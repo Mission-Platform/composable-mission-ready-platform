@@ -176,7 +176,7 @@ export type {
   CompilerDiagnostic,
   CompilerDiagnosticSeverity,
   CompilerPhase,
-  FrameworkBuildAdapters,
+  ForgeBuildAdapters,
   FrameworkOutputPlugin,
   FrameworkSourceMetadata,
   GeneratedExtraModule,
@@ -195,7 +195,6 @@ export { validateForgeOutputPlugin, validateForgeOutputPluginSelection } from '@
 export type {
   GeneratedRouterDeclaration,
   GeneratedRouterModule,
-  RouterBuildAdapters,
   RouterCapability,
   RouterCapabilityImport,
   RouterCapabilityModule,

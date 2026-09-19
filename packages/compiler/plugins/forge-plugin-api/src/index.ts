@@ -1,7 +1,7 @@
 import type { FrameworkOutputPlugin } from "./framework.js";
 
 export type {
-  FrameworkBuildAdapters,
+  ForgeBuildAdapters,
   FrameworkId,
   FrameworkOutputPlugin,
   FrameworkSourceMetadata,

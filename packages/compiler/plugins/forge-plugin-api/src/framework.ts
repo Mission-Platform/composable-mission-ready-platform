@@ -161,8 +161,8 @@ export interface TsdownBuildContext {
   readonly config?: TsdownUserConfig;
 }
 
-/** Independently typed framework build integrations. */
-export interface FrameworkBuildAdapters {
+/** Unified build integration adapters for Forge plugins. */
+export interface ForgeBuildAdapters {
   readonly vite?: (context: ViteBuildContext) => readonly Plugin[];
   readonly tsdown?: (context: TsdownBuildContext) => readonly TsdownPlugin[];
 }
@@ -206,7 +206,7 @@ export interface FrameworkOutputPlugin {
     intentions: TargetIntentions,
     context: GeneratorContext,
   ) => GeneratedModule;
-  readonly build: FrameworkBuildAdapters;
+  readonly build: ForgeBuildAdapters;
 }
 
 /** Caller-owned target selection; validation rejects empty and duplicate IDs. */

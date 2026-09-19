@@ -11,7 +11,7 @@ import { emitWebComponentHookModule } from "./runtime/hook-module.js";
 
 import type { WebComponentsLoweredModule } from "./lower.js";
 import type {
-  FrameworkBuildAdapters,
+  ForgeBuildAdapters,
   FrameworkOutputPlugin,
   SemanticModule,
   TargetComponentHost,
@@ -20,13 +20,13 @@ import type {
   TargetOptimizeOptions,
 } from "@mission-platform/forge-plugin-api";
 
-const BUILD: FrameworkBuildAdapters = { vite: () => [], tsdown: () => [] };
+const BUILD: ForgeBuildAdapters = { vite: () => [], tsdown: () => [] };
 
 /** Host metadata for components shared across independently built packages. */
-const SHARED_COMPONENT_HOSTS = {
+const SHARED_COMPONENT_HOSTS: Readonly<Record<string, TargetComponentHost>> = {
   "forge-dropdown": { baseTag: "div", invocation: "is-attribute" },
   "forge-typography": { invocation: "custom-tag" },
-} as const satisfies Readonly<Record<string, TargetComponentHost>>;
+};
 
 function componentTagName(name: string): string {
   return name
@@ -56,7 +56,7 @@ export function forgeWebComponentsFramework(): FrameworkOutputPlugin {
     prepareComponentHosts(
       modules: readonly { componentName: string; module: SemanticModule }[],
     ): ReadonlyMap<string, TargetComponentHost> {
-      return new Map([
+      return new Map<string, TargetComponentHost>([
         ...Object.entries(SHARED_COMPONENT_HOSTS),
         ...modules.map(({ componentName, module }) => {
           const host = inferWebComponentsHost(
@@ -68,7 +68,7 @@ export function forgeWebComponentsFramework(): FrameworkOutputPlugin {
             {
               baseTag: host.baseTag,
               invocation: host.invocation,
-            },
+            } as TargetComponentHost,
           ] as const;
         }),
       ]);
