@@ -27,6 +27,7 @@
     "format": "prettier --check ."
   },
   "dependencies": {
+    "@mission-platform/forge-cst": "workspace:*",
     "@mission-platform/forge-plugin-api": "workspace:*"
   },
   "devDependencies": {

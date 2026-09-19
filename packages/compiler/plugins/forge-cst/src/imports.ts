@@ -16,6 +16,7 @@ export interface ImportRewriteSpec {
   readonly specifiers?: readonly {
     readonly importedName: string;
     readonly localName?: string;
+    readonly sourceName?: string;
   }[];
   /** Whether to remove imported bindings that are not referenced in the file. */
   readonly removeUnused?: boolean;
@@ -40,6 +41,7 @@ export interface RewriteImportsOptions {
   readonly specifiers?: readonly {
     readonly importedName: string;
     readonly localName?: string;
+    readonly sourceName?: string;
   }[];
   /** Shorthand removeUnused flag if rewrites is omitted. */
   readonly removeUnused?: boolean;
@@ -198,31 +200,37 @@ export function rewriteImportsWithCst(
     );
   }
 
+  const newline = source.includes("\r\n") ? "\r\n" : "\n";
+
   for (const decl of matchingDeclarations) {
-    const spec = specs.find(
+    const matchingSpecs = specs.filter(
       (candidate) => candidate.targetModule === decl.source.value,
     );
-    if (!spec) continue;
+    if (matchingSpecs.length === 0) continue;
 
-    // Removal case: replacementModule is omitted or explicitly undefined/empty
-    if (spec.replacementModule === undefined || spec.replacementModule === "") {
-      removeDeclaration(s, source, decl.start, decl.end);
-      transformed = true;
-      continue;
-    }
+    // Single-module fast path: preserve exact specifiers, comments, and whitespace
+    if (
+      matchingSpecs.length === 1 &&
+      options.preserveNamedSpecifiers === true &&
+      matchingSpecs[0].specifiers === undefined &&
+      !matchingSpecs[0].removeUnused
+    ) {
+      const singleSpec = matchingSpecs[0];
+      if (
+        singleSpec.replacementModule === undefined ||
+        singleSpec.replacementModule === ""
+      ) {
+        removeDeclaration(s, source, decl.start, decl.end);
+        transformed = true;
+        continue;
+      }
 
-    const shouldPreserve =
-      options.preserveNamedSpecifiers === true ||
-      (spec.specifiers === undefined && !spec.removeUnused);
-
-    if (shouldPreserve) {
-      // Non-destructive module specifier rewrite: preserves all comments and layout
       const quote = source[decl.source.start];
       const validQuote = quote === "'" || quote === '"' ? quote : "'";
       s.overwrite(
         decl.source.start,
         decl.source.end,
-        `${validQuote}${spec.replacementModule}${validQuote}`,
+        `${validQuote}${singleSpec.replacementModule}${validQuote}`,
       );
       transformed = true;
       continue;
@@ -271,71 +279,125 @@ export function rewriteImportsWithCst(
       }
     }
 
-    let keptSpecifiers = parsedSpecifiers;
+    // Group matching specs by replacementModule
+    const specsByModule = new Map<string, ImportRewriteSpec[]>();
+    for (const spec of matchingSpecs) {
+      if (!spec.replacementModule) continue;
+      const list = specsByModule.get(spec.replacementModule) ?? [];
+      list.push(spec);
+      specsByModule.set(spec.replacementModule, list);
+    }
 
-    if (spec.specifiers !== undefined) {
-      keptSpecifiers = keptSpecifiers.flatMap((item) => {
-        const mapping = spec.specifiers?.find(
-          (m) =>
-            m.importedName === item.importedName ||
-            m.localName === item.localName,
+    const emittedImports: string[] = [];
+
+    if (decl.specifiers.length === 0) {
+      for (const [replacementModule] of specsByModule) {
+        const quote = source[decl.source.start];
+        const validQuote = quote === "'" || quote === '"' ? quote : "'";
+        emittedImports.push(
+          `import ${validQuote}${replacementModule}${validQuote};`,
         );
-        if (!mapping) return [];
-        return [
-          {
-            ...item,
-            importedName: mapping.importedName,
-            localName: mapping.localName ?? item.localName,
-          },
-        ];
-      });
+      }
+    } else {
+      for (const [replacementModule, moduleSpecs] of specsByModule) {
+        const hasDefinedSpecifiers = moduleSpecs.some(
+          (sp) => sp.specifiers !== undefined,
+        );
+        let keptSpecifiers: ParsedSpecifier[];
+
+        if (hasDefinedSpecifiers) {
+          const moduleSpecifierRules = moduleSpecs.flatMap(
+            (sp) => sp.specifiers ?? [],
+          );
+          keptSpecifiers = parsedSpecifiers.flatMap((item) => {
+            const mapping = moduleSpecifierRules.find((m) =>
+              m.sourceName === undefined
+                ? m.localName === item.importedName ||
+                  m.localName === item.localName ||
+                  m.importedName === item.importedName
+                : m.sourceName === item.importedName,
+            );
+            if (!mapping) return [];
+            return [
+              {
+                ...item,
+                importedName: mapping.importedName,
+                localName:
+                  item.localName === item.importedName
+                    ? (mapping.localName ?? item.localName)
+                    : item.localName,
+              },
+            ];
+          });
+        } else if (specsByModule.size === 1) {
+          keptSpecifiers = [...parsedSpecifiers];
+        } else {
+          keptSpecifiers = [];
+        }
+
+        const hasRemoveUnusedOnModule = moduleSpecs.some(
+          (sp) => sp.removeUnused,
+        );
+        if (hasRemoveUnusedOnModule && referencedIdentifiers) {
+          keptSpecifiers = keptSpecifiers.filter((item) =>
+            referencedIdentifiers.has(item.localName),
+          );
+        }
+
+        if (keptSpecifiers.length === 0) {
+          continue;
+        }
+
+        const quote = source[decl.source.start];
+        const validQuote = quote === "'" || quote === '"' ? quote : "'";
+        const isTypeOnly = decl.importKind === "type";
+        const typePrefix = isTypeOnly ? "type " : "";
+        const parts: string[] = [];
+
+        const defaultSpec = keptSpecifiers.find(
+          (item) => item.kind === "default" || item.importedName === "default",
+        );
+        if (defaultSpec) {
+          parts.push(defaultSpec.localName);
+        }
+
+        const namespaceSpec = keptSpecifiers.find(
+          (item) => item.kind === "namespace" || item.importedName === "*",
+        );
+        if (namespaceSpec) {
+          parts.push(`* as ${namespaceSpec.localName}`);
+        }
+
+        const namedSpecs = keptSpecifiers.filter(
+          (item) =>
+            item.kind === "named" &&
+            item.importedName !== "default" &&
+            item.importedName !== "*",
+        );
+        if (namedSpecs.length > 0) {
+          const namedStrings = namedSpecs.map((item) => {
+            const inlineType = !isTypeOnly && item.typeOnly ? "type " : "";
+            if (item.localName === item.importedName) {
+              return `${inlineType}${item.importedName}`;
+            }
+            return `${inlineType}${item.importedName} as ${item.localName}`;
+          });
+          parts.push(`{ ${namedStrings.join(", ")} }`);
+        }
+
+        emittedImports.push(
+          `import ${typePrefix}${parts.join(", ")} from ${validQuote}${replacementModule}${validQuote};`,
+        );
+      }
     }
 
-    if (spec.removeUnused && referencedIdentifiers) {
-      keptSpecifiers = keptSpecifiers.filter((item) =>
-        referencedIdentifiers.has(item.localName),
-      );
-    }
-
-    if (keptSpecifiers.length === 0) {
+    if (emittedImports.length === 0) {
       removeDeclaration(s, source, decl.start, decl.end);
       transformed = true;
-      continue;
+    } else {
+      s.overwrite(decl.start, decl.end, emittedImports.join(newline));
+      transformed = true;
     }
-
-    const quote = source[decl.source.start];
-    const validQuote = quote === "'" || quote === '"' ? quote : "'";
-    const isTypeOnly = decl.importKind === "type";
-    const typePrefix = isTypeOnly ? "type " : "";
-    const parts: string[] = [];
-
-    const defaultSpec = keptSpecifiers.find((item) => item.kind === "default");
-    if (defaultSpec) {
-      parts.push(defaultSpec.localName);
-    }
-
-    const namespaceSpec = keptSpecifiers.find(
-      (item) => item.kind === "namespace",
-    );
-    if (namespaceSpec) {
-      parts.push(`* as ${namespaceSpec.localName}`);
-    }
-
-    const namedSpecs = keptSpecifiers.filter((item) => item.kind === "named");
-    if (namedSpecs.length > 0) {
-      const namedStrings = namedSpecs.map((item) => {
-        const inlineType = !isTypeOnly && item.typeOnly ? "type " : "";
-        if (item.localName === item.importedName) {
-          return `${inlineType}${item.importedName}`;
-        }
-        return `${inlineType}${item.importedName} as ${item.localName}`;
-      });
-      parts.push(`{ ${namedStrings.join(", ")} }`);
-    }
-
-    const newImport = `import ${typePrefix}${parts.join(", ")} from ${validQuote}${spec.replacementModule}${validQuote};`;
-    s.overwrite(decl.start, decl.end, newImport);
-    transformed = true;
   }
 
   // Handle dynamic imports

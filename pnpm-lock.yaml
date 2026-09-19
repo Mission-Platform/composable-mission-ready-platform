@@ -2688,6 +2688,9 @@ importers:
 
   packages/compiler/plugins/forge-router-plugin-api:
     dependencies:
+      '@mission-platform/forge-cst':
+        specifier: workspace:*
+        version: link:../forge-cst
       '@mission-platform/forge-plugin-api':
         specifier: workspace:*
         version: link:../forge-plugin-api
