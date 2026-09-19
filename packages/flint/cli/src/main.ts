@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import { access, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -25,9 +24,19 @@ import {
 } from './args.js';
 import { formatFlintDiagnostics, formatFlintSoNSummary, outputDirectoryFor, writeFlintArtifacts } from './output.js';
 
+/**
+ * Exit code indicating invalid command-line usage or arguments.
+ */
 export const FLINT_CLI_USAGE_EXIT_CODE = 2;
+
+/**
+ * Exit code indicating compilation, verification, or emission errors.
+ */
 export const FLINT_CLI_COMPILATION_EXIT_CODE = 1;
 
+/**
+ * Pluggable IO interface for Flint CLI stdout and stderr logging.
+ */
 export interface FlintCliIo {
   readonly stdout: (message: string) => void;
   readonly stderr: (message: string) => void;
@@ -38,6 +47,14 @@ const defaultIo: FlintCliIo = {
   stderr: (message) => process.stderr.write(`${message}\n`),
 };
 
+/**
+ * Generates candidate file paths for module resolution.
+ *
+ * @param source Requested module specifier.
+ * @param importer File path of importing module.
+ * @param roots Configured search roots.
+ * @returns Array of candidate absolute or relative file paths.
+ */
 function sourceCandidates(source: string, importer: string, roots: readonly string[]): readonly string[] {
   const values = path.isAbsolute(source)
     ? [source]
@@ -45,6 +62,12 @@ function sourceCandidates(source: string, importer: string, roots: readonly stri
   return [...new Set(values.flatMap((value) => [value, value.endsWith('.flint') ? value : `${value}.flint`]))];
 }
 
+/**
+ * Checks whether a candidate path exists on disk.
+ *
+ * @param fileName Path to verify.
+ * @returns File path if accessible, or undefined.
+ */
 async function existingFile(fileName: string): Promise<string | undefined> {
   try {
     await access(fileName);
@@ -54,6 +77,12 @@ async function existingFile(fileName: string): Promise<string | undefined> {
   }
 }
 
+/**
+ * Creates a module resolver for source resolution across specified search roots.
+ *
+ * @param roots Configured directory search roots.
+ * @returns Configured FlintModuleResolver instance.
+ */
 function createFileResolver(roots: readonly string[]): FlintModuleResolver {
   return {
     async resolve(source, importer): Promise<string | undefined> {
@@ -67,6 +96,13 @@ function createFileResolver(roots: readonly string[]): FlintModuleResolver {
   };
 }
 
+/**
+ * Constructs a diagnostic representing a CLI or file graph resolution failure.
+ *
+ * @param fileName Source file name.
+ * @param message Diagnostic description.
+ * @returns Constructed FlintDiagnostic.
+ */
 function cliDiagnostic(fileName: string, message: string): FlintDiagnostic {
   return createDiagnostic(fileName, 'graph', 'FLINT-CLI-001', message, {
     start: 0,
@@ -78,10 +114,23 @@ function cliDiagnostic(fileName: string, message: string): FlintDiagnostic {
   });
 }
 
+/**
+ * Deduplicates diagnostics based on their stable diagnostic key.
+ *
+ * @param diagnostics Array of raw diagnostics.
+ * @returns Deduplicated diagnostic array.
+ */
 function uniqueDiagnostics(diagnostics: readonly FlintDiagnostic[]): readonly FlintDiagnostic[] {
   return [...new Map(diagnostics.map((diagnostic) => [diagnosticKey(diagnostic), diagnostic])).values()];
 }
 
+/**
+ * Produces link configuration options based on CLI settings.
+ *
+ * @param options Parsed CLI options.
+ * @param projectRoots Resolved project roots.
+ * @returns FlintLinkConfiguration structure.
+ */
 function linkConfigurationFor(options: FlintCliOptions, projectRoots: readonly string[]): FlintLinkConfiguration {
   return {
     projectRoots,
@@ -91,6 +140,12 @@ function linkConfigurationFor(options: FlintCliOptions, projectRoots: readonly s
   };
 }
 
+/**
+ * Resolves the source graph and compiles artifacts according to CLI options.
+ *
+ * @param options Parsed CLI options.
+ * @returns Compiled artifact, diagnostics, and optional trace report.
+ */
 async function compileOptions(options: FlintCliOptions): Promise<{
   readonly entryFileName: string;
   readonly artifact: Awaited<ReturnType<ReturnType<typeof createFlintCompilerService>['compileGraph']>>;
@@ -138,58 +193,46 @@ async function compileOptions(options: FlintCliOptions): Promise<{
   }
 }
 
-export async function runFlintCli(
-  argv: readonly string[] = process.argv.slice(2),
-  io: FlintCliIo = defaultIo,
-  cwd = process.cwd(),
-): Promise<number> {
-  if (argv.includes('--help') || argv.includes('-h')) {
-    io.stdout(FLINT_CLI_USAGE.trimEnd());
-    return 0;
-  }
-  let options: FlintCliOptions;
-  try {
-    options = parseFlintCliArgs(argv, cwd);
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : String(error);
-    io.stderr(message);
-    if (error instanceof FlintCliUsageError && message !== FLINT_CLI_USAGE) io.stderr(FLINT_CLI_USAGE.trimEnd());
-    return FLINT_CLI_USAGE_EXIT_CODE;
-  }
-
-  if (options.command === 'inspect-sonir') {
-    const artifactFileName = options.entries[0];
-    if (artifactFileName === undefined) return FLINT_CLI_USAGE_EXIT_CODE;
-    const relative = path.relative(cwd, artifactFileName);
-    if (relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
-      io.stderr('SoN inspection path must remain under the current working directory.');
-      return FLINT_CLI_COMPILATION_EXIT_CODE;
-    }
-    try {
-      const sonIr = deserializeFlintSoN(await readFile(artifactFileName, 'utf8'));
-      if (sonIr === undefined) throw new Error('Invalid, stale, or oversized SoN artifact.');
-      const summary = formatFlintSoNSummary(sonIr);
-      io.stdout(options.format === 'json' ? JSON.stringify(summary.json) : summary.text);
-      return 0;
-    } catch (error: unknown) {
-      io.stderr(`Unable to inspect SoN artifact: ${error instanceof Error ? error.message : String(error)}`);
-      return FLINT_CLI_COMPILATION_EXIT_CODE;
-    }
-  }
-
-  let result: Awaited<ReturnType<typeof compileOptions>>;
-  try {
-    result = await compileOptions(options);
-  } catch (error: unknown) {
-    const entryFileName = options.entries[0] ?? '<entry>';
-    const diagnostic = cliDiagnostic(
-      entryFileName,
-      `Unable to load source graph: ${error instanceof Error ? error.message : String(error)}`,
-    );
-    io.stderr(formatFlintDiagnostics([diagnostic]));
+/**
+ * Executes the `inspect-sonir` command for bounded Sea-of-Nodes inspection.
+ *
+ * @param options Parsed CLI options.
+ * @param io CLI I/O interface.
+ * @param cwd Current working directory.
+ * @returns Exit code.
+ */
+async function executeInspectSonIrCommand(options: FlintCliOptions, io: FlintCliIo, cwd: string): Promise<number> {
+  const artifactFileName = options.entries[0];
+  if (artifactFileName === undefined) return FLINT_CLI_USAGE_EXIT_CODE;
+  const relative = path.relative(cwd, artifactFileName);
+  if (relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
+    io.stderr('SoN inspection path must remain under the current working directory.');
     return FLINT_CLI_COMPILATION_EXIT_CODE;
   }
+  try {
+    const sonIr = deserializeFlintSoN(await readFile(artifactFileName, 'utf8'));
+    if (sonIr === undefined) throw new Error('Invalid, stale, or oversized SoN artifact.');
+    const summary = formatFlintSoNSummary(sonIr);
+    io.stdout(options.format === 'json' ? JSON.stringify(summary.json) : summary.text);
+    return 0;
+  } catch (error: unknown) {
+    io.stderr(`Unable to inspect SoN artifact: ${error instanceof Error ? error.message : String(error)}`);
+    return FLINT_CLI_COMPILATION_EXIT_CODE;
+  }
+}
 
+/**
+ * Formats and prints compilation diagnostics and summary information.
+ *
+ * @param options Parsed CLI options.
+ * @param result Compiled options result.
+ * @param io CLI I/O interface.
+ */
+function emitCompilationResult(
+  options: FlintCliOptions,
+  result: Awaited<ReturnType<typeof compileOptions>>,
+  io: FlintCliIo,
+): void {
   if (options.format === 'json') {
     io.stdout(
       JSON.stringify({
@@ -203,25 +246,67 @@ export async function runFlintCli(
         ...(options.command === 'trace' ? { trace: result.trace } : {}),
       }),
     );
-  } else if (result.diagnostics.length > 0) io.stderr(formatFlintDiagnostics(result.diagnostics));
-  const hasErrors = result.diagnostics.some((diagnostic) => diagnostic.severity === 'error');
-  if (hasErrors || result.artifact.wasm === undefined || result.artifact.manifest === undefined)
-    return FLINT_CLI_COMPILATION_EXIT_CODE;
-  if (options.command === 'check') {
-    if (options.format !== 'json') {
-      io.stdout(`Checked ${result.entryFileName}.`);
-      if (options.showOptimizerReport || options.boundsChecks !== 'runtime')
-        io.stdout(`Bounds checks: ${options.boundsChecks}.`);
-      if (options.showOptimizerReport) io.stdout(JSON.stringify(result.artifact.optimizationReport ?? {}));
-    }
-    return 0;
+  } else if (result.diagnostics.length > 0) {
+    io.stderr(formatFlintDiagnostics(result.diagnostics));
   }
-  if (options.command === 'trace') {
-    if (options.format !== 'json')
-      io.stdout(`Trace captured for ${result.entryFileName}: ${result.trace?.traceHash ?? 'unavailable'}.`);
-    return 0;
-  }
+}
 
+/**
+ * Handles the `check` command output formatting.
+ *
+ * @param options Parsed CLI options.
+ * @param result Compiled options result.
+ * @param io CLI I/O interface.
+ * @returns Exit code 0.
+ */
+function handleCheckCommand(
+  options: FlintCliOptions,
+  result: Awaited<ReturnType<typeof compileOptions>>,
+  io: FlintCliIo,
+): number {
+  if (options.format !== 'json') {
+    io.stdout(`Checked ${result.entryFileName}.`);
+    if (options.showOptimizerReport || options.boundsChecks !== 'runtime')
+      io.stdout(`Bounds checks: ${options.boundsChecks}.`);
+    if (options.showOptimizerReport) io.stdout(JSON.stringify(result.artifact.optimizationReport ?? {}));
+  }
+  return 0;
+}
+
+/**
+ * Handles the `trace` command output formatting.
+ *
+ * @param options Parsed CLI options.
+ * @param result Compiled options result.
+ * @param io CLI I/O interface.
+ * @returns Exit code 0.
+ */
+function handleTraceCommand(
+  options: FlintCliOptions,
+  result: Awaited<ReturnType<typeof compileOptions>>,
+  io: FlintCliIo,
+): number {
+  if (options.format !== 'json') {
+    io.stdout(`Trace captured for ${result.entryFileName}: ${result.trace?.traceHash ?? 'unavailable'}.`);
+  }
+  return 0;
+}
+
+/**
+ * Writes compiled WebAssembly and metadata artifacts to disk.
+ *
+ * @param options Parsed CLI options.
+ * @param result Compiled options result.
+ * @param io CLI I/O interface.
+ * @param cwd Current working directory.
+ * @returns Exit code.
+ */
+async function handleCompileCommand(
+  options: FlintCliOptions,
+  result: Awaited<ReturnType<typeof compileOptions>>,
+  io: FlintCliIo,
+  cwd: string,
+): Promise<number> {
   const outputDirectory = outputDirectoryFor(
     result.entryFileName,
     options.outputDirectory ?? path.resolve(cwd, 'dist'),
@@ -248,6 +333,70 @@ export async function runFlintCli(
   }
 }
 
+/**
+ * Executes the Flint CLI with given argument vector.
+ *
+ * @param argv Command-line arguments slice.
+ * @param io Pluggable I/O interface.
+ * @param cwd Base working directory.
+ * @returns Promise resolving to the numeric process exit code.
+ */
+export async function runFlintCli(
+  argv: readonly string[] = process.argv.slice(2),
+  io: FlintCliIo = defaultIo,
+  cwd = process.cwd(),
+): Promise<number> {
+  if (argv.includes('--help') || argv.includes('-h')) {
+    io.stdout(FLINT_CLI_USAGE.trimEnd());
+    return 0;
+  }
+  let options: FlintCliOptions;
+  try {
+    options = parseFlintCliArgs(argv, cwd);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    io.stderr(message);
+    if (error instanceof FlintCliUsageError && message !== FLINT_CLI_USAGE) io.stderr(FLINT_CLI_USAGE.trimEnd());
+    return FLINT_CLI_USAGE_EXIT_CODE;
+  }
+
+  if (options.command === 'inspect-sonir') {
+    return executeInspectSonIrCommand(options, io, cwd);
+  }
+
+  let result: Awaited<ReturnType<typeof compileOptions>>;
+  try {
+    result = await compileOptions(options);
+  } catch (error: unknown) {
+    const entryFileName = options.entries[0] ?? '<entry>';
+    const diagnostic = cliDiagnostic(
+      entryFileName,
+      `Unable to load source graph: ${error instanceof Error ? error.message : String(error)}`,
+    );
+    io.stderr(formatFlintDiagnostics([diagnostic]));
+    return FLINT_CLI_COMPILATION_EXIT_CODE;
+  }
+
+  emitCompilationResult(options, result, io);
+
+  const hasErrors = result.diagnostics.some((diagnostic) => diagnostic.severity === 'error');
+  if (hasErrors || result.artifact.wasm === undefined || result.artifact.manifest === undefined)
+    return FLINT_CLI_COMPILATION_EXIT_CODE;
+
+  if (options.command === 'check') {
+    return handleCheckCommand(options, result, io);
+  }
+  if (options.command === 'trace') {
+    return handleTraceCommand(options, result, io);
+  }
+  return handleCompileCommand(options, result, io, cwd);
+}
+
+/**
+ * Detects whether the current script is being executed directly via node CLI.
+ *
+ * @returns True if running as a direct script.
+ */
 function isDirectExecution(): boolean {
   if (process.argv[1] === undefined) return false;
   try {

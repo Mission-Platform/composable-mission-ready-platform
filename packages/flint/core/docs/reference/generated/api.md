@@ -36,14 +36,20 @@ function createFlintAnalysisContext(
 ): FlintAnalysisContext;
 ```
 
-No description provided.
+Creates a static analysis context wrapping frontend outputs, policies, and derived facts.
 
 #### Parameters
 
-| Name     | Type                 | Description |
-| -------- | -------------------- | ----------- |
-| frontend | FlintFrontendResult  |             |
-| options  | FlintAnalysisOptions |             |
+| Name     | Type                 | Description                                             |
+| -------- | -------------------- | ------------------------------------------------------- |
+| frontend | FlintFrontendResult  | Frontend compiler result.                               |
+| options  | FlintAnalysisOptions | Analysis options controlling policies and source files. |
+
+#### Contract
+
+- **@param:** Frontend compiler result.
+- **@param:** Analysis options controlling policies and source files.
+- **@returns:** Fully populated FlintAnalysisContext.
 
 ## `src/analysis/contracts`
 
@@ -1868,9 +1874,14 @@ Creates an in-memory caching compiler service for incremental compilation and gr
 
 #### Parameters
 
-| Name    | Type                        | Description |
-| ------- | --------------------------- | ----------- |
-| options | FlintCompilerServiceOptions |             |
+| Name    | Type                        | Description                                      |
+| ------- | --------------------------- | ------------------------------------------------ |
+| options | FlintCompilerServiceOptions | Optional compiler service configuration options. |
+
+#### Contract
+
+- **@param:** Optional compiler service configuration options.
+- **@returns:** Stateful FlintCompilerService instance.
 
 ## `src/contracts`
 

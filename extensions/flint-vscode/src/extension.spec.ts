@@ -51,9 +51,9 @@ const mocks = vi.hoisted(() => {
   };
   class MockLanguageClient {
     public static readonly instances: MockLanguageClient[] = [];
-    public readonly start = vi.fn().mockResolvedValue(void 0);
-    public readonly dispose = vi.fn().mockResolvedValue(void 0);
-    public readonly setTrace = vi.fn().mockResolvedValue(void 0);
+    public readonly start = vi.fn<() => Promise<void>>().mockResolvedValue();
+    public readonly dispose = vi.fn<() => Promise<void>>().mockResolvedValue();
+    public readonly setTrace = vi.fn<() => Promise<void>>().mockResolvedValue();
     public readonly constructorArguments: readonly unknown[];
 
     public constructor(...constructorArguments: unknown[]) {
@@ -62,6 +62,7 @@ const mocks = vi.hoisted(() => {
     }
 
     protected fillInitializeParams(_parameters: unknown): void {
+      void this;
       // The real client supplies rootUri and protocol defaults before the extension adds workspace folders.
     }
   }

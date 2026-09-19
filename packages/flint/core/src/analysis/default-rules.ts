@@ -17,6 +17,12 @@ interface RangeFlow {
   readonly reachable: boolean;
 }
 
+/**
+ * Merges multiple environment states at control-flow join points.
+ *
+ * @param states Array of environment mappings from different branches.
+ * @returns Merged environment containing only facts agreed upon by all branches.
+ */
 function mergeEnvironments(states: readonly Environment[]): Environment {
   const merged = new Map<string, Constant>();
   const first = states[0];
@@ -34,10 +40,31 @@ const integerBounds: Readonly<Record<string, readonly [number, number]>> = {
   u64: [0, 2 ** 64 - 1],
 };
 
+/**
+ * Constructs an analysis evidence descriptor.
+ *
+ * @param message Description of the observed fact.
+ * @param span Source code span.
+ * @param value Constant value observed.
+ * @returns Constructed evidence object.
+ */
 function evidence(message: string, span: FlintAnalysisFinding['span'], value?: Constant): FlintAnalysisEvidence {
   return { message, span, ...(value === undefined ? {} : { value }) };
 }
 
+/**
+ * Constructs a standardized analysis finding.
+ *
+ * @param context Analysis context.
+ * @param ruleId Rule identifier.
+ * @param category Finding category.
+ * @param code Diagnostic code.
+ * @param message Diagnostic message.
+ * @param span Source location.
+ * @param hint Remediation suggestion.
+ * @param options Additional finding options including severity, CWEs, and evidence.
+ * @returns Constructed finding record.
+ */
 function finding(
   context: FlintAnalysisContext,
   ruleId: string,
@@ -64,6 +91,13 @@ function finding(
   };
 }
 
+/**
+ * Statically evaluates a deterministic constant expression in the given environment.
+ *
+ * @param expression IR expression to evaluate.
+ * @param environment Environment mapping variable names to known constants.
+ * @returns Evaluated constant value or undefined.
+ */
 function evaluate(expression: FlintIrExpression, environment: ReadonlyMap<string, Constant>): Constant {
   if (expression.kind === 'literal') return expression.value;
   if (expression.kind === 'identifier') return environment.get(expression.name);
@@ -125,10 +159,23 @@ function evaluate(expression: FlintIrExpression, environment: ReadonlyMap<string
   return undefined;
 }
 
+/**
+ * Extracts a normalized type name string from a Flint type descriptor.
+ *
+ * @param type Flint type descriptor.
+ * @returns String type name.
+ */
 function typeName(type: FlintTypeName): string {
   return type.reference ?? type.name;
 }
 
+/**
+ * Computes known static length of an array, vector, or string literal expression.
+ *
+ * @param expression IR expression to inspect.
+ * @param environment Known variable bindings.
+ * @returns Length in elements or bytes if statically known, or undefined.
+ */
 function constantLength(expression: FlintIrExpression, environment: ReadonlyMap<string, Constant>): number | undefined {
   if (expression.kind === 'array-literal' || expression.kind === 'vector-literal') return expression.elements.length;
   if (expression.kind === 'literal' && typeof expression.value === 'string')
@@ -140,6 +187,12 @@ function constantLength(expression: FlintIrExpression, environment: ReadonlyMap<
   return undefined;
 }
 
+/**
+ * Traverses an IR expression tree and invokes a visitor callback on each node.
+ *
+ * @param expression Root IR expression.
+ * @param visit Callback invoked for each expression node.
+ */
 function visitExpression(expression: FlintIrExpression, visit: (expression: FlintIrExpression) => void): void {
   visit(expression);
   switch (expression.kind) {
@@ -185,12 +238,20 @@ function visitExpression(expression: FlintIrExpression, visit: (expression: Flin
   }
 }
 
+/**
+ * Traverses a statement list recursively and invokes a visitor callback on each statement.
+ *
+ * @param statements Array of IR statements.
+ * @param visit Callback invoked for each statement.
+ */
 function visitStatements(statements: readonly FlintIrStatement[], visit: (statement: FlintIrStatement) => void): void {
   for (const statement of statements) {
     visit(statement);
     switch (statement.kind) {
       case 'if': {
-        visitExpression(statement.condition, () => {});
+        visitExpression(statement.condition, (expression) => {
+          void expression;
+        });
         visitStatements(statement.consequent, visit);
         if (statement.alternate !== undefined) visitStatements(statement.alternate, visit);
         break;
@@ -213,6 +274,12 @@ function visitStatements(statements: readonly FlintIrStatement[], visit: (statem
   }
 }
 
+/**
+ * Extracts all immediate constituent expressions evaluated by a statement.
+ *
+ * @param statement IR statement to inspect.
+ * @returns Array of immediate child expressions.
+ */
 function expressionsOf(statement: FlintIrStatement): readonly FlintIrExpression[] {
   switch (statement.kind) {
     case 'let': {
@@ -246,9 +313,18 @@ function expressionsOf(statement: FlintIrStatement): readonly FlintIrExpression[
     case 'switch': {
       return [statement.value];
     }
+    default: {
+      return [];
+    }
   }
 }
 
+/**
+ * Statically checks whether a statement sequence is guaranteed to terminate with a return.
+ *
+ * @param statements Array of IR statements.
+ * @returns True if every control-flow path returns.
+ */
 function guaranteedReturn(statements: readonly FlintIrStatement[]): boolean {
   for (const statement of statements) {
     if (statement.kind === 'return') return true;
@@ -277,6 +353,12 @@ function guaranteedReturn(statements: readonly FlintIrStatement[]): boolean {
   return false;
 }
 
+/**
+ * Checks whether a statement block contains conditional or branching control flow.
+ *
+ * @param statements Array of IR statements.
+ * @returns True if any statement branches conditionally.
+ */
 function containsConditional(statements: readonly FlintIrStatement[]): boolean {
   return statements.some((statement) => {
     if (statement.kind === 'if' || statement.kind === 'switch' || statement.kind === 'match-statement') return true;
@@ -427,7 +509,12 @@ const rangeRule: FlintAnalysisRule = {
                 const receiver = node.arguments[0];
                 const value = index === undefined ? undefined : evaluate(index, environment);
                 const length = receiver === undefined ? undefined : constantLength(receiver, environment);
-                if (typeof value === 'number' && length !== undefined && (value < 0 || value >= length))
+                if (
+                  index !== undefined &&
+                  typeof value === 'number' &&
+                  length !== undefined &&
+                  (value < 0 || value >= length)
+                )
                   findings.push(
                     finding(
                       context,
@@ -435,7 +522,7 @@ const rangeRule: FlintAnalysisRule = {
                       'memory',
                       `${FLINT_ANALYSIS_DIAGNOSTIC_CODES.memory}-003`,
                       `Byte index ${value} is outside its known length ${length}.`,
-                      index!.span,
+                      index.span,
                       'Check the index against the byte/string length.',
                       { severity: 'error', cwe: ['CWE-125'] },
                     ),
@@ -567,6 +654,12 @@ interface OwnershipFlow {
   readonly reachable: boolean;
 }
 
+/**
+ * Deeply clones an allocation mapping preserving aliasing structures.
+ *
+ * @param input Source allocation map.
+ * @returns Fresh mutable map of cloned allocations.
+ */
 function cloneAllocations(input: ReadonlyMap<string, Allocation>): Map<string, Allocation> {
   const copies = new Map<Allocation, Allocation>();
   const result = new Map<string, Allocation>();
@@ -581,6 +674,12 @@ function cloneAllocations(input: ReadonlyMap<string, Allocation>): Map<string, A
   return result;
 }
 
+/**
+ * Merges allocation states from multiple control-flow branches.
+ *
+ * @param states Array of allocation maps from each branch.
+ * @returns Unified allocation map reflecting joined branches.
+ */
 function mergeAllocations(states: readonly Map<string, Allocation>[]): Map<string, Allocation> {
   const merged = new Map<string, Allocation>();
   const first = states[0];
@@ -588,17 +687,20 @@ function mergeAllocations(states: readonly Map<string, Allocation>[]): Map<strin
   const names = [...first.keys()].filter((name) => states.every((state) => state.has(name)));
   const mergedAliases = new Map<Allocation, Allocation>();
   for (const name of names) {
-    const firstAllocation = first.get(name)!;
+    const firstAllocation = first.get(name);
+    if (firstAllocation === undefined) continue;
     let allocation = mergedAliases.get(firstAllocation);
     const aliases = names.filter((candidate) => first.get(candidate) === firstAllocation);
     const aliasingAgrees = aliases.every((candidate) =>
       states.every((state) => state.get(candidate) === state.get(name)),
     );
     if (allocation === undefined || !aliasingAgrees) {
-      const candidates = states.map((state) => state.get(name)!);
-      const size = candidates.every((candidate) => Object.is(candidate.size, candidates[0]!.size))
-        ? candidates[0]!.size
-        : undefined;
+      const candidates = states.map((state) => state.get(name)).filter((c): c is Allocation => c !== undefined);
+      const firstCandidate = candidates[0];
+      const size =
+        firstCandidate !== undefined && candidates.every((candidate) => Object.is(candidate.size, firstCandidate.size))
+          ? firstCandidate.size
+          : undefined;
       allocation = { size, released: candidates.some((candidate) => candidate.released) };
       if (aliasingAgrees) mergedAliases.set(firstAllocation, allocation);
     }
@@ -607,6 +709,13 @@ function mergeAllocations(states: readonly Map<string, Allocation>[]): Map<strin
   return merged;
 }
 
+/**
+ * Statically checks whether an expression depends on or propagates tainted data.
+ *
+ * @param expression Target IR expression.
+ * @param tainted Set of variable names containing tainted data.
+ * @returns True if the expression is tainted.
+ */
 function taintedExpression(expression: FlintIrExpression, tainted: ReadonlySet<string>): boolean {
   if (expression.kind === 'identifier') return tainted.has(expression.name);
   if (expression.kind === 'binary')
@@ -655,8 +764,9 @@ const ownershipRule: FlintAnalysisRule = {
               const operation = node.standardLibrary;
               const name = node.arguments[0]?.kind === 'identifier' ? node.arguments[0].name : undefined;
               if (operation === 'memory-alloc') {
-                const size = node.arguments[0] === undefined ? undefined : evaluate(node.arguments[0], environment);
-                if (typeof size === 'number' && size <= 0)
+                const firstArgument = node.arguments[0];
+                const size = firstArgument === undefined ? undefined : evaluate(firstArgument, environment);
+                if (firstArgument !== undefined && typeof size === 'number' && size <= 0)
                   findings.push(
                     finding(
                       context,
@@ -664,7 +774,7 @@ const ownershipRule: FlintAnalysisRule = {
                       'ownership',
                       `${FLINT_ANALYSIS_DIAGNOSTIC_CODES.ownership}-001`,
                       'Allocation size must be positive.',
-                      node.arguments[0]!.span,
+                      firstArgument.span,
                       'Allocate a non-zero, policy-bounded region.',
                       { severity: 'error', cwe: ['CWE-789'] },
                     ),
@@ -766,16 +876,18 @@ const ownershipRule: FlintAnalysisRule = {
                 old.released = true;
                 allocations.set(statement.name, { size, released: false });
               }
-            } else if (value.kind === 'identifier' && allocations.has(value.name)) {
-              allocations.set(statement.name, allocations.get(value.name)!);
+            } else if (value.kind === 'identifier') {
+              const existing = allocations.get(value.name);
+              if (existing !== undefined) {
+                allocations.set(statement.name, existing);
+              }
             }
             environment.set(statement.name, evaluate(statement.value, environment));
-          } else if (
-            statement.kind === 'assignment' &&
-            statement.value.kind === 'identifier' &&
-            allocations.has(statement.value.name)
-          ) {
-            allocations.set(statement.name, allocations.get(statement.value.name)!);
+          } else if (statement.kind === 'assignment' && statement.value.kind === 'identifier') {
+            const existing = allocations.get(statement.value.name);
+            if (existing !== undefined) {
+              allocations.set(statement.name, existing);
+            }
           }
           if (statement.kind === 'return') {
             reachable = false;

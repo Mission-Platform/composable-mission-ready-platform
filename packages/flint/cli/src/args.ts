@@ -9,8 +9,14 @@ import type {
   FlintSoNBoundsChecks,
 } from '@mission-platform/flint';
 
+/**
+ * Supported top-level Flint CLI commands.
+ */
 export type FlintCliCommand = 'check' | 'compile' | 'trace' | 'inspect-sonir';
 
+/**
+ * Options for forensic trace capturing during execution.
+ */
 export interface FlintCliTraceOptions {
   readonly capture: 'summary' | 'events' | 'snapshot';
   readonly maxEvents: number;
@@ -18,6 +24,9 @@ export interface FlintCliTraceOptions {
   readonly maxSnapshotBytes: number;
 }
 
+/**
+ * Parsed command-line arguments and configuration for the Flint CLI.
+ */
 export interface FlintCliOptions {
   readonly command: FlintCliCommand;
   readonly entries: readonly string[];
@@ -35,13 +44,24 @@ export interface FlintCliOptions {
   readonly trace?: FlintCliTraceOptions;
 }
 
+/**
+ * Error thrown when invalid CLI arguments or options are supplied.
+ */
 export class FlintCliUsageError extends Error {
+  /**
+   * Initializes a new FlintCliUsageError.
+   *
+   * @param message Explanatory error message.
+   */
   constructor(message: string) {
     super(message);
     this.name = 'FlintCliUsageError';
   }
 }
 
+/**
+ * Usage help text displayed by the Flint CLI.
+ */
 export const FLINT_CLI_USAGE = `Usage: flint <check|compile|trace|inspect-sonir> <entry.flint|artifact.sonir.json> [options]
 
 Options:
@@ -66,12 +86,49 @@ Options:
   -h, --help                      Show this help
 `;
 
+interface ParseState {
+  command?: FlintCliCommand;
+  outputDirectory?: string;
+  linkMode?: FlintLinkMode;
+  optimization: FlintOptimization;
+  compilerVersion: string;
+  vmMode: FlintVmExecutionMode;
+  format?: 'text' | 'json';
+  boundsChecks: FlintSoNBoundsChecks;
+  showOptimizerReport: boolean;
+  traceCapture: FlintCliTraceOptions['capture'];
+  maxTraceEvents: number;
+  maxTraceBytes: number;
+  maxSnapshotBytes: number;
+  traceRequested: boolean;
+  entries: string[];
+  roots: string[];
+  projectRoots: string[];
+  capabilities: string[];
+}
+
+type FlagHandler = (argv: readonly string[], index: number, state: ParseState, cwd: string) => number;
+
+/**
+ * Extracts a required value parameter for a given flag from the argv array.
+ *
+ * @param argv Command-line argument vector.
+ * @param index Current option index.
+ * @param option Option flag name.
+ * @returns Tuple of option value and next index.
+ */
 function valueFor(argv: readonly string[], index: number, option: string): [string, number] {
   const value = argv[index + 1];
   if (value === undefined || value.startsWith('-')) throw new FlintCliUsageError(`Missing value for ${option}.`);
   return [value, index + 1];
 }
 
+/**
+ * Splits comma-separated strings and produces a sorted, deduplicated array.
+ *
+ * @param values Array of raw string values.
+ * @returns Sorted unique tokens.
+ */
 function splitValues(values: readonly string[]): readonly string[] {
   return [
     ...new Set(
@@ -85,168 +142,228 @@ function splitValues(values: readonly string[]): readonly string[] {
   ].toSorted();
 }
 
+/**
+ * Resolves an array of paths against the specified working directory.
+ *
+ * @param values Relative or absolute path strings.
+ * @param cwd Base working directory.
+ * @returns Array of resolved absolute paths.
+ */
 function absolutePaths(values: readonly string[], cwd: string): readonly string[] {
   return values.map((value) => path.resolve(cwd, value));
 }
 
+const COMMAND_SET: ReadonlySet<string> = new Set(['check', 'compile', 'trace', 'inspect-sonir']);
+
+function handleProjectRoot(argv: readonly string[], index: number, state: ParseState, option: string): number {
+  const [value, nextIndex] = valueFor(argv, index, option);
+  state.projectRoots.push(
+    ...value
+      .split(',')
+      .map((part) => part.trim())
+      .filter(Boolean),
+  );
+  return nextIndex;
+}
+
+function handleLinkMode(argv: readonly string[], index: number, state: ParseState, option: string): number {
+  const [value, nextIndex] = valueFor(argv, index, option);
+  if (value !== 'static' && value !== 'dynamic') throw new FlintCliUsageError(`Invalid link mode '${value}'.`);
+  state.linkMode = value;
+  return nextIndex;
+}
+
+function handleOutputDir(
+  argv: readonly string[],
+  index: number,
+  state: ParseState,
+  cwd: string,
+  option: string,
+): number {
+  const [value, nextIndex] = valueFor(argv, index, option);
+  state.outputDirectory = path.resolve(cwd, value);
+  return nextIndex;
+}
+
+function handleTraceCount(argv: readonly string[], index: number, state: ParseState, option: string): number {
+  state.traceRequested = true;
+  const [value, nextIndex] = valueFor(argv, index, option);
+  const parsed = Number(value);
+  if (!Number.isSafeInteger(parsed) || parsed < 0)
+    throw new FlintCliUsageError(`${option} must be a non-negative integer.`);
+  switch (option) {
+    case '--max-trace-events': {
+      state.maxTraceEvents = parsed;
+      break;
+    }
+    case '--max-trace-bytes': {
+      state.maxTraceBytes = parsed;
+      break;
+    }
+    case '--max-snapshot-bytes': {
+      state.maxSnapshotBytes = parsed;
+      break;
+    }
+    default: {
+      break;
+    }
+  }
+  return nextIndex;
+}
+
+const FLAG_HANDLERS: Readonly<Record<string, FlagHandler>> = {
+  '--help': () => {
+    throw new FlintCliUsageError(FLINT_CLI_USAGE);
+  },
+  '-h': () => {
+    throw new FlintCliUsageError(FLINT_CLI_USAGE);
+  },
+  '--entry': (argv, index, state) => {
+    const [value, nextIndex] = valueFor(argv, index, '--entry');
+    state.entries.push(value);
+    return nextIndex;
+  },
+  '--root': (argv, index, state) => {
+    const [value, nextIndex] = valueFor(argv, index, '--root');
+    state.roots.push(value);
+    return nextIndex;
+  },
+  '--project-root': (argv, index, state) => handleProjectRoot(argv, index, state, '--project-root'),
+  '--project-roots': (argv, index, state) => handleProjectRoot(argv, index, state, '--project-roots'),
+  '--link-mode': (argv, index, state) => handleLinkMode(argv, index, state, '--link-mode'),
+  '--cross-project-link-mode': (argv, index, state) => handleLinkMode(argv, index, state, '--cross-project-link-mode'),
+  '--capability': (argv, index, state) => {
+    const [value, nextIndex] = valueFor(argv, index, '--capability');
+    state.capabilities.push(value);
+    return nextIndex;
+  },
+  '--capabilities': (argv, index, state) => {
+    const [value, nextIndex] = valueFor(argv, index, '--capabilities');
+    state.capabilities.push(value);
+    return nextIndex;
+  },
+  '--optimization': (argv, index, state) => {
+    const [value, nextIndex] = valueFor(argv, index, '--optimization');
+    if (value !== 'debug' && value !== 'release') throw new FlintCliUsageError(`Invalid optimization '${value}'.`);
+    state.optimization = value;
+    return nextIndex;
+  },
+  '--bounds-checks': (argv, index, state) => {
+    const [value, nextIndex] = valueFor(argv, index, '--bounds-checks');
+    if (value !== 'runtime' && value !== 'proven-safe' && value !== 'excluded-by-profile')
+      throw new FlintCliUsageError(`Invalid bounds-check policy '${value}'.`);
+    state.boundsChecks = value;
+    return nextIndex;
+  },
+  '--optimizer-report': (_argv, index, state) => {
+    state.showOptimizerReport = true;
+    return index;
+  },
+  '--out-dir': (argv, index, state, cwd) => handleOutputDir(argv, index, state, cwd, '--out-dir'),
+  '--output-dir': (argv, index, state, cwd) => handleOutputDir(argv, index, state, cwd, '--output-dir'),
+  '-o': (argv, index, state, cwd) => handleOutputDir(argv, index, state, cwd, '-o'),
+  '--compiler-version': (argv, index, state) => {
+    const [value, nextIndex] = valueFor(argv, index, '--compiler-version');
+    state.compilerVersion = value;
+    return nextIndex;
+  },
+  '--vm-mode': (argv, index, state) => {
+    const [value, nextIndex] = valueFor(argv, index, '--vm-mode');
+    if (value !== 'interpret' && value !== 'jit' && value !== 'aot')
+      throw new FlintCliUsageError(`Invalid VM mode '${value}'.`);
+    state.vmMode = value;
+    return nextIndex;
+  },
+  '--format': (argv, index, state) => {
+    const [value, nextIndex] = valueFor(argv, index, '--format');
+    if (value !== 'text' && value !== 'json') throw new FlintCliUsageError(`Invalid output format '${value}'.`);
+    state.format = value;
+    return nextIndex;
+  },
+  '--trace-capture': (argv, index, state) => {
+    state.traceRequested = true;
+    const [value, nextIndex] = valueFor(argv, index, '--trace-capture');
+    if (value !== 'summary' && value !== 'events' && value !== 'snapshot')
+      throw new FlintCliUsageError(`Invalid trace capture mode '${value}'.`);
+    state.traceCapture = value;
+    return nextIndex;
+  },
+  '--max-trace-events': (argv, index, state) => handleTraceCount(argv, index, state, '--max-trace-events'),
+  '--max-trace-bytes': (argv, index, state) => handleTraceCount(argv, index, state, '--max-trace-bytes'),
+  '--max-snapshot-bytes': (argv, index, state) => handleTraceCount(argv, index, state, '--max-snapshot-bytes'),
+};
+
+/**
+ * Parses and validates raw command-line arguments for the Flint CLI.
+ *
+ * @param argv Command-line arguments slice.
+ * @param cwd Current working directory.
+ * @returns Fully validated FlintCliOptions structure.
+ */
 export function parseFlintCliArgs(argv: readonly string[], cwd = process.cwd()): FlintCliOptions {
-  let command: FlintCliCommand | undefined;
-  let outputDirectory: string | undefined;
-  let linkMode: FlintLinkMode | undefined;
-  let optimization: FlintOptimization = 'debug';
-  let compilerVersion = '0.1.0';
-  let vmMode: FlintVmExecutionMode = 'interpret';
-  let format: 'text' | 'json' | undefined;
-  let boundsChecks: FlintSoNBoundsChecks = 'runtime';
-  let showOptimizerReport = false;
-  let traceCapture: FlintCliTraceOptions['capture'] = 'events';
-  let maxTraceEvents = 512;
-  let maxTraceBytes = 65_536;
-  let maxSnapshotBytes = 4096;
-  let traceRequested = false;
-  const entries: string[] = [];
-  const roots: string[] = [];
-  const projectRoots: string[] = [];
-  const capabilities: string[] = [];
+  const state: ParseState = {
+    optimization: 'debug',
+    compilerVersion: '0.1.0',
+    vmMode: 'interpret',
+    boundsChecks: 'runtime',
+    showOptimizerReport: false,
+    traceCapture: 'events',
+    maxTraceEvents: 512,
+    maxTraceBytes: 65_536,
+    maxSnapshotBytes: 4096,
+    traceRequested: false,
+    entries: [],
+    roots: [],
+    projectRoots: [],
+    capabilities: [],
+  };
 
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
     if (argument === undefined) continue;
-    if (argument === '--help' || argument === '-h') throw new FlintCliUsageError(FLINT_CLI_USAGE);
-    if (argument === 'check' || argument === 'compile' || argument === 'trace' || argument === 'inspect-sonir') {
-      if (command !== undefined) throw new FlintCliUsageError('Only one command may be provided.');
-      command = argument;
+    if (COMMAND_SET.has(argument)) {
+      if (state.command !== undefined) throw new FlintCliUsageError('Only one command may be provided.');
+      state.command = argument as FlintCliCommand;
       continue;
     }
-    if (argument === '--entry') {
-      const [value, nextIndex] = valueFor(argv, index, argument);
-      entries.push(value);
-      index = nextIndex;
-      continue;
-    }
-    if (argument === '--root') {
-      const [value, nextIndex] = valueFor(argv, index, argument);
-      roots.push(value);
-      index = nextIndex;
-      continue;
-    }
-    if (argument === '--project-root' || argument === '--project-roots') {
-      const [value, nextIndex] = valueFor(argv, index, argument);
-      projectRoots.push(
-        ...value
-          .split(',')
-          .map((part) => part.trim())
-          .filter(Boolean),
-      );
-      index = nextIndex;
-      continue;
-    }
-    if (argument === '--link-mode' || argument === '--cross-project-link-mode') {
-      const [value, nextIndex] = valueFor(argv, index, argument);
-      if (value !== 'static' && value !== 'dynamic') throw new FlintCliUsageError(`Invalid link mode '${value}'.`);
-      linkMode = value;
-      index = nextIndex;
-      continue;
-    }
-    if (argument === '--capability' || argument === '--capabilities') {
-      const [value, nextIndex] = valueFor(argv, index, argument);
-      capabilities.push(value);
-      index = nextIndex;
-      continue;
-    }
-    if (argument === '--optimization') {
-      const [value, nextIndex] = valueFor(argv, index, argument);
-      if (value !== 'debug' && value !== 'release') throw new FlintCliUsageError(`Invalid optimization '${value}'.`);
-      optimization = value;
-      index = nextIndex;
-      continue;
-    }
-    if (argument === '--bounds-checks') {
-      const [value, nextIndex] = valueFor(argv, index, argument);
-      if (value !== 'runtime' && value !== 'proven-safe' && value !== 'excluded-by-profile')
-        throw new FlintCliUsageError(`Invalid bounds-check policy '${value}'.`);
-      boundsChecks = value;
-      index = nextIndex;
-      continue;
-    }
-    if (argument === '--optimizer-report') {
-      showOptimizerReport = true;
-      continue;
-    }
-    if (argument === '--out-dir' || argument === '--output-dir' || argument === '-o') {
-      const [value, nextIndex] = valueFor(argv, index, argument);
-      outputDirectory = path.resolve(cwd, value);
-      index = nextIndex;
-      continue;
-    }
-    if (argument === '--compiler-version') {
-      const [value, nextIndex] = valueFor(argv, index, argument);
-      compilerVersion = value;
-      index = nextIndex;
-      continue;
-    }
-    if (argument === '--vm-mode') {
-      const [value, nextIndex] = valueFor(argv, index, argument);
-      if (value !== 'interpret' && value !== 'jit' && value !== 'aot')
-        throw new FlintCliUsageError(`Invalid VM mode '${value}'.`);
-      vmMode = value;
-      index = nextIndex;
-      continue;
-    }
-    if (argument === '--format') {
-      const [value, nextIndex] = valueFor(argv, index, argument);
-      if (value !== 'text' && value !== 'json') throw new FlintCliUsageError(`Invalid output format '${value}'.`);
-      format = value;
-      index = nextIndex;
-      continue;
-    }
-    if (argument === '--trace-capture') {
-      traceRequested = true;
-      const [value, nextIndex] = valueFor(argv, index, argument);
-      if (value !== 'summary' && value !== 'events' && value !== 'snapshot')
-        throw new FlintCliUsageError(`Invalid trace capture mode '${value}'.`);
-      traceCapture = value;
-      index = nextIndex;
-      continue;
-    }
-    if (argument === '--max-trace-events' || argument === '--max-trace-bytes' || argument === '--max-snapshot-bytes') {
-      traceRequested = true;
-      const [value, nextIndex] = valueFor(argv, index, argument);
-      const parsed = Number(value);
-      if (!Number.isSafeInteger(parsed) || parsed < 0)
-        throw new FlintCliUsageError(`${argument} must be a non-negative integer.`);
-      if (argument === '--max-trace-events') maxTraceEvents = parsed;
-      if (argument === '--max-trace-bytes') maxTraceBytes = parsed;
-      if (argument === '--max-snapshot-bytes') maxSnapshotBytes = parsed;
-      index = nextIndex;
+    const handler = FLAG_HANDLERS[argument];
+    if (handler !== undefined) {
+      index = handler(argv, index, state, cwd);
       continue;
     }
     if (argument.startsWith('-')) throw new FlintCliUsageError(`Unknown option '${argument}'.`);
-    entries.push(argument);
+    state.entries.push(argument);
   }
 
-  if (command === undefined)
+  if (state.command === undefined)
     throw new FlintCliUsageError('Missing command; expected check, compile, trace, or inspect-sonir.');
-  if (entries.length === 0) throw new FlintCliUsageError('Missing entry file.');
-  if (entries.length > 1) throw new FlintCliUsageError('Exactly one entry file is supported.');
-  if (compilerVersion.length === 0) throw new FlintCliUsageError('Compiler version must not be empty.');
+  if (state.entries.length === 0) throw new FlintCliUsageError('Missing entry file.');
+  if (state.entries.length > 1) throw new FlintCliUsageError('Exactly one entry file is supported.');
+  if (state.compilerVersion.length === 0) throw new FlintCliUsageError('Compiler version must not be empty.');
 
   return {
-    command,
-    entries: absolutePaths(entries, cwd),
-    roots: absolutePaths(roots, cwd),
-    projectRoots: absolutePaths(projectRoots, cwd),
-    ...(linkMode === undefined ? {} : { linkMode }),
-    capabilities: splitValues(capabilities),
-    optimization,
-    ...(outputDirectory === undefined ? {} : { outputDirectory }),
-    compilerVersion,
-    vmMode,
-    ...(format === undefined ? {} : { format }),
-    boundsChecks,
-    showOptimizerReport,
-    ...(command === 'trace' || traceRequested
-      ? { trace: { capture: traceCapture, maxEvents: maxTraceEvents, maxTraceBytes, maxSnapshotBytes } }
+    command: state.command,
+    entries: absolutePaths(state.entries, cwd),
+    roots: absolutePaths(state.roots, cwd),
+    projectRoots: absolutePaths(state.projectRoots, cwd),
+    ...(state.linkMode === undefined ? {} : { linkMode: state.linkMode }),
+    capabilities: splitValues(state.capabilities),
+    optimization: state.optimization,
+    ...(state.outputDirectory === undefined ? {} : { outputDirectory: state.outputDirectory }),
+    compilerVersion: state.compilerVersion,
+    vmMode: state.vmMode,
+    ...(state.format === undefined ? {} : { format: state.format }),
+    boundsChecks: state.boundsChecks,
+    showOptimizerReport: state.showOptimizerReport,
+    ...(state.command === 'trace' || state.traceRequested
+      ? {
+          trace: {
+            capture: state.traceCapture,
+            maxEvents: state.maxTraceEvents,
+            maxTraceBytes: state.maxTraceBytes,
+            maxSnapshotBytes: state.maxSnapshotBytes,
+          },
+        }
       : {}),
   };
 }

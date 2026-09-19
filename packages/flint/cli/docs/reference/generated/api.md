@@ -14,7 +14,7 @@ Generated from public source declarations in `@mission-platform/flint-cli`.
 export const FLINT_CLI_USAGE;
 ```
 
-No description provided.
+Usage help text displayed by the Flint CLI.
 
 ### FlintCliCommand
 
@@ -24,7 +24,7 @@ No description provided.
 export type FlintCliCommand = 'check' | 'compile' | 'trace' | 'inspect-sonir';
 ```
 
-No description provided.
+Supported top-level Flint CLI commands.
 
 ### FlintCliOptions
 
@@ -34,7 +34,7 @@ No description provided.
 export interface FlintCliOptions
 ```
 
-No description provided.
+Parsed command-line arguments and configuration for the Flint CLI.
 
 ### FlintCliTraceOptions
 
@@ -44,7 +44,7 @@ No description provided.
 export interface FlintCliTraceOptions
 ```
 
-No description provided.
+Options for forensic trace capturing during execution.
 
 ### FlintCliUsageError
 
@@ -54,7 +54,7 @@ No description provided.
 export class FlintCliUsageError extends Error
 ```
 
-No description provided.
+Error thrown when invalid CLI arguments or options are supplied.
 
 ### parseFlintCliArgs
 
@@ -64,14 +64,20 @@ No description provided.
 function parseFlintCliArgs(argv: readonly string[], cwd = process.cwd()): FlintCliOptions;
 ```
 
-No description provided.
+Parses and validates raw command-line arguments for the Flint CLI.
 
 #### Parameters
 
-| Name | Type              | Description |
-| ---- | ----------------- | ----------- |
-| argv | readonly string[] |             |
-| cwd  |                   |             |
+| Name | Type              | Description                   |
+| ---- | ----------------- | ----------------------------- |
+| argv | readonly string[] | Command-line arguments slice. |
+| cwd  |                   | Current working directory.    |
+
+#### Contract
+
+- **@param:** Command-line arguments slice.
+- **@param:** Current working directory.
+- **@returns:** Fully validated FlintCliOptions structure.
 
 ## `src/main`
 
@@ -83,7 +89,7 @@ No description provided.
 export const FLINT_CLI_COMPILATION_EXIT_CODE;
 ```
 
-No description provided.
+Exit code indicating compilation, verification, or emission errors.
 
 ### FLINT_CLI_USAGE_EXIT_CODE
 
@@ -93,7 +99,7 @@ No description provided.
 export const FLINT_CLI_USAGE_EXIT_CODE;
 ```
 
-No description provided.
+Exit code indicating invalid command-line usage or arguments.
 
 ### FlintCliIo
 
@@ -103,7 +109,7 @@ No description provided.
 export interface FlintCliIo
 ```
 
-No description provided.
+Pluggable IO interface for Flint CLI stdout and stderr logging.
 
 ### runFlintCli
 
@@ -117,15 +123,22 @@ function runFlintCli(
 ): Promise<number>;
 ```
 
-No description provided.
+Executes the Flint CLI with given argument vector.
 
 #### Parameters
 
-| Name | Type              | Description |
-| ---- | ----------------- | ----------- |
-| argv | readonly string[] |             |
-| io   | FlintCliIo        |             |
-| cwd  |                   |             |
+| Name | Type              | Description                   |
+| ---- | ----------------- | ----------------------------- |
+| argv | readonly string[] | Command-line arguments slice. |
+| io   | FlintCliIo        | Pluggable I/O interface.      |
+| cwd  |                   | Base working directory.       |
+
+#### Contract
+
+- **@param:** Command-line arguments slice.
+- **@param:** Pluggable I/O interface.
+- **@param:** Base working directory.
+- **@returns:** Promise resolving to the numeric process exit code.
 
 ## `src/output`
 
@@ -137,13 +150,18 @@ No description provided.
 function artifactFilesFor(artifact: FlintArtifact): FlintCliArtifactFiles;
 ```
 
-No description provided.
+Extracts and prepares the binary and textual file payloads from a compiled Flint artifact.
 
 #### Parameters
 
-| Name     | Type          | Description |
-| -------- | ------------- | ----------- |
-| artifact | FlintArtifact |             |
+| Name     | Type          | Description                                                 |
+| -------- | ------------- | ----------------------------------------------------------- |
+| artifact | FlintArtifact | Compiled Flint artifact containing WASM, WAT, and metadata. |
+
+#### Contract
+
+- **@param:** Compiled Flint artifact containing WASM, WAT, and metadata.
+- **@returns:** Object mapping artifact roles to their file contents.
 
 ### flintArtifactBaseName
 
@@ -153,13 +171,18 @@ No description provided.
 function flintArtifactBaseName(entryFileName: string): string;
 ```
 
-No description provided.
+Computes the base artifact name without file extension from an entry file path.
 
 #### Parameters
 
-| Name          | Type   | Description |
-| ------------- | ------ | ----------- |
-| entryFileName | string |             |
+| Name          | Type   | Description                       |
+| ------------- | ------ | --------------------------------- |
+| entryFileName | string | Path to the main entrypoint file. |
+
+#### Contract
+
+- **@param:** Path to the main entrypoint file.
+- **@returns:** Base name suitable for artifact emission.
 
 ### FlintCliArtifactFiles
 
@@ -169,7 +192,7 @@ No description provided.
 export interface FlintCliArtifactFiles
 ```
 
-No description provided.
+Collection of artifact payloads to be written to disk.
 
 ### formatFlintDiagnostics
 
@@ -194,13 +217,18 @@ function formatFlintDiagnostics(
 ): string;
 ```
 
-No description provided.
+Formats an array of diagnostics into human-readable compiler diagnostic messages.
 
 #### Parameters
 
-| Name        | Type                                                                                                                                                                                                                                                                                            | Description |
-| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| diagnostics | readonly { readonly code: string; readonly severity: string; readonly phase: string; readonly message: string; readonly fileName: string; readonly span: { readonly line: number; readonly column: number; readonly endLine: number; readonly endColumn: number; }; readonly hint?: string; }[] |             |
+| Name        | Type                                                                                                                                                                                                                                                                                            | Description                            |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| diagnostics | readonly { readonly code: string; readonly severity: string; readonly phase: string; readonly message: string; readonly fileName: string; readonly span: { readonly line: number; readonly column: number; readonly endLine: number; readonly endColumn: number; }; readonly hint?: string; }[] | Array of diagnostic records to format. |
+
+#### Contract
+
+- **@param:** Array of diagnostic records to format.
+- **@returns:** Newline-separated diagnostic summary string.
 
 ### formatFlintSoNSummary
 
@@ -213,13 +241,18 @@ function formatFlintSoNSummary(module: FlintSoNModule): {
 };
 ```
 
-No description provided.
+Formats a Sea-of-Nodes IR module into JSON metadata and terminal summary text.
 
 #### Parameters
 
-| Name   | Type           | Description |
-| ------ | -------------- | ----------- |
-| module | FlintSoNModule |             |
+| Name   | Type           | Description                          |
+| ------ | -------------- | ------------------------------------ |
+| module | FlintSoNModule | Flint Sea-of-Nodes module to format. |
+
+#### Contract
+
+- **@param:** Flint Sea-of-Nodes module to format.
+- **@returns:** Summary object containing structured JSON and human-readable text.
 
 ### outputDirectoryFor
 
@@ -232,14 +265,20 @@ function outputDirectoryFor(
 ): string;
 ```
 
-No description provided.
+Computes the target output directory for artifact generation.
 
 #### Parameters
 
-| Name            | Type   | Description |
-| --------------- | ------ | ----------- |
-| entryFileName   | string |             |
-| outputDirectory |        |             |
+| Name            | Type   | Description                                |
+| --------------- | ------ | ------------------------------------------ |
+| entryFileName   | string | Path to the entry file.                    |
+| outputDirectory |        | Explicit or default output directory path. |
+
+#### Contract
+
+- **@param:** Path to the entry file.
+- **@param:** Explicit or default output directory path.
+- **@returns:** Resolved output directory string.
 
 ### writeFlintArtifacts
 
@@ -253,12 +292,19 @@ function writeFlintArtifacts(
 ): Promise<readonly string[]>;
 ```
 
-Write the complete artifact set through a temporary directory and rename each file into place.
+Atomically writes the complete artifact set through a temporary directory and renames each file into place.
 
 #### Parameters
 
-| Name            | Type          | Description |
-| --------------- | ------------- | ----------- |
-| outputDirectory | string        |             |
-| entryFileName   | string        |             |
-| artifact        | FlintArtifact |             |
+| Name            | Type          | Description                     |
+| --------------- | ------------- | ------------------------------- |
+| outputDirectory | string        | Destination folder path.        |
+| entryFileName   | string        | Path to the primary entrypoint. |
+| artifact        | FlintArtifact | Compiled Flint artifact.        |
+
+#### Contract
+
+- **@param:** Destination folder path.
+- **@param:** Path to the primary entrypoint.
+- **@param:** Compiled Flint artifact.
+- **@returns:** Promise resolving to an array of written file paths.

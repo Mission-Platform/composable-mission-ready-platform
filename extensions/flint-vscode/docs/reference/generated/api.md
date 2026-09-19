@@ -14,13 +14,17 @@ Generated from public source declarations in `flint-vscode`.
 function activate(context: vscode.ExtensionContext): Promise<void>;
 ```
 
-No description provided.
+Activates the Flint VS Code extension and starts the language server and debug support.
 
 #### Parameters
 
-| Name    | Type                    | Description |
-| ------- | ----------------------- | ----------- |
-| context | vscode.ExtensionContext |             |
+| Name    | Type                    | Description               |
+| ------- | ----------------------- | ------------------------- |
+| context | vscode.ExtensionContext | VS Code ExtensionContext. |
+
+#### Contract
+
+- **@param:** VS Code ExtensionContext.
 
 ### createLanguageClient
 
@@ -35,16 +39,24 @@ function createLanguageClient(
 ): FlintLanguageClient;
 ```
 
-No description provided.
+Creates and configures the Flint language server client.
 
 #### Parameters
 
-| Name          | Type                                    | Description |
-| ------------- | --------------------------------------- | ----------- |
-| serverOptions | ServerOptions                           |             |
-| configuration | Pick<FlintConfiguration, 'traceServer'> |             |
-| outputChannel | vscode.LogOutputChannel                 |             |
-| fileWatcher   | vscode.FileSystemWatcher                |             |
+| Name          | Type                                    | Description                                |
+| ------------- | --------------------------------------- | ------------------------------------------ |
+| serverOptions | ServerOptions                           | Language server process configuration.     |
+| configuration | Pick<FlintConfiguration, 'traceServer'> | User configuration options.                |
+| outputChannel | vscode.LogOutputChannel                 | Log output channel for LSP communications. |
+| fileWatcher   | vscode.FileSystemWatcher                | File system watcher for workspace sync.    |
+
+#### Contract
+
+- **@param:** Language server process configuration.
+- **@param:** User configuration options.
+- **@param:** Log output channel for LSP communications.
+- **@param:** File system watcher for workspace sync.
+- **@returns:** Configured FlintLanguageClient.
 
 ### deactivate
 
@@ -54,4 +66,4 @@ No description provided.
 function deactivate(): Promise<void>;
 ```
 
-No description provided.
+Deactivates the extension and disposes running language client instances.

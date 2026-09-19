@@ -148,6 +148,13 @@ export function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>):
   const flintDisposeReference = useRef<(() => void) | undefined>(undefined);
   const flintAttachGenerationReference = useRef(0);
 
+  /**
+   * Determines whether Flint language features should be attached to the editor.
+   *
+   * @param editor Active Monaco editor instance.
+   * @param runtime Active Monaco runtime.
+   * @returns True if the editor language is flint and flint support is enabled.
+   */
   const shouldAttachFlint = (editor?: monaco.editor.IStandaloneCodeEditor, runtime?: MonacoRuntime): boolean =>
     Boolean(editor && runtime && language === 'flint' && properties.flint !== false);
 
@@ -163,14 +170,16 @@ export function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>):
     const runtime = monacoReference.current;
     if (!shouldAttachFlint(editor, runtime) || properties.flint === false) return;
     const flintOptions = typeof properties.flint === 'object' && properties.flint !== null ? properties.flint : {};
-    void import('../../../monaco/flint').then(({ attachFlintMonaco }) => {
-      const isCurrent =
-        flintAttachGenerationReference.current === generation &&
-        shouldAttachFlint(editorReference.current, monacoReference.current);
-      if (isCurrent && editor && runtime) {
-        flintDisposeReference.current = attachFlintMonaco(editor, runtime, flintOptions).dispose;
-      }
-    });
+    import('../../../monaco/flint')
+      .then(({ attachFlintMonaco }) => {
+        const isCurrent =
+          flintAttachGenerationReference.current === generation &&
+          shouldAttachFlint(editorReference.current, monacoReference.current);
+        if (isCurrent && editor && runtime) {
+          flintDisposeReference.current = attachFlintMonaco(editor, runtime, flintOptions).dispose;
+        }
+      })
+      .catch(() => {});
   };
 
   // (Re-)wire Hunspell + Harper against the live editor. Both cores are imported

@@ -117,6 +117,30 @@ function validateDebugTrust(
 }
 
 /**
+ * Assembles a fully resolved launch configuration combining user inputs with extension defaults.
+ *
+ * @param configuration User-supplied debug configuration.
+ * @param settings Active Flint debug settings.
+ * @returns Fully populated FlintLaunchConfiguration.
+ */
+function buildResolvedLaunchConfiguration(
+  configuration: vscode.DebugConfiguration,
+  settings: FlintDebugSettings,
+): FlintLaunchConfiguration {
+  return {
+    ...configuration,
+    type: 'flint',
+    request: 'launch',
+    name: configuration.name ?? 'Launch Flint',
+    program: configuration.program ?? '${file}', // skipcq: JS-0038
+    cwd: configuration.cwd ?? '${workspaceFolder}', // skipcq: JS-0038
+    runtimePath: configuration.runtimePath || settings.runtimePath || undefined,
+    runtimeArgs: configuration.runtimeArgs ?? settings.runtimeArgs,
+    args: configuration.args ?? [],
+  };
+}
+
+/**
  * Creates the Flint launch configuration provider.
  *
  * @param context Extension context.
@@ -135,19 +159,7 @@ export function createDebugConfigurationProvider(
       const adapterPath = resolveDebugAdapterPath(context, settings, folder);
       await assertNodeRuntime(settings.nodePath);
       await assertDebugAdapterAvailable(adapterPath);
-
-      const resolved: FlintLaunchConfiguration = {
-        ...configuration,
-        type: 'flint',
-        request: 'launch',
-        name: configuration.name ?? 'Launch Flint',
-        program: configuration.program ?? '${file}', // skipcq: JS-0038
-        cwd: configuration.cwd ?? '${workspaceFolder}', // skipcq: JS-0038
-        runtimePath: configuration.runtimePath || settings.runtimePath || undefined,
-        runtimeArgs: configuration.runtimeArgs ?? settings.runtimeArgs,
-        args: configuration.args ?? [],
-      };
-      return resolved;
+      return buildResolvedLaunchConfiguration(configuration, settings);
     },
   };
 }

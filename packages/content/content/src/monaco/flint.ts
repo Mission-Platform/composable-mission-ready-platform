@@ -54,6 +54,12 @@ export function registerFlintLanguage(
   };
 }
 
+/**
+ * Resolves the canonical string URI from a Monaco text model.
+ *
+ * @param model Active Monaco text model.
+ * @returns String representation of the model URI.
+ */
 function modelUri(model: monaco.editor.ITextModel): string {
   return model.uri.toString();
 }
@@ -73,6 +79,12 @@ export function attachFlintMonaco(
   let refreshGeneration = 0;
   let currentUri: string | undefined;
 
+  /**
+   * Resolves the workspace-relative or fallback file name for a model.
+   *
+   * @param model Active Monaco text model.
+   * @returns Resolved file name string.
+   */
   const modelFileName = (model: monaco.editor.ITextModel): string =>
     options.fileName ?? model.uri.path ?? modelUri(model);
 
@@ -110,6 +122,9 @@ export function attachFlintMonaco(
     monacoRuntime.editor.setModelMarkers(model, 'flint', markers);
   };
 
+  /**
+   * Refreshes workspace diagnostics and markers for the active model.
+   */
   const refresh = async (): Promise<void> => {
     const model = currentModel();
     const uri = currentUri;
@@ -120,6 +135,12 @@ export function attachFlintMonaco(
     setMarkers(model);
   };
 
+  /**
+   * Synchronizes document content with the language service.
+   *
+   * @param model Active text model to synchronize, or undefined.
+   * @param open Whether this represents an open operation rather than an update.
+   */
   const syncModel = (model: monaco.editor.ITextModel | undefined, open: boolean): void => {
     modelListener?.dispose();
     modelListener = undefined;
@@ -142,9 +163,9 @@ export function attachFlintMonaco(
         text: model.getValue(),
         version: model.getVersionId(),
       });
-      void refresh();
+      refresh().catch(() => {});
     });
-    void refresh();
+    refresh().catch(() => {});
   };
 
   const modelChangeListener = editor.onDidChangeModel(({ newModelUrl }) => {
@@ -183,6 +204,11 @@ export function attachFlintMonaco(
     }),
   );
 
+  /**
+   * Ensures the active model is synchronized before processing language service queries.
+   *
+   * @param model Target Monaco text model.
+   */
   function syncDocumentForRequest(model: monaco.editor.ITextModel): void {
     if (currentUri === modelUri(model)) return;
     syncModel(model, true);
@@ -190,6 +216,9 @@ export function attachFlintMonaco(
 
   syncModel(currentModel(), true);
 
+  /**
+   * Disposes all active listeners, providers, and language service document bindings.
+   */
   const disposeAll = (): void => {
     modelListener?.dispose();
     modelChangeListener.dispose();
@@ -220,8 +249,7 @@ export function attachFlintMonaco(
  * @returns Fresh IState instance.
  */
 function createTokenState(): monaco.languages.IState {
-  let state: monaco.languages.IState;
-  state = {
+  const state: monaco.languages.IState = {
     clone: () => state,
     equals: (other) => other === state,
   };

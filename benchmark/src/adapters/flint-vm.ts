@@ -627,6 +627,118 @@ function validateVmArtifact(artifact: BuildArtifact, mode: FlintMode): void {
 }
 
 /**
+ * Executes the arithmetic reduce kernel with number inputs.
+ *
+ * @param mode VM execution mode.
+ * @param module VM module.
+ * @param input Arithmetic input workload.
+ * @param executor Root VM executor.
+ * @param prepared Prepared executor if applicable.
+ * @param capabilities Capability handlers.
+ * @returns Normalized benchmark output.
+ */
+function executeArithmeticWorkload(
+  mode: Exclude<FlintMode, "wasm" | "wasm-generated" | "wasm-excluded-bounds">,
+  module: FlintVmModule,
+  input: Extract<BenchmarkInput, { multiplier: number }>,
+  executor: ReturnType<typeof createFlintVmExecutor>,
+  prepared: FlintVmPreparedExecutor | undefined,
+  capabilities: ReturnType<typeof stringCapabilities>,
+): BenchmarkOutput {
+  const result = executeNative(
+    mode,
+    module,
+    "arithmetic_reduce",
+    [
+      numberValue(input.n),
+      numberValue(input.multiplier),
+      numberValue(input.offset),
+      numberValue(input.seed),
+    ],
+    executor,
+    prepared,
+    capabilities,
+  );
+  if (result.value.kind !== "number")
+    throw new Error("Flint VM arithmetic returned a non-number.");
+  return normalizeBenchmarkOutput(Number(result.value.value));
+}
+
+/**
+ * Executes the string transform kernel with aggregate inputs.
+ *
+ * @param mode VM execution mode.
+ * @param module VM module.
+ * @param input String transform input workload.
+ * @param executor Root VM executor.
+ * @param prepared Prepared executor if applicable.
+ * @param capabilities Capability handlers.
+ * @returns Normalized benchmark output.
+ */
+function executeStringWorkload(
+  mode: Exclude<FlintMode, "wasm" | "wasm-generated" | "wasm-excluded-bounds">,
+  module: FlintVmModule,
+  input: Extract<BenchmarkInput, { suffix: string }>,
+  executor: ReturnType<typeof createFlintVmExecutor>,
+  prepared: FlintVmPreparedExecutor | undefined,
+  capabilities: ReturnType<typeof stringCapabilities>,
+): BenchmarkOutput {
+  const result = executeNative(
+    mode,
+    module,
+    "string_transform",
+    [
+      aggregateValue(encodeUtf8(input.value), "BenchmarkBytes"),
+      aggregateValue(encodeUtf8(input.prefix), "BenchmarkBytes"),
+      aggregateValue(encodeUtf8(input.suffix), "BenchmarkBytes"),
+      numberValue(input.repeat),
+    ],
+    executor,
+    prepared,
+    capabilities,
+  );
+  if (result.value.kind !== "aggregate")
+    throw new Error("Flint VM string transform returned a non-aggregate.");
+  return normalizeBenchmarkOutput(decodeUtf8(result.value.bytes));
+}
+
+/**
+ * Executes the dataset scan kernel with byte array inputs.
+ *
+ * @param mode VM execution mode.
+ * @param module VM module.
+ * @param input Dataset scan input workload.
+ * @param executor Root VM executor.
+ * @param prepared Prepared executor if applicable.
+ * @param capabilities Capability handlers.
+ * @returns Normalized benchmark output.
+ */
+function executeDatasetWorkload(
+  mode: Exclude<FlintMode, "wasm" | "wasm-generated" | "wasm-excluded-bounds">,
+  module: FlintVmModule,
+  input: Extract<BenchmarkInput, { threshold: number }>,
+  executor: ReturnType<typeof createFlintVmExecutor>,
+  prepared: FlintVmPreparedExecutor | undefined,
+  capabilities: ReturnType<typeof stringCapabilities>,
+): BenchmarkOutput {
+  const result = executeNative(
+    mode,
+    module,
+    "dataset_scan",
+    [
+      aggregateValue(Uint8Array.from(input.bytes), "BenchmarkBytes"),
+      numberValue(input.threshold),
+    ],
+    executor,
+    prepared,
+    capabilities,
+  );
+  if (result.value.kind !== "number")
+    throw new Error("Flint VM dataset scan returned a non-number.");
+  return normalizeBenchmarkOutput(Number(result.value.value));
+}
+
+/**
  * Dispatches an input workload to the corresponding native Flint VM kernel function.
  *
  * @param mode VM execution mode.
@@ -646,58 +758,33 @@ function dispatchVmExecution(
   capabilities: ReturnType<typeof stringCapabilities>,
 ): BenchmarkOutput {
   if ("multiplier" in input) {
-    const result = executeNative(
+    return executeArithmeticWorkload(
       mode,
       module,
-      "arithmetic_reduce",
-      [
-        numberValue(input.n),
-        numberValue(input.multiplier),
-        numberValue(input.offset),
-        numberValue(input.seed),
-      ],
+      input,
       executor,
       prepared,
       capabilities,
     );
-    if (result.value.kind !== "number")
-      throw new Error("Flint VM arithmetic returned a non-number.");
-    return normalizeBenchmarkOutput(Number(result.value.value));
   }
   if ("suffix" in input) {
-    const result = executeNative(
+    return executeStringWorkload(
       mode,
       module,
-      "string_transform",
-      [
-        aggregateValue(encodeUtf8(input.value), "BenchmarkBytes"),
-        aggregateValue(encodeUtf8(input.prefix), "BenchmarkBytes"),
-        aggregateValue(encodeUtf8(input.suffix), "BenchmarkBytes"),
-        numberValue(input.repeat),
-      ],
+      input,
       executor,
       prepared,
       capabilities,
     );
-    if (result.value.kind !== "aggregate")
-      throw new Error("Flint VM string transform returned a non-aggregate.");
-    return normalizeBenchmarkOutput(decodeUtf8(result.value.bytes));
   }
-  const result = executeNative(
+  return executeDatasetWorkload(
     mode,
     module,
-    "dataset_scan",
-    [
-      aggregateValue(Uint8Array.from(input.bytes), "BenchmarkBytes"),
-      numberValue(input.threshold),
-    ],
+    input,
     executor,
     prepared,
     capabilities,
   );
-  if (result.value.kind !== "number")
-    throw new Error("Flint VM dataset scan returned a non-number.");
-  return normalizeBenchmarkOutput(Number(result.value.value));
 }
 
 /**
@@ -724,22 +811,34 @@ function prepareVmBackend(
           capabilities,
           aotArtifact: mode === "aot" ? aot : undefined,
         });
-  const jitEntries = Object.keys(executor.getJitCache?.().entries ?? {}).length;
+  const jitCache = executor.getJitCache?.();
+  const jitEntries = jitCache ? Object.keys(jitCache.entries).length : 0;
   if (prepared !== undefined && prepared.mode !== mode)
     throw new Error(`Flint ${mode} preparation returned an unexpected mode.`);
+
+  const preparation = {
+    compilerVersion: COMPILER_VERSION,
+    jitCacheEntries: jitEntries,
+    backend: "interpreter",
+    instancePolicy: "fresh-per-execute",
+    loweringVersion: "none",
+    preparedArtifactHash: "",
+    preparedArtifactSize: 0,
+    aotArtifactCreated: aot !== undefined,
+    nativeKernels: true,
+  };
+
+  if (prepared) {
+    preparation.backend = prepared.metadata.backend;
+    preparation.instancePolicy = prepared.metadata.instancePolicy;
+    preparation.loweringVersion = prepared.metadata.loweringVersion;
+    preparation.preparedArtifactHash = prepared.artifact.reproducibilityHash;
+    preparation.preparedArtifactSize = prepared.artifact.wasm.byteLength;
+  }
+
   return {
     prepared,
-    preparation: {
-      compilerVersion: COMPILER_VERSION,
-      jitCacheEntries: jitEntries,
-      backend: prepared?.metadata.backend ?? "interpreter",
-      instancePolicy: prepared?.metadata.instancePolicy ?? "fresh-per-execute",
-      loweringVersion: prepared?.metadata.loweringVersion ?? "none",
-      preparedArtifactHash: prepared?.artifact.reproducibilityHash ?? "",
-      preparedArtifactSize: prepared?.artifact.wasm.byteLength ?? 0,
-      aotArtifactCreated: aot !== undefined,
-      nativeKernels: true,
-    },
+    preparation,
   };
 }
 

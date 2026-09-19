@@ -3,6 +3,9 @@ import path from 'node:path';
 
 import type { FlintArtifact, FlintSoNModule } from '@mission-platform/flint';
 
+/**
+ * Collection of artifact payloads to be written to disk.
+ */
 export interface FlintCliArtifactFiles {
   readonly wasm: Uint8Array;
   readonly wat: string;
@@ -12,25 +15,46 @@ export interface FlintCliArtifactFiles {
   readonly sourceMap: string;
 }
 
+/**
+ * Computes the base artifact name without file extension from an entry file path.
+ *
+ * @param entryFileName Path to the main entrypoint file.
+ * @returns Base name suitable for artifact emission.
+ */
 export function flintArtifactBaseName(entryFileName: string): string {
   const name = path.basename(entryFileName);
   return name.endsWith('.flint') ? name.slice(0, -'.flint'.length) : name;
 }
 
+/**
+ * Extracts and prepares the binary and textual file payloads from a compiled Flint artifact.
+ *
+ * @param artifact Compiled Flint artifact containing WASM, WAT, and metadata.
+ * @returns Object mapping artifact roles to their file contents.
+ */
 export function artifactFilesFor(artifact: FlintArtifact): FlintCliArtifactFiles {
-  if (artifact.wasm === undefined || artifact.manifest === undefined)
+  const { wasm, manifest, wat = '', declarations, esmSource, sourceMap = '' } = artifact;
+  if (wasm === undefined || manifest === undefined) {
     throw new Error('Cannot write Flint artifacts without WASM and ABI manifest data.');
+  }
   return {
-    wasm: artifact.wasm,
-    wat: artifact.wat ?? '',
-    manifest: `${JSON.stringify(artifact.manifest, undefined, 2) ?? ''}\n`,
-    declarations: artifact.declarations,
-    esm: artifact.esmSource,
-    sourceMap: artifact.sourceMap ?? '',
+    wasm,
+    wat,
+    manifest: `${JSON.stringify(manifest, undefined, 2)}\n`,
+    declarations,
+    esm: esmSource,
+    sourceMap,
   };
 }
 
-/** Write the complete artifact set through a temporary directory and rename each file into place. */
+/**
+ * Atomically writes the complete artifact set through a temporary directory and renames each file into place.
+ *
+ * @param outputDirectory Destination folder path.
+ * @param entryFileName Path to the primary entrypoint.
+ * @param artifact Compiled Flint artifact.
+ * @returns Promise resolving to an array of written file paths.
+ */
 export async function writeFlintArtifacts(
   outputDirectory: string,
   entryFileName: string,
@@ -69,6 +93,12 @@ export async function writeFlintArtifacts(
   }
 }
 
+/**
+ * Formats an array of diagnostics into human-readable compiler diagnostic messages.
+ *
+ * @param diagnostics Array of diagnostic records to format.
+ * @returns Newline-separated diagnostic summary string.
+ */
 export function formatFlintDiagnostics(
   diagnostics: readonly {
     readonly code: string;
@@ -95,6 +125,12 @@ export function formatFlintDiagnostics(
     .join('\n');
 }
 
+/**
+ * Formats a Sea-of-Nodes IR module into JSON metadata and terminal summary text.
+ *
+ * @param module Flint Sea-of-Nodes module to format.
+ * @returns Summary object containing structured JSON and human-readable text.
+ */
 export function formatFlintSoNSummary(module: FlintSoNModule): {
   readonly json: Readonly<Record<string, unknown>>;
   readonly text: string;
@@ -118,9 +154,17 @@ export function formatFlintSoNSummary(module: FlintSoNModule): {
   };
 }
 
+/**
+ * Computes the target output directory for artifact generation.
+ *
+ * @param entryFileName Path to the entry file.
+ * @param outputDirectory Explicit or default output directory path.
+ * @returns Resolved output directory string.
+ */
 export function outputDirectoryFor(
   entryFileName: string,
   outputDirectory = path.join(path.dirname(entryFileName), 'dist'),
 ): string {
+  void entryFileName;
   return outputDirectory;
 }

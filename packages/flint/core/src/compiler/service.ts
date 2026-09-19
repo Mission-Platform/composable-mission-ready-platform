@@ -139,6 +139,9 @@ function invalidateGraphCache(
 
 /**
  * Creates an in-memory caching compiler service for incremental compilation and graph builds.
+ *
+ * @param options Optional compiler service configuration options.
+ * @returns Stateful FlintCompilerService instance.
  */
 export function createFlintCompilerService(options: FlintCompilerServiceOptions = {}): FlintCompilerService {
   const compiler = createFlintCompiler();

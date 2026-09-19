@@ -393,6 +393,98 @@ function dispatchRawExecution(
 }
 
 /**
+ * Assembles pipeline metadata describing Sea-of-Nodes and Wasm optimization stages.
+ *
+ * @param artifact Compiled Flint artifact.
+ * @param boundsChecks Active bounds checking mode.
+ * @returns Pipeline metadata record.
+ */
+function createFlintSonPipelineMetadata(
+  artifact: FlintArtifact,
+  boundsChecks: "runtime" | "excluded-by-profile",
+) {
+  const sonIr = artifact.sonIr;
+  const passes = artifact.sonOptimizationReport?.passes;
+  return {
+    pipeline: "flint-son-wasm-two-stage" as const,
+    frontend: "son-ir" as const,
+    wasmStage: "wasm-ir-optimizer" as const,
+    optimization: "release" as const,
+    boundsChecks,
+    memoryModel: sonIr ? sonIr.memoryModel : "region-arc-checked-linear",
+    sonGraphHash: sonIr ? sonIr.graphHash : "",
+    sonNodeCount: sonIr ? sonIr.nodes.length : 0,
+    sonPassCount: passes ? passes.length : 0,
+  };
+}
+
+/**
+ * Creates artifact metadata describing ABI, size, and layout properties.
+ *
+ * @param artifact Compiled Flint artifact.
+ * @param persisted Written disk artifact descriptor.
+ * @param generated Whether generated ESM bindings are used.
+ * @param boundsChecks Active bounds checking mode.
+ * @returns Artifact metadata record.
+ */
+function createFlintArtifactMetadata(
+  artifact: FlintArtifact,
+  persisted: ReturnType<typeof persistGeneratedArtifacts>,
+  generated: boolean,
+  boundsChecks: "runtime" | "excluded-by-profile",
+) {
+  const pipeline = createFlintSonPipelineMetadata(artifact, boundsChecks);
+  const rawWasmBytes = artifact.wasm ? artifact.wasm.byteLength : 0;
+  return {
+    abi: generated
+      ? "generated-esm-over-pointer-length-v1"
+      : "pointer-length-native-v1",
+    compilerVersion: COMPILER_VERSION,
+    loader: generated ? "generated-esm" : "raw-pointer-length",
+    nativeKernels: true,
+    instancePolicy: "reusable-with-reset",
+    resetAbi: "fws_reset-v1",
+    rawWasmBytes,
+    ...pipeline,
+    generatedSourceBytes: persisted.generatedSource.byteLength,
+    ...(generated
+      ? { generatedSourceHash: hashArtifactBytes(persisted.generatedSource) }
+      : {}),
+    stringInputAllocations: generated ? 1 : 3,
+    stringOutputAllocations: 1,
+    wasmUrl: persisted.wasmUrl,
+    moduleUrl: persisted.moduleUrl,
+  };
+}
+
+/**
+ * Loads generated Flint WebAssembly ESM exports dynamically from the compiled module URL.
+ *
+ * @param moduleUrl Module file URL.
+ * @param artifactHash Optional hash parameter for cache-busting.
+ * @returns Resolved module instance and synchronous export bindings.
+ */
+async function resolveGeneratedExports(
+  moduleUrl: string,
+  artifactHash?: string,
+): Promise<{
+  readonly generatedModule: GeneratedFlintModule;
+  readonly exports: GeneratedFlintExports;
+}> {
+  const loaded = (await import(
+    `${moduleUrl}?hash=${artifactHash ?? ""}`
+  )) as Partial<GeneratedFlintModule>;
+  if (
+    typeof loaded.loadSync !== "function" ||
+    typeof loaded.load !== "function"
+  ) {
+    throw new TypeError("Generated Flint module has no loadSync loader.");
+  }
+  const generatedModule = loaded as GeneratedFlintModule;
+  return { generatedModule, exports: generatedModule.loadSync() };
+}
+
+/**
  * Creates an internal runtime adapter instance for either raw or generated Flint WASM kernels.
  *
  * @param source Flint kernels source code.
@@ -438,59 +530,23 @@ function createFlintWasmAdapterInternal(
         ),
         generatedModuleUrl: pathToFileURL(persisted.generatedModulePath).href,
       };
+      const pipeline = createFlintSonPipelineMetadata(artifact, boundsChecks);
+      const metadata = createFlintArtifactMetadata(
+        artifact,
+        persisted,
+        generated,
+        boundsChecks,
+      );
       return Promise.resolve({
         id: artifactId,
         implementation: "flint",
         flintMode,
         artifactKind: "wasm",
-        sizeBytes: artifact.wasm?.byteLength ?? 0,
+        sizeBytes: artifact.wasm ? artifact.wasm.byteLength : 0,
         hash: artifact.contentHash,
         exports: [...REQUIRED_EXPORTS],
-        flintPipeline: {
-          pipeline: "flint-son-wasm-two-stage",
-          frontend: "son-ir",
-          wasmStage: "wasm-ir-optimizer",
-          optimization: "release",
-          boundsChecks,
-          memoryModel:
-            artifact.sonIr?.memoryModel ?? "region-arc-checked-linear",
-          sonGraphHash: artifact.sonIr?.graphHash ?? "",
-          sonNodeCount: artifact.sonIr?.nodes.length ?? 0,
-          sonPassCount: artifact.sonOptimizationReport?.passes.length ?? 0,
-        },
-        metadata: {
-          abi: generated
-            ? "generated-esm-over-pointer-length-v1"
-            : "pointer-length-native-v1",
-          compilerVersion: COMPILER_VERSION,
-          loader: generated ? "generated-esm" : "raw-pointer-length",
-          nativeKernels: true,
-          instancePolicy: "reusable-with-reset",
-          resetAbi: "fws_reset-v1",
-          rawWasmBytes: artifact.wasm?.byteLength ?? 0,
-          pipeline: "flint-son-wasm-two-stage",
-          frontend: "son-ir",
-          wasmStage: "wasm-ir-optimizer",
-          optimization: "release",
-          boundsChecks,
-          memoryModel:
-            artifact.sonIr?.memoryModel ?? "region-arc-checked-linear",
-          sonGraphHash: artifact.sonIr?.graphHash ?? "",
-          sonNodeCount: artifact.sonIr?.nodes.length ?? 0,
-          sonPassCount: artifact.sonOptimizationReport?.passes.length ?? 0,
-          generatedSourceBytes: persisted.generatedSource.byteLength,
-          ...(generated
-            ? {
-                generatedSourceHash: hashArtifactBytes(
-                  persisted.generatedSource,
-                ),
-              }
-            : {}),
-          stringInputAllocations: generated ? 1 : 3,
-          stringOutputAllocations: 1,
-          wasmUrl: persisted.wasmUrl,
-          moduleUrl: persisted.moduleUrl,
-        },
+        flintPipeline: pipeline,
+        metadata,
       });
     },
     async initialize(artifact: BuildArtifact): Promise<InitializedAdapter> {
@@ -510,24 +566,19 @@ function createFlintWasmAdapterInternal(
         );
       }
       const module = compiledModule.module;
-      let generatedModule = cachedGeneratedModule;
-      let generatedExports = generated
-        ? await (async (): Promise<GeneratedFlintExports> => {
-            const loaded = (await import(
-              `${compiledModule.generatedModuleUrl}?hash=${artifact.hash ?? ""}`
-            )) as Partial<GeneratedFlintModule>;
-            if (
-              typeof loaded.loadSync !== "function" ||
-              typeof loaded.load !== "function"
-            )
-              throw new Error("Generated Flint module has no loadSync loader.");
-            generatedModule = loaded as GeneratedFlintModule;
-            cachedGeneratedModule = generatedModule;
-            return loaded.loadSync();
-          })()
-        : undefined;
-      if (generatedModule !== undefined && generatedExports === undefined)
-        generatedExports = generatedModule.loadSync();
+      let generatedExports: GeneratedFlintExports | undefined;
+      if (generated) {
+        if (cachedGeneratedModule) {
+          generatedExports = cachedGeneratedModule.loadSync();
+        } else {
+          const resolved = await resolveGeneratedExports(
+            compiledModule.generatedModuleUrl,
+            artifact.hash,
+          );
+          cachedGeneratedModule = resolved.generatedModule;
+          generatedExports = resolved.exports;
+        }
+      }
       if (generated && typeof generatedExports?.fws_reset !== "function")
         throw new Error(
           "Generated Flint module is missing the fws_reset ABI export.",

@@ -90,6 +90,26 @@ function isWorkspacePackage(packageRoot: string): boolean {
 }
 
 /**
+ * Copies listed manifest file entries from source root to destination.
+ *
+ * @param packageRoot Source package directory.
+ * @param destination Target staging directory.
+ * @param entries Relative entries list from package manifest.
+ */
+async function copyManifestEntries(
+  packageRoot: string,
+  destination: string,
+  entries: readonly string[],
+): Promise<void> {
+  for (const entry of entries) {
+    const source = path.join(packageRoot, entry);
+    if (existsSync(source)) {
+      await cp(source, path.join(destination, entry), { recursive: true });
+    }
+  }
+}
+
+/**
  * Stages a monorepo workspace package and its distribution output.
  *
  * @param packageRoot Source package root.
@@ -105,13 +125,7 @@ async function stageWorkspacePackage(
   await cp(path.join(packageRoot, 'package.json'), path.join(destination, 'package.json'));
 
   const publishedEntries = manifest.files ?? ['dist'];
-  for (const entry of publishedEntries) {
-    const source = path.join(packageRoot, entry);
-    if (!existsSync(source)) {
-      continue;
-    }
-    await cp(source, path.join(destination, entry), { recursive: true });
-  }
+  await copyManifestEntries(packageRoot, destination, publishedEntries);
 
   // Always include dist when present even if `files` is customized oddly.
   const distributionSource = path.join(packageRoot, 'dist');
@@ -174,15 +188,42 @@ async function assertServerBuilt(name: string, root: string, entrypoint: string)
 }
 
 /**
+ * Verifies that LSP and DAP server entrypoints have been pre-compiled.
+ */
+async function assertAllServersBuilt(): Promise<void> {
+  const servers = [
+    ['LSP', lspRoot, path.join(lspRoot, 'dist/main.js')],
+    ['DAP', dapRoot, path.join(dapRoot, 'dist/main.js')],
+  ] as const;
+  for (const [name, root, entrypoint] of servers) {
+    await assertServerBuilt(name, root, entrypoint);
+  }
+}
+
+/**
+ * Stages bundled dependencies for both LSP and DAP packages.
+ *
+ * @param lspDependencies Dependencies declared by LSP.
+ * @param dapDependencies Dependencies declared by DAP.
+ */
+async function stageServerDependencies(
+  lspDependencies: readonly string[],
+  dapDependencies: readonly string[],
+): Promise<void> {
+  const visited = new Set<string>();
+  for (const dependency of lspDependencies) {
+    await stagePackage(dependency, lspRoot, visited);
+  }
+  for (const dependency of dapDependencies) {
+    await stagePackage(dependency, dapRoot, visited);
+  }
+}
+
+/**
  * Main staging execution entrypoint.
  */
 async function main(): Promise<void> {
-  for (const [name, root, entrypoint] of [
-    ['LSP', lspRoot, path.join(lspRoot, 'dist/main.js')],
-    ['DAP', dapRoot, path.join(dapRoot, 'dist/main.js')],
-  ] as const) {
-    await assertServerBuilt(name, root, entrypoint);
-  }
+  await assertAllServersBuilt();
 
   await rm(outputRoot, { recursive: true, force: true });
   await mkdir(outputNodeModules, { recursive: true });
@@ -198,13 +239,7 @@ async function main(): Promise<void> {
   const lspManifest = await readManifest(path.join(lspRoot, 'package.json'));
   const dependencies = Object.keys(lspManifest.dependencies ?? {});
   const dapDependencies = Object.keys(dapManifest.dependencies ?? {});
-  const visited = new Set<string>();
-  for (const dependency of dependencies) {
-    await stagePackage(dependency, lspRoot, visited);
-  }
-  for (const dependency of dapDependencies) {
-    await stagePackage(dependency, dapRoot, visited);
-  }
+  await stageServerDependencies(dependencies, dapDependencies);
 }
 
 await main();

@@ -187,6 +187,11 @@ function readNodeVersion(nodePath: string): Promise<string> {
     let stderr = '';
     let settled = false;
     let timeout: ReturnType<typeof setTimeout> | undefined;
+    /**
+     * Executes the settlement callback exactly once and clears probe timeouts.
+     *
+     * @param callback Finalization callback to execute.
+     */
     const finish = (callback: () => void): void => {
       if (settled) return;
       settled = true;
