@@ -36,9 +36,15 @@ const CONTEXT: TargetContext = {
 /** Drive the plugin's three phases the way the compiler pipeline does. */
 function compile(parts: SemanticModuleParts): GeneratedModule {
   const framework = forgeReactFramework();
-  const lowered = framework.lower(semanticModule(parts), CONTEXT);
+  const moduleKind = parts.moduleKind ?? "component";
+  const context: TargetContext = {
+    framework: "react",
+    moduleKind,
+    componentName: moduleKind === "component" ? "ForgeFixture" : undefined,
+  };
+  const lowered = framework.lower(semanticModule(parts), context);
   const optimized = framework.optimize(lowered, { neutral: {} });
-  return framework.generate(optimized, CONTEXT);
+  return framework.generate(optimized, context);
 }
 
 describe("React Forge framework package", () => {

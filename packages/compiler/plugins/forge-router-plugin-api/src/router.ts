@@ -5,13 +5,12 @@ import {
 
 import type {
   CompilerDiagnostic,
-  ForgeBuildAdapters,
   GeneratedExtraModule,
   OutputLanguage,
   SourceSpan,
 } from "@mission-platform/forge-plugin-api";
 
-export type { ForgeBuildAdapters };
+export type { ForgeBuildAdapters } from "@mission-platform/forge-plugin-api";
 
 /** The package whose imports are understood by the router compiler pass. */
 export const MP_ROUTER_MODULE = "@mission-platform/router" as const;
