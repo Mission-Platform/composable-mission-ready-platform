@@ -8,6 +8,7 @@ import {
 } from ".";
 
 import type {
+  ForgeBuildAdapters,
   FrameworkId,
   FrameworkOutputPlugin,
   GeneratedModule,
@@ -64,6 +65,23 @@ describe("Forge output-plugin API", () => {
     expect(
       defineForgeOutputPlugin({ ...validPlugin, build: {} }),
     ).toMatchObject({ id: validPlugin.id, build: {} });
+  });
+
+  it("validates unified ForgeBuildAdapters on plugins", () => {
+    const adapters: ForgeBuildAdapters = {
+      vite: (context) => {
+        expect(context.rootDir).toBe("/root");
+        return [];
+      },
+      tsdown: (context) => {
+        expect(context.outputDirectory).toBe("/dist");
+        return [];
+      },
+    };
+    const plugin = defineForgeOutputPlugin({ ...validPlugin, build: adapters });
+    expect(plugin.build).toBe(adapters);
+    expect(plugin.build.vite?.({ rootDir: "/root" })).toEqual([]);
+    expect(plugin.build.tsdown?.({ outputDirectory: "/dist" })).toEqual([]);
   });
 
   it("accepts arbitrary custom framework IDs without requiring a central registry or enum extension", () => {

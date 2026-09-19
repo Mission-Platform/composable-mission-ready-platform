@@ -131,7 +131,7 @@ The central contracts live in `packages/compiler/plugins/forge-plugin-api/src/fr
 - `TargetLoweredModule` represents the target-owned lowered plan, discriminated on `framework: FrameworkId`.
 - `TargetIntentions<TLowered>` wraps the semantic module with a required `lowered: TLowered` plan, retaining diagnostics.
 - `GeneratedModule` describes generated source, its output language, auxiliary modules, and diagnostics.
-- `FrameworkBuildAdapters` provides independently typed Vite and tsdown adapters.
+- `ForgeBuildAdapters` provides independently typed Vite and tsdown adapters.
 - `FrameworkSourceMetadata`, runtime externals, and display-name metadata let generic orchestration derive output details
   without a target switch statement.
 

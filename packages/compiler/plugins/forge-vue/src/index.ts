@@ -11,7 +11,7 @@ import { optimizeVueModule } from "./optimize.js";
 
 import type { VueLoweredModule } from "./lower.js";
 import type {
-  FrameworkBuildAdapters,
+  ForgeBuildAdapters,
   FrameworkOutputPlugin,
   GeneratorContext,
   TargetContext,
@@ -21,7 +21,7 @@ import type {
 import type { TsdownPlugin } from "tsdown";
 import type { Plugin } from "vite";
 
-const BUILD: FrameworkBuildAdapters = {
+const BUILD: ForgeBuildAdapters = {
   vite: () => [vueJsx() as Plugin],
   tsdown: () => [
     Vue({ isProduction: true }) as TsdownPlugin,

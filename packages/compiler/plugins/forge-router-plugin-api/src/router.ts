@@ -5,14 +5,13 @@ import {
 
 import type {
   CompilerDiagnostic,
+  ForgeBuildAdapters,
   GeneratedExtraModule,
   OutputLanguage,
   SourceSpan,
-  TsdownBuildContext,
-  ViteBuildContext,
 } from "@mission-platform/forge-plugin-api";
-import type { TsdownPlugin } from "tsdown";
-import type { Plugin as VitePlugin } from "vite";
+
+export type { ForgeBuildAdapters };
 
 /** The package whose imports are understood by the router compiler pass. */
 export const MP_ROUTER_MODULE = "@mission-platform/router" as const;
@@ -94,12 +93,6 @@ export interface GeneratedRouterModule {
   readonly diagnostics?: readonly CompilerDiagnostic[];
 }
 
-/** Build hooks owned by a router target; no router dependency is loaded by core. */
-export interface RouterBuildAdapters {
-  readonly vite?: (context: ViteBuildContext) => readonly VitePlugin[];
-  readonly tsdown?: (context: TsdownBuildContext) => readonly TsdownPlugin[];
-}
-
 /** Forge-style compiler plugin for a native router target. */
 export interface RouterOutputPlugin {
   readonly id: string;
@@ -114,7 +107,7 @@ export interface RouterOutputPlugin {
     options: RouterOptimizeOptions,
   ) => RouterTargetPlan;
   readonly generate: (plan: RouterTargetPlan) => GeneratedRouterModule;
-  readonly build: RouterBuildAdapters;
+  readonly build: ForgeBuildAdapters;
 }
 
 /** A native import used to replace one neutral router marker. */
@@ -153,7 +146,7 @@ export interface ForgeRouterTargetOptions {
   readonly runtimeModule?: string;
   /** Optional per-symbol overrides merged on top of {@link runtimeModule} defaults. */
   readonly imports?: Readonly<Record<string, RouterNativeImport>>;
-  readonly build?: RouterBuildAdapters;
+  readonly build?: ForgeBuildAdapters;
 }
 
 /**
@@ -252,7 +245,7 @@ export function defineForgeRouterTarget(
       return {
         code: rewritten.code,
         lang: plan.module.fileName.split(".").pop() ?? "ts",
-        map: rewritten.map,
+        ...(rewritten.map !== undefined && { map: JSON.stringify(rewritten.map) }),
       };
     },
     build: options.build ?? {},
@@ -346,6 +339,16 @@ export function defineForgeRouterPlugin<T extends RouterOutputPlugin>(
   if (typeof plugin.build !== "object" || plugin.build === null) {
     throw new TypeError(
       `Forge router plugin "${plugin.id}" must define build adapters.`,
+    );
+  }
+  const adapters = [plugin.build.vite, plugin.build.tsdown];
+  if (
+    adapters.some(
+      (adapter) => adapter !== undefined && typeof adapter !== "function",
+    )
+  ) {
+    throw new TypeError(
+      `Forge router plugin "${plugin.id}" must define valid Vite or tsdown adapters.`,
     );
   }
   return plugin;
