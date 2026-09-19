@@ -87,6 +87,7 @@ catalogs:
 
   compiler:
     oxc-parser: 0.150.0
+    magic-string: ^0.30.17
 
   webcomponents:
     lit: ^3.3.3
