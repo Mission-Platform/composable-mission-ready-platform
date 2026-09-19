@@ -481,30 +481,25 @@ describe('Forge Tsdown build adapter path normalization and canonical naming', (
     // Normalizes Vue virtual script import specifiers
     const vueChunkCode =
       'import script from "./button.vue?vue&type=script&setup=true&lang.js";\nexport default script;\n';
-    const normalizedVue = await Reflect.apply(
-      renderChunk,
-      plugin,
-      [vueChunkCode, { fileName: 'components/button/button.js' }, {}],
-    );
+    const normalizedVue = await Reflect.apply(renderChunk, plugin, [
+      vueChunkCode,
+      { fileName: 'components/button/button.js' },
+      {},
+    ]);
     expect(normalizedVue).toBe('import script from "./button.script.js";\nexport default script;\n');
 
     // Normalizes CSS module relative import specifiers
-    const cssChunkCode =
-      'import "./alert.module.css";\nimport "./theme.module.scss";\nexport const x = 1;\n';
-    const normalizedCss = await Reflect.apply(
-      renderChunk,
-      plugin,
-      [cssChunkCode, { fileName: 'components/alert/alert.js' }, {}],
-    );
+    const cssChunkCode = 'import "./alert.module.css";\nimport "./theme.module.scss";\nexport const x = 1;\n';
+    const normalizedCss = await Reflect.apply(renderChunk, plugin, [
+      cssChunkCode,
+      { fileName: 'components/alert/alert.js' },
+      {},
+    ]);
     expect(normalizedCss).toBe('import "./alert.css";\nimport "./theme.css";\nexport const x = 1;\n');
 
     // Returns null when no transformation is needed
     const cleanCode = 'export const noop = () => {};\n';
-    const normalizedClean = await Reflect.apply(
-      renderChunk,
-      plugin,
-      [cleanCode, { fileName: 'utils/noop.js' }, {}],
-    );
+    const normalizedClean = await Reflect.apply(renderChunk, plugin, [cleanCode, { fileName: 'utils/noop.js' }, {}]);
     expect(normalizedClean).toBeNull();
   });
 

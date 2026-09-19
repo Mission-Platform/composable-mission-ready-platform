@@ -162,9 +162,14 @@ describe('Forge Vite compiler service lifecycle', () => {
       fs.writeFileSync(path.join(componentDir, 'card.js'), cardSource);
       fs.writeFileSync(path.join(componentDir, 'card.script.js'), scriptSource);
 
-      await invokeHook(plugin.generateBundle, plugin, {}, {
-        'index.js': { type: 'chunk', isEntry: true, fileName: 'index.js' },
-      });
+      await invokeHook(
+        plugin.generateBundle,
+        plugin,
+        {},
+        {
+          'index.js': { type: 'chunk', isEntry: true, fileName: 'index.js' },
+        },
+      );
       await invokeHook(plugin.closeBundle, plugin);
 
       expect(fs.existsSync(path.join(publishedDirectory, 'index.js'))).toBe(true);
@@ -172,7 +177,9 @@ describe('Forge Vite compiler service lifecycle', () => {
       expect(fs.existsSync(path.join(publishedDirectory, 'components/card/card.script.js'))).toBe(true);
       expect(fs.readFileSync(path.join(publishedDirectory, 'index.js'), 'utf8')).toBe(entrySource);
       expect(fs.readFileSync(path.join(publishedDirectory, 'components/card/card.js'), 'utf8')).toBe(cardSource);
-      expect(fs.readFileSync(path.join(publishedDirectory, 'components/card/card.script.js'), 'utf8')).toBe(scriptSource);
+      expect(fs.readFileSync(path.join(publishedDirectory, 'components/card/card.script.js'), 'utf8')).toBe(
+        scriptSource,
+      );
 
       const manifest = JSON.parse(
         fs.readFileSync(path.join(publishedDirectory, '.forge-artifact-manifest.json'), 'utf8'),

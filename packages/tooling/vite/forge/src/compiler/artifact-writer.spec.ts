@@ -101,16 +101,8 @@ describe('createForgeArtifactWriter', () => {
       'export { default as Example } from "./components/example/example.js";\n',
       'utf8',
     );
-    writeFileSync(
-      path.join(writer.stageDirectory, 'components/example/example.js'),
-      componentCode,
-      'utf8',
-    );
-    writeFileSync(
-      path.join(writer.stageDirectory, 'components/example/example.script.js'),
-      scriptCode,
-      'utf8',
-    );
+    writeFileSync(path.join(writer.stageDirectory, 'components/example/example.js'), componentCode, 'utf8');
+    writeFileSync(path.join(writer.stageDirectory, 'components/example/example.script.js'), scriptCode, 'utf8');
     writer.recordTree(['index.js']);
     writer.finalize(['index.js']);
 
@@ -127,9 +119,22 @@ describe('createForgeArtifactWriter', () => {
     expect(manifest.entries).toEqual(['index.js']);
     expect(manifest.artifacts).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ fileName: 'index.js', kind: 'entry', size: expect.any(Number), hash: expect.any(String) }),
-        expect.objectContaining({ fileName: 'components/example/example.js', kind: 'module', size: componentCode.length }),
-        expect.objectContaining({ fileName: 'components/example/example.script.js', kind: 'module', size: scriptCode.length }),
+        expect.objectContaining({
+          fileName: 'index.js',
+          kind: 'entry',
+          size: expect.any(Number),
+          hash: expect.any(String),
+        }),
+        expect.objectContaining({
+          fileName: 'components/example/example.js',
+          kind: 'module',
+          size: componentCode.length,
+        }),
+        expect.objectContaining({
+          fileName: 'components/example/example.script.js',
+          kind: 'module',
+          size: scriptCode.length,
+        }),
       ]),
     );
   });

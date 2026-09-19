@@ -125,7 +125,7 @@ De centrale contracten staan ​​in `packages/compiler/plugins/forge-plugin-ap
 - `TargetContext` bevat een generieke bouwcontext, zoals modulesoort, componentnaam en ontdekte componentmappen.
 - `TargetIntentions` verpakt de semantische module na het verlagen van het doel, terwijl de diagnostiek behouden blijft.
 - `GeneratedModule` beschrijft de gegenereerde bron, de uitvoertaal, hulpmodules en diagnostiek.
-- `FrameworkBuildAdapters` biedt onafhankelijk getypeerde Vite- en tsdown-adapters.
+- `ForgeBuildAdapters` biedt onafhankelijk getypeerde Vite- en tsdown-adapters.
 - `FrameworkSourceMetadata`, externe runtime-instellingen en metagegevens van de weergavenaam zorgen ervoor dat generieke orkestratie uitvoerdetails kan afleiden
   zonder een doelschakelaarinstructie.
 

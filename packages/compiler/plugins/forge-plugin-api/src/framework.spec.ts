@@ -365,7 +365,9 @@ describe("Forge output-plugin API", () => {
       expect(result.errors).toContain(
         'Target intentions for "custom" must contain a lowered target plan.',
       );
-      expect(result.diagnostics[0]?.code).toBe("FORGE_INTENTIONS_MISSING_LOWERED");
+      expect(result.diagnostics[0]?.code).toBe(
+        "FORGE_INTENTIONS_MISSING_LOWERED",
+      );
     });
 
     it("rejects lowered plan with invalid framework discriminator", () => {
@@ -485,7 +487,9 @@ describe("Forge output-plugin API", () => {
       expect(invalidKindResult.valid).toBe(false);
       expect(
         invalidKindResult.errors.some((errorMessage) =>
-          errorMessage.includes('Semantic module must have kind "semantic-module"'),
+          errorMessage.includes(
+            'Semantic module must have kind "semantic-module"',
+          ),
         ),
       ).toBe(true);
 
@@ -586,13 +590,19 @@ describe("Forge output-plugin API", () => {
 
       try {
         assertTargetIntentionsLowered(malformedIntentions, "custom");
-        expect.unreachable("should have thrown TargetIntentionsValidationError");
+        expect.unreachable(
+          "should have thrown TargetIntentionsValidationError",
+        );
       } catch (error) {
         expect(error).toBeInstanceOf(TypeError);
         expect(error).toBeInstanceOf(TargetIntentionsValidationError);
         const validationError = error as TargetIntentionsValidationError;
         expect(validationError.diagnostics.length).toBeGreaterThan(0);
-        const diagnostic = validationError.diagnostics[0]!;
+        const [diagnostic] = validationError.diagnostics;
+        expect(diagnostic).toBeDefined();
+        if (!diagnostic) {
+          throw new Error("Expected at least one diagnostic");
+        }
         expect(diagnostic.phase).toBe("target-lowering");
         expect(diagnostic.severity).toBe("error");
         expect(diagnostic.fileName).toBe("Custom.tsx");

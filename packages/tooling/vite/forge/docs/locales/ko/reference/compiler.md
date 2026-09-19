@@ -125,7 +125,7 @@ Vite 및 tsdown 도우미는 빌드 세션의 수명 동안 프로세스 내 `Fo
 - `TargetContext`는 모듈 종류, 구성 요소 이름 및 검색된 구성 요소 폴더와 같은 일반 빌드 컨텍스트를 전달합니다.
 - `TargetIntentions`은 진단을 유지하면서 대상을 낮춘 후 의미 모듈을 래핑합니다.
 - `GeneratedModule`은 생성된 소스, 해당 출력 언어, 보조 모듈 및 진단을 설명합니다.
-- `FrameworkBuildAdapters`은 독립적인 유형의 Vite 및 tsdown 어댑터를 제공합니다.
+- `ForgeBuildAdapters`은 독립적인 유형의 Vite 및 tsdown 어댑터를 제공합니다.
 - `FrameworkSourceMetadata`, 런타임 외부 및 표시 이름 메타데이터를 통해 일반 오케스트레이션에서 출력 세부 정보를 파생할 수 있습니다.
   대상 스위치 문 없이.
 
