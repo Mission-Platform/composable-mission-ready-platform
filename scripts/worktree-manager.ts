@@ -213,14 +213,10 @@ async function ensureNodeModules(mainRoot: string, targetPath: string): Promise<
 async function primeAndValidateWorktree(targetPath: string): Promise<void> {
   console.log('[worktree-manager] Priming upstream build dependencies...');
   try {
-    await execFile(
-      'pnpm',
-      ['exec', 'turbo', 'run', 'build', '--filter', '@mission-platform/forge-web-script-regex^...'],
-      {
-        cwd: targetPath,
-        stdio: 'inherit',
-      },
-    );
+    await execFile('pnpm', ['exec', 'turbo', 'run', 'build', '--filter', '@mission-platform/flint-regex^...'], {
+      cwd: targetPath,
+      stdio: 'inherit',
+    });
     console.log('[worktree-manager] Upstream build dependencies successfully primed.');
   } catch (error) {
     console.error(`[worktree-manager] Failed to prime upstream build dependencies: ${String(error)}`);
@@ -229,11 +225,11 @@ async function primeAndValidateWorktree(targetPath: string): Promise<void> {
 
   console.log('[worktree-manager] Validating worktree build readiness...');
   try {
-    await execFile('pnpm', ['--filter', '@mission-platform/forge-web-script-regex', 'test'], {
+    await execFile('pnpm', ['--filter', '@mission-platform/flint-regex', 'test'], {
       cwd: targetPath,
       stdio: 'pipe',
     });
-    console.log('[worktree-manager] Verification passed: @mission-platform/forge-web-script-regex tests green.');
+    console.log('[worktree-manager] Verification passed: @mission-platform/flint-regex tests green.');
   } catch (error) {
     console.error(
       `[worktree-manager] Worktree is not ready: verification check encountered an issue: ${String(error)}`,

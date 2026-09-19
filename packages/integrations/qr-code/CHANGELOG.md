@@ -21,7 +21,7 @@
 
 - 7e3cc9d: remove the embedded QR decoder API
   
-  BREAKING CHANGE: remove `decodeQr`, `decodeQrAsync`, and the decoder FWS artifact; use `@mission-platform/code-scanner` for decoding.
+  BREAKING CHANGE: remove `decodeQr`, `decodeQrAsync`, and the decoder Flint artifact; use `@mission-platform/code-scanner` for decoding.
 
 ### Patch Changes
 
@@ -49,7 +49,7 @@
 
 ### Patch Changes
 
-- 140f802: move barcode and phone-number implementations onto the Forge Web Script runtime
+- 140f802: move barcode and phone-number implementations onto the Flint runtime
 - c32bb83: centralize package documentation generation in the repository build
 - 8a15dbc: add generated package API references and build-time documentation extraction
 - 46fe17a: scope Forge build environment variables to package build tasks

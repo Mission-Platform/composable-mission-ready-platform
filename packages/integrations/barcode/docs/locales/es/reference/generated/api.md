@@ -54,7 +54,7 @@ Simbologías de códigos de barras lineales admitidas.
 function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
 ```
 
-Codifique `data` en un código de barras lineal utilizando el gráfico FWS local del paquete.
+Codifique `data` en un código de barras lineal utilizando el gráfico Flint local del paquete.
 
 #### Parámetros
 
@@ -75,7 +75,7 @@ Codifique `data` en un código de barras lineal utilizando el gráfico FWS local
 function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>;
 ```
 
-Codifique `data` de forma asincrónica utilizando el gráfico FWS local del paquete.
+Codifique `data` de forma asincrónica utilizando el gráfico Flint local del paquete.
 
 #### Parámetros
 
@@ -182,7 +182,7 @@ Codifica de forma asincrónica una carga útil EAN-8 de siete dígitos con el ca
 function encodeUpcaFws(value: string): string;
 ```
 
-Codifica una carga útil UPC-A a través del gráfico FWS EAN-13 con prefijo cero.
+Codifica una carga útil UPC-A a través del gráfico Flint EAN-13 con prefijo cero.
 
 #### Parámetros
 
@@ -214,7 +214,7 @@ Codifica asincrónicamente una carga útil UPC-A a través de FWS.
 function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string;
 ```
 
-Codifica un código de barras de longitud variable compatible a través de su gráfico FWS nativo cuando esté disponible.
+Codifica un código de barras de longitud variable compatible a través de su gráfico Flint nativo cuando esté disponible.
 
 #### Parámetros
 
@@ -248,7 +248,7 @@ Codifica de forma asincrónica un código de barras de longitud variable compati
 function validateGs1DataBarValue(value: string): boolean;
 ```
 
-Valida un valor GS1 DataBar/RSS-14 GTIN-14 en el gráfico FWS local del paquete.
+Valida un valor GS1 DataBar/RSS-14 GTIN-14 en el gráfico Flint local del paquete.
 
 #### Parámetros
 
@@ -293,4 +293,4 @@ export type VariableBarcodeSymbology = Extract<
 >;
 ```
 
-Simbologías de longitud variable compatibles con el adaptador FWS de código de barras directo.
+Simbologías de longitud variable compatibles con el adaptador Flint de código de barras directo.

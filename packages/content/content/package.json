@@ -110,7 +110,7 @@
     "@mission-platform/forge-plugin-svelte": "workspace:*",
     "@mission-platform/forge-plugin-vue": "workspace:*",
     "@mission-platform/forge-plugin-web-components": "workspace:*",
-    "@mission-platform/forge-web-script-language-service": "workspace:*",
+    "@mission-platform/flint-language-service": "workspace:*",
     "@mission-platform/harper": "workspace:*",
     "@mission-platform/hunspell": "workspace:*",
     "@mission-platform/icons": "workspace:*",

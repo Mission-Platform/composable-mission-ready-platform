@@ -302,9 +302,9 @@ Een inhoudshash **detecteert onbedoelde of ongeautoriseerde inhoudswijzigingen**
 #### Verificatiewerkstroom
 
 1. **Verkrijg de verwachte hash** van een vertrouwde bron (bijvoorbeeld een ondertekend manifest, CI-buildlogboek of beveiligde configuratie).
-2. **Bereken de artefact-hash** met behulp van de verifier: `fws_verify_artifact(artifact)` retourneert de `contentHash`.
+2. **Bereken de artefact-hash** met behulp van de verifier: `flint_verify_artifact(artifact)` retourneert de `contentHash`.
 3. **Vergelijk hashes**: als ze overeenkomen, is het artefact niet per ongeluk of kwaadwillig gewijzigd sinds de verwachte waarde werd vastgelegd.
-4. **Verifieer het manifest**: gebruik `fws_inspect_manifest` om de import-, export-, metadata- en beleidsnaleving onafhankelijk van elkaar te controleren.
+4. **Verifieer het manifest**: gebruik `flint_inspect_manifest` om de import-, export-, metadata- en beleidsnaleving onafhankelijk van elkaar te controleren.
 
 #### Versiebeheer
 

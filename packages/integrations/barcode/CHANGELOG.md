@@ -20,7 +20,7 @@
 
 - 7e3cc9d: remove the embedded barcode decoder API
   
-  BREAKING CHANGE: remove `decodeBarcode`, `decodeBarcodeAsync`, and the decoder FWS exports; use `@mission-platform/code-scanner` for decoding.
+  BREAKING CHANGE: remove `decodeBarcode`, `decodeBarcodeAsync`, and the decoder Flint exports; use `@mission-platform/code-scanner` for decoding.
 
 ### Patch Changes
 
@@ -43,7 +43,7 @@
 
 ### Minor Changes
 
-- 140f802: move barcode and phone-number implementations onto the Forge Web Script runtime
+- 140f802: move barcode and phone-number implementations onto the Flint runtime
 - 97c3f20: add typed custom-property overrides for visual components
 
 ### Patch Changes

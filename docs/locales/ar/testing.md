@@ -109,7 +109,7 @@ describe("ForgeButton.vue", () => {
 
 ### صياغة اختبارات نصوص الويب
 
-استخدم `@mission-platform/forge-web-script-vitest` للمترجم الحتمي والقطعة الأثرية وWasm والتكافؤ المستضاف ذاتيًا
+استخدم `@mission-platform/flint-vitest` للمترجم الحتمي والقطعة الأثرية وWasm والتكافؤ المستضاف ذاتيًا
 الشيكات. يقوم بتفويض الترجمة إلى نفس خدمة المترجم والمكون الإضافي Vite المستخدم في الإنتاج؛ لا يخلق
 نظام الوحدة الثانية.
 
@@ -117,11 +117,11 @@ describe("ForgeButton.vue", () => {
 
 ```typescript
 // vitest.config.ts
-import { defineForgeWebScriptVitestConfig } from "@mission-platform/forge-web-script-vitest";
+import { defineFlintVitestConfig } from "@mission-platform/flint-vitest";
 
-export default defineForgeWebScriptVitestConfig({
+export default defineFlintVitestConfig({
   environment: "node",
-  forgeWebScript: {
+  flint: {
     root: import.meta.dirname,
     requestedCapabilities: ["clock.now"],
     selfHostedVmMode: "interpret",
@@ -138,32 +138,32 @@ export default defineForgeWebScriptVitestConfig({
 ```typescript
 import { afterEach, describe, expect, it } from "vitest";
 import {
-  assertForgeWebScriptDiagnostic,
-  assertForgeWebScriptNoDiagnostics,
-  createForgeWebScriptTestHarness,
-} from "@mission-platform/forge-web-script-vitest";
+  assertFlintDiagnostic,
+  assertFlintNoDiagnostics,
+  createFlintTestHarness,
+} from "@mission-platform/flint-vitest";
 
 describe("FWS fixture", () => {
-  const harness = createForgeWebScriptTestHarness({
+  const harness = createFlintTestHarness({
     requestedCapabilities: ["clock.now"],
   });
 
   afterEach(() => harness.dispose());
 
   it("checks artifacts, Wasm exports, and explicit capabilities", async () => {
-    const result = await harness.compile("valid/scalar.fws");
-    assertForgeWebScriptNoDiagnostics(result.diagnostics);
+    const result = await harness.compile("valid/scalar.flint");
+    assertFlintNoDiagnostics(result.diagnostics);
     expect(result.artifact.manifest?.exports.map(({ name }) => name)).toEqual([
       "answer",
     ]);
     expect(
       (
-        await harness.load<{ answer: () => number }>("valid/scalar.fws")
+        await harness.load<{ answer: () => number }>("valid/scalar.flint")
       ).answer(),
     ).toBe(42);
 
     const clock = await harness.load<{ current: () => bigint }>(
-      "capabilities/clock-now.fws",
+      "capabilities/clock-now.flint",
       {
         "clock.now": { now: () => 123n },
       },
@@ -172,9 +172,9 @@ describe("FWS fixture", () => {
   });
 
   it("keeps diagnostic code, phase, and span structured", async () => {
-    const result = await harness.inspect("diagnostics/invalid-type.fws");
-    assertForgeWebScriptDiagnostic(result.diagnostics, {
-      code: "FWS-TYPE-005",
+    const result = await harness.inspect("diagnostics/invalid-type.flint");
+    assertFlintDiagnostic(result.diagnostics, {
+      code: "FLINT-TYPE-005",
       phase: "type-check",
       line: 2,
     });
@@ -194,7 +194,7 @@ import {
   load,
   loadSync,
   manifest,
-} from "./fixtures/valid/scalar.fws";
+} from "./fixtures/valid/scalar.flint";
 
 expect(abiManifest).toEqual(manifest);
 expect((await load<{ answer: () => number }>()).answer()).toBe(42);
@@ -210,7 +210,7 @@ const artifact = harness.compileSource(
   `
   export fn echo(value: string) -> string { return value; }
 `,
-  "strings.fws",
+  "strings.flint",
 ).artifact;
 
 const generated = await importFromEsmSource(artifact.esmSource);
@@ -264,8 +264,8 @@ pnpm --filter @mission-platform/benchmark run bench -- \
 لا ضمانات الأداء عبر الأجهزة؛ استخدم عينات التقرير لكل حالة
 للمقارنات.
 
-يعرض البرنامج المساعد أيضًا استعلامات افتراضية صريحة لـ `?forge-web-script-manifest`، `?forge-web-script-declarations`،
-`?forge-web-script-wasm`، و`?forge-web-script-source-map`. لجعل هذه الوحدات المحيطة قابلة للاكتشاف لـ TypeScript،
+يعرض البرنامج المساعد أيضًا استعلامات افتراضية صريحة لـ `?flint-manifest`، `?flint-declarations`،
+`?flint-wasm`، و`?flint-source-map`. لجعل هذه الوحدات المحيطة قابلة للاكتشاف لـ TypeScript،
 أضف المسار الفرعي للإعلان الذي تم شحنه إلى أنواع مشروع الاختبار:
 
 ```json
@@ -273,16 +273,16 @@ pnpm --filter @mission-platform/benchmark run bench -- \
   "compilerOptions": {
     "types": [
       "node",
-      "@mission-platform/forge-web-script-vitest/forge-web-script"
+      "@mission-platform/flint-vitest/flint"
     ]
   }
 }
 ```
 
-وبدلاً من ذلك، أضف `/// <reference types="@mission-platform/forge-web-script-vitest/forge-web-script" />` إلى اختبار فقط
+وبدلاً من ذلك، أضف `/// <reference types="@mission-platform/flint-vitest/flint" />` إلى اختبار فقط
 اكتب نقطة الدخول التي يتضمنها المشروع. المسار الفرعي للإعلان هو من النوع فقط ولا يضيف استيراد وقت التشغيل.
 
-استخدم التركيبات المشتركة في `packages/forge-web-script-vitest/fixtures/` للغة عبر الحزمة وتوافق ABI:
+استخدم التركيبات المشتركة في `packages/flint/vitest/fixtures/` للغة عبر الحزمة وتوافق ABI:
 `valid/`، و`diagnostics/`، و`capabilities/`، و`graphs/`، و`self-hosted/` مستقرة عمدًا. احتفظ بتركيبة بجانبك
 مواصفات المترجم أو وقت التشغيل أو البرنامج المساعد عندما تغطي تفاصيل التنفيذ الخاصة؛ استخدم المصدر المضمن للمحلل الصغير أو
 حالات وحدة VM. يؤدي هذا إلى الحفاظ على أسماء التركيبات وحتمية التنظيف دون فرض اختبارات منخفضة المستوى من خلال الحزام.
@@ -294,10 +294,10 @@ pnpm --filter @mission-platform/benchmark run bench -- \
 قم بتشغيل مصفوفة FWS المركزة مع مهام مساحة العمل العادية:
 
 ```bash
-pnpm exec turbo run test build:check --filter @mission-platform/forge-web-script-vitest
-pnpm exec turbo run test build:check --filter @mission-platform/forge-web-script
-pnpm exec turbo run test build:check --filter @mission-platform/forge-web-script-runtime
-pnpm exec turbo run test build:check --filter @mission-platform/vite-plugin-forge-web-script
+pnpm exec turbo run test build:check --filter @mission-platform/flint-vitest
+pnpm exec turbo run test build:check --filter @mission-platform/flint
+pnpm exec turbo run test build:check --filter @mission-platform/flint-runtime
+pnpm exec turbo run test build:check --filter @mission-platform/vite-plugin-flint
 ```
 
 ## المرجع الفني

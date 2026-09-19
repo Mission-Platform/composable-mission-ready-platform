@@ -7,7 +7,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 
 import {
   discoverPackageRoots,
-  extractFwsSymbols,
+  extractFlintSymbols,
   extractPackageDocs,
   extractTypeScriptSymbols,
   formatGeneratedDocumentation,
@@ -66,10 +66,10 @@ describe('package API documentation extraction', () => {
   it('does not discover generated extension server packages', async () => {
     const temporaryRoot = await createTemporaryDirectory('discover-package-roots-');
     await mkdir(join(temporaryRoot, 'packages'), { recursive: true });
-    await mkdir(join(temporaryRoot, 'extensions', 'fws-vscode', 'server', 'dap'), { recursive: true });
+    await mkdir(join(temporaryRoot, 'extensions', 'flint-vscode', 'server', 'dap'), { recursive: true });
     await mkdir(join(temporaryRoot, 'extensions', 'public-package'), { recursive: true });
     await writeFile(
-      join(temporaryRoot, 'extensions', 'fws-vscode', 'server', 'dap', 'package.json'),
+      join(temporaryRoot, 'extensions', 'flint-vscode', 'server', 'dap', 'package.json'),
       JSON.stringify({ name: '@mission-platform/generated-dap' }),
       'utf8',
     );
@@ -99,15 +99,15 @@ describe('package API documentation extraction', () => {
 
   it('renders constant signatures without duplicating the binding name', async () => {
     const symbols = await extractTypeScriptSymbols(
-      fileURLToPath(new URL('../packages/compiler/forge/forge-web-script-stdlib', import.meta.url)),
+      fileURLToPath(new URL('../packages/flint/stdlib', import.meta.url)),
       {
         exports: { '.': { types: './dist/index.d.ts' } },
       },
     );
 
-    const identity = symbols.find(({ name }) => name === 'FORGE_WEB_SCRIPT_STDLIB_IDENTITY');
-    expect(identity?.signature).toBe('export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY');
-    expect(identity?.signature).not.toContain('FORGE_WEB_SCRIPT_STDLIB_IDENTITY FORGE_WEB_SCRIPT_STDLIB_IDENTITY');
+    const identity = symbols.find(({ name }) => name === 'FLINT_STDLIB_IDENTITY');
+    expect(identity?.signature).toBe('export const FLINT_STDLIB_IDENTITY');
+    expect(identity?.signature).not.toContain('FLINT_STDLIB_IDENTITY FLINT_STDLIB_IDENTITY');
   });
 
   it('follows local re-exports and preserves declaration documentation and aliases', async () => {
@@ -208,11 +208,11 @@ export function build(options: BuildOptions = {}, ...rest: string[]): void {}
     expect(markdown).not.toContain('| options: BuildOptions = {} |');
   });
 
-  it('extracts documented public FWS declarations through the real parser', async () => {
-    const packageRoot = await createTemporaryDirectory('extract-fws-');
-    await mkdir(join(packageRoot, 'fws'), { recursive: true });
+  it('extracts documented public Flint declarations through the real parser', async () => {
+    const packageRoot = await createTemporaryDirectory('extract-flint-');
+    await mkdir(join(packageRoot, 'flint'), { recursive: true });
     await writeFile(
-      join(packageRoot, 'fws', 'option.fws'),
+      join(packageRoot, 'flint', 'option.flint'),
       `/**
  * Optional value container.
  */
@@ -239,31 +239,29 @@ fn helper() -> unit {}
       'utf8',
     );
 
-    const parserPath = fileURLToPath(
-      new URL('../packages/compiler/forge/forge-web-script/dist/parser.js', import.meta.url),
-    );
+    const parserPath = fileURLToPath(new URL('../packages/flint/core/dist/parser.js', import.meta.url));
     const parserModule = (await import(pathToFileURL(parserPath).href)) as {
-      readonly parseForgeWebScript: (
+      readonly parseFlint: (
         source: string,
         fileName?: string,
         options?: { readonly root?: string },
       ) => {
         readonly module?: {
-          readonly functions: readonly FwsSymbol[];
-          readonly enums: readonly FwsSymbol[];
-          readonly structs: readonly FwsSymbol[];
-          readonly interfaces: readonly FwsSymbol[];
+          readonly functions: readonly FlintSymbol[];
+          readonly enums: readonly FlintSymbol[];
+          readonly structs: readonly FlintSymbol[];
+          readonly interfaces: readonly FlintSymbol[];
         };
         readonly diagnostics: readonly { readonly severity: string; readonly message: string }[];
       };
     };
 
-    const symbols = await extractFwsSymbols(packageRoot, {
-      parseForgeWebScript: parserModule.parseForgeWebScript,
+    const symbols = await extractFlintSymbols(packageRoot, {
+      parseFlint: parserModule.parseFlint,
     });
 
     expect(symbols.map(({ name }) => name).sort()).toEqual(['Option', 'is_some']);
-    expect(symbols.every(({ kind }) => kind === 'fws-export')).toBe(true);
+    expect(symbols.every(({ kind }) => kind === 'flint-export')).toBe(true);
     expect(symbols.find(({ name }) => name === 'Option')?.signature).toBe('export enum Option');
     expect(symbols.find(({ name }) => name === 'is_some')?.signature).toContain('export fn is_some');
     expect(symbols.find(({ name }) => name === 'is_some')?.parameters).toEqual([
@@ -272,11 +270,11 @@ fn helper() -> unit {}
     expect(symbols.every(({ name }) => name !== 'helper')).toBe(true);
 
     const markdown = renderReferenceMarkdown({
-      packageName: '@mission-platform/example-fws',
+      packageName: '@mission-platform/example-flint',
       packageRoot,
       symbols,
     });
-    expect(markdown).toContain('**Kind:** fws-export');
+    expect(markdown).toContain('**Kind:** flint-export');
     expect(markdown).toContain('### Option');
     expect(markdown).toContain('### is_some');
     expect(markdown).toContain('| value | Option<T> | Option value to inspect. |');
@@ -385,7 +383,7 @@ fn helper() -> unit {}
   }, 120_000);
 });
 
-interface FwsSymbol {
+interface FlintSymbol {
   readonly kind: string;
   readonly name: string;
   readonly documentation?: {

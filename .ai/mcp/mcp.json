@@ -122,20 +122,20 @@
         "git_commit_apply"
       ]
     },
-    "mission-fws": {
+    "mission-flint": {
       "type": "stdio",
       "command": "node",
       "args": [
         "scripts/launch-mcp.mjs",
-        "--profile=fws"
+        "--profile=flint"
       ],
       "tools": [
-        "fws_analyze_source",
-        "fws_analyze_workspace",
-        "fws_inspect_manifest",
-        "fws_inspect_sonir",
-        "fws_verify_artifact",
-        "fws_run_trace"
+        "flint_analyze_source",
+        "flint_analyze_workspace",
+        "flint_inspect_manifest",
+        "flint_inspect_sonir",
+        "flint_verify_artifact",
+        "flint_run_trace"
       ]
     },
     "DeepWiki": {

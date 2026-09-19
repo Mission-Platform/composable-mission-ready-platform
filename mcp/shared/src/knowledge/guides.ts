@@ -27,10 +27,10 @@ export type GuideId =
   | "external-setup"
   | "design-token-overrides"
   | "routing-setup"
-  | "fws-authoring"
-  | "fws-security"
-  | "fws-artifact-verification"
-  | "fws-forensics"
+  | "flint-authoring"
+  | "flint-security"
+  | "flint-artifact-verification"
+  | "flint-forensics"
   | "security-analysis";
 
 export interface Guide {
@@ -624,14 +624,14 @@ match a known \`--mp-*\` token — usually typos.
 - Prefer overriding **semantic** tokens (\`--mp-color-primary-default\`,
   \`--mp-radius-md\`) over primitives so the whole component library follows.`;
 
-const FWS_AUTHORING = `# Forge Web Script (FWS) Authoring
+const FLINT_AUTHORING = `# Flint Authoring
 
-Forge Web Script (**FWS**) is the canonical name of the typed, ownership-safe
-language. If a request says “FMS”, correct it to FWS; do not invent a separate
+**Flint** is the canonical name of the typed, ownership-safe
+language. If a request says “FMS”, correct it to Flint; do not invent a separate
 language or toolchain.
 
 ## Type, ownership, and ABI rules
-- FWS is statically typed. Keep function parameters, returns, calls, numeric
+- Flint is statically typed. Keep function parameters, returns, calls, numeric
   conversions, and collection element types explicit and compatible.
 - Values crossing a module or host boundary have an ownership contract:
   \`borrowed\` values remain valid only for the call, \`owned\` values have one
@@ -654,20 +654,20 @@ language or toolchain.
   static range facts; \`excluded-by-profile\` is explicit, auditable, and must
   appear in analysis, manifests, optimizer reports, and cache identity.
 - The compiler optimizes a deterministic Sea-of-Nodes graph, then Wasm IR.
-  Inspect \`.sonir.json\` with \`fws_inspect_sonir\`; it is bounded, root-safe,
+  Inspect \`.sonir.json\` with \`flint_inspect_sonir\`; it is bounded, root-safe,
   read-only metadata and must never be executed.
 
 ## Required workflow
-1. Run \`fws_analyze_source\` or \`fws_analyze_workspace\` and inspect every
+1. Run \`flint_analyze_source\` or \`flint_analyze_workspace\` and inspect every
    blocking finding, including its evidence and source range.
-2. Compile with the intended policy and run \`fws_verify_artifact\` on the
+2. Compile with the intended policy and run \`flint_verify_artifact\` on the
    resulting Wasm and manifest. Strict/release output must fail closed.
 3. Only then suggest release code. Keep host effects as explicit declared
-   capabilities; FWS has no ambient filesystem, network, DOM, or Node access.`;
+   capabilities; Flint has no ambient filesystem, network, DOM, or Node access.`;
 
-const FWS_SECURITY = `# FWS Security and Threat Boundaries
+const FLINT_SECURITY = `# Flint Security and Threat Boundaries
 
-FWS enforces a typed memory/ownership model and explicit capability imports;
+Flint enforces a typed memory/ownership model and explicit capability imports;
 these are compiler and runtime guarantees, not a claim that arbitrary host
 implementations are safe. Capability imports are deny-by-default and must be
 allowed by the source policy, manifest, artifact verifier, and runtime binding.
@@ -679,7 +679,7 @@ collection and iterator bounds, recursion/loops/allocations/async limits,
 capability allow-lists, taint flows, and unsafe host-boundary patterns. A
 property that cannot be proven is conservatively rejected in strict mode.
 
-Findings use stable \`FWS-*\` codes, severity, UTF-16-compatible source spans,
+Findings use stable \`Flint-*\` codes, severity, UTF-16-compatible source spans,
 evidence, remediation hints, and optional OWASP/CWE tags. Treat warnings as
 review obligations and errors as release blockers under the strict profile.
 
@@ -687,12 +687,12 @@ review obligations and errors as release blockers under the strict profile.
 Tags help map a finding to risks such as injection, unrestricted resource
 consumption, broken access control, or memory safety; they do not certify the
 host. Review capability implementations, JavaScript glue, browsers, and the
-Wasm engine separately. Never add ambient I/O or dynamic code execution to FWS
+Wasm engine separately. Never add ambient I/O or dynamic code execution to Flint
 to “solve” a finding.`;
 
-const FWS_ARTIFACT_VERIFICATION = `# FWS Wasm Artifact Verification
+const FLINT_ARTIFACT_VERIFICATION = `# Flint Wasm Artifact Verification
 
-\`WebAssembly.validate\` is necessary but not sufficient. The FWS verifier also
+\`WebAssembly.validate\` is necessary but not sufficient. The Flint verifier also
 performs bounded structural inspection and compares the artifact with its
 manifest, deterministic metadata, target profile, and policy.
 
@@ -708,21 +708,21 @@ detects accidental or unauthorized content changes when compared with a trusted
 expected value; it does not authenticate the producer or replace signatures and
 deployment access controls.
 
-Use \`fws_inspect_manifest\` to understand a manifest and
-\`fws_verify_artifact\` to obtain the canonical structured result. A mutated,
+Use \`flint_inspect_manifest\` to understand a manifest and
+\`flint_verify_artifact\` to obtain the canonical structured result. A mutated,
 forged, unexpectedly imported/exported, or metadata-inconsistent artifact must
 not be shipped, even if an engine accepts its binary form. Strict verification
 returns no release artifact on blocking findings.`;
 
-const FWS_FORENSICS = `# FWS Bounded Forensics
+const FLINT_FORENSICS = `# Flint Bounded Forensics
 
-FWS traces are deterministic, source-mapped, and bounded. They contain sequence
+Flint traces are deterministic, source-mapped, and bounded. They contain sequence
 numbers, instruction/call locations, capability decisions, redacted values,
 memory/range and ownership events, traps, resource counters, termination, and a
 trace hash. Replay identifiers and artifact/source hashes correlate a run
 without exposing wall-clock data or unrestricted memory.
 
-Use \`fws_run_trace\` only for the built-in capability-denied self-hosted
+Use \`flint_run_trace\` only for the built-in capability-denied self-hosted
 lex/parser probe. It is not an arbitrary Wasm executor: it accepts bounded
 source, fixed execution limits, no host bindings, and capped events/bytes (with
 optional bounded snapshots). A denied capability or guest trap is useful
@@ -962,25 +962,25 @@ const GUIDES: Record<GuideId, Guide> = {
     title: "Framework-Neutral Routing Setup",
     body: ROUTING_SETUP,
   },
-  "fws-authoring": {
-    id: "fws-authoring",
-    title: "FWS Authoring",
-    body: FWS_AUTHORING,
+  "flint-authoring": {
+    id: "flint-authoring",
+    title: "Flint Authoring",
+    body: FLINT_AUTHORING,
   },
-  "fws-security": {
-    id: "fws-security",
-    title: "FWS Security",
-    body: FWS_SECURITY,
+  "flint-security": {
+    id: "flint-security",
+    title: "Flint Security",
+    body: FLINT_SECURITY,
   },
-  "fws-artifact-verification": {
-    id: "fws-artifact-verification",
-    title: "FWS Wasm Artifact Verification",
-    body: FWS_ARTIFACT_VERIFICATION,
+  "flint-artifact-verification": {
+    id: "flint-artifact-verification",
+    title: "Flint Wasm Artifact Verification",
+    body: FLINT_ARTIFACT_VERIFICATION,
   },
-  "fws-forensics": {
-    id: "fws-forensics",
-    title: "FWS Bounded Forensics",
-    body: FWS_FORENSICS,
+  "flint-forensics": {
+    id: "flint-forensics",
+    title: "Flint Bounded Forensics",
+    body: FLINT_FORENSICS,
   },
   "security-analysis": {
     id: "security-analysis",
@@ -991,10 +991,21 @@ const GUIDES: Record<GuideId, Guide> = {
 
 export const GUIDE_IDS = Object.keys(GUIDES) as GuideId[];
 
+/**
+ * Retrieves a developer guide by its unique identifier.
+ *
+ * @param id Guide identifier string.
+ * @returns Matching Guide object, or undefined if not found.
+ */
 export function getGuide(id: string): Guide | undefined {
   return GUIDES[id as GuideId];
 }
 
+/**
+ * Retrieves all registered developer guides.
+ *
+ * @returns Array containing all Guide objects.
+ */
 export function allGuides(): Guide[] {
   return GUIDE_IDS.map((id) => GUIDES[id]);
 }

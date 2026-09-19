@@ -1488,12 +1488,12 @@ importers:
 
   benchmark:
     dependencies:
-      '@mission-platform/forge-web-script':
+      '@mission-platform/flint':
         specifier: workspace:*
-        version: link:../packages/compiler/forge/forge-web-script
-      '@mission-platform/forge-web-script-runtime':
+        version: link:../packages/flint/core
+      '@mission-platform/flint-runtime':
         specifier: workspace:*
-        version: link:../packages/compiler/forge/forge-web-script-runtime
+        version: link:../packages/flint/runtime
       '@mission-platform/vite-plugin-assemblyscript':
         specifier: workspace:*
         version: link:../packages/tooling/vite/assemblyscript
@@ -1578,21 +1578,21 @@ importers:
         specifier: ^8.3.0
         version: 8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
 
-  examples/forge-web-script-runtime:
+  examples/flint-runtime:
     dependencies:
-      '@mission-platform/forge-web-script-runtime':
+      '@mission-platform/flint-runtime':
         specifier: workspace:*
-        version: link:../../packages/compiler/forge/forge-web-script-runtime
+        version: link:../../packages/flint/runtime
     devDependencies:
-      '@mission-platform/forge-web-script':
+      '@mission-platform/flint':
         specifier: workspace:*
-        version: link:../../packages/compiler/forge/forge-web-script
+        version: link:../../packages/flint/core
       '@mission-platform/typescript-config':
         specifier: workspace:*
         version: link:../../packages/tooling/configs/typescript-config
-      '@mission-platform/vite-plugin-forge-web-script':
+      '@mission-platform/vite-plugin-flint':
         specifier: workspace:*
-        version: link:../../packages/tooling/vite/forge-web-script
+        version: link:../../packages/tooling/vite/flint
       '@types/node':
         specifier: catalog:typescript
         version: 24.13.4
@@ -1603,7 +1603,7 @@ importers:
         specifier: catalog:vite
         version: 8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
 
-  extensions/fws-vscode:
+  extensions/flint-vscode:
     dependencies:
       vscode-languageclient:
         specifier: 10.1.1
@@ -1612,12 +1612,12 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../packages/tooling/configs/eslint-config
-      '@mission-platform/forge-web-script-dap':
+      '@mission-platform/flint-dap':
         specifier: workspace:*
-        version: link:../../packages/compiler/forge/forge-web-script-dap
-      '@mission-platform/forge-web-script-lsp':
+        version: link:../../packages/flint/dap
+      '@mission-platform/flint-lsp':
         specifier: workspace:*
-        version: link:../../packages/compiler/forge/forge-web-script-lsp
+        version: link:../../packages/flint/lsp
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../packages/tooling/configs/prettier-config
@@ -1694,15 +1694,15 @@ importers:
       '@commitlint/load':
         specifier: ^21.2.2
         version: 21.2.2(@types/node@24.13.4)(typescript@7.0.2)
-      '@mission-platform/forge-web-script':
+      '@mission-platform/flint':
         specifier: workspace:*
-        version: link:../../packages/compiler/forge/forge-web-script
-      '@mission-platform/forge-web-script-runtime':
+        version: link:../../packages/flint/core
+      '@mission-platform/flint-runtime':
         specifier: workspace:*
-        version: link:../../packages/compiler/forge/forge-web-script-runtime
-      '@mission-platform/forge-web-script-wasm':
+        version: link:../../packages/flint/runtime
+      '@mission-platform/flint-wasm':
         specifier: workspace:*
-        version: link:../../packages/compiler/forge/forge-web-script-wasm
+        version: link:../../packages/flint/wasm
       '@mission-platform/mcp-shared':
         specifier: workspace:*
         version: link:../shared
@@ -1835,410 +1835,6 @@ importers:
       typescript:
         specifier: catalog:typescript
         version: 7.0.2
-      vitest:
-        specifier: catalog:testing
-        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
-
-  packages/compiler/forge/forge-web-script:
-    dependencies:
-      '@mission-platform/forge-web-script-regex':
-        specifier: workspace:*
-        version: link:../forge-web-script-regex
-      '@mission-platform/forge-web-script-wasm':
-        specifier: workspace:*
-        version: link:../forge-web-script-wasm
-    devDependencies:
-      '@mission-platform/eslint-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/eslint-config
-      '@mission-platform/prettier-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/prettier-config
-      '@mission-platform/typescript-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/typescript-config
-      '@mission-platform/vite-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/vite-config
-      '@types/node':
-        specifier: catalog:typescript
-        version: 24.13.4
-      '@vitest/coverage-v8':
-        specifier: catalog:testing
-        version: 5.0.1(@vitest/browser@5.0.1)(vitest@5.0.1)
-      eslint:
-        specifier: catalog:eslint
-        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
-      prettier:
-        specifier: catalog:prettier
-        version: 3.9.6
-      typescript:
-        specifier: catalog:typescript
-        version: 7.0.2
-      vite:
-        specifier: catalog:vite
-        version: 8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
-      vitest:
-        specifier: catalog:testing
-        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
-
-  packages/compiler/forge/forge-web-script-cli:
-    dependencies:
-      '@mission-platform/forge-web-script':
-        specifier: workspace:*
-        version: link:../forge-web-script
-      '@mission-platform/forge-web-script-runtime':
-        specifier: workspace:*
-        version: link:../forge-web-script-runtime
-    devDependencies:
-      '@mission-platform/eslint-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/eslint-config
-      '@mission-platform/prettier-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/prettier-config
-      '@mission-platform/tsdown-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/tsdown-config
-      '@mission-platform/typescript-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/typescript-config
-      '@types/node':
-        specifier: catalog:typescript
-        version: 24.13.4
-      eslint:
-        specifier: catalog:eslint
-        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
-      prettier:
-        specifier: catalog:prettier
-        version: 3.9.6
-      tsdown:
-        specifier: catalog:build
-        version: 0.23.0(@tsdown/css@0.23.0)(@volar/typescript@2.4.28(typescript@7.0.2))(oxc-resolver@11.21.2)(typescript@7.0.2)(vue-tsc@3.3.11(typescript@7.0.2))
-      typescript:
-        specifier: catalog:typescript
-        version: 7.0.2
-      vitest:
-        specifier: catalog:testing
-        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
-
-  packages/compiler/forge/forge-web-script-dap:
-    devDependencies:
-      '@mission-platform/eslint-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/eslint-config
-      '@mission-platform/prettier-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/prettier-config
-      '@mission-platform/tsdown-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/tsdown-config
-      '@mission-platform/typescript-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/typescript-config
-      '@types/node':
-        specifier: catalog:typescript
-        version: 24.13.4
-      eslint:
-        specifier: catalog:eslint
-        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
-      prettier:
-        specifier: catalog:prettier
-        version: 3.9.6
-      tsdown:
-        specifier: catalog:build
-        version: 0.23.0(@tsdown/css@0.23.0)(@volar/typescript@2.4.28(typescript@7.0.2))(oxc-resolver@11.21.2)(typescript@7.0.2)(vue-tsc@3.3.11(typescript@7.0.2))
-      typescript:
-        specifier: catalog:typescript
-        version: 7.0.2
-      vitest:
-        specifier: catalog:testing
-        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
-
-  packages/compiler/forge/forge-web-script-language-service:
-    dependencies:
-      '@mission-platform/forge-web-script':
-        specifier: workspace:*
-        version: link:../forge-web-script
-      '@mission-platform/forge-web-script-runtime':
-        specifier: workspace:*
-        version: link:../forge-web-script-runtime
-    devDependencies:
-      '@mission-platform/eslint-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/eslint-config
-      '@mission-platform/prettier-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/prettier-config
-      '@mission-platform/typescript-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/typescript-config
-      '@mission-platform/vite-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/vite-config
-      '@types/node':
-        specifier: catalog:typescript
-        version: 24.13.4
-      '@vitest/coverage-v8':
-        specifier: catalog:testing
-        version: 5.0.1(@vitest/browser@5.0.1)(vitest@5.0.1)
-      eslint:
-        specifier: catalog:eslint
-        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
-      prettier:
-        specifier: catalog:prettier
-        version: 3.9.6
-      typescript:
-        specifier: catalog:typescript
-        version: 7.0.2
-      vite:
-        specifier: catalog:vite
-        version: 8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
-      vitest:
-        specifier: catalog:testing
-        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
-
-  packages/compiler/forge/forge-web-script-lsp:
-    dependencies:
-      '@mission-platform/forge-web-script-language-service':
-        specifier: workspace:*
-        version: link:../forge-web-script-language-service
-      vscode-languageserver:
-        specifier: ^10.1.1
-        version: 10.1.1
-      vscode-languageserver-textdocument:
-        specifier: ^1.0.14
-        version: 1.0.14
-    devDependencies:
-      '@mission-platform/eslint-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/eslint-config
-      '@mission-platform/prettier-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/prettier-config
-      '@mission-platform/tsdown-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/tsdown-config
-      '@mission-platform/typescript-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/typescript-config
-      '@types/node':
-        specifier: catalog:typescript
-        version: 24.13.4
-      eslint:
-        specifier: catalog:eslint
-        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
-      prettier:
-        specifier: catalog:prettier
-        version: 3.9.6
-      tsdown:
-        specifier: catalog:build
-        version: 0.23.0(@tsdown/css@0.23.0)(@volar/typescript@2.4.28(typescript@7.0.2))(oxc-resolver@11.21.2)(typescript@7.0.2)(vue-tsc@3.3.11(typescript@7.0.2))
-      typescript:
-        specifier: catalog:typescript
-        version: 7.0.2
-      vitest:
-        specifier: catalog:testing
-        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
-
-  packages/compiler/forge/forge-web-script-regex:
-    devDependencies:
-      '@mission-platform/eslint-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/eslint-config
-      '@mission-platform/prettier-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/prettier-config
-      '@mission-platform/typescript-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/typescript-config
-      '@mission-platform/vite-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/vite-config
-      '@types/node':
-        specifier: catalog:typescript
-        version: 24.13.4
-      '@vitest/coverage-v8':
-        specifier: catalog:testing
-        version: 5.0.1(@vitest/browser@5.0.1)(vitest@5.0.1)
-      eslint:
-        specifier: catalog:eslint
-        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
-      prettier:
-        specifier: catalog:prettier
-        version: 3.9.6
-      typescript:
-        specifier: catalog:typescript
-        version: 7.0.2
-      vite:
-        specifier: catalog:vite
-        version: 8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
-      vitest:
-        specifier: catalog:testing
-        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
-
-  packages/compiler/forge/forge-web-script-runtime:
-    dependencies:
-      '@mission-platform/forge-web-script':
-        specifier: workspace:*
-        version: link:../forge-web-script
-    devDependencies:
-      '@mission-platform/eslint-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/eslint-config
-      '@mission-platform/prettier-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/prettier-config
-      '@mission-platform/typescript-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/typescript-config
-      '@mission-platform/vite-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/vite-config
-      '@types/node':
-        specifier: catalog:typescript
-        version: 24.13.4
-      '@vitest/coverage-v8':
-        specifier: catalog:testing
-        version: 5.0.1(@vitest/browser@5.0.1)(vitest@5.0.1)
-      eslint:
-        specifier: catalog:eslint
-        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
-      prettier:
-        specifier: catalog:prettier
-        version: 3.9.6
-      typescript:
-        specifier: catalog:typescript
-        version: 7.0.2
-      vite:
-        specifier: catalog:vite
-        version: 8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
-      vitest:
-        specifier: catalog:testing
-        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
-
-  packages/compiler/forge/forge-web-script-stdlib:
-    dependencies:
-      '@mission-platform/forge-web-script-runtime':
-        specifier: workspace:*
-        version: link:../forge-web-script-runtime
-    devDependencies:
-      '@mission-platform/eslint-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/eslint-config
-      '@mission-platform/prettier-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/prettier-config
-      '@mission-platform/typescript-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/typescript-config
-      '@mission-platform/vite-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/vite-config
-      '@types/node':
-        specifier: catalog:typescript
-        version: 24.13.4
-      eslint:
-        specifier: catalog:eslint
-        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
-      prettier:
-        specifier: catalog:prettier
-        version: 3.9.6
-      typescript:
-        specifier: catalog:typescript
-        version: 7.0.2
-      vite:
-        specifier: catalog:vite
-        version: 8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
-      vitest:
-        specifier: catalog:testing
-        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
-
-  packages/compiler/forge/forge-web-script-vitest:
-    dependencies:
-      '@mission-platform/forge-web-script':
-        specifier: workspace:*
-        version: link:../forge-web-script
-      '@mission-platform/forge-web-script-runtime':
-        specifier: workspace:*
-        version: link:../forge-web-script-runtime
-      '@mission-platform/vite-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/vite-config
-      '@mission-platform/vite-plugin-forge-web-script':
-        specifier: workspace:*
-        version: link:../../../tooling/vite/forge-web-script
-    devDependencies:
-      '@mission-platform/eslint-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/eslint-config
-      '@mission-platform/prettier-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/prettier-config
-      '@mission-platform/tsdown-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/tsdown-config
-      '@mission-platform/typescript-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/typescript-config
-      '@types/node':
-        specifier: catalog:typescript
-        version: 24.13.4
-      eslint:
-        specifier: catalog:eslint
-        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
-      prettier:
-        specifier: catalog:prettier
-        version: 3.9.6
-      tsdown:
-        specifier: catalog:build
-        version: 0.23.0(@tsdown/css@0.23.0)(@volar/typescript@2.4.28(typescript@7.0.2))(oxc-resolver@11.21.2)(typescript@7.0.2)(vue-tsc@3.3.11(typescript@7.0.2))
-      typescript:
-        specifier: catalog:typescript
-        version: 7.0.2
-      vite:
-        specifier: catalog:vite
-        version: 8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
-      vitest:
-        specifier: catalog:testing
-        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
-
-  packages/compiler/forge/forge-web-script-wasm:
-    dependencies:
-      '@mission-platform/forge-web-script-regex':
-        specifier: workspace:*
-        version: link:../forge-web-script-regex
-    devDependencies:
-      '@mission-platform/eslint-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/eslint-config
-      '@mission-platform/prettier-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/prettier-config
-      '@mission-platform/typescript-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/typescript-config
-      '@mission-platform/vite-config':
-        specifier: workspace:*
-        version: link:../../../tooling/configs/vite-config
-      '@types/node':
-        specifier: catalog:typescript
-        version: 24.13.4
-      '@vitest/coverage-v8':
-        specifier: catalog:testing
-        version: 5.0.1(@vitest/browser@5.0.1)(vitest@5.0.1)
-      eslint:
-        specifier: catalog:eslint
-        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
-      prettier:
-        specifier: catalog:prettier
-        version: 3.9.6
-      typescript:
-        specifier: catalog:typescript
-        version: 7.0.2
-      vite:
-        specifier: catalog:vite
-        version: 8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
       vitest:
         specifier: catalog:testing
         version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -3169,6 +2765,9 @@ importers:
       '@mission-platform/components':
         specifier: workspace:*
         version: link:../../ui/components
+      '@mission-platform/flint-language-service':
+        specifier: workspace:*
+        version: link:../../flint/language-service
       '@mission-platform/float':
         specifier: workspace:*
         version: link:../../ui/float
@@ -3193,9 +2792,6 @@ importers:
       '@mission-platform/forge-plugin-web-components':
         specifier: workspace:*
         version: link:../../compiler/plugins/forge-web-components
-      '@mission-platform/forge-web-script-language-service':
-        specifier: workspace:*
-        version: link:../../compiler/forge/forge-web-script-language-service
       '@mission-platform/harper':
         specifier: workspace:*
         version: link:../harper
@@ -4413,6 +4009,410 @@ importers:
         specifier: catalog:testing
         version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
 
+  packages/flint/cli:
+    dependencies:
+      '@mission-platform/flint':
+        specifier: workspace:*
+        version: link:../core
+      '@mission-platform/flint-runtime':
+        specifier: workspace:*
+        version: link:../runtime
+    devDependencies:
+      '@mission-platform/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/eslint-config
+      '@mission-platform/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/prettier-config
+      '@mission-platform/tsdown-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/tsdown-config
+      '@mission-platform/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/typescript-config
+      '@types/node':
+        specifier: catalog:typescript
+        version: 24.13.4
+      eslint:
+        specifier: catalog:eslint
+        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
+      prettier:
+        specifier: catalog:prettier
+        version: 3.9.6
+      tsdown:
+        specifier: catalog:build
+        version: 0.23.0(@tsdown/css@0.23.0)(@volar/typescript@2.4.28(typescript@7.0.2))(oxc-resolver@11.21.2)(typescript@7.0.2)(vue-tsc@3.3.11(typescript@7.0.2))
+      typescript:
+        specifier: catalog:typescript
+        version: 7.0.2
+      vitest:
+        specifier: catalog:testing
+        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
+
+  packages/flint/core:
+    dependencies:
+      '@mission-platform/flint-regex':
+        specifier: workspace:*
+        version: link:../regex
+      '@mission-platform/flint-wasm':
+        specifier: workspace:*
+        version: link:../wasm
+    devDependencies:
+      '@mission-platform/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/eslint-config
+      '@mission-platform/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/prettier-config
+      '@mission-platform/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/typescript-config
+      '@mission-platform/vite-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/vite-config
+      '@types/node':
+        specifier: catalog:typescript
+        version: 24.13.4
+      '@vitest/coverage-v8':
+        specifier: catalog:testing
+        version: 5.0.1(@vitest/browser@5.0.1)(vitest@5.0.1)
+      eslint:
+        specifier: catalog:eslint
+        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
+      prettier:
+        specifier: catalog:prettier
+        version: 3.9.6
+      typescript:
+        specifier: catalog:typescript
+        version: 7.0.2
+      vite:
+        specifier: catalog:vite
+        version: 8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
+      vitest:
+        specifier: catalog:testing
+        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
+
+  packages/flint/dap:
+    devDependencies:
+      '@mission-platform/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/eslint-config
+      '@mission-platform/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/prettier-config
+      '@mission-platform/tsdown-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/tsdown-config
+      '@mission-platform/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/typescript-config
+      '@types/node':
+        specifier: catalog:typescript
+        version: 24.13.4
+      eslint:
+        specifier: catalog:eslint
+        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
+      prettier:
+        specifier: catalog:prettier
+        version: 3.9.6
+      tsdown:
+        specifier: catalog:build
+        version: 0.23.0(@tsdown/css@0.23.0)(@volar/typescript@2.4.28(typescript@7.0.2))(oxc-resolver@11.21.2)(typescript@7.0.2)(vue-tsc@3.3.11(typescript@7.0.2))
+      typescript:
+        specifier: catalog:typescript
+        version: 7.0.2
+      vitest:
+        specifier: catalog:testing
+        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
+
+  packages/flint/language-service:
+    dependencies:
+      '@mission-platform/flint':
+        specifier: workspace:*
+        version: link:../core
+      '@mission-platform/flint-runtime':
+        specifier: workspace:*
+        version: link:../runtime
+    devDependencies:
+      '@mission-platform/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/eslint-config
+      '@mission-platform/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/prettier-config
+      '@mission-platform/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/typescript-config
+      '@mission-platform/vite-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/vite-config
+      '@types/node':
+        specifier: catalog:typescript
+        version: 24.13.4
+      '@vitest/coverage-v8':
+        specifier: catalog:testing
+        version: 5.0.1(@vitest/browser@5.0.1)(vitest@5.0.1)
+      eslint:
+        specifier: catalog:eslint
+        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
+      prettier:
+        specifier: catalog:prettier
+        version: 3.9.6
+      typescript:
+        specifier: catalog:typescript
+        version: 7.0.2
+      vite:
+        specifier: catalog:vite
+        version: 8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
+      vitest:
+        specifier: catalog:testing
+        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
+
+  packages/flint/lsp:
+    dependencies:
+      '@mission-platform/flint-language-service':
+        specifier: workspace:*
+        version: link:../language-service
+      vscode-languageserver:
+        specifier: ^10.1.1
+        version: 10.1.1
+      vscode-languageserver-textdocument:
+        specifier: ^1.0.14
+        version: 1.0.14
+    devDependencies:
+      '@mission-platform/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/eslint-config
+      '@mission-platform/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/prettier-config
+      '@mission-platform/tsdown-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/tsdown-config
+      '@mission-platform/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/typescript-config
+      '@types/node':
+        specifier: catalog:typescript
+        version: 24.13.4
+      eslint:
+        specifier: catalog:eslint
+        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
+      prettier:
+        specifier: catalog:prettier
+        version: 3.9.6
+      tsdown:
+        specifier: catalog:build
+        version: 0.23.0(@tsdown/css@0.23.0)(@volar/typescript@2.4.28(typescript@7.0.2))(oxc-resolver@11.21.2)(typescript@7.0.2)(vue-tsc@3.3.11(typescript@7.0.2))
+      typescript:
+        specifier: catalog:typescript
+        version: 7.0.2
+      vitest:
+        specifier: catalog:testing
+        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
+
+  packages/flint/regex:
+    devDependencies:
+      '@mission-platform/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/eslint-config
+      '@mission-platform/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/prettier-config
+      '@mission-platform/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/typescript-config
+      '@mission-platform/vite-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/vite-config
+      '@types/node':
+        specifier: catalog:typescript
+        version: 24.13.4
+      '@vitest/coverage-v8':
+        specifier: catalog:testing
+        version: 5.0.1(@vitest/browser@5.0.1)(vitest@5.0.1)
+      eslint:
+        specifier: catalog:eslint
+        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
+      prettier:
+        specifier: catalog:prettier
+        version: 3.9.6
+      typescript:
+        specifier: catalog:typescript
+        version: 7.0.2
+      vite:
+        specifier: catalog:vite
+        version: 8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
+      vitest:
+        specifier: catalog:testing
+        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
+
+  packages/flint/runtime:
+    dependencies:
+      '@mission-platform/flint':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@mission-platform/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/eslint-config
+      '@mission-platform/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/prettier-config
+      '@mission-platform/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/typescript-config
+      '@mission-platform/vite-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/vite-config
+      '@types/node':
+        specifier: catalog:typescript
+        version: 24.13.4
+      '@vitest/coverage-v8':
+        specifier: catalog:testing
+        version: 5.0.1(@vitest/browser@5.0.1)(vitest@5.0.1)
+      eslint:
+        specifier: catalog:eslint
+        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
+      prettier:
+        specifier: catalog:prettier
+        version: 3.9.6
+      typescript:
+        specifier: catalog:typescript
+        version: 7.0.2
+      vite:
+        specifier: catalog:vite
+        version: 8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
+      vitest:
+        specifier: catalog:testing
+        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
+
+  packages/flint/stdlib:
+    dependencies:
+      '@mission-platform/flint-runtime':
+        specifier: workspace:*
+        version: link:../runtime
+    devDependencies:
+      '@mission-platform/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/eslint-config
+      '@mission-platform/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/prettier-config
+      '@mission-platform/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/typescript-config
+      '@mission-platform/vite-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/vite-config
+      '@types/node':
+        specifier: catalog:typescript
+        version: 24.13.4
+      eslint:
+        specifier: catalog:eslint
+        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
+      prettier:
+        specifier: catalog:prettier
+        version: 3.9.6
+      typescript:
+        specifier: catalog:typescript
+        version: 7.0.2
+      vite:
+        specifier: catalog:vite
+        version: 8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
+      vitest:
+        specifier: catalog:testing
+        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
+
+  packages/flint/vitest:
+    dependencies:
+      '@mission-platform/flint':
+        specifier: workspace:*
+        version: link:../core
+      '@mission-platform/flint-runtime':
+        specifier: workspace:*
+        version: link:../runtime
+      '@mission-platform/vite-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/vite-config
+      '@mission-platform/vite-plugin-flint':
+        specifier: workspace:*
+        version: link:../../tooling/vite/flint
+    devDependencies:
+      '@mission-platform/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/eslint-config
+      '@mission-platform/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/prettier-config
+      '@mission-platform/tsdown-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/tsdown-config
+      '@mission-platform/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/typescript-config
+      '@types/node':
+        specifier: catalog:typescript
+        version: 24.13.4
+      eslint:
+        specifier: catalog:eslint
+        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
+      prettier:
+        specifier: catalog:prettier
+        version: 3.9.6
+      tsdown:
+        specifier: catalog:build
+        version: 0.23.0(@tsdown/css@0.23.0)(@volar/typescript@2.4.28(typescript@7.0.2))(oxc-resolver@11.21.2)(typescript@7.0.2)(vue-tsc@3.3.11(typescript@7.0.2))
+      typescript:
+        specifier: catalog:typescript
+        version: 7.0.2
+      vite:
+        specifier: catalog:vite
+        version: 8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
+      vitest:
+        specifier: catalog:testing
+        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
+
+  packages/flint/wasm:
+    dependencies:
+      '@mission-platform/flint-regex':
+        specifier: workspace:*
+        version: link:../regex
+    devDependencies:
+      '@mission-platform/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/eslint-config
+      '@mission-platform/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/prettier-config
+      '@mission-platform/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/typescript-config
+      '@mission-platform/vite-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/vite-config
+      '@types/node':
+        specifier: catalog:typescript
+        version: 24.13.4
+      '@vitest/coverage-v8':
+        specifier: catalog:testing
+        version: 5.0.1(@vitest/browser@5.0.1)(vitest@5.0.1)
+      eslint:
+        specifier: catalog:eslint
+        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
+      prettier:
+        specifier: catalog:prettier
+        version: 3.9.6
+      typescript:
+        specifier: catalog:typescript
+        version: 7.0.2
+      vite:
+        specifier: catalog:vite
+        version: 8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
+      vitest:
+        specifier: catalog:testing
+        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
+
   packages/integrations/barcode:
     dependencies:
       '@mission-platform/barcode-wasm':
@@ -4479,12 +4479,12 @@ importers:
       '@mission-platform/vite-config':
         specifier: workspace:*
         version: link:../../tooling/configs/vite-config
+      '@mission-platform/vite-plugin-flint':
+        specifier: workspace:*
+        version: link:../../tooling/vite/flint
       '@mission-platform/vite-plugin-forge':
         specifier: workspace:*
         version: link:../../tooling/vite/forge
-      '@mission-platform/vite-plugin-forge-web-script':
-        specifier: workspace:*
-        version: link:../../tooling/vite/forge-web-script
       '@storybook/react-vite':
         specifier: catalog:storybook
         version: 10.6.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rollup@4.63.3)(storybook@10.6.0(@types/react@19.3.0)(prettier@3.9.6)(react@19.3.0))(supports-color@10.2.2)(typescript@7.0.2)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1))
@@ -4569,19 +4569,19 @@ importers:
 
   packages/integrations/barcode-wasm:
     dependencies:
-      '@mission-platform/forge-web-script-runtime':
+      '@mission-platform/flint-runtime':
         specifier: workspace:*
-        version: link:../../compiler/forge/forge-web-script-runtime
+        version: link:../../flint/runtime
     devDependencies:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/configs/eslint-config
-      '@mission-platform/forge-web-script':
+      '@mission-platform/flint':
         specifier: workspace:*
-        version: link:../../compiler/forge/forge-web-script
-      '@mission-platform/forge-web-script-vitest':
+        version: link:../../flint/core
+      '@mission-platform/flint-vitest':
         specifier: workspace:*
-        version: link:../../compiler/forge/forge-web-script-vitest
+        version: link:../../flint/vitest
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../tooling/configs/prettier-config
@@ -4594,9 +4594,9 @@ importers:
       '@mission-platform/vite-config':
         specifier: workspace:*
         version: link:../../tooling/configs/vite-config
-      '@mission-platform/vite-plugin-forge-web-script':
+      '@mission-platform/vite-plugin-flint':
         specifier: workspace:*
-        version: link:../../tooling/vite/forge-web-script
+        version: link:../../tooling/vite/flint
       '@types/node':
         specifier: catalog:typescript
         version: 24.13.4
@@ -4697,12 +4697,12 @@ importers:
       '@mission-platform/vite-config':
         specifier: workspace:*
         version: link:../../tooling/configs/vite-config
+      '@mission-platform/vite-plugin-flint':
+        specifier: workspace:*
+        version: link:../../tooling/vite/flint
       '@mission-platform/vite-plugin-forge':
         specifier: workspace:*
         version: link:../../tooling/vite/forge
-      '@mission-platform/vite-plugin-forge-web-script':
-        specifier: workspace:*
-        version: link:../../tooling/vite/forge-web-script
       '@storybook/react-vite':
         specifier: catalog:storybook
         version: 10.6.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rollup@4.63.3)(storybook@10.6.0(@types/react@19.3.0)(prettier@3.9.6)(react@19.3.0))(supports-color@10.2.2)(typescript@7.0.2)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1))
@@ -4793,16 +4793,16 @@ importers:
 
   packages/integrations/code-scanner-wasm:
     dependencies:
-      '@mission-platform/forge-web-script-runtime':
+      '@mission-platform/flint-runtime':
         specifier: workspace:*
-        version: link:../../compiler/forge/forge-web-script-runtime
+        version: link:../../flint/runtime
     devDependencies:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/configs/eslint-config
-      '@mission-platform/forge-web-script-vitest':
+      '@mission-platform/flint-vitest':
         specifier: workspace:*
-        version: link:../../compiler/forge/forge-web-script-vitest
+        version: link:../../flint/vitest
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../tooling/configs/prettier-config
@@ -4815,9 +4815,9 @@ importers:
       '@mission-platform/vite-config':
         specifier: workspace:*
         version: link:../../tooling/configs/vite-config
-      '@mission-platform/vite-plugin-forge-web-script':
+      '@mission-platform/vite-plugin-flint':
         specifier: workspace:*
-        version: link:../../tooling/vite/forge-web-script
+        version: link:../../tooling/vite/flint
       '@types/node':
         specifier: catalog:typescript
         version: 24.13.4
@@ -5184,12 +5184,12 @@ importers:
       '@mission-platform/vite-config':
         specifier: workspace:*
         version: link:../../tooling/configs/vite-config
+      '@mission-platform/vite-plugin-flint':
+        specifier: workspace:*
+        version: link:../../tooling/vite/flint
       '@mission-platform/vite-plugin-forge':
         specifier: workspace:*
         version: link:../../tooling/vite/forge
-      '@mission-platform/vite-plugin-forge-web-script':
-        specifier: workspace:*
-        version: link:../../tooling/vite/forge-web-script
       '@storybook/react-vite':
         specifier: catalog:storybook
         version: 10.6.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rollup@4.63.3)(storybook@10.6.0(@types/react@19.3.0)(prettier@3.9.6)(react@19.3.0))(supports-color@10.2.2)(typescript@7.0.2)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1))
@@ -5280,19 +5280,19 @@ importers:
 
   packages/integrations/matrix-code-wasm:
     dependencies:
-      '@mission-platform/forge-web-script-runtime':
+      '@mission-platform/flint-runtime':
         specifier: workspace:*
-        version: link:../../compiler/forge/forge-web-script-runtime
+        version: link:../../flint/runtime
     devDependencies:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/configs/eslint-config
-      '@mission-platform/forge-web-script':
+      '@mission-platform/flint':
         specifier: workspace:*
-        version: link:../../compiler/forge/forge-web-script
-      '@mission-platform/forge-web-script-vitest':
+        version: link:../../flint/core
+      '@mission-platform/flint-vitest':
         specifier: workspace:*
-        version: link:../../compiler/forge/forge-web-script-vitest
+        version: link:../../flint/vitest
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../tooling/configs/prettier-config
@@ -5305,9 +5305,9 @@ importers:
       '@mission-platform/vite-config':
         specifier: workspace:*
         version: link:../../tooling/configs/vite-config
-      '@mission-platform/vite-plugin-forge-web-script':
+      '@mission-platform/vite-plugin-flint':
         specifier: workspace:*
-        version: link:../../tooling/vite/forge-web-script
+        version: link:../../tooling/vite/flint
       '@types/node':
         specifier: catalog:typescript
         version: 24.13.4
@@ -5335,9 +5335,9 @@ importers:
 
   packages/integrations/phone-number:
     dependencies:
-      '@mission-platform/forge-web-script-regex':
+      '@mission-platform/flint-regex':
         specifier: workspace:*
-        version: link:../../compiler/forge/forge-web-script-regex
+        version: link:../../flint/regex
     devDependencies:
       '@mission-platform/eslint-config':
         specifier: workspace:*
@@ -5357,9 +5357,9 @@ importers:
       '@mission-platform/vite-config':
         specifier: workspace:*
         version: link:../../tooling/configs/vite-config
-      '@mission-platform/vite-plugin-forge-web-script':
+      '@mission-platform/vite-plugin-flint':
         specifier: workspace:*
-        version: link:../../tooling/vite/forge-web-script
+        version: link:../../tooling/vite/flint
       '@types/node':
         specifier: catalog:typescript
         version: 24.13.4
@@ -5409,6 +5409,9 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/configs/eslint-config
+      '@mission-platform/flint':
+        specifier: workspace:*
+        version: link:../../flint/core
       '@mission-platform/forge-cms-plugin-api':
         specifier: workspace:*
         version: link:../../compiler/plugins/forge-cms-plugin-api
@@ -5430,9 +5433,6 @@ importers:
       '@mission-platform/forge-plugin-web-components':
         specifier: workspace:*
         version: link:../../compiler/plugins/forge-web-components
-      '@mission-platform/forge-web-script':
-        specifier: workspace:*
-        version: link:../../compiler/forge/forge-web-script
       '@mission-platform/i18n-config':
         specifier: workspace:*
         version: link:../../tooling/configs/i18n-config
@@ -5454,12 +5454,12 @@ importers:
       '@mission-platform/vite-config':
         specifier: workspace:*
         version: link:../../tooling/configs/vite-config
+      '@mission-platform/vite-plugin-flint':
+        specifier: workspace:*
+        version: link:../../tooling/vite/flint
       '@mission-platform/vite-plugin-forge':
         specifier: workspace:*
         version: link:../../tooling/vite/forge
-      '@mission-platform/vite-plugin-forge-web-script':
-        specifier: workspace:*
-        version: link:../../tooling/vite/forge-web-script
       '@storybook/react-vite':
         specifier: catalog:storybook
         version: 10.6.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rollup@4.63.3)(storybook@10.6.0(@types/react@19.3.0)(prettier@3.9.6)(react@19.3.0))(supports-color@10.2.2)(typescript@7.0.2)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1))
@@ -5544,9 +5544,9 @@ importers:
 
   packages/integrations/qr-code-wasm:
     dependencies:
-      '@mission-platform/forge-web-script-runtime':
+      '@mission-platform/flint-runtime':
         specifier: workspace:*
-        version: link:../../compiler/forge/forge-web-script-runtime
+        version: link:../../flint/runtime
       '@mission-platform/vcard':
         specifier: workspace:*
         version: link:../vcard
@@ -5554,12 +5554,12 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/configs/eslint-config
-      '@mission-platform/forge-web-script':
+      '@mission-platform/flint':
         specifier: workspace:*
-        version: link:../../compiler/forge/forge-web-script
-      '@mission-platform/forge-web-script-vitest':
+        version: link:../../flint/core
+      '@mission-platform/flint-vitest':
         specifier: workspace:*
-        version: link:../../compiler/forge/forge-web-script-vitest
+        version: link:../../flint/vitest
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../tooling/configs/prettier-config
@@ -5572,9 +5572,9 @@ importers:
       '@mission-platform/vite-config':
         specifier: workspace:*
         version: link:../../tooling/configs/vite-config
-      '@mission-platform/vite-plugin-forge-web-script':
+      '@mission-platform/vite-plugin-flint':
         specifier: workspace:*
-        version: link:../../tooling/vite/forge-web-script
+        version: link:../../tooling/vite/flint
       '@types/node':
         specifier: catalog:typescript
         version: 24.13.4
@@ -6299,6 +6299,52 @@ importers:
         specifier: catalog:testing
         version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
 
+  packages/tooling/vite/flint:
+    dependencies:
+      '@mission-platform/flint':
+        specifier: workspace:*
+        version: link:../../../flint/core
+      '@mission-platform/flint-runtime':
+        specifier: workspace:*
+        version: link:../../../flint/runtime
+    devDependencies:
+      '@mission-platform/eslint-config':
+        specifier: workspace:*
+        version: link:../../configs/eslint-config
+      '@mission-platform/prettier-config':
+        specifier: workspace:*
+        version: link:../../configs/prettier-config
+      '@mission-platform/tsdown-config':
+        specifier: workspace:*
+        version: link:../../configs/tsdown-config
+      '@mission-platform/typescript-config':
+        specifier: workspace:*
+        version: link:../../configs/typescript-config
+      '@mission-platform/vite-config':
+        specifier: workspace:*
+        version: link:../../configs/vite-config
+      '@types/node':
+        specifier: catalog:typescript
+        version: 24.13.4
+      eslint:
+        specifier: catalog:eslint
+        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
+      prettier:
+        specifier: catalog:prettier
+        version: 3.9.6
+      tsdown:
+        specifier: catalog:build
+        version: 0.23.0(@tsdown/css@0.23.0)(@volar/typescript@2.4.28(typescript@7.0.2))(oxc-resolver@11.21.2)(typescript@7.0.2)(vue-tsc@3.3.11(typescript@7.0.2))
+      typescript:
+        specifier: catalog:typescript
+        version: 7.0.2
+      vite:
+        specifier: catalog:vite
+        version: 8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
+      vitest:
+        specifier: catalog:testing
+        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
+
   packages/tooling/vite/forge:
     dependencies:
       '@mission-platform/forge-jsx':
@@ -6389,52 +6435,6 @@ importers:
       vue:
         specifier: catalog:vue
         version: 3.5.42(typescript@7.0.2)
-
-  packages/tooling/vite/forge-web-script:
-    dependencies:
-      '@mission-platform/forge-web-script':
-        specifier: workspace:*
-        version: link:../../../compiler/forge/forge-web-script
-      '@mission-platform/forge-web-script-runtime':
-        specifier: workspace:*
-        version: link:../../../compiler/forge/forge-web-script-runtime
-    devDependencies:
-      '@mission-platform/eslint-config':
-        specifier: workspace:*
-        version: link:../../configs/eslint-config
-      '@mission-platform/prettier-config':
-        specifier: workspace:*
-        version: link:../../configs/prettier-config
-      '@mission-platform/tsdown-config':
-        specifier: workspace:*
-        version: link:../../configs/tsdown-config
-      '@mission-platform/typescript-config':
-        specifier: workspace:*
-        version: link:../../configs/typescript-config
-      '@mission-platform/vite-config':
-        specifier: workspace:*
-        version: link:../../configs/vite-config
-      '@types/node':
-        specifier: catalog:typescript
-        version: 24.13.4
-      eslint:
-        specifier: catalog:eslint
-        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
-      prettier:
-        specifier: catalog:prettier
-        version: 3.9.6
-      tsdown:
-        specifier: catalog:build
-        version: 0.23.0(@tsdown/css@0.23.0)(@volar/typescript@2.4.28(typescript@7.0.2))(oxc-resolver@11.21.2)(typescript@7.0.2)(vue-tsc@3.3.11(typescript@7.0.2))
-      typescript:
-        specifier: catalog:typescript
-        version: 7.0.2
-      vite:
-        specifier: catalog:vite
-        version: 8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
-      vitest:
-        specifier: catalog:testing
-        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
 
   packages/tooling/vite/i18n:
     dependencies:
@@ -8233,6 +8233,9 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../packages/tooling/configs/eslint-config
+      '@mission-platform/flint':
+        specifier: workspace:*
+        version: link:../packages/flint/core
       '@mission-platform/forge-plugin-api':
         specifier: workspace:*
         version: link:../packages/compiler/plugins/forge-plugin-api
@@ -8251,9 +8254,6 @@ importers:
       '@mission-platform/forge-plugin-web-components':
         specifier: workspace:*
         version: link:../packages/compiler/plugins/forge-web-components
-      '@mission-platform/forge-web-script':
-        specifier: workspace:*
-        version: link:../packages/compiler/forge/forge-web-script
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../packages/tooling/configs/prettier-config

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { load, loadSync, manifest } from './qr-encoder.fws';
+import { load, loadSync, manifest } from './qr-encoder.flint';
 
 function unpack(
   encoded: { version: number; size: number; modules: number },
@@ -14,7 +14,7 @@ function unpack(
   return { version: encoded.version, size: encoded.size, modules };
 }
 
-describe('QR encoder FWS graph', () => {
+describe('QR encoder Flint graph', () => {
   it('publishes a manifest and a stable packed ABI', () => {
     const encoder = loadSync();
     expect(manifest).toBeDefined();

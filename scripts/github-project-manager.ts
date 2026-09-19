@@ -45,16 +45,16 @@ export interface ProjectConfig {
   readonly issues: readonly ProjectIssueMapping[];
 }
 
-export const FWS_PROJECT_CONFIG: ProjectConfig = {
-  title: 'Forge Web Script Architecture & Modernization',
-  projectTitle: 'Forge Web Script Architecture & Modernization',
+export const FLINT_PROJECT_CONFIG: ProjectConfig = {
+  title: 'Flint Architecture & Modernization',
+  projectTitle: 'Flint Architecture & Modernization',
   description:
-    'End-to-end modernization of the Forge Web Script (FWS) compiler, Sea-of-Nodes IR (SonIR 2.0), standard library, linear regex engine, and capability security runtime.',
+    'End-to-end modernization of the Flint compiler, Sea-of-Nodes IR (SonIR 2.0), standard library, linear regex engine, and capability security runtime.',
   organization: 'Mission-Platform',
   repository: 'Mission-Platform/composable-mission-ready-platform',
-  milestoneTitle: 'FWS Architecture & Runtime Enhancements',
+  milestoneTitle: 'Flint Architecture & Runtime Enhancements',
   milestoneNumber: 1,
-  planPath: 'docs/fws-project-plan.json',
+  planPath: 'docs/flint-project-plan.json',
   fields: {
     status: ['Todo', 'In Progress', 'Review', 'Done'],
     priority: ['P0 - Critical', 'P1 - High', 'P2 - Medium', 'P3 - Low'],
@@ -73,7 +73,7 @@ export const FWS_PROJECT_CONFIG: ProjectConfig = {
   issues: [
     {
       issueNumber: 41,
-      title: 'feat(fws-types): Structural Type Algebra & Generic Monomorphization',
+      title: 'feat(flint-types): Structural Type Algebra & Generic Monomorphization',
       track: 'Compiler Core',
       priority: 'P0 - Critical',
       complexity: 'XL',
@@ -82,7 +82,7 @@ export const FWS_PROJECT_CONFIG: ProjectConfig = {
     },
     {
       issueNumber: 42,
-      title: 'feat(fws-lsp): Incremental LSP Architecture, Query Caching & Request Cancellation',
+      title: 'feat(flint-lsp): Incremental LSP Architecture, Query Caching & Request Cancellation',
       track: 'Tooling & LSP',
       priority: 'P0 - Critical',
       complexity: 'L',
@@ -91,7 +91,7 @@ export const FWS_PROJECT_CONFIG: ProjectConfig = {
     },
     {
       issueNumber: 43,
-      title: 'feat(fws-stdlib): Swiss Table Hash Map & Set with SIMD Acceleration',
+      title: 'feat(flint-stdlib): Swiss Table Hash Map & Set with SIMD Acceleration',
       track: 'Standard Library',
       priority: 'P1 - High',
       complexity: 'L',
@@ -100,7 +100,7 @@ export const FWS_PROJECT_CONFIG: ProjectConfig = {
     },
     {
       issueNumber: 44,
-      title: 'feat(fws-wasm): WebAssembly v128 SIMD Vectorization & Bulk Memory Operations',
+      title: 'feat(flint-wasm): WebAssembly v128 SIMD Vectorization & Bulk Memory Operations',
       track: 'Wasm & SIMD',
       priority: 'P1 - High',
       complexity: 'L',
@@ -109,7 +109,7 @@ export const FWS_PROJECT_CONFIG: ProjectConfig = {
     },
     {
       issueNumber: 45,
-      title: 'feat(fws-sonir): Formal Sea-of-Nodes Schema, Memory SSA, GVN & SCCP',
+      title: 'feat(flint-sonir): Formal Sea-of-Nodes Schema, Memory SSA, GVN & SCCP',
       track: 'SonIR & Optimization',
       priority: 'P2 - Medium',
       complexity: 'XL',
@@ -118,7 +118,7 @@ export const FWS_PROJECT_CONFIG: ProjectConfig = {
     },
     {
       issueNumber: 46,
-      title: 'feat(fws-interop): Native Web IDL Parser & Zero-Copy Host Binding Generator',
+      title: 'feat(flint-interop): Native Web IDL Parser & Zero-Copy Host Binding Generator',
       track: 'Compiler Core',
       priority: 'P2 - Medium',
       complexity: 'L',
@@ -127,7 +127,7 @@ export const FWS_PROJECT_CONFIG: ProjectConfig = {
     },
     {
       issueNumber: 47,
-      title: 'docs(fws): Formal EBNF Language Specification, SonIR Manual & Interactive Docs',
+      title: 'docs(flint): Formal EBNF Language Specification, SonIR Manual & Interactive Docs',
       track: 'Documentation',
       priority: 'P3 - Low',
       complexity: 'M',
@@ -136,7 +136,7 @@ export const FWS_PROJECT_CONFIG: ProjectConfig = {
     },
     {
       issueNumber: 48,
-      title: 'feat(fws-regex): Linear-Time PikeVM/DFA Regex Engine & Polyhedral Bounds Analysis',
+      title: 'feat(flint-regex): Linear-Time PikeVM/DFA Regex Engine & Polyhedral Bounds Analysis',
       track: 'Security & Bounds',
       priority: 'P0 - Critical',
       complexity: 'L',
@@ -145,7 +145,7 @@ export const FWS_PROJECT_CONFIG: ProjectConfig = {
     },
     {
       issueNumber: 49,
-      title: 'feat(fws-runtime): Multi-Memory Segregation & O(1) TLSF Dynamic Allocator',
+      title: 'feat(flint-runtime): Multi-Memory Segregation & O(1) TLSF Dynamic Allocator',
       track: 'Memory & Runtime',
       priority: 'P1 - High',
       complexity: 'XL',
@@ -154,7 +154,7 @@ export const FWS_PROJECT_CONFIG: ProjectConfig = {
     },
     {
       issueNumber: 50,
-      title: 'feat(fws-concurrency): JSPI Async Stack-Switching & Wasm Threads with Send/Sync',
+      title: 'feat(flint-concurrency): JSPI Async Stack-Switching & Wasm Threads with Send/Sync',
       track: 'Memory & Runtime',
       priority: 'P2 - Medium',
       complexity: 'XL',
@@ -163,6 +163,8 @@ export const FWS_PROJECT_CONFIG: ProjectConfig = {
     },
   ],
 };
+
+export const FWS_PROJECT_CONFIG = FLINT_PROJECT_CONFIG;
 
 export const UI_COMPONENTS_PROJECT_CONFIG: ProjectConfig = {
   title: 'The Board',
@@ -364,13 +366,13 @@ export async function checkProjectAuthScopes(): Promise<{
   }
 }
 
-export async function exportProjectPlan(which: 'components' | 'fws' | 'all' = 'all'): Promise<void> {
+export async function exportProjectPlan(which: 'components' | 'flint' | 'fws' | 'all' = 'all'): Promise<void> {
   const configs: ProjectConfig[] = [];
   if (which === 'all' || which === 'components') {
     configs.push(UI_COMPONENTS_PROJECT_CONFIG);
   }
-  if (which === 'all' || which === 'fws') {
-    configs.push(FWS_PROJECT_CONFIG);
+  if (which === 'all' || which === 'fws' || which === 'flint') {
+    configs.push(FLINT_PROJECT_CONFIG);
   }
 
   for (const config of configs) {
@@ -381,13 +383,13 @@ export async function exportProjectPlan(which: 'components' | 'fws' | 'all' = 'a
   }
 }
 
-export async function showProjectStatus(which: 'components' | 'fws' | 'all' = 'all'): Promise<void> {
+export async function showProjectStatus(which: 'components' | 'flint' | 'fws' | 'all' = 'all'): Promise<void> {
   const configs: ProjectConfig[] = [];
   if (which === 'all' || which === 'components') {
     configs.push(UI_COMPONENTS_PROJECT_CONFIG);
   }
-  if (which === 'all' || which === 'fws') {
-    configs.push(FWS_PROJECT_CONFIG);
+  if (which === 'all' || which === 'fws' || which === 'flint') {
+    configs.push(FLINT_PROJECT_CONFIG);
   }
 
   for (const config of configs) {
@@ -440,8 +442,10 @@ export async function syncBoard(boardName = 'The Board'): Promise<void> {
   const auth = await checkProjectAuthScopes();
 
   const config =
-    boardName.toLowerCase().includes('forge') || boardName.toLowerCase().includes('fws')
-      ? FWS_PROJECT_CONFIG
+    boardName.toLowerCase().includes('flint') ||
+    boardName.toLowerCase().includes('forge') ||
+    boardName.toLowerCase().includes('fws')
+      ? FLINT_PROJECT_CONFIG
       : UI_COMPONENTS_PROJECT_CONFIG;
 
   if (!auth.hasProjectScope) {
@@ -530,8 +534,8 @@ export async function syncBoard(boardName = 'The Board'): Promise<void> {
   }
 }
 
-export async function setupProject(target: 'components' | 'fws' = 'components'): Promise<void> {
-  const config = target === 'fws' ? FWS_PROJECT_CONFIG : UI_COMPONENTS_PROJECT_CONFIG;
+export async function setupProject(target: 'components' | 'flint' | 'fws' = 'components'): Promise<void> {
+  const config = target === 'fws' || target === 'flint' ? FLINT_PROJECT_CONFIG : UI_COMPONENTS_PROJECT_CONFIG;
   console.log(`[github-project-manager] Initiating project setup for '${config.title}'...`);
 
   await exportProjectPlan(target);
@@ -610,7 +614,7 @@ export async function setupProject(target: 'components' | 'fws' = 'components'):
 
 async function main(): Promise<void> {
   const command = process.argv[2] ?? 'status';
-  const target = (process.argv[3] ?? 'all') as 'components' | 'fws' | 'all';
+  const target = (process.argv[3] ?? 'all') as 'components' | 'flint' | 'fws' | 'all';
 
   switch (command) {
     case 'plan': {
@@ -622,7 +626,7 @@ async function main(): Promise<void> {
       break;
     }
     case 'setup': {
-      const proj = (process.argv[3] ?? 'components') as 'components' | 'fws';
+      const proj = (process.argv[3] ?? 'components') as 'components' | 'flint' | 'fws';
       await setupProject(proj);
       break;
     }

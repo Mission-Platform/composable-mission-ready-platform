@@ -54,7 +54,7 @@ export type BarcodeSymbology =
 function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
 ```
 
-قم بتشفير `data` إلى رمز شريطي خطي باستخدام الرسم البياني FWS للحزمة المحلية.
+قم بتشفير `data` إلى رمز شريطي خطي باستخدام الرسم البياني Flint للحزمة المحلية.
 
 #### حدود
 
@@ -75,7 +75,7 @@ function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
 function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>;
 ```
 
-قم بتشفير `data` بشكل غير متزامن باستخدام الرسم البياني FWS للحزمة المحلية.
+قم بتشفير `data` بشكل غير متزامن باستخدام الرسم البياني Flint للحزمة المحلية.
 
 #### حدود
 
@@ -182,7 +182,7 @@ function encodeEan8FwsAsync(value: string): Promise<string>;
 function encodeUpcaFws(value: string): string;
 ```
 
-يقوم بتشفير حمولة UPC-A من خلال الرسم البياني EAN-13 FWS ذي البادئة الصفرية.
+يقوم بتشفير حمولة UPC-A من خلال الرسم البياني EAN-13 Flint ذي البادئة الصفرية.
 
 #### حدود
 
@@ -214,7 +214,7 @@ function encodeUpcaFwsAsync(value: string): Promise<string>;
 function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string;
 ```
 
-يقوم بتشفير باركود متغير الطول مدعوم من خلال الرسم البياني الأصلي لـ FWS عندما يكون متاحًا.
+يقوم بتشفير باركود متغير الطول مدعوم من خلال الرسم البياني الأصلي لـ Flint عندما يكون متاحًا.
 
 #### حدود
 
@@ -248,7 +248,7 @@ function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, valu
 function validateGs1DataBarValue(value: string): boolean;
 ```
 
-التحقق من صحة قيمة GS1 DataBar/RSS-14 GTIN-14 في الرسم البياني FWS للحزمة المحلية.
+التحقق من صحة قيمة GS1 DataBar/RSS-14 GTIN-14 في الرسم البياني Flint للحزمة المحلية.
 
 #### حدود
 
@@ -293,4 +293,4 @@ export type VariableBarcodeSymbology = Extract<
 >;
 ```
 
-رموز متغيرة الطول مدعومة بمحول FWS المباشر للرمز الشريطي.
+رموز متغيرة الطول مدعومة بمحول Flint المباشر للرمز الشريطي.

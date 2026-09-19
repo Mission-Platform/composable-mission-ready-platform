@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
 import type { MatrixCode } from '../index';
-import { load, loadSync, manifest } from './matrix-encoder.fws';
-import { loadSync as loadAztecSync } from './matrix-encoder-aztec.fws';
+import { load, loadSync, manifest } from './matrix-encoder.flint';
+import { loadSync as loadAztecSync } from './matrix-encoder-aztec.flint';
 
 function parsePacked(symbology: MatrixCode['symbology'], packed: string): MatrixCode {
   const [widthRaw, heightRaw, modulesRaw = ''] = packed.split(',');
@@ -13,7 +13,7 @@ function parsePacked(symbology: MatrixCode['symbology'], packed: string): Matrix
   return { symbology, width, height, modules };
 }
 
-describe('matrix encoder FWS artifact', () => {
+describe('matrix encoder Flint artifact', () => {
   it('exposes a manifest and RS sanity hooks for the shared GF(256) path', () => {
     const encoder = loadSync();
     expect(manifest).toBeDefined();

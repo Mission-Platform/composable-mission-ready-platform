@@ -5,7 +5,7 @@
     "access": "public"
   },
   "license": "BSD-4-Clause",
-  "description": "Dependency-free 1D (linear) barcode encoder backed by Forge Web Script with a typed ES module wrapper and a write-once React/Vue component",
+  "description": "Dependency-free 1D (linear) barcode encoder backed by Flint with a typed ES module wrapper and a write-once React/Vue component",
   "type": "module",
   "sideEffects": [
     "**/*.css",
@@ -123,7 +123,7 @@
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
     "@mission-platform/vite-plugin-forge": "workspace:*",
-    "@mission-platform/vite-plugin-forge-web-script": "workspace:*",
+    "@mission-platform/vite-plugin-flint": "workspace:*",
     "@storybook/react-vite": "catalog:storybook",
     "@storybook/vue3-vite": "catalog:storybook",
     "@tsdown/css": "catalog:build",

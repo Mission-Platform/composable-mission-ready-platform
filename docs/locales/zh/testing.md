@@ -109,7 +109,7 @@ Mission Platform 利用 Vitest 的浏览器模式进行需要真实 DOM 环境�
 
 ### 伪造 Web 脚本测试
 
-使用 `@mission-platform/forge-web-script-vitest` 进行确定性编译器、工件、Wasm 和自托管奇偶校验
+使用 `@mission-platform/flint-vitest` 进行确定性编译器、工件、Wasm 和自托管奇偶校验
 检查。它将编译委托给生产环境使用的相同编译器服务和 Vite 插件；它不会创建一个
 第二个模块系统。
 
@@ -117,11 +117,11 @@ Mission Platform 利用 Vitest 的浏览器模式进行需要真实 DOM 环境�
 
 ```typescript
 // vitest.config.ts
-import { defineForgeWebScriptVitestConfig } from "@mission-platform/forge-web-script-vitest";
+import { defineFlintVitestConfig } from "@mission-platform/flint-vitest";
 
-export default defineForgeWebScriptVitestConfig({
+export default defineFlintVitestConfig({
   environment: "node",
-  forgeWebScript: {
+  flint: {
     root: import.meta.dirname,
     requestedCapabilities: ["clock.now"],
     selfHostedVmMode: "interpret",
@@ -138,32 +138,32 @@ export default defineForgeWebScriptVitestConfig({
 ```typescript
 import { afterEach, describe, expect, it } from "vitest";
 import {
-  assertForgeWebScriptDiagnostic,
-  assertForgeWebScriptNoDiagnostics,
-  createForgeWebScriptTestHarness,
-} from "@mission-platform/forge-web-script-vitest";
+  assertFlintDiagnostic,
+  assertFlintNoDiagnostics,
+  createFlintTestHarness,
+} from "@mission-platform/flint-vitest";
 
 describe("FWS fixture", () => {
-  const harness = createForgeWebScriptTestHarness({
+  const harness = createFlintTestHarness({
     requestedCapabilities: ["clock.now"],
   });
 
   afterEach(() => harness.dispose());
 
   it("checks artifacts, Wasm exports, and explicit capabilities", async () => {
-    const result = await harness.compile("valid/scalar.fws");
-    assertForgeWebScriptNoDiagnostics(result.diagnostics);
+    const result = await harness.compile("valid/scalar.flint");
+    assertFlintNoDiagnostics(result.diagnostics);
     expect(result.artifact.manifest?.exports.map(({ name }) => name)).toEqual([
       "answer",
     ]);
     expect(
       (
-        await harness.load<{ answer: () => number }>("valid/scalar.fws")
+        await harness.load<{ answer: () => number }>("valid/scalar.flint")
       ).answer(),
     ).toBe(42);
 
     const clock = await harness.load<{ current: () => bigint }>(
-      "capabilities/clock-now.fws",
+      "capabilities/clock-now.flint",
       {
         "clock.now": { now: () => 123n },
       },
@@ -172,9 +172,9 @@ describe("FWS fixture", () => {
   });
 
   it("keeps diagnostic code, phase, and span structured", async () => {
-    const result = await harness.inspect("diagnostics/invalid-type.fws");
-    assertForgeWebScriptDiagnostic(result.diagnostics, {
-      code: "FWS-TYPE-005",
+    const result = await harness.inspect("diagnostics/invalid-type.flint");
+    assertFlintDiagnostic(result.diagnostics, {
+      code: "FLINT-TYPE-005",
       phase: "type-check",
       line: 2,
     });
@@ -194,7 +194,7 @@ import {
   load,
   loadSync,
   manifest,
-} from "./fixtures/valid/scalar.fws";
+} from "./fixtures/valid/scalar.flint";
 
 expect(abiManifest).toEqual(manifest);
 expect((await load<{ answer: () => number }>()).answer()).toBe(42);
@@ -210,7 +210,7 @@ const artifact = harness.compileSource(
   `
   export fn echo(value: string) -> string { return value; }
 `,
-  "strings.fws",
+  "strings.flint",
 ).artifact;
 
 const generated = await importFromEsmSource(artifact.esmSource);
@@ -264,8 +264,8 @@ Unicode-小字符串大小写，原始平均初始化时间为 0.00024 毫秒
 不提供跨机器性能保证；使用报告的每个案例样本
 进行比较。
 
-该插件还公开了 `?forge-web-script-manifest`、`?forge-web-script-declarations` 的显式虚拟查询，
-`?forge-web-script-wasm` 和 `?forge-web-script-source-map`。为了使 TypeScript 可以发现这些环境模块，
+该插件还公开了 `?flint-manifest`、`?flint-declarations` 的显式虚拟查询，
+`?flint-wasm` 和 `?flint-source-map`。为了使 TypeScript 可以发现这些环境模块，
 将已发布的声明子路径添加到测试项目的类型中：
 
 ```json
@@ -273,16 +273,16 @@ Unicode-小字符串大小写，原始平均初始化时间为 0.00024 毫秒
   "compilerOptions": {
     "types": [
       "node",
-      "@mission-platform/forge-web-script-vitest/forge-web-script"
+      "@mission-platform/flint-vitest/flint"
     ]
   }
 }
 ```
 
-或者，将 `/// <reference types="@mission-platform/forge-web-script-vitest/forge-web-script" />` 添加到仅测试
+或者，将 `/// <reference types="@mission-platform/flint-vitest/flint" />` 添加到仅测试
 类型项目包含的入口点。声明子路径仅是类型的，并且不添加运行时导入。
 
-在 `packages/forge-web-script-vitest/fixtures/` 中使用共享装置来实现跨包语言和 ABI 一致性：
+在 `packages/flint/vitest/fixtures/` 中使用共享装置来实现跨包语言和 ABI 一致性：
 `valid/`、`diagnostics/`、`capabilities/`、`graphs/` 和 `self-hosted/` 特意保持稳定。在旁边放一个固定装置
 涵盖私有实现细节的编译器、运行时或插件规范；对小型解析器使用内联源或
 VM 单元案例。这可以保持夹具名称和清理的确定性，而无需强制通过线束进行低级测试。
@@ -294,10 +294,10 @@ lex-stage 平价合约。断言 `parity`、指纹、步骤和 AOT 再现性元�
 使用正常工作区任务运行聚焦的 FWS 矩阵：
 
 ```bash
-pnpm exec turbo run test build:check --filter @mission-platform/forge-web-script-vitest
-pnpm exec turbo run test build:check --filter @mission-platform/forge-web-script
-pnpm exec turbo run test build:check --filter @mission-platform/forge-web-script-runtime
-pnpm exec turbo run test build:check --filter @mission-platform/vite-plugin-forge-web-script
+pnpm exec turbo run test build:check --filter @mission-platform/flint-vitest
+pnpm exec turbo run test build:check --filter @mission-platform/flint
+pnpm exec turbo run test build:check --filter @mission-platform/flint-runtime
+pnpm exec turbo run test build:check --filter @mission-platform/vite-plugin-flint
 ```
 
 ## 技术参考

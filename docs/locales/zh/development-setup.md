@@ -70,7 +70,7 @@ pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
 这 `...` 还构建包所需的 Forge 依赖项。的
-中性代码扫描器是根据其 Forge Web Script 图编译的；它没有
+中性代码扫描器是根据其 Flint 图编译的；它没有
 需要 Rust 或 `wasm-pack` 构建步骤。
 
 ## 开发流程

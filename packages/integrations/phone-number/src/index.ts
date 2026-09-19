@@ -1,15 +1,15 @@
-// Public, typed wrapper around the Forge Web Script/WebAssembly phone-number core.
+// Public, typed wrapper around the Flint/WebAssembly phone-number core.
 //
 // This is a focused reimplementation of the core operations of Google's
 // libphonenumber (https://github.com/google/libphonenumber): parsing,
 // possibility/validity checks, number-type classification and formatting.
 //
-// The heavy lifting runs in WebAssembly (compiled from `phone-number.fws`); this
+// The heavy lifting runs in WebAssembly (compiled from `phone-number.flint`); this
 // module provides an ergonomic, fully typed façade with a lazily-instantiated
 // singleton so consumers never touch the raw wasm exports.
 
-import type { ForgePhoneNumberExports } from './phone-number.fws';
-import { load, loadSync } from './phone-number.fws';
+import type { ForgePhoneNumberExports } from './phone-number.flint';
+import { load, loadSync } from './phone-number.flint';
 
 /** Line type of a phone number, mirroring libphonenumber's `PhoneNumberType`. */
 export const PhoneNumberType = {

@@ -817,18 +817,18 @@ export interface WysiwygEditorProperties
 
 説明はありません。
 
-## `src/monaco/forge-web-script`
+## `src/monaco/flint`
 
-### attachForgeWebScriptモナコ
+### attachFlintモナコ
 
 **種類:** 関数
 
 ```typescript
-function attachForgeWebScriptMonaco(
+function attachFlintMonaco(
   editor: monaco.editor.IStandaloneCodeEditor,
   monacoRuntime: MonacoRuntime,
-  options: ForgeWebScriptMonacoOptions = {},
-): ForgeWebScriptMonacoHandle;
+  options: FlintMonacoOptions = {},
+): FlintMonacoHandle;
 ```
 
 診断、完了、ホバー、モデルの同期、およびトークン化をエディターにアタッチします。
@@ -839,47 +839,44 @@ function attachForgeWebScriptMonaco(
 | ---------------- | ----------------------------------- | ---- |
 | 編集者           | monaco.editor.IStandaloneCodeEditor |      |
 | モナコランタイム | モナコランタイム                    |      |
-| オプション       | ForgeWebScriptMonacoオプション      |      |
+| オプション       | FlintMonacoオプション               |      |
 
-### forgeWebScriptLanguageId
+### flintLanguageId
 
 **種類:** 定数
 
 ```typescript
-export const forgeWebScriptLanguageId;
+export const flintLanguageId;
 ```
 
 説明はありません。
 
-### ForgeWebScriptモナコハンドル
+### Flintモナコハンドル
 
 **種類:** インターフェース
 
 ```typescript
-export interface ForgeWebScriptMonacoHandle
+export interface FlintMonacoHandle
 ```
 
 説明はありません。
 
-### ForgeWebScriptMonacoオプション
+### FlintMonacoオプション
 
 **種類:** インターフェース
 
 ```typescript
-export interface ForgeWebScriptMonacoOptions
+export interface FlintMonacoOptions
 ```
 
 説明はありません。
 
-### registerForgeWebScript言語
+### registerFlint言語
 
 **種類:** 関数
 
 ```typescript
-function registerForgeWebScriptLanguage(
-  monacoRuntime: MonacoRuntime,
-  languageId = forgeWebScriptLanguageId,
-): monaco.IDisposable;
+function registerFlintLanguage(monacoRuntime: MonacoRuntime, languageId = flintLanguageId): monaco.IDisposable;
 ```
 
 Forge Web Script 言語と語彙トークン プロバイダーを登録します。

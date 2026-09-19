@@ -6,11 +6,11 @@ import { pathToFileURL } from "node:url";
 import { compileAssemblyScript } from "@mission-platform/vite-plugin-assemblyscript";
 
 import { hashArtifactBytes, validateWasmArtifact } from "./abi.ts";
-import { createFwsVmAdapter } from "./adapters/fws-vm.ts";
+import { createFlintVmAdapter } from "./adapters/flint-vm.ts";
 import {
-  createFwsGeneratedWasmAdapter,
-  createFwsWasmAdapter,
-} from "./adapters/fws-wasm.ts";
+  createFlintGeneratedWasmAdapter,
+  createFlintWasmAdapter,
+} from "./adapters/flint-wasm.ts";
 import { createJavaScriptAdapter } from "./adapters/javascript.ts";
 
 import type { BuildArtifact } from "./contracts.ts";
@@ -117,16 +117,23 @@ export async function buildBenchmarkArtifacts(): Promise<
   const javascript = await createJavaScriptAdapter().build();
   const vm = await Promise.all(
     (["interpret", "jit", "aot"] as const).map((mode) =>
-      createFwsVmAdapter(mode).build(),
+      createFlintVmAdapter(mode).build(),
     ),
   );
-  const fwsWasm = await createFwsWasmAdapter().build();
-  const fwsGeneratedWasm = await createFwsGeneratedWasmAdapter().build();
+  const flintWasm = await createFlintWasmAdapter().build();
+  const flintGeneratedWasm = await createFlintGeneratedWasmAdapter().build();
   const assemblyscript = await buildAssemblyScriptArtifact();
   const rust = buildRustArtifact();
   // The build manifest is deliberately ordered; report renderers can consume it
   // without re-sorting implementation families differently.
-  return [javascript, ...vm, fwsWasm, fwsGeneratedWasm, rust, assemblyscript];
+  return [
+    javascript,
+    ...vm,
+    flintWasm,
+    flintGeneratedWasm,
+    rust,
+    assemblyscript,
+  ];
 }
 
 export function artifactExists(artifact: BuildArtifact): boolean {

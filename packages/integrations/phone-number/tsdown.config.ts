@@ -1,9 +1,9 @@
 import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
-import forgeWebScriptPlugin from '@mission-platform/vite-plugin-forge-web-script';
+import flintPlugin from '@mission-platform/vite-plugin-flint';
 
 /**
- * Single self-contained ESM bundle: the Forge Web Script core is compiled to
- * wasm and inlined by the FWS plugin before the bundle step, so the module
+ * Single self-contained ESM bundle: the Flint core is compiled to
+ * wasm and inlined by the Flint plugin before the bundle step, so the module
  * graph is flattened (`unbundle: false`) rather than preserve-modules.
  */
 export default defineTsdownLibrary({
@@ -15,7 +15,7 @@ export default defineTsdownLibrary({
   dts: true,
   overrides: {
     plugins: [
-      forgeWebScriptPlugin({
+      flintPlugin({
         root: import.meta.dirname,
       }),
     ],

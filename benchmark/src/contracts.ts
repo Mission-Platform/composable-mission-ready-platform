@@ -17,11 +17,11 @@ export const IMPLEMENTATIONS = [
   "javascript",
   "rust-wasm",
   "assemblyscript-wasm",
-  "fws",
+  "flint",
 ] as const;
 export type Implementation = (typeof IMPLEMENTATIONS)[number];
 
-export const FWS_MODES = [
+export const FLINT_MODES = [
   "interpret",
   "jit",
   "aot",
@@ -29,7 +29,7 @@ export const FWS_MODES = [
   "wasm-generated",
   "wasm-excluded-bounds",
 ] as const;
-export type FwsMode = (typeof FWS_MODES)[number];
+export type FlintMode = (typeof FLINT_MODES)[number];
 
 export type BenchmarkMetric =
   | "compile-time"
@@ -41,19 +41,19 @@ export type BenchmarkMetric =
 export interface BenchmarkMetricRecord {
   readonly metric: BenchmarkMetric;
   readonly implementation: Implementation;
-  readonly fwsMode?: FwsMode;
+  readonly flintMode?: FlintMode;
   readonly caseId?: string;
   readonly hostRuntime?: HostRuntime;
   readonly value: number;
   readonly unit: "milliseconds" | "bytes" | "calls-per-second" | "percent";
   readonly referenceValue?: number;
-  readonly referenceMode?: FwsMode;
+  readonly referenceMode?: FlintMode;
   readonly explanation?: string;
 }
 
-/** Metadata identifying the FWS pipeline represented by a benchmark artifact. */
-export interface FwsBenchmarkPipelineMetadata {
-  readonly pipeline: "fws-son-wasm-two-stage" | "fws-vm-reference";
+/** Metadata identifying the Flint pipeline represented by a benchmark artifact. */
+export interface FlintBenchmarkPipelineMetadata {
+  readonly pipeline: "flint-son-wasm-two-stage" | "flint-vm-reference";
   readonly frontend: "son-ir" | "vm-ir";
   readonly wasmStage?: "wasm-ir-optimizer";
   readonly optimization: "debug" | "release";
@@ -124,14 +124,14 @@ export type NormalizedResult = BenchmarkOutput;
 export interface BuildArtifact {
   readonly id: string;
   readonly implementation: Implementation;
-  readonly fwsMode?: FwsMode;
+  readonly flintMode?: FlintMode;
   readonly hostRuntime?: HostRuntime;
-  readonly artifactKind: "javascript" | "wasm" | "fws-source" | "fws-vm";
+  readonly artifactKind: "javascript" | "wasm" | "flint-source" | "flint-vm";
   readonly sizeBytes?: number;
   readonly hash?: string;
   readonly exports?: readonly string[];
   readonly metadata?: Readonly<Record<string, string | number | boolean>>;
-  readonly fwsPipeline?: FwsBenchmarkPipelineMetadata;
+  readonly flintPipeline?: FlintBenchmarkPipelineMetadata;
 }
 
 export interface InitializedAdapter<
@@ -150,7 +150,7 @@ export interface RuntimeAdapter<
   Output extends BenchmarkOutput = BenchmarkOutput,
 > {
   readonly implementation: Implementation;
-  readonly mode?: FwsMode;
+  readonly mode?: FlintMode;
   readonly adapterId: string;
   build: () => Promise<BuildArtifact>;
   initialize: (
@@ -163,7 +163,7 @@ export interface BenchmarkKey {
   readonly workload: BenchmarkCategory;
   readonly inputSize: BenchmarkSize;
   readonly implementation: Implementation;
-  readonly fwsMode?: FwsMode;
+  readonly flintMode?: FlintMode;
   readonly hostRuntime: HostRuntime;
   readonly phase: BenchmarkPhase;
 }
@@ -258,7 +258,7 @@ export type PerformanceGateStatus =
   "passed" | "failed" | "not-comparable" | "missing-baseline";
 
 export interface PerformanceGateResult {
-  /** The FWS execute row being evaluated. */
+  /** The Flint execute row being evaluated. */
   readonly key: BenchmarkKey;
   /** The exact JavaScript/node identity used as the reference, when available. */
   readonly referenceKey: BenchmarkKey;
@@ -313,7 +313,7 @@ export interface ExecutionMeasurement {
 
 export interface BenchmarkFailure {
   readonly implementation: Implementation;
-  readonly fwsMode?: FwsMode;
+  readonly flintMode?: FlintMode;
   readonly phase: BenchmarkPhase;
   readonly category: "environment" | "build" | "runtime" | "correctness";
   readonly message: string;
@@ -325,7 +325,7 @@ export function createBenchmarkKey(key: BenchmarkKey): string {
     key.workload,
     key.inputSize,
     key.implementation,
-    key.fwsMode ?? "-",
+    key.flintMode ?? "-",
     key.hostRuntime,
     key.phase,
   ].join("|");

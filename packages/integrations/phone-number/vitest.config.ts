@@ -1,10 +1,10 @@
 import { defineVitestConfig } from '@mission-platform/vite-config/vitest';
-import forgeWebScriptPlugin from '@mission-platform/vite-plugin-forge-web-script';
+import flintPlugin from '@mission-platform/vite-plugin-flint';
 
 export default defineVitestConfig({
   coverageInclude: ['src/**/*.ts'],
   coverageExclude: ['src/**/*.spec.ts', 'src/generated/**'],
   overrides: {
-    plugins: [forgeWebScriptPlugin({ root: import.meta.dirname })],
+    plugins: [flintPlugin({ root: import.meta.dirname })],
   },
 });

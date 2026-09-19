@@ -3,7 +3,7 @@
 A **DEVELOPER** Model Context Protocol (MCP) server that helps AI assistants develop within the
 Mission Platform monorepo. (Compatibility note: previously @mission-platform/mcp).
 
-The server uses the shared Mission Platform and FWS analysis/runtime packages.
+The server uses the shared Mission Platform and Flint analysis/runtime packages.
 It is bundled with `tsdown` via Turborepo and run from its built `dist/` output
 on **Node.js 24+**.
 
@@ -45,7 +45,7 @@ To conserve context tokens and prevent model distraction, `@mission-platform/mcp
 | `coding` / `lsp`   | Full LSP code intelligence: diagnostics, symbols, definitions, callers, references, edits, formatting, plus `run_test_file`, `turbo_run`, `repo_prime_dependencies`, and `review_changes`.                                          |
 | `security`         | Auditing & compliance suite: `security_scan_secrets`, `security_analyze_code`, `security_audit_dependencies`, `security_audit_supply_chain`, `security_collect_compliance_evidence`, `security_audit_compliance`, `review_changes`. |
 | `git`              | Version control & commits: `git_status`, `git_changed_files`, `git_diff`, `git_log`, `git_show`, `git_blame`, `git_grep`, `git_metadata`, `git_commit_plan`, `git_commit_apply`.                                                    |
-| `fws`              | Forge Web Script compiler & runtime: `fws_analyze_source`, `fws_analyze_workspace`, `fws_inspect_manifest`, `fws_inspect_sonir`, `fws_verify_artifact`, `fws_run_trace`.                                                            |
+| `fws`              | Flint compiler & runtime: `flint_analyze_source`, `flint_analyze_workspace`, `flint_inspect_manifest`, `flint_inspect_sonir`, `flint_verify_artifact`, `flint_run_trace`.                                                           |
 | `full`             | Complete catalog of all 100+ registered tools (default when no profile is specified).                                                                                                                                               |
 
 Task-specific server configurations are pre-registered in `.ai/mcp/mcp.json` (`mission-core`, `mission-security`, `mission-frontend`, `mission-coding`, `mission-git`, `mission-fws`), allowing assistants to activate only the required tool profile.
@@ -142,7 +142,7 @@ published or otherwise prebuilt installations.
 | `git_commit_plan`                                                          | Read-only, two-phase Conventional Commit preview: validates the structured message with the root commitlint rules, captures a repository snapshot, and returns bounded staging/commit actions. |
 | `git_commit_apply`                                                         | Apply a still-current `git_commit_plan` with normal local Git hooks; mutates only the local index/history and never contacts a remote.                                                         |
 | `git_tags` / `git_remotes`                                                 | Inspect bounded local tag metadata and configured remote fetch/push metadata; remote URLs are credential-sanitized and no network is contacted.                                                |
-| `get_guide`                                                                | Curated guide for a workflow (including `fws-authoring`, `fws-security`, `fws-artifact-verification`, and `fws-forensics`).                                                                    |
+| `get_guide`                                                                | Curated guide for a workflow (including `flint-authoring`, `flint-security`, `flint-artifact-verification`, and `flint-forensics`).                                                            |
 | `list_docs` / `read_doc` / `search_docs`                                   | Browse and search the repository `docs/`.                                                                                                                                                      |
 | `list_components`                                                          | Every component in `@mission-platform/components` with exports and **atomic level**.                                                                                                           |
 | `get_component_usage`                                                      | Props interface, level/path, doc comment, stories, and Vue/React import snippets.                                                                                                              |
@@ -158,11 +158,11 @@ published or otherwise prebuilt installations.
 | `locale_coverage`                                                          | Report translated key counts and missing or extra keys for each non-default locale of a workspace member. This is read-only and never writes locale files.                                     |
 | `add_locale` / `remove_locale`                                             | Add a language (clones the default locale's structure; `fill: source \| empty`) or remove one (refuses the default). Dry-run by default; pass `apply: true`.                                   |
 | `update_translation`                                                       | Set one or more translation values by dot-path key (`entries`) in a single locale/namespace. Dry-run by default; pass `apply: true`.                                                           |
-| `fws_analyze_source` / `fws_analyze_workspace`                             | Run canonical FWS analysis on bounded inline source or repository-rooted `.fws` files; returns structured diagnostics, findings, facts, and policy without execution.                          |
-| `fws_inspect_manifest`                                                     | Inspect a repository-rooted FWS ABI manifest, including bounds-check policy, without instantiating Wasm.                                                                                       |
-| `fws_inspect_sonir`                                                        | Inspect a bounded, root-bounded `.sonir.json` graph summary, optimizer passes, and bounds policy without executing guest code.                                                                 |
-| `fws_verify_artifact`                                                      | Verify a bounded Wasm binary against its FWS manifest, metadata, hashes, target features, and capability policy; never executes it.                                                            |
-| `fws_run_trace`                                                            | Capture a bounded trace from the capability-denied self-hosted FWS probe only; arbitrary Wasm, commands, imports, and ambient I/O are unavailable.                                             |
+| `flint_analyze_source` / `flint_analyze_workspace`                         | Run canonical Flint analysis on bounded inline source or repository-rooted `.flint` files; returns structured diagnostics, findings, facts, and policy without execution.                      |
+| `flint_inspect_manifest`                                                   | Inspect a repository-rooted Flint ABI manifest, including bounds-check policy, without instantiating Wasm.                                                                                     |
+| `flint_inspect_sonir`                                                      | Inspect a bounded, root-bounded `.sonir.json` graph summary, optimizer passes, and bounds policy without executing guest code.                                                                 |
+| `flint_verify_artifact`                                                    | Verify a bounded Wasm binary against its Flint manifest, metadata, hashes, target features, and capability policy; never executes it.                                                          |
+| `flint_run_trace`                                                          | Capture a bounded trace from the capability-denied self-hosted Flint probe only; arbitrary Wasm, commands, imports, and ambient I/O are unavailable.                                           |
 
 ## Local commit workflow
 
@@ -202,8 +202,8 @@ arguments.
 
 ## Prompts
 
-Ready-to-run, guide-embedded prompts for each workflow: `fws-authoring`,
-`fws-secure-review`, `fws-compile-verify`, `fws-forensic-debug`, `use-component`,
+Ready-to-run, guide-embedded prompts for each workflow: `flint-authoring`,
+`flint-secure-review`, `flint-compile-verify`, `flint-forensic-debug`, `use-component`,
 `create-package`, `develop-package`, `create-app`, `develop-app`,
 `create-worker`, `develop-worker`.
 
@@ -239,8 +239,8 @@ The other write paths are the scaffolding tools, i18n locale tools
 (`lsp_config_add`, `lsp_config_edit`), all of which are dry-run previews unless an
 explicit `apply: true` is passed.
 
-FWS inspection is read-only and root-bounded. Source analysis and artifact
-verification delegate to the canonical FWS packages. Trace capture is opt-in,
+Flint inspection is read-only and root-bounded. Source analysis and artifact
+verification delegate to the canonical Flint packages. Trace capture is opt-in,
 event/byte/snapshot capped, deterministic, redacted, and limited to the
 capability-denied self-hosted probe; it is never arbitrary guest execution.
 
@@ -252,8 +252,8 @@ status does not start a server. Configured commands are launched without a
 shell, absolute command arguments must remain within the repository root, and
 document contents are capped before they enter the JSON-RPC transport.
 
-`fws_analyze_source` and `fws_analyze_workspace` accept `policy.boundsChecks`:
+`flint_analyze_source` and `flint_analyze_workspace` accept `policy.boundsChecks`:
 `runtime` is the safe default, `proven-safe` requires proof facts, and
-`excluded-by-profile` is surfaced as an auditable finding. `fws_inspect_sonir`
+`excluded-by-profile` is surfaced as an auditable finding. `flint_inspect_sonir`
 validates the schema and graph metadata, caps returned nodes/functions, rejects
 paths outside the repository root, and never evaluates graph or Wasm contents.

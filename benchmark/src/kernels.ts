@@ -14,7 +14,7 @@ export function toI32(value: number): number {
 
 /**
  * Deterministic i32 term used by arithmetic-reduce.
- * Matches Forge Web Script / WASM i32 multiply and remainder semantics.
+ * Matches Flint / WASM i32 multiply and remainder semantics.
  */
 export function arithmeticTerm(index: number, seed: number): number {
   const termIndex = toI32(index + 1);
@@ -46,7 +46,7 @@ export function runArithmetic(input: ArithmeticInput): number {
   );
 }
 
-/** Doubling repeat that matches the recursive FWS implementation. */
+/** Doubling repeat that matches the recursive Flint implementation. */
 export function repeatString(piece: string, count: number): string {
   const n = toI32(count);
   if (n <= 0) return "";
