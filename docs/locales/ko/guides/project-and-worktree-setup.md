@@ -65,6 +65,7 @@ When a worktree is provisioned or configured:
 - **APFS Copy-on-Write:** On macOS, `node_modules` is cloned via `cp -cR` before running `pnpm install --frozen-lockfile`, completing setup in seconds with zero extra disk footprint.
 - **Turborepo Cache Sharing:** The `.turbo/cache` directory is initialized and shared across worktrees.
 - **LSP Configuration:** `agent-lsp.json` is mirrored from the main repository.
+- **Upstream Build Priming:** Automatically primes upstream workspace build dependencies (`turbo run build --filter <target>^...`) to eliminate clean-state test failures.
 - **Build Sanity Verification:** A quick test check runs to verify that the environment is fully operational.
 
 ---
