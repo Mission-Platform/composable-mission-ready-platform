@@ -28,11 +28,17 @@ import type {
 
 export { deriveFlintModuleId } from './identity.js';
 
+/**
+ * Result object returned by the Flint parser containing the parsed module and diagnostics.
+ */
 export interface FlintParseResult {
   readonly module?: FlintModule;
   readonly diagnostics: readonly FlintDiagnostic[];
 }
 
+/**
+ * Options configuring parsing behavior and diagnostic collection.
+ */
 export interface FlintParseOptions {
   readonly root?: string;
 }
@@ -50,6 +56,9 @@ export const primitiveTypes = new Set<FlintPrimitiveType>([
   'unit',
 ]);
 
+/**
+ * Recursive descent parser for the Flint programming language.
+ */
 class Parser {
   private readonly diagnostics: FlintDiagnostic[];
   private index = 0;
@@ -57,12 +66,24 @@ class Parser {
   private readonly tokens: readonly FlintToken[];
   private readonly fileName: string;
 
+  /**
+   * Initializes a new Parser instance for the given source file and token stream.
+   *
+   * @param tokens - Lexed token stream.
+   * @param fileName - Canonical file path identifier.
+   * @param diagnostics - Diagnostic report accumulator.
+   */
   public constructor(tokens: readonly FlintToken[], fileName: string, diagnostics: readonly FlintDiagnostic[]) {
     this.tokens = tokens;
     this.fileName = fileName;
     this.diagnostics = [...diagnostics];
   }
 
+  /**
+   * Parses the loaded token stream into a complete AST module with diagnostics.
+   *
+   * @returns Parse result containing the compiled module and accumulated diagnostics.
+   */
   public parse(): FlintParseResult {
     const start = this.tokens.find(({ kind }) => kind !== 'comment')?.span ?? this.current().span;
     const imports: FlintCapabilityImport[] = [];
@@ -93,23 +114,14 @@ class Parser {
       const documentation = pendingDocumentation ?? this.consumeTopLevelTrivia();
       pendingDocumentation = undefined;
       if (this.is('}') || this.is('eof')) break;
-      if (this.is('import')) {
-        if (this.isNext('capability')) imports.push(this.parseImport());
-        else sourceImports.push(this.parseSourceImport());
-      } else if (this.is('struct') || this.is('record'))
-        structs.push(this.parseStruct(documentation, this.is('record')));
-      else if (this.is('enum') || (this.is('export') && this.isNext('enum'))) enums.push(this.parseEnum(documentation));
-      else if (this.is('interface')) interfaces.push(this.parseInterface(documentation));
-      else if (
-        this.is('class') ||
-        this.is('constructor') ||
-        this.is('extends') ||
-        this.is('impl') ||
-        this.is('new') ||
-        this.is('trait')
-      )
-        this.rejectClassDeclaration();
-      else functions.push(this.parseFunction(documentation));
+      this.parseTopLevelDeclaration(documentation, {
+        imports,
+        sourceImports,
+        structs,
+        enums,
+        interfaces,
+        functions,
+      });
     }
     const end = this.is('}')
       ? this.expect('}', 'FLINT-PARSE-004', "Expected '}' to close the legacy module.").span
@@ -125,9 +137,75 @@ class Parser {
       functions,
       span: mergeSpans(start, end),
     };
-    return { ...(module === undefined ? {} : { module }), diagnostics: this.diagnostics };
+    return { module, diagnostics: this.diagnostics };
   }
 
+  /**
+   * Checks whether the current token matches a disallowed object-oriented keyword.
+   *
+   * @returns True if current token is a forbidden class keyword.
+   */
+  private isDisallowedClassKeyword(): boolean {
+    return (
+      this.is('class') ||
+      this.is('constructor') ||
+      this.is('extends') ||
+      this.is('impl') ||
+      this.is('new') ||
+      this.is('trait')
+    );
+  }
+
+  /**
+   * Parses a top-level capability or source module import statement.
+   *
+   * @param declarations - Target container collecting parsed declarations.
+   */
+  private parseTopLevelImport(declarations: {
+    readonly imports: FlintCapabilityImport[];
+    readonly sourceImports: FlintSourceModuleImport[];
+  }): void {
+    if (this.isNext('capability')) declarations.imports.push(this.parseImport());
+    else declarations.sourceImports.push(this.parseSourceImport());
+  }
+
+  /**
+   * Parses a single top-level module declaration item.
+   *
+   * @param documentation - Optional documentation comment attached to declaration.
+   * @param declarations - Target container collecting parsed declarations.
+   */
+  private parseTopLevelDeclaration(
+    documentation: FlintFunction['documentation'] | undefined,
+    declarations: {
+      readonly imports: FlintCapabilityImport[];
+      readonly sourceImports: FlintSourceModuleImport[];
+      readonly structs: FlintStructDeclaration[];
+      readonly enums: FlintEnumDeclaration[];
+      readonly interfaces: FlintInterfaceDeclaration[];
+      readonly functions: FlintFunction[];
+    },
+  ): void {
+    if (this.is('import')) {
+      this.parseTopLevelImport(declarations);
+    } else if (this.is('struct') || this.is('record')) {
+      declarations.structs.push(this.parseStruct(documentation, this.is('record')));
+    } else if (this.is('enum') || (this.is('export') && this.isNext('enum'))) {
+      declarations.enums.push(this.parseEnum(documentation));
+    } else if (this.is('interface')) {
+      declarations.interfaces.push(this.parseInterface(documentation));
+    } else if (this.isDisallowedClassKeyword()) {
+      this.rejectClassDeclaration();
+    } else {
+      declarations.functions.push(this.parseFunction(documentation));
+    }
+  }
+
+  /**
+   * Parses a source module import statement binding an external module.
+   *
+   * @returns Parsed source module import AST node.
+   */
   private parseSourceImport(): FlintSourceModuleImport {
     const start = this.consume().span;
     if (this.is('module')) this.consume();
@@ -143,6 +221,11 @@ class Parser {
     };
   }
 
+  /**
+   * Parses a host capability import statement binding a host interface.
+   *
+   * @returns Parsed capability import AST node.
+   */
   private parseImport(): FlintCapabilityImport {
     const start = this.consume().span;
     this.expect('capability', 'FLINT-PARSE-005', "Expected 'capability' after 'import'.");
@@ -163,8 +246,16 @@ class Parser {
     };
   }
 
-  private parseFunction(documentation?: FlintFunction['documentation']): FlintFunction {
-    const start = this.current().span;
+  /**
+   * Parses function declaration modifiers such as export, iter, or inline.
+   *
+   * @returns Parsed modifier flags.
+   */
+  private parseFunctionModifiers(): {
+    exported: boolean;
+    iterable: boolean;
+    inlinePolicy?: FlintFunction['inlinePolicy'];
+  } {
     let exported = false;
     let iterable = false;
     let inlinePolicy: FlintFunction['inlinePolicy'];
@@ -175,6 +266,18 @@ class Parser {
       else if (this.match('noinline')) inlinePolicy = 'noinline';
       else break;
     }
+    return { exported, iterable, inlinePolicy };
+  }
+
+  /**
+   * Parses a function declaration AST node.
+   *
+   * @param documentation - Optional attached documentation comment.
+   * @returns Complete function declaration AST node.
+   */
+  private parseFunction(documentation?: FlintFunction['documentation']): FlintFunction {
+    const start = this.current().span;
+    const { exported, iterable, inlinePolicy } = this.parseFunctionModifiers();
     this.expect('fn', 'FLINT-PARSE-011', "Expected 'fn' or 'export fn'.");
     const name = this.expectIdentifier('FLINT-PARSE-012', 'Expected a function name.');
     const genericParameters = this.parseGenericParameters();
@@ -197,6 +300,11 @@ class Parser {
     };
   }
 
+  /**
+   * Parses generic type parameter declarations enclosed in angle brackets.
+   *
+   * @returns Array of parsed generic parameters.
+   */
   private parseGenericParameters(): FlintGenericParameter[] {
     if (!this.match('<')) return [];
     const parameters: FlintGenericParameter[] = [];
@@ -222,6 +330,36 @@ class Parser {
     return parameters;
   }
 
+  /**
+   * Parses a single field declaration within a struct body.
+   *
+   * @param fieldDocumentation - Optional field-level documentation.
+   * @returns Parsed struct field AST node.
+   */
+  private parseStructField(fieldDocumentation?: FlintFunction['documentation']): FlintStructField {
+    const fieldStart = this.current().span;
+    const fieldName = this.expectIdentifier('FLINT-PARSE-036', 'Expected a struct field name.');
+    this.expect(':', 'FLINT-PARSE-037', "Expected ':' after a struct field name.");
+    const type = this.parseType();
+    const end = this.match(',')
+      ? this.previous().span
+      : this.expect(';', 'FLINT-PARSE-038', "Expected ';' after a struct field.").span;
+    return {
+      kind: 'struct-field',
+      name: fieldName ?? '<missing>',
+      type,
+      ...(fieldDocumentation === undefined ? {} : { documentation: fieldDocumentation }),
+      span: mergeSpans(fieldStart, end),
+    };
+  }
+
+  /**
+   * Parses a struct or record type declaration.
+   *
+   * @param documentation - Optional attached documentation comment.
+   * @param record - True if declared as a value record.
+   * @returns Parsed struct declaration AST node.
+   */
   private parseStruct(documentation?: FlintFunction['documentation'], record = false): FlintStructDeclaration {
     const start = this.consume().span;
     const name = this.expectIdentifier('FLINT-PARSE-034', 'Expected a struct name.');
@@ -231,20 +369,7 @@ class Parser {
     while (true) {
       const fieldDocumentation = this.consumeTopLevelTrivia();
       if (this.is('}') || this.is('eof')) break;
-      const fieldStart = this.current().span;
-      const fieldName = this.expectIdentifier('FLINT-PARSE-036', 'Expected a struct field name.');
-      this.expect(':', 'FLINT-PARSE-037', "Expected ':' after a struct field name.");
-      const type = this.parseType();
-      const end = this.match(',')
-        ? this.previous().span
-        : this.expect(';', 'FLINT-PARSE-038', "Expected ';' after a struct field.").span;
-      fields.push({
-        kind: 'struct-field',
-        name: fieldName ?? '<missing>',
-        type,
-        ...(fieldDocumentation === undefined ? {} : { documentation: fieldDocumentation }),
-        span: mergeSpans(fieldStart, end),
-      });
+      fields.push(this.parseStructField(fieldDocumentation));
     }
     const end = this.expect('}', 'FLINT-PARSE-039', "Expected '}' after a struct declaration.").span;
     return {
@@ -259,6 +384,57 @@ class Parser {
     };
   }
 
+  /**
+   * Computes or parses an explicit numeric discriminant tag for an enum variant.
+   *
+   * @param previousTag - Numeric tag of preceding variant.
+   * @returns Resolved numeric discriminant tag.
+   */
+  private parseEnumVariantTag(previousTag: number): number {
+    let tag = previousTag + 1;
+    if (this.match('=')) {
+      const negative = this.match('-');
+      const value = this.expectKind('number', 'FLINT-PARSE-045', 'Expected an integer enum discriminant.');
+      tag = (negative ? -1 : 1) * Number(value.text || '0');
+    }
+    return tag;
+  }
+
+  /**
+   * Parses an enum variant declaration with optional payload fields.
+   *
+   * @param variantDocumentation - Optional variant documentation.
+   * @param previousTag - Preceding numeric discriminant tag.
+   * @returns Parsed enum variant AST node.
+   */
+  private parseEnumVariant(previousTag: number): FlintEnumVariant {
+    const variantStart = this.current().span;
+    const variantName = this.expectIdentifier('FLINT-PARSE-042', 'Expected an enum variant name.');
+    const fields = this.is('(') ? this.parseVariantFields() : [];
+    const tag = this.parseEnumVariantTag(previousTag);
+    const separated = this.match(',');
+    const end = separated
+      ? this.previous().span
+      : variantName === undefined
+        ? this.current().span
+        : this.previous().span;
+    if (!separated && !this.is('}') && !this.is('eof'))
+      this.expect(',', 'FLINT-PARSE-043', "Expected ',' between enum variants.");
+    return {
+      kind: 'enum-variant',
+      name: variantName ?? '<missing>',
+      fields,
+      tag,
+      span: mergeSpans(variantStart, end),
+    };
+  }
+
+  /**
+   * Parses an enum type declaration.
+   *
+   * @param documentation - Optional attached documentation comment.
+   * @returns Parsed enum declaration AST node.
+   */
   private parseEnum(documentation?: FlintFunction['documentation']): FlintEnumDeclaration {
     const start = this.current().span;
     const exported = this.match('export');
@@ -268,31 +444,8 @@ class Parser {
     this.expect('{', 'FLINT-PARSE-041', "Expected '{' after an enum name.");
     const variants: FlintEnumVariant[] = [];
     while (!this.is('}') && !this.is('eof')) {
-      const variantStart = this.current().span;
-      const variantName = this.expectIdentifier('FLINT-PARSE-042', 'Expected an enum variant name.');
-      const fields = this.is('(') ? this.parseVariantFields() : [];
-      let tag = variants.length === 0 ? 0 : (variants.at(-1)?.tag ?? 0) + 1;
-      if (this.match('=')) {
-        let negative = false;
-        if (this.match('-')) negative = true;
-        const value = this.expectKind('number', 'FLINT-PARSE-045', 'Expected an integer enum discriminant.');
-        tag = (negative ? -1 : 1) * Number(value.text || '0');
-      }
-      const separated = this.match(',');
-      const end = separated
-        ? this.previous().span
-        : variantName === undefined
-          ? this.current().span
-          : this.previous().span;
-      variants.push({
-        kind: 'enum-variant',
-        name: variantName ?? '<missing>',
-        fields,
-        tag,
-        span: mergeSpans(variantStart, end),
-      });
-      if (!separated && !this.is('}') && !this.is('eof'))
-        this.expect(',', 'FLINT-PARSE-043', "Expected ',' between enum variants.");
+      const previousTag = variants.length === 0 ? -1 : (variants.at(-1)?.tag ?? 0);
+      variants.push(this.parseEnumVariant(previousTag));
     }
     const end = this.expect('}', 'FLINT-PARSE-044', "Expected '}' after an enum declaration.").span;
     return {
@@ -306,6 +459,12 @@ class Parser {
     };
   }
 
+  /**
+   * Parses an interface type declaration.
+   *
+   * @param documentation - Optional attached documentation comment.
+   * @returns Parsed interface declaration AST node.
+   */
   private parseInterface(documentation?: FlintFunction['documentation']): FlintInterfaceDeclaration {
     const start = this.consume().span;
     const name = this.expectIdentifier('FLINT-PARSE-045', 'Expected an interface name.');
@@ -344,6 +503,9 @@ class Parser {
     };
   }
 
+  /**
+   * Emits descriptive diagnostics rejecting class-based syntax.
+   */
   private rejectClassDeclaration(): void {
     const start = this.consume().span;
     this.diagnostics.push(
@@ -374,6 +536,11 @@ class Parser {
     }
   }
 
+  /**
+   * Parses function or capability parameter lists enclosed in parentheses.
+   *
+   * @returns Array of parsed parameter AST nodes.
+   */
   private parseParameters(): FlintParameter[] {
     this.expect('(', 'FLINT-PARSE-014', "Expected '('.");
     const parameters: FlintParameter[] = [];
@@ -423,39 +590,99 @@ class Parser {
     return fields;
   }
 
+  /**
+   * Parses a fixed-size array type specification.
+   *
+   * @param typeStart - Start position span.
+   * @param referenceStart - Whether preceded by an reference operator.
+   * @param mutableReference - Whether reference is mutable.
+   * @returns Parsed fixed array type AST node.
+   */
+  private parseFixedArrayType(
+    typeStart: FlintSourceSpan,
+    referenceStart: boolean,
+    mutableReference: boolean,
+  ): FlintTypeName {
+    const element = this.parseType();
+    this.expect(';', 'FLINT-PARSE-080', "Expected ';' before a fixed array length.");
+    const lengthToken = this.expectKind('number', 'FLINT-PARSE-081', 'Expected a fixed array length.');
+    const end = this.expect(']', 'FLINT-PARSE-082', "Expected ']' after a fixed array type.").span;
+    return {
+      kind: 'type-name',
+      name: 'unit',
+      reference: 'Array',
+      arguments: [element],
+      length: Number(lengthToken.text || '0'),
+      ...(referenceStart ? { referenceMode: mutableReference ? ('mut-ref' as const) : ('ref' as const) } : {}),
+      span: mergeSpans(typeStart, end),
+    };
+  }
+
+  /**
+   * Resolves the identifier or keyword string representing the base type name.
+   *
+   * @returns Type name token string.
+   */
+  private resolveTypeNameToken(): string {
+    const nameToken = this.current();
+    const isNamed = nameToken.kind === 'identifier' || nameToken.kind === 'keyword';
+    return isNamed ? nameToken.text : 'unit';
+  }
+
+  /**
+   * Resolves reference mode qualifier (ref or mut-ref) based on preceding tokens.
+   *
+   * @param referenceStart - Whether an ampersand was consumed.
+   * @param mutableReference - Whether mut was consumed.
+   * @returns Resolved reference mode or undefined.
+   */
+  private resolveReferenceMode(referenceStart: boolean, mutableReference: boolean): 'mut-ref' | 'ref' | undefined {
+    if (!referenceStart) return undefined;
+    return mutableReference ? 'mut-ref' : 'ref';
+  }
+
+  /**
+   * Parses a base type name node with optional type arguments and reference qualifiers.
+   *
+   * @param typeStart - Start position span.
+   * @param referenceStart - Whether preceded by reference.
+   * @param mutableReference - Whether reference is mutable.
+   * @returns Parsed base type name AST node.
+   */
+  private parseBaseTypeName(
+    typeStart: FlintSourceSpan,
+    referenceStart: boolean,
+    mutableReference: boolean,
+  ): FlintTypeName {
+    const name = this.resolveTypeNameToken();
+    this.consume();
+    const arguments_ = this.is('<') ? this.parseTypeArguments() : undefined;
+    const primitive = primitiveTypes.has(name as FlintPrimitiveType) ? (name as FlintPrimitiveType) : 'unit';
+    const referenceMode = this.resolveReferenceMode(referenceStart, mutableReference);
+    return {
+      kind: 'type-name',
+      name: primitive,
+      ...(primitive === 'unit' && name !== 'unit' ? { reference: name } : {}),
+      ...(arguments_ === undefined ? {} : { arguments: arguments_ }),
+      ...(referenceMode === undefined ? {} : { referenceMode }),
+      span: mergeSpans(typeStart, this.previous().span),
+    };
+  }
+
+  /**
+   * Parses a full type specification including pointers, references, and array wrappers.
+   *
+   * @returns Parsed type name AST node.
+   */
   private parseType(): FlintTypeName {
     const token = this.current();
     const referenceStart = this.match('&');
     const mutableReference = referenceStart && this.match('mut');
     const typeStart = referenceStart ? token.span : this.current().span;
     if (this.match('[')) {
-      const element = this.parseType();
-      this.expect(';', 'FLINT-PARSE-080', "Expected ';' before a fixed array length.");
-      const lengthToken = this.expectKind('number', 'FLINT-PARSE-081', 'Expected a fixed array length.');
-      const end = this.expect(']', 'FLINT-PARSE-082', "Expected ']' after a fixed array type.").span;
-      return {
-        kind: 'type-name',
-        name: 'unit',
-        reference: 'Array',
-        arguments: [element],
-        length: Number(lengthToken.text || '0'),
-        ...(referenceStart ? { referenceMode: mutableReference ? ('mut-ref' as const) : ('ref' as const) } : {}),
-        span: mergeSpans(typeStart, end),
-      };
+      return this.parseFixedArrayType(typeStart, referenceStart, mutableReference);
     }
-    const nameToken = this.current();
-    const name = nameToken.kind === 'identifier' || nameToken.kind === 'keyword' ? nameToken.text : 'unit';
-    this.consume();
-    const arguments_ = this.is('<') ? this.parseTypeArguments() : undefined;
-    const primitive = primitiveTypes.has(name as FlintPrimitiveType) ? (name as FlintPrimitiveType) : 'unit';
-    const baseType: FlintTypeName = {
-      kind: 'type-name',
-      name: primitive,
-      ...(primitive === 'unit' && name !== 'unit' ? { reference: name } : {}),
-      ...(arguments_ === undefined ? {} : { arguments: arguments_ }),
-      ...(referenceStart ? { referenceMode: mutableReference ? ('mut-ref' as const) : ('ref' as const) } : {}),
-      span: mergeSpans(typeStart, this.previous().span),
-    };
+    const baseType = this.parseBaseTypeName(typeStart, referenceStart, mutableReference);
     if (this.match('[')) {
       const end = this.expect(']', 'FLINT-PARSE-084', "Expected ']' after a dynamic array type.").span;
       return {
@@ -470,6 +697,11 @@ class Parser {
     return baseType;
   }
 
+  /**
+   * Parses type arguments enclosed in angle brackets.
+   *
+   * @returns Array of parsed type argument AST nodes.
+   */
   private parseTypeArguments(): FlintTypeName[] {
     this.expect('<', 'FLINT-PARSE-053', "Expected '<' before type arguments.");
     const arguments_: FlintTypeName[] = [];
@@ -481,6 +713,11 @@ class Parser {
     return arguments_;
   }
 
+  /**
+   * Parses a block of statements enclosed in curly braces.
+   *
+   * @returns Array of parsed statement AST nodes.
+   */
   private parseBlock(): FlintStatement[] {
     this.expect('{', 'FLINT-PARSE-018', "Expected '{' to start a block.");
     const statements: FlintStatement[] = [];
@@ -489,97 +726,173 @@ class Parser {
     return statements;
   }
 
-  private parseStatement(): FlintStatement {
-    if (this.current().kind === 'identifier' && (this.isNext('=') || this.isIndexAssignment())) {
-      const start = this.consume().span;
-      const name = this.previous().text;
-      let index: FlintExpression | undefined;
-      if (this.match('[')) {
-        index = this.parseExpression();
-        this.expect(']', 'FLINT-PARSE-083', "Expected ']' after an indexed assignment target.");
-      }
-      this.consume();
-      const value = this.parseExpression();
-      const end = this.expect(';', 'FLINT-PARSE-030', "Expected ';' after an assignment.").span;
-      return {
-        kind: 'assignment',
-        name,
-        ...(index === undefined ? {} : { index }),
-        value,
-        span: mergeSpans(start, end),
-      };
+  /**
+   * Parses a variable or indexed array element assignment statement.
+   *
+   * @returns Parsed assignment statement AST node.
+   */
+  private parseAssignmentStatement(): FlintStatement {
+    const start = this.consume().span;
+    const name = this.previous().text;
+    let index: FlintExpression | undefined;
+    if (this.match('[')) {
+      index = this.parseExpression();
+      this.expect(']', 'FLINT-PARSE-083', "Expected ']' after an indexed assignment target.");
     }
-    if (this.match('let')) {
-      const start = this.previous().span;
-      const mutable = this.match('mut');
-      const name = this.expectIdentifier('FLINT-PARSE-020', 'Expected a local variable name.');
-      this.expect(':', 'FLINT-PARSE-021', "Expected ':' after a local variable name.");
-      const type = this.parseType();
-      this.expect('=', 'FLINT-PARSE-022', "Expected '=' in a local variable declaration.");
-      const value = this.parseExpression();
-      const end = this.expect(';', 'FLINT-PARSE-023', "Expected ';' after a local variable declaration.").span;
-      return {
-        kind: 'let',
-        name: name ?? '<missing>',
-        ...(mutable ? { mutable: true as const } : {}),
-        type,
-        value,
-        span: mergeSpans(start, end),
-      };
-    }
-    if (this.match('return')) {
-      const start = this.previous().span;
-      const value = this.is(';') ? undefined : this.parseExpression();
-      const end = this.expect(';', 'FLINT-PARSE-024', "Expected ';' after a return statement.").span;
-      return { kind: 'return', ...(value === undefined ? {} : { value }), span: mergeSpans(start, end) };
-    }
-    if (this.match('yield')) {
-      const start = this.previous().span;
-      const value = this.parseExpression();
-      const end = this.expect(';', 'FLINT-PARSE-071', "Expected ';' after a yield statement.").span;
-      return { kind: 'yield', value, span: mergeSpans(start, end) };
-    }
-    if (this.match('loop')) {
-      const start = this.previous().span;
-      const binding =
-        this.expectIdentifier('FLINT-PARSE-072', "Expected an iterator loop binding after 'loop'.") ?? '<missing>';
-      this.expect('=', 'FLINT-PARSE-073', "Expected '=' after an iterator loop binding.");
-      const iterator = this.parseExpression();
-      const body = this.parseBlock();
-      return { kind: 'iterator-loop', binding, iterator, body, span: mergeSpans(start, this.previous().span) };
-    }
-    if (this.is('throw') || this.is('try') || this.is('catch')) {
-      const token = this.consume();
-      this.diagnostics.push(
-        createDiagnostic(
-          this.fileName,
-          'parse',
-          'FLINT-PARSE-074',
-          `Exception construct '${token.text}' is not supported; return a Result or Option instead.`,
-          token.span,
-          'error',
-          'Use an explicit Result<T, E> value and pattern matching for recoverable failures.',
-        ),
-      );
-      while (!this.is(';') && !this.is('}') && !this.is('eof')) this.consume();
-      this.match(';');
-      return this.rejectedStatement(token);
-    }
-    if (this.match('if')) {
-      const start = this.previous().span;
-      const conditionalHint = this.match('likely') ? 'likely' : this.match('unlikely') ? 'unlikely' : undefined;
-      const condition = this.parseExpression();
-      const consequent = this.parseBlock();
-      const alternate = this.match('else') ? this.parseBlock() : undefined;
-      return {
-        kind: 'if',
-        condition,
-        consequent,
-        ...(alternate === undefined ? {} : { alternate }),
-        ...(conditionalHint === undefined ? {} : { conditionalHint }),
-        span: mergeSpans(start, this.previous().span),
-      };
-    }
+    this.consume();
+    const value = this.parseExpression();
+    const end = this.expect(';', 'FLINT-PARSE-030', "Expected ';' after an assignment.").span;
+    return {
+      kind: 'assignment',
+      name,
+      ...(index === undefined ? {} : { index }),
+      value,
+      span: mergeSpans(start, end),
+    };
+  }
+
+  /**
+   * Parses a local variable declaration statement.
+   *
+   * @returns Parsed let statement AST node.
+   */
+  private parseLetStatement(): FlintStatement {
+    const start = this.previous().span;
+    const mutable = this.match('mut');
+    const name = this.expectIdentifier('FLINT-PARSE-020', 'Expected a local variable name.');
+    this.expect(':', 'FLINT-PARSE-021', "Expected ':' after a local variable name.");
+    const type = this.parseType();
+    this.expect('=', 'FLINT-PARSE-022', "Expected '=' in a local variable declaration.");
+    const value = this.parseExpression();
+    const end = this.expect(';', 'FLINT-PARSE-023', "Expected ';' after a local variable declaration.").span;
+    return {
+      kind: 'let',
+      name: name ?? '<missing>',
+      ...(mutable ? { mutable: true as const } : {}),
+      type,
+      value,
+      span: mergeSpans(start, end),
+    };
+  }
+
+  /**
+   * Parses a function return statement with optional return value.
+   *
+   * @returns Parsed return statement AST node.
+   */
+  private parseReturnStatement(): FlintStatement {
+    const start = this.previous().span;
+    const value = this.is(';') ? undefined : this.parseExpression();
+    const end = this.expect(';', 'FLINT-PARSE-024', "Expected ';' after a return statement.").span;
+    return { kind: 'return', ...(value === undefined ? {} : { value }), span: mergeSpans(start, end) };
+  }
+
+  /**
+   * Parses a generator yield statement.
+   *
+   * @returns Parsed yield statement AST node.
+   */
+  private parseYieldStatement(): FlintStatement {
+    const start = this.previous().span;
+    const value = this.parseExpression();
+    const end = this.expect(';', 'FLINT-PARSE-071', "Expected ';' after a yield statement.").span;
+    return { kind: 'yield', value, span: mergeSpans(start, end) };
+  }
+
+  /**
+   * Parses an iterator loop statement over an iterable collection.
+   *
+   * @returns Parsed iterator loop statement AST node.
+   */
+  private parseIteratorLoopStatement(): FlintStatement {
+    const start = this.previous().span;
+    const binding =
+      this.expectIdentifier('FLINT-PARSE-072', "Expected an iterator loop binding after 'loop'.") ?? '<missing>';
+    this.expect('=', 'FLINT-PARSE-073', "Expected '=' after an iterator loop binding.");
+    const iterator = this.parseExpression();
+    const body = this.parseBlock();
+    return { kind: 'iterator-loop', binding, iterator, body, span: mergeSpans(start, this.previous().span) };
+  }
+
+  /**
+   * Emits diagnostics rejecting exception handling keywords (try, catch, throw).
+   *
+   * @returns Error recovery statement node.
+   */
+  private parseExceptionRejectStatement(): FlintStatement {
+    const token = this.consume();
+    this.diagnostics.push(
+      createDiagnostic(
+        this.fileName,
+        'parse',
+        'FLINT-PARSE-074',
+        `Exception construct '${token.text}' is not supported; return a Result or Option instead.`,
+        token.span,
+        'error',
+        'Use an explicit Result<T, E> value and pattern matching for recoverable failures.',
+      ),
+    );
+    while (!this.is(';') && !this.is('}') && !this.is('eof')) this.consume();
+    this.match(';');
+    return this.rejectedStatement(token);
+  }
+
+  /**
+   * Parses an if-else conditional branching statement.
+   *
+   * @returns Parsed if statement AST node.
+   */
+  private parseIfStatement(): FlintStatement {
+    const start = this.previous().span;
+    const conditionalHint = this.match('likely') ? 'likely' : this.match('unlikely') ? 'unlikely' : undefined;
+    const condition = this.parseExpression();
+    const consequent = this.parseBlock();
+    const alternate = this.match('else') ? this.parseBlock() : undefined;
+    return {
+      kind: 'if',
+      condition,
+      consequent,
+      ...(alternate === undefined ? {} : { alternate }),
+      ...(conditionalHint === undefined ? {} : { conditionalHint }),
+      span: mergeSpans(start, this.previous().span),
+    };
+  }
+
+  /**
+   * Parses a standard C-style for-loop statement.
+   *
+   * @returns Parsed for-loop statement AST node.
+   */
+  private parseForStatement(): FlintStatement {
+    const start = this.previous().span;
+    this.diagnostics.push(
+      createDiagnostic(
+        this.fileName,
+        'parse',
+        'FLINT-PARSE-076',
+        "Imperative 'for' loops are not part of FLINT; use an iterator loop.",
+        start,
+        'error',
+      ),
+    );
+    this.expect('(', 'FLINT-PARSE-065', "Expected '(' after for.");
+    if (!this.is(';')) this.parseForClauseStatement();
+    this.expect(';', 'FLINT-PARSE-066', "Expected ';' after a for initializer.");
+    this.parseExpression();
+    this.expect(';', 'FLINT-PARSE-067', "Expected ';' after a for condition.");
+    if (!this.is(')')) this.parseForClauseStatement();
+    this.expect(')', 'FLINT-PARSE-068', "Expected ')' after a for clause.");
+    this.parseBlock();
+    return this.rejectedStatement({ kind: 'keyword', text: 'for', span: start });
+  }
+
+  /**
+   * Dispatches control flow statement parsing (return, yield, if, loops).
+   *
+   * @returns Parsed statement node, or undefined if not a control flow keyword.
+   */
+  private parseControlFlowStatement(): FlintStatement | undefined {
+    if (this.match('if')) return this.parseIfStatement();
     if (this.match('switch')) return this.parseSwitchStatement(this.previous().span);
     if (this.match('while')) {
       const start = this.previous().span;
@@ -587,28 +900,7 @@ class Parser {
       const body = this.parseBlock();
       return { kind: 'while', condition, body, span: mergeSpans(start, this.previous().span) };
     }
-    if (this.match('for')) {
-      const start = this.previous().span;
-      this.diagnostics.push(
-        createDiagnostic(
-          this.fileName,
-          'parse',
-          'FLINT-PARSE-076',
-          "Imperative 'for' loops are not part of FWS; use an iterator loop.",
-          start,
-          'error',
-        ),
-      );
-      this.expect('(', 'FLINT-PARSE-065', "Expected '(' after for.");
-      if (!this.is(';')) this.parseForClauseStatement();
-      this.expect(';', 'FLINT-PARSE-066', "Expected ';' after a for initializer.");
-      this.parseExpression();
-      this.expect(';', 'FLINT-PARSE-067', "Expected ';' after a for condition.");
-      if (!this.is(')')) this.parseForClauseStatement();
-      this.expect(')', 'FLINT-PARSE-068', "Expected ')' after a for clause.");
-      this.parseBlock();
-      return this.rejectedStatement({ kind: 'keyword', text: 'for', span: start });
-    }
+    if (this.match('for')) return this.parseForStatement();
     if (this.match('do')) {
       const start = this.previous().span;
       const body = this.parseBlock();
@@ -617,12 +909,64 @@ class Parser {
       const end = this.expect(';', 'FLINT-PARSE-070', "Expected ';' after a do while statement.").span;
       return { kind: 'do-while', body, condition, span: mergeSpans(start, end) };
     }
+    return undefined;
+  }
+
+  /**
+   * Determines whether the current statement position begins an assignment target.
+   *
+   * @returns True if current position is an assignment.
+   */
+  private isAssignmentTarget(): boolean {
+    return this.current().kind === 'identifier' && (this.isNext('=') || this.isIndexAssignment());
+  }
+
+  /**
+   * Checks whether the current token is a rejected exception keyword.
+   *
+   * @returns True if keyword is try, catch, or throw.
+   */
+  private isExceptionKeyword(): boolean {
+    return this.is('throw') || this.is('try') || this.is('catch');
+  }
+
+  /**
+   * Parses declaration statements or assignment targets.
+   *
+   * @returns Parsed statement AST node or undefined.
+   */
+  private parseDeclarationOrAssignmentStatement(): FlintStatement | undefined {
+    if (this.isAssignmentTarget()) return this.parseAssignmentStatement();
+    if (this.match('let')) return this.parseLetStatement();
+    if (this.match('return')) return this.parseReturnStatement();
+    if (this.match('yield')) return this.parseYieldStatement();
+    if (this.match('loop')) return this.parseIteratorLoopStatement();
+    if (this.isExceptionKeyword()) return this.parseExceptionRejectStatement();
+    return undefined;
+  }
+
+  /**
+   * Parses a single statement AST node.
+   *
+   * @returns Parsed statement AST node.
+   */
+  private parseStatement(): FlintStatement {
+    const declOrAssign = this.parseDeclarationOrAssignmentStatement();
+    if (declOrAssign !== undefined) return declOrAssign;
+    const controlFlow = this.parseControlFlowStatement();
+    if (controlFlow !== undefined) return controlFlow;
     const start = this.current().span;
     const expression = this.parseExpression();
     const end = this.expect(';', 'FLINT-PARSE-025', "Expected ';' after an expression.").span;
     return { kind: 'expression-statement', expression, span: mergeSpans(start, end) };
   }
 
+  /**
+   * Parses a switch pattern matching statement.
+   *
+   * @param start - Starting source span.
+   * @returns Parsed switch statement AST node.
+   */
   private parseSwitchStatement(start: FlintSourceSpan): FlintStatement {
     const value = this.parseExpression();
     this.expect('{', 'FLINT-PARSE-084', "Expected '{' after a switch discriminant.");
@@ -661,6 +1005,11 @@ class Parser {
     };
   }
 
+  /**
+   * Parses a single case value expression within a switch arm.
+   *
+   * @returns Parsed case value string or number.
+   */
   private parseSwitchCaseValue(): number | string {
     let negative = false;
     if (this.match('-')) negative = true;
@@ -673,11 +1022,21 @@ class Parser {
     return name ?? '<missing>';
   }
 
+  /**
+   * Parses the statement block belonging to a switch case arm.
+   *
+   * @returns Array of statements in arm body.
+   */
   private parseSwitchArmBody(): readonly FlintStatement[] {
     if (this.is('{')) return this.parseBlock();
     return [this.parseStatement()];
   }
 
+  /**
+   * Checks if an assignment target has an indexed subscript expression.
+   *
+   * @returns True if current position is an indexed assignment.
+   */
   private isIndexAssignment(): boolean {
     if (!this.isNext('[')) return false;
     let offset = 2;
@@ -691,6 +1050,11 @@ class Parser {
     return depth === 0 && this.tokenAt(this.index + offset)?.text === '=';
   }
 
+  /**
+   * Parses an initializer or update statement within a for-loop clause.
+   *
+   * @returns Parsed statement node.
+   */
   private parseForClauseStatement(): FlintStatement {
     if (this.match('let')) {
       const start = this.previous().span;
@@ -721,6 +1085,12 @@ class Parser {
     return { kind: 'expression-statement', expression, span: mergeSpans(start, expression.span) };
   }
 
+  /**
+   * Parses an expression with binary operator precedence climbing.
+   *
+   * @param minPrecedence - Minimum operator precedence to consume.
+   * @returns Parsed expression AST node.
+   */
   private parseExpression(minPrecedence = 0): FlintExpression {
     let left = this.parsePrimary();
     const precedence: Readonly<Record<string, number>> = {
@@ -752,71 +1122,78 @@ class Parser {
     return left;
   }
 
-  private parsePrimary(): FlintExpression {
-    const token = this.current();
-    if (this.match('match')) return this.parseMatchExpression(token.span);
-    if (this.match('[')) {
-      const elements: FlintExpression[] = [];
-      while (!this.is(']') && !this.is('eof')) {
-        elements.push(this.parseExpression());
-        if (!this.match(',')) break;
-      }
-      const end = this.expect(']', 'FLINT-PARSE-090', "Expected ']' after an array literal.").span;
-      const element =
-        elements[0]?.kind === 'literal'
-          ? { kind: 'type-name' as const, name: elements[0].type, span: elements[0].span }
-          : { kind: 'type-name' as const, name: 'unit' as const, span: token.span };
-      return {
-        kind: 'array-literal',
-        elements,
-        type: {
-          kind: 'type-name',
-          name: 'unit',
-          reference: 'Array',
-          arguments: [element],
-          length: elements.length,
-          span: mergeSpans(token.span, end),
-        },
-        span: mergeSpans(token.span, end),
-      };
+  /**
+   * Parses a fixed-size or dynamic array literal expression.
+   *
+   * @param startSpan - Starting source span.
+   * @returns Parsed array literal expression AST node.
+   */
+  private parseArrayLiteral(startSpan: FlintSourceSpan): FlintExpression {
+    const elements: FlintExpression[] = [];
+    while (!this.is(']') && !this.is('eof')) {
+      elements.push(this.parseExpression());
+      if (!this.match(',')) break;
     }
-    if (token.kind === 'identifier' && token.text === 'vector' && this.tokenAt(this.index + 1)?.text === '[') {
-      this.consume();
-      this.consume();
-      const elements: FlintExpression[] = [];
-      while (!this.is(']') && !this.is('eof')) {
-        elements.push(this.parseExpression());
-        if (!this.match(',')) break;
-      }
-      const end = this.expect(']', 'FLINT-PARSE-091', "Expected ']' after a vector literal.").span;
-      const element =
-        elements[0]?.kind === 'literal'
-          ? { kind: 'type-name' as const, name: elements[0].type, span: elements[0].span }
-          : { kind: 'type-name' as const, name: 'unit' as const, span: token.span };
-      return {
-        kind: 'vector-literal',
-        elements,
-        type: {
-          kind: 'type-name',
-          name: 'unit',
-          reference: 'Vector',
-          arguments: [element],
-          span: mergeSpans(token.span, end),
-        },
-        span: mergeSpans(token.span, end),
-      };
+    const end = this.expect(']', 'FLINT-PARSE-090', "Expected ']' after an array literal.").span;
+    const element =
+      elements[0]?.kind === 'literal'
+        ? { kind: 'type-name' as const, name: elements[0].type, span: elements[0].span }
+        : { kind: 'type-name' as const, name: 'unit' as const, span: startSpan };
+    return {
+      kind: 'array-literal',
+      elements,
+      type: {
+        kind: 'type-name',
+        name: 'unit',
+        reference: 'Array',
+        arguments: [element],
+        length: elements.length,
+        span: mergeSpans(startSpan, end),
+      },
+      span: mergeSpans(startSpan, end),
+    };
+  }
+
+  /**
+   * Parses a contiguous growable vector literal expression.
+   *
+   * @param startSpan - Starting source span.
+   * @returns Parsed vector literal expression AST node.
+   */
+  private parseVectorLiteral(startSpan: FlintSourceSpan): FlintExpression {
+    this.consume();
+    this.consume();
+    const elements: FlintExpression[] = [];
+    while (!this.is(']') && !this.is('eof')) {
+      elements.push(this.parseExpression());
+      if (!this.match(',')) break;
     }
-    if (this.match('fn')) {
-      const name = this.expectIdentifier('FLINT-PARSE-055', 'Expected a function name after fn.');
-      return { kind: 'function-value', name: name ?? '<missing>', span: mergeSpans(token.span, this.previous().span) };
-    }
-    if (this.match('!') || this.match('-'))
-      return {
-        kind: 'unary',
-        operator: this.previous().text as '!' | '-',
-        operand: this.parsePrimary(),
-        span: mergeSpans(token.span, this.previous().span),
-      };
+    const end = this.expect(']', 'FLINT-PARSE-091', "Expected ']' after a vector literal.").span;
+    const element =
+      elements[0]?.kind === 'literal'
+        ? { kind: 'type-name' as const, name: elements[0].type, span: elements[0].span }
+        : { kind: 'type-name' as const, name: 'unit' as const, span: startSpan };
+    return {
+      kind: 'vector-literal',
+      elements,
+      type: {
+        kind: 'type-name',
+        name: 'unit',
+        reference: 'Vector',
+        arguments: [element],
+        span: mergeSpans(startSpan, end),
+      },
+      span: mergeSpans(startSpan, end),
+    };
+  }
+
+  /**
+   * Parses numeric, boolean, or string scalar literal expressions.
+   *
+   * @param token - Token to inspect.
+   * @returns Parsed literal expression AST node or undefined.
+   */
+  private parseScalarLiteral(token: FlintToken): FlintExpression | undefined {
     if (token.kind === 'number') {
       this.consume();
       return { kind: 'literal', value: Number(token.text), type: 'i32', span: token.span };
@@ -829,75 +1206,177 @@ class Parser {
       this.consume();
       return { kind: 'literal', value: token.text === 'true', type: 'bool', span: token.span };
     }
-    if (token.kind === 'identifier') {
-      this.consume();
-      let qualifiedName = token.text;
-      let expression: FlintExpression = { kind: 'identifier', name: qualifiedName, span: token.span };
-      if (this.match('::')) {
-        const variant = this.expectIdentifier('FLINT-PARSE-093', "Expected an enum variant after '::'.");
-        const constructorStart = token.span;
-        qualifiedName = `${qualifiedName}::${variant ?? '<missing>'}`;
-        const arguments_ = this.is('(') ? this.parseCallArguments('FLINT-PARSE-026') : [];
-        expression = {
-          kind: 'enum-value',
-          type: { kind: 'type-name', name: 'unit', reference: token.text, span: constructorStart },
-          variant: variant ?? '<missing>',
-          arguments: arguments_,
-          span: mergeSpans(constructorStart, this.previous().span),
-        };
-      } else if (this.match('(')) {
-        const arguments_ = this.parseCallArguments('FLINT-PARSE-026', true);
+    return undefined;
+  }
+
+  /**
+   * Parses a struct instantiation literal with field values.
+   *
+   * @param token - Struct type token.
+   * @returns Parsed struct literal expression AST node.
+   */
+  private parseStructLiteral(token: FlintToken): FlintExpression {
+    this.consume();
+    const fields: Record<string, FlintExpression> = {};
+    while (!this.is('}') && !this.is('eof')) {
+      const field = this.expectIdentifier('FLINT-PARSE-056', 'Expected a struct field name.');
+      this.expect(':', 'FLINT-PARSE-057', "Expected ':' after a struct field name.");
+      if (field !== undefined) fields[field] = this.parseExpression();
+      if (!this.match(',')) break;
+    }
+    const end = this.expect('}', 'FLINT-PARSE-058', "Expected '}' after a struct value.").span;
+    return {
+      kind: 'struct-value',
+      type: { kind: 'type-name', name: 'unit', reference: token.text, span: token.span },
+      fields,
+      span: mergeSpans(token.span, end),
+    };
+  }
+
+  /**
+   * Parses chained member access and array indexing operations.
+   *
+   * @param initialExpression - Target expression to chain accesses onto.
+   * @param initialQualifiedName - Qualified member path string.
+   * @param tokenSpan - Starting token span.
+   * @returns Chained expression AST node.
+   */
+  private parseMemberAndIndexChain(
+    initialExpression: FlintExpression,
+    initialQualifiedName: string,
+    tokenSpan: FlintSourceSpan,
+  ): FlintExpression {
+    let expression = initialExpression;
+    let qualifiedName = initialQualifiedName;
+    while (this.match('.')) {
+      const member = this.expectMemberName('FLINT-PARSE-078', 'Expected a member name after ".".');
+      qualifiedName = `${qualifiedName}.${member ?? '<missing>'}`;
+      if (this.match('(')) {
+        const arguments_: FlintExpression[] = [];
+        while (!this.is(')') && !this.is('eof')) {
+          arguments_.push(this.parseExpression());
+          if (!this.match(',')) break;
+        }
+        const end = this.expect(')', 'FLINT-PARSE-079', "Expected ')' after member call arguments.").span;
         expression = {
           kind: 'call',
           callee: qualifiedName,
           arguments: arguments_,
-          span: mergeSpans(token.span, this.previous().span),
+          span: mergeSpans(tokenSpan, end),
         };
+      } else {
+        expression = { kind: 'identifier', name: qualifiedName, span: mergeSpans(tokenSpan, this.previous().span) };
       }
-      while (this.match('.')) {
-        const member = this.expectMemberName('FLINT-PARSE-078', 'Expected a member name after ".".');
-        qualifiedName = `${qualifiedName}.${member ?? '<missing>'}`;
-        if (this.match('(')) {
-          const arguments_: FlintExpression[] = [];
-          while (!this.is(')') && !this.is('eof')) {
-            arguments_.push(this.parseExpression());
-            if (!this.match(',')) break;
-          }
-          const end = this.expect(')', 'FLINT-PARSE-079', "Expected ')' after member call arguments.").span;
-          expression = {
-            kind: 'call',
-            callee: qualifiedName,
-            arguments: arguments_,
-            span: mergeSpans(token.span, end),
-          };
-        } else {
-          expression = { kind: 'identifier', name: qualifiedName, span: mergeSpans(token.span, this.previous().span) };
-        }
-      }
-      while (this.match('[')) {
-        const index = this.parseExpression();
-        const end = this.expect(']', 'FLINT-PARSE-092', "Expected ']' after an index expression.").span;
-        expression = { kind: 'index', receiver: expression, index, span: mergeSpans(expression.span, end) };
-      }
-      if (this.is('{') && this.tokens[this.index + 2]?.text === ':') {
-        this.consume();
-        const fields: Record<string, FlintExpression> = {};
-        while (!this.is('}') && !this.is('eof')) {
-          const field = this.expectIdentifier('FLINT-PARSE-056', 'Expected a struct field name.');
-          this.expect(':', 'FLINT-PARSE-057', "Expected ':' after a struct field name.");
-          if (field !== undefined) fields[field] = this.parseExpression();
-          if (!this.match(',')) break;
-        }
-        const end = this.expect('}', 'FLINT-PARSE-058', "Expected '}' after a struct value.").span;
-        return {
-          kind: 'struct-value',
-          type: { kind: 'type-name', name: 'unit', reference: token.text, span: token.span },
-          fields,
-          span: mergeSpans(token.span, end),
-        };
-      }
+    }
+    while (this.match('[')) {
+      const index = this.parseExpression();
+      const end = this.expect(']', 'FLINT-PARSE-092', "Expected ']' after an index expression.").span;
+      expression = { kind: 'index', receiver: expression, index, span: mergeSpans(expression.span, end) };
+    }
+    return expression;
+  }
+
+  /**
+   * Parses identifiers, function calls, or field access chains.
+   *
+   * @param token - Identifier token.
+   * @returns Parsed expression AST node.
+   */
+  private parseIdentifierOrCallOrMemberExpression(token: FlintToken): FlintExpression {
+    this.consume();
+    let qualifiedName = token.text;
+    let expression: FlintExpression = { kind: 'identifier', name: qualifiedName, span: token.span };
+    if (this.match('::')) {
+      const variant = this.expectIdentifier('FLINT-PARSE-093', "Expected an enum variant after '::'.");
+      const constructorStart = token.span;
+      qualifiedName = `${qualifiedName}::${variant ?? '<missing>'}`;
+      const arguments_ = this.is('(') ? this.parseCallArguments('FLINT-PARSE-026') : [];
+      expression = {
+        kind: 'enum-value',
+        type: { kind: 'type-name', name: 'unit', reference: token.text, span: constructorStart },
+        variant: variant ?? '<missing>',
+        arguments: arguments_,
+        span: mergeSpans(constructorStart, this.previous().span),
+      };
+    } else if (this.match('(')) {
+      const arguments_ = this.parseCallArguments('FLINT-PARSE-026', true);
+      expression = {
+        kind: 'call',
+        callee: qualifiedName,
+        arguments: arguments_,
+        span: mergeSpans(token.span, this.previous().span),
+      };
+    }
+    expression = this.parseMemberAndIndexChain(expression, qualifiedName, token.span);
+    if (this.is('{') && this.tokens[this.index + 2]?.text === ':') {
+      return this.parseStructLiteral(token);
+    }
+    return expression;
+  }
+
+  /**
+   * Checks whether the next tokens represent a vector literal constructor.
+   *
+   * @param token - Token to inspect.
+   * @returns True if starting a vector literal.
+   */
+  private isVectorLiteralStart(token: FlintToken): boolean {
+    return token.kind === 'identifier' && token.text === 'vector' && this.tokenAt(this.index + 1)?.text === '[';
+  }
+
+  /**
+   * Parses unary prefix operators (!, -, &).
+   *
+   * @param startSpan - Starting source span.
+   * @param operator - Unary operator symbol.
+   * @returns Parsed unary expression AST node.
+   */
+  private parseUnaryExpression(startSpan: FlintSourceSpan, operator: '!' | '-'): FlintExpression {
+    return {
+      kind: 'unary',
+      operator,
+      operand: this.parsePrimary(),
+      span: mergeSpans(startSpan, this.previous().span),
+    };
+  }
+
+  /**
+   * Parses prefix expressions including unary operators and primaries.
+   *
+   * @returns Parsed prefix expression AST node or undefined.
+   */
+  private parsePrefixExpression(): FlintExpression | undefined {
+    const token = this.current();
+    if (this.match('match')) return this.parseMatchExpression(token.span);
+    if (this.match('[')) return this.parseArrayLiteral(token.span);
+    if (this.isVectorLiteralStart(token)) return this.parseVectorLiteral(token.span);
+    if (this.match('fn')) {
+      const name = this.expectIdentifier('FLINT-PARSE-055', 'Expected a function name after fn.');
+      return { kind: 'function-value', name: name ?? '<missing>', span: mergeSpans(token.span, this.previous().span) };
+    }
+    if (this.match('!')) return this.parseUnaryExpression(token.span, '!');
+    if (this.match('-')) return this.parseUnaryExpression(token.span, '-');
+    return undefined;
+  }
+
+  /**
+   * Parses a primary atomic expression or parenthesized group.
+   *
+   * @returns Parsed primary expression AST node.
+   */
+  private parsePrimary(): FlintExpression {
+    const prefix = this.parsePrefixExpression();
+    if (prefix !== undefined) return prefix;
+    const token = this.current();
+    const scalar = this.parseScalarLiteral(token);
+    if (scalar !== undefined) return scalar;
+    if (token.kind === 'identifier') return this.parseIdentifierOrCallOrMemberExpression(token);
+    if (this.match('(')) {
+      const expression = this.parseExpression();
+      this.expect(')', 'FLINT-PARSE-056', "Expected ')' after expression.");
       return expression;
     }
+    if (this.match('{')) return this.parseStructLiteral(token);
     this.diagnostics.push(
       createDiagnostic(this.fileName, 'parse', 'FLINT-PARSE-027', 'Expected an expression.', token.span),
     );
@@ -905,6 +1384,12 @@ class Parser {
     return { kind: 'literal', value: 0, type: 'i32', span: token.span };
   }
 
+  /**
+   * Parses a pattern match expression.
+   *
+   * @param start - Starting source span.
+   * @returns Parsed match expression AST node.
+   */
   private parseMatchExpression(start: FlintSourceSpan): FlintExpression {
     const value = this.parseExpression();
     this.expect('{', 'FLINT-PARSE-059', "Expected '{' after a match value.");
@@ -924,22 +1409,36 @@ class Parser {
     return { kind: 'match', value, arms, span: mergeSpans(start, end) };
   }
 
-  private parsePattern(): FlintPattern {
-    const token = this.current();
-    if (this.match('_')) return { kind: 'wildcard', span: token.span };
-    if (token.kind === 'number' || token.kind === 'string' || token.text === 'true' || token.text === 'false') {
+  /**
+   * Parses a literal pattern match arm.
+   *
+   * @param token - Candidate pattern token.
+   * @returns Parsed pattern AST node or undefined.
+   */
+  private parseLiteralPattern(token: FlintToken): FlintPattern | undefined {
+    if (token.kind === 'number') {
       this.consume();
-      return {
-        kind: 'literal',
-        value:
-          token.kind === 'number'
-            ? Number(token.text)
-            : token.kind === 'string'
-              ? decodeString(token.text)
-              : token.text === 'true',
-        span: token.span,
-      };
+      return { kind: 'literal', value: Number(token.text), span: token.span };
     }
+    if (token.kind === 'string') {
+      this.consume();
+      return { kind: 'literal', value: decodeString(token.text), span: token.span };
+    }
+    if (token.text === 'true' || token.text === 'false') {
+      this.consume();
+      return { kind: 'literal', value: token.text === 'true', span: token.span };
+    }
+    return undefined;
+  }
+
+  /**
+   * Parses an enum variant pattern match arm with payload destructuring.
+   *
+   * @param start - Start source span.
+   * @param name - Variant constructor name.
+   * @returns Parsed variant pattern AST node.
+   */
+  private parseVariantPattern(token: FlintToken): FlintPattern {
     const name = this.expectIdentifier('FLINT-PARSE-062', 'Expected a match pattern.');
     let qualifiedName = name ?? '<missing>';
     if (this.match('::')) {
@@ -958,6 +1457,26 @@ class Parser {
     return { kind: 'variant', name: qualifiedName, bindings, span: mergeSpans(token.span, this.previous().span) };
   }
 
+  /**
+   * Parses a pattern matching arm.
+   *
+   * @returns Parsed pattern AST node.
+   */
+  private parsePattern(): FlintPattern {
+    const token = this.current();
+    if (this.match('_')) return { kind: 'wildcard', span: token.span };
+    const literal = this.parseLiteralPattern(token);
+    if (literal !== undefined) return literal;
+    return this.parseVariantPattern(token);
+  }
+
+  /**
+   * Parses comma-separated arguments for a function call expression.
+   *
+   * @param code - Diagnostic error code to report on unmatched closing paren.
+   * @param allowTrailingComma - Whether trailing comma is permitted.
+   * @returns Array of parsed argument expressions.
+   */
   private parseCallArguments(code: string, alreadyOpened = false): FlintExpression[] {
     if (!alreadyOpened) this.expect('(', code, "Expected '(' before call arguments.");
     const arguments_: FlintExpression[] = [];
@@ -969,11 +1488,21 @@ class Parser {
     return arguments_;
   }
 
+  /**
+   * Returns the current token in the input stream.
+   *
+   * @returns Current token.
+   */
   private current(): FlintToken {
     while (this.tokens[this.index]?.kind === 'comment') this.index += 1;
     return this.tokens[this.index] ?? this.tokens.at(-1);
   }
 
+  /**
+   * Returns the most recently consumed token in the input stream.
+   *
+   * @returns Previous token.
+   */
   private previous(): FlintToken {
     for (let index = this.index - 1; index >= 0; index -= 1) {
       if (this.tokens[index]?.kind !== 'comment') return this.tokens[index];
@@ -981,32 +1510,66 @@ class Parser {
     return this.current();
   }
 
+  /**
+   * Checks whether the current token has the specified text.
+   *
+   * @param text - Expected token text.
+   * @returns True if text matches.
+   */
   private is(text: string): boolean {
     return this.current().text === text || (text === 'eof' && this.current().kind === 'eof');
   }
 
+  /**
+   * Checks whether the lookahead token has the specified text.
+   *
+   * @param text - Expected lookahead token text.
+   * @returns True if lookahead text matches.
+   */
   private isNext(text: string): boolean {
     return this.tokenAt(this.index + 1)?.text === text;
   }
 
+  /**
+   * Consumes the current token if it matches the specified text.
+   *
+   * @param text - Expected token text.
+   * @returns True if matched and consumed.
+   */
   private match(text: string): boolean {
     if (!this.is(text)) return false;
     this.consume();
     return true;
   }
 
+  /**
+   * Consumes and returns the current token, advancing parser state.
+   *
+   * @returns Consumed token.
+   */
   private consume(): FlintToken {
     const token = this.current();
     if (token.kind !== 'eof') this.index += 1;
     return token;
   }
 
+  /**
+   * Returns the token at the given relative offset from the current position.
+   *
+   * @param index - Lookahead offset.
+   * @returns Token at offset or undefined.
+   */
   private tokenAt(index: number): FlintToken | undefined {
     let candidate = index;
     while (this.tokens[candidate]?.kind === 'comment') candidate += 1;
     return this.tokens[candidate];
   }
 
+  /**
+   * Consumes whitespace and doc comments preceding a top-level declaration.
+   *
+   * @returns Parsed documentation structure or undefined.
+   */
   private consumeTopLevelTrivia(): FlintFunction['documentation'] | undefined {
     let documentation: FlintFunction['documentation'];
     while (this.tokens[this.index]?.kind === 'comment') {
@@ -1017,24 +1580,54 @@ class Parser {
     return documentation;
   }
 
+  /**
+   * Consumes the current token if it matches, or reports an error diagnostic.
+   *
+   * @param text - Expected token text.
+   * @param code - Diagnostic error code.
+   * @param message - Diagnostic actionable hint.
+   * @returns Matched token or placeholder.
+   */
   private expect(text: string, code: string, message: string): FlintToken {
     if (this.is(text)) return this.consume();
     this.diagnostics.push(createDiagnostic(this.fileName, 'parse', code, message, this.current().span));
     return { kind: 'punctuation', text, span: this.current().span };
   }
 
+  /**
+   * Consumes the current token if its kind matches, or reports an error diagnostic.
+   *
+   * @param kind - Expected token kind.
+   * @param code - Diagnostic error code.
+   * @param message - Diagnostic actionable hint.
+   * @returns Matched token or placeholder.
+   */
   private expectKind(kind: FlintToken['kind'], code: string, message: string): FlintToken {
     if (this.current().kind === kind) return this.consume();
     this.diagnostics.push(createDiagnostic(this.fileName, 'parse', code, message, this.current().span));
     return { kind, text: '', span: this.current().span };
   }
 
+  /**
+   * Consumes and returns an identifier token text, or reports an error diagnostic.
+   *
+   * @param code - Diagnostic error code.
+   * @param message - Diagnostic actionable hint.
+   * @returns Identifier text or undefined.
+   */
   private expectIdentifier(code: string, message: string): string | undefined {
     if (this.current().kind === 'identifier') return this.consume().text;
     this.diagnostics.push(createDiagnostic(this.fileName, 'parse', code, message, this.current().span));
     return undefined;
   }
 
+  /**
+   * Consumes and returns a valid member name identifier or keyword.
+   *
+   * @param code - Diagnostic error code.
+   * @param message - Diagnostic actionable hint.
+   * @returns Member name string or undefined.
+   */
   private expectMemberName(code: string, message: string): string | undefined {
     const token = this.current();
     if (token.kind === 'identifier' || token.text === 'iter' || token.text === 'next') return this.consume().text;
@@ -1042,6 +1635,12 @@ class Parser {
     return undefined;
   }
 
+  /**
+   * Creates a placeholder error statement node for recovery.
+   *
+   * @param token - Source token for statement.
+   * @returns Placeholder statement node.
+   */
   private rejectedStatement(token: FlintToken): FlintStatement {
     return {
       kind: 'expression-statement',
@@ -1051,6 +1650,13 @@ class Parser {
   }
 }
 
+/**
+ * Merges start and end spans into a contiguous enclosing source span.
+ *
+ * @param start - Starting source span.
+ * @param end - Ending source span.
+ * @returns Combined source span.
+ */
 function mergeSpans(start: FlintSourceSpan, end: FlintSourceSpan): FlintSourceSpan {
   return {
     start: start.start,
@@ -1062,6 +1668,12 @@ function mergeSpans(start: FlintSourceSpan, end: FlintSourceSpan): FlintSourceSp
   };
 }
 
+/**
+ * Decodes escaped characters within a string literal token.
+ *
+ * @param token - Raw string literal text.
+ * @returns Decoded string content.
+ */
 function decodeString(token: string): string {
   try {
     return JSON.parse(token) as string;
@@ -1070,6 +1682,14 @@ function decodeString(token: string): string {
   }
 }
 
+/**
+ * Parses a Flint source string into a module AST and diagnostic report.
+ *
+ * @param source - Raw Flint source code string.
+ * @param fileName - File name used for source span reporting.
+ * @param options - Parser options.
+ * @returns Parsed module AST and diagnostics.
+ */
 export function parseFlint(source: string, fileName = '<input>', options: FlintParseOptions = {}): FlintParseResult {
   const lexed = lexFlint(source, fileName);
   const result = new Parser(lexed.tokens, fileName, lexed.diagnostics).parse();

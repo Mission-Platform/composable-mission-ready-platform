@@ -11,17 +11,33 @@ import type {
   FlintAnalysisRule,
 } from './contracts.js';
 
+/**
+ * Registry of static analysis rules that can inspect Flint compiler outputs.
+ */
 export interface FlintAnalysisRuleRegistry {
+  /** Active rules registered in this registry. */
   readonly rules: readonly FlintAnalysisRule[];
+  /**
+   * Registers an additional static analysis rule and returns a new updated registry.
+   *
+   * @param rule - Rule definition to append to the registry.
+   * @returns A new FlintAnalysisRuleRegistry with the rule added.
+   */
   register(rule: FlintAnalysisRule): FlintAnalysisRuleRegistry;
+  /**
+   * Executes all registered rules against an analysis context.
+   *
+   * @param context - Analysis context containing frontend outputs, policy, and facts.
+   * @returns Comprehensive report of findings, blocking violations, and diagnostics.
+   */
   analyze(context: FlintAnalysisContext): FlintAnalysisReport;
 }
 
 /**
- * Computes a deterministic identity key for deduplicating analysis findings.
+ * Computes a unique hash key for a static analysis finding to deduplicate identical occurrences.
  *
- * @param finding Finding to key.
- * @returns Serialized JSON string key.
+ * @param finding - Finding to serialize.
+ * @returns JSON key string representing file, code, rule, span, and message.
  */
 function findingKey(finding: FlintAnalysisFinding): string {
   return JSON.stringify([
@@ -35,59 +51,38 @@ function findingKey(finding: FlintAnalysisFinding): string {
 }
 
 /**
- * Filters an array of analysis rules to ensure uniqueness by rule ID.
+ * Filters a list of analysis rules, keeping only unique rules by ID.
  *
- * @param values Array of rules.
- * @returns Deduplicated array of rules.
+ * @param values - List of rules to filter.
+ * @returns Deduplicated list of analysis rules.
  */
 function uniqueRules(values: readonly FlintAnalysisRule[]): readonly FlintAnalysisRule[] {
   return values.filter((rule, index, all) => all.findIndex((candidate) => candidate.id === rule.id) === index);
 }
 
 /**
- * Normalizes a finding produced by a rule against rule defaults and context policy.
+ * Creates an immutable rule registry populated with default or custom analysis rules.
  *
- * @param finding Raw finding from rule.
- * @param rule Executing rule definition.
- * @param context Analysis context.
- * @returns Normalized finding with blocking state populated.
- */
-function normalizeRuleFinding(
-  finding: FlintAnalysisFinding,
-  rule: FlintAnalysisRule,
-  context: FlintAnalysisContext,
-): FlintAnalysisFinding {
-  const normalized = {
-    ...finding,
-    ruleId: finding.ruleId || rule.id,
-    category: finding.category || rule.category,
-  };
-  return {
-    ...normalized,
-    blocking: normalized.blocking ?? isFlintAnalysisFindingBlocking(normalized, context.policy),
-  };
-}
-
-/**
- * Creates an extensible analysis rule registry populated with given rules.
- *
- * @param rules Array of analysis rules to register.
- * @returns Rule registry instance.
+ * @param rules - Initial rules to register (defaults to standard ruleset).
+ * @returns An initialized FlintAnalysisRuleRegistry.
  */
 export function createFlintAnalysisRuleRegistry(
   rules: readonly FlintAnalysisRule[] = FLINT_DEFAULT_ANALYSIS_RULES,
 ): FlintAnalysisRuleRegistry {
   const run = (context: FlintAnalysisContext): FlintAnalysisReport => {
     const findings: FlintAnalysisFinding[] = [];
-    const seenFindingKeys = new Set<string>();
-
     for (const rule of uniqueRules(rules)) {
-      for (const rawFinding of rule.analyze(context)) {
-        const key = findingKey(rawFinding);
-        if (seenFindingKeys.has(key)) continue;
-        seenFindingKeys.add(key);
-
-        findings.push(normalizeRuleFinding(rawFinding, rule, context));
+      for (const finding of rule.analyze(context)) {
+        if (findings.some((candidate) => findingKey(candidate) === findingKey(finding))) continue;
+        const normalizedFinding = {
+          ...finding,
+          ruleId: finding.ruleId || rule.id,
+          category: finding.category || rule.category,
+        };
+        findings.push({
+          ...normalizedFinding,
+          blocking: normalizedFinding.blocking ?? isFlintAnalysisFindingBlocking(normalizedFinding, context.policy),
+        });
         if (findings.length >= context.policy.limits.maxFindings) break;
       }
       if (findings.length >= context.policy.limits.maxFindings) break;
@@ -108,6 +103,12 @@ export function createFlintAnalysisRuleRegistry(
   };
   return {
     rules: uniqueRules(rules),
+    /**
+     * Registers an additional rule and returns a new registry.
+     *
+     * @param rule - Analysis rule to register.
+     * @returns A new FlintAnalysisRuleRegistry with the rule added.
+     */
     register(rule): FlintAnalysisRuleRegistry {
       return createFlintAnalysisRuleRegistry([...rules, rule]);
     },

@@ -5,6 +5,9 @@ import { fileURLToPath } from 'node:url';
 
 import { createFlintDapServer } from './server.js';
 
+/**
+ * Entry point for starting the standalone Flint DAP server process on stdio.
+ */
 export function main(): void {
   const server = createFlintDapServer({
     input: process.stdin,
@@ -23,6 +26,11 @@ export function main(): void {
   server.start();
 }
 
+/**
+ * Detects whether this file was executed directly from the command line.
+ *
+ * @returns True if executed directly as main script.
+ */
 function isDirectExecution(): boolean {
   if (!process.argv[1]) return false;
   try {

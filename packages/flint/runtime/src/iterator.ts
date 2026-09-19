@@ -1,16 +1,31 @@
 import type { FlintIteratorDescriptor } from './collections.js';
 
+/**
+ * Packed numeric representation of an iterator next call returned from WebAssembly.
+ */
 export type FlintPackedIteratorResult = number | bigint;
 
+/**
+ * Configuration options for constructing a WebAssembly iterator wrapper.
+ */
 export interface FlintWasmIteratorOptions<TValue> {
   readonly descriptor: FlintIteratorDescriptor;
   readonly valueDecoder?: (value: number) => TValue;
 }
 
+/**
+ * JavaScript iterator and iterable bridge wrapping a WebAssembly iterator state handle.
+ */
 export interface FlintWasmIterator<TValue> extends Iterator<TValue>, Iterable<TValue> {
   readonly descriptor: FlintIteratorDescriptor;
 }
 
+/**
+ * Unpacks a 64-bit integer into a 32-bit signed value and done boolean flag.
+ *
+ * @param value - Packed 64-bit numeric iterator return value.
+ * @returns Object with unpacked value number and done boolean.
+ */
 function unpack(value: FlintPackedIteratorResult): { readonly value: number; readonly done: boolean } {
   const packed = typeof value === 'bigint' ? value : BigInt(value);
   return {

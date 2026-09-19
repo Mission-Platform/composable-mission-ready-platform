@@ -4,6 +4,9 @@ import { FlintTrap } from './traps.js';
 
 import type { FlintAbiFunction, FlintAbiManifest, FlintPrimitiveType } from '@mission-platform/flint';
 
+/**
+ * Validation result for a Flint ABI manifest containing validation status and error messages.
+ */
 export interface FlintAbiValidationResult {
   readonly valid: boolean;
   readonly errors: readonly string[];
@@ -22,6 +25,13 @@ const primitiveTypes = new Set<FlintPrimitiveType>([
   'unit',
 ]);
 
+/**
+ * Compares two ABI function declarations for structural equivalence.
+ *
+ * @param left - First function declaration.
+ * @param right - Second function declaration.
+ * @returns True if both declarations have identical signatures, parameters, and return types.
+ */
 function equalFunction(left: FlintAbiFunction, right: FlintAbiFunction): boolean {
   return (
     left.result === right.result &&
@@ -44,6 +54,12 @@ function equalFunction(left: FlintAbiFunction, right: FlintAbiFunction): boolean
   );
 }
 
+/**
+ * Validates a Flint ABI manifest against specification requirements, layouts, and capability constraints.
+ *
+ * @param manifest - ABI manifest to validate.
+ * @returns Validation outcome containing boolean status and collected diagnostic errors.
+ */
 export function validateFlintAbiManifest(manifest: FlintAbiManifest): FlintAbiValidationResult {
   const errors: string[] = [];
   if (manifest.format !== 'forge-web-script-module') errors.push('Unsupported manifest format.');
@@ -96,6 +112,12 @@ export function validateFlintAbiManifest(manifest: FlintAbiManifest): FlintAbiVa
   return { valid: errors.length === 0, errors };
 }
 
+/**
+ * Asserts that a Flint ABI manifest is valid according to runtime specification rules.
+ *
+ * @param manifest - ABI manifest to validate.
+ * @throws {FlintTrap} If manifest validation fails.
+ */
 export function assertValidFlintAbiManifest(manifest: FlintAbiManifest): void {
   const result = validateFlintAbiManifest(manifest);
   if (!result.valid) throw new FlintTrap('InvalidAbi', result.errors.join(' '));

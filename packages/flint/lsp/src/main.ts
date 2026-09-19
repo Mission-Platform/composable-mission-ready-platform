@@ -7,6 +7,11 @@ import { createConnection, ProposedFeatures } from 'vscode-languageserver/node';
 
 import { registerFlintLsp } from './server.js';
 
+/**
+ * Starts the Flint LSP language server on standard input/output.
+ *
+ * @returns Promise resolving when the connection listener finishes.
+ */
 export async function main(): Promise<void> {
   const connection = createConnection(ProposedFeatures.all, process.stdin, process.stdout);
   registerFlintLsp(connection);
@@ -14,6 +19,11 @@ export async function main(): Promise<void> {
   await connection.listen();
 }
 
+/**
+ * Checks whether this file was executed directly from the Node command line.
+ *
+ * @returns True if executed directly as main script.
+ */
 function isDirectExecution(): boolean {
   if (!process.argv[1]) return false;
   try {

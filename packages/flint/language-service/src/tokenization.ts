@@ -22,6 +22,7 @@ const primitiveTypes = new Set([
   'iterResult',
 ]);
 
+/** Lexes a Flint source string and assigns semantic classifications to each token. */
 export function tokenizeFlint(source: string, fileName = '<input>'): readonly FlintTokenClassification[] {
   const lexed = lexFlint(source, fileName);
   const classifications = lexed.tokens
@@ -30,6 +31,14 @@ export function tokenizeFlint(source: string, fileName = '<input>'): readonly Fl
   return classifications;
 }
 
+/**
+ * Assigns a semantic token classification to a lexical token based on context.
+ *
+ * @param token - Current token to classify.
+ * @param previous - Preceding significant token.
+ * @param next - Following significant token.
+ * @returns Semantic classification kind.
+ */
 function classifyToken(
   source: string,
   token: FlintToken,
@@ -49,17 +58,20 @@ function classifyToken(
   return { kind, text: token.text, range: rangeFromOffsets(source, token.span.start, token.span.end), token };
 }
 
+/** Evaluates whether a keyword introduces a function or variable declaration. */
 function isDeclarationToken(index: number, tokens: readonly FlintToken[]): boolean {
   const previous = previousSignificantToken(index, tokens)?.text;
   const next = nextSignificantToken(index, tokens)?.text;
   return previous === 'module' || previous === 'fn' || previous === 'as' || previous === 'let' || next === ':';
 }
 
+/** Evaluates whether a keyword introduces a type or aggregate definition. */
 function isTypeDeclarationToken(index: number, tokens: readonly FlintToken[]): boolean {
   const previous = previousSignificantToken(index, tokens)?.text;
   return previous === 'struct' || previous === 'enum' || previous === 'interface';
 }
 
+/** Finds the preceding non-trivia token before an index. */
 function previousSignificantToken(index: number, tokens: readonly FlintToken[]): FlintToken | undefined {
   for (let candidate = index - 1; candidate >= 0; candidate -= 1) {
     if (tokens[candidate]?.kind !== 'comment') return tokens[candidate];
@@ -67,6 +79,7 @@ function previousSignificantToken(index: number, tokens: readonly FlintToken[]):
   return undefined;
 }
 
+/** Finds the following non-trivia token after an index. */
 function nextSignificantToken(index: number, tokens: readonly FlintToken[]): FlintToken | undefined {
   for (let candidate = index + 1; candidate < tokens.length; candidate += 1) {
     if (tokens[candidate]?.kind !== 'comment') return tokens[candidate];
@@ -74,6 +87,7 @@ function nextSignificantToken(index: number, tokens: readonly FlintToken[]): Fli
   return undefined;
 }
 
+/** Maps a lexical token kind to its base semantic classification. */
 export function tokenKindToClassification(kind: FlintTokenKind): FlintTokenClassification['kind'] {
   if (kind === 'eof') return 'punctuation';
   return kind === 'identifier' ? 'identifier' : kind;

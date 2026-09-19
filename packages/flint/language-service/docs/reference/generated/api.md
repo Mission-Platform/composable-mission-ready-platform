@@ -18,15 +18,22 @@ function analyzeFlint(
 ): FlintAnalysis;
 ```
 
-No description provided.
+Analyzes a document AST using Flint compiler frontend and static analysis rules.
 
 #### Parameters
 
-| Name            | Type                  | Description |
-| --------------- | --------------------- | ----------- |
-| document        | FlintDocument         |             |
-| options         | FlintWorkspaceOptions |             |
-| analysisOptions | FlintAnalysisOptions  |             |
+| Name            | Type                  | Description                         |
+| --------------- | --------------------- | ----------------------------------- |
+| document        | FlintDocument         | - Document to analyze.              |
+| options         | FlintWorkspaceOptions | - Analysis and compilation options. |
+| analysisOptions | FlintAnalysisOptions  |                                     |
+
+#### Contract
+
+- **@param:** - Document to analyze.
+- **@param:** - Analysis and compilation options.
+- **@param:** - Configured workspace project roots.
+- **@returns:** Complete analysis report with diagnostics and symbols.
 
 ## `src/completion`
 
@@ -43,16 +50,23 @@ function completeFlint(
 ): readonly FlintCompletion[];
 ```
 
-No description provided.
+Computes autocomplete suggestions at the given document position.
 
 #### Parameters
 
-| Name     | Type                   | Description |
-| -------- | ---------------------- | ----------- |
-| source   | string                 |             |
-| position | FlintPosition          |             |
-| symbols  | readonly FlintSymbol[] |             |
-| options  | FlintWorkspaceOptions  |             |
+| Name     | Type                   | Description                               |
+| -------- | ---------------------- | ----------------------------------------- |
+| source   | string                 |                                           |
+| position | FlintPosition          | - Cursor position.                        |
+| symbols  | readonly FlintSymbol[] | - Visible document and workspace symbols. |
+| options  | FlintWorkspaceOptions  |                                           |
+
+#### Contract
+
+- **@param:** - Target document.
+- **@param:** - Cursor position.
+- **@param:** - Visible document and workspace symbols.
+- **@returns:** Array of completion items.
 
 ## `src/documents`
 
@@ -64,7 +78,7 @@ No description provided.
 function createFlintLanguageService(host?: FlintWorkspaceHost): FlintLanguageService;
 ```
 
-No description provided.
+Creates a language service managing analysis, symbols, and LSP features for open documents.
 
 #### Parameters
 
@@ -86,7 +100,7 @@ function codeLensesFlint(
 ): readonly FlintCodeLens[];
 ```
 
-No description provided.
+Computes actionable code lens commands for Flint functions and modules.
 
 #### Parameters
 
@@ -108,7 +122,7 @@ function documentSymbolsFlint(
 ): readonly FlintDocumentSymbol[];
 ```
 
-No description provided.
+Constructs the hierarchical document symbol tree for outline views.
 
 #### Parameters
 
@@ -126,7 +140,7 @@ No description provided.
 function foldingRangesFlint(source: string, module: FlintModule | undefined): readonly FlintFoldingRange[];
 ```
 
-No description provided.
+Computes syntax folding ranges for functions, control flow blocks, and imports.
 
 #### Parameters
 
@@ -148,7 +162,7 @@ function inlayHintsFlint(
 ): readonly FlintInlayHint[];
 ```
 
-No description provided.
+Computes parameter and type inlay hints within the visible range.
 
 #### Parameters
 
@@ -172,7 +186,7 @@ function inlineValuesFlint(
 ): readonly FlintInlineValue[];
 ```
 
-No description provided.
+Computes inline variable evaluation ranges for debugger display.
 
 #### Parameters
 
@@ -198,16 +212,23 @@ function hoverFlint(
 ): FlintHover | undefined;
 ```
 
-No description provided.
+Computes hover documentation for the token under the cursor.
 
 #### Parameters
 
-| Name     | Type                   | Description |
-| -------- | ---------------------- | ----------- |
-| source   | string                 |             |
-| position | FlintPosition          |             |
-| symbols  | readonly FlintSymbol[] |             |
-| options  | FlintWorkspaceOptions  |             |
+| Name     | Type                   | Description                 |
+| -------- | ---------------------- | --------------------------- |
+| source   | string                 |                             |
+| position | FlintPosition          | - Cursor position.          |
+| symbols  | readonly FlintSymbol[] | - Visible document symbols. |
+| options  | FlintWorkspaceOptions  |                             |
+
+#### Contract
+
+- **@param:** - Target document.
+- **@param:** - Cursor position.
+- **@param:** - Visible document symbols.
+- **@returns:** Hover documentation or undefined.
 
 ## `src/lsif`
 
@@ -223,7 +244,7 @@ function createFlintLsif(
 ): FlintLsifGraph;
 ```
 
-No description provided.
+Generates a complete LSIF index dump for the specified documents.
 
 #### Parameters
 
@@ -261,7 +282,7 @@ The LSIF version represented by this module.
 export interface FlintLsifDiagnostic
 ```
 
-No description provided.
+Diagnostic record exported into LSIF dump artifacts.
 
 ### FlintLsifDocumentVertex
 
@@ -271,7 +292,7 @@ No description provided.
 export interface FlintLsifDocumentVertex
 ```
 
-No description provided.
+LSIF document vertex representing an indexed source file.
 
 ### FlintLsifEdge
 
@@ -281,7 +302,7 @@ No description provided.
 export interface FlintLsifEdge
 ```
 
-No description provided.
+Directed relationship edge between LSIF graph vertices.
 
 ### FlintLsifEdgeLabel
 
@@ -302,7 +323,7 @@ export type FlintLsifEdgeLabel =
   | 'diagnostic';
 ```
 
-No description provided.
+LSIF graph edge label enumeration.
 
 ### FlintLsifGraph
 
@@ -312,7 +333,7 @@ No description provided.
 export interface FlintLsifGraph
 ```
 
-No description provided.
+Complete LSIF index dump containing vertices and edges.
 
 ### FlintLsifInput
 
@@ -322,7 +343,7 @@ No description provided.
 export interface FlintLsifInput
 ```
 
-No description provided.
+Source documents and language service input for LSIF graph generation.
 
 ### FlintLsifMetadataVertex
 
@@ -332,7 +353,7 @@ No description provided.
 export interface FlintLsifMetadataVertex
 ```
 
-No description provided.
+LSIF metadata vertex declaring format version and tool capabilities.
 
 ### FlintLsifMonikerVertex
 
@@ -342,7 +363,7 @@ No description provided.
 export interface FlintLsifMonikerVertex
 ```
 
-No description provided.
+LSIF moniker vertex establishing global cross-project symbol identity.
 
 ### FlintLsifPosition
 
@@ -352,7 +373,7 @@ No description provided.
 export interface FlintLsifPosition
 ```
 
-No description provided.
+LSIF line and character position coordinate.
 
 ### FlintLsifPositionRange
 
@@ -372,7 +393,7 @@ An LSIF diagnostic range uses the same UTF-16 positions as the language service.
 export interface FlintLsifProjectVertex
 ```
 
-No description provided.
+LSIF project vertex representing a compilation root.
 
 ### FlintLsifRangeVertex
 
@@ -382,7 +403,7 @@ No description provided.
 export interface FlintLsifRangeVertex
 ```
 
-No description provided.
+LSIF range vertex bounding a symbol occurrence.
 
 ### FlintLsifResultSetVertex
 
@@ -392,7 +413,7 @@ No description provided.
 export interface FlintLsifResultSetVertex
 ```
 
-No description provided.
+LSIF result set vertex linking multiple ranges to shared definitions.
 
 ### FlintLsifResultVertex
 
@@ -402,7 +423,7 @@ No description provided.
 export interface FlintLsifResultVertex
 ```
 
-No description provided.
+LSIF query result vertex containing hover, definition, or references.
 
 ### FlintLsifVertex
 
@@ -419,7 +440,7 @@ export type FlintLsifVertex =
   | FlintLsifMonikerVertex;
 ```
 
-No description provided.
+Tagged union of all valid LSIF graph vertices.
 
 ### FlintLsifVertexLabel
 
@@ -442,7 +463,7 @@ export type FlintLsifVertexLabel =
   | 'diagnosticResult';
 ```
 
-No description provided.
+LSIF graph vertex label enumeration.
 
 ### serializeFlintLsif
 
@@ -480,14 +501,20 @@ No description provided.
 function containsOffset(range: FlintRange, offset: number): boolean;
 ```
 
-No description provided.
+Evaluates whether an offset falls within a range.
 
 #### Parameters
 
-| Name   | Type       | Description |
-| ------ | ---------- | ----------- |
-| range  | FlintRange |             |
-| offset | number     |             |
+| Name   | Type       | Description         |
+| ------ | ---------- | ------------------- |
+| range  | FlintRange | - Target range.     |
+| offset | number     | - Character offset. |
+
+#### Contract
+
+- **@param:** - Target range.
+- **@param:** - Character offset.
+- **@returns:** True if offset is within range boundaries.
 
 ### offsetAtPosition
 
@@ -497,7 +524,7 @@ No description provided.
 function offsetAtPosition(source: string, position: FlintPosition): number;
 ```
 
-No description provided.
+Converts line and character coordinates into a 0-based character offset.
 
 #### Parameters
 
@@ -514,7 +541,7 @@ No description provided.
 function positionAtOffset(source: string, offset: number): FlintPosition;
 ```
 
-No description provided.
+Converts a 0-based character offset into line and character coordinates.
 
 #### Parameters
 
@@ -531,7 +558,7 @@ No description provided.
 function rangeFromOffsets(source: string, start: number, end: number): FlintRange;
 ```
 
-No description provided.
+Constructs a FlintRange from start and end character offsets.
 
 #### Parameters
 
@@ -549,7 +576,7 @@ No description provided.
 function rangeFromSpan(source: string, span: FlintSourceSpan): FlintRange;
 ```
 
-No description provided.
+Converts a 1-based FlintSourceSpan into a 0-based FlintRange.
 
 #### Parameters
 
@@ -572,7 +599,7 @@ function buildSymbolIndex(
 ): FlintSymbolIndex;
 ```
 
-No description provided.
+Traverses a Flint module AST building an index of all declared symbols and references.
 
 #### Parameters
 
@@ -590,7 +617,7 @@ No description provided.
 function expressionName(expression: FlintExpression): string | undefined;
 ```
 
-No description provided.
+Extracts a display name from an expression node.
 
 #### Parameters
 
@@ -606,7 +633,7 @@ No description provided.
 export interface FlintSymbolIndex
 ```
 
-No description provided.
+Indexed symbol table for a document with definitions and references.
 
 ## `src/tokenization`
 
@@ -618,7 +645,7 @@ No description provided.
 function tokenizeFlint(source: string, fileName = '<input>'): readonly FlintTokenClassification[];
 ```
 
-No description provided.
+Lexes a Flint source string and assigns semantic classifications to each token.
 
 #### Parameters
 
@@ -635,7 +662,7 @@ No description provided.
 function tokenKindToClassification(kind: FlintTokenKind): FlintTokenClassification['kind'];
 ```
 
-No description provided.
+Maps a lexical token kind to its base semantic classification.
 
 #### Parameters
 
@@ -653,7 +680,7 @@ No description provided.
 export interface FlintAnalysis
 ```
 
-No description provided.
+Completed compiler analysis report for a document.
 
 ### FlintAnalysisOptions
 
@@ -663,7 +690,7 @@ No description provided.
 export interface FlintAnalysisOptions
 ```
 
-No description provided.
+Options controlling compiler frontend analysis and diagnostics.
 
 ### FlintCallable
 
@@ -673,7 +700,7 @@ No description provided.
 export interface FlintCallable
 ```
 
-No description provided.
+Callable signature descriptor including parameters and return type.
 
 ### FlintCodeLens
 
@@ -683,7 +710,7 @@ No description provided.
 export interface FlintCodeLens
 ```
 
-No description provided.
+Actionable command embedded directly in editor source code.
 
 ### FlintCodeLensKind
 
@@ -693,7 +720,7 @@ No description provided.
 export type FlintCodeLensKind = 'references';
 ```
 
-No description provided.
+Category of code lens action (references, debug, etc.).
 
 ### FlintCompletion
 
@@ -703,7 +730,7 @@ No description provided.
 export interface FlintCompletion
 ```
 
-No description provided.
+Autocomplete suggestion item with insert text and documentation.
 
 ### FlintCompletionKind
 
@@ -713,7 +740,7 @@ No description provided.
 export type FlintCompletionKind = 'keyword' | 'type' | 'declaration' | 'value' | 'function' | 'capability';
 ```
 
-No description provided.
+Autocomplete suggestion category (keyword, type, function, etc.).
 
 ### FlintDisposable
 
@@ -723,7 +750,7 @@ No description provided.
 export interface FlintDisposable
 ```
 
-No description provided.
+Disposable resource subscription handle.
 
 ### FlintDocument
 
@@ -733,7 +760,7 @@ No description provided.
 export interface FlintDocument
 ```
 
-No description provided.
+Synchronized document representation with URI, version, and text.
 
 ### FlintDocumentation
 
@@ -743,7 +770,7 @@ No description provided.
 export interface FlintDocumentation
 ```
 
-No description provided.
+Documentation comments and markdown description for a symbol.
 
 ### FlintDocumentSymbol
 
@@ -753,7 +780,7 @@ No description provided.
 export interface FlintDocumentSymbol
 ```
 
-No description provided.
+Hierarchical document outline symbol node.
 
 ### FlintFoldingRange
 
@@ -763,7 +790,7 @@ No description provided.
 export interface FlintFoldingRange
 ```
 
-No description provided.
+Range of source code collapsible in the editor.
 
 ### FlintFoldingRangeKind
 
@@ -773,7 +800,7 @@ No description provided.
 export type FlintFoldingRangeKind = 'module' | 'declaration' | 'region';
 ```
 
-No description provided.
+Category of code folding range (comment, imports, region).
 
 ### FlintHover
 
@@ -783,7 +810,7 @@ No description provided.
 export interface FlintHover
 ```
 
-No description provided.
+Hover tooltip documentation for a symbol or token.
 
 ### FlintInlayHint
 
@@ -793,7 +820,7 @@ No description provided.
 export interface FlintInlayHint
 ```
 
-No description provided.
+Inlined hint text displayed beside parameters or variable bindings.
 
 ### FlintInlayHintKind
 
@@ -803,7 +830,7 @@ No description provided.
 export type FlintInlayHintKind = 'parameter' | 'type';
 ```
 
-No description provided.
+Category of inlay hint (parameter, type).
 
 ### FlintInlineValue
 
@@ -813,7 +840,7 @@ No description provided.
 export interface FlintInlineValue
 ```
 
-No description provided.
+Evaluated runtime variable value shown inline during debugging.
 
 ### FlintLanguageDiagnostic
 
@@ -823,7 +850,7 @@ No description provided.
 export interface FlintLanguageDiagnostic
 ```
 
-No description provided.
+Static analysis or compiler diagnostic reported by the language service.
 
 ### FlintLanguageService
 
@@ -833,7 +860,7 @@ No description provided.
 export interface FlintLanguageService
 ```
 
-No description provided.
+Unified language service providing code intelligence queries across documents.
 
 ### FlintLocation
 
@@ -843,7 +870,7 @@ No description provided.
 export interface FlintLocation
 ```
 
-No description provided.
+Document URI and range identifying a source code location.
 
 ### FlintPosition
 
@@ -853,7 +880,7 @@ No description provided.
 export interface FlintPosition
 ```
 
-No description provided.
+Line and character position in a source document.
 
 ### FlintRange
 
@@ -863,7 +890,7 @@ No description provided.
 export interface FlintRange
 ```
 
-No description provided.
+Range delimited by start and end positions with character offsets.
 
 ### FlintSymbol
 
@@ -873,7 +900,7 @@ No description provided.
 export interface FlintSymbol
 ```
 
-No description provided.
+Symbol descriptor with name, kind, container, and location.
 
 ### FlintSymbolKind
 
@@ -883,7 +910,7 @@ No description provided.
 export type FlintSymbolKind = 'module' | 'function' | 'parameter' | 'local' | 'capability' | 'type';
 ```
 
-No description provided.
+Kind category of a language symbol (function, struct, local, etc.).
 
 ### FlintTextEdit
 
@@ -893,7 +920,7 @@ No description provided.
 export interface FlintTextEdit
 ```
 
-No description provided.
+Text edit replacing a range with new text.
 
 ### FlintTokenClassification
 
@@ -903,7 +930,7 @@ No description provided.
 export interface FlintTokenClassification
 ```
 
-No description provided.
+Semantic classification and highlighting token.
 
 ### FlintWorkspaceChange
 
@@ -913,7 +940,7 @@ No description provided.
 export interface FlintWorkspaceChange
 ```
 
-No description provided.
+Document modification event in the workspace.
 
 ### FlintWorkspaceChangeKind
 
@@ -923,7 +950,7 @@ No description provided.
 export type FlintWorkspaceChangeKind = 'created' | 'changed' | 'deleted';
 ```
 
-No description provided.
+Category of workspace document change (created, changed, deleted).
 
 ### FlintWorkspaceEdit
 
@@ -933,7 +960,7 @@ No description provided.
 export interface FlintWorkspaceEdit
 ```
 
-No description provided.
+Multi-document workspace edits mapping document URIs to text edits.
 
 ### FlintWorkspaceHost
 
@@ -943,7 +970,7 @@ No description provided.
 export interface FlintWorkspaceHost
 ```
 
-No description provided.
+Abstract host interface providing filesystem access and watching.
 
 ### FlintWorkspaceIndex
 
@@ -953,7 +980,7 @@ No description provided.
 export interface FlintWorkspaceIndex
 ```
 
-No description provided.
+Global workspace index tracking definitions, references, and symbols.
 
 ### FlintWorkspaceOptions
 
@@ -963,7 +990,7 @@ No description provided.
 export interface FlintWorkspaceOptions
 ```
 
-No description provided.
+Compiler and language service configuration options for a workspace.
 
 ## `src/workspace-index`
 
@@ -978,7 +1005,7 @@ function createFlintWorkspaceIndex(
 ): FlintWorkspaceSemanticIndex;
 ```
 
-No description provided.
+Instantiates a FlintWorkspaceIndex managing workspace symbols and references.
 
 #### Parameters
 
@@ -1007,4 +1034,4 @@ range.
 export interface WorkspaceIndexCallbacks
 ```
 
-No description provided.
+Progress and diagnostic callbacks for workspace indexing events.

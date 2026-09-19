@@ -57,6 +57,12 @@ export type FlintLoadedExports<TExports extends object> = TExports;
 export class FlintTestHarnessError extends Error {
   readonly code: string;
 
+  /**
+   * Constructs a new FlintTestHarnessError.
+   *
+   * @param message - Diagnostic failure message.
+   * @param code - Error code identifier.
+   */
   constructor(message: string, code = 'FLINT-HARNESS-001') {
     super(message);
     this.name = 'FlintTestHarnessError';
@@ -66,6 +72,9 @@ export class FlintTestHarnessError extends Error {
 
 /** Raised when a disposed harness is used again. */
 export class FlintTestHarnessDisposedError extends FlintTestHarnessError {
+  /**
+   * Constructs a new FlintTestHarnessDisposedError.
+   */
   constructor() {
     super('The Flint test harness has been disposed.', 'FLINT-HARNESS-002');
     this.name = 'FlintTestHarnessDisposedError';
@@ -255,16 +264,36 @@ export class FlintTestHarness {
     if (this.disposed) throw new FlintTestHarnessDisposedError();
   }
 
+  /**
+   * Resolves requested capabilities for a given fixture file.
+   *
+   * @param fileName - Fixture file name.
+   * @returns Requested capabilities array or undefined.
+   */
   private capabilitiesFor(fileName: string): readonly string[] | undefined {
     return typeof this.options.requestedCapabilities === 'function'
       ? this.options.requestedCapabilities(fileName)
       : this.options.requestedCapabilities;
   }
 
+  /**
+   * Attaches compilation diagnostics to a compiled module result.
+   *
+   * @param compiled - Compiled module structure.
+   * @returns Compilation result with diagnostics array.
+   */
   private withDiagnostics(compiled: FlintCompiledModule): FlintCompilationResult {
     return { ...compiled, diagnostics: compiled.artifact.diagnostics };
   }
 
+  /**
+   * Validates compilation success and returns WebAssembly binary bytes for loading.
+   *
+   * @param compiled - Compilation result.
+   * @param imports - Host capability imports.
+   * @param mode - Loading mode.
+   * @returns WebAssembly binary byte array.
+   */
   private prepareLoad(
     compiled: FlintCompilationResult,
     imports: FlintCapabilityImports,
@@ -285,6 +314,14 @@ export class FlintTestHarness {
     return compiled.artifact.wasm;
   }
 
+  /**
+   * Builds the WebAssembly imports object matching declared manifest capabilities.
+   *
+   * @param compiled - Compilation result.
+   * @param imports - Host capability imports.
+   * @param mode - Loading mode.
+   * @returns WebAssembly imports object.
+   */
   private wasmImports(
     compiled: FlintCompilationResult,
     imports: FlintCapabilityImports,
@@ -315,6 +352,13 @@ export class FlintTestHarness {
     return result;
   }
 
+  /**
+   * Validates that all declared ABI exports exist and are callable on the Wasm instance.
+   *
+   * @param compiled - Compilation result.
+   * @param exports - WebAssembly instance exports.
+   * @returns Validated typed exports.
+   */
   private validateExports<TExports extends object>(
     compiled: FlintCompilationResult,
     exports: WebAssembly.Exports,
@@ -338,6 +382,14 @@ export class FlintTestHarness {
     return exports as FlintLoadedExports<TExports>;
   }
 
+  /**
+   * Wraps an unknown loading error into a FlintTestHarnessError.
+   *
+   * @param compiled - Compilation result.
+   * @param mode - Loading mode.
+   * @param error - Caught error.
+   * @returns Formatted harness error.
+   */
   private loadError(compiled: FlintCompilationResult, mode: 'async' | 'sync', error: unknown): FlintTestHarnessError {
     return new FlintTestHarnessError(
       `${compiled.fileName} [mode=${mode}] Wasm load failed: ${error instanceof Error ? error.message : String(error)} (artifact=${compiled.artifact.contentHash}, graph=${compiled.artifact.graphHash ?? 'none'})`,
@@ -346,6 +398,13 @@ export class FlintTestHarness {
   }
 }
 
+/**
+ * Emits a JSON-serialized v3 source map for a source file.
+ *
+ * @param fileName - Source file path.
+ * @param source - Source code text.
+ * @returns Serialized v3 source map string.
+ */
 function sourceMapFor(fileName: string, source: string): string {
   return JSON.stringify({
     version: 3,
@@ -357,19 +416,43 @@ function sourceMapFor(fileName: string, source: string): string {
   });
 }
 
+/**
+ * Resolves or creates a file-backed WAT cache based on harness options.
+ *
+ * @param options - Harness configuration options.
+ * @returns Configured WAT cache or undefined if disabled.
+ */
 function watCacheFor(options: FlintTestHarnessOptions): FlintWatCache | undefined {
   if (options.persistWat === false) return undefined;
   const root = options.watCacheRoot ?? path.resolve(options.root ?? process.cwd(), 'node_modules/.cache/flint');
   const cache: FlintWatCache = {
     root,
+    /**
+     * Atomically writes string contents to a cache file.
+     *
+     * @param fileName - Cache file path.
+     * @param contents - File contents string.
+     */
     writeAtomic(fileName: string, contents: string): void {
       fs.mkdirSync(path.dirname(fileName), { recursive: true });
       fs.writeFileSync(fileName, contents, 'utf8');
     },
+    /**
+     * Atomically writes binary bytes to a cache file.
+     *
+     * @param fileName - Cache file path.
+     * @param contents - Binary byte buffer.
+     */
     writeBinaryAtomic(fileName: string, contents: Uint8Array): void {
       fs.mkdirSync(path.dirname(fileName), { recursive: true });
       fs.writeFileSync(fileName, contents);
     },
+    /**
+     * Reads string contents from a cache file if it exists.
+     *
+     * @param fileName - Cache file path.
+     * @returns File contents string or undefined.
+     */
     read(fileName: string): string | undefined {
       try {
         return fs.readFileSync(fileName, 'utf8');
@@ -377,6 +460,11 @@ function watCacheFor(options: FlintTestHarnessOptions): FlintWatCache | undefine
         return undefined;
       }
     },
+    /**
+     * Removes a cache file from disk.
+     *
+     * @param fileName - Cache file path.
+     */
     remove(fileName: string): void {
       try {
         fs.unlinkSync(fileName);
@@ -384,6 +472,11 @@ function watCacheFor(options: FlintTestHarnessOptions): FlintWatCache | undefine
         // Silently ignore unlink errors during test harness cache removal.
       }
     },
+    /**
+     * Lists all cached file paths in the cache root directory.
+     *
+     * @returns Array of absolute file paths.
+     */
     listFiles(): readonly string[] {
       try {
         return fs.readdirSync(root).map((entry) => path.resolve(root, entry));
@@ -396,6 +489,13 @@ function watCacheFor(options: FlintTestHarnessOptions): FlintWatCache | undefine
   return cache;
 }
 
+/**
+ * Executes a self-hosted compiler stage for testing.
+ *
+ * @param input - Compilation input specification.
+ * @param mode - VM execution mode.
+ * @returns Self-hosted stage execution report.
+ */
 function runFlintSelfHostedCompilerStage(
   input: Pick<FlintCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
   mode: FlintVmExecutionMode,

@@ -33,6 +33,9 @@ import {
 
 import type { FlintTraceOptions, FlintTraceReport } from './trace.js';
 
+/**
+ * Configuration options for executing self-hosted compiler stages in VM or AOT modes.
+ */
 export interface FlintSelfHostedRunOptions {
   /** Override parser VM module construction (used to inject deliberate divergence in tests). */
   readonly parserStageVmModuleOptions?: FlintParserStageVmModuleOptions;
@@ -41,6 +44,9 @@ export interface FlintSelfHostedRunOptions {
   readonly maxSteps?: number;
 }
 
+/**
+ * Complete execution report of a self-hosted compiler run across lexing and parsing stages.
+ */
 export interface FlintSelfHostedVmRun {
   readonly mode: FlintVmExecutionMode;
   /** Lex-stage fingerprint produced by VM execution (not a seed echo). */
@@ -56,6 +62,12 @@ export interface FlintSelfHostedVmRun {
   readonly stages?: readonly FlintSelfHostedStageReport[];
 }
 
+/**
+ * Converts a 32-bit numeric fingerprint into a hex-encoded hash string.
+ *
+ * @param value - 32-bit integer fingerprint.
+ * @returns Hex-encoded hash string.
+ */
 function fingerprintHash(value: number): string {
   const bytes = new Uint8Array(4);
   const view = new DataView(bytes.buffer);
@@ -118,6 +130,14 @@ export function runFlintSelfHostedLexStage(
   };
 }
 
+/**
+ * Executes the bounded self-hosted parser stage in the VM or AOT engine.
+ *
+ * @param input - Compiler input containing source and configuration.
+ * @param mode - VM execution mode ('interpreter', 'jit', or 'aot').
+ * @param options - Self-hosted run options.
+ * @returns Self-hosted stage report for the parser stage.
+ */
 function runFlintSelfHostedParserStage(
   input: Pick<FlintCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
   mode: FlintVmExecutionMode,
@@ -183,6 +203,12 @@ function toVmModule(module: FlintSelfHostedVmModule): FlintVmModule {
   return module as FlintVmModule;
 }
 
+/**
+ * Adapts a self-hosted VM value into an execution VM value representation.
+ *
+ * @param value - Source self-hosted VM value.
+ * @returns Equivalent runtime VM value.
+ */
 function toVmValue(value: FlintSelfHostedVmValue): FlintVmValue {
   if (value.kind === 'aggregate')
     return {
@@ -196,6 +222,13 @@ function toVmValue(value: FlintSelfHostedVmValue): FlintVmValue {
   return { kind: 'unit' };
 }
 
+/**
+ * Extracts a numeric 32-bit fingerprint from a VM return value.
+ *
+ * @param value - VM return value.
+ * @param stage - Name of compiler stage being evaluated.
+ * @returns Extracted 32-bit signed fingerprint integer.
+ */
 function readFingerprint(value: FlintVmValue, stage: 'lex' | 'parse'): number {
   if (value.kind !== 'number' || typeof value.value !== 'number')
     throw new Error(`Self-hosted ${stage} stage must return an i32 fingerprint.`);

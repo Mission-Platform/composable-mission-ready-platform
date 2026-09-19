@@ -17,14 +17,21 @@ function assertFlintDiagnostic(
 ): FlintDiagnostic;
 ```
 
-No description provided.
+Asserts that a diagnostic matching expectation criteria is present.
 
 #### Parameters
 
-| Name        | Type                       | Description |
-| ----------- | -------------------------- | ----------- |
-| diagnostics | readonly FlintDiagnostic[] |             |
-| expectation | FlintDiagnosticExpectation |             |
+| Name        | Type                       | Description                       |
+| ----------- | -------------------------- | --------------------------------- |
+| diagnostics | readonly FlintDiagnostic[] | - Diagnostics array to inspect.   |
+| expectation | FlintDiagnosticExpectation | - Expected diagnostic properties. |
+
+#### Contract
+
+- **@param:** - Diagnostics array to inspect.
+- **@param:** - Expected diagnostic properties.
+- **@returns:** The matched diagnostic instance.
+- **@throws:** If no matching diagnostic is found.
 
 ### assertFlintNoDiagnostics
 
@@ -34,13 +41,18 @@ No description provided.
 function assertFlintNoDiagnostics(diagnostics: readonly FlintDiagnostic[]): void;
 ```
 
-No description provided.
+Asserts that a list of diagnostics contains no entries.
 
 #### Parameters
 
-| Name        | Type                       | Description |
-| ----------- | -------------------------- | ----------- |
-| diagnostics | readonly FlintDiagnostic[] |             |
+| Name        | Type                       | Description                          |
+| ----------- | -------------------------- | ------------------------------------ |
+| diagnostics | readonly FlintDiagnostic[] | - Diagnostics array to assert empty. |
+
+#### Contract
+
+- **@param:** - Diagnostics array to assert empty.
+- **@throws:** If diagnostics are present.
 
 ### findFlintDiagnostic
 
@@ -53,14 +65,20 @@ function findFlintDiagnostic(
 ): FlintDiagnostic | undefined;
 ```
 
-No description provided.
+Finds the first diagnostic matching expectation criteria.
 
 #### Parameters
 
-| Name        | Type                       | Description |
-| ----------- | -------------------------- | ----------- |
-| diagnostics | readonly FlintDiagnostic[] |             |
-| expectation | FlintDiagnosticExpectation |             |
+| Name        | Type                       | Description                       |
+| ----------- | -------------------------- | --------------------------------- |
+| diagnostics | readonly FlintDiagnostic[] | - Array of diagnostics to search. |
+| expectation | FlintDiagnosticExpectation | - Matching criteria.              |
+
+#### Contract
+
+- **@param:** - Array of diagnostics to search.
+- **@param:** - Matching criteria.
+- **@returns:** Matching diagnostic or undefined.
 
 ### FlintDiagnosticExpectation
 
@@ -70,7 +88,7 @@ No description provided.
 export interface FlintDiagnosticExpectation
 ```
 
-No description provided.
+Expected properties when matching a diagnostic in assertions.
 
 ### formatFlintDiagnostic
 
@@ -96,13 +114,18 @@ Format a diagnostic without discarding its structured location metadata.
 function formatFlintDiagnostics(diagnostics: readonly FlintDiagnostic[]): string;
 ```
 
-No description provided.
+Formats a list of Flint diagnostics into a single human-readable string.
 
 #### Parameters
 
-| Name        | Type                       | Description |
-| ----------- | -------------------------- | ----------- |
-| diagnostics | readonly FlintDiagnostic[] |             |
+| Name        | Type                       | Description                          |
+| ----------- | -------------------------- | ------------------------------------ |
+| diagnostics | readonly FlintDiagnostic[] | - Sequence of diagnostics to format. |
+
+#### Contract
+
+- **@param:** - Sequence of diagnostics to format.
+- **@returns:** Formatted multiline diagnostic message.
 
 ## `src/harness`
 
@@ -260,7 +283,7 @@ generated FWS fixture queries such as `?flint-wat` remain available.
 export interface FlintVitestConfigOptions extends Omit<VitestConfigOptions, 'overrides'>
 ```
 
-No description provided.
+Configuration options for creating a Flint Vitest testing configuration.
 
 ### flintVitestPlugin
 

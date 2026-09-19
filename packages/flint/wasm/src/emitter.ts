@@ -33,13 +33,16 @@ import { optimizeFlintWasmModule } from './optimizer.js';
 
 const STATIC_DATA_START = 1024;
 const encoder = new TextEncoder();
+/** WebAssembly binary value type bytecode constant codes. */
 type WasmValueType = 0x7f | 0x7e | 0x7d | 0x7c | 0x7b;
+/** Allocation descriptor mapping an IR value to its linear memory or local register indexes. */
 type ValueLocation = {
   readonly indexes: readonly number[];
   readonly type: FlintWasmPrimitiveType;
   readonly reference?: string;
   readonly length?: number;
 };
+/** Resolved function index and signature descriptor for direct or runtime calls. */
 type Callable = {
   readonly parameters: readonly FlintWasmPrimitiveType[];
   readonly result: FlintWasmPrimitiveType;
@@ -59,6 +62,7 @@ const wasmTypes: Readonly<Record<FlintWasmPrimitiveType, readonly WasmValueType[
   v128: [0x7b],
 };
 
+/** Encodes an unsigned 32-bit integer into a WebAssembly LEB128 byte array. */
 function unsignedLeb(value: number): number[] {
   const result: number[] = [];
   let remaining = value >>> 0;
@@ -70,6 +74,7 @@ function unsignedLeb(value: number): number[] {
   return result;
 }
 
+/** Encodes a signed 32-bit integer into a WebAssembly LEB128 byte array. */
 function signedLeb(value: number | bigint): number[] {
   const result: number[] = [];
   let remaining = BigInt(value);
@@ -83,39 +88,47 @@ function signedLeb(value: number | bigint): number[] {
   return result;
 }
 
+/** Prefixes an array of bytecode elements with its count in LEB128 encoding. */
 function vector(values: readonly number[]): number[] {
   return [...unsignedLeb(values.length), ...values];
 }
 
+/** Encodes a UTF-8 string prefixed by its byte length in WebAssembly format. */
 function wasmString(value: string): number[] {
   const bytes = [...encoder.encode(value)];
   return [...unsignedLeb(bytes.length), ...bytes];
 }
 
+/** Packages payload bytes into a WebAssembly section with section ID and length prefix. */
 function section(id: number, contents: readonly number[]): number[] {
   return [id, ...unsignedLeb(contents.length), ...contents];
 }
 
+/** Maps high-level primitive types to WebAssembly binary value type constants. */
 function valueTypes(type: FlintWasmPrimitiveType): readonly WasmValueType[] {
   return wasmTypes[type];
 }
 
+/** Encodes a WebAssembly function signature type entry. */
 function wasmFunctionType(parameters: readonly FlintWasmPrimitiveType[], result: FlintWasmPrimitiveType): number[] {
   return [0x60, ...vector(parameters.flatMap((parameter) => valueTypes(parameter))), ...vector(valueTypes(result))];
 }
 
+/** Appends a 32-bit floating point number in little-endian binary format. */
 function appendF32(value: number): number[] {
   const buffer = new ArrayBuffer(4);
   new DataView(buffer).setFloat32(0, value, true);
   return [...new Uint8Array(buffer)];
 }
 
+/** Appends a 64-bit floating point number in little-endian binary format. */
 function appendF64(value: number): number[] {
   const buffer = new ArrayBuffer(8);
   new DataView(buffer).setFloat64(0, value, true);
   return [...new Uint8Array(buffer)];
 }
 
+/** Returns zero or initial value representation for a primitive type. */
 function defaultValue(type: FlintWasmPrimitiveType): number[] {
   return valueTypes(type).flatMap((valueType) => {
     if (valueType === 0x7d) return [0x43, ...appendF32(0)];
@@ -143,6 +156,7 @@ const COLLECTION_RUNTIME_OPERATION_ORDER = [
 ] as const;
 const COLLECTION_RUNTIME_OPERATIONS: ReadonlySet<string> = new Set(COLLECTION_RUNTIME_OPERATION_ORDER);
 
+/** Converts a high-level primitive type name to its WebAssembly primitive representation. */
 function projectPrimitive(
   type: { readonly name?: string; readonly reference?: string } | undefined,
 ): FlintWasmPrimitiveType {
@@ -168,6 +182,7 @@ function projectPrimitive(
   return 'i32';
 }
 
+/** Projects a type AST node to WebAssembly primitive type representation. */
 function projectTypeName(
   type: { readonly name?: string; readonly reference?: string; readonly span?: FlintWasmSourceSpan } | undefined,
   _span: FlintWasmSourceSpan,
@@ -190,6 +205,7 @@ function projectTypeName(
   };
 }
 
+/** Projects an IR expression to WebAssembly expression representation. */
 function projectExpression(expression: FlintWasmExpression): FlintWasmExpression {
   if (expression.kind === 'literal') {
     return {
@@ -242,6 +258,7 @@ function projectExpression(expression: FlintWasmExpression): FlintWasmExpression
   return expression;
 }
 
+/** Emits a call to the iterator result synthesis runtime helper. */
 function iterResultCall(value: FlintWasmExpression, done: number, span: FlintWasmSourceSpan): FlintWasmExpression {
   return {
     kind: 'call',
@@ -251,6 +268,7 @@ function iterResultCall(value: FlintWasmExpression, done: number, span: FlintWas
   };
 }
 
+/** Emits a return statement wrapping an iterator result value. */
 function returnIterResult(
   value: FlintWasmExpression | number,
   done: number,
@@ -261,6 +279,7 @@ function returnIterResult(
   return { kind: 'return', value: iterResultCall(valueExpression, done, span), span };
 }
 
+/** Constructs the state machine dispatch switch for an iterable function. */
 function buildYieldStateMachine(
   yields: readonly FlintWasmExpression[],
   span: FlintWasmSourceSpan,
@@ -278,7 +297,17 @@ function buildYieldStateMachine(
           right: { kind: 'literal', value: index, type: 'i32', span },
           span,
         },
-        consequent: [returnIterResult(yields[index]!, 0, span)],
+        consequent: [
+          returnIterResult(
+            yields[index] ?? {
+              kind: 'yield',
+              value: { kind: 'literal', type: 'unit', value: 0, span: emptySpan() },
+              span: emptySpan(),
+            },
+            0,
+            span,
+          ),
+        ],
         alternate: statements,
         span,
       },
@@ -287,6 +316,7 @@ function buildYieldStateMachine(
   return statements;
 }
 
+/** Lowers iterator-specific loop and yield statements into primitive control flow. */
 function lowerIteratorStatements(statements: readonly FlintWasmStatement[]): readonly FlintWasmStatement[] {
   return statements.flatMap((statement) => {
     if (statement.kind === 'yield') return [returnIterResult(statement.value, 0, statement.span)];
@@ -368,6 +398,7 @@ function lowerIteratorStatements(statements: readonly FlintWasmStatement[]): rea
   });
 }
 
+/** Scans an AST statement list collecting all top-level yield statements. */
 function collectTopLevelYields(statements: readonly FlintWasmStatement[]): FlintWasmExpression[] | undefined {
   const yields: FlintWasmExpression[] = [];
   for (const statement of statements) {
@@ -377,6 +408,7 @@ function collectTopLevelYields(statements: readonly FlintWasmStatement[]): Flint
   return yields;
 }
 
+/** Determines whether a statement block contains iterable yields or iterator loops. */
 function bodyContainsIteratorNodes(statements: readonly FlintWasmStatement[]): boolean {
   for (const statement of statements) {
     if (statement.kind === 'yield' || statement.kind === 'iterator-loop') return true;
@@ -397,6 +429,7 @@ function bodyContainsIteratorNodes(statements: readonly FlintWasmStatement[]): b
   return false;
 }
 
+/** Formats an element type into a normalized label identifier. */
 function elementTypeLabel(type: {
   readonly name?: string;
   readonly reference?: string;
@@ -407,6 +440,7 @@ function elementTypeLabel(type: {
   return 'i32';
 }
 
+/** Rewrites local identifier access to read from iterator state aggregate fields. */
 function rewriteStateIdentifier(expression: FlintWasmExpression, from: string | undefined): FlintWasmExpression {
   if (from === undefined) return expression;
   if (expression.kind === 'identifier')
@@ -443,6 +477,7 @@ function rewriteStateIdentifier(expression: FlintWasmExpression, from: string | 
   return expression;
 }
 
+/** Traverses statements replacing variable references with iterator state aggregate reads. */
 function rewriteStateInStatements(
   statements: readonly FlintWasmStatement[],
   from: string | undefined,
@@ -500,14 +535,17 @@ function rewriteStateInStatements(
         condition: rewriteStateIdentifier(statement.condition, from),
         ...(statement.initializer === undefined
           ? {}
-          : { initializer: rewriteStateInStatements([statement.initializer], from)[0]! }),
-        ...(statement.update === undefined ? {} : { update: rewriteStateInStatements([statement.update], from)[0]! }),
+          : { initializer: rewriteStateInStatements([statement.initializer], from)[0] ?? statement }),
+        ...(statement.update === undefined
+          ? {}
+          : { update: rewriteStateInStatements([statement.update], from)[0] ?? statement }),
         body: rewriteStateInStatements(statement.body, from),
       };
     return statement;
   });
 }
 
+/** Transforms an iterable generator function into an iterator state-machine function. */
 function lowerIterableFunction(declaration: FlintWasmFunction): readonly FlintWasmFunction[] {
   const span = declaration.span;
   const parameters = declaration.parameters.map((parameter) => ({
@@ -552,6 +590,7 @@ function lowerIterableFunction(declaration: FlintWasmFunction): readonly FlintWa
   return [factory, next];
 }
 
+/** Lowers statements in a non-iterable function. */
 function lowerPlainFunction(declaration: FlintWasmFunction): FlintWasmFunction {
   return {
     ...declaration,
@@ -564,6 +603,7 @@ function lowerPlainFunction(declaration: FlintWasmFunction): FlintWasmFunction {
   };
 }
 
+/** Derives iterator state machine metadata descriptors for exported generator functions. */
 function deriveIteratorDescriptors(module: FlintWasmModule): readonly FlintWasmIteratorBoundaryDescriptor[] {
   if (module.iteratorDescriptors !== undefined && module.iteratorDescriptors.length > 0)
     return module.iteratorDescriptors;
@@ -585,6 +625,7 @@ function deriveIteratorDescriptors(module: FlintWasmModule): readonly FlintWasmI
   });
 }
 
+/** Transforms all iterable functions in a module into state-machine implementations. */
 function lowerIteratorModule(module: FlintWasmModule): {
   readonly module: FlintWasmModule;
   readonly iteratorExports: readonly FlintWasmIteratorExport[];
@@ -650,6 +691,7 @@ function lowerIteratorModule(module: FlintWasmModule): {
   };
 }
 
+/** Resolves the primitive return type of an expression in the current typing environment. */
 function expressionType(
   expression: FlintWasmExpression,
   locals: ReadonlyMap<string, ValueLocation>,
@@ -715,6 +757,7 @@ function expressionType(
   return expressionType(expression.left, locals, callables);
 }
 
+/** Resolves the WebAssembly opcode instruction for a binary operator on primitive types. */
 function binaryOpcode(operator: FlintWasmBinaryOperator, type: FlintWasmPrimitiveType): number {
   if (operator === '&&') return 0x71;
   if (operator === '||') return 0x72;
@@ -781,6 +824,7 @@ function binaryOpcode(operator: FlintWasmBinaryOperator, type: FlintWasmPrimitiv
   return table[operator] ?? 0x46;
 }
 
+/** Determines whether any function in a module utilizes SIMD vector instructions. */
 function moduleHasSimd(module: FlintWasmModule): boolean {
   for (const functionDeclaration of module.functions) {
     if (
@@ -795,6 +839,7 @@ function moduleHasSimd(module: FlintWasmModule): boolean {
   return false;
 }
 
+/** Checks whether a statement or its sub-expressions use SIMD operations. */
 function statementUsesSimd(statement: FlintWasmStatement): boolean {
   if (statement.kind === 'let' && statement.type.name === 'v128') return true;
   if (statement.kind === 'assignment' && expressionUsesSimd(statement.value)) return true;
@@ -813,6 +858,7 @@ function statementUsesSimd(statement: FlintWasmStatement): boolean {
   return false;
 }
 
+/** Checks whether an expression node uses SIMD vector operations. */
 function expressionUsesSimd(expression: FlintWasmExpression): boolean {
   if (expression.kind === 'literal' && expression.type === 'v128') return true;
   if (expression.kind === 'call') {
@@ -824,6 +870,7 @@ function expressionUsesSimd(expression: FlintWasmExpression): boolean {
   return false;
 }
 
+/** Evaluates proposal features required by an IR module. */
 function featureRequirements(module: FlintWasmModule): FlintWasmFeatureRequirements {
   const hasSimd = module.featureRequirements?.simd === true || moduleHasSimd(module);
   return {
@@ -836,6 +883,7 @@ function featureRequirements(module: FlintWasmModule): FlintWasmFeatureRequireme
   };
 }
 
+/** Validates that enabled proposal features meet the requirements of the module. */
 function validateTargetFeatures(
   module: FlintWasmModule,
   targetFeatures: FlintTargetFeatures | undefined,
@@ -899,6 +947,7 @@ function validateTargetFeatures(
   return diagnostics;
 }
 
+/** Formats WebAssembly memory limits descriptor based on 64-bit and shared memory flags. */
 function memoryLimits(targetFeatures: FlintTargetFeatures | undefined, requiredBytes: number): number[] {
   const initialPages = Math.max(1, Math.ceil(requiredBytes / 65_536));
   if (targetFeatures?.memory64 === true && targetFeatures.threads === true)
@@ -908,6 +957,7 @@ function memoryLimits(targetFeatures: FlintTargetFeatures | undefined, requiredB
   return [0x01, 0x00, ...unsignedLeb(initialPages)];
 }
 
+/** Emits a custom section declaring targeted WebAssembly proposals. */
 function featureCustomSection(targetFeatures: FlintTargetFeatures | undefined): number[] {
   const normalized = {
     simd: targetFeatures?.simd === true,
@@ -919,10 +969,12 @@ function featureCustomSection(targetFeatures: FlintTargetFeatures | undefined): 
   return section(0, [...wasmString('fws.target-features'), ...encoder.encode(JSON.stringify(normalized))]);
 }
 
+/** Emits a custom section embedding compilation and ABI metadata. */
 function metadataCustomSection(metadata: FlintWasmBackendInput['metadata']): number[] {
   return section(0, [...wasmString('fws.metadata'), ...encoder.encode(JSON.stringify(metadata))]);
 }
 
+/** Core emitter lowering module IR to binary WebAssembly bytecode. */
 function emitWasm(
   module: FlintWasmModule,
   targetFeatures: FlintTargetFeatures | undefined,
@@ -1310,19 +1362,19 @@ function emitWasm(
           0x10,
           ...unsignedLeb(allocatorFunctionIndex),
           0x21,
-          ...unsignedLeb(temporary.indexes[0]!),
+          ...unsignedLeb(temporary.indexes[0] ?? 0),
         );
         for (const field of layout.fields) {
           const value = expression.fields[field.name];
           if (value === undefined) throw new Error(`FLINT-RECORD-002: Record field "${field.name}" is missing.`);
-          body.push(0x20, ...unsignedLeb(temporary.indexes[0]!), 0x41, ...signedLeb(field.offset), 0x6a);
+          body.push(0x20, ...unsignedLeb(temporary.indexes[0] ?? 0), 0x41, ...signedLeb(field.offset), 0x6a);
           emitExpression(value, visible);
           if (field.type === 'f64') body.push(0x39, 0x03, 0x00);
           else if (field.type === 'f32') body.push(0x38, 0x02, 0x00);
           else if (field.type === 'i64' || field.type === 'u64') body.push(0x37, 0x03, 0x00);
           else body.push(0x36, 0x02, 0x00);
         }
-        body.push(0x20, ...unsignedLeb(temporary.indexes[0]!));
+        body.push(0x20, ...unsignedLeb(temporary.indexes[0] ?? 0));
       } else if (expression.kind === 'array-literal' || expression.kind === 'vector-literal') {
         const temporary = expressionLocations.get(expression);
         if (temporary === undefined) throw new Error('Collection literal is missing its temporary handle local.');
@@ -1332,10 +1384,10 @@ function emitWasm(
           0x10,
           ...unsignedLeb(collectionFunctionIndex(operation)),
           0x21,
-          ...unsignedLeb(temporary.indexes[0]!),
+          ...unsignedLeb(temporary.indexes[0] ?? 0),
         );
         for (const [index, element] of expression.elements.entries()) {
-          body.push(0x20, ...unsignedLeb(temporary.indexes[0]!));
+          body.push(0x20, ...unsignedLeb(temporary.indexes[0] ?? 0));
           if (expression.kind === 'vector-literal') {
             emitExpression(element, visible);
             body.push(0x10, ...unsignedLeb(collectionFunctionIndex('vector-push')), 0x1a);
@@ -1345,24 +1397,24 @@ function emitWasm(
             body.push(0x10, ...unsignedLeb(collectionFunctionIndex('array-set')));
           }
         }
-        body.push(0x20, ...unsignedLeb(temporary.indexes[0]!));
+        body.push(0x20, ...unsignedLeb(temporary.indexes[0] ?? 0));
       } else if (expression.kind === 'index') {
         const receiver = expression.receiver.kind === 'identifier' ? visible.get(expression.receiver.name) : undefined;
         const access = collectionAccessLocations.get(expression);
         if (access !== undefined && (receiver?.reference === 'Array' || receiver?.reference === 'Vector')) {
           emitExpression(expression.receiver, visible);
-          body.push(0x21, ...unsignedLeb(access.receiver.indexes[0]!));
+          body.push(0x21, ...unsignedLeb(access.receiver.indexes[0] ?? 0));
           emitExpression(expression.index, visible);
-          body.push(0x21, ...unsignedLeb(access.index.indexes[0]!));
+          body.push(0x21, ...unsignedLeb(access.index.indexes[0] ?? 0));
           if (expression.boundsCheck !== 'proven-safe') {
             body.push(
               0x20,
-              ...unsignedLeb(access.receiver.indexes[0]!),
+              ...unsignedLeb(access.receiver.indexes[0] ?? 0),
               0x28,
               0x02,
               receiver.reference === 'Array' ? 0 : 4,
               0x20,
-              ...unsignedLeb(access.index.indexes[0]!),
+              ...unsignedLeb(access.index.indexes[0] ?? 0),
               0x4d,
               0x04,
               0x40,
@@ -1373,9 +1425,9 @@ function emitWasm(
           if (receiver.reference === 'Array') {
             body.push(
               0x20,
-              ...unsignedLeb(access.receiver.indexes[0]!),
+              ...unsignedLeb(access.receiver.indexes[0] ?? 0),
               0x20,
-              ...unsignedLeb(access.index.indexes[0]!),
+              ...unsignedLeb(access.index.indexes[0] ?? 0),
               0x41,
               ...signedLeb(1),
               0x6a,
@@ -1390,12 +1442,12 @@ function emitWasm(
           } else {
             body.push(
               0x20,
-              ...unsignedLeb(access.receiver.indexes[0]!),
+              ...unsignedLeb(access.receiver.indexes[0] ?? 0),
               0x28,
               0x02,
               0,
               0x20,
-              ...unsignedLeb(access.index.indexes[0]!),
+              ...unsignedLeb(access.index.indexes[0] ?? 0),
               0x41,
               ...signedLeb(4),
               0x6c,
@@ -1591,11 +1643,11 @@ function emitWasm(
               if (value !== undefined && locations !== undefined) {
                 emitExpression(value, visible);
                 if (explicitLength !== undefined) emitExpression(explicitLength, visible);
-                body.push(0x21, ...unsignedLeb(locations.length.indexes[0]!));
-                body.push(0x21, ...unsignedLeb(locations.pointer.indexes[0]!));
+                body.push(0x21, ...unsignedLeb(locations.length.indexes[0] ?? 0));
+                body.push(0x21, ...unsignedLeb(locations.pointer.indexes[0] ?? 0));
                 body.push(
                   0x20,
-                  ...unsignedLeb(locations.pointer.indexes[0]!),
+                  ...unsignedLeb(locations.pointer.indexes[0] ?? 0),
                   0x41,
                   ...signedLeb(STATIC_DATA_START),
                   0x49,
@@ -1604,21 +1656,21 @@ function emitWasm(
                   0x00,
                   0x0b,
                   0x20,
-                  ...unsignedLeb(locations.pointer.indexes[0]!),
+                  ...unsignedLeb(locations.pointer.indexes[0] ?? 0),
                   0x20,
-                  ...unsignedLeb(locations.length.indexes[0]!),
+                  ...unsignedLeb(locations.length.indexes[0] ?? 0),
                   0x6a,
                   0x20,
-                  ...unsignedLeb(locations.pointer.indexes[0]!),
+                  ...unsignedLeb(locations.pointer.indexes[0] ?? 0),
                   0x49,
                   0x04,
                   0x40,
                   0x00,
                   0x0b,
                   0x20,
-                  ...unsignedLeb(locations.pointer.indexes[0]!),
+                  ...unsignedLeb(locations.pointer.indexes[0] ?? 0),
                   0x20,
-                  ...unsignedLeb(locations.length.indexes[0]!),
+                  ...unsignedLeb(locations.length.indexes[0] ?? 0),
                   0x6a,
                   0x3f,
                   0x00,
@@ -1631,7 +1683,7 @@ function emitWasm(
                   0x00,
                   0x0b,
                   0x20,
-                  ...unsignedLeb(locations.length.indexes[0]!),
+                  ...unsignedLeb(locations.length.indexes[0] ?? 0),
                 );
                 return;
               }
@@ -1646,13 +1698,13 @@ function emitWasm(
               const locations = bytesByteAtLocations.get(expression) ?? stringByteAtLocations.get(expression);
               if (bytes !== undefined && index !== undefined && locations !== undefined) {
                 emitExpression(bytes, visible);
-                body.push(0x21, ...unsignedLeb(locations.length.indexes[0]!));
-                body.push(0x21, ...unsignedLeb(locations.pointer.indexes[0]!));
+                body.push(0x21, ...unsignedLeb(locations.length.indexes[0] ?? 0));
+                body.push(0x21, ...unsignedLeb(locations.pointer.indexes[0] ?? 0));
                 emitExpression(index, visible);
-                body.push(0x21, ...unsignedLeb(locations.index.indexes[0]!));
+                body.push(0x21, ...unsignedLeb(locations.index.indexes[0] ?? 0));
                 body.push(
                   0x20,
-                  ...unsignedLeb(locations.pointer.indexes[0]!),
+                  ...unsignedLeb(locations.pointer.indexes[0] ?? 0),
                   0x41,
                   ...signedLeb(STATIC_DATA_START),
                   0x49,
@@ -1661,21 +1713,21 @@ function emitWasm(
                   0x00,
                   0x0b,
                   0x20,
-                  ...unsignedLeb(locations.pointer.indexes[0]!),
+                  ...unsignedLeb(locations.pointer.indexes[0] ?? 0),
                   0x20,
-                  ...unsignedLeb(locations.length.indexes[0]!),
+                  ...unsignedLeb(locations.length.indexes[0] ?? 0),
                   0x6a,
                   0x20,
-                  ...unsignedLeb(locations.pointer.indexes[0]!),
+                  ...unsignedLeb(locations.pointer.indexes[0] ?? 0),
                   0x49,
                   0x04,
                   0x40,
                   0x00,
                   0x0b,
                   0x20,
-                  ...unsignedLeb(locations.pointer.indexes[0]!),
+                  ...unsignedLeb(locations.pointer.indexes[0] ?? 0),
                   0x20,
-                  ...unsignedLeb(locations.length.indexes[0]!),
+                  ...unsignedLeb(locations.length.indexes[0] ?? 0),
                   0x6a,
                   0x3f,
                   0x00,
@@ -1688,7 +1740,7 @@ function emitWasm(
                   0x00,
                   0x0b,
                   0x20,
-                  ...unsignedLeb(locations.index.indexes[0]!),
+                  ...unsignedLeb(locations.index.indexes[0] ?? 0),
                   0x41,
                   ...signedLeb(0),
                   0x48,
@@ -1697,18 +1749,18 @@ function emitWasm(
                   0x00,
                   0x0b,
                   0x20,
-                  ...unsignedLeb(locations.index.indexes[0]!),
+                  ...unsignedLeb(locations.index.indexes[0] ?? 0),
                   0x20,
-                  ...unsignedLeb(locations.length.indexes[0]!),
+                  ...unsignedLeb(locations.length.indexes[0] ?? 0),
                   0x4f,
                   0x04,
                   0x40,
                   0x00,
                   0x0b,
                   0x20,
-                  ...unsignedLeb(locations.pointer.indexes[0]!),
+                  ...unsignedLeb(locations.pointer.indexes[0] ?? 0),
                   0x20,
-                  ...unsignedLeb(locations.index.indexes[0]!),
+                  ...unsignedLeb(locations.index.indexes[0] ?? 0),
                   0x6a,
                   0x2d,
                   0x00,
@@ -1867,12 +1919,12 @@ function emitWasm(
           tableLength <= values.length * 4);
       emitPhiPrelude(statement);
       emitExpression(statement.value, visible);
-      body.push(0x21, ...unsignedLeb(location.indexes[0]!), 0x02, 0x40);
+      body.push(0x21, ...unsignedLeb(location.indexes[0] ?? 0), 0x02, 0x40);
       if (values.length > 0) {
         if (useBrTable) {
           body.push(
             0x20,
-            ...unsignedLeb(location.indexes[0]!),
+            ...unsignedLeb(location.indexes[0] ?? 0),
             0x41,
             ...signedLeb(minimum),
             0x48,
@@ -1884,7 +1936,7 @@ function emitWasm(
           );
           body.push(
             0x20,
-            ...unsignedLeb(location.indexes[0]!),
+            ...unsignedLeb(location.indexes[0] ?? 0),
             0x41,
             ...signedLeb(maximum),
             0x4a,
@@ -1899,7 +1951,7 @@ function emitWasm(
           for (let index = 0; index < values.length; index += 1) body.push(0x02, 0x40);
           body.push(
             0x20,
-            ...unsignedLeb(location.indexes[0]!),
+            ...unsignedLeb(location.indexes[0] ?? 0),
             0x41,
             ...signedLeb(minimum),
             0x6b,
@@ -1913,7 +1965,7 @@ function emitWasm(
           body.push(...unsignedLeb(values.length));
           for (let index = values.length - 1; index >= 0; index -= 1) {
             body.push(0x0b);
-            emitStatements(statement.cases[index]!.body, visible);
+            emitStatements(statement.cases[index]?.body ?? [], visible);
             emitBranchCopies(statement, index);
             body.push(0x0c, ...unsignedLeb(index + 1));
           }
@@ -1925,9 +1977,17 @@ function emitWasm(
           const emitSparse = (start: number, end: number, depth: number): void => {
             if (start >= end) return;
             const middle = start + Math.floor((end - start) / 2);
-            const selected = sorted[middle]!;
-            body.push(0x20, ...unsignedLeb(location.indexes[0]!), 0x41, ...signedLeb(selected.value), 0x46, 0x04, 0x40);
-            emitStatements(statement.cases[selected.index]!.body, visible);
+            const selected = sorted[middle] ?? { value: 0, index: 0 };
+            body.push(
+              0x20,
+              ...unsignedLeb(location.indexes[0] ?? 0),
+              0x41,
+              ...signedLeb(selected.value),
+              0x46,
+              0x04,
+              0x40,
+            );
+            emitStatements(statement.cases[selected.index]?.body ?? [], visible);
             emitBranchCopies(statement, selected.index);
             body.push(0x0c, ...unsignedLeb(depth + 1), 0x05);
             const leftEnd = middle;
@@ -1935,7 +1995,7 @@ function emitWasm(
             if (start < leftEnd && rightStart < end) {
               body.push(
                 0x20,
-                ...unsignedLeb(location.indexes[0]!),
+                ...unsignedLeb(location.indexes[0] ?? 0),
                 0x41,
                 ...signedLeb(selected.value),
                 0x48,
@@ -1983,18 +2043,18 @@ function emitWasm(
             access !== undefined &&
             (location.reference === 'Array' || location.reference === 'Vector')
           ) {
-            body.push(0x20, ...unsignedLeb(location.indexes[0]!));
-            body.push(0x21, ...unsignedLeb(access.receiver.indexes[0]!));
+            body.push(0x20, ...unsignedLeb(location.indexes[0] ?? 0));
+            body.push(0x21, ...unsignedLeb(access.receiver.indexes[0] ?? 0));
             emitExpression(statement.index, current);
-            body.push(0x21, ...unsignedLeb(access.index.indexes[0]!));
+            body.push(0x21, ...unsignedLeb(access.index.indexes[0] ?? 0));
             body.push(
               0x20,
-              ...unsignedLeb(access.receiver.indexes[0]!),
+              ...unsignedLeb(access.receiver.indexes[0] ?? 0),
               0x28,
               0x02,
               location.reference === 'Array' ? 0 : 4,
               0x20,
-              ...unsignedLeb(access.index.indexes[0]!),
+              ...unsignedLeb(access.index.indexes[0] ?? 0),
               0x4d,
               0x04,
               0x40,
@@ -2004,9 +2064,9 @@ function emitWasm(
             if (location.reference === 'Array') {
               body.push(
                 0x20,
-                ...unsignedLeb(access.receiver.indexes[0]!),
+                ...unsignedLeb(access.receiver.indexes[0] ?? 0),
                 0x20,
-                ...unsignedLeb(access.index.indexes[0]!),
+                ...unsignedLeb(access.index.indexes[0] ?? 0),
                 0x41,
                 ...signedLeb(1),
                 0x6a,
@@ -2018,12 +2078,12 @@ function emitWasm(
             } else {
               body.push(
                 0x20,
-                ...unsignedLeb(access.receiver.indexes[0]!),
+                ...unsignedLeb(access.receiver.indexes[0] ?? 0),
                 0x28,
                 0x02,
                 0,
                 0x20,
-                ...unsignedLeb(access.index.indexes[0]!),
+                ...unsignedLeb(access.index.indexes[0] ?? 0),
                 0x41,
                 ...signedLeb(4),
                 0x6c,
@@ -2033,7 +2093,7 @@ function emitWasm(
             emitExpression(statement.value, current);
             body.push(0x36, 0x02, 0);
           } else if (statement.index !== undefined && location !== undefined) {
-            body.push(0x20, ...unsignedLeb(location.indexes[0]!));
+            body.push(0x20, ...unsignedLeb(location.indexes[0] ?? 0));
             emitExpression(statement.index, current);
             emitExpression(statement.value, current);
             body.push(
@@ -2128,16 +2188,16 @@ function emitWasm(
               : sourceExpression,
             current,
           );
-          body.push(0x21, ...unsignedLeb(source.indexes[0]!));
+          body.push(0x21, ...unsignedLeb(source.indexes[0] ?? 0));
           const loopVisible = new Map(current);
           loopVisible.set(statement.binding, binding);
           body.push(0x02, 0x40, 0x03, 0x40);
-          body.push(0x20, ...unsignedLeb(source.indexes[0]!));
+          body.push(0x20, ...unsignedLeb(source.indexes[0] ?? 0));
           body.push(0x10, ...unsignedLeb(collectionFunctionIndex('iterator-next')));
-          body.push(0x21, ...unsignedLeb(packed.indexes[0]!));
-          body.push(0x20, ...unsignedLeb(packed.indexes[0]!));
+          body.push(0x21, ...unsignedLeb(packed.indexes[0] ?? 0));
+          body.push(0x20, ...unsignedLeb(packed.indexes[0] ?? 0));
           body.push(0x42, ...signedLeb(32n), 0x88, 0x50, 0x45, 0x0d, 0x01);
-          body.push(0x20, ...unsignedLeb(packed.indexes[0]!), 0xa7, 0x21, ...unsignedLeb(binding.indexes[0]!));
+          body.push(0x20, ...unsignedLeb(packed.indexes[0] ?? 0), 0xa7, 0x21, ...unsignedLeb(binding.indexes[0] ?? 0));
           emitStatements(statement.body, loopVisible);
           body.push(0x0c, 0x00, 0x0b, 0x0b);
         }
@@ -2789,16 +2849,16 @@ function emitWasm(
         vector(
           [
             ...functionTypeIndexes,
-            ...(regexClassType === undefined ? [] : [regexClassType!, regexRunType!, regexEntryType!]),
+            ...(regexClassType === undefined ? [] : [regexClassType ?? 0, regexRunType ?? 0, regexEntryType ?? 0]),
             ...(stringLengthType === undefined
               ? []
               : [
-                  stringConcatType!,
-                  stringLengthType!,
-                  stringByteAtType!,
-                  stringStartsWithType!,
-                  stringSliceType!,
-                  stringToI32Type!,
+                  stringConcatType ?? 0,
+                  stringLengthType ?? 0,
+                  stringByteAtType ?? 0,
+                  stringStartsWithType ?? 0,
+                  stringSliceType ?? 0,
+                  stringToI32Type ?? 0,
                 ]),
             allocatorType,
             deallocatorType,
@@ -2824,14 +2884,17 @@ function emitWasm(
   );
 }
 
+/** Creates a zero-length source span at the origin. */
 function emptySpan(): FlintWasmSourceSpan {
   return { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 };
 }
 
+/** Factory helper constructing a backend compiler diagnostic. */
 function backendDiagnostic(fileName: string, message: string, span = emptySpan()): FlintWasmDiagnostic {
   return { code: 'FLINT-EMIT-001', severity: 'error', phase: 'emit', message, fileName, span };
 }
 
+/** Verifies that all execution paths in non-unit functions return a value. */
 function validateReturnPaths(module: FlintWasmModule, fileName: string): readonly FlintWasmDiagnostic[] {
   return module.functions.flatMap((declaration) => {
     if (declaration.name === ITER_RESULT_HELPER) return [];
@@ -2850,6 +2913,7 @@ function validateReturnPaths(module: FlintWasmModule, fileName: string): readonl
   });
 }
 
+/** Record containing compiled binary WebAssembly and metadata for an optimization variant. */
 interface EmittedVariant {
   readonly wasm?: Uint8Array;
   readonly wat: string;
@@ -2857,6 +2921,7 @@ interface EmittedVariant {
   readonly iteratorExports: readonly FlintWasmIteratorExport[];
 }
 
+/** Emits a single WebAssembly variant (debug or release) and captures bytecode. */
 function emitVariant(
   module: FlintWasmModule,
   metadata: FlintWasmBackendInput['metadata'],
@@ -2908,6 +2973,7 @@ function emitVariant(
   }
 }
 
+/** Main entry point compiling a Flint IR module to WebAssembly binary and text formats. */
 export function compileFlintWasm(input: FlintWasmBackendInput, fileName = '<input>'): FlintWasmBackendResult {
   input.logger?.log('info', 'backend.emit.start', { fileName, optimization: input.metadata.optimization });
   const targetFeatures = input.targetFeatures ?? input.metadata.targetFeatures;

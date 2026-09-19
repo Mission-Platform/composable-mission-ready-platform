@@ -1,11 +1,22 @@
+/**
+ * Test fixture specification for Flint language conformance test suites.
+ */
 export interface FlintConformanceFixture {
+  /** Descriptive label for the conformance test case. */
   readonly name: string;
+  /** Flint source code text under test. */
   readonly source: string;
+  /** Expected overall validation outcome (true if expected to pass without errors). */
   readonly valid: boolean;
+  /** Optional capability tokens expected to be granted to the compiler instance. */
   readonly requestedCapabilities?: readonly string[];
+  /** Optional list of expected diagnostic error/warning codes emitted. */
   readonly diagnosticCodes?: readonly string[];
 }
 
+/**
+ * Valid bootstrap test fixtures that exercise valid Flint language constructs.
+ */
 export const acceptedBootstrapFixtures: readonly FlintConformanceFixture[] = [
   {
     name: 'pure arithmetic export',
@@ -44,6 +55,9 @@ export fn current() -> i64 {
   },
 ];
 
+/**
+ * Invalid bootstrap test fixtures that trigger syntactic, semantic, or capability violations.
+ */
 export const rejectedBootstrapFixtures: readonly FlintConformanceFixture[] = [
   {
     name: 'implicit export',

@@ -36,20 +36,21 @@ function createFlintAnalysisContext(
 ): FlintAnalysisContext;
 ```
 
-Creates a static analysis context wrapping frontend outputs, policies, and derived facts.
+Creates an analysis context for evaluating static analysis rules on a frontend compiler output.
+Assembles source files, active security policies, IR representations, and precomputed analysis facts.
 
 #### Parameters
 
-| Name     | Type                 | Description                                             |
-| -------- | -------------------- | ------------------------------------------------------- |
-| frontend | FlintFrontendResult  | Frontend compiler result.                               |
-| options  | FlintAnalysisOptions | Analysis options controlling policies and source files. |
+| Name     | Type                 | Description                                                                 |
+| -------- | -------------------- | --------------------------------------------------------------------------- |
+| frontend | FlintFrontendResult  | - Frontend compiler result containing AST, IR, and link artifacts.          |
+| options  | FlintAnalysisOptions | - Analysis configuration options including custom policies and source maps. |
 
 #### Contract
 
-- **@param:** Frontend compiler result.
-- **@param:** Analysis options controlling policies and source files.
-- **@returns:** Fully populated FlintAnalysisContext.
+- **@param:** - Frontend compiler result containing AST, IR, and link artifacts.
+- **@param:** - Analysis configuration options including custom policies and source maps.
+- **@returns:** A structured FlintAnalysisContext ready for rule execution.
 
 ## `src/analysis/contracts`
 
@@ -71,7 +72,7 @@ Stable prefixes reserved for source-analysis diagnostic families.
 export interface FlintAnalysisAliasLifetimeFact
 ```
 
-No description provided.
+Alias and lifetime summary for borrowed, mutable, and shared bindings.
 
 ### FlintAnalysisArrayBoundsFact
 
@@ -81,7 +82,7 @@ No description provided.
 export interface FlintAnalysisArrayBoundsFact
 ```
 
-No description provided.
+Array/index bounds fact describing safety status for one access site.
 
 ### FlintAnalysisCallGraphNode
 
@@ -91,7 +92,7 @@ No description provided.
 export interface FlintAnalysisCallGraphNode
 ```
 
-No description provided.
+Call-graph fact recording the direct callees of one function.
 
 ### FlintAnalysisCapabilityFact
 
@@ -101,7 +102,7 @@ No description provided.
 export interface FlintAnalysisCapabilityFact
 ```
 
-No description provided.
+Capability import fact linking host capabilities to module imports.
 
 ### FlintAnalysisCategory
 
@@ -112,7 +113,7 @@ export type FlintAnalysisCategory =
   'type' | 'control-flow' | 'memory' | 'ownership' | 'security' | 'resource' | 'optimization';
 ```
 
-No description provided.
+Classification category assigned to analysis findings and diagnostic families.
 
 ### FlintAnalysisContext
 
@@ -122,7 +123,7 @@ No description provided.
 export interface FlintAnalysisContext
 ```
 
-No description provided.
+Rule evaluation context bundling frontend artifacts, policy, and facts.
 
 ### FlintAnalysisControlFlowFact
 
@@ -132,7 +133,7 @@ No description provided.
 export interface FlintAnalysisControlFlowFact
 ```
 
-No description provided.
+Control-flow summary for a function including statement and loop presence.
 
 ### FlintAnalysisEvidence
 
@@ -142,7 +143,7 @@ No description provided.
 export interface FlintAnalysisEvidence
 ```
 
-No description provided.
+Supporting evidence payload attached to an analysis finding.
 
 ### FlintAnalysisFacts
 
@@ -152,7 +153,7 @@ No description provided.
 export interface FlintAnalysisFacts
 ```
 
-No description provided.
+Aggregated semantic facts consumed by analysis rules and reports.
 
 ### FlintAnalysisFinding
 
@@ -162,7 +163,7 @@ No description provided.
 export interface FlintAnalysisFinding
 ```
 
-No description provided.
+Concrete analysis finding with severity, span, and optional compliance tags.
 
 ### FlintAnalysisInterval
 
@@ -172,7 +173,7 @@ No description provided.
 export interface FlintAnalysisInterval
 ```
 
-No description provided.
+Inclusive numeric interval with provenance used by bounds analysis.
 
 ### FlintAnalysisLimits
 
@@ -182,7 +183,7 @@ No description provided.
 export interface FlintAnalysisLimits
 ```
 
-No description provided.
+Numeric resource ceilings enforced by analysis policy profiles.
 
 ### FlintAnalysisOptimizationFact
 
@@ -192,7 +193,7 @@ No description provided.
 export interface FlintAnalysisOptimizationFact
 ```
 
-No description provided.
+Optimization pipeline summary including graph size and applied passes.
 
 ### FlintAnalysisOptions
 
@@ -202,7 +203,7 @@ No description provided.
 export interface FlintAnalysisOptions
 ```
 
-No description provided.
+Optional analysis configuration accepted by compile and service entry points.
 
 ### FlintAnalysisOwnershipFact
 
@@ -212,7 +213,7 @@ No description provided.
 export interface FlintAnalysisOwnershipFact
 ```
 
-No description provided.
+Ownership classification of a function's parameters by mode.
 
 ### FlintAnalysisPointerRangeFact
 
@@ -222,7 +223,7 @@ No description provided.
 export interface FlintAnalysisPointerRangeFact
 ```
 
-No description provided.
+Pointer-range fact derived from memory standard-library call sites.
 
 ### FlintAnalysisPolicy
 
@@ -232,7 +233,7 @@ No description provided.
 export interface FlintAnalysisPolicy
 ```
 
-No description provided.
+Complete analysis policy describing capabilities, bounds checks, and limits.
 
 ### FlintAnalysisProfile
 
@@ -242,7 +243,7 @@ No description provided.
 export type FlintAnalysisProfile = 'development' | 'strict';
 ```
 
-No description provided.
+Named analysis strictness profile controlling default policy severity.
 
 ### FlintAnalysisRangeFact
 
@@ -252,7 +253,7 @@ No description provided.
 export interface FlintAnalysisRangeFact
 ```
 
-No description provided.
+Known constant ranges discovered for locals within a function.
 
 ### FlintAnalysisReport
 
@@ -262,7 +263,7 @@ No description provided.
 export interface FlintAnalysisReport
 ```
 
-No description provided.
+Final analysis report containing findings, diagnostics, facts, and policy.
 
 ### FlintAnalysisResourceFact
 
@@ -272,7 +273,7 @@ No description provided.
 export interface FlintAnalysisResourceFact
 ```
 
-No description provided.
+Resource-usage estimate for a function based on IR size and loops.
 
 ### FlintAnalysisRule
 
@@ -282,7 +283,7 @@ No description provided.
 export interface FlintAnalysisRule
 ```
 
-No description provided.
+Pluggable analysis rule that emits findings from an analysis context.
 
 ### FlintAnalysisSeverity
 
@@ -292,7 +293,7 @@ No description provided.
 export type FlintAnalysisSeverity = FlintDiagnosticSeverity;
 ```
 
-No description provided.
+Severity level shared with compiler diagnostics for analysis findings.
 
 ### FlintAnalysisSourceFile
 
@@ -302,7 +303,7 @@ No description provided.
 export interface FlintAnalysisSourceFile
 ```
 
-No description provided.
+Source file identity optionally carrying raw source text for analysis.
 
 ### FlintAnalysisSourceMap
 
@@ -312,7 +313,7 @@ No description provided.
 export type FlintAnalysisSourceMap = readonly FlintAnalysisSourceMapEntry[];
 ```
 
-No description provided.
+Ordered collection of generated-to-original source map entries.
 
 ### FlintAnalysisSourceMapEntry
 
@@ -322,7 +323,7 @@ No description provided.
 export interface FlintAnalysisSourceMapEntry
 ```
 
-No description provided.
+Mapping from a generated span back to an original source location.
 
 ### FlintAnalysisSwitchCoverageFact
 
@@ -332,7 +333,7 @@ No description provided.
 export interface FlintAnalysisSwitchCoverageFact
 ```
 
-No description provided.
+Switch coverage fact including case values, duplicates, and default presence.
 
 ### FlintAnalysisTypeFact
 
@@ -342,7 +343,7 @@ No description provided.
 export interface FlintAnalysisTypeFact
 ```
 
-No description provided.
+Type signature fact capturing parameter and result type names.
 
 ## `src/analysis/default-rules`
 
@@ -369,14 +370,22 @@ function createFlintAnalysisFacts(
 ): FlintAnalysisFacts;
 ```
 
-No description provided.
+Computes semantic analysis facts across all functions in a frontend compiler artifact.
+Aggregates call graphs, control flow statistics, ownership modes, constant ranges,
+array bounds, pointer checks, and resource usage estimations.
 
 #### Parameters
 
-| Name         | Type                 | Description |
-| ------------ | -------------------- | ----------- |
-| frontend     | FlintFrontendResult  |             |
-| boundsChecks | FlintSoNBoundsChecks |             |
+| Name         | Type                 | Description                                                                |
+| ------------ | -------------------- | -------------------------------------------------------------------------- |
+| frontend     | FlintFrontendResult  | - Frontend compiler result containing IR and SoN graph.                    |
+| boundsChecks | FlintSoNBoundsChecks | - Active bounds checking mode (defaults to frontend setting or 'runtime'). |
+
+#### Contract
+
+- **@param:** - Frontend compiler result containing IR and SoN graph.
+- **@param:** - Active bounds checking mode (defaults to frontend setting or 'runtime').
+- **@returns:** Fully populated FlintAnalysisFacts structure.
 
 ## `src/analysis/policy`
 
@@ -388,13 +397,18 @@ No description provided.
 function createFlintAnalysisPolicy(policy: FlintAnalysisOptionsLike = {}): FlintAnalysisPolicy;
 ```
 
-No description provided.
+Creates a normalized analysis policy by merging user configuration with strict/development defaults.
 
 #### Parameters
 
-| Name   | Type                     | Description |
-| ------ | ------------------------ | ----------- |
-| policy | FlintAnalysisOptionsLike |             |
+| Name   | Type                     | Description                                    |
+| ------ | ------------------------ | ---------------------------------------------- |
+| policy | FlintAnalysisOptionsLike | - Partial policy options or profile specifier. |
+
+#### Contract
+
+- **@param:** - Partial policy options or profile specifier.
+- **@returns:** Fully populated FlintAnalysisPolicy instance.
 
 ### FLINT_DEFAULT_ANALYSIS_LIMITS
 
@@ -404,7 +418,7 @@ No description provided.
 export const FLINT_DEFAULT_ANALYSIS_LIMITS: FlintAnalysisLimits;
 ```
 
-No description provided.
+Default resource and complexity limits enforced by static analysis.
 
 ### FLINT_DEVELOPMENT_ANALYSIS_POLICY
 
@@ -414,7 +428,7 @@ No description provided.
 export const FLINT_DEVELOPMENT_ANALYSIS_POLICY: FlintAnalysisPolicy;
 ```
 
-No description provided.
+Relaxed development analysis policy with permissive defaults.
 
 ### FLINT_STRICT_ANALYSIS_POLICY
 
@@ -424,7 +438,8 @@ No description provided.
 export const FLINT_STRICT_ANALYSIS_POLICY: FlintAnalysisPolicy;
 ```
 
-No description provided.
+Strict analysis policy suitable for CI and production builds.
+Disallows undeclared capabilities and treats errors as blocking.
 
 ### FlintAnalysisOptionsLike
 
@@ -434,7 +449,7 @@ No description provided.
 export type FlintAnalysisOptionsLike = Omit<Partial<FlintAnalysisPolicy>, 'limits'> &
 ```
 
-No description provided.
+Loose input type for configuring analysis policy options.
 
 ### isFlintAnalysisFindingBlocking
 
@@ -444,14 +459,20 @@ No description provided.
 function isFlintAnalysisFindingBlocking(finding: FlintAnalysisFinding, policy: FlintAnalysisPolicy): boolean;
 ```
 
-No description provided.
+Determines whether a static analysis finding should block compilation under the active policy.
 
 #### Parameters
 
-| Name    | Type                 | Description |
-| ------- | -------------------- | ----------- |
-| finding | FlintAnalysisFinding |             |
-| policy  | FlintAnalysisPolicy  |             |
+| Name    | Type                 | Description                                   |
+| ------- | -------------------- | --------------------------------------------- |
+| finding | FlintAnalysisFinding | - Static analysis finding to evaluate.        |
+| policy  | FlintAnalysisPolicy  | - Active analysis policy governing the build. |
+
+#### Contract
+
+- **@param:** - Static analysis finding to evaluate.
+- **@param:** - Active analysis policy governing the build.
+- **@returns:** True if the finding is considered blocking in the current policy profile.
 
 ## `src/analysis/registry`
 
@@ -465,13 +486,18 @@ function createFlintAnalysisRuleRegistry(
 ): FlintAnalysisRuleRegistry;
 ```
 
-No description provided.
+Creates an immutable rule registry populated with default or custom analysis rules.
 
 #### Parameters
 
-| Name  | Type                         | Description |
-| ----- | ---------------------------- | ----------- |
-| rules | readonly FlintAnalysisRule[] |             |
+| Name  | Type                         | Description                                                 |
+| ----- | ---------------------------- | ----------------------------------------------------------- |
+| rules | readonly FlintAnalysisRule[] | - Initial rules to register (defaults to standard ruleset). |
+
+#### Contract
+
+- **@param:** - Initial rules to register (defaults to standard ruleset).
+- **@returns:** An initialized FlintAnalysisRuleRegistry.
 
 ### FlintAnalysisRuleRegistry
 
@@ -481,7 +507,7 @@ No description provided.
 export interface FlintAnalysisRuleRegistry
 ```
 
-No description provided.
+Registry of static analysis rules that can inspect Flint compiler outputs.
 
 ## `src/analysis/report`
 
@@ -493,13 +519,20 @@ No description provided.
 function createFlintAnalysisDiagnostic(finding: FlintAnalysisFinding): FlintDiagnostic;
 ```
 
-No description provided.
+Converts a static analysis rule finding into a structured Flint diagnostic.
+Maps security and quality metadata including rule ID, category, blocking flag,
+OWASP category, and CWE identifiers into diagnostic details.
 
 #### Parameters
 
-| Name    | Type                 | Description |
-| ------- | -------------------- | ----------- |
-| finding | FlintAnalysisFinding |             |
+| Name    | Type                 | Description                                          |
+| ------- | -------------------- | ---------------------------------------------------- |
+| finding | FlintAnalysisFinding | - Static analysis rule violation finding to convert. |
+
+#### Contract
+
+- **@param:** - Static analysis rule violation finding to convert.
+- **@returns:** A structured FlintDiagnostic ready for emission.
 
 ## `src/ast`
 
@@ -511,7 +544,7 @@ No description provided.
 export interface FlintArrayLiteralExpression
 ```
 
-No description provided.
+Fixed-size array literal expression.
 
 ### FlintAssignmentStatement
 
@@ -521,7 +554,7 @@ No description provided.
 export interface FlintAssignmentStatement
 ```
 
-No description provided.
+Variable or index assignment mutation statement.
 
 ### FlintBinaryExpression
 
@@ -531,7 +564,7 @@ No description provided.
 export interface FlintBinaryExpression
 ```
 
-No description provided.
+Binary operation expression.
 
 ### FlintBinaryOperator
 
@@ -541,7 +574,7 @@ No description provided.
 export type FlintBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
 ```
 
-No description provided.
+Supported binary operators for arithmetic, comparison, and boolean logic.
 
 ### FlintCallExpression
 
@@ -551,7 +584,7 @@ No description provided.
 export interface FlintCallExpression
 ```
 
-No description provided.
+Function or capability call expression.
 
 ### FlintCapabilityImport
 
@@ -561,7 +594,7 @@ No description provided.
 export interface FlintCapabilityImport
 ```
 
-No description provided.
+Capability import declaration binding a host capability to a local alias.
 
 ### flintDefaultPassingMode
 
@@ -574,14 +607,20 @@ function flintDefaultPassingMode(
 ): FlintPassingMode;
 ```
 
-No description provided.
+Determines default passing mode for a type based on POD status and reference mode.
 
 #### Parameters
 
-| Name   | Type                                    | Description |
-| ------ | --------------------------------------- | ----------- |
-| type   | FlintTypeName                           |             |
-| module | Pick<FlintModule, 'structs' \| 'enums'> |             |
+| Name   | Type                                    | Description                      |
+| ------ | --------------------------------------- | -------------------------------- |
+| type   | FlintTypeName                           | - Type name to evaluate.         |
+| module | Pick<FlintModule, 'structs' \| 'enums'> | - Module declarations container. |
+
+#### Contract
+
+- **@param:** - Type name to evaluate.
+- **@param:** - Module declarations container.
+- **@returns:** Appropriate passing mode ('value', 'immutable-reference', or 'mutable-reference').
 
 ### FlintDocumentation
 
@@ -591,7 +630,7 @@ No description provided.
 export interface FlintDocumentation
 ```
 
-No description provided.
+Structured documentation comment attached to an AST declaration.
 
 ### FlintDocumentationTag
 
@@ -601,7 +640,7 @@ No description provided.
 export interface FlintDocumentationTag
 ```
 
-No description provided.
+Individual documentation tag associated with a declaration.
 
 ### FlintDoWhileStatement
 
@@ -611,7 +650,7 @@ No description provided.
 export interface FlintDoWhileStatement
 ```
 
-No description provided.
+Do-while loop statement executing body at least once.
 
 ### FlintEnumDeclaration
 
@@ -621,7 +660,7 @@ No description provided.
 export interface FlintEnumDeclaration
 ```
 
-No description provided.
+Algebraic enumeration declaration AST node.
 
 ### FlintEnumValueExpression
 
@@ -631,7 +670,7 @@ No description provided.
 export interface FlintEnumValueExpression
 ```
 
-No description provided.
+Enum variant instantiation expression.
 
 ### FlintEnumVariant
 
@@ -641,7 +680,7 @@ No description provided.
 export interface FlintEnumVariant
 ```
 
-No description provided.
+Individual variant definition within an algebraic enum.
 
 ### FlintExpression
 
@@ -663,7 +702,7 @@ export type FlintExpression =
   | FlintUnaryExpression;
 ```
 
-No description provided.
+Union of all expression AST nodes in Flint.
 
 ### FlintExpressionStatement
 
@@ -673,7 +712,7 @@ No description provided.
 export interface FlintExpressionStatement
 ```
 
-No description provided.
+Solitary expression evaluated as a statement.
 
 ### FlintForStatement
 
@@ -683,7 +722,7 @@ No description provided.
 export interface FlintForStatement
 ```
 
-No description provided.
+Classic for loop statement with initializer, condition, update, and body.
 
 ### FlintFunction
 
@@ -693,7 +732,7 @@ No description provided.
 export interface FlintFunction
 ```
 
-No description provided.
+Function declaration AST node with parameters, return type, and body.
 
 ### FlintFunctionValueExpression
 
@@ -703,7 +742,7 @@ No description provided.
 export interface FlintFunctionValueExpression
 ```
 
-No description provided.
+First-class function value reference expression.
 
 ### FlintGenericParameter
 
@@ -713,7 +752,7 @@ No description provided.
 export interface FlintGenericParameter
 ```
 
-No description provided.
+Generic type parameter declared on a function, struct, or interface.
 
 ### FlintIdentifierExpression
 
@@ -723,7 +762,7 @@ No description provided.
 export interface FlintIdentifierExpression
 ```
 
-No description provided.
+Identifier reference expression.
 
 ### FlintIfStatement
 
@@ -733,7 +772,7 @@ No description provided.
 export interface FlintIfStatement
 ```
 
-No description provided.
+Conditional branching statement with optional alternate branch.
 
 ### FlintIndexExpression
 
@@ -743,7 +782,7 @@ No description provided.
 export interface FlintIndexExpression
 ```
 
-No description provided.
+Indexed element access expression.
 
 ### FlintInterfaceDeclaration
 
@@ -763,7 +802,7 @@ A compile-time structural contract; it has no runtime representation.
 export interface FlintInterfaceFunction
 ```
 
-No description provided.
+Method signature contract declared within an interface.
 
 ### FlintIteratorLoopStatement
 
@@ -773,7 +812,7 @@ No description provided.
 export interface FlintIteratorLoopStatement
 ```
 
-No description provided.
+For-in iterator loop statement over an iterable expression.
 
 ### FlintLetStatement
 
@@ -783,7 +822,7 @@ No description provided.
 export interface FlintLetStatement
 ```
 
-No description provided.
+Variable binding declaration statement.
 
 ### FlintLiteralExpression
 
@@ -793,7 +832,7 @@ No description provided.
 export interface FlintLiteralExpression
 ```
 
-No description provided.
+Literal expression representing a boolean, number, or string value.
 
 ### FlintMatchArm
 
@@ -803,7 +842,7 @@ No description provided.
 export interface FlintMatchArm
 ```
 
-No description provided.
+Single branch within a match expression or match statement.
 
 ### FlintMatchExpression
 
@@ -813,7 +852,7 @@ No description provided.
 export interface FlintMatchExpression
 ```
 
-No description provided.
+Pattern matching expression returning the evaluated value of the matched arm.
 
 ### FlintMatchStatement
 
@@ -823,7 +862,7 @@ No description provided.
 export interface FlintMatchStatement
 ```
 
-No description provided.
+Pattern matching statement executing matched branch body.
 
 ### FlintModule
 
@@ -833,7 +872,7 @@ No description provided.
 export interface FlintModule
 ```
 
-No description provided.
+Complete source module AST node containing declarations and imports.
 
 ### FlintMutability
 
@@ -853,7 +892,7 @@ Source-level mutability of a binding. Bindings are immutable by default.
 export type FlintOwnership = 'borrowed' | 'owned' | 'shared';
 ```
 
-No description provided.
+Memory ownership classification for pointer and aggregate values.
 
 ### FlintParameter
 
@@ -863,7 +902,7 @@ No description provided.
 export interface FlintParameter
 ```
 
-No description provided.
+Formal parameter declaration on a function signature or enum variant.
 
 ### FlintPassingMode
 
@@ -883,7 +922,7 @@ ABI passing mode derived from the recursive POD classification.
 export type FlintPattern = |
 ```
 
-No description provided.
+Pattern matching pattern: wildcard, literal value, or enum variant.
 
 ### FlintPrimitiveType
 
@@ -893,7 +932,7 @@ No description provided.
 export type FlintPrimitiveType = 'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
 ```
 
-No description provided.
+Primitive scalar and carrier types supported by Flint.
 
 ### FlintReferenceMode
 
@@ -913,7 +952,7 @@ A reference is immutable unless `&mut` is written explicitly.
 export interface FlintReturnStatement
 ```
 
-No description provided.
+Function return statement with optional return value.
 
 ### FlintSourceModuleImport
 
@@ -923,7 +962,7 @@ No description provided.
 export interface FlintSourceModuleImport
 ```
 
-No description provided.
+Source module import statement binding an external module alias.
 
 ### FlintStatement
 
@@ -945,7 +984,7 @@ export type FlintStatement =
   | FlintIteratorLoopStatement;
 ```
 
-No description provided.
+Union of all statement AST nodes in Flint.
 
 ### FlintStructDeclaration
 
@@ -955,7 +994,7 @@ No description provided.
 export interface FlintStructDeclaration
 ```
 
-No description provided.
+User-defined immutable struct declaration AST node.
 
 ### FlintStructField
 
@@ -965,7 +1004,7 @@ No description provided.
 export interface FlintStructField
 ```
 
-No description provided.
+Individual field declaration within a struct.
 
 ### FlintStructValueExpression
 
@@ -975,7 +1014,7 @@ No description provided.
 export interface FlintStructValueExpression
 ```
 
-No description provided.
+Struct instantiation expression with named field values.
 
 ### FlintSwitchCase
 
@@ -985,7 +1024,7 @@ No description provided.
 export interface FlintSwitchCase
 ```
 
-No description provided.
+Individual case branch within a switch statement.
 
 ### FlintSwitchStatement
 
@@ -995,7 +1034,7 @@ No description provided.
 export interface FlintSwitchStatement
 ```
 
-No description provided.
+Multi-way switch statement branching on an integral or variant value.
 
 ### FlintTypeName
 
@@ -1005,7 +1044,7 @@ No description provided.
 export interface FlintTypeName
 ```
 
-No description provided.
+AST node describing a primitive, generic, aggregate, or reference type.
 
 ### flintTypeNameToString
 
@@ -1015,13 +1054,18 @@ No description provided.
 function flintTypeNameToString(type: FlintTypeName): string;
 ```
 
-No description provided.
+Converts a Flint type name node into its canonical string representation.
 
 #### Parameters
 
-| Name | Type          | Description |
-| ---- | ------------- | ----------- |
-| type | FlintTypeName |             |
+| Name | Type          | Description                    |
+| ---- | ------------- | ------------------------------ |
+| type | FlintTypeName | - Type name node to stringify. |
+
+#### Contract
+
+- **@param:** - Type name node to stringify.
+- **@returns:** Human-readable type string.
 
 ### FlintUnaryExpression
 
@@ -1031,7 +1075,7 @@ No description provided.
 export interface FlintUnaryExpression
 ```
 
-No description provided.
+Unary operation expression.
 
 ### FlintVectorLiteralExpression
 
@@ -1041,7 +1085,7 @@ No description provided.
 export interface FlintVectorLiteralExpression
 ```
 
-No description provided.
+Dynamically growable vector literal expression.
 
 ### FlintWhileStatement
 
@@ -1051,7 +1095,7 @@ No description provided.
 export interface FlintWhileStatement
 ```
 
-No description provided.
+While loop statement executing while condition holds true.
 
 ### FlintYieldStatement
 
@@ -1061,7 +1105,7 @@ No description provided.
 export interface FlintYieldStatement
 ```
 
-No description provided.
+Iterator yield statement producing a value.
 
 ### isFlintPodType
 
@@ -1082,11 +1126,18 @@ unresolved generic/cyclic values as non-POD.
 
 #### Parameters
 
-| Name     | Type                                    | Description |
-| -------- | --------------------------------------- | ----------- |
-| type     | FlintTypeName                           |             |
-| module   | Pick<FlintModule, 'structs' \| 'enums'> |             |
-| visiting |                                         |             |
+| Name     | Type                                    | Description                                           |
+| -------- | --------------------------------------- | ----------------------------------------------------- |
+| type     | FlintTypeName                           | - Type name AST node to test.                         |
+| module   | Pick<FlintModule, 'structs' \| 'enums'> | - Optional module declarations to resolve user types. |
+| visiting |                                         | - Cycle detection set for recursive types.            |
+
+#### Contract
+
+- **@param:** - Type name AST node to test.
+- **@param:** - Optional module declarations to resolve user types.
+- **@param:** - Cycle detection set for recursive types.
+- **@returns:** True if the type qualifies as Plain Old Data.
 
 ## `src/cache`
 
@@ -1098,7 +1149,7 @@ unresolved generic/cyclic values as non-POD.
 export interface FlintCacheIndex
 ```
 
-No description provided.
+Persisted cache manifest tracking active artifacts across modules to enable stale cleanup.
 
 ### FlintCacheIndexEntry
 
@@ -1108,7 +1159,7 @@ No description provided.
 export interface FlintCacheIndexEntry
 ```
 
-No description provided.
+Index entry tracking cached files and timestamp for a specific module key.
 
 ### flintCacheIndexPath
 
@@ -1134,7 +1185,7 @@ Returns the path to the cache index file `.flint-cache-index.json`.
 export interface FlintCacheLogger
 ```
 
-No description provided.
+Diagnostic logger interface for caching operations and cache hits/misses.
 
 ### FlintDebugArtifactPaths
 
@@ -1144,7 +1195,7 @@ No description provided.
 export interface FlintDebugArtifactPaths
 ```
 
-No description provided.
+File paths to persisted debug artifacts emitted during compilation.
 
 ### FlintDebugArtifactVariant
 
@@ -1154,7 +1205,7 @@ No description provided.
 export type FlintDebugArtifactVariant = 'optimized' | 'unoptimized';
 ```
 
-No description provided.
+Optimization variant identifier for emitted debug artifacts.
 
 ### flintSoNPath
 
@@ -1182,7 +1233,7 @@ Returns the path to the SonIR JSON artifact for a given cache key and variant.
 export interface FlintWatCache
 ```
 
-No description provided.
+File system or in-memory cache provider for compiler artifacts and WAT outputs.
 
 ### flintWatCacheKey
 
@@ -1208,7 +1259,7 @@ Computes a deterministic cache key for a compilation request.
 export interface FlintWatCacheKeyInput
 ```
 
-No description provided.
+Input parameters used to compute a deterministic compilation cache key.
 
 ### flintWatPath
 
@@ -1436,7 +1487,7 @@ No description provided.
 export interface FlintBackendCompilationResult
 ```
 
-No description provided.
+Result structure returned by WebAssembly backend code generation.
 
 ### hashBytes
 
@@ -1764,12 +1815,20 @@ Compiles a single analyzed Flint module to WebAssembly and synthesizes ESM loade
 
 #### Parameters
 
-| Name          | Type                                                                                                          | Description |
-| ------------- | ------------------------------------------------------------------------------------------------------------- | ----------- |
-| input         | FlintCompileInput                                                                                             |             |
-| frontend      | FlintFrontendResult                                                                                           |             |
-| graphMetadata | Pick< FlintArtifact, 'graphHash' \| 'linkMode' \| 'linkedModules' \| 'linkProfile' \| 'optimizationProfile' > |             |
-| sourceFiles   | readonly string[]                                                                                             |             |
+| Name          | Type                                                                                                          | Description                                                |
+| ------------- | ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| input         | FlintCompileInput                                                                                             | - Module compilation input specification.                  |
+| frontend      | FlintFrontendResult                                                                                           | - Prepared frontend compiler result.                       |
+| graphMetadata | Pick< FlintArtifact, 'graphHash' \| 'linkMode' \| 'linkedModules' \| 'linkProfile' \| 'optimizationProfile' > | - Optional metadata propagated from module graph linking.  |
+| sourceFiles   | readonly string[]                                                                                             | - Source file paths contributing to this compilation unit. |
+
+#### Contract
+
+- **@param:** - Module compilation input specification.
+- **@param:** - Prepared frontend compiler result.
+- **@param:** - Optional metadata propagated from module graph linking.
+- **@param:** - Source file paths contributing to this compilation unit.
+- **@returns:** Complete compiled artifact containing binaries, declarations, and reports.
 
 ### compileFlintSeed
 
@@ -1796,6 +1855,10 @@ function createFlintCompiler(): FlintCompiler;
 ```
 
 Creates an instance of the Flint compiler.
+
+#### Contract
+
+- **@returns:** Configured compiler instance.
 
 ### runSelfHostedStage
 
@@ -1893,7 +1956,7 @@ Creates an in-memory caching compiler service for incremental compilation and gr
 export interface FlintArtifact
 ```
 
-No description provided.
+Packaged compiler artifact containing ABI, sources, binaries, and diagnostics.
 
 ### FlintArtifactVerificationReport
 
@@ -1903,7 +1966,7 @@ No description provided.
 export interface FlintArtifactVerificationReport
 ```
 
-No description provided.
+Result of verifying emitted artifact content hashes and variants.
 
 ### FlintAsyncCapability
 
@@ -1913,7 +1976,7 @@ No description provided.
 export type FlintAsyncCapability = 'scheduler.microtask' | 'scheduler.worker';
 ```
 
-No description provided.
+Named async host capability required by async compilation contracts.
 
 ### FlintAsyncCompilationContract
 
@@ -1953,7 +2016,7 @@ Backend output is deliberately independent from the compatibility facade's ESM a
 export interface FlintCompileInput
 ```
 
-No description provided.
+Single-module compile request consumed by the frontend and compiler service.
 
 ### FlintCompiler
 
@@ -1963,7 +2026,7 @@ No description provided.
 export interface FlintCompiler
 ```
 
-No description provided.
+Minimal compiler facade exposing single-module compilation and disposal.
 
 ### FlintCompilerHints
 
@@ -1973,7 +2036,7 @@ No description provided.
 export interface FlintCompilerHints
 ```
 
-No description provided.
+Optional lowering hints that guide specialized backend emission.
 
 ### FlintCompilerLogger
 
@@ -1983,7 +2046,7 @@ No description provided.
 export interface FlintCompilerLogger
 ```
 
-No description provided.
+Structured logger contract used by compiler service stages.
 
 ### FlintCompilerReport
 
@@ -1993,7 +2056,7 @@ No description provided.
 export interface FlintCompilerReport
 ```
 
-No description provided.
+Aggregate service report covering diagnostics, cache stats, and analysis.
 
 ### FlintCompilerService
 
@@ -2003,7 +2066,7 @@ No description provided.
 export interface FlintCompilerService extends FlintCompiler
 ```
 
-No description provided.
+Incremental compiler service supporting graph compiles and invalidation.
 
 ### FlintCompilerServiceOptions
 
@@ -2013,7 +2076,7 @@ No description provided.
 export interface FlintCompilerServiceOptions
 ```
 
-No description provided.
+Configuration bag accepted when constructing a compiler service facade.
 
 ### FlintDebugArtifacts
 
@@ -2023,7 +2086,7 @@ No description provided.
 export interface FlintDebugArtifacts
 ```
 
-No description provided.
+Optional WAT/Wasm snapshots retained for debugging and verification.
 
 ### FlintDeterministicArtifactMetadata
 
@@ -2033,7 +2096,7 @@ No description provided.
 export interface FlintDeterministicArtifactMetadata
 ```
 
-No description provided.
+Deterministic identity fields recorded alongside emitted compiler artifacts.
 
 ### FlintFrontendLinkMetadata
 
@@ -2043,7 +2106,7 @@ No description provided.
 export interface FlintFrontendLinkMetadata
 ```
 
-No description provided.
+Link-time metadata attached to a frontend result for backend packaging.
 
 ### FlintFrontendResult
 
@@ -2063,7 +2126,7 @@ The stable, backend-independent result of parsing, checking, and lowering a modu
 export interface FlintGraphCompileInput
 ```
 
-No description provided.
+Multi-module graph compile request including entry selection and link policy.
 
 ### FlintIteratorExport
 
@@ -2073,7 +2136,7 @@ No description provided.
 export interface FlintIteratorExport
 ```
 
-No description provided.
+ABI metadata describing an exported iterator protocol surface.
 
 ### FlintLinkOptimizationProfile
 
@@ -2103,7 +2166,7 @@ Named cross-project packaging profile used by graph-aware consumers.
 export type FlintOptimization = 'debug' | 'release';
 ```
 
-No description provided.
+Compiler optimization level selecting debug or release lowering.
 
 ### FlintSelfHostedStageReport
 
@@ -2113,7 +2176,7 @@ No description provided.
 export interface FlintSelfHostedStageReport
 ```
 
-Result of the bounded FWS-authored compiler stage used by tooling adapters.
+Result of the bounded FLINT-authored compiler stage used by tooling adapters.
 
 ### FlintSelfHostedStageRunner
 
@@ -2136,7 +2199,7 @@ VM entry point supplied by the runtime without coupling the browser-safe facade 
 export interface FlintTargetFeatures
 ```
 
-No description provided.
+Optional WebAssembly target feature flags requested by the host.
 
 ### FlintVmExecutionMode
 
@@ -2146,7 +2209,7 @@ No description provided.
 export type FlintVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-No description provided.
+Supported VM execution modes for self-hosted compiler stages.
 
 ## `src/diagnostics`
 
@@ -2167,20 +2230,32 @@ function createDiagnostic(
 ): FlintDiagnostic;
 ```
 
-No description provided.
+Constructs a structured compiler diagnostic with optional hint and security metadata.
 
 #### Parameters
 
-| Name     | Type                                                                                          | Description |
-| -------- | --------------------------------------------------------------------------------------------- | ----------- |
-| fileName | string                                                                                        |             |
-| phase    | FlintDiagnosticPhase                                                                          |             |
-| code     | string                                                                                        |             |
-| message  | string                                                                                        |             |
-| span     | FlintSourceSpan                                                                               |             |
-| severity | FlintDiagnosticSeverity                                                                       |             |
-| hint     | string                                                                                        |             |
-| metadata | Pick<FlintDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> |             |
+| Name     | Type                                                                                          | Description                                                               |
+| -------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| fileName | string                                                                                        | - Path or identifier of the source file.                                  |
+| phase    | FlintDiagnosticPhase                                                                          | - Compiler phase emitting the diagnostic.                                 |
+| code     | string                                                                                        | - Diagnostic error or warning code.                                       |
+| message  | string                                                                                        | - Descriptive human-readable diagnostic message.                          |
+| span     | FlintSourceSpan                                                                               | - Source span coordinates for the diagnostic location.                    |
+| severity | FlintDiagnosticSeverity                                                                       | - Severity level, defaulting to 'error'.                                  |
+| hint     | string                                                                                        | - Optional remediation hint or actionable advice.                         |
+| metadata | Pick<FlintDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> | - Optional rule ID, category, evidence, or security taxonomy identifiers. |
+
+#### Contract
+
+- **@param:** - Path or identifier of the source file.
+- **@param:** - Compiler phase emitting the diagnostic.
+- **@param:** - Diagnostic error or warning code.
+- **@param:** - Descriptive human-readable diagnostic message.
+- **@param:** - Source span coordinates for the diagnostic location.
+- **@param:** - Severity level, defaulting to 'error'.
+- **@param:** - Optional remediation hint or actionable advice.
+- **@param:** - Optional rule ID, category, evidence, or security taxonomy identifiers.
+- **@returns:** A structured FlintDiagnostic instance.
 
 ### diagnosticKey
 
@@ -2190,13 +2265,18 @@ No description provided.
 function diagnosticKey(diagnostic: FlintDiagnostic): string;
 ```
 
-No description provided.
+Computes a deterministic identity string key for deduplicating diagnostics.
 
 #### Parameters
 
-| Name       | Type            | Description |
-| ---------- | --------------- | ----------- |
-| diagnostic | FlintDiagnostic |             |
+| Name       | Type            | Description                        |
+| ---------- | --------------- | ---------------------------------- |
+| diagnostic | FlintDiagnostic | - Diagnostic to compute a key for. |
+
+#### Contract
+
+- **@param:** - Diagnostic to compute a key for.
+- **@returns:** Deterministic JSON string encoding file name, phase, code, span, and message.
 
 ### FlintDiagnostic
 
@@ -2206,7 +2286,7 @@ No description provided.
 export interface FlintDiagnostic
 ```
 
-No description provided.
+Structured diagnostic record produced across compiler phases or static analysis passes.
 
 ### FlintDiagnosticEvidence
 
@@ -2216,7 +2296,7 @@ No description provided.
 export interface FlintDiagnosticEvidence
 ```
 
-No description provided.
+Secondary evidence or related location attached to a diagnostic finding.
 
 ### FlintDiagnosticPhase
 
@@ -2227,7 +2307,7 @@ export type FlintDiagnosticPhase =
   'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
 ```
 
-No description provided.
+Compilation phase in which a diagnostic was emitted.
 
 ### FlintDiagnosticSeverity
 
@@ -2237,7 +2317,7 @@ No description provided.
 export type FlintDiagnosticSeverity = 'error' | 'warning' | 'info';
 ```
 
-No description provided.
+Severity level for compiler diagnostics.
 
 ### FlintSourceSpan
 
@@ -2247,7 +2327,7 @@ No description provided.
 export interface FlintSourceSpan
 ```
 
-No description provided.
+Source coordinate span defining the precise location of a token, AST node, or diagnostic in a file.
 
 ## `src/documentation`
 
@@ -2259,13 +2339,18 @@ No description provided.
 function parseFlintDocumentation(comment: string): FlintDocumentation;
 ```
 
-No description provided.
+Parses a Flint doc comment into structured description and documentation tags.
 
 #### Parameters
 
-| Name    | Type   | Description |
-| ------- | ------ | ----------- |
-| comment | string |             |
+| Name    | Type   | Description               |
+| ------- | ------ | ------------------------- |
+| comment | string | - Raw doc comment string. |
+
+#### Contract
+
+- **@param:** - Raw doc comment string.
+- **@returns:** Structured documentation record with normalized description and tags.
 
 ### renderFlintDocumentation
 
@@ -2275,13 +2360,18 @@ No description provided.
 function renderFlintDocumentation(documentation: FlintDocumentation): string;
 ```
 
-No description provided.
+Renders a structured Flint documentation record back to doc comment markdown.
 
 #### Parameters
 
-| Name          | Type               | Description |
-| ------------- | ------------------ | ----------- |
-| documentation | FlintDocumentation |             |
+| Name          | Type               | Description                        |
+| ------------- | ------------------ | ---------------------------------- |
+| documentation | FlintDocumentation | - Structured documentation record. |
+
+#### Contract
+
+- **@param:** - Structured documentation record.
+- **@returns:** Formatted documentation markdown text.
 
 ## `src/dynamic-links`
 
@@ -2293,7 +2383,7 @@ No description provided.
 export type FlintDynamicCallable = (...arguments_: readonly number[]) => unknown;
 ```
 
-No description provided.
+Callable function signature for dynamic module exports accepting numeric handles/arguments.
 
 ### FlintDynamicLinkCache
 
@@ -2314,7 +2404,7 @@ Replacing either identity component invalidates the old callable handles.
 export interface FlintDynamicLinkIdentity
 ```
 
-No description provided.
+Unique identity descriptor for a dynamic link artifact and manifest pair.
 
 ### FlintDynamicModule
 
@@ -2324,7 +2414,7 @@ No description provided.
 export interface FlintDynamicModule
 ```
 
-No description provided.
+Dynamically linked module containing callable exports and optional ABI signatures.
 
 ## `src/frontend`
 
@@ -2336,13 +2426,19 @@ No description provided.
 function prepareFlintFrontend(input: FlintCompileInput): FlintFrontendResult;
 ```
 
-No description provided.
+Executes the frontend pipeline for a single Flint source file.
+Performs lexing, parsing, type-checking, IR lowering, and Sea-of-Nodes optimization.
 
 #### Parameters
 
-| Name  | Type              | Description |
-| ----- | ----------------- | ----------- |
-| input | FlintCompileInput |             |
+| Name  | Type              | Description                                           |
+| ----- | ----------------- | ----------------------------------------------------- |
+| input | FlintCompileInput | - Single-file compiler input options and source code. |
+
+#### Contract
+
+- **@param:** - Single-file compiler input options and source code.
+- **@returns:** Frontend compilation result containing AST, IR, and ABI manifest.
 
 ### prepareFlintGraphFrontend
 
@@ -2352,13 +2448,20 @@ No description provided.
 function prepareFlintGraphFrontend(input: FlintGraphCompileInput): FlintFrontendResult;
 ```
 
-No description provided.
+Prepares the compiler frontend for a linked multi-module graph.
+Resolves static dependency closures, type-checks the combined component,
+and lowers the linked module to optimized IR and ABI manifests.
 
 #### Parameters
 
-| Name  | Type                   | Description |
-| ----- | ---------------------- | ----------- |
-| input | FlintGraphCompileInput |             |
+| Name  | Type                   | Description                                                                   |
+| ----- | ---------------------- | ----------------------------------------------------------------------------- |
+| input | FlintGraphCompileInput | - Multi-module graph compilation input including graph edges and entry point. |
+
+#### Contract
+
+- **@param:** - Multi-module graph compilation input including graph edges and entry point.
+- **@returns:** Combined frontend compilation result for the linked module graph.
 
 ## `src/generics`
 
@@ -2392,16 +2495,24 @@ function createFlintIteratorBoundaryDescriptor(
 ): FlintIteratorBoundaryDescriptor;
 ```
 
-No description provided.
+Creates an iterator boundary descriptor for crossing module or runtime boundaries.
 
 #### Parameters
 
-| Name         | Type           | Description |
-| ------------ | -------------- | ----------- |
-| generic      | string         |             |
-| elementType  | FlintTypeName  |             |
-| nextFunction | string         |             |
-| ownership    | FlintOwnership |             |
+| Name         | Type           | Description                                              |
+| ------------ | -------------- | -------------------------------------------------------- |
+| generic      | string         | - Name of the generic iterator type.                     |
+| elementType  | FlintTypeName  | - Element type produced by the iterator.                 |
+| nextFunction | string         | - Function name to invoke for iterator step advancement. |
+| ownership    | FlintOwnership | - Element ownership semantics ('borrowed' or 'owned').   |
+
+#### Contract
+
+- **@param:** - Name of the generic iterator type.
+- **@param:** - Element type produced by the iterator.
+- **@param:** - Function name to invoke for iterator step advancement.
+- **@param:** - Element ownership semantics ('borrowed' or 'owned').
+- **@returns:** Structured iterator boundary descriptor for the module manifest.
 
 ### flintGenericRepresentation
 
@@ -2411,13 +2522,18 @@ No description provided.
 function flintGenericRepresentation(boundary: FlintGenericBoundary = 'value'): FlintSpecialization['representation'];
 ```
 
-No description provided.
+Resolves the specialization representation kind for a given generic boundary mode.
 
 #### Parameters
 
-| Name     | Type                 | Description |
-| -------- | -------------------- | ----------- |
-| boundary | FlintGenericBoundary |             |
+| Name     | Type                 | Description                                            |
+| -------- | -------------------- | ------------------------------------------------------ |
+| boundary | FlintGenericBoundary | - Generic boundary strategy ('value' or 'descriptor'). |
+
+#### Contract
+
+- **@param:** - Generic boundary strategy ('value' or 'descriptor').
+- **@returns:** Specialization representation kind string.
 
 ### FlintGenericSpecializationRequest
 
@@ -2427,7 +2543,7 @@ No description provided.
 export interface FlintGenericSpecializationRequest
 ```
 
-No description provided.
+Request payload for creating a generic specialization descriptor.
 
 ### FlintMonomorphizeRequest
 
@@ -2437,7 +2553,7 @@ No description provided.
 export interface FlintMonomorphizeRequest extends FlintGenericSpecializationRequest
 ```
 
-No description provided.
+Request payload for monomorphizing a generic type application with layout caching.
 
 ### monomorphizeFlintGeneric
 
@@ -2464,13 +2580,18 @@ Identical expanded layouts share a layout owner while keeping distinct specializ
 function sortFlintSpecializations(specializations: readonly FlintSpecialization[]): readonly FlintSpecialization[];
 ```
 
-No description provided.
+Deterministically sorts a collection of generic specializations by their unique identifier.
 
 #### Parameters
 
-| Name            | Type                           | Description |
-| --------------- | ------------------------------ | ----------- |
-| specializations | readonly FlintSpecialization[] |             |
+| Name            | Type                           | Description                                          |
+| --------------- | ------------------------------ | ---------------------------------------------------- |
+| specializations | readonly FlintSpecialization[] | - Readonly array of generic specializations to sort. |
+
+#### Contract
+
+- **@param:** - Readonly array of generic specializations to sort.
+- **@returns:** New sorted array of generic specializations.
 
 ## `src/graph`
 
@@ -2482,7 +2603,7 @@ No description provided.
 export interface FlintGraphResult
 ```
 
-No description provided.
+Aggregate result of resolving a module graph, returning the module graph structure and diagnostics.
 
 ### FlintLinkConfiguration
 
@@ -2492,7 +2613,7 @@ No description provided.
 export interface FlintLinkConfiguration
 ```
 
-No description provided.
+Configuration options governing cross-project and same-project module linking policies.
 
 ### FlintLinkMode
 
@@ -2502,7 +2623,8 @@ No description provided.
 export type FlintLinkMode = 'static' | 'dynamic';
 ```
 
-No description provided.
+Linking mode specifying whether dependencies are resolved statically (bundled
+into a single component) or dynamically (via host-level runtime imports).
 
 ### FlintModuleEdge
 
@@ -2512,7 +2634,8 @@ No description provided.
 export interface FlintModuleEdge
 ```
 
-No description provided.
+Directed dependency edge in the module graph linking an importer to an importee
+with an associated linking strategy and source code location span.
 
 ### FlintModuleGraph
 
@@ -2522,7 +2645,8 @@ No description provided.
 export interface FlintModuleGraph
 ```
 
-No description provided.
+Directed module dependency graph capturing resolved modules, dependency edges,
+and participating project boundaries.
 
 ### FlintModuleResolver
 
@@ -2532,7 +2656,7 @@ No description provided.
 export interface FlintModuleResolver
 ```
 
-No description provided.
+Interface for resolving import specifiers and asynchronously loading module source text.
 
 ### FlintProject
 
@@ -2542,7 +2666,7 @@ No description provided.
 export interface FlintProject
 ```
 
-No description provided.
+Represents a project boundary containing a file root and derived identifier.
 
 ### FlintResolvedModule
 
@@ -2552,7 +2676,8 @@ No description provided.
 export interface FlintResolvedModule
 ```
 
-No description provided.
+Resolved Flint source module containing parsed AST, source text,
+project root association, and content hash.
 
 ### hashFlintModuleGraph
 
@@ -2562,14 +2687,20 @@ No description provided.
 function hashFlintModuleGraph(graph: FlintModuleGraph, configuration: FlintLinkConfiguration = {}): string;
 ```
 
-No description provided.
+Computes a deterministic 32-bit FNV-1a hex hash of a module graph and its link configuration.
 
 #### Parameters
 
-| Name          | Type                   | Description |
-| ------------- | ---------------------- | ----------- |
-| graph         | FlintModuleGraph       |             |
-| configuration | FlintLinkConfiguration |             |
+| Name          | Type                   | Description                                        |
+| ------------- | ---------------------- | -------------------------------------------------- |
+| graph         | FlintModuleGraph       | - Module dependency graph to hash.                 |
+| configuration | FlintLinkConfiguration | - Link configuration influencing graph resolution. |
+
+#### Contract
+
+- **@param:** - Module dependency graph to hash.
+- **@param:** - Link configuration influencing graph resolution.
+- **@returns:** An 8-character lowercase hexadecimal hash string.
 
 ### resolveFlintModuleGraph
 
@@ -2583,15 +2714,22 @@ function resolveFlintModuleGraph(
 ): Promise<FlintGraphResult>;
 ```
 
-No description provided.
+Asynchronously resolves the full module dependency graph starting from one or more entry points.
 
 #### Parameters
 
-| Name          | Type                   | Description |
-| ------------- | ---------------------- | ----------- |
-| entries       | readonly string[]      |             |
-| resolver      | FlintModuleResolver    |             |
-| configuration | FlintLinkConfiguration |             |
+| Name          | Type                   | Description                                                         |
+| ------------- | ---------------------- | ------------------------------------------------------------------- |
+| entries       | readonly string[]      | - File paths of root entry modules to resolve.                      |
+| resolver      | FlintModuleResolver    | - Module resolver responsible for path mapping and content loading. |
+| configuration | FlintLinkConfiguration | - Linking and packaging configuration options.                      |
+
+#### Contract
+
+- **@param:** - File paths of root entry modules to resolve.
+- **@param:** - Module resolver responsible for path mapping and content loading.
+- **@param:** - Linking and packaging configuration options.
+- **@returns:** Graph result containing resolved modules, dependency edges, projects, and diagnostics.
 
 ## `src/identity`
 
@@ -2603,50 +2741,21 @@ No description provided.
 function deriveFlintModuleId(fileName: string, root?: string): string;
 ```
 
-No description provided.
+Derives a canonical module identifier for a Flint source file.
+Trims root path prefixes, leading relative path markers, and the `.flint` file extension.
 
 #### Parameters
 
-| Name     | Type   | Description |
-| -------- | ------ | ----------- |
-| fileName | string |             |
-| root     | string |             |
+| Name     | Type   | Description                                                         |
+| -------- | ------ | ------------------------------------------------------------------- |
+| fileName | string | - File name or path of the Flint source file.                       |
+| root     | string | - Optional root directory path to strip from the module identifier. |
 
-### FLINT_EXTENSIONS
+#### Contract
 
-**Kind:** constant
-
-```typescript
-export const FLINT_EXTENSIONS;
-```
-
-No description provided.
-
-### FlintExtension
-
-**Kind:** type
-
-```typescript
-export type FlintExtension = (typeof FLINT_EXTENSIONS)[number];
-```
-
-No description provided.
-
-### isFlintFile
-
-**Kind:** function
-
-```typescript
-function isFlintFile(fileName: string): boolean;
-```
-
-No description provided.
-
-#### Parameters
-
-| Name     | Type   | Description |
-| -------- | ------ | ----------- |
-| fileName | string |             |
+- **@param:** - File name or path of the Flint source file.
+- **@param:** - Optional root directory path to strip from the module identifier.
+- **@returns:** Canonical module identifier, or `'<input>'` if the resulting identifier is empty.
 
 ### normalizeFlintFileId
 
@@ -2656,13 +2765,20 @@ No description provided.
 function normalizeFlintFileId(fileName: string): string;
 ```
 
-No description provided.
+Normalizes a file identifier for Flint compilation.
+Strips query parameters, converts Windows path separators to POSIX slashes,
+and collapses duplicate forward slashes.
 
 #### Parameters
 
-| Name     | Type   | Description |
-| -------- | ------ | ----------- |
-| fileName | string |             |
+| Name     | Type   | Description                     |
+| -------- | ------ | ------------------------------- |
+| fileName | string | - Raw file name or path string. |
+
+#### Contract
+
+- **@param:** - Raw file name or path string.
+- **@returns:** Normalized POSIX-style file path identifier.
 
 ## `src/interop/dts-generator`
 
@@ -2674,7 +2790,8 @@ No description provided.
 export class DtsGenerator
 ```
 
-No description provided.
+Generates TypeScript `.d.ts` declarations from a parsed Web IDL module, including a
+`WasmHostCapabilities` descriptor for the host capability import ABI.
 
 ### generateTypeDeclarations
 
@@ -2684,14 +2801,20 @@ No description provided.
 function generateTypeDeclarations(module: WebIdlModule, options?: DtsOptions): string;
 ```
 
-No description provided.
+Generates TypeScript `.d.ts` declarations for a parsed Web IDL module.
 
 #### Parameters
 
-| Name    | Type         | Description |
-| ------- | ------------ | ----------- |
-| module  | WebIdlModule |             |
-| options | DtsOptions   |             |
+| Name    | Type         | Description                                                     |
+| ------- | ------------ | --------------------------------------------------------------- |
+| module  | WebIdlModule | - Parsed Web IDL module to generate declarations from.          |
+| options | DtsOptions   | - Generation options such as capability prefix and module name. |
+
+#### Contract
+
+- **@param:** - Parsed Web IDL module to generate declarations from.
+- **@param:** - Generation options such as capability prefix and module name.
+- **@returns:** The rendered TypeScript declaration source.
 
 ## `src/interop/flint-generator`
 
@@ -2703,17 +2826,7 @@ No description provided.
 export class FlintBindingGenerator
 ```
 
-No description provided.
-
-### FwsBindingGenerator
-
-**Kind:** class
-
-```typescript
-export class FlintBindingGenerator
-```
-
-No description provided.
+Generates FLINT header struct/interface/capability-import bindings from a parsed Web IDL module.
 
 ### generateFlintBindings
 
@@ -2723,31 +2836,20 @@ No description provided.
 function generateFlintBindings(module: WebIdlModule, options?: FlintBindingOptions): string;
 ```
 
-No description provided.
+Generates FLINT header struct/interface/capability-import bindings for a parsed Web IDL module.
 
 #### Parameters
 
-| Name    | Type                | Description |
-| ------- | ------------------- | ----------- |
-| module  | WebIdlModule        |             |
-| options | FlintBindingOptions |             |
+| Name    | Type                | Description                                                              |
+| ------- | ------------------- | ------------------------------------------------------------------------ |
+| module  | WebIdlModule        | - Parsed Web IDL module to generate bindings from.                       |
+| options | FlintBindingOptions | - Generation options such as capability prefix and custom type mappings. |
 
-### generateFwsBindings
+#### Contract
 
-**Kind:** function
-
-```typescript
-function generateFlintBindings(module: WebIdlModule, options?: FlintBindingOptions): string;
-```
-
-No description provided.
-
-#### Parameters
-
-| Name    | Type                | Description |
-| ------- | ------------------- | ----------- |
-| module  | WebIdlModule        |             |
-| options | FlintBindingOptions |             |
+- **@param:** - Parsed Web IDL module to generate bindings from.
+- **@param:** - Generation options such as capability prefix and custom type mappings.
+- **@returns:** The rendered FLINT source text.
 
 ## `src/interop/host-shim-generator`
 
@@ -2759,14 +2861,20 @@ No description provided.
 function generateHostShims(module: WebIdlModule, options?: HostShimOptions): string;
 ```
 
-No description provided.
+Generates zero-copy host JavaScript/TypeScript shims for a parsed Web IDL module.
 
 #### Parameters
 
-| Name    | Type            | Description |
-| ------- | --------------- | ----------- |
-| module  | WebIdlModule    |             |
-| options | HostShimOptions |             |
+| Name    | Type            | Description                                                                     |
+| ------- | --------------- | ------------------------------------------------------------------------------- |
+| module  | WebIdlModule    | - Parsed Web IDL module to generate host shims from.                            |
+| options | HostShimOptions | - Generation options such as memory/allocator export names and target language. |
+
+#### Contract
+
+- **@param:** - Parsed Web IDL module to generate host shims from.
+- **@param:** - Generation options such as memory/allocator export names and target language.
+- **@returns:** The rendered host shim source text.
 
 ### HostShimGenerator
 
@@ -2776,7 +2884,8 @@ No description provided.
 export class HostShimGenerator
 ```
 
-No description provided.
+Generates zero-copy host JavaScript/TypeScript memory manager, capability import factory,
+and Wasm adapter bindings from a parsed Web IDL module.
 
 ## `src/interop/index`
 
@@ -2788,7 +2897,7 @@ No description provided.
 function compileWebIdl(source: string, options: WebIdlCompileOptions = {}): WebIdlCompileResult;
 ```
 
-End-to-end compilation of a Web IDL source string into FWS headers, zero-copy host JS shims, and TypeScript .d.ts declarations.
+End-to-end compilation of a Web IDL source string into FLINT headers, zero-copy host JS shims, and TypeScript .d.ts declarations.
 
 #### Parameters
 
@@ -2807,13 +2916,18 @@ End-to-end compilation of a Web IDL source string into FWS headers, zero-copy ho
 function lexWebIdl(source: string): readonly WebIdlToken[];
 ```
 
-No description provided.
+Tokenizes a complete Web IDL source string.
 
 #### Parameters
 
-| Name   | Type   | Description |
-| ------ | ------ | ----------- |
-| source | string |             |
+| Name   | Type   | Description                   |
+| ------ | ------ | ----------------------------- |
+| source | string | - Web IDL source text to lex. |
+
+#### Contract
+
+- **@param:** - Web IDL source text to lex.
+- **@returns:** The ordered list of lexed tokens, including a trailing `eof` token.
 
 ### WebIdlLexer
 
@@ -2823,7 +2937,7 @@ No description provided.
 export class WebIdlLexer
 ```
 
-No description provided.
+Hand-written scanner that tokenizes Web IDL source text into a flat token stream.
 
 ### WebIdlToken
 
@@ -2833,7 +2947,7 @@ No description provided.
 export interface WebIdlToken
 ```
 
-No description provided.
+A single lexed Web IDL token with its source position.
 
 ### WebIdlTokenKind
 
@@ -2843,7 +2957,7 @@ No description provided.
 export type WebIdlTokenKind = 'eof' | 'identifier' | 'number' | 'string' | 'symbol';
 ```
 
-Web IDL lexer for tokenizer operations across standard IDL specifications.
+Classification of a single lexed Web IDL token.
 
 ## `src/interop/parser`
 
@@ -2855,13 +2969,19 @@ Web IDL lexer for tokenizer operations across standard IDL specifications.
 function parseWebIdl(source: string): WebIdlModule;
 ```
 
-No description provided.
+Lexes and parses a complete Web IDL source string into a structural module AST.
 
 #### Parameters
 
-| Name   | Type   | Description |
-| ------ | ------ | ----------- |
-| source | string |             |
+| Name   | Type   | Description                     |
+| ------ | ------ | ------------------------------- |
+| source | string | - Web IDL source text to parse. |
+
+#### Contract
+
+- **@param:** - Web IDL source text to parse.
+- **@returns:** The parsed Web IDL module.
+- **@throws:** If the source contains a syntax error.
 
 ### WebIdlParseError
 
@@ -2871,7 +2991,7 @@ No description provided.
 export class WebIdlParseError extends Error
 ```
 
-No description provided.
+Error raised while parsing malformed Web IDL source, carrying the offending token position.
 
 ### WebIdlParser
 
@@ -2881,7 +3001,7 @@ No description provided.
 export class WebIdlParser
 ```
 
-No description provided.
+Recursive-descent parser that turns a Web IDL token stream into a structural AST.
 
 ## `src/interop/types`
 
@@ -2893,7 +3013,7 @@ No description provided.
 export interface DtsOptions
 ```
 
-No description provided.
+Options controlling TypeScript declaration (`.d.ts`) generation.
 
 ### FlintBindingOptions
 
@@ -2903,7 +3023,7 @@ No description provided.
 export interface FlintBindingOptions
 ```
 
-No description provided.
+Options controlling FLINT header and capability-import binding generation.
 
 ### HostShimOptions
 
@@ -2913,7 +3033,7 @@ No description provided.
 export interface HostShimOptions
 ```
 
-No description provided.
+Options controlling zero-copy host JavaScript/TypeScript shim generation.
 
 ### WebIdlArgument
 
@@ -2923,7 +3043,7 @@ No description provided.
 export interface WebIdlArgument
 ```
 
-No description provided.
+Single operation, constructor, or callback argument declaration.
 
 ### WebIdlAttribute
 
@@ -2933,7 +3053,7 @@ No description provided.
 export interface WebIdlAttribute
 ```
 
-No description provided.
+Web IDL interface or namespace attribute (property) declaration.
 
 ### WebIdlBufferType
 
@@ -2957,7 +3077,7 @@ export type WebIdlBufferType =
   | 'Uint8ClampedArray';
 ```
 
-No description provided.
+Web IDL buffer source type names mapped to typed array or view host types.
 
 ### WebIdlCallback
 
@@ -2967,7 +3087,7 @@ No description provided.
 export interface WebIdlCallback
 ```
 
-No description provided.
+Web IDL callback function type declaration.
 
 ### WebIdlCompileOptions
 
@@ -2977,7 +3097,7 @@ No description provided.
 export interface WebIdlCompileOptions
 ```
 
-No description provided.
+Combined options accepted by the end-to-end Web IDL compilation entry point.
 
 ### WebIdlCompileResult
 
@@ -2987,7 +3107,7 @@ No description provided.
 export interface WebIdlCompileResult
 ```
 
-No description provided.
+Combined output of compiling a Web IDL source: FLINT bindings, host shims, and `.d.ts` declarations.
 
 ### WebIdlConstant
 
@@ -2997,7 +3117,7 @@ No description provided.
 export interface WebIdlConstant
 ```
 
-No description provided.
+Web IDL interface constant declaration with a literal value.
 
 ### WebIdlConstructor
 
@@ -3007,7 +3127,7 @@ No description provided.
 export interface WebIdlConstructor
 ```
 
-No description provided.
+Web IDL interface constructor operation declaration.
 
 ### WebIdlDefinition
 
@@ -3018,7 +3138,7 @@ export type WebIdlDefinition =
   WebIdlCallback | WebIdlDictionary | WebIdlEnum | WebIdlInterface | WebIdlNamespace | WebIdlTypedef;
 ```
 
-No description provided.
+Any top-level definition that may appear in a parsed Web IDL module.
 
 ### WebIdlDictionary
 
@@ -3028,7 +3148,7 @@ No description provided.
 export interface WebIdlDictionary
 ```
 
-No description provided.
+Web IDL dictionary declaration describing an ordered plain-data record.
 
 ### WebIdlDictionaryMember
 
@@ -3038,7 +3158,7 @@ No description provided.
 export interface WebIdlDictionaryMember
 ```
 
-No description provided.
+Single field declaration within a Web IDL dictionary.
 
 ### WebIdlEnum
 
@@ -3048,7 +3168,7 @@ No description provided.
 export interface WebIdlEnum
 ```
 
-No description provided.
+Web IDL enumeration declaration and its allowed string values.
 
 ### WebIdlInterface
 
@@ -3058,7 +3178,7 @@ No description provided.
 export interface WebIdlInterface
 ```
 
-No description provided.
+Web IDL interface (or interface mixin) declaration with its members.
 
 ### WebIdlMember
 
@@ -3068,7 +3188,7 @@ No description provided.
 export type WebIdlMember = WebIdlAttribute | WebIdlConstant | WebIdlConstructor | WebIdlOperation;
 ```
 
-No description provided.
+Any member declaration that may appear inside a Web IDL interface body.
 
 ### WebIdlModule
 
@@ -3078,7 +3198,7 @@ No description provided.
 export interface WebIdlModule
 ```
 
-No description provided.
+Root AST node produced by parsing a complete Web IDL source document.
 
 ### WebIdlNamespace
 
@@ -3088,7 +3208,7 @@ No description provided.
 export interface WebIdlNamespace
 ```
 
-No description provided.
+Web IDL namespace declaration grouping static attributes and operations.
 
 ### WebIdlOperation
 
@@ -3098,7 +3218,7 @@ No description provided.
 export interface WebIdlOperation
 ```
 
-No description provided.
+Web IDL interface, namespace, or callback operation (method) declaration.
 
 ### WebIdlPrimitiveType
 
@@ -3136,7 +3256,7 @@ Web IDL AST and configuration types for the Flint compiler interop layer.
 export type WebIdlStringType = 'ByteString' | 'CSSOMString' | 'DOMString' | 'USVString';
 ```
 
-No description provided.
+Web IDL string type names distinguished from generic primitive types.
 
 ### WebIdlType
 
@@ -3146,7 +3266,7 @@ No description provided.
 export interface WebIdlType
 ```
 
-No description provided.
+Resolved Web IDL type reference, including nested type arguments for generics and unions.
 
 ### WebIdlTypedef
 
@@ -3156,7 +3276,7 @@ No description provided.
 export interface WebIdlTypedef
 ```
 
-No description provided.
+Web IDL typedef declaration aliasing a name to another type reference.
 
 ### WebIdlTypeKind
 
@@ -3167,7 +3287,7 @@ export type WebIdlTypeKind =
   'buffer' | 'frozen-array' | 'named' | 'primitive' | 'promise' | 'record' | 'sequence' | 'string' | 'union';
 ```
 
-No description provided.
+Structural classification of a parsed Web IDL type reference.
 
 ## `src/ir`
 
@@ -3179,13 +3299,18 @@ No description provided.
 function countFlintIr(module: FlintIrModule): FlintIrCounts;
 ```
 
-No description provided.
+Traverses an IR module to count the total number of functions, statements, and expressions.
 
 #### Parameters
 
-| Name   | Type          | Description |
-| ------ | ------------- | ----------- |
-| module | FlintIrModule |             |
+| Name   | Type          | Description                     |
+| ------ | ------------- | ------------------------------- |
+| module | FlintIrModule | - Lowered IR module to inspect. |
+
+#### Contract
+
+- **@param:** - Lowered IR module to inspect.
+- **@returns:** Total counts of functions, statements, and expressions.
 
 ### FlintCollectionOperation
 
@@ -3195,7 +3320,7 @@ No description provided.
 export type FlintCollectionOperation = 'array-iter' | 'iterator-next' | 'array-length';
 ```
 
-No description provided.
+Built-in collection operations emitted for high-level collection primitives.
 
 ### FlintIrArrayLiteralExpression
 
@@ -3205,7 +3330,7 @@ No description provided.
 export interface FlintIrArrayLiteralExpression
 ```
 
-No description provided.
+Low-level intermediate representation for an array or vector literal.
 
 ### FlintIrAssignmentStatement
 
@@ -3215,7 +3340,7 @@ No description provided.
 export interface FlintIrAssignmentStatement
 ```
 
-No description provided.
+Low-level intermediate representation for a variable or index assignment.
 
 ### FlintIrBinaryExpression
 
@@ -3225,7 +3350,7 @@ No description provided.
 export interface FlintIrBinaryExpression
 ```
 
-No description provided.
+Low-level intermediate representation for a binary operator evaluation.
 
 ### FlintIrCallExpression
 
@@ -3235,7 +3360,7 @@ No description provided.
 export interface FlintIrCallExpression
 ```
 
-No description provided.
+Low-level intermediate representation for a function call or collection intrinsic invocation.
 
 ### FlintIrCounts
 
@@ -3245,7 +3370,7 @@ No description provided.
 export interface FlintIrCounts
 ```
 
-No description provided.
+Statistical counts of structural elements present within an intermediate representation module.
 
 ### FlintIrDoWhileStatement
 
@@ -3255,7 +3380,7 @@ No description provided.
 export interface FlintIrDoWhileStatement
 ```
 
-No description provided.
+Low-level intermediate representation for a do-while loop.
 
 ### FlintIrEnumValueExpression
 
@@ -3265,7 +3390,7 @@ No description provided.
 export interface FlintIrEnumValueExpression
 ```
 
-No description provided.
+Low-level intermediate representation for constructing a tagged enum variant.
 
 ### FlintIrExpression
 
@@ -3286,7 +3411,7 @@ export type FlintIrExpression =
   | FlintIrIndexExpression;
 ```
 
-No description provided.
+Discriminated union of all intermediate representation expression node kinds.
 
 ### FlintIrExpressionStatement
 
@@ -3296,7 +3421,7 @@ No description provided.
 export interface FlintIrExpressionStatement
 ```
 
-No description provided.
+Low-level intermediate representation for an expression evaluated for side effects.
 
 ### FlintIrFunction
 
@@ -3306,7 +3431,7 @@ No description provided.
 export interface FlintIrFunction
 ```
 
-No description provided.
+Low-level intermediate representation of a compiled function.
 
 ### FlintIrFunctionAnalysis
 
@@ -3316,7 +3441,7 @@ No description provided.
 export interface FlintIrFunctionAnalysis
 ```
 
-No description provided.
+Static analysis metadata recorded for intermediate representation functions.
 
 ### FlintIrFunctionValueExpression
 
@@ -3326,7 +3451,7 @@ No description provided.
 export interface FlintIrFunctionValueExpression
 ```
 
-No description provided.
+Low-level intermediate representation for a first-class function pointer value.
 
 ### FlintIrIdentifierExpression
 
@@ -3336,7 +3461,7 @@ No description provided.
 export interface FlintIrIdentifierExpression
 ```
 
-No description provided.
+Low-level intermediate representation for an identifier variable reference.
 
 ### FlintIrIfStatement
 
@@ -3346,7 +3471,7 @@ No description provided.
 export interface FlintIrIfStatement
 ```
 
-No description provided.
+Low-level intermediate representation for conditional branching.
 
 ### FlintIrIndexExpression
 
@@ -3356,7 +3481,7 @@ No description provided.
 export interface FlintIrIndexExpression
 ```
 
-No description provided.
+Low-level intermediate representation for array or vector indexing.
 
 ### FlintIrIteratorLoopStatement
 
@@ -3366,7 +3491,7 @@ No description provided.
 export interface FlintIrIteratorLoopStatement
 ```
 
-No description provided.
+Low-level intermediate representation for stateful iterator iteration loops.
 
 ### FlintIrLetStatement
 
@@ -3376,7 +3501,7 @@ No description provided.
 export interface FlintIrLetStatement
 ```
 
-No description provided.
+Low-level intermediate representation for a local variable binding declaration.
 
 ### FlintIrLiteralExpression
 
@@ -3386,7 +3511,7 @@ No description provided.
 export interface FlintIrLiteralExpression
 ```
 
-No description provided.
+Low-level intermediate representation for a literal scalar value.
 
 ### FlintIrMatchArm
 
@@ -3396,7 +3521,7 @@ No description provided.
 export interface FlintIrMatchArm
 ```
 
-No description provided.
+Low-level intermediate representation for an individual match case arm.
 
 ### FlintIrMatchExpression
 
@@ -3406,7 +3531,7 @@ No description provided.
 export interface FlintIrMatchExpression
 ```
 
-No description provided.
+Low-level intermediate representation for a pattern-matching expression.
 
 ### FlintIrMatchStatement
 
@@ -3416,7 +3541,7 @@ No description provided.
 export interface FlintIrMatchStatement
 ```
 
-No description provided.
+Low-level intermediate representation for a statement-level match construct.
 
 ### FlintIrModule
 
@@ -3426,7 +3551,7 @@ No description provided.
 export interface FlintIrModule
 ```
 
-No description provided.
+Low-level intermediate representation of a compiled module.
 
 ### FlintIrPurity
 
@@ -3436,7 +3561,7 @@ No description provided.
 export type FlintIrPurity = 'pure' | 'effectful' | 'unknown';
 ```
 
-No description provided.
+Purity classification for intermediate representation functions.
 
 ### FlintIrReturnStatement
 
@@ -3446,7 +3571,7 @@ No description provided.
 export interface FlintIrReturnStatement
 ```
 
-No description provided.
+Low-level intermediate representation for a return statement.
 
 ### FlintIrStatement
 
@@ -3467,7 +3592,7 @@ export type FlintIrStatement =
   | FlintIrIteratorLoopStatement;
 ```
 
-No description provided.
+Discriminated union of all intermediate representation statement node kinds.
 
 ### FlintIrStructValueExpression
 
@@ -3477,7 +3602,7 @@ No description provided.
 export interface FlintIrStructValueExpression
 ```
 
-No description provided.
+Low-level intermediate representation for instantiating an aggregate struct value.
 
 ### FlintIrSwitchStatement
 
@@ -3487,7 +3612,7 @@ No description provided.
 export interface FlintIrSwitchStatement
 ```
 
-No description provided.
+Low-level intermediate representation for a switch branch statement.
 
 ### FlintIrUnaryExpression
 
@@ -3497,7 +3622,7 @@ No description provided.
 export interface FlintIrUnaryExpression
 ```
 
-No description provided.
+Low-level intermediate representation for a unary negation or inversion.
 
 ### FlintIrWhileStatement
 
@@ -3507,7 +3632,7 @@ No description provided.
 export interface FlintIrWhileStatement
 ```
 
-No description provided.
+Low-level intermediate representation for a while loop.
 
 ### FlintIrYieldStatement
 
@@ -3517,7 +3642,7 @@ No description provided.
 export interface FlintIrYieldStatement
 ```
 
-No description provided.
+Low-level intermediate representation for generator yielding.
 
 ### lowerFlintIrToModule
 
@@ -3527,13 +3652,18 @@ No description provided.
 function lowerFlintIrToModule(module: FlintIrModule): FlintModule;
 ```
 
-No description provided.
+Reconstructs a FlintModule AST from an intermediate representation module.
 
 #### Parameters
 
-| Name   | Type          | Description |
-| ------ | ------------- | ----------- |
-| module | FlintIrModule |             |
+| Name   | Type          | Description           |
+| ------ | ------------- | --------------------- |
+| module | FlintIrModule | - Compiled IR module. |
+
+#### Contract
+
+- **@param:** - Compiled IR module.
+- **@returns:** Converted FlintModule.
 
 ### lowerFlintToIr
 
@@ -3543,13 +3673,18 @@ No description provided.
 function lowerFlintToIr(module: FlintModule): FlintIrModule;
 ```
 
-No description provided.
+Lowers a complete Flint module AST into an intermediate representation module.
 
 #### Parameters
 
-| Name   | Type        | Description |
-| ------ | ----------- | ----------- |
-| module | FlintModule |             |
+| Name   | Type        | Description          |
+| ------ | ----------- | -------------------- |
+| module | FlintModule | - Source module AST. |
+
+#### Contract
+
+- **@param:** - Source module AST.
+- **@returns:** Lowered IR module structure.
 
 ## `src/lexer`
 
@@ -3561,7 +3696,7 @@ No description provided.
 export interface FlintLexResult
 ```
 
-No description provided.
+Result returned by the Flint lexer containing tokens and diagnostics.
 
 ### FlintToken
 
@@ -3571,7 +3706,7 @@ No description provided.
 export interface FlintToken
 ```
 
-No description provided.
+Structured token representing a recognized lexical element in Flint source code.
 
 ### FlintTokenKind
 
@@ -3582,7 +3717,7 @@ export type FlintTokenKind =
   'eof' | 'comment' | 'identifier' | 'number' | 'string' | 'keyword' | 'operator' | 'punctuation';
 ```
 
-No description provided.
+Valid lexical token kinds recognized by the Flint lexer.
 
 ### lexFlint
 
@@ -3592,14 +3727,20 @@ No description provided.
 function lexFlint(source: string, fileName = '<input>'): FlintLexResult;
 ```
 
-No description provided.
+Lexes a Flint source string into a stream of tokens and diagnostics.
 
 #### Parameters
 
-| Name     | Type   | Description |
-| -------- | ------ | ----------- |
-| source   | string |             |
-| fileName |        |             |
+| Name     | Type   | Description                           |
+| -------- | ------ | ------------------------------------- |
+| source   | string | - Complete source text to tokenize.   |
+| fileName |        | - Optional file name for diagnostics. |
+
+#### Contract
+
+- **@param:** - Complete source text to tokenize.
+- **@param:** - Optional file name for diagnostics.
+- **@returns:** Lex result containing token sequence and diagnostics.
 
 ## `src/linker`
 
@@ -3611,7 +3752,7 @@ No description provided.
 export interface FlintLinkResult
 ```
 
-No description provided.
+Result of validating and linking a Flint module dependency graph.
 
 ### validateFlintLinks
 
@@ -3621,14 +3762,20 @@ No description provided.
 function validateFlintLinks(graph: FlintModuleGraph, configuration: FlintLinkConfiguration = {}): FlintLinkResult;
 ```
 
-No description provided.
+Validates module graph linking constraints, detects static cycles, and merges static components.
 
 #### Parameters
 
-| Name          | Type                   | Description |
-| ------------- | ---------------------- | ----------- |
-| graph         | FlintModuleGraph       |             |
-| configuration | FlintLinkConfiguration |             |
+| Name          | Type                   | Description                         |
+| ------------- | ---------------------- | ----------------------------------- |
+| graph         | FlintModuleGraph       | - Resolved module dependency graph. |
+| configuration | FlintLinkConfiguration | - Active link configuration rules.  |
+
+#### Contract
+
+- **@param:** - Resolved module dependency graph.
+- **@param:** - Active link configuration rules.
+- **@returns:** Result object containing diagnostics, merged static modules, and dynamic edges.
 
 ## `src/manifest`
 
@@ -3640,14 +3787,20 @@ No description provided.
 function createFlintAbiManifest(module: FlintModule, options: FlintAbiManifestOptions = {}): FlintAbiManifest;
 ```
 
-No description provided.
+Generates a complete, deterministic ABI manifest for a compiled Flint module.
 
 #### Parameters
 
-| Name    | Type                    | Description |
-| ------- | ----------------------- | ----------- |
-| module  | FlintModule             |             |
-| options | FlintAbiManifestOptions |             |
+| Name    | Type                    | Description                                 |
+| ------- | ----------------------- | ------------------------------------------- |
+| module  | FlintModule             | - Compiled module AST.                      |
+| options | FlintAbiManifestOptions | - Optional compiler and linkage parameters. |
+
+#### Contract
+
+- **@param:** - Compiled module AST.
+- **@param:** - Optional compiler and linkage parameters.
+- **@returns:** The structured FlintAbiManifest.
 
 ### FLINT_ABI_VERSION
 
@@ -3657,7 +3810,7 @@ No description provided.
 export const FLINT_ABI_VERSION;
 ```
 
-No description provided.
+Binary ABI manifest format version emitted by the compiler.
 
 ### FLINT_LANGUAGE_VERSION
 
@@ -3667,7 +3820,7 @@ No description provided.
 export const FLINT_LANGUAGE_VERSION;
 ```
 
-No description provided.
+Current language specification version supported by the Flint compiler.
 
 ### FlintAbiFunction
 
@@ -3677,7 +3830,7 @@ No description provided.
 export interface FlintAbiFunction
 ```
 
-No description provided.
+ABI specification for an exported or imported function within a WebAssembly module.
 
 ### FlintAbiManifest
 
@@ -3687,7 +3840,7 @@ No description provided.
 export interface FlintAbiManifest
 ```
 
-No description provided.
+Canonical ABI manifest describing module interface, memory, layouts, and capabilities.
 
 ### FlintAbiManifestOptions
 
@@ -3697,7 +3850,7 @@ No description provided.
 export interface FlintAbiManifestOptions
 ```
 
-No description provided.
+Optional parameters accepted by createFlintAbiManifest for custom compilation environments.
 
 ### FlintAbiParameter
 
@@ -3707,7 +3860,7 @@ No description provided.
 export interface FlintAbiParameter
 ```
 
-No description provided.
+Describes a single parameter in an exported or imported ABI function signature.
 
 ### FlintAbiVersion
 
@@ -3717,7 +3870,7 @@ No description provided.
 export type FlintAbiVersion = typeof FLINT_ABI_VERSION;
 ```
 
-No description provided.
+Type representation of the current ABI version string.
 
 ### FlintAggregateFieldLayout
 
@@ -3727,7 +3880,7 @@ No description provided.
 export interface FlintAggregateFieldLayout
 ```
 
-No description provided.
+Memory layout descriptor for a single field within a struct or enum variant.
 
 ### FlintAggregateLayout
 
@@ -3737,7 +3890,7 @@ No description provided.
 export interface FlintAggregateLayout
 ```
 
-No description provided.
+Binary layout and alignment descriptor for an aggregate struct or enum type.
 
 ### FlintCollectionLayout
 
@@ -3747,7 +3900,7 @@ No description provided.
 export interface FlintCollectionLayout
 ```
 
-No description provided.
+Layout and representation specification for arrays and vectors.
 
 ### FlintDynamicLinkMetadata
 
@@ -3777,7 +3930,7 @@ Manifest-visible binding information for an explicitly dynamic module.
 export interface FlintEnumMetadata
 ```
 
-No description provided.
+Exported enum metadata describing variant names and integer tags.
 
 ### FlintHostImport
 
@@ -3787,7 +3940,7 @@ No description provided.
 export interface FlintHostImport
 ```
 
-No description provided.
+Specification for a host capability imported into a Flint module.
 
 ### FlintIteratorBoundaryDescriptor
 
@@ -3797,7 +3950,7 @@ No description provided.
 export interface FlintIteratorBoundaryDescriptor
 ```
 
-No description provided.
+Boundary descriptor for iterators crossing module or generic boundaries.
 
 ### FlintLanguageVersion
 
@@ -3807,7 +3960,7 @@ No description provided.
 export type FlintLanguageVersion = typeof FLINT_LANGUAGE_VERSION;
 ```
 
-No description provided.
+Type representation of the current language version string.
 
 ### FlintLinkedExport
 
@@ -3817,7 +3970,7 @@ No description provided.
 export interface FlintLinkedExport
 ```
 
-No description provided.
+Export specification for a function linked across multi-module boundaries.
 
 ### FlintMemoryLayout
 
@@ -3827,7 +3980,7 @@ No description provided.
 export interface FlintMemoryLayout
 ```
 
-No description provided.
+Linear memory configuration and memory allocator contract emitted in the ABI manifest.
 
 ### FlintSourceImport
 
@@ -3837,7 +3990,7 @@ No description provided.
 export interface FlintSourceImport
 ```
 
-No description provided.
+Source import declaration representing a dependency on another Flint module.
 
 ### FlintSpecialization
 
@@ -3847,7 +4000,7 @@ No description provided.
 export interface FlintSpecialization
 ```
 
-No description provided.
+Monomorphized specialization mapping for generic types.
 
 ### FlintValueRepresentation
 
@@ -3858,7 +4011,7 @@ export type FlintValueRepresentation =
   'bool-i32' | 'f32' | 'f64' | 'i32' | 'i64' | 'pointer-length-u32' | 'pointer-length-u64' | 'u32' | 'u64' | 'unit';
 ```
 
-No description provided.
+Binary encoding representation formats for primitive and compound values.
 
 ## `src/module-types`
 
@@ -3870,7 +4023,7 @@ No description provided.
 export interface FlintImportTypeEnvironment
 ```
 
-No description provided.
+External type environment containing declarations imported into a module.
 
 ### resolveFlintImportTypeEnvironment
 
@@ -3883,14 +4036,20 @@ function resolveFlintImportTypeEnvironment(
 ): FlintImportTypeEnvironment;
 ```
 
-No description provided.
+Resolves imported function signatures from upstream dependency modules in a module graph.
 
 #### Parameters
 
-| Name     | Type                | Description |
-| -------- | ------------------- | ----------- |
-| importer | FlintResolvedModule |             |
-| graph    | FlintModuleGraph    |             |
+| Name     | Type                | Description                                                              |
+| -------- | ------------------- | ------------------------------------------------------------------------ |
+| importer | FlintResolvedModule | - Resolved module whose import dependencies are being inspected.         |
+| graph    | FlintModuleGraph    | - Multi-module dependency graph containing all linked modules and edges. |
+
+#### Contract
+
+- **@param:** - Resolved module whose import dependencies are being inspected.
+- **@param:** - Multi-module dependency graph containing all linked modules and edges.
+- **@returns:** An import type environment containing exported external functions (both bare and alias-prefixed).
 
 ## `src/optimizer`
 
@@ -3902,7 +4061,7 @@ No description provided.
 export interface FlintOptimizationDecision
 ```
 
-No description provided.
+Record describing an individual optimization transformation attempt and whether it was applied.
 
 ### FlintOptimizationReport
 
@@ -3934,7 +4093,7 @@ graph as well.
 export interface FlintOptimizationResult
 ```
 
-No description provided.
+Result returned by the IR and AST optimization passes.
 
 ### optimizeFlintIr
 
@@ -3944,14 +4103,20 @@ No description provided.
 function optimizeFlintIr(input: FlintIrModule, mode: 'debug' | 'release' = 'release'): FlintOptimizationResult;
 ```
 
-No description provided.
+Optimizes a Flint IR module using dead-code elimination, inlining, and constant folding.
 
 #### Parameters
 
-| Name  | Type                 | Description |
-| ----- | -------------------- | ----------- |
-| input | FlintIrModule        |             |
-| mode  | 'debug' \| 'release' |             |
+| Name  | Type                 | Description                                                                                          |
+| ----- | -------------------- | ---------------------------------------------------------------------------------------------------- |
+| input | FlintIrModule        | - Unoptimized IR module.                                                                             |
+| mode  | 'debug' \| 'release' | - Optimization mode: 'debug' retains debug spans and disables folding, 'release' applies all passes. |
+
+#### Contract
+
+- **@param:** - Unoptimized IR module.
+- **@param:** - Optimization mode: 'debug' retains debug spans and disables folding, 'release' applies all passes.
+- **@returns:** Optimization result containing the lowered AST module, IR module, and pass metrics.
 
 ### optimizeFlintModule
 
@@ -3961,14 +4126,20 @@ No description provided.
 function optimizeFlintModule(module: FlintModule, mode: 'debug' | 'release' = 'release'): FlintOptimizationResult;
 ```
 
-No description provided.
+Optimizes an AST module by lowering to IR, running optimization passes, and lifting back to AST.
 
 #### Parameters
 
-| Name   | Type                 | Description |
-| ------ | -------------------- | ----------- |
-| module | FlintModule          |             |
-| mode   | 'debug' \| 'release' |             |
+| Name   | Type                 | Description                                |
+| ------ | -------------------- | ------------------------------------------ |
+| module | FlintModule          | - AST module to optimize.                  |
+| mode   | 'debug' \| 'release' | - Optimization mode: 'debug' or 'release'. |
+
+#### Contract
+
+- **@param:** - AST module to optimize.
+- **@param:** - Optimization mode: 'debug' or 'release'.
+- **@returns:** Optimization result with transformed AST, IR, and pass report.
 
 ## `src/parser`
 
@@ -3980,7 +4151,7 @@ No description provided.
 export interface FlintParseOptions
 ```
 
-No description provided.
+Options configuring parsing behavior and diagnostic collection.
 
 ### FlintParseResult
 
@@ -3990,7 +4161,7 @@ No description provided.
 export interface FlintParseResult
 ```
 
-No description provided.
+Result object returned by the Flint parser containing the parsed module and diagnostics.
 
 ### parseFlint
 
@@ -4000,15 +4171,22 @@ No description provided.
 function parseFlint(source: string, fileName = '<input>', options: FlintParseOptions = {}): FlintParseResult;
 ```
 
-No description provided.
+Parses a Flint source string into a module AST and diagnostic report.
 
 #### Parameters
 
-| Name     | Type              | Description |
-| -------- | ----------------- | ----------- |
-| source   | string            |             |
-| fileName |                   |             |
-| options  | FlintParseOptions |             |
+| Name     | Type              | Description                                 |
+| -------- | ----------------- | ------------------------------------------- |
+| source   | string            | - Raw Flint source code string.             |
+| fileName |                   | - File name used for source span reporting. |
+| options  | FlintParseOptions | - Parser options.                           |
+
+#### Contract
+
+- **@param:** - Raw Flint source code string.
+- **@param:** - File name used for source span reporting.
+- **@param:** - Parser options.
+- **@returns:** Parsed module AST and diagnostics.
 
 ### primitiveTypes
 
@@ -4034,11 +4212,17 @@ Performs source-level checks that cannot be represented by the legacy type strin
 
 #### Parameters
 
-| Name        | Type              | Description |
-| ----------- | ----------------- | ----------- |
-| module      | FlintModule       |             |
-| fileName    | string            |             |
-| diagnostics | FlintDiagnostic[] |             |
+| Name        | Type              | Description                          |
+| ----------- | ----------------- | ------------------------------------ |
+| module      | FlintModule       | - Module AST to validate.            |
+| fileName    | string            | - File name used for diagnostics.    |
+| diagnostics | FlintDiagnostic[] | - Accumulator for error diagnostics. |
+
+#### Contract
+
+- **@param:** - Module AST to validate.
+- **@param:** - File name used for diagnostics.
+- **@param:** - Accumulator for error diagnostics.
 
 ## `src/self-hosted`
 
@@ -4050,7 +4234,11 @@ Performs source-level checks that cannot be represented by the legacy type strin
 function createFlintSelfHostedCompilerSourceManifest(): readonly FlintSelfHostedSourceModule[];
 ```
 
-No description provided.
+Creates the complete manifest of self-hosted compiler source modules.
+
+#### Contract
+
+- **@returns:** An array of self-hosted source modules.
 
 ### decodeFlintSelfHostedFingerprint
 
@@ -4060,13 +4248,18 @@ No description provided.
 function decodeFlintSelfHostedFingerprint(bytes: Uint8Array): string;
 ```
 
-No description provided.
+Decodes a self-hosted fingerprint from a UTF-8 byte array.
 
 #### Parameters
 
-| Name  | Type       | Description |
-| ----- | ---------- | ----------- |
-| bytes | Uint8Array |             |
+| Name  | Type       | Description                     |
+| ----- | ---------- | ------------------------------- |
+| bytes | Uint8Array | - The UTF-8 encoded byte array. |
+
+#### Contract
+
+- **@param:** - The UTF-8 encoded byte array.
+- **@returns:** The decoded fingerprint string.
 
 ### encodeFlintSelfHostedFingerprint
 
@@ -4076,13 +4269,18 @@ No description provided.
 function encodeFlintSelfHostedFingerprint(fingerprint: string): Uint8Array;
 ```
 
-No description provided.
+Encodes a self-hosted fingerprint string into a UTF-8 byte array.
 
 #### Parameters
 
-| Name        | Type   | Description |
-| ----------- | ------ | ----------- |
-| fingerprint | string |             |
+| Name        | Type   | Description               |
+| ----------- | ------ | ------------------------- |
+| fingerprint | string | - The fingerprint string. |
+
+#### Contract
+
+- **@param:** - The fingerprint string.
+- **@returns:** The UTF-8 encoded byte array.
 
 ### FlintSelfHostedCompilation
 
@@ -4092,7 +4290,8 @@ No description provided.
 export interface FlintSelfHostedCompilation
 ```
 
-No description provided.
+Represents the bounded self-hosted compilation unit, merging the TypeScript seed reference
+execution with the bounded self-hosted lex/token-normalization VM stage.
 
 ### FlintSelfHostedNormalizedOutput
 
@@ -4102,7 +4301,8 @@ No description provided.
 export interface FlintSelfHostedNormalizedOutput
 ```
 
-No description provided.
+Represents the normalized, deterministic output representation of a Flint compilation.
+This ensures that compilation artifacts (AST, IR, WA, diagnostics) can be compared stably.
 
 ### FlintSelfHostedVmExecutionMode
 
@@ -4112,7 +4312,7 @@ No description provided.
 export type FlintSelfHostedVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-No description provided.
+The execution mode for the Flint VM when running a self-hosted compilation.
 
 ### prepareFlintSelfHostedCompilation
 
@@ -4168,16 +4368,24 @@ function createFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-No description provided.
+createFlintSelfHostedStageArtifact implementation.
 
 #### Parameters
 
-| Name        | Type                                 | Description |
-| ----------- | ------------------------------------ | ----------- |
-| stage       | FlintSelfHostedCompilerStage         |             |
-| identity    | FlintSelfHostedStageArtifactIdentity |             |
-| payload     | Uint8Array                           |             |
-| diagnostics | readonly FlintDiagnostic[]           |             |
+| Name        | Type                                 | Description                  |
+| ----------- | ------------------------------------ | ---------------------------- |
+| stage       | FlintSelfHostedCompilerStage         | - The stage parameter.       |
+| identity    | FlintSelfHostedStageArtifactIdentity | - The identity parameter.    |
+| payload     | Uint8Array                           | - The payload parameter.     |
+| diagnostics | readonly FlintDiagnostic[]           | - The diagnostics parameter. |
+
+#### Contract
+
+- **@param:** - The stage parameter.
+- **@param:** - The identity parameter.
+- **@param:** - The payload parameter.
+- **@param:** - The diagnostics parameter.
+- **@returns:** The FlintSelfHostedStageArtifact result.
 
 ### decodeFlintSelfHostedDiagnostics
 
@@ -4187,13 +4395,18 @@ No description provided.
 function decodeFlintSelfHostedDiagnostics(bytes: Uint8Array): readonly FlintDiagnostic[];
 ```
 
-No description provided.
+decodeFlintSelfHostedDiagnostics implementation.
 
 #### Parameters
 
-| Name  | Type       | Description |
-| ----- | ---------- | ----------- |
-| bytes | Uint8Array |             |
+| Name  | Type       | Description            |
+| ----- | ---------- | ---------------------- |
+| bytes | Uint8Array | - The bytes parameter. |
+
+#### Contract
+
+- **@param:** - The bytes parameter.
+- **@returns:** The readonly FlintDiagnostic[] result.
 
 ### decodeFlintSelfHostedStageArtifact
 
@@ -4206,14 +4419,20 @@ function decodeFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-No description provided.
+decodeFlintSelfHostedStageArtifact implementation.
 
 #### Parameters
 
-| Name    | Type                                      | Description |
-| ------- | ----------------------------------------- | ----------- |
-| bytes   | Uint8Array                                |             |
-| options | FlintSelfHostedStageArtifactDecodeOptions |             |
+| Name    | Type                                      | Description              |
+| ------- | ----------------------------------------- | ------------------------ |
+| bytes   | Uint8Array                                | - The bytes parameter.   |
+| options | FlintSelfHostedStageArtifactDecodeOptions | - The options parameter. |
+
+#### Contract
+
+- **@param:** - The bytes parameter.
+- **@param:** - The options parameter.
+- **@returns:** The FlintSelfHostedStageArtifact result.
 
 ### encodeFlintSelfHostedDiagnostics
 
@@ -4223,13 +4442,18 @@ No description provided.
 function encodeFlintSelfHostedDiagnostics(diagnostics: readonly FlintDiagnostic[]): Uint8Array;
 ```
 
-No description provided.
+encodeFlintSelfHostedDiagnostics implementation.
 
 #### Parameters
 
-| Name        | Type                       | Description |
-| ----------- | -------------------------- | ----------- |
-| diagnostics | readonly FlintDiagnostic[] |             |
+| Name        | Type                       | Description                  |
+| ----------- | -------------------------- | ---------------------------- |
+| diagnostics | readonly FlintDiagnostic[] | - The diagnostics parameter. |
+
+#### Contract
+
+- **@param:** - The diagnostics parameter.
+- **@returns:** The Uint8Array result.
 
 ### encodeFlintSelfHostedStageArtifact
 
@@ -4239,13 +4463,18 @@ No description provided.
 function encodeFlintSelfHostedStageArtifact(artifact: FlintSelfHostedStageArtifact): Uint8Array;
 ```
 
-No description provided.
+encodeFlintSelfHostedStageArtifact implementation.
 
 #### Parameters
 
-| Name     | Type                         | Description |
-| -------- | ---------------------------- | ----------- |
-| artifact | FlintSelfHostedStageArtifact |             |
+| Name     | Type                         | Description               |
+| -------- | ---------------------------- | ------------------------- |
+| artifact | FlintSelfHostedStageArtifact | - The artifact parameter. |
+
+#### Contract
+
+- **@param:** - The artifact parameter.
+- **@returns:** The Uint8Array result.
 
 ### FLINT_SELF_HOSTED_DIAGNOSTIC_VERSION
 
@@ -4296,7 +4525,7 @@ export type FlintSelfHostedCompilerStage =
   'lex' | 'parse' | 'check' | 'lower' | 'optimize' | 'link' | 'manifest' | 'emit';
 ```
 
-No description provided.
+FlintSelfHostedCompilerStage implementation.
 
 ### FlintSelfHostedStageArtifact
 
@@ -4306,7 +4535,7 @@ No description provided.
 export interface FlintSelfHostedStageArtifact
 ```
 
-No description provided.
+FlintSelfHostedStageArtifact implementation.
 
 ### FlintSelfHostedStageArtifactDecodeOptions
 
@@ -4316,7 +4545,7 @@ No description provided.
 export interface FlintSelfHostedStageArtifactDecodeOptions
 ```
 
-No description provided.
+FlintSelfHostedStageArtifactDecodeOptions implementation.
 
 ### FlintSelfHostedStageArtifactIdentity
 
@@ -4326,7 +4555,7 @@ No description provided.
 export interface FlintSelfHostedStageArtifactIdentity
 ```
 
-No description provided.
+FlintSelfHostedStageArtifactIdentity implementation.
 
 ### hashFlintSelfHostedBytes
 
@@ -4336,13 +4565,18 @@ No description provided.
 function hashFlintSelfHostedBytes(bytes: Uint8Array): string;
 ```
 
-No description provided.
+hashFlintSelfHostedBytes implementation.
 
 #### Parameters
 
-| Name  | Type       | Description |
-| ----- | ---------- | ----------- |
-| bytes | Uint8Array |             |
+| Name  | Type       | Description            |
+| ----- | ---------- | ---------------------- |
+| bytes | Uint8Array | - The bytes parameter. |
+
+#### Contract
+
+- **@param:** - The bytes parameter.
+- **@returns:** The string result.
 
 ### hashFlintSelfHostedSourceIdentity
 
@@ -4352,15 +4586,22 @@ No description provided.
 function hashFlintSelfHostedSourceIdentity(source: string, fileName: string, graphHash?: string): string;
 ```
 
-No description provided.
+hashFlintSelfHostedSourceIdentity implementation.
 
 #### Parameters
 
-| Name      | Type   | Description |
-| --------- | ------ | ----------- |
-| source    | string |             |
-| fileName  | string |             |
-| graphHash | string |             |
+| Name      | Type   | Description                |
+| --------- | ------ | -------------------------- |
+| source    | string | - The source parameter.    |
+| fileName  | string | - The fileName parameter.  |
+| graphHash | string | - The graphHash parameter. |
+
+#### Contract
+
+- **@param:** - The source parameter.
+- **@param:** - The fileName parameter.
+- **@param:** - The graphHash parameter.
+- **@returns:** The string result.
 
 ## `src/self-hosted/flint/lexer`
 
@@ -4400,9 +4641,14 @@ Must stay behaviorally identical to {@link createFlintLexStageVmModule}.
 
 #### Parameters
 
-| Name   | Type   | Description |
-| ------ | ------ | ----------- |
-| source | string |             |
+| Name   | Type   | Description          |
+| ------ | ------ | -------------------- |
+| source | string | - Flint source text. |
+
+#### Contract
+
+- **@param:** - Flint source text.
+- **@returns:** 32-bit signed integer fingerprint.
 
 ### createFlintLexStageVmModule
 
@@ -4434,7 +4680,7 @@ function encodeFlintLexStageSource(source: string): {
 };
 ```
 
-No description provided.
+Encodes source code into the binary representation expected by the VM lexer stage.
 
 #### Parameters
 
@@ -4470,7 +4716,7 @@ No description provided.
 export interface FlintSelfHostedVmFunction
 ```
 
-No description provided.
+Function definition executed by the self-hosted virtual machine.
 
 ### FlintSelfHostedVmInstruction
 
@@ -4480,7 +4726,7 @@ No description provided.
 export type FlintSelfHostedVmInstruction = |
 ```
 
-No description provided.
+Virtual machine instruction tuple executed during self-hosted lexing.
 
 ### FlintSelfHostedVmModule
 
@@ -4490,7 +4736,7 @@ No description provided.
 export interface FlintSelfHostedVmModule
 ```
 
-No description provided.
+Self-hosted compiler VM module structure containing bytecode and constants.
 
 ### FlintSelfHostedVmValue
 
@@ -4500,7 +4746,7 @@ No description provided.
 export type FlintSelfHostedVmValue = |
 ```
 
-No description provided.
+Constant value stored in the self-hosted VM constant pool.
 
 ## `src/self-hosted/parser-module-stage`
 
@@ -4541,13 +4787,18 @@ Envelope layout (all u32 little-endian):
 function decodeFlintParserModuleEnvelope(bytes: Uint8Array): FlintParserModuleEnvelope;
 ```
 
-No description provided.
+decodeFlintParserModuleEnvelope implementation.
 
 #### Parameters
 
-| Name  | Type       | Description |
-| ----- | ---------- | ----------- |
-| bytes | Uint8Array |             |
+| Name  | Type       | Description            |
+| ----- | ---------- | ---------------------- |
+| bytes | Uint8Array | - The bytes parameter. |
+
+#### Contract
+
+- **@param:** - The bytes parameter.
+- **@returns:** The FlintParserModuleEnvelope result.
 
 ### FLINT_PARSER_MODULE_STAGE_ENTRY
 
@@ -4577,7 +4828,7 @@ Decoded envelope returned by {@link FLINT_PARSER_MODULE_STAGE_ENTRY}.
 export interface FlintParserModuleStageOptions
 ```
 
-No description provided.
+FlintParserModuleStageOptions implementation.
 
 ## `src/self-hosted/parser-stage`
 
@@ -4589,14 +4840,18 @@ No description provided.
 function computeFlintParserStageFingerprint(source: string): number;
 ```
 
-Seed reference for the self-hosted parser stage.
-Must stay behaviorally identical to {@link createFlintParserStageVmModule}.
+Computes a deterministic 32-bit FNV fingerprint for the self-hosted parser stage.
 
 #### Parameters
 
-| Name   | Type   | Description |
-| ------ | ------ | ----------- |
-| source | string |             |
+| Name   | Type   | Description                 |
+| ------ | ------ | --------------------------- |
+| source | string | - Flint source code string. |
+
+#### Contract
+
+- **@param:** - Flint source code string.
+- **@returns:** Deterministic 32-bit signed integer fingerprint.
 
 ### createFlintParserStageVmModule
 
@@ -4655,17 +4910,26 @@ function createFlintSelfHostedParserArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-No description provided.
+createFlintSelfHostedParserArtifact implementation.
 
 #### Parameters
 
-| Name        | Type                       | Description |
-| ----------- | -------------------------- | ----------- |
-| source      | string                     |             |
-| fileName    | string                     |             |
-| module      | FlintModule                |             |
-| diagnostics | readonly FlintDiagnostic[] |             |
-| graphHash   | string                     |             |
+| Name        | Type                       | Description                  |
+| ----------- | -------------------------- | ---------------------------- |
+| source      | string                     | - The source parameter.      |
+| fileName    | string                     | - The fileName parameter.    |
+| module      | FlintModule                | - The module parameter.      |
+| diagnostics | readonly FlintDiagnostic[] | - The diagnostics parameter. |
+| graphHash   | string                     | - The graphHash parameter.   |
+
+#### Contract
+
+- **@param:** - The source parameter.
+- **@param:** - The fileName parameter.
+- **@param:** - The module parameter.
+- **@param:** - The diagnostics parameter.
+- **@param:** - The graphHash parameter.
+- **@returns:** The FlintSelfHostedStageArtifact result.
 
 ### createFlintSelfHostedTokenArtifact
 
@@ -4681,17 +4945,26 @@ function createFlintSelfHostedTokenArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-No description provided.
+createFlintSelfHostedTokenArtifact implementation.
 
 #### Parameters
 
-| Name        | Type                       | Description |
-| ----------- | -------------------------- | ----------- |
-| source      | string                     |             |
-| fileName    | string                     |             |
-| tokens      | readonly FlintToken[]      |             |
-| diagnostics | readonly FlintDiagnostic[] |             |
-| graphHash   | string                     |             |
+| Name        | Type                       | Description                  |
+| ----------- | -------------------------- | ---------------------------- |
+| source      | string                     | - The source parameter.      |
+| fileName    | string                     | - The fileName parameter.    |
+| tokens      | readonly FlintToken[]      | - The tokens parameter.      |
+| diagnostics | readonly FlintDiagnostic[] | - The diagnostics parameter. |
+| graphHash   | string                     | - The graphHash parameter.   |
+
+#### Contract
+
+- **@param:** - The source parameter.
+- **@param:** - The fileName parameter.
+- **@param:** - The tokens parameter.
+- **@param:** - The diagnostics parameter.
+- **@param:** - The graphHash parameter.
+- **@returns:** The FlintSelfHostedStageArtifact result.
 
 ### decodeFlintSelfHostedModule
 
@@ -4701,13 +4974,18 @@ No description provided.
 function decodeFlintSelfHostedModule(bytes: Uint8Array): FlintModule;
 ```
 
-No description provided.
+Decodes a self-hosted parser module payload.
 
 #### Parameters
 
-| Name  | Type       | Description |
-| ----- | ---------- | ----------- |
-| bytes | Uint8Array |             |
+| Name  | Type       | Description              |
+| ----- | ---------- | ------------------------ |
+| bytes | Uint8Array | - Binary module payload. |
+
+#### Contract
+
+- **@param:** - Binary module payload.
+- **@returns:** Decoded module AST.
 
 ### decodeFlintSelfHostedTokens
 
@@ -4717,13 +4995,18 @@ No description provided.
 function decodeFlintSelfHostedTokens(bytes: Uint8Array): readonly FlintToken[];
 ```
 
-No description provided.
+Decodes a self-hosted token stream payload.
 
 #### Parameters
 
-| Name  | Type       | Description |
-| ----- | ---------- | ----------- |
-| bytes | Uint8Array |             |
+| Name  | Type       | Description             |
+| ----- | ---------- | ----------------------- |
+| bytes | Uint8Array | - Binary token payload. |
+
+#### Contract
+
+- **@param:** - Binary token payload.
+- **@returns:** Decoded token stream.
 
 ### encodeFlintSelfHostedModule
 
@@ -4733,13 +5016,18 @@ No description provided.
 function encodeFlintSelfHostedModule(module: FlintModule): Uint8Array;
 ```
 
-No description provided.
+Encodes a self-hosted parser module payload.
 
 #### Parameters
 
-| Name   | Type        | Description |
-| ------ | ----------- | ----------- |
-| module | FlintModule |             |
+| Name   | Type        | Description                |
+| ------ | ----------- | -------------------------- |
+| module | FlintModule | - Module AST to serialize. |
+
+#### Contract
+
+- **@param:** - Module AST to serialize.
+- **@returns:** Binary module payload.
 
 ### encodeFlintSelfHostedTokens
 
@@ -4749,13 +5037,18 @@ No description provided.
 function encodeFlintSelfHostedTokens(tokens: readonly FlintToken[]): Uint8Array;
 ```
 
-No description provided.
+Encodes a self-hosted token stream payload.
 
 #### Parameters
 
-| Name   | Type                  | Description |
-| ------ | --------------------- | ----------- |
-| tokens | readonly FlintToken[] |             |
+| Name   | Type                  | Description                  |
+| ------ | --------------------- | ---------------------------- |
+| tokens | readonly FlintToken[] | - Token stream to serialize. |
+
+#### Contract
+
+- **@param:** - Token stream to serialize.
+- **@returns:** Binary token payload.
 
 ### hashFlintSelfHostedStagePayload
 
@@ -4765,13 +5058,18 @@ No description provided.
 function hashFlintSelfHostedStagePayload(artifact: FlintSelfHostedStageArtifact): string;
 ```
 
-No description provided.
+hashFlintSelfHostedStagePayload implementation.
 
 #### Parameters
 
-| Name     | Type                         | Description |
-| -------- | ---------------------------- | ----------- |
-| artifact | FlintSelfHostedStageArtifact |             |
+| Name     | Type                         | Description               |
+| -------- | ---------------------------- | ------------------------- |
+| artifact | FlintSelfHostedStageArtifact | - The artifact parameter. |
+
+#### Contract
+
+- **@param:** - The artifact parameter.
+- **@returns:** The string result.
 
 ### validateFlintSelfHostedStageArtifact
 
@@ -4787,17 +5085,26 @@ function validateFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-No description provided.
+validateFlintSelfHostedStageArtifact implementation.
 
 #### Parameters
 
-| Name      | Type                         | Description |
-| --------- | ---------------------------- | ----------- |
-| artifact  | FlintSelfHostedStageArtifact |             |
-| stage     | FlintSelfHostedCompilerStage |             |
-| source    | string                       |             |
-| fileName  | string                       |             |
-| graphHash | string                       |             |
+| Name      | Type                         | Description                |
+| --------- | ---------------------------- | -------------------------- |
+| artifact  | FlintSelfHostedStageArtifact | - The artifact parameter.  |
+| stage     | FlintSelfHostedCompilerStage | - The stage parameter.     |
+| source    | string                       | - The source parameter.    |
+| fileName  | string                       | - The fileName parameter.  |
+| graphHash | string                       | - The graphHash parameter. |
+
+#### Contract
+
+- **@param:** - The artifact parameter.
+- **@param:** - The stage parameter.
+- **@param:** - The source parameter.
+- **@param:** - The fileName parameter.
+- **@param:** - The graphHash parameter.
+- **@returns:** The FlintSelfHostedStageArtifact result.
 
 ## `src/son-cache`
 
@@ -4809,14 +5116,20 @@ No description provided.
 function deserializeFlintSoN(contents: string, expected?: FlintSoNIdentity): FlintSoNModule | undefined;
 ```
 
-No description provided.
+Deserializes and validates a JSON string representing a Flint Sea-of-Nodes module.
 
 #### Parameters
 
-| Name     | Type             | Description |
-| -------- | ---------------- | ----------- |
-| contents | string           |             |
-| expected | FlintSoNIdentity |             |
+| Name     | Type             | Description                                     |
+| -------- | ---------------- | ----------------------------------------------- |
+| contents | string           | - Raw JSON string content.                      |
+| expected | FlintSoNIdentity | - Optional expected module identity attributes. |
+
+#### Contract
+
+- **@param:** - Raw JSON string content.
+- **@param:** - Optional expected module identity attributes.
+- **@returns:** Validated FlintSoNModule, or undefined if invalid or exceeding size limits.
 
 ### FLINT_SON_MAX_JSON_BYTES
 
@@ -4826,7 +5139,29 @@ No description provided.
 export const FLINT_SON_MAX_JSON_BYTES;
 ```
 
-No description provided.
+Maximum permitted size in bytes for a serialized Flint SoN JSON payload (16 MiB).
+
+### FlintSoNIdentity
+
+**Kind:** type
+
+```typescript
+export type FlintSoNIdentity = Partial<
+  Pick<
+    FlintSoNModule,
+    | 'compilerVersion'
+    | 'languageVersion'
+    | 'abiVersion'
+    | 'sourceHash'
+    | 'graphHash'
+    | 'optimization'
+    | 'boundsChecks'
+    | 'memoryModel'
+  >
+>;
+```
+
+Identity criteria used to verify a deserialized Sea-of-Nodes artifact against expected compiler and graph attributes.
 
 ### serializeFlintSoN
 
@@ -4836,13 +5171,18 @@ No description provided.
 function serializeFlintSoN(module: FlintSoNModule): string;
 ```
 
-No description provided.
+Serializes a Flint Sea-of-Nodes module into deterministic, indented JSON.
 
 #### Parameters
 
-| Name   | Type           | Description |
-| ------ | -------------- | ----------- |
-| module | FlintSoNModule |             |
+| Name   | Type           | Description                         |
+| ------ | -------------- | ----------------------------------- |
+| module | FlintSoNModule | - Sea-of-Nodes module to serialize. |
+
+#### Contract
+
+- **@param:** - Sea-of-Nodes module to serialize.
+- **@returns:** Canonical JSON string terminated with a newline.
 
 ### validateFlintSoN
 
@@ -4852,14 +5192,20 @@ No description provided.
 function validateFlintSoN(value: unknown, expected?: FlintSoNIdentity): value is FlintSoNModule;
 ```
 
-No description provided.
+Validates that an arbitrary JSON-deserialized object conforms to the Sea-of-Nodes module contract.
 
 #### Parameters
 
-| Name     | Type             | Description |
-| -------- | ---------------- | ----------- |
-| value    | unknown          |             |
-| expected | FlintSoNIdentity |             |
+| Name     | Type             | Description                                |
+| -------- | ---------------- | ------------------------------------------ |
+| value    | unknown          | - Untrusted value to validate.             |
+| expected | FlintSoNIdentity | - Optional identity parameters to enforce. |
+
+#### Contract
+
+- **@param:** - Untrusted value to validate.
+- **@param:** - Optional identity parameters to enforce.
+- **@returns:** True if value is a valid FlintSoNModule satisfying all constraints.
 
 ## `src/son-ir`
 
@@ -4871,14 +5217,20 @@ No description provided.
 function buildFlintSoN(module: FlintIrModule, options: FlintSoNBuildOptions): FlintSoNModule;
 ```
 
-No description provided.
+Builds a semantic-operation graph from already-lowered Flint IR.
 
 #### Parameters
 
-| Name    | Type                 | Description |
-| ------- | -------------------- | ----------- |
-| module  | FlintIrModule        |             |
-| options | FlintSoNBuildOptions |             |
+| Name    | Type                 | Description                              |
+| ------- | -------------------- | ---------------------------------------- |
+| module  | FlintIrModule        | - Lowered IR module to encode.           |
+| options | FlintSoNBuildOptions | - Build metadata and profile selections. |
+
+#### Contract
+
+- **@param:** - Lowered IR module to encode.
+- **@param:** - Build metadata and profile selections.
+- **@returns:** Deterministic SoN module.
 
 ### buildFlintSoNFromAst
 
@@ -4888,14 +5240,20 @@ No description provided.
 function buildFlintSoNFromAst(module: FlintModule, options: FlintSoNBuildOptions): FlintSoNModule;
 ```
 
-Compatibility adapter for consumers that still own an AST module.
+Builds a semantic-operation graph from an AST module through the standard IR lowering pass.
 
 #### Parameters
 
-| Name    | Type                 | Description |
-| ------- | -------------------- | ----------- |
-| module  | FlintModule          |             |
-| options | FlintSoNBuildOptions |             |
+| Name    | Type                 | Description                              |
+| ------- | -------------------- | ---------------------------------------- |
+| module  | FlintModule          | - AST module to lower and encode.        |
+| options | FlintSoNBuildOptions | - Build metadata and profile selections. |
+
+#### Contract
+
+- **@param:** - AST module to lower and encode.
+- **@param:** - Build metadata and profile selections.
+- **@returns:** Deterministic SoN module.
 
 ### FLINT_SON_SCHEMA_VERSION
 
@@ -4905,7 +5263,7 @@ Compatibility adapter for consumers that still own an AST module.
 export const FLINT_SON_SCHEMA_VERSION;
 ```
 
-No description provided.
+Schema format version supported by the Flint semantic-operation graph.
 
 ### FlintSoNAliasFact
 
@@ -4915,7 +5273,7 @@ No description provided.
 export type FlintSoNAliasFact = 'none' | 'local' | 'borrowed' | 'mutable' | 'unknown';
 ```
 
-No description provided.
+Alias classification inferred for a SoN node.
 
 ### FlintSoNArtifact
 
@@ -4925,7 +5283,7 @@ No description provided.
 export type FlintSoNArtifact = FlintSoNModule;
 ```
 
-No description provided.
+Compatibility alias for the serializable SoN module artifact.
 
 ### FlintSoNBoundsChecks
 
@@ -4935,7 +5293,7 @@ No description provided.
 export type FlintSoNBoundsChecks = 'runtime' | 'proven-safe' | 'excluded-by-profile';
 ```
 
-No description provided.
+Bounds-check policy recorded in a SoN module.
 
 ### FlintSoNBuildOptions
 
@@ -4945,7 +5303,7 @@ No description provided.
 export interface FlintSoNBuildOptions
 ```
 
-No description provided.
+Inputs required to build a deterministic SoN module from lowered IR.
 
 ### FlintSoNControlRegion
 
@@ -4955,7 +5313,7 @@ No description provided.
 export interface FlintSoNControlRegion
 ```
 
-No description provided.
+A control-flow region grouping nodes in one function.
 
 ### FlintSoNEffect
 
@@ -4965,7 +5323,7 @@ No description provided.
 export type FlintSoNEffect = 'pure' | 'read' | 'write' | 'call' | 'control' | 'allocation' | 'unknown';
 ```
 
-No description provided.
+Observable effect category associated with a SoN node.
 
 ### FlintSoNFunction
 
@@ -4975,7 +5333,7 @@ No description provided.
 export interface FlintSoNFunction
 ```
 
-No description provided.
+The entry node and export status for a function represented in the graph.
 
 ### flintSoNGraphHash
 
@@ -4985,13 +5343,18 @@ No description provided.
 function flintSoNGraphHash(module: FlintSoNModule): string;
 ```
 
-No description provided.
+Computes the deterministic identity of an existing SoN module.
 
 #### Parameters
 
-| Name   | Type           | Description |
-| ------ | -------------- | ----------- |
-| module | FlintSoNModule |             |
+| Name   | Type           | Description           |
+| ------ | -------------- | --------------------- |
+| module | FlintSoNModule | - SoN module to hash. |
+
+#### Contract
+
+- **@param:** - SoN module to hash.
+- **@returns:** Stable graph identity hash.
 
 ### FlintSoNMemoryModel
 
@@ -5001,7 +5364,7 @@ No description provided.
 export type FlintSoNMemoryModel = 'region-arc-checked-linear';
 ```
 
-No description provided.
+Memory-management model implemented by a SoN module.
 
 ### FlintSoNModule
 
@@ -5011,7 +5374,7 @@ No description provided.
 export interface FlintSoNModule
 ```
 
-No description provided.
+Persisted semantic-operation graph and its compiler metadata.
 
 ### FlintSoNNode
 
@@ -5021,7 +5384,7 @@ No description provided.
 export interface FlintSoNNode
 ```
 
-No description provided.
+A node in the persisted semantic-operation graph.
 
 ### FlintSoNOptimization
 
@@ -5031,7 +5394,7 @@ No description provided.
 export type FlintSoNOptimization = 'debug' | 'release';
 ```
 
-No description provided.
+Optimization profile used when building or optimizing a SoN module.
 
 ### FlintSoNOptimizationReport
 
@@ -5041,7 +5404,7 @@ No description provided.
 export interface FlintSoNOptimizationReport
 ```
 
-No description provided.
+Aggregate accounting information for a complete SoN optimization run.
 
 ### FlintSoNOptimizationResult
 
@@ -5051,7 +5414,7 @@ No description provided.
 export interface FlintSoNOptimizationResult
 ```
 
-No description provided.
+Optimized SoN module, backend-compatible IR, and pass accounting from one optimization run.
 
 ### FlintSoNOwnershipFact
 
@@ -5061,7 +5424,7 @@ No description provided.
 export type FlintSoNOwnershipFact = 'value' | 'borrowed' | 'owned' | 'shared' | 'unknown';
 ```
 
-No description provided.
+Ownership classification inferred for a SoN node.
 
 ### FlintSoNPassReport
 
@@ -5071,7 +5434,7 @@ No description provided.
 export interface FlintSoNPassReport
 ```
 
-No description provided.
+Accounting information for one SoN optimization pass.
 
 ### optimizeFlintSoN
 
@@ -5096,11 +5459,18 @@ adapter and is no longer the source of truth for the optimized output.
 
 #### Parameters
 
-| Name     | Type                 | Description |
-| -------- | -------------------- | ----------- |
-| baseline | FlintSoNModule       |             |
-| sourceIr | FlintIrModule        |             |
-| mode     | FlintSoNOptimization |             |
+| Name     | Type                 | Description                                               |
+| -------- | -------------------- | --------------------------------------------------------- |
+| baseline | FlintSoNModule       | - Unoptimized SoN module and build metadata.              |
+| sourceIr | FlintIrModule        | - Unoptimized lowered IR used for tree-level propagation. |
+| mode     | FlintSoNOptimization | - Optimization profile to apply.                          |
+
+#### Contract
+
+- **@param:** - Unoptimized SoN module and build metadata.
+- **@param:** - Unoptimized lowered IR used for tree-level propagation.
+- **@param:** - Optimization profile to apply.
+- **@returns:** Optimized SoN module, compatible IR, and pass report.
 
 ## `src/stdlib/memory`
 
@@ -5112,7 +5482,7 @@ adapter and is no longer the source of truth for the optimized output.
 export const FLINT_MEMORY_FUNCTION_MAP;
 ```
 
-No description provided.
+Lookup map of guest memory intrinsic function names to their definitions.
 
 ### FLINT_MEMORY_FUNCTIONS
 
@@ -5122,7 +5492,7 @@ No description provided.
 export const FLINT_MEMORY_FUNCTIONS: readonly FlintMemoryFunction[];
 ```
 
-No description provided.
+List of built-in guest linear memory intrinsics provided by the runtime.
 
 ### FlintMemoryFunction
 
@@ -5132,7 +5502,7 @@ No description provided.
 export interface FlintMemoryFunction
 ```
 
-No description provided.
+Metadata descriptor for a reserved guest-memory compiler intrinsic function.
 
 ### FlintMemoryOperation
 
@@ -5154,12 +5524,22 @@ Checked guest-linear-memory operations reserved by the compiler.
 
 ## `src/stdlib/regex`
 
+### DEFAULT_FLINT_STANDARD_LIBRARY_IDENTITY
+
+**Kind:** constant
+
+```typescript
+export const DEFAULT_FLINT_STANDARD_LIBRARY_IDENTITY: FlintStandardLibraryIdentity;
+```
+
+Default standard library regex identity configuration.
+
 ### DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY
 
 **Kind:** constant
 
 ```typescript
-export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: FlintStandardLibraryIdentity;
+export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY;
 ```
 
 No description provided.
@@ -5172,7 +5552,7 @@ No description provided.
 export const FLINT_REGEX_DIAGNOSTIC_CODES;
 ```
 
-No description provided.
+Standard diagnostic codes emitted during regex lowering and compilation.
 
 ### FLINT_REGEX_FUNCTION_MAP
 
@@ -5182,7 +5562,7 @@ No description provided.
 export const FLINT_REGEX_FUNCTION_MAP;
 ```
 
-No description provided.
+Lookup map of regex standard library intrinsic function names to their definitions.
 
 ### FLINT_REGEX_FUNCTIONS
 
@@ -5204,7 +5584,7 @@ Capture operations return `-1` for an unset group or when no match exists.
 export const FLINT_REGEX_VERSION;
 ```
 
-No description provided.
+Supported regex bytecode format identifier for the standard library.
 
 ### FlintRegexOperation
 
@@ -5223,7 +5603,7 @@ export type FlintRegexOperation =
   | 'search-capture-end';
 ```
 
-No description provided.
+Standard library regex operations supported by compiler lowering.
 
 ### FlintStandardLibraryFunction
 
@@ -5233,7 +5613,7 @@ No description provided.
 export interface FlintStandardLibraryFunction
 ```
 
-No description provided.
+Metadata descriptor for a standard library compiler intrinsic function.
 
 ### flintStandardLibraryIdentity
 
@@ -5245,13 +5625,18 @@ function flintStandardLibraryIdentity(
 ): FlintStandardLibraryIdentity;
 ```
 
-No description provided.
+Creates a standard library identity descriptor with optional configuration overrides.
 
 #### Parameters
 
-| Name      | Type                                  | Description |
-| --------- | ------------------------------------- | ----------- |
-| overrides | Partial<FlintStandardLibraryIdentity> |             |
+| Name      | Type                                  | Description                                                   |
+| --------- | ------------------------------------- | ------------------------------------------------------------- |
+| overrides | Partial<FlintStandardLibraryIdentity> | - Partial overrides for standard library identity properties. |
+
+#### Contract
+
+- **@param:** - Partial overrides for standard library identity properties.
+- **@returns:** Complete FlintStandardLibraryIdentity instance.
 
 ### FlintStandardLibraryIdentity
 
@@ -5273,7 +5658,7 @@ Stable identity inputs that affect regex compilation and generated artifacts.
 export const FLINT_STRING_FUNCTION_MAP;
 ```
 
-No description provided.
+Lookup map of string intrinsic function names to their definitions.
 
 ### FLINT_STRING_FUNCTIONS
 
@@ -5283,7 +5668,7 @@ No description provided.
 export const FLINT_STRING_FUNCTIONS: readonly FlintStringFunction[];
 ```
 
-No description provided.
+List of built-in deterministic string and byte operations provided by the runtime.
 
 ### FlintStringFunction
 
@@ -5293,7 +5678,7 @@ No description provided.
 export interface FlintStringFunction
 ```
 
-No description provided.
+Metadata descriptor for a built-in string or bytes compiler intrinsic function.
 
 ### FlintStringOperation
 
@@ -5326,7 +5711,7 @@ Compiler-owned deterministic string and byte operations.
 export interface AggregateLayoutDefinition
 ```
 
-No description provided.
+Registered field-layout definition for a user-defined nominal aggregate (struct).
 
 ### createMonomorphizationCache
 
@@ -5339,13 +5724,19 @@ function createMonomorphizationCache(module?: Pick<FlintModule, 'structs'>): {
 };
 ```
 
-No description provided.
+Creates a paired type algebra and monomorphization cache, optionally seeding
+aggregate definitions from a module's struct declarations.
 
 #### Parameters
 
-| Name   | Type                         | Description |
-| ------ | ---------------------------- | ----------- |
-| module | Pick<FlintModule, 'structs'> |             |
+| Name   | Type                         | Description                                                                  |
+| ------ | ---------------------------- | ---------------------------------------------------------------------------- |
+| module | Pick<FlintModule, 'structs'> | - Optional module (or struct-only slice) to seed aggregate definitions from. |
+
+#### Contract
+
+- **@param:** - Optional module (or struct-only slice) to seed aggregate definitions from.
+- **@returns:** The paired `algebra` and `cache`.
 
 ### createTypeAlgebra
 
@@ -5371,7 +5762,7 @@ Shared algebra instance helpers for call sites that do not need a private table.
 export type FlintGenericBoundary = 'value' | 'interface' | 'iterator';
 ```
 
-No description provided.
+Generic instantiation policy: value monomorphization, or descriptor-boundary interface/iterator surfaces.
 
 ### MonomorphizationCache
 
@@ -5392,7 +5783,7 @@ argument tuples, with layout-key deduplication across distinct nominal types.
 export interface MonomorphizedSpecialization
 ```
 
-No description provided.
+A concrete generic application with its interned type id and computed layout.
 
 ### MonomorphizeStructRequest
 
@@ -5402,7 +5793,7 @@ No description provided.
 export interface MonomorphizeStructRequest
 ```
 
-No description provided.
+Request to monomorphize a generic struct declaration against concrete type arguments.
 
 ### ownershipFromType
 
@@ -5412,13 +5803,18 @@ No description provided.
 function ownershipFromType(type: FlintTypeName): FlintOwnership | undefined;
 ```
 
-No description provided.
+Reads the ownership annotation carried by an AST type name.
 
 #### Parameters
 
-| Name | Type          | Description |
-| ---- | ------------- | ----------- |
-| type | FlintTypeName |             |
+| Name | Type          | Description             |
+| ---- | ------------- | ----------------------- |
+| type | FlintTypeName | - Source AST type name. |
+
+#### Contract
+
+- **@param:** - Source AST type name.
+- **@returns:** The declared ownership mode, or `undefined` if unset.
 
 ### primitiveLayout
 
@@ -5428,13 +5824,18 @@ No description provided.
 function primitiveLayout(name: FlintPrimitiveType): Omit<TypeLayout, 'layoutKey'>;
 ```
 
-No description provided.
+Looks up the fixed ABI layout for a primitive type name.
 
 #### Parameters
 
-| Name | Type               | Description |
-| ---- | ------------------ | ----------- |
-| name | FlintPrimitiveType |             |
+| Name | Type               | Description            |
+| ---- | ------------------ | ---------------------- |
+| name | FlintPrimitiveType | - Primitive type name. |
+
+#### Contract
+
+- **@param:** - Primitive type name.
+- **@returns:** The primitive's size and alignment (without a layout key).
 
 ### TypeAlgebra
 
@@ -5468,7 +5869,7 @@ layouts by a stable layout key rather than by surface type name alone.
 export interface TypeLayout
 ```
 
-No description provided.
+Computed ABI layout (size, alignment, and dedup fingerprint) for an interned type.
 
 ### typeNameKeyFromAlgebra
 
@@ -5478,14 +5879,20 @@ No description provided.
 function typeNameKeyFromAlgebra(type: FlintTypeName, algebra = createTypeAlgebra()): string;
 ```
 
-No description provided.
+Computes the canonical checker/specialization key for an AST type name.
 
 #### Parameters
 
-| Name    | Type          | Description |
-| ------- | ------------- | ----------- |
-| type    | FlintTypeName |             |
-| algebra |               |             |
+| Name    | Type          | Description                                                      |
+| ------- | ------------- | ---------------------------------------------------------------- |
+| type    | FlintTypeName | - Source AST type name.                                          |
+| algebra |               | - Type algebra used for interning; defaults to a fresh instance. |
+
+#### Contract
+
+- **@param:** - Source AST type name.
+- **@param:** - Type algebra used for interning; defaults to a fresh instance.
+- **@returns:** The canonical (no-spaces) type key.
 
 ### TypeNode
 
@@ -5495,7 +5902,7 @@ No description provided.
 export type TypeNode = |
 ```
 
-No description provided.
+Discriminated union of interned structural type node shapes.
 
 ## `src/type-checker`
 
@@ -5511,15 +5918,22 @@ function checkFlint(
 ): FlintTypeCheckResult;
 ```
 
-No description provided.
+Type-checks a Flint module, validating ABI, names, and body typing.
 
 #### Parameters
 
-| Name     | Type                  | Description |
-| -------- | --------------------- | ----------- |
-| module   | FlintModule           |             |
-| fileName |                       |             |
-| options  | FlintTypeCheckOptions |             |
+| Name     | Type                  | Description                                                       |
+| -------- | --------------------- | ----------------------------------------------------------------- |
+| module   | FlintModule           | - Parsed module AST to check.                                     |
+| fileName |                       | - Logical source file name used in diagnostics.                   |
+| options  | FlintTypeCheckOptions | - Optional capability, export, and external-function constraints. |
+
+#### Contract
+
+- **@param:** - Parsed module AST to check.
+- **@param:** - Logical source file name used in diagnostics.
+- **@param:** - Optional capability, export, and external-function constraints.
+- **@returns:** Diagnostics and an overall validity flag.
 
 ### FlintTypeCheckOptions
 
@@ -5529,7 +5943,7 @@ No description provided.
 export interface FlintTypeCheckOptions
 ```
 
-No description provided.
+Options controlling Flint type checking and ABI validation.
 
 ### FlintTypeCheckResult
 
@@ -5539,7 +5953,7 @@ No description provided.
 export interface FlintTypeCheckResult
 ```
 
-No description provided.
+Result of running the Flint type checker over a module.
 
 ## `src/validate`
 
@@ -5551,7 +5965,7 @@ No description provided.
 export interface FlintValidationResult
 ```
 
-No description provided.
+Result of validating a Flint source file through parsing and type-checking.
 
 ### validateFlint
 
@@ -5565,15 +5979,23 @@ function validateFlint(
 ): FlintValidationResult;
 ```
 
-No description provided.
+Validates Flint source text by running the parser and type-checker.
+Collects and deduplicates syntactic and semantic diagnostics.
 
 #### Parameters
 
-| Name     | Type                  | Description |
-| -------- | --------------------- | ----------- |
-| source   | string                |             |
-| fileName |                       |             |
-| options  | FlintTypeCheckOptions |             |
+| Name     | Type                  | Description                                                                      |
+| -------- | --------------------- | -------------------------------------------------------------------------------- |
+| source   | string                | - Flint source code text.                                                        |
+| fileName |                       | - Optional file path or name used in diagnostic spans (defaults to `'<input>'`). |
+| options  | FlintTypeCheckOptions | - Optional type-checker configuration flags and external symbol tables.          |
+
+#### Contract
+
+- **@param:** - Flint source code text.
+- **@param:** - Optional file path or name used in diagnostic spans (defaults to `'<input>'`).
+- **@param:** - Optional type-checker configuration flags and external symbol tables.
+- **@returns:** Combined validation result with parsed module (if available), diagnostics, and valid flag.
 
 ## `src/wat`
 
@@ -5585,7 +6007,7 @@ No description provided.
 export interface FlintWatMetadata
 ```
 
-No description provided.
+Metadata emitted in WAT comments describing compiler, optimization, and provenance details.
 
 ### renderFlintWat
 
@@ -5595,11 +6017,17 @@ No description provided.
 function renderFlintWat(module: FlintModule, metadata: FlintWatMetadata = {}): string;
 ```
 
-No description provided.
+Emits complete WebAssembly Text format representation for a compiled Flint module.
 
 #### Parameters
 
-| Name     | Type             | Description |
-| -------- | ---------------- | ----------- |
-| module   | FlintModule      |             |
-| metadata | FlintWatMetadata |             |
+| Name     | Type             | Description                                               |
+| -------- | ---------------- | --------------------------------------------------------- |
+| module   | FlintModule      | - Compiled AST module to render.                          |
+| metadata | FlintWatMetadata | - Optional compiler and provenance metadata for comments. |
+
+#### Contract
+
+- **@param:** - Compiled AST module to render.
+- **@param:** - Optional compiler and provenance metadata for comments.
+- **@returns:** WebAssembly Text representation as a string.

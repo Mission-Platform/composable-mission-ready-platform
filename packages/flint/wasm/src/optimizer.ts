@@ -8,14 +8,17 @@ import type {
   FlintWasmStatement,
 } from './contracts.js';
 
+/** Code generation strategy for lowering switch statements. */
 export type FlintWasmSwitchStrategy = 'br-table' | 'sparse' | 'constant';
 
+/** Diagnostic emitted by WebAssembly optimization passes. */
 export interface FlintWasmOptimizationDiagnostic {
   readonly code: 'FLINT-DISPATCH-001' | 'FLINT-DISPATCH-002';
   readonly message: string;
   readonly span: FlintWasmSourceSpan;
 }
 
+/** Metadata describing an individual optimization pass and its metrics. */
 export interface FlintWasmOptimizationPass {
   readonly name:
     | 'constant-propagation'
@@ -31,6 +34,7 @@ export interface FlintWasmOptimizationPass {
   readonly reason?: string;
 }
 
+/** Summary report tracking all applied WebAssembly optimization passes and diagnostics. */
 export interface FlintWasmOptimizationReport {
   readonly stage: 'wasm';
   readonly optimization: 'debug' | 'release';
@@ -38,14 +42,17 @@ export interface FlintWasmOptimizationReport {
   readonly cfg: ReadonlyMap<string, FlintWasmSsaPlan>;
 }
 
+/** Intermediate representation snapshot of module state at an optimization stage. */
 export interface FlintWasmStageIr {
   readonly module: FlintWasmModule;
   readonly report: FlintWasmOptimizationReport;
   readonly diagnostics: readonly FlintWasmOptimizationDiagnostic[];
 }
 
+/** Type environment mapping variable names to known constant values during constant folding. */
 type Environment = ReadonlyMap<string, FlintWasmExpression>;
 
+/** Scans statements collecting names of all reassigned local variables. */
 function assignedNames(statements: readonly FlintWasmStatement[], names = new Set<string>()): Set<string> {
   for (const statement of statements) {
     if (statement.kind === 'assignment' && statement.index === undefined) names.add(statement.name);
@@ -98,6 +105,7 @@ const literal = (
   span,
 });
 
+/** Determines whether an expression is side-effect free and deterministic. */
 function pure(expression: FlintWasmExpression): boolean {
   if (expression.kind === 'literal' || expression.kind === 'identifier') return true;
   if (expression.kind === 'unary') return pure(expression.operand);
@@ -105,11 +113,13 @@ function pure(expression: FlintWasmExpression): boolean {
   return false;
 }
 
+/** Normalizes integer literal values to 32-bit signed integer representations. */
 function normalizeInteger(value: number, type: FlintWasmPrimitiveType): number {
   // eslint-disable-next-line unicorn/prefer-math-trunc -- i32 normalization must preserve WebAssembly wrapping semantics.
   return type === 'u32' ? value >>> 0 : value | 0;
 }
 
+/** Evaluates compile-time binary arithmetic operations on numeric constants. */
 function foldNumbers(
   operator: Extract<FlintWasmExpression, { kind: 'binary' }>['operator'],
   left: number,
@@ -163,6 +173,7 @@ function foldNumbers(
   }
 }
 
+/** Resolves an expression to a compile-time constant value using the local environment. */
 function resolve(
   expression: FlintWasmExpression,
   environment: Environment,
@@ -208,6 +219,7 @@ function resolve(
   return expression;
 }
 
+/** Performs recursive constant folding and algebraic simplification on an expression node. */
 function fold(expression: FlintWasmExpression): {
   readonly expression: FlintWasmExpression;
   readonly constants: number;
@@ -335,6 +347,7 @@ function fold(expression: FlintWasmExpression): {
   };
 }
 
+/** Result returned from optimizing a statement list including folded statements and termination flag. */
 interface StatementResult {
   readonly statements: readonly FlintWasmStatement[];
   readonly environment: Map<string, FlintWasmExpression>;
@@ -346,6 +359,7 @@ interface StatementResult {
   readonly offsets: number;
 }
 
+/** Optimizes a sequence of statements by eliminating dead code and simplifying branches. */
 function optimizeStatements(
   statements: readonly FlintWasmStatement[],
   input: Environment,
@@ -529,6 +543,7 @@ function optimizeStatements(
   return { statements: output, environment, fallsThrough, constants, copies, dead, unreachable, offsets };
 }
 
+/** Extracts the numeric integer value from a switch case branch arm. */
 function caseValue(value: number | string, module: FlintWasmModule): number | undefined {
   if (typeof value === 'number') return Number.isInteger(value) ? value : undefined;
   for (const declaration of module.enumDeclarations ?? []) {
@@ -538,6 +553,7 @@ function caseValue(value: number | string, module: FlintWasmModule): number | un
   return undefined;
 }
 
+/** Validates switch case arms for uniqueness and selects jump table vs linear search strategy. */
 function validateAndAnnotateSwitches(
   statements: readonly FlintWasmStatement[],
   module: FlintWasmModule,
@@ -602,6 +618,7 @@ function validateAndAnnotateSwitches(
   });
 }
 
+/** Eliminates switch statements with known constant discriminants by selecting the matching arm. */
 function foldConstantSwitches(
   statements: readonly FlintWasmStatement[],
   module: FlintWasmModule,
@@ -675,6 +692,7 @@ function foldConstantSwitches(
   return { statements: output, folded };
 }
 
+/** Traverses expressions collecting all directly called function identifiers. */
 function directCalls(module: FlintWasmModule): number {
   const functions = new Set(module.functions.map(({ name }) => name));
   let count = 0;
@@ -785,6 +803,7 @@ function directCalls(module: FlintWasmModule): number {
   return count;
 }
 
+/** Executes the full suite of WebAssembly optimization passes on an IR module. */
 export function optimizeFlintWasmModule(
   module: FlintWasmModule,
   optimization: 'debug' | 'release' = 'release',
@@ -818,9 +837,11 @@ export function optimizeFlintWasmModule(
     .filter(({ exported }) => !exported)
     .toSorted((left, right) => left.name.localeCompare(right.name));
   let privateIndex = 0;
-  const laidOutFunctions = optimizedFunctions.map((declaration) =>
-    declaration.exported ? declaration : privateFunctions[privateIndex++]!,
-  );
+  const laidOutFunctions = optimizedFunctions.map((declaration) => {
+    if (declaration.exported) return declaration;
+    const optimized = privateFunctions[privateIndex++];
+    return optimized ?? declaration;
+  });
   const optimizedModule: FlintWasmModule = { ...module, functions: laidOutFunctions };
   const cfg = new Map(
     laidOutFunctions.map((declaration) => [declaration.name, lowerFlintWasmFunctionToSsa(declaration)]),

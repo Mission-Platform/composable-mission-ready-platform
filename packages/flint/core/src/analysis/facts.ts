@@ -7,96 +7,220 @@ import type {
   FlintAnalysisArrayBoundsFact,
   FlintAnalysisFacts,
   FlintAnalysisInterval,
+  FlintAnalysisOwnershipFact,
   FlintAnalysisPointerRangeFact,
   FlintAnalysisSwitchCoverageFact,
 } from './contracts.js';
 
 /**
- * Extracts immediate expressions evaluated by a statement.
+ * Returns the optional value expression carried by return or yield statements.
  *
- * @param statement IR statement.
- * @returns Array of immediate constituent expressions.
+ * @param statement - Return or yield IR statement.
+ * @returns Singleton array containing the value, or an empty array when absent.
+ */
+function optionalValueExpression(
+  statement: Extract<FlintIrStatement, { kind: 'return' | 'yield' }>,
+): FlintIrExpression[] {
+  return statement.value === undefined ? [] : [statement.value];
+}
+
+/**
+ * Extracts expressions from binding statements.
+ *
+ * @param statement - IR statement to inspect.
+ * @returns Binding value expressions, or undefined when not a binding statement.
+ */
+function expressionsFromBinding(statement: FlintIrStatement): FlintIrExpression[] | undefined {
+  if (statement.kind === 'let' || statement.kind === 'assignment') return [statement.value];
+  return undefined;
+}
+
+/**
+ * Extracts expressions from return/yield statements.
+ *
+ * @param statement - IR statement to inspect.
+ * @returns Optional value expressions, or undefined when not a return/yield.
+ */
+function expressionsFromReturnOrYield(statement: FlintIrStatement): FlintIrExpression[] | undefined {
+  if (statement.kind === 'return' || statement.kind === 'yield') return optionalValueExpression(statement);
+  return undefined;
+}
+
+/**
+ * Extracts expressions from condition-bearing statements.
+ *
+ * @param statement - IR statement to inspect.
+ * @returns Condition expressions, or undefined when not a conditional statement.
+ */
+function expressionsFromCondition(statement: FlintIrStatement): FlintIrExpression[] | undefined {
+  if (statement.kind === 'if' || statement.kind === 'while' || statement.kind === 'do-while') {
+    return [statement.condition];
+  }
+  return undefined;
+}
+
+/**
+ * Extracts expressions from switch/match statements.
+ *
+ * @param statement - IR statement to inspect.
+ * @returns Scrutinee expressions, or undefined when not a switch/match.
+ */
+function expressionsFromSwitchOrMatch(statement: FlintIrStatement): FlintIrExpression[] | undefined {
+  if (statement.kind === 'switch' || statement.kind === 'match-statement') return [statement.value];
+  return undefined;
+}
+
+/**
+ * Extracts immediate constituent expressions directly evaluated by a statement.
+ *
+ * @param statement - IR statement to inspect.
+ * @returns Array of immediate IR expressions evaluated by the statement.
  */
 function expressionsOf(statement: FlintIrStatement): FlintIrExpression[] {
-  if (statement.kind === 'let' || statement.kind === 'assignment') return [statement.value];
-  if (statement.kind === 'return' || statement.kind === 'yield')
-    return statement.value === undefined ? [] : [statement.value];
+  const fromBinding = expressionsFromBinding(statement);
+  if (fromBinding !== undefined) return fromBinding;
+  const fromReturn = expressionsFromReturnOrYield(statement);
+  if (fromReturn !== undefined) return fromReturn;
   if (statement.kind === 'expression-statement') return [statement.expression];
-  if (statement.kind === 'if' || statement.kind === 'while' || statement.kind === 'do-while')
-    return [statement.condition];
-  if (statement.kind === 'switch' || statement.kind === 'match-statement') return [statement.value];
+  const fromCondition = expressionsFromCondition(statement);
+  if (fromCondition !== undefined) return fromCondition;
+  const fromSwitch = expressionsFromSwitchOrMatch(statement);
+  if (fromSwitch !== undefined) return fromSwitch;
   if (statement.kind === 'iterator-loop') return [statement.iterator];
   return [];
 }
 
 /**
- * No-op callback used when expression traversal requires no custom action.
+ * Recursively visits child expressions for call, binary, unary, and index nodes.
  *
- * @param _expression Ignored expression node.
+ * @param expression - Parent expression whose children should be visited.
+ * @param visit - Visitor callback invoked on each nested expression.
  */
-function visitExpressionNoop(_expression: FlintIrExpression): void {
-  // Intentionally blank no-op visitor
-}
-
-/**
- * Recursively visits all sub-expressions within an IR expression tree.
- *
- * @param expression Root expression.
- * @param visit Callback invoked for each child expression.
- */
-function visitExpression(expression: FlintIrExpression, visit: (expression: FlintIrExpression) => void): void {
-  visit(expression);
-  if (expression.kind === 'call') for (const argument of expression.arguments) visitExpression(argument, visit);
+function visitSimpleChildren(expression: FlintIrExpression, visit: (expression: FlintIrExpression) => void): void {
+  if (expression.kind === 'call') {
+    for (const argument of expression.arguments) visitExpression(argument, visit);
+    return;
+  }
   if (expression.kind === 'binary') {
     visitExpression(expression.left, visit);
     visitExpression(expression.right, visit);
+    return;
   }
-  if (expression.kind === 'unary') visitExpression(expression.operand, visit);
+  if (expression.kind === 'unary') {
+    visitExpression(expression.operand, visit);
+    return;
+  }
   if (expression.kind === 'index') {
     visitExpression(expression.receiver, visit);
     visitExpression(expression.index, visit);
   }
-  if (expression.kind === 'struct-value')
-    for (const field of Object.values(expression.fields)) visitExpression(field, visit);
-  if (expression.kind === 'enum-value') for (const argument of expression.arguments) visitExpression(argument, visit);
-  if (expression.kind === 'match') {
-    visitExpression(expression.value, visit);
-    for (const arm of expression.arms) visitExpression(arm.value, visit);
-  }
-  if (expression.kind === 'array-literal' || expression.kind === 'vector-literal')
-    for (const element of expression.elements) visitExpression(element, visit);
 }
 
 /**
- * Recursively visits all statements within an IR statement list.
+ * Recursively visits child expressions for match arms and collection literals.
  *
- * @param statements Array of statements.
- * @param visit Callback invoked for each statement.
+ * @param expression - Parent expression whose children should be visited.
+ * @param visit - Visitor callback invoked on each nested expression.
+ */
+function visitMatchOrLiteralChildren(
+  expression: FlintIrExpression,
+  visit: (expression: FlintIrExpression) => void,
+): void {
+  if (expression.kind === 'match') {
+    visitExpression(expression.value, visit);
+    for (const arm of expression.arms) visitExpression(arm.value, visit);
+    return;
+  }
+  if (expression.kind === 'array-literal' || expression.kind === 'vector-literal') {
+    for (const element of expression.elements) visitExpression(element, visit);
+  }
+}
+
+/**
+ * Recursively visits child expressions for composite value and match nodes.
+ *
+ * @param expression - Parent expression whose children should be visited.
+ * @param visit - Visitor callback invoked on each nested expression.
+ */
+function visitCompositeChildren(expression: FlintIrExpression, visit: (expression: FlintIrExpression) => void): void {
+  if (expression.kind === 'struct-value') {
+    for (const field of Object.values(expression.fields)) visitExpression(field, visit);
+    return;
+  }
+  if (expression.kind === 'enum-value') {
+    for (const argument of expression.arguments) visitExpression(argument, visit);
+    return;
+  }
+  visitMatchOrLiteralChildren(expression, visit);
+}
+
+/**
+ * Traverses an IR expression tree in pre-order, invoking a visitor callback for each node.
+ *
+ * @param expression - Root IR expression to traverse.
+ * @param visit - Visitor callback invoked on the expression and all child subexpressions.
+ */
+function visitExpression(expression: FlintIrExpression, visit: (expression: FlintIrExpression) => void): void {
+  visit(expression);
+  visitSimpleChildren(expression, visit);
+  visitCompositeChildren(expression, visit);
+}
+
+/**
+ * Visits nested blocks inside switch and match statements.
+ *
+ * @param statement - Switch or match statement.
+ * @param visit - Visitor callback invoked on nested statements.
+ */
+function visitSwitchOrMatchBlocks(statement: FlintIrStatement, visit: (statement: FlintIrStatement) => void): void {
+  if (statement.kind === 'switch') {
+    for (const { body } of statement.cases) visitStatements(body, visit);
+    if (statement.defaultCase !== undefined) visitStatements(statement.defaultCase, visit);
+    return;
+  }
+  if (statement.kind === 'match-statement') {
+    for (const { value } of statement.arms) visitExpression(value, () => {});
+  }
+}
+
+/**
+ * Visits nested statement blocks for branching and looping constructs.
+ *
+ * @param statement - Statement that may contain nested blocks.
+ * @param visit - Visitor callback invoked on nested statements.
+ */
+function visitNestedStatementBlocks(statement: FlintIrStatement, visit: (statement: FlintIrStatement) => void): void {
+  if (statement.kind === 'if') {
+    visitStatements(statement.consequent, visit);
+    if (statement.alternate !== undefined) visitStatements(statement.alternate, visit);
+    return;
+  }
+  if (statement.kind === 'while' || statement.kind === 'do-while' || statement.kind === 'iterator-loop') {
+    visitStatements(statement.body, visit);
+    return;
+  }
+  visitSwitchOrMatchBlocks(statement, visit);
+}
+
+/**
+ * Recursively visits all IR statements in a sequence, traversing nested blocks and branches.
+ *
+ * @param statements - Sequence of IR statements to traverse.
+ * @param visit - Visitor callback invoked on each statement visited.
  */
 function visitStatements(statements: readonly FlintIrStatement[], visit: (statement: FlintIrStatement) => void): void {
   for (const statement of statements) {
     visit(statement);
-    if (statement.kind === 'if') {
-      visitStatements(statement.consequent, visit);
-      if (statement.alternate !== undefined) visitStatements(statement.alternate, visit);
-    }
-    if (statement.kind === 'while' || statement.kind === 'do-while' || statement.kind === 'iterator-loop')
-      visitStatements(statement.body, visit);
-    if (statement.kind === 'switch') {
-      for (const { body } of statement.cases) visitStatements(body, visit);
-      if (statement.defaultCase !== undefined) visitStatements(statement.defaultCase, visit);
-    }
-    if (statement.kind === 'match-statement')
-      for (const { value } of statement.arms) visitExpression(value, visitExpressionNoop);
+    visitNestedStatementBlocks(statement, visit);
   }
 }
 
 /**
- * Computes the static value range interval of an expression based on known constants.
+ * Infers an interval range for an expression based on literal values and known constant bindings.
  *
- * @param expression Target expression.
- * @param constantsByName Map of known constant values by variable name.
- * @returns Inferred interval fact.
+ * @param expression - IR expression to evaluate for numeric bounds.
+ * @param constantsByName - Map of known compile-time constant identifiers to numeric values.
+ * @returns Interval representing minimum and maximum possible values.
  */
 function interval(
   expression: FlintIrExpression,
@@ -110,10 +234,10 @@ function interval(
 }
 
 /**
- * Computes static receiver array length if known at compile time.
+ * Returns the fixed literal length of an array or vector literal receiver, if statically known.
  *
- * @param expression Receiver expression.
- * @returns Element length if statically known, or undefined.
+ * @param expression - Receiver expression being indexed.
+ * @returns Number of literal elements, or undefined if receiver length is dynamic.
  */
 function receiverLength(expression: FlintIrExpression): number | undefined {
   return expression.kind === 'array-literal' || expression.kind === 'vector-literal'
@@ -122,34 +246,86 @@ function receiverLength(expression: FlintIrExpression): number | undefined {
 }
 
 /**
- * Classifies the array bounds checking status from static index interval and receiver length.
+ * Returns true when a known receiver length fully contains the index interval.
  *
- * @param length Known receiver length, if available.
- * @param index Inferred index interval.
- * @param boundsCheck Bounds check hint on the expression.
- * @returns Classified bounds verification status.
+ * @param index - Inferred numeric interval for the index operand.
+ * @param length - Statically known receiver length.
+ * @returns True when the access is proven in-bounds.
  */
-function classifyBoundsCheckStatus(
-  length: number | undefined,
+function isProvenSafeIndex(index: FlintAnalysisInterval, length: number): boolean {
+  return index.min !== undefined && index.max !== undefined && index.min >= 0 && index.max < length;
+}
+
+/**
+ * Returns true when a known receiver length proves the index interval is invalid.
+ *
+ * @param index - Inferred numeric interval for the index operand.
+ * @param length - Statically known receiver length.
+ * @returns True when the access is proven out of range.
+ */
+function isOutOfRangeIndex(index: FlintAnalysisInterval, length: number): boolean {
+  return (index.min !== undefined && index.min < 0) || (index.max !== undefined && index.max >= length);
+}
+
+/**
+ * Classifies an index expression's bounds status from interval and receiver metadata.
+ *
+ * @param expression - Index expression under analysis.
+ * @param index - Inferred numeric interval for the index operand.
+ * @param length - Optional statically known receiver length.
+ * @returns Bounds status label for the access site.
+ */
+function classifyIndexStatus(
+  expression: Extract<FlintIrExpression, { kind: 'index' }>,
   index: FlintAnalysisInterval,
-  boundsCheck: string | undefined,
-): 'proven-safe' | 'out-of-range' | 'runtime-checked' | 'unknown' {
-  if (length !== undefined && index.min !== undefined && index.max !== undefined) {
-    if (index.min >= 0 && index.max < length) return 'proven-safe';
-    if (index.min < 0 || index.max >= length) return 'out-of-range';
-  }
-  if (boundsCheck === 'proven-safe') return 'proven-safe';
-  if (boundsCheck === 'required') return 'runtime-checked';
+  length: number | undefined,
+): FlintAnalysisArrayBoundsFact['status'] {
+  if (length !== undefined && isProvenSafeIndex(index, length)) return 'proven-safe';
+  if (length !== undefined && isOutOfRangeIndex(index, length)) return 'out-of-range';
+  if (expression.boundsCheck === 'proven-safe') return 'proven-safe';
+  if (expression.boundsCheck === 'required') return 'runtime-checked';
   return 'unknown';
 }
 
 /**
- * Collects array indexing bounds facts across a function body.
+ * Collects array bounds facts for index expressions nested under one statement.
  *
- * @param module IR module.
- * @param functionName Target function name.
- * @param knownConstants Map of known integer constants.
- * @returns Array of bounds verification facts.
+ * @param statement - Statement whose expressions should be inspected.
+ * @param functionName - Owning function name recorded on each fact.
+ * @param knownConstants - Map of known constant identifiers to numeric values.
+ * @param facts - Mutable collection receiving discovered bounds facts.
+ */
+function collectIndexBoundsFacts(
+  statement: FlintIrStatement,
+  functionName: string,
+  knownConstants: Readonly<Record<string, number>>,
+  facts: FlintAnalysisArrayBoundsFact[],
+): void {
+  for (const root of expressionsOf(statement)) {
+    visitExpression(root, (expression) => {
+      if (expression.kind !== 'index') return;
+      const index = interval(expression.index, knownConstants);
+      const length = receiverLength(expression.receiver);
+      facts.push({
+        functionName,
+        receiver: expression.receiver.kind === 'identifier' ? expression.receiver.name : expression.receiver.kind,
+        index,
+        ...(length === undefined ? {} : { length }),
+        status: classifyIndexStatus(expression, index, length),
+        span: expression.span,
+      });
+    });
+  }
+}
+
+/**
+ * Analyzes indexing operations in a function to derive array bounds checking facts.
+ * Determines whether each array access is proven safe, out-of-range, or requires runtime check.
+ *
+ * @param module - Module IR containing function declarations.
+ * @param functionName - Name of the function to analyze.
+ * @param knownConstants - Map of known constant identifiers to numeric values.
+ * @returns Array of array bounds analysis facts for each index expression.
  */
 function boundsFacts(
   module: FlintIrModule,
@@ -160,33 +336,19 @@ function boundsFacts(
   const facts: FlintAnalysisArrayBoundsFact[] = [];
   for (const statement of declaration?.body ?? []) {
     visitStatements([statement], (current) => {
-      for (const root of expressionsOf(current))
-        visitExpression(root, (expression) => {
-          if (expression.kind !== 'index') return;
-          const index = interval(expression.index, knownConstants);
-          const length = receiverLength(expression.receiver);
-          const status = classifyBoundsCheckStatus(length, index, expression.boundsCheck);
-          facts.push({
-            functionName,
-            receiver: expression.receiver.kind === 'identifier' ? expression.receiver.name : expression.receiver.kind,
-            index,
-            ...(length === undefined ? {} : { length }),
-            status,
-            span: expression.span,
-          });
-        });
+      collectIndexBoundsFacts(current, functionName, knownConstants, facts);
     });
   }
   return facts;
 }
 
 /**
- * Collects pointer operation facts across a function body.
+ * Inspects memory subsystem calls within a function to extract pointer access range facts.
  *
- * @param module IR module.
- * @param functionName Target function name.
- * @param knownConstants Map of known integer constants.
- * @returns Array of pointer range facts.
+ * @param module - Module IR containing function declarations.
+ * @param functionName - Name of the function to analyze.
+ * @param knownConstants - Map of known constant identifiers to numeric values.
+ * @returns Array of pointer range analysis facts.
  */
 function pointerFacts(
   module: FlintIrModule,
@@ -220,11 +382,11 @@ function pointerFacts(
 }
 
 /**
- * Collects switch statement branch coverage facts.
+ * Extracts switch statement coverage facts, checking case counts, duplicates, and default clauses.
  *
- * @param module IR module.
- * @param functionName Target function name.
- * @returns Array of switch coverage facts.
+ * @param module - Module IR containing function declarations.
+ * @param functionName - Name of the function to analyze.
+ * @returns Array of switch coverage facts for all switch statements in the function.
  */
 function switchFacts(module: FlintIrModule, functionName: string): FlintAnalysisSwitchCoverageFact[] {
   const declaration = module.functions.find(({ name }) => name === functionName);
@@ -246,55 +408,102 @@ function switchFacts(module: FlintIrModule, functionName: string): FlintAnalysis
 }
 
 /**
- * Checks whether an array of statements contains any loops.
+ * Determines whether an if statement nests a loop in either branch.
  *
- * @param statements Statement list to analyze.
- * @returns True if at least one loop structure is present.
+ * @param statement - If statement to inspect.
+ * @returns True when either branch contains a loop.
  */
-function hasLoop(statements: readonly FlintIrStatement[]): boolean {
-  return statements.some((statement) => {
-    if (statement.kind === 'while' || statement.kind === 'do-while' || statement.kind === 'iterator-loop') return true;
-    if (statement.kind === 'if')
-      return hasLoop(statement.consequent) || (statement.alternate !== undefined && hasLoop(statement.alternate));
-    if (statement.kind === 'switch')
-      return (
-        statement.cases.some(({ body }) => hasLoop(body)) ||
-        (statement.defaultCase !== undefined && hasLoop(statement.defaultCase))
-      );
-    if (statement.kind === 'match-statement')
-      return statement.arms.some(({ value }) => value.kind === 'call' && value.callee === 'loop');
-    return false;
-  });
+function ifStatementHasLoop(statement: Extract<FlintIrStatement, { kind: 'if' }>): boolean {
+  if (hasLoop(statement.consequent)) return true;
+  return statement.alternate !== undefined && hasLoop(statement.alternate);
 }
 
 /**
- * Counts the total number of loop statements in a statement tree.
+ * Determines whether a switch statement nests a loop in any arm.
  *
- * @param statements Statement list to analyze.
- * @returns Numeric loop count.
+ * @param statement - Switch statement to inspect.
+ * @returns True when any case or default arm contains a loop.
+ */
+function switchStatementHasLoop(statement: Extract<FlintIrStatement, { kind: 'switch' }>): boolean {
+  if (statement.cases.some(({ body }) => hasLoop(body))) return true;
+  return statement.defaultCase !== undefined && hasLoop(statement.defaultCase);
+}
+
+/**
+ * Determines whether a single statement introduces or nests a loop construct.
+ *
+ * @param statement - IR statement to inspect.
+ * @returns True when the statement contains a loop.
+ */
+function statementHasLoop(statement: FlintIrStatement): boolean {
+  if (statement.kind === 'while' || statement.kind === 'do-while' || statement.kind === 'iterator-loop') return true;
+  if (statement.kind === 'if') return ifStatementHasLoop(statement);
+  if (statement.kind === 'switch') return switchStatementHasLoop(statement);
+  if (statement.kind === 'match-statement') {
+    return statement.arms.some(({ value }) => value.kind === 'call' && value.callee === 'loop');
+  }
+  return false;
+}
+
+/**
+ * Recursively checks whether any loop constructs (while, do-while, iterator-loop) exist in statements.
+ *
+ * @param statements - Sequence of IR statements to inspect.
+ * @returns True if at least one loop construct is present.
+ */
+function hasLoop(statements: readonly FlintIrStatement[]): boolean {
+  return statements.some((statement) => statementHasLoop(statement));
+}
+
+/**
+ * Counts nested loops within an if statement, including both branches.
+ *
+ * @param statement - If statement whose nested blocks should be counted.
+ * @returns Total nested loop count under the if statement.
+ */
+function loopCountInIf(statement: Extract<FlintIrStatement, { kind: 'if' }>): number {
+  const alternateCount = statement.alternate === undefined ? 0 : loopCount(statement.alternate);
+  return loopCount(statement.consequent) + alternateCount;
+}
+
+/**
+ * Counts nested loops within a switch statement, including the default arm.
+ *
+ * @param statement - Switch statement whose nested blocks should be counted.
+ * @returns Total nested loop count under the switch statement.
+ */
+function loopCountInSwitch(statement: Extract<FlintIrStatement, { kind: 'switch' }>): number {
+  let count = 0;
+  for (const arm of statement.cases) count += loopCount(arm.body);
+  if (statement.defaultCase !== undefined) count += loopCount(statement.defaultCase);
+  return count;
+}
+
+/**
+ * Counts the total number of nested loop constructs present in a sequence of IR statements.
+ *
+ * @param statements - Sequence of IR statements to inspect.
+ * @returns Total count of loop statements.
  */
 function loopCount(statements: readonly FlintIrStatement[]): number {
   let count = 0;
   for (const statement of statements) {
     if (statement.kind === 'while' || statement.kind === 'do-while' || statement.kind === 'iterator-loop') count += 1;
-    if (statement.kind === 'if')
-      count +=
-        loopCount(statement.consequent) + (statement.alternate === undefined ? 0 : loopCount(statement.alternate));
-    if (statement.kind === 'switch') for (const arm of statement.cases) count += loopCount(arm.body);
-    if (statement.kind === 'switch' && statement.defaultCase !== undefined) count += loopCount(statement.defaultCase);
+    if (statement.kind === 'if') count += loopCountInIf(statement);
+    if (statement.kind === 'switch') count += loopCountInSwitch(statement);
   }
   return count;
 }
 
 /**
- * Evaluates a binary operator expression on known numeric operands.
+ * Evaluates a binary arithmetic expression when both operands are known constants.
  *
- * @param operator Binary operator.
- * @param left Left operand.
- * @param right Right operand.
- * @returns Evaluated numeric result or undefined.
+ * @param operator - Binary operator token.
+ * @param left - Evaluated left-hand numeric operand.
+ * @param right - Evaluated right-hand numeric operand.
+ * @returns Computed numeric result, or undefined when the operator is unsupported.
  */
-function evaluateBinaryNumeric(operator: string, left: number, right: number): number | undefined {
+function evaluateBinaryConstant(operator: string, left: number, right: number): number | undefined {
   if (operator === '+') return left + right;
   if (operator === '-') return left - right;
   if (operator === '*') return left * right;
@@ -304,91 +513,202 @@ function evaluateBinaryNumeric(operator: string, left: number, right: number): n
 }
 
 /**
- * Statically discovers integer constant bindings and literal occurrences within a function.
+ * Fold-evaluates an IR expression against the current local constant environment.
  *
- * @param module IR module.
- * @param functionName Target function name.
- * @returns Map of discovered constant values.
+ * @param expression - Expression to evaluate.
+ * @param locals - Mutable map of local bindings already proven constant.
+ * @returns Numeric value when statically known, otherwise undefined.
+ */
+function evaluateConstantExpression(
+  expression: FlintIrExpression,
+  locals: Readonly<Record<string, number>>,
+): number | undefined {
+  if (expression.kind === 'literal' && typeof expression.value === 'number') return expression.value;
+  if (expression.kind === 'identifier') return locals[expression.name];
+  if (expression.kind !== 'binary') return undefined;
+  const left = evaluateConstantExpression(expression.left, locals);
+  const right = evaluateConstantExpression(expression.right, locals);
+  if (left === undefined || right === undefined) return undefined;
+  return evaluateBinaryConstant(expression.operator, left, right);
+}
+
+/**
+ * Records nested numeric literals discovered while walking an expression tree.
+ *
+ * @param expression - Expression tree to inspect for literal leaves.
+ * @param result - Mutable map receiving discovered literal constants.
+ */
+function collectLiteralConstants(expression: FlintIrExpression, result: Record<string, number>): void {
+  if (expression.kind === 'literal' && typeof expression.value === 'number') {
+    result[`literal:${Object.keys(result).length}`] = expression.value;
+  }
+  if (expression.kind === 'call') {
+    for (const argument of expression.arguments) collectLiteralConstants(argument, result);
+  }
+  if (expression.kind === 'binary') {
+    collectLiteralConstants(expression.left, result);
+    collectLiteralConstants(expression.right, result);
+  }
+  if (expression.kind === 'unary') collectLiteralConstants(expression.operand, result);
+  if (expression.kind === 'index') {
+    collectLiteralConstants(expression.receiver, result);
+    collectLiteralConstants(expression.index, result);
+  }
+}
+
+/**
+ * Applies let or assignment constant updates into the local and result maps.
+ *
+ * @param statement - Let or assignment statement providing a candidate constant.
+ * @param locals - Mutable local constant environment.
+ * @param result - Mutable exported constant map.
+ */
+function bindStatementConstant(
+  statement: Extract<FlintIrStatement, { kind: 'let' | 'assignment' }>,
+  locals: Record<string, number>,
+  result: Record<string, number>,
+): void {
+  collectLiteralConstants(statement.value, result);
+  const value = evaluateConstantExpression(statement.value, locals);
+  if (value === undefined) {
+    if (statement.kind === 'assignment') delete locals[statement.name];
+    return;
+  }
+  locals[statement.name] = value;
+  result[statement.name] = value;
+}
+
+/**
+ * Evaluates compile-time constant bindings and literal values in a function.
+ * Tracks numeric bindings through let/assignment statements and arithmetic operations.
+ *
+ * @param module - Module IR containing function declarations.
+ * @param functionName - Name of the function to inspect.
+ * @returns Map of variable and literal names to known numeric constant values.
  */
 function constants(module: FlintIrModule, functionName: string): Readonly<Record<string, number>> {
   const result: Record<string, number> = {};
-  const locals = new Map<string, number>();
-  const evaluate = (expression: FlintIrExpression): number | undefined => {
-    if (expression.kind === 'literal' && typeof expression.value === 'number') return expression.value;
-    if (expression.kind === 'identifier') return locals.get(expression.name);
-    if (expression.kind !== 'binary') return undefined;
-    const left = evaluate(expression.left);
-    const right = evaluate(expression.right);
-    if (left === undefined || right === undefined) return undefined;
-    return evaluateBinaryNumeric(expression.operator, left, right);
-  };
-  const visit = (expression: FlintIrExpression): void => {
-    if (expression.kind === 'literal' && typeof expression.value === 'number')
-      result[`literal:${Object.keys(result).length}`] = expression.value;
-    if (expression.kind === 'call') for (const argument of expression.arguments) visit(argument);
-    if (expression.kind === 'binary') {
-      visit(expression.left);
-      visit(expression.right);
-    }
-    if (expression.kind === 'unary') visit(expression.operand);
-    if (expression.kind === 'index') {
-      visit(expression.receiver);
-      visit(expression.index);
-    }
-  };
+  const locals: Record<string, number> = {};
   const declaration = module.functions.find(({ name }) => name === functionName);
   for (const statement of declaration?.body ?? []) {
-    if (statement.kind === 'let') {
-      visit(statement.value);
-      const value = evaluate(statement.value);
-      if (value !== undefined) {
-        locals.set(statement.name, value);
-        result[statement.name] = value;
-      }
+    if (statement.kind === 'let' || statement.kind === 'assignment') {
+      bindStatementConstant(statement, locals, result);
+      continue;
     }
-    if (statement.kind === 'assignment') {
-      visit(statement.value);
-      const value = evaluate(statement.value);
-      if (value === undefined) {
-        locals.delete(statement.name);
-      } else {
-        locals.set(statement.name, value);
-        result[statement.name] = value;
-      }
+    if (statement.kind === 'return' && statement.value !== undefined) {
+      collectLiteralConstants(statement.value, result);
     }
-    if (statement.kind === 'return' && statement.value !== undefined) visit(statement.value);
   }
   return result;
 }
 
 /**
- * Constructs the aggregated semantic facts collection for a frontend compilation result.
+ * Creates an empty analysis facts structure used when IR is unavailable.
  *
- * @param frontend Frontend compilation result.
- * @param boundsChecks Active bounds checking mode.
- * @returns Fully populated FlintAnalysisFacts object.
+ * @param boundsChecks - Active bounds checking mode recorded on optimization facts.
+ * @returns Empty FlintAnalysisFacts instance.
+ */
+function emptyAnalysisFacts(boundsChecks: FlintSoNBoundsChecks): FlintAnalysisFacts {
+  return {
+    callGraph: [],
+    controlFlow: [],
+    types: [],
+    ownership: [],
+    ranges: [],
+    arrayBounds: [],
+    pointerRanges: [],
+    aliasLifetimes: [],
+    switchCoverage: [],
+    optimization: { passes: [], boundsChecks },
+    capabilities: [],
+    resources: [],
+  };
+}
+
+/**
+ * Builds ownership facts for every function in a module.
+ *
+ * @param ir - Module IR containing function declarations.
+ * @returns Ownership facts partitioned by ownership mode.
+ */
+function ownershipFacts(ir: FlintIrModule): FlintAnalysisOwnershipFact[] {
+  return ir.functions.map((declaration) => ({
+    functionName: declaration.name,
+    ownedParameters: declaration.parameters.filter(({ type }) => type.ownership === 'owned').map(({ name }) => name),
+    borrowedParameters: declaration.parameters
+      .filter(({ type }) => type.ownership === 'borrowed')
+      .map(({ name }) => name),
+    sharedParameters: declaration.parameters.filter(({ type }) => type.ownership === 'shared').map(({ name }) => name),
+  }));
+}
+
+/**
+ * Builds alias lifetime facts from ownership facts and mutable reference parameters.
+ *
+ * @param ir - Module IR containing function declarations.
+ * @param ownership - Ownership facts previously computed for the module.
+ * @returns Alias lifetime facts for each function.
+ */
+function aliasLifetimeFacts(
+  ir: FlintIrModule,
+  ownership: readonly FlintAnalysisOwnershipFact[],
+): FlintAnalysisFacts['aliasLifetimes'] {
+  return ownership.map((fact) => ({
+    functionName: fact.functionName,
+    borrowed: fact.borrowedParameters,
+    mutable:
+      ir.functions
+        .find(({ name }) => name === fact.functionName)
+        ?.parameters.filter(({ type }) => type.referenceMode === 'mut-ref')
+        .map(({ name }) => name) ?? [],
+    shared: fact.sharedParameters,
+    regionEscapes: [],
+    releaseCount: 0,
+  }));
+}
+
+/**
+ * Builds optimization facts from optional Sea-of-Nodes and optimized IR artifacts.
+ *
+ * @param frontend - Frontend compiler result supplying SoN and optimized IR.
+ * @param boundsChecks - Active bounds checking mode.
+ * @returns Optimization fact summary for analysis consumers.
+ */
+function optimizationFacts(
+  frontend: FlintFrontendResult,
+  boundsChecks: FlintSoNBoundsChecks,
+): FlintAnalysisFacts['optimization'] {
+  const son = frontend.sonIr;
+  return {
+    ...(son?.graphHash === undefined ? {} : { graphHash: son.graphHash }),
+    ...(son === undefined
+      ? {}
+      : {
+          nodesBefore: son.nodes.length,
+          nodesAfter:
+            frontend.optimizedIr === undefined ? son.nodes.length : countFlintIr(frontend.optimizedIr).expressions,
+        }),
+    passes: son?.optimizationReport?.passes.map(({ name }) => name) ?? [],
+    boundsChecks,
+  };
+}
+
+/**
+ * Computes semantic analysis facts across all functions in a frontend compiler artifact.
+ * Aggregates call graphs, control flow statistics, ownership modes, constant ranges,
+ * array bounds, pointer checks, and resource usage estimations.
+ *
+ * @param frontend - Frontend compiler result containing IR and SoN graph.
+ * @param boundsChecks - Active bounds checking mode (defaults to frontend setting or 'runtime').
+ * @returns Fully populated FlintAnalysisFacts structure.
  */
 export function createFlintAnalysisFacts(
   frontend: FlintFrontendResult,
   boundsChecks: FlintSoNBoundsChecks = frontend.sonIr?.boundsChecks ?? 'runtime',
 ): FlintAnalysisFacts {
   const ir = frontend.ir;
-  if (ir === undefined) {
-    return {
-      callGraph: [],
-      controlFlow: [],
-      types: [],
-      ownership: [],
-      ranges: [],
-      arrayBounds: [],
-      pointerRanges: [],
-      aliasLifetimes: [],
-      switchCoverage: [],
-      optimization: { passes: [], boundsChecks },
-      capabilities: [],
-      resources: [],
-    };
-  }
+  if (ir === undefined) return emptyAnalysisFacts(boundsChecks);
+
   const callGraph = ir.functions.map((declaration) => ({
     functionName: declaration.name,
     calls: declaration.analysis?.calls ?? [],
@@ -409,14 +729,7 @@ export function createFlintAnalysisFacts(
     parameters: declaration.parameters.map(({ type }) => type.name),
     result: declaration.result.name,
   }));
-  const ownership = ir.functions.map((declaration) => ({
-    functionName: declaration.name,
-    ownedParameters: declaration.parameters.filter(({ type }) => type.ownership === 'owned').map(({ name }) => name),
-    borrowedParameters: declaration.parameters
-      .filter(({ type }) => type.ownership === 'borrowed')
-      .map(({ name }) => name),
-    sharedParameters: declaration.parameters.filter(({ type }) => type.ownership === 'shared').map(({ name }) => name),
-  }));
+  const ownership = ownershipFacts(ir);
   const ranges = ir.functions.map(({ name }) => ({ functionName: name, knownConstants: constants(ir, name) }));
   const arrayBounds = ir.functions.flatMap(({ name }) =>
     boundsFacts(ir, name, ranges.find((range) => range.functionName === name)?.knownConstants ?? {}),
@@ -425,31 +738,7 @@ export function createFlintAnalysisFacts(
     pointerFacts(ir, name, ranges.find((range) => range.functionName === name)?.knownConstants ?? {}),
   );
   const switchCoverage = ir.functions.flatMap(({ name }) => switchFacts(ir, name));
-  const aliasLifetimes = ownership.map((fact) => ({
-    functionName: fact.functionName,
-    borrowed: fact.borrowedParameters,
-    mutable:
-      ir.functions
-        .find(({ name }) => name === fact.functionName)
-        ?.parameters.filter(({ type }) => type.referenceMode === 'mut-ref')
-        .map(({ name }) => name) ?? [],
-    shared: fact.sharedParameters,
-    regionEscapes: [],
-    releaseCount: 0,
-  }));
-  const son = frontend.sonIr;
-  const optimization = {
-    ...(son?.graphHash === undefined ? {} : { graphHash: son.graphHash }),
-    ...(son === undefined
-      ? {}
-      : {
-          nodesBefore: son.nodes.length,
-          nodesAfter:
-            frontend.optimizedIr === undefined ? son.nodes.length : countFlintIr(frontend.optimizedIr).expressions,
-        }),
-    passes: son?.optimizationReport?.passes.map(({ name }) => name) ?? [],
-    boundsChecks,
-  };
+  const aliasLifetimes = aliasLifetimeFacts(ir, ownership);
   const capabilities = ir.imports.map(({ capability, alias }) => ({
     capability,
     imports: [alias],
@@ -461,6 +750,7 @@ export function createFlintAnalysisFacts(
     estimatedExpressions: expressionCount,
     loopCount: loopCount(ir.functions.find(({ name }) => name === functionName)?.body ?? []),
   }));
+
   return {
     callGraph,
     controlFlow,
@@ -471,7 +761,7 @@ export function createFlintAnalysisFacts(
     pointerRanges,
     aliasLifetimes,
     switchCoverage,
-    optimization,
+    optimization: optimizationFacts(frontend, boundsChecks),
     capabilities,
     resources,
   };

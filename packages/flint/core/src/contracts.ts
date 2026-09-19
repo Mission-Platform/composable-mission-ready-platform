@@ -16,13 +16,7 @@ import type { FlintSelfHostedCompilerStage, FlintSelfHostedStageArtifact } from 
 import type { FlintSoNBoundsChecks, FlintSoNModule, FlintSoNOptimizationReport } from './son-ir.js';
 import type { FlintStandardLibraryIdentity } from './stdlib/regex.js';
 
-export {
-  FLINT_LANGUAGE_VERSION,
-  FLINT_ABI_VERSION,
-  type FlintLanguageVersion,
-  type FlintAbiVersion,
-} from './manifest.js';
-
+/** Compiler optimization level selecting debug or release lowering. */
 export type FlintOptimization = 'debug' | 'release';
 
 /** Named cross-project packaging profile used by graph-aware consumers. */
@@ -31,6 +25,7 @@ export type FlintLinkProfile = 'static' | 'dynamic';
 /** Link-time policy recorded alongside the ordinary compiler optimization. */
 export type FlintLinkOptimizationProfile = 'standard' | 'static-aggressive' | 'dynamic-conservative';
 
+/** Structured logger contract used by compiler service stages. */
 export interface FlintCompilerLogger {
   readonly scope: string;
   readonly log: (
@@ -40,6 +35,7 @@ export interface FlintCompilerLogger {
   ) => void;
 }
 
+/** Optional WebAssembly target feature flags requested by the host. */
 export interface FlintTargetFeatures {
   readonly simd?: boolean;
   readonly tailCall?: boolean;
@@ -48,11 +44,13 @@ export interface FlintTargetFeatures {
   readonly atomics?: boolean;
 }
 
+/** Optional lowering hints that guide specialized backend emission. */
 export interface FlintCompilerHints {
   readonly tailCallFunctions?: readonly string[];
   readonly iteratorUnrollLimit?: number;
 }
 
+/** Optional WAT/Wasm snapshots retained for debugging and verification. */
 export interface FlintDebugArtifacts {
   readonly optimizedWat?: string;
   readonly unoptimizedWat?: string;
@@ -60,6 +58,7 @@ export interface FlintDebugArtifacts {
   readonly unoptimizedWasm?: Uint8Array;
 }
 
+/** ABI metadata describing an exported iterator protocol surface. */
 export interface FlintIteratorExport {
   readonly name: string;
   readonly nextFunction: string;
@@ -68,9 +67,10 @@ export interface FlintIteratorExport {
   readonly ownership: 'borrowed' | 'owned' | 'shared';
 }
 
+/** Supported VM execution modes for self-hosted compiler stages. */
 export type FlintVmExecutionMode = 'interpret' | 'jit' | 'aot';
 
-/** Result of the bounded FWS-authored compiler stage used by tooling adapters. */
+/** Result of the bounded FLINT-authored compiler stage used by tooling adapters. */
 export interface FlintSelfHostedStageReport {
   /** Stage identity is optional for compatibility with the original lex-only runner. */
   readonly stage?: FlintSelfHostedCompilerStage;
@@ -94,8 +94,9 @@ export type FlintSelfHostedStageRunner = (
   mode: FlintVmExecutionMode,
 ) => FlintSelfHostedStageReport;
 
+/** Configuration bag accepted when constructing a compiler service facade. */
 export interface FlintCompilerServiceOptions {
-  /** The bounded FWS stage runner. Remaining frontend/backend stages stay seed-backed. */
+  /** The bounded FLINT stage runner. Remaining frontend/backend stages stay seed-backed. */
   readonly selfHostedRunner?: FlintSelfHostedStageRunner;
   readonly selfHostedVmMode?: FlintVmExecutionMode;
   /** Default source-analysis policy and rules for service consumers. */
@@ -103,6 +104,7 @@ export interface FlintCompilerServiceOptions {
   readonly analysisRules?: readonly FlintAnalysisRule[];
 }
 
+/** Named async host capability required by async compilation contracts. */
 export type FlintAsyncCapability = 'scheduler.microtask' | 'scheduler.worker';
 
 /** Explicit async boundary shared by VM, Wasm, and host adapters. */
@@ -114,6 +116,7 @@ export interface FlintAsyncCompilationContract {
   readonly ordering: 'sequence';
 }
 
+/** Single-module compile request consumed by the frontend and compiler service. */
 export interface FlintCompileInput {
   readonly source: string;
   readonly fileName: string;
@@ -143,6 +146,7 @@ export interface FlintCompileInput {
   readonly analysisSourceMap?: FlintAnalysisSourceMap;
 }
 
+/** Multi-module graph compile request including entry selection and link policy. */
 export interface FlintGraphCompileInput {
   readonly graph: FlintModuleGraph;
   readonly entryFileName: string;
@@ -166,6 +170,7 @@ export interface FlintGraphCompileInput {
   readonly boundsChecks?: FlintSoNBoundsChecks;
 }
 
+/** Link-time metadata attached to a frontend result for backend packaging. */
 export interface FlintFrontendLinkMetadata {
   readonly graphHash?: string;
   readonly projectRoot?: string;
@@ -209,6 +214,7 @@ export interface FlintBackendInput {
   readonly boundsChecks?: FlintSoNBoundsChecks;
 }
 
+/** Deterministic identity fields recorded alongside emitted compiler artifacts. */
 export interface FlintDeterministicArtifactMetadata {
   readonly compilerVersion: string;
   readonly optimization: FlintOptimization;
@@ -238,6 +244,7 @@ export interface FlintBackendResult {
   readonly diagnostics: readonly FlintDiagnostic[];
 }
 
+/** Packaged compiler artifact containing ABI, sources, binaries, and diagnostics. */
 export interface FlintArtifact {
   readonly wasm?: Uint8Array;
   readonly wasmAsset?: string;
@@ -271,6 +278,7 @@ export interface FlintArtifact {
   readonly artifactVerification?: FlintArtifactVerificationReport;
 }
 
+/** Result of verifying emitted artifact content hashes and variants. */
 export interface FlintArtifactVerificationReport {
   readonly verified: boolean;
   readonly diagnostics: readonly FlintDiagnostic[];
@@ -278,11 +286,13 @@ export interface FlintArtifactVerificationReport {
   readonly checkedVariants: readonly ('optimized' | 'unoptimized')[];
 }
 
+/** Minimal compiler facade exposing single-module compilation and disposal. */
 export interface FlintCompiler {
   compile(input: FlintCompileInput): FlintArtifact;
   dispose(): void;
 }
 
+/** Aggregate service report covering diagnostics, cache stats, and analysis. */
 export interface FlintCompilerReport {
   readonly diagnostics: readonly FlintDiagnostic[];
   readonly cacheHits: number;
@@ -294,6 +304,7 @@ export interface FlintCompilerReport {
   readonly analysis?: FlintAnalysisReport;
 }
 
+/** Incremental compiler service supporting graph compiles and invalidation. */
 export interface FlintCompilerService extends FlintCompiler {
   compileGraph(input: FlintGraphCompileInput): FlintArtifact;
   prepare(input: Pick<FlintCompileInput, 'root' | 'fileName'>): void;

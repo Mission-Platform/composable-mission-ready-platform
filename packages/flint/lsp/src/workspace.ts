@@ -10,6 +10,7 @@ import type {
   FlintWorkspaceOptions,
 } from '@mission-platform/flint-language-service';
 
+/** File system operations required by the Node workspace host. */
 export interface FlintNodeFileSystem {
   readFile(path: string): Promise<string | undefined>;
   listFiles(root: string): Promise<readonly string[]>;
@@ -17,6 +18,7 @@ export interface FlintNodeFileSystem {
   watch(root: string, listener: (path: string) => void): FlintDisposable;
 }
 
+/** Configuration options for initializing a Node-backed workspace host. */
 export interface FlintNodeWorkspaceOptions extends FlintWorkspaceOptions {
   readonly roots: readonly string[];
   readonly optionsForUri?: (uri: string) => FlintWorkspaceOptions | Promise<FlintWorkspaceOptions>;
@@ -41,6 +43,7 @@ const excludedDirectoryNames = new Set([
 ]);
 
 const defaultFileSystem: FlintNodeFileSystem = {
+  /** Reads file contents asynchronously as a UTF-8 string. */
   async readFile(path) {
     try {
       return await readFile(path, 'utf8');
@@ -49,12 +52,14 @@ const defaultFileSystem: FlintNodeFileSystem = {
       throw error;
     }
   },
+  /** Traverses a root directory and lists all matching source files. */
   async listFiles(root) {
     const files: string[] = [];
     await collectFiles(root, files);
     return files;
   },
   realpath,
+  /** Watches a directory root for source file changes. */
   watch(root, listener) {
     try {
       const watcher = watchFileSystem(root, { recursive: true }, (_event, name) => {
@@ -67,22 +72,26 @@ const defaultFileSystem: FlintNodeFileSystem = {
   },
 };
 
+/** Workspace host implementation enforcing root boundary containment for file access. */
 export class RootBoundedFlintWorkspaceHost implements FlintWorkspaceHost {
   readonly #roots: readonly string[];
   readonly #options: FlintNodeWorkspaceOptions;
   readonly #fileSystem: FlintNodeFileSystem;
 
+  /** Initializes a new RootBoundedFlintWorkspaceHost instance. */
   public constructor(options: FlintNodeWorkspaceOptions) {
     this.#roots = options.roots.map((root) => canonicalPath(toFilePath(root)));
     this.#options = options;
     this.#fileSystem = options.fileSystem ?? defaultFileSystem;
   }
 
+  /** Reads a file if its path resides within an authorized workspace root. */
   public async readFile(uri: string): Promise<string | undefined> {
     const path = await this.#safePath(uri, true);
     return path === undefined ? undefined : this.#fileSystem.readFile(path);
   }
 
+  /** Enumerates all source files within authorized workspace roots. */
   public async listFiles(): Promise<readonly string[]> {
     const files = await Promise.all(this.#roots.map((root) => this.#fileSystem.listFiles(root)));
     return files
@@ -91,6 +100,7 @@ export class RootBoundedFlintWorkspaceHost implements FlintWorkspaceHost {
       .map((path) => pathToFileURL(path).href);
   }
 
+  /** Reads compiler and language service options from workspace configuration files. */
   public async getOptions(uri: string): Promise<FlintWorkspaceOptions> {
     if ((await this.#safePath(uri, false)) === undefined) return {};
     const workspaceOptions: FlintWorkspaceOptions = {
@@ -104,6 +114,7 @@ export class RootBoundedFlintWorkspaceHost implements FlintWorkspaceHost {
     return this.#options.optionsForUri?.(uri) ?? workspaceOptions;
   }
 
+  /** Watches workspace roots for file modification events. */
   public watch(listener: (change: FlintWorkspaceChange) => void): FlintDisposable {
     const disposables = this.#roots.map((root) =>
       this.#fileSystem.watch(root, (path) => {
@@ -118,6 +129,7 @@ export class RootBoundedFlintWorkspaceHost implements FlintWorkspaceHost {
     };
   }
 
+  /** Validates that a file URI resolves within authorized workspace roots. */
   async #safePath(uri: string, resolveSymlink: boolean): Promise<string | undefined> {
     let path: string;
     try {
@@ -136,6 +148,7 @@ export class RootBoundedFlintWorkspaceHost implements FlintWorkspaceHost {
     }
   }
 
+  /** Checks whether a path is contained within a root directory. */
   #isInside(path: string): boolean {
     const candidate = canonicalPath(path);
     return this.#roots.some(
@@ -144,10 +157,12 @@ export class RootBoundedFlintWorkspaceHost implements FlintWorkspaceHost {
   }
 }
 
+/** Creates a root-bounded FlintWorkspaceHost for Node environments. */
 export function createFlintNodeWorkspaceHost(options: FlintNodeWorkspaceOptions): RootBoundedFlintWorkspaceHost {
   return new RootBoundedFlintWorkspaceHost(options);
 }
 
+/** Converts a URI string or file path into a canonical local filesystem path. */
 function toFilePath(value: string): string {
   if (!value.startsWith('file:') && !nodePath.isAbsolute(value) && /^[a-z][a-z\d+.-]*:/iu.test(value))
     throw new Error(`Unsupported workspace URI: ${value}`);
@@ -158,10 +173,12 @@ function toFilePath(value: string): string {
       : nodePath.resolve(value);
 }
 
+/** Returns the resolved canonical path for a file. */
 function canonicalPath(path: string): string {
   return nodePath.resolve(path);
 }
 
+/** Evaluates whether a file path has a relevant Flint source extension. */
 function isRelevantSourcePath(path: string): boolean {
   const normalizedPath = path.replaceAll('\\', '/');
   return (
@@ -170,6 +187,7 @@ function isRelevantSourcePath(path: string): boolean {
   );
 }
 
+/** Recursively collects relevant source file paths from a directory tree. */
 async function collectFiles(root: string, files: string[]): Promise<void> {
   try {
     const entries = await readdir(root, { withFileTypes: true });
@@ -186,6 +204,7 @@ async function collectFiles(root: string, files: string[]): Promise<void> {
   }
 }
 
+/** Checks whether an error represents a missing file (ENOENT). */
 function isFileNotFound(error: unknown): boolean {
   return (
     typeof error === 'object' &&

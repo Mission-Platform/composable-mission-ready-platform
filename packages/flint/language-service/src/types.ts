@@ -12,12 +12,14 @@ import type {
   FlintToken,
 } from '@mission-platform/flint';
 
+/** Line and character position in a source document. */
 export interface FlintPosition {
   /** Zero-based line and UTF-16 character offsets. */
   readonly line: number;
   readonly character: number;
 }
 
+/** Range delimited by start and end positions with character offsets. */
 export interface FlintRange {
   readonly start: FlintPosition;
   readonly end: FlintPosition;
@@ -26,24 +28,29 @@ export interface FlintRange {
   readonly endOffset: number;
 }
 
+/** Document URI and range identifying a source code location. */
 export interface FlintLocation {
   readonly uri: string;
   readonly range: FlintRange;
 }
 
+/** Documentation comments and markdown description for a symbol. */
 export interface FlintDocumentation {
   readonly contents: readonly string[];
 }
 
+/** Text edit replacing a range with new text. */
 export interface FlintTextEdit {
   readonly range: FlintRange;
   readonly newText: string;
 }
 
+/** Multi-document workspace edits mapping document URIs to text edits. */
 export interface FlintWorkspaceEdit {
   readonly changes: ReadonlyMap<string, readonly FlintTextEdit[]>;
 }
 
+/** Synchronized document representation with URI, version, and text. */
 export interface FlintDocument {
   readonly uri: string;
   readonly fileName?: string;
@@ -51,12 +58,14 @@ export interface FlintDocument {
   readonly version: number;
 }
 
+/** Callable signature descriptor including parameters and return type. */
 export interface FlintCallable {
   readonly parameters: readonly string[];
   readonly result: string;
   readonly documentation?: string;
 }
 
+/** Compiler and language service configuration options for a workspace. */
 export interface FlintWorkspaceOptions {
   readonly requestedCapabilities?: readonly string[];
   readonly requireExports?: boolean;
@@ -68,10 +77,12 @@ export interface FlintWorkspaceOptions {
   readonly selfHostedRunner?: FlintSelfHostedStageRunner;
 }
 
+/** Options controlling compiler frontend analysis and diagnostics. */
 export interface FlintAnalysisOptions {
   readonly importTypeEnvironment?: FlintImportTypeEnvironment;
 }
 
+/** Abstract host interface providing filesystem access and watching. */
 export interface FlintWorkspaceHost {
   readFile(uri: string): Promise<string | undefined>;
   listFiles(): Promise<readonly string[]>;
@@ -79,17 +90,21 @@ export interface FlintWorkspaceHost {
   watch?(listener: (change: FlintWorkspaceChange) => void): FlintDisposable;
 }
 
+/** Category of workspace document change (created, changed, deleted). */
 export type FlintWorkspaceChangeKind = 'created' | 'changed' | 'deleted';
 
+/** Document modification event in the workspace. */
 export interface FlintWorkspaceChange {
   readonly uri?: string;
   readonly kind: FlintWorkspaceChangeKind;
 }
 
+/** Disposable resource subscription handle. */
 export interface FlintDisposable {
   dispose(): void;
 }
 
+/** Static analysis or compiler diagnostic reported by the language service. */
 export interface FlintLanguageDiagnostic {
   readonly code: string;
   readonly severity: FlintDiagnosticSeverity;
@@ -107,8 +122,10 @@ export interface FlintLanguageDiagnostic {
   readonly cwe?: readonly string[];
 }
 
+/** Kind category of a language symbol (function, struct, local, etc.). */
 export type FlintSymbolKind = 'module' | 'function' | 'parameter' | 'local' | 'capability' | 'type';
 
+/** Symbol descriptor with name, kind, container, and location. */
 export interface FlintSymbol {
   readonly name: string;
   readonly kind: FlintSymbolKind;
@@ -121,8 +138,10 @@ export interface FlintSymbol {
   readonly declarationRange?: FlintRange;
 }
 
+/** Autocomplete suggestion category (keyword, type, function, etc.). */
 export type FlintCompletionKind = 'keyword' | 'type' | 'declaration' | 'value' | 'function' | 'capability';
 
+/** Autocomplete suggestion item with insert text and documentation. */
 export interface FlintCompletion {
   readonly label: string;
   readonly kind: FlintCompletionKind;
@@ -131,13 +150,16 @@ export interface FlintCompletion {
   readonly range: FlintRange;
 }
 
+/** Hover tooltip documentation for a symbol or token. */
 export interface FlintHover {
   readonly range: FlintRange;
   readonly contents: readonly string[];
 }
 
+/** Category of code lens action (references, debug, etc.). */
 export type FlintCodeLensKind = 'references';
 
+/** Actionable command embedded directly in editor source code. */
 export interface FlintCodeLens {
   readonly range: FlintRange;
   readonly kind: FlintCodeLensKind;
@@ -147,13 +169,16 @@ export interface FlintCodeLens {
   readonly referenceCount: number;
 }
 
+/** Category of code folding range (comment, imports, region). */
 export type FlintFoldingRangeKind = 'module' | 'declaration' | 'region';
 
+/** Range of source code collapsible in the editor. */
 export interface FlintFoldingRange {
   readonly range: FlintRange;
   readonly kind: FlintFoldingRangeKind;
 }
 
+/** Evaluated runtime variable value shown inline during debugging. */
 export interface FlintInlineValue {
   readonly range: FlintRange;
   readonly variableName: string;
@@ -161,8 +186,10 @@ export interface FlintInlineValue {
   readonly type?: string;
 }
 
+/** Category of inlay hint (parameter, type). */
 export type FlintInlayHintKind = 'parameter' | 'type';
 
+/** Inlined hint text displayed beside parameters or variable bindings. */
 export interface FlintInlayHint {
   readonly position: FlintPosition;
   readonly label: string;
@@ -171,6 +198,7 @@ export interface FlintInlayHint {
   readonly paddingRight?: boolean;
 }
 
+/** Hierarchical document outline symbol node. */
 export interface FlintDocumentSymbol {
   readonly name: string;
   readonly kind: FlintSymbolKind;
@@ -180,6 +208,7 @@ export interface FlintDocumentSymbol {
   readonly children: readonly FlintDocumentSymbol[];
 }
 
+/** Global workspace index tracking definitions, references, and symbols. */
 export interface FlintWorkspaceIndex {
   refresh(uri?: string): Promise<void>;
   definition(uri: string, position: FlintPosition): readonly FlintLocation[];
@@ -190,6 +219,7 @@ export interface FlintWorkspaceIndex {
   workspaceSymbols?(query?: string): readonly { readonly symbol: FlintSymbol; readonly uri: string }[];
 }
 
+/** Semantic classification and highlighting token. */
 export interface FlintTokenClassification {
   readonly kind:
     | 'comment'
@@ -207,6 +237,7 @@ export interface FlintTokenClassification {
   readonly token?: FlintToken;
 }
 
+/** Completed compiler analysis report for a document. */
 export interface FlintAnalysis {
   readonly uri: string;
   readonly version: number;
@@ -220,6 +251,7 @@ export interface FlintAnalysis {
   readonly selfHosted?: FlintSelfHostedStageReport;
 }
 
+/** Unified language service providing code intelligence queries across documents. */
 export interface FlintLanguageService {
   openDocument(document: FlintDocument): void;
   updateDocument(document: FlintDocument): void;

@@ -31,6 +31,9 @@ export interface MonacoReadyContext {
 /** Size token — canonical 2xs → 2xl scale. */
 export type MonacoEditorSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
+/**
+ * Component properties for the Monaco code editor organism.
+ */
 export interface MonacoEditorProperties {
   /** Size token controlling the wrapper's font scale. Defaults to `'md'`. */
   size?: MonacoEditorSize;

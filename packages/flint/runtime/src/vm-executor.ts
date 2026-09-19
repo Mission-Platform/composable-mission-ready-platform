@@ -31,11 +31,17 @@ function toInt32(value: number): number {
   return value | 0;
 }
 
+/**
+ * Configuration options for the Flint virtual machine executor.
+ */
 export interface FlintVmExecutorOptions {
   readonly compilerVersion?: string;
   readonly jitThreshold?: number;
 }
 
+/**
+ * Runtime execution environment state holding registers, memory, and call context.
+ */
 interface ExecutionState {
   readonly module: FlintVmModule;
   readonly options: FlintVmExecutionOptions;
@@ -44,16 +50,36 @@ interface ExecutionState {
   readonly trace?: ReturnType<typeof createFlintTraceRecorder>;
 }
 
+/**
+ * Numeric value type tags supported in VM registers.
+ */
 type NumericType = Extract<FlintVmValue, { readonly kind: 'number' }>['type'];
 
+/**
+ * Helper creating a guest execution FlintTrap error.
+ *
+ * @param message - Diagnostic error message.
+ * @returns FlintTrap error instance.
+ */
 function trap(message: string): FlintTrap {
   return new FlintTrap('GuestTrap', message);
 }
 
+/**
+ * Helper throwing an invalid ABI trap for malformed bytecode modules.
+ *
+ * @param message - Diagnostic failure message.
+ */
 function failInvalidModule(message: string): never {
   throw new FlintTrap('InvalidAbi', `Invalid VM module: ${message}`);
 }
 
+/**
+ * Canonicalizes arbitrary data structures for deterministic hashing.
+ *
+ * @param value - Value to canonicalize.
+ * @returns Canonicalized representation.
+ */
 function canonicalize(value: unknown): unknown {
   if (value instanceof Uint8Array) return [...value];
   if (Array.isArray(value)) return value.map((entry) => canonicalize(entry));
@@ -67,6 +93,12 @@ function canonicalize(value: unknown): unknown {
   return value;
 }
 
+/**
+ * Computes FNV-1a 32-bit hash of a string.
+ *
+ * @param value - Text to hash.
+ * @returns 8-character hexadecimal hash string.
+ */
 function hashText(value: string): string {
   let hash = 2_166_136_261;
   for (const byte of new TextEncoder().encode(value)) {
@@ -76,19 +108,43 @@ function hashText(value: string): string {
   return hash.toString(16).padStart(8, '0');
 }
 
+/**
+ * Computes hash of a VM function bytecode representation.
+ *
+ * @param function_ - VM function to hash.
+ * @returns Hex-encoded hash string.
+ */
 function hashFunction(function_: FlintVmFunction): string {
   return hashText(JSON.stringify(canonicalize(function_)));
 }
 
+/**
+ * Computes deterministic hash for an AOT artifact.
+ *
+ * @param artifact - AOT artifact without hash.
+ * @returns Hex-encoded hash string.
+ */
 function aotHash(artifact: Omit<FlintVmAotArtifact, 'reproducibilityHash'>): string {
   return hashText(JSON.stringify(canonicalize({ ...artifact, reproducibilityHash: '' })));
 }
 
+/**
+ * Deep clones a runtime VM value.
+ *
+ * @param value - Value to clone.
+ * @returns Cloned FlintVmValue.
+ */
 function cloneValue(value: FlintVmValue): FlintVmValue {
   if (value.kind === 'aggregate') return { ...value, bytes: new Uint8Array(value.bytes) };
   return value;
 }
 
+/**
+ * Type guard validating that a value is a valid FlintVmValue.
+ *
+ * @param value - Candidate value.
+ * @returns True if value is a valid FlintVmValue.
+ */
 function isValue(value: unknown): value is FlintVmValue {
   if (value === null || typeof value !== 'object' || typeof (value as { kind?: unknown }).kind !== 'string')
     return false;
@@ -98,6 +154,13 @@ function isValue(value: unknown): value is FlintVmValue {
   return candidate.kind === 'bytes' || candidate.kind === 'aggregate';
 }
 
+/**
+ * Checks whether a value matches an expected kind.
+ *
+ * @param value - VM value to test.
+ * @param type - Expected value kind.
+ * @returns True if kind matches.
+ */
 function valueTypeMatches(value: FlintVmValue, type: string): boolean {
   if (type === 'unit') return value.kind === 'unit';
   if (type === 'bool') return value.kind === 'bool';
@@ -107,6 +170,11 @@ function valueTypeMatches(value: FlintVmValue, type: string): boolean {
   return value.kind === 'number' && value.type === type;
 }
 
+/**
+ * Validates a Flint VM module structure against bytecode rules.
+ *
+ * @param module - VM module to validate.
+ */
 export function validateFlintVmModule(module: FlintVmModule): void {
   if (module.format !== 'forge-web-script-vm-module' || module.version !== '1.0')
     failInvalidModule('unsupported format or version');
@@ -166,6 +234,12 @@ export function validateFlintVmModule(module: FlintVmModule): void {
   }
 }
 
+/**
+ * Returns register indices read or written by an instruction.
+ *
+ * @param instruction - VM instruction to inspect.
+ * @returns Array of referenced register indices.
+ */
 function instructionRegisters(instruction: FlintVmInstruction): readonly number[] {
   switch (instruction.opcode) {
     case 'const':
@@ -219,12 +293,25 @@ function instructionRegisters(instruction: FlintVmInstruction): readonly number[
   }
 }
 
+/**
+ * Extracts a byte array representation of a VM value.
+ *
+ * @param value - VM value.
+ * @param memory - Linear memory.
+ * @returns Extracted byte array.
+ */
 function valueBytes(value: FlintVmValue, memory: FlintMemory): Uint8Array {
   if (value.kind === 'aggregate') return value.bytes;
   if (value.kind === 'bytes') return memory.readBytes(value.pointer, value.length);
   throw trap('Expected a bytes or aggregate VM value with a byte payload.');
 }
 
+/**
+ * Extracts memory address pointer from a VM value.
+ *
+ * @param value - Value with pointer.
+ * @returns Numeric pointer address.
+ */
 function pointer(value: FlintVmValue): number {
   const numeric = asNumber(value);
   const result = Number(numeric.value);
@@ -232,11 +319,24 @@ function pointer(value: FlintVmValue): number {
   return result;
 }
 
+/**
+ * Casts a VM value to a numeric representation.
+ *
+ * @param value - VM value.
+ * @returns Numeric VM value.
+ */
 function asNumber(value: FlintVmValue): Extract<FlintVmValue, { readonly kind: 'number' }> {
   if (value.kind !== 'number') throw trap('Expected a numeric VM value.');
   return value;
 }
 
+/**
+ * Normalizes number according to width and signedness.
+ *
+ * @param type - Numeric type tag.
+ * @param value - Raw numeric value.
+ * @returns Normalized number or bigint.
+ */
 function normalizeNumber(type: NumericType, value: number | bigint): number | bigint {
   if (type === 'f32') return Math.fround(Number(value));
   if (type === 'f64') return Number(value);
@@ -250,10 +350,24 @@ function normalizeNumber(type: NumericType, value: number | bigint): number | bi
   return Number(BigInt.asUintN(32, integer));
 }
 
+/**
+ * Wraps a normalized number into a FlintVmValue.
+ *
+ * @param type - Numeric type.
+ * @param value - Numeric value.
+ * @returns FlintVmValue object.
+ */
 function numericValue(type: NumericType, value: number | bigint): FlintVmValue {
   return { kind: 'number', type, value: normalizeNumber(type, value) };
 }
 
+/**
+ * Performs equality comparison between two VM values.
+ *
+ * @param left - First value.
+ * @param right - Second value.
+ * @returns True if both values are identical.
+ */
 function compareValues(left: FlintVmValue, right: FlintVmValue): boolean {
   if (left.kind !== right.kind) return false;
   if (left.kind === 'number' && right.kind === 'number') return left.type === right.type && left.value === right.value;
@@ -267,6 +381,14 @@ function compareValues(left: FlintVmValue, right: FlintVmValue): boolean {
   return false;
 }
 
+/**
+ * Evaluates a binary operator instruction on two operands.
+ *
+ * @param operation - Binary operator name.
+ * @param left - Left operand.
+ * @param right - Right operand.
+ * @returns Resulting VM value.
+ */
 function binary(operation: string, left: FlintVmValue, right: FlintVmValue): FlintVmValue {
   if (operation === '==' || operation === '===') return { kind: 'bool', value: compareValues(left, right) };
   if (operation === '!=' || operation === '!==') return { kind: 'bool', value: !compareValues(left, right) };
@@ -369,6 +491,14 @@ function binary(operation: string, left: FlintVmValue, right: FlintVmValue): Fli
   return numericValue(type, value);
 }
 
+/**
+ * Reads numeric value from linear memory.
+ *
+ * @param memory - Linear memory instance.
+ * @param address - Memory byte offset.
+ * @param type - Target numeric type.
+ * @returns Read numeric VM value.
+ */
 function readNumber(memory: FlintMemory, address: number, type: NumericType): FlintVmValue {
   const bytes = memory.readBytes(address, type === 'f32' || type === 'i32' || type === 'u32' ? 4 : 8);
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
@@ -387,6 +517,13 @@ function readNumber(memory: FlintMemory, address: number, type: NumericType): Fl
   return numericValue(type, value);
 }
 
+/**
+ * Writes numeric value into linear memory.
+ *
+ * @param memory - Linear memory instance.
+ * @param address - Destination byte offset.
+ * @param value - Numeric VM value to write.
+ */
 function writeNumber(
   memory: FlintMemory,
   address: number,
@@ -424,16 +561,35 @@ function writeNumber(
   memory.writeBytes(address, new Uint8Array(bytes));
 }
 
+/**
+ * Looks up a capability import declaration in a module.
+ *
+ * @param module - VM module.
+ * @param name - Import name.
+ * @returns Found capability import descriptor.
+ */
 function findCapability(module: FlintVmModule, name: string): FlintVmCapabilityImport {
   const imported = module.capabilityImports.find((candidate) => candidate.name === name);
   if (imported === undefined) throw new FlintTrap('CapabilityDenied', `Capability '${name}' is not declared.`, name);
   return imported;
 }
 
+/**
+ * Finds source debug span for an instruction offset.
+ *
+ * @param function_ - VM function.
+ * @param instruction - Instruction index.
+ * @returns Debug span or undefined.
+ */
 function sourceFor(function_: FlintVmFunction, instruction: number) {
   return function_.debugSpans.find((span) => span.instruction === instruction);
 }
 
+/**
+ * Safely invokes an observational telemetry callback.
+ *
+ * @param callback - Observation callback.
+ */
 function observe(callback: () => void): void {
   try {
     callback();
@@ -442,6 +598,15 @@ function observe(callback: () => void): void {
   }
 }
 
+/**
+ * Executes a VM function bytecode sequence.
+ *
+ * @param function_ - Function to execute.
+ * @param arguments_ - Arguments array.
+ * @param state - Current execution state.
+ * @param executeNamed - Named function dispatcher.
+ * @returns Resulting VM value.
+ */
 function executeFunction(
   function_: FlintVmFunction,
   arguments_: readonly FlintVmValue[],
@@ -558,7 +723,7 @@ function executeFunction(
         const index = Number(indexValue.value);
         if (!Number.isInteger(index) || index < 0 || index >= bytes.length)
           throw trap(`byte-at index ${String(index)} is outside the aggregate payload.`);
-        registers[instruction.destination] = numericValue('i32', bytes[index]!);
+        registers[instruction.destination] = numericValue('i32', bytes[index] ?? 0);
         instructionPointer += 1;
         break;
       }
@@ -656,6 +821,14 @@ function executeFunction(
   throw trap(`Function '${function_.name}' reached the end without returning.`);
 }
 
+/**
+ * Initializes a linear memory instance for VM execution.
+ *
+ * @param input - Optional existing memory buffer.
+ * @param trace - Optional trace recorder.
+ * @param maxMemoryPages - Maximum memory page limit.
+ * @returns Initialized FlintMemory.
+ */
 function createMemory(
   input: Uint8Array | undefined,
   trace: ExecutionState['trace'],
@@ -671,6 +844,12 @@ function createMemory(
   return memory;
 }
 
+/**
+ * Creates a bytecode VM executor with JIT compilation support.
+ *
+ * @param executorOptions - Configuration options for the executor.
+ * @returns Configured FlintVmExecutor instance.
+ */
 export function createFlintVmExecutor(executorOptions: FlintVmExecutorOptions = {}): FlintVmExecutor {
   const compilerVersion = executorOptions.compilerVersion ?? DEFAULT_COMPILER_VERSION;
   const jitThreshold = Math.max(1, Math.trunc(executorOptions.jitThreshold ?? DEFAULT_JIT_THRESHOLD));
@@ -871,6 +1050,13 @@ export function createFlintVmExecutor(executorOptions: FlintVmExecutorOptions = 
   };
 }
 
+/**
+ * Compiles a VM module into an ahead-of-time (AOT) JavaScript artifact.
+ *
+ * @param module - VM module to compile.
+ * @param compilerVersion - Compiler version string.
+ * @returns Emitted AOT artifact.
+ */
 export function createFlintVmAotArtifact(module: FlintVmModule, compilerVersion: string): FlintVmAotArtifact {
   validateFlintVmModule(module);
   const artifact = {
@@ -885,6 +1071,15 @@ export function createFlintVmAotArtifact(module: FlintVmModule, compilerVersion:
   return { ...artifact, reproducibilityHash: aotHash(artifact) };
 }
 
+/**
+ * Convenience runner executing a function in a VM module.
+ *
+ * @param module - VM module.
+ * @param functionName - Entry function name.
+ * @param arguments_ - Arguments array.
+ * @param options - Execution options.
+ * @returns Execution result.
+ */
 export function executeFlintVm(
   module: FlintVmModule,
   functionName: string,
@@ -897,6 +1092,12 @@ export function executeFlintVm(
 const validatedAotArtifacts = new WeakSet<FlintVmAotArtifact>();
 const aotExecutors = new WeakMap<FlintVmAotArtifact, FlintVmExecutor>();
 
+/**
+ * Asserts that an AOT artifact has valid format and version.
+ *
+ * @param artifact - AOT artifact to validate.
+ * @param expectedCompilerVersion - Optional expected compiler version.
+ */
 function validateAotArtifact(artifact: FlintVmAotArtifact, expectedCompilerVersion?: string): void {
   if (
     validatedAotArtifacts.has(artifact) &&
@@ -914,6 +1115,15 @@ function validateAotArtifact(artifact: FlintVmAotArtifact, expectedCompilerVersi
   validatedAotArtifacts.add(artifact);
 }
 
+/**
+ * Executes a compiled AOT artifact.
+ *
+ * @param artifact - Compiled AOT artifact.
+ * @param functionName - Entry function name.
+ * @param arguments_ - Arguments array.
+ * @param options - Execution options.
+ * @returns Execution result.
+ */
 export function executeFlintVmAotArtifact(
   artifact: FlintVmAotArtifact,
   functionName: string,
@@ -929,6 +1139,16 @@ export function executeFlintVmAotArtifact(
   return executor.execute(artifact.module, functionName, arguments_, { ...options, mode: 'aot' });
 }
 
+/**
+ * Executes a bootstrap module in the virtual machine.
+ *
+ * @param module - Bootstrap VM module.
+ * @param functionName - Entry function name.
+ * @param arguments_ - Arguments array.
+ * @param mode - Execution mode.
+ * @param options - Execution options.
+ * @returns Execution result.
+ */
 export function runFlintVmBootstrap(
   module: FlintVmModule,
   functionName: string,
@@ -939,6 +1159,13 @@ export function runFlintVmBootstrap(
   return createFlintVmExecutor().execute(module, functionName, arguments_, { ...options, mode });
 }
 
+/**
+ * Asserts that a JIT cache structure is valid.
+ *
+ * @param jitCache - JIT cache to validate.
+ * @param module - Target VM module.
+ * @param executorCompilerVersion - Expected compiler version.
+ */
 function validateJitCache(jitCache: FlintVmJitCache, module: FlintVmModule, executorCompilerVersion: string): void {
   if (jitCache.compilerVersion !== executorCompilerVersion) {
     throw new FlintTrap(

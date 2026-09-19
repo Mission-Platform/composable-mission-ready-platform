@@ -163,10 +163,21 @@ export function createFlintCompilerService(options: FlintCompilerServiceOptions 
   };
 
   return {
+    /**
+     * Prepares the compiler service by registering compilation roots or preloading configurations.
+     *
+     * @param input - Preparation input containing root paths and target options.
+     */
     prepare(input): void {
       assertActive();
       if (input.root !== undefined) invalidated.add(input.root);
     },
+    /**
+     * Incrementally compiles a single module, returning cached artifacts when valid.
+     *
+     * @param input - Compilation input specification.
+     * @returns Compiled artifact and diagnostic report.
+     */
     compile(input): FlintArtifact {
       assertActive();
       const effectiveInput = withServiceOptions(input, options);
@@ -189,6 +200,12 @@ export function createFlintCompilerService(options: FlintCompilerServiceOptions 
       analysis = artifact.analysis;
       return artifact;
     },
+    /**
+     * Incrementally compiles a multi-module graph, evaluating module invalidations.
+     *
+     * @param input - Module graph compilation input.
+     * @returns Compiled artifact and linked diagnostics.
+     */
     compileGraph(input): FlintArtifact {
       assertActive();
       const effectiveInput = withServiceOptions(input, options);
@@ -221,6 +238,11 @@ export function createFlintCompilerService(options: FlintCompilerServiceOptions 
       analysis = artifact.analysis;
       return artifact;
     },
+    /**
+     * Invalidates cached artifacts and compilation results for modified files.
+     *
+     * @param files - Sequence of file paths to invalidate.
+     */
     invalidate(files): void {
       assertActive();
       for (const file of files) {
@@ -229,6 +251,11 @@ export function createFlintCompilerService(options: FlintCompilerServiceOptions 
         invalidateGraphCache(graphCache, invalidated, file);
       }
     },
+    /**
+     * Generates a compiler service telemetry report summarizing cache metrics and diagnostics.
+     *
+     * @returns Compiler service status report.
+     */
     report(): FlintCompilerReport {
       assertActive();
       return {
@@ -241,6 +268,9 @@ export function createFlintCompilerService(options: FlintCompilerServiceOptions 
         ...(selfHostedStages === undefined ? {} : { selfHostedStages }),
       };
     },
+    /**
+     * Disposes the compiler service and releases all cached artifacts and memory structures.
+     */
     dispose(): void {
       if (disposed) return;
       disposed = true;

@@ -52,6 +52,7 @@ function resolveSource(): string {
   return readFileSync(filePath, "utf8");
 }
 
+/** WebAssembly module export members required by benchmark workloads. */
 interface FlintExports {
   readonly arithmetic_reduce: (
     n: number,
@@ -84,6 +85,7 @@ interface FlintExports {
   readonly fws_reset: () => void;
 }
 
+/** Extended export members provided by generated WebAssembly modules. */
 interface GeneratedFlintExports {
   readonly arithmetic_reduce: FlintExports["arithmetic_reduce"];
   readonly string_transform: (
@@ -103,6 +105,7 @@ interface GeneratedFlintExports {
   readonly fws_reset: FlintExports["fws_reset"];
 }
 
+/** Loaded WebAssembly instance wrapping generated benchmark exports. */
 interface GeneratedFlintModule {
   readonly load: () => Promise<GeneratedFlintExports>;
   readonly loadSync: () => GeneratedFlintExports;
@@ -164,6 +167,7 @@ export function validateFlintWasmArtifact(
   return exports;
 }
 
+/** Asynchronous loader compiling and instantiating WebAssembly benchmark modules. */
 type FlintWasmLoader = "raw" | "generated";
 
 /**
@@ -592,6 +596,7 @@ function createFlintWasmAdapterInternal(
     implementation: "flint",
     mode: flintMode,
     adapterId: artifactId,
+    /** Compiles the benchmark workload into an executable VM or Wasm artifact. */
     build(): Promise<BuildArtifact> {
       const artifact = compileKernels(source, boundsChecks);
       const persisted = persistGeneratedArtifacts(artifact);
@@ -621,6 +626,7 @@ function createFlintWasmAdapterInternal(
         metadata,
       });
     },
+    /** Initializes the benchmark runner and instantiates execution instances. */
     async initialize(artifact: BuildArtifact): Promise<InitializedAdapter> {
       assertMatchingBuildArtifact(artifact, artifactId, flintMode);
       if (compiled === undefined) {

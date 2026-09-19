@@ -64,7 +64,7 @@ Opcodes consumed by the Forge backend and mirrored by the reference oracle.
 export type Opcode = (typeof Op)[keyof typeof Op];
 ```
 
-No description provided.
+Binary instruction opcode identifier for regex bytecode execution.
 
 ## `src/compiler`
 
@@ -270,7 +270,7 @@ Guarantees O(M * N) execution and immunity to ReDoS backtracking.
 export class Runner extends BaseRunner
 ```
 
-No description provided.
+Backtracking reference execution runner for bytecode instruction verification.
 
 ### search
 

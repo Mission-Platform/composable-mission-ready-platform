@@ -8,12 +8,19 @@ export interface FlintStandardLibraryIdentity {
   readonly regexCorpusHash?: string;
 }
 
+/** Supported regex bytecode format identifier for the standard library. */
 export const FLINT_REGEX_VERSION = `bytecode-${FLINT_REGEX_BYTECODE_VERSION}` as const;
 
-export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: FlintStandardLibraryIdentity = {
+/** Default standard library regex identity configuration. */
+export const DEFAULT_FLINT_STANDARD_LIBRARY_IDENTITY: FlintStandardLibraryIdentity = {
   regexBytecodeVersion: FLINT_REGEX_VERSION,
 };
 
+export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY = DEFAULT_FLINT_STANDARD_LIBRARY_IDENTITY;
+
+/**
+ * Standard library regex operations supported by compiler lowering.
+ */
 export type FlintRegexOperation =
   | 'full-match'
   | 'prefix-match'
@@ -25,6 +32,9 @@ export type FlintRegexOperation =
   | 'search-capture-start'
   | 'search-capture-end';
 
+/**
+ * Metadata descriptor for a standard library compiler intrinsic function.
+ */
 export interface FlintStandardLibraryFunction {
   readonly name: string;
   readonly parameters: readonly FlintPrimitiveType[];
@@ -79,16 +89,28 @@ export const FLINT_REGEX_FUNCTIONS: readonly FlintStandardLibraryFunction[] = [
   },
 ];
 
+/**
+ * Lookup map of regex standard library intrinsic function names to their definitions.
+ */
 export const FLINT_REGEX_FUNCTION_MAP = new Map(
   FLINT_REGEX_FUNCTIONS.map((declaration) => [declaration.name, declaration]),
 );
 
+/**
+ * Standard diagnostic codes emitted during regex lowering and compilation.
+ */
 export const FLINT_REGEX_DIAGNOSTIC_CODES = {
   unsupportedSyntax: 'FLINT-REGEX-001',
   malformedPattern: 'FLINT-REGEX-002',
   internalCompilerError: 'FLINT-REGEX-003',
 } as const;
 
+/**
+ * Creates a standard library identity descriptor with optional configuration overrides.
+ *
+ * @param overrides - Partial overrides for standard library identity properties.
+ * @returns Complete FlintStandardLibraryIdentity instance.
+ */
 export function flintStandardLibraryIdentity(
   overrides: Partial<FlintStandardLibraryIdentity> = {},
 ): FlintStandardLibraryIdentity {

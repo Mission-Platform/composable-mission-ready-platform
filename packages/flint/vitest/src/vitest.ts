@@ -4,6 +4,9 @@ import { mergeConfig, type Plugin } from 'vite';
 
 import type { ViteUserConfig } from 'vitest/config';
 
+/**
+ * Configuration options for creating a Flint Vitest testing configuration.
+ */
 export interface FlintVitestConfigOptions extends Omit<VitestConfigOptions, 'overrides'> {
   /** Options forwarded unchanged to the production Flint plugin. */
   readonly flint?: FlintPluginOptions;

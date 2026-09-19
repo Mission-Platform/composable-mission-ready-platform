@@ -8,6 +8,12 @@ import type {
   FlintTargetFeatures,
 } from './contracts.js';
 
+/**
+ * Maps a Flint primitive type to its WebAssembly value type representation.
+ *
+ * @param type - Primitive type to convert.
+ * @returns WebAssembly value type identifier string.
+ */
 function valueType(type: FlintWasmPrimitiveType): string {
   if (type === 'f32') return 'f32';
   if (type === 'f64') return 'f64';
@@ -16,16 +22,35 @@ function valueType(type: FlintWasmPrimitiveType): string {
   return 'i32';
 }
 
+/**
+ * Returns WebAssembly result type names corresponding to a Flint primitive type.
+ *
+ * @param type - Primitive type to evaluate.
+ * @returns Array of result type strings.
+ */
 function resultTypes(type: FlintWasmPrimitiveType): readonly string[] {
   return type === 'string' || type === 'bytes' ? ['i32', 'i32'] : type === 'unit' ? [] : [valueType(type)];
 }
 
+/**
+ * Formats a primitive literal value into a WebAssembly text literal string.
+ *
+ * @param value - Literal value to format.
+ * @returns WebAssembly literal string representation.
+ */
 function watNumber(value: boolean | number | string): string {
   if (typeof value === 'boolean') return value ? '1' : '0';
   if (typeof value === 'string') return '0';
   return Number.isFinite(value) ? String(value) : '0';
 }
 
+/**
+ * Lowers an IR expression into WebAssembly text format (WAT) instructions.
+ *
+ * @param value - Expression node to render.
+ * @param indent - Indentation string for formatting.
+ * @returns Array of rendered instruction lines.
+ */
 function renderExpression(value: FlintWasmExpression, indent: string): readonly string[] {
   if (value.kind === 'literal') {
     const types = resultTypes(value.type);
@@ -144,6 +169,13 @@ function renderExpression(value: FlintWasmExpression, indent: string): readonly 
   return lines;
 }
 
+/**
+ * Collects local variable declarations required by statements within a function body.
+ *
+ * @param statements - Sequence of statements to scan for local bindings.
+ * @param names - Mutable set tracking encountered local variables.
+ * @returns Array of formatted WebAssembly local variable declaration lines.
+ */
 function localDeclarations(statements: readonly FlintWasmStatement[], names = new Set<string>()): readonly string[] {
   for (const statement of statements) {
     if (statement.kind === 'let') names.add(`${statement.name}:${valueType(statement.type.name)}`);
@@ -171,6 +203,13 @@ function localDeclarations(statements: readonly FlintWasmStatement[], names = ne
   });
 }
 
+/**
+ * Lowers a sequence of IR statements into WebAssembly text format (WAT) instruction lines.
+ *
+ * @param items - Statements to render.
+ * @param indent - Indentation string.
+ * @returns Array of rendered WebAssembly instruction lines.
+ */
 function statements(items: readonly FlintWasmStatement[], indent: string): readonly string[] {
   const lines: string[] = [];
   for (const statement of items) {
@@ -233,21 +272,23 @@ function statements(items: readonly FlintWasmStatement[], indent: string): reado
             }).join(' ')} ${values.length}`,
           );
           for (let index = values.length - 1; index >= 0; index -= 1) {
+            const currentCase = statement.cases[index];
             lines.push(
               `${indent}    end`,
-              ...statements(statement.cases[index]!.body, `${indent}    `),
+              ...(currentCase === undefined ? [] : statements(currentCase.body, `${indent}    `)),
               `${indent}    br ${index + 1}`,
             );
           }
           lines.push(`${indent}  end`);
         } else {
           for (const [index, value] of values.entries()) {
+            const currentCase = statement.cases[index];
             lines.push(
               `${indent}  local.get $__switch_${statement.span.start}`,
               `${indent}  i32.const ${value}`,
               `${indent}  i32.eq`,
               `${indent}  if`,
-              ...statements(statement.cases[index]!.body, `${indent}    `),
+              ...(currentCase === undefined ? [] : statements(currentCase.body, `${indent}    `)),
               `${indent}    br 1 ;; exit switch`,
               `${indent}  end`,
             );
@@ -299,6 +340,9 @@ function statements(items: readonly FlintWasmStatement[], indent: string): reado
   return lines;
 }
 
+/**
+ * Metadata emitted into WebAssembly text format (WAT) comments and headers.
+ */
 export interface FlintWasmWatMetadata {
   readonly compilerVersion?: string;
   readonly optimization?: 'debug' | 'release';
@@ -311,6 +355,12 @@ export interface FlintWasmWatMetadata {
   readonly wasmOptimizationPasses?: readonly string[];
 }
 
+/**
+ * Emits the WebAssembly linear memory declaration based on configured target features.
+ *
+ * @param targetFeatures - Target WebAssembly proposal features.
+ * @returns Formatted memory declaration line.
+ */
 function renderMemory(targetFeatures: FlintTargetFeatures | undefined): string {
   if (targetFeatures?.memory64 === true && targetFeatures.threads === true)
     return '  (memory (export "memory") i64 1 1 shared)';
@@ -319,6 +369,13 @@ function renderMemory(targetFeatures: FlintTargetFeatures | undefined): string {
   return '  (memory (export "memory") 1)';
 }
 
+/**
+ * Lowers a complete Flint WebAssembly module intermediate representation into textual WAT format.
+ *
+ * @param module - Compiled module intermediate representation.
+ * @param metadata - Compilation metadata and target feature configuration.
+ * @returns WebAssembly text representation string.
+ */
 export function renderFlintWasmWat(module: FlintWasmModule, metadata: FlintWasmWatMetadata = {}): string {
   const lines = [
     '(module',

@@ -86,6 +86,9 @@ Options:
   -h, --help                      Show this help
 `;
 
+/**
+ * Internal parsing state accumulator for command-line arguments.
+ */
 interface ParseState {
   command?: FlintCliCommand;
   outputDirectory?: string;
@@ -107,6 +110,9 @@ interface ParseState {
   capabilities: string[];
 }
 
+/**
+ * Dispatch handler processing a recognized CLI option flag and updating parse state.
+ */
 type FlagHandler = (argv: readonly string[], index: number, state: ParseState, cwd: string) => number;
 
 /**
@@ -344,7 +350,7 @@ function validateParsedState(state: ParseState): void {
  * @returns Fully populated options structure.
  */
 function buildCliOptions(state: ParseState, cwd: string): FlintCliOptions {
-  const options: FlintCliOptions = {
+  return {
     command: state.command as FlintCliCommand,
     entries: absolutePaths(state.entries, cwd),
     roots: absolutePaths(state.roots, cwd),
@@ -355,19 +361,20 @@ function buildCliOptions(state: ParseState, cwd: string): FlintCliOptions {
     vmMode: state.vmMode,
     boundsChecks: state.boundsChecks,
     showOptimizerReport: state.showOptimizerReport,
+    ...(state.linkMode === undefined ? {} : { linkMode: state.linkMode }),
+    ...(state.outputDirectory === undefined ? {} : { outputDirectory: state.outputDirectory }),
+    ...(state.format === undefined ? {} : { format: state.format }),
+    ...(state.command === 'trace' || state.traceRequested
+      ? {
+          trace: {
+            capture: state.traceCapture,
+            maxEvents: state.maxTraceEvents,
+            maxTraceBytes: state.maxTraceBytes,
+            maxSnapshotBytes: state.maxSnapshotBytes,
+          },
+        }
+      : {}),
   };
-  if (state.linkMode !== undefined) options.linkMode = state.linkMode;
-  if (state.outputDirectory !== undefined) options.outputDirectory = state.outputDirectory;
-  if (state.format !== undefined) options.format = state.format;
-  if (state.command === 'trace' || state.traceRequested) {
-    options.trace = {
-      capture: state.traceCapture,
-      maxEvents: state.maxTraceEvents,
-      maxTraceBytes: state.maxTraceBytes,
-      maxSnapshotBytes: state.maxSnapshotBytes,
-    };
-  }
-  return options;
 }
 
 /**

@@ -108,37 +108,79 @@ const PUNCT = new Set(['{', '}', '(', ')', ':', ';', ',', '|']);
 
 const encoder = new TextEncoder();
 
+/**
+ * toInt32 implementation.
+ * @param value - The value parameter.
+ * @returns The number result.
+ */
 function toInt32(value: number): number {
   // eslint-disable-next-line unicorn/prefer-math-trunc -- intentional ToInt32 wrap for hash parity
   return value | 0;
 }
 
+/**
+ * fnvMix implementation.
+ * @param hash - The hash parameter.
+ * @param byte - The byte parameter.
+ * @returns The number result.
+ */
 function fnvMix(hash: number, byte: number): number {
   return Math.imul(toInt32(hash) ^ (byte & 0xff), FNV_PRIME);
 }
 
+/**
+ * fnvText implementation.
+ * @param text - The text parameter.
+ * @returns The number result.
+ */
 function fnvText(text: string): number {
   let hash = FNV_OFFSET;
   for (const byte of encoder.encode(text)) hash = fnvMix(hash, byte);
   return hash;
 }
 
+/**
+ * isWhitespace implementation.
+ * @param byte - The byte parameter.
+ * @returns The boolean result.
+ */
 function isWhitespace(byte: number): boolean {
   return byte === 9 || byte === 10 || byte === 13 || byte === 32;
 }
 
+/**
+ * isAlpha implementation.
+ * @param byte - The byte parameter.
+ * @returns The boolean result.
+ */
 function isAlpha(byte: number): boolean {
   return (byte >= 65 && byte <= 90) || (byte >= 97 && byte <= 122) || byte === 95;
 }
 
+/**
+ * isDigit implementation.
+ * @param byte - The byte parameter.
+ * @returns The boolean result.
+ */
 function isDigit(byte: number): boolean {
   return byte >= 48 && byte <= 57;
 }
 
+/**
+ * isAlnum implementation.
+ * @param byte - The byte parameter.
+ * @returns The boolean result.
+ */
 function isAlnum(byte: number): boolean {
   return isAlpha(byte) || isDigit(byte);
 }
 
+/**
+ * mixU32 implementation.
+ * @param hash - The hash parameter.
+ * @param value - The value parameter.
+ * @returns The number result.
+ */
 function mixU32(hash: number, value: number): number {
   let next = hash;
   next = fnvMix(next, value & 0xff);
@@ -152,187 +194,392 @@ function mixU32(hash: number, value: number): number {
  * Seed reference for the self-hosted parser stage.
  * Must stay behaviorally identical to {@link createFlintParserStageVmModule}.
  */
+const PUNCT_TAGS = new Map<number, number>([
+  [40, TAG_LPAREN],
+  [41, TAG_RPAREN],
+  [58, TAG_COLON],
+  [59, TAG_SEMI],
+  [44, TAG_COMMA],
+]);
+
+/**
+ * Scans a string literal to update parser fingerprint and hash.
+ *
+ * @param bytes - Source byte buffer.
+ * @param offset - Starting offset of string literal.
+ * @param hash - Current running fingerprint hash.
+ * @param depth - Current syntactic nesting depth.
+ * @returns Updated offset, hash, and depth.
+ */
+function parseStringFingerprint(
+  bytes: Uint8Array,
+  offset: number,
+  hash: number,
+  depth: number,
+): { offset: number; hash: number; depth: number } {
+  const start = offset;
+  let next = offset + 1;
+  while (next < bytes.length) {
+    if (bytes[next] === 92) {
+      next += 2;
+      continue;
+    }
+    if (bytes[next] === 34) {
+      next += 1;
+      break;
+    }
+    next += 1;
+  }
+  let nextHash = fnvMix(hash, TAG_STRING);
+  for (let index = start; index < next; index += 1) {
+    const b = bytes[index];
+    if (b !== undefined) nextHash = fnvMix(nextHash, b);
+  }
+  return { offset: next, hash: nextHash, depth };
+}
+
+/**
+ * Scans a numeric literal to update parser fingerprint and hash.
+ *
+ * @param bytes - Source byte buffer.
+ * @param offset - Starting offset of numeric literal.
+ * @param hash - Current running fingerprint hash.
+ * @param depth - Current syntactic nesting depth.
+ * @returns Updated offset, hash, and depth.
+ */
+function parseNumberFingerprint(
+  bytes: Uint8Array,
+  offset: number,
+  hash: number,
+  depth: number,
+): { offset: number; hash: number; depth: number } {
+  const start = offset;
+  let next = offset + 1;
+  while (next < bytes.length) {
+    const nextByte = bytes[next];
+    if (nextByte === undefined || !isDigit(nextByte)) break;
+    next += 1;
+  }
+  let nextHash = fnvMix(hash, TAG_NUMBER);
+  for (let index = start; index < next; index += 1) {
+    const b = bytes[index];
+    if (b !== undefined) nextHash = fnvMix(nextHash, b);
+  }
+  return { offset: next, hash: nextHash, depth };
+}
+
+/**
+ * Resolves keyword identification fallback when declaration or statement context is absent.
+ *
+ * @param declId - Optional declaration keyword tag identifier.
+ * @param stmtId - Optional statement keyword tag identifier.
+ * @param text - Identifier token string representation.
+ * @returns Resolved keyword identifier or undefined if not a keyword.
+ */
+function isKeywordFallback(declId: number | undefined, stmtId: number | undefined, text: string): number | undefined {
+  if (declId !== undefined) return declId;
+  if (stmtId !== undefined) return stmtId;
+  const keywords: readonly string[] = ALL_KEYWORDS;
+  if (keywords.includes(text)) return 0;
+  return undefined;
+}
+
+/**
+ * Mixes identifier tags and contextual declaration or statement token kind into running hash.
+ *
+ * @param hash - Current running fingerprint hash.
+ * @param depth - Current syntactic nesting depth.
+ * @param text - Identifier token text.
+ * @param identHash - Hash of identifier bytes.
+ * @returns Updated hash incorporating token kind and identifier content.
+ */
+function mixIdentTags(hash: number, depth: number, text: string, identHash: number): number {
+  const declId = DECL_KEYWORDS.get(text);
+  const stmtId = STMT_KEYWORDS.get(text);
+
+  if (declId !== undefined && depth === 0) {
+    let h = fnvMix(hash, TAG_DECL);
+    h = fnvMix(h, declId);
+    return mixU32(h, identHash);
+  }
+
+  if (stmtId !== undefined && depth > 0) {
+    let h = fnvMix(hash, TAG_STMT);
+    h = fnvMix(h, stmtId);
+    return mixU32(h, identHash);
+  }
+
+  const kwId = isKeywordFallback(declId, stmtId, text);
+  if (kwId !== undefined) {
+    let h = fnvMix(hash, TAG_KEYWORD);
+    h = fnvMix(h, kwId);
+    return mixU32(h, identHash);
+  }
+
+  let h = fnvMix(hash, TAG_IDENT);
+  h = fnvMix(h, 0);
+  return mixU32(h, identHash);
+}
+
+/**
+ * Scans an identifier or keyword to update parser fingerprint and context depth.
+ *
+ * @param bytes - Source byte buffer.
+ * @param offset - Starting offset of identifier.
+ * @param hash - Current running fingerprint hash.
+ * @param depth - Current syntactic nesting depth.
+ * @returns Updated offset, hash, and depth.
+ */
+function parseIdentFingerprint(
+  bytes: Uint8Array,
+  offset: number,
+  hash: number,
+  depth: number,
+): { offset: number; hash: number; depth: number } {
+  const start = offset;
+  let next = offset + 1;
+  while (next < bytes.length) {
+    const nextByte = bytes[next];
+    if (nextByte === undefined || !isAlnum(nextByte)) break;
+    next += 1;
+  }
+  let identHash = FNV_OFFSET;
+  for (let index = start; index < next; index += 1) {
+    const byte = bytes[index];
+    if (byte !== undefined) identHash = fnvMix(identHash, byte);
+  }
+  const text = new TextDecoder().decode(bytes.subarray(start, next));
+  return { offset: next, hash: mixIdentTags(hash, depth, text, identHash), depth };
+}
+
+/**
+ * Scans multi-character and single-character operator punctuation to update parser fingerprint.
+ *
+ * @param bytes - Source byte buffer.
+ * @param offset - Starting offset of operator.
+ * @param byte - First byte of operator token.
+ * @param hash - Current running fingerprint hash.
+ * @param depth - Current syntactic nesting depth.
+ * @returns Updated offset, hash, and depth, or undefined if not recognized.
+ */
+function parsePunctuationOpFingerprint(
+  bytes: Uint8Array,
+  offset: number,
+  byte: number,
+  hash: number,
+  depth: number,
+): { offset: number; hash: number; depth: number } | undefined {
+  if (offset + 1 < bytes.length) {
+    const nextByte = bytes[offset + 1];
+    if (nextByte !== undefined) {
+      const two = String.fromCodePoint(byte, nextByte);
+      const ops: readonly string[] = TWO_CHAR_OPS;
+      if (ops.includes(two)) {
+        if (two === '->') return { offset: offset + 2, hash: fnvMix(hash, TAG_ARROW), depth };
+        let nextHash = fnvMix(hash, TAG_OP);
+        nextHash = fnvMix(nextHash, byte);
+        nextHash = fnvMix(nextHash, nextByte);
+        return { offset: offset + 2, hash: nextHash, depth };
+      }
+    }
+  }
+
+  const single = String.fromCodePoint(byte);
+  if (ONE_CHAR_OPS.has(single)) {
+    let nextHash = fnvMix(hash, TAG_OP);
+    nextHash = fnvMix(nextHash, byte);
+    return { offset: offset + 1, hash: nextHash, depth };
+  }
+  if (PUNCT.has(single)) {
+    let nextHash = fnvMix(hash, TAG_PUNCT);
+    nextHash = fnvMix(nextHash, byte);
+    return { offset: offset + 1, hash: nextHash, depth };
+  }
+  return undefined;
+}
+
+/**
+ * Parses structural punctuation tokens and braces to adjust nesting depth and update fingerprint.
+ *
+ * @param bytes - Source byte buffer.
+ * @param offset - Starting offset of punctuation.
+ * @param byte - First byte of punctuation token.
+ * @param hash - Current running fingerprint hash.
+ * @param depth - Current syntactic nesting depth.
+ * @returns Updated offset, hash, and depth, or undefined if not recognized.
+ */
+function parsePunctuationFingerprint(
+  bytes: Uint8Array,
+  offset: number,
+  byte: number,
+  hash: number,
+  depth: number,
+): { offset: number; hash: number; depth: number } | undefined {
+  if (byte === 123) {
+    const nextDepth = depth + 1;
+    let nextHash = fnvMix(hash, TAG_LBRACE);
+    nextHash = fnvMix(nextHash, nextDepth & 0xff);
+    return { offset: offset + 1, hash: nextHash, depth: nextDepth };
+  }
+  if (byte === 125) {
+    let nextHash = fnvMix(hash, TAG_RBRACE);
+    nextHash = fnvMix(nextHash, depth & 0xff);
+    return { offset: offset + 1, hash: nextHash, depth: Math.max(0, depth - 1) };
+  }
+  const simpleTag = PUNCT_TAGS.get(byte);
+  if (simpleTag !== undefined) {
+    return { offset: offset + 1, hash: fnvMix(hash, simpleTag), depth };
+  }
+  if (byte === 45 && offset + 1 < bytes.length && bytes[offset + 1] === 62) {
+    return { offset: offset + 2, hash: fnvMix(hash, TAG_ARROW), depth };
+  }
+
+  return parsePunctuationOpFingerprint(bytes, offset, byte, hash, depth);
+}
+
+/**
+ * Scans past a line comment in the source buffer.
+ *
+ * @param bytes - Source byte buffer.
+ * @param offset - Starting offset of line comment.
+ * @returns Offset following line terminator.
+ */
+function scanLineComment(bytes: Uint8Array, offset: number): number {
+  let next = offset + 2;
+  while (next < bytes.length && bytes[next] !== 10) next += 1;
+  return next;
+}
+
+/**
+ * Scans past a block comment in the source buffer.
+ *
+ * @param bytes - Source byte buffer.
+ * @param offset - Starting offset of block comment.
+ * @returns Offset following comment closure.
+ */
+function scanBlockComment(bytes: Uint8Array, offset: number): number {
+  let next = offset + 2;
+  while (next < bytes.length) {
+    if (bytes[next] === 42 && next + 1 < bytes.length && bytes[next + 1] === 47) {
+      next += 2;
+      break;
+    }
+    next += 1;
+  }
+  return next;
+}
+
+/**
+ * Scans line or block comments when encountering comment prefix bytes.
+ *
+ * @param bytes - Source byte buffer.
+ * @param offset - Current byte offset.
+ * @param hash - Current running fingerprint hash.
+ * @param depth - Current syntactic nesting depth.
+ * @param byte - First byte at offset.
+ * @returns Updated offset, hash, and depth, or undefined if not a comment.
+ */
+function parseCommentFingerprint(
+  bytes: Uint8Array,
+  offset: number,
+  hash: number,
+  depth: number,
+  byte: number,
+): { offset: number; hash: number; depth: number } | undefined {
+  if (byte === 47 && offset + 1 < bytes.length) {
+    const nextByte = bytes[offset + 1];
+    if (nextByte === 47) return { offset: scanLineComment(bytes, offset), hash, depth };
+    if (nextByte === 42) return { offset: scanBlockComment(bytes, offset), hash, depth };
+  }
+  return undefined;
+}
+
+/**
+ * Evaluates fallback token kinds (literals, identifiers, punctuation, or errors) for fingerprinting.
+ *
+ * @param bytes - Source byte buffer.
+ * @param offset - Current byte offset.
+ * @param hash - Current running fingerprint hash.
+ * @param depth - Current syntactic nesting depth.
+ * @param byte - First byte at offset.
+ * @returns Updated offset, hash, and depth.
+ */
+function parseTokenStepFallbacks(
+  bytes: Uint8Array,
+  offset: number,
+  hash: number,
+  depth: number,
+  byte: number,
+): { offset: number; hash: number; depth: number } {
+  if (byte === 34) return parseStringFingerprint(bytes, offset, hash, depth);
+  if (isDigit(byte)) return parseNumberFingerprint(bytes, offset, hash, depth);
+  if (isAlpha(byte)) return parseIdentFingerprint(bytes, offset, hash, depth);
+
+  const punct = parsePunctuationFingerprint(bytes, offset, byte, hash, depth);
+  if (punct !== undefined) return punct;
+
+  let nextHash = fnvMix(hash, TAG_ERROR);
+  nextHash = fnvMix(nextHash, byte);
+  return { offset: offset + 1, hash: nextHash, depth };
+}
+
+/**
+ * Dispatches a single lexical token processing step during parser fingerprint computation.
+ *
+ * @param bytes - Source byte buffer.
+ * @param offset - Current byte offset.
+ * @param hash - Current running fingerprint hash.
+ * @param depth - Current syntactic nesting depth.
+ * @param byte - First byte at offset.
+ * @returns Updated offset, hash, and depth.
+ */
+function parseTokenFingerprintStep(
+  bytes: Uint8Array,
+  offset: number,
+  hash: number,
+  depth: number,
+  byte: number,
+): { offset: number; hash: number; depth: number } {
+  if (isWhitespace(byte)) return { offset: offset + 1, hash, depth };
+
+  const comment = parseCommentFingerprint(bytes, offset, hash, depth, byte);
+  if (comment !== undefined) return comment;
+
+  return parseTokenStepFallbacks(bytes, offset, hash, depth, byte);
+}
+
+/**
+ * Computes a deterministic 32-bit FNV fingerprint for the self-hosted parser stage.
+ *
+ * @param source - Flint source code string.
+ * @returns Deterministic 32-bit signed integer fingerprint.
+ */
 export function computeFlintParserStageFingerprint(source: string): number {
   const bytes = encoder.encode(source);
   let hash = toInt32(FNV_OFFSET ^ PARSE_SALT);
   let offset = 0;
   let depth = 0;
 
-  const mix = (byte: number): void => {
-    hash = fnvMix(hash, byte);
-  };
-
   while (offset < bytes.length) {
-    const byte = bytes[offset]!;
-
-    if (isWhitespace(byte)) {
+    const byte = bytes[offset];
+    if (byte === undefined) {
       offset += 1;
       continue;
     }
-
-    // Line comment — parser ignores trivia (unlike lex fingerprint).
-    if (byte === 47 && offset + 1 < bytes.length && bytes[offset + 1] === 47) {
-      offset += 2;
-      while (offset < bytes.length && bytes[offset] !== 10) offset += 1;
-      continue;
-    }
-
-    // Block comment — ignored.
-    if (byte === 47 && offset + 1 < bytes.length && bytes[offset + 1] === 42) {
-      offset += 2;
-      while (offset < bytes.length) {
-        if (bytes[offset] === 42 && offset + 1 < bytes.length && bytes[offset + 1] === 47) {
-          offset += 2;
-          break;
-        }
-        offset += 1;
-      }
-      continue;
-    }
-
-    if (byte === 34) {
-      const start = offset;
-      offset += 1;
-      while (offset < bytes.length) {
-        if (bytes[offset] === 92) {
-          offset += 2;
-          continue;
-        }
-        if (bytes[offset] === 34) {
-          offset += 1;
-          break;
-        }
-        offset += 1;
-      }
-      mix(TAG_STRING);
-      for (let index = start; index < offset; index += 1) mix(bytes[index]!);
-      continue;
-    }
-
-    if (isDigit(byte)) {
-      const start = offset;
-      offset += 1;
-      while (offset < bytes.length && isDigit(bytes[offset]!)) offset += 1;
-      mix(TAG_NUMBER);
-      for (let index = start; index < offset; index += 1) mix(bytes[index]!);
-      continue;
-    }
-
-    if (isAlpha(byte)) {
-      const start = offset;
-      offset += 1;
-      while (offset < bytes.length && isAlnum(bytes[offset]!)) offset += 1;
-      let identHash = FNV_OFFSET;
-      for (let index = start; index < offset; index += 1) identHash = fnvMix(identHash, bytes[index]!);
-      const text = new TextDecoder().decode(bytes.subarray(start, offset));
-      const declId = DECL_KEYWORDS.get(text);
-      const stmtId = STMT_KEYWORDS.get(text);
-      if (declId !== undefined && depth === 0) {
-        mix(TAG_DECL);
-        mix(declId);
-        hash = mixU32(hash, identHash);
-      } else if (stmtId !== undefined && depth > 0) {
-        mix(TAG_STMT);
-        mix(stmtId);
-        hash = mixU32(hash, identHash);
-      } else if (declId !== undefined || stmtId !== undefined || (ALL_KEYWORDS as readonly string[]).includes(text)) {
-        mix(TAG_KEYWORD);
-        mix(declId ?? stmtId ?? 0);
-        hash = mixU32(hash, identHash);
-      } else {
-        mix(TAG_IDENT);
-        mix(0);
-        hash = mixU32(hash, identHash);
-      }
-      continue;
-    }
-
-    if (byte === 123) {
-      depth += 1;
-      mix(TAG_LBRACE);
-      mix(depth & 0xff);
-      offset += 1;
-      continue;
-    }
-
-    if (byte === 125) {
-      mix(TAG_RBRACE);
-      mix(depth & 0xff);
-      depth = Math.max(0, depth - 1);
-      offset += 1;
-      continue;
-    }
-
-    if (byte === 40) {
-      mix(TAG_LPAREN);
-      offset += 1;
-      continue;
-    }
-
-    if (byte === 41) {
-      mix(TAG_RPAREN);
-      offset += 1;
-      continue;
-    }
-
-    if (byte === 58) {
-      mix(TAG_COLON);
-      offset += 1;
-      continue;
-    }
-
-    if (byte === 59) {
-      mix(TAG_SEMI);
-      offset += 1;
-      continue;
-    }
-
-    if (byte === 44) {
-      mix(TAG_COMMA);
-      offset += 1;
-      continue;
-    }
-
-    if (offset + 1 < bytes.length) {
-      const two = String.fromCodePoint(byte, bytes[offset + 1]!);
-      if ((TWO_CHAR_OPS as readonly string[]).includes(two)) {
-        if (two === '->') mix(TAG_ARROW);
-        else {
-          mix(TAG_OP);
-          mix(byte);
-          mix(bytes[offset + 1]!);
-        }
-        offset += 2;
-        continue;
-      }
-    }
-
-    const single = String.fromCodePoint(byte);
-    if (ONE_CHAR_OPS.has(single)) {
-      mix(TAG_OP);
-      mix(byte);
-      offset += 1;
-      continue;
-    }
-
-    if (PUNCT.has(single)) {
-      mix(TAG_PUNCT);
-      mix(byte);
-      offset += 1;
-      continue;
-    }
-
-    // Recovery: advance one byte so malformed input cannot stall the stage.
-    mix(TAG_ERROR);
-    mix(byte);
-    offset += 1;
+    const result = parseTokenFingerprintStep(bytes, offset, hash, depth, byte);
+    offset = result.offset;
+    hash = result.hash;
+    depth = result.depth;
   }
 
-  mix(TAG_EOF);
-  mix(depth & 0xff);
+  hash = fnvMix(hash, TAG_EOF);
+  hash = fnvMix(hash, depth & 0xff);
   return toInt32(hash);
 }
 
+/**
+ * BytecodeBuilder implementation.
+ */
 interface BytecodeBuilder {
   readonly registers: number;
   readonly code: FlintSelfHostedVmInstruction[];
@@ -353,6 +600,11 @@ interface BytecodeBuilder {
   finish(): FlintSelfHostedVmInstruction[];
 }
 
+/**
+ * createBuilder implementation.
+ * @param parameterCount - The parameterCount parameter.
+ * @returns The BytecodeBuilder result.
+ */
 function createBuilder(parameterCount: number): BytecodeBuilder {
   let nextRegister = parameterCount;
   const code: FlintSelfHostedVmInstruction[] = [];
@@ -360,35 +612,90 @@ function createBuilder(parameterCount: number): BytecodeBuilder {
   const patches: BytecodeBuilder['patches'] = [];
 
   return {
+    /**
+     * registers implementation.
+     */
     get registers() {
       return nextRegister;
     },
     code,
     labels,
     patches,
+    /**
+     * alloc implementation.
+     * @param count - The count parameter.
+     * @returns The unknown result.
+     */
     alloc(count = 1) {
       const start = nextRegister;
       nextRegister += count;
       return start;
     },
+    /**
+     * num implementation.
+     * @param destination - The destination parameter.
+     * @param constantIndex - The constantIndex parameter.
+     * @returns The unknown result.
+     */
     num(destination, constantIndex) {
       code.push({ opcode: 'const', destination, constant: constantIndex });
     },
+    /**
+     * move implementation.
+     * @param destination - The destination parameter.
+     * @param source - The source parameter.
+     * @returns The unknown result.
+     */
     move(destination, source) {
       code.push({ opcode: 'move', destination, source });
     },
+    /**
+     * len implementation.
+     * @param destination - The destination parameter.
+     * @param source - The source parameter.
+     * @returns The unknown result.
+     */
     len(destination, source) {
       code.push({ opcode: 'len', destination, source });
     },
+    /**
+     * byteAt implementation.
+     * @param destination - The destination parameter.
+     * @param source - The source parameter.
+     * @param index - The index parameter.
+     * @returns The unknown result.
+     */
     byteAt(destination, source, index) {
       code.push({ opcode: 'byte-at', destination, source, index });
     },
+    /**
+     * binary implementation.
+     * @param operation - The operation parameter.
+     * @param destination - The destination parameter.
+     * @param left - The left parameter.
+     * @param right - The right parameter.
+     * @returns The unknown result.
+     */
     binary(operation, destination, left, right) {
       code.push({ opcode: 'binary', operation, destination, left, right });
     },
+    /**
+     * unary implementation.
+     * @param operation - The operation parameter.
+     * @param destination - The destination parameter.
+     * @param operand - The operand parameter.
+     * @returns The unknown result.
+     */
     unary(operation, destination, operand) {
       code.push({ opcode: 'unary', operation, destination, operand });
     },
+    /**
+     * call implementation.
+     * @param destination - The destination parameter.
+     * @param functionName - The functionName parameter.
+     * @param arguments_ - The arguments_ parameter.
+     * @returns The unknown result.
+     */
     call(destination, functionName, arguments_) {
       code.push(
         destination === undefined
@@ -396,13 +703,30 @@ function createBuilder(parameterCount: number): BytecodeBuilder {
           : { opcode: 'call', destination, functionName, arguments: arguments_ },
       );
     },
+    /**
+     * label implementation.
+     * @param name - The name parameter.
+     * @returns The unknown result.
+     */
     label(name) {
       labels.set(name, code.length);
     },
+    /**
+     * jump implementation.
+     * @param label - The label parameter.
+     * @returns The unknown result.
+     */
     jump(label) {
       patches.push({ index: code.length, field: 'target', label });
       code.push({ opcode: 'jump', target: -1 });
     },
+    /**
+     * branch implementation.
+     * @param condition - The condition parameter.
+     * @param ifTrue - The ifTrue parameter.
+     * @param ifFalse - The ifFalse parameter.
+     * @returns The unknown result.
+     */
     branch(condition, ifTrue, ifFalse) {
       patches.push(
         { index: code.length, field: 'ifTrue', label: ifTrue },
@@ -410,9 +734,18 @@ function createBuilder(parameterCount: number): BytecodeBuilder {
       );
       code.push({ opcode: 'branch', condition, ifTrue: -1, ifFalse: -1 });
     },
+    /**
+     * ret implementation.
+     * @param source - The source parameter.
+     * @returns The unknown result.
+     */
     ret(source) {
       code.push(source === undefined ? { opcode: 'return' } : { opcode: 'return', source });
     },
+    /**
+     * finish implementation.
+     * @returns The unknown result.
+     */
     finish() {
       for (const patch of patches) {
         const target = labels.get(patch.label);
@@ -425,10 +758,19 @@ function createBuilder(parameterCount: number): BytecodeBuilder {
   };
 }
 
+/**
+ * int32Constant implementation.
+ * @param value - The value parameter.
+ * @returns The FlintSelfHostedVmValue result.
+ */
 function int32Constant(value: number): FlintSelfHostedVmValue {
   return { kind: 'number', type: 'i32', value: toInt32(value) };
 }
 
+/**
+ * buildFnvMix implementation.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildFnvMix(): FlintSelfHostedVmFunction {
   const b = createBuilder(2);
   const xored = b.alloc();
@@ -448,6 +790,12 @@ function buildFnvMix(): FlintSelfHostedVmFunction {
   };
 }
 
+/**
+ * buildPredicateFromEquals implementation.
+ * @param name - The name parameter.
+ * @param constantIndexes - The constantIndexes parameter.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildPredicateFromEquals(name: string, constantIndexes: readonly number[]): FlintSelfHostedVmFunction {
   const b = createBuilder(1);
   const temporary = b.alloc();
@@ -481,10 +829,18 @@ function buildPredicateFromEquals(name: string, constantIndexes: readonly number
   };
 }
 
+/**
+ * buildIsWs implementation.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildIsWs(): FlintSelfHostedVmFunction {
   return buildPredicateFromEquals('is_ws', [9, 10, 11, 12]);
 }
 
+/**
+ * buildIsAlpha implementation.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildIsAlpha(): FlintSelfHostedVmFunction {
   const b = createBuilder(1);
   const temporary = b.alloc();
@@ -535,6 +891,10 @@ function buildIsAlpha(): FlintSelfHostedVmFunction {
   };
 }
 
+/**
+ * buildIsDigit implementation.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildIsDigit(): FlintSelfHostedVmFunction {
   const b = createBuilder(1);
   const temporary = b.alloc();
@@ -558,6 +918,10 @@ function buildIsDigit(): FlintSelfHostedVmFunction {
   };
 }
 
+/**
+ * buildIsAlnum implementation.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildIsAlnum(): FlintSelfHostedVmFunction {
   const b = createBuilder(1);
   const temporary = b.alloc();
@@ -582,6 +946,10 @@ function buildIsAlnum(): FlintSelfHostedVmFunction {
   };
 }
 
+/**
+ * buildIsTwoCharOp implementation.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildIsTwoCharOp(): FlintSelfHostedVmFunction {
   const pairs = [
     [32, 33],
@@ -630,14 +998,26 @@ function buildIsTwoCharOp(): FlintSelfHostedVmFunction {
   };
 }
 
+/**
+ * buildIsOneCharOp implementation.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildIsOneCharOp(): FlintSelfHostedVmFunction {
   return buildPredicateFromEquals('is_one_char_op', [48, 49, 50, 51, 52, 53, 54, 55, 56]);
 }
 
+/**
+ * buildIsPunct implementation.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildIsPunct(): FlintSelfHostedVmFunction {
   return buildPredicateFromEquals('is_punct', [57, 58, 59, 60, 61, 62, 63, 64]);
 }
 
+/**
+ * buildMixU32 implementation.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildMixU32(): FlintSelfHostedVmFunction {
   // mix_u32(hash, value) -> i32
   const b = createBuilder(2);
@@ -776,6 +1156,11 @@ function buildClassifyIdent(keywordHashBase: number, _keywordCount: number): Fli
   };
 }
 
+/**
+ * buildParseStage implementation.
+ * @param blockCommentStarConstant - The blockCommentStarConstant parameter.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildParseStage(blockCommentStarConstant: number): FlintSelfHostedVmFunction {
   // parse_stage(source) -> i32
   const b = createBuilder(1);

@@ -32,6 +32,14 @@ const keywords = [
 
 const outcomeTypes = ['Iterable', 'Iterator', 'Option', 'Result', 'iterResult'];
 
+/**
+ * Computes autocomplete suggestions at the given document position.
+ *
+ * @param document - Target document.
+ * @param position - Cursor position.
+ * @param symbols - Visible document and workspace symbols.
+ * @returns Array of completion items.
+ */
 export function completeFlint(
   source: string,
   position: FlintPosition,
@@ -94,10 +102,12 @@ export function completeFlint(
   return [...items.values()].toSorted((left, right) => left.label.localeCompare(right.label));
 }
 
+/** Formats parameter signatures and return types into a callable detail string. */
 function callableDetail(name: string, parameters: readonly string[], result: string): string {
   return `${name}(${parameters.join(', ')}): ${result}`;
 }
 
+/** Filters symbols visible at the requested offset based on declaration spans. */
 function visibleSymbols(symbols: readonly FlintSymbol[], offset: number): readonly FlintSymbol[] {
   const functionAtCursor = symbols.find(
     (symbol) =>

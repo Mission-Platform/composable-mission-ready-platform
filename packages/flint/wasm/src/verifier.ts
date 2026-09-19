@@ -7,8 +7,10 @@ import type {
   FlintWasmIteratorExport,
 } from './contracts.js';
 
+/** Diagnostic severity levels emitted during artifact verification. */
 export type FlintWasmArtifactVerificationSeverity = 'error' | 'warning' | 'info';
 
+/** Policy rules governing artifact verification enforcement. */
 export interface FlintWasmArtifactVerificationPolicy {
   readonly profile?: 'development' | 'strict';
   readonly allowedCapabilities?: readonly string[];
@@ -17,6 +19,7 @@ export interface FlintWasmArtifactVerificationPolicy {
   readonly allowedCustomSections?: readonly string[];
 }
 
+/** Diagnostic finding emitted during WebAssembly binary verification. */
 export interface FlintWasmArtifactVerificationDiagnostic {
   readonly code: string;
   readonly severity: FlintWasmArtifactVerificationSeverity;
@@ -35,6 +38,7 @@ export interface FlintWasmArtifactVerificationDiagnostic {
   readonly evidence?: readonly { readonly message: string; readonly value?: string | number | boolean }[];
 }
 
+/** Input parameters and expectations passed to artifact verification. */
 export interface FlintWasmArtifactVerificationInput {
   readonly wasm: Uint8Array;
   readonly unoptimizedWasm?: Uint8Array;
@@ -77,6 +81,7 @@ export interface FlintWasmArtifactManifest {
   }[];
 }
 
+/** Function metadata extracted from ABI manifest for verification. */
 export interface FlintWasmManifestFunction {
   readonly name: string;
   readonly parameters: readonly FlintWasmManifestParameter[];
@@ -84,18 +89,21 @@ export interface FlintWasmManifestFunction {
   readonly resultReference?: string;
 }
 
+/** Import declaration metadata extracted from ABI manifest. */
 export interface FlintWasmManifestImport {
   readonly capability: string;
   readonly alias: string;
   readonly function: FlintWasmManifestFunction;
 }
 
+/** Parameter type metadata in manifest function definition. */
 export interface FlintWasmManifestParameter {
   readonly name: string;
   readonly type: string;
   readonly reference?: string;
 }
 
+/** Memory layout expectations verified against WebAssembly binary. */
 export interface FlintWasmMemoryLayout {
   readonly pageSize: number;
   readonly addressType: 'u32' | 'u64';
@@ -109,6 +117,7 @@ export interface FlintWasmMemoryLayout {
   readonly maximumPages?: number;
 }
 
+/** Comprehensive verification result report indicating validation status. */
 export interface FlintWasmArtifactVerificationResult {
   readonly verified: boolean;
   readonly diagnostics: readonly FlintWasmArtifactVerificationDiagnostic[];
@@ -121,28 +130,34 @@ const DEFAULT_MAX_CUSTOM_SECTION_BYTES = 256 * 1024;
 const DEFAULT_CUSTOM_SECTIONS = ['fws.target-features', 'fws.metadata'];
 const EMPTY_SPAN = { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 } as const;
 
+/** Raw WebAssembly type identifier code. */
 type WasmType = 0x7f | 0x7e | 0x7d | 0x7c;
+/** Parsed WebAssembly function signature type entry. */
 interface FunctionType {
   readonly parameters: readonly WasmType[];
   readonly results: readonly WasmType[];
 }
+/** Parsed WebAssembly module import section entry. */
 interface WasmImport {
   readonly module: string;
   readonly name: string;
   readonly kind: number;
   readonly typeIndex?: number;
 }
+/** Parsed WebAssembly module export section entry. */
 interface WasmExport {
   readonly name: string;
   readonly kind: number;
   readonly index: number;
 }
+/** Parsed WebAssembly memory section limits descriptor. */
 interface WasmMemory {
   readonly minimum: number;
   readonly maximum?: number;
   readonly shared: boolean;
   readonly memory64: boolean;
 }
+/** Structured representation of parsed WebAssembly binary sections. */
 interface ParsedWasm {
   readonly types: readonly FunctionType[];
   readonly imports: readonly WasmImport[];
@@ -152,26 +167,31 @@ interface ParsedWasm {
   readonly customSections: ReadonlyMap<string, Uint8Array>;
 }
 
+/** Byte buffer traversal cursor reading binary WebAssembly structures. */
 class Cursor {
   private readonly bytes: Uint8Array;
   public position: number;
   private readonly end: number;
 
+  /** Creates a new Cursor instance. */
   public constructor(bytes: Uint8Array, position = 0, end = bytes.byteLength) {
     this.bytes = bytes;
     this.position = position;
     this.end = end;
   }
 
+  /** Returns the number of unparsed bytes remaining in the buffer. */
   public remaining(): number {
     return this.end - this.position;
   }
 
+  /** Consumes and returns a single byte from the buffer. */
   public byte(): number {
     if (this.position >= this.end) throw new Error('Unexpected end of WebAssembly section.');
     return this.bytes[this.position++] ?? 0;
   }
 
+  /** Decodes an unsigned LEB128 integer from the buffer. */
   public leb(maxBytes = 5): number {
     let value = 0;
     let shift = 0;
@@ -184,6 +204,7 @@ class Cursor {
     throw new Error('WebAssembly integer is too long.');
   }
 
+  /** Reads a slice of bytes from the buffer. */
   public bytesValue(length: number): Uint8Array {
     if (!Number.isSafeInteger(length) || length < 0 || length > this.remaining())
       throw new Error('Invalid WebAssembly section length.');
@@ -192,6 +213,7 @@ class Cursor {
     return value;
   }
 
+  /** Decodes a UTF-8 string prefixed by its LEB128 byte length. */
   public string(maxLength: number): string {
     const length = this.leb();
     if (length > maxLength) throw new Error('WebAssembly name exceeds the verifier limit.');
@@ -199,6 +221,7 @@ class Cursor {
   }
 }
 
+/** Factory creating a verification diagnostic with standard codes and message. */
 function diagnostic(
   code: string,
   message: string,
@@ -218,6 +241,7 @@ function diagnostic(
   };
 }
 
+/** Parses WebAssembly memory or table limits from binary stream. */
 function parseLimits(cursor: Cursor): WasmMemory {
   const flags = cursor.leb();
   const memory64 = (flags & 0x04) !== 0;
@@ -228,6 +252,7 @@ function parseLimits(cursor: Cursor): WasmMemory {
   return { minimum, ...(maximum === undefined ? {} : { maximum }), shared, memory64 };
 }
 
+/** Parses binary WebAssembly byte array into structured section records. */
 function parseWasm(bytes: Uint8Array, maxCustomSectionBytes: number): ParsedWasm {
   if (
     bytes.byteLength < 8 ||
@@ -343,6 +368,7 @@ function parseWasm(bytes: Uint8Array, maxCustomSectionBytes: number): ParsedWasm
   return { types, imports, functionTypeIndexes, exports, ...(memory === undefined ? {} : { memory }), customSections };
 }
 
+/** Maps high-level primitive type names to low-level WebAssembly value type codes. */
 function lowLevelTypes(type: string, reference?: string, addressType: 'u32' | 'u64' = 'u32'): readonly WasmType[] {
   if (type === 'string' || type === 'bytes') return addressType === 'u64' ? [0x7e, 0x7e] : [0x7f, 0x7f];
   if (type.startsWith('Option<') || reference === 'Option') return [0x7e];
@@ -353,14 +379,17 @@ function lowLevelTypes(type: string, reference?: string, addressType: 'u32' | 'u
   return type === 'unit' ? [] : [0x7f];
 }
 
+/** Compares two type arrays for equality. */
 function sameTypes(left: readonly WasmType[], right: readonly WasmType[]): boolean {
   return left.length === right.length && left.every((type, index) => type === right[index]);
 }
 
+/** Resolves a boolean feature flag from target features record. */
 function featureValue(features: FlintTargetFeatures | undefined, key: keyof FlintTargetFeatures): boolean {
   return features?.[key] === true;
 }
 
+/** Generates a normalized feature profile string summarizing enabled WebAssembly proposals. */
 function normalizedFeatureProfile(features: FlintTargetFeatures | undefined): FlintTargetFeatures {
   return Object.fromEntries(
     (['simd', 'tailCall', 'memory64', 'threads', 'atomics'] as const)
@@ -369,6 +398,7 @@ function normalizedFeatureProfile(features: FlintTargetFeatures | undefined): Fl
   ) as FlintTargetFeatures;
 }
 
+/** Verifies structural invariants and binary sections of a WebAssembly module. */
 function verifyVariant(
   bytes: Uint8Array,
   input: FlintWasmArtifactVerificationInput,
@@ -776,6 +806,7 @@ function verifyVariant(
   return { parsed, diagnostics };
 }
 
+/** Verifies synthesized JavaScript loader adapter script against manifest contracts. */
 function verifyAdapter(
   input: FlintWasmArtifactVerificationInput,
   fileName: string,
@@ -829,6 +860,7 @@ function verifyAdapter(
   return diagnostics;
 }
 
+/** Complete verification entry point validating WebAssembly binary and adapter artifacts. */
 export function verifyFlintWasmArtifact(
   input: FlintWasmArtifactVerificationInput,
 ): FlintWasmArtifactVerificationResult {

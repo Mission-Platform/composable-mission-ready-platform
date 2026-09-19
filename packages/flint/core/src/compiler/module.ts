@@ -28,6 +28,7 @@ import { createEsmSource } from './esm.js';
 import type { FlintAnalysisOptions, FlintAnalysisReport } from '../analysis/contracts.js';
 import type {
   FlintArtifact,
+  FlintArtifactVerificationReport,
   FlintCompileInput,
   FlintCompiler,
   FlintCompilerServiceOptions,
@@ -35,6 +36,7 @@ import type {
   FlintGraphCompileInput,
   FlintSelfHostedStageReport,
 } from '../contracts.js';
+import type { FlintAbiManifest, FlintDynamicLinkMetadata } from '../manifest.js';
 
 /**
  * Resolves the analysis policy merged with any requested capabilities.
@@ -284,7 +286,170 @@ function copyDefinedProperties<T extends object>(target: T, source: Record<strin
 }
 
 /**
+ * Emits an event message through the attached compiler logger if configured.
+ *
+ * @param logger - Optional compiler event logger.
+ * @param level - Log severity level.
+ * @param event - Event name identifier.
+ * @param payload - Structured data associated with the event.
+ */
+function logCompilerEvent(
+  logger: FlintCompileInput['logger'],
+  level: 'info' | 'error' | 'warn' | 'debug',
+  event: string,
+  payload: Record<string, unknown>,
+): void {
+  if (logger !== undefined) {
+    logger.log(level, event, payload);
+  }
+}
+
+/**
+ * Computes a fallback content hash used when compilation produces no WebAssembly binary.
+ *
+ * @param input - Module compilation input.
+ * @param graphHash - Optional hash of the linked module graph.
+ * @returns 8-character hexadecimal hash string.
+ */
+function computeInitialEmptyHash(input: FlintCompileInput, graphHash = ''): string {
+  const requireExports = input.requireExports ?? true;
+  const loggerScope = input.logger?.scope ?? '';
+  const stdlibIdentity = JSON.stringify(flintStandardLibraryIdentity(input.standardLibrary));
+  return hashBytes(
+    encoder.encode(
+      `${input.fileName}\0${input.source}\0${input.compilerVersion}\0${requireExports}\0${graphHash}\0${loggerScope}\0${stdlibIdentity}`,
+    ),
+  );
+}
+
+/**
+ * Resolves the optimization level for a single module from input options and link profile.
+ *
+ * @param input - Module compilation input.
+ * @param frontend - Prepared frontend analysis results containing link profile.
+ * @returns Selected optimization level ('debug' or 'release').
+ */
+function resolveModuleOptimization(input: FlintCompileInput, frontend: FlintFrontendResult): 'debug' | 'release' {
+  if (input.optimization !== undefined) return input.optimization;
+  return frontend.links.linkProfile === undefined ? 'debug' : 'release';
+}
+
+/**
+ * Runs WebAssembly backend code generation for an analyzed module.
+ *
+ * @param input - Module compilation input.
+ * @param frontend - Analyzed frontend result containing IR.
+ * @param sourceFiles - Source file paths contributing to this compilation.
+ * @param graphHash - Optional module graph hash.
+ * @param optimization - Optimization level.
+ * @returns Structured backend compilation result.
+ */
+function executeBackendCompilation(
+  input: FlintCompileInput,
+  frontend: FlintFrontendResult,
+  sourceFiles: readonly string[],
+  graphHash: string | undefined,
+  optimization: 'debug' | 'release',
+): FlintBackendCompilationResult {
+  const backendCompileInput = buildBackendCompileInput(input, frontend, sourceFiles, graphHash, optimization);
+  return compileFlintWasm(backendCompileInput, input.fileName) as unknown as FlintBackendCompilationResult;
+}
+
+/**
+ * Checks whether backend WebAssembly compilation resulted in errors or missing output.
+ *
+ * @param backend - Backend compilation result.
+ * @returns True if backend diagnostics or missing binary indicate failure.
+ */
+function hasBackendCompilationFailure(backend: FlintBackendCompilationResult): boolean {
+  return backend.diagnostics.length > 0 || backend.wasm === undefined;
+}
+
+/**
+ * Evaluates whether artifact verification failed under strict security policy.
+ *
+ * @param profile - Policy profile ('strict' or 'development').
+ * @param verified - Whether the artifact verification passed.
+ * @returns True if verification failure must block compilation under strict policy.
+ */
+function isStrictVerificationFailure(profile: 'strict' | 'development', verified: boolean): boolean {
+  return profile === 'strict' && !verified;
+}
+
+/**
+ * Packages a verified WebAssembly module into a complete FlintArtifact.
+ *
+ * @param input - Module compilation input.
+ * @param frontend - Analyzed frontend compiler result.
+ * @param backend - Backend WebAssembly generation result.
+ * @param manifest - Validated ABI manifest.
+ * @param wasm - Emitted WebAssembly binary.
+ * @param esmSource - Synthesized ESM loader script.
+ * @param dynamicMetadata - Optional dynamic link metadata.
+ * @param verification - Verification report and diagnostics.
+ * @param graphMetadata - Graph link metadata to preserve.
+ * @param cacheData - Paths of persisted cache and debug artifacts.
+ * @param analysis - Static analysis report.
+ * @returns Final compiled artifact ready for distribution.
+ */
+function buildSuccessfulArtifact(
+  input: FlintCompileInput,
+  frontend: FlintFrontendResult,
+  backend: FlintBackendCompilationResult,
+  manifest: FlintAbiManifest,
+  wasm: Uint8Array,
+  esmSource: string,
+  dynamicMetadata: FlintDynamicLinkMetadata | undefined,
+  verification: {
+    readonly verificationDiagnostics: readonly FlintDiagnostic[];
+    readonly artifactVerification: FlintArtifactVerificationReport;
+  },
+  graphMetadata: Pick<
+    FlintArtifact,
+    'graphHash' | 'linkMode' | 'linkedModules' | 'linkProfile' | 'optimizationProfile'
+  >,
+  cacheData: ReturnType<typeof persistModuleCache>,
+  analysis: FlintAnalysisReport,
+): FlintArtifact {
+  const artifact: FlintArtifact = {
+    wasm,
+    esmSource,
+    declarations: createDeclarations(manifest),
+    manifest,
+    contentHash: hashBytes(wasm),
+    wat: backend.wat ?? '',
+    optimizationReport: frontend.optimizationReport,
+    sonIr: frontend.sonIr,
+    sonOptimizationReport: frontend.sonOptimizationReport,
+    diagnostics: [...analysis.diagnostics, ...verification.verificationDiagnostics],
+    analysis,
+    artifactVerification: verification.artifactVerification,
+    ...graphMetadata,
+  };
+  return copyDefinedProperties(artifact, {
+    sourceMap: backend.sourceMap,
+    watPath: cacheData.watPath,
+    sonIrPath: cacheData.sonIrPath,
+    unoptimizedSonIrPath: cacheData.unoptimizedSonIrPath,
+    unoptimizedWatPath: cacheData.debugPaths.unoptimizedWatPath,
+    optimizedWasmPath: cacheData.debugPaths.optimizedWasmPath,
+    unoptimizedWasmPath: cacheData.debugPaths.unoptimizedWasmPath,
+    debugArtifacts: cacheData.debugArtifacts,
+    iteratorExports: backend.iteratorExports,
+    targetFeatures: input.targetFeatures,
+    compilerHints: input.compilerHints,
+    dynamicLinkMetadata: dynamicMetadata,
+  });
+}
+
+/**
  * Compiles a single analyzed Flint module to WebAssembly and synthesizes ESM loader artifacts.
+ *
+ * @param input - Module compilation input specification.
+ * @param frontend - Prepared frontend compiler result.
+ * @param graphMetadata - Optional metadata propagated from module graph linking.
+ * @param sourceFiles - Source file paths contributing to this compilation unit.
+ * @returns Complete compiled artifact containing binaries, declarations, and reports.
  */
 export function compileFlintModule(
   input: FlintCompileInput,
@@ -298,44 +463,37 @@ export function compileFlintModule(
   const diagnostics = [...frontend.diagnostics];
   const analysis = analyzeFlint(frontend, analysisOptions(input));
   diagnostics.push(...analysis.diagnostics);
-  input.logger?.log('info', 'compile.start', { fileName: input.fileName });
-  const emptyHash = hashBytes(
-    encoder.encode(
-      `${input.fileName}\0${input.source}\0${input.compilerVersion}\0${input.requireExports ?? true}\0${graphMetadata.graphHash ?? ''}\0${input.logger?.scope ?? ''}\0${JSON.stringify(flintStandardLibraryIdentity(input.standardLibrary))}`,
-    ),
-  );
+  logCompilerEvent(input.logger, 'info', 'compile.start', { fileName: input.fileName });
+
+  const emptyHash = computeInitialEmptyHash(input, graphMetadata.graphHash);
   if (hasFrontendErrors(frontend, analysis)) {
     return { esmSource: '', declarations: '', contentHash: emptyHash, diagnostics, analysis, ...graphMetadata };
   }
-  const optimization = input.optimization ?? (frontend.links.linkProfile === undefined ? 'debug' : 'release');
+
+  const optimization = resolveModuleOptimization(input, frontend);
   const module = frontend.optimizedModule as NonNullable<typeof frontend.optimizedModule>;
   const manifest = frontend.abi as NonNullable<typeof frontend.abi>;
 
-  const backendCompileInput = buildBackendCompileInput(
-    input,
-    frontend,
-    sourceFiles,
-    graphMetadata.graphHash,
-    optimization,
-  );
-  const backend = compileFlintWasm(backendCompileInput, input.fileName) as unknown as FlintBackendCompilationResult;
-  const backendDiagnostics = backend.diagnostics as readonly FlintDiagnostic[];
-  if (backendDiagnostics.length > 0 || backend.wasm === undefined) {
-    input.logger?.log('error', 'compile.failed', { fileName: input.fileName, diagnostics: backendDiagnostics.length });
+  const backend = executeBackendCompilation(input, frontend, sourceFiles, graphMetadata.graphHash, optimization);
+  if (hasBackendCompilationFailure(backend)) {
+    logCompilerEvent(input.logger, 'error', 'compile.failed', {
+      fileName: input.fileName,
+      diagnostics: backend.diagnostics.length,
+    });
     return {
       esmSource: '',
       declarations: '',
       contentHash: emptyHash,
-      diagnostics: [...diagnostics, ...backendDiagnostics],
+      diagnostics: [...diagnostics, ...backend.diagnostics],
       ...graphMetadata,
     };
   }
-  const wasm = backend.wasm;
-  const wat = backend.wat ?? '';
+
+  const wasm = backend.wasm as Uint8Array;
   const contentHash = hashBytes(wasm);
   const dynamicMetadata = dynamicLinkMetadata(manifest, contentHash);
   const esmSource = createEsmSource(wasm, manifest, backend.iteratorExports ?? [], dynamicMetadata);
-  const { verificationDiagnostics, artifactVerification } = verifyBackendArtifact({
+  const verification = verifyBackendArtifact({
     wasm,
     unoptimizedWasm: backend.unoptimizedWasm,
     fileName: input.fileName,
@@ -351,23 +509,23 @@ export function compileFlintModule(
     allowedCapabilities: analysis.policy.allowedCapabilities,
   });
 
-  const strictArtifactFailure = analysis.policy.profile === 'strict' && !artifactVerification.verified;
-  if (strictArtifactFailure) {
-    input.logger?.log('error', 'compile.failed.artifact-verification', {
+  if (isStrictVerificationFailure(analysis.policy.profile, verification.artifactVerification.verified)) {
+    logCompilerEvent(input.logger, 'error', 'compile.failed.artifact-verification', {
       fileName: input.fileName,
-      diagnostics: verificationDiagnostics.length,
+      diagnostics: verification.verificationDiagnostics.length,
     });
     return {
       esmSource: '',
       declarations: '',
       manifest,
       contentHash,
-      diagnostics: [...diagnostics, ...verificationDiagnostics],
+      diagnostics: [...diagnostics, ...verification.verificationDiagnostics],
       analysis,
-      artifactVerification,
+      artifactVerification: verification.artifactVerification,
       ...graphMetadata,
     };
   }
+
   const cacheKey = computeModuleCacheKey(
     input,
     frontend,
@@ -377,45 +535,22 @@ export function compileFlintModule(
     optimization,
     analysis,
   );
+  const cacheData = persistModuleCache(input, cacheKey, frontend, backend, optimization);
+  logCompilerEvent(input.logger, 'info', 'compile.complete', { fileName: input.fileName, contentHash });
 
-  const { sonIrPath, unoptimizedSonIrPath, debugPaths, watPath, debugArtifacts } = persistModuleCache(
+  return buildSuccessfulArtifact(
     input,
-    cacheKey,
     frontend,
     backend,
-    optimization,
-  );
-
-  input.logger?.log('info', 'compile.complete', { fileName: input.fileName, contentHash });
-  const artifact: FlintArtifact = {
+    manifest,
     wasm,
     esmSource,
-    declarations: createDeclarations(manifest),
-    manifest,
-    contentHash,
-    wat,
-    optimizationReport: frontend.optimizationReport,
-    sonIr: frontend.sonIr,
-    sonOptimizationReport: frontend.sonOptimizationReport,
-    diagnostics: [...analysis.diagnostics, ...verificationDiagnostics],
+    dynamicMetadata,
+    verification,
+    graphMetadata,
+    cacheData,
     analysis,
-    artifactVerification,
-    ...graphMetadata,
-  };
-  return copyDefinedProperties(artifact, {
-    sourceMap: backend.sourceMap,
-    watPath,
-    sonIrPath,
-    unoptimizedSonIrPath,
-    unoptimizedWatPath: debugPaths.unoptimizedWatPath,
-    optimizedWasmPath: debugPaths.optimizedWasmPath,
-    unoptimizedWasmPath: debugPaths.unoptimizedWasmPath,
-    debugArtifacts,
-    iteratorExports: backend.iteratorExports,
-    targetFeatures: input.targetFeatures,
-    compilerHints: input.compilerHints,
-    dynamicLinkMetadata: dynamicMetadata,
-  });
+  );
 }
 
 /**
@@ -434,14 +569,26 @@ export function compileFlint(input: FlintCompileInput): FlintArtifact {
 
 /**
  * Creates an instance of the Flint compiler.
+ *
+ * @returns Configured compiler instance.
  */
 export function createFlintCompiler(): FlintCompiler {
   let disposed = false;
   return {
+    /**
+     * Compiles a single Flint input into a WebAssembly artifact.
+     *
+     * @param input - Module compilation input including source and compiler configuration.
+     * @returns Emitted compiler artifact containing WebAssembly binary and diagnostics.
+     * @throws {Error} If the compiler instance has been disposed.
+     */
     compile(input): FlintArtifact {
       if (disposed) throw new Error('Flint compiler has been disposed.');
       return compileFlint(input);
     },
+    /**
+     * Disposes the compiler instance, preventing subsequent compilation calls.
+     */
     dispose(): void {
       disposed = true;
     },

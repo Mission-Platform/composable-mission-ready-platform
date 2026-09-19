@@ -20,11 +20,13 @@ import { rangeFromOffsets, rangeFromSpan } from './positions.js';
 
 import type { FlintCallable, FlintSymbol, FlintTokenClassification } from './types.js';
 
+/** Indexed symbol table for a document with definitions and references. */
 export interface FlintSymbolIndex {
   readonly symbols: readonly FlintSymbol[];
   readonly callables: ReadonlyMap<string, FlintCallable>;
 }
 
+/** Traverses a Flint module AST building an index of all declared symbols and references. */
 export function buildSymbolIndex(
   source: string,
   module: FlintModule | undefined,
@@ -120,6 +122,7 @@ export function buildSymbolIndex(
   return { symbols, callables };
 }
 
+/** Indexes struct declarations, fields, and constructors. */
 function addStructSymbols(
   source: string,
   declaration: FlintStructDeclaration,
@@ -150,6 +153,7 @@ function addStructSymbols(
   }
 }
 
+/** Indexes enum declarations, variants, and variant payload fields. */
 function addEnumSymbols(
   source: string,
   declaration: FlintEnumDeclaration,
@@ -191,6 +195,7 @@ function addEnumSymbols(
   }
 }
 
+/** Indexes interface definitions and their member signatures. */
 function addInterfaceSymbols(
   source: string,
   declaration: FlintInterfaceDeclaration,
@@ -209,6 +214,7 @@ function addInterfaceSymbols(
   for (const method of declaration.functions) addInterfaceFunctionSymbols(source, declaration, method, tokens, symbols);
 }
 
+/** Indexes function signatures declared within an interface. */
 function addInterfaceFunctionSymbols(
   source: string,
   declaration: FlintInterfaceDeclaration,
@@ -235,6 +241,7 @@ function addInterfaceFunctionSymbols(
   addTypeSymbol(symbols, source, method.result);
 }
 
+/** Creates a document symbol for a struct or enum definition. */
 function addAggregateTypeSymbol(
   source: string,
   name: string,
@@ -253,6 +260,7 @@ function addAggregateTypeSymbol(
   });
 }
 
+/** Indexes generic type parameter symbols. */
 function addGenericParameterSymbols(
   source: string,
   parameters: readonly FlintGenericParameter[],
@@ -275,12 +283,14 @@ function addGenericParameterSymbols(
   }
 }
 
+/** Formats generic parameter names into a suffix string like <T, U>. */
 function genericSuffix(parameters: readonly FlintGenericParameter[]): string {
   return parameters.length === 0
     ? ''
     : `<${parameters.map((parameter) => `${parameter.name}${parameter.bounds.length === 0 ? '' : `: ${parameter.bounds.join(' + ')}`}`).join(', ')}>`;
 }
 
+/** Traverses statements indexing local variables, parameters, and control-flow blocks. */
 function addStatementSymbols(
   source: string,
   declaration: FlintFunction,
@@ -371,6 +381,7 @@ function addStatementSymbols(
   }
 }
 
+/** Traverses expressions indexing referenced variables, calls, and member access. */
 function addExpressionSymbols(
   source: string,
   declaration: FlintFunction,
@@ -415,6 +426,7 @@ function addExpressionSymbols(
   }
 }
 
+/** Traverses match pattern expressions indexing pattern bindings. */
 function addPatternSymbols(
   source: string,
   declaration: FlintFunction,
@@ -436,6 +448,7 @@ function addPatternSymbols(
   }
 }
 
+/** Computes the enclosing lexical block scope for statement variables. */
 function blockScope(
   statements: readonly FlintStatement[],
   tokens: readonly FlintToken[],
@@ -457,6 +470,7 @@ function blockScope(
   };
 }
 
+/** Indexes a type reference occurrence. */
 function addTypeSymbol(symbols: FlintSymbol[], source: string, type: FlintTypeName): void {
   const rendered = renderTypeName(type);
   if (!primitiveTypes.has(type.name as FlintPrimitiveType) && type.reference === undefined) return;
@@ -469,6 +483,7 @@ function addTypeSymbol(symbols: FlintSymbol[], source: string, type: FlintTypeNa
   for (const argument of type.arguments ?? []) addTypeSymbol(symbols, source, argument);
 }
 
+/** Formats an AST type name into a readable type signature string. */
 function renderTypeName(type: FlintTypeName): string {
   const name = type.reference ?? type.name;
   return type.arguments === undefined || type.arguments.length === 0
@@ -476,25 +491,30 @@ function renderTypeName(type: FlintTypeName): string {
     : `${name}<${type.arguments.map((argument) => renderTypeName(argument)).join(', ')}>`;
 }
 
+/** Finds a lexical token matching kind or text. */
 function findToken(tokens: readonly FlintToken[], text: string, start: number, end: number): FlintToken | undefined {
   return tokens.find(
     (token) => token.kind === 'identifier' && token.text === text && token.span.start >= start && token.span.end <= end,
   );
 }
 
+/** Finds the next identifier token after an offset. */
 function nextIdentifier(tokens: readonly FlintToken[], token: FlintToken): FlintToken | undefined {
   const index = tokens.indexOf(token);
   return tokens.slice(index + 1).find((candidate) => candidate.kind === 'identifier');
 }
 
+/** Converts a token source span into a FlintRange. */
 function tokenRange(source: string, token: FlintToken) {
   return rangeFromOffsets(source, token.span.start, token.span.end);
 }
 
+/** Formats a function signature into a human-readable display string. */
 function signature(name: string, callable: FlintCallable): string {
   return `${name}(${callable.parameters.join(', ')}): ${callable.result}`;
 }
 
+/** Extracts a display name from an expression node. */
 export function expressionName(expression: FlintExpression): string | undefined {
   return expression.kind === 'identifier'
     ? expression.name

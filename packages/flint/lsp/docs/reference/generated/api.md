@@ -14,7 +14,7 @@ Generated from public source declarations in `@mission-platform/flint-lsp`.
 function createFlintLspServer(options: FlintLspServerOptions = {}): FlintLspServer;
 ```
 
-No description provided.
+Instantiates a FlintLspServer backed by language service and workspace host.
 
 #### Parameters
 
@@ -30,7 +30,7 @@ No description provided.
 export interface FlintLspDocument
 ```
 
-No description provided.
+Synchronized text document representation with version and URI.
 
 ### FlintLspLogEvent
 
@@ -40,7 +40,7 @@ No description provided.
 export interface FlintLspLogEvent
 ```
 
-No description provided.
+Telemetry log event emitted by the language server.
 
 ### FlintLspProgressEvent
 
@@ -50,7 +50,7 @@ No description provided.
 export interface FlintLspProgressEvent
 ```
 
-No description provided.
+Progress notification event payload emitted during analysis.
 
 ### FlintLspServer
 
@@ -60,7 +60,7 @@ No description provided.
 export interface FlintLspServer
 ```
 
-No description provided.
+Full language server handler interface dispatching LSP protocol requests.
 
 ### FlintLspServerOptions
 
@@ -70,7 +70,7 @@ No description provided.
 export interface FlintLspServerOptions
 ```
 
-No description provided.
+Options configuring Flint language server creation.
 
 ### registerFlintLsp
 
@@ -80,7 +80,7 @@ No description provided.
 function registerFlintLsp(connection: Connection, options: FlintLspServerOptions = {}): FlintLspServer;
 ```
 
-No description provided.
+Binds Flint language server request and notification handlers to a connection.
 
 #### Parameters
 
@@ -99,7 +99,7 @@ No description provided.
 function createFlintNodeWorkspaceHost(options: FlintNodeWorkspaceOptions): RootBoundedFlintWorkspaceHost;
 ```
 
-No description provided.
+Creates a root-bounded FlintWorkspaceHost for Node environments.
 
 #### Parameters
 
@@ -115,7 +115,7 @@ No description provided.
 export interface FlintNodeFileSystem
 ```
 
-No description provided.
+File system operations required by the Node workspace host.
 
 ### FlintNodeWorkspaceOptions
 
@@ -125,7 +125,7 @@ No description provided.
 export interface FlintNodeWorkspaceOptions extends FlintWorkspaceOptions
 ```
 
-No description provided.
+Configuration options for initializing a Node-backed workspace host.
 
 ### RootBoundedFlintWorkspaceHost
 
@@ -135,4 +135,4 @@ No description provided.
 export class RootBoundedFlintWorkspaceHost implements FlintWorkspaceHost
 ```
 
-No description provided.
+Workspace host implementation enforcing root boundary containment for file access.

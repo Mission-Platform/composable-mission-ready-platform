@@ -11,6 +11,7 @@ import type {
 /** The LSIF version represented by this module. */
 export const FLINT_LSIF_VERSION = '0.6.0' as const;
 
+/** LSIF graph vertex label enumeration. */
 export type FlintLsifVertexLabel =
   | 'metaData'
   | 'project'
@@ -26,6 +27,7 @@ export type FlintLsifVertexLabel =
   | 'moniker'
   | 'diagnosticResult';
 
+/** LSIF graph edge label enumeration. */
 export type FlintLsifEdgeLabel =
   | 'contains'
   | 'next'
@@ -39,11 +41,13 @@ export type FlintLsifEdgeLabel =
   | 'moniker'
   | 'diagnostic';
 
+/** LSIF line and character position coordinate. */
 export interface FlintLsifPosition {
   readonly line: number;
   readonly character: number;
 }
 
+/** LSIF metadata vertex declaring format version and tool capabilities. */
 export interface FlintLsifMetadataVertex {
   readonly id: string;
   readonly type: 'vertex';
@@ -54,6 +58,7 @@ export interface FlintLsifMetadataVertex {
   readonly toolVersion: string;
 }
 
+/** LSIF project vertex representing a compilation root. */
 export interface FlintLsifProjectVertex {
   readonly id: string;
   readonly type: 'vertex';
@@ -63,6 +68,7 @@ export interface FlintLsifProjectVertex {
   readonly resource?: string;
 }
 
+/** LSIF document vertex representing an indexed source file. */
 export interface FlintLsifDocumentVertex {
   readonly id: string;
   readonly type: 'vertex';
@@ -74,6 +80,7 @@ export interface FlintLsifDocumentVertex {
   readonly diagnostics: number;
 }
 
+/** LSIF range vertex bounding a symbol occurrence. */
 export interface FlintLsifRangeVertex {
   readonly id: string;
   readonly type: 'vertex';
@@ -84,6 +91,7 @@ export interface FlintLsifRangeVertex {
   readonly endOffset: number;
 }
 
+/** LSIF result set vertex linking multiple ranges to shared definitions. */
 export interface FlintLsifResultSetVertex {
   readonly id: string;
   readonly type: 'vertex';
@@ -92,6 +100,7 @@ export interface FlintLsifResultSetVertex {
   readonly symbolKind: string;
 }
 
+/** LSIF query result vertex containing hover, definition, or references. */
 export interface FlintLsifResultVertex {
   readonly id: string;
   readonly type: 'vertex';
@@ -108,6 +117,7 @@ export interface FlintLsifResultVertex {
   readonly diagnostics?: readonly FlintLsifDiagnostic[];
 }
 
+/** LSIF moniker vertex establishing global cross-project symbol identity. */
 export interface FlintLsifMonikerVertex {
   readonly id: string;
   readonly type: 'vertex';
@@ -117,6 +127,7 @@ export interface FlintLsifMonikerVertex {
   readonly identifier: string;
 }
 
+/** Tagged union of all valid LSIF graph vertices. */
 export type FlintLsifVertex =
   | FlintLsifMetadataVertex
   | FlintLsifProjectVertex
@@ -126,6 +137,7 @@ export type FlintLsifVertex =
   | FlintLsifResultVertex
   | FlintLsifMonikerVertex;
 
+/** Directed relationship edge between LSIF graph vertices. */
 export interface FlintLsifEdge {
   readonly id: string;
   readonly type: 'edge';
@@ -134,6 +146,7 @@ export interface FlintLsifEdge {
   readonly inV: string;
 }
 
+/** Diagnostic record exported into LSIF dump artifacts. */
 export interface FlintLsifDiagnostic {
   readonly code: string;
   readonly message: string;
@@ -142,11 +155,13 @@ export interface FlintLsifDiagnostic {
   readonly range: FlintLsifPositionRange;
 }
 
+/** Complete LSIF index dump containing vertices and edges. */
 export interface FlintLsifGraph {
   readonly vertices: readonly FlintLsifVertex[];
   readonly edges: readonly FlintLsifEdge[];
 }
 
+/** Source documents and language service input for LSIF graph generation. */
 export interface FlintLsifInput {
   readonly service: FlintLanguageService;
   /** All workspace documents, including closed documents read by the host. */
@@ -162,6 +177,7 @@ export interface FlintLsifPositionRange {
   readonly end: FlintLsifPosition;
 }
 
+/** Mutable builder accumulating LSIF vertices and edges during graph synthesis. */
 interface MutableGraph {
   readonly vertices: FlintLsifVertex[];
   readonly edges: FlintLsifEdge[];
@@ -174,11 +190,13 @@ interface MutableGraph {
  * this function only adapts those facts to LSIF records.
  */
 export function createFlintLsif(input: FlintLsifInput): FlintLsifGraph;
+/** Generates a complete LSIF index dump for the specified documents. */
 export function createFlintLsif(
   service: FlintLanguageService,
   documents: readonly FlintDocument[],
   projectRoot?: string,
 ): FlintLsifGraph;
+/** Generates a complete LSIF index dump for the specified documents. */
 export function createFlintLsif(
   inputOrService: FlintLsifInput | FlintLanguageService,
   documents: readonly FlintDocument[] = [],
@@ -237,6 +255,7 @@ export function serializeFlintLsif(graph: FlintLsifGraph): string {
 export const serializeFlintLsifGraph = serializeFlintLsif;
 export const createFlintLsifGraph = createFlintLsif;
 
+/** Indexes a document into the LSIF graph, emitting ranges and edges. */
 function addDocument(
   graph: MutableGraph,
   ids: IdAllocator,
@@ -394,6 +413,7 @@ function addDocument(
   }
 }
 
+/** Resolves or creates an LSIF range vertex for a source location. */
 function rangeIdForLocation(
   graph: MutableGraph,
   ids: IdAllocator,
@@ -421,20 +441,24 @@ function rangeIdForLocation(
   return id;
 }
 
+/** Emits a directed relationship edge between two LSIF elements. */
 function addEdge(graph: MutableGraph, ids: IdAllocator, label: FlintLsifEdgeLabel, outV: string, inV: string): void {
   graph.edges.push({ id: ids.id(`edge:${label}:${outV}:${inV}`), type: 'edge', label, outV, inV });
 }
 
+/** Finalizes and sorts LSIF graph elements for deterministic serialization. */
 function finalizeGraph(graph: MutableGraph): FlintLsifGraph {
   const vertices = [...graph.vertices].toSorted(compareRecords);
   const edges = [...graph.edges].toSorted(compareRecords);
   return { vertices, edges };
 }
 
+/** Sort comparator for ordering LSIF graph entries. */
 function compareRecords(left: { readonly id: string }, right: { readonly id: string }): number {
   return left.id.localeCompare(right.id);
 }
 
+/** Sort comparator for ordering document symbols. */
 function compareSymbols(left: FlintAnalysis['symbols'][number], right: FlintAnalysis['symbols'][number]): number {
   return (
     left.range.startOffset - right.range.startOffset ||
@@ -443,6 +467,7 @@ function compareSymbols(left: FlintAnalysis['symbols'][number], right: FlintAnal
   );
 }
 
+/** Sort comparator for ordering source locations. */
 function compareLocations(left: FlintLocation, right: FlintLocation): number {
   return (
     canonicalUri(left.uri).localeCompare(canonicalUri(right.uri)) ||
@@ -451,22 +476,27 @@ function compareLocations(left: FlintLocation, right: FlintLocation): number {
   );
 }
 
+/** Flattens hierarchical document symbol trees into a list. */
 function flattenSymbols(symbols: readonly FlintDocumentSymbol[]): FlintDocumentSymbol[] {
   return symbols.flatMap((symbol) => [symbol, ...flattenSymbols(symbol.children)]);
 }
 
+/** Wraps location query execution with defensive error handling. */
 function safeLocations(factory: () => readonly FlintLocation[]): readonly FlintLocation[] {
   return safe(factory, []);
 }
 
+/** Wraps hover query execution with defensive error handling. */
 function safeHover(factory: () => FlintHover | undefined): FlintHover | undefined {
   return safeOptional(factory);
 }
 
+/** Wraps symbol query execution with defensive error handling. */
 function safeSymbols(factory: () => readonly FlintDocumentSymbol[]): readonly FlintDocumentSymbol[] {
   return safe(factory, []);
 }
 
+/** Executes a language service query safely, catching thrown errors. */
 function safe<T>(factory: () => T, fallback: T): T {
   try {
     return factory();
@@ -475,6 +505,7 @@ function safe<T>(factory: () => T, fallback: T): T {
   }
 }
 
+/** Executes an optional query safely, returning fallback on error. */
 function safeOptional<T>(factory: () => T | undefined): T | undefined {
   try {
     return factory();
@@ -483,6 +514,7 @@ function safeOptional<T>(factory: () => T | undefined): T | undefined {
   }
 }
 
+/** Normalizes a document URI into canonical form. */
 function canonicalUri(uri: string): string {
   const normalized = uri.replaceAll('\\', '/');
   if (normalized.startsWith('file://')) return `file://${collapsePath(normalized.slice('file://'.length))}`;
@@ -491,6 +523,7 @@ function canonicalUri(uri: string): string {
   return normalized.replaceAll(/\/+/gu, '/');
 }
 
+/** Simplifies and collapses relative path segments. */
 function collapsePath(path: string): string {
   const absolute = path.startsWith('/') ? path : `/${path}`;
   const parts: string[] = [];
@@ -502,6 +535,7 @@ function collapsePath(path: string): string {
   return `/${parts.join('/')}`;
 }
 
+/** Determines the lowest common directory root among document URIs. */
 function commonProjectRoot(uris: readonly string[]): string | undefined {
   const paths = uris
     .filter((uri) => uri.startsWith('file://'))
@@ -517,14 +551,17 @@ function commonProjectRoot(uris: readonly string[]): string | undefined {
   return `file://${`/${first.slice(0, Math.max(0, length)).join('/')}`}`;
 }
 
+/** Type guard checking whether input matches the FlintLsifInput object shape. */
 function isInput(value: FlintLsifInput | FlintLanguageService): value is FlintLsifInput {
   return 'service' in value;
 }
 
+/** Monotonic integer identifier generator for LSIF vertices and edges. */
 class IdAllocator {
   readonly #ids = new Map<string, string>();
   #next = 1;
 
+  /** Allocates the next sequential integer identifier. */
   public id(key: string): string {
     const existing = this.#ids.get(key);
     if (existing !== undefined) return existing;

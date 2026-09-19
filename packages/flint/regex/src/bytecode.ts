@@ -15,6 +15,9 @@ export const Op = {
   EOL: 8,
 } as const;
 
+/**
+ * Binary instruction opcode identifier for regex bytecode execution.
+ */
 export type Opcode = (typeof Op)[keyof typeof Op];
 
 /** Width, in 32-bit integer operands, of every instruction. */

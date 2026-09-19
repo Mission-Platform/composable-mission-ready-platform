@@ -2,6 +2,9 @@ import type { FlintSelfHostedCompilerStage } from './artifact.js';
 
 export type { FlintSelfHostedCompilerStage } from './artifact.js';
 
+/**
+ * Represents a discrete compiler source module in the bounded self-hosted sequence.
+ */
 export interface FlintSelfHostedSourceModule {
   readonly name: string;
   readonly stage: FlintSelfHostedCompilerStage;
@@ -9,7 +12,7 @@ export interface FlintSelfHostedSourceModule {
 }
 
 /**
- * Checked-in FWS compiler sources.
+ * Checked-in FLINT compiler sources.
  *
  * The lex and parse stages are executable bootstrap programs. Their checked-in
  * lowerings are intentionally bounded and emit deterministic fingerprints; the

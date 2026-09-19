@@ -12,6 +12,12 @@
 
 import { Op } from '@mission-platform/flint-regex';
 
+/**
+ * Encodes an unsigned 32-bit integer into WebAssembly LEB128 byte sequence.
+ *
+ * @param value - Unsigned integer to encode.
+ * @returns LEB128 byte array.
+ */
 function unsignedLeb(value: number): number[] {
   const result: number[] = [];
   let remaining = value >>> 0;
@@ -23,6 +29,12 @@ function unsignedLeb(value: number): number[] {
   return result;
 }
 
+/**
+ * Encodes a signed 32-bit integer into WebAssembly LEB128 byte sequence.
+ *
+ * @param value - Signed integer to encode.
+ * @returns LEB128 byte array.
+ */
 function signedLeb(value: number): number[] {
   const result: number[] = [];
   let remaining = BigInt(value);
@@ -371,6 +383,9 @@ function regexEntryBody(runIndex: number): number[] {
 /** Number of internal regex functions linked when the runtime is present. */
 export const REGEX_RUNTIME_FUNCTION_COUNT = 3;
 
+/**
+ * Emitted bytecode byte arrays for the three WebAssembly regex runtime functions.
+ */
 export type RegexRuntimeBodies = {
   readonly classMatch: number[];
   readonly run: number[];

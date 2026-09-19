@@ -17,6 +17,13 @@ const INITIAL_STATE = [
   0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19,
 ] as const;
 
+/**
+ * Bitwise right rotation on a 32-bit unsigned integer.
+ *
+ * @param value - 32-bit integer operand.
+ * @param amount - Bit shift offset (0-31).
+ * @returns Rotated 32-bit integer.
+ */
 function rightRotate(value: number, amount: number): number {
   return (value >>> amount) | (value << (32 - amount));
 }
@@ -24,6 +31,9 @@ function rightRotate(value: number, amount: number): number {
 /**
  * Returns a versioned cryptographic identity for artifact bytes.
  * This is an integrity check, not an authenticity signature.
+ *
+ * @param bytes - Input byte array to hash.
+ * @returns Formatted hash string prefixed with hash version.
  */
 export function sha256ArtifactHash(bytes: Uint8Array): string {
   const source = Uint8Array.from(bytes);
@@ -40,18 +50,18 @@ export function sha256ArtifactHash(bytes: Uint8Array): string {
   for (let offset = 0; offset < paddedLength; offset += 64) {
     for (let index = 0; index < 16; index += 1) schedule[index] = view.getUint32(offset + index * 4);
     for (let index = 16; index < 64; index += 1) {
-      const valueA = schedule[index - 15]!;
-      const valueB = schedule[index - 2]!;
+      const valueA = schedule[index - 15] ?? 0;
+      const valueB = schedule[index - 2] ?? 0;
       const sigmaA = rightRotate(valueA, 7) ^ rightRotate(valueA, 18) ^ (valueA >>> 3);
       const sigmaB = rightRotate(valueB, 17) ^ rightRotate(valueB, 19) ^ (valueB >>> 10);
-      schedule[index] = (schedule[index - 16]! + sigmaA + schedule[index - 7]! + sigmaB) >>> 0;
+      schedule[index] = ((schedule[index - 16] ?? 0) + sigmaA + (schedule[index - 7] ?? 0) + sigmaB) >>> 0;
     }
 
     let [a, b, c, d, fifthStateWord, f, g, h] = state;
     for (let index = 0; index < 64; index += 1) {
       const sigmaA = rightRotate(fifthStateWord, 6) ^ rightRotate(fifthStateWord, 11) ^ rightRotate(fifthStateWord, 25);
       const choice = (fifthStateWord & f) ^ (~fifthStateWord & g);
-      const temporary1 = (h + sigmaA + choice + ROUND_CONSTANTS[index]! + schedule[index]!) >>> 0;
+      const temporary1 = (h + sigmaA + choice + (ROUND_CONSTANTS[index] ?? 0) + (schedule[index] ?? 0)) >>> 0;
       const sigmaB = rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22);
       const majority = (a & b) ^ (a & c) ^ (b & c);
       const temporary2 = (sigmaB + majority) >>> 0;
@@ -64,14 +74,14 @@ export function sha256ArtifactHash(bytes: Uint8Array): string {
       b = a;
       a = (temporary1 + temporary2) >>> 0;
     }
-    state[0] = (state[0]! + a) >>> 0;
-    state[1] = (state[1]! + b) >>> 0;
-    state[2] = (state[2]! + c) >>> 0;
-    state[3] = (state[3]! + d) >>> 0;
-    state[4] = (state[4]! + fifthStateWord) >>> 0;
-    state[5] = (state[5]! + f) >>> 0;
-    state[6] = (state[6]! + g) >>> 0;
-    state[7] = (state[7]! + h) >>> 0;
+    state[0] = ((state[0] ?? 0) + a) >>> 0;
+    state[1] = ((state[1] ?? 0) + b) >>> 0;
+    state[2] = ((state[2] ?? 0) + c) >>> 0;
+    state[3] = ((state[3] ?? 0) + d) >>> 0;
+    state[4] = ((state[4] ?? 0) + fifthStateWord) >>> 0;
+    state[5] = ((state[5] ?? 0) + f) >>> 0;
+    state[6] = ((state[6] ?? 0) + g) >>> 0;
+    state[7] = ((state[7] ?? 0) + h) >>> 0;
   }
 
   return `${HASH_VERSION}:${state.map((value) => value.toString(16).padStart(8, '0')).join('')}`;

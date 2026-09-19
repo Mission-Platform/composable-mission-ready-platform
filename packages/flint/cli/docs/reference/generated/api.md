@@ -259,10 +259,7 @@ Formats a Sea-of-Nodes IR module into JSON metadata and terminal summary text.
 **Kind:** function
 
 ```typescript
-function outputDirectoryFor(
-  entryFileName: string,
-  outputDirectory = path.join(path.dirname(entryFileName), 'dist'),
-): string;
+function outputDirectoryFor(entryFileName: string, outputDirectory?: string): string;
 ```
 
 Computes the target output directory for artifact generation.
@@ -272,7 +269,7 @@ Computes the target output directory for artifact generation.
 | Name            | Type   | Description                                |
 | --------------- | ------ | ------------------------------------------ |
 | entryFileName   | string | Path to the entry file.                    |
-| outputDirectory |        | Explicit or default output directory path. |
+| outputDirectory | string | Explicit or default output directory path. |
 
 #### Contract
 

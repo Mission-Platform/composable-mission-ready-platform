@@ -27,15 +27,20 @@ const BYTE_AT_IMPORT = 'fws_byte_at';
 const TRAP_IMPORT = 'fws_trap';
 const encoder = new TextEncoder();
 
+/** Numeric value type tags supported in WebAssembly registers. */
 type NumericType = 'f32' | 'f64' | 'i32' | 'i64' | 'u32' | 'u64';
+/** Supported WebAssembly low-level value types. */
 type WasmValueType = 'i32' | 'i64' | 'f32' | 'f64';
+/** Intermediate type representation for register value layout. */
 type VmRep =
   | { readonly kind: 'unit' }
   | { readonly kind: 'bool' }
   | { readonly kind: 'number'; readonly type: NumericType }
   | { readonly kind: 'bytes' }
   | { readonly kind: 'aggregate'; readonly layout: string };
+/** Local register index mapping tuple. */
 type LocalReference = readonly number[];
+/** Metadata and register layout for a compiled function. */
 type FunctionInfo = {
   readonly function: FlintVmFunction;
   readonly reps: readonly VmRep[];
@@ -44,6 +49,7 @@ type FunctionInfo = {
   readonly typeIndex: number;
 };
 
+/** Encodes an unsigned integer into LEB128 bytes. */
 function unsignedLeb(value: number): number[] {
   const result: number[] = [];
   let remaining = value >>> 0;
@@ -55,6 +61,7 @@ function unsignedLeb(value: number): number[] {
   return result;
 }
 
+/** Encodes a signed integer into LEB128 bytes. */
 function signedLeb(value: number | bigint): number[] {
   const result: number[] = [];
   let remaining = BigInt(value);
@@ -68,6 +75,7 @@ function signedLeb(value: number | bigint): number[] {
   return result;
 }
 
+/** Normalizes an integer immediate value to a BigInt or number. */
 function integerImmediate(type: NumericType, value: number | bigint): number | bigint {
   if (type === 'u32') {
     const unsigned = BigInt(value) & 0xff_ff_ff_ffn;
@@ -80,27 +88,33 @@ function integerImmediate(type: NumericType, value: number | bigint): number | b
   return value;
 }
 
+/** Returns a cloned array of bytes. */
 function bytes(value: readonly number[]): number[] {
   return [...value];
 }
 
+/** Emits an LEB128-prefixed vector of bytecode elements. */
 function vector(value: readonly number[]): number[] {
   return [...unsignedLeb(value.length), ...value];
 }
 
+/** Encodes a UTF-8 string into length-prefixed bytes. */
 function wasmString(value: string): number[] {
   const encoded = encoder.encode(value);
   return [...unsignedLeb(encoded.length), ...encoded];
 }
 
+/** Packages a section ID and payload with length header. */
 function section(id: number, contents: readonly number[]): number[] {
   return [id, ...unsignedLeb(contents.length), ...contents];
 }
 
+/** Throws an InvalidAbi FlintTrap error. */
 function fail(message: string): never {
   throw new FlintTrap('InvalidAbi', `VM WASM lowering failed: ${message}`);
 }
 
+/** Maps a type string into a register layout representation. */
 function typeForValue(type: string): VmRep {
   if (type === 'unit') return { kind: 'unit' };
   if (type === 'bool') return { kind: 'bool' };
@@ -109,6 +123,7 @@ function typeForValue(type: string): VmRep {
   return { kind: 'aggregate', layout: type };
 }
 
+/** Compares two register layout representations for equivalence. */
 function sameRep(left: VmRep, right: VmRep): boolean {
   return (
     left.kind === right.kind &&
@@ -117,6 +132,7 @@ function sameRep(left: VmRep, right: VmRep): boolean {
   );
 }
 
+/** Returns the flattened WebAssembly types for a register layout. */
 function flatTypes(rep: VmRep): readonly WasmValueType[] {
   if (rep.kind === 'unit') return [];
   if (rep.kind === 'bool' || rep.kind === 'bytes' || rep.kind === 'aggregate')
@@ -126,16 +142,19 @@ function flatTypes(rep: VmRep): readonly WasmValueType[] {
   ];
 }
 
+/** Maps a WebAssembly type name to its binary opcode code. */
 function wasmTypeCode(type: WasmValueType): number {
   return type === 'i32' ? 0x7f : type === 'i64' ? 0x7e : type === 'f32' ? 0x7d : 0x7c;
 }
 
+/** Emits a WebAssembly function type signature entry. */
 function typeSignature(parameters: readonly VmRep[], result: VmRep): number[] {
   const parameterTypes = parameters.flatMap((parameter) => flatTypes(parameter).map((type) => wasmTypeCode(type)));
   const resultTypes = flatTypes(result).map((type) => wasmTypeCode(type));
   return [0x60, ...vector(parameterTypes), ...vector(resultTypes)];
 }
 
+/** Derives a register layout representation from a constant value. */
 function repFromConstant(value: FlintVmValue): VmRep {
   if (value.kind === 'number') return { kind: 'number', type: value.type };
   if (value.kind === 'aggregate') return { kind: 'aggregate', layout: value.layout };
@@ -144,10 +163,12 @@ function repFromConstant(value: FlintVmValue): VmRep {
   return { kind: value.kind } as VmRep;
 }
 
+/** Resolves a return type name into a register representation. */
 function resultRep(type: string): VmRep {
   return typeForValue(type);
 }
 
+/** Infers the return representation of a VM instruction. */
 function instructionRep(
   instruction: FlintVmInstruction,
   module: FlintVmModule,
@@ -155,7 +176,7 @@ function instructionRep(
 ): VmRep | undefined {
   switch (instruction.opcode) {
     case 'const': {
-      return repFromConstant(module.constants[instruction.constant]!);
+      return repFromConstant(module.constants[instruction.constant] ?? { kind: 'unit' });
     }
     case 'load': {
       if (instruction.type !== 'number') fail(`load of '${instruction.type}' is not a numeric v1 operation`);
@@ -189,6 +210,7 @@ function instructionRep(
   }
 }
 
+/** Infers register type representations across all instructions in a function. */
 function inferRegisters(function_: FlintVmFunction, module: FlintVmModule): readonly VmRep[] {
   const functions = new Map(module.functions.map((candidate) => [candidate.name, candidate]));
   const inferred: Array<VmRep | undefined> = Array.from({ length: function_.registers });
@@ -256,6 +278,7 @@ function inferRegisters(function_: FlintVmFunction, module: FlintVmModule): read
   return inferred as readonly VmRep[];
 }
 
+/** Allocates local variable slots for inferred function registers. */
 function localDeclarations(
   function_: FlintVmFunction,
   reps: readonly VmRep[],
@@ -283,14 +306,17 @@ function localDeclarations(
   return { locals, declarations: [...unsignedLeb(declarations.length), ...declarations.flatMap((type) => [1, type])] };
 }
 
+/** Emits local.get opcodes for a register reference. */
 function localGet(reference: LocalReference, index = 0): number[] {
   return reference[index] === undefined ? [] : [0x20, ...unsignedLeb(reference[index]!)];
 }
 
+/** Emits local.set opcodes for a register reference. */
 function localSet(reference: LocalReference, value: readonly number[], index = 0): number[] {
   return reference[index] === undefined ? [] : [...value, 0x21, ...unsignedLeb(reference[index]!)];
 }
 
+/** Emits bytecode loading a constant into registers. */
 function emitConst(
   rep: VmRep,
   value: FlintVmValue,
@@ -321,6 +347,7 @@ function emitConst(
   return [0x41, ...signedLeb(pointer), 0x41, ...signedLeb(length)];
 }
 
+/** Emits opcodes loading a value from linear memory. */
 function memoryLoad(rep: VmRep, address: number): number[] {
   if (rep.kind !== 'number') fail('only numeric values can be loaded from memory');
   const opcode =
@@ -337,6 +364,7 @@ function memoryLoad(rep: VmRep, address: number): number[] {
   return [0x41, ...signedLeb(address), opcode, ...unsignedLeb(alignment), 0x00];
 }
 
+/** Emits opcodes storing a value to linear memory. */
 function memoryStore(rep: VmRep): number[] {
   if (rep.kind !== 'number' && rep.kind !== 'bool') fail('only numeric and boolean values can be stored in memory');
   const opcode =
@@ -354,6 +382,7 @@ function memoryStore(rep: VmRep): number[] {
   return [opcode, ...unsignedLeb(alignment), 0x00];
 }
 
+/** Resolves the WebAssembly opcode for a numeric binary operation. */
 function numericBinary(type: NumericType, operation: string): number {
   const integer = type === 'i32' || type === 'u32';
   const wide = type === 'i64' || type === 'u64';
@@ -377,6 +406,7 @@ function numericBinary(type: NumericType, operation: string): number {
   return base + offset;
 }
 
+/** Resolves the WebAssembly opcode for a numeric comparison. */
 function numericCompare(type: NumericType, operation: string): number {
   const offset: Record<string, number> = { '==': 0, '===': 0, '!=': 1, '!==': 1, '<': 2, '>': 4, '<=': 6, '>=': 8 };
   const value = offset[operation];
@@ -389,14 +419,17 @@ function numericCompare(type: NumericType, operation: string): number {
   return base + value + (type === 'u32' || type === 'u64' ? 1 : 0);
 }
 
+/** Emits step counter incrementation and budget check opcodes. */
 function emitStep(): number[] {
   return [0x10, 0x00, 0x04, 0x40, 0x00, 0x0b];
 }
 
+/** Flattens a local reference tuple into an array of index numbers. */
 function flattenReference(reference: LocalReference): readonly number[] {
   return [...reference];
 }
 
+/** Validates that a pointer and length fall entirely within memory bounds. */
 function checkedRange(pointer: number, length: number, memory: WebAssembly.Memory, message: string): void {
   if (
     !Number.isSafeInteger(pointer) ||
@@ -408,6 +441,7 @@ function checkedRange(pointer: number, length: number, memory: WebAssembly.Memor
     throw new FlintTrap('MemoryOutOfBounds', message);
 }
 
+/** Emits WebAssembly instructions for a single virtual machine instruction. */
 function emitInstruction(
   instruction: FlintVmInstruction,
   function_: FlintVmFunction,
@@ -643,6 +677,7 @@ function emitInstruction(
   return result;
 }
 
+/** Computes an FNV-1a hash string for a text value. */
 function hashText(value: string): string {
   let hash = 2_166_136_261;
   for (const byte of encoder.encode(value)) {
@@ -652,10 +687,12 @@ function hashText(value: string): string {
   return hash.toString(16).padStart(8, '0');
 }
 
+/** Computes a reproducibility hash for a VM WASM artifact. */
 function artifactHash(artifact: FlintVmWasmArtifact): string {
   return hashText(JSON.stringify({ ...artifact, wasm: [...artifact.wasm], reproducibilityHash: '' }));
 }
 
+/** Assembles a complete WebAssembly binary module from a Flint VM module. */
 function buildModule(module: FlintVmModule, maximumPages: number): Uint8Array {
   const dataOffsets = new Map<number, number>();
   const dataSegments: Array<{ readonly offset: number; readonly bytes: Uint8Array }> = [];
@@ -1023,11 +1060,13 @@ function buildModule(module: FlintVmModule, maximumPages: number): Uint8Array {
   return new Uint8Array(output);
 }
 
+/** Options configuring compilation of a Flint VM module to WebAssembly. */
 export interface FlintVmWasmCompileOptions {
   readonly compilerVersion?: string;
   readonly maxMemoryPages?: number;
 }
 
+/** Compiles a Flint VM module into a validated WebAssembly bytecode artifact. */
 export function compileFlintVmWasm(
   module: FlintVmModule,
   options: FlintVmWasmCompileOptions = {},
@@ -1050,6 +1089,7 @@ export function compileFlintVmWasm(
   return { ...artifact, reproducibilityHash: artifactHash({ ...artifact, reproducibilityHash: '' }) };
 }
 
+/** Flattens a high-level VM value into low-level WebAssembly primitive arguments. */
 function flatValue(
   value: FlintVmValue,
   memory: WebAssembly.Memory,
@@ -1070,6 +1110,7 @@ function flatValue(
   throw new FlintTrap('InvalidAbi', 'Function values are not supported by the VM WASM backend.');
 }
 
+/** Decodes flat WebAssembly result primitives into a structured VM value. */
 function decodeValue(rep: VmRep, values: readonly (number | bigint)[], memory: WebAssembly.Memory): FlintVmValue {
   if (rep.kind === 'unit') return { kind: 'unit' };
   if (rep.kind === 'bool') return { kind: 'bool', value: Number(values[0]) !== 0 };
@@ -1098,6 +1139,7 @@ function decodeValue(rep: VmRep, values: readonly (number | bigint)[], memory: W
   };
 }
 
+/** Marshals an input argument into linear memory or primitive parameters. */
 function importValue(
   value: FlintVmValue,
   rep: VmRep,
@@ -1121,6 +1163,7 @@ function importValue(
   return flatValue(value, memory, allocate);
 }
 
+/** Prepares a WebAssembly executor from a module or artifact for fast invocation. */
 export function prepareFlintVmWasm(
   moduleOrArtifact: FlintVmModule | FlintVmWasmArtifact,
   options: FlintVmPreparedExecutorOptions = {},
@@ -1156,6 +1199,15 @@ export function prepareFlintVmWasm(
   let steps = 0;
   let maxSteps: number | undefined;
   let memory: WebAssembly.Memory | undefined;
+  const getMemory = (): WebAssembly.Memory => {
+    if (memory !== undefined) return memory;
+    const exportedMemory = exports().memory;
+    if (exportedMemory instanceof WebAssembly.Memory) {
+      memory = exportedMemory;
+      return memory;
+    }
+    throw new FlintTrap('MemoryOutOfBounds', 'WebAssembly linear memory is not available.');
+  };
   let activeTrace: ReturnType<typeof createFlintTraceRecorder> | undefined;
   let activeFunctionName = '';
   let activeRedact: FlintTraceOptions['redact'];
@@ -1202,7 +1254,7 @@ export function prepareFlintVmWasm(
         const arguments_: FlintVmValue[] = [];
         for (const parameter of parameterReps) {
           const width = flatTypes(parameter).length;
-          arguments_.push(decodeValue(parameter, values.slice(offset, offset + width), memory!));
+          arguments_.push(decodeValue(parameter, values.slice(offset, offset + width), getMemory()));
           offset += width;
         }
         const result = capability(...arguments_);
@@ -1226,17 +1278,17 @@ export function prepareFlintVmWasm(
                         checkedRange(
                           result.pointer,
                           result.length,
-                          memory!,
+                          getMemory(),
                           'Capability returned an invalid bytes pointer-length value.',
                         );
-                        return new Uint8Array(memory!.buffer).slice(result.pointer, result.pointer + result.length);
+                        return new Uint8Array(getMemory().buffer).slice(result.pointer, result.pointer + result.length);
                       })()
                     : result.bytes;
                 const pointer = allocate(source.byteLength);
-                new Uint8Array(memory!.buffer).set(source, pointer);
+                new Uint8Array(getMemory().buffer).set(source, pointer);
                 return [pointer, source.byteLength] as readonly (number | bigint)[];
               })()
-            : flatValue(result, memory!, allocate);
+            : flatValue(result, getMemory(), allocate);
         return flatTypes(resultRepValue).length > 1 ? flat : flat[0];
       } catch (error) {
         observe(() => activeTrace?.recordCapability(imported.capability, 'failed', steps));
@@ -1257,30 +1309,30 @@ export function prepareFlintVmWasm(
         checkedRange(
           leftPointer,
           leftLength,
-          memory!,
+          getMemory(),
           'VM WASM comparison received an invalid left pointer-length value.',
         );
         observe(() => activeTrace?.recordRangeCheck(rightPointer, rightLength, steps));
         checkedRange(
           rightPointer,
           rightLength,
-          memory!,
+          getMemory(),
           'VM WASM comparison received an invalid right pointer-length value.',
         );
         if (leftLength !== rightLength) return 0;
-        const view = new Uint8Array(memory!.buffer);
+        const view = new Uint8Array(getMemory().buffer);
         for (let index = 0; index < leftLength; index += 1)
           if (view[leftPointer + index] !== view[rightPointer + index]) return 0;
         return 1;
       },
       [BYTE_AT_IMPORT]: (pointer: number, length: number, index: number) => {
         observe(() => activeTrace?.recordRangeCheck(pointer, length, steps));
-        checkedRange(pointer, length, memory!, 'VM WASM byte-at received an invalid pointer-length value.');
+        checkedRange(pointer, length, getMemory(), 'VM WASM byte-at received an invalid pointer-length value.');
         if (!Number.isInteger(index) || index < 0 || index >= length) {
           pendingTrap = new FlintTrap('GuestTrap', `byte-at index ${String(index)} is outside the aggregate payload.`);
           throw new Error(pendingTrap.message);
         }
-        return new Uint8Array(memory!.buffer)[pointer + index]!;
+        return new Uint8Array(getMemory().buffer)[pointer + index] ?? 0;
       },
       [TRAP_IMPORT]: (functionIndex: number, instructionIndex: number) => {
         const instruction = artifact.module.functions[functionIndex]?.code[instructionIndex];
@@ -1339,18 +1391,18 @@ export function prepareFlintVmWasm(
       activeRedact = executionOptions.trace?.redact;
       const requiredBytes = executionOptions.memory?.byteLength ?? 0;
       const requiredPages = Math.ceil(requiredBytes / PAGE_SIZE);
-      if (requiredPages > memory!.buffer.byteLength / PAGE_SIZE) {
+      if (requiredPages > getMemory().buffer.byteLength / PAGE_SIZE) {
         try {
-          memory!.grow(requiredPages - memory!.buffer.byteLength / PAGE_SIZE);
+          getMemory().grow(requiredPages - getMemory().buffer.byteLength / PAGE_SIZE);
         } catch (error) {
           throw new FlintTrap('MemoryExhausted', 'VM WASM memory could not grow for this execution.', undefined, {
             cause: error,
           });
         }
       }
-      if (executionOptions.memory !== undefined) new Uint8Array(memory!.buffer).set(executionOptions.memory, 0);
+      if (executionOptions.memory !== undefined) new Uint8Array(getMemory().buffer).set(executionOptions.memory, 0);
       const arguments__ = arguments_.flatMap((argument, index) =>
-        importValue(argument, typeForValue(function_.parameters[index]!), memory!, allocate),
+        importValue(argument, typeForValue(function_.parameters[index] ?? 'unit'), getMemory(), allocate),
       );
       const exportName = functionExports.get(functionName);
       if (exportName === undefined) throw new FlintTrap('GuestTrap', `Function '${functionName}' does not exist.`);
@@ -1365,8 +1417,8 @@ export function prepareFlintVmWasm(
             ? resultValues
             : [resultValues as number | bigint];
       const result = {
-        value: decodeValue(resultRep(function_.result), flatResult, memory!),
-        memory: new Uint8Array(memory!.buffer).slice(),
+        value: decodeValue(resultRep(function_.result), flatResult, getMemory()),
+        memory: new Uint8Array(getMemory().buffer).slice(),
         steps,
         mode,
         ...(activeTrace === undefined
@@ -1374,7 +1426,7 @@ export function prepareFlintVmWasm(
           : {
               trace: activeTrace.finish({
                 steps,
-                memory: new Uint8Array(memory!.buffer),
+                memory: new Uint8Array(getMemory().buffer),
                 termination: 'returned',
               }),
             }),
@@ -1396,7 +1448,7 @@ export function prepareFlintVmWasm(
         const trapError = pendingTrap;
         const report = activeTrace.finish({
           steps,
-          memory: new Uint8Array(memory!.buffer),
+          memory: new Uint8Array(getMemory().buffer),
           termination: trapError?.message.includes('step limit') ? 'step-limit' : 'trapped',
           ...(trapError === undefined
             ? {}

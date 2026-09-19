@@ -11,6 +11,14 @@ import { type CompiledRegex, INSTR_WIDTH, Op } from "./bytecode.js";
 /** Capture slots are `[start0, end0, start1, end1, ...]`; `-1` means unset. */
 export type Captures = number[];
 
+/**
+ * Evaluates whether a character code point falls within the character class range tables.
+ *
+ * @param classes - Character class range tables.
+ * @param offset - Offset index of the character class entry.
+ * @param code - Character code point to test.
+ * @returns True if the code point matches any range in the class.
+ */
 function classMatches(
   classes: readonly number[],
   offset: number,
@@ -27,12 +35,23 @@ function classMatches(
   return false;
 }
 
+/**
+ * Abstract base class managing regex bytecode and input text for execution runners.
+ */
 abstract class BaseRunner {
   protected readonly program: readonly number[];
   protected readonly classes: readonly number[];
   protected readonly input: string;
   protected readonly requireEnd: boolean;
 
+  /**
+   * Initializes a new BaseRunner instance.
+   *
+   * @param program - Compiled bytecode instruction array.
+   * @param classes - Character class definition tables.
+   * @param input - Input subject string.
+   * @param requireEnd - Whether matching requires reaching end-of-string.
+   */
   public constructor(
     program: readonly number[],
     classes: readonly number[],
@@ -46,6 +65,9 @@ abstract class BaseRunner {
   }
 }
 
+/**
+ * Internal execution thread tracking program counter and capture register state.
+ */
 interface Thread {
   pc: number;
   saves: number[];
@@ -57,6 +79,13 @@ interface Thread {
  * completely immune to ReDoS (Regular Expression Denial of Service).
  */
 export class PikeRunner extends BaseRunner {
+  /**
+   * Executes the bytecode program from an initial start offset and capture states.
+   *
+   * @param start - Starting string character offset.
+   * @param initialSaves - Initial capture register values.
+   * @returns Captured positions array or null if no match found.
+   */
   public run(start: number, initialSaves: number[]): Captures | null {
     const instructionCount = Math.floor(this.program.length / INSTR_WIDTH);
     if (instructionCount === 0) {
@@ -380,7 +409,18 @@ export class PikeRunner extends BaseRunner {
   }
 }
 
+/**
+ * Backtracking reference execution runner for bytecode instruction verification.
+ */
 export class Runner extends BaseRunner {
+  /**
+   * Executes the bytecode instruction loop from the given program counter.
+   *
+   * @param pc - Program counter index.
+   * @param sp - String pointer offset.
+   * @param saves - Mutable capture slots array.
+   * @returns True if execution reached a match.
+   */
   public run(pc: number, sp: number, saves: number[]): boolean {
     for (;;) {
       const base = pc * INSTR_WIDTH;
@@ -460,6 +500,15 @@ export class Runner extends BaseRunner {
   }
 }
 
+/**
+ * Attempts a regex match using the backtracking reference Runner.
+ *
+ * @param re - Compiled regular expression.
+ * @param input - Input subject string.
+ * @param start - Starting character offset.
+ * @param requireEnd - Whether match must reach the end of the string.
+ * @returns Captured positions array or null if no match found.
+ */
 function attempt(
   re: CompiledRegex,
   input: string,

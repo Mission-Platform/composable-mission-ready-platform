@@ -738,7 +738,7 @@ A Monaco completion-item provider (passed through to `registerCompletionItemProv
 export interface MonacoEditorProperties
 ```
 
-No description provided.
+Component properties for the Monaco code editor organism.
 
 ### MonacoEditorTheme
 
@@ -854,7 +854,7 @@ No description provided.
 export interface FlintMonacoHandle
 ```
 
-No description provided.
+Lifetime handle for an attached Flint Monaco editor session.
 
 ### FlintMonacoOptions
 
@@ -864,7 +864,7 @@ No description provided.
 export interface FlintMonacoOptions
 ```
 
-No description provided.
+Configuration options for initializing the Flint Monaco language adapter.
 
 ### registerFlintLanguage
 

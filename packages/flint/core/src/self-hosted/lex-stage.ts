@@ -68,6 +68,7 @@ const TWO_CHAR_OPS = ['!=', '&&', '==', '||', '<=', '>=', '->', '=>', '::'] as c
 const ONE_CHAR_OPS = new Set(['!', '%', '*', '+', '-', '/', '<', '>', '=']);
 const PUNCT = new Set(['{', '}', '(', ')', '[', ']', ':', ';', ',', '|', '.']);
 
+/** Virtual machine instruction tuple executed during self-hosted lexing. */
 export type FlintSelfHostedVmInstruction =
   | { readonly opcode: 'const'; readonly destination?: number; readonly constant: number }
   | { readonly opcode: 'move'; readonly destination: number; readonly source: number }
@@ -130,6 +131,7 @@ export type FlintSelfHostedVmInstruction =
   | { readonly opcode: 'jump'; readonly target: number }
   | { readonly opcode: 'return'; readonly source?: number };
 
+/** Constant value stored in the self-hosted VM constant pool. */
 export type FlintSelfHostedVmValue =
   | { readonly kind: 'unit' }
   | { readonly kind: 'bool'; readonly value: boolean }
@@ -141,6 +143,7 @@ export type FlintSelfHostedVmValue =
       readonly ownership: FlintOwnership;
     };
 
+/** Function definition executed by the self-hosted virtual machine. */
 export interface FlintSelfHostedVmFunction {
   readonly name: string;
   readonly parameters: readonly string[];
@@ -150,6 +153,7 @@ export interface FlintSelfHostedVmFunction {
   readonly debugSpans: readonly [];
 }
 
+/** Self-hosted compiler VM module structure containing bytecode and constants. */
 export interface FlintSelfHostedVmModule {
   readonly format: 'forge-web-script-vm-module';
   readonly version: '1.0';
@@ -176,10 +180,12 @@ function toInt32(value: number): number {
   return value | 0;
 }
 
+/** Mixes a single 32-bit word into the FNV-1a hash state. */
 function fnvMix(hash: number, byte: number): number {
   return Math.imul(toInt32(hash) ^ (byte & 0xff), FNV_PRIME);
 }
 
+/** Computes the 32-bit FNV-1a hash of a UTF-8 string. */
 function fnvText(text: string): number {
   let hash = FNV_OFFSET;
   for (const byte of encoder.encode(text)) hash = fnvMix(hash, byte);
@@ -188,143 +194,241 @@ function fnvText(text: string): number {
 
 const KEYWORD_HASHES = new Set(KEYWORDS.map((keyword) => fnvText(keyword)));
 
+/** Evaluates whether a byte represents an ASCII or Unicode whitespace code. */
 function isWhitespace(byte: number): boolean {
   return byte === 9 || byte === 10 || byte === 13 || byte === 32;
 }
 
+/** Evaluates whether a byte represents an ASCII alphabetic character. */
 function isAlpha(byte: number): boolean {
   return (byte >= 65 && byte <= 90) || (byte >= 97 && byte <= 122) || byte === 95;
 }
 
+/** Evaluates whether a byte represents an ASCII decimal digit. */
 function isDigit(byte: number): boolean {
   return byte >= 48 && byte <= 57;
 }
 
+/** Evaluates whether a byte represents an alphanumeric character. */
 function isAlnum(byte: number): boolean {
   return isAlpha(byte) || isDigit(byte);
 }
 
 /**
+ * Advances offset past consecutive whitespace bytes.
+ *
+ * @param bytes - Byte buffer.
+ * @param offset - Initial offset.
+ * @returns Offset after whitespace sequence.
+ */
+function skipWhitespaceBytes(bytes: Uint8Array, offset: number): number {
+  let next = offset + 1;
+  while (next < bytes.length && isWhitespace(bytes[next] ?? 0)) next += 1;
+  return next;
+}
+
+/**
+ * Scans a single-line comment in a byte buffer until newline or end-of-buffer.
+ *
+ * @param bytes - Byte buffer.
+ * @param offset - Offset after '//'.
+ * @returns Offset following comment.
+ */
+function scanLineCommentBytes(bytes: Uint8Array, offset: number): number {
+  let next = offset;
+  while (next < bytes.length && bytes[next] !== 10) next += 1;
+  return next;
+}
+
+/**
+ * Scans a block comment in a byte buffer until closing delimiter.
+ *
+ * @param bytes - Byte buffer.
+ * @param offset - Offset after '/*'.
+ * @returns Offset following closing delimiter.
+ */
+function scanBlockCommentBytes(bytes: Uint8Array, offset: number): number {
+  let next = offset;
+  while (next < bytes.length) {
+    if (bytes[next] === 42 && next + 1 < bytes.length && bytes[next + 1] === 47) {
+      next += 2;
+      break;
+    }
+    next += 1;
+  }
+  return next;
+}
+
+/**
+ * Scans a single-line or block comment in a byte buffer.
+ *
+ * @param bytes - Byte buffer.
+ * @param offset - Initial offset at the leading slash.
+ * @param byte - First byte.
+ * @returns Offset after comment, or undefined if not a comment.
+ */
+function scanCommentBytes(bytes: Uint8Array, offset: number, byte: number): number | undefined {
+  if (byte !== 47 || offset + 1 >= bytes.length) return undefined;
+  const nextByte = bytes[offset + 1];
+  if (nextByte === 47) return scanLineCommentBytes(bytes, offset + 2);
+  if (nextByte === 42) return scanBlockCommentBytes(bytes, offset + 2);
+  return undefined;
+}
+
+/**
+ * Scans an alphabetic identifier and mixes its hash and kind into the hash state.
+ *
+ * @param bytes - Byte buffer.
+ * @param offset - Initial offset of identifier.
+ * @param currentHash - Current FNV-1a hash state.
+ * @returns Tuple of next offset and updated hash.
+ */
+function scanIdentBytes(bytes: Uint8Array, offset: number, currentHash: number): [number, number] {
+  const start = offset;
+  let next = offset + 1;
+  while (next < bytes.length && isAlnum(bytes[next] ?? 0)) next += 1;
+  let identHash = FNV_OFFSET;
+  for (let index = start; index < next; index += 1) identHash = fnvMix(identHash, bytes[index] ?? 0);
+  let hash = fnvMix(currentHash, KEYWORD_HASHES.has(identHash) ? KIND_KEYWORD : KIND_IDENT);
+  hash = fnvMix(hash, identHash & 0xff);
+  hash = fnvMix(hash, (identHash >>> 8) & 0xff);
+  hash = fnvMix(hash, (identHash >>> 16) & 0xff);
+  hash = fnvMix(hash, (identHash >>> 24) & 0xff);
+  return [next, hash];
+}
+
+/**
+ * Scans a numeric literal and mixes its digits into the hash state.
+ *
+ * @param bytes - Byte buffer.
+ * @param offset - Initial offset of number.
+ * @param currentHash - Current FNV-1a hash state.
+ * @returns Tuple of next offset and updated hash.
+ */
+function scanDigitBytes(bytes: Uint8Array, offset: number, currentHash: number): [number, number] {
+  const start = offset;
+  let next = offset + 1;
+  while (next < bytes.length && isDigit(bytes[next] ?? 0)) next += 1;
+  let hash = fnvMix(currentHash, KIND_NUMBER);
+  for (let index = start; index < next; index += 1) hash = fnvMix(hash, bytes[index] ?? 0);
+  return [next, hash];
+}
+
+/**
+ * Scans a double-quoted string literal and mixes its bytes into the hash state.
+ *
+ * @param bytes - Byte buffer.
+ * @param offset - Initial offset of opening double quote.
+ * @param currentHash - Current FNV-1a hash state.
+ * @returns Tuple of next offset and updated hash.
+ */
+function scanStringLiteralBytes(bytes: Uint8Array, offset: number, currentHash: number): [number, number] {
+  const start = offset;
+  let next = offset + 1;
+  let terminated = false;
+  while (next < bytes.length) {
+    if (bytes[next] === 92) {
+      next += 2;
+      continue;
+    }
+    if (bytes[next] === 34) {
+      next += 1;
+      terminated = true;
+      break;
+    }
+    next += 1;
+  }
+  let hash = fnvMix(currentHash, terminated ? KIND_STRING : KIND_ERROR);
+  for (let index = start; index < next; index += 1) hash = fnvMix(hash, bytes[index] ?? 0);
+  return [next, hash];
+}
+
+/**
+ * Scans operator or punctuation symbols and updates hash state.
+ *
+ * @param bytes - Byte buffer.
+ * @param offset - Initial offset.
+ * @param byte - First byte value.
+ * @param currentHash - Current FNV-1a hash state.
+ * @returns Tuple of next offset and updated hash.
+ */
+function scanPunctOrOpBytes(bytes: Uint8Array, offset: number, byte: number, currentHash: number): [number, number] {
+  if (offset + 1 < bytes.length) {
+    const nextByte = bytes[offset + 1] ?? 0;
+    const two = String.fromCodePoint(byte, nextByte);
+    if ((TWO_CHAR_OPS as readonly string[]).includes(two)) {
+      let hash = fnvMix(currentHash, KIND_OPERATOR);
+      hash = fnvMix(hash, byte);
+      hash = fnvMix(hash, nextByte);
+      return [offset + 2, hash];
+    }
+  }
+  const single = String.fromCodePoint(byte);
+  if (ONE_CHAR_OPS.has(single)) {
+    let hash = fnvMix(currentHash, KIND_OPERATOR);
+    hash = fnvMix(hash, byte);
+    return [offset + 1, hash];
+  }
+  if (PUNCT.has(single)) {
+    let hash = fnvMix(currentHash, KIND_PUNCT);
+    hash = fnvMix(hash, byte);
+    return [offset + 1, hash];
+  }
+  let hash = fnvMix(currentHash, KIND_ERROR);
+  hash = fnvMix(hash, byte);
+  return [offset + 1, hash];
+}
+
+/**
  * Seed reference for the self-hosted lex stage.
  * Must stay behaviorally identical to {@link createFlintLexStageVmModule}.
+ *
+ * @param source - Flint source text.
+ * @returns 32-bit signed integer fingerprint.
  */
 export function computeFlintLexStageFingerprint(source: string): number {
   const bytes = encoder.encode(source);
   let hash = FNV_OFFSET;
   let offset = 0;
 
-  const mixKind = (kind: number): void => {
-    hash = fnvMix(hash, kind);
-  };
-
   while (offset < bytes.length) {
-    const byte = bytes[offset]!;
+    const byte = bytes[offset] ?? 0;
 
     if (isWhitespace(byte)) {
-      offset += 1;
-      while (offset < bytes.length && isWhitespace(bytes[offset]!)) offset += 1;
+      offset = skipWhitespaceBytes(bytes, offset);
       continue;
     }
 
-    if (byte === 47 && offset + 1 < bytes.length && bytes[offset + 1] === 47) {
-      offset += 2;
-      while (offset < bytes.length && bytes[offset] !== 10) offset += 1;
-      mixKind(KIND_COMMENT);
-      continue;
-    }
-
-    if (byte === 47 && offset + 1 < bytes.length && bytes[offset + 1] === 42) {
-      offset += 2;
-      while (offset < bytes.length) {
-        if (bytes[offset] === 42 && offset + 1 < bytes.length && bytes[offset + 1] === 47) {
-          offset += 2;
-          break;
-        }
-        offset += 1;
-      }
-      mixKind(KIND_COMMENT);
+    const commentEnd = scanCommentBytes(bytes, offset, byte);
+    if (commentEnd !== undefined) {
+      hash = fnvMix(hash, KIND_COMMENT);
+      offset = commentEnd;
       continue;
     }
 
     if (isAlpha(byte)) {
-      const start = offset;
-      offset += 1;
-      while (offset < bytes.length && isAlnum(bytes[offset]!)) offset += 1;
-      let identHash = FNV_OFFSET;
-      for (let index = start; index < offset; index += 1) identHash = fnvMix(identHash, bytes[index]!);
-      mixKind(KEYWORD_HASHES.has(identHash) ? KIND_KEYWORD : KIND_IDENT);
-      hash = fnvMix(hash, identHash & 0xff);
-      hash = fnvMix(hash, (identHash >>> 8) & 0xff);
-      hash = fnvMix(hash, (identHash >>> 16) & 0xff);
-      hash = fnvMix(hash, (identHash >>> 24) & 0xff);
+      [offset, hash] = scanIdentBytes(bytes, offset, hash);
       continue;
     }
 
     if (isDigit(byte)) {
-      const start = offset;
-      offset += 1;
-      while (offset < bytes.length && isDigit(bytes[offset]!)) offset += 1;
-      mixKind(KIND_NUMBER);
-      for (let index = start; index < offset; index += 1) hash = fnvMix(hash, bytes[index]!);
+      [offset, hash] = scanDigitBytes(bytes, offset, hash);
       continue;
     }
 
     if (byte === 34) {
-      const start = offset;
-      offset += 1;
-      let terminated = false;
-      while (offset < bytes.length) {
-        if (bytes[offset] === 92) {
-          offset += 2;
-          continue;
-        }
-        if (bytes[offset] === 34) {
-          offset += 1;
-          terminated = true;
-          break;
-        }
-        offset += 1;
-      }
-      mixKind(terminated ? KIND_STRING : KIND_ERROR);
-      for (let index = start; index < offset; index += 1) hash = fnvMix(hash, bytes[index]!);
+      [offset, hash] = scanStringLiteralBytes(bytes, offset, hash);
       continue;
     }
 
-    if (offset + 1 < bytes.length) {
-      const two = String.fromCodePoint(byte, bytes[offset + 1]!);
-      if ((TWO_CHAR_OPS as readonly string[]).includes(two)) {
-        mixKind(KIND_OPERATOR);
-        hash = fnvMix(hash, byte);
-        hash = fnvMix(hash, bytes[offset + 1]!);
-        offset += 2;
-        continue;
-      }
-    }
-
-    const single = String.fromCodePoint(byte);
-    if (ONE_CHAR_OPS.has(single)) {
-      mixKind(KIND_OPERATOR);
-      hash = fnvMix(hash, byte);
-      offset += 1;
-      continue;
-    }
-
-    if (PUNCT.has(single)) {
-      mixKind(KIND_PUNCT);
-      hash = fnvMix(hash, byte);
-      offset += 1;
-      continue;
-    }
-
-    mixKind(KIND_ERROR);
-    hash = fnvMix(hash, byte);
-    offset += 1;
+    [offset, hash] = scanPunctOrOpBytes(bytes, offset, byte, hash);
   }
 
-  mixKind(KIND_EOF);
+  hash = fnvMix(hash, KIND_EOF);
   return toInt32(hash);
 }
 
+/** Encodes source code into the binary representation expected by the VM lexer stage. */
 export function encodeFlintLexStageSource(source: string): {
   readonly kind: 'aggregate';
   readonly layout: typeof FLINT_LEX_STAGE_SOURCE_LAYOUT;
@@ -339,6 +443,7 @@ export function encodeFlintLexStageSource(source: string): {
   };
 }
 
+/** Fluent builder for generating self-hosted virtual machine bytecode instructions. */
 export interface BytecodeBuilder {
   readonly registers: number;
   readonly code: FlintSelfHostedVmInstruction[];
@@ -359,6 +464,7 @@ export interface BytecodeBuilder {
   finish(): FlintSelfHostedVmInstruction[];
 }
 
+/** Creates a new BytecodeBuilder instance with the specified parameter count. */
 export function createBuilder(parameterCount: number): BytecodeBuilder {
   let nextRegister = parameterCount;
   const code: FlintSelfHostedVmInstruction[] = [];
@@ -366,35 +472,44 @@ export function createBuilder(parameterCount: number): BytecodeBuilder {
   const patches: BytecodeBuilder['patches'] = [];
 
   return {
+    /** Returns the maximum number of allocated virtual registers. */
     get registers() {
       return nextRegister;
     },
     code,
     labels,
     patches,
+    /** Allocates a new virtual register index. */
     alloc(count = 1) {
       const start = nextRegister;
       nextRegister += count;
       return start;
     },
+    /** Emits an instruction loading an immediate numeric constant into a register. */
     num(destination, constantIndex) {
       code.push({ opcode: 'const', destination, constant: constantIndex });
     },
+    /** Emits a register-to-register move instruction. */
     move(destination, source) {
       code.push({ opcode: 'move', destination, source });
     },
+    /** Emits an instruction retrieving the length of an aggregate or buffer. */
     len(destination, source) {
       code.push({ opcode: 'len', destination, source });
     },
+    /** Emits an instruction reading a byte from an aggregate at an offset. */
     byteAt(destination, source, index) {
       code.push({ opcode: 'byte-at', destination, source, index });
     },
+    /** Emits a binary arithmetic or comparison instruction. */
     binary(operation, destination, left, right) {
       code.push({ opcode: 'binary', operation, destination, left, right });
     },
+    /** Emits a unary operation instruction. */
     unary(operation, destination, operand) {
       code.push({ opcode: 'unary', operation, destination, operand });
     },
+    /** Emits a function call instruction passing arguments and binding result. */
     call(destination, functionName, arguments_) {
       code.push({
         opcode: 'call',
@@ -403,21 +518,26 @@ export function createBuilder(parameterCount: number): BytecodeBuilder {
         arguments: arguments_,
       });
     },
+    /** Defines a jump target label in the instruction stream. */
     label(name) {
       labels.set(name, code.length);
     },
+    /** Emits an unconditional jump to a label. */
     jump(label) {
       patches.push({ index: code.length, field: 'target', label });
       code.push({ opcode: 'jump', target: -1 });
     },
+    /** Emits a conditional branch instruction based on a boolean register. */
     branch(condition, ifTrue, ifFalse) {
       const index = code.length;
       patches.push({ index, field: 'ifTrue', label: ifTrue }, { index, field: 'ifFalse', label: ifFalse });
       code.push({ opcode: 'branch', condition, ifTrue: -1, ifFalse: -1 });
     },
+    /** Emits a return instruction returning a register value. */
     ret(source) {
       code.push(source === undefined ? { opcode: 'return' } : { opcode: 'return', source });
     },
+    /** Finalizes and returns the complete bytecode instruction sequence. */
     finish() {
       for (const patch of patches) {
         const target = labels.get(patch.label);
@@ -435,10 +555,12 @@ export function createBuilder(parameterCount: number): BytecodeBuilder {
   };
 }
 
+/** Creates an int32 constant pool entry. */
 function int32Constant(value: number): FlintSelfHostedVmValue {
   return { kind: 'number', type: 'i32', value: toInt32(value) };
 }
 
+/** Creates a word32 constant pool entry. */
 function word32Constant(value: number): FlintSelfHostedVmValue {
   return { kind: 'number', type: 'i32', value: toInt32(value) };
 }
@@ -581,6 +703,7 @@ export function createFlintLexStageVmModule(sourceHash: string): FlintSelfHosted
   };
 }
 
+/** Builds the VM function for FNV-1a hash word mixing. */
 function buildFnvMix(): FlintSelfHostedVmFunction {
   // fnv_mix(hash, byte) -> i32
   const b = createBuilder(2);
@@ -602,6 +725,7 @@ function buildFnvMix(): FlintSelfHostedVmFunction {
   };
 }
 
+/** Builds a jump-table equality predicate VM function for a set of constant values. */
 function buildPredicateFromEquals(name: string, constantIndexes: readonly number[]): FlintSelfHostedVmFunction {
   const b = createBuilder(1);
   const temporary = b.alloc();
@@ -637,14 +761,17 @@ function buildPredicateFromEquals(name: string, constantIndexes: readonly number
   };
 }
 
+/** Builds a predicate testing if a byte matches fixed ASCII whitespace characters. */
 function buildIsWsFixed(): FlintSelfHostedVmFunction {
   return buildPredicateFromEquals('is_ws', [9, 10, 11, 12]);
 }
 
+/** Builds the VM predicate function for whitespace detection. */
 function buildIsWs(): FlintSelfHostedVmFunction {
   return buildIsWsFixed();
 }
 
+/** Builds the VM predicate function for ASCII alphabetic detection. */
 function buildIsAlpha(): FlintSelfHostedVmFunction {
   // (b >= 'A' && b <= 'Z') || (b >= 'a' && b <= 'z') || b == '_'
   const b = createBuilder(1);
@@ -696,6 +823,7 @@ function buildIsAlpha(): FlintSelfHostedVmFunction {
   };
 }
 
+/** Builds the VM predicate function for ASCII decimal digit detection. */
 function buildIsDigit(): FlintSelfHostedVmFunction {
   const b = createBuilder(1);
   const temporary = b.alloc();
@@ -720,6 +848,7 @@ function buildIsDigit(): FlintSelfHostedVmFunction {
   };
 }
 
+/** Builds the VM predicate function for alphanumeric character detection. */
 function buildIsAlnum(): FlintSelfHostedVmFunction {
   const b = createBuilder(1);
   const temporary = b.alloc();
@@ -745,11 +874,13 @@ function buildIsAlnum(): FlintSelfHostedVmFunction {
   };
 }
 
+/** Builds the VM predicate function for reserved keyword detection. */
 function buildIsKeyword(base: number, count: number): FlintSelfHostedVmFunction {
   const indexes = Array.from({ length: count }, (_, index) => base + index);
   return buildPredicateFromEquals('is_keyword', indexes);
 }
 
+/** Builds the VM predicate function for two-character operator detection. */
 function buildIsTwoCharOp(): FlintSelfHostedVmFunction {
   // is_two_char_op(first, second) -> bool
   const pairs = [
@@ -801,14 +932,17 @@ function buildIsTwoCharOp(): FlintSelfHostedVmFunction {
   };
 }
 
+/** Builds the VM predicate function for single-character operator detection. */
 function buildIsOneCharOp(): FlintSelfHostedVmFunction {
   return buildPredicateFromEquals('is_one_char_op', [50, 51, 52, 53, 54, 55, 56, 57, 58]);
 }
 
+/** Builds the VM predicate function for punctuation symbol detection. */
 function buildIsPunct(): FlintSelfHostedVmFunction {
   return buildPredicateFromEquals('is_punct', [59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69]);
 }
 
+/** Builds the complete VM lexer fingerprinting bytecode function. */
 function buildLexFingerprint(blockCommentStarConstant: number): FlintSelfHostedVmFunction {
   // lex_fingerprint(source: aggregate) -> i32
   // registers: 0 = source

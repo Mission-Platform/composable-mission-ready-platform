@@ -14,6 +14,9 @@ export type FlintStringOperation =
   | 'bytes-byte-at-u32'
   | 'bytes-slice';
 
+/**
+ * Metadata descriptor for a built-in string or bytes compiler intrinsic function.
+ */
 export interface FlintStringFunction {
   readonly name: string;
   readonly parameters: readonly FlintPrimitiveType[];
@@ -21,6 +24,9 @@ export interface FlintStringFunction {
   readonly operation: FlintStringOperation;
 }
 
+/**
+ * List of built-in deterministic string and byte operations provided by the runtime.
+ */
 export const FLINT_STRING_FUNCTIONS: readonly FlintStringFunction[] = [
   { name: 'string_concat', parameters: ['string', 'string'], result: 'string', operation: 'string-concat' },
   { name: 'string_length', parameters: ['string'], result: 'i32', operation: 'string-length' },
@@ -35,6 +41,9 @@ export const FLINT_STRING_FUNCTIONS: readonly FlintStringFunction[] = [
   { name: 'bytes_slice', parameters: ['bytes', 'i32', 'i32'], result: 'bytes', operation: 'bytes-slice' },
 ];
 
+/**
+ * Lookup map of string intrinsic function names to their definitions.
+ */
 export const FLINT_STRING_FUNCTION_MAP = new Map(
   FLINT_STRING_FUNCTIONS.map((declaration) => [declaration.name, declaration]),
 );

@@ -4,29 +4,44 @@ import type { FlintMemory, FlintMemoryAddress } from './memory.js';
 
 export const FLINT_MEMORY_MODEL = 'region-arc-checked-linear' as const;
 
+/**
+ * Lifetime token identifying an active memory region.
+ */
 export interface FlintRegion {
   readonly id: number;
   readonly active: boolean;
 }
 
+/**
+ * Descriptor tracking a memory allocation bound to a lifetime region.
+ */
 export interface FlintRegionAllocation {
   readonly pointer: FlintMemoryAddress;
   readonly length: number;
   readonly region: number;
 }
 
+/**
+ * Handle reference identifying a reference-counted shared memory allocation.
+ */
 export interface FlintSharedHandle {
   readonly id: number;
   readonly pointer: FlintMemoryAddress;
   readonly length: number;
 }
 
+/**
+ * Internal tracking state for an active lifetime region.
+ */
 interface RegionState {
   readonly id: number;
   active: boolean;
   readonly allocations: Map<number, number>;
 }
 
+/**
+ * Internal tracking state for a reference-counted shared memory allocation.
+ */
 interface SharedState {
   readonly id: number;
   readonly pointer: FlintMemoryAddress;
@@ -46,16 +61,33 @@ export class FlintSafeHeap {
   private readonly regions = new Map<number, RegionState>();
   private readonly shared = new Map<number, SharedState>();
 
+  /**
+   * Initializes a new FlintSafeHeap manager bound to linear memory.
+   *
+   * @param memory - Linear memory instance.
+   */
   public constructor(memory: FlintMemory) {
     this.memory = memory;
   }
 
+  /**
+   * Opens a new lifetime region for scoped memory allocations.
+   *
+   * @returns Newly allocated lifetime region token.
+   */
   public beginRegion(): FlintRegion {
     const id = this.nextRegion++;
     this.regions.set(id, { id, active: true, allocations: new Map() });
     return { id, active: true };
   }
 
+  /**
+   * Allocates a memory block bound to a specified lifetime region.
+   *
+   * @param region - Region owning the allocation.
+   * @param length - Size in bytes to allocate.
+   * @returns Region allocation descriptor.
+   */
   public allocate(region: FlintRegion, length: number): FlintRegionAllocation {
     const state = this.requireRegion(region);
     const pointer = this.memory.allocate(length);
@@ -92,15 +124,33 @@ export class FlintSafeHeap {
       throw new FlintTrap('BorrowViolation', 'Region borrows cannot cross an async or iterator suspension.');
   }
 
+  /**
+   * Initializes a high-performance bump-pointer arena bound to a lifetime region.
+   *
+   * @param region - Owning lifetime region.
+   * @param capacity - Arena buffer capacity in bytes.
+   * @returns Initialized FlintRegionArena.
+   */
   public beginArena(region: FlintRegion, capacity = 65_536): FlintRegionArena {
     const allocation = this.allocate(region, capacity);
     return new FlintRegionArena(this.memory, allocation.pointer, capacity);
   }
 
+  /**
+   * Instantiates a Two-Level Segregated Fit (TLSF) O(1) allocator pool.
+   *
+   * @param poolSize - Size of the TLSF memory pool in bytes.
+   * @returns Configured FlintTlsfAllocator instance.
+   */
   public createTlsfAllocator(poolSize = 131_072): FlintTlsfAllocator {
     return new FlintTlsfAllocator(this.memory, poolSize);
   }
 
+  /**
+   * Closes a lifetime region and bulk-deallocates all allocations bound to it.
+   *
+   * @param region - Region to terminate.
+   */
   public endRegion(region: FlintRegion): void {
     const state = this.requireRegion(region);
     state.active = false;
@@ -108,6 +158,13 @@ export class FlintSafeHeap {
     state.allocations.clear();
   }
 
+  /**
+   * Promotes an allocated memory range to a reference-counted shared handle.
+   *
+   * @param pointer - Base memory address.
+   * @param length - Size in bytes.
+   * @returns New shared allocation handle.
+   */
   public createShared(pointer: FlintMemoryAddress, length: number): FlintSharedHandle {
     if (this.memory.allocationSize(pointer) !== length)
       throw new FlintTrap('InvalidOwnership', 'Shared handles may only wrap an exact runtime-owned allocation.');
@@ -116,11 +173,21 @@ export class FlintSafeHeap {
     return { id, pointer, length };
   }
 
+  /**
+   * Increments the reference count for a shared memory handle.
+   *
+   * @param handle - Shared handle to retain.
+   */
   public retain(handle: FlintSharedHandle): void {
     const state = this.requireShared(handle);
     state.references += 1;
   }
 
+  /**
+   * Decrements the reference count for a shared handle, freeing memory when count reaches zero.
+   *
+   * @param handle - Shared handle to release.
+   */
   public release(handle: FlintSharedHandle): void {
     const state = this.shared.get(handle.id);
     if (state === undefined || state.released)
@@ -134,17 +201,34 @@ export class FlintSafeHeap {
     }
   }
 
+  /**
+   * Asserts that a shared handle remains valid and has not been freed.
+   *
+   * @param handle - Shared handle to verify.
+   */
   public useShared(handle: FlintSharedHandle): void {
     const state = this.requireShared(handle);
     this.memory.checkRange(state.pointer, state.length);
   }
 
+  /**
+   * Validates and retrieves the state for an active lifetime region.
+   *
+   * @param region - Lifetime region token.
+   * @returns Active region state.
+   */
   private requireRegion(region: FlintRegion): RegionState {
     const state = this.regions.get(region.id);
     if (state === undefined || !state.active) throw new FlintTrap('RegionExpired', `Region ${region.id} has expired.`);
     return state;
   }
 
+  /**
+   * Validates and retrieves the state for a shared allocation handle.
+   *
+   * @param handle - Shared handle.
+   * @returns Active shared state.
+   */
   private requireShared(handle: FlintSharedHandle): SharedState {
     const state = this.shared.get(handle.id);
     if (state === undefined || state.released)
@@ -156,11 +240,23 @@ export class FlintSafeHeap {
     return state;
   }
 
+  /**
+   * Converts a memory address to a normalized numeric byte offset.
+   *
+   * @param pointer - Memory address.
+   * @returns Numeric byte offset.
+   */
   private offset(pointer: FlintMemoryAddress): number {
     return typeof pointer === 'bigint' ? Number(pointer) : pointer;
   }
 }
 
+/**
+ * Factory function creating a new FlintSafeHeap manager.
+ *
+ * @param memory - Linear memory instance.
+ * @returns Initialized FlintSafeHeap instance.
+ */
 export function createFlintSafeHeap(memory: FlintMemory): FlintSafeHeap {
   return new FlintSafeHeap(memory);
 }
@@ -175,16 +271,29 @@ export class FlintRegionArena {
   public readonly memory: FlintMemory;
   private currentOffset = 0;
 
+  /**
+   * Initializes a bump-pointer memory arena.
+   *
+   * @param memory - Linear memory instance.
+   * @param basePointer - Base address of arena buffer.
+   * @param capacity - Total capacity in bytes.
+   */
   public constructor(memory: FlintMemory, basePointer: FlintMemoryAddress, capacity: number) {
     this.memory = memory;
     this.basePointer = basePointer;
     this.capacity = capacity;
   }
 
+  /**
+   * Number of bytes allocated within the arena.
+   */
   public get usedBytes(): number {
     return this.currentOffset;
   }
 
+  /**
+   * Number of remaining unallocated bytes in the arena buffer.
+   */
   public get remainingBytes(): number {
     return this.capacity - this.currentOffset;
   }
@@ -214,6 +323,9 @@ export class FlintRegionArena {
   }
 }
 
+/**
+ * Physical or free block descriptor within a TLSF memory pool.
+ */
 interface TlsfBlock {
   offset: number;
   size: number;
@@ -247,6 +359,12 @@ export class FlintTlsfAllocator {
   private readonly freeLists: (TlsfBlock | undefined)[][] = createFreeListsInitial();
   private readonly allocatedBlocks = new Map<number, TlsfBlock>();
 
+  /**
+   * Initializes a Two-Level Segregated Fit allocator pool.
+   *
+   * @param memory - Linear memory instance.
+   * @param poolSize - Memory pool size in bytes.
+   */
   public constructor(memory: FlintMemory, poolSize = 131_072) {
     this.memory = memory;
     this.poolSize = Math.max(poolSize, 1024);
@@ -333,6 +451,12 @@ export class FlintTlsfAllocator {
     this.insertFreeBlock(merged);
   }
 
+  /**
+   * Computes the first-level and second-level list indices for a block size.
+   *
+   * @param size - Block size in bytes.
+   * @returns First-level and second-level list coordinates.
+   */
   private static mapping(size: number): { fl: number; sl: number } {
     const fl = 31 - Math.clz32(size);
     const sl = (size >> (fl - TLSF_SLI)) ^ TLSF_SECOND_LEVELS;
@@ -342,24 +466,37 @@ export class FlintTlsfAllocator {
     };
   }
 
+  /**
+   * Inserts a freed block into the appropriate segregated free list.
+   *
+   * @param block - Freed memory block descriptor.
+   */
   private insertFreeBlock(block: TlsfBlock): void {
     const { fl, sl } = FlintTlsfAllocator.mapping(block.size);
-    const head = this.freeLists[fl]![sl];
+    const slList = this.freeLists[fl];
+    if (slList === undefined) return;
+    const head = slList[sl];
     block.prevFree = undefined;
     block.nextFree = head;
     if (head) head.prevFree = block;
-    this.freeLists[fl]![sl] = block;
+    slList[sl] = block;
 
     this.flBitmap |= 1 << fl;
-    this.slBitmap[fl]! |= 1 << sl;
+    this.slBitmap[fl] = (this.slBitmap[fl] ?? 0) | (1 << sl);
   }
 
+  /**
+   * Removes a block from its segregated free list.
+   *
+   * @param block - Memory block descriptor to unlink.
+   */
   private removeFreeBlock(block: TlsfBlock): void {
     const { fl, sl } = FlintTlsfAllocator.mapping(block.size);
+    const slList = this.freeLists[fl];
     if (block.prevFree) {
       block.prevFree.nextFree = block.nextFree;
-    } else {
-      this.freeLists[fl]![sl] = block.nextFree;
+    } else if (slList !== undefined) {
+      slList[sl] = block.nextFree;
     }
     if (block.nextFree) {
       block.nextFree.prevFree = block.prevFree;
@@ -367,24 +504,30 @@ export class FlintTlsfAllocator {
     block.prevFree = undefined;
     block.nextFree = undefined;
 
-    if (!this.freeLists[fl]![sl]) {
-      this.slBitmap[fl]! &= ~(1 << sl);
+    if (slList !== undefined && !slList[sl]) {
+      this.slBitmap[fl] = (this.slBitmap[fl] ?? 0) & ~(1 << sl);
       if (this.slBitmap[fl] === 0) {
         this.flBitmap &= ~(1 << fl);
       }
     }
   }
 
+  /**
+   * Finds an available free block satisfying the requested allocation size in O(1) time.
+   *
+   * @param size - Minimum required block size.
+   * @returns Free block descriptor or undefined if pool is exhausted.
+   */
   private findSuitableBlock(size: number): TlsfBlock | undefined {
     let { fl, sl } = FlintTlsfAllocator.mapping(size);
-    let slMask = this.slBitmap[fl]! & ~((1 << sl) - 1);
+    let slMask = (this.slBitmap[fl] ?? 0) & ~((1 << sl) - 1);
     if (slMask === 0) {
       const flMask = this.flBitmap & ~((1 << (fl + 1)) - 1);
       if (flMask === 0) return undefined;
       fl = 31 - Math.clz32(flMask & -flMask);
-      slMask = this.slBitmap[fl]!;
+      slMask = this.slBitmap[fl] ?? 0;
     }
     sl = 31 - Math.clz32(slMask & -slMask);
-    return this.freeLists[fl]![sl];
+    return this.freeLists[fl]?.[sl];
   }
 }

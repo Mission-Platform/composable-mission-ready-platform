@@ -64,6 +64,7 @@ import { TextDocument } from 'vscode-languageserver-textdocument';
 
 import { createFlintNodeWorkspaceHost } from './workspace.js';
 
+/** Options configuring Flint language server creation. */
 export interface FlintLspServerOptions {
   readonly service?: FlintLanguageService;
   readonly workspaceHost?: FlintWorkspaceHost;
@@ -74,6 +75,7 @@ export interface FlintLspServerOptions {
   readonly log?: (event: FlintLspLogEvent) => Promise<void> | void;
 }
 
+/** Progress notification event payload emitted during analysis. */
 export interface FlintLspProgressEvent {
   readonly token: string;
   readonly kind: 'begin' | 'report' | 'end';
@@ -82,6 +84,7 @@ export interface FlintLspProgressEvent {
   readonly percentage?: number;
 }
 
+/** Telemetry log event emitted by the language server. */
 export interface FlintLspLogEvent {
   readonly level: 'info' | 'warning' | 'error';
   readonly event: string;
@@ -89,6 +92,7 @@ export interface FlintLspLogEvent {
   readonly data?: Readonly<Record<string, unknown>>;
 }
 
+/** Synchronized text document representation with version and URI. */
 export interface FlintLspDocument {
   readonly uri: string;
   readonly version: number;
@@ -96,14 +100,19 @@ export interface FlintLspDocument {
   readonly fileName?: string;
 }
 
+/**
+ * Progress reporting handle for long-running LSP operations.
+ */
 type WorkDoneProgressReporter = Awaited<ReturnType<Connection['window']['createWorkDoneProgress']>>;
 
+/** State tracker managing active LSP progress sessions. */
 interface ProgressState {
   reporter?: WorkDoneProgressReporter;
   finished?: boolean;
   ready: Promise<void>;
 }
 
+/** Dispatches an LSP work-done progress notification to the client. */
 function sendProgressEvent(state: ProgressState, event: FlintLspProgressEvent): void {
   const reporter = state.reporter;
   if (reporter === undefined) return;
@@ -118,6 +127,7 @@ function sendProgressEvent(state: ProgressState, event: FlintLspProgressEvent): 
   }
 }
 
+/** Full language server handler interface dispatching LSP protocol requests. */
 export interface FlintLspServer {
   initialize(params: InitializeParams): InitializeResult;
   openDocument(document: FlintLspDocument): Promise<void>;
@@ -186,6 +196,7 @@ const defaultCapabilities: ServerCapabilities = {
   workspace: { workspaceFolders: { supported: true, changeNotifications: true } },
 };
 
+/** Instantiates a FlintLspServer backed by language service and workspace host. */
 export function createFlintLspServer(options: FlintLspServerOptions = {}): FlintLspServer {
   let service = options.service;
   let host = options.workspaceHost;
@@ -291,6 +302,7 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
   };
 
   return {
+    /** Handles LSP initialize request and returns server capabilities. */
     initialize(params): InitializeResult {
       if (disposed) throw new Error('Flint LSP server has been disposed.');
       if (initialized) return { capabilities: defaultCapabilities };
@@ -309,6 +321,7 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
       emitLog({ level: 'info', event: 'server.initialized', message: 'Flint LSP server initialized.' });
       return { capabilities: defaultCapabilities, serverInfo: { name: 'flint-lsp', version: '0.1.0' } };
     },
+    /** Synchronizes an opened text document into the language service. */
     openDocument(document): Promise<void> {
       latestDocumentVersions.set(document.uri, document.version);
       return enqueue(async () => {
@@ -318,6 +331,7 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
         await publish(document.uri, document.version);
       });
     },
+    /** Updates document content following incremental text changes. */
     updateDocument(document): Promise<void> {
       const languageService = assertReady();
       const previous = documents.get(document.uri);
@@ -331,6 +345,7 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
         await publish(document.uri, targetVersion);
       });
     },
+    /** Cleans up language service state when a document is closed. */
     closeDocument(uri): Promise<void> {
       latestDocumentVersions.delete(uri);
       return enqueue(async () => {
@@ -340,6 +355,7 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
         await publishDiagnostics({ uri, diagnostics: [] });
       });
     },
+    /** Propagates filesystem file changes to the workspace host. */
     changeWatchedFiles(params): Promise<void> {
       return enqueue(async () => {
         const languageService = assertReady();
@@ -349,6 +365,7 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
         await publishAll();
       });
     },
+    /** Computes code completion items at the cursor position. */
     completion(params): CompletionItem[] {
       const languageService = assertReady();
       const document = documents.get(params.textDocument.uri);
@@ -363,6 +380,7 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
         })),
       );
     },
+    /** Computes hover documentation for the token under the cursor. */
     hover(params): Hover | undefined {
       const languageService = assertReady();
       if (!documents.has(params.textDocument.uri)) return undefined;
@@ -375,30 +393,35 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
         contents: { kind: MarkupKind.Markdown, value: result.contents.join('\n\n') },
       };
     },
+    /** Resolves definition locations for the symbol at the requested position. */
     definition(params): Location[] {
       const languageService = assertReady();
       return queryLocations(params.textDocument.uri, () =>
         languageService.definition(params.textDocument.uri, params.position),
       );
     },
+    /** Resolves declaration locations for the symbol at the requested position. */
     declaration(params): Location[] {
       const languageService = assertReady();
       return queryLocations(params.textDocument.uri, () =>
         languageService.declaration(params.textDocument.uri, params.position),
       );
     },
+    /** Resolves implementation locations for interface or method symbols. */
     implementation(params): Location[] {
       const languageService = assertReady();
       return queryLocations(params.textDocument.uri, () =>
         languageService.implementation(params.textDocument.uri, params.position),
       );
     },
+    /** Finds all references to the symbol at the requested position. */
     references(params): Location[] {
       const languageService = assertReady();
       return queryLocations(params.textDocument.uri, () =>
         languageService.references(params.textDocument.uri, params.position),
       );
     },
+    /** Returns document symbol hierarchy for outline navigation. */
     documentSymbols(params): DocumentSymbol[] {
       const languageService = assertReady();
       if (!documents.has(params.textDocument.uri)) return [];
@@ -406,6 +429,9 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
         languageService.documentSymbols(params.textDocument.uri).map((symbol) => toDocumentSymbol(symbol)),
       );
     },
+    /**
+     * Searches symbols across all indexed workspace documents.
+     */
     workspaceSymbols(params: WorkspaceSymbolParams): SymbolInformation[] {
       const languageService = assertReady();
       const results = languageService.workspaceSymbols?.(params.query) ?? [];
@@ -419,6 +445,9 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
         ...(symbol.containerName === undefined ? {} : { containerName: symbol.containerName }),
       }));
     },
+    /**
+     * Computes quick-fix and refactoring code actions for diagnostics.
+     */
     codeActions(params: CodeActionParams): CodeAction[] {
       assertReady();
       if (!documents.has(params.textDocument.uri)) return [];
@@ -439,6 +468,7 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
       }
       return actions;
     },
+    /** Computes actionable code lens commands for functions and modules. */
     codeLens(params): CodeLens[] {
       const languageService = assertReady();
       if (!documents.has(params.textDocument.uri)) return [];
@@ -459,6 +489,7 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
         })),
       );
     },
+    /** Computes code folding ranges for functions, blocks, and imports. */
     foldingRanges(params): FoldingRange[] {
       const languageService = assertReady();
       if (!documents.has(params.textDocument.uri)) return [];
@@ -472,6 +503,7 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
         })),
       );
     },
+    /** Computes inline variable values for debug visualization. */
     inlineValues(params): InlineValue[] {
       const languageService = assertReady();
       const document = documents.get(params.textDocument.uri);
@@ -485,6 +517,7 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
           })),
       );
     },
+    /** Computes parameter and type inlay hints for code display. */
     inlayHints(params): InlayHint[] {
       const languageService = assertReady();
       const document = documents.get(params.textDocument.uri);
@@ -499,6 +532,7 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
         })),
       );
     },
+    /** Performs symbol rename across all workspace documents. */
     rename(params): WorkspaceEdit | undefined {
       const languageService = assertReady();
       if (!documents.has(params.textDocument.uri)) return undefined;
@@ -513,6 +547,7 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
       });
       return result;
     },
+    /** Computes semantic syntax highlighting tokens for a document. */
     semanticTokens(params): SemanticTokens {
       const languageService = assertReady();
       const document = documents.get(params.textDocument.uri);
@@ -521,10 +556,14 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
         data: encodeSemanticTokens(languageService.tokenize(document.uri), document.text),
       }));
     },
+    /**
+     * Prepares the language server for process shutdown.
+     */
     async shutdown(): Promise<void> {
       await queue;
       this.dispose();
     },
+    /** Releases all language server resources and watchers. */
     dispose(): void {
       if (disposed) return;
       disposed = true;
@@ -536,6 +575,7 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
   } satisfies FlintLspServer;
 }
 
+/** Binds Flint language server request and notification handlers to a connection. */
 export function registerFlintLsp(connection: Connection, options: FlintLspServerOptions = {}): FlintLspServer {
   const documents = new TextDocuments(TextDocument);
   let clientSupportsWorkDoneProgress = false;
@@ -628,14 +668,17 @@ export function registerFlintLsp(connection: Connection, options: FlintLspServer
   return server;
 }
 
+/** Converts an LSP text document item into a FlintLspDocument. */
 function toDocument(document: TextDocument): FlintLspDocument {
   return { uri: document.uri, version: document.version, text: document.getText(), fileName: document.uri };
 }
 
+/** Converts a Flint source location into an LSP Location object. */
 function toLspLocation(location: FlintLocation): Location {
   return { uri: location.uri, range: toLspRange(location.range) };
 }
 
+/** Converts a Flint symbol into an LSP DocumentSymbol. */
 function toDocumentSymbol(symbol: FlintDocumentSymbol): DocumentSymbol {
   return {
     name: symbol.name,
@@ -647,6 +690,7 @@ function toDocumentSymbol(symbol: FlintDocumentSymbol): DocumentSymbol {
   };
 }
 
+/** Maps a Flint symbol kind to its LSP SymbolKind enum value. */
 function symbolKind(kind: FlintSymbolKind): SymbolKind {
   return kind === 'module'
     ? SymbolKind.Namespace
@@ -661,6 +705,7 @@ function symbolKind(kind: FlintSymbolKind): SymbolKind {
             : SymbolKind.TypeParameter;
 }
 
+/** Extracts normalized workspace root URIs from initialization parameters. */
 function workspaceRoots(params: InitializeParams): readonly string[] {
   if (params.workspaceFolders !== undefined && params.workspaceFolders !== null && params.workspaceFolders.length > 0)
     return params.workspaceFolders.map((folder) => folder.uri);
@@ -668,6 +713,7 @@ function workspaceRoots(params: InitializeParams): readonly string[] {
   return [];
 }
 
+/** Converts Flint compiler diagnostics into LSP PublishDiagnosticsParams. */
 function toPublishDiagnostics(analysis: FlintAnalysis): PublishDiagnosticsParams {
   return {
     uri: analysis.uri,
@@ -692,10 +738,12 @@ function toPublishDiagnostics(analysis: FlintAnalysis): PublishDiagnosticsParams
   };
 }
 
+/** Converts a Flint source span into an LSP Range. */
 function toLspRange(range: { start: { line: number; character: number }; end: { line: number; character: number } }) {
   return { start: range.start, end: range.end };
 }
 
+/** Converts an LSP Range into a 0-based Flint source range. */
 function fromLspRange(
   range: { start: { line: number; character: number }; end: { line: number; character: number } },
   source: string,
@@ -709,10 +757,12 @@ function fromLspRange(
   };
 }
 
+/** Converts a Flint text edit into an LSP TextEdit. */
 function toLspTextEdit(edit: FlintTextEdit): { range: ReturnType<typeof toLspRange>; newText: string } {
   return { range: toLspRange(edit.range), newText: edit.newText };
 }
 
+/** Maps a Flint diagnostic severity to an LSP DiagnosticSeverity. */
 function diagnosticSeverity(severity: 'error' | 'warning' | 'info'): DiagnosticSeverity {
   return severity === 'error'
     ? DiagnosticSeverity.Error
@@ -721,6 +771,7 @@ function diagnosticSeverity(severity: 'error' | 'warning' | 'info'): DiagnosticS
       : DiagnosticSeverity.Information;
 }
 
+/** Maps a Flint completion item kind to an LSP CompletionItemKind. */
 function completionKind(kind: string): CompletionItemKind {
   return kind === 'keyword'
     ? CompletionItemKind.Keyword
@@ -733,10 +784,14 @@ function completionKind(kind: string): CompletionItemKind {
           : CompletionItemKind.Variable;
 }
 
+/** Maps an LSP FileChangeType to a Flint workspace change kind. */
 function toWorkspaceChangeKind(type: FileChangeType): FlintWorkspaceChange['kind'] {
   return type === FileChangeType.Created ? 'created' : type === FileChangeType.Deleted ? 'deleted' : 'changed';
 }
 
+/**
+ * Delta-encodes semantic tokens into the LSP integer array format.
+ */
 function encodeSemanticTokens(tokens: readonly FlintTokenClassification[], source: string): number[] {
   const data: number[] = [];
   let previousLine = 0;
@@ -756,6 +811,9 @@ function encodeSemanticTokens(tokens: readonly FlintTokenClassification[], sourc
   return data;
 }
 
+/**
+ * Splits multiline token spans into single-line semantic token segments.
+ */
 function tokenSegments(
   token: FlintTokenClassification,
   source: string,

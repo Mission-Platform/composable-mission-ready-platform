@@ -1,7 +1,9 @@
 import type { FlintSourceSpan } from './diagnostics.js';
 
+/** Primitive scalar and carrier types supported by Flint. */
 export type FlintPrimitiveType = 'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
 
+/** Memory ownership classification for pointer and aggregate values. */
 export type FlintOwnership = 'borrowed' | 'owned' | 'shared';
 
 /** Source-level mutability of a binding. Bindings are immutable by default. */
@@ -13,6 +15,7 @@ export type FlintReferenceMode = 'value' | 'ref' | 'mut-ref';
 /** ABI passing mode derived from the recursive POD classification. */
 export type FlintPassingMode = 'value' | 'immutable-reference' | 'mutable-reference';
 
+/** Generic type parameter declared on a function, struct, or interface. */
 export interface FlintGenericParameter {
   readonly kind: 'generic-parameter';
   readonly name: string;
@@ -20,6 +23,7 @@ export interface FlintGenericParameter {
   readonly span: FlintSourceSpan;
 }
 
+/** AST node describing a primitive, generic, aggregate, or reference type. */
 export interface FlintTypeName {
   readonly kind: 'type-name';
   /** The ABI-compatible primitive carrier. Non-primitive names use reference. */
@@ -36,70 +40,146 @@ export interface FlintTypeName {
 }
 
 /**
- * Serializes a FlintTypeName descriptor to its canonical source code representation.
+ * Converts a Flint type name node into its canonical string representation.
  *
- * @param type Flint type name structure.
- * @returns Serialized type string (e.g. `i32`, `&mut String`, `[i32; 4]`).
+ * @param type - Type name node to stringify.
+ * @returns Human-readable type string.
  */
 export function flintTypeNameToString(type: FlintTypeName): string {
   const name = type.reference ?? type.name;
-  let text = name;
-  if (type.arguments !== undefined && type.arguments.length > 0) {
-    const renderedArguments = type.arguments.map((argument) => flintTypeNameToString(argument)).join(', ');
-    text = `${name}<${renderedArguments}>`;
-  }
-  if (type.referenceMode === 'mut-ref') text = `&mut ${text}`;
-  else if (type.referenceMode === 'ref') text = `&${text}`;
-  if (type.length !== undefined) text = `${text}[${type.length}]`;
-  return text;
+  const generic =
+    type.arguments === undefined || type.arguments.length === 0
+      ? name
+      : `${name}<${type.arguments.map((argument) => flintTypeNameToString(argument)).join(', ')}>`;
+  const qualified =
+    type.referenceMode === undefined ? generic : `&${type.referenceMode === 'mut-ref' ? 'mut ' : ''}${generic}`;
+  return type.length === undefined ? qualified : `${qualified}[${type.length}]`;
 }
 
 const podPrimitives = new Set<FlintPrimitiveType>(['bool', 'f32', 'f64', 'i32', 'i64', 'u32', 'u64', 'unit']);
+const NON_POD_TYPE_NAMES = new Set(['Array', 'Vector', 'Iterable', 'Iterator', 'Fn']);
+const CONTAINER_POD_TYPE_NAMES = new Set(['Option', 'Result', 'iterResult']);
+
+/**
+ * Checks if a struct definition represents Plain Old Data.
+ *
+ * @param structName - Name of the struct to inspect.
+ * @param module - Module declarations container.
+ * @param visiting - Cycle detection set.
+ * @returns True if all fields are POD.
+ */
+function isStructPodType(
+  structName: string,
+  module: Pick<FlintModule, 'structs' | 'enums'>,
+  visiting: Set<string>,
+): boolean {
+  const struct = module.structs.find((declaration) => declaration.name === structName);
+  if (struct === undefined) return false;
+  return struct.fields.every((field) => field.ownership === undefined && isFlintPodType(field.type, module, visiting));
+}
+
+/**
+ * Checks if an enum definition represents Plain Old Data.
+ *
+ * @param enumName - Name of the enum to inspect.
+ * @param module - Module declarations container.
+ * @param visiting - Cycle detection set.
+ * @returns True if all variant fields are POD.
+ */
+function isEnumPodType(
+  enumName: string,
+  module: Pick<FlintModule, 'structs' | 'enums'>,
+  visiting: Set<string>,
+): boolean {
+  const enumeration = module.enums.find((declaration) => declaration.name === enumName);
+  if (enumeration === undefined) return false;
+  return enumeration.variants.every((variant) =>
+    variant.fields.every((field) => field.type.ownership === undefined && isFlintPodType(field.type, module, visiting)),
+  );
+}
+
+/**
+ * Checks if a type node has explicit reference mode or ownership qualifiers.
+ *
+ * @param type - Type name AST node to inspect.
+ * @returns True if referenceMode or ownership is defined.
+ */
+function hasReferenceOrOwnership(type: FlintTypeName): boolean {
+  return type.referenceMode !== undefined || type.ownership !== undefined;
+}
+
+/**
+ * Checks if a standard container type represents Plain Old Data.
+ *
+ * @param type - Container type name AST node.
+ * @param module - Module declarations container.
+ * @param visiting - Cycle detection set.
+ * @returns True if all type arguments are POD.
+ */
+function isContainerPodType(
+  type: FlintTypeName,
+  module?: Pick<FlintModule, 'structs' | 'enums'>,
+  visiting = new Set<string>(),
+): boolean {
+  const typeArguments = type.arguments;
+  if (typeArguments === undefined) return true;
+  return typeArguments.every((argument) => isFlintPodType(argument, module, visiting));
+}
+
+/**
+ * Checks if a user-defined struct or enum type represents Plain Old Data.
+ *
+ * @param type - Type name AST node.
+ * @param name - Resolved name of the user-defined type.
+ * @param module - Module declarations container.
+ * @param visiting - Cycle detection set for recursive types.
+ * @returns True if the user-defined type is POD.
+ */
+function isUserDefinedPodType(
+  type: FlintTypeName,
+  name: string,
+  module: Pick<FlintModule, 'structs' | 'enums'>,
+  visiting: Set<string>,
+): boolean {
+  const key = flintTypeNameToString(type);
+  if (visiting.has(key)) return false;
+  const nextVisiting = new Set(visiting).add(key);
+  return isStructPodType(name, module, nextVisiting) || isEnumPodType(name, module, nextVisiting);
+}
 
 /**
  * Classifies a type without relying on its ABI carrier. Strings, bytes, and
  * collections are handles even though some of them use scalar carriers.
  * Recursive aggregate walks are cycle-safe and conservatively classify
  * unresolved generic/cyclic values as non-POD.
+ *
+ * @param type - Type name AST node to test.
+ * @param module - Optional module declarations to resolve user types.
+ * @param visiting - Cycle detection set for recursive types.
+ * @returns True if the type qualifies as Plain Old Data.
  */
 export function isFlintPodType(
   type: FlintTypeName,
   module?: Pick<FlintModule, 'structs' | 'enums'>,
   visiting = new Set<string>(),
 ): boolean {
-  if (type.referenceMode !== undefined || type.ownership !== undefined) return false;
+  if (hasReferenceOrOwnership(type)) return false;
+  if (type.reference === undefined && podPrimitives.has(type.name)) return true;
   const name = type.reference ?? type.name;
-  if (podPrimitives.has(type.name) && type.reference === undefined) return true;
-  if (name === 'Array' || name === 'Vector' || name === 'Iterable' || name === 'Iterator' || name === 'Fn')
-    return false;
-  if (name === 'Option' || name === 'Result' || name === 'iterResult')
-    return (type.arguments ?? []).every((argument) => isFlintPodType(argument, module, visiting));
+  if (NON_POD_TYPE_NAMES.has(name)) return false;
+  if (CONTAINER_POD_TYPE_NAMES.has(name)) {
+    return isContainerPodType(type, module, visiting);
+  }
   if (module === undefined) return false;
-  const key = flintTypeNameToString(type);
-  if (visiting.has(key)) return false;
-  const nextVisiting = new Set(visiting).add(key);
-  const struct = module.structs.find((declaration) => declaration.name === name);
-  if (struct !== undefined)
-    return struct.fields.every(
-      (field) => field.ownership === undefined && isFlintPodType(field.type, module, nextVisiting),
-    );
-  const enumeration = module.enums.find((declaration) => declaration.name === name);
-  return (
-    enumeration !== undefined &&
-    enumeration.variants.every((variant) =>
-      variant.fields.every(
-        (field) => field.type.ownership === undefined && isFlintPodType(field.type, module, nextVisiting),
-      ),
-    )
-  );
+  return isUserDefinedPodType(type, name, module, visiting);
 }
 
 /**
- * Computes the default argument passing mode (value, ref, or mut-ref) for a given type.
+ * Determines default passing mode for a type based on POD status and reference mode.
  *
- * @param type Flint type name.
- * @param module Optional module providing struct and enum definitions.
- * @returns Default passing mode convention.
+ * @param type - Type name to evaluate.
+ * @param module - Module declarations container.
+ * @returns Appropriate passing mode ('value', 'immutable-reference', or 'mutable-reference').
  */
 export function flintDefaultPassingMode(
   type: FlintTypeName,
@@ -110,6 +190,7 @@ export function flintDefaultPassingMode(
   return isFlintPodType(type, module) ? 'value' : 'immutable-reference';
 }
 
+/** Formal parameter declaration on a function signature or enum variant. */
 export interface FlintParameter {
   readonly kind: 'parameter';
   readonly name: string;
@@ -119,17 +200,20 @@ export interface FlintParameter {
   readonly span: FlintSourceSpan;
 }
 
+/** Structured documentation comment attached to an AST declaration. */
 export interface FlintDocumentation {
   readonly description: string;
   readonly tags: readonly FlintDocumentationTag[];
 }
 
+/** Individual documentation tag associated with a declaration. */
 export interface FlintDocumentationTag {
   readonly name: string;
   readonly subject?: string;
   readonly text: string;
 }
 
+/** Capability import declaration binding a host capability to a local alias. */
 export interface FlintCapabilityImport {
   readonly kind: 'capability-import';
   readonly capability: string;
@@ -139,6 +223,7 @@ export interface FlintCapabilityImport {
   readonly span: FlintSourceSpan;
 }
 
+/** Source module import statement binding an external module alias. */
 export interface FlintSourceModuleImport {
   readonly kind: 'source-module-import';
   readonly source: string;
@@ -146,6 +231,7 @@ export interface FlintSourceModuleImport {
   readonly span: FlintSourceSpan;
 }
 
+/** Function declaration AST node with parameters, return type, and body. */
 export interface FlintFunction {
   readonly kind: 'function';
   readonly name: string;
@@ -162,6 +248,7 @@ export interface FlintFunction {
   readonly span: FlintSourceSpan;
 }
 
+/** Individual field declaration within a struct. */
 export interface FlintStructField {
   readonly kind: 'struct-field';
   readonly name: string;
@@ -171,6 +258,7 @@ export interface FlintStructField {
   readonly span: FlintSourceSpan;
 }
 
+/** User-defined immutable struct declaration AST node. */
 export interface FlintStructDeclaration {
   readonly kind: 'struct';
   readonly name: string;
@@ -183,6 +271,7 @@ export interface FlintStructDeclaration {
   readonly span: FlintSourceSpan;
 }
 
+/** Individual variant definition within an algebraic enum. */
 export interface FlintEnumVariant {
   readonly kind: 'enum-variant';
   readonly name: string;
@@ -191,6 +280,7 @@ export interface FlintEnumVariant {
   readonly span: FlintSourceSpan;
 }
 
+/** Algebraic enumeration declaration AST node. */
 export interface FlintEnumDeclaration {
   readonly kind: 'enum';
   readonly name: string;
@@ -201,6 +291,7 @@ export interface FlintEnumDeclaration {
   readonly span: FlintSourceSpan;
 }
 
+/** Method signature contract declared within an interface. */
 export interface FlintInterfaceFunction {
   readonly kind: 'interface-function';
   readonly name: string;
@@ -221,8 +312,10 @@ export interface FlintInterfaceDeclaration {
   readonly span: FlintSourceSpan;
 }
 
+/** Supported binary operators for arithmetic, comparison, and boolean logic. */
 export type FlintBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
 
+/** Literal expression representing a boolean, number, or string value. */
 export interface FlintLiteralExpression {
   readonly kind: 'literal';
   readonly value: boolean | number | string;
@@ -230,12 +323,14 @@ export interface FlintLiteralExpression {
   readonly span: FlintSourceSpan;
 }
 
+/** Identifier reference expression. */
 export interface FlintIdentifierExpression {
   readonly kind: 'identifier';
   readonly name: string;
   readonly span: FlintSourceSpan;
 }
 
+/** Function or capability call expression. */
 export interface FlintCallExpression {
   readonly kind: 'call';
   readonly callee: string;
@@ -243,6 +338,7 @@ export interface FlintCallExpression {
   readonly span: FlintSourceSpan;
 }
 
+/** Binary operation expression. */
 export interface FlintBinaryExpression {
   readonly kind: 'binary';
   readonly operator: FlintBinaryOperator;
@@ -251,6 +347,7 @@ export interface FlintBinaryExpression {
   readonly span: FlintSourceSpan;
 }
 
+/** Unary operation expression. */
 export interface FlintUnaryExpression {
   readonly kind: 'unary';
   readonly operator: '!' | '-';
@@ -258,12 +355,14 @@ export interface FlintUnaryExpression {
   readonly span: FlintSourceSpan;
 }
 
+/** First-class function value reference expression. */
 export interface FlintFunctionValueExpression {
   readonly kind: 'function-value';
   readonly name: string;
   readonly span: FlintSourceSpan;
 }
 
+/** Struct instantiation expression with named field values. */
 export interface FlintStructValueExpression {
   readonly kind: 'struct-value';
   readonly type: FlintTypeName;
@@ -271,6 +370,7 @@ export interface FlintStructValueExpression {
   readonly span: FlintSourceSpan;
 }
 
+/** Enum variant instantiation expression. */
 export interface FlintEnumValueExpression {
   readonly kind: 'enum-value';
   readonly type: FlintTypeName;
@@ -279,6 +379,7 @@ export interface FlintEnumValueExpression {
   readonly span: FlintSourceSpan;
 }
 
+/** Fixed-size array literal expression. */
 export interface FlintArrayLiteralExpression {
   readonly kind: 'array-literal';
   readonly elements: readonly FlintExpression[];
@@ -286,6 +387,7 @@ export interface FlintArrayLiteralExpression {
   readonly span: FlintSourceSpan;
 }
 
+/** Dynamically growable vector literal expression. */
 export interface FlintVectorLiteralExpression {
   readonly kind: 'vector-literal';
   readonly elements: readonly FlintExpression[];
@@ -293,6 +395,7 @@ export interface FlintVectorLiteralExpression {
   readonly span: FlintSourceSpan;
 }
 
+/** Indexed element access expression. */
 export interface FlintIndexExpression {
   readonly kind: 'index';
   readonly receiver: FlintExpression;
@@ -300,6 +403,7 @@ export interface FlintIndexExpression {
   readonly span: FlintSourceSpan;
 }
 
+/** Pattern matching pattern: wildcard, literal value, or enum variant. */
 export type FlintPattern =
   | { readonly kind: 'wildcard'; readonly span: FlintSourceSpan }
   | { readonly kind: 'literal'; readonly value: boolean | number | string; readonly span: FlintSourceSpan }
@@ -310,6 +414,7 @@ export type FlintPattern =
       readonly span: FlintSourceSpan;
     };
 
+/** Single branch within a match expression or match statement. */
 export interface FlintMatchArm {
   readonly kind: 'match-arm';
   readonly pattern: FlintPattern;
@@ -317,6 +422,7 @@ export interface FlintMatchArm {
   readonly span: FlintSourceSpan;
 }
 
+/** Pattern matching expression returning the evaluated value of the matched arm. */
 export interface FlintMatchExpression {
   readonly kind: 'match';
   readonly value: FlintExpression;
@@ -324,6 +430,7 @@ export interface FlintMatchExpression {
   readonly span: FlintSourceSpan;
 }
 
+/** Union of all expression AST nodes in Flint. */
 export type FlintExpression =
   | FlintBinaryExpression
   | FlintCallExpression
@@ -338,6 +445,7 @@ export type FlintExpression =
   | FlintMatchExpression
   | FlintUnaryExpression;
 
+/** Variable binding declaration statement. */
 export interface FlintLetStatement {
   readonly kind: 'let';
   readonly name: string;
@@ -348,6 +456,7 @@ export interface FlintLetStatement {
   readonly span: FlintSourceSpan;
 }
 
+/** Variable or index assignment mutation statement. */
 export interface FlintAssignmentStatement {
   readonly kind: 'assignment';
   readonly name: string;
@@ -356,18 +465,21 @@ export interface FlintAssignmentStatement {
   readonly span: FlintSourceSpan;
 }
 
+/** Function return statement with optional return value. */
 export interface FlintReturnStatement {
   readonly kind: 'return';
   readonly value?: FlintExpression;
   readonly span: FlintSourceSpan;
 }
 
+/** Solitary expression evaluated as a statement. */
 export interface FlintExpressionStatement {
   readonly kind: 'expression-statement';
   readonly expression: FlintExpression;
   readonly span: FlintSourceSpan;
 }
 
+/** Conditional branching statement with optional alternate branch. */
 export interface FlintIfStatement {
   readonly kind: 'if';
   readonly condition: FlintExpression;
@@ -377,6 +489,7 @@ export interface FlintIfStatement {
   readonly span: FlintSourceSpan;
 }
 
+/** While loop statement executing while condition holds true. */
 export interface FlintWhileStatement {
   readonly kind: 'while';
   readonly condition: FlintExpression;
@@ -384,6 +497,7 @@ export interface FlintWhileStatement {
   readonly span: FlintSourceSpan;
 }
 
+/** Classic for loop statement with initializer, condition, update, and body. */
 export interface FlintForStatement {
   readonly kind: 'for';
   readonly initializer?: FlintStatement;
@@ -393,6 +507,7 @@ export interface FlintForStatement {
   readonly span: FlintSourceSpan;
 }
 
+/** Do-while loop statement executing body at least once. */
 export interface FlintDoWhileStatement {
   readonly kind: 'do-while';
   readonly body: readonly FlintStatement[];
@@ -400,12 +515,14 @@ export interface FlintDoWhileStatement {
   readonly span: FlintSourceSpan;
 }
 
+/** Iterator yield statement producing a value. */
 export interface FlintYieldStatement {
   readonly kind: 'yield';
   readonly value: FlintExpression;
   readonly span: FlintSourceSpan;
 }
 
+/** For-in iterator loop statement over an iterable expression. */
 export interface FlintIteratorLoopStatement {
   readonly kind: 'iterator-loop';
   readonly binding: string;
@@ -414,6 +531,7 @@ export interface FlintIteratorLoopStatement {
   readonly span: FlintSourceSpan;
 }
 
+/** Pattern matching statement executing matched branch body. */
 export interface FlintMatchStatement {
   readonly kind: 'match-statement';
   readonly value: FlintExpression;
@@ -421,6 +539,7 @@ export interface FlintMatchStatement {
   readonly span: FlintSourceSpan;
 }
 
+/** Individual case branch within a switch statement. */
 export interface FlintSwitchCase {
   readonly kind: 'switch-case';
   /** Integer literals are retained as numbers; enum variants as their names. */
@@ -429,6 +548,7 @@ export interface FlintSwitchCase {
   readonly span: FlintSourceSpan;
 }
 
+/** Multi-way switch statement branching on an integral or variant value. */
 export interface FlintSwitchStatement {
   readonly kind: 'switch';
   readonly value: FlintExpression;
@@ -437,6 +557,7 @@ export interface FlintSwitchStatement {
   readonly span: FlintSourceSpan;
 }
 
+/** Union of all statement AST nodes in Flint. */
 export type FlintStatement =
   | FlintExpressionStatement
   | FlintAssignmentStatement
@@ -451,6 +572,7 @@ export type FlintStatement =
   | FlintYieldStatement
   | FlintIteratorLoopStatement;
 
+/** Complete source module AST node containing declarations and imports. */
 export interface FlintModule {
   readonly kind: 'module';
   /** The canonical identity derived from the source file ID. */

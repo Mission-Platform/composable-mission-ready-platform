@@ -1,3 +1,4 @@
+/** WebAssembly standard library intrinsic operations lowered by the backend compiler. */
 export type FlintWasmStandardLibraryOperation =
   | 'full-match'
   | 'prefix-match'
@@ -59,8 +60,10 @@ export type FlintWasmStandardLibraryOperation =
   | 'simd-v128-load'
   | 'simd-v128-store';
 
+/** Asynchronous runtime capabilities requested by WebAssembly modules. */
 export type FlintWasmAsyncCapability = 'scheduler.microtask' | 'scheduler.worker';
 
+/** Target WebAssembly proposal features enabled during code emission. */
 export interface FlintTargetFeatures {
   readonly simd?: boolean;
   readonly tailCall?: boolean;
@@ -69,6 +72,7 @@ export interface FlintTargetFeatures {
   readonly atomics?: boolean;
 }
 
+/** Optimization hints provided to the WebAssembly compiler backend. */
 export interface FlintWasmCompilerHints {
   /** Functions proven to be in tail position and safe to lower with return_call. */
   readonly tailCallFunctions?: readonly string[];
@@ -76,6 +80,7 @@ export interface FlintWasmCompilerHints {
   readonly iteratorUnrollLimit?: number;
 }
 
+/** Structured logger interface for WebAssembly compilation events. */
 export interface FlintWasmLogger {
   readonly scope: string;
   readonly log: (
@@ -85,6 +90,7 @@ export interface FlintWasmLogger {
   ) => void;
 }
 
+/** WebAssembly feature requirements discovered during code generation. */
 export interface FlintWasmFeatureRequirements {
   readonly simd?: boolean;
   readonly tailCall?: boolean;
@@ -95,6 +101,7 @@ export interface FlintWasmFeatureRequirements {
   readonly parallel?: 'serial' | 'host-workers' | 'wasm-threads';
 }
 
+/** Contract specification governing asynchronous execution and messaging in WebAssembly. */
 export interface FlintWasmAsyncContract {
   readonly capabilities: readonly FlintWasmAsyncCapability[];
   readonly deterministic: true;
@@ -103,9 +110,11 @@ export interface FlintWasmAsyncContract {
   readonly ordering: 'sequence';
 }
 
+/** Primitive data types supported by the WebAssembly backend lowering pass. */
 export type FlintWasmPrimitiveType =
   'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit' | 'v128';
 
+/** Source location span mapped to WebAssembly instructions for debug symbol generation. */
 export interface FlintWasmSourceSpan {
   readonly start: number;
   readonly end: number;
@@ -115,6 +124,7 @@ export interface FlintWasmSourceSpan {
   readonly endColumn: number;
 }
 
+/** Memory layout descriptor for aggregate structures laid out in linear memory. */
 export interface FlintWasmAggregateLayout {
   readonly name: string;
   readonly kind: 'struct' | 'enum';
@@ -130,6 +140,7 @@ export interface FlintWasmAggregateLayout {
   }[];
 }
 
+/** Abstract type name representation utilized during WebAssembly lowering. */
 export interface FlintWasmTypeName {
   readonly name: FlintWasmPrimitiveType;
   readonly reference?: 'Array' | 'Vector' | string;
@@ -138,6 +149,7 @@ export interface FlintWasmTypeName {
   readonly referenceMode?: 'ref' | 'mut-ref';
 }
 
+/** Tagged union enum declaration represented in WebAssembly memory layouts. */
 export interface FlintWasmEnumDeclaration {
   readonly name: string;
   readonly exported: boolean;
@@ -145,6 +157,7 @@ export interface FlintWasmEnumDeclaration {
   readonly variants: readonly { readonly name: string; readonly value: number }[];
 }
 
+/** Layout and strategy configuration for collection types in linear memory. */
 export interface FlintWasmCollectionLayout {
   readonly type: string;
   readonly kind: 'array' | 'vector';
@@ -155,14 +168,17 @@ export interface FlintWasmCollectionLayout {
   readonly elementSize?: number;
 }
 
+/** Iterator capability category supported by runtime iterators. */
 export type FlintWasmIteratorCapability = 'linear' | 'random-access';
 
+/** Descriptor defining iterator iteration strategy and element bounds. */
 export interface FlintWasmIteratorCapabilityDescriptor {
   readonly capability: FlintWasmIteratorCapability;
   readonly preserves: readonly FlintWasmIteratorCapability[];
   readonly operation: 'source' | 'map' | 'filter' | 'flatten' | 'at';
 }
 
+/** Function parameter definition used in WebAssembly function signatures. */
 export interface FlintWasmParameter {
   readonly name: string;
   readonly type: FlintWasmTypeName;
@@ -170,6 +186,7 @@ export interface FlintWasmParameter {
   readonly mutable?: true;
 }
 
+/** Host capability import required by the WebAssembly module. */
 export interface FlintWasmCapabilityImport {
   readonly capability: string;
   readonly alias: string;
@@ -177,13 +194,16 @@ export interface FlintWasmCapabilityImport {
   readonly result: FlintWasmTypeName;
 }
 
+/** Linked source module dependency imported into the WebAssembly module. */
 export interface FlintWasmSourceImport {
   readonly source: string;
   readonly alias: string;
 }
 
+/** Supported binary arithmetic, logical, and comparison operators in WebAssembly. */
 export type FlintWasmBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
 
+/** Intermediate representation expression lowered to WebAssembly instructions. */
 export type FlintWasmExpression =
   | {
       readonly kind: 'literal';
@@ -242,6 +262,7 @@ export type FlintWasmExpression =
       readonly span: FlintWasmSourceSpan;
     };
 
+/** Intermediate representation statement lowered to WebAssembly structured control flow. */
 export type FlintWasmStatement =
   | {
       readonly kind: 'assignment';
@@ -321,6 +342,7 @@ export type FlintWasmStatement =
       readonly span: FlintWasmSourceSpan;
     };
 
+/** Function intermediate representation lowered to WebAssembly function definition. */
 export interface FlintWasmFunction {
   readonly name: string;
   readonly exported: boolean;
@@ -339,6 +361,7 @@ export interface FlintWasmFunction {
   readonly span: FlintWasmSourceSpan;
 }
 
+/** Monomorphized generic function specialization emitted to WebAssembly. */
 export interface FlintWasmGenericSpecialization {
   readonly id: string;
   readonly generic: string;
@@ -346,6 +369,7 @@ export interface FlintWasmGenericSpecialization {
   readonly representation: 'monomorphized' | 'descriptor-boundary';
 }
 
+/** Boundary descriptor defining iterator state machine transitions and exports. */
 export interface FlintWasmIteratorBoundaryDescriptor {
   /** Factory export name used by JS iterator adapters. */
   readonly id: string;
@@ -357,6 +381,7 @@ export interface FlintWasmIteratorBoundaryDescriptor {
   readonly capability?: FlintWasmIteratorCapability;
 }
 
+/** Exported iterator state-machine symbols accessible to host runtimes. */
 export interface FlintWasmIteratorExport {
   readonly name: string;
   readonly nextFunction: string;
@@ -365,6 +390,7 @@ export interface FlintWasmIteratorExport {
   readonly ownership: 'borrowed' | 'owned' | 'shared';
 }
 
+/** Module intermediate representation containing functions, layouts, and imports for WebAssembly emission. */
 export interface FlintWasmModule {
   readonly name: string;
   readonly imports: readonly FlintWasmCapabilityImport[];
@@ -382,6 +408,7 @@ export interface FlintWasmModule {
   readonly span: FlintWasmSourceSpan;
 }
 
+/** Complete input payload passed to the WebAssembly backend compilation pipeline. */
 export interface FlintWasmBackendInput {
   readonly ir: FlintWasmModule;
   readonly optimizedIr: FlintWasmModule;
@@ -393,6 +420,7 @@ export interface FlintWasmBackendInput {
   readonly logger?: FlintWasmLogger;
 }
 
+/** Metadata describing memory layout, feature requirements, and function signatures of the emitted WebAssembly artifact. */
 export interface FlintWasmArtifactMetadata {
   readonly compilerVersion: string;
   readonly optimization: 'debug' | 'release';
@@ -410,6 +438,7 @@ export interface FlintWasmArtifactMetadata {
   readonly wasmOptimizationPasses?: readonly string[];
 }
 
+/** Compiler diagnostic emitted during WebAssembly lowering, validation, or verification. */
 export interface FlintWasmDiagnostic {
   readonly code: string;
   readonly severity: 'error' | 'warning' | 'info';
@@ -420,6 +449,7 @@ export interface FlintWasmDiagnostic {
   readonly hint?: string;
 }
 
+/** Result returned by the WebAssembly backend emitter containing binary artifacts and reports. */
 export interface FlintWasmBackendResult {
   readonly wasm?: Uint8Array;
   readonly wat?: string;

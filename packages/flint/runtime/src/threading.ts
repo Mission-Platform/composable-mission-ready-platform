@@ -7,12 +7,18 @@ export const FLINT_THREADING_CAPABILITIES = {
   sharedMemory: 'wasm.shared-memory',
 } as const;
 
+/**
+ * Options configuring allocation or sharing of an atomic 32-bit integer array.
+ */
 export interface FlintAtomicI32Options {
   readonly capabilities?: readonly string[];
   readonly buffer?: SharedArrayBuffer;
   readonly logger?: FlintLogger;
 }
 
+/**
+ * Wrapper providing atomic read-modify-write operations on a shared 32-bit integer buffer.
+ */
 export interface FlintAtomicI32 {
   readonly buffer: SharedArrayBuffer;
   readonly sharedMemory: true;
@@ -24,6 +30,13 @@ export interface FlintAtomicI32 {
   readonly notify: (index: number, count?: number) => number;
 }
 
+/**
+ * Allocates a shared atomic 32-bit integer array and wraps it with atomic operations.
+ *
+ * @param length - Number of 32-bit integer slots to allocate.
+ * @param options - Allocation options including existing SharedArrayBuffer.
+ * @returns Configured FlintAtomicI32 instance.
+ */
 export function createFlintAtomicI32(length = 1, options: FlintAtomicI32Options = {}): FlintAtomicI32 {
   const logger = (options.logger ?? createFlintLogger({ scope: 'fws.threading' })).child('atomic');
   const capabilities = options.capabilities;
@@ -79,17 +92,26 @@ export function createFlintAtomicI32(length = 1, options: FlintAtomicI32Options 
   };
 }
 
+/**
+ * Generic postMessage message port contract for worker communications.
+ */
 export interface FlintWorkerPort {
   readonly postMessage: (message: unknown, transfer?: readonly Transferable[]) => void;
   readonly addEventListener: (type: 'message' | 'error', listener: (event: unknown) => void) => void;
   readonly terminate?: () => void;
 }
 
+/**
+ * Runtime handle managing a worker communication port and its lifecycle teardown.
+ */
 export interface FlintWorkerRuntime {
   readonly worker: FlintWorkerPort;
   readonly close: () => void;
 }
 
+/**
+ * Options configuring worker runtime creation.
+ */
 export interface FlintWorkerRuntimeOptions {
   readonly logger?: FlintLogger;
 }
@@ -100,6 +122,9 @@ export interface FlintWorkerScheduler {
   readonly close: () => void;
 }
 
+/**
+ * Configuration options for creating a host worker task scheduler.
+ */
 export interface FlintWorkerSchedulerOptions {
   readonly workerCount?: number;
   readonly capabilities?: readonly string[];
@@ -175,6 +200,9 @@ export function createFlintWorkerScheduler(options: FlintWorkerSchedulerOptions 
   };
 }
 
+/**
+ * WebAssembly target features relevant to multithreading and shared memory.
+ */
 export interface FlintWasmThreadTargetFeatures {
   readonly threads?: boolean;
   readonly atomics?: boolean;
@@ -199,6 +227,9 @@ export function canUseFlintWasmThreads(
   );
 }
 
+/**
+ * Options configuring a WebAssembly thread scheduler backed by shared memory and workers.
+ */
 export interface FlintWasmThreadSchedulerOptions extends FlintWasmThreadTargetFeatures {
   readonly capabilities: readonly string[];
   /** Executor supplied by the compiled WASM thread bridge; never inferred by this runtime. */
@@ -245,6 +276,15 @@ export function createFlintWasmThreadScheduler(options: FlintWasmThreadScheduler
   };
 }
 
+/**
+ * Instantiates a worker runtime with the provided port factory and lifecycle hooks.
+ *
+ * @param createWorker - Port factory callback.
+ * @param onMessage - Message handler callback.
+ * @param onError - Optional error handler callback.
+ * @param options - Configuration options for the runtime.
+ * @returns Initialized FlintWorkerRuntime.
+ */
 export function createFlintWorkerRuntime(
   createWorker: () => FlintWorkerPort,
   onMessage: (message: unknown) => void,
@@ -287,6 +327,9 @@ export function createFlintWorkerRuntime(
   };
 }
 
+/**
+ * Thread-safety metadata marker verifying shared memory concurrency guarantees.
+ */
 export interface FlintThreadSafetyMarker {
   readonly __isSend?: boolean;
   readonly __isSync?: boolean;

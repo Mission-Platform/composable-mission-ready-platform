@@ -1,5 +1,11 @@
+/**
+ * Supported logging severity levels for runtime event recording.
+ */
 export type FlintLogLevel = 'debug' | 'info' | 'warn' | 'error';
 
+/**
+ * Structured runtime log event emitted by the logger.
+ */
 export interface FlintLogEvent {
   readonly timestamp: number;
   readonly level: FlintLogLevel;
@@ -8,8 +14,14 @@ export interface FlintLogEvent {
   readonly data?: Readonly<Record<string, unknown>>;
 }
 
+/**
+ * Consumer callback function receiving structured runtime log events.
+ */
 export type FlintLogSink = (event: FlintLogEvent) => void;
 
+/**
+ * Scoped diagnostic logging interface for runtime event tracing.
+ */
 export interface FlintLogger {
   readonly scope: string;
   readonly child: (scope: string) => FlintLogger;
@@ -20,6 +32,9 @@ export interface FlintLogger {
   readonly error: (message: string, data?: Readonly<Record<string, unknown>>) => void;
 }
 
+/**
+ * Configuration options for initializing a runtime logger instance.
+ */
 export interface FlintLoggerOptions {
   readonly scope?: string;
   readonly sink?: FlintLogSink;
@@ -29,6 +44,12 @@ export interface FlintLoggerOptions {
 
 const levelRank: Record<FlintLogLevel, number> = { debug: 10, info: 20, warn: 30, error: 40 };
 
+/**
+ * Creates a scoped FlintLogger instance with custom severity filtering and sinks.
+ *
+ * @param options - Configuration options for logger initialization.
+ * @returns Configured FlintLogger instance.
+ */
 export function createFlintLogger(options: FlintLoggerOptions = {}): FlintLogger {
   const scope = options.scope ?? 'fws';
   const sink = options.sink ?? (() => {});

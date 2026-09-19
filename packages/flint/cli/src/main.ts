@@ -85,6 +85,13 @@ async function existingFile(fileName: string): Promise<string | undefined> {
  */
 function createFileResolver(roots: readonly string[]): FlintModuleResolver {
   return {
+    /**
+     * Resolves a module specifier against importer location and candidate search roots.
+     *
+     * @param source - Import path specifier.
+     * @param importer - Importing module file path.
+     * @returns Resolved file path or undefined if not found.
+     */
     async resolve(source, importer): Promise<string | undefined> {
       for (const candidate of sourceCandidates(source, importer, roots)) {
         const fileName = await existingFile(candidate);

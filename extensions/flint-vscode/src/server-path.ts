@@ -7,8 +7,14 @@ import type { Executable, ServerOptions } from 'vscode-languageclient/node';
 
 export const configurationSection = 'flint';
 
+/**
+ * Trace verbosity level for Flint language server communication.
+ */
 export type FlintTrace = 'off' | 'messages' | 'verbose';
 
+/**
+ * VS Code workspace configuration schema for the Flint extension.
+ */
 export interface FlintConfiguration {
   readonly nodePath: string;
   readonly serverPath: string;
@@ -16,6 +22,9 @@ export interface FlintConfiguration {
   readonly traceServer: FlintTrace;
 }
 
+/**
+ * Helper reader providing type-safe access to extension workspace configuration.
+ */
 export interface ConfigurationReader {
   get<T>(section: string, defaultValue: T): T;
 }

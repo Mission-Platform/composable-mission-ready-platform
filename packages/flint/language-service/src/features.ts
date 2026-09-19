@@ -19,6 +19,7 @@ import type {
   FlintSymbol,
 } from './types.js';
 
+/** Computes actionable code lens commands for Flint functions and modules. */
 export function codeLensesFlint(
   module: FlintModule | undefined,
   symbols: readonly FlintSymbol[],
@@ -54,6 +55,7 @@ export function codeLensesFlint(
     .toSorted(compareCodeLenses);
 }
 
+/** Computes syntax folding ranges for functions, control flow blocks, and imports. */
 export function foldingRangesFlint(source: string, module: FlintModule | undefined): readonly FlintFoldingRange[] {
   if (module === undefined) return [];
   const ranges: FlintFoldingRange[] = [];
@@ -87,6 +89,7 @@ export function foldingRangesFlint(source: string, module: FlintModule | undefin
   return ranges.toSorted(compareFoldingRanges);
 }
 
+/** Computes inline variable evaluation ranges for debugger display. */
 export function inlineValuesFlint(
   source: string,
   module: FlintModule | undefined,
@@ -105,6 +108,7 @@ export function inlineValuesFlint(
   );
 }
 
+/** Computes parameter and type inlay hints within the visible range. */
 export function inlayHintsFlint(
   source: string,
   module: FlintModule | undefined,
@@ -161,6 +165,7 @@ export function inlayHintsFlint(
   );
 }
 
+/** Constructs the hierarchical document symbol tree for outline views. */
 export function documentSymbolsFlint(
   source: string,
   module: FlintModule | undefined,
@@ -191,6 +196,7 @@ export function documentSymbolsFlint(
   ];
 }
 
+/** Helper factory creating a FlintDocumentSymbol with selection range. */
 function makeDocumentSymbol(symbol: FlintSymbol, symbols: readonly FlintSymbol[]): FlintDocumentSymbol {
   const declarationRange = symbol.declarationRange ?? symbol.scopeRange ?? symbol.range;
   const children = symbols
@@ -212,6 +218,7 @@ function makeDocumentSymbol(symbol: FlintSymbol, symbols: readonly FlintSymbol[]
   };
 }
 
+/** Traverses IR statements collecting block folding ranges. */
 function collectStatementFolds(
   statements: readonly FlintStatement[],
   add: (span: FlintSourceSpan, kind: FlintFoldingRangeKind) => void,
@@ -253,6 +260,7 @@ function collectStatementFolds(
   }
 }
 
+/** Collects variable binding ranges suitable for inline debug evaluation. */
 function collectInlineValues(
   source: string,
   statements: readonly FlintStatement[],
@@ -306,6 +314,7 @@ function collectInlineValues(
   }
 }
 
+/** Traverses statements collecting expressions requiring inlay hint evaluation. */
 function collectInlayExpressions(
   source: string,
   statements: readonly FlintStatement[],
@@ -372,6 +381,7 @@ function collectInlayExpressions(
   }
 }
 
+/** Inspects an expression for call argument and let binding inlay hints. */
 function collectInlayExpression(
   source: string,
   expression: FlintExpression,
@@ -457,18 +467,22 @@ function collectInlayExpression(
   }
 }
 
+/** Determines whether two ranges intersect. */
 function rangesOverlap(left: FlintRange, right: FlintRange): boolean {
   return left.startOffset <= right.endOffset && right.startOffset <= left.endOffset;
 }
 
+/** Determines whether an outer range contains an inner range. */
 function contains(span: FlintSourceSpan, offset: number): boolean {
   return span.start <= offset && offset <= span.end;
 }
 
+/** Sort comparator for ordering code lenses by position. */
 function compareCodeLenses(left: FlintCodeLens, right: FlintCodeLens): number {
   return left.range.startOffset - right.range.startOffset || left.symbolName.localeCompare(right.symbolName);
 }
 
+/** Sort comparator for ordering folding ranges by start line. */
 function compareFoldingRanges(left: FlintFoldingRange, right: FlintFoldingRange): number {
   return (
     left.range.startOffset - right.range.startOffset ||
@@ -477,8 +491,10 @@ function compareFoldingRanges(left: FlintFoldingRange, right: FlintFoldingRange)
   );
 }
 
+/** Sort comparator for ordering document symbols by source position. */
 function compareDocumentSymbols(left: FlintDocumentSymbol, right: FlintDocumentSymbol): number {
   return left.selectionRange.startOffset - right.selectionRange.startOffset || left.name.localeCompare(right.name);
 }
 
+/** Category of syntax folding range (comment, imports, region, etc.). */
 type FlintFoldingRangeKind = FlintFoldingRange['kind'];

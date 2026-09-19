@@ -24,6 +24,7 @@ import {
 
 import type { Readable, Writable } from 'node:stream';
 
+/** Configuration options for initializing a Flint DAP server instance. */
 export interface FlintDapServerOptions {
   readonly input: Readable;
   readonly output: Writable;
@@ -32,36 +33,43 @@ export interface FlintDapServerOptions {
   readonly environment?: NodeJS.ProcessEnv;
 }
 
+/** Active Debug Adapter Protocol server instance. */
 export interface FlintDapServer {
   readonly start: () => void;
   readonly dispose: () => void;
 }
 
+/** Tracking record for an in-flight request dispatched to the runtime debug process. */
 interface PendingRuntimeRequest {
   readonly resolve: (response: FlintRuntimeResponse) => void;
   readonly reject: (error: Error) => void;
   readonly timeout: NodeJS.Timeout;
 }
 
+/** Structured response for breakpoint set queries returned by runtime. */
 interface RuntimeBreakpointResult {
   readonly breakpoints?: readonly DapBreakpoint[];
 }
 
+/** Structured response for stack frame queries returned by runtime. */
 interface RuntimeStackResult {
   readonly stackFrames?: readonly Record<string, unknown>[];
   readonly totalFrames?: number;
 }
 
+/** Structured response for variable scope queries returned by runtime. */
 interface RuntimeScopesResult {
   readonly scopes?: readonly Record<string, unknown>[];
 }
 
+/** Structured response for variable evaluation queries returned by runtime. */
 interface RuntimeVariablesResult {
   readonly variables?: readonly Record<string, unknown>[];
 }
 
 const DEFAULT_RESPONSE_TIMEOUT_MS = 10_000;
 
+/** Instantiates a new Flint DAP server attached to the specified input and output streams. */
 export function createFlintDapServer(options: FlintDapServerOptions): FlintDapServer {
   let sequence = 1;
   let runtimeRequestId = 1;
@@ -78,14 +86,17 @@ export function createFlintDapServer(options: FlintDapServerOptions): FlintDapSe
   const responseTimeout = options.runtimeResponseTimeoutMs ?? DEFAULT_RESPONSE_TIMEOUT_MS;
   const spawnRuntime = options.spawnRuntime ?? defaultSpawnRuntime;
 
+  /** Handles stream end on the input reader. */
   function onInputEnded(): void {
     dispose();
   }
 
+  /** Handles stream close on the input reader. */
   function onInputClosed(): void {
     dispose();
   }
 
+  /** Handles stream error on the input reader. */
   function onInputError(error: Error): void {
     // If the IDE closes our pipe without sending disconnect/terminate, we must still clean up.
     // Avoid relying on DAP requests to trigger dispose().
@@ -366,6 +377,7 @@ export function createFlintDapServer(options: FlintDapServerOptions): FlintDapSe
     }
   };
 
+  /** Sends terminated and exited DAP events to the client. */
   function sendTermination(exitCode: number | undefined | null): void {
     if (terminationEventSent || disposed) return;
     terminationEventSent = true;
@@ -373,6 +385,7 @@ export function createFlintDapServer(options: FlintDapServerOptions): FlintDapSe
     event('terminated');
   }
 
+  /** Starts the DAP server by binding event listeners to the input stream. */
   function start(): void {
     if (started) return;
     started = true;
@@ -382,6 +395,7 @@ export function createFlintDapServer(options: FlintDapServerOptions): FlintDapSe
     options.input.once('error', onInputError);
   }
 
+  /** Disposes the DAP server, cleans up stream listeners, and terminates child processes. */
   function dispose(): void {
     if (disposed) return;
     disposed = true;
@@ -397,6 +411,7 @@ export function createFlintDapServer(options: FlintDapServerOptions): FlintDapSe
   return { start, dispose };
 }
 
+/** Spawns a child process for runtime debugging using standard Node child_process.spawn. */
 function defaultSpawnRuntime(
   executable: string,
   arguments_: readonly string[],
@@ -405,6 +420,7 @@ function defaultSpawnRuntime(
   return spawn(executable, [...arguments_], { cwd: options_.cwd, env: options_.env, stdio: ['pipe', 'pipe', 'pipe'] });
 }
 
+/** Validates and normalizes launch arguments supplied in a DAP launch request. */
 async function normalizeLaunchArguments(arguments_: Record<string, unknown>): Promise<
   FlintDapLaunchArguments & {
     readonly cwd: string;

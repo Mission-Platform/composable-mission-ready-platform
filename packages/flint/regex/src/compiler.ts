@@ -5,6 +5,12 @@ export class RegexSyntaxError extends Error {
   public readonly code:
     "FLINT-REGEX-001" | "FLINT-REGEX-002" | "FLINT-REGEX-003";
 
+  /**
+   * Initializes a RegexSyntaxError instance.
+   *
+   * @param message - Diagnostic failure message.
+   * @param code - Error code identifier.
+   */
   public constructor(
     message: string,
     code:
@@ -18,6 +24,9 @@ export class RegexSyntaxError extends Error {
   }
 }
 
+/**
+ * Abstract syntax tree node representing a parsed regular expression element.
+ */
 type Node =
   | { kind: "empty" }
   | { kind: "char"; code: number }
@@ -38,15 +47,28 @@ const CODE_A_LOWER = 97;
 const CODE_Z_LOWER = 122;
 const CODE_UNDERSCORE = 95;
 
+/**
+ * Recursive descent parser constructing regex AST nodes from a pattern string.
+ */
 class Parser {
   private pos = 0;
   private groupCounter = 0;
   private readonly src: string;
 
+  /**
+   * Initializes a new pattern Parser instance.
+   *
+   * @param source - Input regular expression pattern text.
+   */
   public constructor(source: string) {
     this.src = source;
   }
 
+  /**
+   * Parses the complete pattern into an AST root node and capture group count.
+   *
+   * @returns Root AST node and total number of capturing groups.
+   */
   public parse(): { root: Node; groupCount: number } {
     const root = this.parseAlternation();
     if (this.pos < this.src.length)
@@ -56,18 +78,38 @@ class Parser {
     return { root, groupCount: this.groupCounter };
   }
 
+  /**
+   * Peeks at the current character without advancing the stream.
+   *
+   * @returns Current character string.
+   */
   private peek(): string {
     return this.src[this.pos];
   }
 
+  /**
+   * Consumes and returns the current character, advancing the position stream.
+   *
+   * @returns Consumed character string.
+   */
   private next(): string {
     return this.src[this.pos++];
   }
 
+  /**
+   * Checks whether the parser has consumed all characters.
+   *
+   * @returns True if at end of input string.
+   */
   private eof(): boolean {
     return this.pos >= this.src.length;
   }
 
+  /**
+   * Parses top-level alternation expressions separated by '|'.
+   *
+   * @returns Alternation or concatenated node.
+   */
   private parseAlternation(): Node {
     const options: Node[] = [this.parseConcat()];
     while (!this.eof() && this.peek() === "|") {
@@ -77,6 +119,11 @@ class Parser {
     return options.length === 1 ? options[0] : { kind: "alt", options };
   }
 
+  /**
+   * Parses sequence concatenation of quantified atom nodes.
+   *
+   * @returns Concatenated or single atom node.
+   */
   private parseConcat(): Node {
     const parts: Node[] = [];
     while (!this.eof() && this.peek() !== "|" && this.peek() !== ")")
@@ -85,6 +132,11 @@ class Parser {
     return parts.length === 1 ? parts[0] : { kind: "concat", parts };
   }
 
+  /**
+   * Parses an atom expression followed by optional quantifier (*, +, ?, {n,m}).
+   *
+   * @returns Quantified or raw atom node.
+   */
   private parseQuantified(): Node {
     const atom = this.parseAtom();
     if (this.eof()) return atom;
@@ -133,6 +185,11 @@ class Parser {
     return { kind: "repeat", child: atom, min, max, greedy };
   }
 
+  /**
+   * Attempts to parse a brace-enclosed quantifier ({min,max}).
+   *
+   * @returns Range bounds or null if not a valid quantifier.
+   */
   private tryParseBrace(): { min: number; max: number } | null {
     const start = this.pos;
     this.next();
@@ -160,6 +217,11 @@ class Parser {
     return { min, max };
   }
 
+  /**
+   * Parses an atomic regex token (character, group, character class, or anchor).
+   *
+   * @returns Parsed atom AST node.
+   */
   private parseAtom(): Node {
     const c = this.peek();
     if (c === "(") return this.parseGroup();
@@ -184,6 +246,11 @@ class Parser {
     return { kind: "char", code: c.charCodeAt(0) };
   }
 
+  /**
+   * Parses a parenthesized capturing or non-capturing group.
+   *
+   * @returns Group AST node.
+   */
   private parseGroup(): Node {
     this.next();
     let capturing = true;
@@ -206,6 +273,11 @@ class Parser {
     return { kind: "group", child, capturing, index };
   }
 
+  /**
+   * Parses an escaped character sequence or shorthand class.
+   *
+   * @returns Escaped character or class AST node.
+   */
   private parseEscape(): Node {
     this.next();
     if (this.eof()) throw new RegexSyntaxError("Trailing backslash");
@@ -214,6 +286,11 @@ class Parser {
     return cls ?? { kind: "char", code: literalEscapeCode(c) };
   }
 
+  /**
+   * Parses a bracketed character class expression [...].
+   *
+   * @returns Character class AST node.
+   */
   private parseClass(): Node {
     this.next();
     let negated = false;
@@ -244,6 +321,11 @@ class Parser {
     return { kind: "class", ranges, negated };
   }
 
+  /**
+   * Parses a single character or escaped character within a character class.
+   *
+   * @returns Object with code number or ranges array.
+   */
   private parseClassChar(): { code: number; ranges?: number[] } {
     const c = this.next();
     if (c === "\\") {
@@ -257,6 +339,12 @@ class Parser {
   }
 }
 
+/**
+ * Resolves predefined shorthand character class escapes (\d, \D, \w, \W, \s, \S).
+ *
+ * @param c - Escaped character identifier.
+ * @returns Predefined character class node or null if not a shorthand class.
+ */
 function escapeClass(c: string): Node | null {
   switch (c) {
     case "d": {
@@ -318,6 +406,12 @@ function escapeClass(c: string): Node | null {
   }
 }
 
+/**
+ * Resolves literal character escape codes (\n, \t, \r, etc.) to character codes.
+ *
+ * @param c - Escaped character identifier.
+ * @returns Integer character code.
+ */
 function literalEscapeCode(c: string): number {
   switch (c) {
     case "n": {
@@ -345,22 +439,42 @@ function literalEscapeCode(c: string): number {
   }
 }
 
+/**
+ * Intermediate three-operand bytecode instruction representation.
+ */
 interface Instr {
   op: number;
   a: number;
   b: number;
 }
 
+/**
+ * Bytecode instruction and character class definition accumulator.
+ */
 class Emitter {
   public readonly instrs: Instr[] = [];
   public readonly classes: number[] = [];
 
+  /**
+   * Emits a new three-operand instruction into the instruction list.
+   *
+   * @param op - Instruction opcode.
+   * @param a - First operand.
+   * @param b - Second operand.
+   * @returns Instruction index (program counter).
+   */
   public emit(op: number, a = 0, b = 0): number {
     const pc = this.instrs.length;
     this.instrs.push({ op, a, b });
     return pc;
   }
 
+  /**
+   * Registers a character class range table and returns its entry offset.
+   *
+   * @param ranges - Flat range table of character code pairs.
+   * @returns Starting offset in classes table.
+   */
   public addClass(ranges: number[]): number {
     const offset = this.classes.length;
     this.classes.push(ranges.length / 2, ...ranges);
@@ -368,6 +482,12 @@ class Emitter {
   }
 }
 
+/**
+ * Compiles a regex AST node into three-operand bytecode instructions.
+ *
+ * @param node - AST node to compile.
+ * @param emitter - Instruction emitter.
+ */
 function compileNode(node: Node, emitter: Emitter): void {
   switch (node.kind) {
     case "empty": {
@@ -430,6 +550,12 @@ function compileNode(node: Node, emitter: Emitter): void {
   }
 }
 
+/**
+ * Compiles a repeat quantifier AST node into split and jump instructions.
+ *
+ * @param node - Repeat quantifier node.
+ * @param emitter - Instruction emitter.
+ */
 function compileRepeat(
   node: Extract<Node, { kind: "repeat" }>,
   emitter: Emitter,
@@ -454,6 +580,15 @@ function compileRepeat(
     patchSplit(emitter, split, split + 1, after, node.greedy);
 }
 
+/**
+ * Patches split instruction branch targets based on greedy or non-greedy preference.
+ *
+ * @param emitter - Instruction emitter.
+ * @param split - Split instruction index.
+ * @param body - Loop body target address.
+ * @param after - Loop exit target address.
+ * @param greedy - Whether quantifier is greedy.
+ */
 function patchSplit(
   emitter: Emitter,
   split: number,

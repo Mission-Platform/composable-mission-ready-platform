@@ -14,13 +14,18 @@ Generated from public source declarations in `@mission-platform/flint-runtime`.
 function assertValidFlintAbiManifest(manifest: FlintAbiManifest): void;
 ```
 
-No description provided.
+Asserts that a Flint ABI manifest is valid according to runtime specification rules.
 
 #### Parameters
 
-| Name     | Type             | Description |
-| -------- | ---------------- | ----------- |
-| manifest | FlintAbiManifest |             |
+| Name     | Type             | Description                 |
+| -------- | ---------------- | --------------------------- |
+| manifest | FlintAbiManifest | - ABI manifest to validate. |
+
+#### Contract
+
+- **@param:** - ABI manifest to validate.
+- **@throws:** If manifest validation fails.
 
 ### equalFunction
 
@@ -30,14 +35,20 @@ No description provided.
 function equalFunction(left: FlintAbiFunction, right: FlintAbiFunction): boolean;
 ```
 
-No description provided.
+Compares two ABI function declarations for structural equivalence.
 
 #### Parameters
 
-| Name  | Type             | Description |
-| ----- | ---------------- | ----------- |
-| left  | FlintAbiFunction |             |
-| right | FlintAbiFunction |             |
+| Name  | Type             | Description                    |
+| ----- | ---------------- | ------------------------------ |
+| left  | FlintAbiFunction | - First function declaration.  |
+| right | FlintAbiFunction | - Second function declaration. |
+
+#### Contract
+
+- **@param:** - First function declaration.
+- **@param:** - Second function declaration.
+- **@returns:** True if both declarations have identical signatures, parameters, and return types.
 
 ### FlintAbiValidationResult
 
@@ -47,7 +58,7 @@ No description provided.
 export interface FlintAbiValidationResult
 ```
 
-No description provided.
+Validation result for a Flint ABI manifest containing validation status and error messages.
 
 ### validateFlintAbiManifest
 
@@ -57,13 +68,18 @@ No description provided.
 function validateFlintAbiManifest(manifest: FlintAbiManifest): FlintAbiValidationResult;
 ```
 
-No description provided.
+Validates a Flint ABI manifest against specification requirements, layouts, and capability constraints.
 
 #### Parameters
 
-| Name     | Type             | Description |
-| -------- | ---------------- | ----------- |
-| manifest | FlintAbiManifest |             |
+| Name     | Type             | Description                 |
+| -------- | ---------------- | --------------------------- |
+| manifest | FlintAbiManifest | - ABI manifest to validate. |
+
+#### Contract
+
+- **@param:** - ABI manifest to validate.
+- **@returns:** Validation outcome containing boolean status and collected diagnostic errors.
 
 ## `src/async`
 
@@ -75,13 +91,18 @@ No description provided.
 function createFlintAsyncRuntime(options: FlintAsyncRuntimeOptions = {}): FlintAsyncRuntime;
 ```
 
-No description provided.
+Creates a new FlintAsyncRuntime instance managing asynchronous task queues.
 
 #### Parameters
 
-| Name    | Type                     | Description |
-| ------- | ------------------------ | ----------- |
-| options | FlintAsyncRuntimeOptions |             |
+| Name    | Type                     | Description                      |
+| ------- | ------------------------ | -------------------------------- |
+| options | FlintAsyncRuntimeOptions | - Runtime configuration options. |
+
+#### Contract
+
+- **@param:** - Runtime configuration options.
+- **@returns:** Configured FlintAsyncRuntime instance.
 
 ### createFlintJspiSuspender
 
@@ -117,7 +138,7 @@ No description provided.
 export type FlintAsyncCapability = (typeof FLINT_ASYNC_CAPABILITIES)[keyof typeof FLINT_ASYNC_CAPABILITIES];
 ```
 
-No description provided.
+Authorized asynchronous runtime capability identifier string.
 
 ### FlintAsyncExecution
 
@@ -127,7 +148,7 @@ No description provided.
 export interface FlintAsyncExecution
 ```
 
-No description provided.
+Successful execution result containing task output payload.
 
 ### FlintAsyncExecutionResult
 
@@ -137,7 +158,7 @@ No description provided.
 export type FlintAsyncExecutionResult = FlintAsyncExecution | FlintAsyncFailure;
 ```
 
-No description provided.
+Result of executing an asynchronous task (either success or failure).
 
 ### FlintAsyncFailure
 
@@ -147,7 +168,7 @@ No description provided.
 export interface FlintAsyncFailure
 ```
 
-No description provided.
+Failure report returned by an asynchronous scheduling or execution operation.
 
 ### FlintAsyncFailureCode
 
@@ -158,7 +179,7 @@ export type FlintAsyncFailureCode =
   'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
 ```
 
-No description provided.
+Error category codes for asynchronous execution failures.
 
 ### FlintAsyncHostAdapter
 
@@ -168,7 +189,7 @@ No description provided.
 export interface FlintAsyncHostAdapter
 ```
 
-No description provided.
+Host integration hooks for scheduling microtasks and delivering worker messages.
 
 ### FlintAsyncRuntime
 
@@ -178,7 +199,7 @@ No description provided.
 export interface FlintAsyncRuntime
 ```
 
-No description provided.
+Asynchronous runtime coordinator managing microtasks, worker queues, and event loop draining.
 
 ### FlintAsyncRuntimeOptions
 
@@ -188,7 +209,7 @@ No description provided.
 export interface FlintAsyncRuntimeOptions
 ```
 
-No description provided.
+Configuration options for the asynchronous runtime engine.
 
 ### FlintAsyncScheduledTask
 
@@ -198,7 +219,7 @@ No description provided.
 export interface FlintAsyncScheduledTask
 ```
 
-No description provided.
+Successful scheduling result for an asynchronous task.
 
 ### FlintAsyncScheduleResult
 
@@ -208,7 +229,7 @@ No description provided.
 export type FlintAsyncScheduleResult = FlintAsyncScheduledTask | FlintAsyncFailure;
 ```
 
-No description provided.
+Result of scheduling an asynchronous task (either scheduled or failed).
 
 ### FlintAsyncTask
 
@@ -218,7 +239,7 @@ No description provided.
 export interface FlintAsyncTask
 ```
 
-No description provided.
+Descriptor of an asynchronous task queued in the runtime.
 
 ### FlintAsyncTaskHandler
 
@@ -228,7 +249,7 @@ No description provided.
 export type FlintAsyncTaskHandler = (payload: Uint8Array) => Uint8Array;
 ```
 
-No description provided.
+Task execution callback taking an input byte payload and returning an output byte payload.
 
 ### FlintAsyncTaskKind
 
@@ -238,7 +259,7 @@ No description provided.
 export type FlintAsyncTaskKind = 'microtask' | 'worker';
 ```
 
-No description provided.
+Task scheduling classification ('microtask' or 'worker').
 
 ### FlintAsyncWorkerMessage
 
@@ -248,7 +269,7 @@ No description provided.
 export interface FlintAsyncWorkerMessage
 ```
 
-No description provided.
+Message packet transferred to or from a worker thread.
 
 ### FlintJspiOptions
 
@@ -258,7 +279,7 @@ No description provided.
 export interface FlintJspiOptions
 ```
 
-No description provided.
+Options configuring the WebAssembly JavaScript Promise Integration (JSPI) suspender.
 
 ### FlintJspiSuspender
 
@@ -346,14 +367,20 @@ function createFlintMap(
 ): FlintMap<TKey, TValue>;
 ```
 
-No description provided.
+Creates a persistent FlintMap initialized with key-value entries.
 
 #### Parameters
 
-| Name     | Type                                   | Description |
-| -------- | -------------------------------------- | ----------- |
-| entries  | readonly FlintMapEntry<TKey, TValue>[] |             |
-| strategy | FlintHashStrategy<TKey>                |             |
+| Name     | Type                                   | Description                 |
+| -------- | -------------------------------------- | --------------------------- |
+| entries  | readonly FlintMapEntry<TKey, TValue>[] | - Initial key-value tuples. |
+| strategy | FlintHashStrategy<TKey>                |                             |
+
+#### Contract
+
+- **@param:** - Initial key-value tuples.
+- **@param:** - Custom key equality and hashing strategy.
+- **@returns:** Initialized FlintMap instance.
 
 ### createFlintSet
 
@@ -366,14 +393,20 @@ function createFlintSet(
 ): FlintSet<TValue>;
 ```
 
-No description provided.
+Creates a persistent FlintSet initialized with values.
 
 #### Parameters
 
-| Name     | Type                      | Description |
-| -------- | ------------------------- | ----------- |
-| values   | readonly TValue[]         |             |
-| strategy | FlintHashStrategy<TValue> |             |
+| Name     | Type                      | Description                   |
+| -------- | ------------------------- | ----------------------------- |
+| values   | readonly TValue[]         | - Initial iterable of values. |
+| strategy | FlintHashStrategy<TValue> |                               |
+
+#### Contract
+
+- **@param:** - Initial iterable of values.
+- **@param:** - Custom equality and hashing strategy.
+- **@returns:** Initialized FlintSet instance.
 
 ### createFlintVector
 
@@ -486,7 +519,7 @@ Replace an array element without throwing; invalid indices return an error resul
 export type FlintCollectionOwnership = 'owned' | 'borrowed' | 'shared';
 ```
 
-No description provided.
+Memory ownership semantics for collection elements ('owned', 'borrowed', 'shared').
 
 ### flintDefaultHashStrategy
 
@@ -496,7 +529,11 @@ No description provided.
 function flintDefaultHashStrategy(): FlintHashStrategy<TValue>;
 ```
 
-No description provided.
+Returns the default hash strategy using deterministic serialization.
+
+#### Contract
+
+- **@returns:** Default FlintHashStrategy instance.
 
 ### flintError
 
@@ -516,7 +553,7 @@ Construct an error Result value without throwing.
 export interface FlintHashStrategy<TValue>
 ```
 
-No description provided.
+Equality and hashing strategy interface for custom key types in Sets and Maps.
 
 ### FlintIterable
 
@@ -563,14 +600,20 @@ Lazily appends one value to an iterator.
 function flintIteratorAt(iterator: FlintIterator<TValue>, index: number): FlintOption<TValue>;
 ```
 
-No description provided.
+Returns the element at a specified index wrapped in an Option.
 
 #### Parameters
 
-| Name     | Type                  | Description |
-| -------- | --------------------- | ----------- |
-| iterator | FlintIterator<TValue> |             |
-| index    | number                |             |
+| Name     | Type                  | Description                 |
+| -------- | --------------------- | --------------------------- |
+| iterator | FlintIterator<TValue> | - Source iterator.          |
+| index    | number                | - Zero-based element index. |
+
+#### Contract
+
+- **@param:** - Source iterator.
+- **@param:** - Zero-based element index.
+- **@returns:** Option containing element at index or none.
 
 ### FlintIteratorCapability
 
@@ -590,13 +633,18 @@ Linear consumption or non-consuming random access supported by an iterator.
 function flintIteratorCollect(iterator: FlintIterator<TValue>): FlintVector<TValue>;
 ```
 
-No description provided.
+Materializes an iterator into an owned vector of collected values.
 
 #### Parameters
 
-| Name     | Type                  | Description |
-| -------- | --------------------- | ----------- |
-| iterator | FlintIterator<TValue> |             |
+| Name     | Type                  | Description                 |
+| -------- | --------------------- | --------------------------- |
+| iterator | FlintIterator<TValue> | - Source iterator to drain. |
+
+#### Contract
+
+- **@param:** - Source iterator to drain.
+- **@returns:** FlintVector containing collected values.
 
 ### flintIteratorConcat
 
@@ -653,13 +701,18 @@ Lazily filter values; filtering always downgrades capability to linear access.
 function flintIteratorFirst(iterator: FlintIterator<TValue>): FlintOption<TValue>;
 ```
 
-No description provided.
+Returns the first element of an iterator wrapped in an Option.
 
 #### Parameters
 
-| Name     | Type                  | Description |
-| -------- | --------------------- | ----------- |
-| iterator | FlintIterator<TValue> |             |
+| Name     | Type                  | Description        |
+| -------- | --------------------- | ------------------ |
+| iterator | FlintIterator<TValue> | - Source iterator. |
+
+#### Contract
+
+- **@param:** - Source iterator.
+- **@returns:** Option containing first element or none.
 
 ### flintIteratorFlatten
 
@@ -689,15 +742,22 @@ function flintIteratorFold(
 ): TResult;
 ```
 
-No description provided.
+Reduces an iterator from left to right using an accumulator callback.
 
 #### Parameters
 
-| Name     | Type                                                            | Description |
-| -------- | --------------------------------------------------------------- | ----------- |
-| iterator | FlintIterator<TValue>                                           |             |
-| initial  | TResult                                                         |             |
-| reducer  | (accumulator: TResult, value: TValue, index: number) => TResult |             |
+| Name     | Type                                                            | Description                   |
+| -------- | --------------------------------------------------------------- | ----------------------------- |
+| iterator | FlintIterator<TValue>                                           | - Source iterator.            |
+| initial  | TResult                                                         | - Initial accumulator value.  |
+| reducer  | (accumulator: TResult, value: TValue, index: number) => TResult | - Reducing callback function. |
+
+#### Contract
+
+- **@param:** - Source iterator.
+- **@param:** - Initial accumulator value.
+- **@param:** - Reducing callback function.
+- **@returns:** Final reduced accumulator result.
 
 ### flintIteratorFromArray
 
@@ -769,13 +829,18 @@ Create a random-access iterator over a vector without changing its ownership.
 function flintIteratorLast(iterator: FlintIterator<TValue>): FlintOption<TValue>;
 ```
 
-No description provided.
+Returns the last element of an iterator wrapped in an Option.
 
 #### Parameters
 
-| Name     | Type                  | Description |
-| -------- | --------------------- | ----------- |
-| iterator | FlintIterator<TValue> |             |
+| Name     | Type                  | Description        |
+| -------- | --------------------- | ------------------ |
+| iterator | FlintIterator<TValue> | - Source iterator. |
+
+#### Contract
+
+- **@param:** - Source iterator.
+- **@returns:** Option containing last element or none.
 
 ### flintIteratorMap
 
@@ -837,14 +902,20 @@ function flintIteratorToArray(
 ): FlintArray<TValue>;
 ```
 
-No description provided.
+Converts an iterator into an owned FlintArray.
 
 #### Parameters
 
-| Name      | Type                     | Description |
-| --------- | ------------------------ | ----------- |
-| iterator  | FlintIterator<TValue>    |             |
-| ownership | FlintCollectionOwnership |             |
+| Name      | Type                     | Description                   |
+| --------- | ------------------------ | ----------------------------- |
+| iterator  | FlintIterator<TValue>    | - Source iterator.            |
+| ownership | FlintCollectionOwnership | - Collection ownership model. |
+
+#### Contract
+
+- **@param:** - Source iterator.
+- **@param:** - Collection ownership model.
+- **@returns:** Initialized FlintArray.
 
 ### FlintMap
 
@@ -854,7 +925,7 @@ No description provided.
 export interface FlintMap<TKey, TValue>
 ```
 
-No description provided.
+Persistent hash map collection data structure.
 
 ### flintMapDelete
 
@@ -864,14 +935,20 @@ No description provided.
 function flintMapDelete(map: FlintMap<TKey, TValue>, key: TKey): FlintMap<TKey, TValue>;
 ```
 
-No description provided.
+Deletes a key-value mapping from the map, returning a new persistent map.
 
 #### Parameters
 
-| Name | Type                   | Description |
-| ---- | ---------------------- | ----------- |
-| map  | FlintMap<TKey, TValue> |             |
-| key  | TKey                   |             |
+| Name | Type                   | Description      |
+| ---- | ---------------------- | ---------------- |
+| map  | FlintMap<TKey, TValue> | - Target map.    |
+| key  | TKey                   | - Key to delete. |
+
+#### Contract
+
+- **@param:** - Target map.
+- **@param:** - Key to delete.
+- **@returns:** Updated persistent map.
 
 ### flintMapEntries
 
@@ -881,13 +958,18 @@ No description provided.
 function flintMapEntries(map: FlintMap<TKey, TValue>): FlintVector<FlintMapEntry<TKey, TValue>>;
 ```
 
-No description provided.
+Returns all key-value entries contained in the map as an owned vector.
 
 #### Parameters
 
-| Name | Type                   | Description |
-| ---- | ---------------------- | ----------- |
-| map  | FlintMap<TKey, TValue> |             |
+| Name | Type                   | Description   |
+| ---- | ---------------------- | ------------- |
+| map  | FlintMap<TKey, TValue> | - Target map. |
+
+#### Contract
+
+- **@param:** - Target map.
+- **@returns:** Vector of entries in the map.
 
 ### FlintMapEntry
 
@@ -897,7 +979,7 @@ No description provided.
 export interface FlintMapEntry<TKey, TValue>
 ```
 
-No description provided.
+Key-value entry record in a persistent hash map.
 
 ### flintMapGet
 
@@ -907,14 +989,20 @@ No description provided.
 function flintMapGet(map: FlintMap<TKey, TValue>, key: TKey): FlintOption<TValue>;
 ```
 
-No description provided.
+Retrieves the value associated with a key from the map.
 
 #### Parameters
 
-| Name | Type                   | Description |
-| ---- | ---------------------- | ----------- |
-| map  | FlintMap<TKey, TValue> |             |
-| key  | TKey                   |             |
+| Name | Type                   | Description   |
+| ---- | ---------------------- | ------------- |
+| map  | FlintMap<TKey, TValue> | - Target map. |
+| key  | TKey                   | - Lookup key. |
+
+#### Contract
+
+- **@param:** - Target map.
+- **@param:** - Lookup key.
+- **@returns:** Option containing value or none.
 
 ### flintMapSet
 
@@ -924,15 +1012,22 @@ No description provided.
 function flintMapSet(map: FlintMap<TKey, TValue>, key: TKey, value: TValue): FlintMap<TKey, TValue>;
 ```
 
-No description provided.
+Inserts or updates a key-value mapping, returning a new persistent map.
 
 #### Parameters
 
-| Name  | Type                   | Description |
-| ----- | ---------------------- | ----------- |
-| map   | FlintMap<TKey, TValue> |             |
-| key   | TKey                   |             |
-| value | TValue                 |             |
+| Name  | Type                   | Description      |
+| ----- | ---------------------- | ---------------- |
+| map   | FlintMap<TKey, TValue> | - Target map.    |
+| key   | TKey                   | - Mapping key.   |
+| value | TValue                 | - Mapping value. |
+
+#### Contract
+
+- **@param:** - Target map.
+- **@param:** - Mapping key.
+- **@param:** - Mapping value.
+- **@returns:** Updated persistent map.
 
 ### flintNone
 
@@ -982,7 +1077,7 @@ Result-like value used by non-trapping collection mutation helpers.
 export interface FlintSet<TValue>
 ```
 
-No description provided.
+Persistent hash set collection data structure.
 
 ### flintSetAdd
 
@@ -992,14 +1087,20 @@ No description provided.
 function flintSetAdd(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 ```
 
-No description provided.
+Adds an element to the set, returning a new persistent set if modified.
 
 #### Parameters
 
-| Name  | Type             | Description |
-| ----- | ---------------- | ----------- |
-| set   | FlintSet<TValue> |             |
-| value | TValue           |             |
+| Name  | Type             | Description        |
+| ----- | ---------------- | ------------------ |
+| set   | FlintSet<TValue> | - Target set.      |
+| value | TValue           | - Value to insert. |
+
+#### Contract
+
+- **@param:** - Target set.
+- **@param:** - Value to insert.
+- **@returns:** Updated persistent set.
 
 ### flintSetDelete
 
@@ -1009,14 +1110,20 @@ No description provided.
 function flintSetDelete(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 ```
 
-No description provided.
+Deletes an element from the set, returning a new persistent set if modified.
 
 #### Parameters
 
-| Name  | Type             | Description |
-| ----- | ---------------- | ----------- |
-| set   | FlintSet<TValue> |             |
-| value | TValue           |             |
+| Name  | Type             | Description        |
+| ----- | ---------------- | ------------------ |
+| set   | FlintSet<TValue> | - Target set.      |
+| value | TValue           | - Value to remove. |
+
+#### Contract
+
+- **@param:** - Target set.
+- **@param:** - Value to remove.
+- **@returns:** Updated persistent set.
 
 ### flintSetHas
 
@@ -1026,14 +1133,20 @@ No description provided.
 function flintSetHas(set: FlintSet<TValue>, value: TValue): boolean;
 ```
 
-No description provided.
+Tests whether a value exists in the set.
 
 #### Parameters
 
-| Name  | Type             | Description |
-| ----- | ---------------- | ----------- |
-| set   | FlintSet<TValue> |             |
-| value | TValue           |             |
+| Name  | Type             | Description       |
+| ----- | ---------------- | ----------------- |
+| set   | FlintSet<TValue> | - Target set.     |
+| value | TValue           | - Value to check. |
+
+#### Contract
+
+- **@param:** - Target set.
+- **@param:** - Value to check.
+- **@returns:** True if value is present.
 
 ### flintSetValues
 
@@ -1043,13 +1156,18 @@ No description provided.
 function flintSetValues(set: FlintSet<TValue>): FlintVector<TValue>;
 ```
 
-No description provided.
+Returns all values contained in the set as an owned vector.
 
 #### Parameters
 
-| Name | Type             | Description |
-| ---- | ---------------- | ----------- |
-| set  | FlintSet<TValue> |             |
+| Name | Type             | Description   |
+| ---- | ---------------- | ------------- |
+| set  | FlintSet<TValue> | - Target set. |
+
+#### Contract
+
+- **@param:** - Target set.
+- **@returns:** Vector of values in the set.
 
 ### flintSome
 
@@ -1268,16 +1386,24 @@ function addFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-No description provided.
+Attaches a component to an entity if not already present.
 
 #### Parameters
 
-| Name      | Type                  | Description |
-| --------- | --------------------- | ----------- |
-| world     | FlintEcsWorld<TValue> |             |
-| entity    | FlintEcsEntity        |             |
-| component | string                |             |
-| value     | TValue                |             |
+| Name      | Type                  | Description               |
+| --------- | --------------------- | ------------------------- |
+| world     | FlintEcsWorld<TValue> | - Current world snapshot. |
+| entity    | FlintEcsEntity        | - Target entity.          |
+| component | string                |                           |
+| value     | TValue                | - Component value data.   |
+
+#### Contract
+
+- **@param:** - Current world snapshot.
+- **@param:** - Target entity.
+- **@param:** - Component name.
+- **@param:** - Component value data.
+- **@returns:** Transition result outcome.
 
 ### createFlintEcsScheduler
 
@@ -1292,16 +1418,21 @@ function createFlintEcsScheduler(
 ): FlintEcsScheduler<TValue>;
 ```
 
-No description provided.
+Creates an ECS execution pipeline scheduler.
 
 #### Parameters
 
-| Name          | Type                              | Description |
-| ------------- | --------------------------------- | ----------- |
-| systems       | readonly FlintEcsSystem<TValue>[] |             |
-| signals       | readonly FlintEcsSignal[]         |             |
-| subscriptions | readonly FlintEcsSubscription[]   |             |
-| maxSteps      |                                   |             |
+| Name          | Type                              | Description                                        |
+| ------------- | --------------------------------- | -------------------------------------------------- |
+| systems       | readonly FlintEcsSystem<TValue>[] | - Sequence of systems to register in the pipeline. |
+| signals       | readonly FlintEcsSignal[]         |                                                    |
+| subscriptions | readonly FlintEcsSubscription[]   |                                                    |
+| maxSteps      |                                   |                                                    |
+
+#### Contract
+
+- **@param:** - Sequence of systems to register in the pipeline.
+- **@returns:** Configured FlintEcsScheduler instance.
 
 ### createFlintEcsWorld
 
@@ -1311,7 +1442,11 @@ No description provided.
 function createFlintEcsWorld(): FlintEcsWorld<TValue>;
 ```
 
-No description provided.
+Initializes an empty Entity Component System world.
+
+#### Contract
+
+- **@returns:** Freshly initialized FlintEcsWorld instance.
 
 ### despawnFlintEcsEntity
 
@@ -1321,14 +1456,20 @@ No description provided.
 function despawnFlintEcsEntity(world: FlintEcsWorld<TValue>, entity: FlintEcsEntity): FlintEcsResult<TValue>;
 ```
 
-No description provided.
+Despawns an entity, incrementing its generation and clearing all attached components.
 
 #### Parameters
 
-| Name   | Type                  | Description |
-| ------ | --------------------- | ----------- |
-| world  | FlintEcsWorld<TValue> |             |
-| entity | FlintEcsEntity        |             |
+| Name   | Type                  | Description               |
+| ------ | --------------------- | ------------------------- |
+| world  | FlintEcsWorld<TValue> | - Current world snapshot. |
+| entity | FlintEcsEntity        | - Entity to despawn.      |
+
+#### Contract
+
+- **@param:** - Current world snapshot.
+- **@param:** - Entity to despawn.
+- **@returns:** Transition result outcome.
 
 ### FlintEcsComponentStore
 
@@ -1338,7 +1479,7 @@ No description provided.
 export interface FlintEcsComponentStore<TValue = Uint8Array>
 ```
 
-No description provided.
+Component storage mapping entity index numbers to component instances.
 
 ### FlintEcsEntity
 
@@ -1348,7 +1489,7 @@ No description provided.
 export interface FlintEcsEntity
 ```
 
-No description provided.
+Lightweight generational entity handle combining index and generation counter.
 
 ### FlintEcsEntityResult
 
@@ -1358,7 +1499,7 @@ No description provided.
 export interface FlintEcsEntityResult<TValue = Uint8Array>
 ```
 
-No description provided.
+Result of an entity mutation returning the modified world and entity handle.
 
 ### FlintEcsQuery
 
@@ -1368,7 +1509,7 @@ No description provided.
 export interface FlintEcsQuery
 ```
 
-No description provided.
+Entity query specification defining required and excluded component keys.
 
 ### FlintEcsResult
 
@@ -1378,7 +1519,7 @@ No description provided.
 export type FlintEcsResult<TValue = Uint8Array> = |
 ```
 
-No description provided.
+Result outcome of an ECS transition, either successful or failed.
 
 ### FlintEcsScheduler
 
@@ -1388,7 +1529,7 @@ No description provided.
 export interface FlintEcsScheduler<TValue = Uint8Array>
 ```
 
-No description provided.
+Pipeline scheduler coordinating system stages and signal delivery.
 
 ### FlintEcsScheduleResult
 
@@ -1398,7 +1539,7 @@ No description provided.
 export interface FlintEcsScheduleResult<TValue = Uint8Array>
 ```
 
-No description provided.
+Result of executing an ECS schedule across multiple system steps.
 
 ### FlintEcsSignal
 
@@ -1408,7 +1549,7 @@ No description provided.
 export interface FlintEcsSignal
 ```
 
-No description provided.
+Event or state change signal emitted during ECS system execution.
 
 ### FlintEcsSubscription
 
@@ -1418,7 +1559,7 @@ No description provided.
 export interface FlintEcsSubscription
 ```
 
-No description provided.
+Subscription binding a signal to an event handler callback.
 
 ### FlintEcsSystem
 
@@ -1428,7 +1569,7 @@ No description provided.
 export interface FlintEcsSystem<TValue = Uint8Array>
 ```
 
-No description provided.
+System execution unit transforming an ECS world based on queries and updates.
 
 ### FlintEcsTransition
 
@@ -1438,7 +1579,7 @@ No description provided.
 export interface FlintEcsTransition<TValue = Uint8Array>
 ```
 
-No description provided.
+Recorded world transition detailing previous world, next world, and emitted signals.
 
 ### FlintEcsWorld
 
@@ -1448,7 +1589,7 @@ No description provided.
 export interface FlintEcsWorld<TValue = Uint8Array>
 ```
 
-No description provided.
+Immutable snapshot of an Entity Component System world.
 
 ### getFlintEcsComponent
 
@@ -1462,15 +1603,22 @@ function getFlintEcsComponent(
 ): TValue | undefined;
 ```
 
-No description provided.
+Retrieves the component instance attached to an entity.
 
 #### Parameters
 
-| Name      | Type                  | Description |
-| --------- | --------------------- | ----------- |
-| world     | FlintEcsWorld<TValue> |             |
-| entity    | FlintEcsEntity        |             |
-| component | string                |             |
+| Name      | Type                  | Description               |
+| --------- | --------------------- | ------------------------- |
+| world     | FlintEcsWorld<TValue> | - Current world snapshot. |
+| entity    | FlintEcsEntity        | - Target entity.          |
+| component | string                |                           |
+
+#### Contract
+
+- **@param:** - Current world snapshot.
+- **@param:** - Target entity.
+- **@param:** - Component name.
+- **@returns:** Component value or undefined if absent.
 
 ### isFlintEcsEntityAlive
 
@@ -1480,14 +1628,20 @@ No description provided.
 function isFlintEcsEntityAlive(world: FlintEcsWorld<TValue>, entity: FlintEcsEntity): boolean;
 ```
 
-No description provided.
+Determines whether an entity handle matches the active generation in the world.
 
 #### Parameters
 
-| Name   | Type                  | Description |
-| ------ | --------------------- | ----------- |
-| world  | FlintEcsWorld<TValue> |             |
-| entity | FlintEcsEntity        |             |
+| Name   | Type                  | Description               |
+| ------ | --------------------- | ------------------------- |
+| world  | FlintEcsWorld<TValue> | - Current world snapshot. |
+| entity | FlintEcsEntity        | - Entity handle to check. |
+
+#### Contract
+
+- **@param:** - Current world snapshot.
+- **@param:** - Entity handle to check.
+- **@returns:** True if alive.
 
 ### queryFlintEcsEntities
 
@@ -1497,14 +1651,20 @@ No description provided.
 function queryFlintEcsEntities(world: FlintEcsWorld<TValue>, query: FlintEcsQuery): readonly FlintEcsEntity[];
 ```
 
-No description provided.
+Queries active entities matching the component filter criteria.
 
 #### Parameters
 
-| Name  | Type                  | Description |
-| ----- | --------------------- | ----------- |
-| world | FlintEcsWorld<TValue> |             |
-| query | FlintEcsQuery         |             |
+| Name  | Type                  | Description                   |
+| ----- | --------------------- | ----------------------------- |
+| world | FlintEcsWorld<TValue> | - Current world snapshot.     |
+| query | FlintEcsQuery         | - Query filter specification. |
+
+#### Contract
+
+- **@param:** - Current world snapshot.
+- **@param:** - Query filter specification.
+- **@returns:** Array of matching entity handles.
 
 ### removeFlintEcsComponent
 
@@ -1518,15 +1678,22 @@ function removeFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-No description provided.
+Removes a component from an entity.
 
 #### Parameters
 
-| Name      | Type                  | Description |
-| --------- | --------------------- | ----------- |
-| world     | FlintEcsWorld<TValue> |             |
-| entity    | FlintEcsEntity        |             |
-| component | string                |             |
+| Name      | Type                  | Description               |
+| --------- | --------------------- | ------------------------- |
+| world     | FlintEcsWorld<TValue> | - Current world snapshot. |
+| entity    | FlintEcsEntity        | - Target entity.          |
+| component | string                |                           |
+
+#### Contract
+
+- **@param:** - Current world snapshot.
+- **@param:** - Target entity.
+- **@param:** - Component name to remove.
+- **@returns:** Transition result outcome.
 
 ### runFlintEcsScheduler
 
@@ -1539,14 +1706,20 @@ function runFlintEcsScheduler(
 ): FlintEcsScheduleResult<TValue> | Extract<FlintEcsResult<TValue>, { readonly ok: false }>;
 ```
 
-No description provided.
+Runs an ECS scheduler pipeline across all registered systems and stages.
 
 #### Parameters
 
-| Name      | Type                      | Description |
-| --------- | ------------------------- | ----------- |
-| world     | FlintEcsWorld<TValue>     |             |
-| scheduler | FlintEcsScheduler<TValue> |             |
+| Name      | Type                      | Description                      |
+| --------- | ------------------------- | -------------------------------- |
+| world     | FlintEcsWorld<TValue>     | - Initial world snapshot.        |
+| scheduler | FlintEcsScheduler<TValue> | - Configured scheduler pipeline. |
+
+#### Contract
+
+- **@param:** - Initial world snapshot.
+- **@param:** - Configured scheduler pipeline.
+- **@returns:** Schedule execution report.
 
 ### setFlintEcsComponent
 
@@ -1561,16 +1734,24 @@ function setFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-No description provided.
+Sets or overwrites a component value on an entity.
 
 #### Parameters
 
-| Name      | Type                  | Description |
-| --------- | --------------------- | ----------- |
-| world     | FlintEcsWorld<TValue> |             |
-| entity    | FlintEcsEntity        |             |
-| component | string                |             |
-| value     | TValue                |             |
+| Name      | Type                  | Description               |
+| --------- | --------------------- | ------------------------- |
+| world     | FlintEcsWorld<TValue> | - Current world snapshot. |
+| entity    | FlintEcsEntity        | - Target entity.          |
+| component | string                |                           |
+| value     | TValue                | - Component value data.   |
+
+#### Contract
+
+- **@param:** - Current world snapshot.
+- **@param:** - Target entity.
+- **@param:** - Component name.
+- **@param:** - Component value data.
+- **@returns:** Transition result outcome.
 
 ### spawnFlintEcsEntity
 
@@ -1580,13 +1761,18 @@ No description provided.
 function spawnFlintEcsEntity(world: FlintEcsWorld<TValue>): FlintEcsEntityResult<TValue>;
 ```
 
-No description provided.
+Allocates a new entity handle and adds it to the world.
 
 #### Parameters
 
-| Name  | Type                  | Description |
-| ----- | --------------------- | ----------- |
-| world | FlintEcsWorld<TValue> |             |
+| Name  | Type                  | Description               |
+| ----- | --------------------- | ------------------------- |
+| world | FlintEcsWorld<TValue> | - Current world snapshot. |
+
+#### Contract
+
+- **@param:** - Current world snapshot.
+- **@returns:** Entity result containing updated world and new entity.
 
 ### validateFlintEcsSignals
 
@@ -1598,13 +1784,18 @@ function validateFlintEcsSignals(
 ): { readonly valid: true } | { readonly valid: false; readonly cycle: readonly string[] };
 ```
 
-No description provided.
+Validates a sequence of signals against declared signal definitions.
 
 #### Parameters
 
-| Name    | Type                      | Description |
-| ------- | ------------------------- | ----------- |
-| signals | readonly FlintEcsSignal[] |             |
+| Name    | Type                      | Description                     |
+| ------- | ------------------------- | ------------------------------- |
+| signals | readonly FlintEcsSignal[] | - Array of signals to validate. |
+
+#### Contract
+
+- **@param:** - Array of signals to validate.
+- **@returns:** Object with valid status and error messages.
 
 ## `src/host`
 
@@ -1616,13 +1807,18 @@ No description provided.
 function createDefaultFlintCapabilities(options: FlintDefaultHostOptions = {}): FlintCapabilityRegistry;
 ```
 
-No description provided.
+Creates default built-in capability providers (e.g. env.now).
 
 #### Parameters
 
-| Name    | Type                    | Description |
-| ------- | ----------------------- | ----------- |
-| options | FlintDefaultHostOptions |             |
+| Name    | Type                    | Description                                       |
+| ------- | ----------------------- | ------------------------------------------------- |
+| options | FlintDefaultHostOptions | - Configuration options for default capabilities. |
+
+#### Contract
+
+- **@param:** - Configuration options for default capabilities.
+- **@returns:** Registry with default capability implementations.
 
 ### createFlintHost
 
@@ -1636,15 +1832,22 @@ function createFlintHost(
 ): FlintHost;
 ```
 
-No description provided.
+Creates a runtime host environment binding guest imports to authorized capabilities.
 
 #### Parameters
 
-| Name     | Type                    | Description |
-| -------- | ----------------------- | ----------- |
-| manifest | FlintAbiManifest        |             |
-| registry | FlintCapabilityRegistry |             |
-| options  | FlintHostOptions        |             |
+| Name     | Type                    | Description                                                  |
+| -------- | ----------------------- | ------------------------------------------------------------ |
+| manifest | FlintAbiManifest        | - ABI manifest describing required capabilities and imports. |
+| registry | FlintCapabilityRegistry | - Registry of available capability implementations.          |
+| options  | FlintHostOptions        | - Configuration options for host initialization.             |
+
+#### Contract
+
+- **@param:** - ABI manifest describing required capabilities and imports.
+- **@param:** - Registry of available capability implementations.
+- **@param:** - Configuration options for host initialization.
+- **@returns:** Configured FlintHost instance.
 
 ### FlintCapabilityImplementation
 
@@ -1654,7 +1857,7 @@ No description provided.
 export interface FlintCapabilityImplementation
 ```
 
-No description provided.
+Host capability implementation registering an invocation handler and ABI signature.
 
 ### FlintCapabilityRegistry
 
@@ -1664,7 +1867,7 @@ No description provided.
 export type FlintCapabilityRegistry = Readonly<Record<string, FlintCapabilityImplementation>>;
 ```
 
-No description provided.
+Mapping of capability names to their host implementation providers.
 
 ### FlintDefaultHostOptions
 
@@ -1674,7 +1877,7 @@ No description provided.
 export interface FlintDefaultHostOptions
 ```
 
-No description provided.
+Configuration options for default built-in capability providers.
 
 ### FlintHost
 
@@ -1684,7 +1887,7 @@ No description provided.
 export interface FlintHost
 ```
 
-No description provided.
+Execution host providing capability invocation and lifetime management for guest modules.
 
 ### FlintHostCall
 
@@ -1694,7 +1897,7 @@ No description provided.
 export type FlintHostCall = (arguments_: readonly unknown[]) => unknown | Promise<unknown>;
 ```
 
-No description provided.
+Callable host function invoked by guest runtime execution.
 
 ### FlintHostOptions
 
@@ -1704,7 +1907,7 @@ No description provided.
 export interface FlintHostOptions
 ```
 
-No description provided.
+Configuration options for initializing a FlintHost instance.
 
 ## `src/iterator`
 
@@ -1760,7 +1963,7 @@ Builds a JS-facing iterator factory from a backend factory and its `.next` expor
 export type FlintPackedIteratorResult = number | bigint;
 ```
 
-No description provided.
+Packed numeric representation of an iterator next call returned from WebAssembly.
 
 ### FlintWasmIterator
 
@@ -1770,7 +1973,7 @@ No description provided.
 export interface FlintWasmIterator<TValue> extends Iterator<TValue>, Iterable<TValue>
 ```
 
-No description provided.
+JavaScript iterator and iterable bridge wrapping a WebAssembly iterator state handle.
 
 ### FlintWasmIteratorOptions
 
@@ -1780,7 +1983,7 @@ No description provided.
 export interface FlintWasmIteratorOptions<TValue>
 ```
 
-No description provided.
+Configuration options for constructing a WebAssembly iterator wrapper.
 
 ## `src/logging`
 
@@ -1792,13 +1995,18 @@ No description provided.
 function createFlintLogger(options: FlintLoggerOptions = {}): FlintLogger;
 ```
 
-No description provided.
+Creates a scoped FlintLogger instance with custom severity filtering and sinks.
 
 #### Parameters
 
-| Name    | Type               | Description |
-| ------- | ------------------ | ----------- |
-| options | FlintLoggerOptions |             |
+| Name    | Type               | Description                                        |
+| ------- | ------------------ | -------------------------------------------------- |
+| options | FlintLoggerOptions | - Configuration options for logger initialization. |
+
+#### Contract
+
+- **@param:** - Configuration options for logger initialization.
+- **@returns:** Configured FlintLogger instance.
 
 ### FlintLogEvent
 
@@ -1808,7 +2016,7 @@ No description provided.
 export interface FlintLogEvent
 ```
 
-No description provided.
+Structured runtime log event emitted by the logger.
 
 ### FlintLogger
 
@@ -1818,7 +2026,7 @@ No description provided.
 export interface FlintLogger
 ```
 
-No description provided.
+Scoped diagnostic logging interface for runtime event tracing.
 
 ### FlintLoggerOptions
 
@@ -1828,7 +2036,7 @@ No description provided.
 export interface FlintLoggerOptions
 ```
 
-No description provided.
+Configuration options for initializing a runtime logger instance.
 
 ### FlintLogLevel
 
@@ -1838,7 +2046,7 @@ No description provided.
 export type FlintLogLevel = 'debug' | 'info' | 'warn' | 'error';
 ```
 
-No description provided.
+Supported logging severity levels for runtime event recording.
 
 ### FlintLogSink
 
@@ -1848,7 +2056,7 @@ No description provided.
 export type FlintLogSink = (event: FlintLogEvent) => void;
 ```
 
-No description provided.
+Consumer callback function receiving structured runtime log events.
 
 ## `src/memory`
 
@@ -1860,13 +2068,18 @@ No description provided.
 function createFlintMemory(options?: FlintMemoryOptions): FlintMemory;
 ```
 
-No description provided.
+Creates a configured FlintMemory instance.
 
 #### Parameters
 
-| Name    | Type               | Description |
-| ------- | ------------------ | ----------- |
-| options | FlintMemoryOptions |             |
+| Name    | Type               | Description                           |
+| ------- | ------------------ | ------------------------------------- |
+| options | FlintMemoryOptions | - Memory creation and sizing options. |
+
+#### Contract
+
+- **@param:** - Memory creation and sizing options.
+- **@returns:** Initialized FlintMemory instance.
 
 ### createFlintMultiMemory
 
@@ -1902,7 +2115,7 @@ No description provided.
 export class FlintMemory
 ```
 
-No description provided.
+Manages WebAssembly linear memory allocations, bounds checking, and binary I/O.
 
 ### FlintMemoryAddress
 
@@ -1912,7 +2125,7 @@ No description provided.
 export type FlintMemoryAddress = number | bigint;
 ```
 
-No description provided.
+Memory address pointer representation supporting both 32-bit (number) and 64-bit (bigint) addresses.
 
 ### FlintMemoryOptions
 
@@ -1922,7 +2135,7 @@ No description provided.
 export interface FlintMemoryOptions
 ```
 
-No description provided.
+Configuration options for creating and sizing a Flint linear memory instance.
 
 ### FlintMemoryPartitionName
 
@@ -1932,7 +2145,7 @@ No description provided.
 export type FlintMemoryPartitionName = 'guestHeap' | 'hostInterop' | 'staticData';
 ```
 
-No description provided.
+Names of dedicated linear memory partitions for multi-memory modules.
 
 ### FlintMultiMemory
 
@@ -1954,7 +2167,7 @@ host interop buffer (Memory 1), and static constants/tables (Memory 2).
 export interface FlintMultiMemoryOptions
 ```
 
-No description provided.
+Options configuring multiple independent linear memory partitions.
 
 ## `src/parallel`
 
@@ -2289,13 +2502,18 @@ Select a permitted strategy without changing the operation's result contract.
 function createFlintSafeHeap(memory: FlintMemory): FlintSafeHeap;
 ```
 
-No description provided.
+Factory function creating a new FlintSafeHeap manager.
 
 #### Parameters
 
-| Name   | Type        | Description |
-| ------ | ----------- | ----------- |
-| memory | FlintMemory |             |
+| Name   | Type        | Description               |
+| ------ | ----------- | ------------------------- |
+| memory | FlintMemory | - Linear memory instance. |
+
+#### Contract
+
+- **@param:** - Linear memory instance.
+- **@returns:** Initialized FlintSafeHeap instance.
 
 ### FLINT_MEMORY_MODEL
 
@@ -2315,7 +2533,7 @@ No description provided.
 export interface FlintRegion
 ```
 
-No description provided.
+Lifetime token identifying an active memory region.
 
 ### FlintRegionAllocation
 
@@ -2325,7 +2543,7 @@ No description provided.
 export interface FlintRegionAllocation
 ```
 
-No description provided.
+Descriptor tracking a memory allocation bound to a lifetime region.
 
 ### FlintRegionArena
 
@@ -2357,7 +2575,7 @@ remain on FlintMemory and are never implicitly retained here.
 export interface FlintSharedHandle
 ```
 
-No description provided.
+Handle reference identifying a reference-counted shared memory allocation.
 
 ### FlintTlsfAllocator
 
@@ -2381,7 +2599,7 @@ and minimal fragmentation for embedded/real-time Wasm workloads.
 export interface FlintSelfHostedRunOptions
 ```
 
-No description provided.
+Configuration options for executing self-hosted compiler stages in VM or AOT modes.
 
 ### FlintSelfHostedVmRun
 
@@ -2391,7 +2609,7 @@ No description provided.
 export interface FlintSelfHostedVmRun
 ```
 
-No description provided.
+Complete execution report of a self-hosted compiler run across lexing and parsing stages.
 
 ### runFlintSelfHostedCompiler
 
@@ -2507,14 +2725,20 @@ particular, an undeclared capability list never enables this path.
 function createFlintAtomicI32(length = 1, options: FlintAtomicI32Options = {}): FlintAtomicI32;
 ```
 
-No description provided.
+Allocates a shared atomic 32-bit integer array and wraps it with atomic operations.
 
 #### Parameters
 
-| Name    | Type                  | Description |
-| ------- | --------------------- | ----------- |
-| length  |                       |             |
-| options | FlintAtomicI32Options |             |
+| Name    | Type                  | Description                                                |
+| ------- | --------------------- | ---------------------------------------------------------- |
+| length  |                       | - Number of 32-bit integer slots to allocate.              |
+| options | FlintAtomicI32Options | - Allocation options including existing SharedArrayBuffer. |
+
+#### Contract
+
+- **@param:** - Number of 32-bit integer slots to allocate.
+- **@param:** - Allocation options including existing SharedArrayBuffer.
+- **@returns:** Configured FlintAtomicI32 instance.
 
 ### createFlintWasmThreadScheduler
 
@@ -2547,16 +2771,24 @@ function createFlintWorkerRuntime(
 ): FlintWorkerRuntime;
 ```
 
-No description provided.
+Instantiates a worker runtime with the provided port factory and lifecycle hooks.
 
 #### Parameters
 
-| Name         | Type                       | Description |
-| ------------ | -------------------------- | ----------- |
-| createWorker | () => FlintWorkerPort      |             |
-| onMessage    | (message: unknown) => void |             |
-| onError      | (error: unknown) => void   |             |
-| options      | FlintWorkerRuntimeOptions  |             |
+| Name         | Type                       | Description                              |
+| ------------ | -------------------------- | ---------------------------------------- |
+| createWorker | () => FlintWorkerPort      | - Port factory callback.                 |
+| onMessage    | (message: unknown) => void | - Message handler callback.              |
+| onError      | (error: unknown) => void   | - Optional error handler callback.       |
+| options      | FlintWorkerRuntimeOptions  | - Configuration options for the runtime. |
+
+#### Contract
+
+- **@param:** - Port factory callback.
+- **@param:** - Message handler callback.
+- **@param:** - Optional error handler callback.
+- **@param:** - Configuration options for the runtime.
+- **@returns:** Initialized FlintWorkerRuntime.
 
 ### createFlintWorkerScheduler
 
@@ -2597,7 +2829,7 @@ No description provided.
 export interface FlintAtomicI32
 ```
 
-No description provided.
+Wrapper providing atomic read-modify-write operations on a shared 32-bit integer buffer.
 
 ### FlintAtomicI32Options
 
@@ -2607,7 +2839,7 @@ No description provided.
 export interface FlintAtomicI32Options
 ```
 
-No description provided.
+Options configuring allocation or sharing of an atomic 32-bit integer array.
 
 ### FlintThreadSafetyMarker
 
@@ -2617,7 +2849,7 @@ No description provided.
 export interface FlintThreadSafetyMarker
 ```
 
-No description provided.
+Thread-safety metadata marker verifying shared memory concurrency guarantees.
 
 ### FlintWasmThreadSchedulerOptions
 
@@ -2627,7 +2859,7 @@ No description provided.
 export interface FlintWasmThreadSchedulerOptions extends FlintWasmThreadTargetFeatures
 ```
 
-No description provided.
+Options configuring a WebAssembly thread scheduler backed by shared memory and workers.
 
 ### FlintWasmThreadTargetFeatures
 
@@ -2637,7 +2869,7 @@ No description provided.
 export interface FlintWasmThreadTargetFeatures
 ```
 
-No description provided.
+WebAssembly target features relevant to multithreading and shared memory.
 
 ### FlintWorkerPort
 
@@ -2647,7 +2879,7 @@ No description provided.
 export interface FlintWorkerPort
 ```
 
-No description provided.
+Generic postMessage message port contract for worker communications.
 
 ### FlintWorkerRuntime
 
@@ -2657,7 +2889,7 @@ No description provided.
 export interface FlintWorkerRuntime
 ```
 
-No description provided.
+Runtime handle managing a worker communication port and its lifecycle teardown.
 
 ### FlintWorkerRuntimeOptions
 
@@ -2667,7 +2899,7 @@ No description provided.
 export interface FlintWorkerRuntimeOptions
 ```
 
-No description provided.
+Options configuring worker runtime creation.
 
 ### FlintWorkerScheduler
 
@@ -2687,7 +2919,7 @@ A bounded async scheduler used by runtime-facing host-worker operations.
 export interface FlintWorkerSchedulerOptions
 ```
 
-No description provided.
+Configuration options for creating a host worker task scheduler.
 
 ### isFlintSend
 
@@ -2733,14 +2965,20 @@ Validates whether a value satisfies the 'Sync' contract (safe to share concurren
 function createFlintTraceRecorder(options: FlintTraceOptions, functionName: string): FlintTraceRecorder;
 ```
 
-No description provided.
+Creates an execution trace recorder enforcing size budgets and telemetry captures.
 
 #### Parameters
 
-| Name         | Type              | Description |
-| ------------ | ----------------- | ----------- |
-| options      | FlintTraceOptions |             |
-| functionName | string            |             |
+| Name         | Type              | Description                          |
+| ------------ | ----------------- | ------------------------------------ |
+| options      | FlintTraceOptions | - Configuration options for tracing. |
+| functionName | string            | - Primary entry point function name. |
+
+#### Contract
+
+- **@param:** - Configuration options for tracing.
+- **@param:** - Primary entry point function name.
+- **@returns:** Configured FlintTraceRecorder instance.
 
 ### FlintTraceCaptureMode
 
@@ -2750,7 +2988,7 @@ No description provided.
 export type FlintTraceCaptureMode = 'summary' | 'events' | 'snapshot';
 ```
 
-No description provided.
+Capture verbosity mode for execution trace recording.
 
 ### FlintTraceCounters
 
@@ -2760,7 +2998,7 @@ No description provided.
 export interface FlintTraceCounters
 ```
 
-No description provided.
+Aggregated execution metrics and operation counters recorded during tracing.
 
 ### FlintTraceEvent
 
@@ -2770,7 +3008,7 @@ No description provided.
 export interface FlintTraceEvent
 ```
 
-No description provided.
+Detailed execution trace event captured during runtime or VM interpretation.
 
 ### FlintTraceEventType
 
@@ -2781,7 +3019,7 @@ export type FlintTraceEventType =
   'instruction' | 'call' | 'capability' | 'memory' | 'range-check' | 'trap' | 'resource';
 ```
 
-No description provided.
+Category of recorded runtime trace event.
 
 ### FlintTraceLimits
 
@@ -2791,7 +3029,7 @@ No description provided.
 export interface FlintTraceLimits
 ```
 
-No description provided.
+Resource limits constraining trace event volume and byte size.
 
 ### FlintTraceOptions
 
@@ -2801,7 +3039,7 @@ No description provided.
 export interface FlintTraceOptions extends FlintTraceLimits
 ```
 
-No description provided.
+Configuration options for initializing execution trace recording.
 
 ### FlintTraceRecorder
 
@@ -2811,7 +3049,7 @@ No description provided.
 export interface FlintTraceRecorder
 ```
 
-No description provided.
+Active recorder interface consuming runtime execution events and building trace reports.
 
 ### FlintTraceReport
 
@@ -2821,7 +3059,7 @@ No description provided.
 export interface FlintTraceReport
 ```
 
-No description provided.
+Complete structured execution trace report summarized after execution completion.
 
 ### FlintTraceSourceLocation
 
@@ -2831,7 +3069,7 @@ No description provided.
 export interface FlintTraceSourceLocation extends FlintVmDebugSpan
 ```
 
-No description provided.
+Source mapping position for recorded execution trace events.
 
 ### summarizeFlintVmValue
 
@@ -2841,14 +3079,20 @@ No description provided.
 function summarizeFlintVmValue(value: FlintVmValue, redact?: (value: FlintVmValue) => string): string;
 ```
 
-No description provided.
+Summarizes a VM value for diagnostic tracing, optionally applying redactions.
 
 #### Parameters
 
-| Name   | Type                            | Description |
-| ------ | ------------------------------- | ----------- |
-| value  | FlintVmValue                    |             |
-| redact | (value: FlintVmValue) => string |             |
+| Name   | Type                            | Description                    |
+| ------ | ------------------------------- | ------------------------------ |
+| value  | FlintVmValue                    | - VM value to format.          |
+| redact | (value: FlintVmValue) => string | - Optional redaction callback. |
+
+#### Contract
+
+- **@param:** - VM value to format.
+- **@param:** - Optional redaction callback.
+- **@returns:** Human-readable summary string.
 
 ## `src/traps`
 
@@ -2860,14 +3104,19 @@ No description provided.
 function attachFlintTrace(error: unknown, trace: FlintTraceReport): void;
 ```
 
-No description provided.
+Associates an execution trace report with a Flint trap error if applicable.
 
 #### Parameters
 
-| Name  | Type             | Description |
-| ----- | ---------------- | ----------- |
-| error | unknown          |             |
-| trace | FlintTraceReport |             |
+| Name  | Type             | Description                         |
+| ----- | ---------------- | ----------------------------------- |
+| error | unknown          | - Candidate error object.           |
+| trace | FlintTraceReport | - Execution trace report to attach. |
+
+#### Contract
+
+- **@param:** - Candidate error object.
+- **@param:** - Execution trace report to attach.
 
 ### FlintTrap
 
@@ -2877,7 +3126,7 @@ No description provided.
 export class FlintTrap extends Error
 ```
 
-No description provided.
+Represents a fatal runtime or guest execution trap in Flint.
 
 ### FlintTrapCode
 
@@ -2898,7 +3147,7 @@ export type FlintTrapCode =
   | 'DoubleRelease';
 ```
 
-No description provided.
+Canonical runtime trap error category codes.
 
 ### FlintTrapOptions
 
@@ -2908,7 +3157,7 @@ No description provided.
 export interface FlintTrapOptions extends ErrorOptions
 ```
 
-No description provided.
+Options configuring runtime trap error reporting and logging.
 
 ### toFlintHostError
 
@@ -2918,15 +3167,22 @@ No description provided.
 function toFlintHostError(error: unknown, capability: string, logger?: FlintLogger): FlintTrap;
 ```
 
-No description provided.
+Converts an unknown host error into a normalized FlintTrap instance.
 
 #### Parameters
 
-| Name       | Type        | Description |
-| ---------- | ----------- | ----------- |
-| error      | unknown     |             |
-| capability | string      |             |
-| logger     | FlintLogger |             |
+| Name       | Type        | Description                                         |
+| ---------- | ----------- | --------------------------------------------------- |
+| error      | unknown     | - Raw caught error.                                 |
+| capability | string      | - Target host capability identifier.                |
+| logger     | FlintLogger | - Optional runtime logger for diagnostic telemetry. |
+
+#### Contract
+
+- **@param:** - Raw caught error.
+- **@param:** - Target host capability identifier.
+- **@param:** - Optional runtime logger for diagnostic telemetry.
+- **@returns:** Normalized FlintTrap instance.
 
 ## `src/vm-executor`
 
@@ -2938,14 +3194,20 @@ No description provided.
 function createFlintVmAotArtifact(module: FlintVmModule, compilerVersion: string): FlintVmAotArtifact;
 ```
 
-No description provided.
+Compiles a VM module into an ahead-of-time (AOT) JavaScript artifact.
 
 #### Parameters
 
-| Name            | Type          | Description |
-| --------------- | ------------- | ----------- |
-| module          | FlintVmModule |             |
-| compilerVersion | string        |             |
+| Name            | Type          | Description                |
+| --------------- | ------------- | -------------------------- |
+| module          | FlintVmModule | - VM module to compile.    |
+| compilerVersion | string        | - Compiler version string. |
+
+#### Contract
+
+- **@param:** - VM module to compile.
+- **@param:** - Compiler version string.
+- **@returns:** Emitted AOT artifact.
 
 ### createFlintVmExecutor
 
@@ -2955,13 +3217,18 @@ No description provided.
 function createFlintVmExecutor(executorOptions: FlintVmExecutorOptions = {}): FlintVmExecutor;
 ```
 
-No description provided.
+Creates a bytecode VM executor with JIT compilation support.
 
 #### Parameters
 
-| Name            | Type                   | Description |
-| --------------- | ---------------------- | ----------- |
-| executorOptions | FlintVmExecutorOptions |             |
+| Name            | Type                   | Description                               |
+| --------------- | ---------------------- | ----------------------------------------- |
+| executorOptions | FlintVmExecutorOptions | - Configuration options for the executor. |
+
+#### Contract
+
+- **@param:** - Configuration options for the executor.
+- **@returns:** Configured FlintVmExecutor instance.
 
 ### executeFlintVm
 
@@ -2976,16 +3243,24 @@ function executeFlintVm(
 ): FlintVmExecutionResult;
 ```
 
-No description provided.
+Convenience runner executing a function in a VM module.
 
 #### Parameters
 
-| Name         | Type                    | Description |
-| ------------ | ----------------------- | ----------- |
-| module       | FlintVmModule           |             |
-| functionName | string                  |             |
-| arguments_   | readonly FlintVmValue[] |             |
-| options      | FlintVmExecutionOptions |             |
+| Name         | Type                    | Description            |
+| ------------ | ----------------------- | ---------------------- |
+| module       | FlintVmModule           | - VM module.           |
+| functionName | string                  | - Entry function name. |
+| arguments_   | readonly FlintVmValue[] | - Arguments array.     |
+| options      | FlintVmExecutionOptions | - Execution options.   |
+
+#### Contract
+
+- **@param:** - VM module.
+- **@param:** - Entry function name.
+- **@param:** - Arguments array.
+- **@param:** - Execution options.
+- **@returns:** Execution result.
 
 ### executeFlintVmAotArtifact
 
@@ -3000,16 +3275,24 @@ function executeFlintVmAotArtifact(
 ): FlintVmExecutionResult;
 ```
 
-No description provided.
+Executes a compiled AOT artifact.
 
 #### Parameters
 
-| Name         | Type                                  | Description |
-| ------------ | ------------------------------------- | ----------- |
-| artifact     | FlintVmAotArtifact                    |             |
-| functionName | string                                |             |
-| arguments_   | readonly FlintVmValue[]               |             |
-| options      | Omit<FlintVmExecutionOptions, 'mode'> |             |
+| Name         | Type                                  | Description              |
+| ------------ | ------------------------------------- | ------------------------ |
+| artifact     | FlintVmAotArtifact                    | - Compiled AOT artifact. |
+| functionName | string                                | - Entry function name.   |
+| arguments_   | readonly FlintVmValue[]               | - Arguments array.       |
+| options      | Omit<FlintVmExecutionOptions, 'mode'> | - Execution options.     |
+
+#### Contract
+
+- **@param:** - Compiled AOT artifact.
+- **@param:** - Entry function name.
+- **@param:** - Arguments array.
+- **@param:** - Execution options.
+- **@returns:** Execution result.
 
 ### FlintVmExecutorOptions
 
@@ -3019,7 +3302,7 @@ No description provided.
 export interface FlintVmExecutorOptions
 ```
 
-No description provided.
+Configuration options for the Flint virtual machine executor.
 
 ### runFlintVmBootstrap
 
@@ -3035,17 +3318,26 @@ function runFlintVmBootstrap(
 ): FlintVmExecutionResult;
 ```
 
-No description provided.
+Executes a bootstrap module in the virtual machine.
 
 #### Parameters
 
-| Name         | Type                                  | Description |
-| ------------ | ------------------------------------- | ----------- |
-| module       | FlintVmModule                         |             |
-| functionName | string                                |             |
-| arguments_   | readonly FlintVmValue[]               |             |
-| mode         | FlintVmExecutionMode                  |             |
-| options      | Omit<FlintVmExecutionOptions, 'mode'> |             |
+| Name         | Type                                  | Description            |
+| ------------ | ------------------------------------- | ---------------------- |
+| module       | FlintVmModule                         | - Bootstrap VM module. |
+| functionName | string                                | - Entry function name. |
+| arguments_   | readonly FlintVmValue[]               | - Arguments array.     |
+| mode         | FlintVmExecutionMode                  | - Execution mode.      |
+| options      | Omit<FlintVmExecutionOptions, 'mode'> | - Execution options.   |
+
+#### Contract
+
+- **@param:** - Bootstrap VM module.
+- **@param:** - Entry function name.
+- **@param:** - Arguments array.
+- **@param:** - Execution mode.
+- **@param:** - Execution options.
+- **@returns:** Execution result.
 
 ### validateFlintVmModule
 
@@ -3055,13 +3347,17 @@ No description provided.
 function validateFlintVmModule(module: FlintVmModule): void;
 ```
 
-No description provided.
+Validates a Flint VM module structure against bytecode rules.
 
 #### Parameters
 
-| Name   | Type          | Description |
-| ------ | ------------- | ----------- |
-| module | FlintVmModule |             |
+| Name   | Type          | Description              |
+| ------ | ------------- | ------------------------ |
+| module | FlintVmModule | - VM module to validate. |
+
+#### Contract
+
+- **@param:** - VM module to validate.
 
 ## `src/vm-wasm`
 
@@ -3073,7 +3369,7 @@ No description provided.
 function compileFlintVmWasm(module: FlintVmModule, options: FlintVmWasmCompileOptions = {}): FlintVmWasmArtifact;
 ```
 
-No description provided.
+Compiles a Flint VM module into a validated WebAssembly bytecode artifact.
 
 #### Parameters
 
@@ -3090,7 +3386,7 @@ No description provided.
 export interface FlintVmWasmCompileOptions
 ```
 
-No description provided.
+Options configuring compilation of a Flint VM module to WebAssembly.
 
 ### prepareFlintVm
 
@@ -3113,7 +3409,7 @@ function prepareFlintVmWasm(
 ): FlintVmPreparedExecutor;
 ```
 
-No description provided.
+Prepares a WebAssembly executor from a module or artifact for fast invocation.
 
 #### Parameters
 
@@ -3162,7 +3458,7 @@ No description provided.
 export interface FlintVmAotArtifact
 ```
 
-No description provided.
+Ahead-of-time compiled JavaScript artifact emitted from a VM module.
 
 ### FlintVmCapabilityImport
 
@@ -3172,7 +3468,7 @@ No description provided.
 export interface FlintVmCapabilityImport
 ```
 
-No description provided.
+Host capability import descriptor requested by a VM module.
 
 ### FlintVmDebugSpan
 
@@ -3182,7 +3478,7 @@ No description provided.
 export interface FlintVmDebugSpan
 ```
 
-No description provided.
+Debug source span mapping a bytecode instruction offset to source code coordinates.
 
 ### FlintVmExecutionMode
 
@@ -3192,7 +3488,7 @@ No description provided.
 export type FlintVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-No description provided.
+Supported VM bytecode execution modes ('interpret', 'jit', 'aot').
 
 ### FlintVmExecutionOptions
 
@@ -3202,7 +3498,7 @@ No description provided.
 export interface FlintVmExecutionOptions
 ```
 
-No description provided.
+Options configuring VM execution limits, memory buffers, and telemetry.
 
 ### FlintVmExecutionResult
 
@@ -3212,7 +3508,7 @@ No description provided.
 export interface FlintVmExecutionResult
 ```
 
-No description provided.
+Result returned by a VM execution run including value and step metrics.
 
 ### FlintVmExecutor
 
@@ -3222,7 +3518,7 @@ No description provided.
 export interface FlintVmExecutor
 ```
 
-No description provided.
+Primary execution interface for running compiled Flint VM modules.
 
 ### FlintVmFunction
 
@@ -3232,7 +3528,7 @@ No description provided.
 export interface FlintVmFunction
 ```
 
-No description provided.
+Compiled VM function definition containing instructions, registers, and metadata.
 
 ### FlintVmInstruction
 
@@ -3242,7 +3538,7 @@ No description provided.
 export type FlintVmInstruction = |
 ```
 
-No description provided.
+Bytecode instruction operations supported by the Flint virtual machine.
 
 ### FlintVmJitCache
 
@@ -3252,7 +3548,7 @@ No description provided.
 export interface FlintVmJitCache
 ```
 
-No description provided.
+Cache of tier-1 JIT compiled functions and hot function invocation counts.
 
 ### FlintVmJitEntry
 
@@ -3262,7 +3558,7 @@ No description provided.
 export interface FlintVmJitEntry
 ```
 
-No description provided.
+JIT compilation cache entry storing the compiled function and call count.
 
 ### FlintVmModule
 
@@ -3272,7 +3568,7 @@ No description provided.
 export interface FlintVmModule
 ```
 
-No description provided.
+Executable bytecode module container consumed by VM and AOT executors.
 
 ### FlintVmPreparedExecutor
 
@@ -3282,7 +3578,7 @@ No description provided.
 export interface FlintVmPreparedExecutor
 ```
 
-No description provided.
+Reusable, pre-allocated executor instance bound to a specific module.
 
 ### FlintVmPreparedExecutorOptions
 
@@ -3292,7 +3588,7 @@ No description provided.
 export interface FlintVmPreparedExecutorOptions
 ```
 
-No description provided.
+Options configuring a prepared, reusable VM execution instance.
 
 ### FlintVmValue
 
@@ -3302,7 +3598,7 @@ No description provided.
 export type FlintVmValue = |
 ```
 
-No description provided.
+Tagged union representing runtime values manipulated by the bytecode VM.
 
 ### FlintVmWasmArtifact
 
@@ -3312,4 +3608,4 @@ No description provided.
 export interface FlintVmWasmArtifact
 ```
 
-No description provided.
+WebAssembly binary and import metadata artifact emitted from a VM module.

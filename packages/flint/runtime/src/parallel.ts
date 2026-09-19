@@ -136,6 +136,12 @@ export interface FlintParallelPlan {
   readonly reason: 'requested-serial' | 'wasm-capable' | 'host-worker-capable' | 'fallback-serial';
 }
 
+/**
+ * Evaluates whether host worker capabilities are authorized in the given capability list.
+ *
+ * @param capabilities - Authorized capabilities or undefined if unconstrained.
+ * @returns True if host worker execution is authorized.
+ */
 function hasHostWorkerCapability(capabilities: readonly string[] | undefined): boolean {
   return capabilities === undefined || capabilities.includes(FLINT_PARALLEL_CAPABILITIES.hostWorkers);
 }
@@ -168,6 +174,12 @@ export function flintParallelDescriptor(
   };
 }
 
+/**
+ * Normalizes an arbitrary FlintIterable into a unified FlintIterator.
+ *
+ * @param source - Iterable, array, vector, or iterator to convert.
+ * @returns FlintIterator instance.
+ */
 function asIterator<TValue>(source: FlintIterable<TValue>): FlintIterator<TValue> {
   if (typeof source === 'object' && source !== null && 'next' in source && 'descriptor' in source)
     return source as FlintIterator<TValue>;
@@ -178,6 +190,14 @@ function asIterator<TValue>(source: FlintIterable<TValue>): FlintIterator<TValue
   return flintIteratorFromIterable(source as Iterable<TValue>);
 }
 
+/**
+ * Executes an indexed task across array elements using the selected parallel execution plan.
+ *
+ * @param values - Array of elements to process.
+ * @param task - Indexed operation callback.
+ * @param options - Parallel execution options.
+ * @returns Object containing ordered result values and executed plan metadata.
+ */
 async function runIndexed<TValue, TResult>(
   values: readonly TValue[],
   task: (value: TValue, index: number) => TResult | PromiseLike<TResult>,
@@ -204,6 +224,15 @@ async function runIndexed<TValue, TResult>(
   }
 }
 
+/**
+ * Packages an array of parallel computation results into an ordered random-access FlintIterator.
+ *
+ * @param source - Source iterator providing base descriptor metadata.
+ * @param values - Ordered result array.
+ * @param operation - Executed parallel operation identifier.
+ * @param ownership - Collection memory ownership model.
+ * @returns Configured random-access FlintIterator.
+ */
 function resultIterator<TValue>(
   source: FlintIterator<unknown>,
   values: readonly TValue[],
@@ -267,6 +296,13 @@ export async function flintIteratorParFlatten<TValue>(
   return resultIterator(iterator, nested.values.flat(), 'par_flatten');
 }
 
+/**
+ * Collects an iterable and executes a parallel map operation, returning an array of results.
+ *
+ * @param source - Source iterable.
+ * @param options - Parallel execution options.
+ * @returns Ordered array of mapped results.
+ */
 async function materializeParallel<TValue>(
   source: FlintIterable<TValue>,
   options: FlintParallelOptions,

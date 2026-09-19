@@ -71,6 +71,7 @@ function createNativeVmModule(): FlintVmModule {
   return buildModuleWithLabels(constants);
 }
 
+/** Helper interface for accumulating bytecode instructions during function construction. */
 interface FunctionBuilder {
   code: FlintVmInstruction[];
   alloc: () => number;
@@ -100,6 +101,7 @@ interface FunctionBuilder {
  * @returns Fully assembled Flint VM module.
  */
 function buildModuleWithLabels(constants: FlintVmValue[]): FlintVmModule {
+  /** Unresolved branch or jump patch target requiring address fixup. */
   type Patch = {
     index: number;
     field: "ifTrue" | "ifFalse" | "target";
@@ -866,6 +868,7 @@ export function createFlintVmAdapter(
     implementation: "flint",
     mode,
     adapterId: `flint-vm-${mode}`,
+    /** Compiles the benchmark workload into an executable VM or Wasm artifact. */
     build(): Promise<BuildArtifact> {
       return Promise.resolve({
         id: `flint-vm-${mode}`,
@@ -893,6 +896,7 @@ export function createFlintVmAdapter(
         },
       });
     },
+    /** Initializes the benchmark runner and instantiates execution instances. */
     initialize(artifact: BuildArtifact): Promise<InitializedAdapter> {
       validateVmArtifact(artifact, mode);
       const executor = createFlintVmExecutor({

@@ -28,12 +28,14 @@ import type {
   FlintWorkspaceOptions,
 } from './types.js';
 
+/** Progress and diagnostic callbacks for workspace indexing events. */
 interface WorkspaceIndexCallbacks {
   readonly documents: ReadonlyMap<string, FlintDocument>;
   readonly diagnose: (uri: string) => FlintAnalysis;
   readonly getOptions: (uri: string) => FlintWorkspaceOptions;
 }
 
+/** Internal record storing document AST, symbols, and indexed facts. */
 interface WorkspaceRecord {
   readonly uri: string;
   readonly source: string;
@@ -46,6 +48,7 @@ interface WorkspaceRecord {
   readonly optionsHash?: string;
 }
 
+/** Extracted symbol definition indexed across the workspace. */
 interface IndexedSymbol {
   readonly id: string;
   readonly record: WorkspaceRecord;
@@ -54,6 +57,7 @@ interface IndexedSymbol {
   readonly interfaceName?: string;
 }
 
+/** Extracted symbol reference occurrence indexed across the workspace. */
 interface IndexedReference {
   readonly target: IndexedSymbol;
   readonly uri: string;
@@ -75,11 +79,13 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
   readonly #references: IndexedReference[] = [];
   #dirty = true;
 
+  /** <anonymous> declaration. */
   public constructor(callbacks: WorkspaceIndexCallbacks, host?: FlintWorkspaceHost) {
     this.#callbacks = callbacks;
     this.#host = host;
   }
 
+  /** Refreshes and indexes all documents in the workspace. */
   public async refresh(uri?: string): Promise<void> {
     const documents = this.#callbacks.documents;
     const listed = uri === undefined && this.#host !== undefined ? await this.#host.listFiles().catch(() => []) : [];
@@ -170,10 +176,12 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
     void uri;
   }
 
+  /** Invalidates cached index state for a modified document URI. */
   public invalidate(_change?: FlintWorkspaceChange): void {
     this.#dirty = true;
   }
 
+  /** Returns a cached analysis snapshot for an indexed document. */
   public analysisSnapshot(uri: string): { readonly analysis: FlintAnalysis; readonly identity: string } | undefined {
     if (this.#dirty) return undefined;
     const record = this.#findRecord(uri);
@@ -185,21 +193,25 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
     return { analysis: record.analysis, identity: record.graphKey };
   }
 
+  /** Resolves definition locations for a symbol at a document position. */
   public definition(uri: string, position: FlintPosition): readonly FlintLocation[] {
     const target = this.#targetAt(uri, position);
     return target === undefined ? [] : [this.#location(target)];
   }
 
+  /** Resolves declaration locations for a symbol at a document position. */
   public declaration(uri: string, position: FlintPosition): readonly FlintLocation[] {
     return this.definition(uri, position);
   }
 
+  /** Resolves implementation locations for interface or method symbols. */
   public implementation(_uri: string, _position: FlintPosition): readonly FlintLocation[] {
     // Flint models interfaces as type bounds only; there is no reliable
     // implementation relationship in the current AST/type model.
     return [];
   }
 
+  /** Resolves all reference locations for a symbol across the workspace. */
   public references(uri: string, position: FlintPosition): readonly FlintLocation[] {
     const target = this.#targetAt(uri, position);
     if (target === undefined) return [];
@@ -208,6 +220,7 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
       .map(({ uri: targetUri, range }) => ({ uri: targetUri, range }));
   }
 
+  /** Computes workspace text edits to rename a symbol across all documents. */
   public rename(uri: string, position: FlintPosition, newName: string): FlintWorkspaceEdit | undefined {
     if (!/^[A-Za-z_][A-Za-z0-9_]*$/u.test(newName)) return undefined;
     const target = this.#targetAt(uri, position);
@@ -253,6 +266,7 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
     return [...own, ...workspace];
   }
 
+  /** Searches workspace symbols matching a query string. */
   public workspaceSymbols(query?: string): readonly { readonly symbol: FlintSymbol; readonly uri: string }[] {
     this.#ensureIndexed();
     const normalized = query?.trim().toLowerCase();
@@ -268,10 +282,12 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
     return results;
   }
 
+  /** Retrieves compiler and workspace options for a document URI. */
   async #optionsFor(uri: string): Promise<FlintWorkspaceOptions> {
     return this.#host?.getOptions(uri).catch(() => ({})) ?? Promise.resolve({});
   }
 
+  /** Loads document source text from memory or filesystem. */
   async #loadSource(fileName: string): Promise<string> {
     const open = this.#findDocument(fileName);
     if (open !== undefined) return open.text;
@@ -288,11 +304,13 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
     return '';
   }
 
+  /** Looks up an indexed document record by URI. */
   #findDocument(uri: string): FlintDocument | undefined {
     const documents = this.#callbacks.documents;
     return documents.get(uri) ?? [...documents.values()].find((document) => sameIdentity(document.uri, uri));
   }
 
+  /** Parses and indexes a document into a WorkspaceRecord. */
   #createRecord(
     document: FlintDocument,
     analysis: FlintAnalysis,
@@ -320,6 +338,7 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
     return { ...record, symbols: this.#indexSymbols(record) };
   }
 
+  /** Extracts and indexes all declarations and references from a document AST. */
   #indexSymbols(record: WorkspaceRecord): readonly IndexedSymbol[] {
     const module = record.module;
     if (module === undefined) return [];
@@ -358,6 +377,7 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
     return result;
   }
 
+  /** Resolves and indexes imported source modules from open documents. */
   #indexOpenDocumentImports(): void {
     for (const record of this.#records.values()) {
       if (record.module === undefined) continue;
@@ -375,6 +395,7 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
     }
   }
 
+  /** Rebuilds workspace-wide symbol definition and reference indexes. */
   #rebuildFacts(): void {
     this.#declarations.clear();
     this.#references.length = 0;
@@ -386,6 +407,7 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
     }
   }
 
+  /** Traverses IR statements indexing declared and referenced variables. */
   #collectStatements(record: WorkspaceRecord, declaration: FlintFunction, statements: readonly FlintStatement[]): void {
     for (const statement of statements) {
       switch (statement.kind) {
@@ -452,6 +474,7 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
     }
   }
 
+  /** Traverses IR expressions indexing variable uses and function calls. */
   #collectExpression(record: WorkspaceRecord, declaration: FlintFunction, expression: FlintExpression): void {
     switch (expression.kind) {
       case 'identifier': {
@@ -510,6 +533,7 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
     }
   }
 
+  /** Indexes type annotations and type references. */
   #collectType(record: WorkspaceRecord, type: FlintTypeName): void {
     if (type.reference !== undefined) {
       const target = this.#resolve(record, type.reference, type.span.start);
@@ -524,6 +548,7 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
     for (const argument of type.arguments ?? []) this.#collectType(record, argument);
   }
 
+  /** Records a named symbol declaration in the document symbol table. */
   #collectName(record: WorkspaceRecord, declaration: FlintFunction, name: string, start: number, end: number): void {
     const target = this.#resolve(record, name, start);
     if (target === undefined) return;
@@ -535,6 +560,7 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
     void declaration;
   }
 
+  /** Resolves an import path against candidate search roots. */
   #resolve(record: WorkspaceRecord, name: string, offset: number): IndexedSymbol | undefined {
     const parts = name.split('.');
     if (parts.length > 1) {
@@ -586,6 +612,7 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
     return candidates.length === 1 ? candidates[0] : undefined;
   }
 
+  /** Finds an indexed document record matching a URI. */
   #findRecord(uri: string): WorkspaceRecord | undefined {
     return (
       this.#records.get(uri) ??
@@ -593,6 +620,7 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
     );
   }
 
+  /** Finds the symbol or reference target located at a document position. */
   #targetAt(uri: string, position: FlintPosition): IndexedSymbol | undefined {
     this.#ensureIndexed();
     const record = this.#findRecord(uri);
@@ -631,6 +659,7 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
     return declarations[0];
   }
 
+  /** Ensures that all workspace documents have been analyzed and indexed. */
   #ensureIndexed(): void {
     if (!this.#dirty) return;
     for (const document of this.#callbacks.documents.values()) {
@@ -658,19 +687,23 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
     this.#dirty = false;
   }
 
+  /** Converts symbol coordinates into a source location. */
   #location(symbol: IndexedSymbol): FlintLocation {
     return { uri: symbol.record.uri, range: symbol.symbol.range };
   }
 }
 
+/** Computes a unique string key identifying a symbol. */
 function identityKey(uri: string): string {
   return normalizeIdentity(uri);
 }
 
+/** Checks whether two symbol identities are equal. */
 function sameIdentity(left: string, right: string): boolean {
   return normalizeIdentity(left) === normalizeIdentity(right);
 }
 
+/** Normalizes symbol identity components. */
 function normalizeIdentity(uri: string): string {
   const normalized = uri.replaceAll('\\', '/');
   if (normalized.startsWith('file:')) {
@@ -679,6 +712,7 @@ function normalizeIdentity(uri: string): string {
   return normalized.replaceAll(/\/+/gu, '/');
 }
 
+/** Converts document URI to canonical form. */
 function canonicalDocumentUri(fileName: string): string {
   if (fileName.startsWith('file:')) {
     const path = fileName.replace(/^file:\/+/u, '/');
@@ -688,12 +722,14 @@ function canonicalDocumentUri(fileName: string): string {
   return fileName;
 }
 
+/** Generates candidate document URIs for module resolution. */
 function uriCandidates(fileName: string): readonly string[] {
   const identity = normalizeIdentity(fileName);
   const path = identity.startsWith('/') ? identity : `/${identity}`;
   return uniqueUris([fileName, canonicalDocumentUri(fileName), path, `file:${path}`, `file://${path}`]);
 }
 
+/** Filters an array of URIs to retain only unique entries. */
 function uniqueUris(values: readonly string[]): string[] {
   const seen = new Set<string>();
   const result: string[] = [];
@@ -706,14 +742,17 @@ function uniqueUris(values: readonly string[]): string[] {
   return result;
 }
 
+/** Checks whether a source span contains an offset. */
 function containsSpan(span: FlintSourceSpan, offset: number): boolean {
   return span.start <= offset && offset <= span.end;
 }
 
+/** Checks whether a range contains an offset. */
 function containsOffset(start: number, end: number, offset: number): boolean {
   return start <= offset && offset <= end;
 }
 
+/** Computes the source range bounding an identifier token. */
 function identifierRange(
   source: string,
   tokens: FlintAnalysis['tokens'],
@@ -732,6 +771,7 @@ function identifierRange(
   return token === undefined ? undefined : rangeFromOffsets(source, token.span.start, token.span.end);
 }
 
+/** Resolves import path against base directory and candidate extensions. */
 function resolveSource(source: string, importer: string): string | undefined {
   if (/^[A-Za-z][A-Za-z\d+.-]*:/u.test(source) && !source.startsWith('file:')) return source;
   if (importer.includes('://') || importer.startsWith('file:')) {
@@ -753,6 +793,7 @@ function resolveSource(source: string, importer: string): string | undefined {
   return `/${resolved.join('/')}`;
 }
 
+/** Instantiates a FlintWorkspaceIndex managing workspace symbols and references. */
 export function createFlintWorkspaceIndex(
   callbacks: WorkspaceIndexCallbacks,
   host?: FlintWorkspaceHost,

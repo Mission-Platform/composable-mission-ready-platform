@@ -1,5 +1,8 @@
 import type { FlintWasmStandardLibraryOperation } from './contracts.js';
 
+/**
+ * Contract descriptor for standard library runtime helper functions embedded in WebAssembly.
+ */
 export interface FlintWasmRuntimeBody {
   readonly name: string;
   readonly operation: FlintWasmStandardLibraryOperation;
@@ -26,6 +29,13 @@ const signedLeb = (value: bigint): number[] => {
 };
 const load = (offset: number): number[] => [0x28, 0x02, offset];
 const store = (offset: number): number[] => [0x36, 0x02, offset];
+
+/**
+ * Encodes an unsigned 32-bit integer into WebAssembly LEB128 byte sequence.
+ *
+ * @param value - Unsigned integer to encode.
+ * @returns LEB128 byte array.
+ */
 function unsignedLeb(value: number): number[] {
   const result: number[] = [];
   let remaining = value >>> 0;
@@ -46,6 +56,14 @@ const localBody = (count: number, instructions: readonly number[]): number[] => 
   0x0b,
 ];
 
+/**
+ * Generates WebAssembly bytecode instructions performing bounds checks against an aggregate length.
+ *
+ * @param handle - Local register holding the object handle.
+ * @param index - Local register holding the index operand.
+ * @param lengthOffset - Byte offset where length is stored in memory.
+ * @returns Array of WebAssembly opcode bytes.
+ */
 function boundsCheck(handle: number, index: number, lengthOffset: number): number[] {
   return [...get(handle), ...load(lengthOffset), ...get(index), 0x4d, 0x04, 0x40, 0x00, 0x0b];
 }
@@ -370,6 +388,11 @@ const collectionOperations: readonly FlintWasmRuntimeBody[] = [
   },
 ];
 
+/**
+ * Returns metadata descriptors for collection and async runtime helper functions.
+ *
+ * @returns Array of runtime function descriptors.
+ */
 export function buildFlintWasmCollectionRuntimeBodies(): readonly FlintWasmRuntimeBody[] {
   return collectionOperations;
 }

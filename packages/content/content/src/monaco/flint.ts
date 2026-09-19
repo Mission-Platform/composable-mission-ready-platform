@@ -10,6 +10,9 @@ import type * as monaco from 'monaco-editor';
 
 export const flintLanguageId = 'flint';
 
+/**
+ * Configuration options for initializing the Flint Monaco language adapter.
+ */
 export interface FlintMonacoOptions {
   /** An existing service can be shared by multiple models in one workspace. */
   readonly languageService?: FlintLanguageService;
@@ -19,11 +22,17 @@ export interface FlintMonacoOptions {
   readonly fileName?: string;
 }
 
+/**
+ * Lifetime handle for an attached Flint Monaco editor session.
+ */
 export interface FlintMonacoHandle {
   readonly dispose: () => void;
   readonly refresh: () => Promise<void>;
 }
 
+/**
+ * Type alias representing the Monaco editor namespace.
+ */
 type MonacoRuntime = typeof monaco;
 
 /** Register the Flint language and the lexical token provider. */
@@ -41,6 +50,13 @@ export function registerFlintLanguage(
   }
   const tokenProvider = monacoRuntime.languages.setTokensProvider(languageId, {
     getInitialState: createTokenState,
+    /**
+     * Tokenizes a single line of Flint source code.
+     *
+     * @param line - Source line text.
+     * @param state - Previous tokenization state.
+     * @returns Line tokenization result with end state.
+     */
     tokenize(line: string, state: monaco.languages.IState) {
       const tokens = tokenizeFlintLine(line);
       return { tokens, endState: state };
@@ -178,6 +194,13 @@ export function attachFlintMonaco(
 
   providerDisposables.push(
     monacoRuntime.languages.registerCompletionItemProvider(flintLanguageId, {
+      /**
+       * Provides completion suggestions at the requested position.
+       *
+       * @param model - Active text model.
+       * @param position - Editor cursor position.
+       * @returns Completion list suggestions.
+       */
       async provideCompletionItems(model, position) {
         syncDocumentForRequest(model);
         await service.refreshWorkspace(modelUri(model));
@@ -195,6 +218,13 @@ export function attachFlintMonaco(
       },
     }),
     monacoRuntime.languages.registerHoverProvider(flintLanguageId, {
+      /**
+       * Provides hover documentation for the token under the cursor.
+       *
+       * @param model - Active text model.
+       * @param position - Editor cursor position.
+       * @returns Hover documentation or undefined.
+       */
       async provideHover(model, position) {
         syncDocumentForRequest(model);
         await service.refreshWorkspace(modelUri(model));

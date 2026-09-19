@@ -1,3 +1,6 @@
+/**
+ * Memory ownership semantics for collection elements ('owned', 'borrowed', 'shared').
+ */
 export type FlintCollectionOwnership = 'owned' | 'borrowed' | 'shared';
 
 /** Option-like value used by safe reads and empty iterator terminals. */
@@ -76,6 +79,15 @@ export function createFlintIteratorDescriptor(
   return { id, elementType, representation: 'descriptor-boundary', ownership, capability };
 }
 
+/**
+ * Constructs a runtime descriptor describing iterator capabilities and element types.
+ *
+ * @param id - Stable iterator descriptor identifier.
+ * @param elementType - Type name of iterated elements.
+ * @param capability - Access capability ('linear' or 'random-access').
+ * @param ownership - Memory ownership model.
+ * @returns Initialized FlintIteratorDescriptor.
+ */
 function iteratorDescriptor(
   id: string,
   elementType: string,
@@ -94,18 +106,42 @@ export function flintIteratorFromIterable<TValue>(
   return createFlintIterator(values, iteratorDescriptor(id, elementType));
 }
 
+/**
+ * Type guard checking if an iterable is a FlintIterator.
+ *
+ * @param value - Candidate iterable.
+ * @returns True if value conforms to FlintIterator.
+ */
 function isFlintIterator<TValue>(value: FlintIterable<TValue>): value is FlintIterator<TValue> {
   return typeof value === 'object' && value !== null && 'next' in value && 'descriptor' in value;
 }
 
+/**
+ * Type guard checking if an iterable is a FlintArray.
+ *
+ * @param value - Candidate iterable.
+ * @returns True if value is a FlintArray.
+ */
 function isFlintArray<TValue>(value: FlintIterable<TValue>): value is FlintArray<TValue> {
   return typeof value === 'object' && value !== null && 'kind' in value && value.kind === 'array';
 }
 
+/**
+ * Type guard checking if an iterable is a FlintVector.
+ *
+ * @param value - Candidate iterable.
+ * @returns True if value is a FlintVector.
+ */
 function isFlintVector<TValue>(value: FlintIterable<TValue>): value is FlintVector<TValue> {
   return typeof value === 'object' && value !== null && 'kind' in value && value.kind === 'vector';
 }
 
+/**
+ * Converts an arbitrary FlintIterable into a unified FlintIterator.
+ *
+ * @param value - Source iterable, array, or vector.
+ * @returns Uniform FlintIterator instance.
+ */
 function asFlintIterator<TValue>(value: FlintIterable<TValue>): FlintIterator<TValue> {
   if (isFlintIterator(value)) return value;
   if (isFlintArray(value)) return flintIteratorFromArray(value);
@@ -257,11 +293,17 @@ export function flintIteratorFlatten<TValue>(source: FlintIterator<FlintIterable
   };
 }
 
+/**
+ * Equality and hashing strategy interface for custom key types in Sets and Maps.
+ */
 export interface FlintHashStrategy<TValue> {
   readonly hash: (value: TValue) => number;
   readonly equals: (left: TValue, right: TValue) => boolean;
 }
 
+/**
+ * Persistent hash set collection data structure.
+ */
 export interface FlintSet<TValue> {
   readonly kind: 'set';
   readonly buckets: readonly (readonly TValue[])[];
@@ -271,11 +313,17 @@ export interface FlintSet<TValue> {
   readonly ownership: FlintCollectionOwnership;
 }
 
+/**
+ * Key-value entry record in a persistent hash map.
+ */
 export interface FlintMapEntry<TKey, TValue> {
   readonly key: TKey;
   readonly value: TValue;
 }
 
+/**
+ * Persistent hash map collection data structure.
+ */
 export interface FlintMap<TKey, TValue> {
   readonly kind: 'map';
   readonly buckets: readonly (readonly FlintMapEntry<TKey, TValue>[])[];
@@ -321,14 +369,35 @@ export function createFlintArray<TValue>(
   return { kind: 'array', values: copied, length: copied.length, ownership };
 }
 
+/**
+ * Checks whether an index is non-negative and strictly less than length.
+ *
+ * @param index - Index to test.
+ * @param length - Upper bound length.
+ * @returns True if index is in bounds.
+ */
 function validIndex(index: number, length: number): boolean {
   return Number.isInteger(index) && index >= 0 && index < length;
 }
 
+/**
+ * Returns the current element count of a vector.
+ *
+ * @param vector - Vector instance.
+ * @returns Element count.
+ */
 function vectorLength<TValue>(vector: FlintVector<TValue>): number {
   return vector.length ?? vector.values.length;
 }
 
+/**
+ * Asserts that an index is valid for an array or vector, throwing an error if invalid.
+ *
+ * @param index - Candidate index.
+ * @param length - Array length.
+ * @param collection - Name of the collection type for diagnostic messages.
+ * @throws {RangeError} If index is out of bounds.
+ */
 function requireIndex(index: number, length: number, collection: string): void {
   if (!validIndex(index, length))
     throw new RangeError(`${collection} index ${index} is out of bounds for length ${length}`);
@@ -484,10 +553,23 @@ export function flintIteratorFromArray<TValue>(
   return flintIteratorFromIndexedValues(array.values, withRandomAccessCapability(descriptor));
 }
 
+/**
+ * Attaches random-access capabilities to an iterator descriptor if permitted.
+ *
+ * @param descriptor - Base descriptor.
+ * @returns Iterator descriptor with random-access capability.
+ */
 function withRandomAccessCapability(descriptor: FlintIteratorDescriptor): FlintIteratorDescriptor {
   return descriptor.capability === undefined ? { ...descriptor, capability: 'random-access' } : descriptor;
 }
 
+/**
+ * Builds a random-access iterator over an array of indexed values.
+ *
+ * @param values - Array of values to iterate.
+ * @param descriptor - Iterator descriptor.
+ * @returns Configured FlintIterator instance.
+ */
 function flintIteratorFromIndexedValues<TValue>(
   values: readonly TValue[],
   descriptor: FlintIteratorDescriptor,
@@ -510,6 +592,12 @@ function flintIteratorFromIndexedValues<TValue>(
   };
 }
 
+/**
+ * Materializes an iterator into an owned vector of collected values.
+ *
+ * @param iterator - Source iterator to drain.
+ * @returns FlintVector containing collected values.
+ */
 export function flintIteratorCollect<TValue>(iterator: FlintIterator<TValue>): FlintVector<TValue> {
   const values: TValue[] = [];
   let item = iterator.next();
@@ -520,11 +608,23 @@ export function flintIteratorCollect<TValue>(iterator: FlintIterator<TValue>): F
   return createFlintVector(values);
 }
 
+/**
+ * Returns the first element of an iterator wrapped in an Option.
+ *
+ * @param iterator - Source iterator.
+ * @returns Option containing first element or none.
+ */
 export function flintIteratorFirst<TValue>(iterator: FlintIterator<TValue>): FlintOption<TValue> {
   const item = iterator.next();
   return item.done ? flintNone() : flintSome(item.value as TValue);
 }
 
+/**
+ * Returns the last element of an iterator wrapped in an Option.
+ *
+ * @param iterator - Source iterator.
+ * @returns Option containing last element or none.
+ */
 export function flintIteratorLast<TValue>(iterator: FlintIterator<TValue>): FlintOption<TValue> {
   if (
     iterator.descriptor.capability === 'random-access' &&
@@ -542,6 +642,13 @@ export function flintIteratorLast<TValue>(iterator: FlintIterator<TValue>): Flin
   return last;
 }
 
+/**
+ * Returns the element at a specified index wrapped in an Option.
+ *
+ * @param iterator - Source iterator.
+ * @param index - Zero-based element index.
+ * @returns Option containing element at index or none.
+ */
 export function flintIteratorAt<TValue>(iterator: FlintIterator<TValue>, index: number): FlintOption<TValue> {
   if (!Number.isInteger(index) || index < 0) return flintNone();
   if (iterator.descriptor.capability === 'random-access' && iterator.at !== undefined) return iterator.at(index);
@@ -555,6 +662,14 @@ export function flintIteratorAt<TValue>(iterator: FlintIterator<TValue>, index: 
   return flintNone();
 }
 
+/**
+ * Reduces an iterator from left to right using an accumulator callback.
+ *
+ * @param iterator - Source iterator.
+ * @param initial - Initial accumulator value.
+ * @param reducer - Reducing callback function.
+ * @returns Final reduced accumulator result.
+ */
 export function flintIteratorFold<TValue, TResult>(
   iterator: FlintIterator<TValue>,
   initial: TResult,
@@ -571,6 +686,13 @@ export function flintIteratorFold<TValue, TResult>(
   return result;
 }
 
+/**
+ * Converts an iterator into an owned FlintArray.
+ *
+ * @param iterator - Source iterator.
+ * @param ownership - Collection ownership model.
+ * @returns Initialized FlintArray.
+ */
 export function flintIteratorToArray<TValue>(
   iterator: FlintIterator<TValue>,
   ownership: FlintCollectionOwnership = 'owned',
@@ -583,6 +705,15 @@ const bucketIndex = (hash: number, capacity: number): number => {
   return normalized % capacity;
 };
 
+/**
+ * Rehashes hash table entries into a resized bucket array.
+ *
+ * @param buckets - Current hash buckets.
+ * @param size - Current element count.
+ * @param hashStrategy - Hashing strategy.
+ * @param entryHash - Entry hash extraction callback.
+ * @returns Resized bucket array.
+ */
 function resizeBuckets<TValue>(
   buckets: readonly (readonly TValue[])[],
   capacity: number,
@@ -593,6 +724,13 @@ function resizeBuckets<TValue>(
   return resized;
 }
 
+/**
+ * Creates a persistent FlintSet initialized with values.
+ *
+ * @param values - Initial iterable of values.
+ * @param hashStrategy - Custom equality and hashing strategy.
+ * @returns Initialized FlintSet instance.
+ */
 export function createFlintSet<TValue>(
   values: readonly TValue[] = [],
   strategy: FlintHashStrategy<TValue> = flintDefaultHashStrategy<TValue>(),
@@ -609,12 +747,26 @@ export function createFlintSet<TValue>(
   return result;
 }
 
+/**
+ * Tests whether a value exists in the set.
+ *
+ * @param set - Target set.
+ * @param value - Value to check.
+ * @returns True if value is present.
+ */
 export function flintSetHas<TValue>(set: FlintSet<TValue>, value: TValue): boolean {
   return (set.buckets[bucketIndex(set.strategy.hash(value), set.capacity)] ?? []).some((candidate) =>
     set.strategy.equals(candidate, value),
   );
 }
 
+/**
+ * Adds an element to the set, returning a new persistent set if modified.
+ *
+ * @param set - Target set.
+ * @param value - Value to insert.
+ * @returns Updated persistent set.
+ */
 export function flintSetAdd<TValue>(set: FlintSet<TValue>, value: TValue): FlintSet<TValue> {
   if (flintSetHas(set, value)) return set;
   const capacity = set.size + 1 > (set.capacity * 3) / 4 ? set.capacity * 2 : set.capacity;
@@ -627,6 +779,13 @@ export function flintSetAdd<TValue>(set: FlintSet<TValue>, value: TValue): Flint
   return { ...set, buckets, capacity, size: set.size + 1 };
 }
 
+/**
+ * Deletes an element from the set, returning a new persistent set if modified.
+ *
+ * @param set - Target set.
+ * @param value - Value to remove.
+ * @returns Updated persistent set.
+ */
 export function flintSetDelete<TValue>(set: FlintSet<TValue>, value: TValue): FlintSet<TValue> {
   if (!flintSetHas(set, value)) return set;
   const index = bucketIndex(set.strategy.hash(value), set.capacity);
@@ -636,10 +795,23 @@ export function flintSetDelete<TValue>(set: FlintSet<TValue>, value: TValue): Fl
   return { ...set, buckets, size: set.size - 1 };
 }
 
+/**
+ * Returns all values contained in the set as an owned vector.
+ *
+ * @param set - Target set.
+ * @returns Vector of values in the set.
+ */
 export function flintSetValues<TValue>(set: FlintSet<TValue>): FlintVector<TValue> {
   return createFlintVector(set.buckets.flat());
 }
 
+/**
+ * Creates a persistent FlintMap initialized with key-value entries.
+ *
+ * @param entries - Initial key-value tuples.
+ * @param hashStrategy - Custom key equality and hashing strategy.
+ * @returns Initialized FlintMap instance.
+ */
 export function createFlintMap<TKey, TValue>(
   entries: readonly FlintMapEntry<TKey, TValue>[] = [],
   strategy: FlintHashStrategy<TKey> = flintDefaultHashStrategy<TKey>(),
@@ -656,6 +828,13 @@ export function createFlintMap<TKey, TValue>(
   return result;
 }
 
+/**
+ * Retrieves the value associated with a key from the map.
+ *
+ * @param map - Target map.
+ * @param key - Lookup key.
+ * @returns Option containing value or none.
+ */
 export function flintMapGet<TKey, TValue>(map: FlintMap<TKey, TValue>, key: TKey): FlintOption<TValue> {
   const entry = (map.buckets[bucketIndex(map.strategy.hash(key), map.capacity)] ?? []).find((candidate) =>
     map.strategy.equals(candidate.key, key),
@@ -663,6 +842,14 @@ export function flintMapGet<TKey, TValue>(map: FlintMap<TKey, TValue>, key: TKey
   return entry === undefined ? flintNone() : flintSome(entry.value);
 }
 
+/**
+ * Inserts or updates a key-value mapping, returning a new persistent map.
+ *
+ * @param map - Target map.
+ * @param key - Mapping key.
+ * @param value - Mapping value.
+ * @returns Updated persistent map.
+ */
 export function flintMapSet<TKey, TValue>(
   map: FlintMap<TKey, TValue>,
   key: TKey,
@@ -686,6 +873,13 @@ export function flintMapSet<TKey, TValue>(
   return { ...map, buckets, capacity, size: nextSize };
 }
 
+/**
+ * Deletes a key-value mapping from the map, returning a new persistent map.
+ *
+ * @param map - Target map.
+ * @param key - Key to delete.
+ * @returns Updated persistent map.
+ */
 export function flintMapDelete<TKey, TValue>(map: FlintMap<TKey, TValue>, key: TKey): FlintMap<TKey, TValue> {
   if (flintMapGet(map, key).kind === 'none') return map;
   const index = bucketIndex(map.strategy.hash(key), map.capacity);
@@ -698,10 +892,22 @@ export function flintMapDelete<TKey, TValue>(map: FlintMap<TKey, TValue>, key: T
   };
 }
 
+/**
+ * Returns all key-value entries contained in the map as an owned vector.
+ *
+ * @param map - Target map.
+ * @returns Vector of entries in the map.
+ */
 export function flintMapEntries<TKey, TValue>(map: FlintMap<TKey, TValue>): FlintVector<FlintMapEntry<TKey, TValue>> {
   return createFlintVector(map.buckets.flat());
 }
 
+/**
+ * Deterministically serializes values for hashing.
+ *
+ * @param value - Value to serialize.
+ * @returns Canonical JSON string.
+ */
 function flintCanonicalJson(value: unknown): string {
   if (value === null || typeof value !== 'object') return JSON.stringify(value);
   if (Array.isArray(value)) return `[${value.map((entry) => flintCanonicalJson(entry)).join(',')}]`;
@@ -712,12 +918,17 @@ function flintCanonicalJson(value: unknown): string {
     .join(',')}}`;
 }
 
+/**
+ * Returns the default hash strategy using deterministic serialization.
+ *
+ * @returns Default FlintHashStrategy instance.
+ */
 export function flintDefaultHashStrategy<TValue>(): FlintHashStrategy<TValue> {
   return {
     hash: (value) => {
       const text = typeof value === 'string' ? value : flintCanonicalJson(value);
       let hash = 2_166_136_261;
-      for (const character of text ?? '') hash = Math.imul(hash ^ character.codePointAt(0)!, 16_777_619);
+      for (const character of text) hash = Math.imul(hash ^ (character.codePointAt(0) ?? 0), 16_777_619);
       return hash >>> 0;
     },
     equals: (left, right) => Object.is(left, right) || flintCanonicalJson(left) === flintCanonicalJson(right),

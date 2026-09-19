@@ -1,14 +1,23 @@
+/**
+ * Lightweight generational entity handle combining index and generation counter.
+ */
 export interface FlintEcsEntity {
   readonly index: number;
   readonly generation: number;
 }
 
+/**
+ * Component storage mapping entity index numbers to component instances.
+ */
 export interface FlintEcsComponentStore<TValue = Uint8Array> {
   readonly component: string;
   readonly version: number;
   readonly values: ReadonlyMap<number, TValue>;
 }
 
+/**
+ * Immutable snapshot of an Entity Component System world.
+ */
 export interface FlintEcsWorld<TValue = Uint8Array> {
   readonly version: number;
   readonly nextEntityIndex: number;
@@ -17,11 +26,17 @@ export interface FlintEcsWorld<TValue = Uint8Array> {
   readonly stores: ReadonlyMap<string, FlintEcsComponentStore<TValue>>;
 }
 
+/**
+ * Entity query specification defining required and excluded component keys.
+ */
 export interface FlintEcsQuery {
   readonly required: readonly string[];
   readonly excluded: readonly string[];
 }
 
+/**
+ * System execution unit transforming an ECS world based on queries and updates.
+ */
 export interface FlintEcsSystem<TValue = Uint8Array> {
   readonly name: string;
   readonly query: FlintEcsQuery;
@@ -29,6 +44,9 @@ export interface FlintEcsSystem<TValue = Uint8Array> {
   readonly order: number;
 }
 
+/**
+ * Event or state change signal emitted during ECS system execution.
+ */
 export interface FlintEcsSignal {
   readonly id: string;
   readonly version: number;
@@ -36,6 +54,9 @@ export interface FlintEcsSignal {
   readonly compute?: <TValue>(world: FlintEcsWorld<TValue>) => boolean;
 }
 
+/**
+ * Subscription binding a signal to an event handler callback.
+ */
 export interface FlintEcsSubscription {
   readonly signal: string;
   readonly subscriber: string;
@@ -43,6 +64,9 @@ export interface FlintEcsSubscription {
   readonly run?: <TValue>(world: FlintEcsWorld<TValue>, signal: FlintEcsSignal) => FlintEcsWorld<TValue>;
 }
 
+/**
+ * Pipeline scheduler coordinating system stages and signal delivery.
+ */
 export interface FlintEcsScheduler<TValue = Uint8Array> {
   readonly systems: readonly FlintEcsSystem<TValue>[];
   readonly signals: readonly FlintEcsSignal[];
@@ -50,6 +74,9 @@ export interface FlintEcsScheduler<TValue = Uint8Array> {
   readonly maxSteps: number;
 }
 
+/**
+ * Recorded world transition detailing previous world, next world, and emitted signals.
+ */
 export interface FlintEcsTransition<TValue = Uint8Array> {
   readonly previous: FlintEcsWorld<TValue>;
   readonly next: FlintEcsWorld<TValue>;
@@ -57,6 +84,9 @@ export interface FlintEcsTransition<TValue = Uint8Array> {
   readonly changedComponents: readonly string[];
 }
 
+/**
+ * Result outcome of an ECS transition, either successful or failed.
+ */
 export type FlintEcsResult<TValue = Uint8Array> =
   | { readonly ok: true; readonly transition: FlintEcsTransition<TValue> }
   | {
@@ -65,12 +95,18 @@ export type FlintEcsResult<TValue = Uint8Array> =
       readonly message: string;
     };
 
+/**
+ * Result of an entity mutation returning the modified world and entity handle.
+ */
 export interface FlintEcsEntityResult<TValue = Uint8Array> {
   readonly ok: true;
   readonly entity: FlintEcsEntity;
   readonly transition: FlintEcsTransition<TValue>;
 }
 
+/**
+ * Result of executing an ECS schedule across multiple system steps.
+ */
 export interface FlintEcsScheduleResult<TValue = Uint8Array> {
   readonly ok: true;
   readonly world: FlintEcsWorld<TValue>;
@@ -79,6 +115,9 @@ export interface FlintEcsScheduleResult<TValue = Uint8Array> {
   readonly updatedSignals: readonly FlintEcsSignal[];
 }
 
+/**
+ * Mutable internal builder representation of an ECS world.
+ */
 type MutableFlintEcsWorld<TValue> = {
   -readonly [Property in keyof FlintEcsWorld<TValue>]: FlintEcsWorld<TValue>[Property] extends ReadonlyMap<
     infer TKey,
@@ -90,6 +129,9 @@ type MutableFlintEcsWorld<TValue> = {
       : FlintEcsWorld<TValue>[Property];
 };
 
+/**
+ * Error report returned when an ECS operation fails.
+ */
 type FlintEcsFailure = {
   readonly ok: false;
   readonly code: 'duplicate-component' | 'stale-entity' | 'signal-cycle' | 'scheduler-limit';
@@ -101,6 +143,12 @@ const entityKey = (entity: FlintEcsEntity): string => `${entity.index}:${entity.
 const sortedNumbers = (values: Iterable<number>): readonly number[] =>
   [...new Set(values)].toSorted((left, right) => left - right);
 
+/**
+ * Clones an ECS world into an isolated mutable working copy.
+ *
+ * @param world - Source world snapshot.
+ * @returns Mutable working copy.
+ */
 function copyWorld<TValue>(world: FlintEcsWorld<TValue>): MutableFlintEcsWorld<TValue> {
   return {
     version: world.version + 1,
@@ -116,6 +164,14 @@ function copyWorld<TValue>(world: FlintEcsWorld<TValue>): MutableFlintEcsWorld<T
   };
 }
 
+/**
+ * Creates a successful ECS transition result.
+ *
+ * @param previous - Previous world snapshot.
+ * @param next - Updated world snapshot.
+ * @param signals - Optional emitted signals.
+ * @returns Successful transition result.
+ */
 function transition<TValue>(
   previous: FlintEcsWorld<TValue>,
   next: FlintEcsWorld<TValue>,
@@ -132,10 +188,22 @@ function transition<TValue>(
   };
 }
 
+/**
+ * Constructs a failed ECS result outcome.
+ *
+ * @param code - Error classification code.
+ * @param message - Diagnostic failure message.
+ * @returns Failure outcome object.
+ */
 function failure(code: FlintEcsFailure['code'], message: string): FlintEcsFailure {
   return { ok: false, code, message };
 }
 
+/**
+ * Initializes an empty Entity Component System world.
+ *
+ * @returns Freshly initialized FlintEcsWorld instance.
+ */
 export function createFlintEcsWorld<TValue = Uint8Array>(): FlintEcsWorld<TValue> {
   return {
     version: 0,
@@ -146,10 +214,23 @@ export function createFlintEcsWorld<TValue = Uint8Array>(): FlintEcsWorld<TValue
   };
 }
 
+/**
+ * Determines whether an entity handle matches the active generation in the world.
+ *
+ * @param world - Current world snapshot.
+ * @param entity - Entity handle to check.
+ * @returns True if alive.
+ */
 export function isFlintEcsEntityAlive<TValue>(world: FlintEcsWorld<TValue>, entity: FlintEcsEntity): boolean {
   return world.generations.get(entity.index) === entity.generation && !world.freeEntityIndices.includes(entity.index);
 }
 
+/**
+ * Allocates a new entity handle and adds it to the world.
+ *
+ * @param world - Current world snapshot.
+ * @returns Entity result containing updated world and new entity.
+ */
 export function spawnFlintEcsEntity<TValue = Uint8Array>(world: FlintEcsWorld<TValue>): FlintEcsEntityResult<TValue> {
   const next = copyWorld(world);
   const reusableIndex = next.freeEntityIndices[0];
@@ -162,6 +243,13 @@ export function spawnFlintEcsEntity<TValue = Uint8Array>(world: FlintEcsWorld<TV
   return { ok: true, entity, transition: transition(world, next, [entity], []) };
 }
 
+/**
+ * Despawns an entity, incrementing its generation and clearing all attached components.
+ *
+ * @param world - Current world snapshot.
+ * @param entity - Entity to despawn.
+ * @returns Transition result outcome.
+ */
 export function despawnFlintEcsEntity<TValue>(
   world: FlintEcsWorld<TValue>,
   entity: FlintEcsEntity,
@@ -182,6 +270,15 @@ export function despawnFlintEcsEntity<TValue>(
   return { ok: true, transition: transition(world, next, [entity], changedComponents) };
 }
 
+/**
+ * Attaches a component to an entity if not already present.
+ *
+ * @param world - Current world snapshot.
+ * @param entity - Target entity.
+ * @param name - Component name.
+ * @param value - Component value data.
+ * @returns Transition result outcome.
+ */
 export function addFlintEcsComponent<TValue>(
   world: FlintEcsWorld<TValue>,
   entity: FlintEcsEntity,
@@ -199,6 +296,15 @@ export function addFlintEcsComponent<TValue>(
   return { ok: true, transition: transition(world, next, [entity], [component]) };
 }
 
+/**
+ * Sets or overwrites a component value on an entity.
+ *
+ * @param world - Current world snapshot.
+ * @param entity - Target entity.
+ * @param name - Component name.
+ * @param value - Component value data.
+ * @returns Transition result outcome.
+ */
 export function setFlintEcsComponent<TValue>(
   world: FlintEcsWorld<TValue>,
   entity: FlintEcsEntity,
@@ -214,6 +320,14 @@ export function setFlintEcsComponent<TValue>(
   return { ok: true, transition: transition(world, next, [entity], [component]) };
 }
 
+/**
+ * Removes a component from an entity.
+ *
+ * @param world - Current world snapshot.
+ * @param entity - Target entity.
+ * @param name - Component name to remove.
+ * @returns Transition result outcome.
+ */
 export function removeFlintEcsComponent<TValue>(
   world: FlintEcsWorld<TValue>,
   entity: FlintEcsEntity,
@@ -230,6 +344,14 @@ export function removeFlintEcsComponent<TValue>(
   return { ok: true, transition: transition(world, next, [entity], [component]) };
 }
 
+/**
+ * Retrieves the component instance attached to an entity.
+ *
+ * @param world - Current world snapshot.
+ * @param entity - Target entity.
+ * @param name - Component name.
+ * @returns Component value or undefined if absent.
+ */
 export function getFlintEcsComponent<TValue>(
   world: FlintEcsWorld<TValue>,
   entity: FlintEcsEntity,
@@ -239,6 +361,13 @@ export function getFlintEcsComponent<TValue>(
   return world.stores.get(component)?.values.get(entity.index);
 }
 
+/**
+ * Queries active entities matching the component filter criteria.
+ *
+ * @param world - Current world snapshot.
+ * @param query - Query filter specification.
+ * @returns Array of matching entity handles.
+ */
 export function queryFlintEcsEntities<TValue>(
   world: FlintEcsWorld<TValue>,
   query: FlintEcsQuery,
@@ -254,6 +383,12 @@ export function queryFlintEcsEntities<TValue>(
     .toSorted((left, right) => left.index - right.index);
 }
 
+/**
+ * Validates a sequence of signals against declared signal definitions.
+ *
+ * @param signals - Array of signals to validate.
+ * @returns Object with valid status and error messages.
+ */
 export function validateFlintEcsSignals(
   signals: readonly FlintEcsSignal[],
 ): { readonly valid: true } | { readonly valid: false; readonly cycle: readonly string[] } {
@@ -279,6 +414,12 @@ export function validateFlintEcsSignals(
   return { valid: true };
 }
 
+/**
+ * Creates an ECS execution pipeline scheduler.
+ *
+ * @param systems - Sequence of systems to register in the pipeline.
+ * @returns Configured FlintEcsScheduler instance.
+ */
 export function createFlintEcsScheduler<TValue = Uint8Array>(
   systems: readonly FlintEcsSystem<TValue>[],
   signals: readonly FlintEcsSignal[] = [],
@@ -295,6 +436,13 @@ export function createFlintEcsScheduler<TValue = Uint8Array>(
   };
 }
 
+/**
+ * Runs an ECS scheduler pipeline across all registered systems and stages.
+ *
+ * @param world - Initial world snapshot.
+ * @param scheduler - Configured scheduler pipeline.
+ * @returns Schedule execution report.
+ */
 export function runFlintEcsScheduler<TValue>(
   world: FlintEcsWorld<TValue>,
   scheduler: FlintEcsScheduler<TValue>,

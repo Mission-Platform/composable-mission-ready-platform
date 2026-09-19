@@ -1,10 +1,21 @@
 import type { FlintFunction } from './ast.js';
 import type { FlintModuleGraph, FlintResolvedModule } from './graph.js';
 
+/**
+ * External type environment containing declarations imported into a module.
+ */
 export interface FlintImportTypeEnvironment {
+  /** External function declarations exported by resolved dependency modules. */
   readonly externalFunctions: readonly FlintFunction[];
 }
 
+/**
+ * Resolves imported function signatures from upstream dependency modules in a module graph.
+ *
+ * @param importer - Resolved module whose import dependencies are being inspected.
+ * @param graph - Multi-module dependency graph containing all linked modules and edges.
+ * @returns An import type environment containing exported external functions (both bare and alias-prefixed).
+ */
 export function resolveFlintImportTypeEnvironment(
   importer: FlintResolvedModule,
   graph: FlintModuleGraph,

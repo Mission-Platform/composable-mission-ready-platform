@@ -14,7 +14,11 @@ Generated from public source declarations in `@mission-platform/flint-wasm`.
 function buildFlintWasmCollectionRuntimeBodies(): readonly FlintWasmRuntimeBody[];
 ```
 
-No description provided.
+Returns metadata descriptors for collection and async runtime helper functions.
+
+#### Contract
+
+- **@returns:** Array of runtime function descriptors.
 
 ### buildFlintWasmCollectionRuntimeWasmBodies
 
@@ -43,7 +47,7 @@ packed i64 `(done << 32) | i32 value` ABI.
 export interface FlintWasmRuntimeBody
 ```
 
-No description provided.
+Contract descriptor for standard library runtime helper functions embedded in WebAssembly.
 
 ## `src/contracts`
 
@@ -55,7 +59,7 @@ No description provided.
 export interface FlintTargetFeatures
 ```
 
-No description provided.
+Target WebAssembly proposal features enabled during code emission.
 
 ### FlintWasmAggregateLayout
 
@@ -65,7 +69,7 @@ No description provided.
 export interface FlintWasmAggregateLayout
 ```
 
-No description provided.
+Memory layout descriptor for aggregate structures laid out in linear memory.
 
 ### FlintWasmArtifactMetadata
 
@@ -75,7 +79,7 @@ No description provided.
 export interface FlintWasmArtifactMetadata
 ```
 
-No description provided.
+Metadata describing memory layout, feature requirements, and function signatures of the emitted WebAssembly artifact.
 
 ### FlintWasmAsyncCapability
 
@@ -85,7 +89,7 @@ No description provided.
 export type FlintWasmAsyncCapability = 'scheduler.microtask' | 'scheduler.worker';
 ```
 
-No description provided.
+Asynchronous runtime capabilities requested by WebAssembly modules.
 
 ### FlintWasmAsyncContract
 
@@ -95,7 +99,7 @@ No description provided.
 export interface FlintWasmAsyncContract
 ```
 
-No description provided.
+Contract specification governing asynchronous execution and messaging in WebAssembly.
 
 ### FlintWasmBackendInput
 
@@ -105,7 +109,7 @@ No description provided.
 export interface FlintWasmBackendInput
 ```
 
-No description provided.
+Complete input payload passed to the WebAssembly backend compilation pipeline.
 
 ### FlintWasmBackendResult
 
@@ -115,7 +119,7 @@ No description provided.
 export interface FlintWasmBackendResult
 ```
 
-No description provided.
+Result returned by the WebAssembly backend emitter containing binary artifacts and reports.
 
 ### FlintWasmBinaryOperator
 
@@ -125,7 +129,7 @@ No description provided.
 export type FlintWasmBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
 ```
 
-No description provided.
+Supported binary arithmetic, logical, and comparison operators in WebAssembly.
 
 ### FlintWasmCapabilityImport
 
@@ -135,7 +139,7 @@ No description provided.
 export interface FlintWasmCapabilityImport
 ```
 
-No description provided.
+Host capability import required by the WebAssembly module.
 
 ### FlintWasmCollectionLayout
 
@@ -145,7 +149,7 @@ No description provided.
 export interface FlintWasmCollectionLayout
 ```
 
-No description provided.
+Layout and strategy configuration for collection types in linear memory.
 
 ### FlintWasmCompilerHints
 
@@ -155,7 +159,7 @@ No description provided.
 export interface FlintWasmCompilerHints
 ```
 
-No description provided.
+Optimization hints provided to the WebAssembly compiler backend.
 
 ### FlintWasmDiagnostic
 
@@ -165,7 +169,7 @@ No description provided.
 export interface FlintWasmDiagnostic
 ```
 
-No description provided.
+Compiler diagnostic emitted during WebAssembly lowering, validation, or verification.
 
 ### FlintWasmEnumDeclaration
 
@@ -175,7 +179,7 @@ No description provided.
 export interface FlintWasmEnumDeclaration
 ```
 
-No description provided.
+Tagged union enum declaration represented in WebAssembly memory layouts.
 
 ### FlintWasmExpression
 
@@ -185,7 +189,7 @@ No description provided.
 export type FlintWasmExpression = |
 ```
 
-No description provided.
+Intermediate representation expression lowered to WebAssembly instructions.
 
 ### FlintWasmFeatureRequirements
 
@@ -195,7 +199,7 @@ No description provided.
 export interface FlintWasmFeatureRequirements
 ```
 
-No description provided.
+WebAssembly feature requirements discovered during code generation.
 
 ### FlintWasmFunction
 
@@ -205,7 +209,7 @@ No description provided.
 export interface FlintWasmFunction
 ```
 
-No description provided.
+Function intermediate representation lowered to WebAssembly function definition.
 
 ### FlintWasmGenericSpecialization
 
@@ -215,7 +219,7 @@ No description provided.
 export interface FlintWasmGenericSpecialization
 ```
 
-No description provided.
+Monomorphized generic function specialization emitted to WebAssembly.
 
 ### FlintWasmIteratorBoundaryDescriptor
 
@@ -225,7 +229,7 @@ No description provided.
 export interface FlintWasmIteratorBoundaryDescriptor
 ```
 
-No description provided.
+Boundary descriptor defining iterator state machine transitions and exports.
 
 ### FlintWasmIteratorCapability
 
@@ -235,7 +239,7 @@ No description provided.
 export type FlintWasmIteratorCapability = 'linear' | 'random-access';
 ```
 
-No description provided.
+Iterator capability category supported by runtime iterators.
 
 ### FlintWasmIteratorCapabilityDescriptor
 
@@ -245,7 +249,7 @@ No description provided.
 export interface FlintWasmIteratorCapabilityDescriptor
 ```
 
-No description provided.
+Descriptor defining iterator iteration strategy and element bounds.
 
 ### FlintWasmIteratorExport
 
@@ -255,7 +259,7 @@ No description provided.
 export interface FlintWasmIteratorExport
 ```
 
-No description provided.
+Exported iterator state-machine symbols accessible to host runtimes.
 
 ### FlintWasmLogger
 
@@ -265,7 +269,7 @@ No description provided.
 export interface FlintWasmLogger
 ```
 
-No description provided.
+Structured logger interface for WebAssembly compilation events.
 
 ### FlintWasmModule
 
@@ -275,7 +279,7 @@ No description provided.
 export interface FlintWasmModule
 ```
 
-No description provided.
+Module intermediate representation containing functions, layouts, and imports for WebAssembly emission.
 
 ### FlintWasmParameter
 
@@ -285,7 +289,7 @@ No description provided.
 export interface FlintWasmParameter
 ```
 
-No description provided.
+Function parameter definition used in WebAssembly function signatures.
 
 ### FlintWasmPrimitiveType
 
@@ -296,7 +300,7 @@ export type FlintWasmPrimitiveType =
   'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit' | 'v128';
 ```
 
-No description provided.
+Primitive data types supported by the WebAssembly backend lowering pass.
 
 ### FlintWasmSourceImport
 
@@ -306,7 +310,7 @@ No description provided.
 export interface FlintWasmSourceImport
 ```
 
-No description provided.
+Linked source module dependency imported into the WebAssembly module.
 
 ### FlintWasmSourceSpan
 
@@ -316,7 +320,7 @@ No description provided.
 export interface FlintWasmSourceSpan
 ```
 
-No description provided.
+Source location span mapped to WebAssembly instructions for debug symbol generation.
 
 ### FlintWasmStandardLibraryOperation
 
@@ -385,7 +389,7 @@ export type FlintWasmStandardLibraryOperation =
   | 'simd-v128-store';
 ```
 
-No description provided.
+WebAssembly standard library intrinsic operations lowered by the backend compiler.
 
 ### FlintWasmStatement
 
@@ -395,7 +399,7 @@ No description provided.
 export type FlintWasmStatement = |
 ```
 
-No description provided.
+Intermediate representation statement lowered to WebAssembly structured control flow.
 
 ### FlintWasmTypeName
 
@@ -405,7 +409,7 @@ No description provided.
 export interface FlintWasmTypeName
 ```
 
-No description provided.
+Abstract type name representation utilized during WebAssembly lowering.
 
 ## `src/emitter`
 
@@ -417,7 +421,7 @@ No description provided.
 function compileFlintWasm(input: FlintWasmBackendInput, fileName = '<input>'): FlintWasmBackendResult;
 ```
 
-No description provided.
+Main entry point compiling a Flint IR module to WebAssembly binary and text formats.
 
 #### Parameters
 
@@ -436,7 +440,7 @@ No description provided.
 export interface FlintWasmOptimizationDiagnostic
 ```
 
-No description provided.
+Diagnostic emitted by WebAssembly optimization passes.
 
 ### FlintWasmOptimizationPass
 
@@ -446,7 +450,7 @@ No description provided.
 export interface FlintWasmOptimizationPass
 ```
 
-No description provided.
+Metadata describing an individual optimization pass and its metrics.
 
 ### FlintWasmOptimizationReport
 
@@ -456,7 +460,7 @@ No description provided.
 export interface FlintWasmOptimizationReport
 ```
 
-No description provided.
+Summary report tracking all applied WebAssembly optimization passes and diagnostics.
 
 ### FlintWasmStageIr
 
@@ -466,7 +470,7 @@ No description provided.
 export interface FlintWasmStageIr
 ```
 
-No description provided.
+Intermediate representation snapshot of module state at an optimization stage.
 
 ### FlintWasmSwitchStrategy
 
@@ -476,7 +480,7 @@ No description provided.
 export type FlintWasmSwitchStrategy = 'br-table' | 'sparse' | 'constant';
 ```
 
-No description provided.
+Code generation strategy for lowering switch statements.
 
 ### optimizeFlintWasmModule
 
@@ -489,7 +493,7 @@ function optimizeFlintWasmModule(
 ): FlintWasmStageIr;
 ```
 
-No description provided.
+Executes the full suite of WebAssembly optimization passes on an IR module.
 
 #### Parameters
 
@@ -518,7 +522,7 @@ The verifier intentionally consumes a structural manifest to avoid a package cyc
 export interface FlintWasmArtifactVerificationDiagnostic
 ```
 
-No description provided.
+Diagnostic finding emitted during WebAssembly binary verification.
 
 ### FlintWasmArtifactVerificationInput
 
@@ -528,7 +532,7 @@ No description provided.
 export interface FlintWasmArtifactVerificationInput
 ```
 
-No description provided.
+Input parameters and expectations passed to artifact verification.
 
 ### FlintWasmArtifactVerificationPolicy
 
@@ -538,7 +542,7 @@ No description provided.
 export interface FlintWasmArtifactVerificationPolicy
 ```
 
-No description provided.
+Policy rules governing artifact verification enforcement.
 
 ### FlintWasmArtifactVerificationResult
 
@@ -548,7 +552,7 @@ No description provided.
 export interface FlintWasmArtifactVerificationResult
 ```
 
-No description provided.
+Comprehensive verification result report indicating validation status.
 
 ### FlintWasmArtifactVerificationSeverity
 
@@ -558,7 +562,7 @@ No description provided.
 export type FlintWasmArtifactVerificationSeverity = 'error' | 'warning' | 'info';
 ```
 
-No description provided.
+Diagnostic severity levels emitted during artifact verification.
 
 ### FlintWasmManifestFunction
 
@@ -568,7 +572,7 @@ No description provided.
 export interface FlintWasmManifestFunction
 ```
 
-No description provided.
+Function metadata extracted from ABI manifest for verification.
 
 ### FlintWasmManifestImport
 
@@ -578,7 +582,7 @@ No description provided.
 export interface FlintWasmManifestImport
 ```
 
-No description provided.
+Import declaration metadata extracted from ABI manifest.
 
 ### FlintWasmManifestParameter
 
@@ -588,7 +592,7 @@ No description provided.
 export interface FlintWasmManifestParameter
 ```
 
-No description provided.
+Parameter type metadata in manifest function definition.
 
 ### FlintWasmMemoryLayout
 
@@ -598,7 +602,7 @@ No description provided.
 export interface FlintWasmMemoryLayout
 ```
 
-No description provided.
+Memory layout expectations verified against WebAssembly binary.
 
 ### verifyFlintWasmArtifact
 
@@ -608,7 +612,7 @@ No description provided.
 function verifyFlintWasmArtifact(input: FlintWasmArtifactVerificationInput): FlintWasmArtifactVerificationResult;
 ```
 
-No description provided.
+Complete verification entry point validating WebAssembly binary and adapter artifacts.
 
 #### Parameters
 
@@ -626,7 +630,7 @@ No description provided.
 export interface FlintWasmWatMetadata
 ```
 
-No description provided.
+Metadata emitted into WebAssembly text format (WAT) comments and headers.
 
 ### renderFlintWasmWat
 
@@ -636,11 +640,17 @@ No description provided.
 function renderFlintWasmWat(module: FlintWasmModule, metadata: FlintWasmWatMetadata = {}): string;
 ```
 
-No description provided.
+Lowers a complete Flint WebAssembly module intermediate representation into textual WAT format.
 
 #### Parameters
 
-| Name     | Type                 | Description |
-| -------- | -------------------- | ----------- |
-| module   | FlintWasmModule      |             |
-| metadata | FlintWasmWatMetadata |             |
+| Name     | Type                 | Description                                              |
+| -------- | -------------------- | -------------------------------------------------------- |
+| module   | FlintWasmModule      | - Compiled module intermediate representation.           |
+| metadata | FlintWasmWatMetadata | - Compilation metadata and target feature configuration. |
+
+#### Contract
+
+- **@param:** - Compiled module intermediate representation.
+- **@param:** - Compilation metadata and target feature configuration.
+- **@returns:** WebAssembly text representation string.

@@ -1,10 +1,16 @@
 import type { FlintTraceOptions, FlintTraceReport } from './trace.js';
 import type { FlintAggregateLayout, FlintOwnership, FlintSpecialization } from '@mission-platform/flint';
 
+/**
+ * Supported VM bytecode execution modes ('interpret', 'jit', 'aot').
+ */
 export type FlintVmExecutionMode = 'interpret' | 'jit' | 'aot';
 
 export const FLINT_VM_DEFAULT_MAX_MEMORY_PAGES = 256;
 
+/**
+ * Tagged union representing runtime values manipulated by the bytecode VM.
+ */
 export type FlintVmValue =
   | { readonly kind: 'unit' }
   | { readonly kind: 'bool'; readonly value: boolean }
@@ -27,6 +33,9 @@ export type FlintVmValue =
     }
   | { readonly kind: 'function'; readonly functionName: string };
 
+/**
+ * Bytecode instruction operations supported by the Flint virtual machine.
+ */
 export type FlintVmInstruction =
   | { readonly opcode: 'const'; readonly destination?: number; readonly constant: number }
   | { readonly opcode: 'move'; readonly destination: number; readonly source: number }
@@ -98,6 +107,9 @@ export type FlintVmInstruction =
   | { readonly opcode: 'return'; readonly source?: number }
   | { readonly opcode: 'trap'; readonly code: string; readonly message: string };
 
+/**
+ * Debug source span mapping a bytecode instruction offset to source code coordinates.
+ */
 export interface FlintVmDebugSpan {
   readonly instruction: number;
   readonly fileName: string;
@@ -107,6 +119,9 @@ export interface FlintVmDebugSpan {
   readonly column: number;
 }
 
+/**
+ * Compiled VM function definition containing instructions, registers, and metadata.
+ */
 export interface FlintVmFunction {
   readonly name: string;
   readonly parameters: readonly string[];
@@ -116,6 +131,9 @@ export interface FlintVmFunction {
   readonly debugSpans: readonly FlintVmDebugSpan[];
 }
 
+/**
+ * Host capability import descriptor requested by a VM module.
+ */
 export interface FlintVmCapabilityImport {
   readonly name: string;
   readonly capability: string;
@@ -123,6 +141,9 @@ export interface FlintVmCapabilityImport {
   readonly result: string;
 }
 
+/**
+ * Executable bytecode module container consumed by VM and AOT executors.
+ */
 export interface FlintVmModule {
   readonly format: 'forge-web-script-vm-module';
   readonly version: '1.0';
@@ -141,6 +162,9 @@ export interface FlintVmModule {
   readonly sourceHash: string;
 }
 
+/**
+ * Options configuring VM execution limits, memory buffers, and telemetry.
+ */
 export interface FlintVmExecutionOptions {
   readonly mode: FlintVmExecutionMode;
   readonly capabilities?: Readonly<Record<string, (...arguments_: readonly FlintVmValue[]) => FlintVmValue>>;
@@ -152,6 +176,9 @@ export interface FlintVmExecutionOptions {
   readonly trace?: FlintTraceOptions;
 }
 
+/**
+ * Result returned by a VM execution run including value and step metrics.
+ */
 export interface FlintVmExecutionResult {
   readonly value: FlintVmValue;
   readonly memory: Uint8Array;
@@ -160,6 +187,9 @@ export interface FlintVmExecutionResult {
   readonly trace?: FlintTraceReport;
 }
 
+/**
+ * Primary execution interface for running compiled Flint VM modules.
+ */
 export interface FlintVmExecutor {
   readonly execute: (
     module: FlintVmModule,
@@ -175,11 +205,17 @@ export interface FlintVmExecutor {
   readonly getJitCache?: () => FlintVmJitCache;
 }
 
+/**
+ * Cache of tier-1 JIT compiled functions and hot function invocation counts.
+ */
 export interface FlintVmJitCache {
   readonly compilerVersion: string;
   readonly entries: Readonly<Record<string, FlintVmJitEntry>>;
 }
 
+/**
+ * JIT compilation cache entry storing the compiled function and call count.
+ */
 export interface FlintVmJitEntry {
   readonly functionName: string;
   readonly sourceHash: string;
@@ -187,6 +223,9 @@ export interface FlintVmJitEntry {
   readonly mode: 'jit';
 }
 
+/**
+ * Ahead-of-time compiled JavaScript artifact emitted from a VM module.
+ */
 export interface FlintVmAotArtifact {
   readonly format: 'forge-web-script-vm-aot';
   readonly moduleVersion: '1.0';
@@ -200,6 +239,9 @@ export interface FlintVmAotArtifact {
 export const FLINT_VM_WASM_ABI_VERSION = '1.2' as const;
 export const FLINT_VM_WASM_LOWERING_VERSION = '1.0' as const;
 
+/**
+ * WebAssembly binary and import metadata artifact emitted from a VM module.
+ */
 export interface FlintVmWasmArtifact {
   readonly format: 'forge-web-script-vm-wasm';
   readonly moduleVersion: '1.0';
@@ -214,6 +256,9 @@ export interface FlintVmWasmArtifact {
   readonly reproducibilityHash: string;
 }
 
+/**
+ * Options configuring a prepared, reusable VM execution instance.
+ */
 export interface FlintVmPreparedExecutorOptions {
   readonly compilerVersion?: string;
   readonly mode?: Exclude<FlintVmExecutionMode, 'interpret'>;
@@ -222,6 +267,9 @@ export interface FlintVmPreparedExecutorOptions {
   readonly capabilities?: Readonly<Record<string, (...arguments_: readonly FlintVmValue[]) => FlintVmValue>>;
 }
 
+/**
+ * Reusable, pre-allocated executor instance bound to a specific module.
+ */
 export interface FlintVmPreparedExecutor {
   readonly artifact: FlintVmWasmArtifact;
   readonly mode: Exclude<FlintVmExecutionMode, 'interpret'>;

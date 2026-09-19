@@ -1,13 +1,22 @@
 import type { FlintVmDebugSpan, FlintVmValue } from './vm.js';
 
+/**
+ * Capture verbosity mode for execution trace recording.
+ */
 export type FlintTraceCaptureMode = 'summary' | 'events' | 'snapshot';
 
+/**
+ * Resource limits constraining trace event volume and byte size.
+ */
 export interface FlintTraceLimits {
   readonly maxEvents?: number;
   readonly maxTraceBytes?: number;
   readonly maxSnapshotBytes?: number;
 }
 
+/**
+ * Configuration options for initializing execution trace recording.
+ */
 export interface FlintTraceOptions extends FlintTraceLimits {
   /** Tracing is opt-in. No report is produced when this option is omitted. */
   readonly capture?: FlintTraceCaptureMode;
@@ -19,11 +28,20 @@ export interface FlintTraceOptions extends FlintTraceLimits {
   readonly redact?: (value: FlintVmValue) => string;
 }
 
+/**
+ * Source mapping position for recorded execution trace events.
+ */
 export interface FlintTraceSourceLocation extends FlintVmDebugSpan {}
 
+/**
+ * Category of recorded runtime trace event.
+ */
 export type FlintTraceEventType =
   'instruction' | 'call' | 'capability' | 'memory' | 'range-check' | 'trap' | 'resource';
 
+/**
+ * Detailed execution trace event captured during runtime or VM interpretation.
+ */
 export interface FlintTraceEvent {
   readonly sequence: number;
   readonly type: FlintTraceEventType;
@@ -42,6 +60,9 @@ export interface FlintTraceEvent {
   readonly detail?: string;
 }
 
+/**
+ * Aggregated execution metrics and operation counters recorded during tracing.
+ */
 export interface FlintTraceCounters {
   readonly instructions: number;
   readonly calls: number;
@@ -55,6 +76,9 @@ export interface FlintTraceCounters {
   readonly droppedEvents: number;
 }
 
+/**
+ * Complete structured execution trace report summarized after execution completion.
+ */
 export interface FlintTraceReport {
   readonly version: '1.0';
   readonly replayId: string;
@@ -71,6 +95,9 @@ export interface FlintTraceReport {
   readonly traceHash: string;
 }
 
+/**
+ * Active recorder interface consuming runtime execution events and building trace reports.
+ */
 export interface FlintTraceRecorder {
   readonly record: (event: Omit<FlintTraceEvent, 'sequence'>) => void;
   readonly recordInstruction: (
@@ -105,6 +132,12 @@ const DEFAULT_LIMITS: Required<FlintTraceLimits> = {
   maxSnapshotBytes: 4096,
 };
 
+/**
+ * Hashes a string using the FNV-1a 32-bit algorithm.
+ *
+ * @param value - String value to hash.
+ * @returns 8-character hexadecimal hash string.
+ */
 function hashText(value: string): string {
   let hash = 2_166_136_261;
   for (const byte of new TextEncoder().encode(value)) {
@@ -114,6 +147,12 @@ function hashText(value: string): string {
   return hash.toString(16).padStart(8, '0');
 }
 
+/**
+ * Recursively canonicalizes data structures for deterministic JSON serialization.
+ *
+ * @param value - Unknown value to canonicalize.
+ * @returns Canonicalized representation.
+ */
 function canonicalize(value: unknown): unknown {
   if (value instanceof Uint8Array) return [...value];
   if (Array.isArray(value)) return value.map((entry) => canonicalize(entry));
@@ -126,10 +165,23 @@ function canonicalize(value: unknown): unknown {
   return value;
 }
 
+/**
+ * Clamps an optional numeric value to a non-negative integer fallback.
+ *
+ * @param value - Candidate number value.
+ * @param fallback - Default positive integer.
+ * @returns Valid non-negative integer.
+ */
 function positive(value: number | undefined, fallback: number): number {
   return value === undefined || !Number.isFinite(value) ? fallback : Math.max(0, Math.trunc(value));
 }
 
+/**
+ * Extracts normalized, positive trace capacity bounds from options.
+ *
+ * @param options - Input trace options.
+ * @returns Complete required limits object.
+ */
 function safeLimits(options: FlintTraceOptions): Required<FlintTraceLimits> {
   return {
     maxEvents: positive(options.maxEvents, DEFAULT_LIMITS.maxEvents),
@@ -138,6 +190,12 @@ function safeLimits(options: FlintTraceOptions): Required<FlintTraceLimits> {
   };
 }
 
+/**
+ * Produces a concise descriptive string summarizing a VM value.
+ *
+ * @param value - VM value to summarize.
+ * @returns Short summary string.
+ */
 function defaultSummary(value: FlintVmValue): string {
   switch (value.kind) {
     case 'unit': {
@@ -161,6 +219,13 @@ function defaultSummary(value: FlintVmValue): string {
   }
 }
 
+/**
+ * Creates an execution trace recorder enforcing size budgets and telemetry captures.
+ *
+ * @param options - Configuration options for tracing.
+ * @param functionName - Primary entry point function name.
+ * @returns Configured FlintTraceRecorder instance.
+ */
 export function createFlintTraceRecorder(options: FlintTraceOptions, functionName: string): FlintTraceRecorder {
   const limits = safeLimits(options);
   const capture = options.capture ?? 'events';
@@ -270,6 +335,13 @@ export function createFlintTraceRecorder(options: FlintTraceOptions, functionNam
   return recorder;
 }
 
+/**
+ * Summarizes a VM value for diagnostic tracing, optionally applying redactions.
+ *
+ * @param value - VM value to format.
+ * @param redact - Optional redaction callback.
+ * @returns Human-readable summary string.
+ */
 export function summarizeFlintVmValue(value: FlintVmValue, redact?: (value: FlintVmValue) => string): string {
   try {
     return redact?.(value) ?? defaultSummary(value);

@@ -2,6 +2,9 @@ import { deserializeFlintSoN, serializeFlintSoN } from './son-cache.js';
 
 import type { FlintSoNModule } from './son-ir.js';
 
+/**
+ * File system or in-memory cache provider for compiler artifacts and WAT outputs.
+ */
 export interface FlintWatCache {
   /** Absolute or workspace-relative directory in which WAT files are stored. */
   readonly root: string;
@@ -18,6 +21,9 @@ export interface FlintWatCache {
   readonly logger?: FlintCacheLogger;
 }
 
+/**
+ * Diagnostic logger interface for caching operations and cache hits/misses.
+ */
 export interface FlintCacheLogger {
   readonly log: (
     level: 'debug' | 'info' | 'warn' | 'error',
@@ -26,6 +32,9 @@ export interface FlintCacheLogger {
   ) => void;
 }
 
+/**
+ * Input parameters used to compute a deterministic compilation cache key.
+ */
 export interface FlintWatCacheKeyInput {
   readonly compilerVersion: string;
   readonly optimization: 'debug' | 'release';
@@ -50,10 +59,10 @@ export interface FlintWatCacheKeyInput {
 }
 
 /**
- * Recursively normalizes objects and arrays with sorted keys for deterministic serialization.
+ * Recursively orders object keys and normalizes arrays to produce a deterministic object structure.
  *
- * @param value Arbitrary input value.
- * @returns Structurally canonicalized value.
+ * @param value - Any arbitrary JavaScript value.
+ * @returns Deterministically ordered object or value copy.
  */
 function stableValue(value: unknown): unknown {
   if (Array.isArray(value)) return value.map((entry) => stableValue(entry));
@@ -68,10 +77,10 @@ function stableValue(value: unknown): unknown {
 }
 
 /**
- * Computes an 8-character FNV-1a hex hash for a given string.
+ * Computes a 32-bit FNV-1a hash formatted as an 8-character hexadecimal string.
  *
- * @param value String payload.
- * @returns 8-character hex hash.
+ * @param value - Input string to hash.
+ * @returns 8-character lowercase hexadecimal hash.
  */
 function hash(value: string): string {
   let result = 2_166_136_261;
@@ -159,8 +168,14 @@ export function readFlintSoN(
   }
 }
 
+/**
+ * Optimization variant identifier for emitted debug artifacts.
+ */
 export type FlintDebugArtifactVariant = 'optimized' | 'unoptimized';
 
+/**
+ * File paths to persisted debug artifacts emitted during compilation.
+ */
 export interface FlintDebugArtifactPaths {
   readonly optimizedWatPath?: string;
   readonly unoptimizedWatPath?: string;
@@ -217,12 +232,6 @@ export function persistFlintDebugArtifacts(
     optimizedWasmPath?: string;
     unoptimizedWasmPath?: string;
   } = {};
-  /**
-   * Writes a WebAssembly text format (WAT) artifact variant to the cache.
-   *
-   * @param variant Optimization variant.
-   * @param contents Text content to write.
-   */
   const writeWat = (variant: FlintDebugArtifactVariant, contents: string): void => {
     const path = flintDebugArtifactPath(cache, key, variant, 'wat');
     try {
@@ -233,13 +242,6 @@ export function persistFlintDebugArtifacts(
       // Debug inspection must never make compilation fail.
     }
   };
-
-  /**
-   * Writes a compiled WebAssembly binary artifact variant to the cache.
-   *
-   * @param variant Optimization variant.
-   * @param contents Binary bytes to write.
-   */
   const writeWasm = (variant: FlintDebugArtifactVariant, contents: Uint8Array): void => {
     if (cache.writeBinaryAtomic === undefined) return;
     const path = flintDebugArtifactPath(cache, key, variant, 'wasm');
@@ -259,12 +261,18 @@ export function persistFlintDebugArtifacts(
   return paths;
 }
 
+/**
+ * Index entry tracking cached files and timestamp for a specific module key.
+ */
 export interface FlintCacheIndexEntry {
   readonly key: string;
   readonly files: readonly string[];
   readonly timestamp: number;
 }
 
+/**
+ * Persisted cache manifest tracking active artifacts across modules to enable stale cleanup.
+ */
 export interface FlintCacheIndex {
   readonly version: 1;
   readonly entries: Readonly<Record<string, FlintCacheIndexEntry>>;

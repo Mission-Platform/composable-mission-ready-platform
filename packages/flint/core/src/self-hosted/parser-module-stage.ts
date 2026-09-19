@@ -84,15 +84,28 @@ const PK_FAIL = 4;
 
 const textEncoder = new TextEncoder();
 
+/**
+ * u32Value implementation.
+ * @param value - The value parameter.
+ * @returns The FlintSelfHostedVmValue result.
+ */
 function u32Value(value: number): FlintSelfHostedVmValue {
   return { kind: 'number', type: 'u32', value: value >>> 0 };
 }
 
+/**
+ * ConstPool implementation.
+ */
 class ConstPool {
   readonly values: FlintSelfHostedVmValue[] = [];
   private readonly numCache = new Map<number, number>();
   private readonly bytesCache = new Map<string, number>();
 
+  /**
+   * u32 implementation.
+   * @param value - The value parameter.
+   * @returns The number result.
+   */
   public u32(value: number): number {
     const key = value >>> 0;
     const cached = this.numCache.get(key);
@@ -103,6 +116,11 @@ class ConstPool {
     return index;
   }
 
+  /**
+   * bytesConst implementation.
+   * @param bytes - The bytes parameter.
+   * @returns The number result.
+   */
   public bytesConst(bytes: Uint8Array): number {
     const key = [...bytes].join(',');
     const cached = this.bytesCache.get(key);
@@ -123,22 +141,53 @@ class ConstPool {
   }
 }
 
+/**
+ * st implementation.
+ * @param b - The b parameter.
+ * @param address - The address parameter.
+ * @param source - The source parameter.
+ */
 function st(b: BytecodeBuilder, address: number, source: number): void {
   b.code.push({ opcode: 'store', address, source });
 }
 
+/**
+ * ld implementation.
+ * @param b - The b parameter.
+ * @param destination - The destination parameter.
+ * @param address - The address parameter.
+ */
 function ld(b: BytecodeBuilder, destination: number, address: number): void {
   b.code.push({ opcode: 'load', destination, address, type: 'number', numberType: 'u32' });
 }
 
+/**
+ * allocOp implementation.
+ * @param b - The b parameter.
+ * @param destination - The destination parameter.
+ * @param size - The size parameter.
+ */
 function allocOp(b: BytecodeBuilder, destination: number, size: number): void {
   b.code.push({ opcode: 'alloc', destination, size });
 }
 
+/**
+ * bytesFromMemory implementation.
+ * @param b - The b parameter.
+ * @param destination - The destination parameter.
+ * @param pointer - The pointer parameter.
+ * @param length - The length parameter.
+ */
 function bytesFromMemory(b: BytecodeBuilder, destination: number, pointer: number, length: number): void {
   b.code.push({ opcode: 'bytes-from-memory', destination, pointer, length });
 }
 
+/**
+ * writeBytesOp implementation.
+ * @param b - The b parameter.
+ * @param pointer - The pointer parameter.
+ * @param source - The source parameter.
+ */
 function writeBytesOp(b: BytecodeBuilder, pointer: number, source: number): void {
   b.code.push({ opcode: 'write-bytes', pointer, source });
 }
@@ -150,6 +199,14 @@ function K(b: BytecodeBuilder, pool: ConstPool, value: number): number {
   return register;
 }
 
+/**
+ * function_ implementation.
+ * @param name - The name parameter.
+ * @param parameters - The parameters parameter.
+ * @param result - The result parameter.
+ * @param b - The b parameter.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function function_(
   name: string,
   parameters: readonly string[],
@@ -180,6 +237,11 @@ function buildReadByte(pool: ConstPool): FlintSelfHostedVmFunction {
   return function_('pm_read_byte', ['u32'], 'u32', b);
 }
 
+/**
+ * buildIsAlpha implementation.
+ * @param pool - The pool parameter.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildIsAlpha(pool: ConstPool): FlintSelfHostedVmFunction {
   const b = createBuilder(1);
   const t1 = b.alloc();
@@ -209,6 +271,11 @@ function buildIsAlpha(pool: ConstPool): FlintSelfHostedVmFunction {
   return function_('pm_is_alpha', ['u32'], 'bool', b);
 }
 
+/**
+ * buildIsDigit implementation.
+ * @param pool - The pool parameter.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildIsDigit(pool: ConstPool): FlintSelfHostedVmFunction {
   const b = createBuilder(1);
   const t1 = b.alloc();
@@ -221,6 +288,10 @@ function buildIsDigit(pool: ConstPool): FlintSelfHostedVmFunction {
   return function_('pm_is_digit', ['u32'], 'bool', b);
 }
 
+/**
+ * buildIsAlnum implementation.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildIsAlnum(): FlintSelfHostedVmFunction {
   const b = createBuilder(1);
   const a = b.alloc();
@@ -236,6 +307,11 @@ function buildIsAlnum(): FlintSelfHostedVmFunction {
   return function_('pm_is_alnum', ['u32'], 'bool', b);
 }
 
+/**
+ * buildIsTwoCharOp implementation.
+ * @param pool - The pool parameter.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildIsTwoCharOp(pool: ConstPool): FlintSelfHostedVmFunction {
   const pairs: readonly [number, number][] = [
     [45, 62], // ->
@@ -270,6 +346,11 @@ function buildIsTwoCharOp(pool: ConstPool): FlintSelfHostedVmFunction {
   return function_('pm_is_two_char_op', ['u32', 'u32'], 'bool', b);
 }
 
+/**
+ * buildIsOneCharOp implementation.
+ * @param pool - The pool parameter.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildIsOneCharOp(pool: ConstPool): FlintSelfHostedVmFunction {
   const chars = [40, 41, 123, 125, 58, 59, 44, 43, 45, 42, 47, 60, 62, 61, 33];
   const b = createBuilder(1);
@@ -408,6 +489,11 @@ function buildPatchU32(pool: ConstPool): FlintSelfHostedVmFunction {
 // Tokenizer: pm_peek (non-destructive) + pm_consume (commits PEEK_* -> SCAN_*/LAST_*).
 // ---------------------------------------------------------------------------
 
+/**
+ * buildPeek implementation.
+ * @param pool - The pool parameter.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildPeek(pool: ConstPool): FlintSelfHostedVmFunction {
   const b = createBuilder(0);
   const offset = b.alloc();
@@ -684,11 +770,20 @@ function buildWordEquals(pool: ConstPool): FlintSelfHostedVmFunction {
 
 const PRIMITIVE_TYPE_NAMES = ['bool', 'bytes', 'f32', 'f64', 'i32', 'i64', 'string', 'u32', 'u64', 'unit'] as const;
 
+/**
+ * TypeWire implementation.
+ */
 interface TypeWire {
   readonly rawWord: number;
   readonly wire: number;
 }
 
+/**
+ * buildParseType implementation.
+ * @param pool - The pool parameter.
+ * @param types - The types parameter.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildParseType(pool: ConstPool, types: readonly TypeWire[]): FlintSelfHostedVmFunction {
   const b = createBuilder(0);
   const kind = b.alloc();
@@ -748,6 +843,9 @@ function buildParseType(pool: ConstPool, types: readonly TypeWire[]): FlintSelfH
   return function_('pm_parse_type', [], 'unit', b);
 }
 
+/**
+ * ExpressionWire implementation.
+ */
 interface ExpressionWire {
   readonly literal: number;
   readonly identifier: number;
@@ -768,6 +866,12 @@ interface ExpressionWire {
   readonly opNe: number;
 }
 
+/**
+ * buildParsePrimary implementation.
+ * @param pool - The pool parameter.
+ * @param wire - The wire parameter.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildParsePrimary(pool: ConstPool, wire: ExpressionWire): FlintSelfHostedVmFunction {
   const b = createBuilder(0);
   const kind = b.alloc();
@@ -917,6 +1021,12 @@ function buildParsePrimary(pool: ConstPool, wire: ExpressionWire): FlintSelfHost
   return function_('pm_parse_primary', [], 'unit', b);
 }
 
+/**
+ * buildParseUnary implementation.
+ * @param pool - The pool parameter.
+ * @param wire - The wire parameter.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildParseUnary(pool: ConstPool, wire: ExpressionWire): FlintSelfHostedVmFunction {
   const b = createBuilder(0);
   const kind = b.alloc();
@@ -977,6 +1087,12 @@ function buildParseUnary(pool: ConstPool, wire: ExpressionWire): FlintSelfHosted
   return function_('pm_parse_unary', [], 'unit', b);
 }
 
+/**
+ * buildParseExpression implementation.
+ * @param pool - The pool parameter.
+ * @param wire - The wire parameter.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildParseExpression(pool: ConstPool, wire: ExpressionWire): FlintSelfHostedVmFunction {
   const b = createBuilder(0);
   const start = b.alloc();
@@ -1111,6 +1227,11 @@ function buildParseExpression(pool: ConstPool, wire: ExpressionWire): FlintSelfH
   return function_('pm_parse_expression', [], 'unit', b);
 }
 
+/**
+ * buildParseParameters implementation.
+ * @param pool - The pool parameter.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildParseParameters(pool: ConstPool): FlintSelfHostedVmFunction {
   const b = createBuilder(0);
   const kind = b.alloc();
@@ -1229,6 +1350,12 @@ function buildParseParameters(pool: ConstPool): FlintSelfHostedVmFunction {
   return function_('pm_parse_parameters', [], 'unit', b);
 }
 
+/**
+ * buildParseReturnStatement implementation.
+ * @param pool - The pool parameter.
+ * @param returnWire - The returnWire parameter.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildParseReturnStatement(pool: ConstPool, returnWire: number): FlintSelfHostedVmFunction {
   const b = createBuilder(0);
   const start = b.alloc();
@@ -1302,6 +1429,12 @@ function buildParseReturnStatement(pool: ConstPool, returnWire: number): FlintSe
   return function_('pm_parse_return_statement', [], 'unit', b);
 }
 
+/**
+ * buildParseBlock implementation.
+ * @param pool - The pool parameter.
+ * @param returnWord - The returnWord parameter.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildParseBlock(pool: ConstPool, returnWord: number): FlintSelfHostedVmFunction {
   const b = createBuilder(0);
   const kind = b.alloc();
@@ -1384,6 +1517,13 @@ function buildParseBlock(pool: ConstPool, returnWord: number): FlintSelfHostedVm
   return function_('pm_parse_block', [], 'unit', b);
 }
 
+/**
+ * buildParseFunction implementation.
+ * @param pool - The pool parameter.
+ * @param exportWord - The exportWord parameter.
+ * @param functionWord - The functionWord parameter.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildParseFunction(pool: ConstPool, exportWord: number, functionWord: number): FlintSelfHostedVmFunction {
   const b = createBuilder(0);
   const kind = b.alloc();
@@ -1510,6 +1650,11 @@ function buildParseFunction(pool: ConstPool, exportWord: number, functionWord: n
   return function_('pm_parse_function', [], 'unit', b);
 }
 
+/**
+ * buildSkipClassBody implementation.
+ * @param pool - The pool parameter.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildSkipClassBody(pool: ConstPool): FlintSelfHostedVmFunction {
   const b = createBuilder(0);
   const kind = b.alloc();
@@ -1607,6 +1752,15 @@ function buildSkipClassBody(pool: ConstPool): FlintSelfHostedVmFunction {
 // envelope returned to the host.
 // ---------------------------------------------------------------------------
 
+/**
+ * buildEntry implementation.
+ * @param pool - The pool parameter.
+ * @param nameWire - The nameWire parameter.
+ * @param classWord - The classWord parameter.
+ * @param exportWord - The exportWord parameter.
+ * @param functionWord - The functionWord parameter.
+ * @returns The FlintSelfHostedVmFunction result.
+ */
 function buildEntry(
   pool: ConstPool,
   nameWire: number,
@@ -1659,7 +1813,7 @@ function buildEntry(
   ld(b, moduleStartLine, G.PEEK_LINE);
   ld(b, moduleStartCol, G.PEEK_COL);
 
-  // magic 'FWSM' + payload version 1
+  // magic 'FLINTM' + payload version 1
   {
     const header = b.alloc();
     b.num(header, pool.bytesConst(new Uint8Array([0x46, 0x57, 0x53, 0x4d, 1])));
@@ -1831,6 +1985,9 @@ function writeU32At(b: BytecodeBuilder, pool: ConstPool, base: number, offset: n
   writeBytesOp(b, target, temporary);
 }
 
+/**
+ * FlintParserModuleStageOptions implementation.
+ */
 export interface FlintParserModuleStageOptions {
   /** XOR applied to the emitted module magic bytes to prove divergence in tests. */
   readonly saltXor?: number;
@@ -1846,7 +2003,7 @@ export interface FlintParserModuleStageOptions {
  */
 function deriveBoundedModuleName(fileName: string): string {
   const base = fileName.split(/[/\\]/u).at(-1) ?? fileName;
-  return base.replace(/\.(flint|flt|fws)$/u, '');
+  return base.replace(/\.flint$/u, '');
 }
 
 /**
@@ -1997,6 +2154,11 @@ export interface FlintParserModuleEnvelope {
   readonly modulePayload: Uint8Array;
 }
 
+/**
+ * decodeFlintParserModuleEnvelope implementation.
+ * @param bytes - The bytes parameter.
+ * @returns The FlintParserModuleEnvelope result.
+ */
 export function decodeFlintParserModuleEnvelope(bytes: Uint8Array): FlintParserModuleEnvelope {
   if (bytes.byteLength < ENVELOPE_HEADER_SIZE)
     throw new Error('Invalid Flint parser-module envelope: truncated header');

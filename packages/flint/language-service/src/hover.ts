@@ -4,6 +4,14 @@ import { containsOffset, offsetAtPosition, rangeFromOffsets } from './positions.
 
 import type { FlintCallable, FlintHover, FlintPosition, FlintSymbol, FlintWorkspaceOptions } from './types.js';
 
+/**
+ * Computes hover documentation for the token under the cursor.
+ *
+ * @param document - Target document.
+ * @param position - Cursor position.
+ * @param symbols - Visible document symbols.
+ * @returns Hover documentation or undefined.
+ */
 export function hoverFlint(
   source: string,
   position: FlintPosition,
@@ -75,10 +83,12 @@ export function hoverFlint(
   return undefined;
 }
 
+/** Formats Markdown documentation contents for a callable symbol. */
 function callableContents(detail: string, callable: FlintCallable | undefined): readonly string[] {
   return callable?.documentation === undefined ? [detail] : [detail, callable.documentation];
 }
 
+/** Extracts the identifier token at the given character offset. */
 function identifierAt(
   source: string,
   offset: number,

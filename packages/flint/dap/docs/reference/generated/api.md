@@ -14,7 +14,7 @@ Generated from public source declarations in `@mission-platform/flint-dap`.
 export interface DapBreakpoint extends DapSourceBreakpoint
 ```
 
-No description provided.
+Resolved and verified DAP breakpoint state.
 
 ### DapEvent
 
@@ -24,7 +24,7 @@ No description provided.
 export interface DapEvent<TBody = unknown>
 ```
 
-No description provided.
+Standard Debug Adapter Protocol event notification envelope.
 
 ### DapFrameParser
 
@@ -34,7 +34,7 @@ No description provided.
 export class DapFrameParser
 ```
 
-No description provided.
+Stream frame parser decoding Content-Length delimited DAP messages.
 
 ### DapMessage
 
@@ -44,7 +44,7 @@ No description provided.
 export type DapMessage = DapRequest | DapResponse | DapEvent;
 ```
 
-No description provided.
+Union of all standard DAP message envelopes.
 
 ### DapRequest
 
@@ -54,7 +54,7 @@ No description provided.
 export interface DapRequest<TArguments = unknown>
 ```
 
-No description provided.
+Standard Debug Adapter Protocol request message envelope.
 
 ### DapResponse
 
@@ -64,7 +64,7 @@ No description provided.
 export interface DapResponse<TBody = unknown>
 ```
 
-No description provided.
+Standard Debug Adapter Protocol response message envelope.
 
 ### DapScope
 
@@ -74,7 +74,7 @@ No description provided.
 export interface DapScope
 ```
 
-No description provided.
+DAP variable evaluation scope.
 
 ### DapSource
 
@@ -84,7 +84,7 @@ No description provided.
 export interface DapSource
 ```
 
-No description provided.
+DAP descriptor representing a source code document or file.
 
 ### DapSourceBreakpoint
 
@@ -94,7 +94,7 @@ No description provided.
 export interface DapSourceBreakpoint
 ```
 
-No description provided.
+Breakpoint location specified in a source document.
 
 ### DapStackFrame
 
@@ -104,7 +104,7 @@ No description provided.
 export interface DapStackFrame
 ```
 
-No description provided.
+DAP call stack frame descriptor with source coordinates.
 
 ### DapVariable
 
@@ -114,7 +114,7 @@ No description provided.
 export interface DapVariable
 ```
 
-No description provided.
+DAP variable descriptor providing name, formatted value, and child reference.
 
 ### encodeDapMessage
 
@@ -124,7 +124,7 @@ No description provided.
 function encodeDapMessage(message: DapMessage): Buffer;
 ```
 
-No description provided.
+Serializes a DAP message into a Content-Length framed binary buffer.
 
 #### Parameters
 
@@ -140,7 +140,7 @@ No description provided.
 function encodeLineMessage(message: FlintRuntimeRequest): string;
 ```
 
-No description provided.
+Serializes a runtime request into a newline-delimited JSON line.
 
 #### Parameters
 
@@ -156,7 +156,7 @@ No description provided.
 export interface FlintDapForensicRequest extends DapRequest<Record<string, unknown>>
 ```
 
-No description provided.
+DAP request for querying memory state, capability calls, and trap evidence.
 
 ### FlintDapLaunchArguments
 
@@ -166,7 +166,7 @@ No description provided.
 export interface FlintDapLaunchArguments
 ```
 
-No description provided.
+Arguments provided in DAP launch requests for starting a debugged process.
 
 ### FlintDapTraceArguments
 
@@ -176,7 +176,7 @@ No description provided.
 export interface FlintDapTraceArguments
 ```
 
-No description provided.
+Arguments for requesting execution trace capture in DAP sessions.
 
 ### FlintDapTraceRequest
 
@@ -186,7 +186,7 @@ No description provided.
 export interface FlintDapTraceRequest extends DapRequest<FlintDapTraceArguments>
 ```
 
-No description provided.
+DAP request for querying execution trace summaries and event lists.
 
 ### FlintRuntimeCommand
 
@@ -215,7 +215,7 @@ export type FlintRuntimeCommand =
   | 'disconnect';
 ```
 
-No description provided.
+Commands dispatched from DAP adapter to the underlying Flint runtime process.
 
 ### FlintRuntimeContinuedEvent
 
@@ -225,7 +225,7 @@ No description provided.
 export interface FlintRuntimeContinuedEvent
 ```
 
-No description provided.
+Continued event emitted when runtime execution resumes.
 
 ### FlintRuntimeErrorEvent
 
@@ -235,7 +235,7 @@ No description provided.
 export interface FlintRuntimeErrorEvent
 ```
 
-No description provided.
+Error event emitted when an unexpected runtime debugging error occurs.
 
 ### FlintRuntimeMessage
 
@@ -252,7 +252,7 @@ export type FlintRuntimeMessage =
   | FlintRuntimeErrorEvent;
 ```
 
-No description provided.
+Union of message envelopes exchanged with the runtime debug process.
 
 ### FlintRuntimeOutputEvent
 
@@ -262,7 +262,7 @@ No description provided.
 export interface FlintRuntimeOutputEvent
 ```
 
-No description provided.
+Output event emitted by the runtime debug process.
 
 ### FlintRuntimeProcess
 
@@ -272,7 +272,7 @@ No description provided.
 export interface FlintRuntimeProcess
 ```
 
-No description provided.
+Child process interface representing an active runtime debug target.
 
 ### FlintRuntimeRequest
 
@@ -282,7 +282,7 @@ No description provided.
 export interface FlintRuntimeRequest
 ```
 
-No description provided.
+Request dispatched from DAP server to the Flint runtime debug process.
 
 ### FlintRuntimeResponse
 
@@ -292,7 +292,7 @@ No description provided.
 export interface FlintRuntimeResponse
 ```
 
-No description provided.
+Response returned from the Flint runtime debug process to DAP server.
 
 ### FlintRuntimeSpawner
 
@@ -306,7 +306,7 @@ export type FlintRuntimeSpawner = (
 ) => FlintRuntimeProcess;
 ```
 
-No description provided.
+Factory callback spawning runtime debug process instances.
 
 ### FlintRuntimeSpawnOptions
 
@@ -316,7 +316,7 @@ No description provided.
 export interface FlintRuntimeSpawnOptions
 ```
 
-No description provided.
+Options configuring child process spawning for runtime debugging.
 
 ### FlintRuntimeStoppedEvent
 
@@ -326,7 +326,7 @@ No description provided.
 export interface FlintRuntimeStoppedEvent
 ```
 
-No description provided.
+Stopped event emitted by the runtime debug process when execution pauses.
 
 ### FlintRuntimeTerminatedEvent
 
@@ -336,7 +336,7 @@ No description provided.
 export interface FlintRuntimeTerminatedEvent
 ```
 
-No description provided.
+Terminated event emitted when runtime debug execution finishes.
 
 ### FlintRuntimeThreadEvent
 
@@ -346,7 +346,7 @@ No description provided.
 export interface FlintRuntimeThreadEvent
 ```
 
-No description provided.
+Thread lifecycle event emitted when a runtime thread starts or exits.
 
 ### isRecord
 
@@ -356,7 +356,7 @@ No description provided.
 function isRecord(value: unknown): value is Record<string, unknown>;
 ```
 
-No description provided.
+Type guard checking whether an unknown value is a non-null object record.
 
 #### Parameters
 
@@ -372,7 +372,7 @@ No description provided.
 export class RuntimeLineParser
 ```
 
-No description provided.
+Stream line parser decoding newline-delimited JSON messages from the runtime.
 
 ## `src/server`
 
@@ -384,7 +384,7 @@ No description provided.
 function createFlintDapServer(options: FlintDapServerOptions): FlintDapServer;
 ```
 
-No description provided.
+Instantiates a new Flint DAP server attached to the specified input and output streams.
 
 #### Parameters
 
@@ -400,7 +400,7 @@ No description provided.
 export interface FlintDapServer
 ```
 
-No description provided.
+Active Debug Adapter Protocol server instance.
 
 ### FlintDapServerOptions
 
@@ -410,4 +410,4 @@ No description provided.
 export interface FlintDapServerOptions
 ```
 
-No description provided.
+Configuration options for initializing a Flint DAP server instance.

@@ -6,9 +6,18 @@ export const FLINT_ASYNC_CAPABILITIES = {
   jspi: 'wasm.jspi',
 } as const;
 
+/**
+ * Authorized asynchronous runtime capability identifier string.
+ */
 export type FlintAsyncCapability = (typeof FLINT_ASYNC_CAPABILITIES)[keyof typeof FLINT_ASYNC_CAPABILITIES];
+/**
+ * Task scheduling classification ('microtask' or 'worker').
+ */
 export type FlintAsyncTaskKind = 'microtask' | 'worker';
 
+/**
+ * Message packet transferred to or from a worker thread.
+ */
 export interface FlintAsyncWorkerMessage {
   readonly taskId: number;
   readonly sequence: number;
@@ -16,6 +25,9 @@ export interface FlintAsyncWorkerMessage {
   readonly ownership: 'owned';
 }
 
+/**
+ * Descriptor of an asynchronous task queued in the runtime.
+ */
 export interface FlintAsyncTask {
   readonly id: number;
   readonly sequence: number;
@@ -23,6 +35,9 @@ export interface FlintAsyncTask {
   readonly payload: Uint8Array;
 }
 
+/**
+ * Host integration hooks for scheduling microtasks and delivering worker messages.
+ */
 export interface FlintAsyncHostAdapter {
   readonly scheduleMicrotask: (taskId: number, run: () => FlintAsyncExecutionResult | undefined) => void;
   readonly postWorkerMessage: (message: FlintAsyncWorkerMessage) => void;
@@ -30,6 +45,9 @@ export interface FlintAsyncHostAdapter {
   readonly deliverAsyncResult?: (result: FlintAsyncExecutionResult) => void;
 }
 
+/**
+ * Configuration options for the asynchronous runtime engine.
+ */
 export interface FlintAsyncRuntimeOptions {
   readonly capabilities?: readonly string[];
   readonly host?: Partial<FlintAsyncHostAdapter>;
@@ -38,31 +56,55 @@ export interface FlintAsyncRuntimeOptions {
   readonly logger?: FlintLogger;
 }
 
+/**
+ * Error category codes for asynchronous execution failures.
+ */
 export type FlintAsyncFailureCode =
   'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
 
+/**
+ * Failure report returned by an asynchronous scheduling or execution operation.
+ */
 export interface FlintAsyncFailure {
   readonly ok: false;
   readonly code: FlintAsyncFailureCode;
   readonly message: string;
 }
 
+/**
+ * Successful scheduling result for an asynchronous task.
+ */
 export interface FlintAsyncScheduledTask {
   readonly ok: true;
   readonly task: FlintAsyncTask;
 }
 
+/**
+ * Result of scheduling an asynchronous task (either scheduled or failed).
+ */
 export type FlintAsyncScheduleResult = FlintAsyncScheduledTask | FlintAsyncFailure;
 
+/**
+ * Successful execution result containing task output payload.
+ */
 export interface FlintAsyncExecution {
   readonly ok: true;
   readonly task: FlintAsyncTask;
   readonly result: Uint8Array;
 }
 
+/**
+ * Result of executing an asynchronous task (either success or failure).
+ */
 export type FlintAsyncExecutionResult = FlintAsyncExecution | FlintAsyncFailure;
+/**
+ * Task execution callback taking an input byte payload and returning an output byte payload.
+ */
 export type FlintAsyncTaskHandler = (payload: Uint8Array) => Uint8Array;
 
+/**
+ * Asynchronous runtime coordinator managing microtasks, worker queues, and event loop draining.
+ */
 export interface FlintAsyncRuntime {
   readonly capabilities: readonly string[];
   readonly pendingTaskCount: () => number;
@@ -77,6 +119,9 @@ export interface FlintAsyncRuntime {
   readonly drain: () => readonly FlintAsyncExecutionResult[];
 }
 
+/**
+ * Internal tracking record for a queued asynchronous task.
+ */
 interface PendingTask {
   readonly task: FlintAsyncTask;
   readonly handler: FlintAsyncTaskHandler;
@@ -96,6 +141,12 @@ const failure = (code: FlintAsyncFailureCode, message: string): FlintAsyncFailur
   message,
 });
 
+/**
+ * Creates a new FlintAsyncRuntime instance managing asynchronous task queues.
+ *
+ * @param options - Runtime configuration options.
+ * @returns Configured FlintAsyncRuntime instance.
+ */
 export function createFlintAsyncRuntime(options: FlintAsyncRuntimeOptions = {}): FlintAsyncRuntime {
   const capabilities = [...new Set(options.capabilities)].toSorted();
   const maxPendingTasks = options.maxPendingTasks ?? 1024;
@@ -260,6 +311,9 @@ export function createFlintAsyncRuntime(options: FlintAsyncRuntimeOptions = {}):
   };
 }
 
+/**
+ * Options configuring the WebAssembly JavaScript Promise Integration (JSPI) suspender.
+ */
 export interface FlintJspiOptions {
   readonly capabilities?: readonly string[];
   readonly logger?: FlintLogger;
@@ -274,6 +328,11 @@ export class FlintJspiSuspender {
   public readonly capabilities: readonly string[];
   public readonly logger: FlintLogger;
 
+  /**
+   * Initializes a new FlintJspiSuspender instance verifying JSPI capabilities.
+   *
+   * @param options - Configuration options for the suspender.
+   */
   public constructor(options: FlintJspiOptions = {}) {
     this.logger = (options.logger ?? createFlintLogger({ scope: 'fws.async' })).child('jspi');
     this.capabilities = options.capabilities ?? [];

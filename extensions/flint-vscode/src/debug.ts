@@ -13,6 +13,9 @@ import {
   type ConfigurationReader,
 } from './server-path.js';
 
+/**
+ * Launch configuration options for starting a Flint debug session.
+ */
 export interface FlintLaunchConfiguration extends vscode.DebugConfiguration {
   readonly type: 'flint';
   readonly request: 'launch';
@@ -26,6 +29,9 @@ export interface FlintLaunchConfiguration extends vscode.DebugConfiguration {
   readonly stopOnEntry?: boolean;
 }
 
+/**
+ * Resolved settings controlling debug adapter communication and session parameters.
+ */
 export interface FlintDebugSettings {
   readonly nodePath: string;
   readonly dapPath: string;
@@ -186,6 +192,13 @@ export function createDebugAdapterDescriptorFactory(
   context: Pick<vscode.ExtensionContext, 'extensionPath'>,
 ): vscode.DebugAdapterDescriptorFactory {
   return {
+    /**
+     * Factory callback returning the debug adapter executable descriptor.
+     *
+     * @param session - Debug session instance.
+     * @param _executable - Optional debug adapter executable.
+     * @returns Debug adapter descriptor.
+     */
     createDebugAdapterDescriptor(
       session: vscode.DebugSession,
       _executable: vscode.DebugAdapterExecutable | undefined,

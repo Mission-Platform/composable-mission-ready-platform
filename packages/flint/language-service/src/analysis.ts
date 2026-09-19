@@ -21,6 +21,14 @@ import type {
   FlintWorkspaceOptions,
 } from './types.js';
 
+/**
+ * Analyzes a document AST using Flint compiler frontend and static analysis rules.
+ *
+ * @param document - Document to analyze.
+ * @param options - Analysis and compilation options.
+ * @param projectRoots - Configured workspace project roots.
+ * @returns Complete analysis report with diagnostics and symbols.
+ */
 export function analyzeFlint(
   document: FlintDocument,
   options: FlintWorkspaceOptions,
@@ -77,6 +85,13 @@ export function analyzeFlint(
   };
 }
 
+/**
+ * Runs a self-hosted compiler stage for the given source document.
+ *
+ * @param input - Compiler input.
+ * @param options - Workspace options.
+ * @returns Stage report or undefined if self-hosted mode is disabled.
+ */
 function runSelfHostedStage(
   document: FlintDocument,
   options: FlintWorkspaceOptions,
@@ -122,6 +137,13 @@ function runSelfHostedStage(
   }
 }
 
+/**
+ * Maps a Flint compiler diagnostic into a language service diagnostic.
+ *
+ * @param diagnostic - Compiler diagnostic.
+ * @param document - Target document.
+ * @returns Language service diagnostic.
+ */
 function toLanguageDiagnostic(source: string, diagnostic: FlintDiagnostic): FlintLanguageDiagnostic {
   return {
     code: diagnostic.code,

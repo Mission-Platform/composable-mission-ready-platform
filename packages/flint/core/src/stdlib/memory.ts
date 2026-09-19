@@ -11,6 +11,9 @@ export type FlintMemoryOperation =
   | 'memory-store-f64'
   | 'f64-from-u32';
 
+/**
+ * Metadata descriptor for a reserved guest-memory compiler intrinsic function.
+ */
 export interface FlintMemoryFunction {
   readonly name: string;
   readonly parameters: readonly FlintPrimitiveType[];
@@ -18,6 +21,9 @@ export interface FlintMemoryFunction {
   readonly operation: FlintMemoryOperation;
 }
 
+/**
+ * List of built-in guest linear memory intrinsics provided by the runtime.
+ */
 export const FLINT_MEMORY_FUNCTIONS: readonly FlintMemoryFunction[] = [
   { name: 'memory_alloc', parameters: ['u32'], result: 'u32', operation: 'memory-alloc' },
   { name: 'memory_dealloc', parameters: ['u32', 'u32'], result: 'unit', operation: 'memory-dealloc' },
@@ -29,6 +35,9 @@ export const FLINT_MEMORY_FUNCTIONS: readonly FlintMemoryFunction[] = [
   { name: 'f64_from_u32', parameters: ['u32'], result: 'f64', operation: 'f64-from-u32' },
 ];
 
+/**
+ * Lookup map of guest memory intrinsic function names to their definitions.
+ */
 export const FLINT_MEMORY_FUNCTION_MAP = new Map(
   FLINT_MEMORY_FUNCTIONS.map((declaration) => [declaration.name, declaration]),
 );

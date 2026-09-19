@@ -2,7 +2,7 @@ import type { FlintConformanceFixture } from './bootstrap.ts';
 
 /**
  * A deliberately small migration boundary for codec-shaped workloads. The
- * host owns the actual codec implementation; the Forge Web Script module only
+ * host owns the actual codec implementation; the Flint module only
  * forwards its UTF-8 input and returns the owned byte buffer.
  */
 export const codecMigrationFixture: FlintConformanceFixture = {

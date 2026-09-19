@@ -5,20 +5,35 @@
 
 import type { HostShimOptions, WebIdlInterface, WebIdlModule, WebIdlNamespace, WebIdlOperation } from './types.js';
 
+/**
+ * Generates zero-copy host JavaScript/TypeScript memory manager, capability import factory,
+ * and Wasm adapter bindings from a parsed Web IDL module.
+ */
 export class HostShimGenerator {
   private readonly module: WebIdlModule;
   private readonly options: HostShimOptions;
 
+  /**
+   * Creates a host shim generator bound to a parsed Web IDL module.
+   *
+   * @param module - Parsed Web IDL module to generate host shims from.
+   * @param options - Generation options such as memory/allocator export names and target language.
+   */
   public constructor(module: WebIdlModule, options: HostShimOptions = {}) {
     this.module = module;
     this.options = options;
   }
 
+  /**
+   * Generates the complete host shim output: memory manager class, host imports factory, and Wasm adapter class.
+   *
+   * @returns The rendered host shim source text.
+   */
   public generate(): string {
     const memoryName = this.options.memoryExportName ?? 'memory';
     const memoryIndex = this.options.memoryIndex ?? 1;
-    const allocName = this.options.allocatorExportName ?? 'fws_alloc';
-    const deallocName = this.options.deallocatorExportName ?? 'fws_dealloc';
+    const allocName = this.options.allocatorExportName ?? 'flint_alloc';
+    const deallocName = this.options.deallocatorExportName ?? 'flint_dealloc';
     const prefix = this.options.capabilityPrefix ?? 'web';
     const isTs = this.options.targetLanguage !== 'javascript';
 
@@ -36,6 +51,14 @@ export class HostShimGenerator {
     return lines.join('\n').trim() + '\n';
   }
 
+  /**
+   * Renders the `WasmInteropMemory` class providing zero-copy access into Wasm linear memory.
+   *
+   * @param allocExport - Name of the Wasm allocator export, used in the missing-allocator error message.
+   * @param deallocExport - Name of the Wasm deallocator export, referenced in documentation comments.
+   * @param isTs - Whether to emit TypeScript type annotations.
+   * @returns The rendered `WasmInteropMemory` class source text.
+   */
   private generateMemoryManagerClass(allocExport: string, deallocExport: string, isTs: boolean): string {
     const typeAnnot = (annot: string) => (isTs ? annot : '');
 
@@ -137,6 +160,101 @@ export class WasmInteropMemory {
 `.trim();
   }
 
+  /**
+   * Renders the `get_x`/`set_x` host import shims for a single attribute member.
+   *
+   * @param targetName - Interface or namespace name the attribute belongs to, used for host lookup.
+   * @param member - Attribute member being rendered (must have `kind === 'attribute'`).
+   * @param isTs - Whether to emit TypeScript type annotations.
+   * @param lines - Output line accumulator.
+   */
+  private generateAttributeImportShim(
+    targetName: string,
+    member: Extract<WebIdlInterface['members'][number], { kind: 'attribute' }>,
+    isTs: boolean,
+    lines: string[],
+  ): void {
+    const typeAnnot = (annot: string) => (isTs ? annot : '');
+    const getterProperty = `get_${this.toSnakeCase(member.name)}`;
+    const attributeName = member.name;
+    lines.push(
+      `    '${getterProperty}': () => {`,
+      `      const target = env['${targetName}'] ?? globalThis['${targetName}'];`,
+      `      return target ? target['${attributeName}'] : 0;`,
+      '    },',
+    );
+
+    if (!member.readonly) {
+      const setterProperty = `set_${this.toSnakeCase(member.name)}`;
+      lines.push(
+        `    '${setterProperty}': (value${typeAnnot(': any')}) => {`,
+        `      const target = env['${targetName}'] ?? globalThis['${targetName}'];`,
+        `      if (target) target['${attributeName}'] = value;`,
+        '    },',
+      );
+    }
+  }
+
+  /**
+   * Renders the host import entries (attribute and operation shims) for a single member.
+   *
+   * @param targetName - Interface or namespace name the member belongs to.
+   * @param member - Attribute or operation member to render.
+   * @param isTs - Whether to emit TypeScript type annotations.
+   * @param lines - Output line accumulator.
+   */
+  private generateMemberImportEntry(
+    targetName: string,
+    member: WebIdlInterface['members'][number],
+    isTs: boolean,
+    lines: string[],
+  ): void {
+    if (member.kind === 'attribute') {
+      this.generateAttributeImportShim(targetName, member, isTs, lines);
+    } else if (member.kind === 'operation' && member.name !== undefined) {
+      lines.push(this.generateOperationShim(targetName, member.name, member, isTs));
+    }
+  }
+
+  /**
+   * Renders the host import namespace entry for a single Web IDL interface.
+   *
+   * @param iface - Interface AST node to render.
+   * @param prefix - Host capability namespace prefix.
+   * @param isTs - Whether to emit TypeScript type annotations.
+   * @param lines - Output line accumulator.
+   */
+  private generateInterfaceImportEntries(iface: WebIdlInterface, prefix: string, isTs: boolean, lines: string[]): void {
+    lines.push(`  imports['${prefix}.${iface.name}'] = {`);
+    for (const member of iface.members) {
+      this.generateMemberImportEntry(iface.name, member, isTs, lines);
+    }
+    lines.push('  };');
+  }
+
+  /**
+   * Renders the host import namespace entry for a single Web IDL namespace.
+   *
+   * @param ns - Namespace AST node to render.
+   * @param prefix - Host capability namespace prefix.
+   * @param isTs - Whether to emit TypeScript type annotations.
+   * @param lines - Output line accumulator.
+   */
+  private generateNamespaceImportEntries(ns: WebIdlNamespace, prefix: string, isTs: boolean, lines: string[]): void {
+    lines.push(`  imports['${prefix}.${ns.name}'] = {`);
+    for (const member of ns.members) {
+      this.generateMemberImportEntry(ns.name, member, isTs, lines);
+    }
+    lines.push('  };');
+  }
+
+  /**
+   * Renders the `createHostImports` factory function assembling every interface and namespace import namespace.
+   *
+   * @param prefix - Host capability namespace prefix.
+   * @param isTs - Whether to emit TypeScript type annotations.
+   * @returns The rendered `createHostImports` factory source text.
+   */
   private generateHostImportsFactory(prefix: string, isTs: boolean): string {
     const lines: string[] = [];
     const typeAnnot = (annot: string) => (isTs ? annot : '');
@@ -155,57 +273,28 @@ export function createHostImports(
 
     const interfaces = this.module.definitions.filter((d): d is WebIdlInterface => d.kind === 'interface');
     for (const iface of interfaces) {
-      const namespaceKey = `${prefix}.${iface.name}`;
-      lines.push(`  imports['${namespaceKey}'] = {`);
-
-      for (const member of iface.members) {
-        if (member.kind === 'attribute') {
-          const getterProperty = `get_${this.toSnakeCase(member.name)}`;
-          const attributeName = member.name;
-          lines.push(
-            `    '${getterProperty}': () => {`,
-            `      const target = env['${iface.name}'] ?? globalThis['${iface.name}'];`,
-            `      return target ? target['${attributeName}'] : 0;`,
-            '    },',
-          );
-
-          if (!member.readonly) {
-            const setterProperty = `set_${this.toSnakeCase(member.name)}`;
-            lines.push(
-              `    '${setterProperty}': (value${typeAnnot(': any')}) => {`,
-              `      const target = env['${iface.name}'] ?? globalThis['${iface.name}'];`,
-              `      if (target) target['${attributeName}'] = value;`,
-              '    },',
-            );
-          }
-        } else if (member.kind === 'operation' && member.name !== undefined) {
-          const opName = member.name;
-          lines.push(this.generateOperationShim(iface.name, opName, member, isTs));
-        }
-      }
-
-      lines.push('  };');
+      this.generateInterfaceImportEntries(iface, prefix, isTs, lines);
     }
 
     const namespaces = this.module.definitions.filter((d): d is WebIdlNamespace => d.kind === 'namespace');
     for (const ns of namespaces) {
-      const namespaceKey = `${prefix}.${ns.name}`;
-      lines.push(`  imports['${namespaceKey}'] = {`);
-
-      for (const member of ns.members) {
-        if (member.kind === 'operation' && member.name !== undefined) {
-          const opName = member.name;
-          lines.push(this.generateOperationShim(ns.name, opName, member, isTs));
-        }
-      }
-
-      lines.push('  };');
+      this.generateNamespaceImportEntries(ns, prefix, isTs, lines);
     }
 
     lines.push('  return imports;\n}');
     return lines.join('\n');
   }
 
+  /**
+   * Renders a single operation host import shim, translating buffer/string Wasm pointer pairs
+   * into zero-copy host views and delegating the call to the environment target.
+   *
+   * @param targetName - Interface or namespace name the operation belongs to, used for host lookup.
+   * @param opName - Operation name.
+   * @param op - Operation AST node describing the argument and return types.
+   * @param isTs - Whether to emit TypeScript type annotations.
+   * @returns The rendered operation shim source text.
+   */
   private generateOperationShim(targetName: string, opName: string, op: WebIdlOperation, isTs: boolean): string {
     const typeAnnot = (annot: string) => (isTs ? annot : '');
 
@@ -242,6 +331,14 @@ export function createHostImports(
     },`;
   }
 
+  /**
+   * Renders the `WasmInteropAdapter` class connecting a WebAssembly instance to zero-copy host bindings.
+   *
+   * @param memoryExport - Primary Wasm memory export name to probe first.
+   * @param memoryIndex - Fallback multi-memory index used to build the `memory{index}` export name.
+   * @param isTs - Whether to emit TypeScript type annotations.
+   * @returns The rendered `WasmInteropAdapter` class source text.
+   */
   private generateWasmAdapterClass(memoryExport: string, memoryIndex: number, isTs: boolean): string {
     const typeAnnot = (annot: string) => (isTs ? annot : '');
 
@@ -262,8 +359,8 @@ export class WasmInteropAdapter {
       throw new Error(\`WebAssembly instance does not export linear memory '\${memoryName}'\`);
     }
 
-    const allocFn = typeof exports['fws_alloc'] === 'function' ? exports['fws_alloc'] : undefined;
-    const deallocFn = typeof exports['fws_dealloc'] === 'function' ? exports['fws_dealloc'] : undefined;
+    const allocFn = typeof exports['flint_alloc'] === 'function' ? exports['flint_alloc'] : undefined;
+    const deallocFn = typeof exports['flint_dealloc'] === 'function' ? exports['flint_dealloc'] : undefined;
 
     this.memory = new WasmInteropMemory(rawMemory, allocFn, deallocFn);
   }
@@ -301,6 +398,12 @@ export class WasmInteropAdapter {
 `.trim();
   }
 
+  /**
+   * Converts a camelCase or mixed-case identifier to `snake_case`.
+   *
+   * @param string_ - Identifier to convert.
+   * @returns The converted `snake_case` identifier.
+   */
   private toSnakeCase(string_: string): string {
     return string_
       .replaceAll(/([a-z0-9])([A-Z])/g, '$1_$2')
@@ -309,6 +412,13 @@ export class WasmInteropAdapter {
   }
 }
 
+/**
+ * Generates zero-copy host JavaScript/TypeScript shims for a parsed Web IDL module.
+ *
+ * @param module - Parsed Web IDL module to generate host shims from.
+ * @param options - Generation options such as memory/allocator export names and target language.
+ * @returns The rendered host shim source text.
+ */
 export function generateHostShims(module: WebIdlModule, options?: HostShimOptions): string {
   return new HostShimGenerator(module, options).generate();
 }
