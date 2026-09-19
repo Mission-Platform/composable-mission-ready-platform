@@ -9,7 +9,11 @@ import {
   unsupportedRouterCapabilities,
 } from ".";
 
-import type { RouterCapabilityModule, RouterOutputPlugin } from ".";
+import type {
+  ForgeBuildAdapters,
+  RouterCapabilityModule,
+  RouterOutputPlugin,
+} from ".";
 
 const module_: RouterCapabilityModule = {
   kind: "router-capability-module",
@@ -68,6 +72,35 @@ describe("Forge router plugin API", () => {
     expect(() =>
       defineForgeRouterPlugin({ ...plugin, generate: undefined }),
     ).toThrow("generate");
+  });
+
+  it("validates unified ForgeBuildAdapters on router targets", () => {
+    const buildAdapters: ForgeBuildAdapters = {
+      vite: (context) => {
+        expect(context.rootDir).toBe("/app");
+        return [];
+      },
+      tsdown: (context) => {
+        expect(context.outputDirectory).toBe("/out");
+        return [];
+      },
+    };
+    const target = defineForgeRouterTarget({
+      id: "router-with-adapters",
+      routerPackage: "fixture-router",
+      capabilities: ["link"],
+      build: buildAdapters,
+    });
+    expect(target.build).toBe(buildAdapters);
+    expect(target.build.vite?.({ rootDir: "/app" })).toEqual([]);
+    expect(target.build.tsdown?.({ outputDirectory: "/out" })).toEqual([]);
+
+    expect(() =>
+      defineForgeRouterPlugin({
+        ...plugin,
+        build: { vite: "not-a-function" } as unknown as ForgeBuildAdapters,
+      }),
+    ).toThrow("valid Vite or tsdown adapters");
   });
 
   it("keeps future router integrations as explicit extension contracts", () => {

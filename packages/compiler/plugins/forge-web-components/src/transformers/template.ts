@@ -860,12 +860,17 @@ function domProperties(
       }
       continue;
     }
+    if (attribute.kind !== "jsx-attribute") continue;
     if (attribute.name === MP_STATIC_ATTR) {
       continue;
     }
     const name = ATTRIBUTE_ALIASES[attribute.name] ?? attribute.name;
     const value = attribute.value;
-    if (/^on[A-Z]/u.test(attribute.name) && value?.expression !== undefined) {
+    if (
+      /^on[A-Z]/u.test(attribute.name) &&
+      value?.kind === "expression" &&
+      value.expression !== undefined
+    ) {
       entries.push(
         `${JSON.stringify(`@${eventNameOf(attribute.name)}`)}: ${domValue(value.expression.text, nestedOf(value), context)}`,
       );
@@ -875,7 +880,7 @@ function domProperties(
       entries.push(
         `${JSON.stringify(`~${name}`)}: ${JSON.stringify(value.value)}`,
       );
-    } else if (value.expression !== undefined) {
+    } else if (value.kind === "expression" && value.expression !== undefined) {
       const prefix =
         attribute.name === "ref" || name === "ref"
           ? ""
@@ -977,14 +982,16 @@ function domNodeExpression(
     let content = '""';
     const attrs: GenericAttribute[] = [];
     for (const attribute of node.attributes) {
-      if (attribute.name === "as" && attribute.value?.kind === "string") {
+      if (attribute.kind === "jsx-attribute" && attribute.name === "as" && attribute.value?.kind === "string") {
         host = attribute.value.value;
       } else if (
+        attribute.kind === "jsx-attribute" &&
         attribute.name === "html" &&
-        attribute.value?.expression !== undefined
+        attribute.value?.kind === "expression" &&
+        attribute.value.expression !== undefined
       ) {
         content = `unsafeHtml(${domValue(attribute.value.expression.text, nestedOf(attribute.value), childContext)})`;
-      } else if (attribute.name !== "html" && attribute.name !== "as") {
+      } else if (attribute.kind !== "jsx-spread-attribute" && attribute.name !== "html" && attribute.name !== "as") {
         attrs.push(attribute);
       }
     }
@@ -995,7 +1002,7 @@ function domNodeExpression(
     const attrs: GenericAttribute[] =
       name === undefined
         ? [...node.attributes]
-        : node.attributes.filter((attribute) => attribute.name !== "name");
+        : node.attributes.filter((attribute) => attribute.kind !== "jsx-spread-attribute" && attribute.name !== "name");
     if (name !== undefined && name !== "default") {
       attrs.push({
         kind: "jsx-attribute",
@@ -1111,6 +1118,7 @@ function domStaticNode(
       }
       continue;
     }
+    if (attribute.kind !== "jsx-attribute") continue;
     if (attribute.name === MP_STATIC_ATTR) continue;
     const name = ATTRIBUTE_ALIASES[attribute.name] ?? attribute.name;
     const value = attribute.value;
@@ -1211,7 +1219,7 @@ export function renderNodeToDomTemplate(
             attributes: [],
             children: [],
             selfClosing: false,
-          } as GenericRenderNode,
+          } as unknown as GenericRenderNode,
           context,
           builder,
           undefined,
