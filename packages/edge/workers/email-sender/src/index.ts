@@ -501,7 +501,7 @@ async function validateRequestPreconditions(
 ): Promise<Response | undefined> {
   const methodPathError = validateRequestMethodAndPath(request);
   if (methodPathError) return methodPathError;
-  return validateRequestPolicy(request, environment, localRequest);
+  return await validateRequestPolicy(request, environment, localRequest);
 }
 
 /**
