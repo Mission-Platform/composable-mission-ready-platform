@@ -135,6 +135,29 @@ function resolveRedirectTarget(location: string, currentUrl: string, method: str
 }
 
 /**
+ * Resolves the next redirect Request if the response is a valid redirect.
+ *
+ * @param response - Upstream Response to inspect.
+ * @param currentUrl - URL of the current upstream request.
+ * @param request - Original client request.
+ * @param redirectCount - Current redirect count.
+ * @returns Next Request or undefined if redirect is exhausted or invalid.
+ */
+function getNextRedirectRequest(
+  response: Response,
+  currentUrl: string,
+  request: Request,
+  redirectCount: number,
+): Request | undefined {
+  if (redirectCount >= MAX_REDIRECTS) return undefined;
+  const location = response.headers.get('Location');
+  if (!location) return undefined;
+  const targetUrl = resolveRedirectTarget(location, currentUrl, request.method);
+  if (!targetUrl) return undefined;
+  return createUpstreamRequest(request, targetUrl);
+}
+
+/**
  * Fetches the upstream resource, following valid same-origin redirects up to the maximum redirect limit.
  *
  * @param request - Original client request.
@@ -147,13 +170,10 @@ async function fetchUpstream(request: Request): Promise<Response> {
     const response = await fetch(upstreamRequest);
     if (!REDIRECT_STATUSES.has(response.status)) return response;
 
-    const location = response.headers.get('Location');
-    if (!location || redirectCount === MAX_REDIRECTS) return new Response('Bad gateway', { status: 502 });
+    const nextRequest = getNextRedirectRequest(response, upstreamRequest.url, request, redirectCount);
+    if (!nextRequest) return new Response('Bad gateway', { status: 502 });
 
-    const targetUrl = resolveRedirectTarget(location, upstreamRequest.url, request.method);
-    if (!targetUrl) return new Response('Bad gateway', { status: 502 });
-
-    upstreamRequest = createUpstreamRequest(request, targetUrl);
+    upstreamRequest = nextRequest;
   }
 
   return new Response('Bad gateway', { status: 502 });

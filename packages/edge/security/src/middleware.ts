@@ -18,20 +18,34 @@ export type SecurityOptionsProvider<Env extends unknown = unknown> =
   SecurityHeaderOptions | ((request: Request, env: Env) => SecurityHeaderOptions | Promise<SecurityHeaderOptions>);
 
 /**
- * Wraps a fetch handler or an ExportedHandler object with automatic security header injection.
+ * Wraps a fetch handler with automatic security header injection.
  *
- * @param handlerOrObject - A fetch handler function or a Cloudflare Worker exported handler object.
+ * @param handlerOrObject - A fetch handler function.
  * @param optionsOrProvider - Static security options or a dynamic options provider function.
- * @returns The wrapped fetch handler or exported handler object.
+ * @returns The wrapped fetch handler function.
  */
 export function withSecurityHeaders<Env extends unknown = unknown>(
   handlerOrObject: FetchHandler<Env>,
   optionsOrProvider?: SecurityOptionsProvider<Env>,
 ): FetchHandler<Env>;
+/**
+ * Wraps an ExportedHandler object with automatic security header injection on its fetch method.
+ *
+ * @param handlerOrObject - A Cloudflare Worker exported handler object containing a fetch method.
+ * @param optionsOrProvider - Static security options or a dynamic options provider function.
+ * @returns The wrapped exported handler object.
+ */
 export function withSecurityHeaders<
   Env extends unknown = unknown,
   T extends ExportedHandlerLike<Env> = ExportedHandlerLike<Env>,
 >(handlerOrObject: T, optionsOrProvider?: SecurityOptionsProvider<Env>): T;
+/**
+ * Implementation of withSecurityHeaders supporting both handler functions and worker objects.
+ *
+ * @param handlerOrObject - A fetch handler function or exported handler object.
+ * @param optionsOrProvider - Static security options or dynamic options provider.
+ * @returns The wrapped handler or worker object.
+ */
 export function withSecurityHeaders<Env extends unknown = unknown>(
   handlerOrObject: FetchHandler<Env> | ExportedHandlerLike<Env>,
   optionsOrProvider?: SecurityOptionsProvider<Env>,

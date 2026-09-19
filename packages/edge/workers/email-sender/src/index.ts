@@ -39,6 +39,16 @@ type WorkerEnvironment = SmtpEnvironment & EmailPolicyEnvironment;
 export type Delivery = (environment: WorkerEnvironment, message: SmtpMessage) => Promise<void>;
 
 /**
+ * Checks whether an ASCII character code represents a control character (0x00-0x1F, 0x7F).
+ *
+ * @param code - Character code to check.
+ * @returns True if control code.
+ */
+function isControlCode(code: number | undefined): boolean {
+  return typeof code === 'number' && (code < 32 || code === 127);
+}
+
+/**
  * Checks whether a string contains ASCII control characters (0x00-0x1F, 0x7F).
  *
  * @param text - The string to check.
@@ -46,8 +56,7 @@ export type Delivery = (environment: WorkerEnvironment, message: SmtpMessage) =>
  */
 function hasControlCharacters(text: string): boolean {
   for (let index = 0; index < text.length; index += 1) {
-    const code = text.codePointAt(index) ?? 0;
-    if ((code >= 0 && code <= 31) || code === 127) return true;
+    if (isControlCode(text.codePointAt(index))) return true;
   }
   return false;
 }
@@ -117,6 +126,42 @@ async function readBody(request: Request): Promise<string> {
 }
 
 /**
+ * Validates the recipient email address format and length.
+ *
+ * @param to - Recipient email value.
+ * @returns Validated recipient email string.
+ */
+function validateRecipientEmail(to: unknown): string {
+  if (typeof to !== 'string' || to.length > 254 || !EMAIL_PATTERN.test(to)) {
+    throw new Error('A valid recipient email address is required');
+  }
+  if (/[\r\n]/u.test(to)) {
+    throw new Error('Recipient fields contain unsupported characters');
+  }
+  return to;
+}
+
+/**
+ * Validates recipient display name length and character content.
+ *
+ * @param recipientName - Recipient name value.
+ * @returns Trimmed recipient display name.
+ */
+function validateRecipientName(recipientName: unknown): string {
+  if (typeof recipientName !== 'string' || recipientName.length > 100) {
+    throw new Error('A recipient name between 1 and 100 characters is required');
+  }
+  const trimmed = recipientName.trim();
+  if (trimmed.length === 0) {
+    throw new Error('A recipient name between 1 and 100 characters is required');
+  }
+  if (hasControlCharacters(trimmed)) {
+    throw new Error('Recipient fields contain unsupported characters');
+  }
+  return trimmed;
+}
+
+/**
  * Validates recipient email address and recipient name fields.
  *
  * @param to - Recipient email string.
@@ -124,16 +169,10 @@ async function readBody(request: Request): Promise<string> {
  * @returns Cleaned recipient payload.
  */
 function validateRecipient(to: unknown, recipientName: unknown): { to: string; recipientName: string } {
-  if (typeof to !== 'string' || !EMAIL_PATTERN.test(to) || to.length > 254) {
-    throw new Error('A valid recipient email address is required');
-  }
-  if (typeof recipientName !== 'string' || recipientName.trim().length === 0 || recipientName.length > 100) {
-    throw new Error('A recipient name between 1 and 100 characters is required');
-  }
-  if (/[\r\n]/u.test(to) || hasControlCharacters(recipientName)) {
-    throw new Error('Recipient fields contain unsupported characters');
-  }
-  return { to, recipientName: recipientName.trim() };
+  return {
+    to: validateRecipientEmail(to),
+    recipientName: validateRecipientName(recipientName),
+  };
 }
 
 /**
@@ -392,36 +431,47 @@ async function validateRequestPolicy(
 }
 
 /**
- * Handles incoming email delivery requests, validating input and delivering to SMTP service.
+ * Validates request HTTP method and URL pathname.
  *
  * @param request - Incoming HTTP request.
- * @param environment - Worker environment bindings.
- * @param delivery - Delivery function handling message transmission.
- * @returns HTTP Response.
+ * @returns Error Response if invalid method or path, or undefined if valid.
  */
-export async function handleRequest(
-  request: Request,
-  environment: WorkerEnvironment,
-  delivery: Delivery = defaultDelivery,
-): Promise<Response> {
+function validateRequestMethodAndPath(request: Request): Response | undefined {
   const pathname = new URL(request.url).pathname;
   if (pathname !== '/api/email/send') return errorResponse('Not found', 404);
   if (request.method !== 'POST') return errorResponse('Only POST is supported', 405);
+  return undefined;
+}
 
-  const localRequest = isLocalRequest(request);
-  const policyError = await validateRequestPolicy(request, environment, localRequest);
-  if (policyError) return policyError;
-
-  let input: EmailRequest;
+/**
+ * Safely parses request body into EmailRequest or returns an error response.
+ *
+ * @param request - Incoming HTTP request.
+ * @returns Parsed email request or error response.
+ */
+async function parseEmailRequestBody(request: Request): Promise<{ input?: EmailRequest; errorResponse?: Response }> {
   try {
-    input = await parseRequest(request);
+    const input = await parseRequest(request);
+    return { input };
   } catch (error) {
-    return errorResponse(error instanceof Error ? error.message : 'Invalid request', 400);
+    const message = error instanceof Error ? error.message : 'Invalid request';
+    return { errorResponse: errorResponse(message, 400) };
   }
-  if (!isAllowedRecipient(input, environment, localRequest)) {
-    return errorResponse('Email recipient is not allowed', 403);
-  }
+}
 
+/**
+ * Dispatches message to the delivery provider and formats the outcome response.
+ *
+ * @param environment - Worker environment.
+ * @param input - Validated email request.
+ * @param delivery - Delivery provider function.
+ * @returns Resulting HTTP response.
+ */
+async function dispatchEmailDelivery(
+  environment: WorkerEnvironment,
+  input: EmailRequest,
+  delivery: Delivery,
+): Promise<Response> {
   try {
     await delivery(environment, {
       from: environment.MAIL_FROM,
@@ -434,6 +484,36 @@ export async function handleRequest(
     console.error('MailPit delivery failed', error);
     return errorResponse('MailPit delivery failed. Is the local SMTP service running?', 502);
   }
+}
+
+/**
+ * Handles incoming email delivery requests, validating input and delivering to SMTP service.
+ *
+ * @param request - Incoming HTTP request.
+ * @param environment - Worker environment bindings.
+ * @param delivery - Delivery function handling message transmission.
+ * @returns HTTP Response.
+ */
+export async function handleRequest(
+  request: Request,
+  environment: WorkerEnvironment,
+  delivery: Delivery = defaultDelivery,
+): Promise<Response> {
+  const methodPathError = validateRequestMethodAndPath(request);
+  if (methodPathError) return methodPathError;
+
+  const localRequest = isLocalRequest(request);
+  const policyError = await validateRequestPolicy(request, environment, localRequest);
+  if (policyError) return policyError;
+
+  const { input, errorResponse: parseError } = await parseEmailRequestBody(request);
+  if (parseError || !input) return parseError ?? errorResponse('Invalid request', 400);
+
+  if (!isAllowedRecipient(input, environment, localRequest)) {
+    return errorResponse('Email recipient is not allowed', 403);
+  }
+
+  return dispatchEmailDelivery(environment, input, delivery);
 }
 
 export default withSecurityHeaders({

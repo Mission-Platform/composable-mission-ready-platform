@@ -137,6 +137,87 @@ function extractArgValue(
   return { consumed: false };
 }
 
+interface MutableValidationCliArgs {
+  locale?: string;
+  slug?: string;
+  package?: string;
+  baselinePath: string;
+  noBaseline: boolean;
+  updateBaseline: boolean;
+  strict: boolean;
+}
+
+/**
+ * Checks for boolean flags and mutates the options state accordingly.
+ *
+ * @param arg - Command line argument token.
+ * @param state - Mutable validation CLI options state.
+ * @returns True if a boolean flag was matched.
+ */
+function tryMatchBooleanFlag(arg: string, state: MutableValidationCliArgs): boolean {
+  if (arg === '--update-baseline') {
+    state.updateBaseline = true;
+    return true;
+  }
+  if (arg === '--no-baseline') {
+    state.noBaseline = true;
+    return true;
+  }
+  if (arg === '--strict') {
+    state.strict = true;
+    return true;
+  }
+  return false;
+}
+
+const VALUE_FLAGS = ['--baseline', '--locale', '--slug', '--package'] as const;
+
+/**
+ * Assigns a matched value flag to the CLI options state.
+ *
+ * @param flag - The flag name matched.
+ * @param value - The extracted flag value.
+ * @param state - Mutable options state.
+ */
+function assignValueFlag(flag: (typeof VALUE_FLAGS)[number], value: string, state: MutableValidationCliArgs): void {
+  switch (flag) {
+    case '--baseline': {
+      state.baselinePath = resolve(process.cwd(), value);
+      break;
+    }
+    case '--locale': {
+      state.locale = value;
+      break;
+    }
+    case '--slug': {
+      state.slug = value;
+      break;
+    }
+    case '--package': {
+      state.package = value;
+      break;
+    }
+  }
+}
+
+/**
+ * Checks for value flags (--baseline, --locale, --slug, --package).
+ *
+ * @param arg - Current argument token.
+ * @param nextArg - Subsequent argument token if present.
+ * @param state - Mutable options state.
+ * @returns Number of additional arguments consumed (0 or 1).
+ */
+function tryMatchValueFlag(arg: string, nextArg: string | undefined, state: MutableValidationCliArgs): number {
+  for (const flag of VALUE_FLAGS) {
+    const match = extractArgValue(arg, nextArg, flag);
+    if (!match.value) continue;
+    assignValueFlag(flag, match.value, state);
+    return match.consumed ? 1 : 0;
+  }
+  return 0;
+}
+
 /**
  * Parses and normalizes command-line arguments for documentation locale validation.
  *
@@ -145,63 +226,21 @@ function extractArgValue(
  */
 function parseCliArgs(argv: readonly string[]): ValidationCliArgs {
   const args = argv.slice(2);
-  let locale: string | undefined;
-  let slug: string | undefined;
-  let pkg: string | undefined;
-  let baselinePath = join(root, 'scripts', 'doc-locales-backlog.json');
-  let noBaseline = false;
-  let updateBaseline = false;
-  let strict = false;
+  const state: MutableValidationCliArgs = {
+    baselinePath: join(root, 'scripts', 'doc-locales-backlog.json'),
+    noBaseline: false,
+    updateBaseline: false,
+    strict: false,
+  };
 
   for (let index = 0; index < args.length; index += 1) {
-    const arg = args[index]!;
-    if (arg === '--update-baseline') {
-      updateBaseline = true;
-      continue;
-    }
-    if (arg === '--no-baseline') {
-      noBaseline = true;
-      continue;
-    }
-    if (arg === '--strict') {
-      strict = true;
-      continue;
-    }
-
-    const baseline = extractArgValue(arg, args[index + 1], '--baseline');
-    if (baseline.value) {
-      baselinePath = resolve(process.cwd(), baseline.value);
-      if (baseline.consumed) index += 1;
-      continue;
-    }
-    const loc = extractArgValue(arg, args[index + 1], '--locale');
-    if (loc.value) {
-      locale = loc.value;
-      if (loc.consumed) index += 1;
-      continue;
-    }
-    const sl = extractArgValue(arg, args[index + 1], '--slug');
-    if (sl.value) {
-      slug = sl.value;
-      if (sl.consumed) index += 1;
-      continue;
-    }
-    const p = extractArgValue(arg, args[index + 1], '--package');
-    if (p.value) {
-      pkg = p.value;
-      if (p.consumed) index += 1;
-    }
+    const arg = args[index];
+    if (!arg) continue;
+    if (tryMatchBooleanFlag(arg, state)) continue;
+    index += tryMatchValueFlag(arg, args[index + 1], state);
   }
 
-  return {
-    locale,
-    slug,
-    package: pkg,
-    baselinePath,
-    noBaseline,
-    updateBaseline,
-    strict,
-  };
+  return state;
 }
 
 /**
@@ -237,6 +276,104 @@ async function validateRootSlugs(
 }
 
 /**
+ * Extracts candidate relative Markdown link hrefs from document text.
+ *
+ * @param content - Markdown content to scan.
+ * @returns Array of relative Markdown href strings.
+ */
+function extractRelativeLinkHrefs(content: string): string[] {
+  const hrefs: string[] = [];
+  for (const match of withoutFences(content).matchAll(/\[[^\]]*\]\(([^)]+)\)/g)) {
+    const href = match[1];
+    if (href && !/^(https?:|mailto:|#)/.test(href)) {
+      const pathPart = href.split('#')[0];
+      if (pathPart) hrefs.push(href);
+    }
+  }
+  return hrefs;
+}
+
+/**
+ * Checks whether a target file path is contained within a designated root directory.
+ *
+ * @param targetPath - Resolved file path.
+ * @param rootPath - Container directory path.
+ * @returns True if target is contained under root.
+ */
+function isPathUnderRoot(targetPath: string, rootPath: string): boolean {
+  return targetPath === rootPath || targetPath.startsWith(`${rootPath}/`) || targetPath.startsWith(`${rootPath}\\`);
+}
+
+/**
+ * Verifies that a link pointing to a markdown page under another documentation root does not cross locale boundaries.
+ *
+ * @param target - Resolved absolute target path.
+ * @param locale - Expected locale code.
+ * @param documentationRoots - Discovered documentation source roots.
+ * @returns True if cross-root locale link is valid or not applicable.
+ */
+function checkCrossRootLocaleLink(
+  target: string,
+  locale: string,
+  documentationRoots: DocumentationSourceRoot[],
+): boolean {
+  if (!target.endsWith('.md')) return true;
+  const targetRoot = rootForPath(target, documentationRoots);
+  if (!targetRoot) return true;
+
+  const candidateLocaleRoot = join(targetRoot.rootDirectory, 'locales');
+  if (!isPathUnderRoot(target, candidateLocaleRoot)) return true;
+
+  const expectedLocaleRoot = join(candidateLocaleRoot, locale);
+  return isPathUnderRoot(target, expectedLocaleRoot);
+}
+
+/**
+ * Tests whether a relative link resolves to a valid existing file or directory on disk.
+ *
+ * @param targetPath - Absolute target file path.
+ * @returns True if file or directory exists.
+ */
+async function verifyLinkTargetExists(targetPath: string): Promise<boolean> {
+  try {
+    const stats = await stat(targetPath);
+    return stats.isFile() || stats.isDirectory();
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Validates a single relative link for target existence and locale boundary containment.
+ *
+ * @param href - Relative link href.
+ * @param context - Validation context with locale, slug, and file paths.
+ * @param failures - Failures array to append issues to.
+ */
+async function validateSingleRelativeLink(
+  href: string,
+  context: {
+    readonly locale: string;
+    readonly pageSlug: string;
+    readonly localizedFile: string;
+    readonly documentationRoots: DocumentationSourceRoot[];
+  },
+  failures: string[],
+): Promise<void> {
+  const pathPart = href.split('#')[0] ?? '';
+  const target = resolve(dirname(context.localizedFile), pathPart);
+
+  if (!checkCrossRootLocaleLink(target, context.locale, context.documentationRoots)) {
+    failures.push(`${context.locale}/${context.pageSlug}: cross-root link points to a different locale: ${href}`);
+  }
+
+  const exists = await verifyLinkTargetExists(target);
+  if (!exists) {
+    failures.push(`${context.locale}/${context.pageSlug}: unresolved relative link ${href}`);
+  }
+}
+
+/**
  * Validates relative links within localized documentation to verify target resolution and locale boundaries.
  *
  * @param locale - Target locale code.
@@ -254,36 +391,80 @@ async function validateRelativeLinks(
   documentationRoots: DocumentationSourceRoot[],
   failures: string[],
 ): Promise<void> {
-  for (const match of withoutFences(localized).matchAll(/\[[^\]]*\]\(([^)]+)\)/g)) {
-    const href = match[1] ?? '';
-    if (!href || /^(https?:|mailto:|#)/.test(href)) continue;
-    const pathPart = href.split('#')[0] ?? '';
-    if (!pathPart) continue;
-    const target = resolve(dirname(localizedFile), pathPart);
-    const targetRoot = target.endsWith('.md') ? rootForPath(target, documentationRoots) : undefined;
-    if (targetRoot !== undefined) {
-      const candidateLocaleRoot = join(targetRoot.rootDirectory, 'locales');
-      const underLocaleTree =
-        target === candidateLocaleRoot ||
-        target.startsWith(`${candidateLocaleRoot}/`) ||
-        target.startsWith(`${candidateLocaleRoot}\\`);
-      if (underLocaleTree) {
-        const expectedLocaleRoot = join(candidateLocaleRoot, locale);
-        if (
-          !target.startsWith(`${expectedLocaleRoot}/`) &&
-          target !== expectedLocaleRoot &&
-          !target.startsWith(`${expectedLocaleRoot}\\`)
-        ) {
-          failures.push(`${locale}/${pageSlug}: cross-root link points to a different locale: ${href}`);
-        }
-      }
-    }
-    try {
-      const targetStats = await stat(target);
-      if (!targetStats.isFile() && !targetStats.isDirectory()) throw new Error('unsupported link target');
-    } catch {
-      failures.push(`${locale}/${pageSlug}: unresolved relative link ${href}`);
-    }
+  const hrefs = extractRelativeLinkHrefs(localized);
+  const context = { locale, pageSlug, localizedFile, documentationRoots };
+  for (const href of hrefs) {
+    await validateSingleRelativeLink(href, context, failures);
+  }
+}
+
+/**
+ * Compares code fences between canonical and localized markdown files.
+ *
+ * @param canonical - Canonical source text.
+ * @param localized - Localized source text.
+ * @param prefix - Diagnostic prefix (locale/pageSlug).
+ * @param failures - Failures array.
+ */
+function validateCodeFencesMatch(canonical: string, localized: string, prefix: string, failures: string[]): void {
+  const canonicalFences = fences(canonical);
+  const localizedFences = fences(localized);
+  if (JSON.stringify(canonicalFences) !== JSON.stringify(localizedFences)) {
+    failures.push(`${prefix}: fenced code blocks differ from canonical source`);
+  }
+}
+
+/**
+ * Verifies that generated API reference documentation contains generated-file markers.
+ *
+ * @param canonicalFile - Canonical file path.
+ * @param canonical - Canonical file content.
+ * @param localized - Localized file content.
+ * @param prefix - Diagnostic prefix.
+ * @param failures - Failures array.
+ */
+function validateGeneratedMarkers(
+  canonicalFile: string,
+  canonical: string,
+  localized: string,
+  prefix: string,
+  failures: string[],
+): void {
+  if (!canonicalFile.includes(`${join('reference', 'generated')}${pathSeparator()}`)) return;
+  const marker = '<!-- Generated by scripts/extract-package-docs.ts.';
+  if (!canonical.includes(marker)) {
+    failures.push(`${prefix}: generated reference is missing its generated-file marker`);
+  }
+  if (!localized.includes(marker)) {
+    failures.push(`${prefix}: localized generated reference is missing its generated-file marker`);
+  }
+}
+
+/**
+ * Verifies that the localized file starts with a link pointing back to the canonical source.
+ *
+ * @param localized - Localized file content.
+ * @param localizedFile - Path to localized file.
+ * @param canonicalFile - Path to canonical file.
+ * @param prefix - Diagnostic prefix.
+ * @param pageSlug - Page slug.
+ * @param failures - Failures array.
+ */
+function validateCanonicalSourceLink(
+  localized: string,
+  localizedFile: string,
+  canonicalFile: string,
+  prefix: string,
+  pageSlug: string,
+  failures: string[],
+): void {
+  const sourceLink = localized.match(/\]\(([^)]+)\)/u)?.[1];
+  if (!sourceLink) {
+    failures.push(`${prefix}: missing canonical source link`);
+    return;
+  }
+  if (resolve(dirname(localizedFile), sourceLink) !== canonicalFile) {
+    failures.push(`${prefix}: canonical source link does not resolve to ${pageSlug}.md`);
   }
 }
 
@@ -306,36 +487,18 @@ async function validatePageFile(
   const canonicalFile = page.sourcePath;
   const pageSlug = page.pageSlug;
   const localizedFile = join(localeRoot, `${pageSlug}.md`);
-  let canonical: string;
-  let localized: string;
+  let content: [string, string];
   try {
-    [canonical, localized] = await Promise.all([readFile(canonicalFile, 'utf8'), readFile(localizedFile, 'utf8')]);
+    content = await Promise.all([readFile(canonicalFile, 'utf8'), readFile(localizedFile, 'utf8')]);
   } catch {
     return;
   }
+  const [canonical, localized] = content;
+  const prefix = `${locale}/${pageSlug}`;
 
-  const canonicalFences = fences(canonical);
-  const localizedFences = fences(localized);
-  if (JSON.stringify(canonicalFences) !== JSON.stringify(localizedFences)) {
-    failures.push(`${locale}/${pageSlug}: fenced code blocks differ from canonical source`);
-  }
-
-  if (canonicalFile.includes(`${join('reference', 'generated')}${pathSeparator()}`)) {
-    const generatedMarker = '<!-- Generated by scripts/extract-package-docs.ts.';
-    if (!canonical.includes(generatedMarker)) {
-      failures.push(`${locale}/${pageSlug}: generated reference is missing its generated-file marker`);
-    }
-    if (!localized.includes(generatedMarker)) {
-      failures.push(`${locale}/${pageSlug}: localized generated reference is missing its generated-file marker`);
-    }
-  }
-
-  const sourceLink = localized.match(/\]\(([^)]+)\)/u)?.[1];
-  if (!sourceLink) {
-    failures.push(`${locale}/${pageSlug}: missing canonical source link`);
-  } else if (resolve(dirname(localizedFile), sourceLink) !== canonicalFile) {
-    failures.push(`${locale}/${pageSlug}: canonical source link does not resolve to ${pageSlug}.md`);
-  }
+  validateCodeFencesMatch(canonical, localized, prefix, failures);
+  validateGeneratedMarkers(canonicalFile, canonical, localized, prefix, failures);
+  validateCanonicalSourceLink(localized, localizedFile, canonicalFile, prefix, pageSlug, failures);
 
   await validateRelativeLinks(locale, pageSlug, localized, localizedFile, documentationRoots, failures);
 
@@ -345,20 +508,41 @@ async function validatePageFile(
 }
 
 /**
+ * Determines whether the baseline backlog should be loaded based on CLI options.
+ *
+ * @param options - Parsed CLI options.
+ * @returns True if baseline should be loaded.
+ */
+function shouldLoadBaseline(options: ValidationCliArgs): boolean {
+  if (options.noBaseline || options.strict) return false;
+  return existsSync(options.baselinePath);
+}
+
+/**
+ * Parses issues array from raw baseline backlog JSON.
+ *
+ * @param rawContent - Raw JSON string.
+ * @returns Array of issue key strings.
+ */
+function parseBaselineIssues(rawContent: string): string[] {
+  const parsed = JSON.parse(rawContent) satisfies { issues?: string[] } | string[];
+  if (Array.isArray(parsed)) return parsed;
+  return parsed.issues ?? [];
+}
+
+/**
  * Loads suppressed technical debt issues from the baseline backlog JSON file.
  *
  * @param options - Parsed CLI options.
  * @returns Set of known baseline issue keys.
  */
 async function loadKnownIssues(options: ValidationCliArgs): Promise<Set<string>> {
-  if (options.noBaseline || options.strict || !existsSync(options.baselinePath)) {
+  if (!shouldLoadBaseline(options)) {
     return new Set();
   }
   try {
     const rawContent = await readFile(options.baselinePath, 'utf8');
-    const parsed = JSON.parse(rawContent) satisfies { issues?: string[] } | string[];
-    const issuesList = Array.isArray(parsed) ? parsed : (parsed.issues ?? []);
-    return new Set(issuesList);
+    return new Set(parseBaselineIssues(rawContent));
   } catch (error) {
     console.warn(
       `[validate-doc-locales] Warning: Failed to parse baseline backlog from ${options.baselinePath}: ${String(error)}`,
@@ -387,6 +571,41 @@ async function saveBaselineBacklog(baselinePath: string, uniqueFailures: readonl
 }
 
 /**
+ * Emits error diagnostics for new regression failures and throws an Error.
+ *
+ * @param newFailures - List of regression issue keys.
+ * @param suppressedCount - Count of suppressed historical issues.
+ */
+function reportFailuresAndThrow(newFailures: readonly string[], suppressedCount: number): never {
+  console.error(`\n❌ Localized documentation validation failed with ${newFailures.length} new regression(s):`);
+  for (const failure of newFailures) {
+    console.error(`  - ${failure}`);
+  }
+  if (suppressedCount > 0) {
+    console.error(`\n(${suppressedCount} pre-existing issues were suppressed via baseline backlog)`);
+  }
+  throw new Error(
+    `Localized documentation validation failed with ${newFailures.length} new regression(s):\n${newFailures.join('\n')}`,
+  );
+}
+
+/**
+ * Checks whether resolved issues in baseline warrant a ratchet notice.
+ *
+ * @param knownIssuesCount - Total issues registered in baseline.
+ * @param suppressedCount - Suppressed issues in current run.
+ * @param options - CLI options.
+ */
+function checkRatchetNotice(knownIssuesCount: number, suppressedCount: number, options: ValidationCliArgs): void {
+  const isFiltered = Boolean(options.locale || options.slug || options.package);
+  if (isFiltered || knownIssuesCount <= suppressedCount) return;
+  const resolvedCount = knownIssuesCount - suppressedCount;
+  console.log(
+    `ℹ Ratchet notice: ${resolvedCount} issue(s) in baseline backlog have been resolved! Run 'pnpm run validate:locales -- --update-baseline' to update the ratchet.`,
+  );
+}
+
+/**
  * Compares detected issues against baseline backlog and reports pass/fail diagnostics.
  *
  * @param uniqueFailures - Detected unique validation issues.
@@ -408,61 +627,77 @@ function reportResults(
   const suppressedCount = uniqueFailures.length - newFailures.length;
 
   if (newFailures.length > 0) {
-    console.error(`\n❌ Localized documentation validation failed with ${newFailures.length} new regression(s):`);
-    for (const failure of newFailures) {
-      console.error(`  - ${failure}`);
-    }
-    if (suppressedCount > 0) {
-      console.error(`\n(${suppressedCount} pre-existing issues were suppressed via baseline backlog)`);
-    }
-    throw new Error(
-      `Localized documentation validation failed with ${newFailures.length} new regression(s):\n${newFailures.join('\n')}`,
-    );
+    reportFailuresAndThrow(newFailures, suppressedCount);
   }
 
   if (suppressedCount > 0) {
     console.log(
       `✓ Localized documentation validated successfully (${suppressedCount} pre-existing debt issues suppressed via baseline backlog).`,
     );
-    if (knownIssues.size > suppressedCount && !options.locale && !options.slug && !options.package) {
-      const resolvedCount = knownIssues.size - suppressedCount;
-      console.log(
-        `ℹ Ratchet notice: ${resolvedCount} issue(s) in baseline backlog have been resolved! Run 'pnpm run validate:locales -- --update-baseline' to update the ratchet.`,
-      );
-    }
-  } else {
-    console.log(
-      `✓ Validated ${pagesCount} canonical pages across ${rootsCount} roots and ${localesCount} locales with 0 issues.`,
-    );
+    checkRatchetNotice(knownIssues.size, suppressedCount, options);
+    return;
   }
+
+  console.log(
+    `✓ Validated ${pagesCount} canonical pages across ${rootsCount} roots and ${localesCount} locales with 0 issues.`,
+  );
 }
 
 /**
- * Main execution entry point for documentation locale validation.
+ * Filters discovered documentation source roots by optional package or route prefix.
+ *
+ * @param roots - Discovered source roots.
+ * @param pkg - Optional package or prefix filter.
+ * @returns Filtered source roots array.
  */
-async function main(): Promise<void> {
-  const options = parseCliArgs(process.argv);
-  let documentationRoots = discoverDocumentationRoots(root);
-  if (options.package) {
-    documentationRoots = documentationRoots.filter(
-      (sourceRoot) => sourceRoot.packageName === options.package || sourceRoot.routePrefix === options.package,
-    );
-  }
+function filterDocumentationRoots(
+  roots: DocumentationSourceRoot[],
+  pkg: string | undefined,
+): DocumentationSourceRoot[] {
+  if (!pkg) return roots;
+  return roots.filter((sourceRoot) => sourceRoot.packageName === pkg || sourceRoot.routePrefix === pkg);
+}
 
-  let pages = await canonicalPages(documentationRoots);
-  if (options.slug) {
-    pages = pages.filter(
-      (page) => page.pageSlug === options.slug || `${page.sourceRoot.routePrefix}/${page.pageSlug}` === options.slug,
-    );
-  }
+/**
+ * Filters canonical pages by optional slug.
+ *
+ * @param pages - Canonical pages list.
+ * @param targetSlug - Optional target slug.
+ * @returns Filtered pages list.
+ */
+function filterCanonicalPages(pages: CanonicalPage[], targetSlug: string | undefined): CanonicalPage[] {
+  if (!targetSlug) return pages;
+  return pages.filter(
+    (page) => page.pageSlug === targetSlug || `${page.sourceRoot.routePrefix}/${page.pageSlug}` === targetSlug,
+  );
+}
 
-  const targetLocales = options.locale
-    ? (locales.filter((localeItem) => localeItem === options.locale) satisfies readonly DocumentationLocale[])
-    : locales;
+/**
+ * Resolves the target locales to validate.
+ *
+ * @param targetLocale - Optional specific locale code.
+ * @returns List of locales to validate.
+ */
+function resolveTargetLocales(targetLocale: string | undefined): readonly DocumentationLocale[] {
+  if (!targetLocale) return locales;
+  return locales.filter((localeItem) => localeItem === targetLocale) satisfies readonly DocumentationLocale[];
+}
 
-  const failures: string[] = [];
-
-  for (const locale of targetLocales) {
+/**
+ * Validates canonical pages across all target locales and documentation roots.
+ *
+ * @param localesList - Locales to validate.
+ * @param documentationRoots - Documentation source roots.
+ * @param pages - Canonical pages list.
+ * @param failures - Failures array to populate.
+ */
+async function validateLocaleRoots(
+  localesList: readonly DocumentationLocale[],
+  documentationRoots: DocumentationSourceRoot[],
+  pages: CanonicalPage[],
+  failures: string[],
+): Promise<void> {
+  for (const locale of localesList) {
     for (const sourceRoot of documentationRoots) {
       const localeRoot = join(sourceRoot.rootDirectory, 'locales', locale);
       await validateRootSlugs(locale, sourceRoot, pages, localeRoot, failures);
@@ -472,6 +707,19 @@ async function main(): Promise<void> {
       }
     }
   }
+}
+
+/**
+ * Main execution entry point for documentation locale validation.
+ */
+async function main(): Promise<void> {
+  const options = parseCliArgs(process.argv);
+  const documentationRoots = filterDocumentationRoots(discoverDocumentationRoots(root), options.package);
+  const pages = filterCanonicalPages(await canonicalPages(documentationRoots), options.slug);
+  const targetLocales = resolveTargetLocales(options.locale);
+
+  const failures: string[] = [];
+  await validateLocaleRoots(targetLocales, documentationRoots, pages, failures);
 
   const uniqueFailures = [...new Set(failures)].sort();
 

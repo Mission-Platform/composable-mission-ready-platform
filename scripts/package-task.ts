@@ -26,6 +26,68 @@ function extractPackageFilter(argument: string, nextArgument?: string): { packag
 }
 
 /**
+ * Parses and verifies the action argument.
+ *
+ * @param actionArg - Raw action token.
+ * @returns Validated action type.
+ */
+function parseAction(actionArg: string | undefined): 'test' | 'build' {
+  if (actionArg === 'build' || actionArg === 'test') {
+    return actionArg;
+  }
+  throw new Error('Action must be either "test" or "build". Usage: pnpm test:package <package-name> [turbo-options]');
+}
+
+/**
+ * Evaluates whether an argument token corresponds to a filter flag or positional package name.
+ *
+ * @param argument - Current argument token.
+ * @param nextArgument - Next argument token if present.
+ * @param currentPackage - Currently resolved package name.
+ * @returns Object with resolved package and consumed token indicator.
+ */
+function resolveArgumentToken(
+  argument: string,
+  nextArgument: string | undefined,
+  currentPackage: string | undefined,
+): { foundPackage?: string; consumed: boolean } {
+  const filter = extractPackageFilter(argument, nextArgument);
+  if (filter.packageName) {
+    return { foundPackage: filter.packageName, consumed: filter.consumed };
+  }
+  if (!currentPackage && !argument.startsWith('-')) {
+    return { foundPackage: argument, consumed: false };
+  }
+  return { consumed: false };
+}
+
+/**
+ * Scans tokens to extract target package name and extra options.
+ *
+ * @param tokens - Argument tokens excluding action.
+ * @returns Object with parsed package name and extra argument list.
+ */
+function extractPackageAndArgs(tokens: readonly string[]): { packageName?: string; extraArgs: string[] } {
+  let packageName: string | undefined;
+  const extraArgs: string[] = [];
+
+  for (let index = 0; index < tokens.length; index += 1) {
+    const argument = tokens[index];
+    if (!argument) continue;
+
+    const result = resolveArgumentToken(argument, tokens[index + 1], packageName);
+    if (result.foundPackage) {
+      packageName = result.foundPackage;
+      if (result.consumed) index += 1;
+    } else {
+      extraArgs.push(argument);
+    }
+  }
+
+  return { packageName, extraArgs };
+}
+
+/**
  * Parses and validates arguments for running package-scoped test or build commands.
  *
  * @param rawArgs - Raw CLI arguments passed to the script.
@@ -33,27 +95,8 @@ function extractPackageFilter(argument: string, nextArgument?: string): { packag
  */
 export function parsePackageTaskArgs(rawArgs: readonly string[]): ParsedPackageTaskArgs {
   const [actionArg, ...remaining] = rawArgs;
-  const action = actionArg === 'build' ? 'build' : actionArg === 'test' ? 'test' : undefined;
-
-  if (!action) {
-    throw new Error('Action must be either "test" or "build". Usage: pnpm test:package <package-name> [turbo-options]');
-  }
-
-  let packageName: string | undefined;
-  const extraArgs: string[] = [];
-
-  for (let index = 0; index < remaining.length; index += 1) {
-    const argument = remaining[index]!;
-    const filter = extractPackageFilter(argument, remaining[index + 1]);
-    if (filter.packageName) {
-      packageName = filter.packageName;
-      if (filter.consumed) index += 1;
-    } else if (!packageName && !argument.startsWith('-')) {
-      packageName = argument;
-    } else {
-      extraArgs.push(argument);
-    }
-  }
+  const action = parseAction(actionArg);
+  const { packageName, extraArgs } = extractPackageAndArgs(remaining);
 
   if (!packageName) {
     throw new Error(

@@ -183,14 +183,20 @@ function withSecurityHeaders(
 ): FetchHandler<Env> | ExportedHandlerLike<Env>;
 ```
 
-No description provided.
+Implementation of withSecurityHeaders supporting both handler functions and worker objects.
 
 #### Parameters
 
-| Name              | Type                                          | Description |
-| ----------------- | --------------------------------------------- | ----------- |
-| handlerOrObject   | FetchHandler<Env> \| ExportedHandlerLike<Env> |             |
-| optionsOrProvider | SecurityOptionsProvider<Env>                  |             |
+| Name              | Type                                          | Description                                            |
+| ----------------- | --------------------------------------------- | ------------------------------------------------------ |
+| handlerOrObject   | FetchHandler<Env> \| ExportedHandlerLike<Env> | - A fetch handler function or exported handler object. |
+| optionsOrProvider | SecurityOptionsProvider<Env>                  | - Static security options or dynamic options provider. |
+
+#### Contract
+
+- **@param:** - A fetch handler function or exported handler object.
+- **@param:** - Static security options or dynamic options provider.
+- **@returns:** The wrapped handler or worker object.
 
 ## `src/types`
 

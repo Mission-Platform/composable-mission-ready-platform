@@ -82,24 +82,64 @@ function applyHstsHeader(headers: Headers, hsts: SecurityHeaderOptions['hsts']):
 }
 
 /**
+ * Injects X-Content-Type-Options into the target Headers collection.
+ *
+ * @param headers - Target Headers instance.
+ * @param options - Security header configuration options.
+ */
+function applyContentTypeHeader(headers: Headers, options?: SecurityHeaderOptions): void {
+  if (options?.contentTypeOptions !== false) {
+    headers.set('X-Content-Type-Options', 'nosniff');
+  }
+}
+
+/**
+ * Injects X-Frame-Options into the target Headers collection.
+ *
+ * @param headers - Target Headers instance.
+ * @param options - Security header configuration options.
+ */
+function applyFrameOptionsHeader(headers: Headers, options?: SecurityHeaderOptions): void {
+  if (options?.frameOptions !== false) {
+    headers.set('X-Frame-Options', options?.frameOptions ?? 'DENY');
+  }
+}
+
+/**
+ * Injects Referrer-Policy into the target Headers collection.
+ *
+ * @param headers - Target Headers instance.
+ * @param options - Security header configuration options.
+ */
+function applyReferrerPolicyHeader(headers: Headers, options?: SecurityHeaderOptions): void {
+  if (options?.referrerPolicy !== false) {
+    headers.set('Referrer-Policy', options?.referrerPolicy ?? 'strict-origin-when-cross-origin');
+  }
+}
+
+/**
+ * Injects X-XSS-Protection into the target Headers collection.
+ *
+ * @param headers - Target Headers instance.
+ * @param options - Security header configuration options.
+ */
+function applyXssProtectionHeader(headers: Headers, options?: SecurityHeaderOptions): void {
+  if (options?.xssProtection !== false) {
+    headers.set('X-XSS-Protection', typeof options?.xssProtection === 'string' ? options.xssProtection : '0');
+  }
+}
+
+/**
  * Injects browser protection headers (nosniff, frame protection, referrer policy, XSS).
  *
  * @param headers - Target Headers instance.
  * @param options - Security header configuration options.
  */
 function applyProtectionHeaders(headers: Headers, options?: SecurityHeaderOptions): void {
-  if (options?.contentTypeOptions !== false) {
-    headers.set('X-Content-Type-Options', 'nosniff');
-  }
-  if (options?.frameOptions !== false) {
-    headers.set('X-Frame-Options', options?.frameOptions ?? 'DENY');
-  }
-  if (options?.referrerPolicy !== false) {
-    headers.set('Referrer-Policy', options?.referrerPolicy ?? 'strict-origin-when-cross-origin');
-  }
-  if (options?.xssProtection !== false) {
-    headers.set('X-XSS-Protection', typeof options?.xssProtection === 'string' ? options.xssProtection : '0');
-  }
+  applyContentTypeHeader(headers, options);
+  applyFrameOptionsHeader(headers, options);
+  applyReferrerPolicyHeader(headers, options);
+  applyXssProtectionHeader(headers, options);
 }
 
 /**

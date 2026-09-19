@@ -24,29 +24,55 @@ const CATALOG_DEPENDENCY_CONFIG = {
 } as const;
 
 /**
+ * Collects dependency and devDependency declarations from selected catalogs.
+ *
+ * @param catalogs - List of chosen catalog feature flags.
+ * @returns Object with collected dependency lines.
+ */
+function collectCatalogEntries(catalogs: readonly string[]): {
+  deps: string[];
+  devDeps: string[];
+} {
+  const deps: string[] = [];
+  const devDeps: string[] = [];
+  for (const catalog of catalogs) {
+    const config =
+      CATALOG_DEPENDENCY_CONFIG[
+        catalog as keyof typeof CATALOG_DEPENDENCY_CONFIG
+      ];
+    if (config) {
+      deps.push(...config.deps);
+      devDeps.push(...config.devDeps);
+    }
+  }
+  return { deps, devDeps };
+}
+
+/**
+ * Formats an array of package.json lines into a multiline string or undefined.
+ *
+ * @param lines - Array of formatted package dependency lines.
+ * @param separator - Joining separator character.
+ * @returns Formatted block string or undefined if empty.
+ */
+function formatBlock(
+  lines: readonly string[],
+  separator: string,
+): string | undefined {
+  return lines.length > 0 ? lines.join(separator) : undefined;
+}
+
+/**
  * Resolves package catalog dependencies into dependencies and devDependencies package.json blocks.
  *
  * @param catalogs - List of chosen catalog feature flags.
  * @returns Object with formatted template string blocks.
  */
-function resolveCatalogDependencies(catalogs?: readonly string[]) {
-  const deps: string[] = [];
-  const devDeps: string[] = [];
-  if (catalogs) {
-    for (const catalog of catalogs) {
-      const config =
-        CATALOG_DEPENDENCY_CONFIG[
-          catalog as keyof typeof CATALOG_DEPENDENCY_CONFIG
-        ];
-      if (config) {
-        deps.push(...config.deps);
-        devDeps.push(...config.devDeps);
-      }
-    }
-  }
+function resolveCatalogDependencies(catalogs: readonly string[] = []) {
+  const { deps, devDeps } = collectCatalogEntries(catalogs);
   return {
-    dependenciesBlock: deps.length > 0 ? deps.join(",\n") : undefined,
-    devDependenciesBlock: devDeps.length > 0 ? devDeps.join("\n") : undefined,
+    dependenciesBlock: formatBlock(deps, ",\n"),
+    devDependenciesBlock: formatBlock(devDeps, "\n"),
   };
 }
 

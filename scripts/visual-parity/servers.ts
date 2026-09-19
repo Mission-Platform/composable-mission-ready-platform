@@ -244,6 +244,13 @@ async function launchServer(
   }
 }
 
+/**
+ * Creates an idempotent shutdown callback for active Storybook server instances.
+ *
+ * @param servers - Array of active StorybookRendererServer instances to terminate.
+ * @param registry - Process registry managing child processes.
+ * @returns Asynchronous shutdown function.
+ */
 function createServersCloser(
   servers: readonly StorybookRendererServer[],
   registry: ReturnType<typeof createProcessRegistry>,
@@ -259,6 +266,12 @@ function createServersCloser(
   };
 }
 
+/**
+ * Handles server startup failure by terminating spawned processes and writing server logs.
+ *
+ * @param registry - Process registry managing child processes.
+ * @param running - Dictionary of servers successfully launched prior to failure.
+ */
 async function handleStartupFailure(
   registry: ReturnType<typeof createProcessRegistry>,
   running: Partial<Record<VisualParityRendererDefinition['framework'], StorybookRendererServer>>,
