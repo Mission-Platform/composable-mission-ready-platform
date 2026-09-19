@@ -59,68 +59,6 @@ function defaultArtifactKind(relativeName: string): ForgeArtifactKind {
   return 'asset';
 }
 
-function normalizeGeneratedNativePaths(stageDirectory: string): void {
-  const files: string[] = [];
-  const visit = (directory: string): void => {
-    for (const entry of readdirSync(directory, { withFileTypes: true })) {
-      const absolute = path.join(directory, entry.name);
-      if (entry.isDirectory()) visit(absolute);
-      else if (entry.isFile()) files.push(path.relative(stageDirectory, absolute).split(path.sep).join('/'));
-    }
-  };
-  visit(stageDirectory);
-  const renames = new Map<string, string>();
-  for (const relativeFile of files.filter((file) => file.endsWith('.js'))) {
-    const source = readFileSync(path.join(stageDirectory, relativeFile), 'utf8');
-    const vueScriptModule = relativeFile.match(/^(.*)\.vue\?vue&type=script&setup=true&lang\.js$/);
-    if (vueScriptModule !== null) {
-      renames.set(relativeFile, `${vueScriptModule[1]}.script.js`);
-      continue;
-    }
-    if (/(?:^|\/)entry(?:[:_])[^/]+\.js$/.test(relativeFile)) {
-      renames.set(relativeFile, 'index.js');
-      continue;
-    }
-    const region = source.match(/\/\/#region .*?\/((?:components|composables|styles|utils)\/[^\n]+)/)?.[1];
-    if (region === undefined) {
-      continue;
-    }
-    const desired = region
-      .replace(/\.(?:tsx?|jsx?|vue|svelte)$/, '.js')
-      .replace(/\.module\.(?:scss|css)$/, '.module.js');
-    renames.set(relativeFile, desired);
-    if (/\.module\.(?:scss|css)$/.test(region)) {
-      const desiredCss = region.replace(/\.module\.(?:scss|css)$/, '.css');
-      for (const importedCss of source.matchAll(/import ["']\.\/([^"']+\.css)["'];/g)) {
-        renames.set(path.posix.join(path.posix.dirname(relativeFile), importedCss[1]), desiredCss);
-      }
-    }
-  }
-  for (const [oldName, newName] of renames) {
-    const oldPath = path.join(stageDirectory, oldName);
-    const newPath = path.join(stageDirectory, newName);
-    if (oldName === newName || !existsSync(oldPath) || existsSync(newPath)) continue;
-    mkdirSync(path.dirname(newPath), { recursive: true });
-    renameSync(oldPath, newPath);
-  }
-  for (const relativeFile of files.filter((file) => file.endsWith('.js'))) {
-    const outputFile = renames.get(relativeFile) ?? relativeFile;
-    const absoluteFile = path.join(stageDirectory, outputFile);
-    if (!existsSync(absoluteFile)) continue;
-    let source = readFileSync(absoluteFile, 'utf8');
-    for (const [oldName, newName] of renames) {
-      const oldSpecifier = path.posix.relative(path.posix.dirname(relativeFile), oldName);
-      const newSpecifier = path.posix.relative(path.posix.dirname(outputFile), newName);
-      source = source.replaceAll(`./${oldSpecifier}`, `./${newSpecifier}`);
-    }
-    source = source.replace(/import (["'])([^"']+\/index\.js)\1;\n/g, (statement, _quote, specifier) => {
-      const target = path.resolve(path.dirname(absoluteFile), specifier);
-      return existsSync(target) ? statement : '';
-    });
-    writeFileSync(absoluteFile, source, 'utf8');
-  }
-}
-
 function validatePreviousManifest(outDir: string): void {
   const manifestPath = resolveForgeArtifactPath(outDir, MANIFEST_FILE);
   if (!existsSync(manifestPath)) return;
@@ -262,7 +200,6 @@ export function createForgeArtifactWriter(
     },
     recordTree(entries = [], kindForFile = defaultArtifactKind) {
       if (aborted) throw new Error('Forge artifact attempt has been aborted.');
-      normalizeGeneratedNativePaths(stageDirectory);
       const recordedEntryNames = new Set(
         entries.map((entry) => {
           const candidate = /(?:^|\/)entry(?:[:_])/.test(entry) ? 'index.js' : entry;
