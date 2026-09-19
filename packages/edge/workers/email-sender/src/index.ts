@@ -487,6 +487,46 @@ async function dispatchEmailDelivery(
 }
 
 /**
+ * Validates request routing, security policies, and caller authorization.
+ *
+ * @param request - Incoming HTTP request.
+ * @param environment - Worker environment.
+ * @param localRequest - True if local loopback request.
+ * @returns Error Response if validation fails, or undefined if authorized.
+ */
+async function validateRequestPreconditions(
+  request: Request,
+  environment: WorkerEnvironment,
+  localRequest: boolean,
+): Promise<Response | undefined> {
+  const methodPathError = validateRequestMethodAndPath(request);
+  if (methodPathError) return methodPathError;
+  return validateRequestPolicy(request, environment, localRequest);
+}
+
+/**
+ * Parses request body and verifies recipient authorization.
+ *
+ * @param request - Incoming HTTP request.
+ * @param environment - Worker environment.
+ * @param localRequest - True if local loopback request.
+ * @returns Result containing either a validated EmailRequest or an error Response.
+ */
+async function resolveValidatedInput(
+  request: Request,
+  environment: WorkerEnvironment,
+  localRequest: boolean,
+): Promise<{ input: EmailRequest; errorResponse?: undefined } | { input?: undefined; errorResponse: Response }> {
+  const { input, errorResponse: parseError } = await parseEmailRequestBody(request);
+  if (parseError) return { errorResponse: parseError };
+  if (!input) return { errorResponse: errorResponse('Invalid request', 400) };
+  if (!isAllowedRecipient(input, environment, localRequest)) {
+    return { errorResponse: errorResponse('Email recipient is not allowed', 403) };
+  }
+  return { input };
+}
+
+/**
  * Handles incoming email delivery requests, validating input and delivering to SMTP service.
  *
  * @param request - Incoming HTTP request.
@@ -499,21 +539,14 @@ export async function handleRequest(
   environment: WorkerEnvironment,
   delivery: Delivery = defaultDelivery,
 ): Promise<Response> {
-  const methodPathError = validateRequestMethodAndPath(request);
-  if (methodPathError) return methodPathError;
-
   const localRequest = isLocalRequest(request);
-  const policyError = await validateRequestPolicy(request, environment, localRequest);
-  if (policyError) return policyError;
+  const preconditionError = await validateRequestPreconditions(request, environment, localRequest);
+  if (preconditionError) return preconditionError;
 
-  const { input, errorResponse: parseError } = await parseEmailRequestBody(request);
-  if (parseError || !input) return parseError ?? errorResponse('Invalid request', 400);
+  const resolution = await resolveValidatedInput(request, environment, localRequest);
+  if (resolution.errorResponse) return resolution.errorResponse;
 
-  if (!isAllowedRecipient(input, environment, localRequest)) {
-    return errorResponse('Email recipient is not allowed', 403);
-  }
-
-  return dispatchEmailDelivery(environment, input, delivery);
+  return dispatchEmailDelivery(environment, resolution.input, delivery);
 }
 
 export default withSecurityHeaders({

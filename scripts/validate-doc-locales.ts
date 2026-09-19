@@ -197,6 +197,9 @@ function assignValueFlag(flag: (typeof VALUE_FLAGS)[number], value: string, stat
       state.package = value;
       break;
     }
+    default: {
+      break;
+    }
   }
 }
 
