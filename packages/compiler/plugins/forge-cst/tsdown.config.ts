@@ -4,13 +4,13 @@ import path from "node:path";
 import { defineConfig } from "tsdown";
 
 const rootDirectory = import.meta.dirname;
-const package_ = JSON.parse(
-  fs.readFileSync(path.join(rootDirectory, "package.json"), "utf8"),
-) as {
+const package_: {
   dependencies?: Record<string, string>;
   peerDependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
-};
+} = JSON.parse(
+  fs.readFileSync(path.join(rootDirectory, "package.json"), "utf8"),
+);
 const externalNames = [
   ...Object.keys(package_.dependencies ?? {}),
   ...Object.keys(package_.peerDependencies ?? {}),
@@ -18,26 +18,19 @@ const externalNames = [
 ];
 
 export default defineConfig({
-  entry: [
-    path.resolve(rootDirectory, "src/index.ts"),
-    path.resolve(rootDirectory, "src/schema.ts"),
-    path.resolve(rootDirectory, "src/compiler/ast.ts"),
-    path.resolve(rootDirectory, "src/compiler/hoist-static.ts"),
-    path.resolve(rootDirectory, "src/compiler/optimize.ts"),
-  ],
+  entry: [path.resolve(rootDirectory, "src/index.ts")],
   format: ["esm"],
   platform: "node",
   dts: { build: true },
   tsconfig: path.resolve(rootDirectory, "tsconfig.build.json"),
   clean: true,
-  sourcemap: false,
+  sourcemap: true,
   fixedExtension: false,
   outDir: path.resolve(rootDirectory, "dist"),
   unbundle: true,
   deps: {
-    neverBundle: (id) => {
-      if (externalNames.includes(id)) return true;
-      return externalNames.some((name) => id.startsWith(`${name}/`));
-    },
+    neverBundle: (id) =>
+      externalNames.includes(id) ||
+      externalNames.some((name) => id.startsWith(`${name}/`)),
   },
 });

@@ -40,7 +40,7 @@ export type {
   ForgePathAliases,
 } from './graph.js';
 export type {
-  FrameworkBuildAdapters,
+  ForgeBuildAdapters,
   FrameworkOutputPlugin,
   FrameworkSourceMetadata,
   GeneratedExtraModule,

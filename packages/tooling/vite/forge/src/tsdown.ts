@@ -102,6 +102,89 @@ function mergeTsdownConfig(
   };
 }
 
+export type CanonicalChunkCandidate =
+  | string
+  | {
+      readonly name?: string | null;
+      readonly facadeModuleId?: string | null;
+    };
+
+/**
+ * Determine the canonical emitted entry filename for a chunk.
+ * Virtual forge entries are mapped to `index.js`, while preserved
+ * modules delegate to chunk name resolution.
+ */
+export function resolveCanonicalEntryName(chunkInfo: CanonicalChunkCandidate): string {
+  const name = typeof chunkInfo === 'string' ? chunkInfo : (chunkInfo.name ?? '');
+  const facadeModuleId = typeof chunkInfo === 'string' ? undefined : chunkInfo.facadeModuleId;
+
+  if (
+    (facadeModuleId !== undefined && facadeModuleId !== null && facadeModuleId.includes('virtual:forge-entry')) ||
+    name.includes('forge-entry') ||
+    /(?:^|\/)entry(?:[:_])/.test(name)
+  ) {
+    return 'index.js';
+  }
+  return resolveCanonicalChunkName(chunkInfo);
+}
+
+/**
+ * Determine the canonical emitted chunk filename for a chunk.
+ * Preserves canonical `[name].js` paths without collisions and maps
+ * Vue virtual script modules to `${component}.script.js`.
+ */
+export function resolveCanonicalChunkName(chunkInfo: CanonicalChunkCandidate): string {
+  const name = typeof chunkInfo === 'string' ? chunkInfo : (chunkInfo.name ?? '');
+  const facadeModuleId = typeof chunkInfo === 'string' ? undefined : chunkInfo.facadeModuleId;
+
+  const vueScriptMatch = name.match(
+    /^(.*?)(?:\.vue)?[?_]vue[&_](?:[^/]*?)type[=_]?script(?:[^/]*)$/,
+  );
+  if (vueScriptMatch) {
+    return `${vueScriptMatch[1]}.script.js`;
+  }
+  if (facadeModuleId) {
+    const facadeMatch = facadeModuleId.match(
+      /(?:^|[/\\])((?:components|composables|styles|utils)[/\\][^\n?]+?)(?:\.vue)?[?_]vue[&_](?:[^/\\]*?)type[=_]?script/,
+    );
+    if (facadeMatch) {
+      const normalizedPath = facadeMatch[1].split('\\').join('/');
+      return `${normalizedPath}.script.js`;
+    }
+  }
+  return '[name].js';
+}
+
+/**
+ * Normalizes chunk code specifiers: ensures Vue virtual script modules
+ * and CSS module relative specifiers point to canonical emitted files.
+ */
+export function forgePathNormalizationPlugin(): TsdownPlugin {
+  return {
+    name: '@mission-platform/vite-plugin-forge:path-normalization',
+    renderChunk(code) {
+      let updated = code;
+      if (
+        updated.includes('vue&type=script') ||
+        updated.includes('vue_vue_type_script') ||
+        updated.includes('.vue?')
+      ) {
+        updated = updated.replace(
+          /(['"]\.\/[^'"]*?)(?:\.vue)?[?_]vue[&_](?:[^'"]*?)type[=_]?script[^'"]*(['"])/g,
+          '$1.script.js$2',
+        );
+      }
+      if (updated.includes('.module.scss') || updated.includes('.module.css')) {
+        updated = updated.replace(
+          /(['"]\.\/[^'"]*?)\.module\.(?:scss|css)(['"])/g,
+          '$1.css$2',
+        );
+      }
+      return updated === code ? null : updated;
+    },
+  };
+}
+
 export interface TsdownForgeHooksOptions {
   /** Absolute root directory of the package (e.g. `import.meta.dirname`). */
   rootDir: string;
@@ -199,8 +282,8 @@ export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserCo
       // `composables/` + `utils/` land directly under `dist/<framework>/`.
       outputOptions: {
         preserveModulesRoot: generatedDirectory,
-        entryFileNames: '[name].js',
-        chunkFileNames: '[name].js',
+        entryFileNames: resolveCanonicalEntryName,
+        chunkFileNames: resolveCanonicalChunkName,
       },
       plugins: [
         forgeBuildLifecyclePlugin({
@@ -211,6 +294,7 @@ export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserCo
           disposeSession: options.disposeService ?? options.session === undefined,
         }) as unknown as TsdownPlugin,
         ...stagePlugins,
+        forgePathNormalizationPlugin(),
         hookLibraryDtsPlugin({
           framework,
           generatedDir: generatedDirectory,
@@ -580,6 +664,7 @@ function createTsdownForgeComponentPlugin(
       disposeSession: disposeSession ?? service === undefined,
     }) as unknown as TsdownPlugin,
     ...stagePlugins,
+    forgePathNormalizationPlugin(),
     jsxComponentsCssImportPlugin() as TsdownPlugin,
     dtsPlugin as TsdownPlugin,
     removeGeneratedDirectoryPlugin(generatedDirectory, framework),
@@ -605,8 +690,8 @@ function createTsdownForgeComponentPlugin(
       overrides: {
         outputOptions: {
           preserveModulesRoot: generatedDirectory,
-          entryFileNames: '[name].js',
-          chunkFileNames: '[name].js',
+          entryFileNames: resolveCanonicalEntryName,
+          chunkFileNames: resolveCanonicalChunkName,
         },
         plugins: forgePlugins,
       },

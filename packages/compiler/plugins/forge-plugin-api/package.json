@@ -39,6 +39,14 @@
     "./compiler/optimize.js": {
       "types": "./dist/compiler/optimize.d.ts",
       "import": "./dist/compiler/optimize.js"
+    },
+    "./schema": {
+      "types": "./dist/schema.d.ts",
+      "import": "./dist/schema.js"
+    },
+    "./schema.js": {
+      "types": "./dist/schema.d.ts",
+      "import": "./dist/schema.js"
     }
   },
   "files": [

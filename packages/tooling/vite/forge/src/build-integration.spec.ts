@@ -140,4 +140,50 @@ describe('Forge Vite compiler service lifecycle', () => {
 
     expect(session.dispose).not.toHaveBeenCalled();
   });
+
+  it('publishes staged artifacts purely without altering filenames or mutating source chunks', async () => {
+    const packageDir = fs.mkdtempSync(path.join(os.tmpdir(), 'forge-pure-staging-'));
+    const publishedDirectory = path.join(packageDir, 'dist', 'vue');
+    const attemptDirectory = path.join(packageDir, 'attempt');
+    try {
+      const plugin = forgeArtifactPublishPlugin({
+        publishedDirectory,
+        attemptDirectory,
+        targetId: 'vue',
+      });
+      await invokeHook(plugin.buildStart, plugin);
+
+      const componentDir = path.join(attemptDirectory, 'components', 'card');
+      fs.mkdirSync(componentDir, { recursive: true });
+      const entrySource = 'export { Card } from "./components/card/card.js";\n';
+      const cardSource = 'export const Card = () => "card";\n';
+      const scriptSource = 'export const setup = () => {};\n';
+      fs.writeFileSync(path.join(attemptDirectory, 'index.js'), entrySource);
+      fs.writeFileSync(path.join(componentDir, 'card.js'), cardSource);
+      fs.writeFileSync(path.join(componentDir, 'card.script.js'), scriptSource);
+
+      await invokeHook(plugin.generateBundle, plugin, {}, {
+        'index.js': { type: 'chunk', isEntry: true, fileName: 'index.js' },
+      });
+      await invokeHook(plugin.closeBundle, plugin);
+
+      expect(fs.existsSync(path.join(publishedDirectory, 'index.js'))).toBe(true);
+      expect(fs.existsSync(path.join(publishedDirectory, 'components/card/card.js'))).toBe(true);
+      expect(fs.existsSync(path.join(publishedDirectory, 'components/card/card.script.js'))).toBe(true);
+      expect(fs.readFileSync(path.join(publishedDirectory, 'index.js'), 'utf8')).toBe(entrySource);
+      expect(fs.readFileSync(path.join(publishedDirectory, 'components/card/card.js'), 'utf8')).toBe(cardSource);
+      expect(fs.readFileSync(path.join(publishedDirectory, 'components/card/card.script.js'), 'utf8')).toBe(scriptSource);
+
+      const manifest = JSON.parse(
+        fs.readFileSync(path.join(publishedDirectory, '.forge-artifact-manifest.json'), 'utf8'),
+      ) as {
+        entries: string[];
+        artifacts: Array<{ fileName: string; kind: string }>;
+      };
+      expect(manifest.entries).toEqual(['index.js']);
+      expect(manifest.artifacts).toHaveLength(3);
+    } finally {
+      fs.rmSync(packageDir, { recursive: true, force: true });
+    }
+  });
 });
