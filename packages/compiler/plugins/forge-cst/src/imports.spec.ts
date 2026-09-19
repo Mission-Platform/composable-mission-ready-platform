@@ -227,6 +227,62 @@ export const warning = 'Install @mission-platform/router for full features';
     expect(result.code).toBe(source);
   });
 
+  it("splits a single import across multiple replacement modules with per-symbol renames", () => {
+    const source = `import { MpLink, useMpRoute, useMpRouter } from '@mission-platform/router';
+`;
+
+    const result = rewriteImportsWithCst(source, {
+      rewrites: [
+        {
+          targetModule: "@mission-platform/router",
+          replacementModule: "react-router-dom",
+          specifiers: [{ sourceName: "MpLink", importedName: "Link" }],
+        },
+        {
+          targetModule: "@mission-platform/router",
+          replacementModule: "wouter",
+          specifiers: [{ sourceName: "useMpRoute", importedName: "useRoute" }],
+        },
+        {
+          targetModule: "@mission-platform/router",
+          replacementModule: "@fixture/router-runtime",
+          specifiers: [
+            { sourceName: "useMpRouter", importedName: "useMpRouter" },
+          ],
+        },
+      ],
+    });
+
+    expect(result.transformed).toBe(true);
+    expect(result.code).toBe(`import { Link as MpLink } from 'react-router-dom';
+import { useRoute as useMpRoute } from 'wouter';
+import { useMpRouter } from '@fixture/router-runtime';
+`);
+  });
+
+  it("preserves consumer-side local aliases when renaming imported symbols", () => {
+    const source = `import { MpLink as NavLink, useMpRouter as useNav } from '@mission-platform/router';
+`;
+
+    const result = rewriteImportsWithCst(source, {
+      rewrites: [
+        {
+          targetModule: "@mission-platform/router",
+          replacementModule: "react-router-dom",
+          specifiers: [
+            { sourceName: "MpLink", importedName: "Link" },
+            { sourceName: "useMpRouter", importedName: "useNavigate" },
+          ],
+        },
+      ],
+    });
+
+    expect(result.transformed).toBe(true);
+    expect(result.code).toBe(
+      `import { Link as NavLink, useNavigate as useNav } from 'react-router-dom';\n`,
+    );
+  });
+
   it("supports multiple rewrite specifications across different modules", () => {
     const source = `import { MpLink } from '@mission-platform/router';
 import { Button } from '@mission-platform/ui';
