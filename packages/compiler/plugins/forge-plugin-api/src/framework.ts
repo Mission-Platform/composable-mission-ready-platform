@@ -86,48 +86,25 @@ export interface TargetIntentions<
   readonly lowered: TLowered;
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
-
-/**
- * Asserts that the supplied intentions are valid and contain a lowered target plan.
- * Throws a TypeError if the intentions are incomplete or if the lowered plan
- * discriminator does not match the expected framework.
- */
-export function assertTargetIntentionsLowered<
-  TLowered extends TargetLoweredModule = TargetLoweredModule,
->(
-  intentions: unknown,
-  expectedFramework?: FrameworkId,
-): asserts intentions is TargetIntentions<TLowered> {
-  if (!isRecord(intentions)) {
-    throw new TypeError("Target intentions must be an object.");
-  }
-  const frameworkName =
-    typeof intentions.framework === "string" && intentions.framework.length > 0
-      ? intentions.framework
-      : (expectedFramework ?? "unknown");
-  if (!isRecord(intentions.lowered)) {
-    throw new TypeError(
-      `Target intentions for "${frameworkName}" must contain a lowered target plan.`,
-    );
-  }
-  const loweredFramework = intentions.lowered.framework;
-  if (typeof loweredFramework !== "string" || loweredFramework.length === 0) {
-    throw new TypeError(
-      "Target intentions lowered plan must define a non-empty framework discriminator.",
-    );
-  }
-  if (
-    expectedFramework !== undefined &&
-    loweredFramework !== expectedFramework
-  ) {
-    throw new TypeError(
-      `Target intentions lowered plan framework "${loweredFramework}" does not match expected target "${expectedFramework}".`,
-    );
-  }
-}
+export {
+  assertTargetIntentionsLowered,
+  findActionableSpan,
+  semanticModuleSchema,
+  targetContextSchema,
+  targetIntentionsSchema,
+  TargetIntentionsValidationError,
+  targetLoweredModuleSchema,
+  validateAgainstSchema,
+  validateTargetIntentions,
+} from "./schema.js";
+export type {
+  DeclarativeSchema,
+  SchemaFieldRule,
+  SchemaFieldType,
+  SchemaValidationIssue,
+  SchemaValidationOptions,
+  TargetIntentionsValidationResult,
+} from "./schema.js";
 
 /** Neutral optimization options shared by the compiler and target plugins. */
 export interface NeutralOptimizeOptions {
