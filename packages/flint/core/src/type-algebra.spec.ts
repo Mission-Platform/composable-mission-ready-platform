@@ -61,7 +61,8 @@ describe('TypeAlgebra interned structural types', () => {
     const function_ = algebra.fromAst(typeName('Fn', { arguments: [typeName('i32'), typeName('bool')] }));
 
     expect(algebra.collectionKind(vector)).toBe('Vector');
-    expect(algebra.display(algebra.elementType(vector)!)).toBe('i32');
+    const element = algebra.elementType(vector);
+    expect(element === undefined ? undefined : algebra.display(element)).toBe('i32');
     expect(algebra.isOption(option)).toBe(true);
     expect(algebra.isIteratorLike(iterator)).toBe(true);
     expect(algebra.functionParts(function_)).toEqual({
@@ -149,14 +150,15 @@ describe('MonomorphizationCache layout deduplication', () => {
     );
     expect(result.diagnostics).toEqual([]);
     expect(result.module).toBeDefined();
+    if (result.module === undefined) throw new Error('Expected module to be defined');
 
-    const { cache } = createMonomorphizationCache(result.module!);
-    const collected = cache.collectFromModule(result.module!);
+    const { cache } = createMonomorphizationCache(result.module);
+    const collected = cache.collectFromModule(result.module);
     expect(collected.map((entry) => entry.specialization.id)).toEqual(
       expect.arrayContaining(['Vector<i32>:value', 'Option<i32>:value']),
     );
 
-    const manifest = createFlintAbiManifest(result.module!);
+    const manifest = createFlintAbiManifest(result.module);
     expect(manifest.specializations).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ id: 'Vector<i32>:value', representation: 'monomorphized' }),

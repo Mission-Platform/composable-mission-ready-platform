@@ -144,7 +144,8 @@ describe('Forge Web Script graph compiler service', () => {
 
     expect(result.diagnostics).toEqual([]);
     expect(artifact.diagnostics).toEqual([]);
-    const instance = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!));
+    const wasm = artifact.wasm ?? new Uint8Array();
+    const instance = new WebAssembly.Instance(new WebAssembly.Module(wasm));
     const allocate = instance.exports.fws_alloc as (size: number) => number;
     const pointer = allocate(3);
     new Uint8Array((instance.exports.memory as WebAssembly.Memory).buffer, pointer, 3).set([97, 98, 99]);
@@ -187,7 +188,8 @@ describe('Forge Web Script graph compiler service', () => {
 
     expect(result.diagnostics).toEqual([]);
     expect(artifact.diagnostics).toEqual([]);
-    const instance = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!));
+    const wasm = artifact.wasm ?? new Uint8Array();
+    const instance = new WebAssembly.Instance(new WebAssembly.Module(wasm));
     const allocate = instance.exports.fws_alloc as (size: number) => number;
     const pointer = allocate(3);
     const memory = instance.exports.memory as WebAssembly.Memory;

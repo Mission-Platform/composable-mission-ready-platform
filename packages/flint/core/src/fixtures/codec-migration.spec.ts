@@ -18,7 +18,8 @@ describe('Forge Web Script codec migration fixture', () => {
 
     expect(artifact.diagnostics).toEqual([]);
     expect(artifact.wasm).toBeInstanceOf(Uint8Array);
-    expect(WebAssembly.validate(artifact.wasm!)).toBe(true);
+    const wasm = artifact.wasm ?? new Uint8Array();
+    expect(WebAssembly.validate(wasm)).toBe(true);
     expect(artifact.contentHash).toMatch(/^[0-9a-f]{8}$/u);
     expect(artifact.esmSource).toContain('export const manifest =');
     expect(artifact.declarations).toContain('readonly encode_payload: (payload: string) => FlintBytes;');
@@ -34,7 +35,8 @@ describe('Forge Web Script codec migration fixture', () => {
     expect(repeat.esmSource).toBe(artifact.esmSource);
     expect(repeat.declarations).toBe(artifact.declarations);
 
-    const module = parseFlint(codecMigrationFixture.source, 'barcode-migration.flint').module!;
+    const module = parseFlint(codecMigrationFixture.source, 'barcode-migration.flint').module;
+    if (module === undefined) throw new Error('Expected module to be defined');
     expect(createFlintAbiManifest(module)).toMatchObject({
       moduleName: 'barcode-migration',
       requiredCapabilities: ['codec.barcode.encode'],
@@ -74,23 +76,27 @@ describe('Forge Web Script codec migration fixture', () => {
       compilerVersion: '0.1.0',
       requestedCapabilities: codecMigrationFixture.requestedCapabilities,
     });
-    const wasmModule = new WebAssembly.Module(artifact.wasm!);
-    let wasmExports: WebAssembly.Exports | undefined;
+    const wasmModule = new WebAssembly.Module(artifact.wasm ?? new Uint8Array());
+    let memory: WebAssembly.Memory | undefined;
+    let allocateFunction: ((size: number) => number) | undefined;
     let observedInput: [number, number] | undefined;
     const instance = new WebAssembly.Instance(wasmModule, {
       'codec.barcode.encode': {
         encode(pointer: number, length: number): [number, number] {
           observedInput = [pointer, length];
-          const allocate = wasmExports!.fws_alloc as (size: number) => number;
+          const allocate = allocateFunction ?? (() => 0);
           const outputPointer = allocate(length + 1);
-          const output = new Uint8Array(wasmExports!.memory.buffer, outputPointer, length + 1);
+          const mem = memory ?? new WebAssembly.Memory({ initial: 1 });
+          const output = new Uint8Array(mem.buffer, outputPointer, length + 1);
           output[0] = length;
           for (let index = 0; index < length; index += 1) output[index + 1] = index % 2;
           return [outputPointer, output.length];
         },
       },
     });
-    wasmExports = instance.exports;
+    memory = instance.exports.memory as WebAssembly.Memory;
+    allocateFunction = instance.exports.fws_alloc as (size: number) => number;
+    const wasmExports = instance.exports;
 
     const encodePayload = wasmExports.encode_payload as (pointer: number, length: number) => [number, number];
     const result = encodePayload(256, 4);

@@ -63,8 +63,10 @@ describe("flintPlugin", () => {
     expect(files.some((file) => file.endsWith(".d.ts"))).toBe(true);
     const manifestAsset = files.find((file) => file.endsWith(".abi.json"));
     expect(manifestAsset).toBeDefined();
+    if (manifestAsset === undefined)
+      throw new Error("Expected manifest asset to be defined");
     await expect(
-      readFile(join(root, "dist", manifestAsset!), "utf8"),
+      readFile(join(root, "dist", manifestAsset), "utf8"),
     ).resolves.toContain("runtime");
   });
 
@@ -154,8 +156,15 @@ export fn answer() -> i32 {
     const manifestAsset = files.find((file) => file.endsWith(".abi.json"));
     const declarationAsset = files.find((file) => file.endsWith(".d.ts"));
     const sourceMapAsset = files.find((file) => file.endsWith(".map"));
+    if (
+      manifestAsset === undefined ||
+      declarationAsset === undefined ||
+      sourceMapAsset === undefined
+    ) {
+      throw new Error("Expected assets to be defined");
+    }
     const manifest = JSON.parse(
-      await readFile(join(root, "dist", manifestAsset!), "utf8"),
+      await readFile(join(root, "dist", manifestAsset), "utf8"),
     ) as {
       readonly linkMode: string;
       readonly linkProfile: string;
@@ -169,10 +178,10 @@ export fn answer() -> i32 {
       expect.arrayContaining(["answer", "helper"]),
     );
     await expect(
-      readFile(join(root, "dist", declarationAsset!), "utf8"),
+      readFile(join(root, "dist", declarationAsset), "utf8"),
     ).resolves.toContain("FlintExports");
     const sourceMap = JSON.parse(
-      await readFile(join(root, "dist", sourceMapAsset!), "utf8"),
+      await readFile(join(root, "dist", sourceMapAsset), "utf8"),
     ) as {
       readonly sources: readonly string[];
     };
@@ -245,8 +254,10 @@ export fn answer() -> i32 {
     const files = await readdir(join(root, "dist"));
     const manifestAsset = files.find((file) => file.endsWith(".abi.json"));
     expect(manifestAsset).toBeDefined();
+    if (manifestAsset === undefined)
+      throw new Error("Expected manifest asset to be defined");
     const manifest = JSON.parse(
-      await readFile(join(root, "dist", manifestAsset!), "utf8"),
+      await readFile(join(root, "dist", manifestAsset), "utf8"),
     ) as {
       readonly sourceImports: readonly {
         readonly source: string;
@@ -291,8 +302,10 @@ export fn answer() -> i32 {
 
     const files = await readdir(join(root, "dist"));
     const manifestAsset = files.find((file) => file.endsWith(".abi.json"));
+    if (manifestAsset === undefined)
+      throw new Error("Expected manifest asset to be defined");
     const manifest = JSON.parse(
-      await readFile(join(root, "dist", manifestAsset!), "utf8"),
+      await readFile(join(root, "dist", manifestAsset), "utf8"),
     ) as {
       readonly linkProfile: string;
       readonly optimizationProfile: string;
@@ -307,8 +320,10 @@ export fn answer() -> i32 {
       ]),
     );
     const declarationAsset = files.find((file) => file.endsWith(".d.ts"));
+    if (declarationAsset === undefined)
+      throw new Error("Expected declaration asset to be defined");
     await expect(
-      readFile(join(root, "dist", declarationAsset!), "utf8"),
+      readFile(join(root, "dist", declarationAsset), "utf8"),
     ).resolves.toContain("FlintDynamicModuleLoaders");
   });
 

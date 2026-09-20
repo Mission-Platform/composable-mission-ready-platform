@@ -34,7 +34,8 @@ describe('Forge Web Script self-hosted stage codecs', () => {
   it('round-trips a parsed module with deterministic binary framing', () => {
     const parsed = parseFlint(sampleSource, 'main.flint');
     expect(parsed.module).toBeDefined();
-    const encoded = encodeFlintSelfHostedModule(parsed.module!);
+    if (parsed.module === undefined) throw new Error('Expected module to be defined');
+    const encoded = encodeFlintSelfHostedModule(parsed.module);
     expect(encoded[0]).toBe(0x46);
     expect(encoded[1]).toBe(0x57);
     expect(encoded[2]).toBe(0x53);
@@ -54,7 +55,9 @@ describe('Forge Web Script self-hosted stage codecs', () => {
   });
 
   it('rejects wrong module magic and trailing bytes', () => {
-    const module = parseFlint('export fn f() -> i32 { return 1; }', 't.flint').module!;
+    const parsed = parseFlint('export fn f() -> i32 { return 1; }', 't.flint');
+    if (parsed.module === undefined) throw new Error('Expected module to be defined');
+    const module = parsed.module;
     const encoded = encodeFlintSelfHostedModule(module);
     const wrongMagic = new Uint8Array(encoded);
     wrongMagic[3] = 0x00;
@@ -66,7 +69,10 @@ describe('Forge Web Script self-hosted stage codecs', () => {
 
   it('rejects unordered token spans', () => {
     const tokens = lexFlint('export fn f() -> i32 { return 1; }', 't.flint').tokens;
-    const disordered = [tokens[2]!, tokens[0]!, tokens[1]!, ...tokens.slice(3)];
+    const [token0, token1, token2] = tokens;
+    if (token0 === undefined || token1 === undefined || token2 === undefined)
+      throw new Error('Expected at least 3 tokens');
+    const disordered = [token2, token0, token1, ...tokens.slice(3)];
     expect(() => encodeFlintSelfHostedTokens(disordered)).toThrow('token spans are not ordered');
   });
 
@@ -86,7 +92,9 @@ describe('Forge Web Script self-hosted stage codecs', () => {
   });
 
   it('rejects empty module names', () => {
-    const module = parseFlint('export fn f() -> i32 { return 1; }', 't.flint').module!;
+    const parsed = parseFlint('export fn f() -> i32 { return 1; }', 't.flint');
+    if (parsed.module === undefined) throw new Error('Expected module to be defined');
+    const module = parsed.module;
     const encoded = encodeFlintSelfHostedModule({ ...module, name: '' });
     expect(() => decodeFlintSelfHostedModule(encoded)).toThrow('module name must not be empty');
   });

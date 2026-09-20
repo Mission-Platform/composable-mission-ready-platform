@@ -55,11 +55,12 @@ function rankingRows(report: BenchmarkReport): string {
         ),
     )
     .toSorted(
-      (left, right) => left.statistics!.medianMs - right.statistics!.medianMs,
+      (left, right) =>
+        (left.statistics?.medianMs ?? 0) - (right.statistics?.medianMs ?? 0),
     )
     .map(
       (measurement, index) =>
-        `| ${index + 1} | ${text(measurement.workload)} | ${text(measurement.inputSize)} | ${text(measurement.implementation)} | ${mode(measurement)} | ${text(measurement.hostRuntime)} | ${measurement.statistics!.medianMs.toFixed(3)} | ${measurement.statistics!.throughputPerSecond.toFixed(2)} |`,
+        `| ${index + 1} | ${text(measurement.workload)} | ${text(measurement.inputSize)} | ${text(measurement.implementation)} | ${mode(measurement)} | ${text(measurement.hostRuntime)} | ${(measurement.statistics?.medianMs ?? 0).toFixed(3)} | ${(measurement.statistics?.throughputPerSecond ?? 0).toFixed(2)} |`,
     )
     .join("\n");
 }

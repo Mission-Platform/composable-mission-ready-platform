@@ -28,6 +28,14 @@ const countInstruction = (bytes: Uint8Array, instruction: readonly number[]): nu
   return count;
 };
 
+function wasmBytes(result: { readonly wasm?: Uint8Array }): Uint8Array {
+  return result.wasm ?? new Uint8Array();
+}
+
+function wasmModule(result: { readonly wasm?: Uint8Array }): WebAssembly.Module {
+  return new WebAssembly.Module(wasmBytes(result));
+}
+
 describe('Forge Web Script WASM backend', () => {
   it('emits valid deterministic bytes, WAT, and UTF-8 pointer-length literals', () => {
     const module = moduleWith([
@@ -46,7 +54,7 @@ describe('Forge Web Script WASM backend', () => {
     const second = compileFlintWasm(input);
     expect(first.diagnostics).toHaveLength(0);
     expect(first.wasm).toBeDefined();
-    expect(WebAssembly.validate(first.wasm!.buffer as ArrayBuffer)).toBe(true);
+    expect(WebAssembly.validate(wasmBytes(first).buffer as ArrayBuffer)).toBe(true);
     expect(first.wasm).toEqual(second.wasm);
     expect(first.contentHash).toBe(second.contentHash);
     expect(first.wat).toContain('(result i32)');
@@ -57,10 +65,7 @@ describe('Forge Web Script WASM backend', () => {
     const result = compileFlintWasm({ ir: module, optimizedIr: module, abi: {}, links: {}, metadata });
     expect(result.diagnostics).toEqual([]);
     expect(result.wasm).toBeDefined();
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports as Record<
-      string,
-      Function
-    >;
+    const exports = new WebAssembly.Instance(wasmModule(result), {}).exports as Record<string, Function>;
     expect(exports.fws_realloc).toBeInstanceOf(Function);
     const pointer = exports.fws_alloc(4);
     const tail = exports.fws_alloc(4);
@@ -87,10 +92,7 @@ describe('Forge Web Script WASM backend', () => {
     ]);
     const result = compileFlintWasm({ ir: module, optimizedIr: module, abi: {}, links: {}, metadata });
     expect(result.diagnostics).toEqual([]);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports as Record<
-      string,
-      Function
-    >;
+    const exports = new WebAssembly.Instance(wasmModule(result), {}).exports as Record<string, Function>;
     const memory = exports.memory as WebAssembly.Memory;
     expect(memory.buffer.byteLength).toBeGreaterThanOrEqual(2 * 65_536);
     expect(() => exports.fws_alloc(70_000)).not.toThrow();
@@ -123,10 +125,7 @@ describe('Forge Web Script WASM backend', () => {
     const result = compileFlintWasm({ ir: module, optimizedIr: module, abi: {}, links: {}, metadata });
     expect(result.diagnostics).toEqual([]);
     expect(result.wat).toContain('br_table');
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports as Record<
-      string,
-      Function
-    >;
+    const exports = new WebAssembly.Instance(wasmModule(result), {}).exports as Record<string, Function>;
     expect(exports.dispatch(0)).toBe(10);
     expect(exports.dispatch(2)).toBe(20);
     expect(exports.dispatch(1)).toBe(-1);
@@ -160,11 +159,8 @@ describe('Forge Web Script WASM backend', () => {
     expect(result.diagnostics).toEqual([]);
     expect(result.wat).not.toContain('br_table');
     expect(result.wat).toContain('i32.eq');
-    expect(WebAssembly.validate(result.wasm!.buffer as ArrayBuffer)).toBe(true);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports as Record<
-      string,
-      Function
-    >;
+    expect(WebAssembly.validate(wasmBytes(result).buffer as ArrayBuffer)).toBe(true);
+    const exports = new WebAssembly.Instance(wasmModule(result), {}).exports as Record<string, Function>;
     expect(exports.sparseDispatch(-100_000)).toBe(10);
     expect(exports.sparseDispatch(100_000)).toBe(20);
     expect(exports.sparseDispatch(0)).toBe(-1);
@@ -285,11 +281,8 @@ describe('Forge Web Script WASM backend', () => {
     ]);
     const result = compileFlintWasm({ ir: module, optimizedIr: module, abi: {}, links: {}, metadata });
     expect(result.diagnostics).toEqual([]);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports as Record<
-      string,
-      Function
-    >;
-    expect(countInstruction(result.wasm!, [0xfc, 0x0a, 0x00, 0x00])).toBeGreaterThanOrEqual(1);
+    const exports = new WebAssembly.Instance(wasmModule(result), {}).exports as Record<string, Function>;
+    expect(countInstruction(wasmBytes(result), [0xfc, 0x0a, 0x00, 0x00])).toBeGreaterThanOrEqual(1);
     expect(exports.vectorValue()).toBe(11);
   });
 
@@ -327,10 +320,7 @@ describe('Forge Web Script WASM backend', () => {
     ]);
     const result = compileFlintWasm({ ir: module, optimizedIr: module, abi: {}, links: {}, metadata });
     expect(result.diagnostics).toEqual([]);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports as Record<
-      string,
-      Function
-    >;
+    const exports = new WebAssembly.Instance(wasmModule(result), {}).exports as Record<string, Function>;
     expect(exports.arrayValue()).toBe(9);
   });
 
@@ -460,11 +450,8 @@ describe('Forge Web Script WASM backend', () => {
     ]);
     const result = compileFlintWasm({ ir: module, optimizedIr: module, abi: {}, links: {}, metadata });
     expect(result.diagnostics).toEqual([]);
-    expect(WebAssembly.validate(result.wasm!.buffer as ArrayBuffer)).toBe(true);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports as Record<
-      string,
-      Function
-    >;
+    expect(WebAssembly.validate(wasmBytes(result).buffer as ArrayBuffer)).toBe(true);
+    const exports = new WebAssembly.Instance(wasmModule(result), {}).exports as Record<string, Function>;
     const memory = exports.memory as WebAssembly.Memory;
     const allocate = exports.fws_alloc as (size: number) => number;
     const array = allocate(12);
@@ -523,11 +510,8 @@ describe('Forge Web Script WASM backend', () => {
     ]);
     const result = compileFlintWasm({ ir: module, optimizedIr: module, abi: {}, links: {}, metadata });
     expect(result.diagnostics).toEqual([]);
-    expect(WebAssembly.validate(result.wasm!.buffer as ArrayBuffer)).toBe(true);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports as Record<
-      string,
-      Function
-    >;
+    expect(WebAssembly.validate(wasmBytes(result).buffer as ArrayBuffer)).toBe(true);
+    const exports = new WebAssembly.Instance(wasmModule(result), {}).exports as Record<string, Function>;
     const memory = exports.memory as WebAssembly.Memory;
     const allocate = exports.fws_alloc as (size: number) => number;
     const pointer = allocate(3);
@@ -571,12 +555,9 @@ describe('Forge Web Script WASM backend', () => {
     ]);
     const result = compileFlintWasm({ ir: module, optimizedIr: module, abi: {}, links: {}, metadata });
     expect(result.diagnostics).toEqual([]);
-    expect(countInstruction(result.wasm!, [0x2d, 0x00, 0x00])).toBeGreaterThan(5);
-    expect(WebAssembly.validate(result.wasm!.buffer as ArrayBuffer)).toBe(true);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports as Record<
-      string,
-      Function
-    >;
+    expect(countInstruction(wasmBytes(result), [0x2d, 0x00, 0x00])).toBeGreaterThan(5);
+    expect(WebAssembly.validate(wasmBytes(result).buffer as ArrayBuffer)).toBe(true);
+    const exports = new WebAssembly.Instance(wasmModule(result), {}).exports as Record<string, Function>;
     const memory = exports.memory as WebAssembly.Memory;
     const allocate = exports.fws_alloc as (size: number) => number;
     const pointer = allocate(3);
@@ -611,7 +592,7 @@ describe('Forge Web Script WASM backend', () => {
     });
     expect(enabled.diagnostics).toEqual([]);
     expect(enabled.wat).toContain('(memory (export "memory") 1 1 shared)');
-    expect(WebAssembly.validate(enabled.wasm!.buffer as ArrayBuffer)).toBe(true);
+    expect(WebAssembly.validate(wasmBytes(enabled).buffer as ArrayBuffer)).toBe(true);
   });
 
   it('returns deterministic optimized and unoptimized debug artifacts', () => {
@@ -654,7 +635,7 @@ describe('Forge Web Script WASM backend', () => {
     });
     expect(result.diagnostics).toEqual([]);
     expect(result.wat).toContain('(memory (export "memory") i64 1)');
-    expect(WebAssembly.validate(result.wasm!.buffer as ArrayBuffer)).toBe(true);
+    expect(WebAssembly.validate(wasmBytes(result).buffer as ArrayBuffer)).toBe(true);
   });
 
   it('emits valid scalar functions alongside the runtime memory helpers', () => {
@@ -686,7 +667,7 @@ describe('Forge Web Script WASM backend', () => {
       metadata,
     });
     expect(result.diagnostics).toEqual([]);
-    expect(WebAssembly.validate(result.wasm!.buffer as ArrayBuffer)).toBe(true);
+    expect(WebAssembly.validate(wasmBytes(result).buffer as ArrayBuffer)).toBe(true);
   });
 
   it('emits scalar parameters and binary expressions', () => {
@@ -718,7 +699,7 @@ describe('Forge Web Script WASM backend', () => {
     ]);
     const result = compileFlintWasm({ ir: module, optimizedIr: module, abi: {}, links: {}, metadata });
     expect(result.diagnostics).toEqual([]);
-    expect(WebAssembly.validate(result.wasm!.buffer as ArrayBuffer)).toBe(true);
+    expect(WebAssembly.validate(wasmBytes(result).buffer as ArrayBuffer)).toBe(true);
   });
 
   it('short-circuits logical expressions with result-producing Wasm control flow', () => {
@@ -776,11 +757,8 @@ describe('Forge Web Script WASM backend', () => {
     const result = compileFlintWasm({ ir: module, optimizedIr: module, abi: {}, links: {}, metadata });
     expect(result.diagnostics).toEqual([]);
     expect(result.wat).toContain('if (result i32)');
-    expect(WebAssembly.validate(result.wasm!.buffer as ArrayBuffer)).toBe(true);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports as Record<
-      string,
-      Function
-    >;
+    expect(WebAssembly.validate(wasmBytes(result).buffer as ArrayBuffer)).toBe(true);
+    const exports = new WebAssembly.Instance(wasmModule(result), {}).exports as Record<string, Function>;
     expect(exports.andGuard()).toBe(0);
     expect(exports.orGuard()).toBe(1);
   });
@@ -839,8 +817,8 @@ describe('Forge Web Script WASM backend', () => {
     const result = compileFlintWasm({ ir: module, optimizedIr: module, abi: {}, links: {}, metadata });
     expect(result.diagnostics).toEqual([]);
     expect(result.wasm).toBeDefined();
-    expect(WebAssembly.validate(result.wasm!.buffer as ArrayBuffer)).toBe(true);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports;
+    expect(WebAssembly.validate(wasmBytes(result).buffer as ArrayBuffer)).toBe(true);
+    const exports = new WebAssembly.Instance(wasmModule(result), {}).exports;
     expect(Object.keys(exports).toSorted()).toEqual([
       'fws_alloc',
       'fws_dealloc',
@@ -957,7 +935,7 @@ describe('Forge Web Script WASM backend', () => {
     ]);
     const result = compileFlintWasm({ ir: module, optimizedIr: module, abi: {}, links: {}, metadata });
     expect(result.diagnostics).toEqual([]);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports;
+    const exports = new WebAssembly.Instance(wasmModule(result), {}).exports;
     expect((exports.prefixOk as () => number)()).toBe(1);
     expect((exports.fullFail as () => number)()).toBe(0);
     expect((exports.searchOk as () => number)()).toBe(1);
@@ -1070,8 +1048,8 @@ describe('Forge Web Script WASM backend', () => {
     ]);
     const result = compileFlintWasm({ ir: module, optimizedIr: module, abi: {}, links: {}, metadata });
     expect(result.diagnostics).toEqual([]);
-    expect(countInstruction(result.wasm!, [0xfc, 0x0a, 0x00, 0x00])).toBeGreaterThanOrEqual(2);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports;
+    expect(countInstruction(wasmBytes(result), [0xfc, 0x0a, 0x00, 0x00])).toBeGreaterThanOrEqual(2);
+    const exports = new WebAssembly.Instance(wasmModule(result), {}).exports;
     expect((exports.start as () => number)()).toBe(1);
     expect((exports.end as () => number)()).toBe(4);
     expect((exports.missing as () => number)()).toBe(-1);
@@ -1257,12 +1235,9 @@ describe('Forge Web Script WASM backend', () => {
       metadata,
     });
     expect(result.diagnostics).toEqual([]);
-    expect(WebAssembly.validate(result.wasm!.buffer as ArrayBuffer)).toBe(true);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports as Record<
-      string,
-      Function
-    >;
-    expect(countInstruction(result.wasm!, [0xfc, 0x0a, 0x00, 0x00])).toBeGreaterThanOrEqual(2);
+    expect(WebAssembly.validate(wasmBytes(result).buffer as ArrayBuffer)).toBe(true);
+    const exports = new WebAssembly.Instance(wasmModule(result), {}).exports as Record<string, Function>;
+    expect(countInstruction(wasmBytes(result), [0xfc, 0x0a, 0x00, 0x00])).toBeGreaterThanOrEqual(2);
     expect(exports.length()).toBe(3);
     expect(exports.byte()).toBe(98);
     expect(exports.starts()).toBe(1);
@@ -1346,11 +1321,8 @@ describe('Forge Web Script WASM backend', () => {
       metadata,
     });
     expect(result.diagnostics).toEqual([]);
-    expect(countInstruction(result.wasm!, [0xfd, 0x00, 0x00, 0x00])).toBeGreaterThanOrEqual(2);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports as Record<
-      string,
-      Function
-    >;
+    expect(countInstruction(wasmBytes(result), [0xfd, 0x00, 0x00, 0x00])).toBeGreaterThanOrEqual(2);
+    const exports = new WebAssembly.Instance(wasmModule(result), {}).exports as Record<string, Function>;
     expect(exports.longMatch()).toBe(1);
     expect(exports.longMismatch()).toBe(0);
     expect(exports.shortTail()).toBe(1);
@@ -1382,11 +1354,8 @@ describe('Forge Web Script WASM backend', () => {
     ]);
     const result = compileFlintWasm({ ir: module, optimizedIr: module, abi: {}, links: {}, metadata });
     expect(result.diagnostics).toEqual([]);
-    expect(countInstruction(result.wasm!, [0x10, 0x02])).toBe(0);
-    const instance = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports as Record<
-      string,
-      Function
-    >;
+    expect(countInstruction(wasmBytes(result), [0x10, 0x02])).toBe(0);
+    const instance = new WebAssembly.Instance(wasmModule(result), {}).exports as Record<string, Function>;
     const memory = instance.memory as WebAssembly.Memory;
     const pointer = (instance.fws_alloc as (size: number) => number)(3);
     new Uint8Array(memory.buffer).set([1, 2, 3], pointer);
@@ -1422,10 +1391,7 @@ describe('Forge Web Script WASM backend', () => {
     ]);
     const result = compileFlintWasm({ ir: module, optimizedIr: module, abi: {}, links: {}, metadata });
     expect(result.diagnostics).toEqual([]);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports as Record<
-      string,
-      Function
-    >;
+    const exports = new WebAssembly.Instance(wasmModule(result), {}).exports as Record<string, Function>;
     expect(() => exports.badLength()).toThrow(WebAssembly.RuntimeError);
     expect(() => exports.badSlice()).toThrow(WebAssembly.RuntimeError);
   });
@@ -1517,17 +1483,14 @@ describe('Forge Web Script WASM backend', () => {
     expect(result.diagnostics.map(({ code, message }) => `${code}:${message}`)).toEqual([]);
     expect(result.diagnostics.some(({ code }) => code === 'FLINT-EMIT-001')).toBe(false);
     expect(result.wasm).toBeDefined();
-    expect(WebAssembly.validate(result.wasm!.buffer as ArrayBuffer)).toBe(true);
+    expect(WebAssembly.validate(wasmBytes(result).buffer as ArrayBuffer)).toBe(true);
     expect(result.iteratorExports).toEqual([
       expect.objectContaining({ name: 'values', nextFunction: 'values.next', elementType: 'i32' }),
       expect.objectContaining({ name: 'one', nextFunction: 'one.next', elementType: 'i32' }),
     ]);
     expect(result.wat).toContain(';; iterator-export: values next=values.next');
     expect(result.wat).toContain('(func $one.next');
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports as Record<
-      string,
-      CallableFunction
-    >;
+    const exports = new WebAssembly.Instance(wasmModule(result), {}).exports as Record<string, CallableFunction>;
     expect(typeof exports.values).toBe('function');
     expect(typeof exports['values.next']).toBe('function');
     expect(exports.one()).toBe(0);
@@ -1585,7 +1548,7 @@ describe('Forge Web Script WASM backend', () => {
     });
     expect(result.diagnostics).toEqual([]);
     expect(result.wat).toContain('i32.atomic.rmw.add');
-    expect(WebAssembly.validate(result.wasm!.buffer as ArrayBuffer)).toBe(true);
+    expect(WebAssembly.validate(wasmBytes(result).buffer as ArrayBuffer)).toBe(true);
   });
 
   it('traps allocator overflow and deallocation outside the owned memory range', () => {
@@ -1597,7 +1560,7 @@ describe('Forge Web Script WASM backend', () => {
       metadata,
     });
     expect(result.diagnostics).toEqual([]);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports;
+    const exports = new WebAssembly.Instance(wasmModule(result), {}).exports;
     const allocate = exports.fws_alloc as (size: number) => number;
     const deallocate = exports.fws_dealloc as (pointer: number, size: number) => void;
 
@@ -1616,7 +1579,7 @@ describe('Forge Web Script WASM backend', () => {
       metadata,
     });
     expect(result.diagnostics).toEqual([]);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports;
+    const exports = new WebAssembly.Instance(wasmModule(result), {}).exports;
     const memory = exports.memory as WebAssembly.Memory;
     const allocate = exports.fws_alloc as (size: number) => number;
     const reallocate = exports.fws_realloc as (pointer: number, oldSize: number, newSize: number) => number;
@@ -1645,7 +1608,7 @@ describe('Forge Web Script WASM backend', () => {
       links: {},
       metadata,
     });
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports;
+    const exports = new WebAssembly.Instance(wasmModule(result), {}).exports;
     const allocate = exports.fws_alloc as (size: number) => number;
     const reset = exports.fws_reset as () => void;
 
@@ -1742,14 +1705,14 @@ describe('Forge Web Script WASM backend', () => {
     expect(resultRequired.diagnostics).toHaveLength(0);
 
     // Proven-safe should be strictly smaller than required (elision effect only)
-    expect(resultSafe.wasm!.length).toBeLessThan(resultRequired.wasm!.length);
+    expect(wasmBytes(resultSafe).length).toBeLessThan(wasmBytes(resultRequired).length);
 
     // Test 2: Write retains check via behavioral test with invalid index
     const moduleWrite = createWriteFunction('writeTest');
     const resultWrite = compile(moduleWrite);
     expect(resultWrite.diagnostics).toHaveLength(0);
 
-    const instance = new WebAssembly.Instance(new WebAssembly.Module(resultWrite.wasm!), {});
+    const instance = new WebAssembly.Instance(wasmModule(resultWrite), {});
     const writeTest = instance.exports.writeTest as (index: number) => number;
 
     // In-range write (index 0 or 1 for a 2-element array) should succeed
@@ -1853,7 +1816,7 @@ describe('Forge Web Script WASM backend', () => {
     expect(result.wat).toContain('memory.fill');
     expect(result.wat).toContain('memory.copy');
 
-    const instance = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {});
+    const instance = new WebAssembly.Instance(wasmModule(result), {});
     const testFunction = instance.exports.testBulkMemory as () => number;
     expect(testFunction()).toBe(0x2a_2a_2a_2a);
   });
@@ -1994,7 +1957,7 @@ describe('Forge Web Script WASM backend', () => {
     expect(result.wat).toContain('i8x16.eq');
     expect(result.wat).toContain('i8x16.bitmask');
 
-    const instance = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {});
+    const instance = new WebAssembly.Instance(wasmModule(result), {});
     const testFunction = instance.exports.testSimd as () => number;
     expect(testFunction()).toBe(0xff_ff);
   });

@@ -24,9 +24,10 @@ describe('Forge Web Script bootstrap conformance fixtures', () => {
     });
     expect(artifact.diagnostics).toEqual([]);
     expect(artifact.wasm).toBeDefined();
-    expect(WebAssembly.validate(artifact.wasm!)).toBe(true);
+    const wasm = artifact.wasm ?? new Uint8Array();
+    expect(WebAssembly.validate(wasm)).toBe(true);
     const imports = fixture.requestedCapabilities?.includes('clock.now') ? { 'clock.now': { now: () => 42n } } : {};
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!), imports).exports;
+    const exports = new WebAssembly.Instance(new WebAssembly.Module(wasm), imports).exports;
     if (fixture.name === 'pure arithmetic export')
       expect((exports.add as (a: number, b: number) => number)(2, 3)).toBe(5);
     if (fixture.name === 'explicit capability import') expect((exports.current as () => bigint)()).toBe(42n);
@@ -54,7 +55,8 @@ describe('Forge Web Script bootstrap conformance fixtures', () => {
       requestedCapabilities: ['clock.now'],
     });
     expect(result.module).toBeDefined();
-    expect(createFlintAbiManifest(result.module!)).toMatchObject({
+    if (result.module === undefined) throw new Error('Expected module to be defined');
+    expect(createFlintAbiManifest(result.module)).toMatchObject({
       languageVersion: '1.0',
       abiVersion: '1.2',
       moduleName: 'clocked',
@@ -67,7 +69,8 @@ describe('Forge Web Script bootstrap conformance fixtures', () => {
   it('rejects object-oriented declarations through the stable class-free diagnostic', () => {
     const fixture = rejectedBootstrapFixtures.find(({ name }) => name === 'class declaration');
     expect(fixture).toBeDefined();
-    const result = validateFlint(fixture!.source, 'class.flint');
+    if (fixture === undefined) throw new Error('Expected fixture to be defined');
+    const result = validateFlint(fixture.source, 'class.flint');
     expect(result.diagnostics.map((diagnostic) => diagnostic.code)).toContain('FLINT-PARSE-052');
   });
 });

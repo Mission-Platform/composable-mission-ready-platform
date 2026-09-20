@@ -15,7 +15,7 @@ describe('Forge Web Script async runtime', () => {
     const runtime = createFlintAsyncRuntime({
       capabilities: [FLINT_ASYNC_CAPABILITIES.microtask],
     });
-    runtime.scheduleMicrotask(new Uint8Array([2]), (payload) => new Uint8Array([payload[0]! + 1]));
+    runtime.scheduleMicrotask(new Uint8Array([2]), (payload) => new Uint8Array([(payload[0] ?? 0) + 1]));
     runtime.scheduleMicrotask(new Uint8Array([1]), (payload) => payload);
     expect(runtime.drain().map((result) => (result.ok ? result.result[0] : result.code))).toEqual([3, 1]);
   });
@@ -30,7 +30,7 @@ describe('Forge Web Script async runtime', () => {
       },
     });
     const input = new Uint8Array([7]);
-    const scheduled = runtime.spawnWorker(input, (payload) => new Uint8Array([payload[0]! * 2]));
+    const scheduled = runtime.spawnWorker(input, (payload) => new Uint8Array([(payload[0] ?? 0) * 2]));
     input[0] = 0;
     expect(scheduled).toMatchObject({ ok: true });
     if (!scheduled.ok) return;

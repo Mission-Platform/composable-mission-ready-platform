@@ -108,7 +108,8 @@ describe('Forge Web Script test harness boundary', () => {
     const parsed = parseFlint(source, fileName);
     expect(parsed.diagnostics).toEqual([]);
     expect(parsed.module).toBeDefined();
-    expect(checkFlint(parsed.module!, fileName).diagnostics).toEqual([]);
+    if (parsed.module === undefined) throw new Error('Expected parsed module to be defined');
+    expect(checkFlint(parsed.module, fileName).diagnostics).toEqual([]);
   });
 
   it('keeps collection diagnostics stable for shared rejected fixtures', async () => {

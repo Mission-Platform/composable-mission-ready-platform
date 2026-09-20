@@ -453,8 +453,9 @@ export fn caller(value: i32) -> i32 { return add(value); }`;
 
     const rename = service.rename(uri, positionAtOffset(source, source.lastIndexOf('add') + 1), 'sum');
     expect(rename).toBeDefined();
-    expect([...rename!.changes.keys()]).toEqual([uri]);
-    expect(rename!.changes.get(uri)).toEqual(
+    if (rename === undefined) throw new Error('Expected rename to be defined');
+    expect([...rename.changes.keys()]).toEqual([uri]);
+    expect(rename.changes.get(uri)).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           newText: 'sum',
@@ -488,7 +489,7 @@ export fn caller(value: i32) -> i32 { return add(value); }`;
     });
 
     for (const [uri, text] of files) {
-      service.openDocument({ uri, fileName: uri.split('/').pop()!, text, version: 1 });
+      service.openDocument({ uri, fileName: uri.split('/').pop() ?? 'file.flint', text, version: 1 });
     }
     await service.refreshWorkspace();
 
@@ -525,19 +526,20 @@ export fn caller(value: i32) -> i32 { return add(value); }`;
       'execute',
     );
     expect(rename).toBeDefined();
-    expect(rename!.changes.get('file:///workspace/helper.flint')).toEqual([
+    if (rename === undefined) throw new Error('Expected rename to be defined');
+    expect(rename.changes.get('file:///workspace/helper.flint')).toEqual([
       expect.objectContaining({
         newText: 'execute',
         range: expect.objectContaining({ startOffset: helperRunOffset, endOffset: helperRunOffset + 3 }),
       }),
     ]);
-    expect(rename!.changes.get('file:///workspace/main.flint')).toEqual([
+    expect(rename.changes.get('file:///workspace/main.flint')).toEqual([
       expect.objectContaining({
         newText: 'execute',
         range: expect.objectContaining({ startOffset: callOffset, endOffset: callOffset + 3 }),
       }),
     ]);
-    expect(rename!.changes.has('file:///workspace/other.flint')).toBe(false);
+    expect(rename.changes.has('file:///workspace/other.flint')).toBe(false);
 
     // Same-name export in another module must not be confused with the imported helper.
     const otherDefinition = service.definition(
@@ -565,7 +567,8 @@ export fn caller(value: i32) -> i32 { return add(value); }`;
       listFiles: async () => [...files.keys()],
       getOptions: async () => ({}),
     });
-    for (const [uri, text] of files) service.openDocument({ uri, fileName: uri.split('/').pop()!, text, version: 1 });
+    for (const [uri, text] of files)
+      service.openDocument({ uri, fileName: uri.split('/').pop() ?? 'file.flint', text, version: 1 });
 
     await service.refreshWorkspace();
     expect(service.diagnose(mainUri).diagnostics).not.toEqual(
@@ -610,7 +613,8 @@ export fn caller(value: i32) -> i32 { return add(value); }`;
       listFiles: async () => [...files.keys()],
       getOptions: async () => ({}),
     });
-    for (const [uri, text] of files) service.openDocument({ uri, fileName: uri.split('/').pop()!, text, version: 1 });
+    for (const [uri, text] of files)
+      service.openDocument({ uri, fileName: uri.split('/').pop() ?? 'file.flint', text, version: 1 });
 
     await service.refreshWorkspace();
     expect(service.inlayHints(mainUri)).toEqual(
@@ -680,7 +684,7 @@ export fn caller(value: i32) -> i32 { return add(value); }`;
       getOptions: async () => ({}),
     });
 
-    service.openDocument({ uri: activeUri, fileName: 'main.flint', text: files.get(activeUri)!, version: 1 });
+    service.openDocument({ uri: activeUri, fileName: 'main.flint', text: files.get(activeUri) ?? '', version: 1 });
     await service.refreshWorkspace(activeUri);
 
     expect(reads).not.toContain(unrelatedUri);
@@ -753,11 +757,11 @@ export fn entry(value: i32) -> i32 { return run(value); }`;
     ).toBeUndefined();
 
     for (const [uri, text] of files) {
-      service.openDocument({ uri, fileName: uri.split('/').pop()!, text, version: 1 });
+      service.openDocument({ uri, fileName: uri.split('/').pop() ?? 'file.flint', text, version: 1 });
     }
     await service.refreshWorkspace();
 
-    const main = files.get('file:///workspace/main.flint')!;
+    const main = files.get('file:///workspace/main.flint') ?? '';
     expect(service.definition('file:///workspace/main.flint', positionAtOffset(main, main.indexOf('run') + 1))).toEqual(
       [
         expect.objectContaining({
@@ -968,7 +972,8 @@ export fn second(value: Foo) -> Foo { return value; }`;
       listFiles: async () => [...files.keys()],
       getOptions: async () => ({}),
     });
-    for (const [uri, text] of files) service.openDocument({ uri, fileName: uri.split('/').pop()!, text, version: 1 });
+    for (const [uri, text] of files)
+      service.openDocument({ uri, fileName: uri.split('/').pop() ?? 'file.flint', text, version: 1 });
     await service.refreshWorkspace();
 
     const mainUri = 'file:///workspace/main.flint';

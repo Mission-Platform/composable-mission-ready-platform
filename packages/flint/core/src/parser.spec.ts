@@ -6,6 +6,11 @@ import { createFlintAbiManifest } from './manifest.ts';
 import { deriveFlintModuleId, parseFlint } from './parser.ts';
 import { checkFlint } from './type-checker.ts';
 
+function requireModule(parsed: ReturnType<typeof parseFlint>) {
+  if (parsed.module === undefined) throw new Error('Expected parsed module to be defined');
+  return parsed.module;
+}
+
 describe('Forge Web Script flat source modules', () => {
   it('parses file-scoped declarations and keeps source imports separate from capabilities', () => {
     const result = parseFlint(
@@ -54,7 +59,7 @@ describe('Forge Web Script flat source modules', () => {
     expect(result.module?.enums[0].variants).toHaveLength(2);
     expect(result.module?.interfaces[0].functions[0].name).toBe('equals');
     expect(result.module?.functions[0].genericParameters[0].name).toBe('T');
-    expect(checkFlint(result.module!, 'aggregates.flint').diagnostics).toEqual([]);
+    expect(checkFlint(requireModule(result), 'aggregates.flint').diagnostics).toEqual([]);
   });
 
   it('reserves record as a declaration keyword', () => {
@@ -83,11 +88,11 @@ describe('Forge Web Script flat source modules', () => {
         arguments: [{ kind: 'identifier', name: 'value' }],
       },
     });
-    expect(lowerFlintToIr(result.module!).functions[0].body[0]).toMatchObject({
+    expect(lowerFlintToIr(requireModule(result)).functions[0].body[0]).toMatchObject({
       kind: 'return',
       value: { kind: 'enum-value', variant: 'Ok' },
     });
-    expect(checkFlint(result.module!, 'constructors.flint').diagnostics).toEqual([]);
+    expect(checkFlint(requireModule(result), 'constructors.flint').diagnostics).toEqual([]);
   });
 
   it('checks function values by signature and binds qualified match fields locally', () => {
@@ -102,7 +107,7 @@ describe('Forge Web Script flat source modules', () => {
     );
 
     expect(result.diagnostics).toEqual([]);
-    expect(checkFlint(result.module!, 'bindings.flint').diagnostics).toEqual([]);
+    expect(checkFlint(requireModule(result), 'bindings.flint').diagnostics).toEqual([]);
   });
 
   it('diagnoses invalid constructors, function values, and match bindings', () => {
@@ -123,7 +128,7 @@ describe('Forge Web Script flat source modules', () => {
     );
 
     expect(result.module).toBeDefined();
-    const diagnostics = checkFlint(result.module!, 'aggregate-errors.flint').diagnostics;
+    const diagnostics = checkFlint(requireModule(result), 'aggregate-errors.flint').diagnostics;
     expect(diagnostics.map(({ code }) => code)).toEqual(
       expect.arrayContaining([
         'FLINT-TYPE-020',
@@ -146,7 +151,7 @@ describe('Forge Web Script flat source modules', () => {
       'layout.flint',
     );
     expect(result.module).toBeDefined();
-    const manifest = createFlintAbiManifest(result.module!);
+    const manifest = createFlintAbiManifest(requireModule(result));
     expect(manifest.exports).toEqual([{ name: 'origin', parameters: [], result: 'i32' }]);
     expect(manifest.aggregateLayouts).toMatchObject([{ name: 'Point', kind: 'struct', size: 8, immutable: true }]);
     expect(manifest.specializations).toEqual([]);
@@ -239,7 +244,7 @@ export fn add(left: i32, right: i32) -> i32 { return left + right; }`,
       'diagnostics.flint',
     );
     expect(result.module).toBeDefined();
-    const diagnostics = checkFlint(result.module!, 'diagnostics.flint').diagnostics;
+    const diagnostics = checkFlint(requireModule(result), 'diagnostics.flint').diagnostics;
     expect(diagnostics.map(({ code }) => code)).toEqual(
       expect.arrayContaining(['FLINT-TYPE-014', 'FLINT-TYPE-015', 'FLINT-TYPE-016']),
     );
@@ -251,7 +256,7 @@ export fn add(left: i32, right: i32) -> i32 { return left + right; }`,
       'bounds.flint',
     );
     expect(result.module).toBeDefined();
-    const diagnostics = checkFlint(result.module!, 'bounds.flint').diagnostics;
+    const diagnostics = checkFlint(requireModule(result), 'bounds.flint').diagnostics;
     expect(diagnostics.map(({ code }) => code)).toEqual(expect.arrayContaining(['FLINT-TYPE-013', 'FLINT-TYPE-017']));
     expect(diagnostics.some(({ message }) => message.includes('Indexed value has type'))).toBe(true);
   });
@@ -262,7 +267,7 @@ export fn add(left: i32, right: i32) -> i32 { return left + right; }`,
       'vector-bounds.flint',
     );
     expect(result.module).toBeDefined();
-    const diagnostics = checkFlint(result.module!, 'vector-bounds.flint').diagnostics;
+    const diagnostics = checkFlint(requireModule(result), 'vector-bounds.flint').diagnostics;
     expect(diagnostics).toEqual([]);
   });
 
@@ -272,7 +277,7 @@ export fn add(left: i32, right: i32) -> i32 { return left + right; }`,
       'vector-mismatch.flint',
     );
     expect(result.module).toBeDefined();
-    const diagnostics = checkFlint(result.module!, 'vector-mismatch.flint').diagnostics;
+    const diagnostics = checkFlint(requireModule(result), 'vector-mismatch.flint').diagnostics;
     expect(diagnostics.map(({ code }) => code)).toEqual(expect.arrayContaining(['FLINT-TYPE-005']));
     expect(diagnostics.some(({ message }) => message.includes("but the collection element has type 'i32'"))).toBe(true);
   });
@@ -289,7 +294,7 @@ export fn add(left: i32, right: i32) -> i32 { return left + right; }`,
       'collection-inference.flint',
     );
     expect(result.module).toBeDefined();
-    expect(checkFlint(result.module!, 'collection-inference.flint').diagnostics).toEqual([]);
+    expect(checkFlint(requireModule(result), 'collection-inference.flint').diagnostics).toEqual([]);
   });
 
   it('rejects mixed collection elements while preserving fixed-array length checks', () => {
@@ -298,7 +303,7 @@ export fn add(left: i32, right: i32) -> i32 { return left + right; }`,
       'collection-mismatch.flint',
     );
     expect(result.module).toBeDefined();
-    const diagnostics = checkFlint(result.module!, 'collection-mismatch.flint').diagnostics;
+    const diagnostics = checkFlint(requireModule(result), 'collection-mismatch.flint').diagnostics;
     expect(diagnostics.some(({ message }) => message === 'Collection elements must have the same type.')).toBe(true);
     expect(diagnostics.some(({ message }) => message.includes("has type 'i32[2]'"))).toBe(false);
   });
@@ -309,7 +314,7 @@ export fn add(left: i32, right: i32) -> i32 { return left + right; }`,
       'result-matching.flint',
     );
     expect(result.module).toBeDefined();
-    expect(checkFlint(result.module!, 'result-matching.flint').diagnostics).toEqual([]);
+    expect(checkFlint(requireModule(result), 'result-matching.flint').diagnostics).toEqual([]);
   });
 
   it('preserves enum context through nested conditional and loop bodies', () => {
@@ -324,7 +329,7 @@ export fn add(left: i32, right: i32) -> i32 { return left + right; }`,
       'nested-enum.flint',
     );
     expect(result.module).toBeDefined();
-    expect(checkFlint(result.module!, 'nested-enum.flint').diagnostics).toEqual([]);
+    expect(checkFlint(requireModule(result), 'nested-enum.flint').diagnostics).toEqual([]);
   });
 
   it('recursively validates nested types in local declarations', () => {
@@ -333,7 +338,7 @@ export fn add(left: i32, right: i32) -> i32 { return left + right; }`,
       'nested-type.flint',
     );
     expect(result.module).toBeDefined();
-    const diagnostics = checkFlint(result.module!, 'nested-type.flint').diagnostics;
+    const diagnostics = checkFlint(requireModule(result), 'nested-type.flint').diagnostics;
     expect(diagnostics).toContainEqual(
       expect.objectContaining({ code: 'FLINT-TYPE-004', message: "Unknown type 'Unknown'." }),
     );
@@ -345,7 +350,7 @@ export fn add(left: i32, right: i32) -> i32 { return left + right; }`,
       'generic-local-type.flint',
     );
     expect(result.module).toBeDefined();
-    expect(checkFlint(result.module!, 'generic-local-type.flint').diagnostics).toEqual([]);
+    expect(checkFlint(requireModule(result), 'generic-local-type.flint').diagnostics).toEqual([]);
   });
 
   it('checks collection member signatures and receiver methods', () => {
@@ -362,14 +367,14 @@ export fn add(left: i32, right: i32) -> i32 { return left + right; }`,
       'collection-methods.flint',
     );
     expect(valid.module).toBeDefined();
-    expect(checkFlint(valid.module!, 'collection-methods.flint').diagnostics).toEqual([]);
+    expect(checkFlint(requireModule(valid), 'collection-methods.flint').diagnostics).toEqual([]);
 
     const invalid = parseFlint(
       'export fn invalid(array: Array<i32>, vector: Vector<i32>) -> unit { array.get(); array.get("bad"); array.push(1); vector.set(0, "bad"); }',
       'collection-method-errors.flint',
     );
     expect(invalid.module).toBeDefined();
-    const diagnostics = checkFlint(invalid.module!, 'collection-method-errors.flint').diagnostics;
+    const diagnostics = checkFlint(requireModule(invalid), 'collection-method-errors.flint').diagnostics;
     expect(diagnostics.map(({ code }) => code)).toEqual(
       expect.arrayContaining(['FLINT-TYPE-003', 'FLINT-TYPE-005', 'FLINT-ABI-004']),
     );
@@ -381,9 +386,9 @@ export fn add(left: i32, right: i32) -> i32 { return left + right; }`,
       'metadata.flint',
     );
     expect(result.module).toBeDefined();
-    const ir = lowerFlintToIr(result.module!);
+    const ir = lowerFlintToIr(requireModule(result));
     expect(ir.functions[0].body).toEqual(expect.arrayContaining([expect.objectContaining({ kind: 'switch' })]));
-    const manifest = createFlintAbiManifest(result.module!);
+    const manifest = createFlintAbiManifest(requireModule(result));
     expect(manifest.enumDeclarations).toEqual([
       {
         name: 'State',
@@ -429,9 +434,11 @@ export fn add(left: i32, right: i32) -> i32 { return left + right; }`,
     const undocumented = parseFlint('export fn answer() -> i32 { return 42; }', 'same.flint');
     expect(documented.module).toBeDefined();
     expect(undocumented.module).toBeDefined();
-    const ir = lowerFlintToIr(documented.module!);
+    const ir = lowerFlintToIr(requireModule(documented));
     expect(ir.functions[0].documentation?.description).toBe('Returns an answer.');
-    expect(createFlintAbiManifest(documented.module!)).toEqual(createFlintAbiManifest(undocumented.module!));
+    expect(createFlintAbiManifest(requireModule(documented))).toEqual(
+      createFlintAbiManifest(requireModule(undocumented)),
+    );
   });
 
   it('retains documentation on public aggregate declarations and interface members', () => {
@@ -519,7 +526,7 @@ export fn add(left: i32, right: i32) -> i32 { return left + right; }`,
       { kind: 'do-while', body: [{ kind: 'assignment', name: 'value' }] },
       { kind: 'return' },
     ]);
-    expect(checkFlint(result.module!, 'loops.flint').diagnostics).toEqual([]);
+    expect(checkFlint(requireModule(result), 'loops.flint').diagnostics).toEqual([]);
   });
 
   it('rejects yield outside iterator functions and validates iterator next contracts', () => {
@@ -528,10 +535,10 @@ export fn add(left: i32, right: i32) -> i32 { return left + right; }`,
       'yield.flint',
     );
     expect(result.module).toBeDefined();
-    expect(checkFlint(result.module!, 'yield.flint').diagnostics).toContainEqual(
+    expect(checkFlint(requireModule(result), 'yield.flint').diagnostics).toContainEqual(
       expect.objectContaining({ code: 'FLINT-TYPE-011' }),
     );
-    expect(checkFlint(result.module!, 'yield.flint').diagnostics).not.toContainEqual(
+    expect(checkFlint(requireModule(result), 'yield.flint').diagnostics).not.toContainEqual(
       expect.objectContaining({ code: 'FLINT-TYPE-011', message: expect.stringContaining('values') }),
     );
   });

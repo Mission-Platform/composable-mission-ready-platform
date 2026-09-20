@@ -51,7 +51,8 @@ describe('Forge iterator-first control flow and string helpers', () => {
     expect(parsed.module).toBeDefined();
     expect(parsed.diagnostics).toEqual([]);
     expect(parsed.module?.functions[0]?.body.map(({ kind }) => kind)).toEqual(['let', 'while', 'return']);
-    const ir = lowerFlintToIr(parsed.module!);
+    if (parsed.module === undefined) throw new Error('Expected parsed module to be defined');
+    const ir = lowerFlintToIr(parsed.module);
     expect(ir.functions[0]?.body.map(({ kind }) => kind)).toEqual(['let', 'while', 'return']);
   });
 
@@ -96,7 +97,8 @@ describe('Forge iterator-first control flow and string helpers', () => {
     const statements = parsed.module?.functions[0]?.body ?? [];
     expect(statements.map(({ kind }) => kind)).toEqual(['let', 'expression-statement', 'do-while', 'return']);
 
-    const loop = lowerFlintToIr(parsed.module!).functions[0]?.body ?? [];
+    if (parsed.module === undefined) throw new Error('Expected parsed module to be defined');
+    const loop = lowerFlintToIr(parsed.module).functions[0]?.body ?? [];
     expect(loop.map(({ kind }) => kind)).toEqual(['let', 'expression-statement', 'do-while', 'return']);
 
     const artifact = compileFlint({ source, fileName: 'control-flow.flint', compilerVersion: 'test' });
@@ -125,8 +127,9 @@ export fn toNumber(value: string) -> i32 {
     const artifact = compileFlint({ source, fileName: 'string-helpers.flint', compilerVersion: 'test' });
     expect(artifact.diagnostics).toEqual([]);
     expect(artifact.wasm).toBeDefined();
-    expect(WebAssembly.validate(artifact.wasm!.buffer as ArrayBuffer)).toBe(true);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!), {})
+    const wasm = artifact.wasm ?? new Uint8Array();
+    expect(WebAssembly.validate(wasm.buffer as ArrayBuffer)).toBe(true);
+    const exports = new WebAssembly.Instance(new WebAssembly.Module(wasm), {})
       .exports as unknown as StringHelperExports;
 
     expect(exports.byteAt(...writeString(exports, 'abc'), 1)).toBe('b'.codePointAt(0));
@@ -146,7 +149,8 @@ export fn toNumber(value: string) -> i32 {
       compilerVersion: 'test',
     });
     expect(artifact.diagnostics).toEqual([]);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!), {})
+    const wasm = artifact.wasm ?? new Uint8Array();
+    const exports = new WebAssembly.Instance(new WebAssembly.Module(wasm), {})
       .exports as unknown as StringHelperExports & {
       readonly join: (...parts: number[]) => readonly [number, number];
     };
@@ -175,8 +179,8 @@ export fn toNumber(value: string) -> i32 {
       compilerVersion: 'test',
     });
     expect(artifact.diagnostics).toEqual([]);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!), {})
-      .exports as StringHelperExports & {
+    const wasm = artifact.wasm ?? new Uint8Array();
+    const exports = new WebAssembly.Instance(new WebAssembly.Module(wasm), {}).exports as StringHelperExports & {
       readonly collect: (pointer: number, length: number) => readonly [number, number];
     };
     const result = exports.collect(...writeString(exports, 'abc'));
@@ -205,8 +209,8 @@ export fn wrappedDigits(value: string) -> string {
       optimization: 'release',
     });
     expect(artifact.diagnostics).toEqual([]);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!), {})
-      .exports as StringHelperExports & {
+    const wasm = artifact.wasm ?? new Uint8Array();
+    const exports = new WebAssembly.Instance(new WebAssembly.Module(wasm), {}).exports as StringHelperExports & {
       readonly digits: (pointer: number, length: number) => readonly [number, number];
       readonly wrappedDigits: (pointer: number, length: number) => readonly [number, number];
     };

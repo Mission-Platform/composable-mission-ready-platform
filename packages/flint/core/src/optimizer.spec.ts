@@ -16,14 +16,18 @@ function compile(optimization: 'debug' | 'release') {
   return compileFlint({ source, fileName: 'optimizer.flint', compilerVersion: '0.1.0', optimization });
 }
 
+function wasmModule(artifact: { readonly wasm?: Uint8Array }) {
+  return new WebAssembly.Module(artifact.wasm ?? new Uint8Array());
+}
+
 describe('Forge Web Script typed IR optimizer', () => {
   it('keeps debug and release execution equivalent', () => {
     const debug = compile('debug');
     const release = compile('release');
     expect(debug.diagnostics).toEqual([]);
     expect(release.diagnostics).toEqual([]);
-    const debugExports = new WebAssembly.Instance(new WebAssembly.Module(debug.wasm!), {}).exports;
-    const releaseExports = new WebAssembly.Instance(new WebAssembly.Module(release.wasm!), {}).exports;
+    const debugExports = new WebAssembly.Instance(wasmModule(debug), {}).exports;
+    const releaseExports = new WebAssembly.Instance(wasmModule(release), {}).exports;
     expect((debugExports.calculate as () => number)()).toBe(5);
     expect((releaseExports.calculate as () => number)()).toBe(5);
     expect(debug.wat).toContain('(module');
@@ -39,8 +43,9 @@ describe('Forge Web Script typed IR optimizer', () => {
       'ir.flint',
     );
     expect(parsed.module).toBeDefined();
-    const result = optimizeFlintIr(lowerFlintToIr(parsed.module!), 'release');
-    const repeated = optimizeFlintIr(lowerFlintToIr(parsed.module!), 'release');
+    if (parsed.module === undefined) throw new Error('Expected parsed module to be defined');
+    const result = optimizeFlintIr(lowerFlintToIr(parsed.module), 'release');
+    const repeated = optimizeFlintIr(lowerFlintToIr(parsed.module), 'release');
     expect(result.ir).toEqual(repeated.ir);
     expect(result.report.functionsRemoved).toBe(1);
     expect(result.report.reachableFunctions).toEqual(['helper', 'used']);
@@ -68,10 +73,10 @@ describe('Forge Web Script typed IR optimizer', () => {
     expect(debug.diagnostics).toEqual([]);
     expect(release.diagnostics).toEqual([]);
 
-    const debugExports = new WebAssembly.Instance(new WebAssembly.Module(debug.wasm!), {}).exports as unknown as {
+    const debugExports = new WebAssembly.Instance(wasmModule(debug), {}).exports as unknown as {
       f: (cond: boolean) => number;
     };
-    const releaseExports = new WebAssembly.Instance(new WebAssembly.Module(release.wasm!), {}).exports as unknown as {
+    const releaseExports = new WebAssembly.Instance(wasmModule(release), {}).exports as unknown as {
       f: (cond: boolean) => number;
     };
 
@@ -101,10 +106,10 @@ describe('Forge Web Script typed IR optimizer', () => {
     expect(debug.diagnostics).toEqual([]);
     expect(release.diagnostics).toEqual([]);
 
-    const debugExports = new WebAssembly.Instance(new WebAssembly.Module(debug.wasm!), {}).exports as unknown as {
+    const debugExports = new WebAssembly.Instance(wasmModule(debug), {}).exports as unknown as {
       f: () => number;
     };
-    const releaseExports = new WebAssembly.Instance(new WebAssembly.Module(release.wasm!), {}).exports as unknown as {
+    const releaseExports = new WebAssembly.Instance(wasmModule(release), {}).exports as unknown as {
       f: () => number;
     };
 
@@ -136,10 +141,10 @@ describe('Forge Web Script typed IR optimizer', () => {
     expect(debug.diagnostics).toEqual([]);
     expect(release.diagnostics).toEqual([]);
 
-    const debugExports = new WebAssembly.Instance(new WebAssembly.Module(debug.wasm!), {}).exports as unknown as {
+    const debugExports = new WebAssembly.Instance(wasmModule(debug), {}).exports as unknown as {
       f: (cond: number) => number;
     };
-    const releaseExports = new WebAssembly.Instance(new WebAssembly.Module(release.wasm!), {}).exports as unknown as {
+    const releaseExports = new WebAssembly.Instance(wasmModule(release), {}).exports as unknown as {
       f: (cond: number) => number;
     };
 
@@ -165,7 +170,7 @@ describe('Forge Web Script typed IR optimizer', () => {
       optimization: 'release',
     });
     expect(release.diagnostics).toEqual([]);
-    const releaseExports = new WebAssembly.Instance(new WebAssembly.Module(release.wasm!), {}).exports as unknown as {
+    const releaseExports = new WebAssembly.Instance(wasmModule(release), {}).exports as unknown as {
       f: (cond: number) => number;
     };
     expect(releaseExports.f(1)).toBe(9);
@@ -180,7 +185,8 @@ describe('Forge Web Script typed IR optimizer', () => {
       'iterator-ir.flint',
     );
     expect(parsed.diagnostics).toEqual([]);
-    const result = optimizeFlintIr(lowerFlintToIr(parsed.module!), 'release');
+    if (parsed.module === undefined) throw new Error('Expected parsed module to be defined');
+    const result = optimizeFlintIr(lowerFlintToIr(parsed.module), 'release');
     const loop = result.ir.functions[0]?.body[0];
     expect(loop?.kind).toBe('iterator-loop');
     if (loop?.kind !== 'iterator-loop') return;
@@ -201,9 +207,10 @@ describe('Forge Web Script typed IR optimizer', () => {
     );
     expect(parsed.diagnostics).toEqual([]);
     expect(parsed.module).toBeDefined();
-    expect(checkFlint(parsed.module!, 'bounded-empty-iterator.flint').diagnostics).toEqual([]);
+    if (parsed.module === undefined) throw new Error('Expected parsed module to be defined');
+    expect(checkFlint(parsed.module, 'bounded-empty-iterator.flint').diagnostics).toEqual([]);
 
-    const input = lowerFlintToIr(parsed.module!);
+    const input = lowerFlintToIr(parsed.module);
     const inputLoop = input.functions.find(({ name }) => name === 'consume')?.body[0];
     expect(inputLoop).toMatchObject({ kind: 'iterator-loop', boundedLength: 0 });
 
@@ -231,9 +238,10 @@ describe('Forge Web Script typed IR optimizer', () => {
     );
     expect(parsed.diagnostics).toEqual([]);
     expect(parsed.module).toBeDefined();
-    expect(checkFlint(parsed.module!, 'bounded-one-iterator.flint').diagnostics).toEqual([]);
+    if (parsed.module === undefined) throw new Error('Expected parsed module to be defined');
+    expect(checkFlint(parsed.module, 'bounded-one-iterator.flint').diagnostics).toEqual([]);
 
-    const result = optimizeFlintIr(lowerFlintToIr(parsed.module!), 'release');
+    const result = optimizeFlintIr(lowerFlintToIr(parsed.module), 'release');
     const loop = result.ir.functions.find(({ name }) => name === 'consume')?.body[0];
     expect(loop).toMatchObject({ kind: 'iterator-loop', boundedLength: 1 });
     expect(result.report.iteratorUnrolled).toBe(0);
@@ -251,7 +259,8 @@ describe('Forge Web Script typed IR optimizer', () => {
       'export fn used() -> i32 { return helper(); } noinline fn helper() -> i32 { return 7; }',
       'noinline.flint',
     );
-    const result = optimizeFlintIr(lowerFlintToIr(parsed.module!), 'release');
+    if (parsed.module === undefined) throw new Error('Expected parsed module to be defined');
+    const result = optimizeFlintIr(lowerFlintToIr(parsed.module), 'release');
     const returnStatement = result.ir.functions.find(({ name }) => name === 'used')?.body[0];
     expect(returnStatement?.kind).toBe('return');
     if (returnStatement?.kind !== 'return' || returnStatement.value?.kind !== 'call') return;
@@ -269,7 +278,8 @@ describe('Forge Web Script typed IR optimizer', () => {
        export fn read() -> i64 { return now(); }`,
       'host-order.flint',
     );
-    const result = optimizeFlintIr(lowerFlintToIr(parsed.module!), 'release');
+    if (parsed.module === undefined) throw new Error('Expected parsed module to be defined');
+    const result = optimizeFlintIr(lowerFlintToIr(parsed.module), 'release');
     expect(result.report.functionsInlined).toBe(0);
     expect(result.ir.functions[0]?.body[0]).toMatchObject({
       kind: 'return',

@@ -158,7 +158,7 @@ describe("Forge regex compiler and reference oracle", () => {
       input.length,
     ]);
     expect([captureStart(captures, 1), captureEnd(captures, 1)]).toEqual([
-      native!.index + 0,
+      native?.index ?? 0,
       1,
     ]);
     expect([captureStart(captures, 2), captureEnd(captures, 2)]).toEqual([

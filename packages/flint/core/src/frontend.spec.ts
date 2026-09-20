@@ -34,9 +34,9 @@ describe('Forge Web Script frontend/backend boundary', () => {
 
     // The SoN graph is built from the unoptimized IR (which still has the
     // `40 + 2` binary node), so it starts out larger than the optimized graph.
-    expect(result.unoptimizedSonIr!.nodes.length).toBeGreaterThan(result.sonIr!.nodes.length);
+    expect(result.unoptimizedSonIr?.nodes.length).toBeGreaterThan(result.sonIr?.nodes.length ?? 0);
     // Constant-propagation genuinely runs (not a no-op) and folds `40 + 2` to `42`.
-    const constantPropagation = result.sonOptimizationReport!.passes.find(
+    const constantPropagation = result.sonOptimizationReport?.passes.find(
       ({ name }) => name === 'constant-propagation',
     );
     expect(constantPropagation?.applied).toBeGreaterThan(0);
@@ -67,7 +67,7 @@ describe('Forge Web Script frontend/backend boundary', () => {
     expect(result.diagnostics).toEqual([]);
     expect(result.optimizedIr?.functions.map(({ name }) => name).toSorted()).toEqual(['helper', 'used']);
     expect(result.sonIr?.functions.map(({ name }) => name).toSorted()).toEqual(['helper', 'used']);
-    const reachabilityPruning = result.sonOptimizationReport!.passes.find(
+    const reachabilityPruning = result.sonOptimizationReport?.passes.find(
       ({ name }) => name === 'reachability-pruning',
     );
     expect(reachabilityPruning?.applied).toBe(1);

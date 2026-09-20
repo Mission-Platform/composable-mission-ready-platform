@@ -22,8 +22,9 @@ function instantiate(
   const artifact = compileFlint(input(source, requestedCapabilities));
   expect(artifact.diagnostics).toEqual([]);
   expect(artifact.wasm).toBeInstanceOf(Uint8Array);
-  expect(WebAssembly.validate(artifact.wasm!)).toBe(true);
-  return new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!), imports).exports;
+  const wasm = artifact.wasm ?? new Uint8Array();
+  expect(WebAssembly.validate(wasm)).toBe(true);
+  return new WebAssembly.Instance(new WebAssembly.Module(wasm), imports).exports;
 }
 
 describe('Forge Web Script bootstrap compiler', () => {
@@ -40,7 +41,7 @@ describe('Forge Web Script bootstrap compiler', () => {
       'write_and_read',
       'write_and_read_f64',
     ]);
-    const instance = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!), {});
+    const instance = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm ?? new Uint8Array()), {});
     const exports = instance.exports as unknown as {
       readonly write_and_read: (value: number) => number;
       readonly write_and_read_f64: (value: number) => number;
@@ -69,7 +70,7 @@ describe('Forge Web Script bootstrap compiler', () => {
     expect(artifact.diagnostics).toEqual([]);
     expect(artifact.manifest?.exports.map(({ name }) => name)).toEqual(['answer']);
     expect(artifact.wasm).toBeInstanceOf(Uint8Array);
-    expect(WebAssembly.validate(artifact.wasm!)).toBe(true);
+    expect(WebAssembly.validate(artifact.wasm ?? new Uint8Array())).toBe(true);
   });
 
   it('emits valid deterministic wasm for a pure numeric function', () => {
@@ -83,7 +84,7 @@ describe('Forge Web Script bootstrap compiler', () => {
     expect(first.wasm).toBeInstanceOf(Uint8Array);
     expect(first.wasm).toEqual(second.wasm);
     expect(first.contentHash).toBe(second.contentHash);
-    const instance = new WebAssembly.Instance(new WebAssembly.Module(first.wasm!), {});
+    const instance = new WebAssembly.Instance(new WebAssembly.Module(first.wasm ?? new Uint8Array()), {});
     expect((instance.exports.add as (left: number, right: number) => number)(2, 3)).toBe(5);
     expect(instance.exports.memory).toBeInstanceOf(WebAssembly.Memory);
     expect(first.artifactVerification).toMatchObject({ verified: true, checkedVariants: ['optimized', 'unoptimized'] });
@@ -162,7 +163,7 @@ export fn emptySum(items: Array<i32>) -> i32 {
       const artifact = compileFlint({ ...input(source), optimization });
       expect(artifact.diagnostics).toEqual([]);
       expect(artifact.wasm).toBeInstanceOf(Uint8Array);
-      expect(WebAssembly.validate(artifact.wasm!)).toBe(true);
+      expect(WebAssembly.validate(artifact.wasm ?? new Uint8Array())).toBe(true);
       const generated = await import(`data:text/javascript,${encodeURIComponent(artifact.esmSource)}`);
 
       for (const exports of [generated.loadSync(), await generated.load()]) {
@@ -189,10 +190,10 @@ export fn emptySum(items: Array<i32>) -> i32 {
 }`;
     const artifact = compileFlint(input(source, ['clock.now']));
     expect(artifact.diagnostics).toEqual([]);
-    expect(WebAssembly.Module.imports(new WebAssembly.Module(artifact.wasm!))).toEqual([
+    expect(WebAssembly.Module.imports(new WebAssembly.Module(artifact.wasm ?? new Uint8Array()))).toEqual([
       { module: 'clock.now', name: 'now', kind: 'function' },
     ]);
-    const instance = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!), {
+    const instance = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm ?? new Uint8Array()), {
       'clock.now': { now: () => 42n },
     });
     expect((instance.exports.current as () => bigint)()).toBe(42n);
@@ -253,7 +254,7 @@ export fn dispatch(state: State, values: [i32; 2]) -> i32 { return values[0]; }
         { name: 'values', type: 'i32', reference: 'Array', arguments: [{ name: 'i32' }], length: 2 },
       ],
     });
-    expect(WebAssembly.Module.exports(new WebAssembly.Module(artifact.wasm!))).toEqual([
+    expect(WebAssembly.Module.exports(new WebAssembly.Module(artifact.wasm ?? new Uint8Array()))).toEqual([
       { name: 'dispatch', kind: 'function' },
       { name: 'memory', kind: 'memory' },
       { name: 'fws_alloc', kind: 'function' },
@@ -603,7 +604,7 @@ export fn invoke(value: bytes) -> bytes { return reverse(value); }`,
     expect(artifact.esmSource).toContain('const wasm = Uint8Array.from(');
     expect(artifact.esmSource).toContain('const wasmBase64 =');
     expect(artifact.esmSource).toContain('export function loadSync');
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!), {}).exports;
+    const exports = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm ?? new Uint8Array()), {}).exports;
     expect(Object.keys(exports)).toEqual(['answer', 'memory', 'fws_alloc', 'fws_dealloc', 'fws_realloc', 'fws_reset']);
     expect((exports.answer as () => number)()).toBe(42);
 
@@ -734,7 +735,7 @@ export iter fn one() -> Iterator<i32> { yield 1; }`;
     expect(artifact.diagnostics.map(({ code, message }) => `${code}: ${message}`)).toEqual([]);
     expect(artifact.diagnostics.some(({ code }) => code === 'FLINT-EMIT-001')).toBe(false);
     expect(artifact.wasm).toBeInstanceOf(Uint8Array);
-    expect(WebAssembly.validate(artifact.wasm!)).toBe(true);
+    expect(WebAssembly.validate(artifact.wasm ?? new Uint8Array())).toBe(true);
     expect(artifact.iteratorExports).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ name: 'values', nextFunction: 'values.next', elementType: 'i32' }),
@@ -746,10 +747,8 @@ export iter fn one() -> Iterator<i32> { yield 1; }`;
     expect(artifact.esmSource).toContain('"nextFunction":"values.next"');
     expect(artifact.wat).toContain(';; iterator-export: values next=values.next');
 
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!), {}).exports as Record<
-      string,
-      CallableFunction
-    >;
+    const exports = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm ?? new Uint8Array()), {})
+      .exports as Record<string, CallableFunction>;
     expect(typeof exports.values).toBe('function');
     expect(typeof exports['values.next']).toBe('function');
     expect(exports.one()).toBe(0);
@@ -771,8 +770,8 @@ export iter fn one() -> Iterator<i32> { yield 1; }`;
     const artifact = compileFlint(input('import "./math.flint" as math; export fn answer() -> i32 { return 42; }'));
     expect(artifact.diagnostics).toEqual([]);
     expect(artifact.manifest).toBeDefined();
-    expect(artifact.manifest!.sourceImports).toEqual([{ source: './math.flint', alias: 'math' }]);
-    expect(Object.prototype.hasOwnProperty.call(artifact.manifest!, 'linkedExports')).toBe(false);
+    expect(artifact.manifest?.sourceImports).toEqual([{ source: './math.flint', alias: 'math' }]);
+    expect(Object.prototype.hasOwnProperty.call(artifact.manifest ?? {}, 'linkedExports')).toBe(false);
   });
 
   it('tracks service cache hits and invalidation, then rejects use after disposal', () => {

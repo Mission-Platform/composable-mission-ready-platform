@@ -69,7 +69,10 @@ describe("benchmark runtime adapters", () => {
     );
     expect(unicode).toBeDefined();
     expect(dataset).toBeDefined();
-    for (const benchmarkCase of [unicode!, dataset!, unicode!, dataset!])
+    if (unicode === undefined || dataset === undefined) {
+      throw new Error("Expected benchmark cases to be defined");
+    }
+    for (const benchmarkCase of [unicode, dataset, unicode, dataset])
       expect(
         await initialized.execute(benchmarkCase.input),
         benchmarkCase.id,
@@ -80,9 +83,7 @@ describe("benchmark runtime adapters", () => {
         threshold: 1,
       }),
     ).toBe(140_000);
-    expect(await initialized.execute(unicode!.input)).toEqual(
-      unicode!.expected,
-    );
+    expect(await initialized.execute(unicode.input)).toEqual(unicode.expected);
   });
 
   it("rejects malformed WASM before it can enter a speed ranking", () => {

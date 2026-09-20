@@ -308,12 +308,14 @@ function localDeclarations(
 
 /** Emits local.get opcodes for a register reference. */
 function localGet(reference: LocalReference, index = 0): number[] {
-  return reference[index] === undefined ? [] : [0x20, ...unsignedLeb(reference[index]!)];
+  const target = reference[index];
+  return target === undefined ? [] : [0x20, ...unsignedLeb(target)];
 }
 
 /** Emits local.set opcodes for a register reference. */
 function localSet(reference: LocalReference, value: readonly number[], index = 0): number[] {
-  return reference[index] === undefined ? [] : [...value, 0x21, ...unsignedLeb(reference[index]!)];
+  const target = reference[index];
+  return target === undefined ? [] : [...value, 0x21, ...unsignedLeb(target)];
 }
 
 /** Emits bytecode loading a constant into registers. */
@@ -467,14 +469,11 @@ function emitInstruction(
   };
   switch (instruction.opcode) {
     case 'const': {
+      const constant = module.constants[instruction.constant];
+      if (constant === undefined) fail(`constant ${instruction.constant} is not defined`);
       set(
         instruction.destination ?? 0,
-        emitConst(
-          rep(instruction.destination ?? 0),
-          module.constants[instruction.constant]!,
-          instruction.constant,
-          dataOffsets,
-        ),
+        emitConst(rep(instruction.destination ?? 0), constant, instruction.constant, dataOffsets),
       );
       break;
     }
@@ -597,7 +596,9 @@ function emitInstruction(
       for (const argument of instruction.arguments)
         for (const value of reference(argument)) result.push(...localGet([value]));
       result.push(0x10, ...unsignedLeb(importIndex));
-      const imported = module.capabilityImports.find((candidate) => candidate.name === instruction.importName)!;
+      const imported =
+        module.capabilityImports.find((candidate) => candidate.name === instruction.importName) ??
+        fail(`capability import '${instruction.importName}' was not found`);
       if (instruction.destination === undefined)
         for (const _ of flatTypes(resultRep(imported.result))) result.push(0x1a);
       else
@@ -606,6 +607,7 @@ function emitInstruction(
       break;
     }
     case 'branch': {
+      const ip = info.locals[function_.registers]?.[0] ?? fail('missing IP register');
       result.push(
         ...localGet(reference(instruction.condition)),
         0x04,
@@ -613,14 +615,14 @@ function emitInstruction(
         0x41,
         ...signedLeb(instruction.ifTrue),
         0x21,
-        ...unsignedLeb(info.locals[function_.registers]![0]!),
+        ...unsignedLeb(ip),
         0x0c,
         ...unsignedLeb(stepIndex + 1),
         0x05,
         0x41,
         ...signedLeb(instruction.ifFalse),
         0x21,
-        ...unsignedLeb(info.locals[function_.registers]![0]!),
+        ...unsignedLeb(ip),
         0x0c,
         ...unsignedLeb(stepIndex + 1),
         0x0b,
@@ -628,14 +630,8 @@ function emitInstruction(
       break;
     }
     case 'jump': {
-      result.push(
-        0x41,
-        ...signedLeb(instruction.target),
-        0x21,
-        ...unsignedLeb(info.locals[function_.registers]![0]!),
-        0x0c,
-        ...unsignedLeb(stepIndex),
-      );
+      const ip = info.locals[function_.registers]?.[0] ?? fail('missing IP register');
+      result.push(0x41, ...signedLeb(instruction.target), 0x21, ...unsignedLeb(ip), 0x0c, ...unsignedLeb(stepIndex));
       break;
     }
     case 'return': {
@@ -665,15 +661,10 @@ function emitInstruction(
     instruction.opcode !== 'jump' &&
     instruction.opcode !== 'return' &&
     instruction.opcode !== 'trap'
-  )
-    result.push(
-      0x41,
-      ...signedLeb(stepIndex + 1),
-      0x21,
-      ...unsignedLeb(info.locals[function_.registers]![0]!),
-      0x0c,
-      ...unsignedLeb(stepIndex),
-    );
+  ) {
+    const ip = info.locals[function_.registers]?.[0] ?? fail('missing IP register');
+    result.push(0x41, ...signedLeb(stepIndex + 1), 0x21, ...unsignedLeb(ip), 0x0c, ...unsignedLeb(stepIndex));
+  }
   return result;
 }
 
@@ -763,17 +754,21 @@ function buildModule(module: FlintVmModule, maximumPages: number): Uint8Array {
   const userFunctionIndexes = new Map<string, number>();
   for (const [index, function_] of module.functions.entries())
     userFunctionIndexes.set(function_.name, imports.length + index);
-  for (const [name, info] of infos) infos.set(name, { ...info, typeIndex: userFunctionIndexes.get(name)! });
+  for (const [name, info] of infos) infos.set(name, { ...info, typeIndex: userFunctionIndexes.get(name) ?? 0 });
   const userInfos = new Map<string, FunctionInfo>();
   for (const function_ of module.functions) {
-    const old = infos.get(function_.name)!;
-    userInfos.set(function_.name, { ...old, typeIndex: userFunctionIndexes.get(function_.name)! });
+    const old = infos.get(function_.name);
+    if (old !== undefined) {
+      userInfos.set(function_.name, { ...old, typeIndex: userFunctionIndexes.get(function_.name) ?? 0 });
+    }
   }
-  const functionTypeIndexes = module.functions.map((function_) =>
-    typeKeys.get(
-      JSON.stringify([function_.parameters.map((parameter) => typeForValue(parameter)), resultRep(function_.result)]),
-    )!,
-  );
+  const functionTypeIndexes = module.functions.map((function_) => {
+    const key = JSON.stringify([
+      function_.parameters.map((parameter) => typeForValue(parameter)),
+      resultRep(function_.result),
+    ]);
+    return typeKeys.get(key) ?? 0;
+  });
   const allocType = addType([{ kind: 'number', type: 'i32' }], { kind: 'number', type: 'i32' });
   const deallocType = addType(
     [
@@ -802,8 +797,9 @@ function buildModule(module: FlintVmModule, maximumPages: number): Uint8Array {
   };
   const codeBodies: number[][] = [];
   for (const [functionIndex, function_] of module.functions.entries()) {
-    const info = userInfos.get(function_.name)!;
-    const ip = info.locals[function_.registers]![0]!;
+    const info = userInfos.get(function_.name);
+    if (info === undefined) fail(`missing function info for '${function_.name}'`);
+    const ip = info.locals[function_.registers]?.[0] ?? fail('missing IP register');
     const body: number[] = [0x41, ...signedLeb(0), 0x21, ...unsignedLeb(ip), 0x02, 0x40, 0x03, 0x40];
     for (let index = 0; index < function_.code.length; index += 1) {
       // The dispatcher blocks are emitted below; this loop only reserves the instruction count for the labels.
@@ -822,10 +818,12 @@ function buildModule(module: FlintVmModule, maximumPages: number): Uint8Array {
         ...unsignedLeb(blockCount + 1),
       );
       for (let index = blockCount - 1; index >= 0; index -= 1) {
+        const instruction = function_.code[index];
+        if (instruction === undefined) fail(`instruction at index ${index} is missing`);
         body.push(
           0x0b,
           ...emitInstruction(
-            function_.code[index]!,
+            instruction,
             function_,
             info,
             module,

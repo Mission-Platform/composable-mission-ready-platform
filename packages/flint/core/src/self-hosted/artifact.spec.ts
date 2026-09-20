@@ -35,7 +35,7 @@ describe('Forge Web Script self-hosted artifact protocol', () => {
 
     expect(decoded).toEqual(artifact);
     expect(encodeFlintSelfHostedStageArtifact(decoded)).toEqual(encoded);
-    expect(decodeFlintSelfHostedDiagnostics(decoded.diagnosticPayload!)).toEqual([diagnostic]);
+    expect(decodeFlintSelfHostedDiagnostics(decoded.diagnosticPayload ?? new Uint8Array())).toEqual([diagnostic]);
   });
 
   it('canonicalizes diagnostic ordering without mutating the input', () => {

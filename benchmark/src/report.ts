@@ -819,7 +819,12 @@ export function compareBenchmarkReports(
   return keys.map((key) => {
     const currentMeasurement = currentByKey.get(key);
     const baselineMeasurement = baselineByKey.get(key);
-    const measurement = currentMeasurement ?? baselineMeasurement!;
+    const measurement = currentMeasurement ?? baselineMeasurement;
+    if (measurement === undefined) {
+      throw new Error(
+        `Unreachable: measurement for key "${key}" not found in current or baseline`,
+      );
+    }
     const comparisonKeyValue = benchmarkKey(measurement);
     if (
       schemaReason !== undefined ||

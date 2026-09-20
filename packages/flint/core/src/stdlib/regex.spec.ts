@@ -33,7 +33,8 @@ describe('Forge regex standard-library contract', () => {
   it('annotates regex calls in IR without treating them as imports', () => {
     const parsed = parseFlint(VALID_SOURCE, 'regex.flint');
     expect(parsed.module).toBeDefined();
-    const ir = lowerFlintToIr(parsed.module!);
+    if (parsed.module === undefined) throw new Error('Expected parsed module to be defined');
+    const ir = lowerFlintToIr(parsed.module);
     const statement = ir.functions[0].body[0];
     expect(statement.kind).toBe('return');
     if (statement.kind === 'return') {
@@ -62,7 +63,8 @@ describe('Forge regex standard-library contract', () => {
 
   it('keeps regex identities in deterministic manifests, not capability imports', () => {
     const parsed = parseFlint(VALID_SOURCE, 'regex.flint');
-    const manifest = createFlintAbiManifest(parsed.module!, {
+    if (parsed.module === undefined) throw new Error('Expected parsed module to be defined');
+    const manifest = createFlintAbiManifest(parsed.module, {
       standardLibrary: {
         regexBytecodeVersion: 'bytecode-test',
         regexCorpusHash: 'corpus-test',
@@ -90,9 +92,9 @@ export fn searchMatch(value: string, start: i32) -> bool {
     const artifact = compileFlint({ source, fileName: 'regex-runtime.flint', compilerVersion: 'test' });
     expect(artifact.diagnostics).toEqual([]);
     expect(artifact.wasm).toBeDefined();
-    expect(WebAssembly.validate(artifact.wasm!.buffer as ArrayBuffer)).toBe(true);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!), {})
-      .exports as RegexRuntimeExports & {
+    const wasm = artifact.wasm ?? new Uint8Array();
+    expect(WebAssembly.validate(wasm.buffer as ArrayBuffer)).toBe(true);
+    const exports = new WebAssembly.Instance(new WebAssembly.Module(wasm), {}).exports as RegexRuntimeExports & {
       readonly fullMatch: (pointer: number, length: number) => number;
       readonly prefixMatch: (pointer: number, length: number) => number;
       readonly searchMatch: (pointer: number, length: number, start: number) => number;
@@ -114,8 +116,8 @@ export fn captureEnd(value: string, group: i32) -> i32 {
 }`;
     const artifact = compileFlint({ source, fileName: 'regex-capture-runtime.flint', compilerVersion: 'test' });
     expect(artifact.diagnostics).toEqual([]);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!), {})
-      .exports as RegexRuntimeExports & {
+    const wasm = artifact.wasm ?? new Uint8Array();
+    const exports = new WebAssembly.Instance(new WebAssembly.Module(wasm), {}).exports as RegexRuntimeExports & {
       readonly captureStart: (pointer: number, length: number, group: number) => number;
       readonly captureEnd: (pointer: number, length: number, group: number) => number;
     };

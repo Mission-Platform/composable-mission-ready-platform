@@ -42,8 +42,10 @@ describe('Forge Web Script self-hosted compiler bootstrap', () => {
     expect(lex?.stage).toBe('lex');
     expect(parser?.stage).toBe('parse');
     expect(lex?.artifact?.sourceHash).toBe(parser?.artifact?.sourceHash);
-    const tokens = decodeFlintSelfHostedTokens(lex!.artifact!.payload);
-    const module = decodeFlintSelfHostedModule(parser!.artifact!.payload);
+    const lexPayload = lex?.artifact?.payload ?? new Uint8Array();
+    const parserPayload = parser?.artifact?.payload ?? new Uint8Array();
+    const tokens = decodeFlintSelfHostedTokens(lexPayload);
+    const module = decodeFlintSelfHostedModule(parserPayload);
     expect(tokens.length).toBeGreaterThan(5);
     expect(tokens.every(({ span }) => span.end >= span.start)).toBe(true);
     expect(module.kind).toBe('module');
@@ -140,7 +142,8 @@ export fn sample(value: i32) -> bool {
 
     expect(run.parity).toBe(true);
     expect(run.lexFingerprint).toBe(computeFlintLexStageFingerprint(source));
-    expect(decodeFlintSelfHostedTokens(lex!.artifact!.payload)).toEqual(expected.tokens);
+    const lexPayload = lex?.artifact?.payload ?? new Uint8Array();
+    expect(decodeFlintSelfHostedTokens(lexPayload)).toEqual(expected.tokens);
     expect(lex?.outputHash).toBe(lex?.expectedOutputHash);
   });
 
@@ -206,7 +209,7 @@ export fn sample(value: i32) -> i32 {
 
     const instantiate = (wasm: Uint8Array | undefined): number => {
       expect(wasm).toBeDefined();
-      const exports = new WebAssembly.Instance(new WebAssembly.Module(wasm!), {}).exports;
+      const exports = new WebAssembly.Instance(new WebAssembly.Module(wasm ?? new Uint8Array()), {}).exports;
       return (exports.answer as (value: number) => number)(4);
     };
     expect(instantiate(documented.artifact.wasm)).toBe(instantiate(undocumented.artifact.wasm));

@@ -34,7 +34,7 @@ function moduleWith(
 }
 
 function backendFor(module: FlintWasmModule, metadataOverride = metadata, targetFeatures?: FlintTargetFeatures) {
-  return compileFlintWasm({
+  const result = compileFlintWasm({
     ir: module,
     optimizedIr: module,
     abi: {},
@@ -42,6 +42,8 @@ function backendFor(module: FlintWasmModule, metadataOverride = metadata, target
     metadata: metadataOverride,
     ...(targetFeatures === undefined ? {} : { targetFeatures }),
   });
+  if (result.wasm === undefined) throw new Error('Expected wasm output from emission');
+  return { ...result, wasm: result.wasm };
 }
 
 function exportedModule(): FlintWasmModule {
@@ -99,16 +101,16 @@ describe('Forge Web Script Wasm artifact verifier', () => {
   it('accepts a valid deterministic artifact with an exported function and checks both variants', () => {
     const backend = backendFor(exportedModule());
     expect(backend.wasm).toBeDefined();
-    expect(WebAssembly.validate(backend.wasm!)).toBe(true);
+    expect(WebAssembly.validate(backend.wasm)).toBe(true);
     const first = verifyFlintWasmArtifact({
-      wasm: backend.wasm!,
+      wasm: backend.wasm,
       unoptimizedWasm: backend.unoptimizedWasm,
       manifest: { ...manifest, exports: [{ name: 'answer', parameters: [], result: 'i32' }] },
       metadata,
       expectedContentHash: backend.contentHash,
     });
     const second = verifyFlintWasmArtifact({
-      wasm: backend.wasm!,
+      wasm: backend.wasm,
       manifest: { ...manifest, exports: [{ name: 'answer', parameters: [], result: 'i32' }] },
       metadata,
       expectedContentHash: backend.contentHash,
@@ -121,10 +123,10 @@ describe('Forge Web Script Wasm artifact verifier', () => {
 
   it('rejects a content-hash mismatch even when the binary passes engine validation', () => {
     const backend = backendFor(exportedModule());
-    expect(WebAssembly.validate(backend.wasm!.buffer as ArrayBuffer)).toBe(true);
+    expect(WebAssembly.validate(backend.wasm.buffer as ArrayBuffer)).toBe(true);
     const expectedContentHash = backend.contentHash === '00000000' ? 'ffffffff' : '00000000';
     const result = verifyFlintWasmArtifact({
-      wasm: backend.wasm!,
+      wasm: backend.wasm,
       manifest: { ...manifest, exports: [{ name: 'answer', parameters: [], result: 'i32' }] },
       metadata,
       expectedContentHash,
@@ -136,12 +138,12 @@ describe('Forge Web Script Wasm artifact verifier', () => {
   it('rejects unexpected exports and ABI signature mismatches on valid binaries', () => {
     const backend = backendFor(exportedModule());
     const unexpected = verifyFlintWasmArtifact({
-      wasm: backend.wasm!,
+      wasm: backend.wasm,
       manifest,
       metadata,
     });
     const wrongSignature = verifyFlintWasmArtifact({
-      wasm: backend.wasm!,
+      wasm: backend.wasm,
       manifest: { ...manifest, exports: [{ name: 'answer', parameters: [], result: 'f64' }] },
       metadata,
     });
@@ -158,24 +160,24 @@ describe('Forge Web Script Wasm artifact verifier', () => {
       requiredCapabilities: ['clock.now'],
     };
     const denied = verifyFlintWasmArtifact({
-      wasm: backend.wasm!,
+      wasm: backend.wasm,
       manifest: importedManifest,
       metadata,
       policy: { allowedCapabilities: ['text.transform'] },
     });
     const featureMismatch = verifyFlintWasmArtifact({
-      wasm: backend.wasm!,
+      wasm: backend.wasm,
       manifest: importedManifest,
       metadata,
       targetFeatures: { simd: true },
     });
     const memoryMismatch = verifyFlintWasmArtifact({
-      wasm: backend.wasm!,
+      wasm: backend.wasm,
       manifest: { ...importedManifest, memory: { ...memory, minimumPages: 2 } },
       metadata,
     });
     const iteratorMismatch = verifyFlintWasmArtifact({
-      wasm: backend.wasm!,
+      wasm: backend.wasm,
       manifest: {
         ...importedManifest,
         iteratorDescriptors: [
@@ -192,7 +194,7 @@ describe('Forge Web Script Wasm artifact verifier', () => {
       iteratorExports: [],
     });
     const asyncMismatch = verifyFlintWasmArtifact({
-      wasm: backend.wasm!,
+      wasm: backend.wasm,
       manifest: {
         ...importedManifest,
         async: {
@@ -219,7 +221,7 @@ describe('Forge Web Script Wasm artifact verifier', () => {
 
   it('rejects metadata mismatches and unrecognized custom sections while retaining engine validity', () => {
     const backend = backendFor(exportedModule());
-    const forged = backend.wasm!;
+    const forged = backend.wasm;
     const forgedMetadata = { ...metadata, sourceFiles: ['other.flint'] };
     expect(WebAssembly.validate(forged.buffer as ArrayBuffer)).toBe(true);
     const forgedResult = verifyFlintWasmArtifact({
@@ -227,7 +229,7 @@ describe('Forge Web Script Wasm artifact verifier', () => {
       manifest: { ...manifest, exports: [{ name: 'answer', parameters: [], result: 'i32' }] },
       metadata: forgedMetadata,
     });
-    const extraSection = appendCustomSection(backend.wasm!, 'fws.unknown');
+    const extraSection = appendCustomSection(backend.wasm, 'fws.unknown');
     expect(WebAssembly.validate(extraSection.buffer as ArrayBuffer)).toBe(true);
     const extraResult = verifyFlintWasmArtifact({
       wasm: extraSection,
@@ -242,7 +244,7 @@ describe('Forge Web Script Wasm artifact verifier', () => {
     const unorderedMetadata = { ...metadata, sourceFiles: ['z.flint', 'a.flint'] };
     const backend = backendFor(exportedModule(), unorderedMetadata);
     const result = verifyFlintWasmArtifact({
-      wasm: backend.wasm!,
+      wasm: backend.wasm,
       manifest: { ...manifest, exports: [{ name: 'answer', parameters: [], result: 'i32' }] },
       metadata: unorderedMetadata,
       expectedContentHash: backend.contentHash,
@@ -252,7 +254,7 @@ describe('Forge Web Script Wasm artifact verifier', () => {
 
   it('rejects a mutated binary after engine validation fails', () => {
     const backend = backendFor(exportedModule());
-    const mutated = [...backend.wasm!];
+    const mutated = [...backend.wasm];
     mutated[0] = 0xff;
     const result = verifyFlintWasmArtifact({ wasm: mutated, manifest, metadata });
     expect(result.verified).toBe(false);
@@ -299,10 +301,10 @@ describe('Forge Web Script Wasm artifact verifier', () => {
     const backend = backendFor(simdModule, metadata, { simd: true });
     expect(backend.wasm).toBeDefined();
     expect(backend.targetFeatures.simd).toBe(true);
-    expect(WebAssembly.validate(backend.wasm!)).toBe(true);
+    expect(WebAssembly.validate(backend.wasm)).toBe(true);
 
     const verification = verifyFlintWasmArtifact({
-      wasm: backend.wasm!,
+      wasm: backend.wasm,
       unoptimizedWasm: backend.unoptimizedWasm,
       manifest: {
         ...manifest,

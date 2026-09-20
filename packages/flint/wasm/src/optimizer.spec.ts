@@ -24,6 +24,12 @@ function moduleWith(
   };
 }
 
+function firstFunction(wasmModule: FlintWasmModule): FlintWasmModule['functions'][number] {
+  const function_ = wasmModule.functions[0];
+  if (function_ === undefined) throw new Error('Expected function at index 0');
+  return function_;
+}
+
 describe('Forge Web Script Wasm-stage optimizer', () => {
   it('propagates constants and copies, removes pure dead statements, and keeps effects', () => {
     const optimized = optimizeFlintWasmModule(
@@ -50,7 +56,7 @@ describe('Forge Web Script Wasm-stage optimizer', () => {
         [{ name: 'input', type: { name: 'i32', span } }],
       ),
     );
-    const body = optimized.module.functions[0]!.body;
+    const body = firstFunction(optimized.module).body;
     expect(body).toHaveLength(3);
     expect(body[2]).toMatchObject({
       kind: 'return',
@@ -84,7 +90,7 @@ describe('Forge Web Script Wasm-stage optimizer', () => {
       ),
     );
 
-    expect(optimized.module.functions[0]!.body.at(-1)).toMatchObject({
+    expect(firstFunction(optimized.module).body.at(-1)).toMatchObject({
       kind: 'return',
       value: { kind: 'identifier', name: 'high' },
     });
@@ -128,7 +134,7 @@ describe('Forge Web Script Wasm-stage optimizer', () => {
       ),
     );
 
-    expect(optimized.module.functions[0]!.body[0]).toMatchObject({
+    expect(firstFunction(optimized.module).body[0]).toMatchObject({
       kind: 'while',
       body: [{}, {}, { kind: 'if', condition: { kind: 'binary', left: { kind: 'identifier', name: 'high' } } }],
     });
@@ -150,31 +156,33 @@ describe('Forge Web Script Wasm-stage optimizer', () => {
       ]),
       functions: [
         {
-          ...moduleWith([]).functions[0]!,
+          ...firstFunction(moduleWith([])),
           parameters: [{ name: 'tag', type: { name: 'i32', span } }],
-          body: moduleWith([
-            {
-              kind: 'switch',
-              value: identifier('tag'),
-              cases: [
-                { value: 2, body: [{ kind: 'return', value: number(2), span }] },
-                { value: 3, body: [{ kind: 'return', value: number(3), span }] },
-              ],
-              defaultCase: [{ kind: 'return', value: number(0), span }],
-              span,
-            },
-          ]).functions[0]!.body,
+          body: firstFunction(
+            moduleWith([
+              {
+                kind: 'switch',
+                value: identifier('tag'),
+                cases: [
+                  { value: 2, body: [{ kind: 'return', value: number(2), span }] },
+                  { value: 3, body: [{ kind: 'return', value: number(3), span }] },
+                ],
+                defaultCase: [{ kind: 'return', value: number(0), span }],
+                span,
+              },
+            ]),
+          ).body,
         },
       ],
     });
-    const denseSwitch = dense.module.functions[0]!.body[0];
+    const denseSwitch = firstFunction(dense.module).body[0];
     expect(denseSwitch).toMatchObject({ kind: 'switch', strategy: 'br-table' });
 
     const sparse = optimizeFlintWasmModule({
       ...dense.module,
       functions: [
         {
-          ...dense.module.functions[0]!,
+          ...firstFunction(dense.module),
           body: [
             {
               kind: 'switch',
@@ -190,7 +198,7 @@ describe('Forge Web Script Wasm-stage optimizer', () => {
         },
       ],
     });
-    expect(sparse.module.functions[0]!.body[0]).toMatchObject({ kind: 'switch', strategy: 'sparse' });
+    expect(firstFunction(sparse.module).body[0]).toMatchObject({ kind: 'switch', strategy: 'sparse' });
   });
 
   it('folds constant switches and puts exported functions before private functions', () => {
@@ -206,13 +214,13 @@ describe('Forge Web Script Wasm-stage optimizer', () => {
     const optimized = optimizeFlintWasmModule({
       ...module,
       functions: [
-        { ...module.functions[0]!, name: 'public', exported: true },
-        { ...module.functions[0]!, name: 'private-z', exported: false },
-        { ...module.functions[0]!, name: 'private-a', exported: false },
+        { ...firstFunction(module), name: 'public', exported: true },
+        { ...firstFunction(module), name: 'private-z', exported: false },
+        { ...firstFunction(module), name: 'private-a', exported: false },
       ],
     });
     expect(optimized.module.functions.map(({ name }) => name)).toEqual(['public', 'private-a', 'private-z']);
-    expect(optimized.module.functions[0]!.body).toMatchObject([
+    expect(firstFunction(optimized.module).body).toMatchObject([
       { kind: 'return', value: { kind: 'literal', value: 42 } },
     ]);
   });
@@ -240,7 +248,7 @@ describe('Forge Web Script Wasm-stage optimizer', () => {
       ]),
     );
 
-    expect(optimized.module.functions[0]!.body).toMatchObject([
+    expect(firstFunction(optimized.module).body).toMatchObject([
       // eslint-disable-next-line unicorn/prefer-math-trunc -- Assertion models WebAssembly i32 wrapping.
       { kind: 'return', value: { kind: 'literal', value: (Math.imul(216_613_626, 16_777_619) + 1) | 0 } },
     ]);

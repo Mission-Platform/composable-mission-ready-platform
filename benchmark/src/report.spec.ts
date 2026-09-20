@@ -637,7 +637,10 @@ describe("durable benchmark reports", () => {
       flintMode: "jit",
     });
     const missingThroughputReference = measurement("missing-throughput", 10, {
-      statistics: { ...javascript.statistics!, throughputPerSecond: 0 },
+      statistics:
+        javascript.statistics === undefined
+          ? undefined
+          : { ...javascript.statistics, throughputPerSecond: 0 },
     });
     const missingThroughputCandidate = measurement("missing-throughput", 20, {
       implementation: "flint",

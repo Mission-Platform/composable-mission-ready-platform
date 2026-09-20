@@ -347,7 +347,10 @@ export class FlintTestHarness {
           'FLINT-HARNESS-007',
         );
       result[declaration.capability] ??= {};
-      result[declaration.capability]![declaration.alias] = hostFunction;
+      const target = result[declaration.capability];
+      if (target !== undefined) {
+        target[declaration.alias] = hostFunction;
+      }
     }
     return result;
   }

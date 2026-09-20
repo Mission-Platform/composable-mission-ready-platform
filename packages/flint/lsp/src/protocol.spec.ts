@@ -195,14 +195,16 @@ function readMessage(stream: PassThrough): Promise<JsonRpcMessage> {
   if (state === undefined) {
     state = { buffer: '', waiters: [] };
     messageReaders.set(stream, state);
+    const activeState = state;
     stream.on('data', (chunk: Buffer | string) => {
-      state!.buffer += chunk.toString();
-      flushMessages(state!);
+      activeState.buffer += chunk.toString();
+      flushMessages(activeState);
     });
   }
+  const activeState = state;
   return new Promise((resolve, reject) => {
-    state!.waiters.push({ resolve, reject });
-    flushMessages(state!);
+    activeState.waiters.push({ resolve, reject });
+    flushMessages(activeState);
   });
 }
 

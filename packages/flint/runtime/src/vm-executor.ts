@@ -945,9 +945,7 @@ export function createFlintVmExecutor(executorOptions: FlintVmExecutorOptions = 
           wasmFallbacks.set(module, modes);
         }
       }
-      if (fallback) {
-        // Continue through the validated interpreter path for unsupported lowering profiles.
-      }
+      // Continue through the validated interpreter path for unsupported lowering profiles.
     }
     if (options.mode === 'jit') {
       const count = (counts.get(functionName) ?? 0) + 1;
@@ -979,9 +977,7 @@ export function createFlintVmExecutor(executorOptions: FlintVmExecutorOptions = 
             wasmFallbacks.set(module, modes);
           }
         }
-        if (fallback) {
-          // Continue through the validated interpreter path for unsupported lowering profiles.
-        }
+        // Continue through the validated interpreter path for unsupported lowering profiles.
       }
     }
     validateFlintVmModule(module);

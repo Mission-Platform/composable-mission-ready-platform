@@ -4,6 +4,11 @@ import { flintDefaultPassingMode, isFlintPodType } from './ast.ts';
 import { parseFlint } from './parser.ts';
 import { checkFlint } from './type-checker.ts';
 
+function requireModule(result: ReturnType<typeof parseFlint>) {
+  if (result.module === undefined) throw new Error('Expected parsed module to be defined');
+  return result.module;
+}
+
 describe('Forge Web Script safety contracts', () => {
   it('parses explicit mutability and reference modes', () => {
     const result = parseFlint(
@@ -24,7 +29,7 @@ describe('Forge Web Script safety contracts', () => {
       'pod.flint',
     );
     expect(result.diagnostics).toEqual([]);
-    const [point, wrapped, withBytes] = result.module!.structs;
+    const [point, wrapped, withBytes] = requireModule(result).structs;
     expect(isFlintPodType(point.fields[0].type, result.module)).toBe(true);
     expect(isFlintPodType({ ...wrapped.fields[0].type, reference: 'Point' }, result.module)).toBe(true);
     expect(isFlintPodType(withBytes.fields[0].type, result.module)).toBe(false);
@@ -37,7 +42,7 @@ describe('Forge Web Script safety contracts', () => {
       'invalid-safety.flint',
     );
     expect(result.diagnostics).toEqual([]);
-    const diagnostics = checkFlint(result.module!, 'invalid-safety.flint').diagnostics;
+    const diagnostics = checkFlint(requireModule(result), 'invalid-safety.flint').diagnostics;
     expect(diagnostics.map(({ code }) => code)).toEqual(
       expect.arrayContaining(['FLINT-SAFE-001', 'FLINT-SAFE-003', 'FLINT-SAFE-005', 'FLINT-SAFE-006']),
     );
@@ -49,7 +54,7 @@ describe('Forge Web Script safety contracts', () => {
       'ref-args.flint',
     );
     expect(result.diagnostics).toEqual([]);
-    const diagnostics = checkFlint(result.module!, 'ref-args.flint').diagnostics;
+    const diagnostics = checkFlint(requireModule(result), 'ref-args.flint').diagnostics;
     expect(diagnostics.map(({ code }) => code)).toContain('FLINT-SAFE-002');
   });
 
@@ -59,7 +64,7 @@ describe('Forge Web Script safety contracts', () => {
       'iterator-suspension.flint',
     );
     expect(result.diagnostics).toEqual([]);
-    const diagnostics = checkFlint(result.module!, 'iterator-suspension.flint').diagnostics;
+    const diagnostics = checkFlint(requireModule(result), 'iterator-suspension.flint').diagnostics;
     expect(diagnostics.map(({ code }) => code)).toContain('FLINT-SAFE-004');
   });
 
@@ -71,7 +76,7 @@ describe('Forge Web Script safety contracts', () => {
       'literal-escape.flint',
     );
     expect(literalResult.diagnostics).toEqual([]);
-    const literalDiagnostics = checkFlint(literalResult.module!, 'literal-escape.flint').diagnostics;
+    const literalDiagnostics = checkFlint(requireModule(literalResult), 'literal-escape.flint').diagnostics;
     expect(literalDiagnostics.map(({ code }) => code)).toContain('FLINT-SAFE-006');
 
     const localResult = parseFlint(
@@ -79,7 +84,7 @@ describe('Forge Web Script safety contracts', () => {
       'local-escape.flint',
     );
     expect(localResult.diagnostics).toEqual([]);
-    const localDiagnostics = checkFlint(localResult.module!, 'local-escape.flint').diagnostics;
+    const localDiagnostics = checkFlint(requireModule(localResult), 'local-escape.flint').diagnostics;
     expect(localDiagnostics.map(({ code }) => code)).toContain('FLINT-SAFE-006');
   });
 
@@ -89,7 +94,7 @@ describe('Forge Web Script safety contracts', () => {
       'pod-return.flint',
     );
     expect(podResult.diagnostics).toEqual([]);
-    expect(checkFlint(podResult.module!, 'pod-return.flint').diagnostics.map(({ code }) => code)).not.toContain(
+    expect(checkFlint(requireModule(podResult), 'pod-return.flint').diagnostics.map(({ code }) => code)).not.toContain(
       'FLINT-SAFE-006',
     );
 
@@ -100,7 +105,7 @@ describe('Forge Web Script safety contracts', () => {
     );
     expect(parameterResult.diagnostics).toEqual([]);
     expect(
-      checkFlint(parameterResult.module!, 'parameter-return.flint').diagnostics.map(({ code }) => code),
+      checkFlint(requireModule(parameterResult), 'parameter-return.flint').diagnostics.map(({ code }) => code),
     ).not.toContain('FLINT-SAFE-006');
 
     // Ownership is not yet surface syntax; prove the exemption on the AST contract.
@@ -109,7 +114,7 @@ describe('Forge Web Script safety contracts', () => {
       'owned-return.flint',
     );
     expect(ownedParsed.diagnostics).toEqual([]);
-    const ownedModule = structuredClone(ownedParsed.module!);
+    const ownedModule = structuredClone(requireModule(ownedParsed));
     const ownedLet = ownedModule.functions[0].body[0];
     if (ownedLet.kind !== 'let') throw new Error('expected let');
     (ownedLet as { type: { ownership?: 'owned' } }).type = { ...ownedLet.type, ownership: 'owned' };
@@ -122,7 +127,7 @@ describe('Forge Web Script safety contracts', () => {
       'shared-return.flint',
     );
     expect(sharedParsed.diagnostics).toEqual([]);
-    const sharedModule = structuredClone(sharedParsed.module!);
+    const sharedModule = structuredClone(requireModule(sharedParsed));
     const sharedLet = sharedModule.functions[0].body[0];
     if (sharedLet.kind !== 'let') throw new Error('expected let');
     (sharedLet as { type: { ownership?: 'shared' } }).type = { ...sharedLet.type, ownership: 'shared' };

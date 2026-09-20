@@ -46,7 +46,8 @@ describe('Forge Web Script module graph', () => {
 
     expect(result.diagnostics).toEqual([]);
     expect(importer).toBeDefined();
-    const environment = resolveFlintImportTypeEnvironment(importer!, result.graph);
+    if (importer === undefined) throw new Error('Expected importer to be defined');
+    const environment = resolveFlintImportTypeEnvironment(importer, result.graph);
     expect(environment.externalFunctions.map(({ name }) => name)).toEqual(['run', 'helper.run']);
     expect(environment.externalFunctions[0]).toMatchObject({
       parameters: [{ type: { name: 'i32' } }],

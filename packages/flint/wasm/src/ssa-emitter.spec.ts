@@ -39,10 +39,8 @@ describe('Forge Web Script CFG/SSA emitter integration', () => {
     ]);
     const result = compileFlintWasm({ ir: module, optimizedIr: module, abi: {}, links: {}, metadata });
     expect(result.diagnostics).toEqual([]);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports as Record<
-      string,
-      (condition: number) => number
-    >;
+    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm ?? new Uint8Array()), {})
+      .exports as Record<string, (condition: number) => number>;
     expect(exports.branchValue(0)).toBe(20);
     expect(exports.branchValue(1)).toBe(10);
   });
@@ -83,10 +81,8 @@ describe('Forge Web Script CFG/SSA emitter integration', () => {
     ]);
     const result = compileFlintWasm({ ir: module, optimizedIr: module, abi: {}, links: {}, metadata });
     expect(result.diagnostics).toEqual([]);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports as Record<
-      string,
-      () => number
-    >;
+    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm ?? new Uint8Array()), {})
+      .exports as Record<string, () => number>;
     expect(exports.loopValue()).toBe(3);
   });
 
@@ -127,10 +123,8 @@ describe('Forge Web Script CFG/SSA emitter integration', () => {
     ]);
     const result = compileFlintWasm({ ir: module, optimizedIr: module, abi: {}, links: {}, metadata });
     expect(result.diagnostics).toEqual([]);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports as Record<
-      string,
-      () => number
-    >;
+    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm ?? new Uint8Array()), {})
+      .exports as Record<string, () => number>;
     expect(exports.reassignedLoopValue()).toBe(7);
   });
 
@@ -169,10 +163,8 @@ describe('Forge Web Script CFG/SSA emitter integration', () => {
     ]);
     const result = compileFlintWasm({ ir: module, optimizedIr: module, abi: {}, links: {}, metadata });
     expect(result.diagnostics).toEqual([]);
-    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports as Record<
-      string,
-      () => number
-    >;
+    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm ?? new Uint8Array()), {})
+      .exports as Record<string, () => number>;
     expect(exports.forValue()).toBe(3);
   });
 });
