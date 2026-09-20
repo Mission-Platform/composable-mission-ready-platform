@@ -1,5 +1,7 @@
+import { parseWasm } from './binary-parser.js';
 import { sha256ArtifactHash } from './hash.js';
 
+import type { FunctionType, ParsedWasm, WasmExport, WasmImport, WasmMemory, WasmType } from './binary-parser.js';
 import type {
   FlintTargetFeatures,
   FlintWasmArtifactMetadata,
@@ -130,97 +132,6 @@ const DEFAULT_MAX_CUSTOM_SECTION_BYTES = 256 * 1024;
 const DEFAULT_CUSTOM_SECTIONS = ['fws.target-features', 'fws.metadata'];
 const EMPTY_SPAN = { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 } as const;
 
-/** Raw WebAssembly type identifier code. */
-type WasmType = 0x7f | 0x7e | 0x7d | 0x7c;
-/** Parsed WebAssembly function signature type entry. */
-interface FunctionType {
-  readonly parameters: readonly WasmType[];
-  readonly results: readonly WasmType[];
-}
-/** Parsed WebAssembly module import section entry. */
-interface WasmImport {
-  readonly module: string;
-  readonly name: string;
-  readonly kind: number;
-  readonly typeIndex?: number;
-}
-/** Parsed WebAssembly module export section entry. */
-interface WasmExport {
-  readonly name: string;
-  readonly kind: number;
-  readonly index: number;
-}
-/** Parsed WebAssembly memory section limits descriptor. */
-interface WasmMemory {
-  readonly minimum: number;
-  readonly maximum?: number;
-  readonly shared: boolean;
-  readonly memory64: boolean;
-}
-/** Structured representation of parsed WebAssembly binary sections. */
-interface ParsedWasm {
-  readonly types: readonly FunctionType[];
-  readonly imports: readonly WasmImport[];
-  readonly functionTypeIndexes: readonly number[];
-  readonly exports: readonly WasmExport[];
-  readonly memory?: WasmMemory;
-  readonly customSections: ReadonlyMap<string, Uint8Array>;
-}
-
-/** Byte buffer traversal cursor reading binary WebAssembly structures. */
-class Cursor {
-  private readonly bytes: Uint8Array;
-  public position: number;
-  private readonly end: number;
-
-  /** Creates a new Cursor instance. */
-  public constructor(bytes: Uint8Array, position = 0, end = bytes.byteLength) {
-    this.bytes = bytes;
-    this.position = position;
-    this.end = end;
-  }
-
-  /** Returns the number of unparsed bytes remaining in the buffer. */
-  public remaining(): number {
-    return this.end - this.position;
-  }
-
-  /** Consumes and returns a single byte from the buffer. */
-  public byte(): number {
-    if (this.position >= this.end) throw new Error('Unexpected end of WebAssembly section.');
-    return this.bytes[this.position++] ?? 0;
-  }
-
-  /** Decodes an unsigned LEB128 integer from the buffer. */
-  public leb(maxBytes = 5): number {
-    let value = 0;
-    let shift = 0;
-    for (let count = 0; count < maxBytes; count += 1) {
-      const byte = this.byte();
-      value += (byte & 0x7f) * 2 ** shift;
-      if ((byte & 0x80) === 0) return value;
-      shift += 7;
-    }
-    throw new Error('WebAssembly integer is too long.');
-  }
-
-  /** Reads a slice of bytes from the buffer. */
-  public bytesValue(length: number): Uint8Array {
-    if (!Number.isSafeInteger(length) || length < 0 || length > this.remaining())
-      throw new Error('Invalid WebAssembly section length.');
-    const value = this.bytes.slice(this.position, this.position + length);
-    this.position += length;
-    return value;
-  }
-
-  /** Decodes a UTF-8 string prefixed by its LEB128 byte length. */
-  public string(maxLength: number): string {
-    const length = this.leb();
-    if (length > maxLength) throw new Error('WebAssembly name exceeds the verifier limit.');
-    return new TextDecoder().decode(this.bytesValue(length));
-  }
-}
-
 /** Factory creating a verification diagnostic with standard codes and message. */
 function diagnostic(
   code: string,
@@ -241,131 +152,12 @@ function diagnostic(
   };
 }
 
-/** Parses WebAssembly memory or table limits from binary stream. */
-function parseLimits(cursor: Cursor): WasmMemory {
-  const flags = cursor.leb();
-  const memory64 = (flags & 0x04) !== 0;
-  const shared = (flags & 0x02) !== 0;
-  const hasMaximum = (flags & 0x01) !== 0 || (flags & 0x02) !== 0;
-  const minimum = cursor.leb(memory64 ? 10 : 5);
-  const maximum = hasMaximum ? cursor.leb(memory64 ? 10 : 5) : undefined;
-  return { minimum, ...(maximum === undefined ? {} : { maximum }), shared, memory64 };
-}
-
-/** Parses binary WebAssembly byte array into structured section records. */
-function parseWasm(bytes: Uint8Array, maxCustomSectionBytes: number): ParsedWasm {
-  if (
-    bytes.byteLength < 8 ||
-    bytes[0] !== 0 ||
-    bytes[1] !== 0x61 ||
-    bytes[2] !== 0x73 ||
-    bytes[3] !== 0x6d ||
-    bytes[4] !== 1
-  )
-    throw new Error('Invalid WebAssembly magic or version.');
-  const types: FunctionType[] = [];
-  const imports: WasmImport[] = [];
-  const functionTypeIndexes: number[] = [];
-  const exports: WasmExport[] = [];
-  const customSections = new Map<string, Uint8Array>();
-  let memory: WasmMemory | undefined;
-  const cursor = new Cursor(bytes, 8);
-  let lastSection = 0;
-  while (cursor.remaining() > 0) {
-    const id = cursor.byte();
-    const length = cursor.leb(5);
-    const payload = new Cursor(cursor.bytesValue(length));
-    if (id !== 0 && id < lastSection) throw new Error('WebAssembly sections are out of order.');
-    if (id !== 0) lastSection = id;
-    if (id === 0) {
-      const name = payload.string(256);
-      if (payload.remaining() > maxCustomSectionBytes)
-        throw new Error('WebAssembly custom section exceeds the verifier limit.');
-      if (customSections.has(name)) throw new Error(`Duplicate WebAssembly custom section "${name}".`);
-      customSections.set(name, payload.bytesValue(payload.remaining()));
-      continue;
-    }
-    switch (id) {
-      case 1: {
-        const count = payload.leb();
-        if (count > 100_000) throw new Error('WebAssembly type section is too large.');
-        for (let index = 0; index < count; index += 1) {
-          if (payload.byte() !== 0x60) throw new Error('Unsupported WebAssembly type declaration.');
-          const parameters = Array.from({ length: payload.leb() }, () => payload.byte() as WasmType);
-          const results = Array.from({ length: payload.leb() }, () => payload.byte() as WasmType);
-          if ([...parameters, ...results].some((type) => ![0x7f, 0x7e, 0x7d, 0x7c].includes(type)))
-            throw new Error('Unsupported WebAssembly value type.');
-          types.push({ parameters, results });
-        }
-
-        break;
-      }
-      case 2: {
-        const count = payload.leb();
-        if (count > 100_000) throw new Error('WebAssembly import section is too large.');
-        for (let index = 0; index < count; index += 1) {
-          const module = payload.string(256);
-          const name = payload.string(256);
-          const kind = payload.byte();
-          switch (kind) {
-            case 0: {
-              imports.push({ module, name, kind, typeIndex: payload.leb() });
-              break;
-            }
-            case 1: {
-              payload.byte();
-              payload.leb();
-              if (payload.byte() === 0x70) payload.leb();
-
-              break;
-            }
-            case 2: {
-              parseLimits(payload);
-
-              break;
-            }
-            case 3: {
-              payload.byte();
-              payload.byte();
-
-              break;
-            }
-            default: {
-              throw new Error('Unsupported WebAssembly import kind.');
-            }
-          }
-        }
-
-        break;
-      }
-      case 3: {
-        const count = payload.leb();
-        if (count > 100_000) throw new Error('WebAssembly function section is too large.');
-        for (let index = 0; index < count; index += 1) functionTypeIndexes.push(payload.leb());
-
-        break;
-      }
-      case 5: {
-        const count = payload.leb();
-        if (count !== 1 || memory !== undefined) throw new Error('FWS modules must declare exactly one memory.');
-        memory = parseLimits(payload);
-
-        break;
-      }
-      case 7: {
-        const count = payload.leb();
-        if (count > 100_000) throw new Error('WebAssembly export section is too large.');
-        for (let index = 0; index < count; index += 1)
-          exports.push({ name: payload.string(256), kind: payload.byte(), index: payload.leb() });
-
-        break;
-      }
-      // No default
-    }
-    // The engine validates sections that are not needed for the ABI policy checks
-    // (table, global, element, code, data, and data-count sections).
-  }
-  return { types, imports, functionTypeIndexes, exports, ...(memory === undefined ? {} : { memory }), customSections };
+function scalarLowLevelType(type: string): WasmType | undefined {
+  if (type === 'f32') return 0x7d;
+  if (type === 'f64') return 0x7c;
+  if (type === 'i64' || type === 'u64') return 0x7e;
+  if (type === 'unit') return undefined;
+  return 0x7f;
 }
 
 /** Maps high-level primitive type names to low-level WebAssembly value type codes. */
@@ -373,10 +165,8 @@ function lowLevelTypes(type: string, reference?: string, addressType: 'u32' | 'u
   if (type === 'string' || type === 'bytes') return addressType === 'u64' ? [0x7e, 0x7e] : [0x7f, 0x7f];
   if (type.startsWith('Option<') || reference === 'Option') return [0x7e];
   if (reference !== undefined) return [addressType === 'u64' ? 0x7e : 0x7f];
-  if (type === 'f32') return [0x7d];
-  if (type === 'f64') return [0x7c];
-  if (type === 'i64' || type === 'u64') return [0x7e];
-  return type === 'unit' ? [] : [0x7f];
+  const scalar = scalarLowLevelType(type);
+  return scalar === undefined ? [] : [scalar];
 }
 
 /** Compares two type arrays for equality. */
@@ -398,37 +188,85 @@ function normalizedFeatureProfile(features: FlintTargetFeatures | undefined): Fl
   ) as FlintTargetFeatures;
 }
 
-/** Verifies structural invariants and binary sections of a WebAssembly module. */
-function verifyVariant(
+function parseAndValidateBinary(
   bytes: Uint8Array,
-  input: FlintWasmArtifactVerificationInput,
+  maxCustomSectionBytes: number,
   fileName: string,
   variant: 'optimized' | 'unoptimized',
-): { readonly parsed?: ParsedWasm; readonly diagnostics: readonly FlintWasmArtifactVerificationDiagnostic[] } {
-  const diagnostics: FlintWasmArtifactVerificationDiagnostic[] = [];
-  let parsed: ParsedWasm;
+): { readonly parsed?: ParsedWasm; readonly diagnostic?: FlintWasmArtifactVerificationDiagnostic } {
   try {
-    parsed = parseWasm(bytes, input.policy?.maxCustomSectionBytes ?? DEFAULT_MAX_CUSTOM_SECTION_BYTES);
+    const parsed = parseWasm(bytes, maxCustomSectionBytes);
     if (!WebAssembly.validate(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer))
       throw new Error('The WebAssembly engine rejected the binary.');
+    return { parsed };
   } catch (error) {
-    diagnostics.push(
-      diagnostic(
+    return {
+      diagnostic: diagnostic(
         'FLINT-ARTIFACT-001',
         `${variant} WebAssembly is malformed or failed engine validation: ${error instanceof Error ? error.message : String(error)}`,
         fileName,
         'Emit a fresh artifact with the supported FWS backend.',
       ),
-    );
-    return { diagnostics };
+    };
   }
+}
+
+function verifyImportSignatures(
+  imported: WasmImport,
+  expected: FlintWasmManifestImport,
+  parsed: ParsedWasm,
+  addressType: 'u32' | 'u64',
+  fileName: string,
+  diagnostics: FlintWasmArtifactVerificationDiagnostic[],
+): void {
+  if (imported.typeIndex === undefined || !parsed.types[imported.typeIndex]) return;
+  const type = parsed.types[imported.typeIndex];
+  const expectedParameters = expected.function.parameters.flatMap((parameter) =>
+    lowLevelTypes(parameter.type, parameter.reference, addressType),
+  );
+  const expectedResult = lowLevelTypes(expected.function.result, expected.function.resultReference, addressType);
+  if (!sameTypes(type.parameters, expectedParameters) || !sameTypes(type.results, expectedResult)) {
+    diagnostics.push(
+      diagnostic(
+        'FLINT-ARTIFACT-005',
+        `Capability import "${imported.module}.${imported.name}" has a signature different from the manifest.`,
+        fileName,
+      ),
+    );
+  }
+}
+
+function checkImportAllowed(
+  module: string,
+  allowed: readonly string[] | undefined,
+  fileName: string,
+  diagnostics: FlintWasmArtifactVerificationDiagnostic[],
+): void {
+  if (allowed !== undefined && allowed.length > 0 && !allowed.includes(module)) {
+    diagnostics.push(
+      diagnostic(
+        'FLINT-ARTIFACT-004',
+        `Capability "${module}" is not allowed by the artifact verification policy.`,
+        fileName,
+      ),
+    );
+  }
+}
+
+function verifyVariantImports(
+  parsed: ParsedWasm,
+  input: FlintWasmArtifactVerificationInput,
+  fileName: string,
+  variant: 'optimized' | 'unoptimized',
+  diagnostics: FlintWasmArtifactVerificationDiagnostic[],
+): void {
   const expectedImports = input.manifest.imports.map(({ capability, alias, function: declaration }) => ({
     capability,
     alias,
-    declaration,
+    function: declaration,
   }));
   const actualImports = parsed.imports.filter(({ kind }) => kind === 0);
-  if (parsed.imports.some(({ kind }) => kind !== 0))
+  if (parsed.imports.some(({ kind }) => kind !== 0)) {
     diagnostics.push(
       diagnostic(
         'FLINT-ARTIFACT-003',
@@ -436,7 +274,8 @@ function verifyVariant(
         fileName,
       ),
     );
-  if (actualImports.length !== expectedImports.length)
+  }
+  if (actualImports.length !== expectedImports.length) {
     diagnostics.push(
       diagnostic(
         'FLINT-ARTIFACT-002',
@@ -444,6 +283,7 @@ function verifyVariant(
         fileName,
       ),
     );
+  }
   const allowed = input.policy?.allowedCapabilities;
   for (const imported of actualImports) {
     const expected = expectedImports.find(
@@ -460,38 +300,14 @@ function verifyVariant(
       );
       continue;
     }
-    if (allowed !== undefined && allowed.length > 0 && !allowed.includes(imported.module))
-      diagnostics.push(
-        diagnostic(
-          'FLINT-ARTIFACT-004',
-          `Capability "${imported.module}" is not allowed by the artifact verification policy.`,
-          fileName,
-        ),
-      );
-    if (imported.typeIndex === undefined || !parsed.types[imported.typeIndex]) continue;
-    const type = parsed.types[imported.typeIndex];
-    const expectedParameters = expected.declaration.parameters.flatMap((parameter) =>
-      lowLevelTypes(parameter.type, parameter.reference, input.manifest.memory.addressType),
-    );
-    const expectedResult = lowLevelTypes(
-      expected.declaration.result,
-      expected.declaration.resultReference,
-      input.manifest.memory.addressType,
-    );
-    if (!sameTypes(type.parameters, expectedParameters) || !sameTypes(type.results, expectedResult))
-      diagnostics.push(
-        diagnostic(
-          'FLINT-ARTIFACT-005',
-          `Capability import "${imported.module}.${imported.name}" has a signature different from the manifest.`,
-          fileName,
-        ),
-      );
+    checkImportAllowed(imported.module, allowed, fileName, diagnostics);
+    verifyImportSignatures(imported, expected, parsed, input.manifest.memory.addressType, fileName, diagnostics);
   }
   if (
     new Set(expectedImports.map(({ capability }) => capability)).size !==
       new Set(input.manifest.requiredCapabilities).size ||
     expectedImports.some(({ capability }) => !input.manifest.requiredCapabilities.includes(capability))
-  )
+  ) {
     diagnostics.push(
       diagnostic(
         'FLINT-ARTIFACT-006',
@@ -499,11 +315,165 @@ function verifyVariant(
         fileName,
       ),
     );
+  }
+}
+
+function buildFunctionIndexMap(parsed: ParsedWasm): Map<number, FunctionType> {
   const functionIndexes = new Map<number, FunctionType>();
+  const importCount = parsed.imports.filter(({ kind }) => kind === 0).length;
   for (const [index, typeIndex] of parsed.functionTypeIndexes.entries()) {
     const type = parsed.types[typeIndex];
-    if (type !== undefined) functionIndexes.set(parsed.imports.filter(({ kind }) => kind === 0).length + index, type);
+    if (type !== undefined) functionIndexes.set(importCount + index, type);
   }
+  return functionIndexes;
+}
+
+function resolveFunctionType(
+  exportedIndex: number,
+  parsed: ParsedWasm,
+  functionIndexes: Map<number, FunctionType>,
+): FunctionType | undefined {
+  const importedTypeIndex = parsed.imports[exportedIndex]?.typeIndex;
+  return (
+    functionIndexes.get(exportedIndex) ??
+    (importedTypeIndex === undefined ? undefined : parsed.types[importedTypeIndex])
+  );
+}
+
+function verifyExportSignature(
+  exported: WasmExport,
+  declaration: FlintWasmManifestFunction,
+  parsed: ParsedWasm,
+  addressType: 'u32' | 'u64',
+  functionIndexes: Map<number, FunctionType>,
+  fileName: string,
+  diagnostics: FlintWasmArtifactVerificationDiagnostic[],
+): void {
+  const type = resolveFunctionType(exported.index, parsed, functionIndexes);
+  if (type === undefined) return;
+  const parameters = declaration.parameters.flatMap(({ type: parameterType, reference }) =>
+    lowLevelTypes(parameterType, reference, addressType),
+  );
+  const result = lowLevelTypes(declaration.result, declaration.resultReference, addressType);
+  if (!sameTypes(type.parameters, parameters) || !sameTypes(type.results, result)) {
+    diagnostics.push(
+      diagnostic(
+        'FLINT-ARTIFACT-008',
+        `Export "${exported.name}" has a signature different from the manifest.`,
+        fileName,
+      ),
+    );
+  }
+}
+
+function verifyIteratorExport(
+  exported: WasmExport,
+  parsed: ParsedWasm,
+  functionIndexes: Map<number, FunctionType>,
+  fileName: string,
+  diagnostics: FlintWasmArtifactVerificationDiagnostic[],
+): void {
+  const type = resolveFunctionType(exported.index, parsed, functionIndexes);
+  if (type !== undefined && (!sameTypes(type.parameters, [0x7f]) || !sameTypes(type.results, [0x7e]))) {
+    diagnostics.push(
+      diagnostic(
+        'FLINT-ARTIFACT-008',
+        `Iterator export "${exported.name}" must use the (i32) -> (i64) boundary ABI.`,
+        fileName,
+      ),
+    );
+  }
+}
+
+function verifyReservedMemoryExports(
+  parsed: ParsedWasm,
+  input: FlintWasmArtifactVerificationInput,
+  functionIndexes: Map<number, FunctionType>,
+  fileName: string,
+  diagnostics: FlintWasmArtifactVerificationDiagnostic[],
+): void {
+  const addressType = input.manifest.memory.addressType;
+  const reserved = new Map([
+    [
+      input.manifest.memory.allocatorExport,
+      { parameters: lowLevelTypes(addressType), results: lowLevelTypes(addressType) },
+    ],
+    [
+      input.manifest.memory.deallocatorExport,
+      { parameters: [...lowLevelTypes(addressType), ...lowLevelTypes(addressType)], results: [] },
+    ],
+    [
+      input.manifest.memory.reallocatorExport,
+      {
+        parameters: [...lowLevelTypes(addressType), ...lowLevelTypes(addressType), ...lowLevelTypes(addressType)],
+        results: lowLevelTypes(addressType),
+      },
+    ],
+    ['fws_reset', { parameters: [], results: [] }],
+  ]);
+  for (const [name, expected] of reserved) {
+    const exported = parsed.exports.find((entry) => entry.name === name && entry.kind === 0);
+    const type = exported === undefined ? undefined : resolveFunctionType(exported.index, parsed, functionIndexes);
+    if (exported === undefined) {
+      diagnostics.push(diagnostic('FLINT-ARTIFACT-010', `Required memory export "${name}" is missing.`, fileName));
+    } else if (
+      type !== undefined &&
+      (!sameTypes(type.parameters, expected.parameters) || !sameTypes(type.results, expected.results))
+    ) {
+      diagnostics.push(
+        diagnostic('FLINT-ARTIFACT-011', `Memory export "${name}" has an invalid ABI signature.`, fileName),
+      );
+    }
+  }
+}
+
+function checkUnexpectedExports(
+  exports: readonly WasmExport[],
+  allowed: ReadonlySet<string>,
+  fileName: string,
+  diagnostics: FlintWasmArtifactVerificationDiagnostic[],
+): void {
+  for (const exported of exports) {
+    if (exported.name !== 'memory' && (exported.kind !== 0 || !allowed.has(exported.name))) {
+      diagnostics.push(
+        diagnostic('FLINT-ARTIFACT-007', `Artifact contains unexpected export "${exported.name}".`, fileName),
+      );
+    }
+  }
+}
+
+function verifySingleFunctionExport(
+  exported: WasmExport,
+  expectedExports: ReadonlyMap<string, FlintWasmManifestFunction>,
+  iteratorNextNames: ReadonlySet<string>,
+  parsed: ParsedWasm,
+  addressType: 'u32' | 'u64',
+  functionIndexes: Map<number, FunctionType>,
+  fileName: string,
+  diagnostics: FlintWasmArtifactVerificationDiagnostic[],
+): void {
+  if (['fws_alloc', 'fws_dealloc', 'fws_realloc', 'fws_reset'].includes(exported.name)) return;
+  const declaration = expectedExports.get(exported.name);
+  if (declaration === undefined) {
+    if (iteratorNextNames.has(exported.name)) {
+      verifyIteratorExport(exported, parsed, functionIndexes, fileName, diagnostics);
+    } else {
+      diagnostics.push(
+        diagnostic('FLINT-ARTIFACT-007', `Artifact contains unexpected function export "${exported.name}".`, fileName),
+      );
+    }
+    return;
+  }
+  verifyExportSignature(exported, declaration, parsed, addressType, functionIndexes, fileName, diagnostics);
+}
+
+function verifyVariantExports(
+  parsed: ParsedWasm,
+  input: FlintWasmArtifactVerificationInput,
+  fileName: string,
+  functionIndexes: Map<number, FunctionType>,
+  diagnostics: FlintWasmArtifactVerificationDiagnostic[],
+): void {
   const expectedExports = new Map(input.manifest.exports.map((declaration) => [declaration.name, declaration]));
   const exportedFunctions = parsed.exports.filter(({ kind }) => kind === 0);
   const iteratorNextNames = new Set((input.iteratorExports ?? []).map(({ nextFunction }) => nextFunction));
@@ -515,62 +485,21 @@ function verifyVariant(
     'fws_realloc',
     'fws_reset',
   ]);
-  for (const exported of parsed.exports) {
-    if (exported.name !== 'memory' && (exported.kind !== 0 || !allowedFunctionExports.has(exported.name)))
-      diagnostics.push(
-        diagnostic('FLINT-ARTIFACT-007', `Artifact contains unexpected export "${exported.name}".`, fileName),
-      );
-  }
+  checkUnexpectedExports(parsed.exports, allowedFunctionExports, fileName, diagnostics);
   for (const exported of exportedFunctions) {
-    if (['fws_alloc', 'fws_dealloc', 'fws_realloc', 'fws_reset'].includes(exported.name)) continue;
-    const declaration = expectedExports.get(exported.name);
-    if (declaration === undefined) {
-      if (iteratorNextNames.has(exported.name)) {
-        const iteratorTypeIndex = parsed.imports[exported.index]?.typeIndex;
-        const iteratorType =
-          functionIndexes.get(exported.index) ??
-          (iteratorTypeIndex === undefined ? undefined : parsed.types[iteratorTypeIndex]);
-        if (
-          iteratorType !== undefined &&
-          (!sameTypes(iteratorType.parameters, [0x7f]) || !sameTypes(iteratorType.results, [0x7e]))
-        )
-          diagnostics.push(
-            diagnostic(
-              'FLINT-ARTIFACT-008',
-              `Iterator export "${exported.name}" must use the (i32) -> (i64) boundary ABI.`,
-              fileName,
-            ),
-          );
-      } else
-        diagnostics.push(
-          diagnostic(
-            'FLINT-ARTIFACT-007',
-            `Artifact contains unexpected function export "${exported.name}".`,
-            fileName,
-          ),
-        );
-      continue;
-    }
-    const importedTypeIndex = parsed.imports[exported.index]?.typeIndex;
-    const type =
-      functionIndexes.get(exported.index) ??
-      (importedTypeIndex === undefined ? undefined : parsed.types[importedTypeIndex]);
-    if (type === undefined) continue;
-    const parameters = declaration.parameters.flatMap(({ type: parameterType, reference }) =>
-      lowLevelTypes(parameterType, reference, input.manifest.memory.addressType),
+    verifySingleFunctionExport(
+      exported,
+      expectedExports,
+      iteratorNextNames,
+      parsed,
+      input.manifest.memory.addressType,
+      functionIndexes,
+      fileName,
+      diagnostics,
     );
-    const result = lowLevelTypes(declaration.result, declaration.resultReference, input.manifest.memory.addressType);
-    if (!sameTypes(type.parameters, parameters) || !sameTypes(type.results, result))
-      diagnostics.push(
-        diagnostic(
-          'FLINT-ARTIFACT-008',
-          `Export "${exported.name}" has a signature different from the manifest.`,
-          fileName,
-        ),
-      );
   }
-  for (const declaration of input.manifest.exports)
-    if (!parsed.exports.some(({ name }) => name === declaration.name))
+  for (const declaration of input.manifest.exports) {
+    if (!parsed.exports.some(({ name }) => name === declaration.name)) {
       diagnostics.push(
         diagnostic(
           'FLINT-ARTIFACT-009',
@@ -578,102 +507,92 @@ function verifyVariant(
           fileName,
         ),
       );
-  const reserved = new Map([
-    [
-      input.manifest.memory.allocatorExport,
-      {
-        parameters: lowLevelTypes(input.manifest.memory.addressType),
-        results: lowLevelTypes(input.manifest.memory.addressType),
-      },
-    ],
-    [
-      input.manifest.memory.deallocatorExport,
-      {
-        parameters: [
-          ...lowLevelTypes(input.manifest.memory.addressType),
-          ...lowLevelTypes(input.manifest.memory.addressType),
-        ],
-        results: [],
-      },
-    ],
-    [
-      input.manifest.memory.reallocatorExport,
-      {
-        parameters: [
-          ...lowLevelTypes(input.manifest.memory.addressType),
-          ...lowLevelTypes(input.manifest.memory.addressType),
-          ...lowLevelTypes(input.manifest.memory.addressType),
-        ],
-        results: lowLevelTypes(input.manifest.memory.addressType),
-      },
-    ],
-    ['fws_reset', { parameters: [], results: [] }],
-  ]);
-  for (const [name, expected] of reserved) {
-    const exported = parsed.exports.find((entry) => entry.name === name && entry.kind === 0);
-    const importedTypeIndex = exported === undefined ? undefined : parsed.imports[exported.index]?.typeIndex;
-    const type =
-      exported === undefined
-        ? undefined
-        : (functionIndexes.get(exported.index) ??
-          (importedTypeIndex === undefined ? undefined : parsed.types[importedTypeIndex]));
-    if (exported === undefined)
-      diagnostics.push(diagnostic('FLINT-ARTIFACT-010', `Required memory export "${name}" is missing.`, fileName));
-    else if (
-      type !== undefined &&
-      (!sameTypes(type.parameters, expected.parameters) || !sameTypes(type.results, expected.results))
-    )
-      diagnostics.push(
-        diagnostic('FLINT-ARTIFACT-011', `Memory export "${name}" has an invalid ABI signature.`, fileName),
-      );
+    }
   }
-  const memory = parsed.memory;
-  if (memory === undefined)
+  verifyReservedMemoryExports(parsed, input, functionIndexes, fileName, diagnostics);
+}
+
+function verifyMemoryLayout(
+  layout: FlintWasmMemoryLayout,
+  fileName: string,
+  diagnostics: FlintWasmArtifactVerificationDiagnostic[],
+): void {
+  if (
+    layout.pageSize !== 65_536 ||
+    layout.ownership !== 'caller-owned' ||
+    layout.stringEncoding !== 'utf8' ||
+    layout.byteArrayRepresentation !== 'pointer-length'
+  ) {
+    diagnostics.push(diagnostic('FLINT-ARTIFACT-034', 'Manifest contains an unsupported FWS memory layout.', fileName));
+  }
+}
+
+function verifyMemoryPages(
+  memory: WasmMemory,
+  layout: FlintWasmMemoryLayout,
+  fileName: string,
+  diagnostics: FlintWasmArtifactVerificationDiagnostic[],
+): void {
+  if (layout.minimumPages !== undefined && memory.minimum !== layout.minimumPages) {
+    diagnostics.push(
+      diagnostic('FLINT-ARTIFACT-015', 'Artifact memory minimum does not match the manifest.', fileName),
+    );
+  }
+  if (layout.maximumPages !== undefined && memory.maximum !== layout.maximumPages) {
+    diagnostics.push(
+      diagnostic('FLINT-ARTIFACT-016', 'Artifact memory maximum does not match the manifest.', fileName),
+    );
+  }
+  if (memory.maximum !== undefined && memory.maximum < memory.minimum) {
+    diagnostics.push(
+      diagnostic('FLINT-ARTIFACT-017', 'Artifact memory maximum is smaller than its minimum.', fileName),
+    );
+  }
+}
+
+function verifyLinearMemory(
+  memory: WasmMemory | undefined,
+  input: FlintWasmArtifactVerificationInput,
+  fileName: string,
+  diagnostics: FlintWasmArtifactVerificationDiagnostic[],
+): void {
+  if (memory === undefined) {
     diagnostics.push(diagnostic('FLINT-ARTIFACT-012', 'Artifact does not declare linear memory.', fileName));
-  else {
-    if (
-      input.manifest.memory.pageSize !== 65_536 ||
-      input.manifest.memory.ownership !== 'caller-owned' ||
-      input.manifest.memory.stringEncoding !== 'utf8' ||
-      input.manifest.memory.byteArrayRepresentation !== 'pointer-length'
-    )
-      diagnostics.push(
-        diagnostic('FLINT-ARTIFACT-034', 'Manifest contains an unsupported FWS memory layout.', fileName),
-      );
-    if (memory.memory64 !== (input.manifest.memory.addressType === 'u64'))
-      diagnostics.push(
-        diagnostic('FLINT-ARTIFACT-013', 'Artifact memory address width does not match the manifest.', fileName),
-      );
-    if (memory.shared !== featureValue(input.targetFeatures, 'threads'))
-      diagnostics.push(
-        diagnostic(
-          'FLINT-ARTIFACT-014',
-          'Artifact shared-memory flag does not match the target feature policy.',
-          fileName,
-        ),
-      );
-    if (input.manifest.memory.minimumPages !== undefined && memory.minimum !== input.manifest.memory.minimumPages)
-      diagnostics.push(
-        diagnostic('FLINT-ARTIFACT-015', 'Artifact memory minimum does not match the manifest.', fileName),
-      );
-    if (input.manifest.memory.maximumPages !== undefined && memory.maximum !== input.manifest.memory.maximumPages)
-      diagnostics.push(
-        diagnostic('FLINT-ARTIFACT-016', 'Artifact memory maximum does not match the manifest.', fileName),
-      );
-    if (memory.maximum !== undefined && memory.maximum < memory.minimum)
-      diagnostics.push(
-        diagnostic('FLINT-ARTIFACT-017', 'Artifact memory maximum is smaller than its minimum.', fileName),
-      );
+    return;
   }
+  verifyMemoryLayout(input.manifest.memory, fileName, diagnostics);
+  if (memory.memory64 !== (input.manifest.memory.addressType === 'u64')) {
+    diagnostics.push(
+      diagnostic('FLINT-ARTIFACT-013', 'Artifact memory address width does not match the manifest.', fileName),
+    );
+  }
+  if (memory.shared !== featureValue(input.targetFeatures, 'threads')) {
+    diagnostics.push(
+      diagnostic(
+        'FLINT-ARTIFACT-014',
+        'Artifact shared-memory flag does not match the target feature policy.',
+        fileName,
+      ),
+    );
+  }
+  verifyMemoryPages(memory, input.manifest.memory, fileName, diagnostics);
+}
+
+function verifyTargetFeatures(
+  input: FlintWasmArtifactVerificationInput,
+  fileName: string,
+  diagnostics: FlintWasmArtifactVerificationDiagnostic[],
+): void {
   const required = input.featureRequirements ?? {};
   for (const feature of ['simd', 'tailCall', 'memory64', 'threads', 'atomics'] as const) {
-    if (required[feature] === true && !featureValue(input.targetFeatures, feature))
+    if (required[feature] === true && !featureValue(input.targetFeatures, feature)) {
       diagnostics.push(
         diagnostic('FLINT-ARTIFACT-018', `Artifact requires disabled target feature "${feature}".`, fileName),
       );
+    }
   }
   const requestedFeatures = JSON.stringify(normalizedFeatureProfile(input.targetFeatures));
-  if (JSON.stringify(input.manifest.targetFeatures ?? {}) !== requestedFeatures)
+  if (JSON.stringify(input.manifest.targetFeatures ?? {}) !== requestedFeatures) {
     diagnostics.push(
       diagnostic(
         'FLINT-ARTIFACT-035',
@@ -681,9 +600,17 @@ function verifyVariant(
         fileName,
       ),
     );
+  }
+}
+
+function verifyIteratorDescriptors(
+  input: FlintWasmArtifactVerificationInput,
+  fileName: string,
+  diagnostics: FlintWasmArtifactVerificationDiagnostic[],
+): void {
   for (const descriptor of input.manifest.iteratorDescriptors ?? []) {
     const exported = input.iteratorExports?.find(({ nextFunction }) => nextFunction === descriptor.nextFunction);
-    if (exported === undefined)
+    if (exported === undefined) {
       diagnostics.push(
         diagnostic(
           'FLINT-ARTIFACT-036',
@@ -691,11 +618,11 @@ function verifyVariant(
           fileName,
         ),
       );
-    else if (
+    } else if (
       exported.elementType !== descriptor.elementType ||
       exported.ownership !== descriptor.ownership ||
       exported.resultRepresentation !== 'value-done-pair'
-    )
+    ) {
       diagnostics.push(
         diagnostic(
           'FLINT-ARTIFACT-037',
@@ -703,99 +630,166 @@ function verifyVariant(
           fileName,
         ),
       );
+    }
   }
-  if (input.manifest.async !== undefined) {
-    for (const capability of input.manifest.async.capabilities)
-      if (!input.manifest.requiredCapabilities.includes(capability))
-        diagnostics.push(
-          diagnostic(
-            'FLINT-ARTIFACT-038',
-            `Async contract capability "${capability}" is not declared by the artifact.`,
-            fileName,
-          ),
-        );
-    if (
-      input.manifest.async.deterministic !== true ||
-      input.manifest.async.taskIdRepresentation !== 'u32' ||
-      input.manifest.async.messageRepresentation !== 'owned-bytes' ||
-      input.manifest.async.ordering !== 'sequence'
-    )
+}
+
+function verifyAsyncContracts(
+  input: FlintWasmArtifactVerificationInput,
+  fileName: string,
+  diagnostics: FlintWasmArtifactVerificationDiagnostic[],
+): void {
+  if (input.manifest.async === undefined) return;
+  for (const capability of input.manifest.async.capabilities) {
+    if (!input.manifest.requiredCapabilities.includes(capability)) {
       diagnostics.push(
         diagnostic(
-          'FLINT-ARTIFACT-039',
-          'Artifact async contract is not deterministic or uses an unsupported representation.',
+          'FLINT-ARTIFACT-038',
+          `Async contract capability "${capability}" is not declared by the artifact.`,
           fileName,
         ),
       );
+    }
   }
+  if (
+    input.manifest.async.deterministic !== true ||
+    input.manifest.async.taskIdRepresentation !== 'u32' ||
+    input.manifest.async.messageRepresentation !== 'owned-bytes' ||
+    input.manifest.async.ordering !== 'sequence'
+  ) {
+    diagnostics.push(
+      diagnostic(
+        'FLINT-ARTIFACT-039',
+        'Artifact async contract is not deterministic or uses an unsupported representation.',
+        fileName,
+      ),
+    );
+  }
+}
+
+function verifyVariantAsyncAndIterators(
+  input: FlintWasmArtifactVerificationInput,
+  fileName: string,
+  diagnostics: FlintWasmArtifactVerificationDiagnostic[],
+): void {
+  verifyIteratorDescriptors(input, fileName, diagnostics);
+  verifyAsyncContracts(input, fileName, diagnostics);
+}
+
+function verifyCustomSectionsList(
+  parsed: ParsedWasm,
+  input: FlintWasmArtifactVerificationInput,
+  fileName: string,
+  diagnostics: FlintWasmArtifactVerificationDiagnostic[],
+): void {
   const allowedCustomSections = input.policy?.allowedCustomSections ?? DEFAULT_CUSTOM_SECTIONS;
-  for (const name of parsed.customSections.keys())
-    if (!allowedCustomSections.includes(name))
+  for (const name of parsed.customSections.keys()) {
+    if (!allowedCustomSections.includes(name)) {
       diagnostics.push(
         diagnostic('FLINT-ARTIFACT-019', `Artifact contains unrecognized custom section "${name}".`, fileName),
       );
-  const featureSection = parsed.customSections.get('fws.target-features');
-  if (featureSection !== undefined) {
-    try {
-      const encoded = JSON.parse(new TextDecoder().decode(featureSection)) as Record<string, unknown>;
-      for (const feature of ['simd', 'tailCall', 'memory64', 'threads', 'atomics'] as const)
-        if (encoded[feature] !== featureValue(input.targetFeatures, feature))
-          diagnostics.push(
-            diagnostic(
-              'FLINT-ARTIFACT-020',
-              `Target-feature metadata for "${feature}" does not match the requested profile.`,
-              fileName,
-            ),
-          );
-    } catch {
-      diagnostics.push(
-        diagnostic('FLINT-ARTIFACT-021', 'The fws.target-features metadata is not valid JSON.', fileName),
-      );
     }
   }
-  const metadataSection = parsed.customSections.get('fws.metadata');
-  if (metadataSection !== undefined) {
-    try {
-      const encoded = JSON.parse(new TextDecoder().decode(metadataSection)) as Partial<FlintWasmArtifactMetadata>;
-      if (
-        encoded.compilerVersion !== input.metadata.compilerVersion ||
-        encoded.optimization !== input.metadata.optimization ||
-        JSON.stringify(encoded.sourceFiles?.toSorted()) !== JSON.stringify(input.metadata.sourceFiles.toSorted()) ||
-        encoded.sourceHash !== input.metadata.sourceHash ||
-        encoded.graphHash !== input.metadata.graphHash ||
-        encoded.sonSchemaVersion !== input.metadata.sonSchemaVersion ||
-        encoded.sonGraphHash !== input.metadata.sonGraphHash ||
-        encoded.boundsChecks !== input.metadata.boundsChecks ||
-        JSON.stringify(encoded.sonOptimizationPasses) !== JSON.stringify(input.metadata.sonOptimizationPasses) ||
-        (input.metadata.wasmOptimizationPasses !== undefined &&
-          JSON.stringify(encoded.wasmOptimizationPasses) !== JSON.stringify(input.metadata.wasmOptimizationPasses))
-      )
+}
+
+function verifyFeatureCustomSection(
+  parsed: ParsedWasm,
+  input: FlintWasmArtifactVerificationInput,
+  fileName: string,
+  diagnostics: FlintWasmArtifactVerificationDiagnostic[],
+): void {
+  const featureSection = parsed.customSections.get('fws.target-features');
+  if (featureSection === undefined) return;
+  try {
+    const encoded = JSON.parse(new TextDecoder().decode(featureSection)) as Record<string, unknown>;
+    for (const feature of ['simd', 'tailCall', 'memory64', 'threads', 'atomics'] as const) {
+      if (encoded[feature] !== featureValue(input.targetFeatures, feature)) {
         diagnostics.push(
           diagnostic(
-            'FLINT-ARTIFACT-022',
-            'Artifact metadata does not match the deterministic compiler metadata.',
+            'FLINT-ARTIFACT-020',
+            `Target-feature metadata for "${feature}" does not match the requested profile.`,
             fileName,
           ),
         );
-    } catch {
+      }
+    }
+  } catch {
+    diagnostics.push(diagnostic('FLINT-ARTIFACT-021', 'The fws.target-features metadata is not valid JSON.', fileName));
+  }
+}
+
+function metadataCompilerFieldsMatch(
+  encoded: Partial<FlintWasmArtifactMetadata>,
+  expected: FlintWasmArtifactMetadata,
+): boolean {
+  return (
+    encoded.compilerVersion === expected.compilerVersion &&
+    encoded.optimization === expected.optimization &&
+    encoded.sourceHash === expected.sourceHash &&
+    encoded.boundsChecks === expected.boundsChecks
+  );
+}
+
+function metadataGraphFieldsMatch(
+  encoded: Partial<FlintWasmArtifactMetadata>,
+  expected: FlintWasmArtifactMetadata,
+): boolean {
+  return (
+    encoded.graphHash === expected.graphHash &&
+    encoded.sonSchemaVersion === expected.sonSchemaVersion &&
+    encoded.sonGraphHash === expected.sonGraphHash &&
+    JSON.stringify(encoded.sourceFiles?.toSorted()) === JSON.stringify(expected.sourceFiles.toSorted()) &&
+    JSON.stringify(encoded.sonOptimizationPasses) === JSON.stringify(expected.sonOptimizationPasses) &&
+    (expected.wasmOptimizationPasses === undefined ||
+      JSON.stringify(encoded.wasmOptimizationPasses) === JSON.stringify(expected.wasmOptimizationPasses))
+  );
+}
+
+function verifyMetadataCustomSection(
+  parsed: ParsedWasm,
+  input: FlintWasmArtifactVerificationInput,
+  fileName: string,
+  diagnostics: FlintWasmArtifactVerificationDiagnostic[],
+): void {
+  const metadataSection = parsed.customSections.get('fws.metadata');
+  if (metadataSection === undefined) return;
+  try {
+    const encoded = JSON.parse(new TextDecoder().decode(metadataSection)) as Partial<FlintWasmArtifactMetadata>;
+    if (!metadataCompilerFieldsMatch(encoded, input.metadata) || !metadataGraphFieldsMatch(encoded, input.metadata)) {
       diagnostics.push(
-        diagnostic('FLINT-ARTIFACT-023', 'The fws.metadata custom section is not valid JSON.', fileName),
+        diagnostic(
+          'FLINT-ARTIFACT-022',
+          'Artifact metadata does not match the deterministic compiler metadata.',
+          fileName,
+        ),
       );
     }
+  } catch {
+    diagnostics.push(diagnostic('FLINT-ARTIFACT-023', 'The fws.metadata custom section is not valid JSON.', fileName));
   }
+}
+
+function verifyHashes(
+  bytes: Uint8Array,
+  input: FlintWasmArtifactVerificationInput,
+  fileName: string,
+  variant: 'optimized' | 'unoptimized',
+  diagnostics: FlintWasmArtifactVerificationDiagnostic[],
+): void {
   if (
     variant === 'optimized' &&
     input.expectedContentHash !== undefined &&
     sha256ArtifactHash(bytes) !== input.expectedContentHash
-  )
+  ) {
     diagnostics.push(
       diagnostic('FLINT-ARTIFACT-024', 'Artifact content hash does not match the backend result.', fileName),
     );
+  }
   if (
     variant === 'optimized' &&
     input.expectedSourceHash !== undefined &&
     input.metadata.sourceHash !== input.expectedSourceHash
-  )
+  ) {
     diagnostics.push(
       diagnostic(
         'FLINT-ARTIFACT-031',
@@ -803,7 +797,77 @@ function verifyVariant(
         fileName,
       ),
     );
+  }
+}
+
+/** Verifies structural invariants and binary sections of a WebAssembly module. */
+function verifyVariant(
+  bytes: Uint8Array,
+  input: FlintWasmArtifactVerificationInput,
+  fileName: string,
+  variant: 'optimized' | 'unoptimized',
+): { readonly parsed?: ParsedWasm; readonly diagnostics: readonly FlintWasmArtifactVerificationDiagnostic[] } {
+  const maxCustomSectionBytes = input.policy?.maxCustomSectionBytes ?? DEFAULT_MAX_CUSTOM_SECTION_BYTES;
+  const initial = parseAndValidateBinary(bytes, maxCustomSectionBytes, fileName, variant);
+  if (initial.diagnostic !== undefined || initial.parsed === undefined) {
+    return { diagnostics: initial.diagnostic === undefined ? [] : [initial.diagnostic] };
+  }
+  const parsed = initial.parsed;
+  const functionIndexes = buildFunctionIndexMap(parsed);
+  const diagnostics: FlintWasmArtifactVerificationDiagnostic[] = [];
+
+  verifyVariantImports(parsed, input, fileName, variant, diagnostics);
+  verifyVariantExports(parsed, input, fileName, functionIndexes, diagnostics);
+  verifyLinearMemory(parsed.memory, input, fileName, diagnostics);
+  verifyTargetFeatures(input, fileName, diagnostics);
+  verifyVariantAsyncAndIterators(input, fileName, diagnostics);
+  verifyCustomSectionsList(parsed, input, fileName, diagnostics);
+  verifyFeatureCustomSection(parsed, input, fileName, diagnostics);
+  verifyMetadataCustomSection(parsed, input, fileName, diagnostics);
+  verifyHashes(bytes, input, fileName, variant, diagnostics);
+
   return { parsed, diagnostics };
+}
+
+function manifestRequiresPointers(manifest: FlintWasmArtifactManifest): boolean {
+  const declarations = [...manifest.exports, ...manifest.imports.map(({ function: declaration }) => declaration)];
+  return declarations.some(
+    (declaration) =>
+      declaration.parameters.some(({ type }) => type === 'string' || type === 'bytes') ||
+      declaration.result === 'string' ||
+      declaration.result === 'bytes',
+  );
+}
+
+function manifestHasAdaptedImports(manifest: FlintWasmArtifactManifest): boolean {
+  return manifest.imports.some(
+    ({ function: declaration }) =>
+      declaration.parameters.some(({ type }) => type === 'string' || type === 'bytes') ||
+      declaration.result === 'string' ||
+      declaration.result === 'bytes',
+  );
+}
+
+function verifyAdapterPointers(
+  source: string,
+  manifest: FlintWasmArtifactManifest,
+  fileName: string,
+  diagnostics: FlintWasmArtifactVerificationDiagnostic[],
+): void {
+  const pointerValue = manifestRequiresPointers(manifest);
+  if (
+    !source.includes(manifest.memory.allocatorExport) ||
+    !source.includes(manifest.memory.deallocatorExport) ||
+    (pointerValue && !source.includes('checkedBytes'))
+  ) {
+    diagnostics.push(
+      diagnostic(
+        'FLINT-ARTIFACT-026',
+        'Generated ESM adapter does not expose checked pointer-length allocation and cleanup paths.',
+        fileName,
+      ),
+    );
+  }
 }
 
 /** Verifies synthesized JavaScript loader adapter script against manifest contracts. */
@@ -814,7 +878,7 @@ function verifyAdapter(
   if (input.esmSource === undefined) return [];
   const diagnostics: FlintWasmArtifactVerificationDiagnostic[] = [];
   const source = input.esmSource;
-  if (!source.includes('WebAssembly.instantiate') || !source.includes('WebAssembly.Module'))
+  if (!source.includes('WebAssembly.instantiate') || !source.includes('WebAssembly.Module')) {
     diagnostics.push(
       diagnostic(
         'FLINT-ARTIFACT-025',
@@ -822,41 +886,18 @@ function verifyAdapter(
         fileName,
       ),
     );
-  const pointerValue = [
-    ...input.manifest.exports,
-    ...input.manifest.imports.map(({ function: declaration }) => declaration),
-  ].some(
-    (declaration) =>
-      declaration.parameters.some(({ type }) => type === 'string' || type === 'bytes') ||
-      declaration.result === 'string' ||
-      declaration.result === 'bytes',
-  );
-  if (
-    !source.includes(input.manifest.memory.allocatorExport) ||
-    !source.includes(input.manifest.memory.deallocatorExport) ||
-    (pointerValue && !source.includes('checkedBytes'))
-  )
-    diagnostics.push(
-      diagnostic(
-        'FLINT-ARTIFACT-026',
-        'Generated ESM adapter does not expose checked pointer-length allocation and cleanup paths.',
-        fileName,
-      ),
-    );
-  const adaptedImport = input.manifest.imports.some(
-    ({ function: declaration }) =>
-      declaration.parameters.some(({ type }) => type === 'string' || type === 'bytes') ||
-      declaration.result === 'string' ||
-      declaration.result === 'bytes',
-  );
-  if (adaptedImport && !source.includes('adaptCapabilityImports'))
+  }
+  verifyAdapterPointers(source, input.manifest, fileName, diagnostics);
+  if (manifestHasAdaptedImports(input.manifest) && !source.includes('adaptCapabilityImports')) {
     diagnostics.push(
       diagnostic('FLINT-ARTIFACT-027', 'Generated ESM adapter does not adapt declared capability imports.', fileName),
     );
-  if ((input.manifest.iteratorDescriptors?.length ?? 0) > 0 && !source.includes('adaptIteratorExports'))
+  }
+  if ((input.manifest.iteratorDescriptors?.length ?? 0) > 0 && !source.includes('adaptIteratorExports')) {
     diagnostics.push(
       diagnostic('FLINT-ARTIFACT-028', 'Generated ESM adapter does not adapt declared iterator exports.', fileName),
     );
+  }
   return diagnostics;
 }
 

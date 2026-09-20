@@ -1,4 +1,7 @@
 export * from './contracts.js';
+export * from './binary-parser.js';
+export * from './constant-folding.js';
+export * from './switch-optimizer.js';
 export * from './emitter.js';
 export * from './wat.js';
 export * from './collection-runtime.js';
