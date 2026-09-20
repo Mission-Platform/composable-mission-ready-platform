@@ -423,6 +423,9 @@ function addExpressionSymbols(
       }
       break;
     }
+    default: {
+      break;
+    }
   }
 }
 

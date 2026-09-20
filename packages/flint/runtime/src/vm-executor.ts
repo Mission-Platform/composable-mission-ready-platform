@@ -290,6 +290,10 @@ function instructionRegisters(instruction: FlintVmInstruction): readonly number[
     case 'return': {
       return instruction.source === undefined ? [] : [instruction.source];
     }
+    default: {
+      const exhaustiveCheck: never = instruction;
+      throw new Error(`Unexpected VM instruction: ${(exhaustiveCheck as { opcode?: string }).opcode}`);
+    }
   }
 }
 
@@ -815,6 +819,10 @@ function executeFunction(
       }
       case 'trap': {
         throw trap(`${instruction.code}: ${instruction.message}`);
+      }
+      default: {
+        const exhaustiveCheck: never = instruction;
+        throw trap(`Unexpected VM instruction opcode: ${(exhaustiveCheck as { opcode?: string }).opcode}`);
       }
     }
   }

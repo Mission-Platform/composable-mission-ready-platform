@@ -77,16 +77,18 @@ describe('Forge Web Script codec migration fixture', () => {
       requestedCapabilities: codecMigrationFixture.requestedCapabilities,
     });
     const wasmModule = new WebAssembly.Module(artifact.wasm ?? new Uint8Array());
-    let memory: WebAssembly.Memory | undefined;
-    let allocateFunction: ((size: number) => number) | undefined;
+    const instanceReference: { current?: WebAssembly.Instance } = {};
     let observedInput: [number, number] | undefined;
     const instance = new WebAssembly.Instance(wasmModule, {
       'codec.barcode.encode': {
         encode(pointer: number, length: number): [number, number] {
           observedInput = [pointer, length];
-          const allocate = allocateFunction ?? (() => 0);
+          const allocate =
+            (instanceReference.current?.exports.fws_alloc as ((size: number) => number) | undefined) ?? (() => 0);
           const outputPointer = allocate(length + 1);
-          const mem = memory ?? new WebAssembly.Memory({ initial: 1 });
+          const mem =
+            (instanceReference.current?.exports.memory as WebAssembly.Memory | undefined) ??
+            new WebAssembly.Memory({ initial: 1 });
           const output = new Uint8Array(mem.buffer, outputPointer, length + 1);
           output[0] = length;
           for (let index = 0; index < length; index += 1) output[index + 1] = index % 2;
@@ -94,8 +96,7 @@ describe('Forge Web Script codec migration fixture', () => {
         },
       },
     });
-    memory = instance.exports.memory as WebAssembly.Memory;
-    allocateFunction = instance.exports.fws_alloc as (size: number) => number;
+    instanceReference.current = instance;
     const wasmExports = instance.exports;
 
     const encodePayload = wasmExports.encode_payload as (pointer: number, length: number) => [number, number];

@@ -100,7 +100,7 @@ export function createFlintGraphCache(options?: {
     },
     set(key, result): void {
       entries.set(key, result);
-      void result.catch(() => {
+      result.catch(() => {
         if (entries.get(key) === result) entries.delete(key);
       });
     },

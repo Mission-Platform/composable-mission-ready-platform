@@ -243,7 +243,7 @@ function releaseRanges(
  * @returns Result of the operation.
  * @throws {Error} Rethrows any operation error or reset failure.
  */
-function withReset<T extends BenchmarkOutput | number | string | void>(
+function withReset<T extends BenchmarkOutput | number | string | undefined>(
   exports: Pick<FlintExports, "fws_reset">,
   operation: () => T,
 ): T {
@@ -251,14 +251,18 @@ function withReset<T extends BenchmarkOutput | number | string | void>(
   let operationFailed = false;
   try {
     return operation();
-  } catch (error) {
+  } catch (error: unknown) {
     operationFailed = true;
-    throw error;
+    throw error instanceof Error ? error : new Error(String(error));
   } finally {
     try {
       exports.fws_reset();
-    } catch (resetError) {
-      if (!operationFailed) throw resetError;
+    } catch (resetError: unknown) {
+      if (!operationFailed) {
+        throw resetError instanceof Error
+          ? resetError
+          : new Error(String(resetError));
+      }
     }
   }
 }
@@ -748,7 +752,7 @@ function createFlintWasmAdapterInternal(
     implementation: "flint",
     mode: flintMode,
     adapterId: artifactId,
-    async build(): Promise<BuildArtifact> {
+    build(): Promise<BuildArtifact> {
       const resolved = resolveWasmArtifact(
         source,
         boundsChecks,
@@ -757,7 +761,7 @@ function createFlintWasmAdapterInternal(
         generated,
       );
       compiledState = resolved.state;
-      return resolved.buildArtifact;
+      return Promise.resolve(resolved.buildArtifact);
     },
     async initialize(artifact: BuildArtifact): Promise<InitializedAdapter> {
       validateBuildArtifactMatch(artifact, artifactId, flintMode);

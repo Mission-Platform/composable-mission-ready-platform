@@ -160,7 +160,8 @@ export function createFlintWorkerScheduler(options: FlintWorkerSchedulerOptions 
   }> = [];
 
   const drain = (): void => {
-    while (!closed && active < workerCount && pending.length > 0) {
+    while (active < workerCount && pending.length > 0) {
+      if (closed) break;
       const item = pending.shift();
       if (item === undefined) return;
       active += 1;
@@ -288,7 +289,9 @@ export function createFlintWasmThreadScheduler(options: FlintWasmThreadScheduler
 export function createFlintWorkerRuntime(
   createWorker: () => FlintWorkerPort,
   onMessage: (message: unknown) => void,
-  onError: (error: unknown) => void = () => {},
+  onError: (error: unknown) => void = () => {
+    // Default no-op error handler.
+  },
   options: FlintWorkerRuntimeOptions = {},
 ): FlintWorkerRuntime {
   const logger = (options.logger ?? createFlintLogger({ scope: 'fws.threading' })).child('worker');

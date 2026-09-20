@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
+import { deriveFlintModuleId } from './identity.ts';
 import { lowerFlintToIr } from './ir.ts';
 import { lexFlint } from './lexer.ts';
 import { createFlintAbiManifest } from './manifest.ts';
-import { deriveFlintModuleId, parseFlint } from './parser.ts';
+import { parseFlint } from './parser.ts';
 import { checkFlint } from './type-checker.ts';
 
 function requireModule(parsed: ReturnType<typeof parseFlint>) {

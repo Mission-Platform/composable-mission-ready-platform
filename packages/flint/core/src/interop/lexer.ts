@@ -264,9 +264,7 @@ export class WebIdlLexer {
    */
   private isNumberStart(): boolean {
     const char = this.peek();
-    if (char >= '0' && char <= '9') return true;
-    if (char === '-' && this.peek(1) >= '0' && this.peek(1) <= '9') return true;
-    return false;
+    return (char >= '0' && char <= '9') || (char === '-' && this.peek(1) >= '0' && this.peek(1) <= '9');
   }
 
   /**

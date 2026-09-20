@@ -402,9 +402,7 @@ function containsYield(statements: readonly FlintIrStatement[]): boolean {
         (statement.alternate === undefined ? false : containsYield(statement.alternate))
       );
     if (statement.kind === 'while' || statement.kind === 'do-while') return containsYield(statement.body);
-    if (statement.kind === 'iterator-loop') return true;
-    if (statement.kind === 'match-statement') return false;
-    return false;
+    return statement.kind === 'iterator-loop';
   });
 }
 

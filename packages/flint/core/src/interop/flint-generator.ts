@@ -138,7 +138,7 @@ export class FlintBindingGenerator {
     this.generateInterfaces(capabilityPrefix, emitInterfaces, emitImports, lines);
     this.generateNamespaces(capabilityPrefix, emitImports, lines);
 
-    return lines.join('\n').trim() + '\n';
+    return `${lines.join('\n').trim()}\n`;
   }
 
   /**

@@ -207,7 +207,7 @@ export function flintPlugin(options: FlintPluginOptions = {}): Plugin {
         map: result.sourceMap,
       };
     },
-    handleHotUpdate(context: HmrContext): void | HmrContext["modules"] {
+    handleHotUpdate(context: HmrContext): HmrContext["modules"] | undefined {
       const split = splitFlintId(context.file);
       if (split === undefined) return undefined;
       const canonicalChanged = canonicalFileName(split.fileName);

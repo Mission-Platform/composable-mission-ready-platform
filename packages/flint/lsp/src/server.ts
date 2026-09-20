@@ -211,10 +211,10 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
   const publishDiagnostics = options.publishDiagnostics ?? (() => Promise.resolve());
   const emitProgress = (event: FlintLspProgressEvent): void => {
     if (!supportsWorkDoneProgress) return;
-    void options.progress?.(event);
+    options.progress?.(event);
   };
   const emitLog = (event: FlintLspLogEvent): void => {
-    void options.log?.(event);
+    options.log?.(event);
   };
   const withProgress = async <T>(title: string, uri: string | undefined, operation: () => Promise<T>): Promise<T> => {
     const token = `flint/${++progressSequence}`;
@@ -242,8 +242,8 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
   const enqueue = <T>(operation: () => Promise<T>): Promise<T> => {
     const next = queue.then(operation, operation);
     queue = next.then(
-      () => void 0,
-      () => void 0,
+      () => {},
+      () => {},
     );
     return next;
   };
@@ -315,7 +315,7 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
       }
       workspaceSubscription = host.watch?.((change) => {
         service?.invalidateWorkspace(change);
-        void enqueue(() => publishAll());
+        enqueue(() => publishAll()).catch(() => {});
       });
       initialized = true;
       emitLog({ level: 'info', event: 'server.initialized', message: 'Flint LSP server initialized.' });
@@ -387,7 +387,7 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
       const result = safeQuery(params.textDocument.uri, noHover, () =>
         languageService.hover(params.textDocument.uri, params.position),
       );
-      if (result === undefined) return;
+      if (result === undefined) return undefined;
       return {
         range: toLspRange(result.range),
         contents: { kind: MarkupKind.Markdown, value: result.contents.join('\n\n') },
@@ -600,7 +600,7 @@ export function registerFlintLsp(connection: Connection, options: FlintLspServer
     if (state === undefined) return;
     state.ready = state.ready
       .then(() => sendProgressEvent(state, event))
-      .catch(() => void 0)
+      .catch(() => {})
       .finally(() => {
         if (event.kind === 'end') {
           state.finished = true;
@@ -611,7 +611,7 @@ export function registerFlintLsp(connection: Connection, options: FlintLspServer
   const server = createFlintLspServer({
     ...options,
     publishDiagnostics: (params) => connection.sendDiagnostics(params),
-    progress: async (event) => {
+    progress: (event) => {
       options.progress?.(event);
       queueProgressEvent(event);
     },
@@ -632,7 +632,7 @@ export function registerFlintLsp(connection: Connection, options: FlintLspServer
           sendProgressEvent(state, { token, kind: 'end', title: 'Flint workspace refresh' });
           state.finished = true;
         })
-        .catch(() => void 0);
+        .catch(() => {});
     }
     progressReporters.clear();
     dispose();
@@ -641,10 +641,18 @@ export function registerFlintLsp(connection: Connection, options: FlintLspServer
     clientSupportsWorkDoneProgress = params.capabilities?.window?.workDoneProgress === true;
     return server.initialize(params);
   });
-  documents.onDidOpen(({ document }) => void server.openDocument(toDocument(document)));
-  documents.onDidChangeContent(({ document }) => void server.updateDocument(toDocument(document)));
-  documents.onDidClose(({ document }) => void server.closeDocument(document.uri));
-  connection.onDidChangeWatchedFiles((params) => void server.changeWatchedFiles(params));
+  documents.onDidOpen(({ document }) => {
+    server.openDocument(toDocument(document)).catch(() => {});
+  });
+  documents.onDidChangeContent(({ document }) => {
+    server.updateDocument(toDocument(document)).catch(() => {});
+  });
+  documents.onDidClose(({ document }) => {
+    server.closeDocument(document.uri).catch(() => {});
+  });
+  connection.onDidChangeWatchedFiles((params) => {
+    server.changeWatchedFiles(params).catch(() => {});
+  });
   connection.onCompletion((params) => server.completion(params));
   connection.onHover((params) => server.hover(params));
   connection.onDefinition((params) => server.definition(params));

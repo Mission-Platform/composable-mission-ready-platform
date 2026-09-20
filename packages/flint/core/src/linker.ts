@@ -106,6 +106,10 @@ function namespaceOperatorExpression(
     case 'index': {
       return { ...value, receiver: transform(value.receiver), index: transform(value.index) };
     }
+    default: {
+      const exhaustiveCheck: never = value;
+      throw new Error(`Unexpected operator expression kind: ${(exhaustiveCheck as { kind?: string }).kind}`);
+    }
   }
 }
 
@@ -140,6 +144,10 @@ function namespaceAggregateExpression(
         value: transform(value.value),
         arms: value.arms.map((arm) => ({ ...arm, value: transform(arm.value) })),
       };
+    }
+    default: {
+      const exhaustiveCheck: never = value;
+      throw new Error(`Unexpected aggregate expression kind: ${(exhaustiveCheck as { kind?: string }).kind}`);
     }
   }
 }
@@ -198,6 +206,10 @@ function namespaceLinearStatement(
     case 'yield': {
       return { ...value, value: namespaceExpression(value.value, context) };
     }
+    default: {
+      const exhaustiveCheck: never = value;
+      throw new Error(`Unexpected linear statement kind: ${(exhaustiveCheck as { kind?: string }).kind}`);
+    }
   }
 }
 
@@ -235,6 +247,10 @@ function namespaceBranchStatement(
         value: namespaceExpression(value.value, context),
         arms: value.arms.map((arm) => ({ ...arm, value: namespaceExpression(arm.value, context) })),
       };
+    }
+    default: {
+      const exhaustiveCheck: never = value;
+      throw new Error(`Unexpected branch statement kind: ${(exhaustiveCheck as { kind?: string }).kind}`);
     }
   }
 }
@@ -276,6 +292,10 @@ function namespaceLoopStatement(
         iterator: namespaceExpression(value.iterator, context),
         body: namespaceStatements(value.body, context),
       };
+    }
+    default: {
+      const exhaustiveCheck: never = value;
+      throw new Error(`Unexpected loop statement kind: ${(exhaustiveCheck as { kind?: string }).kind}`);
     }
   }
 }

@@ -103,7 +103,7 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
 
     const resolver = {
       resolve: (source: string, importer: string): string | undefined => resolveSource(source, importer),
-      load: async (fileName: string): Promise<string> => this.#loadSource(fileName),
+      load: (fileName: string): Promise<string> => this.#loadSource(fileName),
     };
 
     const result = await resolveFlintModuleGraph(entries, resolver);
@@ -173,7 +173,6 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
     this.#indexOpenDocumentImports();
     this.#rebuildFacts();
     this.#dirty = false;
-    void uri;
   }
 
   /** Invalidates cached index state for a modified document URI. */
@@ -283,7 +282,7 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
   }
 
   /** Retrieves compiler and workspace options for a document URI. */
-  async #optionsFor(uri: string): Promise<FlintWorkspaceOptions> {
+  #optionsFor(uri: string): Promise<FlintWorkspaceOptions> {
     return this.#host?.getOptions(uri).catch(() => ({})) ?? Promise.resolve({});
   }
 
@@ -549,7 +548,7 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
   }
 
   /** Records a named symbol declaration in the document symbol table. */
-  #collectName(record: WorkspaceRecord, declaration: FlintFunction, name: string, start: number, end: number): void {
+  #collectName(record: WorkspaceRecord, _declaration: FlintFunction, name: string, start: number, end: number): void {
     const target = this.#resolve(record, name, start);
     if (target === undefined) return;
     const member = name.split('.').at(-1) ?? name;
@@ -557,7 +556,6 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
       identifierRange(record.source, record.analysis.tokens, member, start, end) ??
       rangeFromOffsets(record.source, start, Math.min(end, start + member.length));
     this.#references.push({ target, uri: record.uri, range });
-    void declaration;
   }
 
   /** Resolves an import path against candidate search roots. */

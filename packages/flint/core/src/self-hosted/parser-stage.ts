@@ -1181,7 +1181,6 @@ function buildParseStage(blockCommentStarConstant: number): FlintSelfHostedVmFun
   const tag = b.alloc();
   const packed = b.alloc();
   const eight = b.alloc();
-  const shifted = b.alloc();
 
   // hash = FNV_OFFSET ^ PARSE_SALT  (const 0 is already XORed salt basis)
   b.num(hash, 0);
@@ -1550,9 +1549,6 @@ function buildParseStage(blockCommentStarConstant: number): FlintSelfHostedVmFun
   b.binary('&', temporary, depth, mask);
   b.call(hash, 'fnv_mix', [hash, temporary]);
   b.ret(hash);
-
-  // silence unused
-  void shifted;
 
   return {
     name: FLINT_PARSER_STAGE_ENTRY,

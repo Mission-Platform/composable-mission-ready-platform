@@ -13,6 +13,25 @@ import type {
   WebIdlTypedef,
 } from './types.js';
 
+const WEB_IDL_TO_TS_PRIMITIVE_TYPES: Readonly<Record<string, string>> = {
+  boolean: 'boolean',
+  byte: 'number',
+  short: 'number',
+  long: 'number',
+  octet: 'number',
+  'unsigned short': 'number',
+  'unsigned long': 'number',
+  float: 'number',
+  'unrestricted float': 'number',
+  double: 'number',
+  'unrestricted double': 'number',
+  'long long': 'bigint',
+  'unsigned long long': 'bigint',
+  bigint: 'bigint',
+  void: 'void',
+  undefined: 'void',
+};
+
 /**
  * Generates TypeScript `.d.ts` declarations from a parsed Web IDL module, including a
  * `WasmHostCapabilities` descriptor for the host capability import ABI.
@@ -126,17 +145,19 @@ export class DtsGenerator {
     lines.push(`  readonly '${prefix}.${iface.name}': {`);
     for (const member of iface.members) {
       if (member.kind === 'attribute') {
-        const getterProperty = `get_${this.toSnakeCase(member.name)}`;
+        const getterProperty = `get_${DtsGenerator.toSnakeCase(member.name)}`;
         lines.push(`    readonly '${getterProperty}': () => ${this.mapTsType(member.type)};`);
         if (!member.readonly) {
-          const setterProperty = `set_${this.toSnakeCase(member.name)}`;
+          const setterProperty = `set_${DtsGenerator.toSnakeCase(member.name)}`;
           lines.push(`    readonly '${setterProperty}': (value: ${this.mapTsType(member.type)}) => void;`);
         }
       } else if (member.kind === 'operation' && member.name !== undefined) {
         const arguments_ = member.arguments
-          .map((argument) => `${argument.name}: ${this.mapWasmAbiType(argument.type)}`)
+          .map((argument) => `${argument.name}: ${DtsGenerator.mapWasmAbiType(argument.type)}`)
           .join(', ');
-        lines.push(`    readonly '${member.name}': (${arguments_}) => ${this.mapWasmAbiType(member.returnType)};`);
+        lines.push(
+          `    readonly '${member.name}': (${arguments_}) => ${DtsGenerator.mapWasmAbiType(member.returnType)};`,
+        );
       }
     }
     lines.push('  };');
@@ -174,7 +195,7 @@ export class DtsGenerator {
     this.generateInterfaces(interfaces, lines);
     this.generateHostCapabilities(interfaces, prefix, lines);
 
-    return lines.join('\n').trim() + '\n';
+    return `${lines.join('\n').trim()}\n`;
   }
 
   /**
@@ -246,7 +267,7 @@ export class DtsGenerator {
 
     switch (type.kind) {
       case 'primitive': {
-        result = this.mapPrimitive(type.name);
+        result = DtsGenerator.mapPrimitive(type.name);
         break;
       }
       case 'string': {
@@ -280,7 +301,7 @@ export class DtsGenerator {
    * @param name - Web IDL primitive type name.
    * @returns The mapped TypeScript primitive type name.
    */
-  private mapPrimitive(name: string): string {
+  private static mapPrimitive(name: string): string {
     return WEB_IDL_TO_TS_PRIMITIVE_TYPES[name] ?? 'any';
   }
 
@@ -290,7 +311,7 @@ export class DtsGenerator {
    * @param type - Web IDL type reference to map.
    * @returns `'number'`, `'bigint'`, or `'void'`, matching the Wasm capability import ABI.
    */
-  private mapWasmAbiType(type: WebIdlType): string {
+  private static mapWasmAbiType(type: WebIdlType): string {
     if (type.kind === 'buffer' || type.kind === 'string') {
       return 'number'; // Pointer offset into linear memory
     }
@@ -308,32 +329,13 @@ export class DtsGenerator {
    * @param string_ - Identifier to convert.
    * @returns The converted `snake_case` identifier.
    */
-  private toSnakeCase(string_: string): string {
+  private static toSnakeCase(string_: string): string {
     return string_
       .replaceAll(/([a-z0-9])([A-Z])/g, '$1_$2')
       .replaceAll(/[^a-zA-Z0-9_]/g, '_')
       .toLowerCase();
   }
 }
-
-const WEB_IDL_TO_TS_PRIMITIVE_TYPES: Readonly<Record<string, string>> = {
-  boolean: 'boolean',
-  byte: 'number',
-  short: 'number',
-  long: 'number',
-  octet: 'number',
-  'unsigned short': 'number',
-  'unsigned long': 'number',
-  float: 'number',
-  'unrestricted float': 'number',
-  double: 'number',
-  'unrestricted double': 'number',
-  'long long': 'bigint',
-  'unsigned long long': 'bigint',
-  bigint: 'bigint',
-  void: 'void',
-  undefined: 'void',
-};
 
 /**
  * Generates TypeScript `.d.ts` declarations for a parsed Web IDL module.

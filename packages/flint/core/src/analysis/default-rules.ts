@@ -332,7 +332,9 @@ function visitExpression(expression: FlintIrExpression, visit: (expression: Flin
 function visitStatementChildren(statement: FlintIrStatement, visit: (statement: FlintIrStatement) => void): void {
   switch (statement.kind) {
     case 'if': {
-      visitExpression(statement.condition, () => {});
+      visitExpression(statement.condition, () => {
+        // Traverse condition without actions.
+      });
       visitStatements(statement.consequent, visit);
       if (statement.alternate !== undefined) visitStatements(statement.alternate, visit);
       break;
@@ -901,7 +903,8 @@ const rangeRule: FlintAnalysisRule = {
     const findings: FlintAnalysisFinding[] = [];
     for (const declaration of ir.functions) {
       const initialEnvironment: Environment = new Map();
-      for (const parameter of declaration.parameters) initialEnvironment.set(parameter.name, undefined);
+      const unsetConstant: Constant = undefined;
+      for (const parameter of declaration.parameters) initialEnvironment.set(parameter.name, unsetConstant);
       // Each recursive call owns a state snapshot. Only facts equal on every reachable
       // branch are retained at a control-flow join.
       const visit = (statements: readonly FlintIrStatement[], input: ReadonlyMap<string, Constant>): RangeFlow => {

@@ -52,7 +52,11 @@ const levelRank: Record<FlintLogLevel, number> = { debug: 10, info: 20, warn: 30
  */
 export function createFlintLogger(options: FlintLoggerOptions = {}): FlintLogger {
   const scope = options.scope ?? 'fws';
-  const sink = options.sink ?? (() => {});
+  const sink =
+    options.sink ??
+    (() => {
+      // Default no-op log sink when none is configured.
+    });
   const clock = options.clock ?? Date.now;
   const minimumLevel = options.minimumLevel ?? 'info';
   const logger: FlintLogger = {

@@ -212,7 +212,7 @@ export fn echo(value: string) -> string { return value; }
 
   it('generates valid TypeScript that can be parsed and type-checked', () => {
     const artifact = compileFlint({
-      source: `export fn answer() -> i32 { return 42; }`,
+      source: 'export fn answer() -> i32 { return 42; }',
       fileName: 'test.flint',
       compilerVersion: '0.1.0',
     });

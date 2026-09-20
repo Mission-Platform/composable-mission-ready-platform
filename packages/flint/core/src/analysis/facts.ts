@@ -179,7 +179,11 @@ function visitSwitchOrMatchBlocks(statement: FlintIrStatement, visit: (statement
     return;
   }
   if (statement.kind === 'match-statement') {
-    for (const { value } of statement.arms) visitExpression(value, () => {});
+    for (const { value } of statement.arms) {
+      visitExpression(value, () => {
+        // Traverse match arm expression without actions.
+      });
+    }
   }
 }
 
@@ -571,7 +575,7 @@ function bindStatementConstant(
   collectLiteralConstants(statement.value, result);
   const value = evaluateConstantExpression(statement.value, locals);
   if (value === undefined) {
-    if (statement.kind === 'assignment') delete locals[statement.name];
+    if (statement.kind === 'assignment') Reflect.deleteProperty(locals, statement.name);
     return;
   }
   locals[statement.name] = value;

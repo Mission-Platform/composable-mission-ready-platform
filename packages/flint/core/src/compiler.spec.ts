@@ -273,7 +273,7 @@ export fn dispatch(state: State, values: [i32; 2]) -> i32 { return values[0]; }
     const generated = await import(
       `data:text/javascript,${encodeURIComponent(
         artifact.esmSource.replaceAll(
-          /wasmExports\.fws_dealloc\(([^,]+),\s*([^\)]+)\)/gu,
+          /wasmExports\.fws_dealloc\(([^,]+),\s*([^)]+)\)/gu,
           (_match, pointer: string, size: string) =>
             `(globalThis.__fwsArrayDeallocations ??= []).push([${pointer.trim()}, ${size.trim()}]), wasmExports.fws_dealloc(${pointer.trim()}, ${size.trim()})`,
         ),
@@ -369,7 +369,7 @@ export fn invoke(value: string) -> string { return transform(value); }`,
     const token = '__fwsCapabilitySuccessDeallocs';
     (globalThis as unknown as Record<string, unknown>)[token] = [];
     const capabilitySource = artifact.esmSource.replaceAll(
-      /wasmExports\.fws_dealloc\(([^,]+),\s*([^\)]+)\)/gu,
+      /wasmExports\.fws_dealloc\(([^,]+),\s*([^)]+)\)/gu,
       (_match, pointerExpr: string, sizeExpr: string) => {
         const pointer = pointerExpr.trim();
         const size = sizeExpr.trim();
@@ -407,7 +407,7 @@ export fn invoke(value: string) -> string { return fail(value); }`,
     const token = '__fwsCapabilityDeallocs';
     (globalThis as unknown as Record<string, unknown>)[token] = [];
     const instrumentedEsmSource = artifact.esmSource.replaceAll(
-      /wasmExports\.fws_dealloc\(([^,]+),\s*([^\)]+)\)/gu,
+      /wasmExports\.fws_dealloc\(([^,]+),\s*([^)]+)\)/gu,
       (_match, pointerExpr: string, sizeExpr: string) => {
         const pointer = pointerExpr.trim();
         const size = sizeExpr.trim();
@@ -443,7 +443,7 @@ export fn literal() -> string { return "generated"; }
     (globalThis as unknown as Record<string, unknown>)[token] = [];
 
     const instrumentedEsmSource = artifact.esmSource.replaceAll(
-      /wasmExports\.fws_dealloc\(([^,]+),\s*([^\)]+)\)/gu,
+      /wasmExports\.fws_dealloc\(([^,]+),\s*([^)]+)\)/gu,
       (_match, pointerExpr: string, sizeExpr: string) => {
         const pointer = pointerExpr.trim();
         const size = sizeExpr.trim();
@@ -530,7 +530,7 @@ export fn literal() -> string { return "generated"; }
     const token = '__fwsGuestTrapDeallocs';
     (globalThis as unknown as Record<string, unknown>)[token] = [];
     const instrumentedEsmSource = artifact.esmSource.replaceAll(
-      /wasmExports\.fws_dealloc\(([^,]+),\s*([^\)]+)\)/gu,
+      /wasmExports\.fws_dealloc\(([^,]+),\s*([^)]+)\)/gu,
       (_match, pointerExpr: string, sizeExpr: string) => {
         const pointer = pointerExpr.trim();
         const size = sizeExpr.trim();

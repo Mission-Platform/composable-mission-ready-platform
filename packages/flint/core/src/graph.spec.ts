@@ -5,13 +5,13 @@ import { resolveFlintImportTypeEnvironment } from './module-types.ts';
 
 function resolver(files: Readonly<Record<string, string>>) {
   return {
-    resolve: (source: string, importer: string) => {
+    resolve: (source: string, importer: string): string | undefined => {
       if (source.startsWith('./')) return `${importer.slice(0, importer.lastIndexOf('/'))}/${source.slice(2)}`;
       if (source.startsWith('../../')) {
         const target = `/workspace/shared/${source.slice('../../shared/'.length)}`;
-        return files[target] === undefined ? undefined : target;
+        return target in files ? target : undefined;
       }
-      return;
+      return source in files ? source : undefined;
     },
     load: (fileName: string) => files[fileName] ?? '',
   };

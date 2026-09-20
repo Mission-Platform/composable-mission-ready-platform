@@ -1948,7 +1948,7 @@ function emitWasm(
             0x02,
             0x40,
           );
-          for (let index = 0; index < values.length; index += 1) body.push(0x02, 0x40);
+          for (const _ of values) body.push(0x02, 0x40);
           body.push(
             0x20,
             ...unsignedLeb(location.indexes[0] ?? 0),
@@ -2023,7 +2023,7 @@ function emitWasm(
       statements: readonly FlintWasmStatement[],
       initial: ReadonlyMap<string, ValueLocation>,
     ): void => {
-      let visible = new Map(initial);
+      const visible = new Map(initial);
       for (const statement of statements) {
         const current = bindingsForStatement(statement, visible);
         if (statement.kind === 'let') {
@@ -2947,7 +2947,7 @@ function emitVariant(
     if (!WebAssembly.validate(wasm.buffer as ArrayBuffer)) {
       let validationDetail = '';
       try {
-        new WebAssembly.Module(wasm.buffer as ArrayBuffer);
+        void new WebAssembly.Module(wasm.buffer as ArrayBuffer);
       } catch (error) {
         validationDetail = ` ${error instanceof Error ? error.message : String(error)}`;
       }

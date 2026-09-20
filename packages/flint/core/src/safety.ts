@@ -155,6 +155,9 @@ function checkControlFlowStatement(statement: FlintStatement, context: SafetyCon
       checkMatchStatement(statement, context, result);
       break;
     }
+    default: {
+      break;
+    }
   }
 }
 

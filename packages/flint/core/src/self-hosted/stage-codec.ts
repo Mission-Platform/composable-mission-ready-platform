@@ -206,7 +206,7 @@ class BinaryReader {
     try {
       return textDecoder.decode(this.take(this.u32()));
     } catch (error) {
-      invalid(`invalid UTF-8 string (${error instanceof Error ? error.message : String(error)})`);
+      throw invalid(`invalid UTF-8 string (${error instanceof Error ? error.message : String(error)})`);
     }
   }
 
@@ -218,7 +218,7 @@ class BinaryReader {
     const value = this.u8();
     if (value === 0) return false;
     if (value === 1) return true;
-    invalid('invalid boolean flag');
+    throw invalid('invalid boolean flag');
   }
 
   /**
@@ -229,7 +229,7 @@ class BinaryReader {
     const flag = this.u8();
     if (flag === 0) return undefined;
     if (flag === 1) return this.string();
-    invalid('invalid optional string flag');
+    throw invalid('invalid optional string flag');
   }
 
   /**
@@ -392,7 +392,7 @@ const conditionalHints = new Set<NonNullable<Extract<FlintStatement, { kind: 'if
 function readPrimitiveType(reader: BinaryReader): FlintPrimitiveType {
   const type = reader.string();
   if (primitiveTypes.has(type as FlintPrimitiveType)) return type as FlintPrimitiveType;
-  invalid(`unsupported primitive type '${type}'`);
+  throw invalid(`unsupported primitive type '${type}'`);
 }
 
 /**
@@ -404,7 +404,7 @@ function readPrimitiveType(reader: BinaryReader): FlintPrimitiveType {
 function readBinaryOperator(reader: BinaryReader): FlintBinaryOperator {
   const operator = reader.string();
   if (binaryOperators.has(operator as FlintBinaryOperator)) return operator as FlintBinaryOperator;
-  invalid(`unsupported binary operator '${operator}'`);
+  throw invalid(`unsupported binary operator '${operator}'`);
 }
 
 /**
@@ -418,7 +418,7 @@ function readUnaryOperator(reader: BinaryReader): Extract<FlintExpression, { kin
   if (unaryOperators.has(operator as Extract<FlintExpression, { kind: 'unary' }>['operator'])) {
     return operator as Extract<FlintExpression, { kind: 'unary' }>['operator'];
   }
-  invalid(`unsupported unary operator '${operator}'`);
+  throw invalid(`unsupported unary operator '${operator}'`);
 }
 
 /**
@@ -433,7 +433,7 @@ function readInlinePolicy(reader: BinaryReader): FlintFunction['inlinePolicy'] |
   if (inlinePolicies.has(inlinePolicy as NonNullable<FlintFunction['inlinePolicy']>)) {
     return inlinePolicy as FlintFunction['inlinePolicy'];
   }
-  invalid(`unsupported inline policy '${inlinePolicy}'`);
+  throw invalid(`unsupported inline policy '${inlinePolicy}'`);
 }
 
 /**
@@ -450,7 +450,7 @@ function readConditionalHint(reader: BinaryReader): Extract<FlintStatement, { ki
   ) {
     return conditionalHint as Extract<FlintStatement, { kind: 'if' }>['conditionalHint'];
   }
-  invalid(`unsupported conditional hint '${conditionalHint}'`);
+  throw invalid(`unsupported conditional hint '${conditionalHint}'`);
 }
 
 /**
@@ -485,7 +485,7 @@ function readLiteralValue(reader: BinaryReader): boolean | number | string {
   if (valueKind === 1) return reader.string();
   if (valueKind === 2) return reader.bool();
   if (valueKind === 3) return Number(reader.string());
-  invalid('unsupported literal value kind');
+  throw invalid('unsupported literal value kind');
 }
 
 /**
@@ -528,7 +528,7 @@ function readPattern(reader: BinaryReader): import('../ast.js').FlintPattern {
       bindings: Array.from({ length: reader.u32() }, () => reader.string()),
       span: readSpan(reader),
     };
-  invalid(`unsupported pattern kind '${kind}'`);
+  throw invalid(`unsupported pattern kind '${kind}'`);
 }
 
 /**
@@ -912,7 +912,7 @@ function readExpression(reader: BinaryReader): FlintExpression {
   const kind = reader.string() as FlintExpression['kind'];
   const dispatch = READ_EXPRESSION_DISPATCH[kind];
   if (dispatch) return dispatch(reader);
-  invalid(`unsupported expression kind '${kind}'`);
+  throw invalid(`unsupported expression kind '${kind}'`);
 }
 
 /**
@@ -1369,7 +1369,7 @@ function readStatement(reader: BinaryReader): FlintStatement {
   const kind = reader.string() as FlintStatement['kind'];
   const dispatch = READ_STATEMENT_DISPATCH[kind];
   if (dispatch) return dispatch(reader);
-  invalid(`unsupported statement kind '${kind}'`);
+  throw invalid(`unsupported statement kind '${kind}'`);
 }
 
 /**

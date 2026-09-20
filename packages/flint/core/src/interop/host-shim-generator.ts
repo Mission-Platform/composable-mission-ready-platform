@@ -48,7 +48,7 @@ export class HostShimGenerator {
       this.generateWasmAdapterClass(memoryName, memoryIndex, isTs),
     ];
 
-    return lines.join('\n').trim() + '\n';
+    return `${lines.join('\n').trim()}\n`;
   }
 
   /**

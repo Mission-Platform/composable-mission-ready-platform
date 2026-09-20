@@ -586,6 +586,10 @@ function lowerLinearStatement(
     case 'yield': {
       return { ...statement, value: lowerAstExpression(statement.value) };
     }
+    default: {
+      const exhaustiveCheck: never = statement;
+      throw new Error(`Unexpected linear statement kind: ${(exhaustiveCheck as { kind?: string }).kind}`);
+    }
   }
 }
 
@@ -893,6 +897,9 @@ function countCollectionOrMatchExpression(
       countArrayOrVectorExpression(expression, countExpression);
       break;
     }
+    default: {
+      break;
+    }
   }
 }
 
@@ -1036,6 +1043,9 @@ function countLinearStatement(
     }
     case 'expression-statement': {
       countExpression(statement.expression);
+      break;
+    }
+    default: {
       break;
     }
   }

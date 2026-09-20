@@ -71,9 +71,9 @@ export fn entry(value: i32) -> i32 { return helper(value); }`;
     let requireExports: boolean | undefined = true;
     let notify: ((change: { readonly uri: string; readonly kind: 'changed' }) => void) | undefined;
     const service = createFlintLanguageService({
-      readFile: async () => '',
-      listFiles: async () => [],
-      getOptions: async () => ({ requireExports }),
+      readFile: () => Promise.resolve(''),
+      listFiles: () => Promise.resolve([]),
+      getOptions: () => Promise.resolve({ requireExports }),
       watch: (listener) => {
         notify = listener;
         return { dispose: () => (notify = undefined) };
@@ -101,9 +101,9 @@ export fn entry() -> i32 { return hidden(); }`;
 
   it.each(['interpret', 'jit', 'aot'] as const)('reports bounded FWS lex parity in %s mode', (selfHostedVmMode) => {
     const service = createFlintLanguageService({
-      readFile: async () => '',
-      listFiles: async () => [],
-      getOptions: async () => ({ selfHostedVmMode }),
+      readFile: () => Promise.resolve(''),
+      listFiles: () => Promise.resolve([]),
+      getOptions: () => Promise.resolve({ selfHostedVmMode }),
     });
     service.openDocument(document(arithmetic));
 
@@ -144,12 +144,16 @@ export fn entry() -> i32 { return hidden(); }`;
     let requestedCapabilities: readonly string[] = [];
     let notify: ((change: { readonly uri: string; readonly kind: 'changed' }) => void) | undefined;
     const service = createFlintLanguageService({
-      readFile: async () => '',
-      listFiles: async () => [],
-      getOptions: async () => ({ requestedCapabilities }),
+      readFile: () => Promise.resolve(''),
+      listFiles: () => Promise.resolve([]),
+      getOptions: () => Promise.resolve({ requestedCapabilities }),
       watch: (listener) => {
         notify = listener;
-        return { dispose: () => (notify = void 0) };
+        return {
+          dispose: () => {
+            notify = undefined;
+          },
+        };
       },
     });
     const source = `import capability "clock.now" as now() -> i64;
@@ -484,8 +488,8 @@ export fn caller(value: i32) -> i32 { return add(value); }`;
     ]);
     const service = createFlintLanguageService({
       readFile: async (uri) => files.get(uri) ?? '',
-      listFiles: async () => [...files.keys()],
-      getOptions: async () => ({}),
+      listFiles: () => Promise.resolve([...files.keys()]),
+      getOptions: () => Promise.resolve({}),
     });
 
     for (const [uri, text] of files) {
@@ -564,8 +568,8 @@ export fn caller(value: i32) -> i32 { return add(value); }`;
     ]);
     const service = createFlintLanguageService({
       readFile: async (uri) => files.get(uri) ?? '',
-      listFiles: async () => [...files.keys()],
-      getOptions: async () => ({}),
+      listFiles: () => Promise.resolve([...files.keys()]),
+      getOptions: () => Promise.resolve({}),
     });
     for (const [uri, text] of files)
       service.openDocument({ uri, fileName: uri.split('/').pop() ?? 'file.flint', text, version: 1 });
@@ -610,8 +614,8 @@ export fn caller(value: i32) -> i32 { return add(value); }`;
     ]);
     const service = createFlintLanguageService({
       readFile: async (uri) => files.get(uri) ?? '',
-      listFiles: async () => [...files.keys()],
-      getOptions: async () => ({}),
+      listFiles: () => Promise.resolve([...files.keys()]),
+      getOptions: () => Promise.resolve({}),
     });
     for (const [uri, text] of files)
       service.openDocument({ uri, fileName: uri.split('/').pop() ?? 'file.flint', text, version: 1 });
@@ -676,12 +680,12 @@ export fn caller(value: i32) -> i32 { return add(value); }`;
     ]);
     const reads: string[] = [];
     const service = createFlintLanguageService({
-      readFile: async (uri) => {
+      readFile: (uri) => {
         reads.push(uri);
-        return files.get(uri) ?? '';
+        return Promise.resolve(files.get(uri) ?? '');
       },
-      listFiles: async () => [...files.keys()],
-      getOptions: async () => ({}),
+      listFiles: () => Promise.resolve([...files.keys()]),
+      getOptions: () => Promise.resolve({}),
     });
 
     service.openDocument({ uri: activeUri, fileName: 'main.flint', text: files.get(activeUri) ?? '', version: 1 });
@@ -729,8 +733,8 @@ export fn entry(value: i32) -> i32 { return run(value); }`;
     let notify: ((change: { readonly uri: string; readonly kind: 'changed' | 'deleted' }) => void) | undefined;
     const service = createFlintLanguageService({
       readFile: async (uri) => files.get(uri) ?? '',
-      listFiles: async () => [...files.keys()],
-      getOptions: async () => ({}),
+      listFiles: () => Promise.resolve([...files.keys()]),
+      getOptions: () => Promise.resolve({}),
       watch: (listener) => {
         notify = listener;
         return { dispose: () => (notify = undefined) };
@@ -969,8 +973,8 @@ export fn second(value: Foo) -> Foo { return value; }`;
     ]);
     const service = createFlintLanguageService({
       readFile: async (uri) => files.get(uri),
-      listFiles: async () => [...files.keys()],
-      getOptions: async () => ({}),
+      listFiles: () => Promise.resolve([...files.keys()]),
+      getOptions: () => Promise.resolve({}),
     });
     for (const [uri, text] of files)
       service.openDocument({ uri, fileName: uri.split('/').pop() ?? 'file.flint', text, version: 1 });

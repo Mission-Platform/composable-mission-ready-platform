@@ -261,10 +261,10 @@ function inferRegisters(function_: FlintVmFunction, module: FlintVmModule): read
         case 'load':
         case 'len':
         case 'byte-at': {
-          {
-            set(instruction.destination, instructionRep(instruction, module, functions));
-            // No default
-          }
+          set(instruction.destination, instructionRep(instruction, module, functions));
+          break;
+        }
+        default: {
           break;
         }
       }
@@ -801,10 +801,6 @@ function buildModule(module: FlintVmModule, maximumPages: number): Uint8Array {
     if (info === undefined) fail(`missing function info for '${function_.name}'`);
     const ip = info.locals[function_.registers]?.[0] ?? fail('missing IP register');
     const body: number[] = [0x41, ...signedLeb(0), 0x21, ...unsignedLeb(ip), 0x02, 0x40, 0x03, 0x40];
-    for (let index = 0; index < function_.code.length; index += 1) {
-      // The dispatcher blocks are emitted below; this loop only reserves the instruction count for the labels.
-      void index;
-    }
     const blockCount = function_.code.length;
     if (blockCount === 0) body.push(0x00);
     else {
@@ -1191,7 +1187,7 @@ export function prepareFlintVmWasm(
     throw new FlintTrap('InvalidAbi', 'VM WASM artifact reproducibility hash does not match its contents.');
   validateFlintVmModule(artifact.module);
   const compiled = new WebAssembly.Module(artifact.wasm.buffer as ArrayBuffer);
-  let instance: WebAssembly.Instance;
+  const instanceReference: { current?: WebAssembly.Instance } = {};
   let pendingTrap: FlintTrap | undefined;
   let closed = false;
   let steps = 0;
@@ -1223,7 +1219,7 @@ export function prepareFlintVmWasm(
     artifact.module.functions.map((function_, index) => [function_.name, `fws_fn_${index}`]),
   );
   const exports = (): Record<string, WebAssembly.ExportValue> =>
-    instance.exports as Record<string, WebAssembly.ExportValue>;
+    (instanceReference.current?.exports ?? {}) as Record<string, WebAssembly.ExportValue>;
   const allocate = (size: number): number => {
     const allocator = exports().fws_alloc as (size: number) => number;
     const pointer = allocator(size);
@@ -1348,7 +1344,8 @@ export function prepareFlintVmWasm(
       artifact.module.capabilityImports.map((imported) => [imported.name, capabilityImport(imported)]),
     ),
   };
-  instance = new WebAssembly.Instance(compiled, imports);
+  const instance = new WebAssembly.Instance(compiled, imports);
+  instanceReference.current = instance;
   memory = exports().memory as WebAssembly.Memory;
   const resetState = (): void => {
     (exports().fws_reset as () => void)();

@@ -48,7 +48,7 @@ const defaultFileSystem: FlintNodeFileSystem = {
     try {
       return await readFile(path, 'utf8');
     } catch (error) {
-      if (isFileNotFound(error)) return void 0;
+      if (isFileNotFound(error)) return;
       throw error;
     }
   },

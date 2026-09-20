@@ -217,12 +217,12 @@ export fn answer() -> i32 {
         );
       },
     };
-    const loadWith = async (plugin: ReturnType<typeof flintPlugin>) => {
+    const loadWith = (plugin: ReturnType<typeof flintPlugin>) => {
       if (typeof plugin.load !== "function")
         throw new Error("Expected a load hook.");
-      return plugin.load.call(
-        { resolve: async () => null },
-        join(root, "runtime.flint") + "?import",
+      return (plugin.load as (id: string) => Promise<unknown>).call(
+        { resolve: () => Promise.resolve(null) },
+        `${join(root, "runtime.flint")}?import`,
       );
     };
 

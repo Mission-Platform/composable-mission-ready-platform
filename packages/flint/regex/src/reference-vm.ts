@@ -660,5 +660,3 @@ export function captureEnd(captures: Captures | null, group: number): number {
     ? -1
     : (captures[group * 2 + 1] ?? -1);
 }
-
-export { FORGE_REGEX_BYTECODE_VERSION } from "./bytecode.js";

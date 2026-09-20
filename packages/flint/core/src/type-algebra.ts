@@ -299,6 +299,10 @@ export class TypeAlgebra {
       case 'fn': {
         return `Fn<${[...node.parameters, node.result].map((part) => this.display(part)).join(',')}>`;
       }
+      default: {
+        const exhaustiveCheck: never = node;
+        throw new Error(`Unexpected type node kind: ${(exhaustiveCheck as { kind?: string }).kind}`);
+      }
     }
   }
 
@@ -362,6 +366,10 @@ export class TypeAlgebra {
           arguments: [...node.parameters, node.result].map((part) => this.toAst(part)),
           span,
         };
+      }
+      default: {
+        const exhaustiveCheck: never = node;
+        throw new Error(`Unexpected type node kind: ${(exhaustiveCheck as { kind?: string }).kind}`);
       }
     }
   }
@@ -462,6 +470,10 @@ export class TypeAlgebra {
       case 'fn': {
         return this.substituteFn(id, node, environment);
       }
+      default: {
+        const exhaustiveCheck: never = node;
+        throw new Error(`Unexpected type node kind: ${(exhaustiveCheck as { kind?: string }).kind}`);
+      }
     }
   }
 
@@ -543,6 +555,10 @@ export class TypeAlgebra {
       }
       case 'nominal': {
         return this.layoutNominal(node.name, node.args, visiting, visitingAggregates);
+      }
+      default: {
+        const exhaustiveCheck: never = node;
+        throw new Error(`Unexpected type node kind: ${(exhaustiveCheck as { kind?: string }).kind}`);
       }
     }
   }
@@ -930,6 +946,10 @@ export class TypeAlgebra {
       }
       case 'fn': {
         return `f:${node.parameters.join(',')}->${node.result}`;
+      }
+      default: {
+        const exhaustiveCheck: never = node;
+        throw new Error(`Unexpected type node kind: ${(exhaustiveCheck as { kind?: string }).kind}`);
       }
     }
   }

@@ -296,10 +296,10 @@ function buildIsAlnum(): FlintSelfHostedVmFunction {
   const b = createBuilder(1);
   const a = b.alloc();
   const d = b.alloc();
-  b.call(a, 'pm_is_alpha', [0]);
+  b.invoke(a, 'pm_is_alpha', [0]);
   b.branch(a, 'yes', 'digit');
   b.label('digit');
-  b.call(d, 'pm_is_digit', [0]);
+  b.invoke(d, 'pm_is_digit', [0]);
   b.ret(d);
   b.label('yes');
   b.num(a, 0);
@@ -425,7 +425,7 @@ function buildEmitU32(pool: ConstPool): FlintSelfHostedVmFunction {
   const temporary = b.alloc();
   st(b, G.SCRATCH, 0);
   bytesFromMemory(b, temporary, zero, four);
-  b.call(undefined, 'pm_emit_slice', [temporary]);
+  b.invoke(undefined, 'pm_emit_slice', [temporary]);
   b.ret();
   return function_('pm_emit_u32', ['u32'], 'unit', b);
 }
@@ -438,7 +438,7 @@ function buildEmitU8(pool: ConstPool): FlintSelfHostedVmFunction {
   const temporary = b.alloc();
   st(b, G.SCRATCH, 0);
   bytesFromMemory(b, temporary, zero, one);
-  b.call(undefined, 'pm_emit_slice', [temporary]);
+  b.invoke(undefined, 'pm_emit_slice', [temporary]);
   b.ret();
   return function_('pm_emit_u8', ['u32'], 'unit', b);
 }
@@ -451,11 +451,11 @@ function buildEmitDynString(): FlintSelfHostedVmFunction {
   const ptr = b.alloc();
   const slice = b.alloc();
   b.binary('-', length, 1, 0);
-  b.call(undefined, 'pm_emit_u32', [length]);
+  b.invoke(undefined, 'pm_emit_u32', [length]);
   ld(b, base, G.SOURCE_BASE);
   b.binary('+', ptr, base, 0);
   bytesFromMemory(b, slice, ptr, length);
-  b.call(undefined, 'pm_emit_slice', [slice]);
+  b.invoke(undefined, 'pm_emit_slice', [slice]);
   b.ret();
   return function_('pm_emit_dyn_string', ['u32', 'u32'], 'unit', b);
 }
@@ -463,7 +463,7 @@ function buildEmitDynString(): FlintSelfHostedVmFunction {
 /** pm_emit_span(start, end, line, column, endLine, endColumn) -> unit. */
 function buildEmitSpan(): FlintSelfHostedVmFunction {
   const b = createBuilder(6);
-  for (let index = 0; index < 6; index += 1) b.call(undefined, 'pm_emit_u32', [index]);
+  for (let index = 0; index < 6; index += 1) b.invoke(undefined, 'pm_emit_u32', [index]);
   b.ret();
   return function_('pm_emit_span', ['u32', 'u32', 'u32', 'u32', 'u32', 'u32'], 'unit', b);
 }
@@ -523,7 +523,7 @@ function buildPeek(pool: ConstPool): FlintSelfHostedVmFunction {
   b.binary('>=', cond, offset, sourceLength);
   b.branch(cond, 'eof', 'trivia_check');
   b.label('trivia_check');
-  b.call(byte, 'pm_read_byte', [offset]);
+  b.invoke(byte, 'pm_read_byte', [offset]);
   b.num(temporary, pool.u32(32));
   b.binary('==', cond, byte, temporary);
   b.branch(cond, 'space', 'tab_check');
@@ -555,13 +555,13 @@ function buildPeek(pool: ConstPool): FlintSelfHostedVmFunction {
   b.move(start, offset);
   b.move(startLine, line);
   b.move(startCol, col);
-  b.call(byte, 'pm_read_byte', [offset]);
+  b.invoke(byte, 'pm_read_byte', [offset]);
 
-  b.call(cond, 'pm_is_alpha', [byte]);
+  b.invoke(cond, 'pm_is_alpha', [byte]);
   b.branch(cond, 'alpha', 'digit_check');
 
   b.label('digit_check');
-  b.call(cond, 'pm_is_digit', [byte]);
+  b.invoke(cond, 'pm_is_digit', [byte]);
   b.branch(cond, 'digit', 'op_check');
 
   b.label('alpha');
@@ -571,8 +571,8 @@ function buildPeek(pool: ConstPool): FlintSelfHostedVmFunction {
   b.binary('>=', cond, end, sourceLength);
   b.branch(cond, 'alpha_done', 'alpha_check');
   b.label('alpha_check');
-  b.call(byte, 'pm_read_byte', [end]);
-  b.call(cond, 'pm_is_alnum', [byte]);
+  b.invoke(byte, 'pm_read_byte', [end]);
+  b.invoke(cond, 'pm_is_alnum', [byte]);
   b.branch(cond, 'alpha_advance', 'alpha_done');
   b.label('alpha_advance');
   b.binary('+', end, end, one);
@@ -597,8 +597,8 @@ function buildPeek(pool: ConstPool): FlintSelfHostedVmFunction {
   b.binary('>=', cond, end, sourceLength);
   b.branch(cond, 'digit_done', 'digit_check2');
   b.label('digit_check2');
-  b.call(byte, 'pm_read_byte', [end]);
-  b.call(cond, 'pm_is_digit', [byte]);
+  b.invoke(byte, 'pm_read_byte', [end]);
+  b.invoke(cond, 'pm_is_digit', [byte]);
   b.branch(cond, 'digit_advance', 'digit_done');
   b.label('digit_advance');
   b.binary('+', end, end, one);
@@ -621,8 +621,8 @@ function buildPeek(pool: ConstPool): FlintSelfHostedVmFunction {
   b.binary('<', cond, temporary2, sourceLength);
   b.branch(cond, 'op_two_load', 'op_one');
   b.label('op_two_load');
-  b.call(nextByte, 'pm_read_byte', [temporary2]);
-  b.call(cond, 'pm_is_two_char_op', [byte, nextByte]);
+  b.invoke(nextByte, 'pm_read_byte', [temporary2]);
+  b.invoke(cond, 'pm_is_two_char_op', [byte, nextByte]);
   b.branch(cond, 'op_two', 'op_one');
 
   b.label('op_two');
@@ -642,7 +642,7 @@ function buildPeek(pool: ConstPool): FlintSelfHostedVmFunction {
   b.ret();
 
   b.label('op_one');
-  b.call(cond, 'pm_is_one_char_op', [byte]);
+  b.invoke(cond, 'pm_is_one_char_op', [byte]);
   b.branch(cond, 'op_single', 'fail');
 
   b.label('op_single');
@@ -745,7 +745,7 @@ function buildWordEquals(pool: ConstPool): FlintSelfHostedVmFunction {
   ld(b, sourceBase, G.SOURCE_BASE);
   b.binary('+', ptr, sourceBase, peekStart);
   b.binary('+', ptr, ptr, index);
-  b.call(tokenByte, 'pm_read_byte', [ptr]);
+  b.invoke(tokenByte, 'pm_read_byte', [ptr]);
   b.byteAt(wordByte, 0, index);
   b.binary('==', cond, tokenByte, wordByte);
   b.branch(cond, 'advance', 'no');
@@ -790,7 +790,6 @@ function buildParseType(pool: ConstPool, types: readonly TypeWire[]): FlintSelfH
   const cond = b.alloc();
   const wantAlpha = K(b, pool, PK_ALPHA);
   const one = K(b, pool, 1);
-  const flag = b.alloc();
   const last = {
     start: b.alloc(),
     end: b.alloc(),
@@ -799,7 +798,7 @@ function buildParseType(pool: ConstPool, types: readonly TypeWire[]): FlintSelfH
     endLine: b.alloc(),
     endCol: b.alloc(),
   };
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_peek', []);
   ld(b, kind, G.PEEK_KIND);
   b.binary('==', cond, kind, wantAlpha);
   b.branch(cond, 'ok', 'fail');
@@ -807,19 +806,19 @@ function buildParseType(pool: ConstPool, types: readonly TypeWire[]): FlintSelfH
   st(b, G.FAIL_FLAG, one);
   b.ret();
   b.label('ok');
-  b.call(undefined, 'pm_consume', []);
+  b.invoke(undefined, 'pm_consume', []);
   let branch = 'p0';
   for (const [index, type] of types.entries()) {
     b.label(branch);
     const word = b.alloc();
     b.num(word, type.rawWord);
-    b.call(cond, 'pm_word_equals', [word]);
+    b.invoke(cond, 'pm_word_equals', [word]);
     branch = index === types.length - 1 ? 'no_match' : `p${String(index + 1)}`;
     b.branch(cond, `emit_${String(index)}`, branch);
     b.label(`emit_${String(index)}`);
     const wire = b.alloc();
     b.num(wire, type.wire);
-    b.call(undefined, 'pm_emit_const', [wire]);
+    b.invoke(undefined, 'pm_emit_const', [wire]);
     b.jump('after_name');
   }
   b.label('no_match');
@@ -827,19 +826,18 @@ function buildParseType(pool: ConstPool, types: readonly TypeWire[]): FlintSelfH
   b.ret();
   b.label('after_name');
   const zero = K(b, pool, 0);
-  b.call(undefined, 'pm_emit_u8', [zero]); // no reference
-  b.call(undefined, 'pm_emit_u8', [zero]); // no type arguments
-  b.call(undefined, 'pm_emit_u8', [zero]); // no fixed length
-  b.call(undefined, 'pm_emit_u8', [zero]); // no ownership annotation
+  b.invoke(undefined, 'pm_emit_u8', [zero]); // no reference
+  b.invoke(undefined, 'pm_emit_u8', [zero]); // no type arguments
+  b.invoke(undefined, 'pm_emit_u8', [zero]); // no fixed length
+  b.invoke(undefined, 'pm_emit_u8', [zero]); // no ownership annotation
   ld(b, last.start, G.LAST_START);
   ld(b, last.end, G.LAST_END);
   ld(b, last.line, G.LAST_LINE);
   ld(b, last.col, G.LAST_COL);
   ld(b, last.endLine, G.LAST_END_LINE);
   ld(b, last.endCol, G.LAST_END_COL);
-  b.call(undefined, 'pm_emit_span', [last.start, last.end, last.line, last.col, last.endLine, last.endCol]);
+  b.invoke(undefined, 'pm_emit_span', [last.start, last.end, last.line, last.col, last.endLine, last.endCol]);
   b.ret();
-  void flag;
   return function_('pm_parse_type', [], 'unit', b);
 }
 
@@ -899,27 +897,27 @@ function buildParsePrimary(pool: ConstPool, wire: ExpressionWire): FlintSelfHost
   const callWire = b.alloc();
   const identWire = b.alloc();
 
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_peek', []);
   ld(b, kind, G.PEEK_KIND);
   b.binary('==', cond, kind, wantNumber);
   b.branch(cond, 'number', 'alpha_check');
 
   b.label('number');
-  b.call(undefined, 'pm_consume', []);
+  b.invoke(undefined, 'pm_consume', []);
   b.num(literalWire, wire.literal);
-  b.call(undefined, 'pm_emit_const', [literalWire]);
+  b.invoke(undefined, 'pm_emit_const', [literalWire]);
   b.num(index32Wire, wire.i32Type);
-  b.call(undefined, 'pm_emit_const', [index32Wire]);
+  b.invoke(undefined, 'pm_emit_const', [index32Wire]);
   b.num(three, pool.u32(3));
-  b.call(undefined, 'pm_emit_u8', [three]);
+  b.invoke(undefined, 'pm_emit_u8', [three]);
   ld(b, identStart, G.LAST_START);
   ld(b, identEnd, G.LAST_END);
   ld(b, identLine, G.LAST_LINE);
   ld(b, identCol, G.LAST_COL);
   ld(b, identEndLine, G.LAST_END_LINE);
   ld(b, identEndCol, G.LAST_END_COL);
-  b.call(undefined, 'pm_emit_dyn_string', [identStart, identEnd]);
-  b.call(undefined, 'pm_emit_span', [identStart, identEnd, identLine, identCol, identEndLine, identEndCol]);
+  b.invoke(undefined, 'pm_emit_dyn_string', [identStart, identEnd]);
+  b.invoke(undefined, 'pm_emit_span', [identStart, identEnd, identLine, identCol, identEndLine, identEndCol]);
   b.ret();
 
   b.label('alpha_check');
@@ -931,14 +929,14 @@ function buildParsePrimary(pool: ConstPool, wire: ExpressionWire): FlintSelfHost
   b.ret();
 
   b.label('alpha');
-  b.call(undefined, 'pm_consume', []);
+  b.invoke(undefined, 'pm_consume', []);
   ld(b, identStart, G.LAST_START);
   ld(b, identEnd, G.LAST_END);
   ld(b, identLine, G.LAST_LINE);
   ld(b, identCol, G.LAST_COL);
   ld(b, identEndLine, G.LAST_END_LINE);
   ld(b, identEndCol, G.LAST_END_COL);
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_peek', []);
   ld(b, kind, G.PEEK_KIND);
   b.binary('==', cond, kind, wantOp);
   b.branch(cond, 'op_check_paren', 'plain_identifier');
@@ -950,20 +948,20 @@ function buildParsePrimary(pool: ConstPool, wire: ExpressionWire): FlintSelfHost
 
   b.label('plain_identifier');
   b.num(identWire, wire.identifier);
-  b.call(undefined, 'pm_emit_const', [identWire]);
-  b.call(undefined, 'pm_emit_dyn_string', [identStart, identEnd]);
-  b.call(undefined, 'pm_emit_span', [identStart, identEnd, identLine, identCol, identEndLine, identEndCol]);
+  b.invoke(undefined, 'pm_emit_const', [identWire]);
+  b.invoke(undefined, 'pm_emit_dyn_string', [identStart, identEnd]);
+  b.invoke(undefined, 'pm_emit_span', [identStart, identEnd, identLine, identCol, identEndLine, identEndCol]);
   b.ret();
 
   b.label('is_call');
-  b.call(undefined, 'pm_consume', []); // '('
+  b.invoke(undefined, 'pm_consume', []); // '('
   b.num(callWire, wire.call);
-  b.call(undefined, 'pm_emit_const', [callWire]);
-  b.call(undefined, 'pm_emit_dyn_string', [identStart, identEnd]);
+  b.invoke(undefined, 'pm_emit_const', [callWire]);
+  b.invoke(undefined, 'pm_emit_dyn_string', [identStart, identEnd]);
   ld(b, savedOffset, G.OUT_CURSOR);
-  b.call(undefined, 'pm_emit_u32', [zero]);
+  b.invoke(undefined, 'pm_emit_u32', [zero]);
   b.move(argumentCount, zero);
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_peek', []);
   b.label('args_loop');
   ld(b, kind, G.PEEK_KIND);
   b.binary('==', cond, kind, wantOp);
@@ -973,7 +971,7 @@ function buildParsePrimary(pool: ConstPool, wire: ExpressionWire): FlintSelfHost
   b.binary('==', cond, byte0, closeParen);
   b.branch(cond, 'args_done', 'args_parse');
   b.label('args_parse');
-  b.call(undefined, 'pm_parse_unary', []);
+  b.invoke(undefined, 'pm_parse_unary', []);
   {
     const failed = b.alloc();
     ld(b, failed, G.FAIL_FLAG);
@@ -981,7 +979,7 @@ function buildParsePrimary(pool: ConstPool, wire: ExpressionWire): FlintSelfHost
   }
   b.label('args_after');
   b.binary('+', argumentCount, argumentCount, one);
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_peek', []);
   ld(b, kind, G.PEEK_KIND);
   b.binary('==', cond, kind, wantOp);
   b.branch(cond, 'args_comma_check', 'args_done');
@@ -990,8 +988,8 @@ function buildParsePrimary(pool: ConstPool, wire: ExpressionWire): FlintSelfHost
   b.binary('==', cond, byte0, comma);
   b.branch(cond, 'args_comma', 'args_done');
   b.label('args_comma');
-  b.call(undefined, 'pm_consume', []);
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_consume', []);
+  b.invoke(undefined, 'pm_peek', []);
   b.jump('args_loop');
   b.label('args_done');
   ld(b, kind, G.PEEK_KIND);
@@ -1002,8 +1000,8 @@ function buildParsePrimary(pool: ConstPool, wire: ExpressionWire): FlintSelfHost
   b.binary('==', cond, byte0, closeParen);
   b.branch(cond, 'args_close', 'bail');
   b.label('args_close');
-  b.call(undefined, 'pm_consume', []); // ')'
-  b.call(undefined, 'pm_patch_u32', [savedOffset, argumentCount]);
+  b.invoke(undefined, 'pm_consume', []); // ')'
+  b.invoke(undefined, 'pm_patch_u32', [savedOffset, argumentCount]);
   {
     const lastEnd = b.alloc();
     const lastEndLine = b.alloc();
@@ -1011,7 +1009,7 @@ function buildParsePrimary(pool: ConstPool, wire: ExpressionWire): FlintSelfHost
     ld(b, lastEnd, G.LAST_END);
     ld(b, lastEndLine, G.LAST_END_LINE);
     ld(b, lastEndCol, G.LAST_END_COL);
-    b.call(undefined, 'pm_emit_span', [identStart, lastEnd, identLine, identCol, lastEndLine, lastEndCol]);
+    b.invoke(undefined, 'pm_emit_span', [identStart, lastEnd, identLine, identCol, lastEndLine, lastEndCol]);
   }
   b.ret();
   b.label('bail');
@@ -1042,7 +1040,7 @@ function buildParseUnary(pool: ConstPool, wire: ExpressionWire): FlintSelfHosted
   const unaryWire = b.alloc();
   const minusWire = b.alloc();
 
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_peek', []);
   ld(b, kind, G.PEEK_KIND);
   b.binary('==', cond, kind, wantOp);
   b.branch(cond, 'op_check', 'primary');
@@ -1063,12 +1061,12 @@ function buildParseUnary(pool: ConstPool, wire: ExpressionWire): FlintSelfHosted
   ld(b, start, G.PEEK_START);
   ld(b, line, G.PEEK_LINE);
   ld(b, col, G.PEEK_COL);
-  b.call(undefined, 'pm_consume', []);
+  b.invoke(undefined, 'pm_consume', []);
   b.num(unaryWire, wire.unary);
-  b.call(undefined, 'pm_emit_const', [unaryWire]);
+  b.invoke(undefined, 'pm_emit_const', [unaryWire]);
   b.num(minusWire, wire.unaryMinus);
-  b.call(undefined, 'pm_emit_const', [minusWire]);
-  b.call(undefined, 'pm_parse_primary', []);
+  b.invoke(undefined, 'pm_emit_const', [minusWire]);
+  b.invoke(undefined, 'pm_parse_primary', []);
   {
     const lastEnd = b.alloc();
     const lastEndLine = b.alloc();
@@ -1076,12 +1074,12 @@ function buildParseUnary(pool: ConstPool, wire: ExpressionWire): FlintSelfHosted
     ld(b, lastEnd, G.LAST_END);
     ld(b, lastEndLine, G.LAST_END_LINE);
     ld(b, lastEndCol, G.LAST_END_COL);
-    b.call(undefined, 'pm_emit_span', [start, lastEnd, line, col, lastEndLine, lastEndCol]);
+    b.invoke(undefined, 'pm_emit_span', [start, lastEnd, line, col, lastEndLine, lastEndCol]);
   }
   b.ret();
 
   b.label('primary');
-  b.call(undefined, 'pm_parse_primary', []);
+  b.invoke(undefined, 'pm_parse_primary', []);
   b.ret();
 
   return function_('pm_parse_unary', [], 'unit', b);
@@ -1111,7 +1109,7 @@ function buildParseExpression(pool: ConstPool, wire: ExpressionWire): FlintSelfH
   const zero = K(b, pool, 0);
   const opConst = b.alloc();
 
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_peek', []);
   ld(b, start, G.PEEK_START);
   ld(b, line, G.PEEK_LINE);
   ld(b, col, G.PEEK_COL);
@@ -1121,7 +1119,7 @@ function buildParseExpression(pool: ConstPool, wire: ExpressionWire): FlintSelfH
   ld(b, leftBase, G.LEFT_BUF_BASE);
   st(b, G.OUTPUT_BASE, leftBase);
   st(b, G.OUT_CURSOR, zero);
-  b.call(undefined, 'pm_parse_unary', []);
+  b.invoke(undefined, 'pm_parse_unary', []);
   ld(b, leftLength, G.OUT_CURSOR);
   st(b, G.OUTPUT_BASE, savedBase);
   st(b, G.OUT_CURSOR, savedCursor);
@@ -1133,7 +1131,7 @@ function buildParseExpression(pool: ConstPool, wire: ExpressionWire): FlintSelfH
   }
 
   b.label('check_operator');
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_peek', []);
   ld(b, kind, G.PEEK_KIND);
   b.binary('==', cond, kind, wantOp);
   b.branch(cond, 'match_operator', 'no_operator');
@@ -1176,16 +1174,16 @@ function buildParseExpression(pool: ConstPool, wire: ExpressionWire): FlintSelfH
   }
 
   b.label('emit_binary');
-  b.call(undefined, 'pm_consume', []);
+  b.invoke(undefined, 'pm_consume', []);
   {
     const binaryWire = b.alloc();
     b.num(binaryWire, wire.binary);
-    b.call(undefined, 'pm_emit_const', [binaryWire]);
+    b.invoke(undefined, 'pm_emit_const', [binaryWire]);
   }
-  b.call(undefined, 'pm_emit_const', [opConst]);
+  b.invoke(undefined, 'pm_emit_const', [opConst]);
   bytesFromMemory(b, leftSlice, leftBase, leftLength);
-  b.call(undefined, 'pm_emit_slice', [leftSlice]);
-  b.call(undefined, 'pm_parse_unary', []);
+  b.invoke(undefined, 'pm_emit_slice', [leftSlice]);
+  b.invoke(undefined, 'pm_parse_unary', []);
   {
     const failed = b.alloc();
     ld(b, failed, G.FAIL_FLAG);
@@ -1199,13 +1197,13 @@ function buildParseExpression(pool: ConstPool, wire: ExpressionWire): FlintSelfH
     ld(b, lastEnd, G.LAST_END);
     ld(b, lastEndLine, G.LAST_END_LINE);
     ld(b, lastEndCol, G.LAST_END_COL);
-    b.call(undefined, 'pm_emit_span', [start, lastEnd, line, col, lastEndLine, lastEndCol]);
+    b.invoke(undefined, 'pm_emit_span', [start, lastEnd, line, col, lastEndLine, lastEndCol]);
   }
   b.ret();
 
   b.label('no_operator');
   bytesFromMemory(b, leftSlice, leftBase, leftLength);
-  b.call(undefined, 'pm_emit_slice', [leftSlice]);
+  b.invoke(undefined, 'pm_emit_slice', [leftSlice]);
   {
     const lastEnd = b.alloc();
     const lastEndLine = b.alloc();
@@ -1213,7 +1211,7 @@ function buildParseExpression(pool: ConstPool, wire: ExpressionWire): FlintSelfH
     ld(b, lastEnd, G.LAST_END);
     ld(b, lastEndLine, G.LAST_END_LINE);
     ld(b, lastEndCol, G.LAST_END_COL);
-    b.call(undefined, 'pm_emit_span', [start, lastEnd, line, col, lastEndLine, lastEndCol]);
+    b.invoke(undefined, 'pm_emit_span', [start, lastEnd, line, col, lastEndLine, lastEndCol]);
   }
   b.ret();
 
@@ -1252,7 +1250,7 @@ function buildParseParameters(pool: ConstPool): FlintSelfHostedVmFunction {
   const nameLine = b.alloc();
   const nameCol = b.alloc();
 
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_peek', []);
   ld(b, kind, G.PEEK_KIND);
   b.binary('==', cond, kind, wantOp);
   b.branch(cond, 'open_check', 'fail');
@@ -1265,11 +1263,11 @@ function buildParseParameters(pool: ConstPool): FlintSelfHostedVmFunction {
   b.ret();
 
   b.label('open_ok');
-  b.call(undefined, 'pm_consume', []);
+  b.invoke(undefined, 'pm_consume', []);
   ld(b, savedOffset, G.OUT_CURSOR);
-  b.call(undefined, 'pm_emit_u32', [zero]);
+  b.invoke(undefined, 'pm_emit_u32', [zero]);
   b.move(count, zero);
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_peek', []);
 
   b.label('loop');
   ld(b, kind, G.PEEK_KIND);
@@ -1284,13 +1282,13 @@ function buildParseParameters(pool: ConstPool): FlintSelfHostedVmFunction {
   b.binary('==', cond, kind, wantAlpha);
   b.branch(cond, 'param_name', 'fail');
   b.label('param_name');
-  b.call(undefined, 'pm_consume', []);
+  b.invoke(undefined, 'pm_consume', []);
   ld(b, nameStart, G.LAST_START);
   ld(b, nameEnd, G.LAST_END);
   ld(b, nameLine, G.LAST_LINE);
   ld(b, nameCol, G.LAST_COL);
-  b.call(undefined, 'pm_emit_dyn_string', [nameStart, nameEnd]);
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_emit_dyn_string', [nameStart, nameEnd]);
+  b.invoke(undefined, 'pm_peek', []);
   ld(b, kind, G.PEEK_KIND);
   b.binary('==', cond, kind, wantOp);
   b.branch(cond, 'colon_check', 'fail');
@@ -1299,8 +1297,8 @@ function buildParseParameters(pool: ConstPool): FlintSelfHostedVmFunction {
   b.binary('==', cond, byte0, colon);
   b.branch(cond, 'colon_ok', 'fail');
   b.label('colon_ok');
-  b.call(undefined, 'pm_consume', []);
-  b.call(undefined, 'pm_parse_type', []);
+  b.invoke(undefined, 'pm_consume', []);
+  b.invoke(undefined, 'pm_parse_type', []);
   {
     const failed = b.alloc();
     ld(b, failed, G.FAIL_FLAG);
@@ -1314,10 +1312,10 @@ function buildParseParameters(pool: ConstPool): FlintSelfHostedVmFunction {
     ld(b, lastEnd, G.LAST_END);
     ld(b, lastEndLine, G.LAST_END_LINE);
     ld(b, lastEndCol, G.LAST_END_COL);
-    b.call(undefined, 'pm_emit_span', [nameStart, lastEnd, nameLine, nameCol, lastEndLine, lastEndCol]);
+    b.invoke(undefined, 'pm_emit_span', [nameStart, lastEnd, nameLine, nameCol, lastEndLine, lastEndCol]);
   }
   b.binary('+', count, count, one);
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_peek', []);
   ld(b, kind, G.PEEK_KIND);
   b.binary('==', cond, kind, wantOp);
   b.branch(cond, 'comma_check', 'done');
@@ -1326,8 +1324,8 @@ function buildParseParameters(pool: ConstPool): FlintSelfHostedVmFunction {
   b.binary('==', cond, byte0, comma);
   b.branch(cond, 'comma_ok', 'done');
   b.label('comma_ok');
-  b.call(undefined, 'pm_consume', []);
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_consume', []);
+  b.invoke(undefined, 'pm_peek', []);
   b.jump('loop');
 
   b.label('done');
@@ -1339,8 +1337,8 @@ function buildParseParameters(pool: ConstPool): FlintSelfHostedVmFunction {
   b.binary('==', cond, byte0, closeParen);
   b.branch(cond, 'close_ok', 'bail');
   b.label('close_ok');
-  b.call(undefined, 'pm_consume', []);
-  b.call(undefined, 'pm_patch_u32', [savedOffset, count]);
+  b.invoke(undefined, 'pm_consume', []);
+  b.invoke(undefined, 'pm_patch_u32', [savedOffset, count]);
   b.ret();
 
   b.label('bail');
@@ -1373,10 +1371,10 @@ function buildParseReturnStatement(pool: ConstPool, returnWire: number): FlintSe
   ld(b, start, G.PEEK_START);
   ld(b, line, G.PEEK_LINE);
   ld(b, col, G.PEEK_COL);
-  b.call(undefined, 'pm_consume', []); // 'return'
+  b.invoke(undefined, 'pm_consume', []); // 'return'
   b.num(wire, returnWire);
-  b.call(undefined, 'pm_emit_const', [wire]);
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_emit_const', [wire]);
+  b.invoke(undefined, 'pm_peek', []);
   ld(b, kind, G.PEEK_KIND);
   b.binary('==', cond, kind, wantOp);
   b.branch(cond, 'semi_check', 'has_value');
@@ -1386,20 +1384,20 @@ function buildParseReturnStatement(pool: ConstPool, returnWire: number): FlintSe
   b.branch(cond, 'no_value', 'has_value');
 
   b.label('no_value');
-  b.call(undefined, 'pm_emit_u8', [zero]);
-  b.call(undefined, 'pm_consume', []); // ';'
+  b.invoke(undefined, 'pm_emit_u8', [zero]);
+  b.invoke(undefined, 'pm_consume', []); // ';'
   b.jump('finish');
 
   b.label('has_value');
-  b.call(undefined, 'pm_emit_u8', [one]);
-  b.call(undefined, 'pm_parse_expression', []);
+  b.invoke(undefined, 'pm_emit_u8', [one]);
+  b.invoke(undefined, 'pm_parse_expression', []);
   {
     const failed = b.alloc();
     ld(b, failed, G.FAIL_FLAG);
     b.branch(failed, 'bail', 'expect_semi');
   }
   b.label('expect_semi');
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_peek', []);
   ld(b, kind, G.PEEK_KIND);
   b.binary('==', cond, kind, wantOp);
   b.branch(cond, 'semi_check2', 'bail');
@@ -1408,7 +1406,7 @@ function buildParseReturnStatement(pool: ConstPool, returnWire: number): FlintSe
   b.binary('==', cond, byte0, semi);
   b.branch(cond, 'semi_ok', 'bail');
   b.label('semi_ok');
-  b.call(undefined, 'pm_consume', []); // ';'
+  b.invoke(undefined, 'pm_consume', []); // ';'
 
   b.label('finish');
   {
@@ -1418,7 +1416,7 @@ function buildParseReturnStatement(pool: ConstPool, returnWire: number): FlintSe
     ld(b, lastEnd, G.LAST_END);
     ld(b, lastEndLine, G.LAST_END_LINE);
     ld(b, lastEndCol, G.LAST_END_COL);
-    b.call(undefined, 'pm_emit_span', [start, lastEnd, line, col, lastEndLine, lastEndCol]);
+    b.invoke(undefined, 'pm_emit_span', [start, lastEnd, line, col, lastEndLine, lastEndCol]);
   }
   b.ret();
 
@@ -1450,7 +1448,7 @@ function buildParseBlock(pool: ConstPool, returnWord: number): FlintSelfHostedVm
   const savedOffset = b.alloc();
   const count = b.alloc();
 
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_peek', []);
   ld(b, kind, G.PEEK_KIND);
   b.binary('==', cond, kind, wantOp);
   b.branch(cond, 'open_check', 'fail');
@@ -1463,11 +1461,11 @@ function buildParseBlock(pool: ConstPool, returnWord: number): FlintSelfHostedVm
   b.ret();
 
   b.label('open_ok');
-  b.call(undefined, 'pm_consume', []);
+  b.invoke(undefined, 'pm_consume', []);
   ld(b, savedOffset, G.OUT_CURSOR);
-  b.call(undefined, 'pm_emit_u32', [zero]);
+  b.invoke(undefined, 'pm_emit_u32', [zero]);
   b.move(count, zero);
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_peek', []);
 
   b.label('loop');
   ld(b, kind, G.PEEK_KIND);
@@ -1489,12 +1487,12 @@ function buildParseBlock(pool: ConstPool, returnWord: number): FlintSelfHostedVm
   {
     const word = b.alloc();
     b.num(word, returnWord);
-    b.call(cond, 'pm_word_equals', [word]);
+    b.invoke(cond, 'pm_word_equals', [word]);
   }
   b.branch(cond, 'stmt_return', 'fail');
 
   b.label('stmt_return');
-  b.call(undefined, 'pm_parse_return_statement', []);
+  b.invoke(undefined, 'pm_parse_return_statement', []);
   {
     const failed = b.alloc();
     ld(b, failed, G.FAIL_FLAG);
@@ -1502,12 +1500,12 @@ function buildParseBlock(pool: ConstPool, returnWord: number): FlintSelfHostedVm
   }
   b.label('stmt_ok');
   b.binary('+', count, count, one);
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_peek', []);
   b.jump('loop');
 
   b.label('done');
-  b.call(undefined, 'pm_consume', []);
-  b.call(undefined, 'pm_patch_u32', [savedOffset, count]);
+  b.invoke(undefined, 'pm_consume', []);
+  b.invoke(undefined, 'pm_patch_u32', [savedOffset, count]);
   b.ret();
 
   b.label('bail');
@@ -1555,13 +1553,13 @@ function buildParseFunction(pool: ConstPool, exportWord: number, functionWord: n
   {
     const word = b.alloc();
     b.num(word, exportWord);
-    b.call(cond, 'pm_word_equals', [word]);
+    b.invoke(cond, 'pm_word_equals', [word]);
   }
   b.branch(cond, 'consume_export', 'want_fn');
   b.label('consume_export');
-  b.call(undefined, 'pm_consume', []);
+  b.invoke(undefined, 'pm_consume', []);
   b.move(exported, one);
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_peek', []);
 
   b.label('want_fn');
   ld(b, kind, G.PEEK_KIND);
@@ -1571,7 +1569,7 @@ function buildParseFunction(pool: ConstPool, exportWord: number, functionWord: n
   {
     const word = b.alloc();
     b.num(word, functionWord);
-    b.call(cond, 'pm_word_equals', [word]);
+    b.invoke(cond, 'pm_word_equals', [word]);
   }
   b.branch(cond, 'consume_fn', 'fail');
   b.label('fail');
@@ -1579,29 +1577,29 @@ function buildParseFunction(pool: ConstPool, exportWord: number, functionWord: n
   b.ret();
 
   b.label('consume_fn');
-  b.call(undefined, 'pm_consume', []);
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_consume', []);
+  b.invoke(undefined, 'pm_peek', []);
   ld(b, kind, G.PEEK_KIND);
   b.binary('==', cond, kind, wantAlpha);
   b.branch(cond, 'have_name', 'fail');
   b.label('have_name');
-  b.call(undefined, 'pm_consume', []);
+  b.invoke(undefined, 'pm_consume', []);
   ld(b, nameStart, G.LAST_START);
   ld(b, nameEnd, G.LAST_END);
-  b.call(undefined, 'pm_emit_dyn_string', [nameStart, nameEnd]);
-  b.call(undefined, 'pm_emit_u8', [exported]);
-  b.call(undefined, 'pm_emit_u8', [zero]); // iterable
-  b.call(undefined, 'pm_emit_u8', [zero]); // inline policy
-  b.call(undefined, 'pm_emit_u8', [zero]); // documentation
-  b.call(undefined, 'pm_emit_u32', [zero]); // generic parameters
-  b.call(undefined, 'pm_parse_parameters', []);
+  b.invoke(undefined, 'pm_emit_dyn_string', [nameStart, nameEnd]);
+  b.invoke(undefined, 'pm_emit_u8', [exported]);
+  b.invoke(undefined, 'pm_emit_u8', [zero]); // iterable
+  b.invoke(undefined, 'pm_emit_u8', [zero]); // inline policy
+  b.invoke(undefined, 'pm_emit_u8', [zero]); // documentation
+  b.invoke(undefined, 'pm_emit_u32', [zero]); // generic parameters
+  b.invoke(undefined, 'pm_parse_parameters', []);
   {
     const failed = b.alloc();
     ld(b, failed, G.FAIL_FLAG);
     b.branch(failed, 'bail', 'want_arrow');
   }
   b.label('want_arrow');
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_peek', []);
   ld(b, kind, G.PEEK_KIND);
   b.binary('==', cond, kind, wantOp);
   b.branch(cond, 'arrow_check', 'bail');
@@ -1617,15 +1615,15 @@ function buildParseFunction(pool: ConstPool, exportWord: number, functionWord: n
   }
   b.branch(cond, 'consume_arrow', 'bail');
   b.label('consume_arrow');
-  b.call(undefined, 'pm_consume', []);
-  b.call(undefined, 'pm_parse_type', []);
+  b.invoke(undefined, 'pm_consume', []);
+  b.invoke(undefined, 'pm_parse_type', []);
   {
     const failed = b.alloc();
     ld(b, failed, G.FAIL_FLAG);
     b.branch(failed, 'bail', 'want_block');
   }
   b.label('want_block');
-  b.call(undefined, 'pm_parse_block', []);
+  b.invoke(undefined, 'pm_parse_block', []);
   {
     const failed = b.alloc();
     ld(b, failed, G.FAIL_FLAG);
@@ -1639,7 +1637,7 @@ function buildParseFunction(pool: ConstPool, exportWord: number, functionWord: n
     ld(b, lastEnd, G.LAST_END);
     ld(b, lastEndLine, G.LAST_END_LINE);
     ld(b, lastEndCol, G.LAST_END_COL);
-    b.call(undefined, 'pm_emit_span', [start, lastEnd, line, col, lastEndLine, lastEndCol]);
+    b.invoke(undefined, 'pm_emit_span', [start, lastEnd, line, col, lastEndLine, lastEndCol]);
   }
   b.ret();
 
@@ -1669,7 +1667,7 @@ function buildSkipClassBody(pool: ConstPool): FlintSelfHostedVmFunction {
   const zero = K(b, pool, 0);
   const braces = b.alloc();
 
-  b.call(undefined, 'pm_consume', []); // the class-family keyword
+  b.invoke(undefined, 'pm_consume', []); // the class-family keyword
   st(b, G.DIAG_FLAG, one);
   {
     const value = b.alloc();
@@ -1686,7 +1684,7 @@ function buildSkipClassBody(pool: ConstPool): FlintSelfHostedVmFunction {
     }
   }
   b.move(braces, zero);
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_peek', []);
 
   b.label('loop');
   ld(b, kind, G.PEEK_KIND);
@@ -1701,8 +1699,8 @@ function buildSkipClassBody(pool: ConstPool): FlintSelfHostedVmFunction {
   b.branch(cond, 'open_brace', 'close_check');
   b.label('open_brace');
   b.binary('+', braces, braces, one);
-  b.call(undefined, 'pm_consume', []);
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_consume', []);
+  b.invoke(undefined, 'pm_peek', []);
   b.jump('loop');
   b.label('close_check');
   b.binary('==', cond, byte0, closeBrace);
@@ -1715,17 +1713,17 @@ function buildSkipClassBody(pool: ConstPool): FlintSelfHostedVmFunction {
   }
   b.label('dec_and_continue');
   b.binary('-', braces, braces, one);
-  b.call(undefined, 'pm_consume', []);
+  b.invoke(undefined, 'pm_consume', []);
   {
     const isZeroNow = b.alloc();
     b.binary('==', isZeroNow, braces, zero);
     b.branch(isZeroNow, 'stop', 'continue_peek');
   }
   b.label('continue_peek');
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_peek', []);
   b.jump('loop');
   b.label('stop_and_consume');
-  b.call(undefined, 'pm_consume', []);
+  b.invoke(undefined, 'pm_consume', []);
   b.jump('stop');
   b.label('semi_check');
   {
@@ -1737,8 +1735,8 @@ function buildSkipClassBody(pool: ConstPool): FlintSelfHostedVmFunction {
   }
   b.branch(cond, 'stop_and_consume', 'advance');
   b.label('advance');
-  b.call(undefined, 'pm_consume', []);
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_consume', []);
+  b.invoke(undefined, 'pm_peek', []);
   b.jump('loop');
   b.label('stop');
   b.ret();
@@ -1808,7 +1806,7 @@ function buildEntry(
   allocOp(b, outputBase, K(b, pool, OUTPUT_CAPACITY));
   st(b, G.OUTPUT_BASE, outputBase);
 
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_peek', []);
   ld(b, moduleStart, G.PEEK_START);
   ld(b, moduleStartLine, G.PEEK_LINE);
   ld(b, moduleStartCol, G.PEEK_COL);
@@ -1817,20 +1815,20 @@ function buildEntry(
   {
     const header = b.alloc();
     b.num(header, pool.bytesConst(new Uint8Array([0x46, 0x57, 0x53, 0x4d, 1])));
-    b.call(undefined, 'pm_emit_const', [header]);
+    b.invoke(undefined, 'pm_emit_const', [header]);
   }
   b.num(nameWireReg, nameWire);
-  b.call(undefined, 'pm_emit_const', [nameWireReg]);
+  b.invoke(undefined, 'pm_emit_const', [nameWireReg]);
 
   ld(b, spanOffset, G.OUT_CURSOR);
-  for (let index = 0; index < 6; index += 1) b.call(undefined, 'pm_emit_u32', [zero]);
-  b.call(undefined, 'pm_emit_u32', [zero]); // imports
-  b.call(undefined, 'pm_emit_u32', [zero]); // sourceImports
-  b.call(undefined, 'pm_emit_u32', [zero]); // structs
-  b.call(undefined, 'pm_emit_u32', [zero]); // enums
-  b.call(undefined, 'pm_emit_u32', [zero]); // interfaces
+  for (let index = 0; index < 6; index += 1) b.invoke(undefined, 'pm_emit_u32', [zero]);
+  b.invoke(undefined, 'pm_emit_u32', [zero]); // imports
+  b.invoke(undefined, 'pm_emit_u32', [zero]); // sourceImports
+  b.invoke(undefined, 'pm_emit_u32', [zero]); // structs
+  b.invoke(undefined, 'pm_emit_u32', [zero]); // enums
+  b.invoke(undefined, 'pm_emit_u32', [zero]); // interfaces
   ld(b, functionCountOffset, G.OUT_CURSOR);
-  b.call(undefined, 'pm_emit_u32', [zero]); // functions placeholder
+  b.invoke(undefined, 'pm_emit_u32', [zero]); // functions placeholder
   b.move(functionCount, zero);
 
   b.label('top_loop');
@@ -1852,12 +1850,12 @@ function buildEntry(
   {
     const word = b.alloc();
     b.num(word, classWord);
-    b.call(cond, 'pm_word_equals', [word]);
+    b.invoke(cond, 'pm_word_equals', [word]);
   }
   b.branch(cond, 'top_class', 'top_fn_check');
 
   b.label('top_class');
-  b.call(undefined, 'pm_skip_class_body', []);
+  b.invoke(undefined, 'pm_skip_class_body', []);
   {
     const failed = b.alloc();
     ld(b, failed, G.FAIL_FLAG);
@@ -1871,15 +1869,15 @@ function buildEntry(
     const isExport = b.alloc();
     const isFunction = b.alloc();
     b.num(exportWordReg, exportWord);
-    b.call(isExport, 'pm_word_equals', [exportWordReg]);
+    b.invoke(isExport, 'pm_word_equals', [exportWordReg]);
     b.num(functionWordReg, functionWord);
-    b.call(isFunction, 'pm_word_equals', [functionWordReg]);
+    b.invoke(isFunction, 'pm_word_equals', [functionWordReg]);
     b.binary('||', cond, isExport, isFunction);
   }
   b.branch(cond, 'top_function', 'top_fail');
 
   b.label('top_function');
-  b.call(undefined, 'pm_parse_function', []);
+  b.invoke(undefined, 'pm_parse_function', []);
   {
     const failed = b.alloc();
     ld(b, failed, G.FAIL_FLAG);
@@ -1889,7 +1887,7 @@ function buildEntry(
   b.binary('+', functionCount, functionCount, one);
 
   b.label('top_continue');
-  b.call(undefined, 'pm_peek', []);
+  b.invoke(undefined, 'pm_peek', []);
   b.jump('top_loop');
 
   b.label('top_fail');
@@ -1897,13 +1895,11 @@ function buildEntry(
   b.jump('top_done');
 
   b.label('top_done');
-  b.call(undefined, 'pm_patch_u32', [functionCountOffset, functionCount]);
+  b.invoke(undefined, 'pm_patch_u32', [functionCountOffset, functionCount]);
   {
-    const failed = b.alloc();
     const moduleEnd = b.alloc();
     const moduleEndLine = b.alloc();
     const moduleEndCol = b.alloc();
-    ld(b, failed, G.FAIL_FLAG);
     ld(b, moduleEnd, G.LAST_END);
     ld(b, moduleEndLine, G.LAST_END_LINE);
     ld(b, moduleEndCol, G.LAST_END_COL);
@@ -1925,12 +1921,12 @@ function buildEntry(
     b.binary('+', off12, spanOffset, twelve);
     b.binary('+', off16, spanOffset, sixteen);
     b.binary('+', off20, spanOffset, twenty);
-    b.call(undefined, 'pm_patch_u32', [off0, moduleStart]);
-    b.call(undefined, 'pm_patch_u32', [off4, moduleEnd]);
-    b.call(undefined, 'pm_patch_u32', [off8, moduleStartLine]);
-    b.call(undefined, 'pm_patch_u32', [off12, moduleStartCol]);
-    b.call(undefined, 'pm_patch_u32', [off16, moduleEndLine]);
-    b.call(undefined, 'pm_patch_u32', [off20, moduleEndCol]);
+    b.invoke(undefined, 'pm_patch_u32', [off0, moduleStart]);
+    b.invoke(undefined, 'pm_patch_u32', [off4, moduleEnd]);
+    b.invoke(undefined, 'pm_patch_u32', [off8, moduleStartLine]);
+    b.invoke(undefined, 'pm_patch_u32', [off12, moduleStartCol]);
+    b.invoke(undefined, 'pm_patch_u32', [off16, moduleEndLine]);
+    b.invoke(undefined, 'pm_patch_u32', [off20, moduleEndCol]);
 
     // Envelope header (32 bytes, at envelopeBase, independent of OUTPUT_BASE/OUT_CURSOR):
     // [0] failFlag [4] diagFlag [8..32) diagnostic span.
@@ -1966,7 +1962,6 @@ function buildEntry(
     const result = b.alloc();
     bytesFromMemory(b, result, envelopeBase, totalLength);
     b.ret(result);
-    void failed;
   }
 
   return function_(FLINT_PARSER_MODULE_STAGE_ENTRY, [SOURCE_LAYOUT], 'bytes', b);
@@ -2090,8 +2085,6 @@ export function createFlintParserModuleVmModule(
     // the emitted envelope bytes differ from the seed without touching any
     // grammar logic. Located after construction so the salt only ever
     // affects the VM path, never the seed oracle.
-    const target = functions.find((candidate) => candidate.name === FLINT_PARSER_MODULE_STAGE_ENTRY);
-    void target;
     const magicIndex = [...pool.values.keys()].find((index) => {
       const value = pool.values[index];
       return value?.kind === 'aggregate' && value.bytes.length === 5 && value.bytes[0] === 0x46;

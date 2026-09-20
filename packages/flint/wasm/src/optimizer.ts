@@ -8,8 +8,6 @@ import {
 
 import type { FlintWasmExpression, FlintWasmModule, FlintWasmStatement } from './contracts.js';
 
-export { type FlintWasmSwitchStrategy, type FlintWasmOptimizationDiagnostic } from './switch-optimizer.js';
-
 /** Metadata describing an individual optimization pass and its metrics. */
 export interface FlintWasmOptimizationPass {
   readonly name:

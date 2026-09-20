@@ -26,7 +26,9 @@ describe('Forge Web Script async runtime', () => {
       capabilities: [FLINT_ASYNC_CAPABILITIES.microtask, FLINT_ASYNC_CAPABILITIES.worker],
       host: {
         postWorkerMessage: (message) => posted.push(message.taskId),
-        scheduleMicrotask: () => {},
+        scheduleMicrotask: () => {
+          // No-op microtask scheduler for test harness.
+        },
       },
     });
     const input = new Uint8Array([7]);

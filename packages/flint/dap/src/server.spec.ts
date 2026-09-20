@@ -408,7 +408,7 @@ describe('Forge Web Script DAP server', () => {
   });
 });
 
-async function waitForChildClose(
+function waitForChildClose(
   child: ChildProcess | undefined,
   timeoutMs: number,
 ): Promise<{ readonly code: number | null; readonly signal: NodeJS.Signals | undefined }> {

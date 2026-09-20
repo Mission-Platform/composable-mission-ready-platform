@@ -9,8 +9,6 @@ import {
 import type { FlintOwnership, FlintTypeName } from './ast.js';
 import type { FlintIteratorBoundaryDescriptor, FlintSpecialization } from './manifest.js';
 
-export type { FlintGenericBoundary } from './type-algebra.js';
-
 /**
  * Request payload for creating a generic specialization descriptor.
  */
@@ -117,5 +115,3 @@ export function sortFlintSpecializations(
 ): readonly FlintSpecialization[] {
   return [...specializations].toSorted((left, right) => left.id.localeCompare(right.id));
 }
-
-export { MonomorphizationCache, TypeAlgebra, createMonomorphizationCache, createTypeAlgebra } from './type-algebra.js';

@@ -364,13 +364,13 @@ describe('Forge Web Script VM WASM backend', () => {
   });
 
   it('rejects nested execution without corrupting the reusable invocation state', () => {
-    let prepared!: ReturnType<typeof prepareFlintVmWasm>;
+    const holder: { current?: ReturnType<typeof prepareFlintVmWasm> } = {};
     let nestedError: unknown;
-    prepared = prepareFlintVmWasm(module, {
+    const prepared = prepareFlintVmWasm(module, {
       capabilities: {
         now: () => {
           try {
-            prepared.execute('add', [number(1), number(2)]);
+            holder.current?.execute('add', [number(1), number(2)]);
           } catch (error) {
             nestedError = error;
           }
@@ -378,6 +378,7 @@ describe('Forge Web Script VM WASM backend', () => {
         },
       },
     });
+    holder.current = prepared;
 
     expect(prepared.execute('clock', []).value).toEqual(number(7));
     expect(nestedError).toBeInstanceOf(FlintTrap);

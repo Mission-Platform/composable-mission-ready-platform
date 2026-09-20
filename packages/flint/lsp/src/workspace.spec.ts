@@ -33,15 +33,15 @@ describe('RootBoundedFlintWorkspaceHost', () => {
     const host = new RootBoundedFlintWorkspaceHost({
       roots: ['/workspace/project'],
       fileSystem: {
-        async readFile(path) {
+        readFile(path) {
           reads.push(path);
-          return 'content';
+          return Promise.resolve('content');
         },
-        async listFiles() {
-          return ['/workspace/project/main.flint', '/workspace/project/../secret.flint'];
+        listFiles() {
+          return Promise.resolve(['/workspace/project/main.flint', '/workspace/project/../secret.flint']);
         },
-        async realpath(path) {
-          return path.endsWith('escape.flint') ? '/workspace/secret.flint' : path;
+        realpath(path) {
+          return Promise.resolve(path.endsWith('escape.flint') ? '/workspace/secret.flint' : path);
         },
         watch: () => ({ dispose: () => false }),
       },
@@ -61,9 +61,9 @@ describe('RootBoundedFlintWorkspaceHost', () => {
     const host = new RootBoundedFlintWorkspaceHost({
       roots: ['/workspace/project', '/workspace/other'],
       fileSystem: {
-        readFile: async () => void 0,
-        listFiles: async () => [],
-        realpath: async (path) => path,
+        readFile: () => Promise.resolve(),
+        listFiles: () => Promise.resolve([]),
+        realpath: (path) => Promise.resolve(path),
         watch: (root, listener) => {
           listeners.push(listener);
           return { dispose: () => disposed.push(root) };
@@ -93,11 +93,11 @@ describe('RootBoundedFlintWorkspaceHost', () => {
       requestedCapabilities: ['clock.now'],
       requireExports: true,
       capabilityNames: ['clock.now'],
-      optionsForUri: async () => ({ requireExports: false }),
+      optionsForUri: () => Promise.resolve({ requireExports: false }),
       fileSystem: {
-        readFile: async () => void 0,
-        listFiles: async () => [],
-        realpath: async (path) => path,
+        readFile: () => Promise.resolve(),
+        listFiles: () => Promise.resolve([]),
+        realpath: (path) => Promise.resolve(path),
         watch: () => ({ dispose: () => false }),
       },
     });
@@ -109,9 +109,9 @@ describe('RootBoundedFlintWorkspaceHost', () => {
     const host = new RootBoundedFlintWorkspaceHost({
       roots: ['/workspace'],
       fileSystem: {
-        readFile: async () => void 0,
-        listFiles: async () => [],
-        realpath: async (path) => path,
+        readFile: () => Promise.resolve(),
+        listFiles: () => Promise.resolve([]),
+        realpath: (path) => Promise.resolve(path),
         watch: () => ({ dispose: () => false }),
       },
     });

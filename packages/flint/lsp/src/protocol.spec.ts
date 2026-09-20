@@ -34,9 +34,9 @@ describe('Flint stdio protocol', () => {
     const connection = createConnection(ProposedFeatures.all, input, output);
     const server = registerFlintLsp(connection, {
       workspaceHost: {
-        readFile: async () => void 0,
-        listFiles: async () => [],
-        getOptions: async () => ({}),
+        readFile: () => Promise.resolve(),
+        listFiles: () => Promise.resolve([]),
+        getOptions: () => Promise.resolve({}),
       },
     });
     connection.listen();
@@ -47,7 +47,7 @@ describe('Flint stdio protocol', () => {
       method: 'initialize',
       params: {
         rootUri: 'file:///workspace',
-        workspaceFolders: void 0,
+        workspaceFolders: undefined,
         capabilities: { window: { workDoneProgress: true } },
       },
     });
@@ -173,7 +173,7 @@ describe('Flint stdio protocol', () => {
     expect(semanticTokens).toMatchObject({ id: 3, result: { data: expect.any(Array) } });
     expect(semanticTokens.result?.data?.length).toBeGreaterThan(0);
 
-    send(input, { jsonrpc: '2.0', id: 2, method: 'shutdown', params: void 0 });
+    send(input, { jsonrpc: '2.0', id: 2, method: 'shutdown', params: undefined });
     let shutdown = await readMessage(output);
     while (shutdown.id !== 2) shutdown = await readMessage(output);
     expect(shutdown).toMatchObject({ id: 2 });

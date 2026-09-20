@@ -75,7 +75,7 @@ export function runPackageBuild(pkg: string): { success: boolean; output: string
     });
     return {
       success: res.status === 0,
-      output: (res.stdout || '') + '\n' + (res.stderr || ''),
+      output: `${res.stdout || ''}\n${res.stderr || ''}`,
     };
   } catch (error: unknown) {
     return {
@@ -96,7 +96,7 @@ export function runPackageTest(pkg: string): { success: boolean; output: string;
       encoding: 'utf8',
       timeout: 120_000,
     });
-    const combinedOutput = (res.stdout || '') + '\n' + (res.stderr || '');
+    const combinedOutput = `${res.stdout || ''}\n${res.stderr || ''}`;
     const failures: string[] = [];
 
     // Parse failing test lines from Vitest output

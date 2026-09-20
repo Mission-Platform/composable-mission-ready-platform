@@ -130,7 +130,7 @@ interface GuestMemoryRange {
  * @returns Result of the operation.
  * @throws {Error} Rethrows operation error or reset failure.
  */
-function withReset<T extends BenchmarkOutput | number | string | void>(
+function withReset<T extends BenchmarkOutput | number | string | undefined>(
   exports: { readonly fws_reset: () => void },
   operation: () => T,
 ): T {
@@ -138,14 +138,18 @@ function withReset<T extends BenchmarkOutput | number | string | void>(
   let operationFailed = false;
   try {
     return operation();
-  } catch (error) {
+  } catch (error: unknown) {
     operationFailed = true;
-    throw error;
+    throw error instanceof Error ? error : new Error(String(error));
   } finally {
     try {
       exports.fws_reset();
-    } catch (resetError) {
-      if (!operationFailed) throw resetError;
+    } catch (resetError: unknown) {
+      if (!operationFailed) {
+        throw resetError instanceof Error
+          ? resetError
+          : new Error(String(resetError));
+      }
     }
   }
 }

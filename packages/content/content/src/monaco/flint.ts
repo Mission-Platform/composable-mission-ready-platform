@@ -179,13 +179,9 @@ export function attachFlintMonaco(
         text: model.getValue(),
         version: model.getVersionId(),
       });
-      refresh().catch((error: unknown) => {
-        void error;
-      });
+      refresh().catch(() => {});
     });
-    refresh().catch((error: unknown) => {
-      void error;
-    });
+    refresh().catch(() => {});
   };
 
   const modelChangeListener = editor.onDidChangeModel(({ newModelUrl }) => {
@@ -235,6 +231,7 @@ export function attachFlintMonaco(
             contents: hover.contents.map((value) => ({ value })),
           };
         }
+        return;
       },
     }),
   );

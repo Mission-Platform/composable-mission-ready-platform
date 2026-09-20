@@ -140,9 +140,11 @@ export class FlintTestHarness {
   }
 
   /** Compile one fixture and return diagnostics plus its ABI/WAT/Wasm artifact. */
-  async compile(fileName: string): Promise<FlintCompilationResult> {
+  compile(fileName: string): Promise<FlintCompilationResult> {
     this.assertActive();
-    return this.withDiagnostics(compileFlintFile(this.resolveFixture(fileName), this.options, this.service));
+    return Promise.resolve(
+      this.withDiagnostics(compileFlintFile(this.resolveFixture(fileName), this.options, this.service)),
+    );
   }
 
   /** Compile an entry fixture together with its statically linked import graph. */
@@ -181,7 +183,7 @@ export class FlintTestHarness {
   }
 
   /** Inspect a fixture without instantiating its Wasm module. */
-  async inspect(fileName: string): Promise<FlintInspectionResult> {
+  inspect(fileName: string): Promise<FlintInspectionResult> {
     return this.compile(fileName);
   }
 
@@ -226,28 +228,32 @@ export class FlintTestHarness {
   }
 
   /** Run the self-hosted compiler/VM for parity checks without loading Wasm. */
-  async checkVmParity(fileName: string, mode: FlintVmExecutionMode): Promise<FlintSelfHostedVmRun> {
+  checkVmParity(fileName: string, mode: FlintVmExecutionMode): Promise<FlintSelfHostedVmRun> {
     this.assertActive();
     const resolvedFileName = this.resolveFixture(fileName);
     const source = fs.readFileSync(resolvedFileName, 'utf8');
     try {
-      return runFlintSelfHostedCompiler(
-        {
-          source,
-          fileName: resolvedFileName,
-          compilerVersion: this.options.compilerVersion ?? '0.1.0',
-          ...(this.options.optimization === undefined ? {} : { optimization: this.options.optimization }),
-          ...(this.capabilitiesFor(resolvedFileName) === undefined
-            ? {}
-            : { requestedCapabilities: this.capabilitiesFor(resolvedFileName) }),
-          ...(this.options.root === undefined ? {} : { root: this.options.root }),
-        },
-        mode,
+      return Promise.resolve(
+        runFlintSelfHostedCompiler(
+          {
+            source,
+            fileName: resolvedFileName,
+            compilerVersion: this.options.compilerVersion ?? '0.1.0',
+            ...(this.options.optimization === undefined ? {} : { optimization: this.options.optimization }),
+            ...(this.capabilitiesFor(resolvedFileName) === undefined
+              ? {}
+              : { requestedCapabilities: this.capabilitiesFor(resolvedFileName) }),
+            ...(this.options.root === undefined ? {} : { root: this.options.root }),
+          },
+          mode,
+        ),
       );
     } catch (error) {
-      throw new FlintTestHarnessError(
-        `${resolvedFileName} [mode=${mode}] self-hosted VM parity failed: ${error instanceof Error ? error.message : String(error)}`,
-        'FLINT-HARNESS-005',
+      return Promise.reject(
+        new FlintTestHarnessError(
+          `${resolvedFileName} [mode=${mode}] self-hosted VM parity failed: ${error instanceof Error ? error.message : String(error)}`,
+          'FLINT-HARNESS-005',
+        ),
       );
     }
   }

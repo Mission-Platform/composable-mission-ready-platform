@@ -146,7 +146,7 @@ function resolveValueAdapter(
   hasValueAdapters: boolean,
 ): string {
   if (!hasValueAdapters) {
-    return `function adaptValueExports(wasmExports) {\n  return wasmExports;\n}`;
+    return 'function adaptValueExports(wasmExports) {\n  return wasmExports;\n}';
   }
   return createValueAdapterSource(valueExports, recordLayouts, valueImports, hasStringValues);
 }

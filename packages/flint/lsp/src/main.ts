@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import { realpathSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -33,7 +32,7 @@ function isDirectExecution(): boolean {
   } catch {
     const entryPath = path.resolve(process.argv[1]);
     const modulePath = fileURLToPath(import.meta.url);
-    return entryPath === modulePath || entryPath + '.js' === modulePath || entryPath + '.ts' === modulePath;
+    return entryPath === modulePath || `${entryPath}.js` === modulePath || `${entryPath}.ts` === modulePath;
   }
 }
 

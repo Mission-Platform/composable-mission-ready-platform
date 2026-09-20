@@ -510,7 +510,7 @@ function safeOptional<T>(factory: () => T | undefined): T | undefined {
   try {
     return factory();
   } catch {
-    return;
+    return undefined;
   }
 }
 

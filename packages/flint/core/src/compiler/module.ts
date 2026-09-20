@@ -173,7 +173,12 @@ function persistModuleCache(
  * Checks whether any mandatory frontend compiler structures are missing.
  */
 function isFrontendIncomplete(frontend: FlintFrontendResult): boolean {
-  return [frontend.optimizedModule, frontend.abi, frontend.ir, frontend.optimizedIr].includes(undefined);
+  return (
+    frontend.optimizedModule === undefined ||
+    frontend.abi === undefined ||
+    frontend.ir === undefined ||
+    frontend.optimizedIr === undefined
+  );
 }
 
 /**

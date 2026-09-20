@@ -182,9 +182,7 @@ export function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>):
           flintDisposeReference.current = attachFlintMonaco(editor, runtime, flintOptions).dispose;
         }
       })
-      .catch((error: unknown) => {
-        void error;
-      });
+      .catch(() => {});
   };
 
   // (Re-)wire Hunspell + Harper against the live editor. Both cores are imported

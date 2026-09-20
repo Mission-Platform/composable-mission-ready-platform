@@ -354,7 +354,7 @@ describe("Forge regex compiler and reference oracle", () => {
         String.raw`(a|aa)+$`,
         String.raw`(a*)*$`,
       ];
-      const nonMatchingInput = "a".repeat(28) + "!";
+      const nonMatchingInput = `${"a".repeat(28)}!`;
 
       for (const pattern of pathological) {
         const compiled = compileRegex(pattern);
@@ -381,7 +381,7 @@ describe("Forge regex compiler and reference oracle", () => {
         const compiled = compileRegex(pattern);
 
         for (const length of lengths) {
-          const input = "a".repeat(length) + "!";
+          const input = `${"a".repeat(length)}!`;
           const start = Date.now();
           const matched = test(compiled, input);
           const elapsed = Date.now() - start;
@@ -395,7 +395,7 @@ describe("Forge regex compiler and reference oracle", () => {
 
     it("prevents ReDoS in unanchored search on pathological inputs", () => {
       const compiled = compileRegex(String.raw`(a+)+$`);
-      const input = "a".repeat(100) + "!";
+      const input = `${"a".repeat(100)}!`;
       const start = Date.now();
       const result = search(compiled, input);
       const elapsed = Date.now() - start;

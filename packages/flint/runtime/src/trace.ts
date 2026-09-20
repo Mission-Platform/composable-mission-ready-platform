@@ -31,7 +31,7 @@ export interface FlintTraceOptions extends FlintTraceLimits {
 /**
  * Source mapping position for recorded execution trace events.
  */
-export interface FlintTraceSourceLocation extends FlintVmDebugSpan {}
+export type FlintTraceSourceLocation = FlintVmDebugSpan;
 
 /**
  * Category of recorded runtime trace event.
@@ -215,6 +215,10 @@ function defaultSummary(value: FlintVmValue): string {
     }
     case 'function': {
       return `function:${value.functionName}`;
+    }
+    default: {
+      const exhaustiveCheck: never = value;
+      throw new Error(`Unexpected VM value kind: ${(exhaustiveCheck as { kind?: string }).kind}`);
     }
   }
 }

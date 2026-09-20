@@ -456,6 +456,7 @@ export interface BytecodeBuilder {
   byteAt(destination: number, source: number, index: number): void;
   binary(operation: string, destination: number, left: number, right: number): void;
   unary(operation: 'not' | 'neg', destination: number, operand: number): void;
+  invoke(destination: number | undefined, functionName: string, arguments_: readonly number[]): void;
   call(destination: number | undefined, functionName: string, arguments_: readonly number[]): void;
   label(name: string): void;
   jump(label: string): void;
@@ -510,6 +511,15 @@ export function createBuilder(parameterCount: number): BytecodeBuilder {
       code.push({ opcode: 'unary', operation, destination, operand });
     },
     /** Emits a function call instruction passing arguments and binding result. */
+    invoke(destination, functionName, arguments_) {
+      code.push({
+        opcode: 'call',
+        ...(destination === undefined ? {} : { destination }),
+        functionName,
+        arguments: arguments_,
+      });
+    },
+    /** Emits a function call instruction passing arguments and binding result (alias for invoke). */
     call(destination, functionName, arguments_) {
       code.push({
         opcode: 'call',

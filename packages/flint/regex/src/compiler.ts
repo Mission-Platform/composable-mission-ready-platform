@@ -547,6 +547,12 @@ function compileNode(node: Node, emitter: Emitter): void {
       compileRepeat(node, emitter);
       return;
     }
+    default: {
+      const exhaustiveCheck: never = node;
+      throw new Error(
+        `Unexpected regex node kind: ${(exhaustiveCheck as { kind?: string }).kind}`,
+      );
+    }
   }
 }
 

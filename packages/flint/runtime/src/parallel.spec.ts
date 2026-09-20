@@ -47,12 +47,12 @@ describe('Forge Web Script parallel iterator runtime', () => {
     const options = { strategy: 'host-workers' as const, hostWorkers: delayedExecutor(closed) };
     const mapped = await flintIteratorParMap(
       createFlintIterator([1, 2, 3, 4], descriptor),
-      async (value) => value * 10,
+      (value) => value * 10,
       options,
     );
     const filtered = await flintIteratorParFilter(
       createFlintIterator([1, 2, 3, 4], descriptor),
-      async (value) => value % 2 === 0,
+      (value) => value % 2 === 0,
       options,
     );
 
@@ -119,9 +119,9 @@ describe('Forge Web Script parallel iterator runtime', () => {
     const closed = { value: false };
     let scheduleCalls = 0;
     const hostWorkers = {
-      schedule: async () => {
+      schedule: () => {
         scheduleCalls += 1;
-        throw new Error('schedule should not be called in serial fallback');
+        return Promise.reject(new Error('schedule should not be called in serial fallback'));
       },
       close: () => {
         closed.value = true;

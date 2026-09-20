@@ -26,8 +26,6 @@ import type {
   FlintStructField,
 } from './ast.js';
 
-export { deriveFlintModuleId } from './identity.js';
-
 /**
  * Result object returned by the Flint parser containing the parsed module and diagnostics.
  */

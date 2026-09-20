@@ -260,8 +260,7 @@ function statements(items: readonly FlintWasmStatement[], indent: string): reado
             `${indent}      br 1 ;; exit switch (out-of-range)`,
             `${indent}    end`,
           );
-          for (let index = 0; index < values.length; index += 1)
-            lines.push(`${indent}    block ;; case ${values[index]}`);
+          for (const value of values) lines.push(`${indent}    block ;; case ${value}`);
           lines.push(
             `${indent}    local.get $__switch_${statement.span.start}`,
             `${indent}    i32.const ${minimum}`,

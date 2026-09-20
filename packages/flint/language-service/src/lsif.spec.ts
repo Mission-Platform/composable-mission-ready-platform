@@ -30,9 +30,9 @@ export fn run(value: i32) -> i32 { return value + 1; }`,
     },
   ];
   const service = createFlintLanguageService({
-    readFile: async (uri) => documents.find((document) => document.uri === uri)?.text,
-    listFiles: async () => documents.map(({ uri }) => uri),
-    getOptions: async () => ({}),
+    readFile: (uri) => Promise.resolve(documents.find((document) => document.uri === uri)?.text ?? ''),
+    listFiles: () => Promise.resolve(documents.map(({ uri }) => uri)),
+    getOptions: () => Promise.resolve({}),
   });
   for (const document of documents) service.openDocument(document);
   return { documents, service };

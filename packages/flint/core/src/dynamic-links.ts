@@ -116,14 +116,14 @@ export class FlintDynamicLinkCache {
    * @param loader - Factory returning the module or a promise of the module.
    * @returns Promise resolving to the loaded module.
    */
-  async resolveModule(
+  resolveModule(
     identity: FlintDynamicLinkIdentity,
     moduleId: string,
     loader: () => FlintDynamicModule | Promise<FlintDynamicModule>,
   ): Promise<FlintDynamicModule> {
     const key = identityKey(identity, moduleId);
     const cached = this.modules.get(key);
-    if (cached !== undefined) return cached;
+    if (cached !== undefined) return Promise.resolve(cached);
     let pending = this.pending.get(key);
     if (pending === undefined) {
       pending = Promise.resolve(loader()).then((module) => {

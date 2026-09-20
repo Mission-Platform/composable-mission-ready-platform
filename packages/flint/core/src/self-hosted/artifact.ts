@@ -177,7 +177,7 @@ function readDiagnosticSeverity(severity: string): FlintDiagnosticSeverity {
   if (diagnosticSeverities.has(severity as FlintDiagnosticSeverity)) {
     return severity as FlintDiagnosticSeverity;
   }
-  invalid(`unsupported diagnostic severity '${severity}'`);
+  throw invalid(`unsupported diagnostic severity '${severity}'`);
 }
 
 /**
@@ -190,7 +190,7 @@ function readDiagnosticPhase(phase: string): FlintDiagnosticPhase {
   if (diagnosticPhases.has(phase as FlintDiagnosticPhase)) {
     return phase as FlintDiagnosticPhase;
   }
-  invalid(`unsupported diagnostic phase '${phase}'`);
+  throw invalid(`unsupported diagnostic phase '${phase}'`);
 }
 
 /**
@@ -319,7 +319,7 @@ class BinaryReader {
     try {
       return textDecoder.decode(this.take(this.u32()));
     } catch (error) {
-      invalid(`invalid UTF-8 string (${error instanceof Error ? error.message : String(error)})`);
+      throw invalid(`invalid UTF-8 string (${error instanceof Error ? error.message : String(error)})`);
     }
   }
 

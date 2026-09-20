@@ -383,5 +383,3 @@ export async function resolveFlintModuleGraph(
     diagnostics: context.diagnostics,
   };
 }
-
-export { deriveFlintModuleId, normalizeFlintFileId } from './identity.js';

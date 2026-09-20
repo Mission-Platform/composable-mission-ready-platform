@@ -507,6 +507,10 @@ class SoNBuilder {
           expression,
         );
       }
+      default: {
+        const exhaustiveCheck: never = expression;
+        throw new Error(`Unexpected aggregate expression kind: ${(exhaustiveCheck as { kind?: string }).kind}`);
+      }
     }
   }
 
@@ -583,6 +587,10 @@ class SoNBuilder {
       }
       case 'yield': {
         return this.node(functionName, 'yield', [this.expression(functionName, statement.value)], statement.span);
+      }
+      default: {
+        const exhaustiveCheck: never = statement;
+        throw new Error(`Unexpected linear statement kind: ${(exhaustiveCheck as { kind?: string }).kind}`);
       }
     }
   }
@@ -743,6 +751,10 @@ class SoNBuilder {
       }
       case 'iterator-loop': {
         return this.iteratorLoopStatementNode(functionName, statement, parentRegion);
+      }
+      default: {
+        const exhaustiveCheck: never = statement;
+        throw new Error(`Unexpected control statement kind: ${(exhaustiveCheck as { kind?: string }).kind}`);
       }
     }
   }
@@ -976,6 +988,9 @@ function recurseSonBoundsAggregateExpression(
       expression.elements.forEach(visit);
       break;
     }
+    default: {
+      break;
+    }
   }
 }
 
@@ -1095,6 +1110,9 @@ function visitSonBoundsSimpleStatement(
       visitSonBoundsExpression(statement.expression, localTypes, counter);
       break;
     }
+    default: {
+      break;
+    }
   }
 }
 
@@ -1136,6 +1154,9 @@ function visitSonBoundsControlStatement(
     case 'iterator-loop': {
       visitExpr(statement.iterator);
       statement.body.forEach(visitStatement);
+      break;
+    }
+    default: {
       break;
     }
   }
@@ -1571,6 +1592,10 @@ function sonTransformLinearStatement(
         value: sonTransformExpression(statement.value, locals, counters),
         arms: statement.arms.map((arm) => ({ ...arm, value: sonTransformExpression(arm.value, locals, counters) })),
       };
+    }
+    default: {
+      const exhaustiveCheck: never = statement;
+      throw new Error(`Unexpected linear statement kind: ${(exhaustiveCheck as { kind?: string }).kind}`);
     }
   }
 }

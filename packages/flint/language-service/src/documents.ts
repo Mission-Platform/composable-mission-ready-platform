@@ -10,14 +10,13 @@ import {
 import { hoverFlint } from './hover.js';
 import { normalizeFlintWorkspaceOptions } from './options.js';
 import { positionAtOffset } from './positions.js';
-import { createFlintWorkspaceIndex, type FlintWorkspaceSemanticIndex } from './workspace-index.js';
+import { createFlintWorkspaceIndex } from './workspace-index.js';
 
 import type {
   FlintAnalysis,
   FlintCodeLens,
   FlintDocumentSymbol,
   FlintDocument,
-  FlintDisposable,
   FlintFoldingRange,
   FlintInlayHint,
   FlintInlineValue,
@@ -42,8 +41,6 @@ export function createFlintLanguageService(host?: FlintWorkspaceHost): FlintLang
   const options = new Map<string, FlintWorkspaceOptions>();
   const cache = new Map<string, { readonly key: string; readonly analysis: FlintAnalysis }>();
   let disposed = false;
-  let watcher: FlintDisposable | undefined;
-  let workspaceIndex: FlintWorkspaceSemanticIndex | undefined;
   const assertActive = (): void => {
     if (disposed) throw new Error('Flint language service has been disposed.');
   };
@@ -64,6 +61,9 @@ export function createFlintLanguageService(host?: FlintWorkspaceHost): FlintLang
     options.delete(change.uri);
     workspaceIndex?.invalidate(change);
   };
+  const watcher = host?.watch?.((change) => {
+    invalidateWorkspace(change);
+  });
   const refreshWorkspace = async (uri?: string): Promise<void> => {
     assertActive();
     if (host !== undefined) {
@@ -83,9 +83,6 @@ export function createFlintLanguageService(host?: FlintWorkspaceHost): FlintLang
     }
     await workspaceIndex?.refresh(uri);
   };
-  watcher = host?.watch?.((change) => {
-    invalidateWorkspace(change);
-  });
   const diagnose = (uri: string): FlintAnalysis => {
     assertActive();
     const document = getDocument(uri);
@@ -98,10 +95,10 @@ export function createFlintLanguageService(host?: FlintWorkspaceHost): FlintLang
     cache.set(uri, { key, analysis });
     return analysis;
   };
-  workspaceIndex = createFlintWorkspaceIndex(
+  const workspaceIndex = createFlintWorkspaceIndex(
     {
       documents,
-      diagnose,
+      diagnose: (uri) => diagnose(uri),
       getOptions: (uri) => options.get(uri) ?? emptyOptions,
     },
     host,
@@ -237,5 +234,3 @@ function optionsKey(value: FlintWorkspaceOptions): string {
       .toSorted(([left], [right]) => left.localeCompare(right)),
   });
 }
-
-export { type FlintDisposable } from './types.js';

@@ -14,7 +14,9 @@ import { FlintTrap } from './traps.js';
 
 const capabilities = Object.values(FLINT_THREADING_CAPABILITIES);
 
-const nonSendFunction = () => {};
+const nonSendFunction = () => {
+  // Deliberate empty function used to test Send boundary rejection.
+};
 
 describe('Forge Web Script threading runtime', () => {
   it('performs atomic operations only with the declared capabilities', () => {
@@ -40,7 +42,9 @@ describe('Forge Web Script threading runtime', () => {
     const runtime = createFlintWorkerRuntime(
       () => ({
         addEventListener: (type, listener) => listeners.set(type, listener),
-        postMessage: () => {},
+        postMessage: () => {
+          // No-op worker postMessage mock for test.
+        },
         terminate: () => {
           terminated = true;
         },

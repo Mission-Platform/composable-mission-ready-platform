@@ -3,9 +3,9 @@ import { describe, expect, it } from 'vitest';
 import {
   createFlintGenericSpecialization,
   createFlintIteratorBoundaryDescriptor,
-  createMonomorphizationCache,
   monomorphizeFlintGeneric,
 } from './generics.ts';
+import { createMonomorphizationCache } from './type-algebra.ts';
 
 const type = (name: 'i32' | 'bytes' | 'i64') => ({
   kind: 'type-name' as const,

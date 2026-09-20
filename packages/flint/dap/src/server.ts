@@ -97,10 +97,9 @@ export function createFlintDapServer(options: FlintDapServerOptions): FlintDapSe
   }
 
   /** Handles stream error on the input reader. */
-  function onInputError(error: Error): void {
+  function onInputError(_error: Error): void {
     // If the IDE closes our pipe without sending disconnect/terminate, we must still clean up.
     // Avoid relying on DAP requests to trigger dispose().
-    void error;
     dispose();
   }
 
@@ -370,7 +369,9 @@ export function createFlintDapServer(options: FlintDapServerOptions): FlintDapSe
   const onData = (chunk: Buffer | string): void => {
     try {
       for (const message of dapParser.push(chunk)) {
-        if (message.type === 'request') void handleRequest(message);
+        if (message.type === 'request') {
+          handleRequest(message).catch(() => {});
+        }
       }
     } catch (error: unknown) {
       event('output', { category: 'stderr', output: `Invalid DAP message: ${String(error)}\n` });

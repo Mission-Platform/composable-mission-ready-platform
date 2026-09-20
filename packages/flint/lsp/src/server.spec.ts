@@ -13,7 +13,7 @@ const privateHelperSource = `fn helper() -> i32 { return 1; }
 export fn entry() -> i32 { return helper(); }`;
 
 function initialize(server: ReturnType<typeof createFlintLspServer>): void {
-  server.initialize({ rootUri: 'file:///workspace', workspaceFolders: void 0 } satisfies InitializeParams);
+  server.initialize({ rootUri: 'file:///workspace', workspaceFolders: undefined } satisfies InitializeParams);
 }
 
 describe('Flint LSP server', () => {
@@ -22,14 +22,14 @@ describe('Flint LSP server', () => {
     let getOptionsCalls = 0;
     const server = createFlintLspServer({
       workspaceHost: {
-        readFile: async () => void 0,
-        listFiles: async () => {
+        readFile: () => Promise.resolve(),
+        listFiles: () => {
           listFilesCalls += 1;
-          return [];
+          return Promise.resolve([]);
         },
-        getOptions: async () => {
+        getOptions: () => {
           getOptionsCalls += 1;
-          return {};
+          return Promise.resolve({});
         },
       },
     });
@@ -113,9 +113,9 @@ describe('Flint LSP server', () => {
     const published: Array<{ uri: string; diagnostics: readonly unknown[] }> = [];
     const server = createFlintLspServer({
       workspaceHost: {
-        readFile: async () => void 0,
-        listFiles: async () => [],
-        getOptions: async () => ({ requireExports: true }),
+        readFile: () => Promise.resolve(),
+        listFiles: () => Promise.resolve([]),
+        getOptions: () => Promise.resolve({ requireExports: true }),
       },
       publishDiagnostics: ({ uri: documentUri, diagnostics }) => published.push({ uri: documentUri, diagnostics }),
     });
@@ -173,7 +173,7 @@ describe('Flint LSP server', () => {
     });
     server.initialize({
       rootUri: 'file:///workspace',
-      workspaceFolders: void 0,
+      workspaceFolders: undefined,
       capabilities: { window: { workDoneProgress: true } },
     });
     const source = `export fn helper(value: i32) -> i32 {
@@ -312,9 +312,9 @@ export fn parse(value: string) -> bool { return regex_search(value, value, 0); }
     let requestedCapabilities: readonly string[] = [];
     const server = createFlintLspServer({
       workspaceHost: {
-        readFile: async () => void 0,
-        listFiles: async () => [],
-        getOptions: async () => ({ requestedCapabilities }),
+        readFile: () => Promise.resolve(),
+        listFiles: () => Promise.resolve([]),
+        getOptions: () => Promise.resolve({ requestedCapabilities }),
       },
     });
     initialize(server);
@@ -333,9 +333,9 @@ export fn current() -> i64 { return now(); }`;
     const published: Array<{ uri: string; diagnostics: readonly unknown[] }> = [];
     const server = createFlintLspServer({
       workspaceHost: {
-        readFile: async () => void 0,
-        listFiles: async () => [],
-        getOptions: async () => ({ requireExports }),
+        readFile: () => Promise.resolve(),
+        listFiles: () => Promise.resolve([]),
+        getOptions: () => Promise.resolve({ requireExports }),
       },
       publishDiagnostics: ({ uri: documentUri, diagnostics }) => published.push({ uri: documentUri, diagnostics }),
     });
