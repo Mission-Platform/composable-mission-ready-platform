@@ -1729,11 +1729,17 @@ describe('self-contained framework exports and types', () => {
       );
 
       writeFileSync(
+        path.join(compDir, 'index.ts'),
+        "export { ForgeAvatar, type AvatarProperties, type AvatarSize } from './forge-avatar';\n",
+      );
+
+      writeFileSync(
         path.join(compDir, 'forge-avatar.vue'),
         [
           '<script lang="ts">',
           "export type AvatarSize = 'sm' | 'md' | 'lg';",
           'export interface AvatarProperties {',
+          '  children?: unknown;',
           '  src?: string;',
           '  size?: AvatarSize;',
           '}',
@@ -1788,9 +1794,14 @@ describe('self-contained framework exports and types', () => {
         "export { beginPointerDrag, type PointerDragHandlers } from './utils/pointer-drag/pointer-drag';",
       );
 
-      // Verify component d.ts and vue.d.ts
+      // Verify component index.d.ts matches source index.ts
+      expect(emittedFiles['components/atoms/forge-avatar/index.d.ts']).toBe(
+        "export { ForgeAvatar, type AvatarProperties, type AvatarSize } from './forge-avatar';\n",
+      );
+
+      // Verify component d.ts and that no vue.d.ts is emitted
       expect(emittedFiles['components/atoms/forge-avatar/forge-avatar.d.ts']).toBeDefined();
-      expect(emittedFiles['components/atoms/forge-avatar/forge-avatar.vue.d.ts']).toBeDefined();
+      expect(emittedFiles['components/atoms/forge-avatar/forge-avatar.vue.d.ts']).toBeUndefined();
       expect(emittedFiles['components/atoms/forge-avatar/forge-avatar.d.ts']).toContain(
         'import type { DefineComponent } from "vue";',
       );
@@ -1800,6 +1811,8 @@ describe('self-contained framework exports and types', () => {
       expect(emittedFiles['components/atoms/forge-avatar/forge-avatar.d.ts']).toContain(
         'export interface AvatarProperties',
       );
+      // Children prop should be removed in Vue
+      expect(emittedFiles['components/atoms/forge-avatar/forge-avatar.d.ts']).not.toContain('children?:');
       expect(emittedFiles['components/atoms/forge-avatar/forge-avatar.d.ts']).toContain(
         'export declare const ForgeAvatar: DefineComponent<Readonly<AvatarProperties>>;',
       );
@@ -1815,6 +1828,159 @@ describe('self-contained framework exports and types', () => {
       expect(emittedFiles['utils/pointer-drag/pointer-drag.d.ts']).toContain(
         'export declare function beginPointerDrag(h: PointerDragHandlers): () => void;',
       );
+    } finally {
+      rmSync(temporaryDir, { recursive: true, force: true });
+    }
+  });
+
+  it('emits framework-native component declarations for React, Solid, and Svelte', () => {
+    const temporaryDir = mkdtempSync(path.join(os.tmpdir(), 'entry-dts-fw-types-'));
+    try {
+      // 1. React with children (PropsWithChildren)
+      const reactCache = path.join(temporaryDir, 'react');
+      const reactComp = path.join(reactCache, 'components', 'atoms', 'forge-avatar');
+      mkdirSync(reactComp, { recursive: true });
+      writeFileSync(
+        path.join(reactCache, 'index.ts'),
+        "export { ForgeAvatar } from './components/atoms/forge-avatar/forge-avatar';\n",
+      );
+      writeFileSync(
+        path.join(reactComp, 'forge-avatar.tsx'),
+        [
+          "import type { ReactNode } from 'react';",
+          'export interface AvatarProperties {',
+          '  children?: ReactNode | readonly ReactNode[];',
+          '  src?: string;',
+          '}',
+          'export function ForgeAvatar(props: AvatarProperties) { return null; }',
+        ].join('\n'),
+      );
+      const reactPlugin = jsxComponentsEntryDtsPlugin({
+        framework: 'react',
+        componentsModule: path.join(temporaryDir, 'dummy.ts'),
+        generatedDirectory: reactCache,
+        declarationFileName: 'index',
+      });
+      const reactFiles: Record<string, string> = {};
+      (reactPlugin.generateBundle as Function).call(
+        {
+          emitFile(f: { fileName: string; source: string }) {
+            reactFiles[f.fileName] = f.source;
+          },
+        },
+        {},
+        {},
+      );
+      expect(reactFiles['components/atoms/forge-avatar/forge-avatar.d.ts']).toContain(
+        'import type { FunctionComponent, PropsWithChildren } from "react";',
+      );
+      expect(reactFiles['components/atoms/forge-avatar/forge-avatar.d.ts']).toContain(
+        'export declare const ForgeAvatar: FunctionComponent<PropsWithChildren<Readonly<AvatarProperties>>>;',
+      );
+      expect(reactFiles['components/atoms/forge-avatar/forge-avatar.d.ts']).not.toContain(
+        'children?: ReactNode | readonly ReactNode[];',
+      );
+
+      // 2. Solid with children (ParentComponent) vs without children (VoidComponent)
+      const solidCache = path.join(temporaryDir, 'solid');
+      const solidComp1 = path.join(solidCache, 'components', 'atoms', 'forge-avatar');
+      const solidComp2 = path.join(solidCache, 'components', 'atoms', 'forge-divider');
+      mkdirSync(solidComp1, { recursive: true });
+      mkdirSync(solidComp2, { recursive: true });
+      writeFileSync(
+        path.join(solidCache, 'index.ts'),
+        "export { ForgeAvatar } from './components/atoms/forge-avatar/forge-avatar';\n",
+      );
+      writeFileSync(
+        path.join(solidComp1, 'forge-avatar.tsx'),
+        [
+          'export interface AvatarProperties {',
+          '  children?: JSX.Element | readonly JSX.Element[];',
+          '  src?: string;',
+          '}',
+          'export function ForgeAvatar(props: AvatarProperties) { return null; }',
+        ].join('\n'),
+      );
+      writeFileSync(
+        path.join(solidComp2, 'forge-divider.tsx'),
+        [
+          'export interface DividerProperties { decorative?: boolean; }',
+          'export function ForgeDivider(props: DividerProperties) { return null; }',
+        ].join('\n'),
+      );
+      const solidPlugin = jsxComponentsEntryDtsPlugin({
+        framework: 'solid',
+        componentsModule: path.join(temporaryDir, 'dummy.ts'),
+        generatedDirectory: solidCache,
+        declarationFileName: 'index',
+      });
+      const solidFiles: Record<string, string> = {};
+      (solidPlugin.generateBundle as Function).call(
+        {
+          emitFile(f: { fileName: string; source: string }) {
+            solidFiles[f.fileName] = f.source;
+          },
+        },
+        {},
+        {},
+      );
+      expect(solidFiles['components/atoms/forge-avatar/forge-avatar.d.ts']).toContain(
+        'import type { ParentComponent } from "solid-js";',
+      );
+      expect(solidFiles['components/atoms/forge-avatar/forge-avatar.d.ts']).toContain(
+        'export declare const ForgeAvatar: ParentComponent<Readonly<AvatarProperties>>;',
+      );
+      expect(solidFiles['components/atoms/forge-divider/forge-divider.d.ts']).toContain(
+        'import type { VoidComponent } from "solid-js";',
+      );
+      expect(solidFiles['components/atoms/forge-divider/forge-divider.d.ts']).toContain(
+        'export declare const ForgeDivider: VoidComponent<Readonly<DividerProperties>>;',
+      );
+
+      // 3. Svelte with Snippet (and no .svelte.d.ts)
+      const svelteCache = path.join(temporaryDir, 'svelte');
+      const svelteComp = path.join(svelteCache, 'components', 'atoms', 'forge-avatar');
+      mkdirSync(svelteComp, { recursive: true });
+      writeFileSync(
+        path.join(svelteCache, 'index.ts'),
+        "export { ForgeAvatar } from './components/atoms/forge-avatar/forge-avatar';\n",
+      );
+      writeFileSync(
+        path.join(svelteComp, 'forge-avatar.svelte'),
+        [
+          '<script lang="ts">',
+          'export interface AvatarProperties {',
+          '  children?: unknown;',
+          '  src?: string;',
+          '}',
+          '</script>',
+          '<div>Avatar</div>',
+        ].join('\n'),
+      );
+      const sveltePlugin = jsxComponentsEntryDtsPlugin({
+        framework: 'svelte',
+        componentsModule: path.join(temporaryDir, 'dummy.ts'),
+        generatedDirectory: svelteCache,
+        declarationFileName: 'index',
+      });
+      const svelteFiles: Record<string, string> = {};
+      (sveltePlugin.generateBundle as Function).call(
+        {
+          emitFile(f: { fileName: string; source: string }) {
+            svelteFiles[f.fileName] = f.source;
+          },
+        },
+        {},
+        {},
+      );
+      expect(svelteFiles['components/atoms/forge-avatar/forge-avatar.d.ts']).toContain(
+        'import type { Component, Snippet } from "svelte";',
+      );
+      expect(svelteFiles['components/atoms/forge-avatar/forge-avatar.d.ts']).toContain('children?: Snippet;');
+      expect(svelteFiles['components/atoms/forge-avatar/forge-avatar.d.ts']).toContain(
+        'export declare const ForgeAvatar: Component<Readonly<AvatarProperties>>;',
+      );
+      expect(svelteFiles['components/atoms/forge-avatar/forge-avatar.svelte.d.ts']).toBeUndefined();
     } finally {
       rmSync(temporaryDir, { recursive: true, force: true });
     }

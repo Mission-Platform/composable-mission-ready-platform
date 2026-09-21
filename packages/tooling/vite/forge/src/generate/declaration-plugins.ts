@@ -336,6 +336,48 @@ function extractScriptFromComponent(fullPath: string, source: string): string {
   return source;
 }
 
+function filterReferencedImports(importStatements: readonly string[], bodyText: string): string[] {
+  const result: string[] = [];
+  for (const imp of importStatements) {
+    const namedMatch = imp.match(/^import\s+(?:type\s+)?\{([^}]+)\}\s+from\s+['"]([^'"]+)['"];?$/);
+    if (namedMatch) {
+      const isTypeImport = imp.startsWith('import type');
+      const specifiers = namedMatch[1]
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+      const source = namedMatch[2];
+      const keptSpecifiers: string[] = [];
+      for (const spec of specifiers) {
+        const clean = spec.replace(/^type\s+/, '');
+        const local = clean.split(/\s+as\s+/)[1] ?? clean.split(/\s+as\s+/)[0];
+        const regex = new RegExp(`\\b${local}\\b`);
+        if (regex.test(bodyText)) {
+          keptSpecifiers.push(spec);
+        }
+      }
+      if (keptSpecifiers.length > 0) {
+        const typePrefix = isTypeImport ? 'type ' : '';
+        result.push(`import ${typePrefix}{ ${keptSpecifiers.join(', ')} } from '${source}';`);
+      }
+      continue;
+    }
+
+    const defaultMatch = imp.match(/^import\s+(?:type\s+)?([A-Za-z0-9_$]+)\s+from\s+['"]([^'"]+)['"];?$/);
+    if (defaultMatch) {
+      const local = defaultMatch[1];
+      const regex = new RegExp(`\\b${local}\\b`);
+      if (regex.test(bodyText)) {
+        result.push(imp);
+      }
+      continue;
+    }
+
+    result.push(imp);
+  }
+  return result;
+}
+
 function emitComponentDeclaration(
   framework: JsxFramework,
   fullPath: string,
@@ -354,8 +396,8 @@ function emitComponentDeclaration(
     return;
   }
 
-  const imports: string[] = [];
-  const types: string[] = [];
+  const rawImports: string[] = [];
+  let types: string[] = [];
   const typeNames: string[] = [];
 
   for (const stmt of parsed.program.body) {
@@ -368,7 +410,7 @@ function emitComponentDeclaration(
         !src.endsWith('.sass') &&
         !src.endsWith('.less')
       ) {
-        imports.push(oxcNodeText(scriptContent, stmt));
+        rawImports.push(oxcNodeText(scriptContent, stmt));
       }
     } else if (stmt.type === 'ExportNamedDeclaration' && stmt.declaration) {
       const decl = stmt.declaration;
@@ -445,85 +487,110 @@ function emitComponentDeclaration(
       : `Readonly<${matchedProps}>`
     : 'Record<string, unknown>';
 
-  const lines: string[] = [];
+  const childrenPropPattern = /(?:^[ \t]*\/\*\*[\s\S]*?\*\/\r?\n)?[ \t]*children\s*\??\s*:[^;]+;\r?\n?/m;
+  const hasChildren = types.some((t) => childrenPropPattern.test(t));
+
   switch (framework) {
-    case 'react': {
-      lines.push('import type { FunctionComponent, ReactNode, ReactElement } from "react";');
-      break;
-    }
+    case 'react':
+    case 'solid':
     case 'vue': {
-      lines.push('import type { DefineComponent } from "vue";');
+      types = types.map((t) =>
+        t.replace(/(?:^[ \t]*\/\*\*[\s\S]*?\*\/\r?\n)?[ \t]*children\s*\??\s*:[^;]+;\r?\n?/gm, ''),
+      );
       break;
     }
     case 'svelte': {
-      lines.push('import type { Component } from "svelte";');
+      types = types.map((t) => t.replace(/children\s*\??\s*:[^;]+;/g, 'children?: Snippet;'));
       break;
     }
-    case 'solid': {
-      lines.push('import type { Component, JSX } from "solid-js";');
-      break;
-    }
-    case 'web-components': {
-      lines.push('import type { ForgeElement } from "@mission-platform/forge-adapters/web-components";');
+    default: {
       break;
     }
   }
 
-  lines.push(...imports);
-  lines.push(...types);
+  const frameworkImportLines: string[] = [];
+  const compLines: string[] = [];
+  const typesText = types.join('\n');
 
   switch (framework) {
     case 'react': {
-      lines.push(`export declare const ${neutralName}: FunctionComponent<${propsType}>;`);
+      const reactImports = ['FunctionComponent'];
+      if (hasChildren) {
+        reactImports.push('PropsWithChildren');
+      }
+      if (/\bReactNode\b/.test(typesText)) {
+        reactImports.push('ReactNode');
+      }
+      if (/\bReactElement\b/.test(typesText)) {
+        reactImports.push('ReactElement');
+      }
+      frameworkImportLines.push(`import type { ${reactImports.join(', ')} } from "react";`);
+
+      const compType = hasChildren
+        ? `FunctionComponent<PropsWithChildren<${propsType}>>`
+        : `FunctionComponent<${propsType}>`;
+      compLines.push(`export declare const ${neutralName}: ${compType};`);
       if (publicName !== neutralName) {
-        lines.push(`export { ${neutralName} as ${publicName} };`);
+        compLines.push(`export { ${neutralName} as ${publicName} };`);
       }
       break;
     }
     case 'vue': {
-      lines.push(`declare const _default: DefineComponent<${propsType}>;`);
-      lines.push('export default _default;');
-      lines.push(`export declare const ${neutralName}: DefineComponent<${propsType}>;`);
+      frameworkImportLines.push('import type { DefineComponent } from "vue";');
+      compLines.push(`declare const _default: DefineComponent<${propsType}>;`);
+      compLines.push('export default _default;');
+      compLines.push(`export declare const ${neutralName}: DefineComponent<${propsType}>;`);
       if (publicName !== neutralName) {
-        lines.push(`export { ${neutralName} as ${publicName} };`);
+        compLines.push(`export { ${neutralName} as ${publicName} };`);
       }
       break;
     }
     case 'svelte': {
-      lines.push(`declare const _default: Component<${propsType}>;`);
-      lines.push('export default _default;');
-      lines.push(`export declare const ${neutralName}: Component<${propsType}>;`);
+      const svelteImports = ['Component'];
+      if (hasChildren || /\bSnippet\b/.test(typesText)) {
+        svelteImports.push('Snippet');
+      }
+      frameworkImportLines.push(`import type { ${svelteImports.join(', ')} } from "svelte";`);
+      compLines.push(`declare const _default: Component<${propsType}>;`);
+      compLines.push('export default _default;');
+      compLines.push(`export declare const ${neutralName}: Component<${propsType}>;`);
       if (publicName !== neutralName) {
-        lines.push(`export { ${neutralName} as ${publicName} };`);
+        compLines.push(`export { ${neutralName} as ${publicName} };`);
       }
       break;
     }
     case 'solid': {
-      lines.push(`export declare const ${neutralName}: Component<${propsType}>;`);
+      const solidImports = hasChildren ? ['ParentComponent'] : ['VoidComponent'];
+      if (/\bJSX\b/.test(typesText)) {
+        solidImports.push('JSX');
+      }
+      frameworkImportLines.push(`import type { ${solidImports.join(', ')} } from "solid-js";`);
+      const compType = hasChildren ? `ParentComponent<${propsType}>` : `VoidComponent<${propsType}>`;
+      compLines.push(`export declare const ${neutralName}: ${compType};`);
       if (publicName !== neutralName) {
-        lines.push(`export { ${neutralName} as ${publicName} };`);
+        compLines.push(`export { ${neutralName} as ${publicName} };`);
       }
       break;
     }
     case 'web-components': {
-      lines.push(`declare const ${neutralName}Element_base: typeof ForgeElement;`);
-      lines.push(`export declare class ${neutralName}Element extends ${neutralName}Element_base {}`);
-      lines.push(`export declare const ${neutralName}: typeof ${neutralName}Element;`);
+      frameworkImportLines.push('import type { ForgeElement } from "@mission-platform/forge-adapters/web-components";');
+      compLines.push(`declare const ${neutralName}Element_base: typeof ForgeElement;`);
+      compLines.push(`export declare class ${neutralName}Element extends ${neutralName}Element_base {}`);
+      compLines.push(`export declare const ${neutralName}: typeof ${neutralName}Element;`);
       if (publicName !== neutralName) {
-        lines.push(`export { ${neutralName} as ${publicName} };`);
+        compLines.push(`export { ${neutralName} as ${publicName} };`);
       }
       break;
     }
   }
+
+  const bodyText = `${typesText}\n${compLines.join('\n')}`;
+  const filteredImports = filterReferencedImports(rawImports, bodyText);
+
+  const lines: string[] = [...frameworkImportLines, ...filteredImports, ...types, ...compLines];
 
   const dtsContent = lines.filter(Boolean).join('\n') + '\n';
   emit(`${stem}.d.ts`, dtsContent);
-
-  if (fullPath.endsWith('.vue')) {
-    emit(`${stem}.vue.d.ts`, dtsContent);
-  } else if (fullPath.endsWith('.svelte')) {
-    emit(`${stem}.svelte.d.ts`, dtsContent);
-  }
 }
 
 function emitUtilityDeclaration(
@@ -696,6 +763,46 @@ function emitCachedFrameworkDeclarations(
     emit('mp-jsx-types.d.ts', readFileSync(mpJsxTypesFile, 'utf8'));
   }
 
+  const emittedIndexFiles = new Set<string>();
+
+  // 1. Walk source components directory to emit component barrel index.d.ts files matching source index.ts
+  const candidateSourceDirs = [
+    options.componentsModule ? path.dirname(options.componentsModule) : undefined,
+    options.sourceRoot ? path.join(options.sourceRoot, 'components') : undefined,
+    options.sourceRoot,
+    options.packageRoot ? path.join(options.packageRoot, 'src', 'components') : undefined,
+    options.packageRoot ? path.join(options.packageRoot, 'src') : undefined,
+  ];
+  const sourceComponentsDir = candidateSourceDirs.find((d): d is string => d !== undefined && existsSync(d));
+  if (sourceComponentsDir && existsSync(sourceComponentsDir)) {
+    const walkSourceIndexes = (currentDir: string): void => {
+      for (const entry of readdirSync(currentDir, { withFileTypes: true })) {
+        const fullPath = path.join(currentDir, entry.name);
+        if (entry.isDirectory()) {
+          walkSourceIndexes(fullPath);
+        } else if (entry.isFile() && (entry.name === 'index.ts' || entry.name === 'index.tsx')) {
+          const relFromComponents = path.relative(sourceComponentsDir, fullPath).split(path.sep).join('/');
+          const outName =
+            relFromComponents === 'index.ts' || relFromComponents === 'index.tsx'
+              ? 'components/index.d.ts'
+              : `components/${relFromComponents.replace(/\.tsx?$/, '.d.ts')}`;
+          emit(outName, readFileSync(fullPath, 'utf8'));
+          emittedIndexFiles.add(outName);
+        }
+      }
+    };
+    walkSourceIndexes(sourceComponentsDir);
+  }
+
+  if (
+    options.componentsModule &&
+    existsSync(options.componentsModule) &&
+    !emittedIndexFiles.has('components/index.d.ts')
+  ) {
+    emit('components/index.d.ts', readFileSync(options.componentsModule, 'utf8'));
+    emittedIndexFiles.add('components/index.d.ts');
+  }
+
   const componentsDir = path.join(generatedDirectory, 'components');
   if (existsSync(componentsDir)) {
     const walkComponents = (currentDir: string): void => {
@@ -708,7 +815,16 @@ function emitCachedFrameworkDeclarations(
           /\.(?:tsx|ts|vue|svelte)$/.test(entry.name) &&
           !/\.(?:d\.ts|test\.[^.]+|spec\.[^.]+)$/.test(entry.name)
         ) {
-          emitComponentDeclaration(framework, fullPath, generatedDirectory, emit);
+          if (entry.name === 'index.ts' || entry.name === 'index.tsx') {
+            const relFromGenerated = path.relative(generatedDirectory, fullPath).split(path.sep).join('/');
+            const outName = relFromGenerated.replace(/\.tsx?$/, '.d.ts');
+            if (!emittedIndexFiles.has(outName)) {
+              emit(outName, readFileSync(fullPath, 'utf8'));
+              emittedIndexFiles.add(outName);
+            }
+          } else {
+            emitComponentDeclaration(framework, fullPath, generatedDirectory, emit);
+          }
         }
       }
     };
