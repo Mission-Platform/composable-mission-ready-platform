@@ -1,91 +1,91 @@
 dashboard:
-  latency: '{name} · latency'
-  live: Live
-  reconnecting: Reconnecting…
-  servicesLabel: Monitored services
+  latency: '{name} · 延迟'
+  live: 实时
+  reconnecting: 正在重新连接…
+  servicesLabel: 已监控的服务
   stat:
-    avgLatency: Avg latency
-    interval: Interval
-    lastStatus: Last status
-    samples: Samples
-    type: Type
-    uptime: Uptime
-  subtitle: Server-side health checks (default every {interval}s, per-monitor overrides), stored as a time series on the edge.
-  title: Service Monitor
+    avgLatency: 平均延迟
+    interval: 间隔
+    lastStatus: 最后状态
+    samples: 样本数
+    type: 类型
+    uptime: 运行时间
+  subtitle: 服务端健康检查（默认每 {interval} 秒一次，可按监控器覆盖），作为时间序列存储在边缘。
+  title: 服务监控
 incidents:
-  addPostReport: Add post-incident report
-  addProgressUpdate: Add progress update
-  cancel: Cancel
-  edit: Edit
-  editMaintenance: Edit maintenance
-  editPostReport: Edit post-incident report
-  plannedMaintenance: Planned maintenance
-  postIncidentReport: Post-incident report
-  reportAnIncident: Report an incident
-  reportButton: Report incident
-  scheduleMaintenance: Schedule maintenance
-  title: Incidents
+  addPostReport: 添加事后报告
+  addProgressUpdate: 添加进度更新
+  cancel: 取消
+  edit: 编辑
+  editMaintenance: 编辑维护
+  editPostReport: 编辑事后报告
+  plannedMaintenance: 计划维护
+  postIncidentReport: 事后报告
+  reportAnIncident: 报告事件
+  reportButton: 报告事件
+  scheduleMaintenance: 安排维护
+  title: 事件
 monitors:
-  add: Add monitor
-  configuration: Monitor configuration
-  edit: Edit
-  editAria: Edit {name}
-  editTitle: Edit monitor
+  add: 添加监控
+  configuration: 监控器配置
+  edit: 编辑
+  editAria: 编辑 {name}
+  editTitle: 编辑监控
   error:
-    rejected: The server rejected this monitor. Check the fields and try again.
-    required: Provide an id, a name, and a URL (HTTP/JSON/GraphQL) or host.
-  remove: Remove
-  removeAria: Remove {name}
-  subtitle: Configured at runtime · default interval {interval}s.
-  title: Monitors
+    rejected: 服务器拒绝了此监控器。请检查字段并重试。
+    required: 请提供 ID、名称和 URL (HTTP/JSON/GraphQL) 或主机名。
+  remove: 移除
+  removeAria: 移除 {name}
+  subtitle: 运行时配置 · 默认间隔 {interval} 秒。
+  title: 监控器
 nav:
-  dashboard: Dashboard
-  incidents: Incidents & maintenance
-  monitors: Monitors
-  status: Status
+  dashboard: 仪表板
+  incidents: 事件与维护
+  monitors: 监控器
+  status: 状态
 shell:
-  activeIncidents_zero: '{count} active incidents'
-  activeIncidents_one: '{count} active incident'
-  activeIncidents_other: '{count} active incidents'
-  currentStatus: Current system status
+  activeIncidents_zero: '{count} 个活动事件'
+  activeIncidents_one: '{count} 个活动事件'
+  activeIncidents_other: '{count} 个活动事件'
+  currentStatus: 当前系统状态
   title: Service Monitor
-  viewIncidentDetails: View incident details
+  viewIncidentDetails: 查看事件详情
 speed:
-  bandwidth: Bandwidth {value} Mbps
-  chartEmpty: Run a few tests to chart this provider…
-  disabled: Scheduled speed tests are disabled — run one on demand.
-  down: Download {value} Mbps
-  enabled: Server-side speed tests every {interval}s (Cloudflare, Fast.com, Speedtest).
-  failed: Failed
+  bandwidth: 带宽 {value} Mbps
+  chartEmpty: 运行几次测试以绘制此提供商的图表…
+  disabled: 已禁用计划测速 — 请按需运行。
+  down: '{value} Mbps 下载'
+  enabled: 服务端测速每 {interval} 秒一次 (Cloudflare, Fast.com, Speedtest)。
+  failed: 失败
   graphMetric:
     bandwidth: speed.graphMetric.bandwidth
     download: speed.graphMetric.download
     latency: speed.graphMetric.latency
     ping: speed.graphMetric.ping
     upload: speed.graphMetric.upload
-  graphTitle: '{name} · {metric} over time'
-  latency: Latency {value} ms
-  pending: No measurement yet
+  graphTitle: '{name} · 随时间变化的 {metric}'
+  latency: '{value} 毫秒'
+  pending: 尚无测量结果
   ping: Ping {value} ms
-  reportsTitle: Network speed reports
-  run: Run test
-  running: Running…
-  summary_zero: avg {average} · max {maximum} · n={count}
-  summary_one: avg {average} · max {maximum} · n={count}
-  summary_other: avg {average} · max {maximum} · n={count}
-  title: Network speed
-  up: Upload {value} Mbps
-  uploadUnavailable: Upload unavailable
-  viewReports: View speed-test reports
+  reportsTitle: 网络速度报告
+  run: 运行测试
+  running: 正在运行…
+  summary_zero: 平均 {average} · 最大 {maximum} · n={count}
+  summary_one: 平均 {average} · 最大 {maximum} · n={count}
+  summary_other: 平均 {average} · 最大 {maximum} · n={count}
+  title: 网络速度
+  up: '{value} Mbps 上传'
+  uploadUnavailable: 上传不可用
+  viewReports: 查看测速报告
 state:
-  down: Down
+  down: 离线
 summary:
-  activeIncidentsTitle: Active incidents
-  allOperational: All systems operational
-  degradedPerformance: Degraded performance
-  monitoredServicesAndIncidents: '{servicesCount} monitored services · {incidentsCount} active incidents'
-  noActiveIncidents: No active incidents.
-  noUpcomingMaintenance: No upcoming maintenance.
-  plannedMaintenance: Planned maintenance
-  serviceDisruption: Service disruption
-  systemStatus: System status
+  activeIncidentsTitle: 活动事件
+  allOperational: 所有系统正常运行
+  degradedPerformance: 性能下降
+  monitoredServicesAndIncidents: '{servicesCount} 个监控服务 · {incidentsCount} 个活动事件'
+  noActiveIncidents: 无活动事件。
+  noUpcomingMaintenance: 无即将进行的维护。
+  plannedMaintenance: 计划维护
+  serviceDisruption: 服务中断
+  systemStatus: 系统状态
