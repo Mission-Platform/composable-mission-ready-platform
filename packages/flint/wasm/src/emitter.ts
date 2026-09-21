@@ -726,6 +726,7 @@ function expressionType(
     if (
       expression.standardLibrary === 'memory-alloc' ||
       expression.standardLibrary === 'memory-load-u32' ||
+      expression.standardLibrary === 'memory-load-u8' ||
       expression.standardLibrary === 'memory-realloc'
     )
       return 'u32';
@@ -747,6 +748,7 @@ function expressionType(
       expression.standardLibrary === 'simd-v128-store' ||
       expression.standardLibrary === 'memory-dealloc' ||
       expression.standardLibrary === 'memory-store-u32' ||
+      expression.standardLibrary === 'memory-store-u8' ||
       expression.standardLibrary === 'memory-store-f64'
     )
       return 'unit';
@@ -908,8 +910,9 @@ function validateTargetFeatures(
   const required = featureRequirements(module);
   const diagnostics: FlintWasmDiagnostic[] = [];
   // skipcq: JS-D1001
-  const check = (feature: keyof FlintTargetFeatures): void => {
-    if (required[feature] === true && requested[feature] !== true)
+  const check = (feature: keyof FlintWasmFeatureRequirements): void => {
+    if (feature === 'parallel') return;
+    if (required[feature] === true && requested[feature as keyof FlintTargetFeatures] !== true)
       diagnostics.push({
         ...backendDiagnostic(
           fileName,
@@ -922,7 +925,7 @@ function validateTargetFeatures(
   };
   for (const feature of Object.keys(required).filter(
     (feature) => feature !== 'parallel',
-  ) as (keyof FlintTargetFeatures)[]) {
+  ) as (keyof FlintWasmFeatureRequirements)[]) {
     check(feature);
   }
   if (requested.threads === true && requested.atomics !== true)
@@ -990,6 +993,46 @@ function metadataCustomSection(metadata: FlintWasmBackendInput['metadata']): num
   return section(0, [...wasmString('fws.metadata'), ...encoder.encode(JSON.stringify(metadata))]);
 }
 
+/** Maps a Flint or C type representation string to WebAssembly primitive value type. */
+function toWasmPrimitiveType(
+  type: string | { readonly name?: string; readonly reference?: string } | undefined,
+  memory64: boolean,
+): FlintWasmPrimitiveType {
+  const typeString = typeof type === 'string' ? type : (type?.reference ?? type?.name ?? 'i32');
+  if (typeString.startsWith('CPtr') || typeString.startsWith('MutCPtr') || typeString === 'COpaquePtr') {
+    return memory64 ? 'u64' : 'u32';
+  }
+  switch (typeString) {
+    case 'f32':
+    case 'c_float': {
+      return 'f32';
+    }
+    case 'f64':
+    case 'c_double': {
+      return 'f64';
+    }
+    case 'i64':
+    case 'u64':
+    case 'c_longlong':
+    case 'c_ulonglong': {
+      return 'i64';
+    }
+    case 'c_long':
+    case 'c_ulong':
+    case 'c_size':
+    case 'c_ssize': {
+      return memory64 ? 'u64' : 'u32';
+    }
+    case 'unit':
+    case 'c_void': {
+      return 'unit';
+    }
+    default: {
+      return 'i32';
+    }
+  }
+}
+
 /** Core emitter lowering module IR to binary WebAssembly bytecode. */
 // skipcq: JS-R1005
 function emitWasm(
@@ -999,6 +1042,28 @@ function emitWasm(
   metadata: FlintWasmBackendInput['metadata'],
   aggregateLayouts: readonly FlintWasmAggregateLayout[] = [],
 ): Uint8Array {
+  const isMemory64 = targetFeatures?.memory64 === true;
+  const foreignImports: {
+    readonly library: string;
+    readonly symbol: string;
+    readonly parameters: readonly FlintWasmPrimitiveType[];
+    readonly result: FlintWasmPrimitiveType;
+  }[] = [];
+
+  for (const foreignCap of module.foreignCapabilities ?? []) {
+    for (const function_ of foreignCap.functions) {
+      const symbol =
+        (function_ as { readonly symbol?: string; readonly name?: string }).symbol ??
+        (function_ as { readonly symbol?: string; readonly name?: string }).name ??
+        '';
+      foreignImports.push({
+        library: foreignCap.library,
+        symbol,
+        parameters: function_.parameters.map((p) => toWasmPrimitiveType(p.type as never, isMemory64)),
+        result: toWasmPrimitiveType(function_.result as never, isMemory64),
+      });
+    }
+  }
   const hasRegexRuntime = module.functions.some((declaration) =>
     /"standardLibrary":"(?:full|prefix|search)/.test(JSON.stringify(declaration.body)),
   );
@@ -1033,6 +1098,11 @@ function emitWasm(
       parameters: imported.parameters.map(({ type }) => type.name),
       result: imported.result.name,
     });
+  for (const foreign of foreignImports)
+    callables.set(foreign.symbol, {
+      parameters: foreign.parameters,
+      result: foreign.result,
+    });
   for (const declaration of module.functions)
     callables.set(declaration.name, {
       parameters: declaration.parameters.map(({ type }) => type.name),
@@ -1044,6 +1114,7 @@ function emitWasm(
       result.name,
     ),
   );
+  const foreignImportTypeIndexes = foreignImports.map(({ parameters, result }) => getTypeIndex(parameters, result));
   const functionTypeIndexes = module.functions.map(({ parameters, result }) =>
     getTypeIndex(
       parameters.map(({ type }) => type.name),
@@ -1130,10 +1201,11 @@ function emitWasm(
     return table;
   };
   const functionIndexes = new Map<string, number>();
-  for (const [index, declaration] of module.imports.entries()) functionIndexes.set(declaration.alias, index);
-  for (const [index, declaration] of module.functions.entries())
-    functionIndexes.set(declaration.name, module.imports.length + index);
-  const runtimeIndex = module.imports.length + module.functions.length;
+  let nextFunctionIndex = 0;
+  for (const declaration of module.imports) functionIndexes.set(declaration.alias, nextFunctionIndex++);
+  for (const foreign of foreignImports) functionIndexes.set(foreign.symbol, nextFunctionIndex++);
+  for (const declaration of module.functions) functionIndexes.set(declaration.name, nextFunctionIndex++);
+  const runtimeIndex = module.imports.length + foreignImports.length + module.functions.length;
   const allocatorFunctionIndex =
     runtimeIndex +
     (hasRegexRuntime ? REGEX_RUNTIME_FUNCTION_COUNT : 0) +
@@ -1551,6 +1623,23 @@ function emitWasm(
             body.push(0x36, 0x02, 0x00);
             return;
           }
+          if (expression.standardLibrary === 'memory-load-u8') {
+            const address = expression.arguments[0];
+            if (address === undefined) throw new Error('FLINT-MEMORY-007: memory_load_u8 requires an address.');
+            emitExpression(address, visible);
+            body.push(0x2d, 0x00, 0x00);
+            return;
+          }
+          if (expression.standardLibrary === 'memory-store-u8') {
+            const address = expression.arguments[0];
+            const value = expression.arguments[1];
+            if (address === undefined || value === undefined)
+              throw new Error('FLINT-MEMORY-008: memory_store_u8 requires an address and value.');
+            emitExpression(address, visible);
+            emitExpression(value, visible);
+            body.push(0x3a, 0x00, 0x00);
+            return;
+          }
           if (expression.standardLibrary === 'memory-load-f64') {
             const address = expression.arguments[0];
             if (address === undefined) throw new Error('FLINT-MEMORY-003: memory_load_f64 requires an address.');
@@ -1876,6 +1965,13 @@ function emitWasm(
           body.push(0x10, ...unsignedLeb(runtimeIndex + 2));
           return;
         }
+        if (expression.callee.endsWith('.as_c_ptr') || expression.callee.endsWith('.as_mut_c_ptr')) {
+          const receiver = expression.callee.slice(0, expression.callee.lastIndexOf('.'));
+          if (visible.has(receiver)) {
+            emitExpression({ kind: 'identifier', name: receiver, span: expression.span }, visible);
+          }
+          return;
+        }
         const index = functionIndexes.get(expression.callee);
         if (index !== undefined) {
           if (expression.callee.endsWith('.next')) {
@@ -1886,6 +1982,11 @@ function emitWasm(
             for (const argument of expression.arguments) emitExpression(argument, visible);
           }
           body.push(0x10, ...unsignedLeb(index));
+        } else if (expression.callee.startsWith('indirect:') || expression.callee.startsWith('call_indirect:')) {
+          const parts = expression.callee.split(':');
+          const targetTypeIndex = Number(parts[1] ?? '0');
+          for (const argument of expression.arguments) emitExpression(argument, visible);
+          body.push(0x11, ...unsignedLeb(targetTypeIndex), 0x00);
         } else if (expression.callee.endsWith('.next')) {
           const receiver = expression.callee.slice(0, expression.callee.lastIndexOf('.'));
           const receiverName = visible.has(receiver) ? receiver : '__state';
@@ -1897,6 +1998,11 @@ function emitWasm(
         if (expression.operator === '!') {
           emitExpression(expression.operand, visible);
           body.push(0x45);
+        } else if (expression.operator === '&' || expression.operator === '&mut') {
+          emitExpression(expression.operand, visible);
+        } else if (expression.operator === '*') {
+          emitExpression(expression.operand, visible);
+          body.push(0x28, 0x02, 0x00);
         } else if (operandType === 'f32') {
           emitExpression(expression.operand, visible);
           body.push(0x8c);
@@ -2804,12 +2910,36 @@ function emitWasm(
   );
   for (const runtimeBody of collectionBodies) bodies.push([...unsignedLeb(runtimeBody.length), ...runtimeBody]);
   bodies.push([...unsignedLeb(emittedReallocatorBody.length), ...emittedReallocatorBody]);
-  const importEntries = module.imports.map((declaration, index) => [
-    ...wasmString(declaration.capability),
-    ...wasmString(declaration.alias),
-    0x00,
-    ...unsignedLeb(importTypeIndexes[index] ?? 0),
-  ]);
+  const shouldImportMemory = targetFeatures?.importMemory !== undefined && targetFeatures.importMemory !== false;
+  const importMemoryModule =
+    typeof targetFeatures?.importMemory === 'object' ? targetFeatures.importMemory.module : 'env';
+  const importMemoryName =
+    typeof targetFeatures?.importMemory === 'object' ? targetFeatures.importMemory.name : 'memory';
+
+  const memoryImportEntry = shouldImportMemory
+    ? [
+        ...wasmString(importMemoryModule),
+        ...wasmString(importMemoryName),
+        0x02,
+        ...memoryLimits(targetFeatures, globalInitialValue).slice(1),
+      ]
+    : [];
+
+  const importEntries = [
+    ...(shouldImportMemory ? [memoryImportEntry] : []),
+    ...module.imports.map((declaration, index) => [
+      ...wasmString(declaration.capability),
+      ...wasmString(declaration.alias),
+      0x00,
+      ...unsignedLeb(importTypeIndexes[index] ?? 0),
+    ]),
+    ...foreignImports.map((foreign, index) => [
+      ...wasmString(foreign.library),
+      ...wasmString(foreign.symbol),
+      0x00,
+      ...unsignedLeb(foreignImportTypeIndexes[index] ?? 0),
+    ]),
+  ];
   const exportEntries = [
     ...module.functions
       .filter(({ exported }) => exported)
@@ -2910,7 +3040,7 @@ function emitWasm(
           ].flatMap((type) => unsignedLeb(type)),
         ),
       ),
-      section(5, memoryLimits(targetFeatures, globalInitialValue)),
+      ...(shouldImportMemory ? [] : [section(5, memoryLimits(targetFeatures, globalInitialValue))]),
       section(6, global),
       section(7, [...unsignedLeb(exportEntries.length), ...exportEntries.flat()]),
       section(10, [...unsignedLeb(bodies.length), ...bodies.flat()]),

@@ -365,11 +365,26 @@ export interface FlintWasmWatMetadata {
  * @returns Formatted memory declaration line.
  */
 function renderMemory(targetFeatures: FlintTargetFeatures | undefined): string {
+  if (targetFeatures?.importMemory !== undefined && targetFeatures.importMemory !== false) {
+    const importModule = typeof targetFeatures.importMemory === 'object' ? targetFeatures.importMemory.module : 'env';
+    const name = typeof targetFeatures.importMemory === 'object' ? targetFeatures.importMemory.name : 'memory';
+    return `  (import "${importModule}" "${name}" (memory 1))\n  (export "memory" (memory 0))`;
+  }
   if (targetFeatures?.memory64 === true && targetFeatures.threads === true)
     return '  (memory (export "memory") i64 1 1 shared)';
   if (targetFeatures?.memory64 === true) return '  (memory (export "memory") i64 1)';
   if (targetFeatures?.threads === true) return '  (memory (export "memory") 1 1 shared)';
   return '  (memory (export "memory") 1)';
+}
+
+/** Maps a Flint or C type representation string to WebAssembly WAT value type. */
+function toWatType(type: string | { readonly name?: string; readonly reference?: string } | undefined): string {
+  const typeString = typeof type === 'string' ? type : (type?.reference ?? type?.name ?? 'i32');
+  if (typeString === 'f32' || typeString === 'c_float') return 'f32';
+  if (typeString === 'f64' || typeString === 'c_double') return 'f64';
+  if (typeString === 'i64' || typeString === 'u64' || typeString === 'c_longlong' || typeString === 'c_ulonglong')
+    return 'i64';
+  return 'i32';
 }
 
 /**
@@ -408,6 +423,26 @@ export function renderFlintWasmWat(module: FlintWasmModule, metadata: FlintWasmW
     lines.push(
       `  (import ${JSON.stringify(imported.capability)} ${JSON.stringify(imported.alias)} (func $${imported.alias} ${[...parameters, ...results].join(' ')}))`,
     );
+  }
+  for (const foreignCap of module.foreignCapabilities ?? []) {
+    for (const function_ of foreignCap.functions) {
+      const symbol =
+        (function_ as { readonly symbol?: string; readonly name?: string }).symbol ??
+        (function_ as { readonly symbol?: string; readonly name?: string }).name ??
+        '';
+      const parameters = function_.parameters.map(({ name, type }) => `(param $${name} ${toWatType(type as never)})`);
+      const resultTypeString =
+        typeof function_.result === 'string'
+          ? function_.result
+          : ((function_.result as { readonly name?: string })?.name ?? 'unit');
+      const results =
+        resultTypeString === 'unit' || resultTypeString === 'c_void'
+          ? []
+          : [`(result ${toWatType(function_.result as never)})`];
+      lines.push(
+        `  (import ${JSON.stringify(foreignCap.library)} ${JSON.stringify(symbol)} (func $${symbol} ${[...parameters, ...results].join(' ')}))`,
+      );
+    }
   }
   lines.push(renderMemory(metadata.targetFeatures));
   for (const descriptor of module.iteratorDescriptors ?? [])
