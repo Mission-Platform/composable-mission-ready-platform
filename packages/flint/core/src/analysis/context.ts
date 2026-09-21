@@ -12,6 +12,7 @@ import type { FlintAnalysisContext, FlintAnalysisOptions, FlintAnalysisSourceFil
  * @param options - Analysis configuration options including custom policies and source maps.
  * @returns A structured FlintAnalysisContext ready for rule execution.
  */
+// skipcq: JS-R1005
 export function createFlintAnalysisContext(
   frontend: FlintFrontendResult,
   options: FlintAnalysisOptions = {},

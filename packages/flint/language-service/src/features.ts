@@ -33,6 +33,7 @@ export function codeLensesFlint(
     ...module.interfaces.map((declaration) => declaration.name),
   ]);
   const declarations = symbols.filter(
+    // skipcq: JS-R1005
     (symbol) =>
       (symbol.kind === 'function' || symbol.kind === 'type') &&
       symbol.containerName === undefined &&
@@ -56,9 +57,11 @@ export function codeLensesFlint(
 }
 
 /** Computes syntax folding ranges for functions, control flow blocks, and imports. */
+// skipcq: JS-R1005
 export function foldingRangesFlint(source: string, module: FlintModule | undefined): readonly FlintFoldingRange[] {
   if (module === undefined) return [];
   const ranges: FlintFoldingRange[] = [];
+  // skipcq: JS-D1001
   const add = (span: FlintSourceSpan, kind: FlintFoldingRangeKind): void => {
     const range = rangeFromSpan(source, span);
     if (range.start.line === range.end.line || range.endOffset <= range.startOffset) return;
@@ -109,6 +112,7 @@ export function inlineValuesFlint(
 }
 
 /** Computes parameter and type inlay hints within the visible range. */
+// skipcq: JS-R1005
 export function inlayHintsFlint(
   source: string,
   module: FlintModule | undefined,
@@ -117,6 +121,7 @@ export function inlayHintsFlint(
 ): readonly FlintInlayHint[] {
   if (module === undefined) return [];
   const hints: FlintInlayHint[] = [];
+  // skipcq: JS-D1001
   const add = (hint: FlintInlayHint, offset: number): void => {
     if (requestedRange !== undefined && (offset < requestedRange.startOffset || offset > requestedRange.endOffset))
       return;
@@ -219,6 +224,7 @@ function makeDocumentSymbol(symbol: FlintSymbol, symbols: readonly FlintSymbol[]
 }
 
 /** Traverses IR statements collecting block folding ranges. */
+// skipcq: JS-R1005
 function collectStatementFolds(
   statements: readonly FlintStatement[],
   add: (span: FlintSourceSpan, kind: FlintFoldingRangeKind) => void,
@@ -261,6 +267,7 @@ function collectStatementFolds(
 }
 
 /** Collects variable binding ranges suitable for inline debug evaluation. */
+// skipcq: JS-R1005
 function collectInlineValues(
   source: string,
   statements: readonly FlintStatement[],
@@ -315,6 +322,7 @@ function collectInlineValues(
 }
 
 /** Traverses statements collecting expressions requiring inlay hint evaluation. */
+// skipcq: JS-R1005
 function collectInlayExpressions(
   source: string,
   statements: readonly FlintStatement[],
@@ -382,6 +390,7 @@ function collectInlayExpressions(
 }
 
 /** Inspects an expression for call argument and let binding inlay hints. */
+// skipcq: JS-R1005
 function collectInlayExpression(
   source: string,
   expression: FlintExpression,

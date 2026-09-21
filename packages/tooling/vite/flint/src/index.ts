@@ -43,6 +43,7 @@ const QUERY_NAMES = new Set([
   FLINT_SOURCE_MAP_QUERY,
 ]);
 
+// skipcq: JS-D1001, JS-R1005
 function splitFlintId(
   id: string,
 ): { fileName: string; query?: string } | undefined {
@@ -53,6 +54,7 @@ function splitFlintId(
   return query === undefined ? { fileName } : { fileName, query };
 }
 
+// skipcq: JS-D1001
 function formatDiagnostic(diagnostic: FlintDiagnostic): string {
   const location = `${diagnostic.fileName}:${diagnostic.span.line}:${diagnostic.span.column}`;
   const hint = diagnostic.hint === undefined ? "" : ` Hint: ${diagnostic.hint}`;
@@ -79,16 +81,19 @@ export class FlintViteError extends Error {
   }
 }
 
+// skipcq: JS-D1001
 function getFirstError(
   diagnostics: readonly FlintDiagnostic[],
 ): FlintDiagnostic | undefined {
   return diagnostics.find((diagnostic) => diagnostic.severity === "error");
 }
 
+// skipcq: JS-D1001
 function assetStem(fileName: string): string {
   return basename(fileName, extname(fileName));
 }
 
+// skipcq: JS-D1001
 function canonicalFileName(fileName: string): string {
   return existsSync(fileName) ? realpathSync(fileName) : fileName;
 }
@@ -112,6 +117,7 @@ export function flintPlugin(options: FlintPluginOptions = {}): Plugin {
   const compiled = new Map<string, FlintCompiledModule>();
   let config: ResolvedConfig | undefined;
 
+  // skipcq: JS-D1001, JS-R1005
   const compile = async (
     fileName: string,
     pluginContext?: {
@@ -175,6 +181,7 @@ export function flintPlugin(options: FlintPluginOptions = {}): Plugin {
     configResolved(resolved): void {
       config = resolved;
     },
+    // skipcq: JS-R1005
     resolveId(source, importer): string | null {
       const split = splitFlintId(source);
       if (split === undefined) return null;
@@ -187,6 +194,7 @@ export function flintPlugin(options: FlintPluginOptions = {}): Plugin {
         ? fileName
         : `${fileName}?${split.query}`;
     },
+    // skipcq: JS-R1005
     async load(id): Promise<{ code: string; map: string } | string | null> {
       const split = splitFlintId(id);
       if (split === undefined) return null;

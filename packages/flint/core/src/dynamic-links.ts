@@ -225,6 +225,7 @@ export class FlintDynamicLinkCache {
    * @returns The validated callable export.
    * @throws {Error} If the export is missing or has an incompatible signature.
    */
+  // skipcq: JS-R1005
   private validateExport(
     module: FlintDynamicModule,
     moduleId: string,

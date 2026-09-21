@@ -124,7 +124,7 @@ async function buildTargets(): Promise<readonly BuildAttempt[]> {
     [aot, () => aot.build()],
     [flintWasm, () => flintWasm.build()],
     [flintExcludedBoundsWasm, () => flintExcludedBoundsWasm.build()],
-    [rust, async () => buildRustArtifact()],
+    [rust, () => buildRustArtifact()],
     [assemblyScript, () => buildAssemblyScriptArtifact()],
   ];
   const result: BuildAttempt[] = [];

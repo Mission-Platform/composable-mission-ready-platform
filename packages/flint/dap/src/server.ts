@@ -103,10 +103,12 @@ export function createFlintDapServer(options: FlintDapServerOptions): FlintDapSe
     dispose();
   }
 
+  // skipcq: JS-D1001
   const send = (message: DapResponse | DapEvent): void => {
     if (!disposed) options.output.write(encodeDapMessage(message));
   };
 
+  // skipcq: JS-D1001
   const respond = <T>(request: DapRequest, success: boolean, body?: T, message?: string): void => {
     send({
       seq: sequence++,
@@ -119,10 +121,12 @@ export function createFlintDapServer(options: FlintDapServerOptions): FlintDapSe
     });
   };
 
+  // skipcq: JS-D1001
   const event = <T>(name: string, body?: T): void => {
     send({ seq: sequence++, type: 'event', event: name, ...(body === undefined ? {} : { body }) });
   };
 
+  // skipcq: JS-D1001
   const rejectPending = (error: Error): void => {
     for (const [requestId, request] of pending) {
       clearTimeout(request.timeout);
@@ -131,6 +135,7 @@ export function createFlintDapServer(options: FlintDapServerOptions): FlintDapSe
     }
   };
 
+  // skipcq: JS-D1001, JS-R1005
   const handleRuntimeMessage = (message: FlintRuntimeMessage): void => {
     if (message.type === 'response') {
       const request = pending.get(message.requestId);
@@ -174,6 +179,7 @@ export function createFlintDapServer(options: FlintDapServerOptions): FlintDapSe
     event('output', { category: 'stderr', output: message.message });
   };
 
+  // skipcq: JS-D1001
   const attachRuntime = (process_: FlintRuntimeProcess): void => {
     runtime = process_;
     process_.stdout.on('data', (chunk: Buffer | string) => {
@@ -199,6 +205,7 @@ export function createFlintDapServer(options: FlintDapServerOptions): FlintDapSe
     });
   };
 
+  // skipcq: JS-D1001
   const sendRuntimeRequest = (command: FlintRuntimeCommand, arguments_: unknown): Promise<FlintRuntimeResponse> => {
     if (runtime === undefined) return Promise.reject(new Error('The Flint runtime is not running.'));
     const requestId = runtimeRequestId++;
@@ -224,6 +231,7 @@ export function createFlintDapServer(options: FlintDapServerOptions): FlintDapSe
     });
   };
 
+  // skipcq: JS-D1001, JS-R1005
   const handleRequest = async (request: DapRequest): Promise<void> => {
     try {
       if (request.command === 'initialize') {
@@ -366,11 +374,14 @@ export function createFlintDapServer(options: FlintDapServerOptions): FlintDapSe
     }
   };
 
+  // skipcq: JS-D1001
   const onData = (chunk: Buffer | string): void => {
     try {
       for (const message of dapParser.push(chunk)) {
         if (message.type === 'request') {
-          handleRequest(message).catch(() => {});
+          handleRequest(message).catch(() => {
+            /* no-op */
+          });
         }
       }
     } catch (error: unknown) {
@@ -422,6 +433,7 @@ function defaultSpawnRuntime(
 }
 
 /** Validates and normalizes launch arguments supplied in a DAP launch request. */
+// skipcq: JS-R1005
 async function normalizeLaunchArguments(arguments_: Record<string, unknown>): Promise<
   FlintDapLaunchArguments & {
     readonly cwd: string;

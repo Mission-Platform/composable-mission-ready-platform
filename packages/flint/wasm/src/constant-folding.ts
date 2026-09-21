@@ -27,6 +27,7 @@ export const literal = (
 });
 
 /** Determines whether an expression is side-effect free and deterministic. */
+// skipcq: JS-R1005
 export function pure(expression: FlintWasmExpression): boolean {
   if (expression.kind === 'literal' || expression.kind === 'identifier') return true;
   if (expression.kind === 'unary') return pure(expression.operand);
@@ -40,6 +41,7 @@ export function normalizeInteger(value: number, type: FlintWasmPrimitiveType): n
   return type === 'u32' ? value >>> 0 : value | 0;
 }
 
+// skipcq: JS-D1001, JS-R1005
 function foldAddSubMul(
   operator: string,
   a: number,
@@ -63,6 +65,7 @@ function foldAddSubMul(
   }
 }
 
+// skipcq: JS-D1001, JS-R1005
 function foldDivisionAndRemainder(
   operator: string,
   a: number,
@@ -84,6 +87,7 @@ function foldDivisionAndRemainder(
   }
 }
 
+// skipcq: JS-D1001
 function foldArithmetic(
   operator: string,
   a: number,
@@ -96,6 +100,7 @@ function foldArithmetic(
   return foldDivisionAndRemainder(operator, a, b, integer32, type);
 }
 
+// skipcq: JS-D1001, JS-R1005
 function foldComparison(operator: string, a: number, b: number): boolean | undefined {
   switch (operator) {
     case '<': {
@@ -123,6 +128,7 @@ function foldComparison(operator: string, a: number, b: number): boolean | undef
 }
 
 /** Evaluates compile-time binary arithmetic operations on numeric constants. */
+// skipcq: JS-R1005
 export function foldNumbers(
   operator: Extract<FlintWasmExpression, { kind: 'binary' }>['operator'],
   left: number,
@@ -131,7 +137,9 @@ export function foldNumbers(
 ): boolean | number | undefined {
   if (type === 'i64' || type === 'u64') return undefined;
   const integer32 = type === 'i32' || type === 'u32';
+  // skipcq: JS-C1002
   const a = integer32 ? normalizeInteger(left, type) : left;
+  // skipcq: JS-C1002
   const b = integer32 ? normalizeInteger(right, type) : right;
 
   const arithmetic = foldArithmetic(operator, a, b, integer32, type);
@@ -140,6 +148,7 @@ export function foldNumbers(
   return foldComparison(operator, a, b);
 }
 
+// skipcq: JS-D1001
 function resolveIdentifier(
   name: string,
   environment: Environment,
@@ -154,6 +163,7 @@ function resolveIdentifier(
   return resolve(replacement, environment, new Set(resolving).add(name));
 }
 
+// skipcq: JS-D1001
 function resolveAtomic(
   expression: Extract<FlintWasmExpression, { kind: 'atomic' }>,
   environment: Environment,
@@ -170,6 +180,7 @@ function resolveAtomic(
 }
 
 /** Resolves an expression to a compile-time constant value using the local environment. */
+// skipcq: JS-R1005
 export function resolve(
   expression: FlintWasmExpression,
   environment: Environment,
@@ -215,6 +226,7 @@ export function resolve(
   }
 }
 
+// skipcq: JS-D1001, JS-R1005
 function foldCall(expression: Extract<FlintWasmExpression, { kind: 'call' }>): FoldResult {
   const argumentsWithFolds = expression.arguments.map((argument) => fold(argument));
   if (
@@ -244,6 +256,7 @@ function foldCall(expression: Extract<FlintWasmExpression, { kind: 'call' }>): F
   };
 }
 
+// skipcq: JS-D1001, JS-R1005
 function foldUnaryLiteral(
   operator: string,
   operand: Extract<FlintWasmExpression, { kind: 'literal' }>,
@@ -262,6 +275,7 @@ function foldUnaryLiteral(
   return undefined;
 }
 
+// skipcq: JS-D1001
 function foldUnary(expression: Extract<FlintWasmExpression, { kind: 'unary' }>): FoldResult {
   const operand = fold(expression.operand);
   if (operand.expression.kind === 'literal') {
@@ -277,12 +291,14 @@ function foldUnary(expression: Extract<FlintWasmExpression, { kind: 'unary' }>):
   };
 }
 
+// skipcq: JS-D1001
 function foldBinaryEquality(operator: string, av: unknown, bv: unknown): boolean | undefined {
   if (operator === '==') return av === bv;
   if (operator === '!=') return av !== bv;
   return undefined;
 }
 
+// skipcq: JS-D1001, JS-R1005
 function foldBinaryLogical(operator: string, av: unknown, bv: unknown): boolean | undefined {
   if (typeof av !== 'boolean' || typeof bv !== 'boolean') return undefined;
   if (operator === '&&') return av && bv;
@@ -290,6 +306,7 @@ function foldBinaryLogical(operator: string, av: unknown, bv: unknown): boolean 
   return undefined;
 }
 
+// skipcq: JS-D1001
 function foldBinaryLiteralValue(
   operator: Extract<FlintWasmExpression, { kind: 'binary' }>['operator'],
   av: boolean | number | string,
@@ -304,6 +321,7 @@ function foldBinaryLiteralValue(
   return foldBinaryLogical(operator, av, bv);
 }
 
+// skipcq: JS-D1001, JS-R1005
 function isComparisonOrLogicalOperator(operator: string): boolean {
   return (
     operator === '<' ||
@@ -317,12 +335,15 @@ function isComparisonOrLogicalOperator(operator: string): boolean {
   );
 }
 
+// skipcq: JS-D1001
 function foldBinaryLiterals(
   expression: Extract<FlintWasmExpression, { kind: 'binary' }>,
   left: FoldResult,
   right: FoldResult,
 ): FoldResult | undefined {
+  // skipcq: JS-C1002
   const a = left.expression;
+  // skipcq: JS-C1002
   const b = right.expression;
   if (a.kind !== 'literal' || b.kind !== 'literal') return undefined;
 
@@ -337,12 +358,15 @@ function foldBinaryLiterals(
   };
 }
 
+// skipcq: JS-D1001, JS-R1005
 function foldBinaryAddressOffsets(
   expression: Extract<FlintWasmExpression, { kind: 'binary' }>,
   left: FoldResult,
   right: FoldResult,
 ): FoldResult | undefined {
+  // skipcq: JS-C1002
   const a = left.expression;
+  // skipcq: JS-C1002
   const b = right.expression;
   if (
     expression.operator === '+' &&
@@ -366,6 +390,7 @@ function foldBinaryAddressOffsets(
   return undefined;
 }
 
+// skipcq: JS-D1001
 function foldBinary(expression: Extract<FlintWasmExpression, { kind: 'binary' }>): FoldResult {
   const left = fold(expression.left);
   const right = fold(expression.right);

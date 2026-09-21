@@ -35,6 +35,7 @@ function rightRotate(value: number, amount: number): number {
  * @param bytes - Input byte array to hash.
  * @returns Formatted hash string prefixed with hash version.
  */
+// skipcq: JS-R1005
 export function sha256ArtifactHash(bytes: Uint8Array): string {
   const source = Uint8Array.from(bytes);
   const bitLength = source.byteLength * 8;
@@ -57,31 +58,31 @@ export function sha256ArtifactHash(bytes: Uint8Array): string {
       schedule[index] = ((schedule[index - 16] ?? 0) + sigmaA + (schedule[index - 7] ?? 0) + sigmaB) >>> 0;
     }
 
-    let [a, b, c, d, fifthStateWord, f, g, h] = state;
+    let [stateA, stateB, stateC, stateD, stateE, stateF, stateG, stateH] = state;
     for (let index = 0; index < 64; index += 1) {
-      const sigmaA = rightRotate(fifthStateWord, 6) ^ rightRotate(fifthStateWord, 11) ^ rightRotate(fifthStateWord, 25);
-      const choice = (fifthStateWord & f) ^ (~fifthStateWord & g);
-      const temporary1 = (h + sigmaA + choice + (ROUND_CONSTANTS[index] ?? 0) + (schedule[index] ?? 0)) >>> 0;
-      const sigmaB = rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22);
-      const majority = (a & b) ^ (a & c) ^ (b & c);
+      const sigmaA = rightRotate(stateE, 6) ^ rightRotate(stateE, 11) ^ rightRotate(stateE, 25);
+      const choice = (stateE & stateF) ^ (~stateE & stateG);
+      const temporary1 = (stateH + sigmaA + choice + (ROUND_CONSTANTS[index] ?? 0) + (schedule[index] ?? 0)) >>> 0;
+      const sigmaB = rightRotate(stateA, 2) ^ rightRotate(stateA, 13) ^ rightRotate(stateA, 22);
+      const majority = (stateA & stateB) ^ (stateA & stateC) ^ (stateB & stateC);
       const temporary2 = (sigmaB + majority) >>> 0;
-      h = g;
-      g = f;
-      f = fifthStateWord;
-      fifthStateWord = (d + temporary1) >>> 0;
-      d = c;
-      c = b;
-      b = a;
-      a = (temporary1 + temporary2) >>> 0;
+      stateH = stateG;
+      stateG = stateF;
+      stateF = stateE;
+      stateE = (stateD + temporary1) >>> 0;
+      stateD = stateC;
+      stateC = stateB;
+      stateB = stateA;
+      stateA = (temporary1 + temporary2) >>> 0;
     }
-    state[0] = ((state[0] ?? 0) + a) >>> 0;
-    state[1] = ((state[1] ?? 0) + b) >>> 0;
-    state[2] = ((state[2] ?? 0) + c) >>> 0;
-    state[3] = ((state[3] ?? 0) + d) >>> 0;
-    state[4] = ((state[4] ?? 0) + fifthStateWord) >>> 0;
-    state[5] = ((state[5] ?? 0) + f) >>> 0;
-    state[6] = ((state[6] ?? 0) + g) >>> 0;
-    state[7] = ((state[7] ?? 0) + h) >>> 0;
+    state[0] = ((state[0] ?? 0) + stateA) >>> 0;
+    state[1] = ((state[1] ?? 0) + stateB) >>> 0;
+    state[2] = ((state[2] ?? 0) + stateC) >>> 0;
+    state[3] = ((state[3] ?? 0) + stateD) >>> 0;
+    state[4] = ((state[4] ?? 0) + stateE) >>> 0;
+    state[5] = ((state[5] ?? 0) + stateF) >>> 0;
+    state[6] = ((state[6] ?? 0) + stateG) >>> 0;
+    state[7] = ((state[7] ?? 0) + stateH) >>> 0;
   }
 
   return `${HASH_VERSION}:${state.map((value) => value.toString(16).padStart(8, '0')).join('')}`;

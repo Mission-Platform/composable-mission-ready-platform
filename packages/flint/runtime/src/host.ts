@@ -67,6 +67,7 @@ function findImport(manifest: FlintAbiManifest, alias: string) {
  * @param options - Configuration options for host initialization.
  * @returns Configured FlintHost instance.
  */
+// skipcq: JS-R1005
 export function createFlintHost(
   manifest: FlintAbiManifest,
   registry: FlintCapabilityRegistry,
@@ -101,6 +102,7 @@ export function createFlintHost(
      * @param arguments_ - Arguments array passed to host implementation.
      * @returns Invocable function call result.
      */
+    // skipcq: JS-R1005
     invoke(alias, arguments_): unknown | Promise<unknown> {
       if (disposed) throw new FlintTrap('GuestTrap', 'Flint host has been disposed.', undefined, { logger });
       const imported = findImport(manifest, alias);

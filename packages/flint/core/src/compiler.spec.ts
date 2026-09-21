@@ -507,7 +507,7 @@ export fn literal() -> string { return "generated"; }
   });`,
       )
       .replaceAll(
-        /wasmExports\.fws_dealloc\(([^,]+),\s*([^\)]+)\)/gu,
+        /wasmExports\.fws_dealloc\(([^,]+),\s*([^)]+)\)/gu,
         (_match, pointerExpr: string, sizeExpr: string) => {
           const pointer = pointerExpr.trim();
           const size = sizeExpr.trim();

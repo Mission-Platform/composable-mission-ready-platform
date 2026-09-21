@@ -35,6 +35,7 @@ function unsignedLeb(value: number): number[] {
  * @param value - Signed integer to encode.
  * @returns LEB128 byte array.
  */
+// skipcq: JS-R1005
 function signedLeb(value: number): number[] {
   const result: number[] = [];
   let remaining = BigInt(value);
@@ -48,29 +49,48 @@ function signedLeb(value: number): number[] {
   return result;
 }
 
+// skipcq: JS-D1001
 const get = (index: number): number[] => [0x20, ...unsignedLeb(index)];
+// skipcq: JS-C1002, JS-D1001
 const set = (index: number): number[] => [0x21, ...unsignedLeb(index)];
-const c = (value: number): number[] => [0x41, ...signedLeb(value)];
+const c32 = (value: number): number[] => [0x41, ...signedLeb(value)];
+// skipcq: JS-D1001
 const load = (): number[] => [0x28, 0x02, 0x00];
+// skipcq: JS-D1001
 const load8 = (): number[] => [0x2d, 0x00, 0x00];
+// skipcq: JS-D1001
 const store = (): number[] => [0x36, 0x02, 0x00];
+// skipcq: JS-D1001
 const memoryCopy = (): number[] => [0xfc, 0x0a, 0x00, 0x00];
+// skipcq: JS-D1001
 const add = (): number[] => [0x6a];
+// skipcq: JS-D1001
 const mul = (): number[] => [0x6c];
+// skipcq: JS-D1001
 const eq = (): number[] => [0x46];
+// skipcq: JS-D1001
 const lt_s = (): number[] => [0x48];
+// skipcq: JS-D1001
 const lt_u = (): number[] => [0x49];
+// skipcq: JS-D1001
 const gt_u = (): number[] => [0x4b];
+// skipcq: JS-D1001
 const le_s = (): number[] => [0x4c];
+// skipcq: JS-D1001
 const ge_s = (): number[] => [0x4e];
+// skipcq: JS-D1001
 const ge_u = (): number[] => [0x4f];
+// skipcq: JS-D1001
 const and = (): number[] => [0x71];
+// skipcq: JS-D1001
 const call = (index: number): number[] => [0x10, ...unsignedLeb(index)];
+// skipcq: JS-D1001
 const returnValue = (): number[] => [0x0f];
+// skipcq: JS-D1001
 const end = (): number[] => [0x0b];
 
 /** Convert an i32-slot index to a byte offset (`index * 4`). */
-const slotBytes = (indexLocal: number): number[] => [...get(indexLocal), ...c(4), ...mul()];
+const slotBytes = (indexLocal: number): number[] => [...get(indexLocal), ...c32(4), ...mul()];
 
 /** i32 locals declaration: one group of `count` i32 locals. */
 function index32Locals(count: number): number[] {
@@ -93,20 +113,20 @@ function regexClassMatchBody(): number[] {
   const body: number[] = [...index32Locals(4)];
 
   body.push(...get(classes), ...slotBytes(offset), ...add(), ...load(), ...set(count));
-  body.push(...c(0), ...set(index), 0x02, 0x40, 0x03, 0x40); // loop
+  body.push(...c32(0), ...set(index), 0x02, 0x40, 0x03, 0x40); // loop
   body.push(...get(index), ...get(count), ...ge_u(), 0x0d, 0x01);
 
   // lo = classes[offset + 1 + index*2]
   body.push(
     ...get(classes),
     ...get(offset),
-    ...c(1),
+    ...c32(1),
     ...add(),
     ...get(index),
-    ...c(2),
+    ...c32(2),
     ...mul(),
     ...add(),
-    ...c(4),
+    ...c32(4),
     ...mul(),
     ...add(),
     ...load(),
@@ -116,13 +136,13 @@ function regexClassMatchBody(): number[] {
   body.push(
     ...get(classes),
     ...get(offset),
-    ...c(2),
+    ...c32(2),
     ...add(),
     ...get(index),
-    ...c(2),
+    ...c32(2),
     ...mul(),
     ...add(),
-    ...c(4),
+    ...c32(4),
     ...mul(),
     ...add(),
     ...load(),
@@ -130,10 +150,10 @@ function regexClassMatchBody(): number[] {
   );
   body.push(...get(code), ...get(lo), ...ge_s());
   body.push(...get(code), ...get(hi), ...le_s());
-  body.push(...and(), 0x04, 0x40, ...c(1), ...returnValue(), ...end());
-  body.push(...get(index), ...c(1), ...add(), ...set(index), 0x0c, 0x00);
+  body.push(...and(), 0x04, 0x40, ...c32(1), ...returnValue(), ...end());
+  body.push(...get(index), ...c32(1), ...add(), ...set(index), 0x0c, 0x00);
   body.push(...end(), ...end());
-  body.push(...c(0), ...returnValue(), ...end());
+  body.push(...c32(0), ...returnValue(), ...end());
   return body;
 }
 
@@ -153,10 +173,12 @@ function regexRunBody(runIndex: number, classIndex: number): number[] {
   const scratch = 8;
   const slots = 9;
   const depth = 10;
+  // skipcq: JS-C1002
   const base = 11;
   const op = 12;
-  const a = 13;
-  const b = 14;
+  const operandA = 13;
+  // skipcq: JS-C1002
+  const operandB = 14;
   const temporary = 15;
   const frame = 16;
 
@@ -165,38 +187,38 @@ function regexRunBody(runIndex: number, classIndex: number): number[] {
   // loop $dispatch — single continue point at label 0 from the loop body.
 
   // base = program + pc * 12
-  body.push(...get(program), ...get(pc), ...c(12), ...mul(), ...add(), ...set(base));
+  body.push(...get(program), ...get(pc), ...c32(12), ...mul(), ...add(), ...set(base));
   body.push(...get(base), ...load(), ...set(op));
-  body.push(...get(base), ...c(4), ...add(), ...load(), ...set(a));
-  body.push(...get(base), ...c(8), ...add(), ...load(), ...set(b));
+  body.push(...get(base), ...c32(4), ...add(), ...load(), ...set(operandA));
+  body.push(...get(base), ...c32(8), ...add(), ...load(), ...set(operandB));
 
   // if op == MATCH
-  body.push(...get(op), ...c(Op.MATCH), ...eq(), 0x04, 0x40);
+  body.push(...get(op), ...c32(Op.MATCH), ...eq(), 0x04, 0x40);
   body.push(...get(requireEnd), 0x04, 0x40);
   body.push(...get(sp), ...get(length), ...eq(), ...returnValue());
-  body.push(0x05, ...c(1), ...returnValue(), ...end(), 0x05); // else
+  body.push(0x05, ...c32(1), ...returnValue(), ...end(), 0x05); // else
 
   // if op == CHAR
-  body.push(...get(op), ...c(Op.CHAR), ...eq(), 0x04, 0x40);
+  body.push(...get(op), ...c32(Op.CHAR), ...eq(), 0x04, 0x40);
   body.push(...get(sp), ...get(length), ...lt_u());
-  body.push(...get(input), ...get(sp), ...add(), ...load8(), ...get(a), ...eq(), ...and(), 0x04, 0x40);
-  body.push(...get(pc), ...c(1), ...add(), ...set(pc));
-  body.push(...get(sp), ...c(1), ...add(), ...set(sp));
-  body.push(0x05, ...c(0), ...returnValue(), ...end(), 0x05); // else
+  body.push(...get(input), ...get(sp), ...add(), ...load8(), ...get(operandA), ...eq(), ...and(), 0x04, 0x40);
+  body.push(...get(pc), ...c32(1), ...add(), ...set(pc));
+  body.push(...get(sp), ...c32(1), ...add(), ...set(sp));
+  body.push(0x05, ...c32(0), ...returnValue(), ...end(), 0x05); // else
 
   // if op == ANY
-  body.push(...get(op), ...c(Op.ANY), ...eq(), 0x04, 0x40);
+  body.push(...get(op), ...c32(Op.ANY), ...eq(), 0x04, 0x40);
   body.push(...get(sp), ...get(length), ...lt_u(), 0x04, 0x40);
-  body.push(...get(pc), ...c(1), ...add(), ...set(pc));
-  body.push(...get(sp), ...c(1), ...add(), ...set(sp));
-  body.push(0x05, ...c(0), ...returnValue(), ...end(), 0x05); // else
+  body.push(...get(pc), ...c32(1), ...add(), ...set(pc));
+  body.push(...get(sp), ...c32(1), ...add(), ...set(sp));
+  body.push(0x05, ...c32(0), ...returnValue(), ...end(), 0x05); // else
 
   // if op == CLASS
-  body.push(...get(op), ...c(Op.CLASS), ...eq(), 0x04, 0x40);
-  body.push(...get(sp), ...get(length), ...ge_u(), 0x04, 0x40, ...c(0), ...returnValue(), ...end());
+  body.push(...get(op), ...c32(Op.CLASS), ...eq(), 0x04, 0x40);
+  body.push(...get(sp), ...get(length), ...ge_u(), 0x04, 0x40, ...c32(0), ...returnValue(), ...end());
   body.push(
     ...get(classes),
-    ...get(a),
+    ...get(operandA),
     ...get(input),
     ...get(sp),
     ...add(),
@@ -204,73 +226,73 @@ function regexRunBody(runIndex: number, classIndex: number): number[] {
     ...call(classIndex),
     ...set(temporary),
   );
-  body.push(...get(temporary), ...get(b), ...c(0), ...eq(), ...eq(), 0x04, 0x40);
-  body.push(...get(pc), ...c(1), ...add(), ...set(pc));
-  body.push(...get(sp), ...c(1), ...add(), ...set(sp));
-  body.push(0x05, ...c(0), ...returnValue(), ...end(), 0x05); // else
+  body.push(...get(temporary), ...get(operandB), ...c32(0), ...eq(), ...eq(), 0x04, 0x40);
+  body.push(...get(pc), ...c32(1), ...add(), ...set(pc));
+  body.push(...get(sp), ...c32(1), ...add(), ...set(sp));
+  body.push(0x05, ...c32(0), ...returnValue(), ...end(), 0x05); // else
 
   // if op == BOL
-  body.push(...get(op), ...c(Op.BOL), ...eq(), 0x04, 0x40);
-  body.push(...get(sp), ...c(0), ...eq(), 0x04, 0x40);
-  body.push(...get(pc), ...c(1), ...add(), ...set(pc));
-  body.push(0x05, ...c(0), ...returnValue(), ...end(), 0x05); // else
+  body.push(...get(op), ...c32(Op.BOL), ...eq(), 0x04, 0x40);
+  body.push(...get(sp), ...c32(0), ...eq(), 0x04, 0x40);
+  body.push(...get(pc), ...c32(1), ...add(), ...set(pc));
+  body.push(0x05, ...c32(0), ...returnValue(), ...end(), 0x05); // else
 
   // if op == EOL
-  body.push(...get(op), ...c(Op.EOL), ...eq(), 0x04, 0x40);
+  body.push(...get(op), ...c32(Op.EOL), ...eq(), 0x04, 0x40);
   body.push(...get(sp), ...get(length), ...eq(), 0x04, 0x40);
-  body.push(...get(pc), ...c(1), ...add(), ...set(pc));
-  body.push(0x05, ...c(0), ...returnValue(), ...end(), 0x05); // else
+  body.push(...get(pc), ...c32(1), ...add(), ...set(pc));
+  body.push(0x05, ...c32(0), ...returnValue(), ...end(), 0x05); // else
 
   // if op == SAVE
-  body.push(...get(op), ...c(Op.SAVE), ...eq(), 0x04, 0x40);
-  body.push(...get(captures), ...slotBytes(a), ...add(), ...get(sp), ...store());
-  body.push(...get(pc), ...c(1), ...add(), ...set(pc), 0x05); // else
+  body.push(...get(op), ...c32(Op.SAVE), ...eq(), 0x04, 0x40);
+  body.push(...get(captures), ...slotBytes(operandA), ...add(), ...get(sp), ...store());
+  body.push(...get(pc), ...c32(1), ...add(), ...set(pc), 0x05); // else
 
   // if op == JMP
-  body.push(...get(op), ...c(Op.JMP), ...eq(), 0x04, 0x40);
-  body.push(...get(a), ...set(pc), 0x05); // else
+  body.push(...get(op), ...c32(Op.JMP), ...eq(), 0x04, 0x40);
+  body.push(...get(operandA), ...set(pc), 0x05); // else
 
   // if op == SPLIT
-  body.push(...get(op), ...c(Op.SPLIT), ...eq(), 0x04, 0x40);
+  body.push(...get(op), ...c32(Op.SPLIT), ...eq(), 0x04, 0x40);
   // frame = scratch + depth * slots * 4
-  body.push(...get(scratch), ...get(depth), ...get(slots), ...mul(), ...c(4), ...mul(), ...add(), ...set(frame));
+  body.push(...get(scratch), ...get(depth), ...get(slots), ...mul(), ...c32(4), ...mul(), ...add(), ...set(frame));
   // snapshot captures -> frame
-  body.push(...get(frame), ...get(captures), ...get(slots), ...c(4), ...mul(), ...memoryCopy());
+  body.push(...get(frame), ...get(captures), ...get(slots), ...c32(4), ...mul(), ...memoryCopy());
   // if run(a, sp, depth+1): return 1
   body.push(
     ...get(program),
     ...get(classes),
     ...get(input),
     ...get(length),
-    ...get(a),
+    ...get(operandA),
     ...get(sp),
     ...get(requireEnd),
     ...get(captures),
     ...get(scratch),
     ...get(slots),
     ...get(depth),
-    ...c(1),
+    ...c32(1),
     ...add(),
     ...call(runIndex),
     0x04,
     0x40,
-    ...c(1),
+    ...c32(1),
     ...returnValue(),
     ...end(),
   );
   // restore captures from frame
-  body.push(...get(captures), ...get(frame), ...get(slots), ...c(4), ...mul(), ...memoryCopy());
-  body.push(...get(b), ...set(pc), 0x05); // else unknown
-  body.push(...c(0), ...returnValue());
+  body.push(...get(captures), ...get(frame), ...get(slots), ...c32(4), ...mul(), ...memoryCopy());
+  body.push(...get(operandB), ...set(pc), 0x05); // else unknown
+  body.push(...c32(0), ...returnValue());
 
   // close if-else chain: SPLIT, JMP, SAVE, EOL, BOL, CLASS, ANY, CHAR, MATCH
-  for (let n = 0; n < 9; n++) body.push(...end());
+  for (let branchIndex = 0; branchIndex < 9; branchIndex++) body.push(...end());
 
   // continue dispatch (label 0 = loop, from loop-body depth)
   body.push(0x0c, 0x00);
   body.push(...end()); // end loop
   // unreachable
-  body.push(...c(0), ...returnValue());
+  body.push(...c32(0), ...returnValue());
   body.push(...end());
   return body;
 }
@@ -302,45 +324,48 @@ function regexEntryBody(runIndex: number): number[] {
 
   const body: number[] = [...index32Locals(4)];
 
+  // skipcq: JS-D1001
   const initCaptures = (): number[] => {
     const out: number[] = [];
-    out.push(...c(0), ...set(index), 0x02, 0x40, 0x03, 0x40);
+    out.push(...c32(0), ...set(index), 0x02, 0x40, 0x03, 0x40);
     out.push(...get(index), ...get(slots), ...ge_u(), 0x0d, 0x01);
-    out.push(...get(captures), ...slotBytes(index), ...add(), ...c(-1), ...store());
-    out.push(...get(index), ...c(1), ...add(), ...set(index));
+    out.push(...get(captures), ...slotBytes(index), ...add(), ...c32(-1), ...store());
+    out.push(...get(index), ...c32(1), ...add(), ...set(index));
     out.push(0x0c, 0x00, ...end(), ...end());
     return out;
   };
 
+  // skipcq: JS-D1001
   const callRun = (startLocal: number): number[] => [
     ...get(program),
     ...get(classes),
     ...get(input),
     ...get(length),
-    ...c(0),
+    ...c32(0),
     ...get(startLocal),
     ...get(requireEnd),
     ...get(captures),
     ...get(scratch),
     ...get(slots),
-    ...c(0),
+    ...c32(0),
     ...call(runIndex),
   ];
 
+  // skipcq: JS-D1001
   const returnResult = (): number[] => {
     const out: number[] = [];
-    out.push(...get(group), ...c(0), ...lt_s(), 0x04, 0x40);
+    out.push(...get(group), ...c32(0), ...lt_s(), 0x04, 0x40);
     out.push(...get(matched), ...returnValue());
     out.push(...end());
-    out.push(...get(matched), ...c(0), ...eq(), 0x04, 0x40, ...c(-1), ...returnValue(), ...end());
+    out.push(...get(matched), ...c32(0), ...eq(), 0x04, 0x40, ...c32(-1), ...returnValue(), ...end());
     out.push(
       ...get(captures),
       ...get(group),
-      ...c(2),
+      ...c32(2),
       ...mul(),
       ...get(captureEnd),
       ...add(),
-      ...c(4),
+      ...c32(4),
       ...mul(),
       ...add(),
       ...load(),
@@ -349,8 +374,8 @@ function regexEntryBody(runIndex: number): number[] {
     return out;
   };
 
-  body.push(...get(mode), ...c(1), ...eq(), ...set(requireEnd));
-  body.push(...c(0), ...set(matched));
+  body.push(...get(mode), ...c32(1), ...eq(), ...set(requireEnd));
+  body.push(...c32(0), ...set(matched));
 
   // search mode
   // Control-flow layout:
@@ -359,14 +384,14 @@ function regexEntryBody(runIndex: number): number[] {
   //       loop $search
   //         ...
   //         if matched: br $done   // depth 2 from inside the if
-  body.push(...get(mode), ...c(2), ...eq(), 0x04, 0x40);
+  body.push(...get(mode), ...c32(2), ...eq(), 0x04, 0x40);
   body.push(...get(sp), ...set(attempt), 0x02, 0x40, 0x03, 0x40); // loop $search
   body.push(...get(attempt), ...get(length), ...gt_u(), 0x0d, 0x01); // -> $done
   body.push(...initCaptures());
   body.push(...callRun(attempt), 0x04, 0x40);
-  body.push(...c(1), ...set(matched), 0x0c, 0x02);
+  body.push(...c32(1), ...set(matched), 0x0c, 0x02);
   body.push(...end()); // end if matched
-  body.push(...get(attempt), ...c(1), ...add(), ...set(attempt), 0x0c, 0x00); // continue $search
+  body.push(...get(attempt), ...c32(1), ...add(), ...set(attempt), 0x0c, 0x00); // continue $search
   body.push(...end()); // end loop
   body.push(...end()); // end block
   body.push(...returnResult(), 0x05); // else single attempt
@@ -375,7 +400,7 @@ function regexEntryBody(runIndex: number): number[] {
   body.push(...returnResult());
   body.push(...end());
 
-  body.push(...c(0), ...returnValue());
+  body.push(...c32(0), ...returnValue());
   body.push(...end());
   return body;
 }

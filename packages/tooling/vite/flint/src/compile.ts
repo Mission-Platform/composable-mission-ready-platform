@@ -131,6 +131,7 @@ export function resolveFlintPath(root: string, value: string): string {
   return isAbsolute(value) ? value : resolve(root, value);
 }
 
+// skipcq: JS-D1001
 function sourceMapFor(
   fileName: string,
   source: string,
@@ -154,6 +155,7 @@ function sourceMapFor(
 
 let watTemporaryFile = 0;
 
+// skipcq: JS-D1001
 function watCacheFor(options: FlintPluginOptions): FlintWatCache | undefined {
   if (options.persistWat === false) return undefined;
   const root =
@@ -223,6 +225,7 @@ const graphResolverIds = new WeakMap<
 >();
 let nextGraphResolverId = 1;
 
+// skipcq: JS-D1001
 function graphResolverKey(options: FlintPluginOptions): string | undefined {
   if (options.graphCacheKey !== undefined) return options.graphCacheKey;
   if (options.resolveModule === undefined) return undefined;
@@ -235,6 +238,7 @@ function graphResolverKey(options: FlintPluginOptions): string | undefined {
   return `resolver-${id}`;
 }
 
+// skipcq: JS-D1001
 function graphCacheKey(
   fileName: string,
   options: FlintPluginOptions,
@@ -254,6 +258,7 @@ function graphCacheKey(
 }
 
 /** Compile one FWS file and return its artifact plus source-map metadata. */
+// skipcq: JS-R1005
 export function compileFlintFile(
   fileName: string,
   options: FlintPluginOptions,
@@ -302,6 +307,7 @@ export function compileFlintFile(
 }
 
 /** Resolve, link, and compile an imported FWS module graph. */
+// skipcq: JS-R1005
 export async function compileFlintGraph(
   fileName: string,
   options: FlintPluginOptions,
@@ -313,6 +319,7 @@ export async function compileFlintGraph(
       selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     }),
 ): Promise<FlintCompiledModule> {
+  // skipcq: JS-D1001
   const resolveGraph = (): Promise<FlintGraphResult> =>
     resolveFlintModuleGraph([fileName], resolver, {
       projectRoots:

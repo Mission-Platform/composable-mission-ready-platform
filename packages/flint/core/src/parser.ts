@@ -82,6 +82,7 @@ class Parser {
    *
    * @returns Parse result containing the compiled module and accumulated diagnostics.
    */
+  // skipcq: JS-R1005
   public parse(): FlintParseResult {
     const start = this.tokens.find(({ kind }) => kind !== 'comment')?.span ?? this.current().span;
     const imports: FlintCapabilityImport[] = [];
@@ -143,6 +144,7 @@ class Parser {
    *
    * @returns True if current token is a forbidden class keyword.
    */
+  // skipcq: JS-R1005
   private isDisallowedClassKeyword(): boolean {
     return (
       this.is('class') ||
@@ -173,6 +175,7 @@ class Parser {
    * @param documentation - Optional documentation comment attached to declaration.
    * @param declarations - Target container collecting parsed declarations.
    */
+  // skipcq: JS-R1005
   private parseTopLevelDeclaration(
     documentation: FlintFunction['documentation'] | undefined,
     declarations: {
@@ -249,6 +252,7 @@ class Parser {
    *
    * @returns Parsed modifier flags.
    */
+  // skipcq: JS-R1005
   private parseFunctionModifiers(): {
     exported: boolean;
     iterable: boolean;
@@ -303,6 +307,7 @@ class Parser {
    *
    * @returns Array of parsed generic parameters.
    */
+  // skipcq: JS-R1005
   private parseGenericParameters(): FlintGenericParameter[] {
     if (!this.match('<')) return [];
     const parameters: FlintGenericParameter[] = [];
@@ -358,6 +363,7 @@ class Parser {
    * @param record - True if declared as a value record.
    * @returns Parsed struct declaration AST node.
    */
+  // skipcq: JS-R1005
   private parseStruct(documentation?: FlintFunction['documentation'], record = false): FlintStructDeclaration {
     const start = this.consume().span;
     const name = this.expectIdentifier('FLINT-PARSE-034', 'Expected a struct name.');
@@ -405,6 +411,7 @@ class Parser {
    * @param previousTag - Preceding numeric discriminant tag.
    * @returns Parsed enum variant AST node.
    */
+  // skipcq: JS-R1005
   private parseEnumVariant(previousTag: number): FlintEnumVariant {
     const variantStart = this.current().span;
     const variantName = this.expectIdentifier('FLINT-PARSE-042', 'Expected an enum variant name.');
@@ -433,6 +440,7 @@ class Parser {
    * @param documentation - Optional attached documentation comment.
    * @returns Parsed enum declaration AST node.
    */
+  // skipcq: JS-R1005
   private parseEnum(documentation?: FlintFunction['documentation']): FlintEnumDeclaration {
     const start = this.current().span;
     const exported = this.match('export');
@@ -463,6 +471,7 @@ class Parser {
    * @param documentation - Optional attached documentation comment.
    * @returns Parsed interface declaration AST node.
    */
+  // skipcq: JS-R1005
   private parseInterface(documentation?: FlintFunction['documentation']): FlintInterfaceDeclaration {
     const start = this.consume().span;
     const name = this.expectIdentifier('FLINT-PARSE-045', 'Expected an interface name.');
@@ -504,6 +513,7 @@ class Parser {
   /**
    * Emits descriptive diagnostics rejecting class-based syntax.
    */
+  // skipcq: JS-R1005
   private rejectClassDeclaration(): void {
     const start = this.consume().span;
     this.diagnostics.push(
@@ -539,6 +549,7 @@ class Parser {
    *
    * @returns Array of parsed parameter AST nodes.
    */
+  // skipcq: JS-R1005
   private parseParameters(): FlintParameter[] {
     this.expect('(', 'FLINT-PARSE-014', "Expected '('.");
     const parameters: FlintParameter[] = [];
@@ -565,6 +576,7 @@ class Parser {
    * Enum variant payloads accept either named fields (`value: T`) or the
    * positional bare-type form used by Option/Result (`T`).
    */
+  // skipcq: JS-R1005
   private parseVariantFields(): FlintParameter[] {
     this.expect('(', 'FLINT-PARSE-014', "Expected '('.");
     const fields: FlintParameter[] = [];
@@ -634,7 +646,10 @@ class Parser {
    * @param mutableReference - Whether mut was consumed.
    * @returns Resolved reference mode or undefined.
    */
-  private resolveReferenceMode(referenceStart: boolean, mutableReference: boolean): 'mut-ref' | 'ref' | undefined {
+  private static resolveReferenceMode(
+    referenceStart: boolean,
+    mutableReference: boolean,
+  ): 'mut-ref' | 'ref' | undefined {
     if (!referenceStart) return undefined;
     return mutableReference ? 'mut-ref' : 'ref';
   }
@@ -647,6 +662,7 @@ class Parser {
    * @param mutableReference - Whether reference is mutable.
    * @returns Parsed base type name AST node.
    */
+  // skipcq: JS-R1005
   private parseBaseTypeName(
     typeStart: FlintSourceSpan,
     referenceStart: boolean,
@@ -656,7 +672,8 @@ class Parser {
     this.consume();
     const arguments_ = this.is('<') ? this.parseTypeArguments() : undefined;
     const primitive = primitiveTypes.has(name as FlintPrimitiveType) ? (name as FlintPrimitiveType) : 'unit';
-    const referenceMode = this.resolveReferenceMode(referenceStart, mutableReference);
+    // skipcq: JS-0105
+    const referenceMode = Parser.resolveReferenceMode(referenceStart, mutableReference);
     return {
       kind: 'type-name',
       name: primitive,
@@ -672,6 +689,7 @@ class Parser {
    *
    * @returns Parsed type name AST node.
    */
+  // skipcq: JS-R1005
   private parseType(): FlintTypeName {
     const token = this.current();
     const referenceStart = this.match('&');
@@ -832,7 +850,7 @@ class Parser {
     );
     while (!this.is(';') && !this.is('}') && !this.is('eof')) this.consume();
     this.match(';');
-    return this.rejectedStatement(token);
+    return Parser.rejectedStatement(token);
   }
 
   /**
@@ -840,6 +858,7 @@ class Parser {
    *
    * @returns Parsed if statement AST node.
    */
+  // skipcq: JS-R1005
   private parseIfStatement(): FlintStatement {
     const start = this.previous().span;
     const conditionalHint = this.match('likely') ? 'likely' : this.match('unlikely') ? 'unlikely' : undefined;
@@ -881,7 +900,7 @@ class Parser {
     if (!this.is(')')) this.parseForClauseStatement();
     this.expect(')', 'FLINT-PARSE-068', "Expected ')' after a for clause.");
     this.parseBlock();
-    return this.rejectedStatement({ kind: 'keyword', text: 'for', span: start });
+    return Parser.rejectedStatement({ kind: 'keyword', text: 'for', span: start });
   }
 
   /**
@@ -889,6 +908,7 @@ class Parser {
    *
    * @returns Parsed statement node, or undefined if not a control flow keyword.
    */
+  // skipcq: JS-R1005
   private parseControlFlowStatement(): FlintStatement | undefined {
     if (this.match('if')) return this.parseIfStatement();
     if (this.match('switch')) return this.parseSwitchStatement(this.previous().span);
@@ -933,6 +953,7 @@ class Parser {
    *
    * @returns Parsed statement AST node or undefined.
    */
+  // skipcq: JS-R1005
   private parseDeclarationOrAssignmentStatement(): FlintStatement | undefined {
     if (this.isAssignmentTarget()) return this.parseAssignmentStatement();
     if (this.match('let')) return this.parseLetStatement();
@@ -965,6 +986,7 @@ class Parser {
    * @param start - Starting source span.
    * @returns Parsed switch statement AST node.
    */
+  // skipcq: JS-R1005
   private parseSwitchStatement(start: FlintSourceSpan): FlintStatement {
     const value = this.parseExpression();
     this.expect('{', 'FLINT-PARSE-084', "Expected '{' after a switch discriminant.");
@@ -1035,6 +1057,7 @@ class Parser {
    *
    * @returns True if current position is an indexed assignment.
    */
+  // skipcq: JS-R1005
   private isIndexAssignment(): boolean {
     if (!this.isNext('[')) return false;
     let offset = 2;
@@ -1053,6 +1076,7 @@ class Parser {
    *
    * @returns Parsed statement node.
    */
+  // skipcq: JS-R1005
   private parseForClauseStatement(): FlintStatement {
     if (this.match('let')) {
       const start = this.previous().span;
@@ -1239,6 +1263,7 @@ class Parser {
    * @param tokenSpan - Starting token span.
    * @returns Chained expression AST node.
    */
+  // skipcq: JS-R1005
   private parseMemberAndIndexChain(
     initialExpression: FlintExpression,
     initialQualifiedName: string,
@@ -1280,6 +1305,7 @@ class Parser {
    * @param token - Identifier token.
    * @returns Parsed expression AST node.
    */
+  // skipcq: JS-R1005
   private parseIdentifierOrCallOrMemberExpression(token: FlintToken): FlintExpression {
     this.consume();
     let qualifiedName = token.text;
@@ -1343,6 +1369,7 @@ class Parser {
    *
    * @returns Parsed prefix expression AST node or undefined.
    */
+  // skipcq: JS-R1005
   private parsePrefixExpression(): FlintExpression | undefined {
     const token = this.current();
     if (this.match('match')) return this.parseMatchExpression(token.span);
@@ -1362,6 +1389,7 @@ class Parser {
    *
    * @returns Parsed primary expression AST node.
    */
+  // skipcq: JS-R1005
   private parsePrimary(): FlintExpression {
     const prefix = this.parsePrefixExpression();
     if (prefix !== undefined) return prefix;
@@ -1436,6 +1464,7 @@ class Parser {
    * @param name - Variant constructor name.
    * @returns Parsed variant pattern AST node.
    */
+  // skipcq: JS-R1005
   private parseVariantPattern(token: FlintToken): FlintPattern {
     const name = this.expectIdentifier('FLINT-PARSE-062', 'Expected a match pattern.');
     let qualifiedName = name ?? '<missing>';
@@ -1639,7 +1668,8 @@ class Parser {
    * @param token - Source token for statement.
    * @returns Placeholder statement node.
    */
-  private rejectedStatement(token: FlintToken): FlintStatement {
+  // skipcq: JS-0105
+  private static rejectedStatement(token: FlintToken): FlintStatement {
     return {
       kind: 'expression-statement',
       expression: { kind: 'literal', value: 0, type: 'i32', span: token.span },

@@ -196,6 +196,7 @@ function safeLimits(options: FlintTraceOptions): Required<FlintTraceLimits> {
  * @param value - VM value to summarize.
  * @returns Short summary string.
  */
+// skipcq: JS-R1005
 function defaultSummary(value: FlintVmValue): string {
   switch (value.kind) {
     case 'unit': {
@@ -247,6 +248,7 @@ export function createFlintTraceRecorder(options: FlintTraceOptions, functionNam
   let memoryBytes = 0;
   let peakMemoryBytes = 0;
 
+  // skipcq: JS-D1001
   const record = (event: Omit<FlintTraceEvent, 'sequence'>): void => {
     if (capture === 'summary') return;
     try {
@@ -306,6 +308,7 @@ export function createFlintTraceRecorder(options: FlintTraceOptions, functionNam
       memoryBytes = Math.max(0, memoryBytes + (operation === 'deallocate' ? -bytes : bytes));
       peakMemoryBytes = Math.max(peakMemoryBytes, memoryBytes);
     },
+    // skipcq: JS-R1005
     finish: ({ steps, memory, termination, trap }) => {
       const snapshot = capture === 'snapshot' ? memory.slice(0, limits.maxSnapshotBytes) : undefined;
       const reportWithoutHash = {

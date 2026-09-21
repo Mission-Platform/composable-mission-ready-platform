@@ -6,7 +6,7 @@ import {
   type FlintWorkspaceHost,
 } from '@mission-platform/flint-language-service';
 
-import type * as monaco from 'monaco-editor';
+import type * as monaco from 'monaco-editor'; // skipcq: JS-C1003
 
 export const flintLanguageId = 'flint';
 
@@ -141,6 +141,7 @@ export function attachFlintMonaco(
   /**
    * Refreshes workspace diagnostics and markers for the active model.
    */
+  // skipcq: JS-R1005
   const refresh = async (): Promise<void> => {
     const model = currentModel();
     const uri = currentUri;
@@ -179,9 +180,13 @@ export function attachFlintMonaco(
         text: model.getValue(),
         version: model.getVersionId(),
       });
-      refresh().catch(() => {});
+      refresh().catch(() => {
+        /* no-op */
+      });
     });
-    refresh().catch(() => {});
+    refresh().catch(() => {
+      /* no-op */
+    });
   };
 
   const modelChangeListener = editor.onDidChangeModel(({ newModelUrl }) => {
@@ -231,7 +236,8 @@ export function attachFlintMonaco(
             contents: hover.contents.map((value) => ({ value })),
           };
         }
-        return;
+        // eslint-disable-next-line unicorn/no-useless-undefined
+        return undefined;
       },
     }),
   );

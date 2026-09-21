@@ -5,6 +5,7 @@ import { resolveFlintModuleGraph } from './graph.ts';
 
 function resolver(files: Readonly<Record<string, string>>) {
   return {
+    // skipcq: JS-R1005
     resolve: (source: string, importer: string) => {
       const base = importer.slice(0, importer.lastIndexOf('/'));
       const parts = `${base}/${source}`.split('/');

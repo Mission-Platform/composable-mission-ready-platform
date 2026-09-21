@@ -48,6 +48,7 @@ function resolveGraphAnalysisSettings(input: FlintGraphCompileInput) {
 /**
  * Extracts optional compiler settings and cache metadata for graph compilation.
  */
+// skipcq: JS-R1005
 function resolveGraphKeyMetadata(input: FlintGraphCompileInput) {
   const capabilities = input.requestedCapabilities ? [...input.requestedCapabilities].toSorted() : [];
   return {

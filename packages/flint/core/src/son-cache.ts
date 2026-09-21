@@ -28,7 +28,7 @@ function stableValue(value: unknown): unknown {
   if (isRecord(value)) {
     return Object.fromEntries(
       Object.entries(value)
-        .toSorted(([a], [b]) => a.localeCompare(b))
+        .toSorted(([leftKey], [rightKey]) => leftKey.localeCompare(rightKey))
         .map(([key, entry]) => [key, stableValue(entry)]),
     );
   }
@@ -88,6 +88,7 @@ function isValidBoundsChecks(value: unknown): value is FlintSoNModule['boundsChe
  * @param candidate - Candidate module record.
  * @returns True if all header fields conform to specification.
  */
+// skipcq: JS-R1005
 function validateModuleHeader(candidate: Record<string, unknown>): boolean {
   if (
     candidate.schemaVersion !== '1.0' ||
@@ -112,6 +113,7 @@ function validateModuleHeader(candidate: Record<string, unknown>): boolean {
  * @param candidate - Candidate module record.
  * @returns True if all array properties exist and adhere to length caps.
  */
+// skipcq: JS-R1005
 function validateModuleArrayLengths(candidate: Record<string, unknown>): boolean {
   if (
     !Array.isArray(candidate.nodes) ||
@@ -147,6 +149,7 @@ interface ValidNodeShape {
  * @param node - Candidate node item.
  * @returns True if node conforms to structural layout.
  */
+// skipcq: JS-R1005
 function isNodeShapeValid(node: unknown): node is ValidNodeShape {
   if (!isRecord(node)) return false;
   return (
@@ -261,6 +264,7 @@ function assertSoNModule(value: unknown): value is FlintSoNModule {
  * @param expected - Optional identity parameters to enforce.
  * @returns True if value is a valid FlintSoNModule satisfying all constraints.
  */
+// skipcq: JS-R1005
 export function validateFlintSoN(value: unknown, expected?: FlintSoNIdentity): value is FlintSoNModule {
   try {
     if (!isRecord(value)) return false;

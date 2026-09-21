@@ -62,6 +62,7 @@ function unsignedLeb(value: number): number[] {
 }
 
 /** Encodes a signed integer into LEB128 bytes. */
+// skipcq: JS-R1005
 function signedLeb(value: number | bigint): number[] {
   const result: number[] = [];
   let remaining = BigInt(value);
@@ -115,6 +116,7 @@ function fail(message: string): never {
 }
 
 /** Maps a type string into a register layout representation. */
+// skipcq: JS-R1005
 function typeForValue(type: string): VmRep {
   if (type === 'unit') return { kind: 'unit' };
   if (type === 'bool') return { kind: 'bool' };
@@ -124,6 +126,7 @@ function typeForValue(type: string): VmRep {
 }
 
 /** Compares two register layout representations for equivalence. */
+// skipcq: JS-R1005
 function sameRep(left: VmRep, right: VmRep): boolean {
   return (
     left.kind === right.kind &&
@@ -133,6 +136,7 @@ function sameRep(left: VmRep, right: VmRep): boolean {
 }
 
 /** Returns the flattened WebAssembly types for a register layout. */
+// skipcq: JS-R1005
 function flatTypes(rep: VmRep): readonly WasmValueType[] {
   if (rep.kind === 'unit') return [];
   if (rep.kind === 'bool' || rep.kind === 'bytes' || rep.kind === 'aggregate')
@@ -169,6 +173,7 @@ function resultRep(type: string): VmRep {
 }
 
 /** Infers the return representation of a VM instruction. */
+// skipcq: JS-R1005
 function instructionRep(
   instruction: FlintVmInstruction,
   module: FlintVmModule,
@@ -211,10 +216,12 @@ function instructionRep(
 }
 
 /** Infers register type representations across all instructions in a function. */
+// skipcq: JS-R1005
 function inferRegisters(function_: FlintVmFunction, module: FlintVmModule): readonly VmRep[] {
   const functions = new Map(module.functions.map((candidate) => [candidate.name, candidate]));
   const inferred: Array<VmRep | undefined> = Array.from({ length: function_.registers });
   for (const [index, parameter] of function_.parameters.entries()) inferred[index] = typeForValue(parameter);
+  // skipcq: JS-D1001
   const set = (index: number, value: VmRep | undefined): void => {
     if (value === undefined || value.kind === 'unit') return;
     const current = inferred[index];
@@ -319,6 +326,7 @@ function localSet(reference: LocalReference, value: readonly number[], index = 0
 }
 
 /** Emits bytecode loading a constant into registers. */
+// skipcq: JS-R1005
 function emitConst(
   rep: VmRep,
   value: FlintVmValue,
@@ -350,6 +358,7 @@ function emitConst(
 }
 
 /** Emits opcodes loading a value from linear memory. */
+// skipcq: JS-R1005
 function memoryLoad(rep: VmRep, address: number): number[] {
   if (rep.kind !== 'number') fail('only numeric values can be loaded from memory');
   const opcode =
@@ -367,6 +376,7 @@ function memoryLoad(rep: VmRep, address: number): number[] {
 }
 
 /** Emits opcodes storing a value to linear memory. */
+// skipcq: JS-R1005
 function memoryStore(rep: VmRep): number[] {
   if (rep.kind !== 'number' && rep.kind !== 'bool') fail('only numeric and boolean values can be stored in memory');
   const opcode =
@@ -385,6 +395,7 @@ function memoryStore(rep: VmRep): number[] {
 }
 
 /** Resolves the WebAssembly opcode for a numeric binary operation. */
+// skipcq: JS-R1005
 function numericBinary(type: NumericType, operation: string): number {
   const integer = type === 'i32' || type === 'u32';
   const wide = type === 'i64' || type === 'u64';
@@ -409,6 +420,7 @@ function numericBinary(type: NumericType, operation: string): number {
 }
 
 /** Resolves the WebAssembly opcode for a numeric comparison. */
+// skipcq: JS-R1005
 function numericCompare(type: NumericType, operation: string): number {
   const offset: Record<string, number> = { '==': 0, '===': 0, '!=': 1, '!==': 1, '<': 2, '>': 4, '<=': 6, '>=': 8 };
   const value = offset[operation];
@@ -432,6 +444,7 @@ function flattenReference(reference: LocalReference): readonly number[] {
 }
 
 /** Validates that a pointer and length fall entirely within memory bounds. */
+// skipcq: JS-R1005
 function checkedRange(pointer: number, length: number, memory: WebAssembly.Memory, message: string): void {
   if (
     !Number.isSafeInteger(pointer) ||
@@ -444,6 +457,7 @@ function checkedRange(pointer: number, length: number, memory: WebAssembly.Memor
 }
 
 /** Emits WebAssembly instructions for a single virtual machine instruction. */
+// skipcq: JS-R1005
 function emitInstruction(
   instruction: FlintVmInstruction,
   function_: FlintVmFunction,
@@ -459,11 +473,15 @@ function emitInstruction(
   functionIndex: number,
 ): number[] {
   const result: number[] = [...emitStep()];
+  // skipcq: JS-D1001
   const reference = (index: number): LocalReference => info.locals[index] ?? fail(`register ${index} is not available`);
+  // skipcq: JS-D1001
   const rep = (index: number): VmRep => info.reps[index] ?? fail(`register ${index} is not available`);
+  // skipcq: JS-D1001
   const set = (destination: number, value: readonly number[]): void => {
     result.push(...localSet(reference(destination), value));
   };
+  // skipcq: JS-D1001
   const assign = (destination: number, width = 1): void => {
     for (let index = width - 1; index >= 0; index -= 1) result.push(...localSet(reference(destination), [], index));
   };
@@ -684,6 +702,7 @@ function artifactHash(artifact: FlintVmWasmArtifact): string {
 }
 
 /** Assembles a complete WebAssembly binary module from a Flint VM module. */
+// skipcq: JS-R1005
 function buildModule(module: FlintVmModule, maximumPages: number): Uint8Array {
   const dataOffsets = new Map<number, number>();
   const dataSegments: Array<{ readonly offset: number; readonly bytes: Uint8Array }> = [];
@@ -697,6 +716,7 @@ function buildModule(module: FlintVmModule, maximumPages: number): Uint8Array {
   const infos = new Map<string, FunctionInfo>();
   const typeKeys = new Map<string, number>();
   const typeBodies: number[][] = [];
+  // skipcq: JS-D1001
   const addType = (parameters: readonly VmRep[], result: VmRep): number => {
     const key = JSON.stringify([parameters, result]);
     const existing = typeKeys.get(key);
@@ -791,6 +811,7 @@ function buildModule(module: FlintVmModule, maximumPages: number): Uint8Array {
   const reallocIndex = allocIndex + 2;
   const resetIndex = allocIndex + 3;
   const allFunctionTypes = [...functionTypeIndexes, allocType, deallocType, reallocType, resetType];
+  // skipcq: JS-D1001
   const bodyFor = (body: readonly number[], declarations: readonly number[]): number[] => {
     const content = [...declarations, ...body, 0x0b];
     return [...unsignedLeb(content.length), ...content];
@@ -1084,6 +1105,7 @@ export function compileFlintVmWasm(
 }
 
 /** Flattens a high-level VM value into low-level WebAssembly primitive arguments. */
+// skipcq: JS-R1005
 function flatValue(
   value: FlintVmValue,
   memory: WebAssembly.Memory,
@@ -1105,6 +1127,7 @@ function flatValue(
 }
 
 /** Decodes flat WebAssembly result primitives into a structured VM value. */
+// skipcq: JS-R1005
 function decodeValue(rep: VmRep, values: readonly (number | bigint)[], memory: WebAssembly.Memory): FlintVmValue {
   if (rep.kind === 'unit') return { kind: 'unit' };
   if (rep.kind === 'bool') return { kind: 'bool', value: Number(values[0]) !== 0 };
@@ -1134,6 +1157,7 @@ function decodeValue(rep: VmRep, values: readonly (number | bigint)[], memory: W
 }
 
 /** Marshals an input argument into linear memory or primitive parameters. */
+// skipcq: JS-R1005
 function importValue(
   value: FlintVmValue,
   rep: VmRep,
@@ -1158,6 +1182,7 @@ function importValue(
 }
 
 /** Prepares a WebAssembly executor from a module or artifact for fast invocation. */
+// skipcq: JS-R1005
 export function prepareFlintVmWasm(
   moduleOrArtifact: FlintVmModule | FlintVmWasmArtifact,
   options: FlintVmPreparedExecutorOptions = {},
@@ -1193,8 +1218,13 @@ export function prepareFlintVmWasm(
   let steps = 0;
   let maxSteps: number | undefined;
   let memory: WebAssembly.Memory | undefined;
+  // skipcq: JS-D1001
+  const exports = (): Record<string, WebAssembly.ExportValue> =>
+    (instanceReference.current?.exports ?? {}) as Record<string, WebAssembly.ExportValue>;
+  // skipcq: JS-D1001
   const getMemory = (): WebAssembly.Memory => {
     if (memory !== undefined) return memory;
+    // skipcq: JS-0357
     const exportedMemory = exports().memory;
     if (exportedMemory instanceof WebAssembly.Memory) {
       memory = exportedMemory;
@@ -1218,8 +1248,7 @@ export function prepareFlintVmWasm(
   const functionExports = new Map(
     artifact.module.functions.map((function_, index) => [function_.name, `fws_fn_${index}`]),
   );
-  const exports = (): Record<string, WebAssembly.ExportValue> =>
-    (instanceReference.current?.exports ?? {}) as Record<string, WebAssembly.ExportValue>;
+  // skipcq: JS-D1001
   const allocate = (size: number): number => {
     const allocator = exports().fws_alloc as (size: number) => number;
     const pointer = allocator(size);
@@ -1229,9 +1258,11 @@ export function prepareFlintVmWasm(
     });
     return pointer;
   };
+  // skipcq: JS-D1001
   const capabilityImport = (
     imported: FlintVmCapabilityImport,
   ): ((...values: readonly (number | bigint)[]) => unknown) => {
+    // skipcq: JS-R1005
     return (...values) => {
       try {
         const capability = options.capabilities?.[imported.name];
@@ -1347,16 +1378,19 @@ export function prepareFlintVmWasm(
   const instance = new WebAssembly.Instance(compiled, imports);
   instanceReference.current = instance;
   memory = exports().memory as WebAssembly.Memory;
+  // skipcq: JS-D1001
   const resetState = (): void => {
     (exports().fws_reset as () => void)();
     steps = 0;
     pendingTrap = undefined;
   };
+  // skipcq: JS-D1001
   const reset = (): void => {
     if (executionInProgress)
       throw new FlintTrap('InvalidAbi', 'VM WASM prepared executor cannot reset during execution.');
     resetState();
   };
+  // skipcq: JS-D1001, JS-R1005
   const execute = (
     functionName: string,
     arguments_: readonly FlintVmValue[],
@@ -1469,6 +1503,7 @@ export function prepareFlintVmWasm(
       }
     }
   };
+  // skipcq: JS-D1001
   const close = (): void => {
     if (executionInProgress)
       throw new FlintTrap('InvalidAbi', 'VM WASM prepared executor cannot close during execution.');

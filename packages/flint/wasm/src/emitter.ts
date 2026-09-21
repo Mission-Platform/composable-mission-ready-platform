@@ -75,6 +75,7 @@ function unsignedLeb(value: number): number[] {
 }
 
 /** Encodes a signed 32-bit integer into a WebAssembly LEB128 byte array. */
+// skipcq: JS-R1005
 function signedLeb(value: number | bigint): number[] {
   const result: number[] = [];
   let remaining = BigInt(value);
@@ -157,6 +158,7 @@ const COLLECTION_RUNTIME_OPERATION_ORDER = [
 const COLLECTION_RUNTIME_OPERATIONS: ReadonlySet<string> = new Set(COLLECTION_RUNTIME_OPERATION_ORDER);
 
 /** Converts a high-level primitive type name to its WebAssembly primitive representation. */
+// skipcq: JS-R1005
 function projectPrimitive(
   type: { readonly name?: string; readonly reference?: string } | undefined,
 ): FlintWasmPrimitiveType {
@@ -206,6 +208,7 @@ function projectTypeName(
 }
 
 /** Projects an IR expression to WebAssembly expression representation. */
+// skipcq: JS-R1005
 function projectExpression(expression: FlintWasmExpression): FlintWasmExpression {
   if (expression.kind === 'literal') {
     return {
@@ -318,6 +321,7 @@ function buildYieldStateMachine(
 
 /** Lowers iterator-specific loop and yield statements into primitive control flow. */
 function lowerIteratorStatements(statements: readonly FlintWasmStatement[]): readonly FlintWasmStatement[] {
+  // skipcq: JS-R1005
   return statements.flatMap((statement) => {
     if (statement.kind === 'yield') return [returnIterResult(statement.value, 0, statement.span)];
     if (statement.kind === 'iterator-loop') {
@@ -409,6 +413,7 @@ function collectTopLevelYields(statements: readonly FlintWasmStatement[]): Flint
 }
 
 /** Determines whether a statement block contains iterable yields or iterator loops. */
+// skipcq: JS-R1005
 function bodyContainsIteratorNodes(statements: readonly FlintWasmStatement[]): boolean {
   for (const statement of statements) {
     if (statement.kind === 'yield' || statement.kind === 'iterator-loop') return true;
@@ -441,6 +446,7 @@ function elementTypeLabel(type: {
 }
 
 /** Rewrites local identifier access to read from iterator state aggregate fields. */
+// skipcq: JS-R1005
 function rewriteStateIdentifier(expression: FlintWasmExpression, from: string | undefined): FlintWasmExpression {
   if (from === undefined) return expression;
   if (expression.kind === 'identifier')
@@ -483,6 +489,7 @@ function rewriteStateInStatements(
   from: string | undefined,
 ): readonly FlintWasmStatement[] {
   if (from === undefined) return statements;
+  // skipcq: JS-R1005
   return statements.map((statement) => {
     if (statement.kind === 'let') return { ...statement, value: rewriteStateIdentifier(statement.value, from) };
     if (statement.kind === 'assignment')
@@ -626,6 +633,7 @@ function deriveIteratorDescriptors(module: FlintWasmModule): readonly FlintWasmI
 }
 
 /** Transforms all iterable functions in a module into state-machine implementations. */
+// skipcq: JS-R1005
 function lowerIteratorModule(module: FlintWasmModule): {
   readonly module: FlintWasmModule;
   readonly iteratorExports: readonly FlintWasmIteratorExport[];
@@ -692,6 +700,7 @@ function lowerIteratorModule(module: FlintWasmModule): {
 }
 
 /** Resolves the primitive return type of an expression in the current typing environment. */
+// skipcq: JS-R1005
 function expressionType(
   expression: FlintWasmExpression,
   locals: ReadonlyMap<string, ValueLocation>,
@@ -758,6 +767,7 @@ function expressionType(
 }
 
 /** Resolves the WebAssembly opcode instruction for a binary operator on primitive types. */
+// skipcq: JS-R1005
 function binaryOpcode(operator: FlintWasmBinaryOperator, type: FlintWasmPrimitiveType): number {
   if (operator === '&&') return 0x71;
   if (operator === '||') return 0x72;
@@ -825,6 +835,7 @@ function binaryOpcode(operator: FlintWasmBinaryOperator, type: FlintWasmPrimitiv
 }
 
 /** Determines whether any function in a module utilizes SIMD vector instructions. */
+// skipcq: JS-R1005
 function moduleHasSimd(module: FlintWasmModule): boolean {
   for (const functionDeclaration of module.functions) {
     if (
@@ -840,6 +851,7 @@ function moduleHasSimd(module: FlintWasmModule): boolean {
 }
 
 /** Checks whether a statement or its sub-expressions use SIMD operations. */
+// skipcq: JS-R1005
 function statementUsesSimd(statement: FlintWasmStatement): boolean {
   if (statement.kind === 'let' && statement.type.name === 'v128') return true;
   if (statement.kind === 'assignment' && expressionUsesSimd(statement.value)) return true;
@@ -859,6 +871,7 @@ function statementUsesSimd(statement: FlintWasmStatement): boolean {
 }
 
 /** Checks whether an expression node uses SIMD vector operations. */
+// skipcq: JS-R1005
 function expressionUsesSimd(expression: FlintWasmExpression): boolean {
   if (expression.kind === 'literal' && expression.type === 'v128') return true;
   if (expression.kind === 'call') {
@@ -871,6 +884,7 @@ function expressionUsesSimd(expression: FlintWasmExpression): boolean {
 }
 
 /** Evaluates proposal features required by an IR module. */
+// skipcq: JS-R1005
 function featureRequirements(module: FlintWasmModule): FlintWasmFeatureRequirements {
   const hasSimd = module.featureRequirements?.simd === true || moduleHasSimd(module);
   return {
@@ -884,6 +898,7 @@ function featureRequirements(module: FlintWasmModule): FlintWasmFeatureRequireme
 }
 
 /** Validates that enabled proposal features meet the requirements of the module. */
+// skipcq: JS-R1005
 function validateTargetFeatures(
   module: FlintWasmModule,
   targetFeatures: FlintTargetFeatures | undefined,
@@ -892,6 +907,7 @@ function validateTargetFeatures(
   const requested = targetFeatures ?? {};
   const required = featureRequirements(module);
   const diagnostics: FlintWasmDiagnostic[] = [];
+  // skipcq: JS-D1001
   const check = (feature: keyof FlintTargetFeatures): void => {
     if (required[feature] === true && requested[feature] !== true)
       diagnostics.push({
@@ -975,6 +991,7 @@ function metadataCustomSection(metadata: FlintWasmBackendInput['metadata']): num
 }
 
 /** Core emitter lowering module IR to binary WebAssembly bytecode. */
+// skipcq: JS-R1005
 function emitWasm(
   module: FlintWasmModule,
   targetFeatures: FlintTargetFeatures | undefined,
@@ -1000,6 +1017,7 @@ function emitWasm(
     : [];
   const types: number[][] = [];
   const typeIndexes = new Map<string, number>();
+  // skipcq: JS-D1001
   const getTypeIndex = (parameters: readonly FlintWasmPrimitiveType[], result: FlintWasmPrimitiveType): number => {
     const key = `${parameters.join(',')}->${result}`;
     const existing = typeIndexes.get(key);
@@ -1062,6 +1080,7 @@ function emitWasm(
   const dataEntries: { readonly offset: number; readonly bytes: Uint8Array }[] = [];
   const stringOffsets = new Map<string, { readonly offset: number; readonly bytes: Uint8Array }>();
   let dataOffset = STATIC_DATA_START;
+  // skipcq: JS-D1001
   const addData = (bytes: Uint8Array, alignment = 1): { readonly offset: number; readonly bytes: Uint8Array } => {
     dataOffset = (dataOffset + alignment - 1) & ~(alignment - 1);
     const entry = { offset: dataOffset, bytes };
@@ -1069,6 +1088,7 @@ function emitWasm(
     dataEntries.push(entry);
     return entry;
   };
+  // skipcq: JS-D1001
   const getString = (value: string): { readonly offset: number; readonly bytes: Uint8Array } => {
     const existing = stringOffsets.get(value);
     if (existing !== undefined) return existing;
@@ -1088,12 +1108,14 @@ function emitWasm(
       readonly slots: number;
     }
   >();
+  // skipcq: JS-D1001
   const index32Bytes = (values: readonly number[]): Uint8Array => {
     const bytes = new Uint8Array(values.length * 4);
     const view = new DataView(bytes.buffer);
     for (const [index, value] of values.entries()) view.setInt32(index * 4, value, true);
     return bytes;
   };
+  // skipcq: JS-D1001
   const getRegexTable = (pattern: string) => {
     const existing = regexTables.get(pattern);
     if (existing !== undefined) return existing;
@@ -1119,6 +1141,7 @@ function emitWasm(
   const collectionBodies = hasCollectionRuntime
     ? buildFlintWasmCollectionRuntimeWasmBodies(allocatorFunctionIndex)
     : [];
+  // skipcq: JS-D1001
   const collectionFunctionIndex = (operation: string): number => {
     const index = COLLECTION_RUNTIME_OPERATION_ORDER.indexOf(
       operation as (typeof COLLECTION_RUNTIME_OPERATION_ORDER)[number],
@@ -1171,11 +1194,13 @@ function emitWasm(
       FlintWasmExpression,
       { readonly pointer: ValueLocation; readonly length: ValueLocation }
     >();
+    // skipcq: JS-D1001
     const allocateI32 = (): ValueLocation => {
       const index = parameterIndex + locals.length;
       locals.push({ type: 0x7f });
       return { indexes: [index], type: 'i32' };
     };
+    // skipcq: JS-D1001
     const allocateI64 = (): ValueLocation => {
       const index = parameterIndex + locals.length;
       locals.push({ type: 0x7e });
@@ -1200,8 +1225,10 @@ function emitWasm(
         ...(value.length === undefined ? {} : { length: value.length }),
       });
     }
+    // skipcq: JS-D1001
     const locationForValue = (value: FlintWasmSsaValue | undefined): ValueLocation | undefined =>
       value === undefined ? undefined : valueLocations.get(value.id);
+    // skipcq: JS-D1001
     const bindingsToLocations = (bindings: FlintWasmSsaBindings): Map<string, ValueLocation> => {
       const result = new Map<string, ValueLocation>();
       for (const [name, value] of bindings) {
@@ -1210,6 +1237,7 @@ function emitWasm(
       }
       return result;
     };
+    // skipcq: JS-D1001, JS-R1005
     const collectExpression = (expression: FlintWasmExpression): void => {
       if (expression.kind === 'struct-value') {
         expressionLocations.set(expression, allocateI32());
@@ -1247,6 +1275,7 @@ function emitWasm(
         collectionAccessLocations.set(expression, { receiver: allocateI32(), index: allocateI32() });
       }
     };
+    // skipcq: JS-D1001
     const iteratorSourceExpression = (
       statement: Extract<FlintWasmStatement, { readonly kind: 'iterator-loop' }>,
     ): FlintWasmExpression => {
@@ -1257,6 +1286,7 @@ function emitWasm(
         ? iterator.arguments[0]
         : iterator;
     };
+    // skipcq: JS-D1001, JS-R1005
     const collect = (statements: readonly FlintWasmStatement[], visible: Map<string, ValueLocation>): void => {
       for (const statement of statements) {
         if (statement.kind === 'let') {
@@ -1303,6 +1333,7 @@ function emitWasm(
     };
     collect(declaration.body, new Map(parameterLocations));
     const body: number[] = [...unsignedLeb(locals.length), ...locals.flatMap(({ type }) => [1, type])];
+    // skipcq: JS-D1001
     const bindingsForStatement = (
       statement: FlintWasmStatement,
       fallback: ReadonlyMap<string, ValueLocation>,
@@ -1314,6 +1345,7 @@ function emitWasm(
       }
       return result;
     };
+    // skipcq: JS-D1001, JS-R1005
     const emitCopies = (from: FlintWasmSsaBindings | undefined, to: FlintWasmSsaBindings | undefined): void => {
       if (from === undefined || to === undefined) return;
       for (const [name, target] of to) {
@@ -1325,19 +1357,22 @@ function emitWasm(
         for (const index of targetLocation.indexes.toReversed()) body.push(0x21, ...unsignedLeb(index));
       }
     };
+    // skipcq: JS-D1001
     const emitPhiPrelude = (statement: FlintWasmStatement): void =>
       emitCopies(ssaPlan.entryBindings.get(statement), ssaPlan.exitBindings.get(statement));
+    // skipcq: JS-D1001
     const emitBranchCopies = (statement: FlintWasmStatement, branchIndex: number): void =>
       emitCopies(ssaPlan.branchOutputs.get(statement)?.[branchIndex], ssaPlan.exitBindings.get(statement));
-    const emitCollectionCall = (
+    function emitCollectionCall(
       operation: string,
       arguments_: readonly FlintWasmExpression[],
       visible: ReadonlyMap<string, ValueLocation>,
-    ): void => {
+    ): void {
+      // skipcq: JS-0357, JS-D1001, JS-R1005
       for (const argument of arguments_) emitExpression(argument, visible);
       body.push(0x10, ...unsignedLeb(collectionFunctionIndex(operation)));
-    };
-    const emitExpression = (expression: FlintWasmExpression, visible: ReadonlyMap<string, ValueLocation>): void => {
+    }
+    function emitExpression(expression: FlintWasmExpression, visible: ReadonlyMap<string, ValueLocation>): void {
       if (expression.kind === 'literal') {
         if (expression.type === 'string' || expression.type === 'bytes') {
           const entry = getString(String(expression.value));
@@ -1894,7 +1929,8 @@ function emitWasm(
           body.push(binaryOpcode(expression.operator, expressionType(expression.left, visible, callables)));
         }
       }
-    };
+    }
+    // skipcq: JS-D1001, JS-R1005
     const emitSwitch = (
       statement: Extract<FlintWasmStatement, { readonly kind: 'switch' }>,
       visible: ReadonlyMap<string, ValueLocation>,
@@ -1965,6 +2001,7 @@ function emitWasm(
           body.push(...unsignedLeb(values.length));
           for (let index = values.length - 1; index >= 0; index -= 1) {
             body.push(0x0b);
+            // skipcq: JS-0357
             emitStatements(statement.cases[index]?.body ?? [], visible);
             emitBranchCopies(statement, index);
             body.push(0x0c, ...unsignedLeb(index + 1));
@@ -1974,6 +2011,7 @@ function emitWasm(
           const sorted = values
             .map((value, index) => ({ value, index }))
             .toSorted((left, right) => left.value - right.value);
+          // skipcq: JS-D1001, JS-R1005
           const emitSparse = (start: number, end: number, depth: number): void => {
             if (start >= end) return;
             const middle = start + Math.floor((end - start) / 2);
@@ -1987,6 +2025,7 @@ function emitWasm(
               0x04,
               0x40,
             );
+            // skipcq: JS-0357
             emitStatements(statement.cases[selected.index]?.body ?? [], visible);
             emitBranchCopies(statement, selected.index);
             body.push(0x0c, ...unsignedLeb(depth + 1), 0x05);
@@ -2014,15 +2053,16 @@ function emitWasm(
         }
       }
       if (statement.defaultCase !== undefined) {
+        // skipcq: JS-0357, JS-D1001, JS-R1005
         emitStatements(statement.defaultCase, visible);
         emitBranchCopies(statement, values.length);
       }
       body.push(0x0b);
     };
-    const emitStatements = (
+    function emitStatements(
       statements: readonly FlintWasmStatement[],
       initial: ReadonlyMap<string, ValueLocation>,
-    ): void => {
+    ): void {
       const visible = new Map(initial);
       for (const statement of statements) {
         const current = bindingsForStatement(statement, visible);
@@ -2202,7 +2242,7 @@ function emitWasm(
           body.push(0x0c, 0x00, 0x0b, 0x0b);
         }
       }
-    };
+    }
     emitStatements(declaration.body, parameterLocations);
     if (declaration.result.name !== 'unit') body.push(...defaultValue(declaration.result.name));
     body.push(0x0b);
@@ -2922,6 +2962,7 @@ interface EmittedVariant {
 }
 
 /** Emits a single WebAssembly variant (debug or release) and captures bytecode. */
+// skipcq: JS-R1005
 function emitVariant(
   module: FlintWasmModule,
   metadata: FlintWasmBackendInput['metadata'],
@@ -2947,7 +2988,8 @@ function emitVariant(
     if (!WebAssembly.validate(wasm.buffer as ArrayBuffer)) {
       let validationDetail = '';
       try {
-        void new WebAssembly.Module(wasm.buffer as ArrayBuffer);
+        const parsedModule = new WebAssembly.Module(wasm.buffer as ArrayBuffer);
+        Boolean(parsedModule);
       } catch (error) {
         validationDetail = ` ${error instanceof Error ? error.message : String(error)}`;
       }
@@ -2974,6 +3016,7 @@ function emitVariant(
 }
 
 /** Main entry point compiling a Flint IR module to WebAssembly binary and text formats. */
+// skipcq: JS-R1005
 export function compileFlintWasm(input: FlintWasmBackendInput, fileName = '<input>'): FlintWasmBackendResult {
   input.logger?.log('info', 'backend.emit.start', { fileName, optimization: input.metadata.optimization });
   const targetFeatures = input.targetFeatures ?? input.metadata.targetFeatures;

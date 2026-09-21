@@ -16,6 +16,7 @@ export function positionAtOffset(source: string, offset: number): FlintPosition 
 }
 
 /** Converts line and character coordinates into a 0-based character offset. */
+// skipcq: JS-R1005
 export function offsetAtPosition(source: string, position: FlintPosition): number {
   const wantedLine = Math.max(0, position.line);
   const wantedCharacter = Math.max(0, position.character);

@@ -243,6 +243,7 @@ export class DapFrameParser {
   private buffer = Buffer.alloc(0);
 
   /** Pushes incoming stream chunks and decodes complete DAP messages. */
+  // skipcq: JS-R1005
   public push(chunk: Buffer | string): DapMessage[] {
     this.buffer = Buffer.concat([this.buffer, Buffer.from(chunk)]);
     const messages: DapMessage[] = [];

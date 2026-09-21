@@ -28,6 +28,7 @@ interface MessageReaderState {
 const messageReaders = new WeakMap<PassThrough, MessageReaderState>();
 
 describe('Flint stdio protocol', () => {
+  // skipcq: JS-R1005
   it('handles initialize, open diagnostics, shutdown, and exit over framed messages', async () => {
     const input = new PassThrough();
     const output = new PassThrough();
@@ -208,6 +209,7 @@ function readMessage(stream: PassThrough): Promise<JsonRpcMessage> {
   });
 }
 
+// skipcq: JS-R1005
 function flushMessages(state: MessageReaderState): void {
   while (state.waiters.length > 0) {
     const headerEnd = state.buffer.indexOf('\r\n\r\n');

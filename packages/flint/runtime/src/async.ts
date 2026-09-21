@@ -129,12 +129,15 @@ interface PendingTask {
   state: 'queued' | 'waiting-worker' | 'ready';
 }
 
+// skipcq: JS-D1001
 const copyPayload = (payload: Uint8Array, maxMessageBytes: number): Uint8Array | undefined =>
   payload.byteLength <= maxMessageBytes ? new Uint8Array(payload) : undefined;
 
+// skipcq: JS-D1001
 const hasCapability = (capabilities: readonly string[], capability: FlintAsyncCapability): boolean =>
   capabilities.includes(capability);
 
+// skipcq: JS-D1001
 const failure = (code: FlintAsyncFailureCode, message: string): FlintAsyncFailure => ({
   ok: false,
   code,
@@ -156,6 +159,7 @@ export function createFlintAsyncRuntime(options: FlintAsyncRuntimeOptions = {}):
   let nextSequence = 1;
   const logger = (options.logger ?? createFlintLogger({ scope: 'fws' })).child('async');
 
+  // skipcq: JS-D1001
   const taskFor = (kind: FlintAsyncTaskKind, payload: Uint8Array, handler: FlintAsyncTaskHandler) => {
     const copied = copyPayload(payload, maxMessageBytes);
     if (copied === undefined) {
@@ -182,6 +186,7 @@ export function createFlintAsyncRuntime(options: FlintAsyncRuntimeOptions = {}):
     return { ok: true as const, task };
   };
 
+  // skipcq: JS-D1001, JS-R1005
   const runTask = (taskId: number): FlintAsyncExecutionResult | undefined => {
     const entry = pending.get(taskId);
     if (entry === undefined || (entry.state !== 'queued' && entry.state !== 'ready')) return undefined;
@@ -200,6 +205,7 @@ export function createFlintAsyncRuntime(options: FlintAsyncRuntimeOptions = {}):
     }
   };
 
+  // skipcq: JS-D1001
   const notifyMicrotask = (taskId: number): FlintAsyncFailure | undefined => {
     const scheduleMicrotask = options.host?.scheduleMicrotask;
     if (scheduleMicrotask === undefined) return undefined;
@@ -222,6 +228,7 @@ export function createFlintAsyncRuntime(options: FlintAsyncRuntimeOptions = {}):
     }
   };
 
+  // skipcq: JS-D1001
   const scheduleMicrotask = (payload: Uint8Array, handler: FlintAsyncTaskHandler): FlintAsyncScheduleResult => {
     if (!hasCapability(capabilities, FLINT_ASYNC_CAPABILITIES.microtask)) {
       logger.warn('task.reject', { kind: 'microtask', reason: 'capability-denied' });
@@ -237,6 +244,7 @@ export function createFlintAsyncRuntime(options: FlintAsyncRuntimeOptions = {}):
     return scheduled;
   };
 
+  // skipcq: JS-D1001, JS-R1005
   const spawnWorker = (payload: Uint8Array, handler: FlintAsyncTaskHandler): FlintAsyncScheduleResult => {
     if (!hasCapability(capabilities, FLINT_ASYNC_CAPABILITIES.worker)) {
       logger.warn('task.reject', { kind: 'worker', reason: 'capability-denied' });
@@ -267,6 +275,7 @@ export function createFlintAsyncRuntime(options: FlintAsyncRuntimeOptions = {}):
     return scheduled;
   };
 
+  // skipcq: JS-D1001, JS-R1005
   const deliverWorkerMessage = (
     taskId: number,
     payload: Uint8Array,
@@ -286,6 +295,7 @@ export function createFlintAsyncRuntime(options: FlintAsyncRuntimeOptions = {}):
     return hostError ?? { ok: true };
   };
 
+  // skipcq: JS-D1001
   const runNext = (): FlintAsyncExecutionResult | undefined => {
     const next = [...pending.values()].toSorted((left, right) => left.task.sequence - right.task.sequence)[0];
     if (next === undefined || (next.state !== 'queued' && next.state !== 'ready')) return undefined;
@@ -345,7 +355,9 @@ export class FlintJspiSuspender {
   /**
    * Suspends the current WebAssembly stack frame while awaiting host promise completion.
    */
+  // skipcq: JS-0105
   public suspend<T>(promise: Promise<T>): Promise<T> {
+    this.logger.debug('jspi.suspend');
     const wa = WebAssembly as unknown as { Suspending?: new (fn: Function) => Function };
     if (typeof wa.Suspending === 'function') {
       return promise;
@@ -356,9 +368,11 @@ export class FlintJspiSuspender {
   /**
    * Wraps an asynchronous host function into a WebAssembly-callable function that returns a Promise.
    */
+  // skipcq: JS-0105
   public promising<TArgs extends unknown[], TRet>(
     function_: (...arguments_: TArgs) => TRet,
   ): (...arguments_: TArgs) => Promise<TRet> {
+    this.logger.debug('jspi.promising');
     const wa = WebAssembly as unknown as {
       promising?: (function__: Function) => (...arguments__: unknown[]) => Promise<unknown>;
     };

@@ -183,6 +183,22 @@ interface MutableGraph {
   readonly edges: FlintLsifEdge[];
 }
 
+/** Monotonic integer identifier generator for LSIF vertices and edges. */
+class IdAllocator {
+  readonly #ids = new Map<string, string>();
+  #next = 1;
+
+  /** Allocates the next sequential integer identifier. */
+  public id(key: string): string {
+    const existing = this.#ids.get(key);
+    if (existing !== undefined) return existing;
+    const id = `FLINT-${String(this.#next).padStart(6, '0')}`;
+    this.#next += 1;
+    this.#ids.set(key, id);
+    return id;
+  }
+}
+
 /**
  * Creates a deterministic LSIF graph from the language-service workspace snapshot.
  *
@@ -191,6 +207,7 @@ interface MutableGraph {
  */
 export function createFlintLsif(input: FlintLsifInput): FlintLsifGraph;
 /** Generates a complete LSIF index dump for the specified documents. */
+// skipcq: JS-R1005
 export function createFlintLsif(
   service: FlintLanguageService,
   documents: readonly FlintDocument[],
@@ -256,6 +273,7 @@ export const serializeFlintLsifGraph = serializeFlintLsif;
 export const createFlintLsifGraph = createFlintLsif;
 
 /** Indexes a document into the LSIF graph, emitting ranges and edges. */
+// skipcq: JS-R1005
 function addDocument(
   graph: MutableGraph,
   ids: IdAllocator,
@@ -288,6 +306,7 @@ function addDocument(
   });
   addEdge(graph, ids, 'contains', projectId, documentId);
 
+  // skipcq: JS-D1001
   const rangeId = (range: FlintRange): string => {
     const key = `${documentUri}:${range.startOffset}:${range.endOffset}`;
     const existing = ranges.get(key);
@@ -306,6 +325,7 @@ function addDocument(
     addEdge(graph, ids, 'contains', documentId, id);
     return id;
   };
+  // skipcq: JS-D1001
   const addResultSet = (symbolName: string, symbolKind: string, range: FlintRange): string => {
     const resultSetId = ids.id(
       `resultSet:${documentUri}:${symbolKind}:${symbolName}:${range.startOffset}:${range.endOffset}`,
@@ -524,6 +544,7 @@ function canonicalUri(uri: string): string {
 }
 
 /** Simplifies and collapses relative path segments. */
+// skipcq: JS-R1005
 function collapsePath(path: string): string {
   const absolute = path.startsWith('/') ? path : `/${path}`;
   const parts: string[] = [];
@@ -536,6 +557,7 @@ function collapsePath(path: string): string {
 }
 
 /** Determines the lowest common directory root among document URIs. */
+// skipcq: JS-R1005
 function commonProjectRoot(uris: readonly string[]): string | undefined {
   const paths = uris
     .filter((uri) => uri.startsWith('file://'))
@@ -554,20 +576,4 @@ function commonProjectRoot(uris: readonly string[]): string | undefined {
 /** Type guard checking whether input matches the FlintLsifInput object shape. */
 function isInput(value: FlintLsifInput | FlintLanguageService): value is FlintLsifInput {
   return 'service' in value;
-}
-
-/** Monotonic integer identifier generator for LSIF vertices and edges. */
-class IdAllocator {
-  readonly #ids = new Map<string, string>();
-  #next = 1;
-
-  /** Allocates the next sequential integer identifier. */
-  public id(key: string): string {
-    const existing = this.#ids.get(key);
-    if (existing !== undefined) return existing;
-    const id = `FLINT-${String(this.#next).padStart(6, '0')}`;
-    this.#next += 1;
-    this.#ids.set(key, id);
-    return id;
-  }
 }

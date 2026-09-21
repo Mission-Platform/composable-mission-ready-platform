@@ -6,6 +6,7 @@ import { MonomorphizationCache, TypeAlgebra, createMonomorphizationCache, create
 
 const span = { start: 0, end: 1, line: 1, column: 1, endLine: 1, endColumn: 2 };
 
+// skipcq: JS-R1005
 const typeName = (
   name: string,
   options: {

@@ -51,217 +51,6 @@ interface SharedState {
 }
 
 /**
- * Deterministic scoped heap for compiler-managed values. Raw fws_alloc calls
- * remain on FlintMemory and are never implicitly retained here.
- */
-export class FlintSafeHeap {
-  public readonly memory: FlintMemory;
-  private nextRegion = 1;
-  private nextHandle = 1;
-  private readonly regions = new Map<number, RegionState>();
-  private readonly shared = new Map<number, SharedState>();
-
-  /**
-   * Initializes a new FlintSafeHeap manager bound to linear memory.
-   *
-   * @param memory - Linear memory instance.
-   */
-  public constructor(memory: FlintMemory) {
-    this.memory = memory;
-  }
-
-  /**
-   * Opens a new lifetime region for scoped memory allocations.
-   *
-   * @returns Newly allocated lifetime region token.
-   */
-  public beginRegion(): FlintRegion {
-    const id = this.nextRegion++;
-    this.regions.set(id, { id, active: true, allocations: new Map() });
-    return { id, active: true };
-  }
-
-  /**
-   * Allocates a memory block bound to a specified lifetime region.
-   *
-   * @param region - Region owning the allocation.
-   * @param length - Size in bytes to allocate.
-   * @returns Region allocation descriptor.
-   */
-  public allocate(region: FlintRegion, length: number): FlintRegionAllocation {
-    const state = this.requireRegion(region);
-    const pointer = this.memory.allocate(length);
-    state.allocations.set(this.offset(pointer), length);
-    return { pointer, length, region: state.id };
-  }
-
-  /** Checks a borrow immediately before use, preventing stale region pointers. */
-  public borrow(allocation: FlintRegionAllocation): void {
-    const state = this.regions.get(allocation.region);
-    if (
-      state === undefined ||
-      !state.active ||
-      state.allocations.get(this.offset(allocation.pointer)) !== allocation.length
-    )
-      throw new FlintTrap('RegionExpired', 'A region allocation was used after its region ended.');
-    this.memory.checkRange(allocation.pointer, allocation.length);
-  }
-
-  /** Promote a value before an async/iterator suspension or another escape boundary. */
-  public promote(allocation: FlintRegionAllocation): FlintSharedHandle {
-    const state = this.requireRegion({ id: allocation.region, active: true });
-    const offset = this.offset(allocation.pointer);
-    if (state.allocations.get(offset) !== allocation.length)
-      throw new FlintTrap('RegionExpired', 'A region allocation is no longer available for promotion.');
-    state.allocations.delete(offset);
-    return this.createShared(allocation.pointer, allocation.length);
-  }
-
-  /** A suspension is legal only after every region value has been promoted. */
-  public prepareSuspension(region: FlintRegion): void {
-    const state = this.requireRegion(region);
-    if (state.allocations.size > 0)
-      throw new FlintTrap('BorrowViolation', 'Region borrows cannot cross an async or iterator suspension.');
-  }
-
-  /**
-   * Initializes a high-performance bump-pointer arena bound to a lifetime region.
-   *
-   * @param region - Owning lifetime region.
-   * @param capacity - Arena buffer capacity in bytes.
-   * @returns Initialized FlintRegionArena.
-   */
-  public beginArena(region: FlintRegion, capacity = 65_536): FlintRegionArena {
-    const allocation = this.allocate(region, capacity);
-    return new FlintRegionArena(this.memory, allocation.pointer, capacity);
-  }
-
-  /**
-   * Instantiates a Two-Level Segregated Fit (TLSF) O(1) allocator pool.
-   *
-   * @param poolSize - Size of the TLSF memory pool in bytes.
-   * @returns Configured FlintTlsfAllocator instance.
-   */
-  public createTlsfAllocator(poolSize = 131_072): FlintTlsfAllocator {
-    return new FlintTlsfAllocator(this.memory, poolSize);
-  }
-
-  /**
-   * Closes a lifetime region and bulk-deallocates all allocations bound to it.
-   *
-   * @param region - Region to terminate.
-   */
-  public endRegion(region: FlintRegion): void {
-    const state = this.requireRegion(region);
-    state.active = false;
-    for (const [pointer, length] of state.allocations) this.memory.deallocate(pointer, length);
-    state.allocations.clear();
-  }
-
-  /**
-   * Promotes an allocated memory range to a reference-counted shared handle.
-   *
-   * @param pointer - Base memory address.
-   * @param length - Size in bytes.
-   * @returns New shared allocation handle.
-   */
-  public createShared(pointer: FlintMemoryAddress, length: number): FlintSharedHandle {
-    if (this.memory.allocationSize(pointer) !== length)
-      throw new FlintTrap('InvalidOwnership', 'Shared handles may only wrap an exact runtime-owned allocation.');
-    const id = this.nextHandle++;
-    this.shared.set(id, { id, pointer, length, references: 1, released: false });
-    return { id, pointer, length };
-  }
-
-  /**
-   * Increments the reference count for a shared memory handle.
-   *
-   * @param handle - Shared handle to retain.
-   */
-  public retain(handle: FlintSharedHandle): void {
-    const state = this.requireShared(handle);
-    state.references += 1;
-  }
-
-  /**
-   * Decrements the reference count for a shared handle, freeing memory when count reaches zero.
-   *
-   * @param handle - Shared handle to release.
-   */
-  public release(handle: FlintSharedHandle): void {
-    const state = this.shared.get(handle.id);
-    if (state === undefined || state.released)
-      throw new FlintTrap('DoubleRelease', `Shared handle ${handle.id} was released too many times.`);
-    if (state.pointer !== handle.pointer || state.length !== handle.length)
-      throw new FlintTrap('InvalidOwnership', `Shared handle ${handle.id} does not match its allocation.`);
-    state.references -= 1;
-    if (state.references === 0) {
-      state.released = true;
-      this.memory.deallocate(state.pointer, state.length);
-    }
-  }
-
-  /**
-   * Asserts that a shared handle remains valid and has not been freed.
-   *
-   * @param handle - Shared handle to verify.
-   */
-  public useShared(handle: FlintSharedHandle): void {
-    const state = this.requireShared(handle);
-    this.memory.checkRange(state.pointer, state.length);
-  }
-
-  /**
-   * Validates and retrieves the state for an active lifetime region.
-   *
-   * @param region - Lifetime region token.
-   * @returns Active region state.
-   */
-  private requireRegion(region: FlintRegion): RegionState {
-    const state = this.regions.get(region.id);
-    if (state === undefined || !state.active) throw new FlintTrap('RegionExpired', `Region ${region.id} has expired.`);
-    return state;
-  }
-
-  /**
-   * Validates and retrieves the state for a shared allocation handle.
-   *
-   * @param handle - Shared handle.
-   * @returns Active shared state.
-   */
-  private requireShared(handle: FlintSharedHandle): SharedState {
-    const state = this.shared.get(handle.id);
-    if (state === undefined || state.released)
-      throw new FlintTrap('UseAfterRelease', `Shared handle ${handle.id} was released.`);
-    if (state.pointer !== handle.pointer || state.length !== handle.length)
-      throw new FlintTrap('InvalidOwnership', `Shared handle ${handle.id} does not match its allocation.`);
-    if (state.references <= 0)
-      throw new FlintTrap('DoubleRelease', `Shared handle ${handle.id} was released too many times.`);
-    return state;
-  }
-
-  /**
-   * Converts a memory address to a normalized numeric byte offset.
-   *
-   * @param pointer - Memory address.
-   * @returns Numeric byte offset.
-   */
-  private offset(pointer: FlintMemoryAddress): number {
-    return typeof pointer === 'bigint' ? Number(pointer) : pointer;
-  }
-}
-
-/**
- * Factory function creating a new FlintSafeHeap manager.
- *
- * @param memory - Linear memory instance.
- * @returns Initialized FlintSafeHeap instance.
- */
-export function createFlintSafeHeap(memory: FlintMemory): FlintSafeHeap {
-  return new FlintSafeHeap(memory);
-}
-
-/**
  * High-performance scoped arena bump allocator for transient tasks.
  * Reclaims all allocated memory in an instant O(1) pointer reset.
  */
@@ -390,24 +179,25 @@ export class FlintTlsfAllocator {
       throw new FlintTrap('MemoryExhausted', `TLSF heap exhausted: cannot satisfy allocation of ${size} bytes.`);
 
     this.removeFreeBlock(block);
-    block.isFree = false;
 
-    // Split block if remaining space is at least TLSF_MIN_BLOCK_SIZE
-    const remainder = block.size - alignedSize;
-    if (remainder >= TLSF_MIN_BLOCK_SIZE) {
+    // Split block if remaining space is large enough
+    if (block.size - alignedSize >= TLSF_MIN_BLOCK_SIZE) {
       const splitBlock: TlsfBlock = {
         offset: block.offset + alignedSize,
-        size: remainder,
+        size: block.size - alignedSize,
         isFree: true,
         prevPhysical: block,
         nextPhysical: block.nextPhysical,
       };
-      if (block.nextPhysical) block.nextPhysical.prevPhysical = splitBlock;
+      if (block.nextPhysical) {
+        block.nextPhysical.prevPhysical = splitBlock;
+      }
       block.nextPhysical = splitBlock;
       block.size = alignedSize;
       this.insertFreeBlock(splitBlock);
     }
 
+    block.isFree = false;
     this.allocatedBlocks.set(block.offset, block);
     const base = typeof this.basePointer === 'bigint' ? Number(this.basePointer) : this.basePointer;
     return typeof this.basePointer === 'bigint' ? BigInt(base + block.offset) : base + block.offset;
@@ -425,6 +215,7 @@ export class FlintTlsfAllocator {
     if (!block || block.isFree)
       throw new FlintTrap('InvalidOwnership', `Invalid or duplicate TLSF deallocation at address ${raw}.`);
 
+    // skipcq: JS-0105
     this.allocatedBlocks.delete(offset);
     block.isFree = true;
 
@@ -530,4 +321,218 @@ export class FlintTlsfAllocator {
     sl = 31 - Math.clz32(slMask & -slMask);
     return this.freeLists[fl]?.[sl];
   }
+}
+
+/**
+ * Deterministic scoped heap for compiler-managed values. Raw fws_alloc calls
+ * remain on FlintMemory and are never implicitly retained here.
+ */
+export class FlintSafeHeap {
+  public readonly memory: FlintMemory;
+  private nextRegion = 1;
+  private nextHandle = 1;
+  private readonly regions = new Map<number, RegionState>();
+  private readonly shared = new Map<number, SharedState>();
+
+  /**
+   * Initializes a new FlintSafeHeap manager bound to linear memory.
+   *
+   * @param memory - Linear memory instance.
+   */
+  public constructor(memory: FlintMemory) {
+    this.memory = memory;
+  }
+
+  /**
+   * Opens a new lifetime region for scoped memory allocations.
+   *
+   // skipcq: JS-R1005
+   * @returns Newly allocated lifetime region token.
+   */
+  public beginRegion(): FlintRegion {
+    const id = this.nextRegion++;
+    this.regions.set(id, { id, active: true, allocations: new Map() });
+    return { id, active: true };
+  }
+
+  /**
+   * Allocates a memory block bound to a specified lifetime region.
+   *
+   * @param region - Region owning the allocation.
+   * @param length - Size in bytes to allocate.
+   * @returns Region allocation descriptor.
+   */
+  public allocate(region: FlintRegion, length: number): FlintRegionAllocation {
+    const state = this.requireRegion(region);
+    // skipcq: JS-R1005
+    const pointer = this.memory.allocate(length);
+    state.allocations.set(FlintSafeHeap.offset(pointer), length);
+    return { pointer, length, region: state.id };
+  }
+
+  /** Checks a borrow immediately before use, preventing stale region pointers. */
+  public borrow(allocation: FlintRegionAllocation): void {
+    const state = this.regions.get(allocation.region);
+    if (
+      state === undefined ||
+      !state.active ||
+      state.allocations.get(FlintSafeHeap.offset(allocation.pointer)) !== allocation.length
+    )
+      throw new FlintTrap('RegionExpired', 'A region allocation was used after its region ended.');
+    this.memory.checkRange(allocation.pointer, allocation.length);
+  }
+
+  /** Promote a value before an async/iterator suspension or another escape boundary. */
+  public promote(allocation: FlintRegionAllocation): FlintSharedHandle {
+    const state = this.requireRegion({ id: allocation.region, active: true });
+    const offset = FlintSafeHeap.offset(allocation.pointer);
+    if (state.allocations.get(offset) !== allocation.length)
+      throw new FlintTrap('RegionExpired', 'A region allocation is no longer available for promotion.');
+    state.allocations.delete(offset);
+    return this.createShared(allocation.pointer, allocation.length);
+  }
+
+  /** A suspension is legal only after every region value has been promoted. */
+  public prepareSuspension(region: FlintRegion): void {
+    const state = this.requireRegion(region);
+    if (state.allocations.size > 0)
+      throw new FlintTrap('BorrowViolation', 'Region borrows cannot cross an async or iterator suspension.');
+  }
+
+  /**
+   * Initializes a high-performance bump-pointer arena bound to a lifetime region.
+   *
+   * @param region - Owning lifetime region.
+   * @param capacity - Arena buffer capacity in bytes.
+   * @returns Initialized FlintRegionArena.
+   */
+  public beginArena(region: FlintRegion, capacity = 65_536): FlintRegionArena {
+    const allocation = this.allocate(region, capacity);
+    return new FlintRegionArena(this.memory, allocation.pointer, capacity);
+  }
+
+  /**
+   * Instantiates a Two-Level Segregated Fit (TLSF) O(1) allocator pool.
+   *
+   * @param poolSize - Size of the TLSF memory pool in bytes.
+   * @returns Configured FlintTlsfAllocator instance.
+   */
+  public createTlsfAllocator(poolSize = 131_072): FlintTlsfAllocator {
+    return new FlintTlsfAllocator(this.memory, poolSize);
+  }
+
+  /**
+   // skipcq: JS-R1005
+   * Closes a lifetime region and bulk-deallocates all allocations bound to it.
+   *
+   * @param region - Region to terminate.
+   */
+  public endRegion(region: FlintRegion): void {
+    const state = this.requireRegion(region);
+    state.active = false;
+    for (const [pointer, length] of state.allocations) this.memory.deallocate(pointer, length);
+    state.allocations.clear();
+  }
+
+  /**
+   * Promotes an allocated memory range to a reference-counted shared handle.
+   *
+   * @param pointer - Base memory address.
+   * @param length - Size in bytes.
+   * @returns New shared allocation handle.
+   */
+  public createShared(pointer: FlintMemoryAddress, length: number): FlintSharedHandle {
+    if (this.memory.allocationSize(pointer) !== length)
+      throw new FlintTrap('InvalidOwnership', 'Shared handles may only wrap an exact runtime-owned allocation.');
+    const id = this.nextHandle++;
+    this.shared.set(id, { id, pointer, length, references: 1, released: false });
+    return { id, pointer, length };
+  }
+
+  /**
+   * Increments the reference count for a shared memory handle.
+   *
+   * @param handle - Shared handle to retain.
+   */
+  public retain(handle: FlintSharedHandle): void {
+    const state = this.requireShared(handle);
+    state.references += 1;
+  }
+
+  /**
+   * Decrements the reference count for a shared handle, freeing memory when count reaches zero.
+   *
+   * @param handle - Shared handle to release.
+   */
+  public release(handle: FlintSharedHandle): void {
+    const state = this.shared.get(handle.id);
+    if (state === undefined || state.released)
+      throw new FlintTrap('DoubleRelease', `Shared handle ${handle.id} was released too many times.`);
+    if (state.pointer !== handle.pointer || state.length !== handle.length)
+      throw new FlintTrap('InvalidOwnership', `Shared handle ${handle.id} does not match its allocation.`);
+    state.references -= 1;
+    if (state.references === 0) {
+      state.released = true;
+      this.memory.deallocate(state.pointer, state.length);
+    }
+  }
+
+  /**
+   * Asserts that a shared handle remains valid and has not been freed.
+   *
+   * @param handle - Shared handle to verify.
+   */
+  public useShared(handle: FlintSharedHandle): void {
+    const state = this.requireShared(handle);
+    this.memory.checkRange(state.pointer, state.length);
+  }
+
+  /**
+   * Validates and retrieves the state for an active lifetime region.
+   *
+   * @param region - Lifetime region token.
+   * @returns Active region state.
+   */
+  private requireRegion(region: FlintRegion): RegionState {
+    const state = this.regions.get(region.id);
+    if (state === undefined || !state.active) throw new FlintTrap('RegionExpired', `Region ${region.id} has expired.`);
+    return state;
+  }
+
+  /**
+   * Validates and retrieves the state for a shared allocation handle.
+   *
+   * @param handle - Shared handle.
+   * @returns Active shared state.
+   */
+  private requireShared(handle: FlintSharedHandle): SharedState {
+    const state = this.shared.get(handle.id);
+    if (state === undefined || state.released)
+      throw new FlintTrap('UseAfterRelease', `Shared handle ${handle.id} was released.`);
+    if (state.pointer !== handle.pointer || state.length !== handle.length)
+      throw new FlintTrap('InvalidOwnership', `Shared handle ${handle.id} does not match its allocation.`);
+    if (state.references <= 0)
+      throw new FlintTrap('DoubleRelease', `Shared handle ${handle.id} was released too many times.`);
+    return state;
+  }
+
+  /**
+   * Converts a memory address to a normalized numeric byte offset.
+   *
+   * @param pointer - Memory address.
+   * @returns Numeric byte offset.
+   */
+  private static offset(pointer: FlintMemoryAddress): number {
+    return typeof pointer === 'bigint' ? Number(pointer) : pointer;
+  }
+}
+
+/**
+ * Factory function creating a new FlintSafeHeap manager.
+ *
+ * @param memory - Linear memory instance.
+ * @returns Initialized FlintSafeHeap instance.
+ */
+export function createFlintSafeHeap(memory: FlintMemory): FlintSafeHeap {
+  return new FlintSafeHeap(memory);
 }

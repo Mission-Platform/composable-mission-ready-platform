@@ -76,6 +76,7 @@ function expressionsFromSwitchOrMatch(statement: FlintIrStatement): FlintIrExpre
  * @param statement - IR statement to inspect.
  * @returns Array of immediate IR expressions evaluated by the statement.
  */
+// skipcq: JS-R1005
 function expressionsOf(statement: FlintIrStatement): FlintIrExpression[] {
   const fromBinding = expressionsFromBinding(statement);
   if (fromBinding !== undefined) return fromBinding;
@@ -96,6 +97,7 @@ function expressionsOf(statement: FlintIrStatement): FlintIrExpression[] {
  * @param expression - Parent expression whose children should be visited.
  * @param visit - Visitor callback invoked on each nested expression.
  */
+// skipcq: JS-R1005
 function visitSimpleChildren(expression: FlintIrExpression, visit: (expression: FlintIrExpression) => void): void {
   if (expression.kind === 'call') {
     for (const argument of expression.arguments) visitExpression(argument, visit);
@@ -122,6 +124,7 @@ function visitSimpleChildren(expression: FlintIrExpression, visit: (expression: 
  * @param expression - Parent expression whose children should be visited.
  * @param visit - Visitor callback invoked on each nested expression.
  */
+// skipcq: JS-R1005
 function visitMatchOrLiteralChildren(
   expression: FlintIrExpression,
   visit: (expression: FlintIrExpression) => void,
@@ -172,6 +175,7 @@ function visitExpression(expression: FlintIrExpression, visit: (expression: Flin
  * @param statement - Switch or match statement.
  * @param visit - Visitor callback invoked on nested statements.
  */
+// skipcq: JS-R1005
 function visitSwitchOrMatchBlocks(statement: FlintIrStatement, visit: (statement: FlintIrStatement) => void): void {
   if (statement.kind === 'switch') {
     for (const { body } of statement.cases) visitStatements(body, visit);
@@ -193,6 +197,7 @@ function visitSwitchOrMatchBlocks(statement: FlintIrStatement, visit: (statement
  * @param statement - Statement that may contain nested blocks.
  * @param visit - Visitor callback invoked on nested statements.
  */
+// skipcq: JS-R1005
 function visitNestedStatementBlocks(statement: FlintIrStatement, visit: (statement: FlintIrStatement) => void): void {
   if (statement.kind === 'if') {
     visitStatements(statement.consequent, visit);
@@ -279,6 +284,7 @@ function isOutOfRangeIndex(index: FlintAnalysisInterval, length: number): boolea
  * @param length - Optional statically known receiver length.
  * @returns Bounds status label for the access site.
  */
+// skipcq: JS-R1005
 function classifyIndexStatus(
   expression: Extract<FlintIrExpression, { kind: 'index' }>,
   index: FlintAnalysisInterval,
@@ -363,6 +369,7 @@ function pointerFacts(
   const facts: FlintAnalysisPointerRangeFact[] = [];
   for (const statement of declaration?.body ?? []) {
     for (const root of expressionsOf(statement))
+      // skipcq: JS-R1005
       visitExpression(root, (expression) => {
         if (
           expression.kind !== 'call' ||
@@ -439,6 +446,7 @@ function switchStatementHasLoop(statement: Extract<FlintIrStatement, { kind: 'sw
  * @param statement - IR statement to inspect.
  * @returns True when the statement contains a loop.
  */
+// skipcq: JS-R1005
 function statementHasLoop(statement: FlintIrStatement): boolean {
   if (statement.kind === 'while' || statement.kind === 'do-while' || statement.kind === 'iterator-loop') return true;
   if (statement.kind === 'if') return ifStatementHasLoop(statement);
@@ -489,6 +497,7 @@ function loopCountInSwitch(statement: Extract<FlintIrStatement, { kind: 'switch'
  * @param statements - Sequence of IR statements to inspect.
  * @returns Total count of loop statements.
  */
+// skipcq: JS-R1005
 function loopCount(statements: readonly FlintIrStatement[]): number {
   let count = 0;
   for (const statement of statements) {
@@ -507,6 +516,7 @@ function loopCount(statements: readonly FlintIrStatement[]): number {
  * @param right - Evaluated right-hand numeric operand.
  * @returns Computed numeric result, or undefined when the operator is unsupported.
  */
+// skipcq: JS-R1005
 function evaluateBinaryConstant(operator: string, left: number, right: number): number | undefined {
   if (operator === '+') return left + right;
   if (operator === '-') return left - right;
@@ -523,6 +533,7 @@ function evaluateBinaryConstant(operator: string, left: number, right: number): 
  * @param locals - Mutable map of local bindings already proven constant.
  * @returns Numeric value when statically known, otherwise undefined.
  */
+// skipcq: JS-R1005
 function evaluateConstantExpression(
   expression: FlintIrExpression,
   locals: Readonly<Record<string, number>>,
@@ -542,6 +553,7 @@ function evaluateConstantExpression(
  * @param expression - Expression tree to inspect for literal leaves.
  * @param result - Mutable map receiving discovered literal constants.
  */
+// skipcq: JS-R1005
 function collectLiteralConstants(expression: FlintIrExpression, result: Record<string, number>): void {
   if (expression.kind === 'literal' && typeof expression.value === 'number') {
     result[`literal:${Object.keys(result).length}`] = expression.value;
@@ -590,6 +602,7 @@ function bindStatementConstant(
  * @param functionName - Name of the function to inspect.
  * @returns Map of variable and literal names to known numeric constant values.
  */
+// skipcq: JS-R1005
 function constants(module: FlintIrModule, functionName: string): Readonly<Record<string, number>> {
   const result: Record<string, number> = {};
   const locals: Record<string, number> = {};

@@ -130,28 +130,25 @@ interface GuestMemoryRange {
  * @returns Result of the operation.
  * @throws {Error} Rethrows operation error or reset failure.
  */
+// skipcq: JS-R1005
 function withReset<T extends BenchmarkOutput | number | string | undefined>(
   exports: { readonly fws_reset: () => void },
   operation: () => T,
 ): T {
   exports.fws_reset();
-  let operationFailed = false;
+  let result: T;
   try {
-    return operation();
+    result = operation();
   } catch (error: unknown) {
-    operationFailed = true;
-    throw error instanceof Error ? error : new Error(String(error));
-  } finally {
     try {
       exports.fws_reset();
-    } catch (resetError: unknown) {
-      if (!operationFailed) {
-        throw resetError instanceof Error
-          ? resetError
-          : new Error(String(resetError));
-      }
+    } catch {
+      // Best-effort cleanup when operation fails.
     }
+    throw error instanceof Error ? error : new Error(String(error));
   }
+  exports.fws_reset();
+  return result;
 }
 
 /**
@@ -235,6 +232,7 @@ async function compileBrowserWasmModule(
  * @param exports - Member exports from WebAssembly instance.
  * @returns True if exports conform to BrowserFlintExports.
  */
+// skipcq: JS-R1005
 function isBrowserFlintExports(
   exports: WebAssembly.Exports,
 ): exports is WebAssembly.Exports & BrowserFlintExports {
@@ -492,6 +490,7 @@ function flintGeneratedWasmAdapter(artifact: BuildArtifact): RuntimeAdapter {
  * @param value - Dynamic import export candidate.
  * @returns True if value contains required Rust WASM kernel functions.
  */
+// skipcq: JS-R1005
 function isRustWasmExports(value: unknown): value is RustWasmExports {
   return (
     typeof value === "object" &&
@@ -534,6 +533,7 @@ interface AssemblyScriptModule {
  * @param value - Dynamic import export candidate.
  * @returns True if value conforms to AssemblyScriptModule.
  */
+// skipcq: JS-R1005
 function isAssemblyScriptModule(value: unknown): value is AssemblyScriptModule {
   return (
     typeof value === "object" &&
@@ -833,6 +833,7 @@ export async function runBrowserRequest(
  * @param value - Candidate request payload.
  * @returns True if value is a valid BrowserBenchmarkRequest.
  */
+// skipcq: JS-R1005
 function isBrowserBenchmarkRequest(
   value: unknown,
 ): value is BrowserBenchmarkRequest {

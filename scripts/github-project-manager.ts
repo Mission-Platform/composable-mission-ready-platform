@@ -366,6 +366,7 @@ export async function checkProjectAuthScopes(): Promise<{
   }
 }
 
+// skipcq: JS-R1005
 export async function exportProjectPlan(which: 'components' | 'flint' | 'fws' | 'all' = 'all'): Promise<void> {
   const configs: ProjectConfig[] = [];
   if (which === 'all' || which === 'components') {
@@ -383,7 +384,7 @@ export async function exportProjectPlan(which: 'components' | 'flint' | 'fws' | 
   }
 }
 
-export async function showProjectStatus(which: 'components' | 'flint' | 'fws' | 'all' = 'all'): Promise<void> {
+export function showProjectStatus(which: 'components' | 'flint' | 'fws' | 'all' = 'all'): Promise<void> {
   const configs: ProjectConfig[] = [];
   if (which === 'all' || which === 'components') {
     configs.push(UI_COMPONENTS_PROJECT_CONFIG);
@@ -435,8 +436,10 @@ export async function showProjectStatus(which: 'components' | 'flint' | 'fws' | 
       console.log(`- ${stage.padEnd(11)}: ${count} issues`);
     }
   }
+  return Promise.resolve();
 }
 
+// skipcq: JS-R1005
 export async function syncBoard(boardName = 'The Board'): Promise<void> {
   console.log(`\n=== Synchronizing Items on Project '${boardName}' ===`);
   const auth = await checkProjectAuthScopes();
@@ -534,6 +537,7 @@ export async function syncBoard(boardName = 'The Board'): Promise<void> {
   }
 }
 
+// skipcq: JS-R1005
 export async function setupProject(target: 'components' | 'flint' | 'fws' = 'components'): Promise<void> {
   const config = target === 'fws' || target === 'flint' ? FLINT_PROJECT_CONFIG : UI_COMPONENTS_PROJECT_CONFIG;
   console.log(`[github-project-manager] Initiating project setup for '${config.title}'...`);

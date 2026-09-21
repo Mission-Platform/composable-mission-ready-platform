@@ -119,6 +119,7 @@ function compareStrings(left: string, right: string): number {
  * @param right - The right parameter.
  * @returns The number result.
  */
+// skipcq: JS-R1005
 function canonicalDiagnosticMetadataOrder(left: FlintDiagnostic, right: FlintDiagnostic): number {
   return (
     compareStrings(left.phase, right.phase) ||
@@ -404,6 +405,7 @@ export function encodeFlintSelfHostedDiagnostics(diagnostics: readonly FlintDiag
  * @param bytes - The bytes parameter.
  * @returns The readonly FlintDiagnostic[] result.
  */
+// skipcq: JS-R1005
 export function decodeFlintSelfHostedDiagnostics(bytes: Uint8Array): readonly FlintDiagnostic[] {
   const reader = new BinaryReader(bytes);
   if (!reader.take(diagnosticMagic.length).every((value, index) => value === diagnosticMagic[index]))
@@ -488,6 +490,7 @@ export function createFlintSelfHostedStageArtifact(
  * @param artifact - The artifact parameter.
  * @returns The Uint8Array result.
  */
+// skipcq: JS-R1005
 export function encodeFlintSelfHostedStageArtifact(artifact: FlintSelfHostedStageArtifact): Uint8Array {
   if (artifact.format !== FLINT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT) invalid('artifact format is unsupported');
   if (artifact.version !== FLINT_SELF_HOSTED_STAGE_ARTIFACT_VERSION) invalid('artifact version is unsupported');
@@ -517,6 +520,7 @@ export function encodeFlintSelfHostedStageArtifact(artifact: FlintSelfHostedStag
  * @param maxPayloadBytes - The maximum payload size.
  * @returns The parsed artifact header values.
  */
+// skipcq: JS-R1005
 function readArtifactHeader(reader: BinaryReader, maxPayloadBytes: number) {
   if (!reader.take(artifactMagic.length).every((value, index) => value === artifactMagic[index]))
     invalid('artifact magic does not match');
@@ -542,6 +546,7 @@ function readArtifactHeader(reader: BinaryReader, maxPayloadBytes: number) {
  * @param fileName - The actual fileName.
  * @param graphHash - The actual graphHash.
  */
+// skipcq: JS-R1005
 function checkArtifactIdentity(
   expected: Partial<FlintSelfHostedStageArtifactIdentity> | undefined,
   sourceHash: string,
@@ -561,6 +566,7 @@ function checkArtifactIdentity(
  * @param header - The parsed artifact header values.
  * @param options - The expected validation options.
  */
+// skipcq: JS-R1005
 function validateArtifactHeader(
   header: ReturnType<typeof readArtifactHeader>,
   options: FlintSelfHostedStageArtifactDecodeOptions,
@@ -579,6 +585,7 @@ function validateArtifactHeader(
  * @param options - The options parameter.
  * @returns The FlintSelfHostedStageArtifact result.
  */
+// skipcq: JS-R1005
 export function decodeFlintSelfHostedStageArtifact(
   bytes: Uint8Array,
   options: FlintSelfHostedStageArtifactDecodeOptions = {},

@@ -75,6 +75,7 @@ export function createHelperModuleCarrier(input: {
     }
   };
 
+  // skipcq: JS-R1005
   const carryHelperModule = (sourcePath: string): void => {
     const sourceKey = path.resolve(sourcePath);
     if (carriedHelpers.has(sourceKey)) {

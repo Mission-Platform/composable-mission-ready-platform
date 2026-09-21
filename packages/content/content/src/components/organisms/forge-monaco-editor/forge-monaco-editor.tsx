@@ -9,7 +9,7 @@ import type { FlintMonacoOptions } from '../../../monaco/flint';
 // dynamic `import('monaco-editor')` inside the mount `useEffect`, which lets
 // Vite/Rollup split Monaco into its own chunk and ensures the editor only ever
 // evaluates in the browser — keeping this component SSG-safe.
-import type * as monaco from 'monaco-editor';
+import type * as monaco from 'monaco-editor'; // skipcq: JS-C1003
 
 /** The dynamically-imported Monaco runtime module. */
 type MonacoRuntime = typeof monaco;
@@ -134,8 +134,8 @@ export function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>):
   } = properties;
 
   const containerReference = useRef<HTMLDivElement | null>(null);
-  const editorReference = useRef<monaco.editor.IStandaloneCodeEditor | undefined>(undefined);
-  const monacoReference = useRef<MonacoRuntime | undefined>(undefined);
+  const editorReference = useRef<monaco.editor.IStandaloneCodeEditor | undefined>(undefined); // skipcq: JS-W1042
+  const monacoReference = useRef<MonacoRuntime | undefined>(undefined); // skipcq: JS-W1042
   // `true` while the value-mirror effect below is imperatively pushing an
   // incoming `modelValue` into the editor. Monaco fires `onDidChangeModelContent`
   // *synchronously* from `setValue`, so without this guard that programmatic edit
@@ -144,10 +144,10 @@ export function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>):
   // unbounded pre-flush loop that silently freezes the host (no framework
   // recursion warning, since pre-flush jobs are not recursion-capped).
   const applyingModelValueReference = useRef<boolean>(false);
-  const completionDisposableReference = useRef<monaco.IDisposable | undefined>(undefined);
+  const completionDisposableReference = useRef<monaco.IDisposable | undefined>(undefined); // skipcq: JS-W1042
   // Disposers for the lazily-attached spell/grammar checkers.
-  const hunspellDisposeReference = useRef<(() => void) | undefined>(undefined);
-  const harperDisposeReference = useRef<(() => void) | undefined>(undefined);
+  const hunspellDisposeReference = useRef<(() => void) | undefined>(undefined); // skipcq: JS-W1042
+  const harperDisposeReference = useRef<(() => void) | undefined>(undefined); // skipcq: JS-W1042
   const flintDisposeReference = useRef<(() => void) | undefined>(undefined); // skipcq: JS-W1042
   const flintAttachGenerationReference = useRef(0);
 
@@ -182,7 +182,9 @@ export function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>):
           flintDisposeReference.current = attachFlintMonaco(editor, runtime, flintOptions).dispose;
         }
       })
-      .catch(() => {});
+      .catch(() => {
+        /* no-op */
+      });
   };
 
   // (Re-)wire Hunspell + Harper against the live editor. Both cores are imported

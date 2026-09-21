@@ -41,29 +41,36 @@ export function createFlintLanguageService(host?: FlintWorkspaceHost): FlintLang
   const options = new Map<string, FlintWorkspaceOptions>();
   const cache = new Map<string, { readonly key: string; readonly analysis: FlintAnalysis }>();
   let disposed = false;
+  let workspaceIndex: ReturnType<typeof createFlintWorkspaceIndex> | undefined;
+  // skipcq: JS-D1001
   const assertActive = (): void => {
     if (disposed) throw new Error('Flint language service has been disposed.');
   };
+  // skipcq: JS-D1001
   const getDocument = (uri: string): FlintDocument => {
     const document = documents.get(uri);
     if (document === undefined) throw new Error(`No open Flint document for '${uri}'.`);
     return document;
   };
+  // skipcq: JS-D1001
   const invalidateWorkspace = (change?: FlintWorkspaceChange): void => {
     assertActive();
     if (change?.uri === undefined) {
       cache.clear();
       options.clear();
+      // skipcq: JS-0357
       workspaceIndex?.invalidate(change);
       return;
     }
     cache.delete(change.uri);
     options.delete(change.uri);
+    // skipcq: JS-0357
     workspaceIndex?.invalidate(change);
   };
   const watcher = host?.watch?.((change) => {
     invalidateWorkspace(change);
   });
+  // skipcq: JS-D1001
   const refreshWorkspace = async (uri?: string): Promise<void> => {
     assertActive();
     if (host !== undefined) {
@@ -81,12 +88,15 @@ export function createFlintLanguageService(host?: FlintWorkspaceHost): FlintLang
         }),
       );
     }
+    // skipcq: JS-0357
     await workspaceIndex?.refresh(uri);
   };
+  // skipcq: JS-D1001
   const diagnose = (uri: string): FlintAnalysis => {
     assertActive();
     const document = getDocument(uri);
     const workspaceOptions = options.get(uri) ?? emptyOptions;
+    // skipcq: JS-0357
     const snapshot = workspaceIndex?.analysisSnapshot(uri);
     const key = `${documentCacheKey(document, workspaceOptions)}\0${snapshot?.identity ?? 'local'}`;
     const cached = cache.get(uri);
@@ -95,7 +105,7 @@ export function createFlintLanguageService(host?: FlintWorkspaceHost): FlintLang
     cache.set(uri, { key, analysis });
     return analysis;
   };
-  const workspaceIndex = createFlintWorkspaceIndex(
+  workspaceIndex = createFlintWorkspaceIndex(
     {
       documents,
       diagnose: (uri) => diagnose(uri),

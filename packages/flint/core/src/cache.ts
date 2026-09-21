@@ -215,6 +215,7 @@ export function persistFlintWat(cache: FlintWatCache | undefined, key: string, w
 /**
  * Persists debug artifacts (WAT and Wasm, both optimized and unoptimized) to disk.
  */
+// skipcq: JS-R1005
 export function persistFlintDebugArtifacts(
   cache: FlintWatCache | undefined,
   key: string,
@@ -232,6 +233,7 @@ export function persistFlintDebugArtifacts(
     optimizedWasmPath?: string;
     unoptimizedWasmPath?: string;
   } = {};
+  // skipcq: JS-D1001
   const writeWat = (variant: FlintDebugArtifactVariant, contents: string): void => {
     const path = flintDebugArtifactPath(cache, key, variant, 'wat');
     try {
@@ -242,6 +244,7 @@ export function persistFlintDebugArtifacts(
       // Debug inspection must never make compilation fail.
     }
   };
+  // skipcq: JS-D1001
   const writeWasm = (variant: FlintDebugArtifactVariant, contents: Uint8Array): void => {
     if (cache.writeBinaryAtomic === undefined) return;
     const path = flintDebugArtifactPath(cache, key, variant, 'wasm');

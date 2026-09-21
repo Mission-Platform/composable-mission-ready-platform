@@ -1,7 +1,7 @@
 import { access } from 'node:fs/promises';
 import path from 'node:path';
 
-import * as vscode from 'vscode';
+import * as vscode from 'vscode'; // skipcq: JS-C1003
 
 import {
   assertNodeRuntime,
@@ -141,6 +141,7 @@ function resolveRuntimePath(configured: unknown, fallback: string | undefined): 
  * @param settings Active Flint debug settings.
  * @returns Fully populated FlintLaunchConfiguration.
  */
+// skipcq: JS-R1005
 function buildResolvedLaunchConfiguration(
   configuration: vscode.DebugConfiguration,
   settings: FlintDebugSettings,

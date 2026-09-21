@@ -40,6 +40,7 @@ const outcomeTypes = ['Iterable', 'Iterator', 'Option', 'Result', 'iterResult'];
  * @param symbols - Visible document and workspace symbols.
  * @returns Array of completion items.
  */
+// skipcq: JS-R1005
 export function completeFlint(
   source: string,
   position: FlintPosition,
@@ -52,6 +53,7 @@ export function completeFlint(
   const start = offset - prefix.length;
   const range = rangeFromOffsets(source, start, offset);
   const items = new Map<string, FlintCompletion>();
+  // skipcq: JS-D1001
   const add = (item: Omit<FlintCompletion, 'range'>): void => {
     if (!item.label.startsWith(prefix)) return;
     items.set(item.label, { ...item, range });
@@ -117,6 +119,7 @@ function visibleSymbols(symbols: readonly FlintSymbol[], offset: number): readon
       symbol.scopeRange.endOffset >= offset,
   )?.name;
 
+  // skipcq: JS-D1001, JS-R1005
   const isInScope = (symbol: FlintSymbol): boolean => {
     if (symbol.kind !== 'local' && symbol.kind !== 'parameter' && symbol.kind !== 'type') return true;
     if (symbol.scopeRange === undefined) return true;
@@ -124,6 +127,7 @@ function visibleSymbols(symbols: readonly FlintSymbol[], offset: number): readon
   };
 
   return symbols.filter(
+    // skipcq: JS-R1005
     (symbol) =>
       isInScope(symbol) &&
       ((symbol.kind !== 'local' && symbol.kind !== 'parameter' && symbol.kind !== 'type') ||

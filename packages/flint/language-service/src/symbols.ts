@@ -27,6 +27,7 @@ export interface FlintSymbolIndex {
 }
 
 /** Traverses a Flint module AST building an index of all declared symbols and references. */
+// skipcq: JS-R1005
 export function buildSymbolIndex(
   source: string,
   module: FlintModule | undefined,
@@ -154,6 +155,7 @@ function addStructSymbols(
 }
 
 /** Indexes enum declarations, variants, and variant payload fields. */
+// skipcq: JS-R1005
 function addEnumSymbols(
   source: string,
   declaration: FlintEnumDeclaration,
@@ -291,6 +293,7 @@ function genericSuffix(parameters: readonly FlintGenericParameter[]): string {
 }
 
 /** Traverses statements indexing local variables, parameters, and control-flow blocks. */
+// skipcq: JS-R1005
 function addStatementSymbols(
   source: string,
   declaration: FlintFunction,
@@ -382,6 +385,7 @@ function addStatementSymbols(
 }
 
 /** Traverses expressions indexing referenced variables, calls, and member access. */
+// skipcq: JS-R1005
 function addExpressionSymbols(
   source: string,
   declaration: FlintFunction,
@@ -474,6 +478,7 @@ function blockScope(
 }
 
 /** Indexes a type reference occurrence. */
+// skipcq: JS-R1005
 function addTypeSymbol(symbols: FlintSymbol[], source: string, type: FlintTypeName): void {
   const rendered = renderTypeName(type);
   if (!primitiveTypes.has(type.name as FlintPrimitiveType) && type.reference === undefined) return;

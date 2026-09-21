@@ -86,11 +86,12 @@ describe('Forge Web Script Vitest adapter', () => {
         resolve: { alias: { '@fixture-root': '/tmp/fixtures' } },
       },
     });
+    // skipcq: JS-R1005
     const pluginNames = (config.plugins ?? []).flatMap((plugin) => {
       const candidate: unknown = Array.isArray(plugin) ? plugin[0] : plugin;
       if (typeof candidate !== 'object' || candidate === null || !('name' in candidate)) return [];
-      const name = (candidate as { readonly name?: unknown }).name;
-      return typeof name === 'string' ? [name] : [];
+      const pluginName = (candidate as { readonly name?: unknown }).name;
+      return typeof pluginName === 'string' ? [pluginName] : [];
     });
     expect(pluginNames).toContain('@mission-platform/vite-plugin-flint');
     expect(pluginNames).toContain('consumer-plugin');

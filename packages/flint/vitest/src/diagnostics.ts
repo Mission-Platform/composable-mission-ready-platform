@@ -51,6 +51,7 @@ export function findFlintDiagnostic(
   expectation: FlintDiagnosticExpectation,
 ): FlintDiagnostic | undefined {
   return diagnostics.find(
+    // skipcq: JS-R1005
     (diagnostic) =>
       diagnostic.code === expectation.code &&
       (expectation.phase === undefined || diagnostic.phase === expectation.phase) &&

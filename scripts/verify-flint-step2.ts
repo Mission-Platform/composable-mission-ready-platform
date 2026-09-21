@@ -13,10 +13,12 @@ export interface ScanResult {
   content: string;
 }
 
+// skipcq: JS-D1001
 export function scanForLegacyPatterns(): ScanResult[] {
   const results: ScanResult[] = [];
   const patterns = [/@mission-platform\/forge-web-script/g, /ForgeWebScript/g, /\bFWS-[A-Z0-9-]+/g, /\.fws\b/g];
 
+  // skipcq: JS-D1001, JS-R1005
   function walk(dir: string) {
     for (const item of readdirSync(dir)) {
       if (
@@ -62,6 +64,7 @@ export function scanForLegacyPatterns(): ScanResult[] {
   return results;
 }
 
+// skipcq: JS-D1001
 export function runPackageBuild(pkg: string): { success: boolean; output: string } {
   const pkgDir = join(FLINT_ROOT, pkg);
   const pkgJson = JSON.parse(readFileSync(join(pkgDir, 'package.json'), 'utf8'));
@@ -85,6 +88,7 @@ export function runPackageBuild(pkg: string): { success: boolean; output: string
   }
 }
 
+// skipcq: JS-D1001, JS-R1005
 export function runPackageTest(pkg: string): { success: boolean; output: string; failures: string[] } {
   const pkgDir = join(FLINT_ROOT, pkg);
   const pkgJson = JSON.parse(readFileSync(join(pkgDir, 'package.json'), 'utf8'));

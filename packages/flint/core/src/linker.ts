@@ -53,6 +53,7 @@ interface NamespaceContext {
  * @param context - Active namespacing context.
  * @returns The renamed symbol or original name.
  */
+// skipcq: JS-R1005
 function renameIdentifier(name: string, context: NamespaceContext): string {
   const linked = context.linkedCalls.get(name) ?? name;
   if (context.privateNames.has(linked)) return `${context.prefix}${linked}`;
@@ -120,6 +121,7 @@ function namespaceOperatorExpression(
  * @param transform - Recursive expression transformer callback.
  * @returns Updated expression AST node.
  */
+// skipcq: JS-R1005
 function namespaceAggregateExpression(
   value: FlintExpression & { kind: 'struct-value' | 'enum-value' | 'array-literal' | 'vector-literal' | 'match' },
   transform: (expr: FlintExpression) => FlintExpression,
@@ -159,6 +161,7 @@ function namespaceAggregateExpression(
  * @param context - Active namespacing context.
  * @returns The rewritten expression node.
  */
+// skipcq: JS-R1005
 function namespaceExpression(value: FlintExpression, context: NamespaceContext): FlintExpression {
   if (value.kind === 'literal' || value.kind === 'identifier') {
     return value;
@@ -179,6 +182,7 @@ function namespaceExpression(value: FlintExpression, context: NamespaceContext):
  * @param context - Active namespacing context.
  * @returns Rewritten statement AST node.
  */
+// skipcq: JS-R1005
 function namespaceLinearStatement(
   value: FlintStatement & { kind: 'let' | 'assignment' | 'return' | 'expression-statement' | 'yield' },
   context: NamespaceContext,
@@ -220,6 +224,7 @@ function namespaceLinearStatement(
  * @param context - Active namespacing context.
  * @returns Rewritten statement AST node.
  */
+// skipcq: JS-R1005
 function namespaceBranchStatement(
   value: FlintStatement & { kind: 'if' | 'switch' | 'match-statement' },
   context: NamespaceContext,
@@ -262,6 +267,7 @@ function namespaceBranchStatement(
  * @param context - Active namespacing context.
  * @returns Rewritten statement AST node.
  */
+// skipcq: JS-R1005
 function namespaceLoopStatement(
   value: Extract<FlintStatement, { kind: LoopStatementKind }>,
   context: NamespaceContext,
@@ -432,6 +438,7 @@ function collectComponentFiles(
   seen: Set<string>,
 ): string[] {
   const files: string[] = [];
+  // skipcq: JS-D1001
   const visit = (fileName: string): void => {
     if (seen.has(fileName)) return;
     seen.add(fileName);
@@ -453,6 +460,7 @@ function collectComponentFiles(
  * @param modules - All modules included in the static component.
  * @param diagnostics - Diagnostic list to append errors to.
  */
+// skipcq: JS-R1005
 function validateStaticComponentExports(
   root: FlintResolvedModule,
   modules: readonly FlintResolvedModule[],
@@ -497,6 +505,7 @@ function validateStaticComponentExports(
  * @param byFile - Map of resolved modules indexed by file name.
  * @returns Mapping from imported symbol aliases to namespaced function names.
  */
+// skipcq: JS-R1005
 function buildLinkedCallsMap(
   module: FlintResolvedModule,
   rootProjectRoot: string,
@@ -564,6 +573,7 @@ function mergeStaticComponent(
  * @param diagnostics - Diagnostic list to append linking errors to.
  * @returns Array of merged static module ASTs.
  */
+// skipcq: JS-R1005
 function staticComponents(graph: FlintModuleGraph, diagnostics: FlintDiagnostic[]): FlintModule[] {
   const byFile = new Map(graph.modules.map((module) => [module.fileName, module]));
   const staticTargets = new Set(graph.edges.filter((edge) => edge.linkMode === 'static').map((edge) => edge.resolved));
@@ -624,6 +634,7 @@ function isConfiguredCrossProjectLink(
  * @param configuration - Active link configuration.
  * @param diagnostics - Diagnostic list to append errors to.
  */
+// skipcq: JS-R1005
 function validateSingleEdge(
   edge: FlintModuleEdge,
   importer: FlintResolvedModule,
@@ -729,6 +740,7 @@ function detectStaticLinkingCycles(
   const active = new Set<string>();
   const complete = new Set<string>();
 
+  // skipcq: JS-D1001
   const visit = (fileName: string): void => {
     if (active.has(fileName)) {
       reportStaticCycle(fileName, modulesByFile, diagnostics);

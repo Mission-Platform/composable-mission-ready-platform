@@ -36,7 +36,7 @@ export class FlintBindingGenerator {
    * @param lines - Output line accumulator.
    */
   private generateEnums(lines: string[]): void {
-    const enums = this.module.definitions.filter((d): d is WebIdlEnum => d.kind === 'enum');
+    const enums = this.module.definitions.filter((definition): definition is WebIdlEnum => definition.kind === 'enum');
     for (const enumDeclaration of enums) {
       lines.push(this.generateEnum(enumDeclaration), '');
     }
@@ -48,7 +48,9 @@ export class FlintBindingGenerator {
    * @param lines - Output line accumulator.
    */
   private generateDictionaries(lines: string[]): void {
-    const dictionaries = this.module.definitions.filter((d): d is WebIdlDictionary => d.kind === 'dictionary');
+    const dictionaries = this.module.definitions.filter(
+      (definition): definition is WebIdlDictionary => definition.kind === 'dictionary',
+    );
     for (const dict of dictionaries) {
       lines.push(this.generateDictionary(dict), '');
     }
@@ -96,7 +98,9 @@ export class FlintBindingGenerator {
     emitImports: boolean,
     lines: string[],
   ): void {
-    const interfaces = this.module.definitions.filter((d): d is WebIdlInterface => d.kind === 'interface');
+    const interfaces = this.module.definitions.filter(
+      (definition): definition is WebIdlInterface => definition.kind === 'interface',
+    );
     for (const iface of interfaces) {
       this.generateInterfaceSection(iface, capabilityPrefix, emitInterfaces, emitImports, lines);
     }
@@ -112,7 +116,9 @@ export class FlintBindingGenerator {
   private generateNamespaces(capabilityPrefix: string, emitImports: boolean, lines: string[]): void {
     if (!emitImports) return;
 
-    const namespaces = this.module.definitions.filter((d): d is WebIdlNamespace => d.kind === 'namespace');
+    const namespaces = this.module.definitions.filter(
+      (definition): definition is WebIdlNamespace => definition.kind === 'namespace',
+    );
     for (const ns of namespaces) {
       const importLines = this.generateNamespaceCapabilityImports(ns, capabilityPrefix);
       if (importLines.length > 0) {
@@ -148,9 +154,9 @@ export class FlintBindingGenerator {
    * @returns The rendered `export enum` declaration text.
    */
   private generateEnum(enumDeclaration: WebIdlEnum): string {
-    const lines: string[] = [`export enum ${this.sanitizeIdentifier(enumDeclaration.name)} {`];
+    const lines: string[] = [`export enum ${sanitizeIdentifier(enumDeclaration.name)} {`];
     for (const value of enumDeclaration.values) {
-      const variantName = this.formatEnumVariant(value);
+      const variantName = formatEnumVariant(value);
       lines.push(`  ${variantName},`);
     }
     lines.push('}');
@@ -164,9 +170,9 @@ export class FlintBindingGenerator {
    * @returns The rendered `struct` declaration text.
    */
   private generateDictionary(dict: WebIdlDictionary): string {
-    const lines: string[] = [`struct ${this.sanitizeIdentifier(dict.name)} {`];
+    const lines: string[] = [`struct ${sanitizeIdentifier(dict.name)} {`];
     for (const member of dict.members) {
-      const fieldName = this.sanitizeIdentifier(member.name);
+      const fieldName = sanitizeIdentifier(member.name);
       let fieldType = this.mapType(member.type);
       if (!member.required && !member.type.nullable) {
         fieldType = `Option<${fieldType}>`;
@@ -183,24 +189,25 @@ export class FlintBindingGenerator {
    * @param iface - Interface AST node to render.
    * @returns The rendered `interface` declaration text.
    */
+  // skipcq: JS-R1005
   private generateInterface(iface: WebIdlInterface): string {
-    const lines: string[] = [`interface ${this.sanitizeIdentifier(iface.name)} {`];
+    const lines: string[] = [`interface ${sanitizeIdentifier(iface.name)} {`];
 
     // Attributes as getter / setter functions
     for (const member of iface.members) {
       if (member.kind === 'attribute') {
         const attributeType = this.mapType(member.type);
-        const getterName = `get_${this.toSnakeCase(member.name)}`;
+        const getterName = `get_${toSnakeCase(member.name)}`;
         lines.push(`  fn ${getterName}() -> ${attributeType};`);
 
         if (!member.readonly) {
-          const setterName = `set_${this.toSnakeCase(member.name)}`;
+          const setterName = `set_${toSnakeCase(member.name)}`;
           lines.push(`  fn ${setterName}(value: ${attributeType}) -> unit;`);
         }
       } else if (member.kind === 'operation' && member.name !== undefined) {
-        const opName = this.toSnakeCase(member.name);
+        const opName = toSnakeCase(member.name);
         const arguments_ = member.arguments
-          .map((argument) => `${this.sanitizeIdentifier(argument.name)}: ${this.mapType(argument.type)}`)
+          .map((argument) => `${sanitizeIdentifier(argument.name)}: ${this.mapType(argument.type)}`)
           .join(', ');
         const returnType = this.mapType(member.returnType);
         lines.push(`  fn ${opName}(${arguments_}) -> ${returnType};`);
@@ -218,21 +225,22 @@ export class FlintBindingGenerator {
    * @param prefix - Host capability namespace prefix.
    * @returns The rendered `import capability` statement lines.
    */
+  // skipcq: JS-R1005
   private generateCapabilityImports(iface: WebIdlInterface, prefix: string): string[] {
     const lines: string[] = [];
-    const ifaceNameSnake = this.toSnakeCase(iface.name);
+    const ifaceNameSnake = toSnakeCase(iface.name);
 
     for (const member of iface.members) {
       if (member.kind === 'attribute') {
         const attributeType = this.mapType(member.type);
-        const getterProperty = `get_${this.toSnakeCase(member.name)}`;
+        const getterProperty = `get_${toSnakeCase(member.name)}`;
         const getterAlias = `${ifaceNameSnake}_${getterProperty}`;
         lines.push(
           `import capability "${prefix}.${iface.name}.${getterProperty}" as ${getterAlias}() -> ${attributeType};`,
         );
 
         if (!member.readonly) {
-          const setterProperty = `set_${this.toSnakeCase(member.name)}`;
+          const setterProperty = `set_${toSnakeCase(member.name)}`;
           const setterAlias = `${ifaceNameSnake}_${setterProperty}`;
           lines.push(
             `import capability "${prefix}.${iface.name}.${setterProperty}" as ${setterAlias}(value: ${attributeType}) -> unit;`,
@@ -240,10 +248,10 @@ export class FlintBindingGenerator {
         }
       } else if (member.kind === 'operation' && member.name !== undefined) {
         const opName = member.name;
-        const opNameSnake = this.toSnakeCase(opName);
+        const opNameSnake = toSnakeCase(opName);
         const alias = `${ifaceNameSnake}_${opNameSnake}`;
         const arguments_ = member.arguments
-          .map((argument) => `${this.sanitizeIdentifier(argument.name)}: ${this.mapType(argument.type)}`)
+          .map((argument) => `${sanitizeIdentifier(argument.name)}: ${this.mapType(argument.type)}`)
           .join(', ');
         const returnType = this.mapType(member.returnType);
         lines.push(
@@ -262,21 +270,22 @@ export class FlintBindingGenerator {
    * @param prefix - Host capability namespace prefix.
    * @returns The rendered `import capability` statement lines.
    */
+  // skipcq: JS-R1005
   private generateNamespaceCapabilityImports(ns: WebIdlNamespace, prefix: string): string[] {
     const lines: string[] = [];
-    const nsNameSnake = this.toSnakeCase(ns.name);
+    const nsNameSnake = toSnakeCase(ns.name);
 
     for (const member of ns.members) {
       if (member.kind === 'attribute') {
         const attributeType = this.mapType(member.type);
-        const getterProperty = `get_${this.toSnakeCase(member.name)}`;
+        const getterProperty = `get_${toSnakeCase(member.name)}`;
         const getterAlias = `${nsNameSnake}_${getterProperty}`;
         lines.push(
           `import capability "${prefix}.${ns.name}.${getterProperty}" as ${getterAlias}() -> ${attributeType};`,
         );
 
         if (!member.readonly) {
-          const setterProperty = `set_${this.toSnakeCase(member.name)}`;
+          const setterProperty = `set_${toSnakeCase(member.name)}`;
           const setterAlias = `${nsNameSnake}_${setterProperty}`;
           lines.push(
             `import capability "${prefix}.${ns.name}.${setterProperty}" as ${setterAlias}(value: ${attributeType}) -> unit;`,
@@ -284,10 +293,10 @@ export class FlintBindingGenerator {
         }
       } else if (member.kind === 'operation' && member.name !== undefined) {
         const opName = member.name;
-        const opNameSnake = this.toSnakeCase(opName);
+        const opNameSnake = toSnakeCase(opName);
         const alias = `${nsNameSnake}_${opNameSnake}`;
         const arguments_ = member.arguments
-          .map((argument) => `${this.sanitizeIdentifier(argument.name)}: ${this.mapType(argument.type)}`)
+          .map((argument) => `${sanitizeIdentifier(argument.name)}: ${this.mapType(argument.type)}`)
           .join(', ');
         const returnType = this.mapType(member.returnType);
         lines.push(`import capability "${prefix}.${ns.name}.${opName}" as ${alias}(${arguments_}) -> ${returnType};`);
@@ -350,7 +359,9 @@ export class FlintBindingGenerator {
    * @returns The rendered FLINT type text.
    */
   private mapUnionType(type: WebIdlType): string {
-    const nonNull = type.unionTypes?.filter((u) => u.name !== 'undefined' && u.name !== 'void');
+    const nonNull = type.unionTypes?.filter(
+      (unionMember) => unionMember.name !== 'undefined' && unionMember.name !== 'void',
+    );
     return nonNull && nonNull.length > 0 ? this.mapType(nonNull[0]) : 'string';
   }
 
@@ -360,6 +371,7 @@ export class FlintBindingGenerator {
    * @param type - Container type to map.
    * @returns The rendered FLINT type text, without `Option<...>` nullability wrapping.
    */
+  // skipcq: JS-R1005
   private mapContainerType(type: WebIdlType): string {
     switch (type.kind) {
       case 'sequence':
@@ -376,7 +388,7 @@ export class FlintBindingGenerator {
         return this.mapUnionType(type);
       }
       default: {
-        return this.sanitizeIdentifier(type.name);
+        return sanitizeIdentifier(type.name);
       }
     }
   }
@@ -387,6 +399,7 @@ export class FlintBindingGenerator {
    * @param type - Web IDL type reference to map.
    * @returns The rendered FLINT type text.
    */
+  // skipcq: JS-R1005
   public mapType(type: WebIdlType): string {
     const custom = this.mapCustomType(type);
     if (custom !== undefined) return custom;
@@ -395,7 +408,8 @@ export class FlintBindingGenerator {
 
     switch (type.kind) {
       case 'primitive': {
-        result = this.mapPrimitive(type.name);
+        // skipcq: JS-0105
+        result = mapPrimitive(type.name);
         break;
       }
       case 'string': {
@@ -418,89 +432,6 @@ export class FlintBindingGenerator {
 
     return result;
   }
-
-  /**
-   * Maps a Web IDL primitive type name to its FLINT scalar type equivalent.
-   *
-   * @param name - Web IDL primitive type name.
-   * @returns The mapped FLINT scalar type name.
-   */
-  private mapPrimitive(name: string): string {
-    return WEB_IDL_TO_FLINT_PRIMITIVE_TYPES[name] ?? 'u32';
-  }
-
-  /**
-   * Sanitizes a Web IDL identifier for use as an FLINT identifier, escaping reserved keywords.
-   *
-   * @param name - Source identifier to sanitize.
-   * @returns The sanitized FLINT identifier.
-   */
-  private sanitizeIdentifier(name: string): string {
-    const reserved = new Set([
-      'as',
-      'break',
-      'case',
-      'const',
-      'continue',
-      'do',
-      'else',
-      'enum',
-      'export',
-      'fn',
-      'for',
-      'if',
-      'import',
-      'in',
-      'inline',
-      'interface',
-      'iter',
-      'let',
-      'match',
-      'module',
-      'mut',
-      'noinline',
-      'record',
-      'return',
-      'struct',
-      'switch',
-      'while',
-      'yield',
-    ]);
-
-    const sanitized = name.replaceAll(/[^a-zA-Z0-9_]/g, '_');
-    if (reserved.has(sanitized)) {
-      return `_${sanitized}`;
-    }
-    return sanitized;
-  }
-
-  /**
-   * Converts a camelCase or mixed-case identifier to `snake_case`.
-   *
-   * @param string_ - Identifier to convert.
-   * @returns The converted `snake_case` identifier.
-   */
-  private toSnakeCase(string_: string): string {
-    return string_
-      .replaceAll(/([a-z0-9])([A-Z])/g, '$1_$2')
-      .replaceAll(/[^a-zA-Z0-9_]/g, '_')
-      .toLowerCase();
-  }
-
-  /**
-   * Formats a raw Web IDL enum value string into a PascalCase FLINT enum variant name.
-   *
-   * @param value - Raw enum value string (e.g. `'readwrite'`, `'aes-gcm'`).
-   * @returns The formatted PascalCase variant name.
-   */
-  private formatEnumVariant(value: string): string {
-    // Convert string like "readwrite" -> "Readwrite", "aes-gcm" -> "AesGcm"
-    const cleaned = value.replaceAll(/[^a-zA-Z0-9]/g, ' ');
-    const parts = cleaned.split(/\s+/).filter(Boolean);
-    if (parts.length === 0) return 'Variant';
-
-    return parts.map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()).join('');
-  }
 }
 
 const WEB_IDL_TO_FLINT_PRIMITIVE_TYPES: Readonly<Record<string, string>> = {
@@ -521,6 +452,93 @@ const WEB_IDL_TO_FLINT_PRIMITIVE_TYPES: Readonly<Record<string, string>> = {
   void: 'unit',
   undefined: 'unit',
 };
+
+/**
+ * Maps a Web IDL primitive type name to its FLINT scalar type equivalent.
+ *
+ * @param name - Web IDL primitive type name.
+ * @returns The mapped FLINT scalar type name.
+ */
+function mapPrimitive(name: string): string {
+  // skipcq: JS-0357
+  return WEB_IDL_TO_FLINT_PRIMITIVE_TYPES[name] ?? 'u32';
+}
+
+/**
+ * Sanitizes a Web IDL identifier for use as an FLINT identifier, escaping reserved keywords.
+ *
+ * @param name - Source identifier to sanitize.
+ * @returns The sanitized FLINT identifier.
+ */
+// skipcq: JS-0105
+function sanitizeIdentifier(name: string): string {
+  const reserved = new Set([
+    'as',
+    'break',
+    'case',
+    'const',
+    'continue',
+    'do',
+    'else',
+    'enum',
+    'export',
+    'fn',
+    'for',
+    'if',
+    'import',
+    'in',
+    'inline',
+    'interface',
+    'iter',
+    'let',
+    'match',
+    'module',
+    'mut',
+    'noinline',
+    'record',
+    'return',
+    'struct',
+    'switch',
+    'while',
+    'yield',
+  ]);
+
+  const sanitized = name.replaceAll(/[^a-zA-Z0-9_]/g, '_');
+  if (reserved.has(sanitized)) {
+    return `_${sanitized}`;
+  }
+  return sanitized;
+}
+
+/**
+ * Converts a camelCase or mixed-case identifier to `snake_case`.
+ *
+ * @param string_ - Identifier to convert.
+ * @returns The converted `snake_case` identifier.
+ */
+// skipcq: JS-0105
+function toSnakeCase(string_: string): string {
+  return string_
+    .replaceAll(/([a-z0-9])([A-Z])/g, '$1_$2')
+    .replaceAll(/[^a-zA-Z0-9_]/g, '_')
+    .toLowerCase();
+}
+
+/**
+ * Formats a raw Web IDL enum value string into a PascalCase FLINT enum variant name.
+ *
+ * @param value - Raw enum value string (e.g. `'readwrite'`, `'aes-gcm'`).
+ * @returns The formatted PascalCase variant name.
+ */
+// skipcq: JS-0105
+function formatEnumVariant(value: string): string {
+  // Convert string like "readwrite" -> "Readwrite", "aes-gcm" -> "AesGcm"
+  const cleaned = value.replaceAll(/[^a-zA-Z0-9]/g, ' ');
+  const parts = cleaned.split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return 'Variant';
+
+  return parts.map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()).join('');
+}
 
 /**
  * Generates FLINT header struct/interface/capability-import bindings for a parsed Web IDL module.

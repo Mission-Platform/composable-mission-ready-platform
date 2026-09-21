@@ -39,6 +39,7 @@ export function tokenizeFlint(source: string, fileName = '<input>'): readonly Fl
  * @param next - Following significant token.
  * @returns Semantic classification kind.
  */
+// skipcq: JS-R1005
 function classifyToken(
   source: string,
   token: FlintToken,

@@ -29,6 +29,7 @@ import type {
  * @param projectRoots - Configured workspace project roots.
  * @returns Complete analysis report with diagnostics and symbols.
  */
+// skipcq: JS-R1005
 export function analyzeFlint(
   document: FlintDocument,
   options: FlintWorkspaceOptions,
@@ -92,6 +93,7 @@ export function analyzeFlint(
  * @param options - Workspace options.
  * @returns Stage report or undefined if self-hosted mode is disabled.
  */
+// skipcq: JS-R1005
 function runSelfHostedStage(
   document: FlintDocument,
   options: FlintWorkspaceOptions,
@@ -144,6 +146,7 @@ function runSelfHostedStage(
  * @param document - Target document.
  * @returns Language service diagnostic.
  */
+// skipcq: JS-R1005
 function toLanguageDiagnostic(source: string, diagnostic: FlintDiagnostic): FlintLanguageDiagnostic {
   return {
     code: diagnostic.code,

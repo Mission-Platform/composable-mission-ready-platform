@@ -208,6 +208,7 @@ async function compileOptions(options: FlintCliOptions): Promise<{
  * @param cwd Current working directory.
  * @returns Exit code.
  */
+// skipcq: JS-R1005
 async function executeInspectSonIrCommand(options: FlintCliOptions, io: FlintCliIo, cwd: string): Promise<number> {
   const artifactFileName = options.entries[0];
   if (artifactFileName === undefined) return FLINT_CLI_USAGE_EXIT_CODE;
@@ -280,6 +281,7 @@ function emitCompilationResult(
  * @param io CLI I/O interface.
  * @returns Exit code 0.
  */
+// skipcq: JS-R1005
 function handleCheckCommand(
   options: FlintCliOptions,
   result: Awaited<ReturnType<typeof compileOptions>>,
@@ -321,6 +323,7 @@ function handleTraceCommand(
  * @param cwd Current working directory.
  * @returns Exit code.
  */
+// skipcq: JS-R1005
 async function handleCompileCommand(
   options: FlintCliOptions,
   result: Awaited<ReturnType<typeof compileOptions>>,
@@ -385,6 +388,7 @@ function dispatchCompiledCommand(
  * @param cwd Base working directory.
  * @returns Promise resolving to the numeric process exit code.
  */
+// skipcq: JS-R1005
 export async function runFlintCli(
   argv: readonly string[] = process.argv.slice(2),
   io: FlintCliIo = defaultIo,

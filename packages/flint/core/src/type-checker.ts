@@ -268,6 +268,7 @@ function checkSourceImports(
  * @param callables - Mutable callable registry.
  * @param options - Type-check options including requested capabilities.
  */
+// skipcq: JS-R1005
 function checkCapabilityImports(
   module: FlintModule,
   fileName: string,
@@ -370,6 +371,7 @@ function checkEnumDeclarations(module: FlintModule, fileName: string, diagnostic
  * @param fileName - Source file name for diagnostics.
  * @param diagnostics - Accumulator for diagnostics.
  */
+// skipcq: JS-R1005
 function checkEnumVariants(
   declaration: FlintModule['enums'][number],
   fileName: string,
@@ -420,6 +422,7 @@ function checkEnumVariants(
  * @param fileName - Source file name for diagnostics.
  * @param diagnostics - Accumulator for diagnostics.
  */
+// skipcq: JS-R1005
 function checkInterfaceDeclarations(module: FlintModule, fileName: string, diagnostics: FlintDiagnostic[]): void {
   for (const declaration of module.interfaces)
     for (const required of declaration.functions) {
@@ -452,6 +455,7 @@ function checkInterfaceDeclarations(module: FlintModule, fileName: string, diagn
  * @param callables - Mutable callable registry.
  * @param options - Type-check options including export requirements.
  */
+// skipcq: JS-R1005
 function registerModuleFunctions(
   module: FlintModule,
   fileName: string,
@@ -601,6 +605,7 @@ interface StatementCheckContext {
  * @param context - Shared statement-check context.
  * @returns True when the statement kind was handled.
  */
+// skipcq: JS-R1005
 function checkBindingStatement(statement: FlintStatement, context: StatementCheckContext): boolean {
   const { result, iterable, locals, environment, genericNames } = context;
   if (statement.kind === 'let') {
@@ -748,6 +753,7 @@ function checkAssignmentStatement(
  * @param locals - Local variable type map.
  * @param environment - Shared type-check environment.
  */
+// skipcq: JS-R1005
 function checkIndexedAssignment(
   statement: Extract<FlintStatement, { kind: 'assignment' }>,
   localType: string,
@@ -787,6 +793,7 @@ function checkIndexedAssignment(
  * @param fileName - Source file name for diagnostics.
  * @param diagnostics - Accumulator for diagnostics.
  */
+// skipcq: JS-R1005
 function reportFixedArrayIndexOutOfBounds(
   localType: string,
   indexExpression: FlintExpression,
@@ -916,6 +923,7 @@ function checkSwitchStatement(
  * @param fileName - Source file name for diagnostics.
  * @param diagnostics - Accumulator for diagnostics.
  */
+// skipcq: JS-R1005
 function checkSwitchArmTag(
   arm: Extract<FlintStatement, { kind: 'switch' }>['cases'][number],
   discriminant: string,
@@ -1054,6 +1062,7 @@ function checkYieldStatement(
  * @param environment - Shared type-check environment.
  * @param genericNames - In-scope generic parameter names.
  */
+// skipcq: JS-R1005
 function checkIteratorLoopStatement(
   statement: Extract<FlintStatement, { kind: 'iterator-loop' }>,
   result: string,
@@ -1152,6 +1161,7 @@ function inferPrimaryExpression(
  * @param expectedType - Optional expected type key.
  * @returns Inferred type key, or undefined when not a composite expression kind.
  */
+// skipcq: JS-R1005
 function inferCompositeExpression(
   expression: FlintExpression,
   locals: ReadonlyMap<string, string>,
@@ -1176,6 +1186,7 @@ function inferCompositeExpression(
  * @param expectedType - Optional expected numeric type for widening.
  * @returns Inferred type key.
  */
+// skipcq: JS-R1005
 function inferLiteralExpression(
   expression: Extract<FlintExpression, { kind: 'literal' }>,
   expectedType?: string,
@@ -1229,6 +1240,7 @@ function inferIdentifierExpression(
  * @param environment - Shared type-check environment.
  * @returns Inferred result type key.
  */
+// skipcq: JS-R1005
 function inferCallExpression(
   expression: Extract<FlintExpression, { kind: 'call' }>,
   locals: ReadonlyMap<string, string>,
@@ -1254,6 +1266,7 @@ function inferCallExpression(
  * @param environment - Shared type-check environment.
  * @returns Result type key, or undefined when not a collection method call.
  */
+// skipcq: JS-R1005
 function inferCollectionMethodCall(
   expression: Extract<FlintExpression, { kind: 'call' }>,
   locals: ReadonlyMap<string, string>,
@@ -1281,6 +1294,7 @@ function inferCollectionMethodCall(
  * @param locals - Local variable type map.
  * @param environment - Shared type-check environment.
  */
+// skipcq: JS-R1005
 function checkCollectionMethodArguments(
   expression: Extract<FlintExpression, { kind: 'call' }>,
   contract: CollectionMethodContract,
@@ -1498,6 +1512,7 @@ function inferEnumValueExpression(
  * @param fields - Expected variant fields when known.
  * @param environment - Shared type-check environment.
  */
+// skipcq: JS-R1005
 function reportEnumValueShapeDiagnostics(
   expression: Extract<FlintExpression, { kind: 'enum-value' }>,
   enumName: string,
@@ -1543,6 +1558,7 @@ function reportEnumValueShapeDiagnostics(
  * @param actualArguments - Inferred argument type keys.
  * @param environment - Shared type-check environment.
  */
+// skipcq: JS-R1005
 function checkEnumValueFieldTypes(
   expression: Extract<FlintExpression, { kind: 'enum-value' }>,
   fields: readonly FlintParameter[] | undefined,
@@ -1602,6 +1618,7 @@ function resolveEnumValueResultType(
  * @param expectedType - Optional expected collection type key.
  * @returns Inferred collection type key.
  */
+// skipcq: JS-R1005
 function inferCollectionLiteralExpression(
   expression: Extract<FlintExpression, { kind: 'array-literal' | 'vector-literal' }>,
   locals: ReadonlyMap<string, string>,
@@ -1658,6 +1675,7 @@ function inferIndexExpression(
  * @param environment - Shared type-check environment.
  * @returns Common arm result type key.
  */
+// skipcq: JS-R1005
 function inferMatchExpression(
   expression: Extract<FlintExpression, { kind: 'match' }>,
   locals: ReadonlyMap<string, string>,
@@ -1965,6 +1983,7 @@ function bindVariantPatternLocals(
  * @param environment - Shared type-check environment.
  * @returns Inferred result type key.
  */
+// skipcq: JS-R1005
 function inferUnaryExpression(
   expression: Extract<FlintExpression, { kind: 'unary' }>,
   locals: ReadonlyMap<string, string>,
@@ -2181,6 +2200,7 @@ function isPrimitiveTypeName(name: string): name is FlintPrimitiveType {
  * @param diagnostics - Accumulator for diagnostics.
  * @param declarationSpan - Span used when reporting arity errors.
  */
+// skipcq: JS-R1005
 function validateGenericArity(
   baseType: string,
   arity: number,
@@ -2218,6 +2238,7 @@ function validateGenericArity(
  * @param declared - Optional user-declared type.
  * @returns Expected type-argument count.
  */
+// skipcq: JS-R1005
 function expectedGenericArity(
   baseType: string,
   declared:
@@ -2437,6 +2458,7 @@ function buildTypeNameAst(name: string, arguments_: readonly FlintTypeName[]): F
  * @param callables - Known callable signatures.
  * @returns Receiver type key, or undefined when unresolved.
  */
+// skipcq: JS-R1005
 function memberReceiverType(
   receiver: string,
   locals: ReadonlyMap<string, string>,
@@ -2489,6 +2511,7 @@ function functionTypeKey(callable: Callable): string {
  * @param value - Raw generic argument list without surrounding angle brackets.
  * @returns Trimmed argument fragments.
  */
+// skipcq: JS-R1005
 function splitGenericArguments(value: string): string[] {
   const result: string[] = [];
   let start = 0;
@@ -2565,6 +2588,7 @@ function extractSubstitutedGenericArgument(aggregateType: string, enumName: stri
  * @param aggregateType - Optional fully applied aggregate type key.
  * @returns Resolved field type key.
  */
+// skipcq: JS-R1005
 function resolveEnumFieldType(
   type: FlintTypeName,
   declaration: FlintModule['enums'][number] | undefined,

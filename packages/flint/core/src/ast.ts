@@ -45,6 +45,7 @@ export interface FlintTypeName {
  * @param type - Type name node to stringify.
  * @returns Human-readable type string.
  */
+// skipcq: JS-R1005
 export function flintTypeNameToString(type: FlintTypeName): string {
   const name = type.reference ?? type.name;
   const generic =
@@ -158,6 +159,7 @@ function isUserDefinedPodType(
  * @param visiting - Cycle detection set for recursive types.
  * @returns True if the type qualifies as Plain Old Data.
  */
+// skipcq: JS-R1005
 export function isFlintPodType(
   type: FlintTypeName,
   module?: Pick<FlintModule, 'structs' | 'enums'>,

@@ -304,6 +304,7 @@ function writeTypeName(writer: BinaryWriter, type: FlintTypeName): void {
  * @param reader - The reader parameter.
  * @returns The FlintTypeName result.
  */
+// skipcq: JS-R1005
 function readTypeName(reader: BinaryReader): FlintTypeName {
   const name = reader.string();
   const reference = reader.optionalString();
@@ -1254,6 +1255,7 @@ function readMatchStatement(reader: BinaryReader): Extract<FlintStatement, { kin
  * @param writer - Target binary writer.
  * @param statement - Switch statement node to serialize.
  */
+// skipcq: JS-R1005
 function writeSwitchStatement(writer: BinaryWriter, statement: Extract<FlintStatement, { kind: 'switch' }>): void {
   writeExpression(writer, statement.value);
   writer.u32(statement.cases.length);
@@ -1446,6 +1448,7 @@ function writeFunction(writer: BinaryWriter, function_: FlintFunction): void {
  * @param reader - Binary stream reader.
  * @returns Decoded function AST node.
  */
+// skipcq: JS-R1005
 function readFunction(reader: BinaryReader): FlintFunction {
   const name = reader.string();
   const exported = reader.bool();

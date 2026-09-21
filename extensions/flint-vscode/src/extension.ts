@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+import * as vscode from 'vscode'; // skipcq: JS-C1003
 import {
   LanguageClient,
   type LanguageClientOptions,

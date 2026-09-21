@@ -8,6 +8,7 @@ export const STRING_RUNTIME_FUNCTION_COUNT = 6;
  * @param value - Integer to encode.
  * @returns Array of LEB128 bytes.
  */
+// skipcq: JS-R1005
 function signedLeb(value: number): number[] {
   const result: number[] = [];
   let remaining = BigInt(value);

@@ -143,7 +143,7 @@ export class FlintTestHarness {
   compile(fileName: string): Promise<FlintCompilationResult> {
     this.assertActive();
     return Promise.resolve(
-      this.withDiagnostics(compileFlintFile(this.resolveFixture(fileName), this.options, this.service)),
+      FlintTestHarness.withDiagnostics(compileFlintFile(this.resolveFixture(fileName), this.options, this.service)),
     );
   }
 
@@ -156,7 +156,9 @@ export class FlintTestHarness {
         (await this.options.resolveModule?.(source, importer)) ?? path.resolve(path.dirname(importer), source),
       load: (moduleFileName: string): string => fs.readFileSync(moduleFileName, 'utf8'),
     };
-    return this.withDiagnostics(await compileFlintGraph(entryFileName, this.options, resolver, this.service));
+    return FlintTestHarness.withDiagnostics(
+      await compileFlintGraph(entryFileName, this.options, resolver, this.service),
+    );
   }
 
   /** Compile inline FWS source while retaining a caller-supplied logical file name. */
@@ -173,7 +175,7 @@ export class FlintTestHarness {
       watCache: watCacheFor(this.options),
     };
     const artifact = this.service.compile(input);
-    return this.withDiagnostics({
+    return FlintTestHarness.withDiagnostics({
       fileName,
       source,
       artifact,
@@ -200,11 +202,11 @@ export class FlintTestHarness {
     try {
       const instantiated = await WebAssembly.instantiate(
         wasm as unknown as BufferSource,
-        this.wasmImports(compiled, imports, 'async'),
+        FlintTestHarness.wasmImports(compiled, imports, 'async'),
       );
-      return this.validateExports<TExports>(compiled, instantiated.instance.exports);
+      return FlintTestHarness.validateExports<TExports>(compiled, instantiated.instance.exports);
     } catch (error) {
-      throw this.loadError(compiled, 'async', error);
+      throw FlintTestHarness.loadError(compiled, 'async', error);
     }
   }
 
@@ -214,20 +216,23 @@ export class FlintTestHarness {
     imports: FlintCapabilityImports = {},
   ): FlintLoadedExports<TExports> {
     this.assertActive();
-    const compiled = this.withDiagnostics(compileFlintFile(this.resolveFixture(fileName), this.options, this.service));
+    const compiled = FlintTestHarness.withDiagnostics(
+      compileFlintFile(this.resolveFixture(fileName), this.options, this.service),
+    );
     const wasm = this.prepareLoad(compiled, imports, 'sync');
     try {
       const instance = new WebAssembly.Instance(
         new WebAssembly.Module(wasm as unknown as BufferSource),
-        this.wasmImports(compiled, imports, 'sync'),
+        FlintTestHarness.wasmImports(compiled, imports, 'sync'),
       );
-      return this.validateExports<TExports>(compiled, instance.exports);
+      return FlintTestHarness.validateExports<TExports>(compiled, instance.exports);
     } catch (error) {
-      throw this.loadError(compiled, 'sync', error);
+      throw FlintTestHarness.loadError(compiled, 'sync', error);
     }
   }
 
   /** Run the self-hosted compiler/VM for parity checks without loading Wasm. */
+  // skipcq: JS-R1005
   checkVmParity(fileName: string, mode: FlintVmExecutionMode): Promise<FlintSelfHostedVmRun> {
     this.assertActive();
     const resolvedFileName = this.resolveFixture(fileName);
@@ -288,7 +293,8 @@ export class FlintTestHarness {
    * @param compiled - Compiled module structure.
    * @returns Compilation result with diagnostics array.
    */
-  private withDiagnostics(compiled: FlintCompiledModule): FlintCompilationResult {
+  // skipcq: JS-0105
+  private static withDiagnostics(compiled: FlintCompiledModule): FlintCompilationResult {
     return { ...compiled, diagnostics: compiled.artifact.diagnostics };
   }
 
@@ -316,7 +322,7 @@ export class FlintTestHarness {
         `${compiled.fileName} [mode=${mode}] cannot load: compilation produced no Wasm or ABI manifest (artifact=${compiled.artifact.contentHash})`,
         'FLINT-HARNESS-004',
       );
-    this.wasmImports(compiled, imports, mode);
+    FlintTestHarness.wasmImports(compiled, imports, mode);
     return compiled.artifact.wasm;
   }
 
@@ -328,7 +334,8 @@ export class FlintTestHarness {
    * @param mode - Loading mode.
    * @returns WebAssembly imports object.
    */
-  private wasmImports(
+  // skipcq: JS-0105, JS-R1005
+  private static wasmImports(
     compiled: FlintCompilationResult,
     imports: FlintCapabilityImports,
     mode: 'async' | 'sync',
@@ -368,7 +375,8 @@ export class FlintTestHarness {
    * @param exports - WebAssembly instance exports.
    * @returns Validated typed exports.
    */
-  private validateExports<TExports extends object>(
+  // skipcq: JS-0105, JS-R1005
+  private static validateExports<TExports extends object>(
     compiled: FlintCompilationResult,
     exports: WebAssembly.Exports,
   ): FlintLoadedExports<TExports> {
@@ -399,7 +407,12 @@ export class FlintTestHarness {
    * @param error - Caught error.
    * @returns Formatted harness error.
    */
-  private loadError(compiled: FlintCompilationResult, mode: 'async' | 'sync', error: unknown): FlintTestHarnessError {
+  // skipcq: JS-0105
+  private static loadError(
+    compiled: FlintCompilationResult,
+    mode: 'async' | 'sync',
+    error: unknown,
+  ): FlintTestHarnessError {
     return new FlintTestHarnessError(
       `${compiled.fileName} [mode=${mode}] Wasm load failed: ${error instanceof Error ? error.message : String(error)} (artifact=${compiled.artifact.contentHash}, graph=${compiled.artifact.graphHash ?? 'none'})`,
       'FLINT-HARNESS-009',

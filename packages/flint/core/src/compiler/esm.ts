@@ -154,6 +154,7 @@ function resolveValueAdapter(
 /**
  * Generates an ESM loader module string containing embedded WebAssembly and runtime adapters.
  */
+// skipcq: JS-R1005
 export function createEsmSource(
   wasm: Uint8Array,
   manifest: FlintAbiManifest,

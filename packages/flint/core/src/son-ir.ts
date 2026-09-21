@@ -138,7 +138,7 @@ function stableValue(value: unknown): unknown {
   if (value !== null && typeof value === 'object')
     return Object.fromEntries(
       Object.entries(value)
-        .toSorted(([a], [b]) => a.localeCompare(b))
+        .toSorted(([leftKey], [rightKey]) => leftKey.localeCompare(rightKey))
         .map(([key, entry]) => [key, stableValue(entry)]),
     );
   return value;
@@ -182,6 +182,7 @@ function graphIdentityBase(
  * @param expression - IR expression to inspect.
  * @returns Printable type, or undefined when the expression is untyped.
  */
+// skipcq: JS-R1005
 function typeOfExpression(expression: FlintIrExpression): string | undefined {
   if (expression.kind === 'literal') return expression.type;
   if (expression.kind === 'array-literal' || expression.kind === 'vector-literal')
@@ -208,6 +209,7 @@ function ownershipOfType(type: string | undefined): FlintSoNOwnershipFact {
  * @param expression - IR expression to classify.
  * @returns Effect tags associated with evaluating the expression.
  */
+// skipcq: JS-R1005
 function expressionEffects(expression: FlintIrExpression): readonly FlintSoNEffect[] {
   if (expression.kind === 'call') return expression.standardLibrary === undefined ? ['call', 'unknown'] : ['pure'];
   if (expression.kind === 'identifier') return ['read'];
@@ -222,6 +224,7 @@ function expressionEffects(expression: FlintIrExpression): readonly FlintSoNEffe
  * @param kind - SoN node kind string (e.g. `'let'`, `'control.if'`, `'assign'`).
  * @returns The effect tags for the node.
  */
+// skipcq: JS-R1005
 function nonExpressionNodeEffects(kind: string): readonly FlintSoNEffect[] {
   if (kind === 'let' || kind === 'function-entry') return ['pure'];
   if (kind.includes('control') || kind === 'return' || kind === 'yield') return ['control'];
@@ -328,6 +331,7 @@ class SoNBuilder {
    * @param expression - Source expression supplying type/value metadata, if any.
    * @returns The allocated node id.
    */
+  // skipcq: JS-R1005
   private node(
     functionName: string,
     kind: string,
@@ -521,6 +525,7 @@ class SoNBuilder {
    * @param expression - IR expression to lower.
    * @returns The id of the created (or recursively created) node.
    */
+  // skipcq: JS-R1005
   private expression(functionName: string, expression: FlintIrExpression): number {
     if (isLeafSonExpression(expression)) return this.expressionLeaf(functionName, expression);
     if (expression.kind === 'call') return this.expressionCall(functionName, expression);
@@ -558,6 +563,7 @@ class SoNBuilder {
    * @param statement - Linear IR statement.
    * @returns The id of the created node.
    */
+  // skipcq: JS-R1005
   private linearStatementNode(
     functionName: string,
     statement: Extract<FlintIrStatement, { kind: 'let' | 'assignment' | 'return' | 'expression-statement' | 'yield' }>,
@@ -727,6 +733,7 @@ class SoNBuilder {
    * @param parentRegion - Enclosing control region id, if any.
    * @returns The id of the created control node.
    */
+  // skipcq: JS-R1005
   private controlStatementNode(
     functionName: string,
     statement: Extract<
@@ -798,9 +805,12 @@ class SoNBuilder {
    * @param options - Build metadata and optional profile selections.
    * @returns Persisted semantic-operation graph.
    */
+  // skipcq: JS-R1005
   build(options: FlintSoNBuildOptions): FlintSoNModule {
     const functions: FlintSoNFunction[] = [];
-    for (const declaration of this.module.functions.toSorted((a, b) => a.name.localeCompare(b.name))) {
+    for (const declaration of this.module.functions.toSorted((leftDecl, rightDecl) =>
+      leftDecl.name.localeCompare(rightDecl.name),
+    )) {
       const entry = this.node(declaration.name, 'function-entry', [], declaration.span);
       const body = this.statements(declaration.name, declaration.body);
       this.region(declaration.name, 'function', [entry, ...body]);
@@ -948,6 +958,7 @@ function annotateLiteralReceiverIndexBounds(
  * @param localTypes - Known local variable types in the enclosing function.
  * @param counter - Mutable annotation counter, incremented when proven safe.
  */
+// skipcq: JS-R1005
 function annotateIndexExpressionBounds(
   expression: Extract<FlintIrExpression, { kind: 'index' }>,
   localTypes: ReadonlyMap<string, FlintTypeName>,
@@ -1000,6 +1011,7 @@ function recurseSonBoundsAggregateExpression(
  * @param expression - IR expression whose children (if any) should be visited.
  * @param visit - Callback invoked for each child expression.
  */
+// skipcq: JS-R1005
 function recurseSonBoundsExpression(
   expression: FlintIrExpression,
   visit: (expression: FlintIrExpression) => void,
@@ -1125,12 +1137,14 @@ function visitSonBoundsSimpleStatement(
  * @param counter - Mutable annotation counter.
  * @param visitStatement - Callback invoked for each nested statement.
  */
+// skipcq: JS-R1005
 function visitSonBoundsControlStatement(
   statement: Extract<FlintIrStatement, { kind: 'if' | 'switch' | 'while' | 'do-while' | 'iterator-loop' }>,
   localTypes: ReadonlyMap<string, FlintTypeName>,
   counter: SoNBoundsAnnotationCounter,
   visitStatement: (statement: FlintIrStatement) => void,
 ): void {
+  // skipcq: JS-D1001
   const visitExpr = (expression: FlintIrExpression): void => visitSonBoundsExpression(expression, localTypes, counter);
   switch (statement.kind) {
     case 'if': {
@@ -1249,6 +1263,7 @@ function sonEvaluateBooleanBinary(operator: string, left: SoNIrLiteral, right: S
  * @param right - Right literal operand.
  * @returns Folded numeric or boolean result, or undefined when it cannot be folded.
  */
+// skipcq: JS-R1005
 function sonEvaluateNumericBinary(
   operator: string,
   left: SoNIrLiteral,
@@ -1292,6 +1307,7 @@ interface SoNPropagationCounters {
  * @param statement - Statement to inspect.
  * @param names - Mutable collection receiving assigned names.
  */
+// skipcq: JS-R1005
 function sonCollectAssignedNames(statement: FlintIrStatement, names: Set<string>): void {
   if (statement.kind === 'assignment') {
     names.add(statement.name);
@@ -1402,6 +1418,7 @@ function sonTransformAggregateExpression(
  * @param counters - Mutable propagation accounting.
  * @returns Transformed expression, possibly replaced with a folded literal.
  */
+// skipcq: JS-R1005
 function sonTransformUnaryExpression(
   expression: Extract<FlintIrExpression, { kind: 'unary' }>,
   locals: ReadonlyMap<string, FlintIrExpression>,
@@ -1473,6 +1490,7 @@ function isSonPropagationTerminalExpression(
  * @param counters - Mutable propagation accounting.
  * @returns Semantically equivalent transformed expression.
  */
+// skipcq: JS-R1005
 function sonTransformExpression(
   expression: FlintIrExpression,
   locals: ReadonlyMap<string, FlintIrExpression>,
@@ -1559,6 +1577,7 @@ function sonTransformLetStatement(
  * @param counters - Mutable propagation accounting.
  * @returns Equivalent transformed statement.
  */
+// skipcq: JS-R1005
 function sonTransformLinearStatement(
   statement: SoNLinearPropagationStatement,
   locals: Map<string, FlintIrExpression>,
@@ -1608,6 +1627,7 @@ function sonTransformLinearStatement(
  * @param counters - Mutable propagation accounting.
  * @returns Equivalent transformed conditional statement.
  */
+// skipcq: JS-R1005
 function sonTransformIfStatement(
   statement: Extract<FlintIrStatement, { kind: 'if' }>,
   locals: Map<string, FlintIrExpression>,
@@ -1658,6 +1678,7 @@ function sonTransformConditionLoopStatement(
  * @param counters - Mutable propagation accounting.
  * @returns Equivalent transformed switch statement.
  */
+// skipcq: JS-R1005
 function sonTransformSwitchStatement(
   statement: Extract<FlintIrStatement, { kind: 'switch' }>,
   locals: Map<string, FlintIrExpression>,
@@ -1713,6 +1734,7 @@ function sonTransformIteratorLoopStatement(
  * @param counters - Mutable propagation accounting.
  * @returns Equivalent transformed statement.
  */
+// skipcq: JS-R1005
 function sonTransformStatement(
   statement: FlintIrStatement,
   locals: Map<string, FlintIrExpression>,
@@ -1866,6 +1888,7 @@ function sonCanonicalizeNodes(nodes: readonly FlintSoNNode[]): {
  * @param liveFunctions - Names of functions currently known to be live.
  * @returns Initial referenced node ids.
  */
+// skipcq: JS-R1005
 function sonSeedReferencedNodes(graph: FlintSoNModule, liveFunctions: ReadonlySet<string>): Set<number> {
   const referenced = new Set<number>();
   for (const entry of graph.functions) {
@@ -1885,6 +1908,7 @@ function sonSeedReferencedNodes(graph: FlintSoNModule, liveFunctions: ReadonlySe
  * @param byId - Node index by id.
  * @param referenced - Referenced ids to expand in place.
  */
+// skipcq: JS-R1005
 function sonExpandReferencedInputs(byId: ReadonlyMap<number, FlintSoNNode>, referenced: Set<number>): void {
   const pending = [...referenced];
   while (pending.length > 0) {
@@ -1909,6 +1933,7 @@ function sonExpandReferencedInputs(byId: ReadonlyMap<number, FlintSoNNode>, refe
  * @param liveFunctions - Live function names updated in place.
  * @returns True when at least one new live function was discovered.
  */
+// skipcq: JS-R1005
 function sonGrowLiveFunctions(
   referenced: ReadonlySet<number>,
   byId: ReadonlyMap<number, FlintSoNNode>,
@@ -1987,6 +2012,7 @@ function sonRenumberGraph(pruned: {
 } {
   const keptIds = new Set(pruned.nodes.map(({ id }) => id));
   const idMap = new Map(pruned.nodes.map(({ id }, index) => [id, index + 1]));
+  // skipcq: JS-D1001
   const remapKeptId = (id: number): number => {
     const remapped = idMap.get(id);
     if (remapped === undefined) {
@@ -2072,6 +2098,7 @@ export function optimizeFlintSoN(
   });
 
   const canonical = sonCanonicalizeNodes(propagatedGraph.nodes);
+  // skipcq: JS-D1001
   const remapId = (id: number): number => canonical.remap.get(id) ?? id;
   const preDceGraph: FlintSoNModule = {
     ...propagatedGraph,

@@ -50,6 +50,7 @@ export class FlintMemory {
    * @param memory - Optional existing WebAssembly.Memory instance.
    * @param options - Configuration options for memory sizing and bounds.
    */
+  // skipcq: JS-R1005
   public constructor(memory?: WebAssembly.Memory, options: FlintMemoryOptions = {}) {
     this.addressBits = options.addressBits ?? 32;
     this.shared =
@@ -57,6 +58,7 @@ export class FlintMemory {
     this.logger = (options.logger ?? createFlintLogger({ scope: 'fws' })).child('memory');
     this.trace = options.trace;
     const capabilities = options.capabilities;
+    // skipcq: JS-D1001
     const has = (capability: string, legacyName: string): boolean =>
       capabilities === undefined || capabilities.includes(capability) || capabilities.includes(legacyName);
     if (this.addressBits === 64 && !has(FLINT_MEMORY_CAPABILITIES.memory64, 'memory64'))
@@ -110,6 +112,7 @@ export class FlintMemory {
    * @param pointer - Memory address pointer.
    * @returns Normalized numeric offset.
    */
+  // skipcq: JS-R1005
   private normalizeAddress(pointer: FlintMemoryAddress): number {
     if (typeof pointer === 'bigint') {
       if (pointer < 0n || pointer > BigInt(Number.MAX_SAFE_INTEGER))
@@ -132,6 +135,7 @@ export class FlintMemory {
    * @param length - Range length in bytes.
    * @throws {FlintTrap} If the range exceeds memory bounds.
    */
+  // skipcq: JS-R1005
   public checkRange(pointer: FlintMemoryAddress, length: number): void {
     const offset = this.normalizeAddress(pointer);
     try {
@@ -235,6 +239,7 @@ export class FlintMemory {
    * @param size - Size in bytes to allocate.
    * @returns Allocated base address pointer.
    */
+  // skipcq: JS-R1005
   public allocate(size: number): FlintMemoryAddress {
     if (!Number.isSafeInteger(size) || size < 0)
       throw new FlintTrap('MemoryExhausted', 'Allocation size must be a non-negative integer.');
@@ -274,6 +279,7 @@ export class FlintMemory {
    * @param newSize - New requested allocation size in bytes.
    * @returns Reallocated base address pointer.
    */
+  // skipcq: JS-R1005
   public reallocate(pointer: FlintMemoryAddress, oldSize: number, newSize: number): FlintMemoryAddress {
     const offset = this.normalizeAddress(pointer);
     this.checkRange(pointer, oldSize);
@@ -399,10 +405,12 @@ export class FlintMultiMemory {
    *
    * @param options - Multi-memory partition options.
    */
+  // skipcq: JS-R1005
   public constructor(options: FlintMultiMemoryOptions = {}) {
     this.logger = (options.logger ?? createFlintLogger({ scope: 'fws' })).child('multi-memory');
     this.capabilities = options.capabilities ?? [];
 
+    // skipcq: JS-D1001
     const has = (capability: string): boolean =>
       options.capabilities === undefined || options.capabilities.includes(capability);
 
@@ -439,6 +447,7 @@ export class FlintMultiMemory {
   /**
    * Returns the requested memory partition by index (0, 1, 2) or logical name.
    */
+  // skipcq: JS-R1005
   public getPartition(partition: 0 | 1 | 2 | FlintMemoryPartitionName): FlintMemory {
     if (partition === 0 || partition === 'guestHeap') return this.guestHeap;
     if (partition === 1 || partition === 'hostInterop') return this.hostInterop;

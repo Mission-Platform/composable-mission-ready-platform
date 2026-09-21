@@ -20,6 +20,7 @@ import {
   testLinear,
 } from "./reference-vm.js";
 
+// skipcq: JS-C1003
 import * as RootApi from ".";
 
 const CASES = [
@@ -254,6 +255,7 @@ describe("Forge regex compiler and reference oracle", () => {
       }
     });
 
+    // skipcq: JS-R1005
     it("conforms exactly to backtracking oracle across pattern/input matrix for prefixMatch and search", () => {
       for (const pattern of PATTERNS) {
         const compiled = compileRegex(pattern);

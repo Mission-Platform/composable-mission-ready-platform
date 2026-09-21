@@ -15,6 +15,7 @@ describe('Forge Web Script bootstrap conformance fixtures', () => {
     expect(result.diagnostics).toEqual([]);
   });
 
+  // skipcq: JS-R1005
   it.each(acceptedBootstrapFixtures)('compiles and executes $name', (fixture) => {
     const artifact = compileFlint({
       source: fixture.source,

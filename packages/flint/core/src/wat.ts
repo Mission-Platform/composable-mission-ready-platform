@@ -74,6 +74,7 @@ const BINARY_OP_MAP: Readonly<Record<string, string>> = {
  * @param indent - Current indentation string.
  * @returns List of WAT instruction lines.
  */
+// skipcq: JS-R1005
 function renderCompositeExpression(value: FlintExpression, indent: string): readonly string[] {
   if (value.kind === 'struct-value')
     return Object.values(value.fields).flatMap((field) => renderExpression(field, indent));
@@ -117,6 +118,7 @@ function renderBinaryExpression(
  * @param indent - Indentation string for alignment.
  * @returns Array of rendered WAT lines.
  */
+// skipcq: JS-R1005
 function renderExpression(value: FlintExpression, indent: string): readonly string[] {
   if (value.kind === 'literal') {
     const type = resultTypes(value.type)[0] ?? 'i32';
@@ -145,6 +147,7 @@ function renderExpression(value: FlintExpression, indent: string): readonly stri
  * @param statement - Statement to inspect for loop bodies.
  * @param names - Accumulator set of variable names with types.
  */
+// skipcq: JS-R1005
 function collectLoopLocalDeclarations(statement: FlintStatement, names: Set<string>): void {
   switch (statement.kind) {
     case 'while':
@@ -175,6 +178,7 @@ function collectLoopLocalDeclarations(statement: FlintStatement, names: Set<stri
  * @param statement - Branching statement to inspect.
  * @param names - Accumulator set of variable names with types.
  */
+// skipcq: JS-R1005
 function collectBranchLocalDeclarations(statement: FlintStatement, names: Set<string>): void {
   switch (statement.kind) {
     case 'if': {
@@ -243,6 +247,7 @@ function localDeclarations(
  * @param indent - Current indentation string.
  * @returns Array of rendered WAT lines.
  */
+// skipcq: JS-R1005
 function renderBasicStatement(statement: FlintStatement, indent: string): readonly string[] {
   if (statement.kind === 'let') {
     return [
@@ -340,6 +345,7 @@ function renderForOrIterLoop(statement: FlintStatement, indent: string): readonl
  * @param indent - Current indentation string.
  * @returns Array of rendered WAT lines.
  */
+// skipcq: JS-R1005
 function renderBranchStatement(statement: FlintStatement, indent: string): readonly string[] {
   if (statement.kind === 'if') {
     const alternateLines: readonly string[] =
@@ -382,6 +388,7 @@ const BASIC_STATEMENT_KINDS = new Set(['let', 'assignment', 'return', 'expressio
  * @param indent - Indentation string.
  * @returns Array of rendered WAT lines.
  */
+// skipcq: JS-R1005
 function renderStatement(statement: FlintStatement, indent: string): readonly string[] {
   if (BASIC_STATEMENT_KINDS.has(statement.kind)) return renderBasicStatement(statement, indent);
   if (statement.kind === 'while' || statement.kind === 'do-while') return renderWhileLoop(statement, indent);
@@ -407,6 +414,7 @@ function statements(statementsToRender: readonly FlintStatement[], indent: strin
  * @param metadata - Optional compiler and provenance metadata for comments.
  * @returns WebAssembly Text representation as a string.
  */
+// skipcq: JS-R1005
 export function renderFlintWat(module: FlintModule, metadata: FlintWatMetadata = {}): string {
   const lines = [
     '(module',

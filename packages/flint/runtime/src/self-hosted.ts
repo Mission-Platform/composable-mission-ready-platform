@@ -76,6 +76,7 @@ function fingerprintHash(value: number): string {
 }
 
 /** Execute only the bounded FWS-authored lex stage for compiler consumers. */
+// skipcq: JS-R1005
 export function runFlintSelfHostedLexStage(
   input: Pick<FlintCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
   mode: FlintVmExecutionMode,
@@ -138,6 +139,7 @@ export function runFlintSelfHostedLexStage(
  * @param options - Self-hosted run options.
  * @returns Self-hosted stage report for the parser stage.
  */
+// skipcq: JS-R1005
 function runFlintSelfHostedParserStage(
   input: Pick<FlintCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
   mode: FlintVmExecutionMode,

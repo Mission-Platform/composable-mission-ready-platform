@@ -625,6 +625,7 @@ interface FlintSymbolLike {
   readonly iterable?: boolean;
 }
 
+// skipcq: JS-D1001, JS-R1005
 function flintTypeNameToString(type: unknown): string {
   if (typeof type === 'string') return type;
   if (!isRecord(type)) return 'unknown';
@@ -637,10 +638,12 @@ function flintTypeNameToString(type: unknown): string {
   return `${name}${argumentsList}${length}`;
 }
 
+// skipcq: JS-D1001
 function flintParameters(parameters: readonly { readonly name: string; readonly type: unknown }[]): string {
   return parameters.map((parameter) => `${parameter.name}: ${flintTypeNameToString(parameter.type)}`).join(', ');
 }
 
+// skipcq: JS-D1001
 function flintDocumentationTags(
   documentation: FlintDocumentation,
 ): readonly { readonly name: string; readonly text: string }[] {
@@ -650,6 +653,7 @@ function flintDocumentationTags(
   }));
 }
 
+// skipcq: JS-D1001, JS-R1005
 function flintSignature(declaration: FlintSymbolLike): string {
   if (declaration.kind === 'function') {
     const exportPrefix = declaration.exported === false ? '' : 'export ';
@@ -676,6 +680,7 @@ function documentedFlintDeclarations(module: {
   );
 }
 
+// skipcq: JS-D1001
 async function loadFlintParser(repoRoot: string): Promise<FlintParseFunction | undefined> {
   const candidates = [
     resolve(repoRoot, 'packages/flint/core/dist/parser.js'),
@@ -692,6 +697,7 @@ async function loadFlintParser(repoRoot: string): Promise<FlintParseFunction | u
 }
 
 /** Extract documented public Flint declarations from package `.flint` sources. */
+// skipcq: JS-R1005
 export async function extractFlintSymbols(
   packageRoot: string,
   options: { readonly repoRoot?: string; readonly parseFlint?: FlintParseFunction } = {},

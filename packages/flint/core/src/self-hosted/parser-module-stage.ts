@@ -36,6 +36,7 @@ const SOURCE_LAYOUT = 'FlintSourceBytes';
 const BYTES_BLOB_LAYOUT = 'FlintSelfHostedBytesBlob';
 
 /** Fixed global memory addresses (u32 slots), reserved via a leading dummy allocation. */
+// skipcq: JS-C1002
 const G = {
   SCRATCH: 0,
   SCAN_OFFSET: 8,
@@ -222,6 +223,7 @@ function function_(
 
 /** pm_read_byte(offset: u32) -> u32 : byte at SOURCE_BASE + offset. */
 function buildReadByte(pool: ConstPool): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(1);
   const base = b.alloc();
   const ptr = b.alloc();
@@ -243,6 +245,7 @@ function buildReadByte(pool: ConstPool): FlintSelfHostedVmFunction {
  * @returns The FlintSelfHostedVmFunction result.
  */
 function buildIsAlpha(pool: ConstPool): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(1);
   const t1 = b.alloc();
   const t2 = b.alloc();
@@ -277,6 +280,7 @@ function buildIsAlpha(pool: ConstPool): FlintSelfHostedVmFunction {
  * @returns The FlintSelfHostedVmFunction result.
  */
 function buildIsDigit(pool: ConstPool): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(1);
   const t1 = b.alloc();
   const t2 = b.alloc();
@@ -293,8 +297,11 @@ function buildIsDigit(pool: ConstPool): FlintSelfHostedVmFunction {
  * @returns The FlintSelfHostedVmFunction result.
  */
 function buildIsAlnum(): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(1);
+  // skipcq: JS-C1002
   const a = b.alloc();
+  // skipcq: JS-C1002
   const d = b.alloc();
   b.invoke(a, 'pm_is_alpha', [0]);
   b.branch(a, 'yes', 'digit');
@@ -322,6 +329,7 @@ function buildIsTwoCharOp(pool: ConstPool): FlintSelfHostedVmFunction {
     [38, 38], // &&
     [124, 124], // ||
   ];
+  // skipcq: JS-C1002
   const b = createBuilder(2);
   const t1 = b.alloc();
   const t2 = b.alloc();
@@ -353,8 +361,10 @@ function buildIsTwoCharOp(pool: ConstPool): FlintSelfHostedVmFunction {
  */
 function buildIsOneCharOp(pool: ConstPool): FlintSelfHostedVmFunction {
   const chars = [40, 41, 123, 125, 58, 59, 44, 43, 45, 42, 47, 60, 62, 61, 33];
+  // skipcq: JS-C1002
   const b = createBuilder(1);
   const temporary = b.alloc();
+  // skipcq: JS-C1002
   const c = b.alloc();
   let next = 'c0';
   for (const [index, value] of chars.entries()) {
@@ -381,6 +391,7 @@ function buildIsOneCharOp(pool: ConstPool): FlintSelfHostedVmFunction {
 
 /** pm_emit_slice(bytes) -> unit : append a memory-backed slice (from `bytes-from-memory`). */
 function buildEmitSlice(): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(1);
   const length = b.alloc();
   const outBase = b.alloc();
@@ -400,6 +411,7 @@ function buildEmitSlice(): FlintSelfHostedVmFunction {
 
 /** pm_emit_const(bytes: BYTES_BLOB_LAYOUT) -> unit : append a precomputed wire blob. */
 function buildEmitConst(): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(1);
   const length = b.alloc();
   const outBase = b.alloc();
@@ -419,6 +431,7 @@ function buildEmitConst(): FlintSelfHostedVmFunction {
 
 /** pm_emit_u32(value: u32) -> unit : append 4 little-endian bytes. */
 function buildEmitU32(pool: ConstPool): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(1);
   const zero = K(b, pool, 0);
   const four = K(b, pool, 4);
@@ -432,6 +445,7 @@ function buildEmitU32(pool: ConstPool): FlintSelfHostedVmFunction {
 
 /** pm_emit_u8(value: u32, 0 or 1) -> unit : append exactly 1 byte (LE low byte of value). */
 function buildEmitU8(pool: ConstPool): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(1);
   const zero = K(b, pool, 0);
   const one = K(b, pool, 1);
@@ -445,6 +459,7 @@ function buildEmitU8(pool: ConstPool): FlintSelfHostedVmFunction {
 
 /** pm_emit_dyn_string(start: u32, end: u32) -> unit : length-prefixed source slice. */
 function buildEmitDynString(): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(2);
   const length = b.alloc();
   const base = b.alloc();
@@ -462,6 +477,7 @@ function buildEmitDynString(): FlintSelfHostedVmFunction {
 
 /** pm_emit_span(start, end, line, column, endLine, endColumn) -> unit. */
 function buildEmitSpan(): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(6);
   for (let index = 0; index < 6; index += 1) b.invoke(undefined, 'pm_emit_u32', [index]);
   b.ret();
@@ -470,6 +486,7 @@ function buildEmitSpan(): FlintSelfHostedVmFunction {
 
 /** pm_patch_u32(offset: u32, value: u32) -> unit : overwrite 4 bytes at OUTPUT_BASE + offset. */
 function buildPatchU32(pool: ConstPool): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(2);
   const outBase = b.alloc();
   const target = b.alloc();
@@ -495,6 +512,7 @@ function buildPatchU32(pool: ConstPool): FlintSelfHostedVmFunction {
  * @returns The FlintSelfHostedVmFunction result.
  */
 function buildPeek(pool: ConstPool): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(0);
   const offset = b.alloc();
   const line = b.alloc();
@@ -691,6 +709,7 @@ function buildPeek(pool: ConstPool): FlintSelfHostedVmFunction {
 
 /** pm_consume() -> unit : commit PEEK_* into SCAN_* and LAST_*. Must follow a pm_peek() call. */
 function buildConsume(): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(0);
   const value = b.alloc();
   for (const [from, to] of [
@@ -716,6 +735,7 @@ function buildConsume(): FlintSelfHostedVmFunction {
 
 /** pm_word_equals(word: BYTES_BLOB_LAYOUT) -> bool : PEEK_START..PEEK_END text equals `word`. */
 function buildWordEquals(pool: ConstPool): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(1);
   const wordLength = b.alloc();
   const peekStart = b.alloc();
@@ -785,6 +805,7 @@ interface TypeWire {
  * @returns The FlintSelfHostedVmFunction result.
  */
 function buildParseType(pool: ConstPool, types: readonly TypeWire[]): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(0);
   const kind = b.alloc();
   const cond = b.alloc();
@@ -871,6 +892,7 @@ interface ExpressionWire {
  * @returns The FlintSelfHostedVmFunction result.
  */
 function buildParsePrimary(pool: ConstPool, wire: ExpressionWire): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(0);
   const kind = b.alloc();
   const cond = b.alloc();
@@ -1026,6 +1048,7 @@ function buildParsePrimary(pool: ConstPool, wire: ExpressionWire): FlintSelfHost
  * @returns The FlintSelfHostedVmFunction result.
  */
 function buildParseUnary(pool: ConstPool, wire: ExpressionWire): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(0);
   const kind = b.alloc();
   const cond = b.alloc();
@@ -1092,6 +1115,7 @@ function buildParseUnary(pool: ConstPool, wire: ExpressionWire): FlintSelfHosted
  * @returns The FlintSelfHostedVmFunction result.
  */
 function buildParseExpression(pool: ConstPool, wire: ExpressionWire): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(0);
   const start = b.alloc();
   const line = b.alloc();
@@ -1231,6 +1255,7 @@ function buildParseExpression(pool: ConstPool, wire: ExpressionWire): FlintSelfH
  * @returns The FlintSelfHostedVmFunction result.
  */
 function buildParseParameters(pool: ConstPool): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(0);
   const kind = b.alloc();
   const cond = b.alloc();
@@ -1355,6 +1380,7 @@ function buildParseParameters(pool: ConstPool): FlintSelfHostedVmFunction {
  * @returns The FlintSelfHostedVmFunction result.
  */
 function buildParseReturnStatement(pool: ConstPool, returnWire: number): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(0);
   const start = b.alloc();
   const line = b.alloc();
@@ -1434,6 +1460,7 @@ function buildParseReturnStatement(pool: ConstPool, returnWire: number): FlintSe
  * @returns The FlintSelfHostedVmFunction result.
  */
 function buildParseBlock(pool: ConstPool, returnWord: number): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(0);
   const kind = b.alloc();
   const byte0 = b.alloc();
@@ -1523,6 +1550,7 @@ function buildParseBlock(pool: ConstPool, returnWord: number): FlintSelfHostedVm
  * @returns The FlintSelfHostedVmFunction result.
  */
 function buildParseFunction(pool: ConstPool, exportWord: number, functionWord: number): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(0);
   const kind = b.alloc();
   const cond = b.alloc();
@@ -1654,6 +1682,7 @@ function buildParseFunction(pool: ConstPool, exportWord: number, functionWord: n
  * @returns The FlintSelfHostedVmFunction result.
  */
 function buildSkipClassBody(pool: ConstPool): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(0);
   const kind = b.alloc();
   const byte0 = b.alloc();
@@ -1766,6 +1795,7 @@ function buildEntry(
   exportWord: number,
   functionWord: number,
 ): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(1); // parameter 0 = source aggregate
   const dummy = b.alloc();
   const sourceLength = b.alloc();

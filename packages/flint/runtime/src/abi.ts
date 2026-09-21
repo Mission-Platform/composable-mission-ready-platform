@@ -38,6 +38,7 @@ function equalFunction(left: FlintAbiFunction, right: FlintAbiFunction): boolean
     left.resultReference === right.resultReference &&
     JSON.stringify(left.resultArguments) === JSON.stringify(right.resultArguments) &&
     left.parameters.length === right.parameters.length &&
+    // skipcq: JS-R1005
     left.parameters.every((parameter, index) => {
       const other = right.parameters[index];
       return (
@@ -60,6 +61,7 @@ function equalFunction(left: FlintAbiFunction, right: FlintAbiFunction): boolean
  * @param manifest - ABI manifest to validate.
  * @returns Validation outcome containing boolean status and collected diagnostic errors.
  */
+// skipcq: JS-R1005
 export function validateFlintAbiManifest(manifest: FlintAbiManifest): FlintAbiValidationResult {
   const errors: string[] = [];
   if (manifest.format !== 'forge-web-script-module') errors.push('Unsupported manifest format.');

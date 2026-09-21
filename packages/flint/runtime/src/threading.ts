@@ -37,9 +37,11 @@ export interface FlintAtomicI32 {
  * @param options - Allocation options including existing SharedArrayBuffer.
  * @returns Configured FlintAtomicI32 instance.
  */
+// skipcq: JS-R1005
 export function createFlintAtomicI32(length = 1, options: FlintAtomicI32Options = {}): FlintAtomicI32 {
   const logger = (options.logger ?? createFlintLogger({ scope: 'fws.threading' })).child('atomic');
   const capabilities = options.capabilities;
+  // skipcq: JS-D1001
   const has = (capability: string, legacyName: string): boolean =>
     capabilities === undefined || capabilities.includes(capability) || capabilities.includes(legacyName);
   if (!has(FLINT_THREADING_CAPABILITIES.threads, 'threads'))
@@ -75,6 +77,7 @@ export function createFlintAtomicI32(length = 1, options: FlintAtomicI32Options 
       logger,
     });
   const view = new Int32Array(buffer);
+  // skipcq: JS-D1001
   const index = (value: number): number => {
     if (!Number.isSafeInteger(value) || value < 0 || value >= view.length)
       throw new FlintTrap('MemoryOutOfBounds', 'Atomic index is out of bounds.', undefined, { logger });
@@ -141,6 +144,7 @@ export interface FlintWorkerSchedulerOptions {
  * lifecycle/cleanup and use the indexed protocol at its boundary; this scheduler
  * provides the same bounded async contract for hosts without worker support.
  */
+// skipcq: JS-R1005
 export function createFlintWorkerScheduler(options: FlintWorkerSchedulerOptions = {}): FlintWorkerScheduler {
   const logger = (options.logger ?? createFlintLogger({ scope: 'fws.threading' })).child('scheduler');
   const workerCount = options.workerCount ?? options.runtimes?.length ?? 1;
@@ -159,6 +163,7 @@ export function createFlintWorkerScheduler(options: FlintWorkerSchedulerOptions 
     readonly reject: (error: unknown) => void;
   }> = [];
 
+  // skipcq: JS-D1001
   const drain = (): void => {
     while (active < workerCount && pending.length > 0) {
       if (closed) break;
@@ -214,6 +219,7 @@ export interface FlintWasmThreadTargetFeatures {
  * Thread execution is opt-in at both compilation and runtime boundaries. In
  * particular, an undeclared capability list never enables this path.
  */
+// skipcq: JS-R1005
 export function canUseFlintWasmThreads(
   targetFeatures: FlintWasmThreadTargetFeatures | undefined,
   capabilities: readonly string[] | undefined,
@@ -289,7 +295,7 @@ export function createFlintWasmThreadScheduler(options: FlintWasmThreadScheduler
 export function createFlintWorkerRuntime(
   createWorker: () => FlintWorkerPort,
   onMessage: (message: unknown) => void,
-  onError: (error: unknown) => void = () => {
+  onError: (error: unknown) => void = (_error: unknown) => {
     // Default no-op error handler.
   },
   options: FlintWorkerRuntimeOptions = {},
@@ -310,12 +316,14 @@ export function createFlintWorkerRuntime(
       onMessage(event);
     } catch (error) {
       logger.error('worker.message-error');
+      // skipcq: JS-W1038
       onError(error);
     }
   });
   worker.addEventListener('error', (error) => {
     if (closed) return;
     logger.error('worker.error');
+    // skipcq: JS-W1038
     onError(error);
   });
   logger.info('worker.start');
@@ -342,6 +350,7 @@ export interface FlintThreadSafetyMarker {
  * Validates whether a value satisfies the 'Send' contract (safe to transfer across thread boundaries).
  * Recursively verifies plain objects, arrays, primitives, and typed buffers.
  */
+// skipcq: JS-R1005
 export function isFlintSend(value: unknown, visited = new Set<unknown>()): boolean {
   if (typeof value === 'function') return false;
   if (value === null || typeof value !== 'object') return true;
@@ -367,6 +376,7 @@ export function isFlintSend(value: unknown, visited = new Set<unknown>()): boole
 /**
  * Validates whether a value satisfies the 'Sync' contract (safe to share concurrently across threads).
  */
+// skipcq: JS-R1005
 export function isFlintSync(value: unknown): boolean {
   if (typeof value === 'function') return false;
   if (value === null || typeof value !== 'object') return true;

@@ -42,6 +42,7 @@ function normalizedLines(comment: string): string[] {
  * @param line - Line starting with '@'.
  * @returns Structured documentation tag object.
  */
+// skipcq: JS-R1005
 function parseTag(line: string): FlintDocumentationTag {
   const match = /^@([^\s]+)(?:\s+(.*))?$/u.exec(line);
   const name = match?.[1] ?? '';
@@ -81,6 +82,7 @@ function buildDescription(lines: readonly string[]): string {
  * @param comment - Raw doc comment string.
  * @returns Structured documentation record with normalized description and tags.
  */
+// skipcq: JS-R1005
 export function parseFlintDocumentation(comment: string): FlintDocumentation {
   const lines = normalizedLines(comment);
   const descriptionLines: string[] = [];

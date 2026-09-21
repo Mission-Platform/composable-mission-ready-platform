@@ -14,6 +14,7 @@ import type {
  * @param type - Primitive type to convert.
  * @returns WebAssembly value type identifier string.
  */
+// skipcq: JS-R1005
 function valueType(type: FlintWasmPrimitiveType): string {
   if (type === 'f32') return 'f32';
   if (type === 'f64') return 'f64';
@@ -51,6 +52,7 @@ function watNumber(value: boolean | number | string): string {
  * @param indent - Indentation string for formatting.
  * @returns Array of rendered instruction lines.
  */
+// skipcq: JS-R1005
 function renderExpression(value: FlintWasmExpression, indent: string): readonly string[] {
   if (value.kind === 'literal') {
     const types = resultTypes(value.type);
@@ -176,6 +178,7 @@ function renderExpression(value: FlintWasmExpression, indent: string): readonly 
  * @param names - Mutable set tracking encountered local variables.
  * @returns Array of formatted WebAssembly local variable declaration lines.
  */
+// skipcq: JS-R1005
 function localDeclarations(statements: readonly FlintWasmStatement[], names = new Set<string>()): readonly string[] {
   for (const statement of statements) {
     if (statement.kind === 'let') names.add(`${statement.name}:${valueType(statement.type.name)}`);
@@ -210,6 +213,7 @@ function localDeclarations(statements: readonly FlintWasmStatement[], names = ne
  * @param indent - Indentation string.
  * @returns Array of rendered WebAssembly instruction lines.
  */
+// skipcq: JS-R1005
 function statements(items: readonly FlintWasmStatement[], indent: string): readonly string[] {
   const lines: string[] = [];
   for (const statement of items) {
@@ -375,6 +379,7 @@ function renderMemory(targetFeatures: FlintTargetFeatures | undefined): string {
  * @param metadata - Compilation metadata and target feature configuration.
  * @returns WebAssembly text representation string.
  */
+// skipcq: JS-R1005
 export function renderFlintWasmWat(module: FlintWasmModule, metadata: FlintWasmWatMetadata = {}): string {
   const lines = [
     '(module',

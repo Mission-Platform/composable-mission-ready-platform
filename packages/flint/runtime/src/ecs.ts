@@ -138,8 +138,10 @@ type FlintEcsFailure = {
   readonly message: string;
 };
 
+// skipcq: JS-D1001
 const entityKey = (entity: FlintEcsEntity): string => `${entity.index}:${entity.generation}`;
 
+// skipcq: JS-D1001
 const sortedNumbers = (values: Iterable<number>): readonly number[] =>
   [...new Set(values)].toSorted((left, right) => left - right);
 
@@ -373,6 +375,7 @@ export function queryFlintEcsEntities<TValue>(
   query: FlintEcsQuery,
 ): readonly FlintEcsEntity[] {
   const requiredStores = query.required.map((component) => world.stores.get(component));
+  // skipcq: JS-W1042
   if (requiredStores.includes(undefined)) return [];
   const candidates = requiredStores[0]?.values.keys() ?? [...world.generations.keys()];
   return [...candidates]
@@ -395,6 +398,7 @@ export function validateFlintEcsSignals(
   const dependencies = new Map(signals.map((signal) => [signal.id, signal.dependencies]));
   const visiting = new Set<string>();
   const visited = new Set<string>();
+  // skipcq: JS-D1001, JS-R1005
   const walk = (id: string, path: readonly string[]): readonly string[] | undefined => {
     if (visiting.has(id)) return [...path, id];
     if (visited.has(id)) return undefined;
@@ -443,6 +447,7 @@ export function createFlintEcsScheduler<TValue = Uint8Array>(
  * @param scheduler - Configured scheduler pipeline.
  * @returns Schedule execution report.
  */
+// skipcq: JS-R1005
 export function runFlintEcsScheduler<TValue>(
   world: FlintEcsWorld<TValue>,
   scheduler: FlintEcsScheduler<TValue>,

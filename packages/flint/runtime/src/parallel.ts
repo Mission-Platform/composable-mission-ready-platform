@@ -147,6 +147,7 @@ function hasHostWorkerCapability(capabilities: readonly string[] | undefined): b
 }
 
 /** Select a permitted strategy without changing the operation's result contract. */
+// skipcq: JS-R1005
 export function selectFlintParallelStrategy(options: FlintParallelOptions = {}): FlintParallelPlan {
   const requested = options.strategy ?? 'auto';
   if (requested === 'serial') return { requested, strategy: 'serial', reason: 'requested-serial' };
@@ -180,6 +181,7 @@ export function flintParallelDescriptor(
  * @param source - Iterable, array, vector, or iterator to convert.
  * @returns FlintIterator instance.
  */
+// skipcq: JS-R1005
 function asIterator<TValue>(source: FlintIterable<TValue>): FlintIterator<TValue> {
   if (typeof source === 'object' && source !== null && 'next' in source && 'descriptor' in source)
     return source as FlintIterator<TValue>;

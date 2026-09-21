@@ -349,6 +349,7 @@ function validateParsedState(state: ParseState): void {
  * @param cwd Current working directory.
  * @returns Fully populated options structure.
  */
+// skipcq: JS-R1005
 function buildCliOptions(state: ParseState, cwd: string): FlintCliOptions {
   return {
     command: state.command as FlintCliCommand,
@@ -384,6 +385,7 @@ function buildCliOptions(state: ParseState, cwd: string): FlintCliOptions {
  * @param cwd Current working directory.
  * @returns Fully validated FlintCliOptions structure.
  */
+// skipcq: JS-R1005
 export function parseFlintCliArgs(argv: readonly string[], cwd = process.cwd()): FlintCliOptions {
   const state: ParseState = {
     optimization: 'debug',

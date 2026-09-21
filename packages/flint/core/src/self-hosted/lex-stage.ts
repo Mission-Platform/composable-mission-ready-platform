@@ -283,6 +283,7 @@ function scanCommentBytes(bytes: Uint8Array, offset: number, byte: number): numb
  * @param currentHash - Current FNV-1a hash state.
  * @returns Tuple of next offset and updated hash.
  */
+// skipcq: JS-R1005
 function scanIdentBytes(bytes: Uint8Array, offset: number, currentHash: number): [number, number] {
   const start = offset;
   let next = offset + 1;
@@ -305,6 +306,7 @@ function scanIdentBytes(bytes: Uint8Array, offset: number, currentHash: number):
  * @param currentHash - Current FNV-1a hash state.
  * @returns Tuple of next offset and updated hash.
  */
+// skipcq: JS-R1005
 function scanDigitBytes(bytes: Uint8Array, offset: number, currentHash: number): [number, number] {
   const start = offset;
   let next = offset + 1;
@@ -322,6 +324,7 @@ function scanDigitBytes(bytes: Uint8Array, offset: number, currentHash: number):
  * @param currentHash - Current FNV-1a hash state.
  * @returns Tuple of next offset and updated hash.
  */
+// skipcq: JS-R1005
 function scanStringLiteralBytes(bytes: Uint8Array, offset: number, currentHash: number): [number, number] {
   const start = offset;
   let next = offset + 1;
@@ -352,6 +355,7 @@ function scanStringLiteralBytes(bytes: Uint8Array, offset: number, currentHash: 
  * @param currentHash - Current FNV-1a hash state.
  * @returns Tuple of next offset and updated hash.
  */
+// skipcq: JS-R1005
 function scanPunctOrOpBytes(bytes: Uint8Array, offset: number, byte: number, currentHash: number): [number, number] {
   if (offset + 1 < bytes.length) {
     const nextByte = bytes[offset + 1] ?? 0;
@@ -386,6 +390,7 @@ function scanPunctOrOpBytes(bytes: Uint8Array, offset: number, byte: number, cur
  * @param source - Flint source text.
  * @returns 32-bit signed integer fingerprint.
  */
+// skipcq: JS-R1005
 export function computeFlintLexStageFingerprint(source: string): number {
   const bytes = encoder.encode(source);
   let hash = FNV_OFFSET;
@@ -715,57 +720,60 @@ export function createFlintLexStageVmModule(sourceHash: string): FlintSelfHosted
 
 /** Builds the VM function for FNV-1a hash word mixing. */
 function buildFnvMix(): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   // fnv_mix(hash, byte) -> i32
-  const b = createBuilder(2);
-  const xored = b.alloc();
-  const prime = b.alloc();
-  const mixed = b.alloc();
-  b.binary('^', xored, 0, 1);
-  b.num(prime, 1);
-  b.binary('*', mixed, xored, prime);
-  b.ret(mixed);
-  const code = b.finish();
+  const builder = createBuilder(2);
+  const xored = builder.alloc();
+  const prime = builder.alloc();
+  const mixed = builder.alloc();
+  builder.binary('^', xored, 0, 1);
+  builder.num(prime, 1);
+  builder.binary('*', mixed, xored, prime);
+  builder.ret(mixed);
+  const code = builder.finish();
   return {
     name: 'fnv_mix',
     parameters: ['i32', 'i32'],
     result: 'i32',
-    registers: b.registers,
+    registers: builder.registers,
     code,
     debugSpans: [],
   };
 }
 
 /** Builds a jump-table equality predicate VM function for a set of constant values. */
+// skipcq: JS-C1002
 function buildPredicateFromEquals(name: string, constantIndexes: readonly number[]): FlintSelfHostedVmFunction {
-  const b = createBuilder(1);
-  const temporary = b.alloc();
-  const c = b.alloc();
+  const builder = createBuilder(1);
+  // skipcq: JS-C1002
+  const temporary = builder.alloc();
+  const constantRegister = builder.alloc();
   let next = 'c0';
   for (const [index, constantIndex] of constantIndexes.entries()) {
-    b.label(next);
-    b.num(c, constantIndex);
-    b.binary('==', temporary, 0, c);
+    builder.label(next);
+    builder.num(constantRegister, constantIndex);
+    builder.binary('==', temporary, 0, constantRegister);
     const yes = 'yes';
     next = index === constantIndexes.length - 1 ? 'no' : `c${String(index + 1)}`;
-    b.branch(temporary, yes, next);
+    builder.branch(temporary, yes, next);
   }
-  b.label('yes');
+  builder.label('yes');
   // true
-  b.num(c, 2);
-  b.num(temporary, 2);
-  b.binary('==', temporary, c, temporary); // 0 == 0 => true
-  b.ret(temporary);
-  b.label('no');
-  b.num(c, 2);
-  b.num(temporary, 3);
-  b.binary('==', temporary, c, temporary); // 0 == 1 => false
-  b.ret(temporary);
-  const code = b.finish();
+  builder.num(constantRegister, 2);
+  builder.num(temporary, 2);
+  builder.binary('==', temporary, constantRegister, temporary); // 0 == 0 => true
+  builder.ret(temporary);
+  builder.label('no');
+  builder.num(constantRegister, 2);
+  builder.num(temporary, 3);
+  builder.binary('==', temporary, constantRegister, temporary); // 0 == 1 => false
+  builder.ret(temporary);
+  const code = builder.finish();
   return {
     name,
     parameters: ['i32'],
     result: 'bool',
-    registers: b.registers,
+    registers: builder.registers,
     code,
     debugSpans: [],
   };
@@ -783,102 +791,105 @@ function buildIsWs(): FlintSelfHostedVmFunction {
 
 /** Builds the VM predicate function for ASCII alphabetic detection. */
 function buildIsAlpha(): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   // (b >= 'A' && b <= 'Z') || (b >= 'a' && b <= 'z') || b == '_'
-  const b = createBuilder(1);
-  const temporary = b.alloc();
-  const lo = b.alloc();
-  const hi = b.alloc();
-  const t1 = b.alloc();
-  const t2 = b.alloc();
+  const builder = createBuilder(1);
+  const temporary = builder.alloc();
+  const lo = builder.alloc();
+  const hi = builder.alloc();
+  const t1 = builder.alloc();
+  const t2 = builder.alloc();
 
-  b.num(lo, 17); // A
-  b.num(hi, 18); // Z
-  b.binary('>=', t1, 0, lo);
-  b.binary('<=', t2, 0, hi);
-  b.binary('&&', temporary, t1, t2);
-  b.branch(temporary, 'yes', 'lower');
+  builder.num(lo, 17); // A
+  builder.num(hi, 18); // Z
+  builder.binary('>=', t1, 0, lo);
+  builder.binary('<=', t2, 0, hi);
+  builder.binary('&&', temporary, t1, t2);
+  builder.branch(temporary, 'yes', 'lower');
 
-  b.label('lower');
-  b.num(lo, 20); // a
-  b.num(hi, 21); // z
-  b.binary('>=', t1, 0, lo);
-  b.binary('<=', t2, 0, hi);
-  b.binary('&&', temporary, t1, t2);
-  b.branch(temporary, 'yes', 'under');
+  builder.label('lower');
+  builder.num(lo, 20); // a
+  builder.num(hi, 21); // z
+  builder.binary('>=', t1, 0, lo);
+  builder.binary('<=', t2, 0, hi);
+  builder.binary('&&', temporary, t1, t2);
+  builder.branch(temporary, 'yes', 'under');
 
-  b.label('under');
-  b.num(lo, 19); // _
-  b.binary('==', temporary, 0, lo);
-  b.branch(temporary, 'yes', 'no');
+  builder.label('under');
+  builder.num(lo, 19); // _
+  builder.binary('==', temporary, 0, lo);
+  builder.branch(temporary, 'yes', 'no');
 
-  b.label('yes');
-  b.num(lo, 2);
-  b.num(temporary, 2);
-  b.binary('==', temporary, lo, temporary);
-  b.ret(temporary);
-  b.label('no');
-  b.num(lo, 2);
-  b.num(temporary, 3);
-  b.binary('==', temporary, lo, temporary);
-  b.ret(temporary);
+  builder.label('yes');
+  builder.num(lo, 2);
+  builder.num(temporary, 2);
+  builder.binary('==', temporary, lo, temporary);
+  builder.ret(temporary);
+  builder.label('no');
+  builder.num(lo, 2);
+  builder.num(temporary, 3);
+  builder.binary('==', temporary, lo, temporary);
+  builder.ret(temporary);
 
-  const code = b.finish();
+  const code = builder.finish();
   return {
     name: 'is_alpha',
     parameters: ['i32'],
     result: 'bool',
-    registers: b.registers,
+    registers: builder.registers,
     code,
     debugSpans: [],
   };
 }
 
 /** Builds the VM predicate function for ASCII decimal digit detection. */
+// skipcq: JS-C1002
 function buildIsDigit(): FlintSelfHostedVmFunction {
-  const b = createBuilder(1);
-  const temporary = b.alloc();
-  const lo = b.alloc();
-  const hi = b.alloc();
-  const t1 = b.alloc();
-  const t2 = b.alloc();
-  b.num(lo, 15);
-  b.num(hi, 16);
-  b.binary('>=', t1, 0, lo);
-  b.binary('<=', t2, 0, hi);
-  b.binary('&&', temporary, t1, t2);
-  b.ret(temporary);
-  const code = b.finish();
+  const builder = createBuilder(1);
+  const temporary = builder.alloc();
+  const lo = builder.alloc();
+  const hi = builder.alloc();
+  const t1 = builder.alloc();
+  const t2 = builder.alloc();
+  builder.num(lo, 15);
+  builder.num(hi, 16);
+  builder.binary('>=', t1, 0, lo);
+  builder.binary('<=', t2, 0, hi);
+  builder.binary('&&', temporary, t1, t2);
+  builder.ret(temporary);
+  const code = builder.finish();
   return {
     name: 'is_digit',
     parameters: ['i32'],
     result: 'bool',
-    registers: b.registers,
+    registers: builder.registers,
     code,
     debugSpans: [],
   };
 }
 
 /** Builds the VM predicate function for alphanumeric character detection. */
+// skipcq: JS-C1002
 function buildIsAlnum(): FlintSelfHostedVmFunction {
-  const b = createBuilder(1);
-  const temporary = b.alloc();
-  const other = b.alloc();
-  b.call(temporary, 'is_alpha', [0]);
-  b.branch(temporary, 'yes', 'digit');
-  b.label('digit');
-  b.call(other, 'is_digit', [0]);
-  b.ret(other);
-  b.label('yes');
-  b.num(temporary, 2);
-  b.num(other, 2);
-  b.binary('==', temporary, temporary, other);
-  b.ret(temporary);
-  const code = b.finish();
+  const builder = createBuilder(1);
+  const temporary = builder.alloc();
+  const other = builder.alloc();
+  builder.call(temporary, 'is_alpha', [0]);
+  builder.branch(temporary, 'yes', 'digit');
+  builder.label('digit');
+  builder.call(other, 'is_digit', [0]);
+  builder.ret(other);
+  builder.label('yes');
+  builder.num(temporary, 2);
+  builder.num(other, 2);
+  builder.binary('==', temporary, temporary, other);
+  builder.ret(temporary);
+  const code = builder.finish();
   return {
     name: 'is_alnum',
     parameters: ['i32'],
     result: 'bool',
-    registers: b.registers,
+    registers: builder.registers,
     code,
     debugSpans: [],
   };
@@ -904,39 +915,40 @@ function buildIsTwoCharOp(): FlintSelfHostedVmFunction {
     [46, 47],
     [48, 49],
   ] as const;
-  const b = createBuilder(2);
-  const temporary = b.alloc();
-  const c1 = b.alloc();
-  const c2 = b.alloc();
-  const t1 = b.alloc();
-  const t2 = b.alloc();
+  const builder = createBuilder(2);
+  // skipcq: JS-C1002
+  const temporary = builder.alloc();
+  const c1 = builder.alloc();
+  const c2 = builder.alloc();
+  const t1 = builder.alloc();
+  const t2 = builder.alloc();
   let next = 'p0';
   for (const [index, [left, right]] of pairs.entries()) {
-    b.label(next);
-    b.num(c1, left);
-    b.num(c2, right);
-    b.binary('==', t1, 0, c1);
-    b.binary('==', t2, 1, c2);
-    b.binary('&&', temporary, t1, t2);
+    builder.label(next);
+    builder.num(c1, left);
+    builder.num(c2, right);
+    builder.binary('==', t1, 0, c1);
+    builder.binary('==', t2, 1, c2);
+    builder.binary('&&', temporary, t1, t2);
     next = index === pairs.length - 1 ? 'no' : `p${String(index + 1)}`;
-    b.branch(temporary, 'yes', next);
+    builder.branch(temporary, 'yes', next);
   }
-  b.label('yes');
-  b.num(c1, 2);
-  b.num(temporary, 2);
-  b.binary('==', temporary, c1, temporary);
-  b.ret(temporary);
-  b.label('no');
-  b.num(c1, 2);
-  b.num(temporary, 3);
-  b.binary('==', temporary, c1, temporary);
-  b.ret(temporary);
-  const code = b.finish();
+  builder.label('yes');
+  builder.num(c1, 2);
+  builder.num(temporary, 2);
+  builder.binary('==', temporary, c1, temporary);
+  builder.ret(temporary);
+  builder.label('no');
+  builder.num(c1, 2);
+  builder.num(temporary, 3);
+  builder.binary('==', temporary, c1, temporary);
+  builder.ret(temporary);
+  const code = builder.finish();
   return {
     name: 'is_two_char_op',
     parameters: ['i32', 'i32'],
     result: 'bool',
-    registers: b.registers,
+    registers: builder.registers,
     code,
     debugSpans: [],
   };
@@ -956,319 +968,320 @@ function buildIsPunct(): FlintSelfHostedVmFunction {
 function buildLexFingerprint(blockCommentStarConstant: number): FlintSelfHostedVmFunction {
   // lex_fingerprint(source: aggregate) -> i32
   // registers: 0 = source
-  const b = createBuilder(1);
-  const hash = b.alloc(); // 1
-  const length = b.alloc(); // 2
-  const offset = b.alloc(); // 3
-  const byte = b.alloc(); // 4
-  const temporary = b.alloc(); // 5
-  const temporary2 = b.alloc(); // 6
-  const start = b.alloc(); // 7
-  const identHash = b.alloc(); // 8
-  const one = b.alloc(); // 9
-  const zero = b.alloc(); // 10
-  const kind = b.alloc(); // 11
-  const nextByte = b.alloc(); // 12
-  const shifted = b.alloc(); // 13
-  const mask = b.alloc(); // 14
-  const cond = b.alloc(); // 15
+  const builder = createBuilder(1);
+  // skipcq: JS-C1002
+  const hash = builder.alloc(); // 1
+  const length = builder.alloc(); // 2
+  const offset = builder.alloc(); // 3
+  const byte = builder.alloc(); // 4
+  const temporary = builder.alloc(); // 5
+  const temporary2 = builder.alloc(); // 6
+  const start = builder.alloc(); // 7
+  const identHash = builder.alloc(); // 8
+  const one = builder.alloc(); // 9
+  const zero = builder.alloc(); // 10
+  const kind = builder.alloc(); // 11
+  const nextByte = builder.alloc(); // 12
+  const shifted = builder.alloc(); // 13
+  const mask = builder.alloc(); // 14
+  const cond = builder.alloc(); // 15
 
-  b.num(hash, 0); // FNV offset
-  b.len(length, 0);
-  b.num(offset, 2); // 0
-  b.num(one, 3); // 1
-  b.num(zero, 2); // 0
-  b.num(mask, 8); // 0xff
+  builder.num(hash, 0); // FNV offset
+  builder.len(length, 0);
+  builder.num(offset, 2); // 0
+  builder.num(one, 3); // 1
+  builder.num(zero, 2); // 0
+  builder.num(mask, 8); // 0xff
 
-  b.label('loop');
-  b.binary('<', cond, offset, length);
-  b.branch(cond, 'body', 'done');
+  builder.label('loop');
+  builder.binary('<', cond, offset, length);
+  builder.branch(cond, 'body', 'done');
 
-  b.label('body');
-  b.byteAt(byte, 0, offset);
+  builder.label('body');
+  builder.byteAt(byte, 0, offset);
 
   // whitespace
-  b.call(cond, 'is_ws', [byte]);
-  b.branch(cond, 'ws', 'comment');
+  builder.call(cond, 'is_ws', [byte]);
+  builder.branch(cond, 'ws', 'comment');
 
-  b.label('ws');
-  b.binary('+', offset, offset, one);
-  b.label('ws_loop');
-  b.binary('<', cond, offset, length);
-  b.branch(cond, 'ws_check', 'loop');
-  b.label('ws_check');
-  b.byteAt(byte, 0, offset);
-  b.call(cond, 'is_ws', [byte]);
-  b.branch(cond, 'ws_advance', 'loop');
-  b.label('ws_advance');
-  b.binary('+', offset, offset, one);
-  b.jump('ws_loop');
+  builder.label('ws');
+  builder.binary('+', offset, offset, one);
+  builder.label('ws_loop');
+  builder.binary('<', cond, offset, length);
+  builder.branch(cond, 'ws_check', 'loop');
+  builder.label('ws_check');
+  builder.byteAt(byte, 0, offset);
+  builder.call(cond, 'is_ws', [byte]);
+  builder.branch(cond, 'ws_advance', 'loop');
+  builder.label('ws_advance');
+  builder.binary('+', offset, offset, one);
+  builder.jump('ws_loop');
 
   // // and /* */ comments
-  b.label('comment');
-  b.num(temporary, 14); // '/'
-  b.binary('==', cond, byte, temporary);
-  b.branch(cond, 'comment_second', 'ident');
-  b.label('comment_second');
-  b.binary('+', temporary2, offset, one);
-  b.binary('<', cond, temporary2, length);
-  b.branch(cond, 'comment_load', 'ident');
-  b.label('comment_load');
-  b.byteAt(nextByte, 0, temporary2);
-  b.binary('==', cond, nextByte, temporary);
-  b.branch(cond, 'line_comment_body', 'block_comment_start');
-  b.label('block_comment_start');
-  b.num(temporary, blockCommentStarConstant);
-  b.binary('==', cond, nextByte, temporary);
-  b.branch(cond, 'block_comment_body', 'ident');
+  builder.label('comment');
+  builder.num(temporary, 14); // '/'
+  builder.binary('==', cond, byte, temporary);
+  builder.branch(cond, 'comment_second', 'ident');
+  builder.label('comment_second');
+  builder.binary('+', temporary2, offset, one);
+  builder.binary('<', cond, temporary2, length);
+  builder.branch(cond, 'comment_load', 'ident');
+  builder.label('comment_load');
+  builder.byteAt(nextByte, 0, temporary2);
+  builder.binary('==', cond, nextByte, temporary);
+  builder.branch(cond, 'line_comment_body', 'block_comment_start');
+  builder.label('block_comment_start');
+  builder.num(temporary, blockCommentStarConstant);
+  builder.binary('==', cond, nextByte, temporary);
+  builder.branch(cond, 'block_comment_body', 'ident');
 
-  b.label('line_comment_body');
-  b.binary('+', offset, offset, one);
-  b.binary('+', offset, offset, one);
-  b.label('comment_loop');
-  b.binary('<', cond, offset, length);
-  b.branch(cond, 'comment_check', 'comment_mix');
-  b.label('comment_check');
-  b.byteAt(byte, 0, offset);
-  b.num(temporary, 10); // lf
-  b.binary('==', cond, byte, temporary);
-  b.branch(cond, 'comment_mix', 'comment_advance');
-  b.label('comment_advance');
-  b.binary('+', offset, offset, one);
-  b.jump('comment_loop');
-  b.label('comment_mix');
-  b.num(kind, 30); // KIND_COMMENT
-  b.call(hash, 'fnv_mix', [hash, kind]);
-  b.jump('loop');
+  builder.label('line_comment_body');
+  builder.binary('+', offset, offset, one);
+  builder.binary('+', offset, offset, one);
+  builder.label('comment_loop');
+  builder.binary('<', cond, offset, length);
+  builder.branch(cond, 'comment_check', 'comment_mix');
+  builder.label('comment_check');
+  builder.byteAt(byte, 0, offset);
+  builder.num(temporary, 10); // lf
+  builder.binary('==', cond, byte, temporary);
+  builder.branch(cond, 'comment_mix', 'comment_advance');
+  builder.label('comment_advance');
+  builder.binary('+', offset, offset, one);
+  builder.jump('comment_loop');
+  builder.label('comment_mix');
+  builder.num(kind, 30); // KIND_COMMENT
+  builder.call(hash, 'fnv_mix', [hash, kind]);
+  builder.jump('loop');
 
-  b.label('block_comment_body');
-  b.binary('+', offset, offset, one);
-  b.binary('+', offset, offset, one);
-  b.label('block_comment_loop');
-  b.binary('<', cond, offset, length);
-  b.branch(cond, 'block_comment_check', 'block_comment_mix');
-  b.label('block_comment_check');
-  b.byteAt(byte, 0, offset);
-  b.num(temporary, blockCommentStarConstant);
-  b.binary('==', cond, byte, temporary);
-  b.branch(cond, 'block_comment_star', 'block_comment_advance');
-  b.label('block_comment_star');
-  b.binary('+', temporary2, offset, one);
-  b.binary('<', cond, temporary2, length);
-  b.branch(cond, 'block_comment_close_check', 'block_comment_advance');
-  b.label('block_comment_close_check');
-  b.byteAt(nextByte, 0, temporary2);
-  b.num(temporary, 14); // '/'
-  b.binary('==', cond, nextByte, temporary);
-  b.branch(cond, 'block_comment_mix', 'block_comment_advance');
-  b.label('block_comment_advance');
-  b.binary('+', offset, offset, one);
-  b.jump('block_comment_loop');
-  b.label('block_comment_mix');
-  b.binary('+', offset, offset, one);
-  b.binary('+', offset, offset, one);
-  b.num(kind, 30); // KIND_COMMENT
-  b.call(hash, 'fnv_mix', [hash, kind]);
-  b.jump('loop');
+  builder.label('block_comment_body');
+  builder.binary('+', offset, offset, one);
+  builder.binary('+', offset, offset, one);
+  builder.label('block_comment_loop');
+  builder.binary('<', cond, offset, length);
+  builder.branch(cond, 'block_comment_check', 'block_comment_mix');
+  builder.label('block_comment_check');
+  builder.byteAt(byte, 0, offset);
+  builder.num(temporary, blockCommentStarConstant);
+  builder.binary('==', cond, byte, temporary);
+  builder.branch(cond, 'block_comment_star', 'block_comment_advance');
+  builder.label('block_comment_star');
+  builder.binary('+', temporary2, offset, one);
+  builder.binary('<', cond, temporary2, length);
+  builder.branch(cond, 'block_comment_close_check', 'block_comment_advance');
+  builder.label('block_comment_close_check');
+  builder.byteAt(nextByte, 0, temporary2);
+  builder.num(temporary, 14); // '/'
+  builder.binary('==', cond, nextByte, temporary);
+  builder.branch(cond, 'block_comment_mix', 'block_comment_advance');
+  builder.label('block_comment_advance');
+  builder.binary('+', offset, offset, one);
+  builder.jump('block_comment_loop');
+  builder.label('block_comment_mix');
+  builder.binary('+', offset, offset, one);
+  builder.binary('+', offset, offset, one);
+  builder.num(kind, 30); // KIND_COMMENT
+  builder.call(hash, 'fnv_mix', [hash, kind]);
+  builder.jump('loop');
 
   // identifier / keyword
-  b.label('ident');
-  b.call(cond, 'is_alpha', [byte]);
-  b.branch(cond, 'ident_body', 'number');
-  b.label('ident_body');
-  b.move(start, offset);
-  b.binary('+', offset, offset, one);
-  b.label('ident_loop');
-  b.binary('<', cond, offset, length);
-  b.branch(cond, 'ident_check', 'ident_finish');
-  b.label('ident_check');
-  b.byteAt(byte, 0, offset);
-  b.call(cond, 'is_alnum', [byte]);
-  b.branch(cond, 'ident_advance', 'ident_finish');
-  b.label('ident_advance');
-  b.binary('+', offset, offset, one);
-  b.jump('ident_loop');
-  b.label('ident_finish');
-  b.num(identHash, 0); // FNV offset
-  b.move(temporary, start);
-  b.label('ident_hash_loop');
-  b.binary('<', cond, temporary, offset);
-  b.branch(cond, 'ident_hash_body', 'ident_kind');
-  b.label('ident_hash_body');
-  b.byteAt(byte, 0, temporary);
-  b.call(identHash, 'fnv_mix', [identHash, byte]);
-  b.binary('+', temporary, temporary, one);
-  b.jump('ident_hash_loop');
-  b.label('ident_kind');
-  b.call(cond, 'is_keyword', [identHash]);
-  b.branch(cond, 'ident_kw', 'ident_id');
-  b.label('ident_kw');
-  b.num(kind, 25);
-  b.jump('ident_mix');
-  b.label('ident_id');
-  b.num(kind, 24);
-  b.label('ident_mix');
-  b.call(hash, 'fnv_mix', [hash, kind]);
+  builder.label('ident');
+  builder.call(cond, 'is_alpha', [byte]);
+  builder.branch(cond, 'ident_body', 'number');
+  builder.label('ident_body');
+  builder.move(start, offset);
+  builder.binary('+', offset, offset, one);
+  builder.label('ident_loop');
+  builder.binary('<', cond, offset, length);
+  builder.branch(cond, 'ident_check', 'ident_finish');
+  builder.label('ident_check');
+  builder.byteAt(byte, 0, offset);
+  builder.call(cond, 'is_alnum', [byte]);
+  builder.branch(cond, 'ident_advance', 'ident_finish');
+  builder.label('ident_advance');
+  builder.binary('+', offset, offset, one);
+  builder.jump('ident_loop');
+  builder.label('ident_finish');
+  builder.num(identHash, 0); // FNV offset
+  builder.move(temporary, start);
+  builder.label('ident_hash_loop');
+  builder.binary('<', cond, temporary, offset);
+  builder.branch(cond, 'ident_hash_body', 'ident_kind');
+  builder.label('ident_hash_body');
+  builder.byteAt(byte, 0, temporary);
+  builder.call(identHash, 'fnv_mix', [identHash, byte]);
+  builder.binary('+', temporary, temporary, one);
+  builder.jump('ident_hash_loop');
+  builder.label('ident_kind');
+  builder.call(cond, 'is_keyword', [identHash]);
+  builder.branch(cond, 'ident_kw', 'ident_id');
+  builder.label('ident_kw');
+  builder.num(kind, 25);
+  builder.jump('ident_mix');
+  builder.label('ident_id');
+  builder.num(kind, 24);
+  builder.label('ident_mix');
+  builder.call(hash, 'fnv_mix', [hash, kind]);
   // mix 4 bytes of identHash
-  b.binary('&', temporary, identHash, mask);
-  b.call(hash, 'fnv_mix', [hash, temporary]);
-  b.num(temporary2, 5); // 8
-  b.binary('>>', shifted, identHash, temporary2);
-  b.binary('&', temporary, shifted, mask);
-  b.call(hash, 'fnv_mix', [hash, temporary]);
-  b.num(temporary2, 6); // 16
-  b.binary('>>', shifted, identHash, temporary2);
-  b.binary('&', temporary, shifted, mask);
-  b.call(hash, 'fnv_mix', [hash, temporary]);
-  b.num(temporary2, 7); // 24
-  b.binary('>>', shifted, identHash, temporary2);
-  b.binary('&', temporary, shifted, mask);
-  b.call(hash, 'fnv_mix', [hash, temporary]);
-  b.jump('loop');
+  builder.binary('&', temporary, identHash, mask);
+  builder.call(hash, 'fnv_mix', [hash, temporary]);
+  builder.num(temporary2, 5); // 8
+  builder.binary('>>', shifted, identHash, temporary2);
+  builder.binary('&', temporary, shifted, mask);
+  builder.call(hash, 'fnv_mix', [hash, temporary]);
+  builder.num(temporary2, 6); // 16
+  builder.binary('>>', shifted, identHash, temporary2);
+  builder.binary('&', temporary, shifted, mask);
+  builder.call(hash, 'fnv_mix', [hash, temporary]);
+  builder.num(temporary2, 7); // 24
+  builder.binary('>>', shifted, identHash, temporary2);
+  builder.binary('&', temporary, shifted, mask);
+  builder.call(hash, 'fnv_mix', [hash, temporary]);
+  builder.jump('loop');
 
   // number
-  b.label('number');
-  b.call(cond, 'is_digit', [byte]);
-  b.branch(cond, 'number_body', 'string');
-  b.label('number_body');
-  b.move(start, offset);
-  b.binary('+', offset, offset, one);
-  b.label('number_loop');
-  b.binary('<', cond, offset, length);
-  b.branch(cond, 'number_check', 'number_mix');
-  b.label('number_check');
-  b.byteAt(byte, 0, offset);
-  b.call(cond, 'is_digit', [byte]);
-  b.branch(cond, 'number_advance', 'number_mix');
-  b.label('number_advance');
-  b.binary('+', offset, offset, one);
-  b.jump('number_loop');
-  b.label('number_mix');
-  b.num(kind, 26);
-  b.call(hash, 'fnv_mix', [hash, kind]);
-  b.move(temporary, start);
-  b.label('number_hash_loop');
-  b.binary('<', cond, temporary, offset);
-  b.branch(cond, 'number_hash_body', 'loop');
-  b.label('number_hash_body');
-  b.byteAt(byte, 0, temporary);
-  b.call(hash, 'fnv_mix', [hash, byte]);
-  b.binary('+', temporary, temporary, one);
-  b.jump('number_hash_loop');
+  builder.label('number');
+  builder.call(cond, 'is_digit', [byte]);
+  builder.branch(cond, 'number_body', 'string');
+  builder.label('number_body');
+  builder.move(start, offset);
+  builder.binary('+', offset, offset, one);
+  builder.label('number_loop');
+  builder.binary('<', cond, offset, length);
+  builder.branch(cond, 'number_check', 'number_mix');
+  builder.label('number_check');
+  builder.byteAt(byte, 0, offset);
+  builder.call(cond, 'is_digit', [byte]);
+  builder.branch(cond, 'number_advance', 'number_mix');
+  builder.label('number_advance');
+  builder.binary('+', offset, offset, one);
+  builder.jump('number_loop');
+  builder.label('number_mix');
+  builder.num(kind, 26);
+  builder.call(hash, 'fnv_mix', [hash, kind]);
+  builder.move(temporary, start);
+  builder.label('number_hash_loop');
+  builder.binary('<', cond, temporary, offset);
+  builder.branch(cond, 'number_hash_body', 'loop');
+  builder.label('number_hash_body');
+  builder.byteAt(byte, 0, temporary);
+  builder.call(hash, 'fnv_mix', [hash, byte]);
+  builder.binary('+', temporary, temporary, one);
+  builder.jump('number_hash_loop');
 
   // string
-  b.label('string');
-  b.num(temporary, 13); // quote
-  b.binary('==', cond, byte, temporary);
-  b.branch(cond, 'string_body', 'two_char');
-  b.label('string_body');
-  b.move(start, offset);
-  b.binary('+', offset, offset, one);
-  b.num(temporary2, 2); // terminated = 0 (false-ish, use flag)
+  builder.label('string');
+  builder.num(temporary, 13); // quote
+  builder.binary('==', cond, byte, temporary);
+  builder.branch(cond, 'string_body', 'two_char');
+  builder.label('string_body');
+  builder.move(start, offset);
+  builder.binary('+', offset, offset, one);
+  builder.num(temporary2, 2); // terminated = 0 (false-ish, use flag)
   // use temporary2 as terminated flag: 0 = false, 1 = true
-  b.label('string_loop');
-  b.binary('<', cond, offset, length);
-  b.branch(cond, 'string_check', 'string_mix');
-  b.label('string_check');
-  b.byteAt(byte, 0, offset);
-  b.num(temporary, 22); // backslash
-  b.binary('==', cond, byte, temporary);
-  b.branch(cond, 'string_escape', 'string_quote');
-  b.label('string_escape');
-  b.binary('+', offset, offset, one);
-  b.binary('+', offset, offset, one);
-  b.jump('string_loop');
-  b.label('string_quote');
-  b.num(temporary, 13);
-  b.binary('==', cond, byte, temporary);
-  b.branch(cond, 'string_end', 'string_advance');
-  b.label('string_end');
-  b.binary('+', offset, offset, one);
-  b.num(temporary2, 3); // terminated = 1
-  b.jump('string_mix');
-  b.label('string_advance');
-  b.binary('+', offset, offset, one);
-  b.jump('string_loop');
-  b.label('string_mix');
-  b.num(temporary, 3); // 1
-  b.binary('==', cond, temporary2, temporary);
-  b.branch(cond, 'string_ok', 'string_err');
-  b.label('string_ok');
-  b.num(kind, 27);
-  b.jump('string_hash');
-  b.label('string_err');
-  b.num(kind, 31);
-  b.label('string_hash');
-  b.call(hash, 'fnv_mix', [hash, kind]);
-  b.move(temporary, start);
-  b.label('string_hash_loop');
-  b.binary('<', cond, temporary, offset);
-  b.branch(cond, 'string_hash_body', 'loop');
-  b.label('string_hash_body');
-  b.byteAt(byte, 0, temporary);
-  b.call(hash, 'fnv_mix', [hash, byte]);
-  b.binary('+', temporary, temporary, one);
-  b.jump('string_hash_loop');
+  builder.label('string_loop');
+  builder.binary('<', cond, offset, length);
+  builder.branch(cond, 'string_check', 'string_mix');
+  builder.label('string_check');
+  builder.byteAt(byte, 0, offset);
+  builder.num(temporary, 22); // backslash
+  builder.binary('==', cond, byte, temporary);
+  builder.branch(cond, 'string_escape', 'string_quote');
+  builder.label('string_escape');
+  builder.binary('+', offset, offset, one);
+  builder.binary('+', offset, offset, one);
+  builder.jump('string_loop');
+  builder.label('string_quote');
+  builder.num(temporary, 13);
+  builder.binary('==', cond, byte, temporary);
+  builder.branch(cond, 'string_end', 'string_advance');
+  builder.label('string_end');
+  builder.binary('+', offset, offset, one);
+  builder.num(temporary2, 3); // terminated = 1
+  builder.jump('string_mix');
+  builder.label('string_advance');
+  builder.binary('+', offset, offset, one);
+  builder.jump('string_loop');
+  builder.label('string_mix');
+  builder.num(temporary, 3); // 1
+  builder.binary('==', cond, temporary2, temporary);
+  builder.branch(cond, 'string_ok', 'string_err');
+  builder.label('string_ok');
+  builder.num(kind, 27);
+  builder.jump('string_hash');
+  builder.label('string_err');
+  builder.num(kind, 31);
+  builder.label('string_hash');
+  builder.call(hash, 'fnv_mix', [hash, kind]);
+  builder.move(temporary, start);
+  builder.label('string_hash_loop');
+  builder.binary('<', cond, temporary, offset);
+  builder.branch(cond, 'string_hash_body', 'loop');
+  builder.label('string_hash_body');
+  builder.byteAt(byte, 0, temporary);
+  builder.call(hash, 'fnv_mix', [hash, byte]);
+  builder.binary('+', temporary, temporary, one);
+  builder.jump('string_hash_loop');
 
   // two-char operator
-  b.label('two_char');
-  b.binary('+', temporary2, offset, one);
-  b.binary('<', cond, temporary2, length);
-  b.branch(cond, 'two_char_load', 'one_char');
-  b.label('two_char_load');
-  b.byteAt(nextByte, 0, temporary2);
-  b.call(cond, 'is_two_char_op', [byte, nextByte]);
-  b.branch(cond, 'two_char_mix', 'one_char');
-  b.label('two_char_mix');
-  b.num(kind, 28);
-  b.call(hash, 'fnv_mix', [hash, kind]);
-  b.call(hash, 'fnv_mix', [hash, byte]);
-  b.call(hash, 'fnv_mix', [hash, nextByte]);
-  b.binary('+', offset, offset, one);
-  b.binary('+', offset, offset, one);
-  b.jump('loop');
+  builder.label('two_char');
+  builder.binary('+', temporary2, offset, one);
+  builder.binary('<', cond, temporary2, length);
+  builder.branch(cond, 'two_char_load', 'one_char');
+  builder.label('two_char_load');
+  builder.byteAt(nextByte, 0, temporary2);
+  builder.call(cond, 'is_two_char_op', [byte, nextByte]);
+  builder.branch(cond, 'two_char_mix', 'one_char');
+  builder.label('two_char_mix');
+  builder.num(kind, 28);
+  builder.call(hash, 'fnv_mix', [hash, kind]);
+  builder.call(hash, 'fnv_mix', [hash, byte]);
+  builder.call(hash, 'fnv_mix', [hash, nextByte]);
+  builder.binary('+', offset, offset, one);
+  builder.binary('+', offset, offset, one);
+  builder.jump('loop');
 
   // one-char operator
-  b.label('one_char');
-  b.call(cond, 'is_one_char_op', [byte]);
-  b.branch(cond, 'one_char_mix', 'punct');
-  b.label('one_char_mix');
-  b.num(kind, 28);
-  b.call(hash, 'fnv_mix', [hash, kind]);
-  b.call(hash, 'fnv_mix', [hash, byte]);
-  b.binary('+', offset, offset, one);
-  b.jump('loop');
+  builder.label('one_char');
+  builder.call(cond, 'is_one_char_op', [byte]);
+  builder.branch(cond, 'one_char_mix', 'punct');
+  builder.label('one_char_mix');
+  builder.num(kind, 28);
+  builder.call(hash, 'fnv_mix', [hash, kind]);
+  builder.call(hash, 'fnv_mix', [hash, byte]);
+  builder.binary('+', offset, offset, one);
+  builder.jump('loop');
 
   // punctuation
-  b.label('punct');
-  b.call(cond, 'is_punct', [byte]);
-  b.branch(cond, 'punct_mix', 'error');
-  b.label('punct_mix');
-  b.num(kind, 29);
-  b.call(hash, 'fnv_mix', [hash, kind]);
-  b.call(hash, 'fnv_mix', [hash, byte]);
-  b.binary('+', offset, offset, one);
-  b.jump('loop');
+  builder.label('punct');
+  builder.call(cond, 'is_punct', [byte]);
+  builder.branch(cond, 'punct_mix', 'error');
+  builder.label('punct_mix');
+  builder.num(kind, 29);
+  builder.call(hash, 'fnv_mix', [hash, kind]);
+  builder.call(hash, 'fnv_mix', [hash, byte]);
+  builder.binary('+', offset, offset, one);
+  builder.jump('loop');
 
   // error / other
-  b.label('error');
-  b.num(kind, 31);
-  b.call(hash, 'fnv_mix', [hash, kind]);
-  b.call(hash, 'fnv_mix', [hash, byte]);
-  b.binary('+', offset, offset, one);
-  b.jump('loop');
+  builder.label('error');
+  builder.num(kind, 31);
+  builder.call(hash, 'fnv_mix', [hash, kind]);
+  builder.call(hash, 'fnv_mix', [hash, byte]);
+  builder.binary('+', offset, offset, one);
+  builder.jump('loop');
 
-  b.label('done');
-  b.num(kind, 23); // EOF
-  b.call(hash, 'fnv_mix', [hash, kind]);
-  b.ret(hash);
+  builder.label('done');
+  builder.num(kind, 23); // EOF
+  builder.call(hash, 'fnv_mix', [hash, kind]);
+  builder.ret(hash);
 
-  const code = b.finish();
+  const code = builder.finish();
   return {
     name: FLINT_LEX_STAGE_ENTRY,
     parameters: [FLINT_LEX_STAGE_SOURCE_LAYOUT],
     result: 'i32',
-    registers: b.registers,
+    registers: builder.registers,
     code,
     debugSpans: [],
   };

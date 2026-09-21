@@ -98,6 +98,7 @@ export class Cursor {
 }
 
 /** Parses WebAssembly memory or table limits from binary stream. */
+// skipcq: JS-R1005
 export function parseLimits(cursor: Cursor): WasmMemory {
   const flags = cursor.leb();
   const memory64 = (flags & 0x04) !== 0;
@@ -108,6 +109,7 @@ export function parseLimits(cursor: Cursor): WasmMemory {
   return { minimum, ...(maximum === undefined ? {} : { maximum }), shared, memory64 };
 }
 
+// skipcq: JS-D1001
 function readWasmType(payload: Cursor): WasmType {
   const byte = payload.byte();
   if (byte !== 0x7f && byte !== 0x7e && byte !== 0x7d && byte !== 0x7c) {
@@ -131,6 +133,7 @@ function parseTypeSection(payload: Cursor): FunctionType[] {
 }
 
 /** Parses one import entry from the import section payload. */
+// skipcq: JS-R1005
 function parseImportEntry(payload: Cursor): WasmImport {
   const module = payload.string(256);
   const name = payload.string(256);
@@ -197,6 +200,7 @@ function parseExportSection(payload: Cursor): WasmExport[] {
 }
 
 /** Validates WebAssembly binary header magic and version. */
+// skipcq: JS-R1005
 function validateWasmHeader(bytes: Uint8Array): void {
   if (
     bytes.byteLength < 8 ||
@@ -218,6 +222,7 @@ interface SectionBuilder {
   memory?: WasmMemory;
 }
 
+// skipcq: JS-D1001, JS-R1005
 function parseStandardSection(id: number, payload: Cursor, builder: SectionBuilder): void {
   switch (id) {
     case 1: {
@@ -246,6 +251,7 @@ function parseStandardSection(id: number, payload: Cursor, builder: SectionBuild
   }
 }
 
+// skipcq: JS-D1001
 function parseCustomSection(payload: Cursor, maxBytes: number, customSections: Map<string, Uint8Array>): void {
   const name = payload.string(256);
   if (payload.remaining() > maxBytes) {
@@ -258,6 +264,7 @@ function parseCustomSection(payload: Cursor, maxBytes: number, customSections: M
 }
 
 /** Parses binary WebAssembly byte array into structured section records. */
+// skipcq: JS-R1005
 export function parseWasm(bytes: Uint8Array, maxCustomSectionBytes: number): ParsedWasm {
   validateWasmHeader(bytes);
   const customSections = new Map<string, Uint8Array>();

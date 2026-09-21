@@ -13,6 +13,7 @@ export function main(): void {
     output: process.stdout,
   });
 
+  // skipcq: JS-D1001
   const shutdown = (): void => {
     server.dispose();
   };

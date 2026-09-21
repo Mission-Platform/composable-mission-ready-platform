@@ -176,6 +176,7 @@ export class WebIdlLexer {
    *
    * @returns The next lexed token, or `undefined` if none could be produced.
    */
+  // skipcq: JS-R1005
   private nextToken(): WebIdlToken | undefined {
     const startLine = this.line;
     const startColumn = this.column;
@@ -192,7 +193,8 @@ export class WebIdlLexer {
     }
 
     // Identifiers and keywords (including extended attributes or escaped identifiers like _attribute)
-    if (this.isIdentifierStart(char)) {
+    // skipcq: JS-0105
+    if (WebIdlLexer.isIdentifierStart(char)) {
       return this.lexIdentifier(startLine, startColumn);
     }
 
@@ -237,7 +239,7 @@ export class WebIdlLexer {
    * @param char - Candidate character.
    * @returns `true` when the character is a letter or underscore.
    */
-  private isIdentifierStart(char: string): boolean {
+  private static isIdentifierStart(char: string): boolean {
     return (char >= 'a' && char <= 'z') || (char >= 'A' && char <= 'Z') || char === '_';
   }
 
@@ -247,7 +249,7 @@ export class WebIdlLexer {
    * @param char - Candidate character.
    * @returns `true` when the character is a letter, digit, underscore, or hyphen.
    */
-  private isIdentifierPart(char: string): boolean {
+  private static isIdentifierPart(char: string): boolean {
     return (
       (char >= 'a' && char <= 'z') ||
       (char >= 'A' && char <= 'Z') ||
@@ -274,6 +276,7 @@ export class WebIdlLexer {
    * @param startColumn - Column number at which the string literal begins.
    * @returns The lexed string token.
    */
+  // skipcq: JS-R1005
   private lexString(startLine: number, startColumn: number): WebIdlToken {
     this.advance(); // consume opening quote
     let value = '';
@@ -318,7 +321,7 @@ export class WebIdlLexer {
    * @param char - Candidate character.
    * @returns `true` when the character is `0`-`9`, `a`-`f`, or `A`-`F`.
    */
-  private isHexDigit(char: string): boolean {
+  private static isHexDigit(char: string): boolean {
     return (char >= '0' && char <= '9') || (char >= 'a' && char <= 'f') || (char >= 'A' && char <= 'F');
   }
 
@@ -347,7 +350,8 @@ export class WebIdlLexer {
    */
   private lexHexDigits(): string {
     let text = this.advance() + this.advance();
-    while (!this.isEof() && this.isHexDigit(this.peek())) {
+    // skipcq: JS-0105, JS-R1005
+    while (!this.isEof() && WebIdlLexer.isHexDigit(this.peek())) {
       text += this.advance();
     }
     return text;
@@ -430,7 +434,7 @@ export class WebIdlLexer {
    */
   private lexIdentifier(startLine: number, startColumn: number): WebIdlToken {
     let text = '';
-    while (!this.isEof() && this.isIdentifierPart(this.peek())) {
+    while (!this.isEof() && WebIdlLexer.isIdentifierPart(this.peek())) {
       text += this.advance();
     }
 

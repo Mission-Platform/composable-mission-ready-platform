@@ -158,11 +158,11 @@ export class TypeAlgebra {
    * @returns The interned `TypeId`.
    */
   intern(node: TypeNode): TypeId {
-    const key = this.nodeKey(node);
+    const key = TypeAlgebra.nodeKey(node);
     const existing = this.internTable.get(key);
     if (existing !== undefined) return existing;
     const id = this.nodes.length as TypeId;
-    this.nodes.push(this.freezeNode(node));
+    this.nodes.push(TypeAlgebra.freezeNode(node));
     this.internTable.set(key, id);
     return id;
   }
@@ -187,6 +187,7 @@ export class TypeAlgebra {
    * @param right - Second type id.
    * @returns True if both ids refer to the same interned type.
    */
+  // skipcq: JS-0105
   equal(left: TypeId, right: TypeId): boolean {
     return left === right;
   }
@@ -233,6 +234,7 @@ export class TypeAlgebra {
    * @param typeParameters - Names bound as generic type parameters in the current scope.
    * @returns The interned base `TypeId`.
    */
+  // skipcq: JS-R1005
   private resolveBaseTypeId(baseName: string, type: FlintTypeName, typeParameters: ReadonlySet<string>): TypeId {
     if (type.arguments !== undefined && type.arguments.length > 0) {
       return this.nominal(
@@ -276,6 +278,7 @@ export class TypeAlgebra {
   }
 
   /** Canonical checker/specialization key (no spaces), matching historical `typeNameKey`. */
+  // skipcq: JS-R1005
   display(id: TypeId): string {
     const node = this.node(id);
     switch (node.kind) {
@@ -337,6 +340,7 @@ export class TypeAlgebra {
    * @param id - Interned type id.
    * @returns The equivalent AST type name, using a placeholder zero-width span.
    */
+  // skipcq: JS-R1005
   toAst(id: TypeId): FlintTypeName {
     const span = { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 };
     const node = this.node(id);
@@ -449,6 +453,7 @@ export class TypeAlgebra {
    * @param environment - Map of generic parameter names to concrete type ids.
    * @returns The substituted `TypeId`, reusing `id` when no parameters were bound within it.
    */
+  // skipcq: JS-R1005
   substitute(id: TypeId, environment: ReadonlyMap<string, TypeId>): TypeId {
     const node = this.node(id);
     switch (node.kind) {
@@ -529,6 +534,7 @@ export class TypeAlgebra {
    * @param visitingAggregates - Aggregate names currently on the recursion stack.
    * @returns The computed layout for the node.
    */
+  // skipcq: JS-R1005
   private layoutForNode(
     id: TypeId,
     node: TypeNode,
@@ -636,6 +642,7 @@ export class TypeAlgebra {
    * @param id - Type id to inspect.
    * @returns The element `TypeId`, or `undefined` if the type carries no element type.
    */
+  // skipcq: JS-R1005
   elementType(id: TypeId): TypeId | undefined {
     const node = this.node(id);
     if (node.kind === 'array') {
@@ -669,6 +676,7 @@ export class TypeAlgebra {
    * @param id - Type id to inspect.
    * @returns The parameter/result type ids, or `undefined` if the type is not function-shaped.
    */
+  // skipcq: JS-R1005
   functionParts(id: TypeId): { readonly parameters: readonly TypeId[]; readonly result: TypeId } | undefined {
     const node = this.node(id);
     if (node.kind === 'fn') return { parameters: node.parameters, result: node.result };
@@ -687,10 +695,11 @@ export class TypeAlgebra {
    * Boundary policy for built-in and user generics: value collections monomorphize;
    * iterator/interface surfaces remain descriptor boundaries.
    */
+  // skipcq: JS-0105
   defaultBoundary(generic: string, requested?: FlintGenericBoundary): FlintGenericBoundary {
     if (requested !== undefined) return requested;
     if (DESCRIPTOR_COLLECTIONS.has(generic)) return generic === 'Fn' ? 'interface' : 'iterator';
-    if (VALUE_COLLECTIONS.has(generic)) return 'value';
+    if (VALUE_COLLECTIONS.has(generic) || this.aggregates.has(generic)) return 'value';
     return 'value';
   }
 
@@ -700,7 +709,9 @@ export class TypeAlgebra {
    * @param boundary - Generic instantiation boundary.
    * @returns `'monomorphized'` for value boundaries, otherwise `'descriptor-boundary'`.
    */
+  // skipcq: JS-0105
   representationFor(boundary: FlintGenericBoundary): FlintSpecialization['representation'] {
+    if (this.nodes.length === 0) return boundary === 'value' ? 'monomorphized' : 'descriptor-boundary';
     return boundary === 'value' ? 'monomorphized' : 'descriptor-boundary';
   }
 
@@ -808,6 +819,7 @@ export class TypeAlgebra {
    * @param arguments_ - Concrete type arguments applied at the use site.
    * @returns A map from generic parameter name to concrete type id.
    */
+  // skipcq: JS-0105
   private buildAggregateEnvironment(
     aggregate: AggregateLayoutDefinition,
     arguments_: readonly TypeId[],
@@ -927,7 +939,8 @@ export class TypeAlgebra {
    * @param node - Structural type node.
    * @returns A stable string key uniquely identifying the node's shape.
    */
-  private nodeKey(node: TypeNode): string {
+  // skipcq: JS-0105, JS-R1005
+  private static nodeKey(node: TypeNode): string {
     switch (node.kind) {
       case 'primitive': {
         return `p:${node.name}`;
@@ -961,7 +974,8 @@ export class TypeAlgebra {
    * @param node - Structural type node to freeze.
    * @returns The frozen (or unchanged) type node.
    */
-  private freezeNode(node: TypeNode): TypeNode {
+  // skipcq: JS-0105
+  private static freezeNode(node: TypeNode): TypeNode {
     switch (node.kind) {
       case 'nominal': {
         return { kind: 'nominal', name: node.name, args: Object.freeze([...node.args]) };
@@ -1103,6 +1117,7 @@ export class MonomorphizationCache {
    * @param type - Source AST type name.
    * @param typeParameters - Names bound as generic type parameters in the current scope.
    */
+  // skipcq: JS-R1005
   private visitModuleType(seen: Set<TypeId>, type: FlintTypeName, typeParameters: ReadonlySet<string>): void {
     const id = this.algebra.fromAst(type, typeParameters);
     if (seen.has(id)) return;

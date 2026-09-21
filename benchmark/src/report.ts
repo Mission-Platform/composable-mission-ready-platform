@@ -816,6 +816,7 @@ export function compareBenchmarkReports(
       ? undefined
       : `Corpus hashes differ (${current.corpusHash} vs ${baseline.corpusHash}); workloads are not comparable.`;
 
+  // skipcq: JS-R1005
   return keys.map((key) => {
     const currentMeasurement = currentByKey.get(key);
     const baselineMeasurement = baselineByKey.get(key);

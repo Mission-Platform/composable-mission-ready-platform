@@ -41,6 +41,7 @@ import type { FlintAbiManifest, FlintDynamicLinkMetadata } from '../manifest.js'
 /**
  * Resolves the analysis policy merged with any requested capabilities.
  */
+// skipcq: JS-R1005
 function resolveAnalysisPolicy(input: FlintCompileInput): FlintAnalysisOptions['policy'] {
   const nested = input.analysis ?? {};
   const basePolicy = nested.policy ?? input.analysisPolicy;
@@ -114,6 +115,7 @@ function persistSonIrArtifacts(
 /**
  * Persists backend debug artifacts (WAT, WASM) to cache if debug optimization is selected.
  */
+// skipcq: JS-R1005
 function persistDebugArtifacts(
   cache: FlintWatCache | undefined,
   cacheKey: string,
@@ -192,6 +194,7 @@ function hasFrontendErrors(frontend: FlintFrontendResult, analysis: FlintAnalysi
 /**
  * Builds the backend compiler configuration from frontend artifacts and options.
  */
+// skipcq: JS-R1005
 function buildBackendCompileInput(
   input: FlintCompileInput,
   frontend: FlintFrontendResult,

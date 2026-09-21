@@ -487,6 +487,7 @@ export fn caller(value: i32) -> i32 { return add(value); }`;
       ['file:///workspace/other.flint', otherSource],
     ]);
     const service = createFlintLanguageService({
+      // skipcq: JS-0116
       readFile: async (uri) => files.get(uri) ?? '',
       listFiles: () => Promise.resolve([...files.keys()]),
       getOptions: () => Promise.resolve({}),
@@ -567,6 +568,7 @@ export fn caller(value: i32) -> i32 { return add(value); }`;
       [mainUri, 'import "./helper.flint" as helper;\nexport fn entry(value: i32) -> i32 { return helper.run(value); }'],
     ]);
     const service = createFlintLanguageService({
+      // skipcq: JS-0116
       readFile: async (uri) => files.get(uri) ?? '',
       listFiles: () => Promise.resolve([...files.keys()]),
       getOptions: () => Promise.resolve({}),
@@ -613,6 +615,7 @@ export fn caller(value: i32) -> i32 { return add(value); }`;
       [mainUri, mainSource],
     ]);
     const service = createFlintLanguageService({
+      // skipcq: JS-0116
       readFile: async (uri) => files.get(uri) ?? '',
       listFiles: () => Promise.resolve([...files.keys()]),
       getOptions: () => Promise.resolve({}),
@@ -732,6 +735,7 @@ export fn entry(value: i32) -> i32 { return run(value); }`;
     ]);
     let notify: ((change: { readonly uri: string; readonly kind: 'changed' | 'deleted' }) => void) | undefined;
     const service = createFlintLanguageService({
+      // skipcq: JS-0116
       readFile: async (uri) => files.get(uri) ?? '',
       listFiles: () => Promise.resolve([...files.keys()]),
       getOptions: () => Promise.resolve({}),
@@ -872,6 +876,7 @@ export fn second(value: Foo) -> Foo { return value; }`;
   });
 
   it('derives nested folds with UTF-16 ranges and conservative literal inline values/inlay hints', async () => {
+    // skipcq: JS-R1004
     const source = `// 😀 header\r\nexport fn add(value: i32) -> i32 {\r\n  let known: i32 = 1;\r\n  if value > 0 {\r\n    while value > 0 {\r\n      return add(known);\r\n    }\r\n  }\r\n  let unknown: i32 = value;\r\n  return unknown;\r\n}`;
     const service = createFlintLanguageService();
     const uri = document(source).uri;
@@ -972,6 +977,7 @@ export fn second(value: Foo) -> Foo { return value; }`;
       ['file:///workspace/main.flint', 'import "./one.flint" as dep;\nexport fn entry() -> i32 { return dep.one(); }'],
     ]);
     const service = createFlintLanguageService({
+      // skipcq: JS-0116
       readFile: async (uri) => files.get(uri),
       listFiles: () => Promise.resolve([...files.keys()]),
       getOptions: () => Promise.resolve({}),

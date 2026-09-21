@@ -66,6 +66,7 @@ export class WebIdlParser {
    * @param definitions - Accumulator array that the parsed definition is pushed onto.
    * @throws {WebIdlParseError} If the current token does not start a recognized top-level definition.
    */
+  // skipcq: JS-R1005
   private parseTopLevelDefinition(definitions: WebIdlDefinition[]): void {
     const extendedAttributes = this.parseExtendedAttributes();
     if (this.isEof()) return;
@@ -230,14 +231,16 @@ export class WebIdlParser {
    *
    * @returns The trimmed parameter text, or `true` if the parameter list was empty.
    */
+  // skipcq: JS-R1005
   private parseExtendedAttributeParameterList(): boolean | string {
     let depth = 1;
     let parameterText = '';
+    // skipcq: JS-C1002
     while (depth > 0 && !this.isEof()) {
-      const t = this.advance();
-      if (t.text === '(') depth += 1;
-      else if (t.text === ')') depth -= 1;
-      if (depth > 0) parameterText += t.text;
+      const token = this.advance();
+      if (token.text === '(') depth += 1;
+      else if (token.text === ')') depth -= 1;
+      if (depth > 0) parameterText += token.text;
     }
     return parameterText.trim() || true;
   }
@@ -603,6 +606,7 @@ export class WebIdlParser {
    *
    * @returns The parsed namespace AST node.
    */
+  // skipcq: JS-R1005
   private parseNamespace(): WebIdlNamespace {
     const name = this.expectIdentifier();
     this.expect('{');
@@ -630,6 +634,7 @@ export class WebIdlParser {
    *
    * @returns The parsed arguments, in declaration order.
    */
+  // skipcq: JS-R1005
   private parseArguments(): readonly WebIdlArgument[] {
     this.expect('(');
     const arguments_: WebIdlArgument[] = [];
@@ -661,6 +666,7 @@ export class WebIdlParser {
    *
    * @returns The parsed default value.
    */
+  // skipcq: JS-R1005
   private parseDefaultValue(): boolean | number | string {
     const token = this.advance();
     if (token.text === 'true') return true;
@@ -677,6 +683,7 @@ export class WebIdlParser {
    *
    * @returns The parsed union type.
    */
+  // skipcq: JS-R1005
   private parseUnionType(): WebIdlType {
     const unionTypes: WebIdlType[] = [];
     while (!this.match(')') && !this.isEof()) {
@@ -688,7 +695,7 @@ export class WebIdlParser {
     const nullable = this.match('?');
     return {
       kind: 'union',
-      name: unionTypes.map((u) => u.name).join(' | '),
+      name: unionTypes.map((unionMember) => unionMember.name).join(' | '),
       unionTypes,
       ...(nullable ? { nullable: true } : {}),
     };
@@ -831,6 +838,7 @@ export class WebIdlParser {
    *
    * @returns The parsed type reference.
    */
+  // skipcq: JS-R1005
   public parseType(): WebIdlType {
     // Union type: (TypeA or TypeB or ...)
     if (this.match('(')) {

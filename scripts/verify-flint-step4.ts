@@ -142,6 +142,7 @@ interface CommandResult {
   readonly tail: string;
 }
 
+// skipcq: JS-D1001, JS-R1005
 function parseFailures(output: string): string[] {
   const failures: string[] = [];
   for (const line of output.split('\n')) {
@@ -161,6 +162,7 @@ function parseFailures(output: string): string[] {
   return [...new Set(failures)].slice(0, 20);
 }
 
+// skipcq: JS-D1001, JS-R1005
 function runCommand(
   entry: MatrixEntry,
   command: MatrixEntry['commands'][number],
@@ -189,6 +191,7 @@ function runCommand(
   };
 }
 
+// skipcq: JS-D1001, JS-R1005
 function main(): number {
   const args = process.argv.slice(2);
   const onlyArg =
@@ -268,4 +271,4 @@ function main(): number {
   return 0;
 }
 
-process.exit(main());
+process.exitCode = main();

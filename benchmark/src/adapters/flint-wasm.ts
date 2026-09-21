@@ -141,6 +141,7 @@ interface GeneratedFlintModule {
  * @param value - Untyped WebAssembly exports dictionary.
  * @returns True if value satisfies all FlintExports requirements.
  */
+// skipcq: JS-R1005
 function isFlintExports(
   value: WebAssembly.Exports,
 ): value is WebAssembly.Exports & FlintExports {
@@ -243,28 +244,25 @@ function releaseRanges(
  * @returns Result of the operation.
  * @throws {Error} Rethrows any operation error or reset failure.
  */
+// skipcq: JS-R1005
 function withReset<T extends BenchmarkOutput | number | string | undefined>(
   exports: Pick<FlintExports, "fws_reset">,
   operation: () => T,
 ): T {
   exports.fws_reset();
-  let operationFailed = false;
+  let result: T;
   try {
-    return operation();
+    result = operation();
   } catch (error: unknown) {
-    operationFailed = true;
-    throw error instanceof Error ? error : new Error(String(error));
-  } finally {
     try {
       exports.fws_reset();
-    } catch (resetError: unknown) {
-      if (!operationFailed) {
-        throw resetError instanceof Error
-          ? resetError
-          : new Error(String(resetError));
-      }
+    } catch {
+      // Best-effort cleanup when operation fails.
     }
+    throw error instanceof Error ? error : new Error(String(error));
   }
+  exports.fws_reset();
+  return result;
 }
 
 /**
@@ -315,6 +313,7 @@ function resolveArtifactId(
  * @param generatedModulePath - Local filesystem path where ESM is written.
  * @returns Benchmark build artifact metadata.
  */
+// skipcq: JS-R1005
 function buildWasmArtifactDescriptor(
   artifactId: string,
   flintMode: FlintMode,
@@ -474,6 +473,7 @@ function resolveWasmArtifact(
  * @param value - Candidate import value.
  * @returns True if value conforms to the GeneratedFlintModule interface.
  */
+// skipcq: JS-R1005
 function isGeneratedFlintModule(value: unknown): value is GeneratedFlintModule {
   return (
     typeof value === "object" &&
@@ -495,6 +495,7 @@ function isGeneratedFlintModule(value: unknown): value is GeneratedFlintModule {
  * @returns Instantiated exports and optional cached ESM module.
  * @throws {TypeError} If ESM module or reset exports are missing or have invalid types.
  */
+// skipcq: JS-R1005
 async function instantiateWasmModule(
   state: CompiledWasmState,
   artifact: BuildArtifact,

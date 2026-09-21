@@ -12,6 +12,7 @@ import type { FlintCallable, FlintHover, FlintPosition, FlintSymbol, FlintWorksp
  * @param symbols - Visible document symbols.
  * @returns Hover documentation or undefined.
  */
+// skipcq: JS-R1005
 export function hoverFlint(
   source: string,
   position: FlintPosition,
@@ -31,6 +32,7 @@ export function hoverFlint(
     };
   const local = symbols
     .filter(
+      // skipcq: JS-R1005
       (symbol) =>
         (symbol.kind === 'local' || symbol.kind === 'parameter') &&
         symbol.name === token.text &&
@@ -89,6 +91,7 @@ function callableContents(detail: string, callable: FlintCallable | undefined): 
 }
 
 /** Extracts the identifier token at the given character offset. */
+// skipcq: JS-R1005
 function identifierAt(
   source: string,
   offset: number,

@@ -12,9 +12,13 @@ export interface FlintWasmRuntimeBody {
   readonly capability?: 'scheduler.microtask' | 'scheduler.worker';
 }
 
+// skipcq: JS-D1001
 const get = (index: number): number[] => [0x20, index];
+// skipcq: JS-D1001
 const set = (index: number): number[] => [0x21, index];
+// skipcq: JS-D1001
 const constant = (value: number): number[] => [0x41, value];
+// skipcq: JS-D1001, JS-R1005
 const signedLeb = (value: bigint): number[] => {
   const bytes: number[] = [];
   let remaining = value;
@@ -27,7 +31,9 @@ const signedLeb = (value: bigint): number[] => {
   }
   return bytes;
 };
+// skipcq: JS-D1001
 const load = (offset: number): number[] => [0x28, 0x02, offset];
+// skipcq: JS-D1001
 const store = (offset: number): number[] => [0x36, 0x02, offset];
 
 /**
@@ -47,8 +53,11 @@ function unsignedLeb(value: number): number[] {
   return result;
 }
 
+// skipcq: JS-D1001
 const call = (index: number): number[] => [0x10, ...unsignedLeb(index)];
+// skipcq: JS-D1001
 const memoryCopy = (): number[] => [0xfc, 0x0a, 0x00, 0x00];
+// skipcq: JS-D1001
 const localBody = (count: number, instructions: readonly number[]): number[] => [
   count === 0 ? 0 : 1,
   ...(count === 0 ? [] : [count, 0x7f]),

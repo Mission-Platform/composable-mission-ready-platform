@@ -1,4 +1,4 @@
-/// <reference path="./flint.d.ts" />
+import './flint.d.ts';
 
 export * from './diagnostics.js';
 export * from './harness.js';

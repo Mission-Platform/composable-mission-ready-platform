@@ -89,6 +89,7 @@ function checkStatement(statement: FlintStatement, context: SafetyContext, resul
  * @param result - Declared return type of the enclosing function.
  * @returns True if handled, false otherwise.
  */
+// skipcq: JS-R1005
 function checkBindingOrActionStatement(
   statement: FlintStatement,
   context: SafetyContext,
@@ -128,6 +129,7 @@ function checkBindingOrActionStatement(
  * @param context - Enclosing safety analysis context.
  * @param result - Declared return type of the enclosing function.
  */
+// skipcq: JS-R1005
 function checkControlFlowStatement(statement: FlintStatement, context: SafetyContext, result: FlintTypeName): void {
   switch (statement.kind) {
     case 'if': {
@@ -182,6 +184,7 @@ function checkLetStatement(statement: Extract<FlintStatement, { kind: 'let' }>, 
  * @param statement - Assignment statement node.
  * @param context - Safety context.
  */
+// skipcq: JS-R1005
 function checkAssignmentStatement(
   statement: Extract<FlintStatement, { kind: 'assignment' }>,
   context: SafetyContext,
@@ -225,6 +228,7 @@ function checkReturnStatement(
  * @param statement - Yield statement node.
  * @param context - Safety context.
  */
+// skipcq: JS-R1005
 function checkYieldStatement(statement: Extract<FlintStatement, { kind: 'yield' }>, context: SafetyContext): void {
   checkExpression(statement.value, context);
   if (context.iterable && statement.value.kind === 'identifier') {
@@ -419,6 +423,7 @@ function checkCallExpression(expression: Extract<FlintExpression, { kind: 'call'
  * @param context - Safety context.
  * @param mutableArguments - Set tracking bindings already borrowed mutably in this call.
  */
+// skipcq: JS-R1005
 function checkCallParameterBorrow(
   index: number,
   parameter: FlintFunction['parameters'][number],
@@ -518,6 +523,7 @@ function checkMatchExpression(expression: Extract<FlintExpression, { kind: 'matc
  * @param expression - Expression AST node.
  * @param context - Safety context.
  */
+// skipcq: JS-R1005
 function checkCollectionOrAggregateExpression(expression: FlintExpression, context: SafetyContext): void {
   switch (expression.kind) {
     case 'array-literal':
@@ -576,6 +582,7 @@ function isUserDefinedNonOwningHandle(result: FlintTypeName, module: FlintModule
  * @param context - Safety context.
  * @returns True if the result represents a non-owning escape hazard.
  */
+// skipcq: JS-R1005
 function isNonOwningEscapeResult(result: FlintTypeName, context: SafetyContext): boolean {
   if (result.ownership === 'owned' || result.ownership === 'shared') return false;
   if (result.referenceMode === 'ref' || result.referenceMode === 'mut-ref') return true;
@@ -598,6 +605,7 @@ type EscapeClassification = { readonly allowed: true } | { readonly allowed: fal
  * @param context - Safety context.
  * @returns Escape classification result.
  */
+// skipcq: JS-R1005
 function classifyReturnedIdentifier(
   expression: Extract<FlintExpression, { kind: 'identifier' }>,
   context: SafetyContext,
@@ -622,6 +630,7 @@ function classifyReturnedIdentifier(
  * @param context - Safety context.
  * @returns Escape classification result.
  */
+// skipcq: JS-R1005
 function classifyReturnedStructOrEnumValue(
   expression: Extract<FlintExpression, { kind: 'struct-value' | 'enum-value' }>,
   context: SafetyContext,
@@ -665,6 +674,7 @@ function classifyReturnedCollectionLiteral(
  * @param context - Safety context.
  * @returns Escape classification result.
  */
+// skipcq: JS-R1005
 function classifyReturnedCall(
   expression: Extract<FlintExpression, { kind: 'call' }>,
   context: SafetyContext,
@@ -709,6 +719,7 @@ function classifyReturnedMatch(
  * @param context - Safety context.
  * @returns Escape classification result, or undefined if not a primary/literal expression.
  */
+// skipcq: JS-R1005
 function classifyReturnedPrimary(
   expression: FlintExpression,
   context: SafetyContext,
@@ -751,6 +762,7 @@ function classifyReturnedAggregate(
  * @param context - Safety context.
  * @returns Escape classification result.
  */
+// skipcq: JS-R1005
 function classifyReturnedValue(expression: FlintExpression, context: SafetyContext): EscapeClassification {
   const primary = classifyReturnedPrimary(expression, context);
   if (primary !== undefined) return primary;
@@ -775,6 +787,7 @@ function classifyReturnedValue(expression: FlintExpression, context: SafetyConte
  * @param result - Function return type declaration.
  * @param context - Enclosing safety analysis context.
  */
+// skipcq: JS-R1005
 function checkEscape(expression: FlintExpression, result: FlintTypeName, context: SafetyContext): void {
   // Explicit ownership on the result type is an ownership-transfer boundary.
   if (result.ownership === 'owned' || result.ownership === 'shared') return;

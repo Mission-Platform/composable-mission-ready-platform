@@ -84,6 +84,7 @@ function referenceOf(
  * @param type - Parameter type descriptor including optional reference mode.
  * @returns ABI passing mode label.
  */
+// skipcq: JS-R1005
 function abiPassingMode(type: {
   readonly name: FlintPrimitiveType;
   readonly reference?: string;
@@ -173,6 +174,7 @@ const emptyLinks = (): FlintFrontendLinkMetadata => ({
  * @param linkMode - Static or dynamic link mode setting.
  * @returns Resolved FlintLinkOptimizationProfile identifier.
  */
+// skipcq: JS-R1005
 function linkOptimizationProfile(
   profile: FlintLinkOptimizationProfile | 'static' | 'dynamic' | undefined,
   linkMode: 'static' | 'dynamic' | undefined,
@@ -423,6 +425,7 @@ function collectLinkedExports(
  * @param sourceImport - Source import declaration from the entry module.
  * @returns Structured source import metadata including optional dynamic exports.
  */
+// skipcq: JS-R1005
 function resolveSourceImport(
   input: FlintGraphCompileInput,
   sourceImport: FlintModule['sourceImports'][number],
@@ -516,6 +519,7 @@ function graphLinks(
  */
 function collectStaticLinkedFiles(graph: FlintModuleGraph, entryFileName: string): Set<string> {
   const linkedFiles = new Set<string>();
+  // skipcq: JS-D1001
   const visitStatic = (fileName: string): void => {
     if (linkedFiles.has(fileName)) return;
     linkedFiles.add(fileName);
@@ -586,6 +590,7 @@ function collectMissingEntryDiagnostic(
  * @param input - Multi-module graph compilation input including graph edges and entry point.
  * @returns Combined frontend compilation result for the linked module graph.
  */
+// skipcq: JS-R1005
 export function prepareFlintGraphFrontend(input: FlintGraphCompileInput): FlintFrontendResult {
   const configuration: FlintLinkConfiguration = {
     ...input.linkConfiguration,

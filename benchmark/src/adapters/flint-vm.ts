@@ -128,6 +128,7 @@ interface BuiltFunction {
  * @returns The patched instructions array.
  * @throws {Error} If a target label is missing in the label index.
  */
+// skipcq: JS-R1005
 function resolvePatches(
   code: FlintVmInstruction[],
   patches: readonly LabelPatch[],
@@ -786,6 +787,7 @@ function prepareVmBackend(
  * @param aotArtifactCreated - Whether an AOT artifact was created.
  * @returns Dictionary of benchmark preparation metadata.
  */
+// skipcq: JS-R1005
 function extractPreparationMetadata(
   prepared: FlintVmPreparedExecutor | undefined,
   jitCacheEntries: number,
@@ -851,6 +853,7 @@ function buildVmArtifact(
  * @returns Normalized benchmark output.
  * @throws {Error} If execution produces unexpected output types or unrecognized inputs.
  */
+// skipcq: JS-R1005
 function executeVmInput(
   mode: Exclude<FlintMode, "wasm" | "wasm-generated" | "wasm-excluded-bounds">,
   module: FlintVmModule,

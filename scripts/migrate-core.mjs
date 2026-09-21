@@ -3,10 +3,12 @@ import path from 'node:path';
 
 const { join } = path;
 
+// skipcq: JS-D1001, JS-R1005
 function getAllTsFiles(directory) {
   let result = [];
   for (const item of readdirSync(directory)) {
     if (item === 'node_modules' || item === 'dist' || item === '.git' || item === '.turbo') continue;
+    // skipcq: JS-C1002
     const p = join(directory, item);
     if (statSync(p).isDirectory()) {
       result = [...result, ...getAllTsFiles(p)];

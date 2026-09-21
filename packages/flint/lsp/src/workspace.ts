@@ -48,7 +48,8 @@ const defaultFileSystem: FlintNodeFileSystem = {
     try {
       return await readFile(path, 'utf8');
     } catch (error) {
-      if (isFileNotFound(error)) return;
+      // eslint-disable-next-line unicorn/no-useless-undefined
+      if (isFileNotFound(error)) return undefined;
       throw error;
     }
   },
@@ -130,6 +131,7 @@ export class RootBoundedFlintWorkspaceHost implements FlintWorkspaceHost {
   }
 
   /** Validates that a file URI resolves within authorized workspace roots. */
+  // skipcq: JS-R1005
   async #safePath(uri: string, resolveSymlink: boolean): Promise<string | undefined> {
     let path: string;
     try {
@@ -152,7 +154,7 @@ export class RootBoundedFlintWorkspaceHost implements FlintWorkspaceHost {
   #isInside(path: string): boolean {
     const candidate = canonicalPath(path);
     return this.#roots.some(
-      (root) => candidate === root || !nodePath.relative(root, candidate).startsWith(`..${pathSeparator}`),
+      (root) => candidate === root || !nodePath.relative(root, candidate).startsWith(`..${nodePath.sep}`),
     );
   }
 }
@@ -163,6 +165,7 @@ export function createFlintNodeWorkspaceHost(options: FlintNodeWorkspaceOptions)
 }
 
 /** Converts a URI string or file path into a canonical local filesystem path. */
+// skipcq: JS-R1005
 function toFilePath(value: string): string {
   if (!value.startsWith('file:') && !nodePath.isAbsolute(value) && /^[a-z][a-z\d+.-]*:/iu.test(value))
     throw new Error(`Unsupported workspace URI: ${value}`);
@@ -192,6 +195,7 @@ async function collectFiles(root: string, files: string[]): Promise<void> {
   try {
     const entries = await readdir(root, { withFileTypes: true });
     await Promise.all(
+      // skipcq: JS-R1005
       entries.map(async (entry) => {
         if (entry.isDirectory() && excludedDirectoryNames.has(entry.name)) return;
         const path = nodePath.resolve(root, entry.name);
@@ -213,5 +217,3 @@ function isFileNotFound(error: unknown): boolean {
     (error.code === 'ENOENT' || error.code === 'EACCES')
   );
 }
-
-const pathSeparator = process.platform === 'win32' ? '\\' : '/';

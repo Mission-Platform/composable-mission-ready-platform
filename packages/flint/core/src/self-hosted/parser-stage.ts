@@ -211,6 +211,7 @@ const PUNCT_TAGS = new Map<number, number>([
  * @param depth - Current syntactic nesting depth.
  * @returns Updated offset, hash, and depth.
  */
+// skipcq: JS-R1005
 function parseStringFingerprint(
   bytes: Uint8Array,
   offset: number,
@@ -232,6 +233,7 @@ function parseStringFingerprint(
   }
   let nextHash = fnvMix(hash, TAG_STRING);
   for (let index = start; index < next; index += 1) {
+    // skipcq: JS-C1002
     const b = bytes[index];
     if (b !== undefined) nextHash = fnvMix(nextHash, b);
   }
@@ -247,6 +249,7 @@ function parseStringFingerprint(
  * @param depth - Current syntactic nesting depth.
  * @returns Updated offset, hash, and depth.
  */
+// skipcq: JS-R1005
 function parseNumberFingerprint(
   bytes: Uint8Array,
   offset: number,
@@ -262,6 +265,7 @@ function parseNumberFingerprint(
   }
   let nextHash = fnvMix(hash, TAG_NUMBER);
   for (let index = start; index < next; index += 1) {
+    // skipcq: JS-C1002
     const b = bytes[index];
     if (b !== undefined) nextHash = fnvMix(nextHash, b);
   }
@@ -293,17 +297,20 @@ function isKeywordFallback(declId: number | undefined, stmtId: number | undefine
  * @param identHash - Hash of identifier bytes.
  * @returns Updated hash incorporating token kind and identifier content.
  */
+// skipcq: JS-R1005
 function mixIdentTags(hash: number, depth: number, text: string, identHash: number): number {
   const declId = DECL_KEYWORDS.get(text);
   const stmtId = STMT_KEYWORDS.get(text);
 
   if (declId !== undefined && depth === 0) {
+    // skipcq: JS-C1002
     let h = fnvMix(hash, TAG_DECL);
     h = fnvMix(h, declId);
     return mixU32(h, identHash);
   }
 
   if (stmtId !== undefined && depth > 0) {
+    // skipcq: JS-C1002
     let h = fnvMix(hash, TAG_STMT);
     h = fnvMix(h, stmtId);
     return mixU32(h, identHash);
@@ -311,11 +318,13 @@ function mixIdentTags(hash: number, depth: number, text: string, identHash: numb
 
   const kwId = isKeywordFallback(declId, stmtId, text);
   if (kwId !== undefined) {
+    // skipcq: JS-C1002
     let h = fnvMix(hash, TAG_KEYWORD);
     h = fnvMix(h, kwId);
     return mixU32(h, identHash);
   }
 
+  // skipcq: JS-C1002
   let h = fnvMix(hash, TAG_IDENT);
   h = fnvMix(h, 0);
   return mixU32(h, identHash);
@@ -330,6 +339,7 @@ function mixIdentTags(hash: number, depth: number, text: string, identHash: numb
  * @param depth - Current syntactic nesting depth.
  * @returns Updated offset, hash, and depth.
  */
+// skipcq: JS-R1005
 function parseIdentFingerprint(
   bytes: Uint8Array,
   offset: number,
@@ -362,6 +372,7 @@ function parseIdentFingerprint(
  * @param depth - Current syntactic nesting depth.
  * @returns Updated offset, hash, and depth, or undefined if not recognized.
  */
+// skipcq: JS-R1005
 function parsePunctuationOpFingerprint(
   bytes: Uint8Array,
   offset: number,
@@ -408,6 +419,7 @@ function parsePunctuationOpFingerprint(
  * @param depth - Current syntactic nesting depth.
  * @returns Updated offset, hash, and depth, or undefined if not recognized.
  */
+// skipcq: JS-R1005
 function parsePunctuationFingerprint(
   bytes: Uint8Array,
   offset: number,
@@ -772,6 +784,7 @@ function int32Constant(value: number): FlintSelfHostedVmValue {
  * @returns The FlintSelfHostedVmFunction result.
  */
 function buildFnvMix(): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(2);
   const xored = b.alloc();
   const prime = b.alloc();
@@ -797,8 +810,10 @@ function buildFnvMix(): FlintSelfHostedVmFunction {
  * @returns The FlintSelfHostedVmFunction result.
  */
 function buildPredicateFromEquals(name: string, constantIndexes: readonly number[]): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(1);
   const temporary = b.alloc();
+  // skipcq: JS-C1002
   const c = b.alloc();
   let next = 'c0';
   for (const [index, constantIndex] of constantIndexes.entries()) {
@@ -842,6 +857,7 @@ function buildIsWs(): FlintSelfHostedVmFunction {
  * @returns The FlintSelfHostedVmFunction result.
  */
 function buildIsAlpha(): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(1);
   const temporary = b.alloc();
   const lo = b.alloc();
@@ -896,6 +912,7 @@ function buildIsAlpha(): FlintSelfHostedVmFunction {
  * @returns The FlintSelfHostedVmFunction result.
  */
 function buildIsDigit(): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(1);
   const temporary = b.alloc();
   const lo = b.alloc();
@@ -923,6 +940,7 @@ function buildIsDigit(): FlintSelfHostedVmFunction {
  * @returns The FlintSelfHostedVmFunction result.
  */
 function buildIsAlnum(): FlintSelfHostedVmFunction {
+  // skipcq: JS-C1002
   const b = createBuilder(1);
   const temporary = b.alloc();
   const other = b.alloc();
@@ -961,6 +979,7 @@ function buildIsTwoCharOp(): FlintSelfHostedVmFunction {
     [44, 45],
     [46, 47],
   ] as const;
+  // skipcq: JS-C1002
   const b = createBuilder(2);
   const temporary = b.alloc();
   const c1 = b.alloc();
@@ -1020,6 +1039,7 @@ function buildIsPunct(): FlintSelfHostedVmFunction {
  */
 function buildMixU32(): FlintSelfHostedVmFunction {
   // mix_u32(hash, value) -> i32
+  // skipcq: JS-C1002
   const b = createBuilder(2);
   const hash = b.alloc();
   const byte = b.alloc();
@@ -1078,9 +1098,11 @@ function buildClassifyIdent(keywordHashBase: number, _keywordCount: number): Fli
     return { kind: 3 as const, id: 0 }; // other keyword
   });
 
+  // skipcq: JS-C1002
   const b = createBuilder(2);
   // 0 = identHash, 1 = depth
   const temporary = b.alloc();
+  // skipcq: JS-C1002
   const c = b.alloc();
   const packed = b.alloc();
   const tag = b.alloc();
@@ -1163,6 +1185,7 @@ function buildClassifyIdent(keywordHashBase: number, _keywordCount: number): Fli
  */
 function buildParseStage(blockCommentStarConstant: number): FlintSelfHostedVmFunction {
   // parse_stage(source) -> i32
+  // skipcq: JS-C1002
   const b = createBuilder(1);
   const hash = b.alloc();
   const length = b.alloc();

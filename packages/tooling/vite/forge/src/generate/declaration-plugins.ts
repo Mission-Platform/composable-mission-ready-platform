@@ -629,9 +629,7 @@ async function emitSvelteComponentDeclarations(
     return;
   }
   this.warn(
-    "jsxComponentsDtsPlugin: svelte2tsx's emitDts did not produce usable declarations " +
-      '(dangling props-type references in the generated .svelte.d.ts sidecars); ' +
-      'falling back to the synthesised entry declaration for the Svelte build.',
+    "jsxComponentsDtsPlugin: svelte2tsx's emitDts did not produce usable declarations (dangling props-type references in the generated .svelte.d.ts sidecars); falling back to the synthesised entry declaration for the Svelte build.",
   );
   if (existsSync(options.outDir)) {
     for (const file of readdirSync(options.outDir).filter((entry) => entry.endsWith('.d.ts'))) {

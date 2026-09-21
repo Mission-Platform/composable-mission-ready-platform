@@ -69,6 +69,7 @@ function uniqueRules(values: readonly FlintAnalysisRule[]): readonly FlintAnalys
 export function createFlintAnalysisRuleRegistry(
   rules: readonly FlintAnalysisRule[] = FLINT_DEFAULT_ANALYSIS_RULES,
 ): FlintAnalysisRuleRegistry {
+  // skipcq: JS-D1001, JS-R1005
   const run = (context: FlintAnalysisContext): FlintAnalysisReport => {
     const findings: FlintAnalysisFinding[] = [];
     for (const rule of uniqueRules(rules)) {

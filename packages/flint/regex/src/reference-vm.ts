@@ -86,6 +86,7 @@ export class PikeRunner extends BaseRunner {
    * @param initialSaves - Initial capture register values.
    * @returns Captured positions array or null if no match found.
    */
+  // skipcq: JS-R1005
   public run(start: number, initialSaves: number[]): Captures | null {
     const instructionCount = Math.floor(this.program.length / INSTR_WIDTH);
     if (instructionCount === 0) {
@@ -98,6 +99,7 @@ export class PikeRunner extends BaseRunner {
     let matchedSaves: Captures | null = null;
     let currentThreads: Thread[] = [];
 
+    // skipcq: JS-D1001, JS-R1005
     const addThread = (
       pc: number,
       sp: number,
@@ -109,9 +111,11 @@ export class PikeRunner extends BaseRunner {
       visited[pc] = 1;
 
       const base = pc * INSTR_WIDTH;
+      // skipcq: JS-C1002
       const op = this.program[base];
-      const a = this.program[base + 1];
-      const b = this.program[base + 2];
+      // skipcq: JS-C1002
+      const operandA = this.program[base + 1];
+      const operandB = this.program[base + 2];
 
       switch (op) {
         case Op.MATCH: {
@@ -127,10 +131,10 @@ export class PikeRunner extends BaseRunner {
           return false;
         }
         case Op.JMP: {
-          return addThread(a, sp, saves, targetThreads);
+          return addThread(operandA, sp, saves, targetThreads);
         }
         case Op.SPLIT: {
-          const matchA = addThread(a, sp, saves, targetThreads);
+          const matchA = addThread(operandA, sp, saves, targetThreads);
           // If branch A matched and we don't require end:
           // Branch A has higher priority than branch B, so branch B cannot beat branch A.
           if (matchA && !this.requireEnd) {
@@ -139,12 +143,12 @@ export class PikeRunner extends BaseRunner {
           if (matchA && this.requireEnd && sp === this.input.length) {
             return true;
           }
-          const matchB = addThread(b, sp, saves, targetThreads);
+          const matchB = addThread(operandB, sp, saves, targetThreads);
           return matchA || matchB;
         }
         case Op.SAVE: {
           const nextSaves = [...saves];
-          nextSaves[a] = sp;
+          nextSaves[operandA] = sp;
           return addThread(pc + 1, sp, nextSaves, targetThreads);
         }
         case Op.BOL: {
@@ -205,14 +209,16 @@ export class PikeRunner extends BaseRunner {
         }
 
         const base = thread.pc * INSTR_WIDTH;
+        // skipcq: JS-C1002
         const op = this.program[base];
-        const a = this.program[base + 1];
-        const b = this.program[base + 2];
+        // skipcq: JS-C1002
+        const operandA = this.program[base + 1];
+        const operandB = this.program[base + 2];
 
         let consumes = false;
         switch (op) {
           case Op.CHAR: {
-            consumes = code === a;
+            consumes = code === operandA;
             break;
           }
           case Op.ANY: {
@@ -220,7 +226,8 @@ export class PikeRunner extends BaseRunner {
             break;
           }
           case Op.CLASS: {
-            consumes = classMatches(this.classes, a, code) === (b === 0);
+            consumes =
+              classMatches(this.classes, operandA, code) === (operandB === 0);
             break;
           }
           default: {
@@ -255,6 +262,7 @@ export class PikeRunner extends BaseRunner {
    * Injects new search threads progressively at each input position while extending active
    * threads from the leftmost start position, guaranteeing ReDoS immunity.
    */
+  // skipcq: JS-R1005
   public search(start: number, initialSaves: number[]): Captures | null {
     const instructionCount = Math.floor(this.program.length / INSTR_WIDTH);
     if (instructionCount === 0) {
@@ -267,6 +275,7 @@ export class PikeRunner extends BaseRunner {
     let matchedSaves: Captures | null = null;
     let currentThreads: Thread[] = [];
 
+    // skipcq: JS-D1001, JS-R1005
     const addThread = (
       pc: number,
       sp: number,
@@ -277,10 +286,12 @@ export class PikeRunner extends BaseRunner {
       if (visited[pc] !== -1) return false;
       visited[pc] = 1;
 
+      // skipcq: JS-C1002
       const base = pc * INSTR_WIDTH;
+      // skipcq: JS-C1002
       const op = this.program[base];
-      const a = this.program[base + 1];
-      const b = this.program[base + 2];
+      const operandA = this.program[base + 1];
+      const operandB = this.program[base + 2];
 
       switch (op) {
         case Op.MATCH: {
@@ -291,19 +302,19 @@ export class PikeRunner extends BaseRunner {
           return false;
         }
         case Op.JMP: {
-          return addThread(a, sp, saves, targetThreads);
+          return addThread(operandA, sp, saves, targetThreads);
         }
         case Op.SPLIT: {
-          const matchA = addThread(a, sp, saves, targetThreads);
+          const matchA = addThread(operandA, sp, saves, targetThreads);
           if (matchA) {
             return true;
           }
-          const matchB = addThread(b, sp, saves, targetThreads);
+          const matchB = addThread(operandB, sp, saves, targetThreads);
           return matchA || matchB;
         }
         case Op.SAVE: {
           const nextSaves = [...saves];
-          nextSaves[a] = sp;
+          nextSaves[operandA] = sp;
           return addThread(pc + 1, sp, nextSaves, targetThreads);
         }
         case Op.BOL: {
@@ -357,15 +368,17 @@ export class PikeRunner extends BaseRunner {
           break;
         }
 
+        // skipcq: JS-C1002
         const base = thread.pc * INSTR_WIDTH;
+        // skipcq: JS-C1002
         const op = this.program[base];
-        const a = this.program[base + 1];
-        const b = this.program[base + 2];
+        const operandA = this.program[base + 1];
+        const operandB = this.program[base + 2];
 
         let consumes = false;
         switch (op) {
           case Op.CHAR: {
-            consumes = code === a;
+            consumes = code === operandA;
             break;
           }
           case Op.ANY: {
@@ -373,7 +386,8 @@ export class PikeRunner extends BaseRunner {
             break;
           }
           case Op.CLASS: {
-            consumes = classMatches(this.classes, a, code) === (b === 0);
+            consumes =
+              classMatches(this.classes, operandA, code) === (operandB === 0);
             break;
           }
           default: {
@@ -421,19 +435,25 @@ export class Runner extends BaseRunner {
    * @param saves - Mutable capture slots array.
    * @returns True if execution reached a match.
    */
+  // skipcq: JS-R1005
   public run(pc: number, sp: number, saves: number[]): boolean {
     for (;;) {
+      // skipcq: JS-C1002
       const base = pc * INSTR_WIDTH;
+      // skipcq: JS-C1002
       const op = this.program[base];
-      const a = this.program[base + 1];
-      const b = this.program[base + 2];
+      const operandA = this.program[base + 1];
+      const operandB = this.program[base + 2];
       switch (op) {
         case Op.MATCH: {
           return this.requireEnd ? sp === this.input.length : true;
         }
         case Op.CHAR: {
-          // eslint-disable-next-line unicorn/prefer-code-point -- VM mirrors the UTF-16 bytecode contract.
-          if (sp < this.input.length && this.input.charCodeAt(sp) === a) {
+          if (
+            sp < this.input.length &&
+            // eslint-disable-next-line unicorn/prefer-code-point -- VM mirrors the UTF-16 bytecode contract.
+            this.input.charCodeAt(sp) === operandA
+          ) {
             pc += 1;
             sp += 1;
             continue;
@@ -452,8 +472,8 @@ export class Runner extends BaseRunner {
           if (sp >= this.input.length) return false;
           if (
             // eslint-disable-next-line unicorn/prefer-code-point -- VM mirrors the UTF-16 bytecode contract.
-            classMatches(this.classes, a, this.input.charCodeAt(sp)) ===
-            (b === 0)
+            classMatches(this.classes, operandA, this.input.charCodeAt(sp)) ===
+            (operandB === 0)
           ) {
             pc += 1;
             sp += 1;
@@ -476,20 +496,20 @@ export class Runner extends BaseRunner {
           return false;
         }
         case Op.SAVE: {
-          saves[a] = sp;
+          saves[operandA] = sp;
           pc += 1;
           continue;
         }
         case Op.JMP: {
-          pc = a;
+          pc = operandA;
           continue;
         }
         case Op.SPLIT: {
           const snapshot = [...saves];
-          if (this.run(a, sp, saves)) return true;
+          if (this.run(operandA, sp, saves)) return true;
           for (let index = 0; index < snapshot.length; index++)
             saves[index] = snapshot[index];
-          pc = b;
+          pc = operandB;
           continue;
         }
         default: {

@@ -48,12 +48,12 @@ export function runArithmetic(input: ArithmeticInput): number {
 
 /** Doubling repeat that matches the recursive Flint implementation. */
 export function repeatString(piece: string, count: number): string {
-  const n = toI32(count);
-  if (n <= 0) return "";
-  if (n === 1) return piece;
-  const half = repeatString(piece, toI32(n / 2));
+  const repeats = toI32(count);
+  if (repeats <= 0) return "";
+  if (repeats === 1) return piece;
+  const half = repeatString(piece, toI32(repeats / 2));
   const doubled = `${half}${half}`;
-  return n % 2 === 0 ? doubled : `${doubled}${piece}`;
+  return repeats % 2 === 0 ? doubled : `${doubled}${piece}`;
 }
 
 /**

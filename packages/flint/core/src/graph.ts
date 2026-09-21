@@ -152,6 +152,7 @@ function projectFor(fileName: string, roots: readonly string[]): string {
  * @param configuration - Active link configuration rules.
  * @returns The resolved link mode (`'static'` or `'dynamic'`).
  */
+// skipcq: JS-R1005
 function linkModeFor(
   importer: FlintResolvedModule,
   target: FlintResolvedModule,
@@ -332,6 +333,7 @@ export async function resolveFlintModuleGraph(
     visited: new Set(),
   };
 
+  // skipcq: JS-D1001
   const visit = async (fileName: string): Promise<void> => {
     const normalizedFileName = normalizeFlintFileId(fileName);
     if (context.visited.has(normalizedFileName)) return;

@@ -6,15 +6,16 @@ import type { FlintWorkspaceHost } from '@mission-platform/flint-language-servic
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 const capabilityWorkspace: FlintWorkspaceHost = {
-  readFile: async () => '',
-  listFiles: async () => [],
-  getOptions: async () => ({
-    requestedCapabilities: ['clock.now'],
-    capabilityNames: ['clock.now'],
-    capabilitySignatures: new Map([
-      ['clock.now', { parameters: [], result: 'i64', documentation: 'Read the current Unix timestamp.' }],
-    ]),
-  }),
+  readFile: () => Promise.resolve(''),
+  listFiles: () => Promise.resolve([]),
+  getOptions: () =>
+    Promise.resolve({
+      requestedCapabilities: ['clock.now'],
+      capabilityNames: ['clock.now'],
+      capabilitySignatures: new Map([
+        ['clock.now', { parameters: [], result: 'i64', documentation: 'Read the current Unix timestamp.' }],
+      ]),
+    }),
 };
 
 /**

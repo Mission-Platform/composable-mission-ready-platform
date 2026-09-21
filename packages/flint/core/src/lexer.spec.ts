@@ -52,6 +52,7 @@ describe('Forge Web Script string lexing', () => {
   });
 
   it('handles a trailing backslash without exceeding the source bounds', () => {
+    // skipcq: JS-0096
     const source = '"trailing' + '\\';
     const result = lexFlint(source, 'strings.flint');
 
