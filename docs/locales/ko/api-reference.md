@@ -292,11 +292,11 @@ All email requests must:
 
 Non-local deployments without explicit configuration will reject all requests. Local deployments remain unrestricted for development convenience.
 
-## Forge Web Script Artifact Verification
+## Flint Artifact Verification
 
 ### Artifact Content Identity
 
-Forge Web Script artifacts use a versioned SHA-256 content identity in the format `sha256-v1:<hex>`. This digest is computed over the complete artifact binary and is stored in the artifact manifest's `contentHash` field.
+Flint artifacts use a versioned SHA-256 content identity in the format `sha256-v1:<hex>`. This digest is computed over the complete artifact binary and is stored in the artifact manifest's `contentHash` field.
 
 #### Integrity vs. Authenticity
 
@@ -309,9 +309,9 @@ A content hash **detects accidental or unauthorized content changes** when compa
 #### Verification Workflow
 
 1. **Obtain the expected hash** from a trusted source (e.g., a signed manifest, CI build log, or secure configuration).
-2. **Compute the artifact hash** using the verifier: `fws_verify_artifact(artifact)` returns the `contentHash`.
+2. **Compute the artifact hash** using the verifier: `flint_verify_artifact(artifact)` returns the `contentHash`.
 3. **Compare hashes**: If they match, the artifact has not been accidentally or maliciously altered since the expected value was recorded.
-4. **Verify the manifest**: Use `fws_inspect_manifest` to check capability imports, exports, metadata, and policy compliance independently.
+4. **Verify the manifest**: Use `flint_inspect_manifest` to check capability imports, exports, metadata, and policy compliance independently.
 
 #### Versioning
 
@@ -371,12 +371,30 @@ The `sha256-v1` prefix allows for future hash algorithm upgrades without ambigui
 | `@mission-platform/harper`       | Harper grammar and style integration for Monaco. |
 | `@mission-platform/hunspell`     | Emscripten Hunspell spell-checking wrapper.      |
 
+### Flint systems language toolchain
+
+These live in `packages/flint/` and `packages/tooling/vite/flint`.
+
+| 패키지                                        | 목적                                                                                      |
+| :----------------------------------------- | :-------------------------------------------------------------------------------------- |
+| `@mission-platform/flint`                  | Core AST, TypeChecker, SonIR, and compiler pipeline.                    |
+| `@mission-platform/flint-cli`              | Standalone `flint` executable compiler and checker CLI.                 |
+| `@mission-platform/flint-wasm`             | WebAssembly binary emitter and bytecode verifier.                       |
+| `@mission-platform/flint-runtime`          | Memory sandbox and execution runtime.                                   |
+| `@mission-platform/flint-stdlib`           | Standard library collections and builtins.                              |
+| `@mission-platform/flint-regex`            | Linear-time PikeVM regular expression engine.                           |
+| `@mission-platform/flint-lsp`              | Stdio Language Server Protocol server (`flint-lsp`). |
+| `@mission-platform/flint-language-service` | High-level code intelligence and analysis service.                      |
+| `@mission-platform/flint-dap`              | Debug Adapter Protocol server.                                          |
+| `@mission-platform/flint-vitest`           | Vitest harness for compiler, artifact, and Wasm testing.                |
+| `@mission-platform/vite-plugin-flint`      | Vite plugin for compiling `.flint` sources.                             |
+
 ### Forge 컴파일러 타겟
 
 These live in `packages/compiler/plugins/`. **프레임워크** 플러그인은 어떤 런타임이 중립 구성 요소인지 결정합니다. 으로 낮아졌습니다; **CMS** 대상은 그것이 투영되는 콘텐츠 플랫폼을 결정합니다. 두 개의 축이 구성되므로 모든 CMS
 대상은 모든 프레임워크 플러그인에 바인딩될 수 있습니다. See the [Forge Compiler Pipeline](../packages/tooling/vite/forge/docs/reference/compiler.md).
 
-| 패키지                                             | 목적                                                                                  |
+| Package                                         | Purpose                                                                             |
 | :---------------------------------------------- | :---------------------------------------------------------------------------------- |
 | `@mission-platform/forge-plugin-api`            | `FrameworkOutputPlugin` 계약, 의미론적 IR 유형, 빌드 어댑터 유형 등이 있습니다.          |
 | `@mission-platform/forge-plugin-react`          | React 출력 대상.                                                        |
