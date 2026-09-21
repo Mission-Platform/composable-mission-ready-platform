@@ -18,6 +18,8 @@ export interface FlintMemoryOptions {
   readonly capabilities?: readonly string[];
   readonly logger?: FlintLogger;
   readonly trace?: FlintTraceRecorder;
+  readonly memory?: WebAssembly.Memory;
+  readonly initialPointer?: number;
 }
 
 /**
@@ -52,9 +54,10 @@ export class FlintMemory {
    */
   // skipcq: JS-R1005
   public constructor(memory?: WebAssembly.Memory, options: FlintMemoryOptions = {}) {
+    const targetMemory = memory ?? options.memory;
     this.addressBits = options.addressBits ?? 32;
     this.shared =
-      options.shared ?? (typeof SharedArrayBuffer !== 'undefined' && memory?.buffer instanceof SharedArrayBuffer);
+      options.shared ?? (typeof SharedArrayBuffer !== 'undefined' && targetMemory?.buffer instanceof SharedArrayBuffer);
     this.logger = (options.logger ?? createFlintLogger({ scope: 'fws' })).child('memory');
     this.trace = options.trace;
     const capabilities = options.capabilities;
@@ -89,14 +92,14 @@ export class FlintMemory {
       ...(this.addressBits === 64 ? { address: 'i64' as const } : {}),
     } as WebAssembly.MemoryDescriptor;
     try {
-      this.wasmMemory = memory ?? new WebAssembly.Memory(descriptor);
+      this.wasmMemory = targetMemory ?? new WebAssembly.Memory(descriptor);
     } catch (error) {
       throw new FlintTrap('MemoryExhausted', 'Linear memory could not be created.', undefined, {
         cause: error,
         logger: this.logger,
       });
     }
-    this.nextPointer = this.addressBits === 64 ? 8n : 8;
+    this.nextPointer = options.initialPointer ?? (this.addressBits === 64 ? 8n : 8);
   }
 
   /**
@@ -234,6 +237,23 @@ export class FlintMemory {
   }
 
   /**
+   * Expands linear memory by the specified number of WebAssembly pages (64KB each).
+   *
+   * @param pages - Number of pages to grow.
+   * @returns Previous memory size in pages.
+   */
+  public grow(pages: number): number {
+    try {
+      return this.wasmMemory.grow(pages);
+    } catch (error) {
+      throw new FlintTrap('MemoryExhausted', 'Linear memory could not grow.', undefined, {
+        cause: error,
+        logger: this.logger,
+      });
+    }
+  }
+
+  /**
    * Allocates a contiguous block of bytes on the linear memory heap.
    *
    * @param size - Size in bytes to allocate.
@@ -359,28 +379,79 @@ export class FlintMemory {
   public allocationSize(pointer: FlintMemoryAddress): number | undefined {
     return this.allocations.get(this.normalizeAddress(pointer));
   }
+
+  /**
+   * Validates that the specified pointer range falls completely within the active memory boundaries.
+   *
+   * @param pointer - Base address of the memory range.
+   * @param length - Length in bytes of the memory range.
+   * @returns True if valid; throws FlintTrap('MemoryOutOfBounds') otherwise.
+   */
+  public validatePointerRange(pointer: FlintMemoryAddress, length: number): boolean {
+    const offset = this.normalizeAddress(pointer);
+    if (length < 0 || offset < 0 || offset + length > this.bytes.byteLength) {
+      throw new FlintTrap(
+        'MemoryOutOfBounds',
+        `Memory range [${offset}, ${offset + length}) exceeds buffer boundary of ${this.bytes.byteLength} bytes.`,
+        undefined,
+        { logger: this.logger },
+      );
+    }
+    return true;
+  }
+
+  /**
+   * Performs a bounded cross-memory DMA transfer between this memory and another FlintMemory instance.
+   * Emulates WebAssembly `memory.copy` semantics across memory instances with strict bounds validation.
+   *
+   * @param sourceOffset - Starting byte offset in this (source) memory.
+   * @param targetMemory - Target destination FlintMemory instance.
+   * @param targetOffset - Starting byte offset in target memory.
+   * @param length - Number of bytes to copy.
+   */
+  public copyBetweenMemories(
+    sourceOffset: FlintMemoryAddress,
+    targetMemory: FlintMemory,
+    targetOffset: FlintMemoryAddress,
+    length: number,
+  ): void {
+    if (length <= 0) return;
+    this.validatePointerRange(sourceOffset, length);
+    targetMemory.validatePointerRange(targetOffset, length);
+
+    const sourceBytes = this.readBytes(sourceOffset, length);
+    targetMemory.writeBytes(targetOffset, sourceBytes);
+  }
 }
 
 /**
  * Creates a configured FlintMemory instance.
  *
- * @param options - Memory creation and sizing options.
+ * @param memoryOrOptions - Existing WebAssembly.Memory or memory creation options.
+ * @param options - Memory creation and sizing options if memory instance provided.
  * @returns Initialized FlintMemory instance.
  */
-export function createFlintMemory(options?: FlintMemoryOptions): FlintMemory {
-  return new FlintMemory(undefined, options);
+export function createFlintMemory(
+  memoryOrOptions?: WebAssembly.Memory | FlintMemoryOptions,
+  options?: FlintMemoryOptions,
+): FlintMemory {
+  if (memoryOrOptions instanceof WebAssembly.Memory) {
+    return new FlintMemory(memoryOrOptions, options);
+  }
+  return new FlintMemory(undefined, memoryOrOptions);
 }
 
 /**
  * Names of dedicated linear memory partitions for multi-memory modules.
  */
-export type FlintMemoryPartitionName = 'guestHeap' | 'hostInterop' | 'staticData';
+export type FlintMemoryPartitionName = 'guestHeap' | 'foreignHeap' | 'hostInterop' | 'staticData';
 
 /**
  * Options configuring multiple independent linear memory partitions.
  */
 export interface FlintMultiMemoryOptions {
   readonly guestHeap?: FlintMemoryOptions;
+  readonly foreignHeap?: FlintMemoryOptions;
   readonly hostInterop?: FlintMemoryOptions;
   readonly staticData?: FlintMemoryOptions;
   readonly capabilities?: readonly string[];
@@ -391,10 +462,12 @@ export interface FlintMultiMemoryOptions {
 /**
  * WebAssembly multi-memory segregation coordinator.
  * Isolates memory into dedicated spaces for guest execution (Memory 0),
- * host interop buffer (Memory 1), and static constants/tables (Memory 2).
+ * foreign untrusted C/Rust heap (Memory 1), host interop buffer (Memory 2),
+ * and static constants/tables (Memory 3).
  */
 export class FlintMultiMemory {
   public readonly guestHeap: FlintMemory;
+  public readonly foreignHeap: FlintMemory;
   public readonly hostInterop: FlintMemory;
   public readonly staticData: FlintMemory;
   public readonly capabilities: readonly string[];
@@ -424,19 +497,25 @@ export class FlintMultiMemory {
     }
 
     const baseCaps = options.capabilities;
-    this.guestHeap = new FlintMemory(undefined, {
+    this.guestHeap = new FlintMemory(options.guestHeap?.memory, {
       ...options.guestHeap,
       capabilities: options.guestHeap?.capabilities ?? baseCaps,
       logger: this.logger.child('guestHeap'),
       trace: options.trace,
     });
-    this.hostInterop = new FlintMemory(undefined, {
+    this.foreignHeap = new FlintMemory(options.foreignHeap?.memory, {
+      ...options.foreignHeap,
+      capabilities: options.foreignHeap?.capabilities ?? baseCaps,
+      logger: this.logger.child('foreignHeap'),
+      trace: options.trace,
+    });
+    this.hostInterop = new FlintMemory(options.hostInterop?.memory, {
       ...options.hostInterop,
       capabilities: options.hostInterop?.capabilities ?? baseCaps,
       logger: this.logger.child('hostInterop'),
       trace: options.trace,
     });
-    this.staticData = new FlintMemory(undefined, {
+    this.staticData = new FlintMemory(options.staticData?.memory, {
       ...options.staticData,
       capabilities: options.staticData?.capabilities ?? baseCaps,
       logger: this.logger.child('staticData'),
@@ -445,13 +524,15 @@ export class FlintMultiMemory {
   }
 
   /**
-   * Returns the requested memory partition by index (0, 1, 2) or logical name.
+   * Returns the requested memory partition by index or logical name.
    */
   // skipcq: JS-R1005
-  public getPartition(partition: 0 | 1 | 2 | FlintMemoryPartitionName): FlintMemory {
+  public getPartition(partition: number | FlintMemoryPartitionName): FlintMemory {
     if (partition === 0 || partition === 'guestHeap') return this.guestHeap;
+    if (partition === 'foreignHeap') return this.foreignHeap;
     if (partition === 1 || partition === 'hostInterop') return this.hostInterop;
     if (partition === 2 || partition === 'staticData') return this.staticData;
+    if (partition === 3) return this.foreignHeap;
     throw new FlintTrap('MemoryOutOfBounds', `Unknown memory partition: ${String(partition)}`, undefined, {
       logger: this.logger,
     });
@@ -461,9 +542,8 @@ export class FlintMultiMemory {
    * Safely copies a memory range from the guest heap into the host interop buffer.
    */
   public transferToInterop(pointer: FlintMemoryAddress, length: number): FlintMemoryAddress {
-    const bytes = this.guestHeap.readBytes(pointer, length);
     const destination = this.hostInterop.allocate(length);
-    this.hostInterop.writeBytes(destination, bytes);
+    this.guestHeap.copyBetweenMemories(pointer, this.hostInterop, destination, length);
     return destination;
   }
 
@@ -471,10 +551,91 @@ export class FlintMultiMemory {
    * Safely copies a memory range from the host interop buffer into the guest heap.
    */
   public transferFromInterop(pointer: FlintMemoryAddress, length: number): FlintMemoryAddress {
-    const bytes = this.hostInterop.readBytes(pointer, length);
     const destination = this.guestHeap.allocate(length);
-    this.guestHeap.writeBytes(destination, bytes);
+    this.hostInterop.copyBetweenMemories(pointer, this.guestHeap, destination, length);
     return destination;
+  }
+
+  /**
+   * Bounded cross-memory DMA transfer from guest heap (Memory 0) to foreign C/Rust heap (Memory 1).
+   */
+  public transferToForeign(pointer: FlintMemoryAddress, length: number): FlintMemoryAddress {
+    const destination = this.foreignHeap.allocate(length);
+    this.guestHeap.copyBetweenMemories(pointer, this.foreignHeap, destination, length);
+    return destination;
+  }
+
+  /**
+   * Bounded cross-memory DMA transfer from foreign C/Rust heap (Memory 1) back to guest heap (Memory 0).
+   */
+  public transferFromForeign(pointer: FlintMemoryAddress, length: number): FlintMemoryAddress {
+    const destination = this.guestHeap.allocate(length);
+    this.foreignHeap.copyBetweenMemories(pointer, this.guestHeap, destination, length);
+    return destination;
+  }
+}
+
+/**
+ * Scoped regional bump allocator pool (Tier 1) providing O(1) allocation
+ * and deterministic bulk deallocation upon scope exit.
+ */
+export class FlintRegionalArena {
+  private readonly memory: FlintMemory;
+  private readonly startOffset: number;
+  private readonly capacity: number;
+  private currentOffset: number;
+  private readonly logger: FlintLogger;
+
+  public constructor(memory: FlintMemory, size = 65_536) {
+    this.memory = memory;
+    this.capacity = size;
+    this.startOffset = Number(memory.allocate(size));
+    this.currentOffset = this.startOffset;
+    this.logger = createFlintLogger({ scope: 'fws.arena' });
+  }
+
+  /**
+   * Allocates an aligned chunk within this arena in O(1) time.
+   *
+   * @param size - Size in bytes.
+   * @param alignment - Natural alignment requirement (default: 8).
+   * @returns Byte offset in linear memory.
+   */
+  public allocate(size: number, alignment = 8): number {
+    const aligned = (this.currentOffset + alignment - 1) & ~(alignment - 1);
+    if (aligned + size > this.startOffset + this.capacity) {
+      throw new FlintTrap('MemoryExhausted', 'Regional arena capacity exceeded.', undefined, {
+        logger: this.logger,
+      });
+    }
+    this.currentOffset = aligned + size;
+    return aligned;
+  }
+
+  /**
+   * Bulk-resets the arena bump pointer back to the start in O(1) time.
+   */
+  public reset(): void {
+    this.currentOffset = this.startOffset;
+  }
+
+  /**
+   * Releases the arena backing buffer back to the parent memory allocator.
+   */
+  public dispose(): void {
+    this.memory.deallocate(this.startOffset, this.capacity);
+  }
+
+  /**
+   * Executes a scoped closure with an arena, automatically disposing upon exit.
+   */
+  public static withRegion<T>(memory: FlintMemory, size: number, action: (arena: FlintRegionalArena) => T): T {
+    const arena = new FlintRegionalArena(memory, size);
+    try {
+      return action(arena);
+    } finally {
+      arena.dispose();
+    }
   }
 }
 
