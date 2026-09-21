@@ -16,6 +16,24 @@ export interface FlintResultValue<TValue, TError = string> {
   readonly error?: TError;
 }
 
+/** Construct an empty Option value. */
+export const flintNone = <TValue>(): FlintOption<TValue> => ({ kind: 'none' });
+
+/** Construct a present Option value. */
+export const flintSome = <TValue>(value: TValue): FlintOption<TValue> => ({ kind: 'some', value });
+
+/** Construct a successful Result value. */
+export const flintOk = <TValue, TError = string>(value: TValue): FlintResultValue<TValue, TError> => ({
+  kind: 'ok',
+  value,
+});
+
+/** Construct an error Result value without throwing. */
+export const flintError = <TValue, TError = string>(error: TError): FlintResultValue<TValue, TError> => ({
+  kind: 'error',
+  error,
+});
+
 /**
  * Growable contiguous collection. Runtime-created vectors carry an owned handle
  * contract while borrowed/shared ownership is retained by derived values.
@@ -170,9 +188,7 @@ export function flintIteratorMap<TValue, TResult>(
       ? {
           length: source.length,
           at: (index: number) => {
-            // skipcq: JS-0357
             const item = source.at?.(index) ?? flintNone<TValue>();
-            // skipcq: JS-0357
             return item.kind === 'none' ? flintNone<TResult>() : flintSome(map(item.value as TValue));
           },
         }
@@ -222,7 +238,6 @@ export function flintIteratorTake<TValue>(source: FlintIterator<TValue>, count: 
     ...(descriptor.capability === 'random-access' && source.at !== undefined && source.length !== undefined
       ? {
           length: Math.min(limit, source.length),
-          // skipcq: JS-0357
           at: (index: number) => (validIndex(index, limit) ? (source.at?.(index) ?? flintNone<TValue>()) : flintNone()),
         }
       : {}),
@@ -334,26 +349,6 @@ export interface FlintMap<TKey, TValue> {
   readonly capacity: number;
   readonly strategy: FlintHashStrategy<TKey>;
   readonly ownership: FlintCollectionOwnership;
-}
-
-/** Construct an empty Option value. */
-export function flintNone<TValue>(): FlintOption<TValue> {
-  return { kind: 'none' };
-}
-
-/** Construct a present Option value. */
-export function flintSome<TValue>(value: TValue): FlintOption<TValue> {
-  return { kind: 'some', value };
-}
-
-/** Construct a successful Result value. */
-export function flintOk<TValue, TError = string>(value: TValue): FlintResultValue<TValue, TError> {
-  return { kind: 'ok', value };
-}
-
-/** Construct an error Result value without throwing. */
-export function flintError<TValue, TError = string>(error: TError): FlintResultValue<TValue, TError> {
-  return { kind: 'error', error };
 }
 
 /** Create an owned vector by copying the supplied values. */

@@ -1,12 +1,18 @@
 import { lowerFlintWasmFunctionToSsa, type FlintWasmSsaPlan } from './cfg.js';
 import { fold, pure, resolve, type Environment } from './constant-folding.js';
-import {
-  foldConstantSwitches,
-  validateAndAnnotateSwitches,
-  type FlintWasmOptimizationDiagnostic,
-} from './switch-optimizer.js';
+import { foldConstantSwitches, validateAndAnnotateSwitches } from './switch-optimizer.js';
 
-import type { FlintWasmExpression, FlintWasmModule, FlintWasmStatement } from './contracts.js';
+import type { FlintWasmExpression, FlintWasmModule, FlintWasmSourceSpan, FlintWasmStatement } from './contracts.js';
+
+/** Code generation strategy for lowering switch statements. */
+export type FlintWasmSwitchStrategy = 'br-table' | 'sparse' | 'constant';
+
+/** Diagnostic emitted by WebAssembly optimization passes. */
+export interface FlintWasmOptimizationDiagnostic {
+  readonly code: 'FLINT-DISPATCH-001' | 'FLINT-DISPATCH-002';
+  readonly message: string;
+  readonly span: FlintWasmSourceSpan;
+}
 
 /** Metadata describing an individual optimization pass and its metrics. */
 export interface FlintWasmOptimizationPass {

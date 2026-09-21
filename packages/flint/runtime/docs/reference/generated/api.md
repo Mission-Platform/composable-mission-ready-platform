@@ -2766,7 +2766,9 @@ must use the serial fallback selected by the parallel contract.
 function createFlintWorkerRuntime(
   createWorker: () => FlintWorkerPort,
   onMessage: (message: unknown) => void,
-  onError: (error: unknown) => void = () => {},
+  onError: (error: unknown) => void = (_error: unknown) => {
+    // Default no-op error handler.
+  },
   options: FlintWorkerRuntimeOptions = {},
 ): FlintWorkerRuntime;
 ```
@@ -3063,10 +3065,10 @@ Complete structured execution trace report summarized after execution completion
 
 ### FlintTraceSourceLocation
 
-**Kind:** interface
+**Kind:** type
 
 ```typescript
-export interface FlintTraceSourceLocation extends FlintVmDebugSpan
+export type FlintTraceSourceLocation = FlintVmDebugSpan;
 ```
 
 Source mapping position for recorded execution trace events.

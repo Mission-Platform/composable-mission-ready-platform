@@ -311,7 +311,13 @@ function documentationFor(module: ParsedModule, start: number): ParsedDocumentat
   const comment = module.comments
     .filter((candidate) => candidate.type === 'Block' && candidate.value.startsWith('*') && candidate.end <= start)
     .toSorted((left, right) => right.end - left.end)
-    .find((candidate) => module.source.slice(candidate.end, start).trim() === '');
+    .find(
+      (candidate) =>
+        module.source
+          .slice(candidate.end, start)
+          .replaceAll(/\/\/.*$/gmu, '')
+          .trim() === '',
+    );
   if (comment === undefined) return { description: '', tags: [], parameterDescriptions: new Map() };
 
   const lines = comment.value.split('\n').map((line) => line.replace(/^\s*\* ?/u, '').trimEnd());

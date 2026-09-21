@@ -116,7 +116,10 @@ async function buildTargets(): Promise<readonly BuildAttempt[]> {
   const flintExcludedBoundsWasm = createFlintExcludedBoundsWasmAdapter();
   const rust = createRustWasmAdapter(rustLoader);
   const assemblyScript = createAssemblyScriptAdapter(assemblyScriptLoader);
-  const targets: readonly [RuntimeAdapter, () => Promise<BuildArtifact>][] = [
+  const targets: readonly [
+    RuntimeAdapter,
+    () => Promise<BuildArtifact> | BuildArtifact,
+  ][] = [
     [javascript, () => javascript.build()],
     [flintGeneratedWasm, () => flintGeneratedWasm.build()],
     [interpret, () => interpret.build()],

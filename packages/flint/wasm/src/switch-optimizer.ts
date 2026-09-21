@@ -2,17 +2,8 @@
  * Switch statement analysis, jump-table strategy selection, and constant branch elimination.
  */
 
-import type { FlintWasmModule, FlintWasmSourceSpan, FlintWasmStatement } from './contracts.js';
-
-/** Execution dispatch strategy applied to switch statement jump tables. */
-export type FlintWasmSwitchStrategy = 'br-table' | 'sparse' | 'constant';
-
-/** Diagnostic emitted by WebAssembly optimization passes. */
-export interface FlintWasmOptimizationDiagnostic {
-  readonly code: 'FLINT-DISPATCH-001' | 'FLINT-DISPATCH-002';
-  readonly message: string;
-  readonly span: FlintWasmSourceSpan;
-}
+import type { FlintWasmModule, FlintWasmStatement } from './contracts.js';
+import type { FlintWasmOptimizationDiagnostic, FlintWasmSwitchStrategy } from './optimizer.js';
 
 /** Extracts the numeric integer value from a switch case branch arm. */
 // skipcq: JS-R1005
