@@ -156,10 +156,13 @@ export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserCo
   const framework = plugin.id as JsxFramework;
   const resolvedEntry = resolveForgeHookEntryModule(rootDir, entryModule);
   const generatedDirectory = forgeGeneratedDirectory(rootDir, framework, resolvedEntry, outputRoot);
-  const finalOutDir = path.resolve(rootDir, `dist/${framework}`);
-  const publishedOutDir = resolveTsdownOutputDirectory(rootDir, finalOutDir, outputRoot);
-  const attemptFinalOutDir = forgeArtifactAttemptDirectory(finalOutDir, framework);
-  const outDir = resolveTsdownOutputDirectory(rootDir, attemptFinalOutDir, outputRoot);
+  const targetOutDir =
+    typeof overrides?.outDir === 'string'
+      ? path.resolve(rootDir, overrides.outDir)
+      : path.resolve(rootDir, `dist/${framework}`);
+  const publishedOutDir = resolveTsdownOutputDirectory(rootDir, targetOutDir, outputRoot);
+  const attemptFinalOutDir = forgeArtifactAttemptDirectory(targetOutDir, framework);
+  const attemptOutDir = resolveTsdownOutputDirectory(rootDir, attemptFinalOutDir, outputRoot);
 
   const target = createHookTargetPlan({
     plugin,
@@ -177,7 +180,7 @@ export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserCo
   const stagePlugins = (plugin.build.tsdown?.({
     rootDir,
     generatedDirectory,
-    outputDirectory: outDir,
+    outputDirectory: attemptOutDir,
   }) ?? []) as TsdownPlugin[];
 
   const frameworkExternals = plugin.runtimeExternals ?? [];
@@ -214,12 +217,12 @@ export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserCo
         hookLibraryDtsPlugin({
           framework,
           generatedDir: generatedDirectory,
-          outDir,
+          outDir: attemptOutDir,
         }) as TsdownPlugin,
         removeGeneratedDirectoryPlugin(generatedDirectory, framework),
         forgeArtifactPublishPlugin({
           publishedDirectory: publishedOutDir,
-          attemptDirectory: outDir,
+          attemptDirectory: attemptOutDir,
           generatedDirectory,
           targetId: framework,
         }) as unknown as TsdownPlugin,
@@ -227,7 +230,8 @@ export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserCo
     },
   });
 
-  return mergeTsdownConfig(base, overrides, rootDir, outputRoot);
+  const { outDir: _ignoredOutDir, ...effectiveOverrides } = overrides ?? {};
+  return mergeTsdownConfig(base, effectiveOverrides, rootDir, outputRoot);
 }
 
 export interface TsdownForgeHooksAllOptions {
@@ -542,9 +546,12 @@ function createTsdownForgeComponentPlugin(
     rejectFixturePlaceholder,
   });
 
-  const finalOutDir = path.resolve(rootDir, `dist/${framework}`);
-  const publishedOutDir = resolveTsdownOutputDirectory(rootDir, finalOutDir, outputRoot);
-  const attemptFinalOutDir = forgeArtifactAttemptDirectory(finalOutDir, framework);
+  const targetOutDir =
+    typeof overrides?.outDir === 'string'
+      ? path.resolve(rootDir, overrides.outDir)
+      : path.resolve(rootDir, `dist/${framework}`);
+  const publishedOutDir = resolveTsdownOutputDirectory(rootDir, targetOutDir, outputRoot);
+  const attemptFinalOutDir = forgeArtifactAttemptDirectory(targetOutDir, framework);
   const attemptOutDir = resolveTsdownOutputDirectory(rootDir, attemptFinalOutDir, outputRoot);
 
   // Component packages need real Svelte/Solid compilers. Use the tsdown-safe
@@ -558,13 +565,21 @@ function createTsdownForgeComponentPlugin(
   // All framework targets use synthesized declarations. This avoids invoking
   // the TypeScript 7 project builder against generated source trees and keeps
   // every emitted declaration in the package's configured dist directory.
+  const resolvedDeclarationModule =
+    declarationModule === '..' || declarationModule === '../components' || !declarationModule
+      ? './components'
+      : declarationModule;
+
   const dtsPlugin = jsxComponentsEntryDtsPlugin({
     framework,
+    generatedDirectory,
     componentsModule: resolvedComponentsModule,
     publicEntryModule: resolvedPublicEntryModule,
     sourceRoot: path.dirname(path.dirname(resolvedComponentsModule)),
+    packageRoot: rootDir,
+    outputRoot,
     declarationFileName: 'index',
-    declarationModule: declarationModule ?? '../components',
+    declarationModule: resolvedDeclarationModule,
     // Keep the neutral `Forge` prefix on the public API (do not strip it).
     stripPrefix: '',
   });
@@ -591,6 +606,7 @@ function createTsdownForgeComponentPlugin(
     }) as unknown as TsdownPlugin,
   ];
 
+  const { outDir: _ignoredOutDir, ...effectiveOverrides } = overrides ?? {};
   const forgeConfig = mergeTsdownConfig(
     defineTsdownLibrary({
       rootDir,
@@ -611,7 +627,7 @@ function createTsdownForgeComponentPlugin(
         plugins: forgePlugins,
       },
     }),
-    overrides,
+    effectiveOverrides,
     rootDir,
     outputRoot,
   );

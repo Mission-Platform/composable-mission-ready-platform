@@ -24,6 +24,7 @@ import {
 import {
   oxcArray,
   oxcIdentifierName,
+  oxcNodeText,
   oxcObject,
   oxcProgramBody,
   oxcUnwrapModuleStatement,
@@ -611,6 +612,153 @@ function deriveSourceSpecifier(graphEntry: string, sourcePath: string, specifier
   return `./${relative}`;
 }
 
+/** Extracts the props type identifier from a component's AST declaration. */
+function extractPropsTypeFromAst(
+  sourcePath: string,
+  neutralName: string,
+  astCache: Map<string, OxcParsedModule>,
+): string | undefined {
+  let parsed = astCache.get(sourcePath);
+  if (parsed === undefined) {
+    if (!fs.existsSync(sourcePath)) {
+      return undefined;
+    }
+    try {
+      parsed = parseOxcModule(sourcePath, fs.readFileSync(sourcePath, 'utf8'));
+      astCache.set(sourcePath, parsed);
+    } catch {
+      return undefined;
+    }
+  }
+
+  const localName = resolveLocalSymbolName(parsed.program, neutralName);
+  const declaration = findDeclaration(parsed.program, localName);
+  if (declaration === undefined) {
+    return undefined;
+  }
+
+  let fn: OxcNode | undefined;
+  if (declaration.type === 'FunctionDeclaration') {
+    fn = declaration;
+  } else if (declaration.type === 'VariableDeclarator') {
+    let init = oxcObject(declaration, 'init');
+    while (
+      init !== undefined &&
+      (init.type === 'ParenthesizedExpression' ||
+        init.type === 'TSAsExpression' ||
+        init.type === 'TSTypeAssertion' ||
+        init.type === 'TSNonNullExpression')
+    ) {
+      init = oxcObject(init, 'expression');
+    }
+    if (init !== undefined) {
+      if (init.type === 'ArrowFunctionExpression' || init.type === 'FunctionExpression') {
+        fn = init;
+      } else if (init.type === 'CallExpression') {
+        for (const arg of oxcArray(init, 'arguments')) {
+          if (arg.type === 'ArrowFunctionExpression' || arg.type === 'FunctionExpression') {
+            fn = arg;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  if (fn === undefined) {
+    return undefined;
+  }
+
+  const paramsNode = oxcObject(fn, 'params');
+  const items = paramsNode ? oxcArray(paramsNode, 'items') : [];
+  const firstParam = items[0] ?? oxcArray(fn, 'params')[0];
+  if (firstParam === undefined) {
+    return undefined;
+  }
+
+  let typeAnnotation = oxcObject(firstParam, 'typeAnnotation');
+  if (typeAnnotation === undefined) {
+    const pattern = oxcObject(firstParam, 'pattern') ?? oxcObject(firstParam, 'argument');
+    if (pattern !== undefined) {
+      typeAnnotation = oxcObject(pattern, 'typeAnnotation');
+    }
+  }
+  if (typeAnnotation === undefined) {
+    return undefined;
+  }
+
+  const rawText = oxcNodeText(parsed.source, typeAnnotation).trim().replace(/^:\s*/, '');
+  const readonlyMatch = /^Readonly<\s*([A-Za-z0-9_]+)\s*>$/.exec(rawText);
+  if (readonlyMatch !== null) {
+    return readonlyMatch[1];
+  }
+  const identMatch = /^[A-Za-z0-9_]+$/.exec(rawText);
+  if (identMatch !== null) {
+    return identMatch[0];
+  }
+  return undefined;
+}
+
+/** Resolves the properties type for a component using conventions and AST inspection. */
+function findComponentPropertiesType(
+  publicName: string,
+  neutralName: string,
+  typeExports: string[],
+  sourcePath: string,
+  astCache: Map<string, OxcParsedModule>,
+): string | undefined {
+  const baseName = publicName.replace(/^Forge/, '');
+  const neutralBase = neutralName.replace(/^Forge/, '');
+  const candidates = [
+    `${baseName}Properties`,
+    `${neutralBase}Properties`,
+    `${publicName}Properties`,
+    `${neutralName}Properties`,
+    `Forge${baseName}Properties`,
+    `Forge${neutralBase}Properties`,
+    `${baseName}Props`,
+    `${neutralBase}Props`,
+    `${publicName}Props`,
+    `${neutralName}Props`,
+    `Forge${baseName}Props`,
+    `Forge${neutralBase}Props`,
+  ];
+  const matchedCandidate = candidates.find((cand) => typeExports.includes(cand));
+  if (matchedCandidate !== undefined) {
+    return matchedCandidate;
+  }
+
+  const propTypes = typeExports.filter(
+    (t) =>
+      (t.endsWith('Properties') || t.endsWith('Props')) &&
+      !t.endsWith('StyleProperties') &&
+      !t.endsWith('CSSProperties') &&
+      !t.endsWith('StyleProps'),
+  );
+  if (propTypes.length === 1) {
+    return propTypes[0];
+  }
+  if (propTypes.length > 1) {
+    const match = propTypes.find(
+      (t) => t.toLowerCase().includes(baseName.toLowerCase()) || t.toLowerCase().includes(neutralBase.toLowerCase()),
+    );
+    if (match !== undefined) {
+      return match;
+    }
+    return propTypes[0];
+  }
+
+  const astPropsType = extractPropsTypeFromAst(sourcePath, neutralName, astCache);
+  if (astPropsType !== undefined) {
+    if (!typeExports.includes(astPropsType)) {
+      typeExports.push(astPropsType);
+    }
+    return astPropsType;
+  }
+
+  return undefined;
+}
+
 /** Resolves a single graph export into a DiscoveredComponent when it represents a component. */
 function resolveDiscoveredComponent(
   graph: ForgeFileGraph,
@@ -629,8 +777,7 @@ function resolveDiscoveredComponent(
   const publicName = derivePublicName(entryExport.exportedName, entryExport.localName, neutralName, stripPrefix);
   const helperExportNames = extractHelperExportNames(sourceNode, astCache);
   const typeExports = graphTypeExports(graph, entry, sourceNode, entryExport.specifier, helperExportNames);
-  const candidate = `${publicName}Properties`;
-  const propertiesType = typeExports.includes(candidate) ? candidate : undefined;
+  const propertiesType = findComponentPropertiesType(publicName, neutralName, typeExports, sourceNode.id, astCache);
   const sourceSpecifier = deriveSourceSpecifier(graph.entry, sourceNode.id, entryExport.specifier);
   return {
     neutralName,
@@ -1042,11 +1189,36 @@ export function discoverComponents(barrelSource: string, stripPrefix = 'Forge'):
     const sourceDir = stripTrailingDuplicate(moduleRelativePath(reExport.from));
     for (const neutralName of reExport.values) {
       const publicName = neutralName.startsWith(stripPrefix) ? neutralName.slice(stripPrefix.length) : neutralName;
-      const candidate = `${publicName}Properties`;
+      const baseName = publicName.replace(/^Forge/, '');
+      const neutralBase = neutralName.replace(/^Forge/, '');
+      const candidates = [
+        `${baseName}Properties`,
+        `${neutralBase}Properties`,
+        `${publicName}Properties`,
+        `${neutralName}Properties`,
+        `Forge${baseName}Properties`,
+        `Forge${neutralBase}Properties`,
+        `${baseName}Props`,
+        `${neutralBase}Props`,
+        `${publicName}Props`,
+        `${neutralName}Props`,
+        `Forge${baseName}Props`,
+        `Forge${neutralBase}Props`,
+      ];
+      const matched = candidates.find((c) => reExport.types.has(c));
+      const fallbackProp =
+        matched ??
+        [...reExport.types].find(
+          (t) =>
+            (t.endsWith('Properties') || t.endsWith('Props')) &&
+            !t.endsWith('StyleProperties') &&
+            !t.endsWith('CSSProperties') &&
+            !t.endsWith('StyleProps'),
+        );
       components.push({
         neutralName,
         publicName,
-        propertiesType: reExport.types.has(candidate) ? candidate : undefined,
+        propertiesType: fallbackProp,
         typeExports: [...reExport.types],
         folder,
         sourceDir,

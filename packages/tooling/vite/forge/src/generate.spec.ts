@@ -27,6 +27,7 @@ import {
   jsxComponentsDtsPlugin,
   jsxComponentsEntryDtsPlugin,
 } from './generate';
+import { generateEntryDeclaration } from './generate/declaration-plugins';
 
 import type { DiscoveredComponent, DiscoveredExternalExport, DiscoveredHelperExport } from './compiler/discover';
 import type { FrameworkOutputPlugin } from '@mission-platform/forge-plugin-api';
@@ -1605,5 +1606,217 @@ describe('jsxComponentsCssImportPlugin', () => {
 
     expect(bundle['foo.module.css']).toBeDefined();
     expect(bundle['foo.module.js'].code).toBe('import "./foo.module.css";\ncode;');
+  });
+});
+
+describe('self-contained framework exports and types', () => {
+  it('generates typed properties with Readonly wrapper instead of Record<string, unknown>', () => {
+    const dts = generateEntryDeclaration(
+      'react',
+      './components',
+      [
+        component({
+          neutralName: 'ForgeAvatar',
+          publicName: 'Avatar',
+          propertiesType: 'AvatarProperties',
+          typeExports: ['AvatarProperties'],
+        }),
+      ],
+      [],
+      [],
+    );
+    expect(dts).toContain('import type { FunctionComponent } from "react";');
+    expect(dts).toContain('import type { AvatarProperties } from "./components";');
+    expect(dts).toContain('export declare const Avatar: FunctionComponent<Readonly<AvatarProperties>>;');
+    expect(dts).not.toContain('Record<string, unknown>');
+  });
+
+  it('prefers self-contained relative framework specifier for utils instead of lifting out', () => {
+    const dts = generateEntryDeclaration(
+      'react',
+      './components',
+      [
+        component({
+          neutralName: 'ForgeAvatar',
+          publicName: 'Avatar',
+          propertiesType: 'AvatarProperties',
+          typeExports: ['AvatarProperties'],
+        }),
+      ],
+      [
+        {
+          base: 'pointer-drag',
+          relativePath: 'utils/pointer-drag/pointer-drag',
+          values: [{ localName: 'beginPointerDrag', exportedName: 'beginPointerDrag' }],
+          types: [{ localName: 'PointerDragHandlers', exportedName: 'PointerDragHandlers' }],
+        },
+      ],
+      [],
+    );
+    expect(dts).toContain(
+      'export { beginPointerDrag, type PointerDragHandlers } from "./utils/pointer-drag/pointer-drag";',
+    );
+    expect(dts).not.toContain('../utils');
+  });
+
+  it('jsxComponentsEntryDtsPlugin emits self-contained component declarations from dist/components', () => {
+    const temporaryDir = mkdtempSync(path.join(os.tmpdir(), 'entry-dts-self-contained-'));
+    try {
+      const srcDir = path.join(temporaryDir, 'src', 'components');
+      mkdirSync(srcDir, { recursive: true });
+      writeFileSync(path.join(temporaryDir, 'package.json'), JSON.stringify({ name: 'test-pkg' }));
+      writeFileSync(path.join(srcDir, 'index.ts'), 'export const a = 1;\n');
+
+      const distComponentsDir = path.join(temporaryDir, 'dist', 'components');
+      const atomsDir = path.join(distComponentsDir, 'atoms', 'avatar');
+      const utilsDir = path.join(distComponentsDir, 'utils');
+      mkdirSync(atomsDir, { recursive: true });
+      mkdirSync(utilsDir, { recursive: true });
+      writeFileSync(path.join(distComponentsDir, 'index.d.ts'), 'export declare const barrel = true;\n');
+      writeFileSync(path.join(atomsDir, 'avatar.d.ts'), 'export interface AvatarProperties { size: number; }\n');
+      writeFileSync(path.join(utilsDir, 'helper.d.ts'), 'export declare function helper(): void;\n');
+
+      const plugin = jsxComponentsEntryDtsPlugin({
+        framework: 'react',
+        componentsModule: path.join(srcDir, 'index.ts'),
+        packageRoot: temporaryDir,
+        declarationFileName: 'index',
+        declarationModule: './components',
+      });
+
+      const emittedFiles: Record<string, string> = {};
+      const generateBundle = plugin.generateBundle;
+      if (typeof generateBundle !== 'function') {
+        throw new TypeError('expected function generateBundle');
+      }
+      generateBundle.call(
+        {
+          emitFile(file: { fileName: string; source: string }): void {
+            emittedFiles[file.fileName] = file.source;
+          },
+        } as never,
+        {},
+        {},
+      );
+
+      expect(emittedFiles['index.d.ts']).toBeDefined();
+      expect(emittedFiles['components/index.d.ts']).toBe('export declare const barrel = true;\n');
+      expect(emittedFiles['components/atoms/avatar/avatar.d.ts']).toBe(
+        'export interface AvatarProperties { size: number; }\n',
+      );
+      expect(emittedFiles['utils/helper.d.ts']).toBe('export declare function helper(): void;\n');
+    } finally {
+      rmSync(temporaryDir, { recursive: true, force: true });
+    }
+  });
+
+  it('jsxComponentsEntryDtsPlugin emits declarations based off cached framework sources', () => {
+    const temporaryDir = mkdtempSync(path.join(os.tmpdir(), 'entry-dts-cached-framework-'));
+    try {
+      const cacheDir = path.join(temporaryDir, 'cache', 'vue');
+      const compDir = path.join(cacheDir, 'components', 'atoms', 'forge-avatar');
+      const utilsDir = path.join(cacheDir, 'utils', 'pointer-drag');
+      mkdirSync(compDir, { recursive: true });
+      mkdirSync(utilsDir, { recursive: true });
+
+      writeFileSync(
+        path.join(cacheDir, 'index.ts'),
+        [
+          "export { default as ForgeAvatar, default as Avatar } from './components/atoms/forge-avatar/forge-avatar.vue';",
+          "export { type AvatarProperties, type AvatarSize } from './components/atoms/forge-avatar/forge-avatar.vue';",
+          "export { beginPointerDrag, type PointerDragHandlers } from './utils/pointer-drag/pointer-drag';",
+        ].join('\n') + '\n',
+      );
+
+      writeFileSync(
+        path.join(compDir, 'forge-avatar.vue'),
+        [
+          '<script lang="ts">',
+          "export type AvatarSize = 'sm' | 'md' | 'lg';",
+          'export interface AvatarProperties {',
+          '  src?: string;',
+          '  size?: AvatarSize;',
+          '}',
+          '</script>',
+          '<script setup lang="ts">',
+          "defineOptions({ name: 'ForgeAvatar' });",
+          'const props = defineProps<AvatarProperties>();',
+          '</script>',
+          '<template><div class="avatar" /></template>',
+        ].join('\n'),
+      );
+
+      writeFileSync(
+        path.join(utilsDir, 'pointer-drag.ts'),
+        [
+          'export interface PointerDragHandlers { onMove: (e: any) => void; }',
+          'export function beginPointerDrag(h: PointerDragHandlers): () => void { return () => {}; }',
+        ].join('\n'),
+      );
+
+      const plugin = jsxComponentsEntryDtsPlugin({
+        framework: 'vue',
+        componentsModule: path.join(temporaryDir, 'dummy.ts'),
+        generatedDirectory: cacheDir,
+        declarationFileName: 'index',
+      });
+
+      const emittedFiles: Record<string, string> = {};
+      const generateBundle = plugin.generateBundle;
+      if (typeof generateBundle !== 'function') {
+        throw new TypeError('expected function generateBundle');
+      }
+      generateBundle.call(
+        {
+          emitFile(file: { fileName: string; source: string }): void {
+            emittedFiles[file.fileName] = file.source;
+          },
+        } as never,
+        {},
+        {},
+      );
+
+      // Verify index.d.ts
+      expect(emittedFiles['index.d.ts']).toBeDefined();
+      expect(emittedFiles['index.d.ts']).toContain(
+        'export { ForgeAvatar, ForgeAvatar as Avatar, default as ForgeAvatar, default as Avatar } from "./components/atoms/forge-avatar/forge-avatar";',
+      );
+      expect(emittedFiles['index.d.ts']).toContain(
+        'export { type AvatarProperties, type AvatarSize } from "./components/atoms/forge-avatar/forge-avatar";',
+      );
+      expect(emittedFiles['index.d.ts']).toContain(
+        "export { beginPointerDrag, type PointerDragHandlers } from './utils/pointer-drag/pointer-drag';",
+      );
+
+      // Verify component d.ts and vue.d.ts
+      expect(emittedFiles['components/atoms/forge-avatar/forge-avatar.d.ts']).toBeDefined();
+      expect(emittedFiles['components/atoms/forge-avatar/forge-avatar.vue.d.ts']).toBeDefined();
+      expect(emittedFiles['components/atoms/forge-avatar/forge-avatar.d.ts']).toContain(
+        'import type { DefineComponent } from "vue";',
+      );
+      expect(emittedFiles['components/atoms/forge-avatar/forge-avatar.d.ts']).toContain(
+        "export type AvatarSize = 'sm' | 'md' | 'lg';",
+      );
+      expect(emittedFiles['components/atoms/forge-avatar/forge-avatar.d.ts']).toContain(
+        'export interface AvatarProperties',
+      );
+      expect(emittedFiles['components/atoms/forge-avatar/forge-avatar.d.ts']).toContain(
+        'export declare const ForgeAvatar: DefineComponent<Readonly<AvatarProperties>>;',
+      );
+      expect(emittedFiles['components/atoms/forge-avatar/forge-avatar.d.ts']).toContain(
+        'export { ForgeAvatar as Avatar };',
+      );
+
+      // Verify utils d.ts
+      expect(emittedFiles['utils/pointer-drag/pointer-drag.d.ts']).toBeDefined();
+      expect(emittedFiles['utils/pointer-drag/pointer-drag.d.ts']).toContain(
+        'export interface PointerDragHandlers { onMove: (e: any) => void; }',
+      );
+      expect(emittedFiles['utils/pointer-drag/pointer-drag.d.ts']).toContain(
+        'export declare function beginPointerDrag(h: PointerDragHandlers): () => void;',
+      );
+    } finally {
+      rmSync(temporaryDir, { recursive: true, force: true });
+    }
   });
 });

@@ -14,6 +14,7 @@ import {
   type DiscoveredHelperExport,
 } from '../compiler/discover.js';
 import { buildForgeFileGraph } from '../compiler/graph.js';
+import { oxcNodeText, parseOxcModule, type OxcParsedModule } from '../compiler/oxc.js';
 
 import { externalReExportLine, helperBindingReExportName } from './entry-synthesis.js';
 
@@ -41,6 +42,12 @@ export interface JsxComponentsEntryDtsOptions {
   stripPrefix?: string;
   /** Owning neutral source root used for graph alias resolution. */
   sourceRoot?: string;
+  /** Package root directory, used to locate `dist/components` declarations. */
+  packageRoot?: string;
+  /** Isolated output root if executing under staged forge runner. */
+  outputRoot?: string;
+  /** Cached framework source directory containing generated framework sources. */
+  generatedDirectory?: string;
 }
 
 /**
@@ -93,6 +100,24 @@ export function jsxComponentsCssImportPlugin(): Plugin {
   };
 }
 
+/** Resolves the import specifier for a helper module within the declaration file. */
+function resolveHelperSpecifier(declarationModule: string, helperRelativePath: string): string {
+  const cleanPath = helperRelativePath.startsWith('./') ? helperRelativePath.slice(2) : helperRelativePath;
+  if (
+    cleanPath.startsWith('utils/') ||
+    cleanPath.startsWith('composables/') ||
+    cleanPath.startsWith('styles/') ||
+    cleanPath.startsWith('components/')
+  ) {
+    return `./${cleanPath}`;
+  }
+  if (declarationModule) {
+    const cleanModule = declarationModule.replace(/\/+$/, '');
+    return `${cleanModule}/${cleanPath}`;
+  }
+  return `./${cleanPath}`;
+}
+
 /** Generate the synthesised TypeScript declaration of the public entry. */
 export function generateEntryDeclaration(
   framework: JsxFramework,
@@ -137,7 +162,11 @@ export function generateEntryDeclaration(
       continue;
     }
     claimed.add(component.publicName);
-    const properties = component.propertiesType ?? 'Record<string, unknown>';
+    const properties = component.propertiesType
+      ? component.propertiesType.startsWith('Readonly<')
+        ? component.propertiesType
+        : `Readonly<${component.propertiesType}>`
+      : 'Record<string, unknown>';
     lines.push(`export declare const ${component.publicName}: ${componentType}<${properties}>;`);
     if (component.neutralName !== component.publicName && !claimed.has(component.neutralName)) {
       claimed.add(component.neutralName);
@@ -171,9 +200,8 @@ export function generateEntryDeclaration(
         }),
     ];
     if (names.length > 0) {
-      lines.push(
-        `export { ${names.join(', ')} } from ${JSON.stringify(`${declarationModule}/${helper.relativePath}`)};`,
-      );
+      const helperSpecifier = resolveHelperSpecifier(declarationModule, helper.relativePath);
+      lines.push(`export { ${names.join(', ')} } from ${JSON.stringify(helperSpecifier)};`);
     }
   }
   for (const external of externalExports) {
@@ -228,6 +256,485 @@ export function discoverGeneratedEntrySources(
   };
 }
 
+function findPackageRoot(startDir: string): string {
+  let current = path.resolve(startDir);
+  while (true) {
+    if (existsSync(path.join(current, 'package.json'))) {
+      return current;
+    }
+    const parent = path.dirname(current);
+    if (parent === current) {
+      return startDir;
+    }
+    current = parent;
+  }
+}
+
+function collectAllDeclarationFiles(dir: string, baseDir = dir): { relativePath: string; fullPath: string }[] {
+  if (!existsSync(dir)) return [];
+  const results: { relativePath: string; fullPath: string }[] = [];
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      results.push(...collectAllDeclarationFiles(fullPath, baseDir));
+    } else if (entry.isFile() && /\.(?:d\.ts|d\.mts|d\.cts)$/.test(entry.name)) {
+      const relativePath = path.relative(baseDir, fullPath).split(path.sep).join('/');
+      results.push({ relativePath, fullPath });
+    }
+  }
+  return results;
+}
+
+function resolveNeutralComponentsDirectory(packageRoot: string, outputRoot?: string): string | undefined {
+  const stageRoot = outputRoot ?? process.env.FORGE_BUILD_STAGE_ROOT;
+  const candidates = [
+    stageRoot ? path.resolve(stageRoot, 'dist/components') : undefined,
+    path.resolve(packageRoot, 'dist/components'),
+  ].filter((c): c is string => c !== undefined && existsSync(c));
+
+  for (const candidate of candidates) {
+    if (hasDeclarationFiles(candidate)) {
+      return candidate;
+    }
+  }
+
+  const forgeConfig = path.join(packageRoot, 'tsdown.forge.config.ts');
+  if (existsSync(forgeConfig)) {
+    try {
+      execFileSync('pnpm', ['exec', 'tsdown', '--config', 'tsdown.forge.config.ts'], {
+        cwd: packageRoot,
+        stdio: ['ignore', 'pipe', 'pipe'],
+      });
+      for (const candidate of [
+        stageRoot ? path.resolve(stageRoot, 'dist/components') : undefined,
+        path.resolve(packageRoot, 'dist/components'),
+      ].filter((c): c is string => c !== undefined && existsSync(c))) {
+        if (hasDeclarationFiles(candidate)) {
+          return candidate;
+        }
+      }
+    } catch {
+      // Ignore fallback failure
+    }
+  }
+
+  return (
+    candidates[0] ??
+    (existsSync(path.resolve(packageRoot, 'dist/components'))
+      ? path.resolve(packageRoot, 'dist/components')
+      : undefined)
+  );
+}
+
+function extractScriptFromComponent(fullPath: string, source: string): string {
+  if (fullPath.endsWith('.vue') || fullPath.endsWith('.svelte')) {
+    const scriptMatches = [...source.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
+    if (scriptMatches.length > 0) {
+      return scriptMatches.map((m) => m[1]).join('\n');
+    }
+  }
+  return source;
+}
+
+function emitComponentDeclaration(
+  framework: JsxFramework,
+  fullPath: string,
+  generatedDirectory: string,
+  emit: (fileName: string, source: string) => void,
+): void {
+  const relativePath = path.relative(generatedDirectory, fullPath).split(path.sep).join('/');
+  const stem = relativePath.replace(/\.(?:tsx|ts|vue|svelte)$/, '');
+  const source = readFileSync(fullPath, 'utf8');
+  const scriptContent = extractScriptFromComponent(fullPath, source);
+
+  let parsed: OxcParsedModule;
+  try {
+    parsed = parseOxcModule(fullPath, scriptContent);
+  } catch {
+    return;
+  }
+
+  const imports: string[] = [];
+  const types: string[] = [];
+  const typeNames: string[] = [];
+
+  for (const stmt of parsed.program.body) {
+    if (stmt.type === 'ImportDeclaration') {
+      const src = stmt.source?.value;
+      if (
+        typeof src === 'string' &&
+        !src.endsWith('.css') &&
+        !src.endsWith('.scss') &&
+        !src.endsWith('.sass') &&
+        !src.endsWith('.less')
+      ) {
+        imports.push(oxcNodeText(scriptContent, stmt));
+      }
+    } else if (stmt.type === 'ExportNamedDeclaration' && stmt.declaration) {
+      const decl = stmt.declaration;
+      if (
+        decl.type === 'TSTypeAliasDeclaration' ||
+        decl.type === 'TSInterfaceDeclaration' ||
+        decl.type === 'TSEnumDeclaration'
+      ) {
+        types.push(oxcNodeText(scriptContent, stmt));
+        const id = (decl as { id?: { name?: string } }).id?.name;
+        if (id) {
+          typeNames.push(id);
+        }
+      }
+    } else if (
+      stmt.type === 'TSTypeAliasDeclaration' ||
+      stmt.type === 'TSInterfaceDeclaration' ||
+      stmt.type === 'TSEnumDeclaration'
+    ) {
+      types.push(`export ${oxcNodeText(scriptContent, stmt)}`);
+      const id = (stmt as { id?: { name?: string } }).id?.name;
+      if (id) {
+        typeNames.push(id);
+      }
+    }
+  }
+
+  const baseFileName = path.basename(stem);
+  const parts = baseFileName.split('-').map((p) => p.charAt(0).toUpperCase() + p.slice(1));
+  let neutralName = parts.join('');
+
+  const nameMatch = scriptContent.match(/defineOptions\(\{\s*name:\s*['"]([^'"]+)['"]/);
+  if (nameMatch) {
+    neutralName = nameMatch[1];
+  } else {
+    for (const stmt of parsed.program.body) {
+      if (stmt.type === 'ExportNamedDeclaration' && stmt.declaration) {
+        const d = stmt.declaration as { id?: { name?: string }; type?: string };
+        const id = d.id?.name;
+        if (id && (d.type === 'FunctionDeclaration' || d.type === 'ClassDeclaration') && id.startsWith('Forge')) {
+          neutralName = id.endsWith('Element') ? id.slice(0, -'Element'.length) : id;
+          break;
+        }
+      }
+    }
+  }
+
+  const publicName = neutralName.startsWith('Forge') ? neutralName.slice(5) : neutralName;
+
+  const candidates = [
+    `${publicName}Properties`,
+    `${neutralName}Properties`,
+    `Forge${publicName}Properties`,
+    `${publicName}Props`,
+    `${neutralName}Props`,
+    `Forge${publicName}Props`,
+    'Properties',
+    'Props',
+  ];
+  let matchedProps = candidates.find((c) => typeNames.includes(c));
+  if (!matchedProps) {
+    matchedProps = typeNames.find(
+      (t) =>
+        (t.endsWith('Properties') || t.endsWith('Props')) &&
+        !t.endsWith('StyleProperties') &&
+        !t.endsWith('CSSProperties') &&
+        !t.endsWith('StyleProps'),
+    );
+  }
+
+  const propsType = matchedProps
+    ? matchedProps.startsWith('Readonly<')
+      ? matchedProps
+      : `Readonly<${matchedProps}>`
+    : 'Record<string, unknown>';
+
+  const lines: string[] = [];
+  switch (framework) {
+    case 'react': {
+      lines.push('import type { FunctionComponent, ReactNode, ReactElement } from "react";');
+      break;
+    }
+    case 'vue': {
+      lines.push('import type { DefineComponent } from "vue";');
+      break;
+    }
+    case 'svelte': {
+      lines.push('import type { Component } from "svelte";');
+      break;
+    }
+    case 'solid': {
+      lines.push('import type { Component, JSX } from "solid-js";');
+      break;
+    }
+    case 'web-components': {
+      lines.push('import type { ForgeElement } from "@mission-platform/forge-adapters/web-components";');
+      break;
+    }
+  }
+
+  lines.push(...imports);
+  lines.push(...types);
+
+  switch (framework) {
+    case 'react': {
+      lines.push(`export declare const ${neutralName}: FunctionComponent<${propsType}>;`);
+      if (publicName !== neutralName) {
+        lines.push(`export { ${neutralName} as ${publicName} };`);
+      }
+      break;
+    }
+    case 'vue': {
+      lines.push(`declare const _default: DefineComponent<${propsType}>;`);
+      lines.push('export default _default;');
+      lines.push(`export declare const ${neutralName}: DefineComponent<${propsType}>;`);
+      if (publicName !== neutralName) {
+        lines.push(`export { ${neutralName} as ${publicName} };`);
+      }
+      break;
+    }
+    case 'svelte': {
+      lines.push(`declare const _default: Component<${propsType}>;`);
+      lines.push('export default _default;');
+      lines.push(`export declare const ${neutralName}: Component<${propsType}>;`);
+      if (publicName !== neutralName) {
+        lines.push(`export { ${neutralName} as ${publicName} };`);
+      }
+      break;
+    }
+    case 'solid': {
+      lines.push(`export declare const ${neutralName}: Component<${propsType}>;`);
+      if (publicName !== neutralName) {
+        lines.push(`export { ${neutralName} as ${publicName} };`);
+      }
+      break;
+    }
+    case 'web-components': {
+      lines.push(`declare const ${neutralName}Element_base: typeof ForgeElement;`);
+      lines.push(`export declare class ${neutralName}Element extends ${neutralName}Element_base {}`);
+      lines.push(`export declare const ${neutralName}: typeof ${neutralName}Element;`);
+      if (publicName !== neutralName) {
+        lines.push(`export { ${neutralName} as ${publicName} };`);
+      }
+      break;
+    }
+  }
+
+  const dtsContent = lines.filter(Boolean).join('\n') + '\n';
+  emit(`${stem}.d.ts`, dtsContent);
+
+  if (fullPath.endsWith('.vue')) {
+    emit(`${stem}.vue.d.ts`, dtsContent);
+  } else if (fullPath.endsWith('.svelte')) {
+    emit(`${stem}.svelte.d.ts`, dtsContent);
+  }
+}
+
+function emitUtilityDeclaration(
+  fullPath: string,
+  generatedDirectory: string,
+  emit: (fileName: string, source: string) => void,
+): void {
+  const relativePath = path.relative(generatedDirectory, fullPath).split(path.sep).join('/');
+  const stem = relativePath.replace(/\.ts$/, '');
+  const source = readFileSync(fullPath, 'utf8');
+
+  let parsed: OxcParsedModule;
+  try {
+    parsed = parseOxcModule(fullPath, source);
+  } catch {
+    return;
+  }
+
+  const lines: string[] = [];
+  for (const stmt of parsed.program.body) {
+    if (stmt.type === 'ImportDeclaration') {
+      const s = stmt.source?.value;
+      if (
+        typeof s === 'string' &&
+        !s.endsWith('.css') &&
+        !s.endsWith('.scss') &&
+        !s.endsWith('.sass') &&
+        !s.endsWith('.less')
+      ) {
+        lines.push(oxcNodeText(source, stmt));
+      }
+    } else if (stmt.type === 'ExportNamedDeclaration') {
+      if (stmt.declaration) {
+        const decl = stmt.declaration as {
+          type?: string;
+          start?: number;
+          body?: { start?: number };
+          declarations?: Array<{ id?: { name?: string; typeAnnotation?: unknown } }>;
+        };
+        switch (decl.type) {
+          case 'TSTypeAliasDeclaration':
+          case 'TSInterfaceDeclaration':
+          case 'TSEnumDeclaration': {
+            lines.push(oxcNodeText(source, stmt));
+
+            break;
+          }
+          case 'FunctionDeclaration': {
+            const body = decl.body;
+            const sig =
+              body?.start !== undefined
+                ? source.slice(decl.start ?? 0, body.start).trim() + ';'
+                : oxcNodeText(source, decl);
+            lines.push('export declare ' + sig.replace(/^export\s+/, ''));
+
+            break;
+          }
+          case 'VariableDeclaration': {
+            for (const d of decl.declarations ?? []) {
+              const id = d.id?.name;
+              const typeAnnotation = d.id?.typeAnnotation;
+              const typeText = typeAnnotation ? oxcNodeText(source, typeAnnotation) : ': any';
+              lines.push(`export declare const ${id}${typeText};`);
+            }
+
+            break;
+          }
+          // No default
+        }
+      } else if (stmt.specifiers) {
+        lines.push(oxcNodeText(source, stmt));
+      }
+    }
+  }
+
+  emit(`${stem}.d.ts`, lines.join('\n') + '\n');
+}
+
+function emitEntryDeclarationFromCache(
+  framework: JsxFramework,
+  generatedDirectory: string,
+  declarationFileName: string,
+  emit: (fileName: string, source: string) => void,
+): void {
+  const candidateEntries = [path.join(generatedDirectory, 'index.tsx'), path.join(generatedDirectory, 'index.ts')];
+  const entryFile = candidateEntries.find((f) => existsSync(f));
+  if (!entryFile) {
+    return;
+  }
+
+  const entrySource = readFileSync(entryFile, 'utf8');
+  const lines = entrySource.split('\n');
+  const outLines: string[] = [];
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed.length === 0 || trimmed.startsWith('//') || trimmed.startsWith('/*')) {
+      continue;
+    }
+
+    const compMatch = trimmed.match(/^export\s+\{([^}]+)\}\s+from\s+['"]\.\/components\/([^'"]+)['"];?$/);
+    if (compMatch) {
+      const rawSpecifiers = compMatch[1].split(',').map((s) => s.trim());
+      const subPath = compMatch[2].replace(/\.(?:vue|svelte|tsx|ts)$/, '');
+      const isTypeExport = rawSpecifiers.every((s) => s.startsWith('type '));
+
+      if (isTypeExport) {
+        outLines.push(`export { ${rawSpecifiers.join(', ')} } from "./components/${subPath}";`);
+      } else {
+        const typeSpecs: string[] = [];
+        const valueIds: string[] = [];
+        for (const spec of rawSpecifiers) {
+          if (spec.startsWith('type ')) {
+            typeSpecs.push(spec);
+          } else {
+            const clean = spec.replace(/^default\s+as\s+/, '');
+            const id = clean.split(/\s+as\s+/)[0];
+            valueIds.push(id);
+          }
+        }
+
+        const neutralName = valueIds.find((id) => id.startsWith('Forge')) ?? valueIds[0];
+        const names = new Set<string>();
+        if (neutralName) {
+          const pub = neutralName.startsWith('Forge') ? neutralName.slice(5) : neutralName;
+          names.add(neutralName);
+          if (pub !== neutralName) {
+            names.add(`${neutralName} as ${pub}`);
+          }
+          if (framework === 'vue' || framework === 'svelte') {
+            names.add(`default as ${neutralName}`);
+            if (pub !== neutralName) {
+              names.add(`default as ${pub}`);
+            }
+          }
+        }
+        for (const typeSpec of typeSpecs) {
+          names.add(typeSpec);
+        }
+        outLines.push(`export { ${[...names].join(', ')} } from "./components/${subPath}";`);
+      }
+      continue;
+    }
+
+    const utilMatch = trimmed.match(
+      /^export\s+\{([^}]+)\}\s+from\s+['"](\.\/(?:utils|composables|styles)\/[^'"]+)['"];?$/,
+    );
+    if (utilMatch) {
+      outLines.push(trimmed);
+      continue;
+    }
+
+    if (trimmed.startsWith('export ')) {
+      outLines.push(trimmed);
+    }
+  }
+
+  emit(`${declarationFileName}.d.ts`, outLines.join('\n') + '\n');
+}
+
+function emitCachedFrameworkDeclarations(
+  options: JsxComponentsEntryDtsOptions,
+  emit: (fileName: string, source: string) => void,
+): void {
+  const generatedDirectory = options.generatedDirectory!;
+  const framework = options.framework;
+
+  const mpJsxTypesFile = path.join(generatedDirectory, 'mp-jsx-types.ts');
+  if (existsSync(mpJsxTypesFile)) {
+    emit('mp-jsx-types.d.ts', readFileSync(mpJsxTypesFile, 'utf8'));
+  }
+
+  const componentsDir = path.join(generatedDirectory, 'components');
+  if (existsSync(componentsDir)) {
+    const walkComponents = (currentDir: string): void => {
+      for (const entry of readdirSync(currentDir, { withFileTypes: true })) {
+        const fullPath = path.join(currentDir, entry.name);
+        if (entry.isDirectory()) {
+          walkComponents(fullPath);
+        } else if (
+          entry.isFile() &&
+          /\.(?:tsx|ts|vue|svelte)$/.test(entry.name) &&
+          !/\.(?:d\.ts|test\.[^.]+|spec\.[^.]+)$/.test(entry.name)
+        ) {
+          emitComponentDeclaration(framework, fullPath, generatedDirectory, emit);
+        }
+      }
+    };
+    walkComponents(componentsDir);
+  }
+
+  for (const subDir of ['utils', 'composables', 'styles']) {
+    const dirPath = path.join(generatedDirectory, subDir);
+    if (existsSync(dirPath)) {
+      const walkUtils = (currentDir: string): void => {
+        for (const entry of readdirSync(currentDir, { withFileTypes: true })) {
+          const fullPath = path.join(currentDir, entry.name);
+          if (entry.isDirectory()) {
+            walkUtils(fullPath);
+          } else if (entry.isFile() && entry.name.endsWith('.ts') && !entry.name.endsWith('.d.ts')) {
+            emitUtilityDeclaration(fullPath, generatedDirectory, emit);
+          }
+        }
+      };
+      walkUtils(dirPath);
+    }
+  }
+
+  emitEntryDeclarationFromCache(framework, generatedDirectory, options.declarationFileName ?? 'index', emit);
+}
+
 /**
  * Emit the synthesised declaration (`<declarationFileName>.d.ts`) for the
  * generated entry, so the package's `./react` / `./vue` types resolve even
@@ -240,6 +747,13 @@ export function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOption
   return {
     name: '@mission-platform/vite-plugin-forge:entry-dts',
     generateBundle() {
+      if (options.generatedDirectory && existsSync(options.generatedDirectory)) {
+        emitCachedFrameworkDeclarations(options, (fileName, source) => {
+          this.emitFile({ type: 'asset', fileName, source });
+        });
+        return;
+      }
+
       const { components, helpers, externalExports } = discoverGeneratedEntrySources(
         options.componentsModule,
         options.publicEntryModule,
@@ -251,6 +765,56 @@ export function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOption
         fileName: `${options.declarationFileName}.d.ts`,
         source: generateEntryDeclaration(options.framework, declarationModule, components, helpers, externalExports),
       });
+
+      const packageRoot =
+        options.packageRoot ??
+        (options.sourceRoot ? findPackageRoot(options.sourceRoot) : findPackageRoot(options.componentsModule));
+      const neutralComponentsDir = resolveNeutralComponentsDirectory(packageRoot, options.outputRoot);
+      if (neutralComponentsDir && existsSync(neutralComponentsDir)) {
+        const hasTopLevelComponents = existsSync(path.join(neutralComponentsDir, 'components'));
+        const declarationFiles = collectAllDeclarationFiles(neutralComponentsDir);
+
+        for (const file of declarationFiles) {
+          if (hasTopLevelComponents) {
+            if (
+              file.relativePath === 'index.d.ts' ||
+              file.relativePath === 'index.d.mts' ||
+              file.relativePath === 'index.d.cts'
+            ) {
+              continue;
+            }
+            this.emitFile({
+              type: 'asset',
+              fileName: file.relativePath,
+              source: readFileSync(file.fullPath, 'utf8'),
+            });
+          } else {
+            if (
+              file.relativePath === 'index.d.ts' ||
+              file.relativePath === 'index.d.mts' ||
+              file.relativePath === 'index.d.cts'
+            ) {
+              this.emitFile({
+                type: 'asset',
+                fileName: `components/${file.relativePath}`,
+                source: readFileSync(file.fullPath, 'utf8'),
+              });
+            } else if (file.relativePath.startsWith('utils/') || file.relativePath.startsWith('styles/')) {
+              this.emitFile({
+                type: 'asset',
+                fileName: file.relativePath,
+                source: readFileSync(file.fullPath, 'utf8'),
+              });
+            } else {
+              this.emitFile({
+                type: 'asset',
+                fileName: `components/${file.relativePath}`,
+                source: readFileSync(file.fullPath, 'utf8'),
+              });
+            }
+          }
+        }
+      }
     },
   };
 }

@@ -1974,6 +1974,24 @@ It preserves the Forge tree so
 | ------- | --------------------------------- | ----------- |
 | options | TsdownForgeEmailComponentsOptions |             |
 
+### defineTsdownForgeHooks
+
+**Kind:** function
+
+```typescript
+function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig;
+```
+
+Reproduce one Archetype-C **hook** framework build under tsdown:
+Stage 1 (`generateHookLibrarySources`) + Stage 2 plugins + `hookLibraryDtsPlugin`,
+emitting into `dist/<framework>/`.
+
+#### Parameters
+
+| Name    | Type                    | Description |
+| ------- | ----------------------- | ----------- |
+| options | TsdownForgeHooksOptions |             |
+
 ### defineTsdownForgeHooksAll
 
 **Kind:** function
@@ -2054,6 +2072,16 @@ with one caller-owned `defineTsdownLibrary` configuration.
 
 ```typescript
 export interface TsdownForgeHooksAllOptions
+```
+
+No description provided.
+
+### TsdownForgeHooksOptions
+
+**Kind:** interface
+
+```typescript
+export interface TsdownForgeHooksOptions
 ```
 
 No description provided.
