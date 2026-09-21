@@ -3,12 +3,31 @@ import "./renderer-common.flint" as common;
 import "./camera.flint" as camera;
 import "./spatial-index.flint" as spatial;
 
+import capability "webgpu.upload_camera_buffer" as gpu_upload_camera_buffer() -> unit;
+import capability "webgpu.upload_node_buffer" as gpu_upload_node_buffer(count: u32) -> unit;
+import capability "webgpu.upload_edge_buffer" as gpu_upload_edge_buffer(count: u32) -> unit;
+import capability "webgpu.upload_pin_buffer" as gpu_upload_pin_buffer(count: u32) -> unit;
+
 import capability "webgpu.render_begin" as gpu_render_begin() -> unit;
 import capability "webgpu.render_grid" as gpu_render_grid() -> unit;
 import capability "webgpu.render_edges" as gpu_render_edges(count: u32) -> unit;
 import capability "webgpu.render_nodes" as gpu_render_nodes(count: u32) -> unit;
 import capability "webgpu.render_pins" as gpu_render_pins(count: u32) -> unit;
 import capability "webgpu.render_end" as gpu_render_end() -> unit;
+
+import capability "webgpu.write_node_instance" as gpu_write_node_instance(
+  cx: i32, cy: i32, w: i32, h: i32, radius: i32,
+  is_selected: u32, is_active: u32, is_trapped: u32
+) -> unit;
+
+import capability "webgpu.write_edge_instance" as gpu_write_edge_instance(
+  p0x: i32, p0y: i32, p1x: i32, p1y: i32, p2x: i32, p2y: i32, p3x: i32, p3y: i32,
+  is_selected: u32, is_active: u32, pulse_offset_permille: u32
+) -> unit;
+
+import capability "webgpu.write_pin_instance" as gpu_write_pin_instance(
+  px: i32, py: i32, radius: i32, is_hovered: u32, is_active: u32, is_output: u32
+) -> unit;
 
 export fn point_in_rect(px: i32, py: i32, rx: i32, ry: i32, rw: i32, rh: i32) -> bool {
   return px >= rx && px <= (rx + rw) && py >= ry && py <= (ry + rh);
@@ -47,6 +66,39 @@ export fn node_bounds_height(header_h: i32, max_ports: i32, row_h: i32, pad: i32
   return header_h + (max_ports * row_h) + pad;
 }
 
+export fn compute_node_instance(
+  min_x: i32, min_y: i32, max_x: i32, max_y: i32,
+  is_selected: u32, is_active: u32, is_trapped: u32
+) -> unit {
+  let width: i32 = max_x - min_x;
+  let height: i32 = max_y - min_y;
+  let cx: i32 = min_x + (width / 2);
+  let cy: i32 = min_y + (height / 2);
+  gpu_write_node_instance(cx, cy, width, height, 8, is_selected, is_active, is_trapped);
+}
+
+export fn compute_edge_instance(
+  p0x: i32, p0y: i32, p3x: i32, p3y: i32,
+  is_selected: u32, is_active: u32, pulse_offset_permille: u32
+) -> unit {
+  let dx: i32 = bezier_control_dx(p0x, p3x);
+  let p1x: i32 = p0x + dx;
+  let p1y: i32 = p0y;
+  let p2x: i32 = p3x - dx;
+  let p2y: i32 = p3y;
+  gpu_write_edge_instance(p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, is_selected, is_active, pulse_offset_permille);
+}
+
+export fn compute_pin_instance(
+  px: i32, py: i32, is_hovered: u32, is_active: u32, is_output: u32
+) -> unit {
+  let mut radius: i32 = 6;
+  if is_hovered != 0 {
+    radius = 8;
+  }
+  gpu_write_pin_instance(px, py, radius, is_hovered, is_active, is_output);
+}
+
 export fn renderer_execute_frame(visible_nodes: u32, visible_edges: u32, visible_pins: u32) -> unit {
   gpu_render_begin();
   gpu_render_grid();
@@ -60,4 +112,24 @@ export fn renderer_execute_frame(visible_nodes: u32, visible_edges: u32, visible
     gpu_render_pins(visible_pins);
   }
   gpu_render_end();
+}
+
+export fn renderer_render_webgpu_frame(
+  visible_nodes: u32,
+  visible_edges: u32,
+  visible_pins: u32
+) -> unit {
+  gpu_upload_camera_buffer();
+
+  if visible_edges > 0 {
+    gpu_upload_edge_buffer(visible_edges);
+  }
+  if visible_nodes > 0 {
+    gpu_upload_node_buffer(visible_nodes);
+  }
+  if visible_pins > 0 {
+    gpu_upload_pin_buffer(visible_pins);
+  }
+
+  renderer_execute_frame(visible_nodes, visible_edges, visible_pins);
 }

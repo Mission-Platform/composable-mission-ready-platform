@@ -81,7 +81,33 @@ export interface FlintRenderWorkerWasmExports {
   readonly spatial_get_query_result: (index: number) => number;
   readonly spatial_hit_test_point: (px: number, py: number) => number;
   readonly spatial_hit_test_port: (px: number, py: number, snap_radius: number) => number;
+  readonly compute_node_instance: (
+    min_x: number,
+    min_y: number,
+    max_x: number,
+    max_y: number,
+    is_selected: number,
+    is_active: number,
+    is_trapped: number,
+  ) => void;
+  readonly compute_edge_instance: (
+    p0x: number,
+    p0y: number,
+    p3x: number,
+    p3y: number,
+    is_selected: number,
+    is_active: number,
+    pulse_offset_permille: number,
+  ) => void;
+  readonly compute_pin_instance: (
+    px: number,
+    py: number,
+    is_hovered: number,
+    is_active: number,
+    is_output: number,
+  ) => void;
   readonly renderer_execute_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
+  readonly renderer_render_webgpu_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
   readonly memory: WebAssembly.Memory;
 }
 

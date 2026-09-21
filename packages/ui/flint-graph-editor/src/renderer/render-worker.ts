@@ -86,7 +86,33 @@ export interface FlintRenderWorkerWasmExports {
   readonly spatial_get_query_result: (index: number) => number;
   readonly spatial_hit_test_point: (px: number, py: number) => number;
   readonly spatial_hit_test_port: (px: number, py: number, snap_radius: number) => number;
+  readonly compute_node_instance: (
+    min_x: number,
+    min_y: number,
+    max_x: number,
+    max_y: number,
+    is_selected: number,
+    is_active: number,
+    is_trapped: number,
+  ) => void;
+  readonly compute_edge_instance: (
+    p0x: number,
+    p0y: number,
+    p3x: number,
+    p3y: number,
+    is_selected: number,
+    is_active: number,
+    pulse_offset_permille: number,
+  ) => void;
+  readonly compute_pin_instance: (
+    px: number,
+    py: number,
+    is_hovered: number,
+    is_active: number,
+    is_output: number,
+  ) => void;
   readonly renderer_execute_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
+  readonly renderer_render_webgpu_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
   readonly memory: WebAssembly.Memory;
 }
 
@@ -224,12 +250,19 @@ export function getFlintRenderWorkerWasm(imports?: WebAssembly.Imports): FlintRe
   }
   if (cachedFlintWasm === undefined) {
     const defaultCapabilities: WebAssembly.Imports = {
+      'webgpu.upload_camera_buffer': { gpu_upload_camera_buffer: () => {} },
+      'webgpu.upload_node_buffer': { gpu_upload_node_buffer: () => {} },
+      'webgpu.upload_edge_buffer': { gpu_upload_edge_buffer: () => {} },
+      'webgpu.upload_pin_buffer': { gpu_upload_pin_buffer: () => {} },
       'webgpu.render_begin': { gpu_render_begin: () => {} },
       'webgpu.render_grid': { gpu_render_grid: () => {} },
       'webgpu.render_edges': { gpu_render_edges: () => {} },
       'webgpu.render_nodes': { gpu_render_nodes: () => {} },
       'webgpu.render_pins': { gpu_render_pins: () => {} },
       'webgpu.render_end': { gpu_render_end: () => {} },
+      'webgpu.write_node_instance': { gpu_write_node_instance: () => {} },
+      'webgpu.write_edge_instance': { gpu_write_edge_instance: () => {} },
+      'webgpu.write_pin_instance': { gpu_write_pin_instance: () => {} },
     };
     cachedFlintWasm = loadSync(defaultCapabilities);
   }
@@ -642,6 +675,10 @@ export class FlintRenderEngine {
   private cameraBindGroup?: GPUBindGroup;
   private nodeInstanceBuffer?: GPUBuffer;
   private edgeInstanceBuffer?: GPUBuffer;
+  private pinInstanceBuffer?: GPUBuffer;
+  private nodeInstanceFloats: number[] = [];
+  private edgeInstanceFloats: number[] = [];
+  private pinInstanceFloats: number[] = [];
 
   private currentPassEncoder?: GPURenderPassEncoder;
   private currentCommandEncoder?: GPUCommandEncoder;
@@ -657,6 +694,207 @@ export class FlintRenderEngine {
 
   private initFlintWasm(): void {
     const capabilities: WebAssembly.Imports = {
+      'webgpu.upload_camera_buffer': {
+        gpu_upload_camera_buffer: () => {
+          if (!this.gpuContext || !this.cameraBuffer) return;
+          const vpMatrix = createViewProjectionMatrix(this.camera);
+          const cameraUniforms = new Float32Array(24);
+          cameraUniforms.set(vpMatrix, 0);
+          cameraUniforms[16] = this.camera.viewportWidth;
+          cameraUniforms[17] = this.camera.viewportHeight;
+          cameraUniforms[18] = this.camera.x;
+          cameraUniforms[19] = this.camera.y;
+          cameraUniforms[20] = this.camera.zoom;
+          cameraUniforms[21] = 1;
+          this.gpuContext.queue.writeBuffer(this.cameraBuffer, 0, cameraUniforms);
+        },
+      },
+      'webgpu.write_node_instance': {
+        gpu_write_node_instance: (
+          posX: number,
+          posY: number,
+          width: number,
+          height: number,
+          radius: number,
+          isSelected: number,
+          isActive: number,
+          isTrapped: number,
+        ) => {
+          const glowR = isTrapped ? 0.95 : isActive ? 0.15 : 0;
+          const glowG = isTrapped ? 0.15 : isActive ? 0.75 : 0;
+          const glowB = isTrapped ? 0.2 : isActive ? 1 : 0;
+          const glowA = isTrapped ? 0.9 : isActive ? 0.8 : isSelected ? 0.5 : 0;
+
+          const fillR = 0.14;
+          const fillG = 0.16;
+          const fillB = 0.22;
+          const fillA = 0.95;
+
+          const borderR = isSelected ? 0.35 : 0.28;
+          const borderG = isSelected ? 0.65 : 0.32;
+          const borderB = isSelected ? 1 : 0.42;
+          const borderA = isSelected ? 1 : 0.7;
+          const borderWidth = isSelected ? 2.5 : 1.2;
+
+          this.nodeInstanceFloats.push(
+            posX,
+            posY,
+            width,
+            height,
+            radius,
+            fillR,
+            fillG,
+            fillB,
+            fillA,
+            borderR,
+            borderG,
+            borderB,
+            borderA,
+            borderWidth,
+            glowR,
+            glowG,
+            glowB,
+            glowA,
+          );
+        },
+      },
+      'webgpu.write_edge_instance': {
+        gpu_write_edge_instance: (
+          p0x: number,
+          p0y: number,
+          p1x: number,
+          p1y: number,
+          p2x: number,
+          p2y: number,
+          p3x: number,
+          p3y: number,
+          isSelected: number,
+          isActive: number,
+          pulseOffsetPermille: number,
+        ) => {
+          const colorR = isSelected ? 0.35 : isActive ? 0.2 : 0.45;
+          const colorG = isSelected ? 0.65 : isActive ? 0.8 : 0.52;
+          const colorB = isSelected ? 1 : isActive ? 1 : 0.65;
+          const colorA = isSelected ? 1 : isActive ? 0.9 : 0.8;
+          const width = isSelected ? 3 : 2.5;
+
+          this.edgeInstanceFloats.push(
+            p0x,
+            p0y,
+            p1x,
+            p1y,
+            p2x,
+            p2y,
+            p3x,
+            p3y,
+            colorR,
+            colorG,
+            colorB,
+            colorA,
+            width,
+            pulseOffsetPermille / 1000,
+            isActive,
+          );
+        },
+      },
+      'webgpu.write_pin_instance': {
+        gpu_write_pin_instance: (
+          posX: number,
+          posY: number,
+          radius: number,
+          isHovered: number,
+          isActive: number,
+          _isOutput: number,
+        ) => {
+          const fillR = isHovered ? 0 : isActive ? 0 : 0.15;
+          const fillG = isHovered ? 0.94 : isActive ? 1 : 0.2;
+          const fillB = isHovered ? 1 : isActive ? 0.53 : 0.28;
+          const fillA = 1;
+
+          const borderR = 0.45;
+          const borderG = 0.52;
+          const borderB = 0.65;
+          const borderA = 0.8;
+          const borderWidth = isHovered ? 2.5 : 1.5;
+
+          const glowR = isHovered ? 0 : isActive ? 0 : 0;
+          const glowG = isHovered ? 0.94 : isActive ? 1 : 0;
+          const glowB = isHovered ? 1 : isActive ? 0.53 : 0;
+          const glowA = isHovered ? 0.8 : isActive ? 0.6 : 0;
+
+          this.pinInstanceFloats.push(
+            posX,
+            posY,
+            radius * 2,
+            radius * 2,
+            radius,
+            fillR,
+            fillG,
+            fillB,
+            fillA,
+            borderR,
+            borderG,
+            borderB,
+            borderA,
+            borderWidth,
+            glowR,
+            glowG,
+            glowB,
+            glowA,
+          );
+        },
+      },
+      'webgpu.upload_node_buffer': {
+        gpu_upload_node_buffer: () => {
+          if (!this.gpuContext) return;
+          const { device, queue } = this.gpuContext;
+          if (this.nodeInstanceFloats.length > 0) {
+            const nodeData = new Float32Array(this.nodeInstanceFloats);
+            if (!this.nodeInstanceBuffer || this.nodeInstanceBuffer.size < nodeData.byteLength) {
+              this.nodeInstanceBuffer?.destroy();
+              this.nodeInstanceBuffer = device.createBuffer({
+                size: Math.max(nodeData.byteLength, 1024),
+                usage: 0x00_20 | 0x00_08,
+              });
+            }
+            queue.writeBuffer(this.nodeInstanceBuffer, 0, nodeData);
+          }
+        },
+      },
+      'webgpu.upload_edge_buffer': {
+        gpu_upload_edge_buffer: () => {
+          if (!this.gpuContext) return;
+          const { device, queue } = this.gpuContext;
+          if (this.edgeInstanceFloats.length > 0) {
+            const edgeData = new Float32Array(this.edgeInstanceFloats);
+            if (!this.edgeInstanceBuffer || this.edgeInstanceBuffer.size < edgeData.byteLength) {
+              this.edgeInstanceBuffer?.destroy();
+              this.edgeInstanceBuffer = device.createBuffer({
+                size: Math.max(edgeData.byteLength, 1024),
+                usage: 0x00_20 | 0x00_08,
+              });
+            }
+            queue.writeBuffer(this.edgeInstanceBuffer, 0, edgeData);
+          }
+        },
+      },
+      'webgpu.upload_pin_buffer': {
+        gpu_upload_pin_buffer: () => {
+          if (!this.gpuContext) return;
+          const { device, queue } = this.gpuContext;
+          if (this.pinInstanceFloats.length > 0) {
+            const pinData = new Float32Array(this.pinInstanceFloats);
+            if (!this.pinInstanceBuffer || this.pinInstanceBuffer.size < pinData.byteLength) {
+              this.pinInstanceBuffer?.destroy();
+              this.pinInstanceBuffer = device.createBuffer({
+                size: Math.max(pinData.byteLength, 1024),
+                usage: 0x00_20 | 0x00_08,
+              });
+            }
+            queue.writeBuffer(this.pinInstanceBuffer, 0, pinData);
+          }
+        },
+      },
       'webgpu.render_begin': { gpu_render_begin: () => this.gpuBeginPass() },
       'webgpu.render_grid': { gpu_render_grid: () => this.gpuDrawGrid() },
       'webgpu.render_edges': {
@@ -665,7 +903,9 @@ export class FlintRenderEngine {
       'webgpu.render_nodes': {
         gpu_render_nodes: (count: number) => this.gpuDrawNodes(count),
       },
-      'webgpu.render_pins': { gpu_render_pins: () => {} },
+      'webgpu.render_pins': {
+        gpu_render_pins: (count: number) => this.gpuDrawPins(count),
+      },
       'webgpu.render_end': { gpu_render_end: () => this.gpuEndPass() },
     };
     try {
@@ -710,6 +950,7 @@ export class FlintRenderEngine {
   destroy(): void {
     this.nodeInstanceBuffer?.destroy();
     this.edgeInstanceBuffer?.destroy();
+    this.pinInstanceBuffer?.destroy();
     this.cameraBuffer?.destroy();
   }
 
@@ -1020,88 +1261,37 @@ export class FlintRenderEngine {
 
   private renderWebGpuFrame(): void {
     if (!this.gpuContext || !this.cameraBuffer) return;
-    const { device, queue } = this.gpuContext;
+    const wasm = this.flintWasmInstance ?? getFlintRenderWorkerWasm();
 
-    const vpMatrix = createViewProjectionMatrix(this.camera);
-    const cameraUniforms = new Float32Array(24);
-    cameraUniforms.set(vpMatrix, 0);
-    cameraUniforms[16] = this.camera.viewportWidth;
-    cameraUniforms[17] = this.camera.viewportHeight;
-    cameraUniforms[18] = this.camera.x;
-    cameraUniforms[19] = this.camera.y;
-    cameraUniforms[20] = this.camera.zoom;
-    cameraUniforms[21] = 1;
-    queue.writeBuffer(this.cameraBuffer, 0, cameraUniforms);
+    this.nodeInstanceFloats = [];
+    this.edgeInstanceFloats = [];
+    this.pinInstanceFloats = [];
 
     const visibleBounds = getViewportBounds(this.camera, 200);
     const visibleNodeIds = new Set(this.spatialIndex.queryBox(visibleBounds));
     const visibleNodes = this.nodes.filter((n) => visibleNodeIds.has(n.id));
 
-    const nodeInstanceFloats: number[] = [];
     for (const node of visibleNodes) {
       const bounds = getNodeBounds(node);
-      const width = bounds.maxX - bounds.minX;
-      const height = bounds.maxY - bounds.minY;
-      const posX = bounds.minX + width / 2;
-      const posY = bounds.minY + height / 2;
+      const isSelected = this.selectedNodeIds.has(node.id) ? 1 : 0;
+      const isActive = this.activeNodeIds.has(node.id) ? 1 : 0;
+      const isTrapped = this.trappedNodeId === node.id ? 1 : 0;
 
-      const isSelected = this.selectedNodeIds.has(node.id);
-      const isActive = this.activeNodeIds.has(node.id);
-      const isTrapped = this.trappedNodeId === node.id;
+      wasm.compute_node_instance(bounds.minX, bounds.minY, bounds.maxX, bounds.maxY, isSelected, isActive, isTrapped);
 
-      const glowR = isTrapped ? 0.95 : isActive ? 0.15 : 0;
-      const glowG = isTrapped ? 0.15 : isActive ? 0.75 : 0;
-      const glowB = isTrapped ? 0.2 : isActive ? 1 : 0;
-      const glowA = isTrapped ? 0.9 : isActive ? 0.8 : isSelected ? 0.5 : 0;
-
-      const fillR = 0.14;
-      const fillG = 0.16;
-      const fillB = 0.22;
-      const fillA = 0.95;
-
-      const borderR = isSelected ? 0.35 : 0.28;
-      const borderG = isSelected ? 0.65 : 0.32;
-      const borderB = isSelected ? 1 : 0.42;
-      const borderA = isSelected ? 1 : 0.7;
-      const borderWidth = isSelected ? 2.5 : 1.2;
-
-      nodeInstanceFloats.push(
-        posX,
-        posY,
-        width,
-        height,
-        8,
-        fillR,
-        fillG,
-        fillB,
-        fillA,
-        borderR,
-        borderG,
-        borderB,
-        borderA,
-        borderWidth,
-        glowR,
-        glowG,
-        glowB,
-        glowA,
-      );
-    }
-
-    if (nodeInstanceFloats.length > 0) {
-      const nodeData = new Float32Array(nodeInstanceFloats);
-      if (!this.nodeInstanceBuffer || this.nodeInstanceBuffer.size < nodeData.byteLength) {
-        this.nodeInstanceBuffer?.destroy();
-        this.nodeInstanceBuffer = device.createBuffer({
-          size: Math.max(nodeData.byteLength, 1024),
-          usage: 0x00_20 | 0x00_08, // GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST
-        });
+      for (const [idx, port] of node.inputs.entries()) {
+        const py = node.position.y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
+        const isHovered = this.hoveredPort?.nodeId === node.id && this.hoveredPort?.portId === port.id ? 1 : 0;
+        wasm.compute_pin_instance(node.position.x, py, isHovered, 0, 0);
       }
-      queue.writeBuffer(this.nodeInstanceBuffer, 0, nodeData);
+      for (const [idx, port] of node.outputs.entries()) {
+        const py = node.position.y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
+        const isHovered = this.hoveredPort?.nodeId === node.id && this.hoveredPort?.portId === port.id ? 1 : 0;
+        wasm.compute_pin_instance(node.position.x + NODE_WIDTH, py, isHovered, 0, 1);
+      }
     }
 
     const nodeMap = new Map<string, FlintGraphNode>(this.nodes.map((n) => [n.id, n]));
-    const edgeInstanceFloats: number[] = [];
-
     for (const edge of this.edges) {
       const fromNode = nodeMap.get(edge.fromNodeId);
       const toNode = nodeMap.get(edge.toNodeId);
@@ -1121,53 +1311,33 @@ export class FlintRenderEngine {
       const p3x = toNode.position.x;
       const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIndex * PORT_ROW_HEIGHT + 14;
 
-      const wasm = getFlintRenderWorkerWasm();
-      const dx = wasm.bezier_control_dx(Math.round(p0x), Math.round(p3x));
-      const p1x = p0x + dx;
-      const p1y = p0y;
-      const p2x = p3x - dx;
-      const p2y = p3y;
-
+      const isSelected = this.selectedEdgeIds.has(edge.id) ? 1 : 0;
+      const isActive = this.edgePulses.has(edge.id) ? 1 : 0;
       const pulseOffset = this.edgePulses.get(edge.id) ?? 0;
-      const pulseActive = this.edgePulses.has(edge.id) ? 1 : 0;
 
-      edgeInstanceFloats.push(
-        p0x,
-        p0y,
-        p1x,
-        p1y,
-        p2x,
-        p2y,
-        p3x,
-        p3y,
-        0.45,
-        0.52,
-        0.65,
-        0.8,
-        2.5,
-        pulseOffset,
-        pulseActive,
-      );
+      wasm.compute_edge_instance(p0x, p0y, p3x, p3y, isSelected, isActive, Math.round(pulseOffset * 1000));
     }
 
-    if (edgeInstanceFloats.length > 0) {
-      const edgeData = new Float32Array(edgeInstanceFloats);
-      if (!this.edgeInstanceBuffer || this.edgeInstanceBuffer.size < edgeData.byteLength) {
-        this.edgeInstanceBuffer?.destroy();
-        this.edgeInstanceBuffer = device.createBuffer({
-          size: Math.max(edgeData.byteLength, 1024),
-          usage: 0x00_20 | 0x00_08,
-        });
+    if (this.connectingEdge) {
+      const fromNode = nodeMap.get(this.connectingEdge.fromNodeId);
+      if (fromNode) {
+        const outIdx = Math.max(
+          0,
+          fromNode.outputs.findIndex((p) => p.id === this.connectingEdge?.fromPortId),
+        );
+        const p0x = fromNode.position.x + NODE_WIDTH;
+        const p0y = fromNode.position.y + NODE_HEADER_HEIGHT + outIdx * PORT_ROW_HEIGHT + 14;
+        const p3x = this.connectingEdge.cursorX;
+        const p3y = this.connectingEdge.cursorY;
+        wasm.compute_edge_instance(p0x, p0y, p3x, p3y, 1, 1, 500);
       }
-      queue.writeBuffer(this.edgeInstanceBuffer, 0, edgeData);
     }
 
     this.currentVisibleNodesCount = visibleNodes.length;
-    this.currentVisibleEdgesCount = this.edges.length;
+    this.currentVisibleEdgesCount = Math.floor(this.edgeInstanceFloats.length / 15);
+    const visiblePinsCount = Math.floor(this.pinInstanceFloats.length / 18);
 
-    // Execute frame through Flint capabilities
-    const wasm = this.flintWasmInstance ?? getFlintRenderWorkerWasm();
-    wasm.renderer_execute_frame(this.currentVisibleNodesCount, this.currentVisibleEdgesCount, 0);
+    wasm.renderer_render_webgpu_frame(this.currentVisibleNodesCount, this.currentVisibleEdgesCount, visiblePinsCount);
   }
 
   private gpuBeginPass(): void {
@@ -1223,6 +1393,21 @@ export class FlintRenderEngine {
     this.currentPassEncoder.setPipeline(this.nodesPipeline);
     this.currentPassEncoder.setBindGroup(0, this.cameraBindGroup);
     this.currentPassEncoder.setVertexBuffer(0, this.nodeInstanceBuffer);
+    this.currentPassEncoder.draw(6, count, 0, 0);
+  }
+
+  private gpuDrawPins(count: number): void {
+    if (
+      !this.currentPassEncoder ||
+      !this.nodesPipeline ||
+      !this.cameraBindGroup ||
+      !this.pinInstanceBuffer ||
+      count === 0
+    )
+      return;
+    this.currentPassEncoder.setPipeline(this.nodesPipeline);
+    this.currentPassEncoder.setBindGroup(0, this.cameraBindGroup);
+    this.currentPassEncoder.setVertexBuffer(0, this.pinInstanceBuffer);
     this.currentPassEncoder.draw(6, count, 0, 0);
   }
 

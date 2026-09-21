@@ -292,4 +292,91 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     expect(cameraWasm.camera_pan_x(100, 50, 100)).toBe(50);
     expect(renderWasm.bezier_control_dx(0, 100)).toBe(50);
   });
+
+  it('computes WebGPU camera view-projection matrix elements and instances in Flint', () => {
+    let uploadedCamera = false;
+    let recordedNode: unknown;
+    let recordedEdge: unknown;
+    let recordedPin: unknown;
+    let uploadedEdgeCount = 0;
+    let renderedGrid = false;
+    let renderedNodesCount = 0;
+
+    const testWasm = getFlintRenderWorkerWasm({
+      'webgpu.upload_camera_buffer': {
+        gpu_upload_camera_buffer: () => {
+          uploadedCamera = true;
+        },
+      },
+      'webgpu.write_node_instance': {
+        gpu_write_node_instance: (cx: number, cy: number, w: number, h: number, radius: number, isSelected: number) => {
+          recordedNode = { cx, cy, w, h, radius, isSelected };
+        },
+      },
+      'webgpu.write_edge_instance': {
+        gpu_write_edge_instance: (
+          p0x: number,
+          p0y: number,
+          p1x: number,
+          p1y: number,
+          p2x: number,
+          p2y: number,
+          p3x: number,
+          p3y: number,
+        ) => {
+          recordedEdge = { p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y };
+        },
+      },
+      'webgpu.write_pin_instance': {
+        gpu_write_pin_instance: (px: number, py: number, radius: number) => {
+          recordedPin = { px, py, radius };
+        },
+      },
+      'webgpu.upload_node_buffer': { gpu_upload_node_buffer: () => {} },
+      'webgpu.upload_edge_buffer': {
+        gpu_upload_edge_buffer: (count: number) => {
+          uploadedEdgeCount = count;
+        },
+      },
+      'webgpu.upload_pin_buffer': { gpu_upload_pin_buffer: () => {} },
+      'webgpu.render_begin': { gpu_render_begin: () => {} },
+      'webgpu.render_grid': {
+        gpu_render_grid: () => {
+          renderedGrid = true;
+        },
+      },
+      'webgpu.render_edges': { gpu_render_edges: () => {} },
+      'webgpu.render_nodes': {
+        gpu_render_nodes: (count: number) => {
+          renderedNodesCount = count;
+        },
+      },
+      'webgpu.render_pins': { gpu_render_pins: () => {} },
+      'webgpu.render_end': { gpu_render_end: () => {} },
+    });
+
+    testWasm.compute_node_instance(0, 0, 220, 100, 1, 0, 0);
+    expect(recordedNode).toEqual({ cx: 110, cy: 50, w: 220, h: 100, radius: 8, isSelected: 1 });
+
+    testWasm.compute_edge_instance(220, 50, 400, 50, 1, 1, 500);
+    expect(recordedEdge).toEqual({
+      p0x: 220,
+      p0y: 50,
+      p1x: 310,
+      p1y: 50,
+      p2x: 310,
+      p2y: 50,
+      p3x: 400,
+      p3y: 50,
+    });
+
+    testWasm.compute_pin_instance(220, 50, 1, 0, 1);
+    expect(recordedPin).toEqual({ px: 220, py: 50, radius: 8 });
+
+    testWasm.renderer_render_webgpu_frame(5, 3, 10);
+    expect(uploadedCamera).toBe(true);
+    expect(uploadedEdgeCount).toBe(3);
+    expect(renderedGrid).toBe(true);
+    expect(renderedNodesCount).toBe(5);
+  });
 });
