@@ -657,4 +657,40 @@ export function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfi
   });
 }
 
+export interface TsdownForgeTargetOptions extends TsdownLibraryOptions {
+  /**
+   * Component output directory relative to `rootDir`.
+   * Defaults to `'dist/components'`.
+   */
+  componentsOutDir?: string;
+}
+
+/**
+ * Build a tsdown config for the neutral Forge component target (`dist/components/**`).
+ * Defaults `outDir` to `'dist/components'` while preserving all {@link defineTsdownLibrary} features.
+ */
+export function defineTsdownForgeTarget(options: TsdownForgeTargetOptions): UserConfig {
+  const {
+    rootDir,
+    outDir: outDirectory = 'dist/components',
+    componentsOutDir: componentsOutDirectory = outDirectory,
+    dts = true,
+    clean = true,
+    overrides,
+    ...rest
+  } = options;
+
+  return defineTsdownLibrary({
+    ...rest,
+    rootDir,
+    outDir: componentsOutDirectory,
+    dts,
+    clean,
+    overrides: {
+      outDir: path.resolve(rootDir, componentsOutDirectory),
+      ...overrides,
+    },
+  });
+}
+
 export { type UserConfig } from 'tsdown';
