@@ -1,19 +1,19 @@
 import { encodeBarcode, encodeBarcodeAsync, type BarcodeSymbology } from '../encoder';
 
-import { load as loadBarcode, loadSync as loadBarcodeSync } from './barcode.fws';
-import { loadSync as loadCodabarSync, load as loadCodabar } from './codabar.fws';
-import { loadSync as loadCode128Sync, load as loadCode128 } from './code128.fws';
-import { loadSync as loadCode39Sync, load as loadCode39 } from './code39.fws';
-import { loadSync as loadCode93Sync, load as loadCode93 } from './code93.fws';
-import { load as loadDataBar, loadSync as loadDataBarSync } from './databar.fws';
-import { loadSync as loadItfSync, load as loadItf } from './itf.fws';
-import { loadSync as loadMsiSync, load as loadMsi } from './msi.fws';
-import { loadSync as loadPharmacodeSync, load as loadPharmacode } from './pharmacode.fws';
+import { load as loadBarcode, loadSync as loadBarcodeSync } from './barcode.flint';
+import { loadSync as loadCodabarSync, load as loadCodabar } from './codabar.flint';
+import { loadSync as loadCode128Sync, load as loadCode128 } from './code128.flint';
+import { loadSync as loadCode39Sync, load as loadCode39 } from './code39.flint';
+import { loadSync as loadCode93Sync, load as loadCode93 } from './code93.flint';
+import { load as loadDataBar, loadSync as loadDataBarSync } from './databar.flint';
+import { loadSync as loadItfSync, load as loadItf } from './itf.flint';
+import { loadSync as loadMsiSync, load as loadMsi } from './msi.flint';
+import { loadSync as loadPharmacodeSync, load as loadPharmacode } from './pharmacode.flint';
 
-import type { ForgeBarcodeExports } from './barcode.fws';
-import type { ForgeDataBarExports } from './databar.fws';
+import type { ForgeBarcodeExports } from './barcode.flint';
+import type { ForgeDataBarExports } from './databar.flint';
 
-/** Variable-length symbologies supported by the direct barcode FWS adapter. */
+/** Variable-length symbologies supported by the direct barcode Flint adapter. */
 export type VariableBarcodeSymbology = Extract<
   BarcodeSymbology,
   | 'code128'
@@ -83,14 +83,14 @@ const NATIVE_VARIABLE_ASYNC_ENCODERS: Record<NativeVariableBarcodeSymbology, (va
 };
 
 /**
- * Checks whether the given symbology is natively supported by dedicated FWS graphs.
+ * Checks whether the given symbology is natively supported by dedicated Flint graphs.
  */
 function isNativeVariableBarcode(symbology: VariableBarcodeSymbology): symbology is NativeVariableBarcodeSymbology {
   return symbology in NATIVE_VARIABLE_ENCODERS;
 }
 
 /**
- * Synchronously encodes a variable barcode using its dedicated native FWS graph.
+ * Synchronously encodes a variable barcode using its dedicated native Flint graph.
  */
 function encodeNativeVariableBarcode(symbology: NativeVariableBarcodeSymbology, value: string): string {
   const encoder = NATIVE_VARIABLE_ENCODERS[symbology];
@@ -101,7 +101,7 @@ function encodeNativeVariableBarcode(symbology: NativeVariableBarcodeSymbology, 
 }
 
 /**
- * Asynchronously encodes a variable barcode using its dedicated native FWS graph.
+ * Asynchronously encodes a variable barcode using its dedicated native Flint graph.
  */
 async function encodeNativeVariableBarcodeAsync(
   symbology: NativeVariableBarcodeSymbology,
@@ -114,7 +114,7 @@ async function encodeNativeVariableBarcodeAsync(
   return assertEncoded(await encoder(value), symbology);
 }
 
-/** Encodes a supported variable-length barcode through its native FWS graph when available. */
+/** Encodes a supported variable-length barcode through its native Flint graph when available. */
 export function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string {
   if (isNativeVariableBarcode(symbology)) {
     return encodeNativeVariableBarcode(symbology, value);
@@ -122,7 +122,7 @@ export function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, va
   return encodeBarcode(symbology, value).modules.join('');
 }
 
-/** Asynchronously encodes a supported variable-length barcode through FWS. */
+/** Asynchronously encodes a supported variable-length barcode through Flint. */
 export async function encodeVariableBarcodeFwsAsync(
   symbology: VariableBarcodeSymbology,
   value: string,
@@ -153,42 +153,42 @@ function validateDataBarWith(wasm: ForgeDataBarExports, value: string): boolean 
   return Boolean(wasm.validate_databar_gtin(value));
 }
 
-/** Encodes a seven-digit EAN-8 payload and computes its check digit in FWS. */
+/** Encodes a seven-digit EAN-8 payload and computes its check digit in Flint. */
 export function encodeEan8Fws(value: string): string {
   return encodeEan8With(loadBarcodeSync(), value);
 }
 
-/** Asynchronously encodes a seven-digit EAN-8 payload with the FWS loader. */
+/** Asynchronously encodes a seven-digit EAN-8 payload with the Flint loader. */
 export async function encodeEan8FwsAsync(value: string): Promise<string> {
   return encodeEan8With(await loadBarcode(), value);
 }
 
-/** Encodes a twelve-digit EAN-13 payload and computes its check digit in FWS. */
+/** Encodes a twelve-digit EAN-13 payload and computes its check digit in Flint. */
 export function encodeEan13Fws(value: string): string {
   return encodeEan13With(loadBarcodeSync(), value);
 }
 
-/** Asynchronously encodes a twelve-digit EAN-13 payload with the FWS loader. */
+/** Asynchronously encodes a twelve-digit EAN-13 payload with the Flint loader. */
 export async function encodeEan13FwsAsync(value: string): Promise<string> {
   return encodeEan13With(await loadBarcode(), value);
 }
 
-/** Encodes a UPC-A payload through the zero-prefixed EAN-13 FWS graph. */
+/** Encodes a UPC-A payload through the zero-prefixed EAN-13 Flint graph. */
 export function encodeUpcaFws(value: string): string {
   return encodeUpcaWith(loadBarcodeSync(), value);
 }
 
-/** Asynchronously encodes a UPC-A payload through FWS. */
+/** Asynchronously encodes a UPC-A payload through Flint. */
 export async function encodeUpcaFwsAsync(value: string): Promise<string> {
   return encodeUpcaWith(await loadBarcode(), value);
 }
 
-/** Validates a GS1 DataBar/RSS-14 GTIN-14 value in the package-local FWS graph. */
+/** Validates a GS1 DataBar/RSS-14 GTIN-14 value in the package-local Flint graph. */
 export function validateGs1DataBarValue(value: string): boolean {
   return validateDataBarWith(loadDataBarSync(), value);
 }
 
-/** Asynchronously validates a GS1 DataBar/RSS-14 GTIN-14 value through FWS. */
+/** Asynchronously validates a GS1 DataBar/RSS-14 GTIN-14 value through Flint. */
 export async function validateGs1DataBarValueAsync(value: string): Promise<boolean> {
   return validateDataBarWith(await loadDataBar(), value);
 }

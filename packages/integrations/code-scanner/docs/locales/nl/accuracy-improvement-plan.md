@@ -6,7 +6,7 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 > Taal: Nederlands (nl)
 
 Een plan om de leessnelheid van `@mission-platform/code-scanner` te verhogen op opnamen uit de echte wereld (uploads en live camerabeelden
-frames) en om de scanpijplijn binnen één statisch gekoppeld Forge Web Script/WebAssembly-artefact te houden.
+frames) en om de scanpijplijn binnen één statisch gekoppeld Flint/WebAssembly-artefact te houden.
 
 > **Huidige implementatie:** De scanner wordt geleverd als statisch gekoppelde scanner
 > Maak een webscriptgrafiek onder `src/fws`, met een dynamisch bronmoduleprofiel
@@ -28,7 +28,7 @@ De oorspronkelijke implementatie splitste de pijplijn:
   heeft een **gelabelde buffer** `[format, ...payload]` geretourneerd — deze heeft **niet** gedecodeerd.
 - **Decode** draaide in JavaScript en riep afzonderlijke decodermodules aan.
 
-Fase 1 verving dat door een enkele FWS `scan_and_decode`-oproep (zie §1); de
+Fase 1 verving dat door een enkele Flint `scan_and_decode`-oproep (zie §1); de
 historische motivatie hieronder wordt als grondgedachte aangehouden, terwijl de huidige bron van
 De waarheid is de FWS-grafiek en de bijbehorende Vitest-conformiteitssuite.
 
@@ -40,7 +40,7 @@ Vóór fase 1 was een enkele scan:
 image (JS)
   → wasm code-scan.scan()            [Rust: binarise + locate + sample]
   → tagged module buffer (JS)        [cross back into JS]
-  → scanner-owned FWS decoder graph   [decode inside the scanner artifact]
+  → scanner-owned Flint decoder graph   [decode inside the scanner artifact]
   → payload string (JS)
 ```
 
@@ -63,16 +63,16 @@ de kabelzoeker en de decoder kunnen niet samenwerken:
 ### Doelarchitectuur: één FWS-oproep, beeld erin, payload eruit
 
 > **Status: geïmplementeerd.** De scanner exporteert `scan_and_decode`, koppelt de
-> decoder FWS maakt rechtstreeks grafieken, en de JS-façade decodeert via die single
+> decoder Flint maakt rechtstreeks grafieken, en de JS-façade decodeert via die single
 > bellen. In de onderstaande details wordt de reden voor de migratie vastgelegd.
 
 ```
 image (JS)
-  → FWS scanner.scan_and_decode()      [binarise + locate + sample + decode]
+  → Flint scanner.scan_and_decode()      [binarise + locate + sample + decode]
   → ScanOutcome { format, value } (JS)
 ```
 
-`scan_and_decode(width, height, luma) -> Option<ScanOutcome>` voert de hele pijplijn uit binnen `src/fws/scanner.fws` en
+`scan_and_decode(width, height, luma) -> Option<ScanOutcome>` voert de hele pijplijn uit binnen `src/fws/scanner.flint` en
 retourneert de **gedecodeerde payload** rechtstreeks (`value` is leeg als een symbool zich bevindt maar niet kan worden gedecodeerd). De JS-gevel
 (`scanner/index.ts`) is een dunne verzamellaag die de QR-, matrix- en barcode-FWS-bronnen tijdens het bouwen met elkaar verbindt;
 die pakketten blijven onafhankelijk publiceerbaar.
@@ -394,7 +394,7 @@ originele vier formaten. Met deze stap worden de nieuwe symbologieën tijdens ru
   `5 → 'databar'`, `6 → 'maxicode'` en de `ScanFormat`-vereniging in `src/types.ts`
   krijgt dezelfde drie namen — dus `scanImageData` / `scanImageDataAsync` (en de
   `*All` / ROI-varianten) retourneert ze zoals elk ander formaat.
-- **Het FWS-artefact van de scanner is gebouwd** van `src/fws/scanner.fws` door de Forge Web Script Vite-plug-in. Het statische profiel
+- **Het FWS-artefact van de scanner is gebouwd** van `src/fws/scanner.flint` door de Flint Vite-plug-in. Het statische profiel
   koppelt de decodergrafieken tot één op zichzelf staand artefact, maakt WebAssembly SIMD mogelijk en past agressieve linktijd toe
   optimalisatie; het dynamische profiel behoudt expliciete grenzen van de decodermodule en cachet exportverzending.
 - **De FWS-grafiek- en gevelsuites** (`src/fws/scanner-graph.spec.ts` en

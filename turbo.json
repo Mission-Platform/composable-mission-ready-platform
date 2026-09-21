@@ -198,7 +198,7 @@
       ]
     },
     "docs:generate": {
-      "dependsOn": ["@mission-platform/forge-web-script#build"],
+      "dependsOn": ["@mission-platform/flint#build"],
       "inputs": [
         "$TURBO_ROOT$/scripts/extract-package-docs.ts",
         "$TURBO_ROOT$/packages/**",

@@ -637,6 +637,21 @@ const config = [
       'sonarjs/concise-regex': 'off',
     },
   },
+  // ── DeepSource analyzer overrides ──────────────────────────────────────────
+  // DeepSource JavaScript analyzer honors rules explicitly disabled in the
+  // ESLint configuration. Compilers, parsers, and AST visitors in this monorepo
+  // have high cyclomatic complexity (JS-R1005) by design, and internal helper
+  // functions do not require redundant JSDocs (JS-D1001). Switching them off here
+  // ensures analyzer alignment with the repository conventions without modifying
+  // .deepsource.toml.
+  {
+    name: 'mission-platform/deepsource-analyzer-overrides',
+    rules: {
+      complexity: 'off',
+      'require-jsdoc': 'off',
+      'valid-jsdoc': 'off',
+    },
+  },
   // ── turbo ─────────────────────────────────────────────────────────────────
   // Flag usage of environment variables that have not been declared in
   // `turbo.json` (`globalEnv` / per-task `env`), which would otherwise silently

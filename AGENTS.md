@@ -91,9 +91,9 @@ All LSP server definitions in `agent-lsp.json` must be portable:
 - Use relative executable invocations: `["pnpm", "exec", "<server>", "--stdio"]` or `["pnpm", "--dir", "relative/path", ...]`.
 - The MCP LSP server automatically executes language server processes within the detected repository or worktree root.
 
-### Forge Web Script and scanner validation
+### Flint and scanner validation
 
-- Treat Forge Web Script LSP diagnostics as source-level feedback only; they do not prove that a linked multi-module graph emits valid Wasm or that its runtime ABI executes correctly.
+- Treat Flint LSP diagnostics as source-level feedback only; they do not prove that a linked multi-module graph emits valid Wasm or that its runtime ABI executes correctly.
 - For scanner graph changes, run the focused graph suite, package `build:check`, and the package Vitest suite; record artifact-emission failures separately from source diagnostics.
 - Passing a fixture or reduced decoder path does not establish full ZXing parity. Mark unsupported modes, format subsets, metadata, retries, and public-contract migrations explicitly in the plan and pull request.
 - When static linking fails, capture the graph module/edge counts, emitter diagnostic, and the smallest isolated reproducer before changing algorithm code or weakening tests.

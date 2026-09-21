@@ -46,7 +46,7 @@ reported until the upstream black-box/golden corpus is imported.
   Aztec, clean single-symbol PDF417, reduced MaxiCode modes 4/5, and the
   linear/RSS formats listed in `ScanFormat`.
 - QR decoder fixtures are retained by `qr-graph.spec.ts`, but the QR decoder
-  cannot currently be linked into `scanner.fws` because Forge Web Script emits
+  cannot currently be linked into `scanner.fws` because Flint emits
   invalid Wasm (`FWS-EMIT-001`) once the decoder graph is present.
 - Full ZXing black-box/golden import, detector parity, binary result metadata,
   and per-format read-rate baselines remain follow-up work; local fixtures are
@@ -67,7 +67,7 @@ they are used as release conformance gates.
   multi-symbol scenarios that require unavailable combined-reader behavior.
 - Package `build:check`, ESLint, Stylelint, Prettier, and all Forge framework
   and Storyblok builds passed on 2026-09-12.
-- Strict FWS source analysis and the complete ZXing black-box/golden corpus are
+- Strict Flint source analysis and the complete ZXing black-box/golden corpus are
   not release gates yet: standalone directory analysis cannot resolve the
   product graph's imported symbols, no corpus files are redistributed, and the
   current all-results entry remains a single-result compatibility path.

@@ -54,7 +54,7 @@ Symbologies de codes-barres linéaires prises en charge.
 function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
 ```
 
-Encodez `data` dans un code-barres linéaire à l’aide du graphique FWS local du package.
+Encodez `data` dans un code-barres linéaire à l’aide du graphique Flint local du package.
 
 #### Paramètres
 
@@ -75,7 +75,7 @@ Encodez `data` dans un code-barres linéaire à l’aide du graphique FWS local 
 function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>;
 ```
 
-Encodez `data` de manière asynchrone à l’aide du graphique FWS local du package.
+Encodez `data` de manière asynchrone à l’aide du graphique Flint local du package.
 
 #### Paramètres
 
@@ -182,7 +182,7 @@ Encode de manière asynchrone une charge utile EAN-8 à sept chiffres avec le ch
 function encodeUpcaFws(value: string): string;
 ```
 
-Encode une charge utile UPC-A via le graphique FWS EAN-13 avec préfixe zéro.
+Encode une charge utile UPC-A via le graphique Flint EAN-13 avec préfixe zéro.
 
 #### Paramètres
 
@@ -214,7 +214,7 @@ Encode de manière asynchrone une charge utile UPC-A via FWS.
 function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string;
 ```
 
-Encode un code-barres de longueur variable pris en charge via son graphique FWS natif lorsqu'il est disponible.
+Encode un code-barres de longueur variable pris en charge via son graphique Flint natif lorsqu'il est disponible.
 
 #### Paramètres
 
@@ -248,7 +248,7 @@ Encode de manière asynchrone un code-barres de longueur variable pris en charge
 function validateGs1DataBarValue(value: string): boolean;
 ```
 
-Valide une valeur GS1 DataBar/RSS-14 GTIN-14 dans le graphique FWS local du package.
+Valide une valeur GS1 DataBar/RSS-14 GTIN-14 dans le graphique Flint local du package.
 
 #### Paramètres
 
@@ -293,4 +293,4 @@ export type VariableBarcodeSymbology = Extract<
 >;
 ```
 
-Symbologies de longueur variable prises en charge par l'adaptateur FWS de code-barres direct.
+Symbologies de longueur variable prises en charge par l'adaptateur Flint de code-barres direct.

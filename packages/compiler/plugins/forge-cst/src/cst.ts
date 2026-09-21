@@ -7,34 +7,6 @@ export interface ParseCstOptions extends ParserOptions {
   readonly fileName?: string;
 }
 
-const EXTENSION_LANGUAGE_MAP: readonly (readonly [
-  string,
-  NonNullable<ParserOptions["lang"]>,
-])[] = [
-  [".d.ts", "dts"],
-  [".tsx", "tsx"],
-  [".ts", "ts"],
-  [".jsx", "jsx"],
-  [".js", "js"],
-  [".mjs", "js"],
-  [".cjs", "js"],
-];
-
-/**
- * Detects the language variant for OXC parser based on file extension.
- *
- * @param fileName - File name or path to inspect.
- * @returns The matching parser language identifier.
- */
-function detectSourceLanguage(
-  fileName: string,
-): NonNullable<ParserOptions["lang"]> {
-  const matched = EXTENSION_LANGUAGE_MAP.find(([extension]) =>
-    fileName.endsWith(extension),
-  );
-  return matched ? matched[1] : "tsx";
-}
-
 /**
  * Parse TypeScript/JavaScript/TSX source text into a Concrete Syntax Tree (CST)
  * with token positions, comments, and full AST metadata.
@@ -48,7 +20,24 @@ export function parseCst(
   const explicitOptions =
     typeof options === "object" && options !== null ? options : {};
 
-  const lang = explicitOptions.lang ?? detectSourceLanguage(fileName);
+  let lang = explicitOptions.lang;
+  if (!lang) {
+    if (fileName.endsWith(".d.ts")) {
+      lang = "dts";
+    } else if (fileName.endsWith(".ts")) {
+      lang = "ts";
+    } else if (
+      fileName.endsWith(".js") ||
+      fileName.endsWith(".mjs") ||
+      fileName.endsWith(".cjs")
+    ) {
+      lang = "js";
+    } else if (fileName.endsWith(".jsx")) {
+      lang = "jsx";
+    } else {
+      lang = "tsx";
+    }
+  }
 
   return parseSync(fileName, source, {
     lang,

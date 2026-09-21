@@ -71,7 +71,7 @@ A two-letter ISO 3166-1 region code, e.g. `"US"`, `"GB"`.
 
 ### country_code_for_region
 
-**Kind:** fws-export
+**Kind:** flint-export
 
 ```typescript
 export fn country_code_for_region(region: string) -> i32
@@ -92,7 +92,7 @@ Maps a supported region code to its international dialing country code.
 
 ### national_prefix
 
-**Kind:** fws-export
+**Kind:** flint-export
 
 ```typescript
 export fn national_prefix(region: string) -> string
@@ -113,7 +113,7 @@ Returns the national trunk prefix used when dialing within a region.
 
 ### region_for_country_code
 
-**Kind:** fws-export
+**Kind:** flint-export
 
 ```typescript
 export fn region_for_country_code(code: i32) -> string
@@ -134,7 +134,7 @@ Maps a country calling code to a representative ISO region.
 
 ### region_is
 
-**Kind:** fws-export
+**Kind:** flint-export
 
 ```typescript
 export fn region_is(region: string, expected: string) -> bool

@@ -70,7 +70,7 @@ pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
 Der `...` erstellt auch die für das Paket erforderlichen Forge-Abhängigkeiten. Die
-Der neutrale Codescanner wird aus seinem Forge Web Script-Diagramm kompiliert. das tut es nicht
+Der neutrale Codescanner wird aus seinem Flint-Diagramm kompiliert. das tut es nicht
 erfordern einen Rost oder `wasm-pack` Bauschritt.
 
 ## Entwicklungsworkflow

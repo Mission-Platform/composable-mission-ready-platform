@@ -54,7 +54,7 @@ export type BarcodeSymbology =
 function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
 ```
 
-使用包本地 FWS 图将 `data` 编码为线性条形码。
+使用包本地 Flint 图将 `data` 编码为线性条形码。
 
 #### 参数
 
@@ -75,7 +75,7 @@ function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
 function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>;
 ```
 
-使用包本地 FWS 图异步编码 `data`。
+使用包本地 Flint 图异步编码 `data`。
 
 #### 参数
 
@@ -118,7 +118,7 @@ function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<
 function encodeEan13Fws(value: string): string;
 ```
 
-对 12 位 EAN-13 有效负载进行编码并在 FWS 中计算其校验位。
+对 12 位 EAN-13 有效负载进行编码并在 Flint 中计算其校验位。
 
 #### 参数
 
@@ -134,7 +134,7 @@ function encodeEan13Fws(value: string): string;
 function encodeEan13FwsAsync(value: string): Promise<string>;
 ```
 
-使用 FWS 加载程序异步编码 12 位 EAN-13 有效负载。
+使用 Flint 加载程序异步编码 12 位 EAN-13 有效负载。
 
 #### 参数
 
@@ -150,7 +150,7 @@ function encodeEan13FwsAsync(value: string): Promise<string>;
 function encodeEan8Fws(value: string): string;
 ```
 
-对七位 EAN-8 有效负载进行编码并在 FWS 中计算其校验位。
+对七位 EAN-8 有效负载进行编码并在 Flint 中计算其校验位。
 
 #### 参数
 
@@ -166,7 +166,7 @@ function encodeEan8Fws(value: string): string;
 function encodeEan8FwsAsync(value: string): Promise<string>;
 ```
 
-使用 FWS 加载程序对七位 EAN-8 有效负载进行异步编码。
+使用 Flint 加载程序对七位 EAN-8 有效负载进行异步编码。
 
 #### 参数
 
@@ -182,7 +182,7 @@ function encodeEan8FwsAsync(value: string): Promise<string>;
 function encodeUpcaFws(value: string): string;
 ```
 
-通过零前缀 EAN-13 FWS 图对 UPC-A 有效负载进行编码。
+通过零前缀 EAN-13 Flint 图对 UPC-A 有效负载进行编码。
 
 #### 参数
 
@@ -198,7 +198,7 @@ function encodeUpcaFws(value: string): string;
 function encodeUpcaFwsAsync(value: string): Promise<string>;
 ```
 
-通过 FWS 异步编码 UPC-A 有效负载。
+通过 Flint 异步编码 UPC-A 有效负载。
 
 #### 参数
 
@@ -214,7 +214,7 @@ function encodeUpcaFwsAsync(value: string): Promise<string>;
 function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string;
 ```
 
-通过其本机 FWS 图表（如果可用）对受支持的可变长度条形码进行编码。
+通过其本机 Flint 图表（如果可用）对受支持的可变长度条形码进行编码。
 
 #### 参数
 
@@ -231,7 +231,7 @@ function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: st
 function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, value: string): Promise<string>;
 ```
 
-通过 FWS 对支持的可变长度条形码进行异步编码。
+通过 Flint 对支持的可变长度条形码进行异步编码。
 
 #### 参数
 
@@ -248,7 +248,7 @@ function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, valu
 function validateGs1DataBarValue(value: string): boolean;
 ```
 
-验证包本地 FWS 图中的 GS1 DataBar/RSS-14 GTIN-14 值。
+验证包本地 Flint 图中的 GS1 DataBar/RSS-14 GTIN-14 值。
 
 #### 参数
 
@@ -264,7 +264,7 @@ function validateGs1DataBarValue(value: string): boolean;
 function validateGs1DataBarValueAsync(value: string): Promise<boolean>;
 ```
 
-通过 FWS 异步验证 GS1 DataBar/RSS-14 GTIN-14 值。
+通过 Flint 异步验证 GS1 DataBar/RSS-14 GTIN-14 值。
 
 #### 参数
 
@@ -293,4 +293,4 @@ export type VariableBarcodeSymbology = Extract<
 >;
 ```
 
-直接条形码 FWS 适配器支持的可变长度符号体系。
+直接条形码 Flint 适配器支持的可变长度符号体系。

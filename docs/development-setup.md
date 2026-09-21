@@ -81,7 +81,7 @@ pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
 The `...` filter also builds the Forge dependencies required by the package. The
-neutral code scanner is compiled from its Forge Web Script graph; it does not
+neutral code scanner is compiled from its Flint graph; it does not
 require a Rust or `wasm-pack` build step.
 
 ## Development Workflow
@@ -161,7 +161,7 @@ pnpm install
 
 ### WASM Build Failures
 
-If a Forge Web Script artifact fails to build, inspect its compiler diagnostics
+If a Flint artifact fails to build, inspect its compiler diagnostics
 and verify the selected static or dynamic link profile. The
 `@mission-platform/hunspell` Emscripten build additionally requires Docker to
 be running.

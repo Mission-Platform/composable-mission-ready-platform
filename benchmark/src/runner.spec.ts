@@ -19,7 +19,7 @@ describe("benchmark execution pipeline", () => {
     expect(result.artifacts.length).toBeGreaterThanOrEqual(8);
     expect(
       result.artifacts.some(
-        (artifact) => artifact.fwsMode === "wasm-excluded-bounds",
+        (artifact) => artifact.flintMode === "wasm-excluded-bounds",
       ),
     ).toBe(true);
     expect(result.correctness).toHaveLength(9 * smallCases.length);

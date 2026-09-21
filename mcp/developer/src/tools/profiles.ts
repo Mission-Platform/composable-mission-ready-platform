@@ -5,7 +5,7 @@
  * the tools needed for the task at hand, reducing token overhead in the context window.
  */
 
-export type McpProfileName = 'full' | 'minimal' | 'core' | 'frontend' | 'coding' | 'lsp' | 'security' | 'git' | 'fws';
+export type McpProfileName = 'full' | 'minimal' | 'core' | 'frontend' | 'coding' | 'lsp' | 'security' | 'git' | 'flint';
 
 export interface McpProfileOptions {
   readonly profile?: string;
@@ -193,13 +193,13 @@ export const PROFILE_TOOLS: Record<Exclude<McpProfileName, 'full'>, readonly str
     'git_commit_plan',
     'git_commit_apply',
   ],
-  fws: [
-    'fws_analyze_source',
-    'fws_analyze_workspace',
-    'fws_inspect_manifest',
-    'fws_inspect_sonir',
-    'fws_verify_artifact',
-    'fws_run_trace',
+  flint: [
+    'flint_analyze_source',
+    'flint_analyze_workspace',
+    'flint_inspect_manifest',
+    'flint_inspect_sonir',
+    'flint_verify_artifact',
+    'flint_run_trace',
   ],
 };
 
@@ -212,7 +212,7 @@ const KNOWN_PROFILES = new Set<string>([
   'lsp',
   'security',
   'git',
-  'fws',
+  'flint',
   '*',
 ]);
 

@@ -141,16 +141,6 @@ export const MP_ROUTER_MODULE;
 
 The package whose imports are understood by the router compiler pass.
 
-### RouterBuildAdapters
-
-**Kind:** interface
-
-```typescript
-export interface RouterBuildAdapters
-```
-
-Build hooks owned by a router target; no router dependency is loaded by core.
-
 ### RouterCapability
 
 **Kind:** type

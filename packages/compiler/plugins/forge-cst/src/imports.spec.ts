@@ -279,7 +279,7 @@ import { useMpRouter } from '@fixture/router-runtime';
 
     expect(result.transformed).toBe(true);
     expect(result.code).toBe(
-      "import { Link as NavLink, useNavigate as useNav } from 'react-router-dom';\n",
+      `import { Link as NavLink, useNavigate as useNav } from 'react-router-dom';\n`,
     );
   });
 

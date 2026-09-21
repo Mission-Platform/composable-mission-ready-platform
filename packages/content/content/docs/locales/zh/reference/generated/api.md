@@ -818,69 +818,66 @@ export interface WysiwygEditorProperties
 
 没有提供描述。
 
-## `src/monaco/forge-web-script`
+## `src/monaco/flint`
 
-### AttachForgeWebScript摩纳哥
+### AttachFlint摩纳哥
 
 **种类：**功能
 
 ```typescript
-function attachForgeWebScriptMonaco(
+function attachFlintMonaco(
   editor: monaco.editor.IStandaloneCodeEditor,
   monacoRuntime: MonacoRuntime,
-  options: ForgeWebScriptMonacoOptions = {},
-): ForgeWebScriptMonacoHandle;
+  options: FlintMonacoOptions = {},
+): FlintMonacoHandle;
 ```
 
 将诊断、完成、悬停、模型同步和标记化附加到编辑器。
 
 #### 参数
 
-| 名称         | 类型                                | 描述                        |
-| ------------ | ----------------------------------- | --------------------------- |
-| 编辑         | 摩纳哥.editor.IStandaloneCodeEditor |                             |
-| 摩纳哥运行时 | 摩纳哥运行时                        |                             |
-| 选项         | ForgeWebScriptMonacoOptions         | ForgeWebScriptMonacoOptions | ForgeWebScriptMonacoOptions |
+| 名称         | 类型                                | 描述               |
+| ------------ | ----------------------------------- | ------------------ |
+| 编辑         | 摩纳哥.editor.IStandaloneCodeEditor |                    |
+| 摩纳哥运行时 | 摩纳哥运行时                        |                    |
+| 选项         | FlintMonacoOptions                  | FlintMonacoOptions | FlintMonacoOptions |
 
-### forgeWebScriptLanguageId
+### flintLanguageId
 
 **种类：**常数
 
 ```typescript
-export const forgeWebScriptLanguageId;
+export const flintLanguageId;
 ```
 
 没有提供描述。
 
-### ForgeWebScriptMonacoHandle
+### FlintMonacoHandle
 
 **种类：**接口
 
 ```typescript
-export interface ForgeWebScriptMonacoHandle
+export interface FlintMonacoHandle
 ```
 
 没有提供描述。
 
-### ForgeWebScriptMonacoOptions
+### FlintMonacoOptions
 
 **种类：**接口
 
 ```typescript
-export interface ForgeWebScriptMonacoOptions
+export interface FlintMonacoOptions
 ```
 
 没有提供描述。
 
-### 注册ForgeWebScriptLanguage
+### 注册FlintLanguage
 
 **种类：**功能
 
 ```typescript
-function registerForgeWebScriptLanguage(
-  monacoRuntime: MonacoRuntime,
-  languageId = forgeWebScriptLanguageId,
-): monaco.IDisposable;
+function registerFlintLanguage(monacoRuntime: MonacoRuntime, languageId = flintLanguageId): monaco.IDisposable;
 ```
 
 注册 Forge Web 脚本语言和词汇标记提供程序。

@@ -17,8 +17,8 @@ function value(value: unknown): string {
   return text(JSON.stringify(value));
 }
 
-function mode(measurement: { fwsMode?: string }): string {
-  return measurement.fwsMode ?? "-";
+function mode(measurement: { flintMode?: string }): string {
+  return measurement.flintMode ?? "-";
 }
 
 function measurementRows(report: BenchmarkReport): string {
@@ -55,11 +55,12 @@ function rankingRows(report: BenchmarkReport): string {
         ),
     )
     .toSorted(
-      (left, right) => left.statistics!.medianMs - right.statistics!.medianMs,
+      (left, right) =>
+        (left.statistics?.medianMs ?? 0) - (right.statistics?.medianMs ?? 0),
     )
     .map(
       (measurement, index) =>
-        `| ${index + 1} | ${text(measurement.workload)} | ${text(measurement.inputSize)} | ${text(measurement.implementation)} | ${mode(measurement)} | ${text(measurement.hostRuntime)} | ${measurement.statistics!.medianMs.toFixed(3)} | ${measurement.statistics!.throughputPerSecond.toFixed(2)} |`,
+        `| ${index + 1} | ${text(measurement.workload)} | ${text(measurement.inputSize)} | ${text(measurement.implementation)} | ${mode(measurement)} | ${text(measurement.hostRuntime)} | ${(measurement.statistics?.medianMs ?? 0).toFixed(3)} | ${(measurement.statistics?.throughputPerSecond ?? 0).toFixed(2)} |`,
     )
     .join("\n");
 }
@@ -155,7 +156,7 @@ export function renderMarkdown(report: BenchmarkReport): string {
   const performanceGates =
     report.performanceGates === undefined
       ? "No performance gate was requested."
-      : `Policy: maximum ratio ${report.performanceGates.policy.maxRatio.toFixed(2)}x; small-case timing floor ${report.performanceGates.policy.timingFloorMs.toFixed(3)} ms; overall status: **${report.performanceGates.failed ? "failed" : "passed"}**.\n\n| Case | Workload | Size | Implementation | Mode | Host | Status | FWS median (ms) | JavaScript median (ms) | Latency ratio | Throughput ratio | Floor (ms) | Explanation |\n| --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |\n${performanceGateRows(report.performanceGates.results)}`;
+      : `Policy: maximum ratio ${report.performanceGates.policy.maxRatio.toFixed(2)}x; small-case timing floor ${report.performanceGates.policy.timingFloorMs.toFixed(3)} ms; overall status: **${report.performanceGates.failed ? "failed" : "passed"}**.\n\n| Case | Workload | Size | Implementation | Mode | Host | Status | Flint median (ms) | JavaScript median (ms) | Latency ratio | Throughput ratio | Floor (ms) | Explanation |\n| --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |\n${performanceGateRows(report.performanceGates.results)}`;
   const javascriptPerformanceComparisons =
     report.performanceComparisons === undefined ||
     report.performanceComparisons.filter(
@@ -168,8 +169,8 @@ export function renderMarkdown(report: BenchmarkReport): string {
     report.performanceComparisons.filter(
       (comparison) => comparison.referenceKey.implementation !== "javascript",
     ).length === 0
-      ? "No generalized FWS performance comparisons were generated."
-      : `Each FWS execute row is compared with matching AssemblyScript/WASM and Rust/WASM rows on the same host runtime. Latency ratios above 1x are slower; throughput ratios above 1x are higher. Positive percentages indicate slower latency or higher throughput, respectively.\n\n| Case | Workload | Size | FWS mode | Host | Reference | FWS median (ms) | Reference median (ms) | Latency ratio | Latency Δ | FWS throughput/s | Reference throughput/s | Throughput ratio | Throughput Δ | Status | Explanation |\n| --- | --- | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- |\n${fwsPerformanceComparisonRows(report.performanceComparisons.filter((comparison) => comparison.referenceKey.implementation !== "javascript"))}`;
-  const comparisons = `${baselineComparisons}\n\n## JavaScript Performance Comparisons\n${javascriptPerformanceComparisons}\n\n## FWS Performance Comparisons\n${fwsPerformanceComparisons}\n\n## Performance Gates\n${performanceGates}`;
-  return `# Forge Web Script Benchmark\n\n- Generated: ${text(report.generatedAt)}\n- Schema: ${report.schemaVersion}\n- Corpus hash: ${text(report.corpusHash)}\n\n## Methodology\n\n- Warmup iterations: ${report.methodology.warmupIterations}\n- Sample iterations: ${report.methodology.sampleIterations}\n- Clock: ${report.methodology.clock}\n- Build, initialization, and execute phases are reported separately. Only correctness-passing execute measurements enter rankings.\n\n## Environment\n\n| Field | Value |\n| --- | --- |\n| Node | ${text(report.environment.nodeVersion ?? "unavailable")} |\n| Chromium | ${text(report.environment.browserVersion ?? "unavailable")} |\n| Platform | ${text(report.environment.platform)} |\n| Architecture | ${text(report.environment.architecture)} |\n| CPU | ${text(report.environment.cpuModel ?? "unavailable")} |\n| CPU count | ${report.environment.cpuCount ?? "unavailable"} |\n| Memory | ${report.environment.memoryBytes ?? "unavailable"} |\n| Command | ${text(report.environment.commandLine)} |\n\n## Artifacts\n\n| ID | Implementation | Mode | Kind | Bytes | Hash |\n| --- | --- | --- | --- | ---: | --- |\n${artifacts}\n\n## Rankings\n\nRankings are ordered by median execute latency and exclude failed, unsupported, or incorrect cases.\n\n| Rank | Workload | Size | Implementation | Mode | Host | Median ms | Throughput/s |\n| ---: | --- | --- | --- | --- | --- | ---: | ---: |\n${rankingRows(report) || "| - | - | - | - | - | - | - | - |"}\n\n## Measurements\n\n| Case | Workload | Size | Implementation | Mode | Host | Phase | Status | Median ms | P95 ms | Throughput/s |\n| --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: |\n${measurementRows(report) || "| - | - | - | - | - | - | - | - | - | - | - |"}\n\n## Correctness\n\n| Case | Implementation | Mode | Host | Status | Expected | Observed | Reason |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n${correctness === "None." ? "| - | - | - | - | - | - | - | - |" : correctness}\n\n## Failures\n\n${failures}\n\n## Baseline comparison\n\n${comparisons}\n`;
+      ? "No generalized Flint performance comparisons were generated."
+      : `Each Flint execute row is compared with matching AssemblyScript/WASM and Rust/WASM rows on the same host runtime. Latency ratios above 1x are slower; throughput ratios above 1x are higher. Positive percentages indicate slower latency or higher throughput, respectively.\n\n| Case | Workload | Size | Flint mode | Host | Reference | Flint median (ms) | Reference median (ms) | Latency ratio | Latency Δ | Flint throughput/s | Reference throughput/s | Throughput ratio | Throughput Δ | Status | Explanation |\n| --- | --- | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- |\n${fwsPerformanceComparisonRows(report.performanceComparisons.filter((comparison) => comparison.referenceKey.implementation !== "javascript"))}`;
+  const comparisons = `${baselineComparisons}\n\n## JavaScript Performance Comparisons\n${javascriptPerformanceComparisons}\n\n## Flint Performance Comparisons\n${fwsPerformanceComparisons}\n\n## Performance Gates\n${performanceGates}`;
+  return `# Flint Benchmark\n\n- Generated: ${text(report.generatedAt)}\n- Schema: ${report.schemaVersion}\n- Corpus hash: ${text(report.corpusHash)}\n\n## Methodology\n\n- Warmup iterations: ${report.methodology.warmupIterations}\n- Sample iterations: ${report.methodology.sampleIterations}\n- Clock: ${report.methodology.clock}\n- Build, initialization, and execute phases are reported separately. Only correctness-passing execute measurements enter rankings.\n\n## Environment\n\n| Field | Value |\n| --- | --- |\n| Node | ${text(report.environment.nodeVersion ?? "unavailable")} |\n| Chromium | ${text(report.environment.browserVersion ?? "unavailable")} |\n| Platform | ${text(report.environment.platform)} |\n| Architecture | ${text(report.environment.architecture)} |\n| CPU | ${text(report.environment.cpuModel ?? "unavailable")} |\n| CPU count | ${report.environment.cpuCount ?? "unavailable"} |\n| Memory | ${report.environment.memoryBytes ?? "unavailable"} |\n| Command | ${text(report.environment.commandLine)} |\n\n## Artifacts\n\n| ID | Implementation | Mode | Kind | Bytes | Hash |\n| --- | --- | --- | --- | ---: | --- |\n${artifacts}\n\n## Rankings\n\nRankings are ordered by median execute latency and exclude failed, unsupported, or incorrect cases.\n\n| Rank | Workload | Size | Implementation | Mode | Host | Median ms | Throughput/s |\n| ---: | --- | --- | --- | --- | --- | ---: | ---: |\n${rankingRows(report) || "| - | - | - | - | - | - | - | - |"}\n\n## Measurements\n\n| Case | Workload | Size | Implementation | Mode | Host | Phase | Status | Median ms | P95 ms | Throughput/s |\n| --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: |\n${measurementRows(report) || "| - | - | - | - | - | - | - | - | - | - | - |"}\n\n## Correctness\n\n| Case | Implementation | Mode | Host | Status | Expected | Observed | Reason |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n${correctness === "None." ? "| - | - | - | - | - | - | - | - |" : correctness}\n\n## Failures\n\n${failures}\n\n## Baseline comparison\n\n${comparisons}\n`;
 }

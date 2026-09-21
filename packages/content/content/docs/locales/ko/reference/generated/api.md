@@ -817,18 +817,18 @@ export interface WysiwygEditorProperties
 
 설명이 제공되지 않았습니다.
 
-## `src/monaco/forge-web-script`
+## `src/monaco/flint`
 
-### AttachForgeWebScript모나코
+### AttachFlint모나코
 
 **종류:** 기능
 
 ```typescript
-function attachForgeWebScriptMonaco(
+function attachFlintMonaco(
   editor: monaco.editor.IStandaloneCodeEditor,
   monacoRuntime: MonacoRuntime,
-  options: ForgeWebScriptMonacoOptions = {},
-): ForgeWebScriptMonacoHandle;
+  options: FlintMonacoOptions = {},
+): FlintMonacoHandle;
 ```
 
 진단, 완료, 마우스 오버, 모델 동기화 및 토큰화를 편집기에 연결합니다.
@@ -839,47 +839,44 @@ function attachForgeWebScriptMonaco(
 | ------------ | ----------------------------------- | ---- |
 | 편집자       | monaco.editor.IStandaloneCodeEditor |      |
 | 모나코런타임 | 모나코런타임                        |      |
-| 옵션         | ForgeWebScriptMonaco옵션            |      |
+| 옵션         | FlintMonaco옵션                     |      |
 
-### forgeWebScript언어Id
+### flint언어Id
 
 **종류:** 상수
 
 ```typescript
-export const forgeWebScriptLanguageId;
+export const flintLanguageId;
 ```
 
 설명이 제공되지 않았습니다.
 
-### ForgeWebScriptMonaco핸들
+### FlintMonaco핸들
 
 **종류:** 인터페이스
 
 ```typescript
-export interface ForgeWebScriptMonacoHandle
+export interface FlintMonacoHandle
 ```
 
 설명이 제공되지 않았습니다.
 
-### ForgeWebScriptMonaco옵션
+### FlintMonaco옵션
 
 **종류:** 인터페이스
 
 ```typescript
-export interface ForgeWebScriptMonacoOptions
+export interface FlintMonacoOptions
 ```
 
 설명이 제공되지 않았습니다.
 
-### RegisterForgeWebScript언어
+### RegisterFlint언어
 
 **종류:** 기능
 
 ```typescript
-function registerForgeWebScriptLanguage(
-  monacoRuntime: MonacoRuntime,
-  languageId = forgeWebScriptLanguageId,
-): monaco.IDisposable;
+function registerFlintLanguage(monacoRuntime: MonacoRuntime, languageId = flintLanguageId): monaco.IDisposable;
 ```
 
 Forge 웹 스크립트 언어와 어휘 토큰 공급자를 등록합니다.

@@ -1,14 +1,14 @@
 import { resolve } from 'node:path';
 
 import { defineVitestConfig } from '@mission-platform/vite-config/vitest';
-import forgeWebScriptPlugin from '@mission-platform/vite-plugin-forge-web-script';
+import flintPlugin from '@mission-platform/vite-plugin-flint';
 
 export default defineVitestConfig({
   coverageInclude: ['src/**/*.ts', 'src/**/*.tsx'],
   coverageExclude: ['src/**/*.spec.ts', 'src/test-setup.ts', 'src/test-support/**', 'src/**/*.stories.*'],
   overrides: {
     plugins: [
-      forgeWebScriptPlugin({
+      flintPlugin({
         root: import.meta.dirname,
         projectRoots: [resolve(import.meta.dirname, 'src/fws')],
         crossProjectLinkMode: 'static',
@@ -17,7 +17,7 @@ export default defineVitestConfig({
         optimization: 'release',
         targetFeatures: { simd: true },
         requireExports: false,
-        requestedCapabilities: (fileName) => (fileName.endsWith('/qr-decoder.fws') ? ['qr.decode.utf8'] : undefined),
+        requestedCapabilities: (fileName) => (fileName.endsWith('/qr-decoder.flint') || fileName.endsWith('/qr-decoder.fws') ? ['qr.decode.utf8'] : undefined),
       }),
     ],
     oxc: {

@@ -6,16 +6,16 @@ import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
 import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 import { defineLibraryConfig } from '@mission-platform/vite-config';
+import flintPlugin from '@mission-platform/vite-plugin-flint';
 import { defineJsxLibraryConfig, type JsxFramework } from '@mission-platform/vite-plugin-forge';
-import forgeWebScriptPlugin from '@mission-platform/vite-plugin-forge-web-script';
 import { defineConfig, type Plugin, type UserConfig } from 'vite';
 
-/** FWS roots used to compile the self-contained scanner graph. */
+/** Flint roots used to compile the self-contained scanner graph. */
 const componentsModule = path.resolve(import.meta.dirname, 'src/components/index.ts');
 const scannerProjectRoots = [path.resolve(import.meta.dirname, 'src/fws')];
 
 function scannerForgePlugin(linkProfile: 'static' | 'dynamic'): Plugin {
-  return forgeWebScriptPlugin({
+  return flintPlugin({
     root: import.meta.dirname,
     projectRoots: scannerProjectRoots,
     crossProjectLinkMode: linkProfile,
@@ -24,7 +24,8 @@ function scannerForgePlugin(linkProfile: 'static' | 'dynamic'): Plugin {
     optimization: linkProfile === 'static' ? 'release' : 'debug',
     targetFeatures: { simd: true },
     requireExports: false,
-    requestedCapabilities: (fileName) => (fileName.endsWith('/qr-decoder.fws') ? ['qr.decode.utf8'] : undefined),
+    requestedCapabilities: (fileName) =>
+      fileName.endsWith('/qr-decoder.flint') || fileName.endsWith('/qr-decoder.fws') ? ['qr.decode.utf8'] : undefined,
   });
 }
 
@@ -34,7 +35,7 @@ function defineScannerConfig(linkProfile: 'static' | 'dynamic' = 'static'): User
     rootDir: import.meta.dirname,
     entry: { index: 'src/index.ts' },
     name: 'MissionPlatformCodeScanner',
-    // Static FWS links flatten the scanner and decoder graph into one artifact.
+    // Static Flint links flatten the scanner and decoder graph into one artifact.
     preserveModules: false,
     overrides: {
       plugins: [scannerForgePlugin(linkProfile)],

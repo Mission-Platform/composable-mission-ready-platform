@@ -13,7 +13,7 @@ const MAX_REVIEW_FILES = 100;
 const DEFAULT_REVIEW_FILES = 25;
 const REVIEWABLE_EXTENSIONS = new Set([
   '.css',
-  '.fws',
+  '.flint',
   '.html',
   '.js',
   '.json',

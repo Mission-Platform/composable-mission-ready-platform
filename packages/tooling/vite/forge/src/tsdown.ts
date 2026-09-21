@@ -110,59 +110,33 @@ export type CanonicalChunkCandidate =
     };
 
 /**
- * Extracts candidate chunk name and facadeModuleId.
- *
- * @param chunkInfo - Chunk string or candidate object.
- * @returns Normalized chunk candidate object.
- */
-function extractChunkCandidate(chunkInfo: CanonicalChunkCandidate): {
-  readonly name: string;
-  readonly facadeModuleId?: string | null;
-} {
-  if (typeof chunkInfo === 'string') {
-    return { name: chunkInfo };
-  }
-  return {
-    name: chunkInfo.name ?? '',
-    facadeModuleId: chunkInfo.facadeModuleId,
-  };
-}
-
-/**
- * Checks whether a candidate chunk represents a virtual Forge entry module.
- *
- * @param name - Candidate chunk name.
- * @param facadeModuleId - Facade module identifier.
- * @returns True if chunk is a Forge virtual entry.
- */
-function isForgeVirtualEntry(name: string, facadeModuleId?: string | null): boolean {
-  if (facadeModuleId && facadeModuleId.includes('virtual:forge-entry')) {
-    return true;
-  }
-  return name.includes('forge-entry') || /(?:^|\/)entry(?:[:_])/.test(name);
-}
-
-/**
  * Determine the canonical emitted entry filename for a chunk.
  * Virtual forge entries are mapped to `index.js`, while preserved
  * modules delegate to chunk name resolution.
  */
 export function resolveCanonicalEntryName(chunkInfo: CanonicalChunkCandidate): string {
-  const { name, facadeModuleId } = extractChunkCandidate(chunkInfo);
-  if (isForgeVirtualEntry(name, facadeModuleId)) {
+  const name = typeof chunkInfo === 'string' ? chunkInfo : (chunkInfo.name ?? '');
+  const facadeModuleId = typeof chunkInfo === 'string' ? undefined : chunkInfo.facadeModuleId;
+
+  if (
+    (facadeModuleId !== undefined && facadeModuleId !== null && facadeModuleId.includes('virtual:forge-entry')) ||
+    name.includes('forge-entry') ||
+    /(?:^|\/)entry(?:[:_])/.test(name)
+  ) {
     return 'index.js';
   }
   return resolveCanonicalChunkName(chunkInfo);
 }
 
 /**
- * Resolves canonical script chunk name for Vue virtual script modules.
- *
- * @param name - Candidate chunk name.
- * @param facadeModuleId - Facade module identifier.
- * @returns Emitted script chunk name if matching Vue virtual pattern, or undefined.
+ * Determine the canonical emitted chunk filename for a chunk.
+ * Preserves canonical `[name].js` paths without collisions and maps
+ * Vue virtual script modules to `${component}.script.js`.
  */
-function resolveVueScriptChunkName(name: string, facadeModuleId?: string | null): string | undefined {
+export function resolveCanonicalChunkName(chunkInfo: CanonicalChunkCandidate): string {
+  const name = typeof chunkInfo === 'string' ? chunkInfo : (chunkInfo.name ?? '');
+  const facadeModuleId = typeof chunkInfo === 'string' ? undefined : chunkInfo.facadeModuleId;
+
   const vueScriptMatch = name.match(/^(.*?)(?:\.vue)?[?_]vue[&_](?:[^/]*?)type[=_]?script(?:[^/]*)$/);
   if (vueScriptMatch) {
     return `${vueScriptMatch[1]}.script.js`;
@@ -172,49 +146,11 @@ function resolveVueScriptChunkName(name: string, facadeModuleId?: string | null)
       /(?:^|[/\\])((?:components|composables|styles|utils)[/\\][^\n?]+?)(?:\.vue)?[?_]vue[&_](?:[^/\\]*?)type[=_]?script/,
     );
     if (facadeMatch) {
-      return `${facadeMatch[1].split('\\').join('/')}.script.js`;
+      const normalizedPath = facadeMatch[1].split('\\').join('/');
+      return `${normalizedPath}.script.js`;
     }
   }
-  return undefined;
-}
-
-/**
- * Determine the canonical emitted chunk filename for a chunk.
- * Preserves canonical `[name].js` paths without collisions and maps
- * Vue virtual script modules to `${component}.script.js`.
- */
-export function resolveCanonicalChunkName(chunkInfo: CanonicalChunkCandidate): string {
-  const { name, facadeModuleId } = extractChunkCandidate(chunkInfo);
-  return resolveVueScriptChunkName(name, facadeModuleId) ?? '[name].js';
-}
-
-/**
- * Normalizes Vue virtual script import specifiers in emitted code.
- *
- * @param code - Emitted chunk code.
- * @returns Code with normalized Vue script paths.
- */
-function normalizeVueScriptSpecifiers(code: string): string {
-  if (code.includes('vue&type=script') || code.includes('vue_vue_type_script') || code.includes('.vue?')) {
-    return code.replace(
-      /(['"]\.\/[^'"]*?)(?:\.vue)?[?_]vue[&_](?:[^'"]*?)type[=_]?script[^'"]*(['"])/g,
-      '$1.script.js$2',
-    );
-  }
-  return code;
-}
-
-/**
- * Normalizes CSS/SCSS module import specifiers in emitted code.
- *
- * @param code - Emitted chunk code.
- * @returns Code with normalized stylesheet paths.
- */
-function normalizeCssModuleSpecifiers(code: string): string {
-  if (code.includes('.module.scss') || code.includes('.module.css')) {
-    return code.replace(/(['"]\.\/[^'"]*?)\.module\.(?:scss|css)(['"])/g, '$1.css$2');
-  }
-  return code;
+  return '[name].js';
 }
 
 /**
@@ -225,7 +161,16 @@ export function forgePathNormalizationPlugin(): TsdownPlugin {
   return {
     name: '@mission-platform/vite-plugin-forge:path-normalization',
     renderChunk(code) {
-      const updated = normalizeCssModuleSpecifiers(normalizeVueScriptSpecifiers(code));
+      let updated = code;
+      if (updated.includes('vue&type=script') || updated.includes('vue_vue_type_script') || updated.includes('.vue?')) {
+        updated = updated.replace(
+          /(['"]\.\/[^'"]*?)(?:\.vue)?[?_]vue[&_](?:[^'"]*?)type[=_]?script[^'"]*(['"])/g,
+          '$1.script.js$2',
+        );
+      }
+      if (updated.includes('.module.scss') || updated.includes('.module.css')) {
+        updated = updated.replace(/(['"]\.\/[^'"]*?)\.module\.(?:scss|css)(['"])/g, '$1.css$2');
+      }
       return updated === code ? null : updated;
     },
   };

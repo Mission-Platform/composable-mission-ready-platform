@@ -1,0 +1,44 @@
+<idea-plugin>
+    <id>com.missionplatform.flint</id>
+    <name>Flint</name>
+    <vendor url="https://github.com/mission-platform">Mission Platform</vendor>
+    <description><![CDATA[
+        Flint language support using the shared Flint Language Server over LSP4IJ.
+    ]]></description>
+    <version>0.1.0</version>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.redhat.devtools.lsp4ij</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType
+                name="Flint"
+                language="flint"
+                extensions="flint,flt"
+                implementationClass="com.missionplatform.flint.FlintFileType"/>
+        <applicationService serviceImplementation="com.missionplatform.flint.FlintSettingsState"/>
+        <applicationConfigurable instance="com.missionplatform.flint.FlintSettingsConfigurable"/>
+    </extensions>
+
+    <extensions defaultExtensionNs="com.redhat.devtools.lsp4ij">
+        <server
+                id="flint"
+                name="Flint Language Server"
+                factoryClass="com.missionplatform.flint.FlintLanguageServerDefinition"/>
+        <fileNamePatternMapping
+                patterns="*.flint,*.flt"
+                serverId="flint"
+                languageId="flint"/>
+        <debugAdapterServer
+                id="flint-dap"
+                name="Flint"
+                factoryClass="com.missionplatform.flint.FlintDebugAdapterDescriptorFactory"/>
+    </extensions>
+
+    <actions>
+        <action
+                id="flint.showReferences"
+                class="com.redhat.devtools.lsp4ij.commands.editor.ShowReferencesAction"/>
+    </actions>
+</idea-plugin>

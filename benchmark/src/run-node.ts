@@ -3,12 +3,12 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { normalizeBenchmarkOutput, outputsEqual } from "./abi.ts";
 import { createAssemblyScriptAdapter } from "./adapters/assemblyscript-wasm.ts";
-import { createFwsVmAdapter } from "./adapters/fws-vm.ts";
+import { createFlintVmAdapter } from "./adapters/flint-vm.ts";
 import {
-  createFwsExcludedBoundsWasmAdapter,
-  createFwsGeneratedWasmAdapter,
-  createFwsWasmAdapter,
-} from "./adapters/fws-wasm.ts";
+  createFlintExcludedBoundsWasmAdapter,
+  createFlintGeneratedWasmAdapter,
+  createFlintWasmAdapter,
+} from "./adapters/flint-wasm.ts";
 import { createJavaScriptAdapter } from "./adapters/javascript.ts";
 import { createRustWasmAdapter } from "./adapters/rust-wasm.ts";
 import { buildAssemblyScriptArtifact, buildRustArtifact } from "./build.ts";
@@ -27,7 +27,7 @@ import type {
   BuildArtifact,
   CorrectnessResult,
   EnvironmentMetadata,
-  FwsMode,
+  FlintMode,
   HostRuntime,
   MeasurementOptions,
   PhaseMeasurement,
@@ -108,23 +108,26 @@ async function assemblyScriptLoader(moduleUrl: string): Promise<never> {
 
 async function buildTargets(): Promise<readonly BuildAttempt[]> {
   const javascript = createJavaScriptAdapter();
-  const interpret = createFwsVmAdapter("interpret");
-  const jit = createFwsVmAdapter("jit");
-  const aot = createFwsVmAdapter("aot");
-  const fwsWasm = createFwsWasmAdapter();
-  const fwsGeneratedWasm = createFwsGeneratedWasmAdapter();
-  const fwsExcludedBoundsWasm = createFwsExcludedBoundsWasmAdapter();
+  const interpret = createFlintVmAdapter("interpret");
+  const jit = createFlintVmAdapter("jit");
+  const aot = createFlintVmAdapter("aot");
+  const flintWasm = createFlintWasmAdapter();
+  const flintGeneratedWasm = createFlintGeneratedWasmAdapter();
+  const flintExcludedBoundsWasm = createFlintExcludedBoundsWasmAdapter();
   const rust = createRustWasmAdapter(rustLoader);
   const assemblyScript = createAssemblyScriptAdapter(assemblyScriptLoader);
-  const targets: readonly [RuntimeAdapter, () => Promise<BuildArtifact>][] = [
+  const targets: readonly [
+    RuntimeAdapter,
+    () => Promise<BuildArtifact> | BuildArtifact,
+  ][] = [
     [javascript, () => javascript.build()],
-    [fwsGeneratedWasm, () => fwsGeneratedWasm.build()],
+    [flintGeneratedWasm, () => flintGeneratedWasm.build()],
     [interpret, () => interpret.build()],
     [jit, () => jit.build()],
     [aot, () => aot.build()],
-    [fwsWasm, () => fwsWasm.build()],
-    [fwsExcludedBoundsWasm, () => fwsExcludedBoundsWasm.build()],
-    [rust, async () => buildRustArtifact()],
+    [flintWasm, () => flintWasm.build()],
+    [flintExcludedBoundsWasm, () => flintExcludedBoundsWasm.build()],
+    [rust, () => buildRustArtifact()],
     [assemblyScript, () => buildAssemblyScriptArtifact()],
   ];
   const result: BuildAttempt[] = [];
@@ -159,7 +162,7 @@ function keyFor(
     workload: benchmarkCase.category,
     inputSize: benchmarkCase.size,
     implementation: adapter.implementation,
-    ...(adapter.mode === undefined ? {} : { fwsMode: adapter.mode }),
+    ...(adapter.mode === undefined ? {} : { flintMode: adapter.mode }),
     hostRuntime,
     phase,
   } as const;
@@ -190,7 +193,7 @@ function unsupportedCorrectness(
     workload: benchmarkCase.category,
     inputSize: benchmarkCase.size,
     implementation: adapter.implementation,
-    ...(adapter.mode === undefined ? {} : { fwsMode: adapter.mode }),
+    ...(adapter.mode === undefined ? {} : { flintMode: adapter.mode }),
     hostRuntime: "node",
     status: "unsupported",
     expected: benchmarkCase.expected,
@@ -253,7 +256,7 @@ export async function runNodeBenchmark(
           implementation: attempt.adapter.implementation,
           ...(attempt.adapter.mode === undefined
             ? {}
-            : { fwsMode: attempt.adapter.mode as FwsMode }),
+            : { flintMode: attempt.adapter.mode as FlintMode }),
           phase: "build",
           category: /not found|enoent|browser|toolchain|wasm-pack|asc/i.test(
             reason,
@@ -325,7 +328,7 @@ export async function runNodeBenchmark(
             implementation: attempt.adapter.implementation,
             ...(attempt.adapter.mode === undefined
               ? {}
-              : { fwsMode: attempt.adapter.mode }),
+              : { flintMode: attempt.adapter.mode }),
             phase: "execute",
             category: "runtime",
             message: reason,
@@ -354,7 +357,7 @@ export async function runNodeBenchmark(
             implementation: attempt.adapter.implementation,
             ...(attempt.adapter.mode === undefined
               ? {}
-              : { fwsMode: attempt.adapter.mode }),
+              : { flintMode: attempt.adapter.mode }),
             phase: "execute",
             category: "correctness",
             message: reason,
@@ -396,7 +399,7 @@ export async function runNodeBenchmark(
           implementation: attempt.adapter.implementation,
           ...(attempt.adapter.mode === undefined
             ? {}
-            : { fwsMode: attempt.adapter.mode }),
+            : { flintMode: attempt.adapter.mode }),
           phase: "initialize",
           category: "runtime",
           message: reason,

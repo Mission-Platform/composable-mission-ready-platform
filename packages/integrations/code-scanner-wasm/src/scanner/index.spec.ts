@@ -571,7 +571,7 @@ describe('scanImageData — 1D barcodes', () => {
     // Placeholder for future 1D barcode tests
   });
   // The scanner resolves the UPC-A/EAN-13 overlap by the number-system digit
-  // (mirrors the FWS symbology disambiguation): an EAN-13 whose number-system
+  // (mirrors the Flint symbology disambiguation): an EAN-13 whose number-system
   // digit is `0` *is* a UPC-A, so it is reported as the 12-digit UPC-A form (the
   // EAN-13 value with its leading zero stripped). Genuine EAN-13 is unchanged.
 

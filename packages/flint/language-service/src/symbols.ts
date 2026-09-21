@@ -1,0 +1,532 @@
+import {
+  primitiveTypes,
+  renderFlintDocumentation,
+  type FlintEnumDeclaration,
+  type FlintExpression,
+  type FlintFunction,
+  type FlintGenericParameter,
+  type FlintInterfaceDeclaration,
+  type FlintInterfaceFunction,
+  type FlintModule,
+  type FlintPrimitiveType,
+  type FlintSourceSpan,
+  type FlintStructDeclaration,
+  type FlintStatement,
+  type FlintToken,
+  type FlintTypeName,
+} from '@mission-platform/flint';
+
+import { rangeFromOffsets, rangeFromSpan } from './positions.js';
+
+import type { FlintCallable, FlintSymbol, FlintTokenClassification } from './types.js';
+
+/** Indexed symbol table for a document with definitions and references. */
+export interface FlintSymbolIndex {
+  readonly symbols: readonly FlintSymbol[];
+  readonly callables: ReadonlyMap<string, FlintCallable>;
+}
+
+/** Traverses a Flint module AST building an index of all declared symbols and references. */
+// skipcq: JS-R1005
+export function buildSymbolIndex(
+  source: string,
+  module: FlintModule | undefined,
+  tokens: readonly FlintTokenClassification[],
+): FlintSymbolIndex {
+  if (module === undefined) return { symbols: [], callables: new Map() };
+  const rawTokens = tokens.flatMap((token) => (token.token === undefined ? [] : [token.token]));
+  const symbols: FlintSymbol[] = [];
+  const callables = new Map<string, FlintCallable>();
+  const moduleToken = rawTokens.find(
+    (token) => token.text === 'module' && token.span.start >= module.span.start && token.span.end <= module.span.end,
+  );
+  const moduleNameToken = moduleToken === undefined ? undefined : nextIdentifier(rawTokens, moduleToken);
+  symbols.push({
+    name: module.name,
+    kind: 'module',
+    range: moduleNameToken === undefined ? rangeFromSpan(source, module.span) : tokenRange(source, moduleNameToken),
+    detail: `module ${module.name}`,
+  });
+  for (const imported of module.sourceImports) {
+    const aliasToken = findToken(rawTokens, imported.alias, imported.span.start, imported.span.end);
+    symbols.push({
+      name: imported.alias,
+      kind: 'capability',
+      range: aliasToken === undefined ? rangeFromSpan(source, imported.span) : tokenRange(source, aliasToken),
+      detail: `${imported.source} as ${imported.alias}`,
+    });
+  }
+  for (const imported of module.imports) {
+    const aliasToken = findToken(rawTokens, imported.alias, imported.span.start, imported.span.end);
+    const callable = {
+      parameters: imported.parameters.map((parameter) => renderTypeName(parameter.type)),
+      result: renderTypeName(imported.result),
+    } satisfies FlintCallable;
+    callables.set(imported.alias, callable);
+    symbols.push({
+      name: imported.alias,
+      kind: 'capability',
+      range: aliasToken === undefined ? rangeFromSpan(source, imported.span) : tokenRange(source, aliasToken),
+      detail: `${imported.capability} as ${signature(imported.alias, callable)}`,
+      callable,
+    });
+    addTypeSymbol(symbols, source, imported.result);
+    for (const parameter of imported.parameters) addTypeSymbol(symbols, source, parameter.type);
+  }
+  for (const declaration of module.structs) addStructSymbols(source, declaration, rawTokens, symbols);
+  for (const declaration of module.enums) addEnumSymbols(source, declaration, rawTokens, symbols);
+  for (const declaration of module.interfaces) addInterfaceSymbols(source, declaration, rawTokens, symbols);
+  for (const declaration of module.functions) {
+    const callable = {
+      parameters: declaration.parameters.map((parameter) => renderTypeName(parameter.type)),
+      result: renderTypeName(declaration.result),
+      ...(declaration.documentation === undefined
+        ? {}
+        : { documentation: renderFlintDocumentation(declaration.documentation) }),
+    } satisfies FlintCallable;
+    callables.set(declaration.name, callable);
+    const functionToken = findToken(rawTokens, declaration.name, declaration.span.start, declaration.span.end);
+    symbols.push({
+      name: declaration.name,
+      kind: 'function',
+      range: functionToken === undefined ? rangeFromSpan(source, declaration.span) : tokenRange(source, functionToken),
+      detail: `${declaration.exported ? 'export ' : ''}${signature(declaration.name, callable)}`,
+      callable,
+      scopeRange: rangeFromSpan(source, declaration.span),
+      declarationRange: rangeFromSpan(source, declaration.span),
+    });
+    addGenericParameterSymbols(
+      source,
+      declaration.genericParameters,
+      rawTokens,
+      symbols,
+      declaration.name,
+      declaration.span,
+    );
+    addTypeSymbol(symbols, source, declaration.result);
+    for (const parameter of declaration.parameters) {
+      const parameterToken = findToken(rawTokens, parameter.name, declaration.span.start, declaration.span.end);
+      symbols.push({
+        name: parameter.name,
+        kind: 'parameter',
+        range:
+          parameterToken === undefined ? rangeFromSpan(source, parameter.span) : tokenRange(source, parameterToken),
+        detail: `parameter ${parameter.name}: ${parameter.type.name}`,
+        type: parameter.type.name,
+        containerName: declaration.name,
+        scopeRange: rangeFromSpan(source, declaration.span),
+      });
+      addTypeSymbol(symbols, source, parameter.type);
+    }
+    addStatementSymbols(source, declaration, declaration.body, rawTokens, symbols, declaration.span);
+  }
+  return { symbols, callables };
+}
+
+/** Indexes struct declarations, fields, and constructors. */
+function addStructSymbols(
+  source: string,
+  declaration: FlintStructDeclaration,
+  tokens: readonly FlintToken[],
+  symbols: FlintSymbol[],
+): void {
+  addAggregateTypeSymbol(source, declaration.name, declaration.genericParameters, declaration.span, tokens, symbols);
+  addGenericParameterSymbols(
+    source,
+    declaration.genericParameters,
+    tokens,
+    symbols,
+    declaration.name,
+    declaration.span,
+  );
+  for (const field of declaration.fields) {
+    const fieldToken = findToken(tokens, field.name, field.span.start, field.span.end);
+    symbols.push({
+      name: field.name,
+      kind: 'type',
+      range: fieldToken === undefined ? rangeFromSpan(source, field.span) : tokenRange(source, fieldToken),
+      detail: `field ${field.name}: ${renderTypeName(field.type)}`,
+      type: renderTypeName(field.type),
+      containerName: declaration.name,
+      scopeRange: rangeFromSpan(source, declaration.span),
+    });
+    addTypeSymbol(symbols, source, field.type);
+  }
+}
+
+/** Indexes enum declarations, variants, and variant payload fields. */
+// skipcq: JS-R1005
+function addEnumSymbols(
+  source: string,
+  declaration: FlintEnumDeclaration,
+  tokens: readonly FlintToken[],
+  symbols: FlintSymbol[],
+): void {
+  addAggregateTypeSymbol(source, declaration.name, declaration.genericParameters, declaration.span, tokens, symbols);
+  addGenericParameterSymbols(
+    source,
+    declaration.genericParameters,
+    tokens,
+    symbols,
+    declaration.name,
+    declaration.span,
+  );
+  for (const variant of declaration.variants) {
+    const variantToken = findToken(tokens, variant.name, variant.span.start, variant.span.end);
+    symbols.push({
+      name: variant.name,
+      kind: 'type',
+      range: variantToken === undefined ? rangeFromSpan(source, variant.span) : tokenRange(source, variantToken),
+      detail: `variant ${variant.name}${variant.fields.length === 0 ? '' : `(${variant.fields.map((field) => renderTypeName(field.type)).join(', ')})`}`,
+      containerName: declaration.name,
+      scopeRange: rangeFromSpan(source, declaration.span),
+    });
+    for (const field of variant.fields) {
+      const fieldToken = findToken(tokens, field.name, field.span.start, field.span.end);
+      symbols.push({
+        name: field.name,
+        kind: 'parameter',
+        range: fieldToken === undefined ? rangeFromSpan(source, field.span) : tokenRange(source, fieldToken),
+        detail: `parameter ${field.name}: ${renderTypeName(field.type)}`,
+        type: renderTypeName(field.type),
+        containerName: variant.name,
+        scopeRange: rangeFromSpan(source, variant.span),
+      });
+      addTypeSymbol(symbols, source, field.type);
+    }
+  }
+}
+
+/** Indexes interface definitions and their member signatures. */
+function addInterfaceSymbols(
+  source: string,
+  declaration: FlintInterfaceDeclaration,
+  tokens: readonly FlintToken[],
+  symbols: FlintSymbol[],
+): void {
+  addAggregateTypeSymbol(source, declaration.name, declaration.genericParameters, declaration.span, tokens, symbols);
+  addGenericParameterSymbols(
+    source,
+    declaration.genericParameters,
+    tokens,
+    symbols,
+    declaration.name,
+    declaration.span,
+  );
+  for (const method of declaration.functions) addInterfaceFunctionSymbols(source, declaration, method, tokens, symbols);
+}
+
+/** Indexes function signatures declared within an interface. */
+function addInterfaceFunctionSymbols(
+  source: string,
+  declaration: FlintInterfaceDeclaration,
+  method: FlintInterfaceFunction,
+  tokens: readonly FlintToken[],
+  symbols: FlintSymbol[],
+): void {
+  const callable = {
+    parameters: method.parameters.map((parameter) => renderTypeName(parameter.type)),
+    result: renderTypeName(method.result),
+  } satisfies FlintCallable;
+  const methodToken = findToken(tokens, method.name, method.span.start, method.span.end);
+  symbols.push({
+    name: method.name,
+    kind: 'function',
+    range: methodToken === undefined ? rangeFromSpan(source, method.span) : tokenRange(source, methodToken),
+    detail: signature(method.name, callable),
+    callable,
+    containerName: declaration.name,
+    scopeRange: rangeFromSpan(source, declaration.span),
+  });
+  addGenericParameterSymbols(source, method.genericParameters, tokens, symbols, method.name, method.span);
+  for (const parameter of method.parameters) addTypeSymbol(symbols, source, parameter.type);
+  addTypeSymbol(symbols, source, method.result);
+}
+
+/** Creates a document symbol for a struct or enum definition. */
+function addAggregateTypeSymbol(
+  source: string,
+  name: string,
+  genericParameters: readonly FlintGenericParameter[],
+  span: FlintSourceSpan,
+  tokens: readonly FlintToken[],
+  symbols: FlintSymbol[],
+): void {
+  const nameToken = findToken(tokens, name, span.start, span.end);
+  symbols.push({
+    name,
+    kind: 'type',
+    range: nameToken === undefined ? rangeFromSpan(source, span) : tokenRange(source, nameToken),
+    detail: `Flint type ${name}${genericSuffix(genericParameters)}`,
+    declarationRange: rangeFromSpan(source, span),
+  });
+}
+
+/** Indexes generic type parameter symbols. */
+function addGenericParameterSymbols(
+  source: string,
+  parameters: readonly FlintGenericParameter[],
+  tokens: readonly FlintToken[],
+  symbols: FlintSymbol[],
+  containerName: string,
+  scope: FlintSourceSpan,
+): void {
+  for (const parameter of parameters) {
+    const parameterToken = findToken(tokens, parameter.name, parameter.span.start, parameter.span.end);
+    symbols.push({
+      name: parameter.name,
+      kind: 'type',
+      range: parameterToken === undefined ? rangeFromSpan(source, parameter.span) : tokenRange(source, parameterToken),
+      detail: `generic parameter ${parameter.name}${parameter.bounds.length === 0 ? '' : `: ${parameter.bounds.join(' + ')}`}`,
+      type: parameter.name,
+      containerName,
+      scopeRange: rangeFromSpan(source, scope),
+    });
+  }
+}
+
+/** Formats generic parameter names into a suffix string like <T, U>. */
+function genericSuffix(parameters: readonly FlintGenericParameter[]): string {
+  return parameters.length === 0
+    ? ''
+    : `<${parameters.map((parameter) => `${parameter.name}${parameter.bounds.length === 0 ? '' : `: ${parameter.bounds.join(' + ')}`}`).join(', ')}>`;
+}
+
+/** Traverses statements indexing local variables, parameters, and control-flow blocks. */
+// skipcq: JS-R1005
+function addStatementSymbols(
+  source: string,
+  declaration: FlintFunction,
+  statements: readonly FlintStatement[],
+  tokens: readonly FlintToken[],
+  symbols: FlintSymbol[],
+  scope: FlintSourceSpan,
+): void {
+  for (const statement of statements) {
+    if (statement.kind === 'let') {
+      const nameToken = findToken(tokens, statement.name, statement.span.start, statement.span.end);
+      symbols.push({
+        name: statement.name,
+        kind: 'local',
+        range: nameToken === undefined ? rangeFromSpan(source, statement.span) : tokenRange(source, nameToken),
+        detail: `local ${statement.name}: ${renderTypeName(statement.type)}`,
+        type: renderTypeName(statement.type),
+        containerName: declaration.name,
+        scopeRange: rangeFromSpan(source, scope),
+      });
+      addTypeSymbol(symbols, source, statement.type);
+      addExpressionSymbols(source, declaration, statement.value, tokens, symbols, scope);
+    }
+    if (statement.kind === 'if') {
+      addExpressionSymbols(source, declaration, statement.condition, tokens, symbols, scope);
+      addStatementSymbols(
+        source,
+        declaration,
+        statement.consequent,
+        tokens,
+        symbols,
+        blockScope(statement.consequent, tokens, statement.span),
+      );
+      if (statement.alternate !== undefined)
+        addStatementSymbols(
+          source,
+          declaration,
+          statement.alternate,
+          tokens,
+          symbols,
+          blockScope(statement.alternate, tokens, statement.span),
+        );
+    }
+    if (statement.kind === 'while' || statement.kind === 'do-while') {
+      addExpressionSymbols(source, declaration, statement.condition, tokens, symbols, scope);
+      addStatementSymbols(
+        source,
+        declaration,
+        statement.body,
+        tokens,
+        symbols,
+        blockScope(statement.body, tokens, statement.span),
+      );
+    }
+    if (statement.kind === 'iterator-loop') {
+      const bindingToken = findToken(tokens, statement.binding, statement.span.start, statement.span.end);
+      symbols.push({
+        name: statement.binding,
+        kind: 'local',
+        range: bindingToken === undefined ? rangeFromSpan(source, statement.span) : tokenRange(source, bindingToken),
+        detail: `iterator binding ${statement.binding}`,
+        containerName: declaration.name,
+        scopeRange: rangeFromSpan(source, blockScope(statement.body, tokens, statement.span)),
+      });
+      addExpressionSymbols(source, declaration, statement.iterator, tokens, symbols, scope);
+      addStatementSymbols(
+        source,
+        declaration,
+        statement.body,
+        tokens,
+        symbols,
+        blockScope(statement.body, tokens, statement.span),
+      );
+    }
+    if (statement.kind === 'match-statement') {
+      addExpressionSymbols(source, declaration, statement.value, tokens, symbols, scope);
+      for (const arm of statement.arms) {
+        addPatternSymbols(source, declaration, arm.pattern, arm.span, tokens, symbols);
+        addExpressionSymbols(source, declaration, arm.value, tokens, symbols, arm.span);
+      }
+    }
+    if (statement.kind === 'return' && statement.value !== undefined)
+      addExpressionSymbols(source, declaration, statement.value, tokens, symbols, scope);
+    if (statement.kind === 'expression-statement')
+      addExpressionSymbols(source, declaration, statement.expression, tokens, symbols, scope);
+    if (statement.kind === 'assignment')
+      addExpressionSymbols(source, declaration, statement.value, tokens, symbols, scope);
+  }
+}
+
+/** Traverses expressions indexing referenced variables, calls, and member access. */
+// skipcq: JS-R1005
+function addExpressionSymbols(
+  source: string,
+  declaration: FlintFunction,
+  expression: FlintExpression,
+  tokens: readonly FlintToken[],
+  symbols: FlintSymbol[],
+  scope: FlintSourceSpan,
+): void {
+  switch (expression.kind) {
+    case 'binary': {
+      addExpressionSymbols(source, declaration, expression.left, tokens, symbols, scope);
+      addExpressionSymbols(source, declaration, expression.right, tokens, symbols, scope);
+      break;
+    }
+    case 'unary': {
+      addExpressionSymbols(source, declaration, expression.operand, tokens, symbols, scope);
+      break;
+    }
+    case 'call': {
+      for (const argument of expression.arguments)
+        addExpressionSymbols(source, declaration, argument, tokens, symbols, scope);
+      break;
+    }
+    case 'struct-value': {
+      for (const value of Object.values(expression.fields))
+        addExpressionSymbols(source, declaration, value, tokens, symbols, scope);
+      break;
+    }
+    case 'enum-value': {
+      for (const argument of expression.arguments)
+        addExpressionSymbols(source, declaration, argument, tokens, symbols, scope);
+      break;
+    }
+    case 'match': {
+      addExpressionSymbols(source, declaration, expression.value, tokens, symbols, scope);
+      for (const arm of expression.arms) {
+        addPatternSymbols(source, declaration, arm.pattern, arm.span, tokens, symbols);
+        addExpressionSymbols(source, declaration, arm.value, tokens, symbols, arm.span);
+      }
+      break;
+    }
+    default: {
+      break;
+    }
+  }
+}
+
+/** Traverses match pattern expressions indexing pattern bindings. */
+function addPatternSymbols(
+  source: string,
+  declaration: FlintFunction,
+  pattern: { readonly kind: string; readonly bindings?: readonly string[] },
+  scope: FlintSourceSpan,
+  tokens: readonly FlintToken[],
+  symbols: FlintSymbol[],
+): void {
+  for (const binding of pattern.bindings ?? []) {
+    const bindingToken = findToken(tokens, binding, scope.start, scope.end);
+    symbols.push({
+      name: binding,
+      kind: 'local',
+      range: bindingToken === undefined ? rangeFromSpan(source, scope) : tokenRange(source, bindingToken),
+      detail: `match binding ${binding}`,
+      containerName: declaration.name,
+      scopeRange: rangeFromSpan(source, scope),
+    });
+  }
+}
+
+/** Computes the enclosing lexical block scope for statement variables. */
+function blockScope(
+  statements: readonly FlintStatement[],
+  tokens: readonly FlintToken[],
+  fallback: FlintSourceSpan,
+): FlintSourceSpan {
+  const first = statements[0];
+  const last = statements.at(-1);
+  if (first === undefined || last === undefined) return fallback;
+  const opening = tokens.findLast((token) => token.text === '{' && token.span.end <= first.span.start);
+  const closing = tokens.find((token) => token.text === '}' && token.span.start >= last.span.end);
+  if (opening === undefined || closing === undefined) return fallback;
+  return {
+    start: opening.span.start,
+    end: closing.span.end,
+    line: opening.span.line,
+    column: opening.span.column,
+    endLine: closing.span.endLine,
+    endColumn: closing.span.endColumn,
+  };
+}
+
+/** Indexes a type reference occurrence. */
+// skipcq: JS-R1005
+function addTypeSymbol(symbols: FlintSymbol[], source: string, type: FlintTypeName): void {
+  const rendered = renderTypeName(type);
+  if (!primitiveTypes.has(type.name as FlintPrimitiveType) && type.reference === undefined) return;
+  symbols.push({
+    name: rendered,
+    kind: 'type',
+    range: rangeFromSpan(source, type.span),
+    detail: type.reference === undefined ? `primitive type ${rendered}` : `Flint type ${rendered}`,
+  });
+  for (const argument of type.arguments ?? []) addTypeSymbol(symbols, source, argument);
+}
+
+/** Formats an AST type name into a readable type signature string. */
+function renderTypeName(type: FlintTypeName): string {
+  const name = type.reference ?? type.name;
+  return type.arguments === undefined || type.arguments.length === 0
+    ? name
+    : `${name}<${type.arguments.map((argument) => renderTypeName(argument)).join(', ')}>`;
+}
+
+/** Finds a lexical token matching kind or text. */
+function findToken(tokens: readonly FlintToken[], text: string, start: number, end: number): FlintToken | undefined {
+  return tokens.find(
+    (token) => token.kind === 'identifier' && token.text === text && token.span.start >= start && token.span.end <= end,
+  );
+}
+
+/** Finds the next identifier token after an offset. */
+function nextIdentifier(tokens: readonly FlintToken[], token: FlintToken): FlintToken | undefined {
+  const index = tokens.indexOf(token);
+  return tokens.slice(index + 1).find((candidate) => candidate.kind === 'identifier');
+}
+
+/** Converts a token source span into a FlintRange. */
+function tokenRange(source: string, token: FlintToken) {
+  return rangeFromOffsets(source, token.span.start, token.span.end);
+}
+
+/** Formats a function signature into a human-readable display string. */
+function signature(name: string, callable: FlintCallable): string {
+  return `${name}(${callable.parameters.join(', ')}): ${callable.result}`;
+}
+
+/** Extracts a display name from an expression node. */
+export function expressionName(expression: FlintExpression): string | undefined {
+  return expression.kind === 'identifier'
+    ? expression.name
+    : expression.kind === 'call'
+      ? expression.callee
+      : undefined;
+}

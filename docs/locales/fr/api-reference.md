@@ -302,9 +302,9 @@ Un hachage de contenu **détecte les modifications de contenu accidentelles ou n
 #### Flux de travail de vérification
 
 1. **Obtenez le hachage attendu** à partir d'une source fiable (par exemple, un manifeste signé, un journal de build CI ou une configuration sécurisée).
-2. **Calculez le hachage de l'artefact** à l'aide du vérificateur : `fws_verify_artifact(artifact)` renvoie le `contentHash`.
+2. **Calculez le hachage de l'artefact** à l'aide du vérificateur : `flint_verify_artifact(artifact)` renvoie le `contentHash`.
 3. **Comparez les hachages** : s'ils correspondent, l'artefact n'a pas été modifié accidentellement ou malicieusement depuis l'enregistrement de la valeur attendue.
-4. **Vérifiez le manifeste** : utilisez `fws_inspect_manifest` pour vérifier indépendamment les importations, les exportations, les métadonnées et la conformité aux politiques.
+4. **Vérifiez le manifeste** : utilisez `flint_inspect_manifest` pour vérifier indépendamment les importations, les exportations, les métadonnées et la conformité aux politiques.
 
 #### Gestion des versions
 

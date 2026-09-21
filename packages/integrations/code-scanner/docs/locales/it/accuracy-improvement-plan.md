@@ -6,7 +6,7 @@ Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manua
 > Lingua: Italiano (it)
 
 Un piano per aumentare la velocità di lettura di `@mission-platform/code-scanner` sulle acquisizioni del mondo reale (caricamenti e fotocamera live
-frame) e per mantenere la pipeline di scansione all'interno di un artefatto Forge Web Script/WebAssembly collegato staticamente.
+frame) e per mantenere la pipeline di scansione all'interno di un artefatto Flint/WebAssembly collegato staticamente.
 
 > **Implementazione attuale:** Lo scanner viene fornito collegato staticamente
 > Forge grafico Web Script in `src/fws`, con un profilo dinamico del modulo sorgente
@@ -28,9 +28,9 @@ L'implementazione originale divideva la pipeline:
   ha restituito un **buffer contrassegnato** `[format, ...payload]` — **non** decodificato.
 - **Decode** veniva eseguito in JavaScript e chiamava moduli decodificatori separati.
 
-La Fase 1 l'ha sostituita con una singola chiamata FWS `scan_and_decode` (vedi §1); il
+La Fase 1 l'ha sostituita con una singola chiamata Flint `scan_and_decode` (vedi §1); il
 la motivazione storica di seguito viene mantenuta come motivazione, mentre la fonte attuale di
-la verità è il grafico FWS e la sua suite di conformità Vitest.
+la verità è il grafico Flint e la sua suite di conformità Vitest.
 
 ## 1. Il problema strutturale principale: la pipeline ha attraversato il confine wasm↔JS due volte
 
@@ -40,7 +40,7 @@ Prima della Fase 1 una singola scansione era:
 image (JS)
   → wasm code-scan.scan()            [Rust: binarise + locate + sample]
   → tagged module buffer (JS)        [cross back into JS]
-  → scanner-owned FWS decoder graph   [decode inside the scanner artifact]
+  → scanner-owned Flint decoder graph   [decode inside the scanner artifact]
   → payload string (JS)
 ```
 
@@ -63,18 +63,18 @@ il localizzatore e il decoder non possono cooperare:
 ### Architettura di destinazione: una chiamata FWS, immagine in ingresso, payload in uscita
 
 > **Stato: implementato.** Lo scanner esporta `scan_and_decode`, collega il
-> decoder FWS grafica direttamente, e la facciata JS decodifica attraverso quel singolo
+> decoder Flint grafica direttamente, e la facciata JS decodifica attraverso quel singolo
 > chiamare. I dettagli seguenti registrano la logica della migrazione.
 
 ```
 image (JS)
-  → FWS scanner.scan_and_decode()      [binarise + locate + sample + decode]
+  → Flint scanner.scan_and_decode()      [binarise + locate + sample + decode]
   → ScanOutcome { format, value } (JS)
 ```
 
-`scan_and_decode(width, height, luma) -> Option<ScanOutcome>` esegue l'intera pipeline all'interno di `src/fws/scanner.fws` e
+`scan_and_decode(width, height, luma) -> Option<ScanOutcome>` esegue l'intera pipeline all'interno di `src/fws/scanner.flint` e
 restituisce direttamente il **carico utile decodificato** (`value` è vuoto quando viene individuato un simbolo ma non decodificabile). La facciata di JS
-(`scanner/index.ts`) è un sottile strato di marshalling che collega le origini FWS QR, matrice e codice a barre in fase di creazione;
+(`scanner/index.ts`) è un sottile strato di marshalling che collega le origini Flint QR, matrice e codice a barre in fase di creazione;
 tali pacchetti rimangono pubblicabili in modo indipendente.
 
 #### Perché questo è risolvibile adesso
@@ -384,7 +384,7 @@ falsi positivi. I viaggi di andata e ritorno sono coperti da `maxicode-decode/te
 linea di base 0 (un simbolo ruotato campiona la griglia esagonale in modo errato e RS la rifiuta - nessun falso positivo). Un bersaglio
 finder che recupera la rotazione del simbolo prima che il campionamento solleverebbe le altre tre rotazioni.
 
-### Passaggio 6: collega i nuovi formati alla facciata JS + crea l'artefatto FWS _(fatto)_
+### Passaggio 6: collega i nuovi formati alla facciata JS + crea l'artefatto Flint _(fatto)_
 
 I passaggi 3–5 hanno inserito PDF417, GS1 DataBar (RSS-14) e MaxiCode nello scanner
 pipeline dietro i tag `FORMAT_PDF417` / `FORMAT_DATABAR` / `FORMAT_MAXICODE`, mentre la facciata JS conosceva solo i tag
@@ -394,7 +394,7 @@ quattro formati originali. Questo passaggio fa emergere le nuove simbologie in f
   `5 → 'databar'`, `6 → 'maxicode'` e l'unione `ScanFormat` in `src/types.ts`
   ottiene gli stessi tre nomi, quindi `scanImageData` / `scanImageDataAsync` (e il
   `*All` / varianti ROI) li restituiscono come qualsiasi altro formato.
-- **L'artefatto FWS dello scanner è creato** da `src/fws/scanner.fws` dal plugin Forge Web Script Vite. Il profilo statico
+- **L'artefatto Flint dello scanner è creato** da `src/fws/scanner.flint` dal plugin Flint Vite. Il profilo statico
   collega i grafici del decodificatore in un artefatto autonomo, abilita WebAssembly SIMD e applica un tempo di collegamento aggressivo
   ottimizzazione; il profilo dinamico mantiene i limiti espliciti del modulo decodificatore e memorizza nella cache l'invio dell'esportazione.
 - **Le suite di grafici e facciate FWS** (`src/fws/scanner-graph.spec.ts` e
@@ -404,7 +404,7 @@ quattro formati originali. Questo passaggio fa emergere le nuove simbologie in f
   Il dispositivo di testo PDF417 package-local mantiene il caso di conformità indipendente da
   lo spazio di lavoro del corpus nativo in pensione.
 
-**Risultato:** `vitest` è verde rispetto all'artefatto FWS e alla build `tsc`
+**Risultato:** `vitest` è verde rispetto all'artefatto Flint e alla build `tsc`
 il controllo è pulito. Le famiglie sostenute restano coperte tassativamente dall'art
 suite di grafici e facciate pubbliche e la suddivisione del modello per fase che ha guidato il
 lo sforzo è documentato in `docs/model-cost-strategy.md`.

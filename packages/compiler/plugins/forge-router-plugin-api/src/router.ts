@@ -170,78 +170,6 @@ function resolveTargetImports(
 }
 
 /**
- * Creates rewrite specifications grouping target native imports by destination module.
- *
- * @param targetImports - Map of neutral router symbols to native import locations.
- * @returns Array of rewrite specifications.
- */
-function createSpecifierRewrites(
-  targetImports: Record<string, { module: string; name: string }>,
-): ImportRewriteSpec[] {
-  const byModule = new Map<
-    string,
-    { sourceName: string; importedName: string; localName?: string }[]
-  >();
-  for (const [neutralName, nativeImport] of Object.entries(targetImports)) {
-    const list = byModule.get(nativeImport.module) ?? [];
-    list.push({
-      sourceName: neutralName,
-      importedName: nativeImport.name,
-      localName: neutralName,
-    });
-    byModule.set(nativeImport.module, list);
-  }
-
-  return [...byModule.entries()].map(([targetModule, specifiers]) => ({
-    targetModule: MP_ROUTER_MODULE,
-    replacementModule: targetModule,
-    specifiers,
-  }));
-}
-
-/**
- * Rewrites router imports for a generated module plan.
- *
- * @param source - Original module source code.
- * @param fileName - File name of the module.
- * @param options - Target options.
- * @param targetImports - Resolved target imports.
- * @returns Result of CST import rewriting.
- */
-function rewriteRouterPlanImports(
-  source: string,
-  fileName: string,
-  options: ForgeRouterTargetOptions,
-  targetImports: Record<string, { module: string; name: string }>,
-): RewriteResult {
-  const hasCustomImports =
-    options.imports !== undefined && Object.keys(options.imports).length > 0;
-  const targetImportCount = Object.keys(targetImports).length;
-
-  if (targetImportCount === 0) {
-    return rewriteImportsWithCst(source, {
-      targetModule: MP_ROUTER_MODULE,
-      replacementModule: undefined,
-      sourceFileName: fileName,
-    });
-  }
-
-  if (!hasCustomImports && options.runtimeModule !== undefined) {
-    return rewriteImportsWithCst(source, {
-      targetModule: MP_ROUTER_MODULE,
-      replacementModule: options.runtimeModule,
-      preserveNamedSpecifiers: true,
-      sourceFileName: fileName,
-    });
-  }
-
-  return rewriteImportsWithCst(source, {
-    rewrites: createSpecifierRewrites(targetImports),
-    sourceFileName: fileName,
-  });
-}
-
-/**
  * Create a deterministic target that rewrites neutral router imports.
  *
  * Prefer {@link ForgeRouterTargetOptions.runtimeModule}: it keeps call sites
@@ -254,6 +182,9 @@ export function defineForgeRouterTarget(
   options: ForgeRouterTargetOptions,
 ): RouterOutputPlugin {
   const targetImports = resolveTargetImports(options);
+  const hasCustomImports =
+    options.imports !== undefined && Object.keys(options.imports).length > 0;
+  const targetImportCount = Object.keys(targetImports).length;
 
   return defineForgeRouterPlugin({
     id: options.id,
@@ -265,18 +196,54 @@ export function defineForgeRouterTarget(
     }),
     optimize: (plan) => plan,
     generate: (plan) => {
-      const rewritten = rewriteRouterPlanImports(
-        plan.module.source,
-        plan.module.fileName,
-        options,
-        targetImports,
-      );
-      const fileParts = plan.module.fileName.split(".");
-      const extension = fileParts.pop();
+      let rewritten;
+      if (targetImportCount === 0) {
+        rewritten = rewriteImportsWithCst(plan.module.source, {
+          targetModule: MP_ROUTER_MODULE,
+          replacementModule: undefined,
+          sourceFileName: plan.module.fileName,
+        });
+      } else if (!hasCustomImports && options.runtimeModule !== undefined) {
+        rewritten = rewriteImportsWithCst(plan.module.source, {
+          targetModule: MP_ROUTER_MODULE,
+          replacementModule: options.runtimeModule,
+          preserveNamedSpecifiers: true,
+          sourceFileName: plan.module.fileName,
+        });
+      } else {
+        const byModule = new Map<
+          string,
+          { sourceName: string; importedName: string; localName?: string }[]
+        >();
+        for (const [neutralName, nativeImport] of Object.entries(
+          targetImports,
+        )) {
+          const list = byModule.get(nativeImport.module) ?? [];
+          list.push({
+            sourceName: neutralName,
+            importedName: nativeImport.name,
+            localName: neutralName,
+          });
+          byModule.set(nativeImport.module, list);
+        }
+
+        const rewrites: ImportRewriteSpec[] = [...byModule.entries()].map(
+          ([module, specifiers]) => ({
+            targetModule: MP_ROUTER_MODULE,
+            replacementModule: module,
+            specifiers,
+          }),
+        );
+
+        rewritten = rewriteImportsWithCst(plan.module.source, {
+          rewrites,
+          sourceFileName: plan.module.fileName,
+        });
+      }
 
       return {
         code: rewritten.code,
-        lang: extension ?? "ts",
+        lang: plan.module.fileName.split(".").pop() ?? "ts",
         ...(rewritten.map !== undefined && {
           map: JSON.stringify(rewritten.map),
         }),
@@ -340,12 +307,13 @@ export function createRouterDiagnostic(
   };
 }
 
-/**
- * Asserts that the plugin has a valid id and package metadata.
- *
- * @param plugin - Plugin object to validate.
- */
-function assertPluginMetadata(plugin: Record<string, unknown>): void {
+/** Validate router plugin metadata before it enters a compiler pipeline. */
+export function defineForgeRouterPlugin<T extends RouterOutputPlugin>(
+  plugin: T,
+): T {
+  if (typeof plugin !== "object" || plugin === null) {
+    throw new TypeError("A Forge router plugin must be an object.");
+  }
   if (typeof plugin.id !== "string" || plugin.id.length === 0) {
     throw new TypeError("A Forge router plugin must define a non-empty id.");
   }
@@ -362,62 +330,28 @@ function assertPluginMetadata(plugin: Record<string, unknown>): void {
       `Forge router plugin "${plugin.id}" must define capabilities.`,
     );
   }
-}
-
-/**
- * Asserts that the required plugin lifecycle methods exist.
- *
- * @param plugin - Plugin object.
- * @param id - Plugin identifier for error messaging.
- */
-function assertPluginMethods(
-  plugin: Record<string, unknown>,
-  id: string,
-): void {
   for (const method of ["lower", "optimize", "generate"] as const) {
     if (typeof plugin[method] !== "function") {
       throw new TypeError(
-        `Forge router plugin "${id}" must define ${method}().`,
+        `Forge router plugin "${plugin.id}" must define ${method}().`,
       );
     }
   }
-}
-
-/**
- * Asserts that the plugin build adapters are properly formed.
- *
- * @param build - Build configuration object.
- * @param id - Plugin identifier for error messaging.
- */
-function assertPluginBuildAdapters(build: unknown, id: string): void {
-  if (typeof build !== "object" || build === null) {
+  if (typeof plugin.build !== "object" || plugin.build === null) {
     throw new TypeError(
-      `Forge router plugin "${id}" must define build adapters.`,
+      `Forge router plugin "${plugin.id}" must define build adapters.`,
     );
   }
-  const buildRecord = build as Record<string, unknown>;
-  const adapters = [buildRecord.vite, buildRecord.tsdown];
-  const hasInvalidAdapter = adapters.some(
-    (adapter) => adapter !== undefined && typeof adapter !== "function",
-  );
-  if (hasInvalidAdapter) {
+  const adapters = [plugin.build.vite, plugin.build.tsdown];
+  if (
+    adapters.some(
+      (adapter) => adapter !== undefined && typeof adapter !== "function",
+    )
+  ) {
     throw new TypeError(
-      `Forge router plugin "${id}" must define valid Vite or tsdown adapters.`,
+      `Forge router plugin "${plugin.id}" must define valid Vite or tsdown adapters.`,
     );
   }
-}
-
-/** Validate router plugin metadata before it enters a compiler pipeline. */
-export function defineForgeRouterPlugin<T extends RouterOutputPlugin>(
-  plugin: T,
-): T {
-  if (typeof plugin !== "object" || plugin === null) {
-    throw new TypeError("A Forge router plugin must be an object.");
-  }
-  const rawPlugin = plugin as unknown as Record<string, unknown>;
-  assertPluginMetadata(rawPlugin);
-  assertPluginMethods(rawPlugin, plugin.id);
-  assertPluginBuildAdapters(plugin.build, plugin.id);
   return plugin;
 }
 

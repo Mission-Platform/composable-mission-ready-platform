@@ -67,7 +67,7 @@ function uniqueFailures(
 ): readonly BenchmarkFailure[] {
   const seen = new Set<string>();
   return failures.filter((failure) => {
-    const key = `${failure.implementation}|${failure.fwsMode ?? "-"}|${failure.phase}|${failure.category}|${failure.message}`;
+    const key = `${failure.implementation}|${failure.flintMode ?? "-"}|${failure.phase}|${failure.category}|${failure.message}`;
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
@@ -86,8 +86,8 @@ function sortCorrectness(
   correctness: readonly CorrectnessResult[],
 ): readonly CorrectnessResult[] {
   return correctness.toSorted((left, right) => {
-    const leftKey = `${left.caseId}|${left.workload}|${left.inputSize}|${left.implementation}|${left.fwsMode ?? "-"}|${left.hostRuntime}`;
-    const rightKey = `${right.caseId}|${right.workload}|${right.inputSize}|${right.implementation}|${right.fwsMode ?? "-"}|${right.hostRuntime}`;
+    const leftKey = `${left.caseId}|${left.workload}|${left.inputSize}|${left.implementation}|${left.flintMode ?? "-"}|${left.hostRuntime}`;
+    const rightKey = `${right.caseId}|${right.workload}|${right.inputSize}|${right.implementation}|${right.flintMode ?? "-"}|${right.hostRuntime}`;
     return leftKey.localeCompare(rightKey);
   });
 }
@@ -110,7 +110,7 @@ function metricIdentity(metric: BenchmarkMetricRecord): string {
     metric.metric,
     metric.caseId ?? "-",
     metric.implementation,
-    metric.fwsMode ?? "-",
+    metric.flintMode ?? "-",
     metric.hostRuntime ?? "-",
   ].join("|");
 }
@@ -127,9 +127,9 @@ function benchmarkMetrics(
       metrics.push({
         metric: "compile-time",
         implementation: measurement.implementation,
-        ...(measurement.fwsMode === undefined
+        ...(measurement.flintMode === undefined
           ? {}
-          : { fwsMode: measurement.fwsMode }),
+          : { flintMode: measurement.flintMode }),
         caseId: measurement.caseId,
         hostRuntime: measurement.hostRuntime,
         value: statistics.medianMs,
@@ -139,9 +139,9 @@ function benchmarkMetrics(
       metrics.push({
         metric: "call-throughput",
         implementation: measurement.implementation,
-        ...(measurement.fwsMode === undefined
+        ...(measurement.flintMode === undefined
           ? {}
-          : { fwsMode: measurement.fwsMode }),
+          : { flintMode: measurement.flintMode }),
         caseId: measurement.caseId,
         hostRuntime: measurement.hostRuntime,
         value: statistics.throughputPerSecond,
@@ -151,9 +151,9 @@ function benchmarkMetrics(
         metrics.push({
           metric: "memory-behavior",
           implementation: measurement.implementation,
-          ...(measurement.fwsMode === undefined
+          ...(measurement.flintMode === undefined
             ? {}
-            : { fwsMode: measurement.fwsMode }),
+            : { flintMode: measurement.flintMode }),
           caseId: measurement.caseId,
           hostRuntime: measurement.hostRuntime,
           value: statistics.memoryDeltaBytes,
@@ -167,10 +167,12 @@ function benchmarkMetrics(
     metrics.push({
       metric: "wasm-size",
       implementation: artifact.implementation,
-      ...(artifact.fwsMode === undefined ? {} : { fwsMode: artifact.fwsMode }),
+      ...(artifact.flintMode === undefined
+        ? {}
+        : { flintMode: artifact.flintMode }),
       value: artifact.sizeBytes,
       unit: "bytes",
-      ...(artifact.fwsPipeline?.pipeline === "fws-son-wasm-two-stage"
+      ...(artifact.flintPipeline?.pipeline === "flint-son-wasm-two-stage"
         ? {
             explanation:
               "Size includes the canonical SoN frontend and Wasm-stage optimizer.",
@@ -184,9 +186,9 @@ function benchmarkMetrics(
     if (measurement.phase !== "execute" || measurement.status !== "measured")
       continue;
     const key = `${measurement.caseId}|${measurement.workload}|${measurement.inputSize}|${measurement.hostRuntime}`;
-    if (measurement.implementation !== "fws") continue;
-    if (measurement.fwsMode === "wasm") checked.set(key, measurement);
-    if (measurement.fwsMode === "wasm-excluded-bounds")
+    if (measurement.implementation !== "flint") continue;
+    if (measurement.flintMode === "wasm") checked.set(key, measurement);
+    if (measurement.flintMode === "wasm-excluded-bounds")
       excluded.set(key, measurement);
   }
   for (const [key, runtime] of checked) {
@@ -204,8 +206,8 @@ function benchmarkMetrics(
     if (overhead === undefined) continue;
     metrics.push({
       metric: "bounds-check-overhead",
-      implementation: "fws",
-      fwsMode: "wasm",
+      implementation: "flint",
+      flintMode: "wasm",
       caseId: runtime.caseId,
       hostRuntime: runtime.hostRuntime,
       value: overhead,
@@ -228,11 +230,11 @@ function correctnessIdentity(
     | "workload"
     | "inputSize"
     | "implementation"
-    | "fwsMode"
+    | "flintMode"
     | "hostRuntime"
   >,
 ): string {
-  return `${value.caseId}|${value.workload}|${value.inputSize}|${value.implementation}|${value.fwsMode ?? "-"}|${value.hostRuntime}`;
+  return `${value.caseId}|${value.workload}|${value.inputSize}|${value.implementation}|${value.flintMode ?? "-"}|${value.hostRuntime}`;
 }
 
 function referenceKeyFor(value: PhaseMeasurement): BenchmarkKey {
@@ -283,7 +285,8 @@ export function comparePerformanceGates(
   return report.measurements
     .filter(
       (measurement) =>
-        measurement.implementation === "fws" && measurement.phase === "execute",
+        measurement.implementation === "flint" &&
+        measurement.phase === "execute",
     )
     .map((measurement) => {
       const referenceKey = referenceKeyFor(measurement);
@@ -316,15 +319,15 @@ export function comparePerformanceGates(
           status: "not-comparable",
           explanation:
             candidateCorrectness === undefined
-              ? "No correctness-passing result exists for this FWS execute row."
-              : "The FWS execute row did not pass correctness.",
+              ? "No correctness-passing result exists for this Flint execute row."
+              : "The Flint execute row did not pass correctness.",
         } satisfies PerformanceGateResult;
       }
       if (measurement.status !== "measured") {
         return {
           ...base,
           status: "not-comparable",
-          explanation: "The FWS execute row was not measured successfully.",
+          explanation: "The Flint execute row was not measured successfully.",
         } satisfies PerformanceGateResult;
       }
       const measuredMedianMs = validMedian(measurement);
@@ -332,7 +335,7 @@ export function comparePerformanceGates(
         return {
           ...base,
           status: "not-comparable",
-          explanation: "The FWS execute row has no valid median statistics.",
+          explanation: "The Flint execute row has no valid median statistics.",
         } satisfies PerformanceGateResult;
       }
       if (
@@ -390,8 +393,8 @@ export function comparePerformanceGates(
       } satisfies PerformanceGateResult;
     })
     .toSorted((left, right) =>
-      `${left.key.caseId}|${left.key.fwsMode ?? "-"}`.localeCompare(
-        `${right.key.caseId}|${right.key.fwsMode ?? "-"}`,
+      `${left.key.caseId}|${left.key.flintMode ?? "-"}`.localeCompare(
+        `${right.key.caseId}|${right.key.flintMode ?? "-"}`,
       ),
     );
 }
@@ -673,7 +676,7 @@ export function compareFwsPerformance(
 ): readonly PerformanceComparison[] {
   return compareAgainstReferences(
     report,
-    (measurement) => measurement.implementation === "fws",
+    (measurement) => measurement.implementation === "flint",
     ["assemblyscript-wasm", "rust-wasm"],
   );
 }
@@ -769,9 +772,9 @@ function benchmarkKey(measurement: PhaseMeasurement): BenchmarkKey {
     workload: measurement.workload,
     inputSize: measurement.inputSize,
     implementation: measurement.implementation,
-    ...(measurement.fwsMode === undefined
+    ...(measurement.flintMode === undefined
       ? {}
-      : { fwsMode: measurement.fwsMode }),
+      : { flintMode: measurement.flintMode }),
     hostRuntime: measurement.hostRuntime,
     phase: measurement.phase,
   };
@@ -813,10 +816,16 @@ export function compareBenchmarkReports(
       ? undefined
       : `Corpus hashes differ (${current.corpusHash} vs ${baseline.corpusHash}); workloads are not comparable.`;
 
+  // skipcq: JS-R1005
   return keys.map((key) => {
     const currentMeasurement = currentByKey.get(key);
     const baselineMeasurement = baselineByKey.get(key);
-    const measurement = currentMeasurement ?? baselineMeasurement!;
+    const measurement = currentMeasurement ?? baselineMeasurement;
+    if (measurement === undefined) {
+      throw new Error(
+        `Unreachable: measurement for key "${key}" not found in current or baseline`,
+      );
+    }
     const comparisonKeyValue = benchmarkKey(measurement);
     if (
       schemaReason !== undefined ||

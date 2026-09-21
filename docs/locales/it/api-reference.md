@@ -302,9 +302,9 @@ Un hash di contenuto **rileva modifiche di contenuto accidentali o non autorizza
 #### Flusso di lavoro di verifica
 
 1. **Ottieni l'hash previsto** da una fonte attendibile (ad esempio, un manifest firmato, un registro di compilazione CI o una configurazione sicura).
-2. **Calcola l'hash dell'artefatto** utilizzando il verificatore: `fws_verify_artifact(artifact)` restituisce `contentHash`.
+2. **Calcola l'hash dell'artefatto** utilizzando il verificatore: `flint_verify_artifact(artifact)` restituisce `contentHash`.
 3. **Confronta hash**: se corrispondono, l'artefatto non è stato modificato accidentalmente o in modo dannoso da quando è stato registrato il valore previsto.
-4. **Verifica il manifest**: utilizzare `fws_inspect_manifest` per verificare in modo indipendente le importazioni, le esportazioni, i metadati e la conformità alle policy.
+4. **Verifica il manifest**: utilizzare `flint_inspect_manifest` per verificare in modo indipendente le importazioni, le esportazioni, i metadati e la conformità alle policy.
 
 #### Versionamento
 

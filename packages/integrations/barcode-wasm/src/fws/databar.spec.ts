@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { load as loadDataBar, loadSync as loadDataBarSync } from './databar.fws';
+import { load as loadDataBar, loadSync as loadDataBarSync } from './databar.flint';
 import { dataBarFixture } from './fws.fixtures';
 
-describe('GS1 DataBar/RSS-14 FWS slice', () => {
+describe('GS1 DataBar/RSS-14 Flint slice', () => {
   it('validates GTIN-14 values through synchronous and asynchronous loaders', async () => {
     const dataBar = loadDataBarSync();
 

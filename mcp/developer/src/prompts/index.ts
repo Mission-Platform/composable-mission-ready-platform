@@ -22,67 +22,67 @@ function guideBody(id: GuideId): string {
 
 export function registerPrompts(server: McpServer): void {
   server.registerPrompt(
-    'fws-authoring',
+    'flint-authoring',
     {
-      description: 'Guide an assistant to author statically typed, ownership-safe Forge Web Script (FWS).',
+      description: 'Guide an assistant to author statically typed, ownership-safe Flint (Flint).',
       argsSchema: {
-        task: z.string().optional().describe('The FWS feature or function to author.'),
+        task: z.string().optional().describe('The Flint feature or function to author.'),
       },
     },
     (args) =>
       userMessage(
-        `${guideBody('fws-authoring')}\n\n---\nTask: Author FWS for ${args.task ?? '(the requested behavior)'}. Keep types, ownership, pointer-length contracts, and explicit capabilities visible. Run fws_analyze_source before proposing release code.`,
+        `${guideBody('flint-authoring')}\n\n---\nTask: Author Flint for ${args.task ?? '(the requested behavior)'}. Keep types, ownership, pointer-length contracts, and explicit capabilities visible. Run flint_analyze_source before proposing release code.`,
       ),
   );
 
   server.registerPrompt(
-    'fws-secure-review',
+    'flint-secure-review',
     {
-      description: 'Review FWS source and capability boundaries using canonical security findings.',
+      description: 'Review Flint source and capability boundaries using canonical security findings.',
       argsSchema: {
-        sourcePath: z.string().optional().describe('Repository-rooted .fws path, if known.'),
+        sourcePath: z.string().optional().describe('Repository-rooted .flint path, if known.'),
       },
     },
     (args) =>
       userMessage(
-        `${guideBody('fws-security')}\n\n---\nTask: Perform a conservative FWS security review${args.sourcePath ? ` of \`${args.sourcePath}\`` : ''}. Use fws_analyze_source or fws_analyze_workspace, report stable findings with evidence and remediation, and distinguish compiler guarantees from host responsibilities. Do not execute source or call ambient capabilities.`,
+        `${guideBody('flint-security')}\n\n---\nTask: Perform a conservative Flint security review${args.sourcePath ? ` of \`${args.sourcePath}\`` : ''}. Use flint_analyze_source or flint_analyze_workspace, report stable findings with evidence and remediation, and distinguish compiler guarantees from host responsibilities. Do not execute source or call ambient capabilities.`,
       ),
   );
 
   server.registerPrompt(
-    'fws-compile-verify',
+    'flint-compile-verify',
     {
-      description: 'Guide the analyze, compile, and Wasm artifact verification workflow for FWS release output.',
+      description: 'Guide the analyze, compile, and Wasm artifact verification workflow for Flint release output.',
       argsSchema: {
-        sourcePath: z.string().optional().describe('Repository-rooted .fws path, if known.'),
+        sourcePath: z.string().optional().describe('Repository-rooted .flint path, if known.'),
         profile: z.enum(['development', 'strict']).optional().describe('Analysis policy profile (strict for release).'),
       },
     },
     (args) =>
       userMessage(
-        `${guideBody('fws-artifact-verification')}\n\n---\nTask: Compile and verify FWS${args.sourcePath ? ` from \`${args.sourcePath}\`` : ''} under the ${args.profile ?? 'strict'} policy. First run canonical analysis, then compile, inspect the manifest, and run fws_verify_artifact on every returned Wasm variant. Do not treat WebAssembly.validate alone as sufficient and never bypass a blocking finding.`,
+        `${guideBody('flint-artifact-verification')}\n\n---\nTask: Compile and verify Flint${args.sourcePath ? ` from \`${args.sourcePath}\`` : ''} under the ${args.profile ?? 'strict'} policy. First run canonical analysis, then compile, inspect the manifest, and run flint_verify_artifact on every returned Wasm variant. Do not treat WebAssembly.validate alone as sufficient and never bypass a blocking finding.`,
       ),
   );
 
   server.registerPrompt(
-    'fws-forensic-debug',
+    'flint-forensic-debug',
     {
-      description: 'Interpret bounded, redacted FWS forensic traces without enabling arbitrary execution.',
+      description: 'Interpret bounded, redacted Flint forensic traces without enabling arbitrary execution.',
       argsSchema: {
-        sourcePath: z.string().optional().describe('Repository-rooted .fws path, if known.'),
+        sourcePath: z.string().optional().describe('Repository-rooted .flint path, if known.'),
         replayId: z.string().optional().describe('Stable replay identifier.'),
       },
     },
     (args) =>
       userMessage(
-        `${guideBody('fws-forensics')}\n\n---\nTask: Investigate the FWS behavior${args.sourcePath ? ` from \`${args.sourcePath}\`` : ''}${args.replayId ? ` for replay \`${args.replayId}\`` : ''}. Use fws_run_trace only with its bounded capability-denied self-hosted probe, interpret source locations, caps, traps, and hashes, and propose remediation after analysis. Do not request arbitrary commands, Wasm instantiation, host imports, secrets, or unrestricted snapshots.`,
+        `${guideBody('flint-forensics')}\n\n---\nTask: Investigate the Flint behavior${args.sourcePath ? ` from \`${args.sourcePath}\`` : ''}${args.replayId ? ` for replay \`${args.replayId}\`` : ''}. Use flint_run_trace only with its bounded capability-denied self-hosted probe, interpret source locations, caps, traps, and hashes, and propose remediation after analysis. Do not request arbitrary commands, Wasm instantiation, host imports, secrets, or unrestricted snapshots.`,
       ),
   );
 
   server.registerPrompt(
     'debug-code',
     {
-      description: 'Guide evidence-first debugging of a TypeScript, Vue, FWS, or configuration file.',
+      description: 'Guide evidence-first debugging of a TypeScript, Vue, Flint, or configuration file.',
       argsSchema: {
         filePath: z.string().optional().describe('Repository-rooted file path, if known.'),
         languageId: z.string().optional().describe('Configured language-server identifier, if known.'),

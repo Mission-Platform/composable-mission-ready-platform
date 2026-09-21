@@ -70,7 +70,7 @@ pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
 の `...` また、パッケージに必要な Forge の依存関係も構築します。の
-ニュートラル コード スキャナーは、Forge Web Script グラフからコンパイルされます。そうではありません
+ニュートラル コード スキャナーは、Flint グラフからコンパイルされます。そうではありません
 Rust が必要か、 `wasm-pack` ビルドステップ。
 
 ## 開発ワークフロー
@@ -150,7 +150,7 @@ pnpm install
 
 ### WASM ビルドの失敗
 
-Forge Web Script アーティファクトのビルドに失敗した場合は、コンパイラ診断を検査してください
+Flint アーティファクトのビルドに失敗した場合は、コンパイラ診断を検査してください
 選択した静的リンク プロファイルまたは動的リンク プロファイルを確認します。の
 `@mission-platform/hunspell` Emscripten ビルドにはさらに Docker が必要です。
 走ってください。

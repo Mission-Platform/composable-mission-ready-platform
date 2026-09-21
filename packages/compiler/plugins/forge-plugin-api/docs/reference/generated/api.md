@@ -578,37 +578,15 @@ Abort a compiler pipeline when a phase reported one or more errors.
 
 ## `src/framework`
 
-### assertTargetIntentionsLowered
-
-**Kind:** function
-
-```typescript
-function assertTargetIntentionsLowered(
-  intentions: unknown,
-  expectedFramework?: FrameworkId,
-): asserts intentions is TargetIntentions<TLowered>;
-```
-
-Asserts that the supplied intentions are valid and contain a lowered target plan.
-Throws a TypeError if the intentions are incomplete or if the lowered plan
-discriminator does not match the expected framework.
-
-#### Parameters
-
-| Name              | Type        | Description |
-| ----------------- | ----------- | ----------- |
-| intentions        | unknown     |             |
-| expectedFramework | FrameworkId |             |
-
-### FrameworkBuildAdapters
+### ForgeBuildAdapters
 
 **Kind:** interface
 
 ```typescript
-export interface FrameworkBuildAdapters
+export interface ForgeBuildAdapters
 ```
 
-Independently typed framework build integrations.
+Unified build integration adapters for Forge plugins.
 
 ### FrameworkId
 
@@ -1374,3 +1352,197 @@ Walk a render tree depth-first, including nested expression markup.
 | ----- | --------------------------------- | ----------- |
 | nodes | readonly GenericRenderNode[]      |             |
 | visit | (node: GenericRenderNode) => void |             |
+
+## `src/schema`
+
+### assertTargetIntentionsLowered
+
+**Kind:** function
+
+```typescript
+function assertTargetIntentionsLowered(
+  intentions: unknown,
+  expectedFramework?: FrameworkId,
+): asserts intentions is TargetIntentions<TLowered>;
+```
+
+Asserts that the supplied intentions are valid and contain a lowered target plan.
+Throws a TargetIntentionsValidationError (subclass of TypeError) if the intentions are incomplete
+or if the lowered plan discriminator does not match the expected framework.
+
+#### Parameters
+
+| Name              | Type        | Description |
+| ----------------- | ----------- | ----------- |
+| intentions        | unknown     |             |
+| expectedFramework | FrameworkId |             |
+
+### DeclarativeSchema
+
+**Kind:** interface
+
+```typescript
+export interface DeclarativeSchema
+```
+
+Declarative schema definition for compiler intermediate representations.
+
+### findActionableSpan
+
+**Kind:** function
+
+```typescript
+function findActionableSpan(value: unknown): SourceSpan | undefined;
+```
+
+Recursively search for an actionable source span within intentions or their AST facts.
+
+#### Parameters
+
+| Name  | Type    | Description |
+| ----- | ------- | ----------- |
+| value | unknown |             |
+
+### SchemaFieldRule
+
+**Kind:** interface
+
+```typescript
+export interface SchemaFieldRule
+```
+
+Declarative rule applied to a schema property.
+
+### SchemaFieldType
+
+**Kind:** type
+
+```typescript
+export type SchemaFieldType =
+  "string" | "non-empty-string" | "object" | "array" | "boolean";
+```
+
+Supported field types for declarative schema validation.
+
+### SchemaValidationIssue
+
+**Kind:** interface
+
+```typescript
+export interface SchemaValidationIssue
+```
+
+A single schema validation issue identified during intention checking.
+
+### SchemaValidationOptions
+
+**Kind:** interface
+
+```typescript
+export interface SchemaValidationOptions
+```
+
+Options configuring declarative schema validation.
+
+### semanticModuleSchema
+
+**Kind:** constant
+
+```typescript
+export const semanticModuleSchema: DeclarativeSchema;
+```
+
+Schema validating the incoming semantic module IR.
+
+### targetContextSchema
+
+**Kind:** constant
+
+```typescript
+export const targetContextSchema: DeclarativeSchema;
+```
+
+Schema validating the compilation target context.
+
+### targetIntentionsSchema
+
+**Kind:** constant
+
+```typescript
+export const targetIntentionsSchema: DeclarativeSchema;
+```
+
+Schema validating target intentions.
+
+### TargetIntentionsValidationError
+
+**Kind:** class
+
+```typescript
+export class TargetIntentionsValidationError extends TypeError
+```
+
+Error thrown when target intentions fail declarative schema verification.
+
+### TargetIntentionsValidationResult
+
+**Kind:** interface
+
+```typescript
+export interface TargetIntentionsValidationResult
+```
+
+Structured result of target intention validation.
+
+### targetLoweredModuleSchema
+
+**Kind:** constant
+
+```typescript
+export const targetLoweredModuleSchema: DeclarativeSchema;
+```
+
+Schema validating the structure of a lowered target plan.
+
+### validateAgainstSchema
+
+**Kind:** function
+
+```typescript
+function validateAgainstSchema(
+  target: unknown,
+  schema: DeclarativeSchema,
+  options?: SchemaValidationOptions,
+): SchemaValidationIssue[];
+```
+
+Validates a target object against a declarative schema, collecting all structural issues.
+
+#### Parameters
+
+| Name    | Type                    | Description |
+| ------- | ----------------------- | ----------- |
+| target  | unknown                 |             |
+| schema  | DeclarativeSchema       |             |
+| options | SchemaValidationOptions |             |
+
+### validateTargetIntentions
+
+**Kind:** function
+
+```typescript
+function validateTargetIntentions(
+  intentions: unknown,
+  expectedFramework?: FrameworkId,
+): TargetIntentionsValidationResult;
+```
+
+Validates the structure and integrity of target intentions against the declarative schema.
+Returns structured validation errors and corresponding CompilerDiagnostic objects with source locations.
+
+#### Parameters
+
+| Name              | Type        | Description |
+| ----------------- | ----------- | ----------- |
+| intentions        | unknown     |             |
+| expectedFramework | FrameworkId |             |
