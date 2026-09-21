@@ -1,10 +1,13 @@
 {
   "$schema": "https://turborepo.com/schema.json",
-  "concurrency": "3",
+  "concurrency": "8",
   "futureFlags": {
     "experimentalTaskCommand": true
   },
-  "globalDependencies": ["pnpm-workspace.yaml", ".nvmrc"],
+  "globalDependencies": [
+    "pnpm-workspace.yaml",
+    ".nvmrc"
+  ],
   "globalEnv": [
     "NODE_ENV",
     "CI",
@@ -21,11 +24,18 @@
   ],
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build",
+        "build:forge",
+        "build:react",
+        "build:vue",
+        "build:svelte",
+        "build:solid",
+        "build:web-components",
+        "build:cms-storyblok:assets"
+      ],
       "inputs": [
         "$TURBO_DEFAULT$",
-        "$TURBO_ROOT$/scripts/build-forge.ts",
-        "$TURBO_ROOT$/scripts/forge-build.ts",
         "!**/*.md",
         "!**/dist/**",
         "!**/storybook-static/**",
@@ -47,36 +57,6 @@
         "!**/coverage/**"
       ]
     },
-    "build:bundle": {
-      "dependsOn": ["^build"],
-      "env": [
-        "FORGE_BUILD_TARGET",
-        "FORGE_FRAMEWORK_TARGET",
-        "FORGE_CMS_STORYBLOK_TARGET",
-        "FORGE_CMS_ARTIFACT_MODE",
-        "FORGE_BUILD_STAGE_ROOT"
-      ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "!**/*.md",
-        "!**/dist/**",
-        "!**/storybook-static/**",
-        "!**/.vite/**",
-        "!**/coverage/**"
-      ],
-      "outputs": ["dist/**", "!dist/**/*.d.ts", "!dist/**/*.d.ts.map"]
-    },
-    "build:types": {
-      "dependsOn": ["^build"],
-      "env": [
-        "FORGE_BUILD_TARGET",
-        "FORGE_FRAMEWORK_TARGET",
-        "FORGE_CMS_STORYBLOK_TARGET",
-        "FORGE_CMS_ARTIFACT_MODE",
-        "FORGE_BUILD_STAGE_ROOT"
-      ],
-      "outputs": ["dist/**/*.d.ts", "dist/**/*.d.ts.map"]
-    },
     "build:generate": {
       "dependsOn": ["^build"],
       "env": [
@@ -88,8 +68,6 @@
       ],
       "inputs": [
         "$TURBO_DEFAULT$",
-        "$TURBO_ROOT$/scripts/build-forge.ts",
-        "$TURBO_ROOT$/scripts/forge-build.ts",
         "!**/dist/**",
         "!**/node_modules/.cache/forge-build/**",
         "!**/.forge-promotion-*/**"
@@ -97,7 +75,7 @@
       "outputs": ["dist/**"]
     },
     "build:forge": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build:forge", "build:check"],
       "env": [
         "FORGE_BUILD_TARGET",
         "FORGE_FRAMEWORK_TARGET",
@@ -106,8 +84,6 @@
       ],
       "inputs": [
         "$TURBO_DEFAULT$",
-        "$TURBO_ROOT$/scripts/build-forge.ts",
-        "$TURBO_ROOT$/scripts/forge-build.ts",
         "!**/*.md",
         "!**/dist/**",
         "!**/storybook-static/**",
@@ -116,77 +92,118 @@
         "!**/node_modules/.cache/forge-build/**",
         "!**/.forge-promotion-*/**"
       ],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/components/**", "dist/styles/**", "dist/sprite/**", "dist/*.d.ts", "dist/*.js"]
     },
     "build:react": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build:react", "build:forge"],
       "env": ["FORGE_BUILD_TARGET", "FORGE_FRAMEWORK_TARGET"],
       "inputs": [
         "$TURBO_DEFAULT$",
-        "$TURBO_ROOT$/scripts/build-forge.ts",
-        "$TURBO_ROOT$/scripts/forge-build.ts",
+        "!**/*.md",
         "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**",
         "!**/node_modules/.cache/forge-build/**",
         "!**/.forge-promotion-*/**"
       ],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/react/**"]
     },
     "build:vue": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build:vue", "build:forge"],
       "env": ["FORGE_BUILD_TARGET", "FORGE_FRAMEWORK_TARGET"],
       "inputs": [
         "$TURBO_DEFAULT$",
-        "$TURBO_ROOT$/scripts/build-forge.ts",
-        "$TURBO_ROOT$/scripts/forge-build.ts",
+        "!**/*.md",
         "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**",
         "!**/node_modules/.cache/forge-build/**",
         "!**/.forge-promotion-*/**"
       ],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/vue/**"]
     },
     "build:svelte": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build:svelte", "build:forge"],
       "env": ["FORGE_BUILD_TARGET", "FORGE_FRAMEWORK_TARGET"],
       "inputs": [
         "$TURBO_DEFAULT$",
-        "$TURBO_ROOT$/scripts/build-forge.ts",
-        "$TURBO_ROOT$/scripts/forge-build.ts",
+        "!**/*.md",
         "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**",
         "!**/node_modules/.cache/forge-build/**",
         "!**/.forge-promotion-*/**"
       ],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/svelte/**"]
     },
     "build:solid": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build:solid", "build:forge"],
       "env": ["FORGE_BUILD_TARGET", "FORGE_FRAMEWORK_TARGET"],
       "inputs": [
         "$TURBO_DEFAULT$",
-        "$TURBO_ROOT$/scripts/build-forge.ts",
-        "$TURBO_ROOT$/scripts/forge-build.ts",
+        "!**/*.md",
         "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**",
         "!**/node_modules/.cache/forge-build/**",
         "!**/.forge-promotion-*/**"
       ],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/solid/**"]
     },
     "build:web-components": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build:web-components", "build:forge"],
       "env": ["FORGE_BUILD_TARGET", "FORGE_FRAMEWORK_TARGET"],
       "inputs": [
         "$TURBO_DEFAULT$",
-        "$TURBO_ROOT$/scripts/build-forge.ts",
-        "$TURBO_ROOT$/scripts/forge-build.ts",
+        "!**/*.md",
+        "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**",
+        "!**/node_modules/.cache/forge-build/**",
+        "!**/.forge-promotion-*/**"
+      ],
+      "outputs": ["dist/web-components/**"]
+    },
+    "build:cms-storyblok:assets": {
+      "dependsOn": ["build:forge"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
         "!**/dist/**",
         "!**/node_modules/.cache/forge-build/**",
         "!**/.forge-promotion-*/**"
       ],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/cms/**"]
     },
-    "build:watch": {
-      "dependsOn": ["^build"],
-      "cache": false,
-      "persistent": true
+    "build:cms-storyblok:react": {
+      "dependsOn": ["build:forge", "build:cms-storyblok:assets"],
+      "outputs": ["dist/cms/storyblok/react/**"]
+    },
+    "build:cms-storyblok:vue": {
+      "dependsOn": ["build:forge", "build:cms-storyblok:assets"],
+      "outputs": ["dist/cms/storyblok/vue/**"]
+    },
+    "build:cms-storyblok:svelte": {
+      "dependsOn": ["build:forge", "build:cms-storyblok:assets"],
+      "outputs": ["dist/cms/storyblok/svelte/**"]
+    },
+    "build:cms-storyblok:solid": {
+      "dependsOn": ["build:forge", "build:cms-storyblok:assets"],
+      "outputs": ["dist/cms/storyblok/solid/**"]
+    },
+    "build:cms-storyblok:web-components": {
+      "dependsOn": ["build:forge", "build:cms-storyblok:assets"],
+      "outputs": ["dist/cms/storyblok/web-components/**"]
+    },
+    "my-care-notes#build": {
+      "dependsOn": ["^build:vue", "^build:forge"],
+      "env": ["VITE_*"],
+      "outputs": ["dist/**", ".output/**", ".vite/**", "public/sitemap.xml", "public/robots.txt"]
     },
     "bench": {
       "cache": false,
@@ -298,7 +315,6 @@
     },
     "dev": {
       "dependsOn": ["^build"],
-      "with": ["@mission-platform/components#build:watch"],
       "cache": false,
       "persistent": true
     },

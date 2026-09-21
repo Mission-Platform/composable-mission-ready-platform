@@ -3,12 +3,12 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build:vue", "^build:forge"],
       "env": ["VITE_*"],
       "outputs": ["dist/**", ".output/**", ".vite/**", "public/sitemap.xml", "public/robots.txt"]
     },
     "build:spa": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build:vue", "^build:forge"],
       "env": ["VITE_*"],
       "outputs": ["dist/**", ".output/**", ".vite/**", "public/sitemap.xml", "public/robots.txt"]
     },
