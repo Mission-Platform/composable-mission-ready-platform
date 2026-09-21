@@ -1,0 +1,472 @@
+// ZXing-shaped scanner foundation.
+//
+// Modified source: adapted from ZXing core contracts for Flint.
+// See ../../NOTICE and ../../LICENSE-APACHE-2.0 for provenance and terms.
+//
+// This module deliberately uses POD records rather than object/class semantics.
+// Records are caller-owned Array<i32> values with the layouts documented below;
+// image and bitmap storage is caller-owned guest linear memory.  The constants
+// and status values mirror the contracts used by ZXing's LuminanceSource,
+// BitArray, BitMatrix, Binarizer, ResultPoint and DecoderResult boundaries.
+//
+// Record layouts (all offsets are i32 words):
+//   luminance[0..7] = status, width, height, stride, data, reserved, reserved, reserved
+//   bit_array[0..3] = status, bits_ptr, bit_count, capacity
+//   bit_matrix[0..5] = status, bits_ptr, width, height, row_bytes, bit_count
+//   candidate[0..11] = status, format, x0, y0, x1, y1, orientation, score,
+//                      points_ptr, point_count, metadata_ptr, metadata_count
+//   outcome[0..15] = status, format, text_ptr, text_len, bytes_ptr, bytes_len,
+//                    num_bits, points_ptr, point_count, metadata_ptr,
+//                    metadata_count, orientation, timestamp, reserved, reserved, reserved
+//
+// Pointers in these records are encoded as non-negative i32 values.  The FWS
+// allocator is 32-bit and this keeps record validation deterministic at the ABI.
+import "./common.flint" as c;
+
+export fn ZXING_FOUNDATION_VERSION() -> i32 { return 1; }
+export fn FOUNDATION_MAX_WIDTH() -> i32 { return 4096; }
+export fn FOUNDATION_MAX_HEIGHT() -> i32 { return 4096; }
+export fn FOUNDATION_MAX_PIXELS() -> i32 { return 16777216; }
+export fn FOUNDATION_MAX_ALLOCATION_BYTES() -> i32 { return 33554432; }
+export fn FOUNDATION_MAX_POINTS() -> i32 { return 32; }
+export fn FOUNDATION_MAX_METADATA() -> i32 { return 16; }
+
+// Status convention shared by input validation, candidates, decoders and the
+// result envelope. Positive values are progress states; negative values fail closed.
+export fn STATUS_NOT_FOUND() -> i32 { return 0; }
+export fn STATUS_LOCATED() -> i32 { return 1; }
+export fn STATUS_DECODED() -> i32 { return 2; }
+export fn STATUS_INVALID_INPUT() -> i32 { return -1; }
+export fn STATUS_NO_MEMORY() -> i32 { return -2; }
+export fn STATUS_UNSUPPORTED() -> i32 { return -3; }
+export fn STATUS_CHECKSUM_ERROR() -> i32 { return -4; }
+export fn STATUS_EC_ERROR() -> i32 { return -5; }
+
+// Format ids are stable and match the order of the public ZXing-derived contract.
+export fn FORMAT_AZTEC() -> i32 { return 0; }
+export fn FORMAT_CODABAR() -> i32 { return 1; }
+export fn FORMAT_CODE_39() -> i32 { return 2; }
+export fn FORMAT_CODE_93() -> i32 { return 3; }
+export fn FORMAT_CODE_128() -> i32 { return 4; }
+export fn FORMAT_DATA_MATRIX() -> i32 { return 5; }
+export fn FORMAT_EAN_8() -> i32 { return 6; }
+export fn FORMAT_EAN_13() -> i32 { return 7; }
+export fn FORMAT_ITF() -> i32 { return 8; }
+export fn FORMAT_MAXICODE() -> i32 { return 9; }
+export fn FORMAT_PDF_417() -> i32 { return 10; }
+export fn FORMAT_QR_CODE() -> i32 { return 11; }
+export fn FORMAT_RSS_14() -> i32 { return 12; }
+export fn FORMAT_RSS_EXPANDED() -> i32 { return 13; }
+export fn FORMAT_UPC_A() -> i32 { return 14; }
+export fn FORMAT_UPC_E() -> i32 { return 15; }
+
+fn valid_dimensions(width: i32, height: i32) -> bool {
+  if width <= 0 || height <= 0 { return false; }
+  if width > FOUNDATION_MAX_WIDTH() || height > FOUNDATION_MAX_HEIGHT() { return false; }
+  return width * height <= FOUNDATION_MAX_PIXELS();
+}
+
+fn valid_ptr(pointer: i32) -> bool { return pointer > 0; }
+
+export fn foundation_validate_dimensions(width: i32, height: i32, stride: i32) -> i32 {
+  if height <= 0 { return STATUS_INVALID_INPUT(); }
+  if !valid_dimensions(width, height) { return STATUS_INVALID_INPUT(); }
+  if stride < width || stride * height > FOUNDATION_MAX_PIXELS() { return STATUS_INVALID_INPUT(); }
+  return STATUS_DECODED();
+}
+
+export fn foundation_luminance_record(
+  width: i32,
+  height: i32,
+  stride: i32,
+  data: u32,
+  mut state: Array<i32>
+) -> i32 {
+  if c.array_len_i32(state) < 8 { return STATUS_INVALID_INPUT(); }
+  if foundation_validate_dimensions(width, height, stride) < 0 || !valid_ptr(c.i32_from_u32(data)) {
+    state[0] = STATUS_INVALID_INPUT();
+    return STATUS_INVALID_INPUT();
+  }
+  state[0] = STATUS_DECODED();
+  state[1] = width;
+  state[2] = height;
+  state[3] = stride;
+  state[4] = c.i32_from_u32(data);
+  state[5] = 0;
+  state[6] = 0;
+  state[7] = 0;
+  return STATUS_DECODED();
+}
+
+export fn foundation_luminance_row(
+  mut state: Array<i32>,
+  row: i32,
+  mut output: Array<i32>
+) -> i32 {
+  if c.array_len_i32(state) < 8 || c.array_len_i32(output) < state[1] { return STATUS_INVALID_INPUT(); }
+  if state[0] < 0 || row < 0 || row >= state[2] || !valid_ptr(state[4]) { return STATUS_INVALID_INPUT(); }
+  let mut x: i32 = 0;
+  while x < state[1] {
+    output[x] = c.mem_get_u8(c.u32_from_i32(state[4]), row * state[3] + x);
+    x = x + 1;
+  }
+  return STATUS_DECODED();
+}
+
+fn packed_bytes(bit_count: i32) -> i32 {
+  if bit_count <= 0 { return 0; }
+  let sum: i32 = bit_count + 7;
+  let bytes: i32 = sum / 8;
+  return bytes;
+}
+
+fn bit_at(pointer: u32, index: i32) -> bool {
+  let byte_index: i32 = index / 8;
+  let offset: i32 = index - byte_index * 8;
+  if offset < 0 || offset > 7 { return false; }
+  let value: i32 = c.mem_get_u8(pointer, byte_index);
+  return selected_bit(value, offset);
+}
+
+fn odd(value: i32) -> bool {
+  let mut remainder: i32 = value;
+  while remainder >= 2 { remainder = remainder - 2; }
+  return remainder == 1;
+}
+
+fn selected_bit(value: i32, bit: i32) -> bool {
+  if bit == 0 { return odd(value); }
+  if bit == 1 { return odd(value / 2); }
+  if bit == 2 { return odd(value / 4); }
+  if bit == 3 { return odd(value / 8); }
+  if bit == 4 { return odd(value / 16); }
+  if bit == 5 { return odd(value / 32); }
+  if bit == 6 { return odd(value / 64); }
+  if bit == 7 { return odd(value / 128); }
+  return false;
+}
+
+fn selected_mask(bit: i32) -> i32 {
+  if bit == 0 { return 1; }
+  if bit == 1 { return 2; }
+  if bit == 2 { return 4; }
+  if bit == 3 { return 8; }
+  if bit == 4 { return 16; }
+  if bit == 5 { return 32; }
+  if bit == 6 { return 64; }
+  if bit == 7 { return 128; }
+  return 0;
+}
+
+fn set_bit(pointer: u32, index: i32, enabled: bool) -> unit {
+  let byte_index: i32 = index / 8;
+  let offset: i32 = index - byte_index * 8;
+  let value: i32 = c.mem_get_u8(pointer, byte_index);
+  let mask: i32 = selected_mask(offset);
+  let present: bool = selected_bit(value, offset);
+  if mask <= 0 { return; }
+  if enabled && !present { c.mem_set_u8(pointer, byte_index, value + mask); }
+  if !enabled && present { c.mem_set_u8(pointer, byte_index, value - mask); }
+}
+
+export fn foundation_bit_array_init(bits: u32, capacity: i32, mut state: Array<i32>) -> i32 {
+  if c.array_len_i32(state) < 4 || capacity <= 0 || capacity > FOUNDATION_MAX_PIXELS() || !valid_ptr(c.i32_from_u32(bits)) {
+    return STATUS_INVALID_INPUT();
+  }
+  state[0] = STATUS_DECODED();
+  state[1] = c.i32_from_u32(bits);
+  state[2] = 0;
+  state[3] = capacity;
+  return STATUS_DECODED();
+}
+
+export fn foundation_bit_array_append(mut state: Array<i32>, value: i32) -> i32 {
+  if c.array_len_i32(state) < 4 || state[0] < 0 || state[2] >= state[3] {
+    return STATUS_INVALID_INPUT();
+  }
+  set_bit(c.u32_from_i32(state[1]), state[2], value != 0);
+  state[2] = state[2] + 1;
+  return STATUS_DECODED();
+}
+
+export fn foundation_bit_array_get(mut state: Array<i32>, index: i32) -> i32 {
+  if c.array_len_i32(state) < 4 || state[0] < 0 || index < 0 || index >= state[2] { return -1; }
+  if bit_at(c.u32_from_i32(state[1]), index) { return 1; }
+  return 0;
+}
+
+export fn foundation_bit_matrix_init(
+  bits: u32,
+  width: i32,
+  height: i32,
+  mut state: Array<i32>
+) -> i32 {
+  if c.array_len_i32(state) < 6 || !valid_dimensions(width, height) || !valid_ptr(c.i32_from_u32(bits)) {
+    return STATUS_INVALID_INPUT();
+  }
+  let sum: i32 = width + 7;
+  let rows: i32 = sum / 8;
+  state[0] = STATUS_DECODED();
+  state[1] = c.i32_from_u32(bits);
+  state[2] = width;
+  state[3] = height;
+  state[4] = rows;
+  state[5] = width * height;
+  return STATUS_DECODED();
+}
+
+export fn foundation_bit_matrix_get(mut state: Array<i32>, x: i32, y: i32) -> i32 {
+  if c.array_len_i32(state) < 6 || state[0] < 0 || x < 0 || y < 0 || x >= state[2] || y >= state[3] { return -1; }
+  if bit_at(c.u32_from_i32(state[1]), y * state[4] * 8 + x) { return 1; }
+  return 0;
+}
+
+export fn foundation_bit_matrix_set(mut state: Array<i32>, x: i32, y: i32, value: i32) -> i32 {
+  if c.array_len_i32(state) < 6 || state[0] < 0 || x < 0 || y < 0 || x >= state[2] || y >= state[3] { return STATUS_INVALID_INPUT(); }
+  set_bit(c.u32_from_i32(state[1]), y * state[4] * 8 + x, value != 0);
+  return STATUS_DECODED();
+}
+
+// ZXing GlobalHistogramBinarizer-compatible threshold selection. The caller
+// provides 32 zeroable bins so allocation is explicit and bounded.
+export fn foundation_global_threshold(data: u32, width: i32, height: i32, histogram: u32) -> i32 {
+  if !valid_dimensions(width, height) || !valid_ptr(c.i32_from_u32(data)) || !valid_ptr(c.i32_from_u32(histogram)) { return -1; }
+  let mut bin: i32 = 0;
+  while bin < 32 { c.mem_set_u8(histogram, bin * 4, 0); c.mem_set_u8(histogram, bin * 4 + 1, 0); c.mem_set_u8(histogram, bin * 4 + 2, 0); c.mem_set_u8(histogram, bin * 4 + 3, 0); bin = bin + 1; }
+  let mut index: i32 = 0;
+  while index < width * height {
+    let value: i32 = c.mem_get_u8(data, index);
+    let bucket: i32 = value / 8;
+    let old: i32 = c.mem_get_u8(histogram, bucket * 4);
+    c.mem_set_u8(histogram, bucket * 4, old + 1);
+    index = index + 1;
+  }
+  let mut first: i32 = 0;
+  while first < 32 && c.mem_get_u8(histogram, first * 4) == 0 { first = first + 1; }
+  let mut last: i32 = 31;
+  while last >= 0 && c.mem_get_u8(histogram, last * 4) == 0 { last = last - 1; }
+  if first >= last { return first * 8 + 4; }
+  let mut best_gap: i32 = -1;
+  let mut best_bucket: i32 = first;
+  let mut current: i32 = first;
+  while current < last {
+    let left: i32 = c.mem_get_u8(histogram, current * 4);
+    let next_idx: i32 = current + 1;
+    let next_offset: i32 = next_idx * 4;
+    let right: i32 = c.mem_get_u8(histogram, next_offset);
+    let gap_factor1: i32 = current - first + 1;
+    let gap_factor2: i32 = last - current;
+    let gap: i32 = c.abs_i32(left - right) * gap_factor1 * gap_factor2;
+    if gap > best_gap { best_gap = gap; best_bucket = current; }
+    current = current + 1;
+  }
+  return best_bucket * 8 + 4;
+}
+
+export fn foundation_global_binarize(data: u32, width: i32, height: i32, bits: u32, histogram: u32) -> i32 {
+  if !valid_dimensions(width, height) || !valid_ptr(c.i32_from_u32(bits)) { return STATUS_INVALID_INPUT(); }
+  let threshold: i32 = foundation_global_threshold(data, width, height, histogram);
+  if threshold < 0 { return STATUS_INVALID_INPUT(); }
+  let mut index: i32 = 0;
+  while index < width * height { set_bit(bits, index, c.mem_get_u8(data, index) < threshold); index = index + 1; }
+  return STATUS_DECODED();
+}
+
+// Local block thresholding follows HybridBinarizer's bounded 8x8 contract.
+export fn foundation_hybrid_binarize(data: u32, width: i32, height: i32, bits: u32) -> i32 {
+  if !valid_dimensions(width, height) || !valid_ptr(c.i32_from_u32(data)) || !valid_ptr(c.i32_from_u32(bits)) { return STATUS_INVALID_INPUT(); }
+  let mut y: i32 = 0;
+  while y < height {
+    let mut x: i32 = 0;
+    while x < width {
+      let mut sum: i32 = 0;
+      let mut minimum: i32 = 255;
+      let mut maximum: i32 = 0;
+      let mut count: i32 = 0;
+      let mut dy: i32 = 0;
+      while dy < 8 && y + dy < height {
+        let mut dx: i32 = 0;
+        while dx < 8 && x + dx < width {
+          let y_dy: i32 = y + dy;
+          let row_offset: i32 = y_dy * width;
+          let col_offset: i32 = row_offset + x + dx;
+          let value: i32 = c.mem_get_u8(data, col_offset);
+          sum = sum + value;
+          if value < minimum { minimum = value; }
+          if value > maximum { maximum = value; }
+          count = count + 1;
+          dx = dx + 1;
+        }
+        dy = dy + 1;
+      }
+      let mut threshold: i32 = 128;
+      let mut divisor: i32 = count;
+      if divisor <= 0 { divisor = 1; }
+      threshold = sum / divisor;
+      if maximum - minimum < 24 { threshold = minimum / 2; }
+      let pixel_offset: i32 = y * width + x;
+      let value: i32 = c.mem_get_u8(data, pixel_offset);
+      set_bit(bits, pixel_offset, value < threshold);
+      x = x + 1;
+    }
+    y = y + 1;
+  }
+  return STATUS_DECODED();
+}
+
+// Fixed-point (8 fractional bits) perspective sampler. The four corners are
+// ordered top-left, top-right, bottom-right, bottom-left. This bilinear form is
+// deterministic and is intentionally kept free of floating point operations.
+export fn foundation_sample_perspective(
+  source: u32,
+  source_width: i32,
+  source_height: i32,
+  top_left_x: i32,
+  top_left_y: i32,
+  top_right_x: i32,
+  top_right_y: i32,
+  bottom_right_x: i32,
+  bottom_right_y: i32,
+  bottom_left_x: i32,
+  bottom_left_y: i32,
+  size: i32,
+  output: u32
+) -> i32 {
+  if size <= 0 { return STATUS_INVALID_INPUT(); }
+  if !valid_dimensions(source_width, source_height) || size > FOUNDATION_MAX_WIDTH() || !valid_ptr(c.i32_from_u32(source)) || !valid_ptr(c.i32_from_u32(output)) { return STATUS_INVALID_INPUT(); }
+  let mut y: i32 = 0;
+  while y < size {
+    let v_num: i32 = y * 256 + 128;
+    let v: i32 = v_num / size;
+    let left_dx: i32 = bottom_left_x - top_left_x;
+    let left_x: i32 = top_left_x + left_dx * v / 256;
+    let left_dy: i32 = bottom_left_y - top_left_y;
+    let left_y: i32 = top_left_y + left_dy * v / 256;
+    let right_dx: i32 = bottom_right_x - top_right_x;
+    let right_x: i32 = top_right_x + right_dx * v / 256;
+    let right_dy: i32 = bottom_right_y - top_right_y;
+    let right_y: i32 = top_right_y + right_dy * v / 256;
+    let mut x: i32 = 0;
+    while x < size {
+      let u_num: i32 = x * 256 + 128;
+      let u: i32 = u_num / size;
+      let sample_dx: i32 = right_x - left_x;
+      let sample_x: i32 = left_x + sample_dx * u / 256;
+      let sample_dy: i32 = right_y - left_y;
+      let sample_y: i32 = left_y + sample_dy * u / 256;
+      let px: i32 = sample_x / 256;
+      let py: i32 = sample_y / 256;
+      let safe_x: i32 = c.clamp_i32(px, 0, source_width - 1);
+      let safe_y: i32 = c.clamp_i32(py, 0, source_height - 1);
+      let out_offset: i32 = y * size + x;
+      let src_offset: i32 = safe_y * source_width + safe_x;
+      c.mem_set_u8(output, out_offset, c.mem_get_u8(source, src_offset));
+      x = x + 1;
+    }
+    y = y + 1;
+  }
+  return STATUS_DECODED();
+}
+
+fn xor8(a: i32, b: i32) -> i32 {
+  let mut left: i32 = a;
+  let mut right: i32 = b;
+  let mut result: i32 = 0;
+  let mut place: i32 = 1;
+  let mut index: i32 = 0;
+  while index < 8 {
+    let left_bit: bool = odd(left);
+    let right_bit: bool = odd(right);
+    if left_bit != right_bit { result = result + place; }
+    left = left / 2;
+    right = right / 2;
+    place = place * 2;
+    index = index + 1;
+  }
+  return result;
+}
+
+export fn foundation_gf256_mul(a: i32, b: i32) -> i32 {
+  let a_div: i32 = a / 256;
+  let mut left: i32 = a - a_div * 256;
+  let b_div: i32 = b / 256;
+  let mut right: i32 = b - b_div * 256;
+  let mut result: i32 = 0;
+  let mut index: i32 = 0;
+  while index < 8 {
+    if odd(right) { result = xor8(result, left); }
+    let high: bool = left >= 128;
+    left = left * 2;
+    if high { left = left - 256 + 29; }
+    right = right / 2;
+    index = index + 1;
+  }
+  return result;
+}
+
+export fn foundation_gf256_pow(value: i32, exponent: i32) -> i32 {
+  if exponent < 0 { return 0; }
+  let mut result: i32 = 1;
+  let mut base: i32 = value;
+  let mut remaining: i32 = exponent;
+  while remaining > 0 {
+    if odd(remaining) { result = foundation_gf256_mul(result, base); }
+    base = foundation_gf256_mul(base, base);
+    remaining = remaining / 2;
+  }
+  return result;
+}
+
+export fn foundation_gf256_inverse(value: i32) -> i32 {
+  if value <= 0 { return 0; }
+  return foundation_gf256_pow(value, 254);
+}
+
+// Evaluate a codeword at the first ec_count non-zero field powers. This is the
+// Reed-Solomon syndrome primitive shared by QR/Data Matrix/Aztec ports.
+export fn foundation_reed_solomon_syndrome(data: u32, data_length: i32, ec_count: i32, output: u32) -> i32 {
+  if data_length <= 0 || ec_count <= 0 || ec_count > 255 || !valid_ptr(c.i32_from_u32(data)) || !valid_ptr(c.i32_from_u32(output)) { return STATUS_INVALID_INPUT(); }
+  let mut syndrome: i32 = 0;
+  while syndrome < ec_count {
+    let root: i32 = foundation_gf256_pow(2, syndrome);
+    let mut value: i32 = 0;
+    let mut index: i32 = 0;
+    while index < data_length {
+      value = xor8(foundation_gf256_mul(value, root), c.mem_get_u8(data, index));
+      index = index + 1;
+    }
+    c.mem_set_u8(output, syndrome, value);
+    syndrome = syndrome + 1;
+  }
+  return STATUS_DECODED();
+}
+
+export fn foundation_candidate_init(mut candidate: Array<i32>, format: i32) -> i32 {
+  if c.array_len_i32(candidate) < 12 || format < FORMAT_AZTEC() || format > FORMAT_UPC_E() { return STATUS_INVALID_INPUT(); }
+  let mut index: i32 = 0;
+  while index < 12 { candidate[index] = 0; index = index + 1; }
+  candidate[0] = STATUS_NOT_FOUND();
+  candidate[1] = format;
+  candidate[7] = 0;
+  return STATUS_NOT_FOUND();
+}
+
+export fn foundation_outcome_init(mut outcome: Array<i32>) -> i32 {
+  if c.array_len_i32(outcome) < 16 { return STATUS_INVALID_INPUT(); }
+  let mut index: i32 = 0;
+  while index < 16 { outcome[index] = 0; index = index + 1; }
+  outcome[0] = STATUS_NOT_FOUND();
+  outcome[1] = -1;
+  return STATUS_NOT_FOUND();
+}
+
+export fn foundation_validate_outcome(mut outcome: Array<i32>) -> i32 {
+  if c.array_len_i32(outcome) < 16 { return STATUS_INVALID_INPUT(); }
+  if outcome[0] < STATUS_NOT_FOUND() || outcome[0] > STATUS_DECODED() { return STATUS_INVALID_INPUT(); }
+  if outcome[8] < 0 || outcome[8] > FOUNDATION_MAX_POINTS() { return STATUS_INVALID_INPUT(); }
+  if outcome[10] < 0 || outcome[10] > FOUNDATION_MAX_METADATA() { return STATUS_INVALID_INPUT(); }
+  if outcome[3] < 0 || outcome[5] < 0 || outcome[6] < 0 { return STATUS_INVALID_INPUT(); }
+  if outcome[3] > 0 && outcome[2] <= 0 { return STATUS_INVALID_INPUT(); }
+  if outcome[5] > 0 && outcome[4] <= 0 { return STATUS_INVALID_INPUT(); }
+  return STATUS_DECODED();
+}

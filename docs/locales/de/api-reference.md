@@ -302,9 +302,9 @@ Ein Inhalts-Hash **erkennt versehentliche oder nicht autorisierte Inhaltsänderu
 #### Verifizierungsworkflow
 
 1. **Beziehen Sie den erwarteten Hash** von einer vertrauenswürdigen Quelle (z. B. einem signierten Manifest, einem CI-Build-Protokoll oder einer sicheren Konfiguration).
-2. **Berechnen Sie den Artefakt-Hash** mit dem Prüfer: `fws_verify_artifact(artifact)` gibt `contentHash` zurück.
+2. **Berechnen Sie den Artefakt-Hash** mit dem Prüfer: `flint_verify_artifact(artifact)` gibt `contentHash` zurück.
 3. **Hashes vergleichen**: Wenn sie übereinstimmen, wurde das Artefakt seit der Aufzeichnung des erwarteten Werts nicht versehentlich oder böswillig verändert.
-4. **Überprüfen Sie das Manifest**: Verwenden Sie `fws_inspect_manifest`, um Funktionsimporte, -exporte, Metadaten und Richtlinieneinhaltung unabhängig zu überprüfen.
+4. **Überprüfen Sie das Manifest**: Verwenden Sie `flint_inspect_manifest`, um Funktionsimporte, -exporte, Metadaten und Richtlinieneinhaltung unabhängig zu überprüfen.
 
 #### Versionierung
 

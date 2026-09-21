@@ -54,7 +54,7 @@ export type BarcodeSymbology =
 function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
 ```
 
-קידוד `data` לברקוד ליניארי באמצעות גרף FWS המקומי של החבילה.
+קידוד `data` לברקוד ליניארי באמצעות גרף Flint המקומי של החבילה.
 
 #### פרמטרים
 
@@ -75,7 +75,7 @@ function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
 function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>;
 ```
 
-קידוד `data` באופן אסינכרוני באמצעות גרף FWS המקומי של החבילה.
+קידוד `data` באופן אסינכרוני באמצעות גרף Flint המקומי של החבילה.
 
 #### פרמטרים
 
@@ -182,7 +182,7 @@ function encodeEan8FwsAsync(value: string): Promise<string>;
 function encodeUpcaFws(value: string): string;
 ```
 
-מקודד מטען UPC-A דרך גרף EAN-13 FWS עם קידומת אפס.
+מקודד מטען UPC-A דרך גרף EAN-13 Flint עם קידומת אפס.
 
 #### פרמטרים
 
@@ -248,7 +248,7 @@ function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, valu
 function validateGs1DataBarValue(value: string): boolean;
 ```
 
-מאמת ערך GS1 DataBar/RSS-14 GTIN-14 בגרף FWS המקומי של החבילה.
+מאמת ערך GS1 DataBar/RSS-14 GTIN-14 בגרף Flint המקומי של החבילה.
 
 #### פרמטרים
 

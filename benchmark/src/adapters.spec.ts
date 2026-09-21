@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
 import { validateWasmArtifact } from "./abi.ts";
-import { createFwsVmAdapter } from "./adapters/fws-vm.ts";
-import { createFwsWasmAdapter } from "./adapters/fws-wasm.ts";
+import { createFlintVmAdapter } from "./adapters/flint-vm.ts";
+import { createFlintWasmAdapter } from "./adapters/flint-wasm.ts";
 import { createJavaScriptAdapter } from "./adapters/javascript.ts";
 import { BENCHMARK_CORPUS } from "./corpus.ts";
 import { runKernel } from "./kernels.ts";
@@ -28,9 +28,9 @@ describe("benchmark runtime adapters", () => {
   });
 
   it.each(["interpret", "jit", "aot"] as const)(
-    "executes native FWS VM kernels independently (%s)",
+    "executes native Flint VM kernels independently (%s)",
     async (mode) => {
-      const adapter = createFwsVmAdapter(mode);
+      const adapter = createFlintVmAdapter(mode);
       const artifact = await adapter.build();
       expect(artifact.metadata?.nativeKernels).toBe(true);
       const initialized = await adapter.initialize(artifact);
@@ -56,8 +56,8 @@ describe("benchmark runtime adapters", () => {
     10_000, // Increased timeout for JIT cache compilation on cold runs
   );
 
-  it("executes native emitted FWS WASM kernels through the pointer-length ABI", async () => {
-    const initialized = await expectCorpus(createFwsWasmAdapter());
+  it("executes native emitted Flint WASM kernels through the pointer-length ABI", async () => {
+    const initialized = await expectCorpus(createFlintWasmAdapter());
     expect(initialized.preparation?.nativeKernels).toBe(true);
     expect(initialized.preparation?.instancePolicy).toBe("reusable-with-reset");
     expect(initialized.preparation?.resetAbi).toBe("fws_reset-v1");
@@ -69,7 +69,10 @@ describe("benchmark runtime adapters", () => {
     );
     expect(unicode).toBeDefined();
     expect(dataset).toBeDefined();
-    for (const benchmarkCase of [unicode!, dataset!, unicode!, dataset!])
+    if (unicode === undefined || dataset === undefined) {
+      throw new Error("Expected benchmark cases to be defined");
+    }
+    for (const benchmarkCase of [unicode, dataset, unicode, dataset])
       expect(
         await initialized.execute(benchmarkCase.input),
         benchmarkCase.id,
@@ -80,9 +83,7 @@ describe("benchmark runtime adapters", () => {
         threshold: 1,
       }),
     ).toBe(140_000);
-    expect(await initialized.execute(unicode!.input)).toEqual(
-      unicode!.expected,
-    );
+    expect(await initialized.execute(unicode.input)).toEqual(unicode.expected);
   });
 
   it("rejects malformed WASM before it can enter a speed ranking", () => {
@@ -91,9 +92,9 @@ describe("benchmark runtime adapters", () => {
     ).toThrow("valid WebAssembly");
   });
 
-  it("does not silently accept a JavaScript capability shim as FWS native work", async () => {
-    const wasm = await createFwsWasmAdapter().build();
-    const vm = await createFwsVmAdapter("interpret").build();
+  it("does not silently accept a JavaScript capability shim as Flint native work", async () => {
+    const wasm = await createFlintWasmAdapter().build();
+    const vm = await createFlintVmAdapter("interpret").build();
     expect(wasm.metadata?.nativeKernels).toBe(true);
     expect(vm.metadata?.nativeKernels).toBe(true);
     expect(wasm.metadata?.abi).toBe("pointer-length-native-v1");

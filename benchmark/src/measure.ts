@@ -120,14 +120,14 @@ export async function measureInitialization<Input extends BenchmarkInput>(
 }
 
 export function memoryUsageBytes(): number | undefined {
-  const memory = globalThis as typeof globalThis & {
+  const host = globalThis as typeof globalThis & {
     process?: { memoryUsage?: () => { heapUsed: number } };
     performance?: { memory?: { usedJSHeapSize: number } };
   };
-  if (typeof memory.process?.memoryUsage === "function") {
-    return memory.process.memoryUsage().heapUsed;
+  if (typeof host.process?.memoryUsage === "function") {
+    return host.process.memoryUsage().heapUsed;
   }
-  const used = memory.performance?.memory?.usedJSHeapSize;
+  const used = host.performance?.memory?.usedJSHeapSize;
   return typeof used === "number" ? used : undefined;
 }
 

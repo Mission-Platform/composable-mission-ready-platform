@@ -2,7 +2,7 @@
   "name": "@mission-platform/benchmark",
   "private": true,
   "version": "0.1.3",
-  "description": "Evidence-based Forge Web Script runtime benchmark harness",
+  "description": "Evidence-based Flint runtime benchmark harness",
   "type": "module",
   "scripts": {
     "bench": "node --experimental-strip-types src/cli.ts",
@@ -15,8 +15,8 @@
     "format:write": "prettier --write ."
   },
   "dependencies": {
-    "@mission-platform/forge-web-script": "workspace:*",
-    "@mission-platform/forge-web-script-runtime": "workspace:*",
+    "@mission-platform/flint": "workspace:*",
+    "@mission-platform/flint-runtime": "workspace:*",
     "@mission-platform/vite-plugin-assemblyscript": "workspace:*",
     "vite": "catalog:vite"
   },

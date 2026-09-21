@@ -109,7 +109,7 @@ Mission Platform nutzt den Browsermodus von Vitest für Tests, die eine echte DO
 
 ### Forge-Webskripttests
 
-Verwenden Sie `@mission-platform/forge-web-script-vitest` für deterministischen Compiler, Artefakt, Wasm und selbstgehostete Parität
+Verwenden Sie `@mission-platform/flint-vitest` für deterministischen Compiler, Artefakt, Wasm und selbstgehostete Parität
 Schecks. Es delegiert die Kompilierung an denselben Compilerdienst und dasselbe Vite-Plugin, das von der Produktion verwendet wird. es entsteht kein
 zweites Modulsystem.
 
@@ -117,11 +117,11 @@ Installieren Sie das Paket in einem Arbeitsbereich, der `.fws`-Module testet, un
 
 ```typescript
 // vitest.config.ts
-import { defineForgeWebScriptVitestConfig } from "@mission-platform/forge-web-script-vitest";
+import { defineFlintVitestConfig } from "@mission-platform/flint-vitest";
 
-export default defineForgeWebScriptVitestConfig({
+export default defineFlintVitestConfig({
   environment: "node",
-  forgeWebScript: {
+  flint: {
     root: import.meta.dirname,
     requestedCapabilities: ["clock.now"],
     selfHostedVmMode: "interpret",
@@ -138,32 +138,32 @@ Erstellen Sie für direkte Compiler- und Laufzeitzusicherungen einen Harness pro
 ```typescript
 import { afterEach, describe, expect, it } from "vitest";
 import {
-  assertForgeWebScriptDiagnostic,
-  assertForgeWebScriptNoDiagnostics,
-  createForgeWebScriptTestHarness,
-} from "@mission-platform/forge-web-script-vitest";
+  assertFlintDiagnostic,
+  assertFlintNoDiagnostics,
+  createFlintTestHarness,
+} from "@mission-platform/flint-vitest";
 
 describe("FWS fixture", () => {
-  const harness = createForgeWebScriptTestHarness({
+  const harness = createFlintTestHarness({
     requestedCapabilities: ["clock.now"],
   });
 
   afterEach(() => harness.dispose());
 
   it("checks artifacts, Wasm exports, and explicit capabilities", async () => {
-    const result = await harness.compile("valid/scalar.fws");
-    assertForgeWebScriptNoDiagnostics(result.diagnostics);
+    const result = await harness.compile("valid/scalar.flint");
+    assertFlintNoDiagnostics(result.diagnostics);
     expect(result.artifact.manifest?.exports.map(({ name }) => name)).toEqual([
       "answer",
     ]);
     expect(
       (
-        await harness.load<{ answer: () => number }>("valid/scalar.fws")
+        await harness.load<{ answer: () => number }>("valid/scalar.flint")
       ).answer(),
     ).toBe(42);
 
     const clock = await harness.load<{ current: () => bigint }>(
-      "capabilities/clock-now.fws",
+      "capabilities/clock-now.flint",
       {
         "clock.now": { now: () => 123n },
       },
@@ -172,9 +172,9 @@ describe("FWS fixture", () => {
   });
 
   it("keeps diagnostic code, phase, and span structured", async () => {
-    const result = await harness.inspect("diagnostics/invalid-type.fws");
-    assertForgeWebScriptDiagnostic(result.diagnostics, {
-      code: "FWS-TYPE-005",
+    const result = await harness.inspect("diagnostics/invalid-type.flint");
+    assertFlintDiagnostic(result.diagnostics, {
+      code: "FLINT-TYPE-005",
       phase: "type-check",
       line: 2,
     });
@@ -194,7 +194,7 @@ import {
   load,
   loadSync,
   manifest,
-} from "./fixtures/valid/scalar.fws";
+} from "./fixtures/valid/scalar.flint";
 
 expect(abiManifest).toEqual(manifest);
 expect((await load<{ answer: () => number }>()).answer()).toBe(42);
@@ -210,7 +210,7 @@ const artifact = harness.compileSource(
   `
   export fn echo(value: string) -> string { return value; }
 `,
-  "strings.fws",
+  "strings.flint",
 ).artifact;
 
 const generated = await importFromEsmSource(artifact.esmSource);
@@ -264,8 +264,8 @@ generiert beim aufgezeichneten Node-Lauf. Diese Zahlen sind repräsentative Bewe
 keine maschinenübergreifenden Leistungsgarantien; Verwenden Sie die Fallbeispiele des Berichts
 für Vergleiche.
 
-Das Plugin stellt außerdem explizite virtuelle Abfragen für `?forge-web-script-manifest`, `?forge-web-script-declarations`,
-`?forge-web-script-wasm` und `?forge-web-script-source-map`. Um diese Umgebungsmodule für TypeScript erkennbar zu machen,
+Das Plugin stellt außerdem explizite virtuelle Abfragen für `?flint-manifest`, `?flint-declarations`,
+`?flint-wasm` und `?flint-source-map`. Um diese Umgebungsmodule für TypeScript erkennbar zu machen,
 Fügen Sie den Unterpfad der mitgelieferten Deklaration zu den Typen des Testprojekts hinzu:
 
 ```json
@@ -273,16 +273,16 @@ Fügen Sie den Unterpfad der mitgelieferten Deklaration zu den Typen des Testpro
   "compilerOptions": {
     "types": [
       "node",
-      "@mission-platform/forge-web-script-vitest/forge-web-script"
+      "@mission-platform/flint-vitest/flint"
     ]
   }
 }
 ```
 
-Alternativ können Sie `/// <reference types="@mission-platform/forge-web-script-vitest/forge-web-script" />` zu einem Nur-Test hinzufügen
+Alternativ können Sie `/// <reference types="@mission-platform/flint-vitest/flint" />` zu einem Nur-Test hinzufügen
 Geben Sie den im Projekt enthaltenen Einstiegspunkt ein. Der Deklarationsunterpfad ist nur typspezifisch und fügt keinen Laufzeitimport hinzu.
 
-Verwenden Sie gemeinsam genutzte Fixtures in `packages/forge-web-script-vitest/fixtures/` für paketübergreifende Sprach- und ABI-Konformität:
+Verwenden Sie gemeinsam genutzte Fixtures in `packages/flint/vitest/fixtures/` für paketübergreifende Sprach- und ABI-Konformität:
 `valid/`, `diagnostics/`, `capabilities/`, `graphs/` und `self-hosted/` sind absichtlich stabil. Halten Sie eine Halterung daneben
 eine Compiler-, Laufzeit- oder Plugin-Spezifikation, wenn sie ein privates Implementierungsdetail abdeckt; Verwenden Sie eine Inline-Quelle für einen kleinen Parser oder
 Fälle von VM-Einheiten. Dadurch bleiben Gerätenamen und Bereinigung deterministisch, ohne dass Tests auf niedriger Ebene durch den Kabelbaum gezwungen werden.
@@ -294,10 +294,10 @@ als beliebige kompilierte FWS-VM-Ausführung oder als Ersatz für Wasm-Verhalten
 Führen Sie die fokussierte FWS-Matrix mit den normalen Arbeitsbereichsaufgaben aus:
 
 ```bash
-pnpm exec turbo run test build:check --filter @mission-platform/forge-web-script-vitest
-pnpm exec turbo run test build:check --filter @mission-platform/forge-web-script
-pnpm exec turbo run test build:check --filter @mission-platform/forge-web-script-runtime
-pnpm exec turbo run test build:check --filter @mission-platform/vite-plugin-forge-web-script
+pnpm exec turbo run test build:check --filter @mission-platform/flint-vitest
+pnpm exec turbo run test build:check --filter @mission-platform/flint
+pnpm exec turbo run test build:check --filter @mission-platform/flint-runtime
+pnpm exec turbo run test build:check --filter @mission-platform/vite-plugin-flint
 ```
 
 ## Technische Referenz

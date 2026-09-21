@@ -139,9 +139,10 @@ function isCarryableHelperNode(node: ForgeFileNode | undefined): node is ForgeFi
   return node !== undefined && !NON_HELPER_NODE_KINDS.has(node.kind);
 }
 
-/** Determines if a graph node is a Forge Web Script asset. */
+/** Determines if a graph node is a Flint or legacy Forge Web Script asset. */
 function isForgeWebScriptAsset(node: ForgeFileNode | undefined): node is ForgeFileNode {
-  return node?.kind === 'asset' && path.extname(node.id) === '.fws';
+  const ext = path.extname(node?.id ?? '');
+  return node?.kind === 'asset' && (ext === '.flint' || ext === '.flt' || ext === '.fws');
 }
 
 /** Evaluates an import edge from a component and carries helper modules or assets into the flat build. */

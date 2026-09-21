@@ -2,13 +2,13 @@ import { describe, expect, it } from 'vitest';
 
 import { encodeBarcode } from '../encoder';
 
-import { loadSync as loadCodabarSync } from './codabar.fws';
-import { load as loadCode39, loadSync as loadCode39Sync } from './code39.fws';
-import { load as loadItf, loadSync as loadItfSync } from './itf.fws';
-import { load as loadMsi, loadSync as loadMsiSync } from './msi.fws';
-import { load as loadPharmacode, loadSync as loadPharmacodeSync } from './pharmacode.fws';
+import { loadSync as loadCodabarSync } from './codabar.flint';
+import { load as loadCode39, loadSync as loadCode39Sync } from './code39.flint';
+import { load as loadItf, loadSync as loadItfSync } from './itf.flint';
+import { load as loadMsi, loadSync as loadMsiSync } from './msi.flint';
+import { load as loadPharmacode, loadSync as loadPharmacodeSync } from './pharmacode.flint';
 
-describe('native barcode FWS families', () => {
+describe('native barcode Flint families', () => {
   it('matches Code 39 standard and extended module output', () => {
     const standard = loadCode39Sync();
     const extended = encodeBarcode('code39ext', 'Hello, World!').modules.join('');

@@ -1,7 +1,7 @@
 # @mission-platform/barcode
 
-A dependency-free **1D (linear) barcode encoder** backed by package-local Forge
-Web Script graphs and typed direct loaders.
+A dependency-free **1D (linear) barcode encoder** backed by package-local Flint
+graphs and typed direct loaders.
 
 It renders a symbology + payload into a flat run of **module bits** (`1` = bar,
 `0` = space), one entry per unit-width module (no quiet zone) — ready to draw as an SVG or canvas. Supported symbologies:
@@ -42,7 +42,7 @@ const rects = barcode.modules
 const svg = `<svg viewBox="0 0 ${barcode.width} ${height}">${rects}</svg>`;
 ```
 
-`encodeBarcode` paths load their embedded FWS artifacts synchronously and need no runtime `fetch`; an async variant,
+`encodeBarcode` paths load their embedded Flint artifacts synchronously and need no runtime `fetch`; an async variant,
 `encodeBarcodeAsync`, is also exported.
 
 `encodeBarcode` throws a `RangeError` when the payload is invalid for the chosen symbology (bad characters, wrong
@@ -53,27 +53,27 @@ To decode captured images or camera frames, use the scanner APIs from
 
 ## Architecture
 
-- `src/fws/` — package-local Forge Web Script encoder graphs, handwritten ABI
+- `src/fws/` — package-local Flint encoder graphs, handwritten ABI
   declarations, and focused parity fixtures. The graphs expose generated `load`
   and `loadSync` loaders.
-- `src/encoder/` — the typed façade that converts between the direct FWS string
+- `src/encoder/` — the typed façade that converts between the direct Flint string
   ABI and the public module-bit contract. Generated loaders own linear-memory
   allocation and result cleanup.
-- `src/index.ts` — the package entry, re-exporting direct FWS codec APIs and
+- `src/index.ts` — the package entry, re-exporting direct Flint codec APIs and
   framework component entrypoints.
 - The barcode implementation is package-local and does not depend on a
   generated WebAssembly wrapper package.
 
 ## Building
 
-The package build embeds the package-local FWS graphs before the type-check,
+The package build embeds the package-local Flint graphs before the type-check,
 bundle, and declaration steps:
 
 ```sh
 pnpm exec turbo run build --filter @mission-platform/barcode
 ```
 
-The normal workspace installation provides the Forge Web Script compiler and
+The normal workspace installation provides the Flint compiler and
 runtime packages:
 
 ```sh

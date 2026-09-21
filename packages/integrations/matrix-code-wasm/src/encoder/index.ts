@@ -1,6 +1,6 @@
-// Public, typed wrapper around the package-local Forge Web Script matrix encoder.
+// Public, typed wrapper around the package-local Flint matrix encoder.
 
-import { load as loadMatrixEncoder, loadSync as loadMatrixEncoderSync } from '../fws/matrix-encoder.fws';
+import { load as loadMatrixEncoder, loadSync as loadMatrixEncoderSync } from '../fws/matrix-encoder.flint';
 
 /**
  * The 2D matrix symbologies this encoder supports. Passed as the first argument

@@ -1,5 +1,5 @@
 /**
- * Extract public TypeScript and Forge Web Script declarations into package-owned
+ * Extract public TypeScript and Flint declarations into package-owned
  * reference documentation.
  *
  * Usage:
@@ -14,7 +14,8 @@ import { promisify } from 'node:util';
 
 import { parseSync } from 'oxc-parser';
 
-export type ExtractedSymbolKind = 'function' | 'class' | 'interface' | 'type' | 'constant' | 'component' | 'fws-export';
+export type ExtractedSymbolKind =
+  'function' | 'class' | 'interface' | 'type' | 'constant' | 'component' | 'flint-export';
 
 export interface ExtractedParameter {
   readonly name: string;
@@ -310,7 +311,13 @@ function documentationFor(module: ParsedModule, start: number): ParsedDocumentat
   const comment = module.comments
     .filter((candidate) => candidate.type === 'Block' && candidate.value.startsWith('*') && candidate.end <= start)
     .toSorted((left, right) => right.end - left.end)
-    .find((candidate) => module.source.slice(candidate.end, start).trim() === '');
+    .find(
+      (candidate) =>
+        module.source
+          .slice(candidate.end, start)
+          .replaceAll(/\/\/.*$/gmu, '')
+          .trim() === '',
+    );
   if (comment === undefined) return { description: '', tags: [], parameterDescriptions: new Map() };
 
   const lines = comment.value.split('\n').map((line) => line.replace(/^\s*\* ?/u, '').trimEnd());
@@ -609,39 +616,42 @@ export async function extractTypeScriptSymbols(
   });
 }
 
-interface FwsDocumentation {
+interface FlintDocumentation {
   readonly description: string;
   readonly tags: readonly { readonly name: string; readonly subject?: string; readonly text: string }[];
 }
 
-interface FwsSymbolLike {
+interface FlintSymbolLike {
   readonly kind: string;
   readonly name: string;
-  readonly documentation?: FwsDocumentation;
+  readonly documentation?: FlintDocumentation;
   readonly exported?: boolean;
   readonly parameters?: readonly { readonly name: string; readonly type: unknown }[];
   readonly result?: unknown;
   readonly iterable?: boolean;
 }
 
-function fwsTypeNameToString(type: unknown): string {
+// skipcq: JS-D1001, JS-R1005
+function flintTypeNameToString(type: unknown): string {
   if (typeof type === 'string') return type;
   if (!isRecord(type)) return 'unknown';
   const name =
     typeof type.reference === 'string' ? type.reference : typeof type.name === 'string' ? type.name : 'unknown';
   const argumentsList = Array.isArray(type.arguments)
-    ? `<${type.arguments.map((argument) => fwsTypeNameToString(argument)).join(', ')}>`
+    ? `<${type.arguments.map((argument) => flintTypeNameToString(argument)).join(', ')}>`
     : '';
   const length = typeof type.length === 'number' ? `[${type.length}]` : '';
   return `${name}${argumentsList}${length}`;
 }
 
-function fwsParameters(parameters: readonly { readonly name: string; readonly type: unknown }[]): string {
-  return parameters.map((parameter) => `${parameter.name}: ${fwsTypeNameToString(parameter.type)}`).join(', ');
+// skipcq: JS-D1001
+function flintParameters(parameters: readonly { readonly name: string; readonly type: unknown }[]): string {
+  return parameters.map((parameter) => `${parameter.name}: ${flintTypeNameToString(parameter.type)}`).join(', ');
 }
 
-function fwsDocumentationTags(
-  documentation: FwsDocumentation,
+// skipcq: JS-D1001
+function flintDocumentationTags(
+  documentation: FlintDocumentation,
 ): readonly { readonly name: string; readonly text: string }[] {
   return documentation.tags.map(({ name, subject, text }) => ({
     name,
@@ -649,10 +659,11 @@ function fwsDocumentationTags(
   }));
 }
 
-function fwsSignature(declaration: FwsSymbolLike): string {
+// skipcq: JS-D1001, JS-R1005
+function flintSignature(declaration: FlintSymbolLike): string {
   if (declaration.kind === 'function') {
     const exportPrefix = declaration.exported === false ? '' : 'export ';
-    return `${exportPrefix}${declaration.iterable === true ? 'iter ' : ''}fn ${declaration.name}(${fwsParameters(declaration.parameters ?? [])}) -> ${fwsTypeNameToString(declaration.result)}`;
+    return `${exportPrefix}${declaration.iterable === true ? 'iter ' : ''}fn ${declaration.name}(${flintParameters(declaration.parameters ?? [])}) -> ${flintTypeNameToString(declaration.result)}`;
   }
   if (declaration.kind === 'enum') {
     return `${declaration.exported === false ? '' : 'export '}enum ${declaration.name}`;
@@ -661,13 +672,13 @@ function fwsSignature(declaration: FwsSymbolLike): string {
   return `interface ${declaration.name}`;
 }
 
-function documentedFwsDeclarations(module: {
-  readonly functions: readonly FwsSymbolLike[];
-  readonly enums: readonly FwsSymbolLike[];
-  readonly structs: readonly FwsSymbolLike[];
-  readonly interfaces: readonly FwsSymbolLike[];
-}): readonly FwsSymbolLike[] {
-  // Documented top-level declarations form the public FWS reference surface.
+function documentedFlintDeclarations(module: {
+  readonly functions: readonly FlintSymbolLike[];
+  readonly enums: readonly FlintSymbolLike[];
+  readonly structs: readonly FlintSymbolLike[];
+  readonly interfaces: readonly FlintSymbolLike[];
+}): readonly FlintSymbolLike[] {
+  // Documented top-level declarations form the public Flint reference surface.
   // Export is preferred for ABI boundaries but is not required for package-owned
   // declaration modules such as the standard library sources.
   return [...module.functions, ...module.enums, ...module.structs, ...module.interfaces].filter(
@@ -675,40 +686,42 @@ function documentedFwsDeclarations(module: {
   );
 }
 
-async function loadForgeWebScriptParser(repoRoot: string): Promise<ForgeWebScriptParseFunction | undefined> {
+// skipcq: JS-D1001
+async function loadFlintParser(repoRoot: string): Promise<FlintParseFunction | undefined> {
   const candidates = [
-    resolve(repoRoot, 'packages/compiler/forge/forge-web-script/dist/parser.js'),
-    resolve(repoRoot, 'packages/compiler/forge/forge-web-script/dist/index.js'),
+    resolve(repoRoot, 'packages/flint/core/dist/parser.js'),
+    resolve(repoRoot, 'packages/flint/core/dist/index.js'),
   ];
   for (const parserPath of candidates) {
     if (!(await fileExists(parserPath))) continue;
     const parserModule = (await import(pathToFileURL(parserPath).href)) as {
-      readonly parseForgeWebScript?: ForgeWebScriptParseFunction;
+      readonly parseFlint?: FlintParseFunction;
     };
-    if (typeof parserModule.parseForgeWebScript === 'function') return parserModule.parseForgeWebScript;
+    if (typeof parserModule.parseFlint === 'function') return parserModule.parseFlint;
   }
   return undefined;
 }
 
-/** Extract documented public Forge Web Script declarations from package `.fws` sources. */
-export async function extractFwsSymbols(
+/** Extract documented public Flint declarations from package `.flint` sources. */
+// skipcq: JS-R1005
+export async function extractFlintSymbols(
   packageRoot: string,
-  options: { readonly repoRoot?: string; readonly parseForgeWebScript?: ForgeWebScriptParseFunction } = {},
+  options: { readonly repoRoot?: string; readonly parseFlint?: FlintParseFunction } = {},
 ): Promise<readonly ExtractedSymbol[]> {
   const files = await walk(
     packageRoot,
-    (path) => path.endsWith('.fws') && !path.includes(`${sep}fixtures${sep}`) && !path.endsWith('.spec.fws'),
+    (path) => path.endsWith('.flint') && !path.includes(`${sep}fixtures${sep}`) && !path.endsWith('.spec.flint'),
   );
   if (files.length === 0) return [];
 
   const repoRoot = options.repoRoot ?? resolve(dirname(fileURLToPath(import.meta.url)), '..');
-  const parseForgeWebScript = options.parseForgeWebScript ?? (await loadForgeWebScriptParser(repoRoot));
-  if (parseForgeWebScript === undefined) {
-    // Package prebuilds can run before forge-web-script itself is rebuilt. The
-    // docs-site all-workspace extraction runs after builds and regenerates FWS
-    // references once packages/compiler/forge/forge-web-script/dist/parser.js is available.
+  const parseFlint = options.parseFlint ?? (await loadFlintParser(repoRoot));
+  if (parseFlint === undefined) {
+    // Package prebuilds can run before flint itself is rebuilt. The
+    // docs-site all-workspace extraction runs after builds and regenerates Flint
+    // references once packages/flint/core/dist/parser.js is available.
     console.warn(
-      `Skipping FWS extraction for ${relative(repoRoot, packageRoot)}: build @mission-platform/forge-web-script first so packages/compiler/forge/forge-web-script/dist/parser.js is available.`,
+      `Skipping Flint extraction for ${relative(repoRoot, packageRoot)}: build @mission-platform/flint first so packages/flint/core/dist/parser.js is available.`,
     );
     return [];
   }
@@ -716,7 +729,7 @@ export async function extractFwsSymbols(
   const symbols: ExtractedSymbol[] = [];
   for (const file of files) {
     const source = await readFile(file, 'utf8');
-    const parserResult = parseForgeWebScript(source, file, { root: packageRoot });
+    const parserResult = parseFlint(source, file, { root: packageRoot });
     const errors = parserResult.diagnostics.filter(({ severity }) => severity === 'error');
     if (errors.length > 0) {
       if (!source.includes('/**')) continue;
@@ -727,20 +740,20 @@ export async function extractFwsSymbols(
     if (parserResult.module === undefined) continue;
     const sourceModule = relative(packageRoot, file)
       .replaceAll(sep, '/')
-      .replace(/\.fws$/u, '');
-    for (const declaration of documentedFwsDeclarations(parserResult.module)) {
+      .replace(/\.flint$/u, '');
+    for (const declaration of documentedFlintDeclarations(parserResult.module)) {
       const docs = declaration.documentation;
       if (docs === undefined) continue;
       symbols.push({
         name: declaration.name,
-        kind: 'fws-export',
-        signature: fwsSignature(declaration),
+        kind: 'flint-export',
+        signature: flintSignature(declaration),
         description: docs.description || 'No description provided.',
         parameters:
           declaration.kind === 'function'
             ? (declaration.parameters ?? []).map(({ name, type }) => ({
                 name,
-                type: fwsTypeNameToString(type),
+                type: flintTypeNameToString(type),
                 ...Object.fromEntries(
                   docs.tags
                     .filter(
@@ -750,7 +763,7 @@ export async function extractFwsSymbols(
                 ),
               }))
             : [],
-        tags: fwsDocumentationTags(docs),
+        tags: flintDocumentationTags(docs),
         sourceModule,
       });
     }
@@ -760,21 +773,17 @@ export async function extractFwsSymbols(
   );
 }
 
-type ForgeWebScriptParseResult = {
+type FlintParseResult = {
   readonly module?: {
-    readonly functions: readonly FwsSymbolLike[];
-    readonly enums: readonly FwsSymbolLike[];
-    readonly structs: readonly FwsSymbolLike[];
-    readonly interfaces: readonly FwsSymbolLike[];
+    readonly functions: readonly FlintSymbolLike[];
+    readonly enums: readonly FlintSymbolLike[];
+    readonly structs: readonly FlintSymbolLike[];
+    readonly interfaces: readonly FlintSymbolLike[];
   };
   readonly diagnostics: readonly { readonly severity: string; readonly message: string }[];
 };
 
-type ForgeWebScriptParseFunction = (
-  source: string,
-  fileName?: string,
-  options?: { readonly root?: string },
-) => ForgeWebScriptParseResult;
+type FlintParseFunction = (source: string, fileName?: string, options?: { readonly root?: string }) => FlintParseResult;
 
 function markdownTableCell(value: string): string {
   return value.replaceAll('|', String.raw`\|`).replaceAll('\n', ' ');
@@ -831,7 +840,7 @@ async function extractPackage(packageRoot: string, repoRoot: string): Promise<Pa
     throw new Error(`Missing package name in ${relative(repoRoot, packageRoot)}/package.json`);
   const symbols = [
     ...(await extractTypeScriptSymbols(packageRoot, manifest)),
-    ...(await extractFwsSymbols(packageRoot, { repoRoot })),
+    ...(await extractFlintSymbols(packageRoot, { repoRoot })),
   ].sort((left, right) =>
     `${left.sourceModule}:${left.name}:${left.kind}`.localeCompare(`${right.sourceModule}:${right.name}:${right.kind}`),
   );

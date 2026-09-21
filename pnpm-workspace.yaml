@@ -1,7 +1,7 @@
 packages:
   - benchmark
   - apps/**
-  - extensions/fws-vscode
+  - extensions/flint-vscode
   - packages/**
   - examples/**
   - scripts

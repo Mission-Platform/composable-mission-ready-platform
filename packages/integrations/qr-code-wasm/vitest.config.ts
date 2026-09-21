@@ -1,20 +1,20 @@
 import { resolve } from 'node:path';
 
-import { createForgeWebScriptCompilerService } from '@mission-platform/forge-web-script';
+import { createFlintCompilerService } from '@mission-platform/flint';
 import { defineVitestConfig } from '@mission-platform/vite-config/vitest';
-import forgeWebScriptPlugin from '@mission-platform/vite-plugin-forge-web-script';
+import flintPlugin from '@mission-platform/vite-plugin-flint';
 
-const forgeWebScriptCompilerService = createForgeWebScriptCompilerService();
+const flintCompilerService = createFlintCompilerService();
 
 export default defineVitestConfig({
   coverageInclude: ['src/**/*.ts'],
   coverageExclude: ['src/**/*.spec.ts', 'src/test-setup.ts', 'src/test-support/**', 'src/**/*.stories.*'],
   overrides: {
     plugins: [
-      forgeWebScriptPlugin({
+      flintPlugin({
         root: import.meta.dirname,
         requireExports: false,
-        compilerService: forgeWebScriptCompilerService,
+        compilerService: flintCompilerService,
       }),
     ],
     resolve: {

@@ -50,16 +50,16 @@ export function validateWasmArtifact(
   if (!WebAssembly.validate(source))
     throw new Error("Generated artifact is not valid WebAssembly.");
   const module = new WebAssembly.Module(source);
-  const exports = WebAssembly.Module.exports(module)
+  const exportedNames = WebAssembly.Module.exports(module)
     .map(({ name }) => name)
     .toSorted();
   for (const required of requiredExports) {
-    if (!exports.includes(required))
+    if (!exportedNames.includes(required))
       throw new Error(
         `WASM artifact is missing required export '${required}'.`,
       );
   }
-  return exports;
+  return exportedNames;
 }
 
 export function validateManifestExports(
@@ -68,14 +68,16 @@ export function validateManifestExports(
 ): readonly string[] {
   if (manifest === null || typeof manifest !== "object")
     throw new Error("Artifact manifest is not an object.");
-  const exports = (manifest as { exports?: unknown }).exports;
+  const manifestExports = (manifest as { exports?: unknown }).exports;
   if (
-    !Array.isArray(exports) ||
-    !exports.every((entry) => entry !== null && typeof entry === "object")
+    !Array.isArray(manifestExports) ||
+    !manifestExports.every(
+      (entry) => entry !== null && typeof entry === "object",
+    )
   ) {
     throw new Error("Artifact manifest has no valid exports list.");
   }
-  const names = exports
+  const names = manifestExports
     .map((entry) => (entry as { name?: unknown }).name)
     .filter((name): name is string => typeof name === "string")
     .toSorted();

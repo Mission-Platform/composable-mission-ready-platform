@@ -18,7 +18,7 @@ export default [
   {
     files: ['src/encoder/index.ts', 'src/fws/index.ts'],
     rules: {
-      // Lazy FWS loaders intentionally expose the loaded module's method directly.
+      // Lazy Flint loaders intentionally expose the loaded module's method directly.
       'unicorn/no-await-expression-member': 'off',
     },
   },

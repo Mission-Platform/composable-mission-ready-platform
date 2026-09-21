@@ -2,22 +2,22 @@
 
 A focused reimplementation of the core of Google
 [libphonenumber](https://github.com/google/libphonenumber) — **parse, validate, classify and format** international
-phone numbers — written in Forge Web Script and compiled to **WebAssembly**, wrapped in a typed ES module.
+phone numbers — written in Flint and compiled to **WebAssembly**, wrapped in a typed ES module.
 
 ---
 
 ## How it works
 
 ```
-src/phone-number.fws       ← Forge Web Script parse / validate / classify / format logic
-src/phone-number.fws.d.ts  ← typed pointer-length ABI contract
-src/index.ts               ← typed `PhoneNumberUtil` façade over the wasm exports
-dist/                      ← built artifact (wasm inlined as base64)
+src/phone-number.flint       ← Flint parse / validate / classify / format logic
+src/phone-number.flint.d.ts  ← typed pointer-length ABI contract
+src/index.ts                 ← typed `PhoneNumberUtil` façade over the wasm exports
+dist/                        ← built artifact (wasm inlined as base64)
 ```
 
-The Forge Web Script core is compiled to a `.wasm` binary by
-`@mission-platform/vite-plugin-forge-web-script`, then **inlined as base64** into the bundled ES module. The TypeScript
-façade owns the FWS pointer-length UTF-8 boundary, so consumers continue to use ordinary strings and booleans without
+The Flint core is compiled to a `.wasm` binary by
+`@mission-platform/vite-plugin-flint`, then **inlined as base64** into the bundled ES module. The TypeScript
+façade owns the Flint pointer-length UTF-8 boundary, so consumers continue to use ordinary strings and booleans without
 touching the raw WebAssembly ABI.
 
 ---
@@ -53,7 +53,7 @@ already in international form (`+…`, `00…` or
 ### Synchronous usage
 
 When an `await` boundary is impractical (e.g. rendering a component), obtain the instance synchronously — the embedded
-FWS wasm bytes are instantiated with the synchronous `WebAssembly` constructors:
+Flint wasm bytes are instantiated with the synchronous `WebAssembly` constructors:
 
 ```ts
 import { getPhoneNumberUtilSync } from '@mission-platform/phone-number';
@@ -88,11 +88,11 @@ util.isValidNumberForRegion('(415) 555-2671', 'US'); // true
 
 ## Building
 
-Forge Web Script is compiled during the bundle step by
-`@mission-platform/vite-plugin-forge-web-script`. No Docker or native toolchain is required.
+Flint is compiled during the bundle step by
+`@mission-platform/vite-plugin-flint`. No Docker or native toolchain is required.
 
 ```bash
-# Full build (FWS → wasm + typecheck + bundle + declarations):
+# Full build (Flint → wasm + typecheck + bundle + declarations):
 pnpm --filter @mission-platform/phone-number build
 ```
 
@@ -104,22 +104,22 @@ Google's libphonenumber ships exhaustive, machine-generated metadata for every I
 **curated, hand-verified subset** of regions (US, CA, GB, FR, DE, AU, IN, JP, BR, CN, RU) and implements the core
 operations without relying on regular expressions. Validation is length- and
 leading-digit based, and formatting uses per-region grouping rules — plausible approximations rather than byte-for-byte
-parity with upstream. Additional regions can be added in `src/phone-number.fws`.
+parity with upstream. Additional regions can be added in `src/phone-number.flint`.
 
 ---
 
 ## Regex precompilation engine (toward full upstream parity)
 
 Google's libphonenumber drives validation, number-type classification and formatting almost entirely with JavaScript
-`RegExp` applied to per-region patterns in its metadata. Forge Web Script uses a **precompile-patterns** approach for
+`RegExp` applied to per-region patterns in its metadata. Flint uses a **precompile-patterns** approach for
 full parity: patterns are compiled ahead of time into compact, flat `i32` bytecode, and a tiny backtracking VM executes
 that bytecode at runtime — keeping the wasm core regex-free.
 
 ```
-@mission-platform/forge-web-script-regex  ← shared Forge bytecode contract/compiler
-  /reference                            ← TypeScript oracle (tests only)
-src/phone-number.fws                     ← current Forge Web Script runtime entry point
-src/metadata/pattern-corpus.ts          ← captured upstream pattern corpus (diff-testing)
+@mission-platform/flint-regex  ← shared Flint bytecode contract/compiler
+  /reference                   ← TypeScript oracle (tests only)
+src/phone-number.flint         ← current Flint runtime entry point
+src/metadata/pattern-corpus.ts ← captured upstream pattern corpus (diff-testing)
 ```
 
 Supported syntax (the subset used by the metadata): literals, `.`, character classes with ranges/negation,

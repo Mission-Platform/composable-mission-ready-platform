@@ -5,7 +5,7 @@
     "access": "public"
   },
   "license": "BSD-4-Clause",
-  "description": "Dependency-free image/camera code scanner backed by a Forge Web Script graph: locates and decodes Data Matrix, compact Aztec, 1D/RSS, PDF417 and MaxiCode symbols from images or live media streams; QR decoder sources are available as a standalone graph",
+  "description": "Dependency-free image/camera code scanner backed by a Flint graph: locates and decodes Data Matrix, compact Aztec, 1D/RSS, PDF417 and MaxiCode symbols from images or live media streams; QR decoder sources are available as a standalone graph",
   "type": "module",
   "sideEffects": [
     "**/*.css",
@@ -126,7 +126,7 @@
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
     "@mission-platform/vite-plugin-forge": "workspace:*",
-    "@mission-platform/vite-plugin-forge-web-script": "workspace:*",
+    "@mission-platform/vite-plugin-flint": "workspace:*",
     "@storybook/react-vite": "catalog:storybook",
     "@storybook/vue3-vite": "catalog:storybook",
     "@tsdown/css": "catalog:build",

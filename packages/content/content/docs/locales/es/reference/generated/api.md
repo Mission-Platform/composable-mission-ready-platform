@@ -818,18 +818,18 @@ export interface WysiwygEditorProperties
 
 No se proporciona descripción.
 
-## `src/monaco/forge-web-script`
+## `src/monaco/flint`
 
-### adjuntarForgeWebScriptMónaco
+### adjuntarFlintMónaco
 
 **Tipo:** función
 
 ```typescript
-function attachForgeWebScriptMonaco(
+function attachFlintMonaco(
   editor: monaco.editor.IStandaloneCodeEditor,
   monacoRuntime: MonacoRuntime,
-  options: ForgeWebScriptMonacoOptions = {},
-): ForgeWebScriptMonacoHandle;
+  options: FlintMonacoOptions = {},
+): FlintMonacoHandle;
 ```
 
 Adjunte diagnósticos, finalización, desplazamiento, sincronización de modelos y tokenización a un editor.
@@ -840,47 +840,44 @@ Adjunte diagnósticos, finalización, desplazamiento, sincronización de modelos
 | ------------- | ----------------------------------- | ----------- |
 | redactor      | monaco.editor.IStandaloneCodeEditor |             |
 | mónacoRuntime | MónacoRuntime                       |             |
-| opciones      | Opciones de ForgeWebScriptMonaco    |             |
+| opciones      | Opciones de FlintMonaco             |             |
 
-### forgeWebScriptLanguageId
+### flintLanguageId
 
 **Tipo:** constante
 
 ```typescript
-export const forgeWebScriptLanguageId;
+export const flintLanguageId;
 ```
 
 No se proporciona descripción.
 
-### ForgeWebScriptMónacoManejar
+### FlintMónacoManejar
 
 **Tipo:** interfaz
 
 ```typescript
-export interface ForgeWebScriptMonacoHandle
+export interface FlintMonacoHandle
 ```
 
 No se proporciona descripción.
 
-### Opciones de ForgeWebScriptMonaco
+### Opciones de FlintMonaco
 
 **Tipo:** interfaz
 
 ```typescript
-export interface ForgeWebScriptMonacoOptions
+export interface FlintMonacoOptions
 ```
 
 No se proporciona descripción.
 
-### registrarseForgeWebScriptLanguage
+### registrarseFlintLanguage
 
 **Tipo:** función
 
 ```typescript
-function registerForgeWebScriptLanguage(
-  monacoRuntime: MonacoRuntime,
-  languageId = forgeWebScriptLanguageId,
-): monaco.IDisposable;
+function registerFlintLanguage(monacoRuntime: MonacoRuntime, languageId = flintLanguageId): monaco.IDisposable;
 ```
 
 Registre el lenguaje Forge Web Script y el proveedor de tokens léxicos.

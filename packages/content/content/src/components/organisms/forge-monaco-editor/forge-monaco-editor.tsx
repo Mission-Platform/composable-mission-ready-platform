@@ -3,13 +3,13 @@ import { font } from '@mission-platform/tokens';
 
 import styles from './forge-monaco-editor.module.scss';
 
-import type { ForgeWebScriptMonacoOptions } from '../../../monaco/forge-web-script';
+import type { FlintMonacoOptions } from '../../../monaco/flint';
 // Type-only import: erased at build time, so `monaco-editor` is NOT pulled into
 // the synchronous module graph. The runtime module is loaded lazily via a
 // dynamic `import('monaco-editor')` inside the mount `useEffect`, which lets
 // Vite/Rollup split Monaco into its own chunk and ensures the editor only ever
 // evaluates in the browser — keeping this component SSG-safe.
-import type * as monaco from 'monaco-editor';
+import type * as monaco from 'monaco-editor'; // skipcq: JS-C1003
 
 /** The dynamically-imported Monaco runtime module. */
 type MonacoRuntime = typeof monaco;
@@ -31,6 +31,9 @@ export interface MonacoReadyContext {
 /** Size token — canonical 2xs → 2xl scale. */
 export type MonacoEditorSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
+/**
+ * Component properties for the Monaco code editor organism.
+ */
 export interface MonacoEditorProperties {
   /** Size token controlling the wrapper's font scale. Defaults to `'md'`. */
   size?: MonacoEditorSize;
@@ -63,8 +66,8 @@ export interface MonacoEditorProperties {
   automaticLayout?: boolean;
   /** Optional completion-item provider registered for the current language. */
   completionProvider?: MonacoEditorCompletionItemProvider;
-  /** Configure the built-in Forge Web Script integration when `language` is `'fws'`; set to `false` to disable it. */
-  forgeWebScript?: ForgeWebScriptMonacoOptions | false;
+  /** Configure the built-in Flint integration when `language` is `'flint'`; set to `false` to disable it. */
+  flint?: FlintMonacoOptions | false;
   /**
    * Whether spell (Hunspell) + grammar (Harper) checking should be active. When
    * `true` (and not `readonly`), the editor lazily `import()`s the
@@ -131,8 +134,8 @@ export function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>):
   } = properties;
 
   const containerReference = useRef<HTMLDivElement | null>(null);
-  const editorReference = useRef<monaco.editor.IStandaloneCodeEditor | undefined>(undefined);
-  const monacoReference = useRef<MonacoRuntime | undefined>(undefined);
+  const editorReference = useRef<monaco.editor.IStandaloneCodeEditor | undefined>(undefined); // skipcq: JS-W1042
+  const monacoReference = useRef<MonacoRuntime | undefined>(undefined); // skipcq: JS-W1042
   // `true` while the value-mirror effect below is imperatively pushing an
   // incoming `modelValue` into the editor. Monaco fires `onDidChangeModelContent`
   // *synchronously* from `setValue`, so without this guard that programmatic edit
@@ -141,36 +144,47 @@ export function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>):
   // unbounded pre-flush loop that silently freezes the host (no framework
   // recursion warning, since pre-flush jobs are not recursion-capped).
   const applyingModelValueReference = useRef<boolean>(false);
-  const completionDisposableReference = useRef<monaco.IDisposable | undefined>(undefined);
+  const completionDisposableReference = useRef<monaco.IDisposable | undefined>(undefined); // skipcq: JS-W1042
   // Disposers for the lazily-attached spell/grammar checkers.
-  const hunspellDisposeReference = useRef<(() => void) | undefined>(undefined);
-  const harperDisposeReference = useRef<(() => void) | undefined>(undefined);
-  const forgeWebScriptDisposeReference = useRef<(() => void) | undefined>(undefined);
-  const forgeWebScriptAttachGenerationReference = useRef(0);
+  const hunspellDisposeReference = useRef<(() => void) | undefined>(undefined); // skipcq: JS-W1042
+  const harperDisposeReference = useRef<(() => void) | undefined>(undefined); // skipcq: JS-W1042
+  const flintDisposeReference = useRef<(() => void) | undefined>(undefined); // skipcq: JS-W1042
+  const flintAttachGenerationReference = useRef(0);
 
-  const applyForgeWebScript = (): void => {
-    forgeWebScriptAttachGenerationReference.current += 1;
-    const generation = forgeWebScriptAttachGenerationReference.current;
-    forgeWebScriptDisposeReference.current?.();
-    forgeWebScriptDisposeReference.current = undefined;
+  /**
+   * Determines whether Flint language features should be attached to the editor.
+   *
+   * @param editor Active Monaco editor instance.
+   * @param runtime Active Monaco runtime.
+   * @returns True if the editor language is flint and flint support is enabled.
+   */
+  const shouldAttachFlint = (editor?: monaco.editor.IStandaloneCodeEditor, runtime?: MonacoRuntime): boolean =>
+    Boolean(editor && runtime && language === 'flint' && properties.flint !== false);
+
+  /**
+   * Lazily loads and attaches the Flint language service to the active Monaco editor.
+   */
+  const applyFlint = (): void => {
+    flintAttachGenerationReference.current += 1;
+    const generation = flintAttachGenerationReference.current;
+    flintDisposeReference.current?.();
+    flintDisposeReference.current = undefined;
     const editor = editorReference.current;
     const runtime = monacoReference.current;
-    if (!editor || !runtime || language !== 'fws' || properties.forgeWebScript === false) return;
-    void import('../../../monaco/forge-web-script').then(({ attachForgeWebScriptMonaco }) => {
-      if (
-        forgeWebScriptAttachGenerationReference.current === generation &&
-        editorReference.current === editor &&
-        monacoReference.current === runtime &&
-        language === 'fws' &&
-        properties.forgeWebScript !== false
-      ) {
-        forgeWebScriptDisposeReference.current = attachForgeWebScriptMonaco(
-          editor,
-          runtime,
-          properties.forgeWebScript ?? {},
-        ).dispose;
-      }
-    });
+    if (!shouldAttachFlint(editor, runtime) || properties.flint === false) return;
+    const flintOptions = typeof properties.flint === 'object' && properties.flint !== null ? properties.flint : {};
+    import('../../../monaco/flint')
+      .then(({ attachFlintMonaco }) => {
+        const isCurrent =
+          flintAttachGenerationReference.current === generation &&
+          shouldAttachFlint(editorReference.current, monacoReference.current);
+        if (isCurrent && editor && runtime) {
+          flintDisposeReference.current = attachFlintMonaco(editor, runtime, flintOptions).dispose;
+        }
+      })
+      .catch(() => {
+        /* no-op */
+      });
   };
 
   // (Re-)wire Hunspell + Harper against the live editor. Both cores are imported
@@ -265,7 +279,7 @@ export function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>):
       editor.onDidFocusEditorText(() => properties.onFocus?.());
 
       registerCompletionProvider(language);
-      applyForgeWebScript();
+      applyFlint();
       properties.onReady?.({ editor, monaco: runtime });
       applySpellCheck();
     };
@@ -280,9 +294,9 @@ export function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>):
       hunspellDisposeReference.current = undefined;
       harperDisposeReference.current?.();
       harperDisposeReference.current = undefined;
-      forgeWebScriptAttachGenerationReference.current += 1;
-      forgeWebScriptDisposeReference.current?.();
-      forgeWebScriptDisposeReference.current = undefined;
+      flintAttachGenerationReference.current += 1;
+      flintDisposeReference.current?.();
+      flintDisposeReference.current = undefined;
       editorReference.current?.dispose();
       editorReference.current = undefined;
     };
@@ -295,8 +309,8 @@ export function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>):
   }, [spellCheck, readonly, language]);
 
   useEffect(() => {
-    applyForgeWebScript();
-  }, [language, properties.forgeWebScript]);
+    applyFlint();
+  }, [language, properties.flint]);
 
   // Mirror controlled value changes (skip echoes of the editor's own edits).
   useEffect(() => {

@@ -70,7 +70,7 @@ pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
 El `...` También construye las dependencias de Forge requeridas por el paquete. el
-el escáner de código neutral se compila a partir de su gráfico Forge Web Script; no lo hace
+el escáner de código neutral se compila a partir de su gráfico Flint; no lo hace
 requieren un óxido o `wasm-pack` paso de construcción.
 
 ## Flujo de trabajo de desarrollo
@@ -150,7 +150,7 @@ pnpm install
 
 ### Fallos de compilación de WASM
 
-Si un artefacto de Forge Web Script no se puede compilar, inspeccione los diagnósticos del compilador
+Si un artefacto de Flint no se puede compilar, inspeccione los diagnósticos del compilador
 y verificar el perfil de enlace estático o dinámico seleccionado. El
 `@mission-platform/hunspell` La compilación de Emscripten también requiere que Docker
 estar corriendo.

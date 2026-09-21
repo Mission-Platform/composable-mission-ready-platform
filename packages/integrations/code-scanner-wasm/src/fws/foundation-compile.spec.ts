@@ -4,9 +4,9 @@ import { dirname, join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import {
-  createForgeWebScriptCompilerService,
-  resolveForgeWebScriptModuleGraph,
-} from '../../../../compiler/forge/forge-web-script/dist/index.js';
+  createFlintCompilerService,
+  resolveFlintModuleGraph,
+} from '../../../../flint/core/dist/index.js';
 
 const foundationDirectory = resolve(import.meta.dirname);
 const projectRoots = [foundationDirectory];
@@ -15,7 +15,7 @@ function loadTree(directory: string, files: Record<string, string>): void {
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
     const fileName = join(directory, entry.name);
     if (entry.isDirectory()) loadTree(fileName, files);
-    else if (entry.name.endsWith('.fws')) files[resolve(fileName)] = readFileSync(fileName, 'utf8');
+    else if (entry.name.endsWith('.fws') || entry.name.endsWith('.flint')) files[resolve(fileName)] = readFileSync(fileName, 'utf8');
   }
 }
 
@@ -23,7 +23,7 @@ describe('compiled ZXing foundation graph', () => {
   it('emits valid WebAssembly for deterministic foundation probes', async () => {
     const files: Record<string, string> = {};
     loadTree(foundationDirectory, files);
-    const entry = resolve(foundationDirectory, 'foundation-entry.fws');
+    const entry = resolve(foundationDirectory, 'foundation-entry.flint');
     const resolver = {
       resolve(source: string, importer: string): string | undefined {
         const target = resolve(dirname(importer), source);
@@ -39,8 +39,8 @@ describe('compiled ZXing foundation graph', () => {
       crossProjectLinkMode: 'static' as const,
       linkProfile: 'static' as const,
     };
-    const graph = await resolveForgeWebScriptModuleGraph([entry], resolver, linkConfiguration);
-    const artifact = createForgeWebScriptCompilerService().compileGraph({
+    const graph = await resolveFlintModuleGraph([entry], resolver, linkConfiguration);
+    const artifact = createFlintCompilerService().compileGraph({
       graph: graph.graph,
       entryFileName: entry,
       compilerVersion: '0.1.0',

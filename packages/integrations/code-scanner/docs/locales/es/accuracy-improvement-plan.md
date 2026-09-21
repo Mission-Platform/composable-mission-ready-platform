@@ -6,10 +6,10 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 > Idioma: Español (es)
 
 Un plan para aumentar la tasa de lectura de `@mission-platform/code-scanner` en capturas del mundo real (cargas y cámara en vivo).
-marcos), y para mantener la canalización de escaneo dentro de un artefacto Forge Web Script/WebAssembly vinculado estáticamente.
+marcos), y para mantener la canalización de escaneo dentro de un artefacto Flint/WebAssembly vinculado estáticamente.
 
 > **Implementación actual:** El escáner se envía como un dispositivo vinculado estáticamente
-> Gráfico Forge Web Script en `src/fws`, con un perfil de módulo fuente dinámico
+> Gráfico Flint en `src/fws`, con un perfil de módulo fuente dinámico
 > disponible para módulos decodificadores que se pueden almacenar en caché de forma independiente. El óxido y la caja
 > las referencias que se conservan a continuación son únicamente de procedencia migratoria histórica; ellos son
 > no empaquetar dependencias de tiempo de ejecución ni generar entradas.
@@ -28,9 +28,9 @@ La implementación original dividió el proceso:
   devolvió un **búfer etiquetado** `[format, ...payload]`; **no** decodificó.
 - **Decode** se ejecutó en JavaScript y llamó a módulos decodificadores separados.
 
-La fase 1 reemplazó eso con una única llamada FWS `scan_and_decode` (ver §1); el
+La fase 1 reemplazó eso con una única llamada Flint `scan_and_decode` (ver §1); el
 La motivación histórica a continuación se mantiene como justificación, mientras que la fuente actual de
-La verdad es el gráfico FWS y su conjunto de conformidad Vitest.
+La verdad es el gráfico Flint y su conjunto de conformidad Vitest.
 
 ## 1. El problema estructural central: el oleoducto cruzó el límite wasm↔JS dos veces
 
@@ -40,7 +40,7 @@ Antes de la Fase 1, una única exploración era:
 image (JS)
   → wasm code-scan.scan()            [Rust: binarise + locate + sample]
   → tagged module buffer (JS)        [cross back into JS]
-  → scanner-owned FWS decoder graph   [decode inside the scanner artifact]
+  → scanner-owned Flint decoder graph   [decode inside the scanner artifact]
   → payload string (JS)
 ```
 
@@ -63,18 +63,18 @@ el localizador y el decodificador no pueden cooperar:
 ### Arquitectura de destino: una llamada FWS, entrada de imagen, salida de carga
 
 > **Estado: implementado.** El escáner exporta `scan_and_decode`, vincula el
-> el decodificador FWS grafica directamente, y la fachada JS decodifica a través de ese único
+> el decodificador Flint grafica directamente, y la fachada JS decodifica a través de ese único
 > llamar. Los detalles a continuación registran el motivo de la migración.
 
 ```
 image (JS)
-  → FWS scanner.scan_and_decode()      [binarise + locate + sample + decode]
+  → Flint scanner.scan_and_decode()      [binarise + locate + sample + decode]
   → ScanOutcome { format, value } (JS)
 ```
 
-`scan_and_decode(width, height, luma) -> Option<ScanOutcome>` ejecuta todo el proceso dentro de `src/fws/scanner.fws` y
+`scan_and_decode(width, height, luma) -> Option<ScanOutcome>` ejecuta todo el proceso dentro de `src/fws/scanner.flint` y
 devuelve la **carga útil decodificada** directamente (`value` está vacío cuando se encuentra un símbolo pero no se puede decodificar). La fachada JS
-(`scanner/index.ts`) es una capa de clasificación delgada que vincula las fuentes FWS de códigos de barras, matrices y QR en el momento de la compilación;
+(`scanner/index.ts`) es una capa de clasificación delgada que vincula las fuentes Flint de códigos de barras, matrices y QR en el momento de la compilación;
 esos paquetes siguen siendo publicables de forma independiente.
 
 #### ¿Por qué esto es manejable ahora?
@@ -384,7 +384,7 @@ falsos positivos. Los viajes de ida y vuelta están cubiertos por `maxicode-deco
 línea de base 0 (un símbolo girado muestra la cuadrícula hexagonal incorrectamente y RS la rechaza; no hay falsos positivos). una diana
 El buscador que recupera la rotación del símbolo antes del muestreo levantaría las otras tres rotaciones.
 
-### Paso 6: conecte los nuevos formatos a la fachada JS + cree el artefacto FWS _(hecho)_
+### Paso 6: conecte los nuevos formatos a la fachada JS + cree el artefacto Flint _(hecho)_
 
 Los pasos 3 a 5 colocaron PDF417, GS1 DataBar (RSS-14) y MaxiCode en el escáner
 tubería detrás de las etiquetas `FORMAT_PDF417` / `FORMAT_DATABAR` / `FORMAT_MAXICODE`, mientras que la fachada JS solo conocía la
@@ -394,17 +394,17 @@ cuatro formatos originales. Este paso muestra las nuevas simbologías en tiempo 
   `5 → 'databar'`, `6 → 'maxicode'` y el sindicato `ScanFormat` en `src/types.ts`
   gana los mismos tres nombres, por lo que `scanImageData` / `scanImageDataAsync` (y el
   `*All` / variantes ROI) los devuelven como cualquier otro formato.
-- **El artefacto FWS del escáner está creado** a partir de `src/fws/scanner.fws` mediante el complemento Vite de Forge Web Script. El perfil estático
+- **El artefacto Flint del escáner está creado** a partir de `src/fws/scanner.flint` mediante el complemento Vite de Flint. El perfil estático
   vincula los gráficos del decodificador en un artefacto autónomo, habilita WebAssembly SIMD y aplica un tiempo de enlace agresivo
   optimización; el perfil dinámico mantiene límites explícitos del módulo decodificador y almacena en caché el envío de exportaciones.
-- **El gráfico FWS y las suites de fachada** (`src/fws/scanner-graph.spec.ts` y
+- **El gráfico Flint y las suites de fachada** (`src/fws/scanner-graph.spec.ts` y
   `src/scanner/index.spec.ts`) ejercita los gráficos del decodificador vinculado a través del
   escáner ABI y ambos puntos de entrada públicos, incluidos PDF417, GS1 DataBar,
   Rutas MaxiCode, ROI, multiresultados, sincrónicas y asincrónicas. el
   El accesorio de texto PDF417 local del paquete mantiene el caso de conformidad independiente de
   el espacio de trabajo del corpus nativo retirado.
 
-**Resultado:** `vitest` es verde frente al artefacto FWS y la compilación `tsc`
+**Resultado:** `vitest` es verde frente al artefacto Flint y la compilación `tsc`
 el cheque está limpio. Las familias apoyadas siguen cubiertas exhaustivamente por el
 conjuntos de gráficos y fachadas públicas, y la clasificación por niveles del modelo por etapa que guió el
 El esfuerzo está documentado en `docs/model-cost-strategy.md`.

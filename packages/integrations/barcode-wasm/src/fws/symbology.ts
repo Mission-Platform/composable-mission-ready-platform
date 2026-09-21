@@ -1,4 +1,4 @@
-import { BarcodeSymbology as FwsBarcodeSymbology, type BarcodeSymbology as FwsSymbology } from './barcode-native.fws';
+import { BarcodeSymbology as FwsBarcodeSymbology, type BarcodeSymbology as FwsSymbology } from './barcode-native.flint';
 
 import type { BarcodeSymbology } from '../encoder/types';
 

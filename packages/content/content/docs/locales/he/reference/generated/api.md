@@ -819,18 +819,18 @@ export interface WysiwygEditorProperties
 
 לא סופק תיאור.
 
-## `src/monaco/forge-web-script`
+## `src/monaco/flint`
 
-### attachForgeWebScriptMonaco
+### attachFlintMonaco
 
 פונקציה **סוג:**
 
 ```typescript
-function attachForgeWebScriptMonaco(
+function attachFlintMonaco(
   editor: monaco.editor.IStandaloneCodeEditor,
   monacoRuntime: MonacoRuntime,
-  options: ForgeWebScriptMonacoOptions = {},
-): ForgeWebScriptMonacoHandle;
+  options: FlintMonacoOptions = {},
+): FlintMonacoHandle;
 ```
 
 צרף אבחון, השלמה, ריחוף, סנכרון מודל וטוקניזציה לעורך.
@@ -841,47 +841,44 @@ function attachForgeWebScriptMonaco(
 | ------------- | ----------------------------------- | ----- |
 | עורך          | monaco.editor.IstandaloneCodeEditor |       |
 | monacoRuntime | MonacoRuntime                       |       |
-| אפשרויות      | ForgeWebScriptMonacoOptions         |       |
+| אפשרויות      | FlintMonacoOptions                  |       |
 
-### forgeWebScriptLanguageId
+### flintLanguageId
 
 **סוג:** קבוע
 
 ```typescript
-export const forgeWebScriptLanguageId;
+export const flintLanguageId;
 ```
 
 לא סופק תיאור.
 
-### ForgeWebScriptMonacoHandle
+### FlintMonacoHandle
 
 **סוג:** ממשק
 
 ```typescript
-export interface ForgeWebScriptMonacoHandle
+export interface FlintMonacoHandle
 ```
 
 לא סופק תיאור.
 
-### ForgeWebScriptMonacoOptions
+### FlintMonacoOptions
 
 **סוג:** ממשק
 
 ```typescript
-export interface ForgeWebScriptMonacoOptions
+export interface FlintMonacoOptions
 ```
 
 לא סופק תיאור.
 
-### registerForgeWebScriptLanguage
+### registerFlintLanguage
 
 פונקציה **סוג:**
 
 ```typescript
-function registerForgeWebScriptLanguage(
-  monacoRuntime: MonacoRuntime,
-  languageId = forgeWebScriptLanguageId,
-): monaco.IDisposable;
+function registerFlintLanguage(monacoRuntime: MonacoRuntime, languageId = flintLanguageId): monaco.IDisposable;
 ```
 
 רשום את שפת Forge Web Script ואת ספק האסימון המילוני.

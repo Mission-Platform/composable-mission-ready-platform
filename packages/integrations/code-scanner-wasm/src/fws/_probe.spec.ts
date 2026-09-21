@@ -4,9 +4,9 @@ import { dirname, join, resolve } from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import {
-  createForgeWebScriptCompilerService,
-  resolveForgeWebScriptModuleGraph,
-} from '../../../../compiler/forge/forge-web-script/dist/index.js';
+  createFlintCompilerService,
+  resolveFlintModuleGraph,
+} from '../../../../flint/core/dist/index.js';
 
 type RawString = readonly [pointer: number, length: number];
 
@@ -25,7 +25,7 @@ function loadTree(directory: string, files: Record<string, string>): void {
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
     const fileName = join(directory, entry.name);
     if (entry.isDirectory()) loadTree(fileName, files);
-    else if (entry.name.endsWith('.fws')) files[resolve(fileName)] = readFileSync(fileName, 'utf8');
+    else if (entry.name.endsWith('.fws') || entry.name.endsWith('.flint')) files[resolve(fileName)] = readFileSync(fileName, 'utf8');
   }
 }
 
@@ -35,7 +35,7 @@ describe('foundation scanner probes', () => {
   beforeAll(async () => {
     const files: Record<string, string> = {};
     for (const root of projectRoots) loadTree(root, files);
-    const entry = resolve(scannerDirectory, 'scanner.fws');
+    const entry = resolve(scannerDirectory, 'scanner.flint');
     const resolver = {
       resolve(source: string, importer: string): string | undefined {
         const target = resolve(dirname(importer), source);
@@ -51,8 +51,8 @@ describe('foundation scanner probes', () => {
       crossProjectLinkMode: 'static' as const,
       linkProfile: 'static' as const,
     };
-    const graph = await resolveForgeWebScriptModuleGraph([entry], resolver, linkConfiguration);
-    const service = createForgeWebScriptCompilerService();
+    const graph = await resolveFlintModuleGraph([entry], resolver, linkConfiguration);
+    const service = createFlintCompilerService();
     try {
       const artifact = service.compileGraph({
         graph: graph.graph,

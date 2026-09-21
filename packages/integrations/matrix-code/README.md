@@ -1,7 +1,7 @@
 # @mission-platform/matrix-code
 
-Dependency-free **2D matrix barcode encoder** backed by package-local Forge Web
-Script artifacts and wrapped in a typed ES module. Supports **Data
+Dependency-free **2D matrix barcode encoder** backed by package-local Flint
+artifacts and wrapped in a typed ES module. Supports **Data
 Matrix** (ECC 200, square and rectangular), **GS1 Data Matrix** (the same symbol
 with a leading FNC1), and **Aztec Code** (compact).
 
@@ -16,7 +16,7 @@ const code = encodeMatrix('datamatrix', 'https://mission-platform.dev');
 // code.modules -> width * height row-major bits (1 = dark, 0 = light)
 ```
 
-The encoder is **synchronous** and **self-contained**: its package-local FWS
+The encoder is **synchronous** and **self-contained**: its package-local Flint
 artifact is loaded without a runtime `fetch`, so `encodeMatrix` works during SSR
 and in tests with no initialisation step. An async `encodeMatrixAsync` is also
 exported.
@@ -43,9 +43,9 @@ scope for this encoder and throw a `RangeError`.
 
 ## Architecture
 
-- `src/fws/` contains the package-local Forge Web Script encoder graphs,
+- `src/fws/` contains the package-local Flint encoder graphs,
   handwritten ABI declarations, and focused parity fixtures.
-- `src/encoder/` is the typed façade around the direct FWS loaders. It preserves
+- `src/encoder/` is the typed façade around the direct Flint loaders. It preserves
   the public matrix-bit contract and exposes synchronous and asynchronous APIs.
 - The package-local artifacts are the complete production implementation; the
   package does not depend on a generated WebAssembly wrapper package.
@@ -56,5 +56,5 @@ scope for this encoder and throw a `RangeError`.
 pnpm exec turbo run build --filter @mission-platform/matrix-code
 ```
 
-The normal workspace installation provides the Forge Web Script compiler and
+The normal workspace installation provides the Flint compiler and
 runtime packages used to build the package-local artifacts.

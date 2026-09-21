@@ -76,11 +76,13 @@ export interface ForgeFileGraphOptions {
 
 const CODE_EXTENSIONS = new Set(['.cjs', '.cts', '.js', '.jsx', '.mjs', '.mts', '.ts', '.tsx']);
 const STYLE_EXTENSIONS = new Set(['.css', '.less', '.sass', '.scss', '.styl']);
-// Forge Web Script sources are consumed by the dedicated FWS plugin rather
+// Flint (and legacy FWS) sources are consumed by the dedicated plugin rather
 // than the JavaScript authoring parser, but must remain resolvable when a
-// framework component imports a package façade that uses a local `.fws` graph.
+// framework component imports a package façade that uses a local `.flint` graph.
 const ASSET_EXTENSIONS = new Set([
   '.avif',
+  '.flint',
+  '.flt',
   '.fws',
   '.gif',
   '.jpeg',

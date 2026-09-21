@@ -63,7 +63,7 @@ describe('encodeBarcode', () => {
     await expect(pending).rejects.toThrow(RangeError);
   });
 
-  it('rejects invalid UPC-E payloads through the native FWS loader', async () => {
+  it('rejects invalid UPC-E payloads through the native Flint loader', async () => {
     await expect(encodeBarcodeAsync('upce', '012345x')).rejects.toThrow(RangeError);
   });
 
