@@ -2593,6 +2593,405 @@ Deterministically sorts a collection of generic specializations by their unique 
 - **@param:** - Readonly array of generic specializations to sort.
 - **@returns:** New sorted array of generic specializations.
 
+## `src/graph-compiler/ast-builder`
+
+### buildGraphAst
+
+**Kind:** function
+
+```typescript
+function buildGraphAst(graph: FlintNodeGraph): FlintAstBuildResult;
+```
+
+Lowers a validated FlintNodeGraph into an in-memory FlintModule AST and bidirectional source map.
+
+#### Parameters
+
+| Name  | Type           | Description |
+| ----- | -------------- | ----------- |
+| graph | FlintNodeGraph |             |
+
+### FlintAstBuildResult
+
+**Kind:** interface
+
+```typescript
+export interface FlintAstBuildResult
+```
+
+No description provided.
+
+## `src/graph-compiler/catalog`
+
+### createNodeFromDefinition
+
+**Kind:** function
+
+```typescript
+function createNodeFromDefinition(
+  definition: FlintNodeDefinition,
+  id: string,
+  position: { readonly x: number; readonly y: number } = DEFAULT_NODE_POSITION,
+  properties?: Readonly<Record<string, unknown>>,
+): FlintGraphNode;
+```
+
+Instantiates a FlintGraphNode from a catalog definition with given ID, position, and property overrides.
+
+#### Parameters
+
+| Name       | Type                                       | Description |
+| ---------- | ------------------------------------------ | ----------- |
+| definition | FlintNodeDefinition                        |             |
+| id         | string                                     |             |
+| position   | { readonly x: number; readonly y: number } |             |
+| properties | Readonly<Record<string, unknown>>          |             |
+
+### FlintNodeDefinition
+
+**Kind:** interface
+
+```typescript
+export interface FlintNodeDefinition
+```
+
+No description provided.
+
+### getAllNodeDefinitions
+
+**Kind:** function
+
+```typescript
+function getAllNodeDefinitions(): readonly FlintNodeDefinition[];
+```
+
+Returns all registered standard node definitions.
+
+### getNodeDefinition
+
+**Kind:** function
+
+```typescript
+function getNodeDefinition(operation: string): FlintNodeDefinition | undefined;
+```
+
+Retrieves a standard node definition by its unique operation identifier.
+
+#### Parameters
+
+| Name      | Type   | Description |
+| --------- | ------ | ----------- |
+| operation | string |             |
+
+### getNodeDefinitionsByCategory
+
+**Kind:** function
+
+```typescript
+function getNodeDefinitionsByCategory(category: FlintNodeCategory): readonly FlintNodeDefinition[];
+```
+
+Returns node definitions filtered by category.
+
+#### Parameters
+
+| Name     | Type              | Description |
+| -------- | ----------------- | ----------- |
+| category | FlintNodeCategory |             |
+
+## `src/graph-compiler/generator`
+
+### compileGraphToFlint
+
+**Kind:** function
+
+```typescript
+function compileGraphToFlint(graph: FlintNodeGraph): FlintGraphCompilationArtifact;
+```
+
+Dual compiler generator for Flint visual node graphs.
+Synthesizes typed in-memory FlintModule AST and formatted .flint source text with bidirectional source maps.
+
+#### Parameters
+
+| Name  | Type           | Description |
+| ----- | -------------- | ----------- |
+| graph | FlintNodeGraph |             |
+
+### compileNodeGraph
+
+**Kind:** function
+
+```typescript
+function compileNodeGraph(graph: FlintNodeGraph, options?: Partial<FlintCompileInput>): FlintCompiledNodeGraphArtifact;
+```
+
+Compiles a visual FlintNodeGraph end-to-end into WebAssembly binary, ABI manifest, and source artifacts.
+
+#### Parameters
+
+| Name    | Type                       | Description |
+| ------- | -------------------------- | ----------- |
+| graph   | FlintNodeGraph             |             |
+| options | Partial<FlintCompileInput> |             |
+
+### FlintCompiledNodeGraphArtifact
+
+**Kind:** interface
+
+```typescript
+export interface FlintCompiledNodeGraphArtifact extends FlintArtifact
+```
+
+No description provided.
+
+### FlintGraphCompilationArtifact
+
+**Kind:** interface
+
+```typescript
+export interface FlintGraphCompilationArtifact
+```
+
+No description provided.
+
+## `src/graph-compiler/source-emitter`
+
+### emitGraphSource
+
+**Kind:** function
+
+```typescript
+function emitGraphSource(graph: FlintNodeGraph): FlintSourceEmissionResult;
+```
+
+Emits clean, formatted Flint source code from a validated graph with exact bidirectional source maps.
+
+#### Parameters
+
+| Name  | Type           | Description |
+| ----- | -------------- | ----------- |
+| graph | FlintNodeGraph |             |
+
+### FlintSourceEmissionResult
+
+**Kind:** interface
+
+```typescript
+export interface FlintSourceEmissionResult
+```
+
+No description provided.
+
+## `src/graph-compiler/types`
+
+### createContainerType
+
+**Kind:** function
+
+```typescript
+function createContainerType(
+  container: string,
+  typeArguments: readonly FlintTypeName[] = [],
+  span: FlintSourceSpan = createSyntheticSpan(),
+): FlintTypeName;
+```
+
+Creates a generic or aggregate FlintTypeName node.
+
+#### Parameters
+
+| Name          | Type                     | Description |
+| ------------- | ------------------------ | ----------- |
+| container     | string                   |             |
+| typeArguments | readonly FlintTypeName[] |             |
+| span          | FlintSourceSpan          |             |
+
+### createPrimitiveType
+
+**Kind:** function
+
+```typescript
+function createPrimitiveType(
+  primitive: FlintPrimitiveType,
+  span: FlintSourceSpan = createSyntheticSpan(),
+): FlintTypeName;
+```
+
+Creates a primitive FlintTypeName node.
+
+#### Parameters
+
+| Name      | Type               | Description |
+| --------- | ------------------ | ----------- |
+| primitive | FlintPrimitiveType |             |
+| span      | FlintSourceSpan    |             |
+
+### createSyntheticSpan
+
+**Kind:** function
+
+```typescript
+function createSyntheticSpan(line = 1, column = 1, length = 1): FlintSourceSpan;
+```
+
+Creates a synthetic source span for graph-generated AST nodes.
+
+#### Parameters
+
+| Name   | Type | Description |
+| ------ | ---- | ----------- |
+| line   |      |             |
+| column |      |             |
+| length |      |             |
+
+### FlintGraphEdge
+
+**Kind:** interface
+
+```typescript
+export interface FlintGraphEdge
+```
+
+No description provided.
+
+### FlintGraphNode
+
+**Kind:** interface
+
+```typescript
+export interface FlintGraphNode
+```
+
+No description provided.
+
+### FlintGraphPort
+
+**Kind:** interface
+
+```typescript
+export interface FlintGraphPort
+```
+
+No description provided.
+
+### FlintGraphValidationIssue
+
+**Kind:** interface
+
+```typescript
+export interface FlintGraphValidationIssue
+```
+
+No description provided.
+
+### FlintGraphValidationResult
+
+**Kind:** interface
+
+```typescript
+export interface FlintGraphValidationResult
+```
+
+No description provided.
+
+### FlintGraphValidationSeverity
+
+**Kind:** type
+
+```typescript
+export type FlintGraphValidationSeverity = 'error' | 'warning' | 'info';
+```
+
+No description provided.
+
+### FlintNodeCategory
+
+**Kind:** type
+
+```typescript
+export type FlintNodeCategory = 'math' | 'logic' | 'text' | 'collection' | 'control' | 'capability' | 'custom';
+```
+
+No description provided.
+
+### FlintNodeGraph
+
+**Kind:** interface
+
+```typescript
+export interface FlintNodeGraph
+```
+
+No description provided.
+
+### FlintNodeKind
+
+**Kind:** type
+
+```typescript
+export type FlintNodeKind =
+  'input' | 'output' | 'constant' | 'operation' | 'stdlib_call' | 'capability_call' | 'custom';
+```
+
+No description provided.
+
+### FlintNodeSourceMap
+
+**Kind:** interface
+
+```typescript
+export interface FlintNodeSourceMap
+```
+
+No description provided.
+
+### FlintPortDirection
+
+**Kind:** type
+
+```typescript
+export type FlintPortDirection = 'input' | 'output';
+```
+
+No description provided.
+
+## `src/graph-compiler/validator`
+
+### areTypesCompatible
+
+**Kind:** function
+
+```typescript
+function areTypesCompatible(source: FlintTypeName, target: FlintTypeName): boolean;
+```
+
+Checks structural and semantic compatibility between source and destination Flint types.
+
+#### Parameters
+
+| Name   | Type          | Description |
+| ------ | ------------- | ----------- |
+| source | FlintTypeName |             |
+| target | FlintTypeName |             |
+
+### validateGraph
+
+**Kind:** function
+
+```typescript
+function validateGraph(graph: FlintNodeGraph): FlintGraphValidationResult;
+```
+
+Validates graph topology, edge connections, port types, and detects cycles.
+Returns sorted node IDs if the graph is a valid Directed Acyclic Graph (DAG).
+
+#### Parameters
+
+| Name  | Type           | Description |
+| ----- | -------------- | ----------- |
+| graph | FlintNodeGraph |             |
+
 ## `src/graph`
 
 ### FlintGraphResult

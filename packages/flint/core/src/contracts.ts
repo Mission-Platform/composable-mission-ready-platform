@@ -307,6 +307,10 @@ export interface FlintCompilerReport {
 /** Incremental compiler service supporting graph compiles and invalidation. */
 export interface FlintCompilerService extends FlintCompiler {
   compileGraph(input: FlintGraphCompileInput): FlintArtifact;
+  compileNodeGraph?(
+    graph: unknown,
+    options?: Partial<FlintCompileInput>,
+  ): FlintArtifact & { readonly compilation: unknown };
   prepare(input: Pick<FlintCompileInput, 'root' | 'fileName'>): void;
   invalidate(files: readonly string[]): void;
   report(): FlintCompilerReport;
