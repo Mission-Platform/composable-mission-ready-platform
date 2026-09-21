@@ -56,6 +56,19 @@ export interface FlintModuleGraph {
   readonly projects: readonly FlintProject[];
 }
 
+/** Relocatable foreign object format (compiled from C/C++ clang or Rust cargo). */
+export type ForeignObjectFormat = 'wasm-relocatable' | 'elf-object' | 'mach-o';
+
+/** Foreign relocatable object reference supplied to the linker. */
+export interface FlintForeignObjectReference {
+  readonly name: string;
+  readonly path: string;
+  readonly format: ForeignObjectFormat;
+  readonly exportedSymbols: readonly string[];
+  readonly undefinedSymbols?: readonly string[];
+  readonly binary?: Uint8Array;
+}
+
 /**
  * Configuration options governing cross-project and same-project module linking policies.
  */
@@ -66,6 +79,7 @@ export interface FlintLinkConfiguration {
   readonly defaultLinkMode?: FlintLinkMode;
   readonly crossProjectLinkMode?: FlintLinkMode;
   readonly linkModes?: Readonly<Record<string, FlintLinkMode>>;
+  readonly foreignObjects?: readonly FlintForeignObjectReference[];
 }
 
 /**

@@ -15,6 +15,9 @@ source                  = { trivia }, compilation-unit, { trivia }, eof ;
 compilation-unit        = legacy-module | { top-level-declaration } ;
 legacy-module           = "module", identifier, "{", { top-level-declaration }, "}" ;
 top-level-declaration   = import-declaration
+                        | foreign-capability-declaration
+                        | opaque-foreign-type-declaration
+                        | c-struct-declaration
                         | struct-declaration
                         | record-declaration
                         | enum-declaration
@@ -45,15 +48,15 @@ hex-digit               = decimal-digit | "A" .. "F" | "a" .. "f" ;
 operator                = "!=" | "&&" | "==" | "||" | "<=" | ">=" | "->" | "=>" | "::"
                         | "!" | "%" | "*" | "+" | "-" | "/" | "<" | ">" | "=" | "&" ;
 punctuation             = "{" | "}" | "(" | ")" | "[" | "]" | ":" | ";"
-                        | "," | "|" | "." ;
+                        | "," | "|" | "." | "#" ;
 
-keyword                 = "as" | "capability" | "case" | "catch" | "class"
+keyword                 = "as" | "capability" | "case" | "catch" | "c_struct" | "class"
                         | "constructor" | "default" | "do" | "else" | "enum"
-                        | "extends" | "export" | "for" | "fn" | "if" | "impl"
+                        | "extends" | "export" | "for" | "foreign" | "fn" | "if" | "impl"
                         | "import" | "inline" | "interface" | "iter" | "let" | "mut"
                         | "likely" | "loop" | "match" | "module" | "new"
-                        | "noinline" | "record" | "return" | "struct" | "switch" | "throw"
-                        | "trait" | "try" | "unlikely" | "while" | "yield" ;
+                        | "noinline" | "opaque" | "record" | "return" | "struct" | "switch" | "throw"
+                        | "trait" | "try" | "type" | "unlikely" | "while" | "yield" ;
 boolean-literal         = "true" | "false" ;
 
 (* Lexical recovery *)
@@ -72,6 +75,10 @@ import-declaration      = capability-import | source-import ;
 capability-import       = "import", "capability", string, "as", identifier,
                           parameter-list, "->", type, ";" ;
 source-import           = "import", [ "module" ], string, "as", identifier, ";" ;
+foreign-capability-declaration = "foreign", string, "capability", string, "{",
+                                 { foreign-function-declaration }, "}" ;
+foreign-function-declaration   = "fn", identifier, parameter-list, "->", type, ";" ;
+opaque-foreign-type-declaration = "opaque", "foreign", "type", identifier, ";" ;
 parameter-list          = "(", [ parameters ], ")" ;
 parameters              = parameter, { ",", parameter } ;
 parameter               = [ "mut" ], identifier, ":", type ;
@@ -82,6 +89,9 @@ function-modifier       = "export" | "iter" | "inline" | "noinline" ;
 generic-parameters      = "<", generic-parameter, { ",", generic-parameter }, ">" ;
 generic-parameter       = identifier, [ ":", identifier, { "+", identifier } ] ;
 
+c-struct-declaration    = [ struct-attribute ], "c_struct", identifier, [ generic-parameters ], "{",
+                          { struct-field }, "}" ;
+struct-attribute        = "#", "[", identifier, [ "(", identifier, [ "(", integer, ")" ], ")" ], "]" ;
 struct-declaration      = "struct", identifier, [ generic-parameters ], "{",
                           { struct-field }, "}" ;
 record-declaration      = "record", identifier, [ generic-parameters ], "{",
@@ -137,7 +147,10 @@ fixed-array-type        = "[", type, ";", integer, "]" ;
 type-name               = [ "&", [ "mut" ] ], type-atom, [ "<", type, { ",", type }, ">" ] ;
 type-atom               = primitive-type | identifier ;
 primitive-type          = "bool" | "bytes" | "f32" | "f64" | "i32" | "i64"
-                        | "string" | "u32" | "u64" | "unit" ;
+                        | "string" | "u32" | "u64" | "unit"
+                        | "c_char" | "c_uchar" | "c_short" | "c_ushort" | "c_int"
+                        | "c_uint" | "c_long" | "c_ulong" | "c_longlong" | "c_ulonglong"
+                        | "c_size" | "c_ssize" | "c_float" | "c_double" | "c_void" ;
 
 expression              = binary-expression ;
 binary-expression       = unary-expression, { binary-operator, unary-expression } ;

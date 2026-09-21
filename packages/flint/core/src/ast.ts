@@ -1,7 +1,28 @@
 import type { FlintSourceSpan } from './diagnostics.js';
 
+/** C scalar primitive types supported by Flint C interoperability layer. */
+export type FlintCPrimitiveType =
+  | 'u8'
+  | 'i8'
+  | 'c_char'
+  | 'c_uchar'
+  | 'c_short'
+  | 'c_ushort'
+  | 'c_int'
+  | 'c_uint'
+  | 'c_long'
+  | 'c_ulong'
+  | 'c_longlong'
+  | 'c_ulonglong'
+  | 'c_size'
+  | 'c_ssize'
+  | 'c_float'
+  | 'c_double'
+  | 'c_void';
+
 /** Primitive scalar and carrier types supported by Flint. */
-export type FlintPrimitiveType = 'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
+export type FlintPrimitiveType =
+  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit' | FlintCPrimitiveType;
 
 /** Memory ownership classification for pointer and aggregate values. */
 export type FlintOwnership = 'borrowed' | 'owned' | 'shared';
@@ -57,9 +78,36 @@ export function flintTypeNameToString(type: FlintTypeName): string {
   return type.length === undefined ? qualified : `${qualified}[${type.length}]`;
 }
 
-const podPrimitives = new Set<FlintPrimitiveType>(['bool', 'f32', 'f64', 'i32', 'i64', 'u32', 'u64', 'unit']);
+const podPrimitives = new Set<FlintPrimitiveType>([
+  'bool',
+  'f32',
+  'f64',
+  'i32',
+  'i64',
+  'u32',
+  'u64',
+  'unit',
+  'u8',
+  'i8',
+  'c_char',
+  'c_uchar',
+  'c_short',
+  'c_ushort',
+  'c_int',
+  'c_uint',
+  'c_long',
+  'c_ulong',
+  'c_longlong',
+  'c_ulonglong',
+  'c_size',
+  'c_ssize',
+  'c_float',
+  'c_double',
+  'c_void',
+]);
 const NON_POD_TYPE_NAMES = new Set(['Array', 'Vector', 'Iterable', 'Iterator', 'Fn']);
 const CONTAINER_POD_TYPE_NAMES = new Set(['Option', 'Result', 'iterResult']);
+const C_POINTER_TYPE_NAMES = new Set(['CPtr', 'MutCPtr', 'COpaquePtr']);
 
 /**
  * Checks if a struct definition represents Plain Old Data.
@@ -168,6 +216,7 @@ export function isFlintPodType(
   if (hasReferenceOrOwnership(type)) return false;
   if (type.reference === undefined && podPrimitives.has(type.name)) return true;
   const name = type.reference ?? type.name;
+  if (C_POINTER_TYPE_NAMES.has(name)) return true;
   if (NON_POD_TYPE_NAMES.has(name)) return false;
   if (CONTAINER_POD_TYPE_NAMES.has(name)) {
     return isContainerPodType(type, module, visiting);
@@ -260,12 +309,27 @@ export interface FlintStructField {
   readonly span: FlintSourceSpan;
 }
 
+/** Struct representation modes and layout directives. */
+export type FlintStructRepr =
+  | { readonly kind: 'c' }
+  | { readonly kind: 'packed'; readonly alignment: number }
+  | { readonly kind: 'align'; readonly alignment: number }
+  | { readonly kind: 'flint' };
+
 /** User-defined immutable struct declaration AST node. */
 export interface FlintStructDeclaration {
   readonly kind: 'struct';
   readonly name: string;
   /** Records use the same source representation but cross the host ABI as values. */
   readonly record?: true;
+  /** Explicit C ABI struct layout (c_struct or #[repr(C)]). */
+  readonly c_struct?: boolean;
+  /** Explicit representation attributes (e.g. #[repr(C)], #[repr(packed(N))], #[repr(align(N))]). */
+  readonly repr?: FlintStructRepr;
+  /** Packed struct alignment clamp (from #[repr(packed(N))]). */
+  readonly packed?: number;
+  /** Elevated alignment (from #[repr(align(N))]). */
+  readonly align?: number;
   readonly documentation?: FlintDocumentation;
   readonly genericParameters: readonly FlintGenericParameter[];
   readonly fields: readonly FlintStructField[];
@@ -352,7 +416,7 @@ export interface FlintBinaryExpression {
 /** Unary operation expression. */
 export interface FlintUnaryExpression {
   readonly kind: 'unary';
-  readonly operator: '!' | '-';
+  readonly operator: '!' | '-' | '*' | '&' | '&mut';
   readonly operand: FlintExpression;
   readonly span: FlintSourceSpan;
 }
@@ -574,6 +638,41 @@ export type FlintStatement =
   | FlintYieldStatement
   | FlintIteratorLoopStatement;
 
+/** Parameter for a foreign C function declaration. */
+export interface FlintForeignFunctionParameter {
+  readonly name: string;
+  readonly type: FlintTypeName;
+  readonly span: FlintSourceSpan;
+}
+
+/** Function declaration within a foreign capability block. */
+export interface FlintForeignFunctionDeclaration {
+  readonly kind: 'foreign-function';
+  readonly name: string;
+  readonly parameters: readonly FlintForeignFunctionParameter[];
+  readonly result: FlintTypeName;
+  readonly documentation?: FlintDocumentation;
+  readonly span: FlintSourceSpan;
+}
+
+/** Foreign capability block binding an external native C or Rust library. */
+export interface FlintForeignCapabilityDeclaration {
+  readonly kind: 'foreign-capability';
+  readonly abi: 'C';
+  readonly library: string;
+  readonly callingConvention: 'wasm-c-abi';
+  readonly memoryModel?: 'shared' | 'multi-memory-segregated';
+  readonly functions: readonly FlintForeignFunctionDeclaration[];
+  readonly span: FlintSourceSpan;
+}
+
+/** Opaque foreign type declaration (handle for opaque C pointers). */
+export interface FlintOpaqueForeignTypeDeclaration {
+  readonly kind: 'opaque-foreign-type';
+  readonly name: string;
+  readonly span: FlintSourceSpan;
+}
+
 /** Complete source module AST node containing declarations and imports. */
 export interface FlintModule {
   readonly kind: 'module';
@@ -585,5 +684,7 @@ export interface FlintModule {
   readonly enums: readonly FlintEnumDeclaration[];
   readonly interfaces: readonly FlintInterfaceDeclaration[];
   readonly functions: readonly FlintFunction[];
+  readonly foreignCapabilities?: readonly FlintForeignCapabilityDeclaration[];
+  readonly opaqueForeignTypes?: readonly FlintOpaqueForeignTypeDeclaration[];
   readonly span: FlintSourceSpan;
 }

@@ -1,7 +1,22 @@
 import { createDiagnostic, type FlintDiagnostic } from './diagnostics.js';
 
 import type { FlintExpression, FlintFunction, FlintModule, FlintStatement } from './ast.js';
-import type { FlintLinkConfiguration, FlintModuleEdge, FlintModuleGraph, FlintResolvedModule } from './graph.js';
+import type {
+  FlintForeignObjectReference,
+  FlintLinkConfiguration,
+  FlintModuleEdge,
+  FlintModuleGraph,
+  FlintResolvedModule,
+} from './graph.js';
+
+/** Foreign symbol resolution record produced by the linker. */
+export interface FlintResolvedForeignSymbol {
+  readonly symbol: string;
+  readonly library: string;
+  readonly objectPath?: string;
+  readonly callingConvention: 'wasm-c-abi';
+  readonly resolved: boolean;
+}
 
 /**
  * Result of validating and linking a Flint module dependency graph.
@@ -11,6 +26,7 @@ export interface FlintLinkResult {
   readonly diagnostics: readonly FlintDiagnostic[];
   readonly staticModules: readonly FlintModule[];
   readonly dynamicEdges: readonly FlintModuleEdge[];
+  readonly foreignSymbols?: readonly FlintResolvedForeignSymbol[];
 }
 
 const emptySpan = { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 } as const;
@@ -762,6 +778,57 @@ function detectStaticLinkingCycles(
 }
 
 /**
+ * Resolves declared foreign capability symbols against provided foreign relocatable objects.
+ *
+ * @param graph - Module dependency graph containing ASTs.
+ * @param foreignObjects - List of foreign relocatable object descriptors.
+ * @param diagnostics - Diagnostic accumulator.
+ * @returns List of foreign symbol resolution records.
+ */
+function resolveForeignSymbols(
+  graph: FlintModuleGraph,
+  foreignObjects: readonly FlintForeignObjectReference[] = [],
+  diagnostics: FlintDiagnostic[],
+): FlintResolvedForeignSymbol[] {
+  const resolved: FlintResolvedForeignSymbol[] = [];
+  const symbolToObject = new Map<string, FlintForeignObjectReference>();
+  for (const object_ of foreignObjects) {
+    for (const symbol of object_.exportedSymbols) {
+      symbolToObject.set(symbol, object_);
+    }
+  }
+
+  for (const resolvedModule of graph.modules) {
+    for (const capability of resolvedModule.module.foreignCapabilities ?? []) {
+      for (const function_ of capability.functions) {
+        const matchingObject = symbolToObject.get(function_.name);
+        if (foreignObjects.length > 0 && matchingObject === undefined) {
+          diagnostics.push(
+            createDiagnostic(
+              resolvedModule.fileName,
+              'link',
+              'FLINT-LINK-006',
+              `Unresolved foreign symbol '${function_.name}' required by library '${capability.library}'.`,
+              function_.span,
+              'error',
+              'Supply a foreign object defining this symbol.',
+            ),
+          );
+        }
+        resolved.push({
+          symbol: function_.name,
+          library: capability.library,
+          callingConvention: capability.callingConvention,
+          ...(matchingObject === undefined ? {} : { objectPath: matchingObject.path }),
+          resolved: matchingObject !== undefined,
+        });
+      }
+    }
+  }
+  return resolved;
+}
+
+/**
  * Validates module graph linking constraints, detects static cycles, and merges static components.
  *
  * @param graph - Resolved module dependency graph.
@@ -786,5 +853,13 @@ export function validateFlintLinks(
   }
   detectStaticLinkingCycles(graph.modules, adjacency, modulesByFile, diagnostics);
 
-  return { graph, diagnostics, staticModules: staticComponents(graph, diagnostics), dynamicEdges };
+  const foreignSymbols = resolveForeignSymbols(graph, configuration.foreignObjects, diagnostics);
+
+  return {
+    graph,
+    diagnostics,
+    staticModules: staticComponents(graph, diagnostics),
+    dynamicEdges,
+    ...(foreignSymbols.length === 0 ? {} : { foreignSymbols }),
+  };
 }

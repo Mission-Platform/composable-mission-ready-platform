@@ -36,4 +36,92 @@ describe('Forge Web Script linker boundary', () => {
     });
     expect(result.diagnostics.map(({ code }) => code)).toEqual(['FLINT-LINK-002']);
   });
+
+  it('resolves foreign symbols against relocatable objects', () => {
+    const result = validateFlintLinks(
+      {
+        modules: [
+          {
+            fileName: '/app/interop.flint',
+            moduleId: 'interop',
+            projectRoot: '/app',
+            source: '',
+            contentHash: 'interop_hash',
+            module: {
+              kind: 'module',
+              name: 'interop',
+              imports: [],
+              sourceImports: [],
+              structs: [],
+              enums: [],
+              interfaces: [],
+              functions: [],
+              foreignCapabilities: [
+                {
+                  kind: 'foreign-capability',
+                  abi: 'C',
+                  library: 'zstd',
+                  callingConvention: 'wasm-c-abi',
+                  functions: [
+                    {
+                      kind: 'foreign-function',
+                      name: 'ZSTD_compress',
+                      parameters: [],
+                      result: {
+                        name: 'u32',
+                        span: { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 },
+                      },
+                      span: { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 },
+                    },
+                    {
+                      kind: 'foreign-function',
+                      name: 'ZSTD_versionNumber',
+                      parameters: [],
+                      result: {
+                        name: 'u32',
+                        span: { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 },
+                      },
+                      span: { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 },
+                    },
+                  ],
+                  span: { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 },
+                },
+              ],
+              span: { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 },
+            },
+          },
+        ],
+        projects: [{ root: '/app', id: 'app' }],
+        edges: [],
+      },
+      {
+        foreignObjects: [
+          {
+            name: 'libzstd',
+            path: '/vendor/libzstd.a',
+            format: 'wasm-relocatable',
+            exportedSymbols: ['ZSTD_compress', 'ZSTD_versionNumber'],
+          },
+        ],
+      },
+    );
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.foreignSymbols).toEqual([
+      {
+        symbol: 'ZSTD_compress',
+        library: 'zstd',
+        callingConvention: 'wasm-c-abi',
+        objectPath: '/vendor/libzstd.a',
+        resolved: true,
+      },
+      {
+        symbol: 'ZSTD_versionNumber',
+        library: 'zstd',
+        callingConvention: 'wasm-c-abi',
+        objectPath: '/vendor/libzstd.a',
+        resolved: true,
+      },
+    ]);
+  });
 });

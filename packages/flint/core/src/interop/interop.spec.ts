@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { parseFlint } from '../parser.js';
 
 import {
+  compileCHeader,
   compileWebIdl,
   generateFlintBindings,
   generateHostShims,
@@ -411,5 +412,67 @@ describe('Web IDL Interop: End-to-End compileWebIdl', () => {
     // Verify FWS syntax validity
     const fwsParse = parseFlint(result.flintBindings, 'encoding.flint');
     expect(fwsParse.diagnostics.filter((d) => d.severity === 'error')).toHaveLength(0);
+  });
+});
+
+describe('C and Rust cbindgen Interop: flint-bindgen', () => {
+  it('parses C header and Rust cbindgen outputs into Flint AST and bindings', () => {
+    const cHeader = `
+      /* Generated with cbindgen:0.26.0 */
+      #include <stdint.h>
+      #include <stddef.h>
+
+      typedef struct ZstdContext ZstdContext;
+
+      typedef struct ScannerResult {
+        uint32_t code_type;
+        uint32_t length;
+        float confidence;
+      } ScannerResult;
+
+      uint32_t ZSTD_versionNumber(void);
+
+      int32_t scan_barcode_c(
+        const uint8_t *image_ptr,
+        uint32_t width,
+        uint32_t height,
+        ScannerResult *result_out
+      );
+    `;
+
+    const result = compileCHeader(cHeader, 'scanner');
+    expect(result.ast.structs).toHaveLength(1);
+    expect(result.ast.structs[0].name).toBe('ScannerResult');
+    expect(result.ast.structs[0].fields).toHaveLength(3);
+    expect(result.ast.functions).toHaveLength(2);
+    expect(result.ast.opaqueTypes).toEqual(['ZstdContext']);
+
+    // Check generated Flint bindings syntax
+    expect(result.flintBindings).toContain('opaque foreign type ZstdContext;');
+    expect(result.flintBindings).toContain('#[repr(C)]');
+    expect(result.flintBindings).toContain('c_struct ScannerResult {');
+    expect(result.flintBindings).toContain('foreign "C" capability "scanner" {');
+    expect(result.flintBindings).toContain(
+      'fn scan_barcode_c(image_ptr: CPtr<u8>, width: c_uint, height: c_uint, result_out: MutCPtr<ScannerResult>) -> c_int;',
+    );
+
+    // Verify Flint parser accepts the emitted Flint bindings cleanly
+    const parseResult = parseFlint(result.flintBindings, 'scanner_bindings.flint');
+    expect(parseResult.diagnostics).toEqual([]);
+    expect(parseResult.module?.structs).toHaveLength(1);
+    expect(parseResult.module?.foreignCapabilities).toHaveLength(1);
+    expect(parseResult.module?.opaqueForeignTypes).toHaveLength(1);
+
+    // Check generated TypeScript .d.ts
+    expect(result.typeDeclarations).toContain('export namespace scanner {');
+    expect(result.typeDeclarations).toContain('export interface ScannerResult {');
+    expect(result.typeDeclarations).toContain('export type ZstdContext = number;');
+    expect(result.typeDeclarations).toContain(
+      'scan_barcode_c(image_ptr: number, width: number, height: number, result_out: number): number;',
+    );
+
+    // Check generated FFI host shim
+    expect(result.hostShim).toContain("import { dlopen, ptr, FFIType } from 'bun:ffi';");
+    expect(result.hostShim).toContain('scan_barcode_c: {');
   });
 });

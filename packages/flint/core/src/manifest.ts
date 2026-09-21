@@ -107,6 +107,21 @@ export interface FlintMemoryLayout {
 export type FlintValueRepresentation =
   'bool-i32' | 'f32' | 'f64' | 'i32' | 'i64' | 'pointer-length-u32' | 'pointer-length-u64' | 'u32' | 'u64' | 'unit';
 
+/** Individual foreign function descriptor within an ABI manifest foreign capability. */
+export interface FlintForeignFunction {
+  readonly symbol: string;
+  readonly parameters: readonly { readonly name: string; readonly cType: string; readonly wasmType: string }[];
+  readonly result: { readonly cType: string; readonly wasmType: string };
+}
+
+/** Foreign capability descriptor recorded in the ABI manifest. */
+export interface FlintForeignCapability {
+  readonly library: string;
+  readonly callingConvention: 'wasm-c-abi';
+  readonly memoryModel: 'shared' | 'multi-memory-segregated';
+  readonly functions: readonly FlintForeignFunction[];
+}
+
 /**
  * Canonical ABI manifest describing module interface, memory, layouts, and capabilities.
  */
@@ -118,6 +133,8 @@ export interface FlintAbiManifest {
   readonly exports: readonly FlintAbiFunction[];
   readonly imports: readonly FlintHostImport[];
   readonly sourceImports: readonly FlintSourceImport[];
+  readonly foreignCapabilities?: readonly FlintForeignCapability[];
+  readonly multiMemory?: boolean;
   readonly graphHash?: string;
   readonly projectRoot?: string;
   readonly linkMode?: FlintLinkMode;
@@ -572,7 +589,7 @@ export interface FlintAbiManifestOptions {
   readonly specializations?: readonly FlintSpecialization[];
   readonly iteratorDescriptors?: readonly FlintIteratorBoundaryDescriptor[];
   readonly async?: FlintAsyncCompilationContract;
-  readonly targetFeatures?: FlintTargetFeatures;
+  readonly targetFeatures?: FlintTargetFeatures | readonly string[];
   readonly boundsChecks?: FlintSoNBoundsChecks;
 }
 
@@ -624,14 +641,25 @@ function asyncContract(
  * @returns Canonicalized target features mapping with enabled entries.
  */
 // skipcq: JS-R1005
-function extractEnabledTargetFeatures(features?: FlintTargetFeatures): FlintTargetFeatures {
+function extractEnabledTargetFeatures(features?: FlintTargetFeatures | readonly string[]): FlintTargetFeatures {
   if (!features) return {};
+  if (Array.isArray(features)) {
+    const list = features as readonly string[];
+    return {
+      ...(list.includes('atomics') ? { atomics: true } : {}),
+      ...(list.includes('memory64') ? { memory64: true } : {}),
+      ...(list.includes('simd') ? { simd: true } : {}),
+      ...(list.includes('tailCall') ? { tailCall: true } : {}),
+      ...(list.includes('threads') ? { threads: true } : {}),
+    };
+  }
+  const config = features as FlintTargetFeatures;
   return {
-    ...(features.atomics === true ? { atomics: true } : {}),
-    ...(features.memory64 === true ? { memory64: true } : {}),
-    ...(features.simd === true ? { simd: true } : {}),
-    ...(features.tailCall === true ? { tailCall: true } : {}),
-    ...(features.threads === true ? { threads: true } : {}),
+    ...(config.atomics === true ? { atomics: true } : {}),
+    ...(config.memory64 === true ? { memory64: true } : {}),
+    ...(config.simd === true ? { simd: true } : {}),
+    ...(config.tailCall === true ? { tailCall: true } : {}),
+    ...(config.threads === true ? { threads: true } : {}),
   };
 }
 
@@ -673,6 +701,23 @@ function createValueRepresentations(memory64: boolean): Readonly<Record<FlintPri
     u32: 'u32',
     u64: 'u64',
     unit: 'unit',
+    u8: 'u32',
+    i8: 'i32',
+    c_char: 'i32',
+    c_uchar: 'u32',
+    c_short: 'i32',
+    c_ushort: 'u32',
+    c_int: 'i32',
+    c_uint: 'u32',
+    c_long: memory64 ? 'i64' : 'i32',
+    c_ulong: memory64 ? 'u64' : 'u32',
+    c_longlong: 'i64',
+    c_ulonglong: 'u64',
+    c_size: memory64 ? 'u64' : 'u32',
+    c_ssize: memory64 ? 'i64' : 'i32',
+    c_float: 'f32',
+    c_double: 'f64',
+    c_void: 'unit',
   };
 }
 
@@ -696,6 +741,82 @@ function extractLinkOptions(options: FlintAbiManifestOptions): Partial<FlintAbiM
 }
 
 /**
+ * Maps a Flint type AST node to its corresponding WebAssembly ABI value type.
+ *
+ * @param type - Type name AST node.
+ * @param memory64 - True if target uses 64-bit pointers.
+ * @returns Wasm value type name ('i32', 'i64', 'f32', 'f64', or 'void').
+ */
+function toWasmType(type: FlintTypeName, memory64: boolean): string {
+  const name = type.reference ?? type.name;
+  if (name === 'CPtr' || name === 'MutCPtr' || name === 'COpaquePtr') {
+    return memory64 ? 'i64' : 'i32';
+  }
+  switch (name) {
+    case 'f32':
+    case 'c_float': {
+      return 'f32';
+    }
+    case 'f64':
+    case 'c_double': {
+      return 'f64';
+    }
+    case 'i64':
+    case 'u64':
+    case 'c_longlong':
+    case 'c_ulonglong': {
+      return 'i64';
+    }
+    case 'c_long':
+    case 'c_ulong':
+    case 'c_size':
+    case 'c_ssize': {
+      return memory64 ? 'i64' : 'i32';
+    }
+    case 'unit':
+    case 'c_void': {
+      return 'void';
+    }
+    default: {
+      return 'i32';
+    }
+  }
+}
+
+/**
+ * Builds foreign capabilities manifest entries from declared module foreign capabilities.
+ *
+ * @param module - Compiled module AST.
+ * @param memory64 - True if 64-bit addressing is enabled.
+ * @returns Array of foreign capability descriptors, or undefined if none declared.
+ */
+function buildForeignCapabilities(
+  module: FlintModule,
+  memory64: boolean,
+): readonly FlintForeignCapability[] | undefined {
+  if (module.foreignCapabilities === undefined || module.foreignCapabilities.length === 0) {
+    return undefined;
+  }
+  return module.foreignCapabilities.map((capability) => ({
+    library: capability.library,
+    callingConvention: capability.callingConvention,
+    memoryModel: capability.memoryModel ?? 'shared',
+    functions: capability.functions.map((function_) => ({
+      symbol: function_.name,
+      parameters: function_.parameters.map((parameter) => ({
+        name: parameter.name,
+        cType: flintTypeNameToString(parameter.type),
+        wasmType: toWasmType(parameter.type, memory64),
+      })),
+      result: {
+        cType: flintTypeNameToString(function_.result),
+        wasmType: toWasmType(function_.result, memory64),
+      },
+    })),
+  }));
+}
+
+/**
  * Generates a complete, deterministic ABI manifest for a compiled Flint module.
  *
  * @param module - Compiled module AST.
@@ -706,6 +827,7 @@ function extractLinkOptions(options: FlintAbiManifestOptions): Partial<FlintAbiM
 export function createFlintAbiManifest(module: FlintModule, options: FlintAbiManifestOptions = {}): FlintAbiManifest {
   const targetFeatures = extractEnabledTargetFeatures(options.targetFeatures);
   const memory64 = targetFeatures.memory64 === true;
+  const foreignCapabilities = buildForeignCapabilities(module, memory64);
   return {
     format: 'forge-web-script-module',
     languageVersion: FLINT_LANGUAGE_VERSION,
@@ -729,6 +851,7 @@ export function createFlintAbiManifest(module: FlintModule, options: FlintAbiMan
     })),
     sourceImports: options.sourceImports ?? module.sourceImports.map(({ source, alias }) => ({ source, alias })),
     requiredCapabilities: [...new Set(module.imports.map((declaration) => declaration.capability))].toSorted(),
+    ...(foreignCapabilities === undefined ? {} : { foreignCapabilities }),
     memory: createMemoryLayout(memory64),
     boundsChecks: options.boundsChecks ?? 'runtime',
     valueRepresentations: createValueRepresentations(memory64),
