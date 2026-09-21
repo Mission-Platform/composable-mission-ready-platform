@@ -859,4 +859,4 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
   );
 }
 
-export const ForgeCombobox = ForgeSelect;
+export const ForgeCombobox: typeof ForgeSelect = ForgeSelect;

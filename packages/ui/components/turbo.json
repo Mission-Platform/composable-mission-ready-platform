@@ -3,50 +3,15 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": ["^build", "build:check"],
-      "env": [
-        "FORGE_BUILD_TARGET",
-        "FORGE_FRAMEWORK_TARGET",
-        "FORGE_CMS_STORYBLOK_TARGET",
-        "FORGE_CMS_ARTIFACT_MODE",
-        "FORGE_BUILD_STAGE_ROOT"
+      "dependsOn": [
+        "build:forge",
+        "build:react",
+        "build:vue",
+        "build:svelte",
+        "build:solid",
+        "build:web-components",
+        "build:cms-storyblok:assets"
       ]
-    },
-    "build:forge": {
-      "dependsOn": ["^build", "build:check"]
-    },
-    "build:react": {
-      "dependsOn": ["^build", "build:check"]
-    },
-    "build:vue": {
-      "dependsOn": ["^build", "build:check"]
-    },
-    "build:svelte": {
-      "dependsOn": ["^build", "build:check"]
-    },
-    "build:solid": {
-      "dependsOn": ["^build", "build:check"]
-    },
-    "build:web-components": {
-      "dependsOn": ["^build", "build:check"]
-    },
-    "build:cms-storyblok:assets": {
-      "dependsOn": ["^build", "build:check"]
-    },
-    "build:cms-storyblok:react": {
-      "dependsOn": ["^build", "build:check", "build:cms-storyblok:assets"]
-    },
-    "build:cms-storyblok:vue": {
-      "dependsOn": ["^build", "build:check", "build:cms-storyblok:assets"]
-    },
-    "build:cms-storyblok:svelte": {
-      "dependsOn": ["^build", "build:check", "build:cms-storyblok:assets"]
-    },
-    "build:cms-storyblok:solid": {
-      "dependsOn": ["^build", "build:check", "build:cms-storyblok:assets"]
-    },
-    "build:cms-storyblok:web-components": {
-      "dependsOn": ["^build", "build:check", "build:cms-storyblok:assets"]
     }
   }
 }

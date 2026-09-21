@@ -182,7 +182,7 @@ Canonical control size scale.
 **Kind:** constant
 
 ```typescript
-export const ForgeCombobox;
+export const ForgeCombobox: typeof ForgeSelect;
 ```
 
 No description provided.
