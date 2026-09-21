@@ -1,0 +1,13 @@
+.portPopover {
+  position: absolute;
+  padding: var(--mp-space-2, 8px) var(--mp-space-3, 12px);
+  background-color: var(--mp-color-surface-overlay, #21262d);
+  border: 1px solid var(--mp-color-border-subtle, #30363d);
+  border-radius: var(--mp-radius-md, 6px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  font-family: var(--mp-font-family-mono, monospace);
+  font-size: var(--mp-font-size-xs, 12px);
+  pointer-events: none;
+  z-index: 50;
+  white-space: nowrap;
+}

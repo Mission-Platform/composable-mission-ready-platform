@@ -1,0 +1,54 @@
+// Shared Flint geometric and projection math primitives
+
+export fn clamp_i32(val: i32, min_val: i32, max_val: i32) -> i32 {
+  if val < min_val {
+    return min_val;
+  }
+  if val > max_val {
+    return max_val;
+  }
+  return val;
+}
+
+export fn abs_i32(val: i32) -> i32 {
+  if val < 0 {
+    return 0 - val;
+  }
+  return val;
+}
+
+export fn compute_center(min_val: i32, max_val: i32) -> i32 {
+  return (min_val + max_val) / 2;
+}
+
+export fn screen_to_world_x(screen_x: i32, camera_x: i32, viewport_w: i32, zoom_percent: i32) -> i32 {
+  let offset_x: i32 = screen_x - (viewport_w / 2);
+  return camera_x + (offset_x * 100) / zoom_percent;
+}
+
+export fn screen_to_world_y(screen_y: i32, camera_y: i32, viewport_h: i32, zoom_percent: i32) -> i32 {
+  let offset_y: i32 = screen_y - (viewport_h / 2);
+  return camera_y + (offset_y * 100) / zoom_percent;
+}
+
+export fn world_to_screen_x(world_x: i32, camera_x: i32, viewport_w: i32, zoom_percent: i32) -> i32 {
+  let delta_x: i32 = world_x - camera_x;
+  return (viewport_w / 2) + (delta_x * zoom_percent) / 100;
+}
+
+export fn world_to_screen_y(world_y: i32, camera_y: i32, viewport_h: i32, zoom_percent: i32) -> i32 {
+  let delta_y: i32 = world_y - camera_y;
+  return (viewport_h / 2) + (delta_y * zoom_percent) / 100;
+}
+
+export fn screen_to_world_f32(screen_coord: f32, camera_coord: f32, center_coord: f32, zoom: f32) -> f32 {
+  return camera_coord + (screen_coord - center_coord) / zoom;
+}
+
+export fn world_to_screen_f32(world_coord: f32, camera_coord: f32, center_coord: f32, zoom: f32) -> f32 {
+  return center_coord + (world_coord - camera_coord) * zoom;
+}
+
+export fn port_y_position(node_y: i32, header_h: i32, row_index: i32, row_h: i32, port_offset: i32) -> i32 {
+  return node_y + header_h + (row_index * row_h) + port_offset;
+}

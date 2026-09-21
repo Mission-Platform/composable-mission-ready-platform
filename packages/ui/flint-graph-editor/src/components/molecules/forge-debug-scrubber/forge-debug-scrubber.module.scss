@@ -1,0 +1,117 @@
+.scrubberContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: var(--mp-space-2, 8px) var(--mp-space-4, 16px);
+  background-color: var(--mp-color-surface-raised, #161b22);
+  border-top: 1px solid var(--mp-color-border-subtle, #30363d);
+}
+
+.controlsRow {
+  display: flex;
+  align-items: center;
+  gap: var(--mp-space-3, 12px);
+  width: 100%;
+}
+
+.buttonGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--mp-space-1, 4px);
+}
+
+.controlBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background-color: var(--mp-color-surface-base, #21262d);
+  border: 1px solid var(--mp-color-border-subtle, #30363d);
+  border-radius: var(--mp-radius-md, 6px);
+  color: var(--mp-color-text-primary, #f0f6fc);
+  cursor: pointer;
+  font-size: var(--mp-font-size-sm, 13px);
+  transition: all 0.15s ease-in-out;
+}
+
+.controlBtn:hover:not(:disabled) {
+  background-color: var(--mp-color-surface-overlay, #30363d);
+  border-color: var(--mp-color-brand-primary, #58a6ff);
+}
+
+.controlBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.primaryBtn {
+  background-color: var(--mp-color-brand-primary, #1f6feb);
+  border-color: var(--mp-color-brand-primary, #1f6feb);
+}
+
+.sliderContainer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.slider {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--mp-color-surface-sunken, #0d1117);
+  outline: none;
+  cursor: pointer;
+}
+
+.speedGroup {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background-color: var(--mp-color-surface-sunken, #0d1117);
+  padding: 2px;
+  border-radius: var(--mp-radius-md, 6px);
+}
+
+.speedBtn {
+  padding: 2px 6px;
+  font-size: 11px;
+  border: none;
+  background: transparent;
+  color: var(--mp-color-text-muted, #8b949e);
+  border-radius: var(--mp-radius-sm, 4px);
+  cursor: pointer;
+}
+
+.speedBtnActive {
+  background-color: var(--mp-color-surface-overlay, #30363d);
+  color: var(--mp-color-text-primary, #f0f6fc);
+  font-weight: 600;
+}
+
+.statusIndicator {
+  display: flex;
+  align-items: center;
+  font-size: var(--mp-font-size-xs, 12px);
+}
+
+.stepBadge {
+  color: var(--mp-color-text-muted, #8b949e);
+  font-family: var(--mp-font-family-mono, monospace);
+}
+
+.trapBadge {
+  color: #f85149;
+  font-weight: 600;
+  animation: pulse 1s infinite alternate;
+}
+
+@keyframes pulse {
+  from {
+    opacity: 0.7;
+  }
+  to {
+    opacity: 1;
+  }
+}

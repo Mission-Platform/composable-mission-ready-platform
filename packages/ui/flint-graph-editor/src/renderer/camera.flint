@@ -1,0 +1,66 @@
+
+import "./renderer-common.flint" as common;
+
+struct CameraState {
+  x: i32;
+  y: i32;
+  zoom_percent: i32;
+}
+
+struct ViewportBounds {
+  min_x: i32;
+  min_y: i32;
+  max_x: i32;
+  max_y: i32;
+}
+
+export fn camera_pan_x(cam_x: i32, delta_x: i32, zoom_percent: i32) -> i32 {
+  return cam_x - (delta_x * 100) / zoom_percent;
+}
+
+export fn camera_pan_y(cam_y: i32, delta_y: i32, zoom_percent: i32) -> i32 {
+  return cam_y - (delta_y * 100) / zoom_percent;
+}
+
+export fn camera_zoom_percent(current_zoom_percent: i32, factor_permille: i32, min_percent: i32, max_percent: i32) -> i32 {
+  let next_zoom: i32 = (current_zoom_percent * factor_permille) / 1000;
+  return common.clamp_i32(next_zoom, min_percent, max_percent);
+}
+
+export fn camera_zoom_anchor_x(cam_x: i32, cursor_x: i32, viewport_w: i32, old_zoom_percent: i32, new_zoom_percent: i32) -> i32 {
+  let center_x: i32 = viewport_w / 2;
+  let offset: i32 = cursor_x - center_x;
+  let world_before: i32 = cam_x + (offset * 100) / old_zoom_percent;
+  return world_before - (offset * 100) / new_zoom_percent;
+}
+
+export fn camera_zoom_anchor_y(cam_y: i32, cursor_y: i32, viewport_h: i32, old_zoom_percent: i32, new_zoom_percent: i32) -> i32 {
+  let center_y: i32 = viewport_h / 2;
+  let offset: i32 = cursor_y - center_y;
+  let world_before: i32 = cam_y + (offset * 100) / old_zoom_percent;
+  return world_before - (offset * 100) / new_zoom_percent;
+}
+
+export fn viewport_bounds_min_x(cam_x: i32, viewport_w: i32, zoom_percent: i32, padding: i32) -> i32 {
+  let half_w: i32 = ((viewport_w / 2) * 100) / zoom_percent;
+  return cam_x - half_w - padding;
+}
+
+export fn viewport_bounds_max_x(cam_x: i32, viewport_w: i32, zoom_percent: i32, padding: i32) -> i32 {
+  let half_w: i32 = ((viewport_w / 2) * 100) / zoom_percent;
+  return cam_x + half_w + padding;
+}
+
+export fn viewport_bounds_min_y(cam_y: i32, viewport_h: i32, zoom_percent: i32, padding: i32) -> i32 {
+  let half_h: i32 = ((viewport_h / 2) * 100) / zoom_percent;
+  return cam_y - half_h - padding;
+}
+
+export fn viewport_bounds_max_y(cam_y: i32, viewport_h: i32, zoom_percent: i32, padding: i32) -> i32 {
+  let half_h: i32 = ((viewport_h / 2) * 100) / zoom_percent;
+  return cam_y + half_h + padding;
+}
+
+export fn node_bounds_max_y(node_y: i32, header_h: i32, max_ports: i32, row_h: i32, pad: i32) -> i32 {
+  return common.port_y_position(node_y, header_h, max_ports, row_h, pad);
+}

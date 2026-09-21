@@ -1,0 +1,71 @@
+import path from 'node:path';
+
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
+import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
+import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
+import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
+import flintPlugin from '@mission-platform/vite-plugin-flint';
+import { defineTsdownForgeComponentsAll } from '@mission-platform/vite-plugin-forge';
+
+const rootDirectory = import.meta.dirname;
+const componentsModule = path.resolve(rootDirectory, 'src/components/index.ts');
+const buildNeutral = process.env.FORGE_FRAMEWORK_TARGET === undefined || process.env.FORGE_FRAMEWORK_TARGET === 'none';
+const flintPlugins = [
+  flintPlugin({
+    root: rootDirectory,
+    requireExports: false,
+    requestedCapabilities: [
+      'webgpu.render_begin',
+      'webgpu.render_grid',
+      'webgpu.render_edges',
+      'webgpu.render_nodes',
+      'webgpu.render_pins',
+      'webgpu.render_end',
+    ],
+  }),
+];
+
+export default [
+  ...(buildNeutral
+    ? [
+        defineTsdownLibrary({
+          rootDir: rootDirectory,
+          entry: {
+            index: 'src/index.ts',
+          },
+          dts: true,
+          clean: true,
+          overrides: {
+            plugins: flintPlugins,
+          },
+        }),
+      ]
+    : []),
+  ...(process.env.FORGE_FRAMEWORK_TARGET === 'none'
+    ? []
+    : defineTsdownForgeComponentsAll({
+        rootDir: rootDirectory,
+        frameworks: [
+          forgeReactFramework(),
+          forgeSolidFramework(),
+          forgeSvelteFramework(),
+          forgeWebComponentsFramework(),
+          forgeVueFramework(),
+        ],
+        componentsModule,
+        name: 'MissionPlatformFlintGraphEditor',
+        external: [
+          '@mission-platform/components',
+          '@mission-platform/flint',
+          '@mission-platform/flint-runtime',
+          '@mission-platform/icons',
+          '@mission-platform/tokens',
+        ],
+        declarationModule: '..',
+        overrides: {
+          plugins: flintPlugins,
+        },
+      })),
+];

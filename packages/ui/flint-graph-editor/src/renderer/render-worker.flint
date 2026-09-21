@@ -1,0 +1,63 @@
+
+import "./renderer-common.flint" as common;
+import "./camera.flint" as camera;
+import "./spatial-index.flint" as spatial;
+
+import capability "webgpu.render_begin" as gpu_render_begin() -> unit;
+import capability "webgpu.render_grid" as gpu_render_grid() -> unit;
+import capability "webgpu.render_edges" as gpu_render_edges(count: u32) -> unit;
+import capability "webgpu.render_nodes" as gpu_render_nodes(count: u32) -> unit;
+import capability "webgpu.render_pins" as gpu_render_pins(count: u32) -> unit;
+import capability "webgpu.render_end" as gpu_render_end() -> unit;
+
+export fn point_in_rect(px: i32, py: i32, rx: i32, ry: i32, rw: i32, rh: i32) -> bool {
+  return px >= rx && px <= (rx + rw) && py >= ry && py <= (ry + rh);
+}
+
+export fn point_in_circle(px: i32, py: i32, cx: i32, cy: i32, radius: i32) -> bool {
+  let dx: i32 = px - cx;
+  let dy: i32 = py - cy;
+  return (dx * dx + dy * dy) <= (radius * radius);
+}
+
+export fn rect_intersects_box(rx: i32, ry: i32, rw: i32, rh: i32, min_x: i32, min_y: i32, max_x: i32, max_y: i32) -> bool {
+  return (rx + rw) >= min_x && rx <= max_x && (ry + rh) >= min_y && ry <= max_y;
+}
+
+export fn bezier_point_1d(p0: i32, p1: i32, p2: i32, p3: i32, t_permille: i32) -> i32 {
+  let u: i32 = 1000 - t_permille;
+  let term0: i32 = (u * u * u * p0) / 1000000000;
+  let term1: i32 = (3 * u * u * t_permille * p1) / 1000000000;
+  let term2: i32 = (3 * u * t_permille * t_permille * p2) / 1000000000;
+  let term3: i32 = (t_permille * t_permille * t_permille * p3) / 1000000000;
+  return term0 + term1 + term2 + term3;
+}
+
+export fn bezier_control_dx(p0x: i32, p3x: i32) -> i32 {
+  let diff: i32 = p3x - p0x;
+  let abs_diff: i32 = common.abs_i32(diff);
+  let half: i32 = abs_diff / 2;
+  if half > 40 {
+    return half;
+  }
+  return 40;
+}
+
+export fn node_bounds_height(header_h: i32, max_ports: i32, row_h: i32, pad: i32) -> i32 {
+  return header_h + (max_ports * row_h) + pad;
+}
+
+export fn renderer_execute_frame(visible_nodes: u32, visible_edges: u32, visible_pins: u32) -> unit {
+  gpu_render_begin();
+  gpu_render_grid();
+  if visible_edges > 0 {
+    gpu_render_edges(visible_edges);
+  }
+  if visible_nodes > 0 {
+    gpu_render_nodes(visible_nodes);
+  }
+  if visible_pins > 0 {
+    gpu_render_pins(visible_pins);
+  }
+  gpu_render_end();
+}
