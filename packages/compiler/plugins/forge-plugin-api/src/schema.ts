@@ -133,6 +133,39 @@ function findSpanInIntentions(
   );
 }
 
+/**
+ * Extracts a source span from a lowered plan record if available.
+ *
+ * @param lowered - Lowered plan object.
+ * @returns SourceSpan if found, or undefined.
+ */
+function findSpanInLowered(lowered: unknown): SourceSpan | undefined {
+  return isRecord(lowered) && isSourceSpan(lowered.span)
+    ? lowered.span
+    : undefined;
+}
+
+/**
+ * Finds a source span within child compiler records.
+ *
+ * @param value - Parent record to inspect.
+ * @returns SourceSpan if found, or undefined.
+ */
+function findSpanInSubstructures(
+  value: Record<string, unknown>,
+): SourceSpan | undefined {
+  if (isRecord(value.module)) {
+    return findActionableSpan(value.module);
+  }
+  if (isRecord(value.ast)) {
+    return findSpanInAst(value.ast);
+  }
+  if (isRecord(value.intentions)) {
+    return findSpanInIntentions(value.intentions);
+  }
+  return findSpanInLowered(value.lowered);
+}
+
 /** Recursively search for an actionable source span within intentions or their AST facts. */
 export function findActionableSpan(value: unknown): SourceSpan | undefined {
   if (!isRecord(value)) {
@@ -141,28 +174,7 @@ export function findActionableSpan(value: unknown): SourceSpan | undefined {
   if (isSourceSpan(value.span)) {
     return value.span;
   }
-  if (isRecord(value.module)) {
-    const span = findActionableSpan(value.module);
-    if (span !== undefined) {
-      return span;
-    }
-  }
-  if (isRecord(value.ast)) {
-    const span = findSpanInAst(value.ast);
-    if (span !== undefined) {
-      return span;
-    }
-  }
-  if (isRecord(value.intentions)) {
-    const span = findSpanInIntentions(value.intentions);
-    if (span !== undefined) {
-      return span;
-    }
-  }
-  if (isRecord(value.lowered) && isSourceSpan(value.lowered.span)) {
-    return value.lowered.span;
-  }
-  return undefined;
+  return findSpanInSubstructures(value);
 }
 
 /** Schema validating the structure of a lowered target plan. */
@@ -355,6 +367,25 @@ export const targetIntentionsSchema: DeclarativeSchema = {
 };
 
 /**
+ * Resolves the issue path using an optional base path.
+ *
+ * @param customPath - Path from custom validation result.
+ * @param basePath - Base path prefix.
+ * @param defaultPath - Fallback path if custom path is missing.
+ * @returns Resolved full path string.
+ */
+function resolveIssuePath(
+  customPath: string | undefined,
+  basePath: string | undefined,
+  defaultPath: string,
+): string {
+  if (!customPath) {
+    return defaultPath;
+  }
+  return basePath ? `${basePath}.${customPath}` : customPath;
+}
+
+/**
  * Evaluates custom validation rule if defined.
  *
  * @param rule - The schema field rule.
@@ -375,21 +406,27 @@ function evaluateCustomValidation(
     return undefined;
   }
   const customResult = rule.custom(value, options.root);
-  if (customResult !== undefined && !customResult.valid) {
-    const issuePath = customResult.path
-      ? options.basePath
-        ? `${options.basePath}.${customResult.path}`
-        : customResult.path
-      : defaultPath;
-    return {
-      path: issuePath,
-      code: rule.code,
-      message: customResult.message,
-      span: customResult.span ?? defaultSpan,
-    };
+  if (customResult === undefined || customResult.valid) {
+    return undefined;
   }
-  return undefined;
+  return {
+    path: resolveIssuePath(customResult.path, options.basePath, defaultPath),
+    code: rule.code,
+    message: customResult.message,
+    span: customResult.span ?? defaultSpan,
+  };
 }
+
+const SCHEMA_TYPE_VALIDATORS: Record<
+  SchemaFieldType,
+  (value: unknown) => boolean
+> = {
+  string: (value) => typeof value === "string",
+  "non-empty-string": (value) => typeof value === "string" && value.length > 0,
+  object: isRecord,
+  array: Array.isArray,
+  boolean: (value) => typeof value === "boolean",
+};
 
 /**
  * Checks whether a value matches the declared schema field type.
@@ -399,26 +436,18 @@ function evaluateCustomValidation(
  * @returns True if the value matches the type.
  */
 function matchesSchemaType(type: SchemaFieldType, value: unknown): boolean {
-  switch (type) {
-    case "string": {
-      return typeof value === "string";
-    }
-    case "non-empty-string": {
-      return typeof value === "string" && value.length > 0;
-    }
-    case "object": {
-      return isRecord(value);
-    }
-    case "array": {
-      return Array.isArray(value);
-    }
-    case "boolean": {
-      return typeof value === "boolean";
-    }
-    default: {
-      return true;
-    }
-  }
+  const validator = SCHEMA_TYPE_VALIDATORS[type];
+  return validator ? validator(value) : true;
+}
+
+/**
+ * Checks whether a value is not null or undefined.
+ *
+ * @param value - Value to check.
+ * @returns True if value is present.
+ */
+function isValuePresent(value: unknown): boolean {
+  return value !== undefined && value !== null;
 }
 
 /**
@@ -440,25 +469,18 @@ function validateRequiredRule(
   fullPath: string,
   span: SourceSpan | undefined,
 ): SchemaValidationIssue | undefined {
-  if (!rule.required || (value !== undefined && value !== null)) {
+  if (!rule.required || isValuePresent(value)) {
     return undefined;
   }
-  const customIssue = evaluateCustomValidation(
-    rule,
-    value,
-    options,
-    fullPath,
-    span,
+  return (
+    evaluateCustomValidation(rule, value, options, fullPath, span) ?? {
+      path: fullPath,
+      code: rule.code,
+      message:
+        rule.message ?? `${schema.name} field "${fullPath}" is required.`,
+      span,
+    }
   );
-  if (customIssue !== undefined) {
-    return customIssue;
-  }
-  return {
-    path: fullPath,
-    code: rule.code,
-    message: rule.message ?? `${schema.name} field "${fullPath}" is required.`,
-    span,
-  };
 }
 
 /**
@@ -552,6 +574,61 @@ function validateAllowedValuesRule(
 }
 
 /**
+ * Resolves the full path for a schema rule.
+ *
+ * @param basePath - Optional base path prefix.
+ * @param path - Rule relative path.
+ * @returns Combined path string.
+ */
+function resolveRulePath(basePath: string | undefined, path: string): string {
+  return basePath ? `${basePath}.${path}` : path;
+}
+
+/**
+ * Resolves the source span for a field value, falling back if not detected.
+ *
+ * @param value - Field value.
+ * @param fallbackSpan - Fallback source span.
+ * @returns Detected or fallback span.
+ */
+function resolveRuleSpan(
+  value: unknown,
+  fallbackSpan: SourceSpan | undefined,
+): SourceSpan | undefined {
+  const valueSpan = isRecord(value) ? findActionableSpan(value) : undefined;
+  return valueSpan ?? fallbackSpan;
+}
+
+/**
+ * Validates type, allowed values, and custom rules for a present value.
+ *
+ * @param rule - Schema rule.
+ * @param value - Value to validate.
+ * @param schema - Schema definition.
+ * @param options - Validation options.
+ * @param fullPath - Full path string.
+ * @param span - Source span.
+ * @returns Validation issue if invalid, or undefined.
+ */
+function validatePresentValueRules(
+  rule: SchemaFieldRule,
+  value: unknown,
+  schema: DeclarativeSchema,
+  options: SchemaValidationOptions,
+  fullPath: string,
+  span: SourceSpan | undefined,
+): SchemaValidationIssue | undefined {
+  if (!isValuePresent(value)) {
+    return undefined;
+  }
+  return (
+    validateTypeRule(rule, value, schema, options, fullPath, span) ??
+    validateAllowedValuesRule(rule, value, schema, options, fullPath, span) ??
+    evaluateCustomValidation(rule, value, options, fullPath, span)
+  );
+}
+
+/**
  * Validates a single schema rule against an extracted field value.
  *
  * @param rule - Schema field rule definition.
@@ -566,53 +643,13 @@ function validateSchemaRule(
   schema: DeclarativeSchema,
   options: SchemaValidationOptions,
 ): SchemaValidationIssue | undefined {
-  const fullPath = options.basePath
-    ? `${options.basePath}.${rule.path}`
-    : rule.path;
-  const valueSpan = isRecord(value) ? findActionableSpan(value) : undefined;
-  const span = valueSpan ?? options.fallbackSpan;
+  const fullPath = resolveRulePath(options.basePath, rule.path);
+  const span = resolveRuleSpan(value, options.fallbackSpan);
 
-  const requiredIssue = validateRequiredRule(
-    rule,
-    value,
-    schema,
-    options,
-    fullPath,
-    span,
+  return (
+    validateRequiredRule(rule, value, schema, options, fullPath, span) ??
+    validatePresentValueRules(rule, value, schema, options, fullPath, span)
   );
-  if (requiredIssue !== undefined) {
-    return requiredIssue;
-  }
-
-  if (value === undefined || value === null) {
-    return undefined;
-  }
-
-  const typeIssue = validateTypeRule(
-    rule,
-    value,
-    schema,
-    options,
-    fullPath,
-    span,
-  );
-  if (typeIssue !== undefined) {
-    return typeIssue;
-  }
-
-  const allowedIssue = validateAllowedValuesRule(
-    rule,
-    value,
-    schema,
-    options,
-    fullPath,
-    span,
-  );
-  if (allowedIssue !== undefined) {
-    return allowedIssue;
-  }
-
-  return evaluateCustomValidation(rule, value, options, fullPath, span);
 }
 
 /**
@@ -759,6 +796,38 @@ function validateRootFramework(
 }
 
 /**
+ * Checks for mismatch between context framework and target intentions framework.
+ *
+ * @param context - Target context record.
+ * @param intentions - Target intentions record.
+ * @param span - Fallback source span.
+ * @returns Validation issue if mismatched, or undefined.
+ */
+function checkContextFrameworkMismatch(
+  context: Record<string, unknown>,
+  intentions: Record<string, unknown>,
+  span?: SourceSpan,
+): SchemaValidationIssue | undefined {
+  const contextFramework =
+    typeof context.framework === "string" ? context.framework : "";
+  const rootFramework =
+    typeof intentions.framework === "string" ? intentions.framework : "";
+  if (
+    contextFramework.length > 0 &&
+    rootFramework.length > 0 &&
+    contextFramework !== rootFramework
+  ) {
+    return {
+      path: "context.framework",
+      code: "FORGE_INTENTIONS_INVALID_CONTEXT",
+      message: `Target context framework "${contextFramework}" does not match target intentions framework "${rootFramework}".`,
+      span,
+    };
+  }
+  return undefined;
+}
+
+/**
  * Validates the context section of target intentions and its cross-field consistency.
  *
  * @param intentions - Target intentions record.
@@ -780,22 +849,59 @@ function validateContextSection(
     fallbackSpan: contextSpan,
   });
 
-  if (
-    typeof context.framework === "string" &&
-    context.framework.length > 0 &&
-    typeof intentions.framework === "string" &&
-    intentions.framework.length > 0 &&
-    context.framework !== intentions.framework
-  ) {
-    issues.push({
-      path: "context.framework",
-      code: "FORGE_INTENTIONS_INVALID_CONTEXT",
-      message: `Target context framework "${context.framework}" does not match target intentions framework "${intentions.framework}".`,
-      span: contextSpan,
-    });
+  const mismatch = checkContextFrameworkMismatch(
+    context,
+    intentions,
+    contextSpan,
+  );
+  if (mismatch !== undefined) {
+    issues.push(mismatch);
   }
 
   return issues;
+}
+
+/**
+ * Checks whether an unknown value is a known semantic module kind.
+ *
+ * @param kind - Candidate kind value.
+ * @returns True if kind is component or composable.
+ */
+function isKnownModuleKind(kind: unknown): kind is "component" | "composable" {
+  return kind === "component" || kind === "composable";
+}
+
+/**
+ * Checks for mismatch between semantic module kind and target context module kind.
+ *
+ * @param module_ - Semantic module record.
+ * @param context - Target context.
+ * @param span - Fallback source span.
+ * @returns Validation issue if mismatched, or undefined.
+ */
+function checkModuleKindMismatch(
+  module_: Record<string, unknown>,
+  context: unknown,
+  span?: SourceSpan,
+): SchemaValidationIssue | undefined {
+  if (!isRecord(context)) {
+    return undefined;
+  }
+  if (
+    !isKnownModuleKind(module_.moduleKind) ||
+    !isKnownModuleKind(context.moduleKind)
+  ) {
+    return undefined;
+  }
+  if (module_.moduleKind !== context.moduleKind) {
+    return {
+      path: "module.moduleKind",
+      code: "FORGE_INTENTIONS_INVALID_MODULE",
+      message: `Semantic module moduleKind "${module_.moduleKind}" does not match context moduleKind "${context.moduleKind}".`,
+      span,
+    };
+  }
+  return undefined;
 }
 
 /**
@@ -820,23 +926,68 @@ function validateModuleSection(
     fallbackSpan: moduleSpan,
   });
 
-  if (
-    (module_.moduleKind === "component" ||
-      module_.moduleKind === "composable") &&
-    isRecord(intentions.context) &&
-    (intentions.context.moduleKind === "component" ||
-      intentions.context.moduleKind === "composable") &&
-    module_.moduleKind !== intentions.context.moduleKind
-  ) {
-    issues.push({
-      path: "module.moduleKind",
-      code: "FORGE_INTENTIONS_INVALID_MODULE",
-      message: `Semantic module moduleKind "${module_.moduleKind}" does not match context moduleKind "${intentions.context.moduleKind}".`,
-      span: moduleSpan,
-    });
+  const mismatch = checkModuleKindMismatch(
+    module_,
+    intentions.context,
+    moduleSpan,
+  );
+  if (mismatch !== undefined) {
+    issues.push(mismatch);
   }
 
   return issues;
+}
+
+/**
+ * Checks for mismatch between lowered plan framework and expected target framework.
+ *
+ * @param loweredFramework - Framework discriminator in lowered plan.
+ * @param expectedFramework - Expected framework.
+ * @param span - Fallback source span.
+ * @returns Validation issue if mismatched, or undefined.
+ */
+function checkLoweredFrameworkMismatch(
+  loweredFramework: string,
+  expectedFramework: FrameworkId | undefined,
+  span?: SourceSpan,
+): SchemaValidationIssue | undefined {
+  if (expectedFramework && loweredFramework !== expectedFramework) {
+    return {
+      path: "lowered.framework",
+      code: "FORGE_INTENTIONS_LOWERED_FRAMEWORK_MISMATCH",
+      message: `Target intentions lowered plan framework "${loweredFramework}" does not match expected target "${expectedFramework}".`,
+      span,
+    };
+  }
+  return undefined;
+}
+
+/**
+ * Checks for mismatch between lowered plan framework and root intentions framework.
+ *
+ * @param loweredFramework - Framework discriminator in lowered plan.
+ * @param rootFramework - Root framework identifier.
+ * @param span - Fallback source span.
+ * @returns Validation issue if mismatched, or undefined.
+ */
+function checkLoweredRootFrameworkMismatch(
+  loweredFramework: string,
+  rootFramework: unknown,
+  span?: SourceSpan,
+): SchemaValidationIssue | undefined {
+  if (
+    typeof rootFramework === "string" &&
+    rootFramework.length > 0 &&
+    loweredFramework !== rootFramework
+  ) {
+    return {
+      path: "lowered.framework",
+      code: "FORGE_INTENTIONS_LOWERED_FRAMEWORK_MISMATCH",
+      message: `Target intentions root framework "${rootFramework}" does not match lowered plan framework "${loweredFramework}".`,
+      span,
+    };
+  }
+  return undefined;
 }
 
 /**
@@ -863,30 +1014,24 @@ function validateLoweredSection(
     fallbackSpan: loweredSpan,
   });
 
-  if (typeof lowered.framework === "string" && lowered.framework.length > 0) {
-    if (
-      expectedFramework !== undefined &&
-      lowered.framework !== expectedFramework
-    ) {
-      issues.push({
-        path: "lowered.framework",
-        code: "FORGE_INTENTIONS_LOWERED_FRAMEWORK_MISMATCH",
-        message: `Target intentions lowered plan framework "${lowered.framework}" does not match expected target "${expectedFramework}".`,
-        span: loweredSpan,
-      });
+  const loweredFw =
+    typeof lowered.framework === "string" ? lowered.framework : "";
+  if (loweredFw.length > 0) {
+    const expectedMismatch = checkLoweredFrameworkMismatch(
+      loweredFw,
+      expectedFramework,
+      loweredSpan,
+    );
+    if (expectedMismatch !== undefined) {
+      issues.push(expectedMismatch);
     }
-
-    if (
-      typeof intentions.framework === "string" &&
-      intentions.framework.length > 0 &&
-      lowered.framework !== intentions.framework
-    ) {
-      issues.push({
-        path: "lowered.framework",
-        code: "FORGE_INTENTIONS_LOWERED_FRAMEWORK_MISMATCH",
-        message: `Target intentions root framework "${intentions.framework}" does not match lowered plan framework "${lowered.framework}".`,
-        span: loweredSpan,
-      });
+    const rootMismatch = checkLoweredRootFrameworkMismatch(
+      loweredFw,
+      intentions.framework,
+      loweredSpan,
+    );
+    if (rootMismatch !== undefined) {
+      issues.push(rootMismatch);
     }
   }
 

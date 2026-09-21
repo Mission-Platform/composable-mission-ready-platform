@@ -341,14 +341,23 @@ export function createRouterDiagnostic(
 }
 
 /**
+ * Asserts that the plugin id is a non-empty string.
+ *
+ * @param id - Candidate plugin id.
+ */
+function assertPluginId(id: unknown): asserts id is string {
+  if (typeof id !== "string" || id.length === 0) {
+    throw new TypeError("A Forge router plugin must define a non-empty id.");
+  }
+}
+
+/**
  * Asserts that the plugin has a valid id and package metadata.
  *
  * @param plugin - Plugin object to validate.
  */
 function assertPluginMetadata(plugin: Record<string, unknown>): void {
-  if (typeof plugin.id !== "string" || plugin.id.length === 0) {
-    throw new TypeError("A Forge router plugin must define a non-empty id.");
-  }
+  assertPluginId(plugin.id);
   if (
     typeof plugin.routerPackage !== "string" ||
     plugin.routerPackage.length === 0

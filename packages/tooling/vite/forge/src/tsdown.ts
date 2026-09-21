@@ -136,7 +136,7 @@ function extractChunkCandidate(chunkInfo: CanonicalChunkCandidate): {
  * @returns True if chunk is a Forge virtual entry.
  */
 function isForgeVirtualEntry(name: string, facadeModuleId?: string | null): boolean {
-  if (facadeModuleId && facadeModuleId.includes('virtual:forge-entry')) {
+  if (facadeModuleId?.includes('virtual:forge-entry')) {
     return true;
   }
   return name.includes('forge-entry') || /(?:^|\/)entry(?:[:_])/.test(name);

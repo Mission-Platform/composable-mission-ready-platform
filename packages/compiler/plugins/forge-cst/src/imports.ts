@@ -171,6 +171,56 @@ function normalizeRewriteSpecs(
 }
 
 /**
+ * Extracts the imported symbol name from an OXC import specifier.
+ *
+ * @param specifier - The named import specifier.
+ * @returns The imported symbol name.
+ */
+function parseNamedImportName(specifier: ImportSpecifier): string {
+  return specifier.imported.type === "Identifier"
+    ? specifier.imported.name
+    : specifier.imported.value;
+}
+
+/**
+ * Parses a single import specifier node into a normalized record.
+ *
+ * @param specifier - The AST specifier node.
+ * @param isTypeDecl - Whether the parent declaration is type-only.
+ * @returns Normalized specifier record or undefined if unrecognized.
+ */
+function parseSpecifier(
+  specifier: ImportDeclaration["specifiers"][number],
+  isTypeDecl: boolean,
+): ParsedSpecifier | undefined {
+  if (specifier.type === "ImportDefaultSpecifier") {
+    return {
+      kind: "default",
+      importedName: "default",
+      localName: specifier.local.name,
+      typeOnly: isTypeDecl,
+    };
+  }
+  if (specifier.type === "ImportNamespaceSpecifier") {
+    return {
+      kind: "namespace",
+      importedName: "*",
+      localName: specifier.local.name,
+      typeOnly: isTypeDecl,
+    };
+  }
+  if (specifier.type === "ImportSpecifier") {
+    return {
+      kind: "named",
+      importedName: parseNamedImportName(specifier),
+      localName: specifier.local.name,
+      typeOnly: isTypeDecl || specifier.importKind === "type",
+    };
+  }
+  return undefined;
+}
+
+/**
  * Extracts normalized specifier records from an import declaration.
  *
  * @param decl - An OXC import declaration node.
@@ -179,44 +229,12 @@ function normalizeRewriteSpecs(
 function parseSpecifiersFromDeclaration(
   decl: ImportDeclaration,
 ): ParsedSpecifier[] {
+  const isTypeDecl = decl.importKind === "type";
   const parsedSpecifiers: ParsedSpecifier[] = [];
   for (const specifier of decl.specifiers) {
-    switch (specifier.type) {
-      case "ImportDefaultSpecifier": {
-        parsedSpecifiers.push({
-          kind: "default",
-          importedName: "default",
-          localName: specifier.local.name,
-          typeOnly: decl.importKind === "type",
-        });
-        break;
-      }
-      case "ImportNamespaceSpecifier": {
-        parsedSpecifiers.push({
-          kind: "namespace",
-          importedName: "*",
-          localName: specifier.local.name,
-          typeOnly: decl.importKind === "type",
-        });
-        break;
-      }
-      case "ImportSpecifier": {
-        const importedName =
-          specifier.imported.type === "Identifier"
-            ? specifier.imported.name
-            : specifier.imported.value;
-        parsedSpecifiers.push({
-          kind: "named",
-          importedName,
-          localName: specifier.local.name,
-          typeOnly:
-            specifier.importKind === "type" || decl.importKind === "type",
-        });
-        break;
-      }
-      default: {
-        break;
-      }
+    const parsed = parseSpecifier(specifier, isTypeDecl);
+    if (parsed !== undefined) {
+      parsedSpecifiers.push(parsed);
     }
   }
   return parsedSpecifiers;
@@ -369,6 +387,36 @@ function groupSpecsByReplacementModule(
 }
 
 /**
+ * Extracts a valid quote character from the source position.
+ *
+ * @param source - Original source string.
+ * @param position - Character index in source.
+ * @returns Valid single or double quote character.
+ */
+function extractValidQuote(source: string, position: number): string {
+  const quote = source[position];
+  return quote === "'" || quote === '"' ? quote : "'";
+}
+
+/**
+ * Checks whether matching rewrite specs are eligible for the single-module fast path.
+ *
+ * @param matchingSpecs - Matching rewrite specs.
+ * @param preserveNamedSpecifiers - Preservation option flag.
+ * @returns True if eligible for fast path.
+ */
+function isEligibleForPreserveFastPath(
+  matchingSpecs: readonly ImportRewriteSpec[],
+  preserveNamedSpecifiers: boolean | undefined,
+): boolean {
+  if (preserveNamedSpecifiers !== true || matchingSpecs.length !== 1) {
+    return false;
+  }
+  const spec = matchingSpecs[0];
+  return spec.specifiers === undefined && !spec.removeUnused;
+}
+
+/**
  * Fast-path check for single module specifier preservation without rewriting named tokens.
  *
  * @param matchingSpecs - Matching rewrite specs.
@@ -385,12 +433,7 @@ function tryPreserveSpecifiersFastPath(
   magicString: MagicString,
   source: string,
 ): boolean {
-  if (
-    matchingSpecs.length !== 1 ||
-    preserveNamedSpecifiers !== true ||
-    matchingSpecs[0].specifiers !== undefined ||
-    matchingSpecs[0].removeUnused
-  ) {
+  if (!isEligibleForPreserveFastPath(matchingSpecs, preserveNamedSpecifiers)) {
     return false;
   }
 
@@ -400,14 +443,90 @@ function tryPreserveSpecifiersFastPath(
     return true;
   }
 
-  const quote = source[decl.source.start];
-  const validQuote = quote === "'" || quote === '"' ? quote : "'";
+  const validQuote = extractValidQuote(source, decl.source.start);
   magicString.overwrite(
     decl.source.start,
     decl.source.end,
     `${validQuote}${singleSpec.replacementModule}${validQuote}`,
   );
   return true;
+}
+
+/**
+ * Rewrites an import declaration that contains no specifiers (side-effect import).
+ *
+ * @param decl - Import declaration.
+ * @param specsByModule - Replacement specs grouped by module.
+ * @param magicString - MagicString being mutated.
+ * @param source - Original source code.
+ * @param quote - Quote character to use.
+ * @param newline - Newline string.
+ */
+function rewriteSideEffectImport(
+  decl: ImportDeclaration,
+  specsByModule: Map<string, ImportRewriteSpec[]>,
+  magicString: MagicString,
+  source: string,
+  quote: string,
+  newline: string,
+): void {
+  const emitted = [...specsByModule.keys()].map(
+    (targetModule) => `import ${quote}${targetModule}${quote};`,
+  );
+  if (emitted.length === 0) {
+    removeDeclaration(magicString, source, decl.start, decl.end);
+  } else {
+    magicString.overwrite(decl.start, decl.end, emitted.join(newline));
+  }
+}
+
+/**
+ * Rewrites an import declaration containing named/default/namespace specifiers.
+ *
+ * @param decl - Import declaration.
+ * @param specsByModule - Replacement specs grouped by module.
+ * @param magicString - MagicString being mutated.
+ * @param source - Original source code.
+ * @param quote - Quote character to use.
+ * @param newline - Newline string.
+ * @param referencedIdentifiers - Referenced identifiers for pruning unused imports.
+ */
+function rewriteNamedImportDeclaration(
+  decl: ImportDeclaration,
+  specsByModule: Map<string, ImportRewriteSpec[]>,
+  magicString: MagicString,
+  source: string,
+  quote: string,
+  newline: string,
+  referencedIdentifiers?: Set<string>,
+): void {
+  const parsedSpecifiers = parseSpecifiersFromDeclaration(decl);
+  const emittedImports: string[] = [];
+
+  for (const [replacementModule, moduleSpecs] of specsByModule) {
+    const kept = filterKeptSpecifiers(
+      parsedSpecifiers,
+      moduleSpecs,
+      specsByModule.size,
+      referencedIdentifiers,
+    );
+    if (kept.length > 0) {
+      emittedImports.push(
+        buildImportStatement(
+          replacementModule,
+          kept,
+          decl.importKind === "type",
+          quote,
+        ),
+      );
+    }
+  }
+
+  if (emittedImports.length === 0) {
+    removeDeclaration(magicString, source, decl.start, decl.end);
+  } else {
+    magicString.overwrite(decl.start, decl.end, emittedImports.join(newline));
+  }
 }
 
 /**
@@ -443,48 +562,64 @@ function rewriteStaticImportDeclaration(
   }
 
   const specsByModule = groupSpecsByReplacementModule(matchingSpecs);
-  const rawQuote = source[decl.source.start];
-  const quote = rawQuote === "'" || rawQuote === '"' ? rawQuote : "'";
+  const quote = extractValidQuote(source, decl.source.start);
 
   if (decl.specifiers.length === 0) {
-    const emitted = [...specsByModule.keys()].map(
-      (targetModule) => `import ${quote}${targetModule}${quote};`,
+    rewriteSideEffectImport(
+      decl,
+      specsByModule,
+      magicString,
+      source,
+      quote,
+      newline,
     );
-    if (emitted.length === 0) {
-      removeDeclaration(magicString, source, decl.start, decl.end);
-    } else {
-      magicString.overwrite(decl.start, decl.end, emitted.join(newline));
-    }
     return;
   }
 
-  const parsedSpecifiers = parseSpecifiersFromDeclaration(decl);
-  const emittedImports: string[] = [];
+  rewriteNamedImportDeclaration(
+    decl,
+    specsByModule,
+    magicString,
+    source,
+    quote,
+    newline,
+    referencedIdentifiers,
+  );
+}
 
-  for (const [replacementModule, moduleSpecs] of specsByModule) {
-    const kept = filterKeptSpecifiers(
-      parsedSpecifiers,
-      moduleSpecs,
-      specsByModule.size,
-      referencedIdentifiers,
-    );
-    if (kept.length > 0) {
-      emittedImports.push(
-        buildImportStatement(
-          replacementModule,
-          kept,
-          decl.importKind === "type",
-          quote,
-        ),
-      );
-    }
+/**
+ * Rewrites a single dynamic import if matching rewrite specifications exist.
+ *
+ * @param dyn - Dynamic import metadata.
+ * @param source - Original source text.
+ * @param specs - Rewrite specifications.
+ * @param magicString - MagicString being mutated.
+ * @returns True if the dynamic import was rewritten.
+ */
+function rewriteSingleDynamicImport(
+  dyn: {
+    readonly moduleRequest: { readonly start: number; readonly end: number };
+  },
+  source: string,
+  specs: readonly ImportRewriteSpec[],
+  magicString: MagicString,
+): boolean {
+  const raw = source.slice(dyn.moduleRequest.start, dyn.moduleRequest.end);
+  const unquoted = raw.replaceAll(/^['"`]|['"`]$/g, "");
+  const spec = specs.find((candidate) => candidate.targetModule === unquoted);
+  if (!spec?.replacementModule) {
+    return false;
   }
 
-  if (emittedImports.length === 0) {
-    removeDeclaration(magicString, source, decl.start, decl.end);
-  } else {
-    magicString.overwrite(decl.start, decl.end, emittedImports.join(newline));
-  }
+  const quote = raw[0];
+  const validQuote =
+    quote === "'" || quote === '"' || quote === "`" ? quote : "'";
+  magicString.overwrite(
+    dyn.moduleRequest.start,
+    dyn.moduleRequest.end,
+    `${validQuote}${spec.replacementModule}${validQuote}`,
+  );
+  return true;
 }
 
 /**
@@ -506,76 +641,70 @@ function rewriteDynamicImports(
 ): boolean {
   let transformed = false;
   for (const dyn of dynamicImports) {
-    const raw = source.slice(dyn.moduleRequest.start, dyn.moduleRequest.end);
-    const quote = raw[0];
-    const unquoted = raw.replaceAll(/^['"`]|['"`]$/g, "");
-    const spec = specs.find((candidate) => candidate.targetModule === unquoted);
-    if (!spec || !spec.replacementModule) continue;
-
-    const validQuote =
-      quote === "'" || quote === '"' || quote === "`" ? quote : "'";
-    magicString.overwrite(
-      dyn.moduleRequest.start,
-      dyn.moduleRequest.end,
-      `${validQuote}${spec.replacementModule}${validQuote}`,
-    );
-    transformed = true;
+    if (rewriteSingleDynamicImport(dyn, source, specs, magicString)) {
+      transformed = true;
+    }
   }
   return transformed;
 }
 
 /**
- * Rewrite imports in TypeScript/TSX source code using an accurate Concrete Syntax Tree (CST).
+ * Checks whether any rewrite specification target module appears in the source text.
  *
- * Preserves comments, multiline formatting, and AST integrity without fragile regex parsing.
+ * @param source - Source code to inspect.
+ * @param specs - Rewrite specifications.
+ * @returns True if at least one target module is found.
  */
-export function rewriteImportsWithCst(
+function containsTargetModule(
+  source: string,
+  specs: readonly ImportRewriteSpec[],
+): boolean {
+  return specs.some((spec) => source.includes(spec.targetModule));
+}
+
+/**
+ * Filters dynamic imports matching target rewrite specifications.
+ *
+ * @param source - Source text.
+ * @param dynamicImports - Dynamic imports from AST.
+ * @param specs - Target rewrite specs.
+ * @returns Filtered matching dynamic imports.
+ */
+function filterMatchingDynamicImports(
+  source: string,
+  dynamicImports: readonly {
+    readonly moduleRequest: { readonly start: number; readonly end: number };
+  }[],
+  specs: readonly ImportRewriteSpec[],
+): {
+  readonly moduleRequest: { readonly start: number; readonly end: number };
+}[] {
+  return dynamicImports.filter((dyn) => {
+    const raw = source.slice(dyn.moduleRequest.start, dyn.moduleRequest.end);
+    const unquoted = raw.replaceAll(/^['"`]|['"`]$/g, "");
+    return specs.some((spec) => spec.targetModule === unquoted);
+  });
+}
+
+/**
+ * Rewrites all matching static import declarations in the source.
+ *
+ * @param matchingDeclarations - Declarations that match rewrite specs.
+ * @param specs - Rewrite specs.
+ * @param magicString - MagicString being mutated.
+ * @param source - Original source text.
+ * @param options - Rewrite options.
+ * @param referencedIdentifiers - Referenced identifiers for pruning.
+ */
+function applyMatchingStaticRewrites(
+  matchingDeclarations: readonly ImportDeclaration[],
+  specs: readonly ImportRewriteSpec[],
+  magicString: MagicString,
   source: string,
   options: RewriteImportsOptions,
-): RewriteResult {
-  const specs = normalizeRewriteSpecs(options);
-  if (
-    specs.length === 0 ||
-    !specs.some((spec) => source.includes(spec.targetModule))
-  ) {
-    return { code: source, map: undefined, transformed: false };
-  }
-
-  const ast = parseCst(source, options.sourceFileName);
-  if (ast.errors.length > 0) {
-    const firstError = ast.errors[0];
-    throw new SyntaxError(
-      `Failed to parse CST for ${options.sourceFileName ?? "source"}: ${firstError.message}`,
-    );
-  }
-
-  const allImportDeclarations = getImportDeclarations(ast.program);
-  const matchingDeclarations = allImportDeclarations.filter((decl) =>
-    specs.some((spec) => spec.targetModule === decl.source.value),
-  );
-  const matchingDynamicImports = (ast.module.dynamicImports ?? []).filter(
-    (dyn) => {
-      const raw = source.slice(dyn.moduleRequest.start, dyn.moduleRequest.end);
-      const unquoted = raw.replaceAll(/^['"`]|['"`]$/g, "");
-      return specs.some((spec) => spec.targetModule === unquoted);
-    },
-  );
-
-  if (
-    matchingDeclarations.length === 0 &&
-    matchingDynamicImports.length === 0
-  ) {
-    return { code: source, map: undefined, transformed: false };
-  }
-
-  const magicString = new MagicString(source);
-  const hasRemoveUnused = specs.some((spec) => spec.removeUnused);
-  const referencedIdentifiers = hasRemoveUnused
-    ? collectReferencedIdentifiers(ast.program, allImportDeclarations)
-    : undefined;
-
+  referencedIdentifiers?: Set<string>,
+): void {
   const newline = source.includes("\r\n") ? "\r\n" : "\n";
-
   for (const decl of matchingDeclarations) {
     const matchingSpecs = specs.filter(
       (candidate) => candidate.targetModule === decl.source.value,
@@ -592,16 +721,80 @@ export function rewriteImportsWithCst(
       );
     }
   }
+}
+
+/**
+ * Asserts that AST parsed successfully without errors.
+ *
+ * @param ast - CST parse result.
+ * @param sourceFileName - Source file name for diagnostic reporting.
+ */
+function assertAstParseSuccess(
+  ast: ParseResult,
+  sourceFileName?: string,
+): void {
+  if (ast.errors.length > 0) {
+    const firstError = ast.errors[0];
+    throw new SyntaxError(
+      `Failed to parse CST for ${sourceFileName ?? "source"}: ${firstError.message}`,
+    );
+  }
+}
+
+/**
+ * Rewrite imports in TypeScript/TSX source code using an accurate Concrete Syntax Tree (CST).
+ *
+ * Preserves comments, multiline formatting, and AST integrity without fragile regex parsing.
+ */
+export function rewriteImportsWithCst(
+  source: string,
+  options: RewriteImportsOptions,
+): RewriteResult {
+  const specs = normalizeRewriteSpecs(options);
+  if (specs.length === 0 || !containsTargetModule(source, specs)) {
+    return { code: source, map: undefined, transformed: false };
+  }
+
+  const ast = parseCst(source, options.sourceFileName);
+  assertAstParseSuccess(ast, options.sourceFileName);
+
+  const allImportDeclarations = getImportDeclarations(ast.program);
+  const matchingDeclarations = allImportDeclarations.filter((decl) =>
+    specs.some((spec) => spec.targetModule === decl.source.value),
+  );
+  const matchingDynamic = filterMatchingDynamicImports(
+    source,
+    ast.module.dynamicImports ?? [],
+    specs,
+  );
+
+  if (matchingDeclarations.length === 0 && matchingDynamic.length === 0) {
+    return { code: source, map: undefined, transformed: false };
+  }
+
+  const magicString = new MagicString(source);
+  const hasRemoveUnused = specs.some((spec) => spec.removeUnused);
+  const referencedIdentifiers = hasRemoveUnused
+    ? collectReferencedIdentifiers(ast.program, allImportDeclarations)
+    : undefined;
+
+  applyMatchingStaticRewrites(
+    matchingDeclarations,
+    specs,
+    magicString,
+    source,
+    options,
+    referencedIdentifiers,
+  );
 
   const dynamicTransformed = rewriteDynamicImports(
     magicString,
     source,
-    matchingDynamicImports,
+    matchingDynamic,
     specs,
   );
 
-  const transformed = matchingDeclarations.length > 0 || dynamicTransformed;
-  if (!transformed) {
+  if (matchingDeclarations.length === 0 && !dynamicTransformed) {
     return { code: source, map: undefined, transformed: false };
   }
 
