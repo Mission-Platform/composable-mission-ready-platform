@@ -29,7 +29,7 @@ Maak een bron-lokale diagnose voor een fout in de routercompiler.
 
 | Naam         | Typ                                                                                           | Beschrijving |
 | ------------ | --------------------------------------------------------------------------------------------- | ------------ |
-| diagnostisch | Laat<CompilerDiagnostic, 'phase' \| 'fileName'> weg & { alleen-lezen bestandsnaam?: string; } |              |
+| diagnostisch | Laat<CompilerDiagnostic, "phase" \| "fileName"> weg & { alleen-lezen bestandsnaam?: string; } |              |
 
 ### definieerForgeRouterPlugin
 
@@ -81,7 +81,7 @@ export const FORGE_ROUTER_RUNTIME_EXPORTS;
 
 Neutrale runtime-exports waarbij het pakketauteurcontract behouden blijft.
 
-Doelen die de oorspronkelijke hooks niet 1:1 kunnen hernoemen (bijvoorbeeld React's
+Doelen die de native hooks niet 1:1 kunnen hernoemen (bijvoorbeeld React's
 `useNavigate` versus neutrale `useMpRouter().navigate`) moeten deze namen weergeven
 vanuit een doelruntimemodule en punt {@link ForgeRouterTargetOptions.runtimeModule}
 bij die module.
@@ -145,16 +145,6 @@ export const MP_ROUTER_MODULE;
 ```
 
 Het pakket waarvan de invoer wordt begrepen door de routercompilerpas.
-
-### RouterBuildAdapters
-
-**Soort:** interface
-
-```typescript
-export interface RouterBuildAdapters
-```
-
-Bouw haken die eigendom zijn van een routerdoelwit; er wordt geen routerafhankelijkheid door de kern geladen.
 
 ### Routercapaciteit
 

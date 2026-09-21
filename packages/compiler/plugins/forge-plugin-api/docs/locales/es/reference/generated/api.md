@@ -11,6 +11,16 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/forg
 
 ## `src/compiler/ast`
 
+### ADAPTADORES_MODULO
+
+**Tipo:** constante
+
+```typescript
+export const ADAPTERS_MODULE;
+```
+
+No se proporciona descripción.
+
 ### aplicar fuenteEdits
 
 **Tipo:** función
@@ -38,16 +48,6 @@ export const CLASS_NAME_ATTRIBUTE;
 
 No se proporciona descripción.
 
-### COMPONENTES_JSX_MODULES
-
-**Tipo:** constante
-
-```typescript
-export const COMPONENTS_JSX_MODULES;
-```
-
-No se proporciona descripción.
-
 ### nombredeleventoparapropiedad
 
 **Tipo:** función
@@ -64,15 +64,37 @@ Derive el nombre del evento representado por un accesorio `on<Event>` de estilo 
 | ------------------- | ------ | ----------- |
 | nombre de propiedad | cadena |             |
 
-### ICONOS_JSX_MODULE
+### marcoAdaptadorMódulo
 
-**Tipo:** constante
+**Tipo:** función
 
 ```typescript
-export const ICONS_JSX_MODULE;
+function frameworkAdapterModule(framework: JsxFramework): string;
 ```
 
-No se proporciona descripción.
+Derive el módulo de tiempo de ejecución/adaptador de Forge para cualquier marco de destino integrado.
+
+#### Parámetros
+
+| Nombre | Tipo      | Descripción |
+| ------ | --------- | ----------- |
+| marco  | Marco Jsx |             |
+
+### marcoParaDirectiva
+
+**Tipo:** función
+
+```typescript
+function frameworkForDirective(directive: string): JsxFramework | undefined;
+```
+
+Resuelva una directiva `use <framework>` principal para cualquier objetivo integrado.
+
+#### Parámetros
+
+| Nombre    | Tipo   | Descripción |
+| --------- | ------ | ----------- |
+| directiva | cadena |             |
 
 ### JSX_ATTRIBUTE_RENAMES
 
@@ -80,26 +102,6 @@ No se proporciona descripción.
 
 ```typescript
 export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
-```
-
-No se proporciona descripción.
-
-### LOCAL_EFFECT_FILE
-
-**Tipo:** constante
-
-```typescript
-export const LOCAL_EFFECT_FILE;
-```
-
-No se proporciona descripción.
-
-### LOCAL_EFFECT_MODULE
-
-**Tipo:** constante
-
-```typescript
-export const LOCAL_EFFECT_MODULE;
 ```
 
 No se proporciona descripción.
@@ -133,22 +135,6 @@ export const LOCAL_JSX_TYPES_MODULE;
 ```
 
 No se proporciona descripción.
-
-### localEffectModuleSource
-
-**Tipo:** función
-
-```typescript
-function localEffectModuleSource(framework: JsxFramework): string;
-```
-
-Emita el efecto auxiliar compartido Vue; otros objetivos no necesitan este archivo.
-
-#### Parámetros
-
-| Nombre | Tipo      | Descripción |
-| ------ | --------- | ----------- |
-| marco  | Marco Jsx |             |
 
 ### localJsxTypesModuleSource
 
@@ -226,16 +212,6 @@ export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
 
 No se proporciona descripción.
 
-### REACT_ADAPTER_MODULE
-
-**Tipo:** constante
-
-```typescript
-export const REACT_ADAPTER_MODULE;
-```
-
-No se proporciona descripción.
-
 ### REACT_TYPE_ALIASES
 
 **Tipo:** constante
@@ -265,16 +241,6 @@ export interface StyleImport
 ```
 
 Una importación de hoja de estilo llevada a un árbol plano generado.
-
-### VUE_ADAPTER_MODULE
-
-**Tipo:** constante
-
-```typescript
-export const VUE_ADAPTER_MODULE;
-```
-
-No se proporciona descripción.
 
 ### VUE_BUILTIN_COMPONENTS
 
@@ -506,7 +472,7 @@ Devuelve una lista de atributos genéricos sin marcadores.
 function stripMpStaticMarker(node: GenericRenderNode): GenericRenderNode;
 ```
 
-Devuelve una representación genérica sin marcadores node, preservando recursivamente los intervalos de origen.
+Devuelve un node de renderizado genérico sin marcadores, preservando recursivamente los intervalos de origen.
 
 #### Parámetros
 
@@ -589,7 +555,7 @@ Cree un diagnóstico sin acoplar los contratos de fase a los nodos TypeScript.
 function formatCompilerDiagnostic(diagnostic: CompilerDiagnostic): string;
 ```
 
-Formatee un diagnóstico de un error del compilador sin perder su ubicación de origen.
+Formatee un diagnóstico para un error del compilador sin perder su ubicación de origen.
 
 #### Parámetros
 
@@ -617,15 +583,26 @@ Cancelar una canalización del compilador cuando una fase informó uno o más er
 
 ## `src/framework`
 
-### FrameworkBuildAdapters
+### ForgeBuildAdapters
 
 **Tipo:** interfaz
 
 ```typescript
-export interface FrameworkBuildAdapters
+export interface ForgeBuildAdapters
 ```
 
-Integraciones de compilación de marcos de tipo independiente.
+Adaptadores de integración de compilación unificada para complementos de Forge.
+
+### ID de marco
+
+**Tipo:** tipo
+
+```typescript
+export type FrameworkId = JsxFramework | (string &
+```
+
+Identificador de marco abierto para complementos de destino y canales de compilación.
+Mantiene el autocompletado para marcos integrados conocidos y acepta objetivos de complementos personalizados arbitrarios.
 
 ### FrameworkOutputPlugin
 
@@ -738,12 +715,23 @@ export interface TargetContext
 
 Contexto compartido por reducción y optimización de objetivos.
 
+### ID del marco de destino
+
+**Tipo:** tipo
+
+```typescript
+export type TargetFrameworkId = FrameworkId;
+```
+
+Alias ​​de identificador de marco abierto para complementos de destino.
+Equivalente a {@link FrameworkId}.
+
 ### Intenciones objetivo
 
 **Tipo:** interfaz
 
 ```typescript
-export interface TargetIntentions
+export interface TargetIntentions< TLowered extends TargetLoweredModule = TargetLoweredModule, >
 ```
 
 Envoltura de intención específica del objetivo; Los hechos neutrales permanecen disponibles para pases posteriores.
@@ -858,7 +846,7 @@ function validateForgeOutputPluginSelection(
 ): readonly T[];
 ```
 
-Valide una selección de objetivos propiedad de la persona que llama, incluidas las identificaciones vacías y duplicadas.
+Valide una selección de objetivos propiedad de la persona que llama, incluidos ID vacíos y duplicados.
 
 #### Parámetros
 
@@ -1365,7 +1353,201 @@ Recorra un árbol de renderizado en profundidad, incluido el marcado de expresi�
 
 #### Parámetros
 
-| Nombre | Tipo                               | Descripción |
-| ------ | ---------------------------------- | ----------- |
-| nodos  | sólo lectura GenericRenderNode[]   |             |
-| visita | (node: GenericRenderNode) => vacío |             |
+| Nombre  | Tipo                               | Descripción |
+| ------- | ---------------------------------- | ----------- |
+| nodos   | sólo lectura GenericRenderNode[]   |             |
+| visitar | (node: GenericRenderNode) => vacío |             |
+
+## `src/schema`
+
+### afirmarTargetIntentionsReducido
+
+**Tipo:** función
+
+```typescript
+function assertTargetIntentionsLowered(
+  intentions: unknown,
+  expectedFramework?: FrameworkId,
+): asserts intentions is TargetIntentions<TLowered>;
+```
+
+Afirma que las intenciones proporcionadas son válidas y contienen un plan objetivo reducido.
+Lanza un TargetIntentionsValidationError (subclase de TypeError) si las intenciones están incompletas
+o si el discriminador del plan reducido no coincide con el marco esperado.
+
+#### Parámetros
+
+| Nombre         | Tipo        | Descripción |
+| -------------- | ----------- | ----------- |
+| intenciones    | desconocido |             |
+| marco esperado | ID de marco |             |
+
+### Esquema declarativo
+
+**Tipo:** interfaz
+
+```typescript
+export interface DeclarativeSchema
+```
+
+Definición de esquema declarativo para representaciones intermedias del compilador.
+
+### encontrarActionableSpan
+
+**Tipo:** función
+
+```typescript
+function findActionableSpan(value: unknown): SourceSpan | undefined;
+```
+
+Busque recursivamente una fuente procesable dentro de las intenciones o sus hechos AST.
+
+#### Parámetros
+
+| Nombre | Tipo        | Descripción |
+| ------ | ----------- | ----------- |
+| valor  | desconocido |             |
+
+### Regla de campo de esquema
+
+**Tipo:** interfaz
+
+```typescript
+export interface SchemaFieldRule
+```
+
+Regla declarativa aplicada a una propiedad de esquema.
+
+### Tipo de campo de esquema
+
+**Tipo:** tipo
+
+```typescript
+export type SchemaFieldType =
+  "string" | "non-empty-string" | "object" | "array" | "boolean";
+```
+
+Tipos de campos admitidos para la validación de esquemas declarativos.
+
+### Problema de validación de esquema
+
+**Tipo:** interfaz
+
+```typescript
+export interface SchemaValidationIssue
+```
+
+Un problema de validación de esquema único identificado durante la verificación de intenciones.
+
+### Opciones de validación de esquema
+
+**Tipo:** interfaz
+
+```typescript
+export interface SchemaValidationOptions
+```
+
+Opciones para configurar la validación del esquema declarativo.
+
+### semánticoMóduloEsquema
+
+**Tipo:** constante
+
+```typescript
+export const semanticModuleSchema: DeclarativeSchema;
+```
+
+Esquema que valida el módulo semántico entrante IR.
+
+### targetContextSchema
+
+**Tipo:** constante
+
+```typescript
+export const targetContextSchema: DeclarativeSchema;
+```
+
+Esquema que valida el contexto de destino de la compilación.
+
+### objetivoIntencionesEsquema
+
+**Tipo:** constante
+
+```typescript
+export const targetIntentionsSchema: DeclarativeSchema;
+```
+
+Esquema que valida las intenciones del objetivo.
+
+### Error de validación de intenciones de destino
+
+**Tipo:** clase
+
+```typescript
+export class TargetIntentionsValidationError extends TypeError
+```
+
+Se produce un error cuando las intenciones del objetivo no superan la verificación del esquema declarativo.
+
+### ObjetivoIntencionesValidaciónResultado
+
+**Tipo:** interfaz
+
+```typescript
+export interface TargetIntentionsValidationResult
+```
+
+Resultado estructurado de la validación de la intención objetivo.
+
+### targetLoweredModuleSchema
+
+**Tipo:** constante
+
+```typescript
+export const targetLoweredModuleSchema: DeclarativeSchema;
+```
+
+Esquema que valida la estructura de un plan de objetivos rebajado.
+
+### validar contra esquema
+
+**Tipo:** función
+
+```typescript
+function validateAgainstSchema(
+  target: unknown,
+  schema: DeclarativeSchema,
+  options?: SchemaValidationOptions,
+): SchemaValidationIssue[];
+```
+
+Valida un objeto de destino frente a un esquema declarativo, recopilando todos los problemas estructurales.
+
+#### Parámetros
+
+| Nombre   | Tipo                              | Descripción |
+| -------- | --------------------------------- | ----------- |
+| objetivo | desconocido                       |             |
+| esquema  | Esquema declarativo               |             |
+| opciones | Opciones de validación de esquema |             |
+
+### validarTargetIntentions
+
+**Tipo:** función
+
+```typescript
+function validateTargetIntentions(
+  intentions: unknown,
+  expectedFramework?: FrameworkId,
+): TargetIntentionsValidationResult;
+```
+
+Valida la estructura y la integridad de las intenciones objetivo frente al esquema declarativo.
+Devuelve errores de validación estructurados y los objetos CompilerDiagnostic correspondientes con ubicaciones de origen.
+
+#### Parámetros
+
+| Nombre         | Tipo        | Descripción |
+| -------------- | ----------- | ----------- |
+| intenciones    | desconocido |             |
+| marco esperado | ID de marco |             |

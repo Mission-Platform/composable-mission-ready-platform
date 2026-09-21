@@ -11,6 +11,16 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/forge-plugi
 
 ## `src/compiler/ast`
 
+### ADAPTERS_MODULE
+
+**Art:** konstant
+
+```typescript
+export const ADAPTERS_MODULE;
+```
+
+Keine Beschreibung angegeben.
+
 ### applySourceEdits
 
 **Art:** Funktion
@@ -38,16 +48,6 @@ export const CLASS_NAME_ATTRIBUTE;
 
 Keine Beschreibung angegeben.
 
-### COMPONENTS_JSX_MODULES
-
-**Art:** konstant
-
-```typescript
-export const COMPONENTS_JSX_MODULES;
-```
-
-Keine Beschreibung angegeben.
-
 ### eventNameForProperty
 
 **Art:** Funktion
@@ -64,15 +64,37 @@ Leiten Sie den Ereignisnamen ab, der durch eine `on<Event>`-Requisite im Vue-Sti
 | ---------------- | ------------ | ---------------- |
 | Eigenschaftsname | Zeichenfolge |                  |
 
-### ICONS_JSX_MODULE
+### FrameworkAdapterModule
 
-**Art:** konstant
+**Art:** Funktion
 
 ```typescript
-export const ICONS_JSX_MODULE;
+function frameworkAdapterModule(framework: JsxFramework): string;
 ```
 
-Keine Beschreibung angegeben.
+Leiten Sie das Forge-Adapter-/Laufzeitmodul für jedes integrierte Zielframework ab.
+
+#### Parameter
+
+| Name   | Geben Sie    | ein Beschreibung |
+| ------ | ------------ | ---------------- |
+| Rahmen | JsxFramework |                  |
+
+### FrameworkForDirective
+
+**Art:** Funktion
+
+```typescript
+function frameworkForDirective(directive: string): JsxFramework | undefined;
+```
+
+Lösen Sie eine führende `use <framework>`-Direktive für jedes integrierte Ziel auf.
+
+#### Parameter
+
+| Name       | Geben Sie    | ein Beschreibung |
+| ---------- | ------------ | ---------------- |
+| Richtlinie | Zeichenfolge |                  |
 
 ### JSX_ATTRIBUTE_RENAMES
 
@@ -80,26 +102,6 @@ Keine Beschreibung angegeben.
 
 ```typescript
 export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
-```
-
-Keine Beschreibung angegeben.
-
-### LOCAL_EFFECT_FILE
-
-**Art:** konstant
-
-```typescript
-export const LOCAL_EFFECT_FILE;
-```
-
-Keine Beschreibung angegeben.
-
-### LOCAL_EFFECT_MODULE
-
-**Art:** konstant
-
-```typescript
-export const LOCAL_EFFECT_MODULE;
 ```
 
 Keine Beschreibung angegeben.
@@ -133,22 +135,6 @@ export const LOCAL_JSX_TYPES_MODULE;
 ```
 
 Keine Beschreibung angegeben.
-
-### localEffectModuleSource
-
-**Art:** Funktion
-
-```typescript
-function localEffectModuleSource(framework: JsxFramework): string;
-```
-
-Geben Sie den gemeinsam genutzten Vue-Effekthelfer aus. Andere Ziele benötigen diese Datei nicht.
-
-#### Parameter
-
-| Name   | Geben Sie    | ein Beschreibung |
-| ------ | ------------ | ---------------- |
-| Rahmen | JsxFramework |                  |
 
 ### localJsxTypesModuleSource
 
@@ -226,16 +212,6 @@ export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
 
 Keine Beschreibung angegeben.
 
-### REACT_ADAPTER_MODULE
-
-**Art:** konstant
-
-```typescript
-export const REACT_ADAPTER_MODULE;
-```
-
-Keine Beschreibung angegeben.
-
 ### REACT_TYPE_ALIASES
 
 **Art:** konstant
@@ -265,16 +241,6 @@ export interface StyleImport
 ```
 
 Ein Stylesheet-Import, der in einen generierten flachen Baum durchgeführt wird.
-
-### VUE_ADAPTER_MODULE
-
-**Art:** konstant
-
-```typescript
-export const VUE_ADAPTER_MODULE;
-```
-
-Keine Beschreibung angegeben.
 
 ### VUE_BUILTIN_COMPONENTS
 
@@ -617,15 +583,26 @@ Brechen Sie eine Compiler-Pipeline ab, wenn eine Phase einen oder mehrere Fehler
 
 ## `src/framework`
 
-### FrameworkBuildAdapters
+### ForgeBuildAdapters
 
 **Art:** Schnittstelle
 
 ```typescript
-export interface FrameworkBuildAdapters
+export interface ForgeBuildAdapters
 ```
 
-Unabhängig typisierte Framework-Build-Integrationen.
+Einheitliche Build-Integrationsadapter für Forge-Plugins.
+
+### FrameworkId
+
+**Art:** Typ
+
+```typescript
+export type FrameworkId = JsxFramework | (string &
+```
+
+Offene Framework-ID für Ziel-Plugins und Compiler-Pipelines.
+Behält die automatische Vervollständigung für bekannte integrierte Frameworks bei und akzeptiert gleichzeitig beliebige benutzerdefinierte Plugin-Ziele.
 
 ### FrameworkOutputPlugin
 
@@ -738,12 +715,23 @@ export interface TargetContext
 
 Gemeinsamer Kontext durch Zielsenkung und -optimierung.
 
+### TargetFrameworkId
+
+**Art:** Typ
+
+```typescript
+export type TargetFrameworkId = FrameworkId;
+```
+
+Open-Framework-Identifier-Alias ​​für Ziel-Plugins.
+Entspricht {@link FrameworkId}.
+
 ### Zielabsichten
 
 **Art:** Schnittstelle
 
 ```typescript
-export interface TargetIntentions
+export interface TargetIntentions< TLowered extends TargetLoweredModule = TargetLoweredModule, >
 ```
 
 Zielspezifischer Absichts-Wrapper; Neutrale Fakten bleiben für spätere Durchgänge verfügbar.
@@ -1260,7 +1248,7 @@ Eine Ref-Intention unabhängig von der Ref-Darstellung des Ziels.
 function renderNodeTagName(node: GenericRenderNode): string | undefined;
 ```
 
-Der einfache Tag-Name eines Rendering-Tags node oder `undefined` für ein berechnetes Tag.
+Der einfache Tag-Name eines Render-node oder `undefined` für ein berechnetes Tag.
 
 #### Parameter
 
@@ -1369,3 +1357,197 @@ Durchlaufen Sie einen Renderbaum mit der Tiefe zuerst, einschließlich verschach
 | -------- | --------------------------------- | ---------------- |
 | Knoten   | readonly GenericRenderNode[]      |                  |
 | besuchen | (node: GenericRenderNode) => void |                  |
+
+## `src/schema`
+
+### behauptenTargetIntentionsLowered
+
+**Art:** Funktion
+
+```typescript
+function assertTargetIntentionsLowered(
+  intentions: unknown,
+  expectedFramework?: FrameworkId,
+): asserts intentions is TargetIntentions<TLowered>;
+```
+
+Bestätigt, dass die angegebenen Absichten gültig sind und einen niedrigeren Zielplan enthalten.
+Löst einen TargetIntentionsValidationError (Unterklasse von TypeError) aus, wenn die Absichten unvollständig sind
+oder wenn der abgesenkte Plandiskriminator nicht mit dem erwarteten Rahmen übereinstimmt.
+
+#### Parameter
+
+| Name                | Geben Sie   | ein Beschreibung |
+| ------------------- | ----------- | ---------------- |
+| Absichten           | unbekannt   |                  |
+| erwartetesFramework | FrameworkId |                  |
+
+### Deklaratives Schema
+
+**Art:** Schnittstelle
+
+```typescript
+export interface DeclarativeSchema
+```
+
+Deklarative Schemadefinition für Compiler-Zwischendarstellungen.
+
+### findActionableSpan
+
+**Art:** Funktion
+
+```typescript
+function findActionableSpan(value: unknown): SourceSpan | undefined;
+```
+
+Suchen Sie rekursiv nach einem umsetzbaren Quellenbereich innerhalb von Absichten oder ihren AST-Fakten.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | --------- | ---------------- |
+| Wert | unbekannt |                  |
+
+### SchemaFieldRule
+
+**Art:** Schnittstelle
+
+```typescript
+export interface SchemaFieldRule
+```
+
+Deklarative Regel, die auf eine Schemaeigenschaft angewendet wird.
+
+### SchemaFieldType
+
+**Art:** Typ
+
+```typescript
+export type SchemaFieldType =
+  "string" | "non-empty-string" | "object" | "array" | "boolean";
+```
+
+Unterstützte Feldtypen für die deklarative Schemavalidierung.
+
+### SchemaValidationIssue
+
+**Art:** Schnittstelle
+
+```typescript
+export interface SchemaValidationIssue
+```
+
+Bei der Absichtsprüfung wurde ein einzelnes Schemavalidierungsproblem festgestellt.
+
+### SchemaValidationOptions
+
+**Art:** Schnittstelle
+
+```typescript
+export interface SchemaValidationOptions
+```
+
+Optionen zum Konfigurieren der deklarativen Schemavalidierung.
+
+### semanticModuleSchema
+
+**Art:** konstant
+
+```typescript
+export const semanticModuleSchema: DeclarativeSchema;
+```
+
+Schema zur Validierung der eingehenden semantischen Modul-IR.
+
+### targetContextSchema
+
+**Art:** konstant
+
+```typescript
+export const targetContextSchema: DeclarativeSchema;
+```
+
+Schema zur Validierung des Kompilierungszielkontexts.
+
+### targetIntentionsSchema
+
+**Art:** konstant
+
+```typescript
+export const targetIntentionsSchema: DeclarativeSchema;
+```
+
+Schema zur Validierung der Zielabsichten.
+
+### TargetIntentionsValidationError
+
+**Art:** Klasse
+
+```typescript
+export class TargetIntentionsValidationError extends TypeError
+```
+
+Fehler wird ausgegeben, wenn Zielabsichten bei der deklarativen Schemaüberprüfung fehlschlagen.
+
+### TargetIntentionsValidationResult
+
+**Art:** Schnittstelle
+
+```typescript
+export interface TargetIntentionsValidationResult
+```
+
+Strukturiertes Ergebnis der Zielabsichtsvalidierung.
+
+### targetLoweredModuleSchema
+
+**Art:** konstant
+
+```typescript
+export const targetLoweredModuleSchema: DeclarativeSchema;
+```
+
+Schema zur Validierung der Struktur eines abgesenkten Zielplans.
+
+### validateAgainstSchema
+
+**Art:** Funktion
+
+```typescript
+function validateAgainstSchema(
+  target: unknown,
+  schema: DeclarativeSchema,
+  options?: SchemaValidationOptions,
+): SchemaValidationIssue[];
+```
+
+Validiert ein Zielobjekt anhand eines deklarativen Schemas und erfasst alle strukturellen Probleme.
+
+#### Parameter
+
+| Name     | Geben Sie               | ein Beschreibung |
+| -------- | ----------------------- | ---------------- |
+| Ziel     | unbekannt               |                  |
+| Schema   | Deklaratives Schema     |                  |
+| Optionen | SchemaValidationOptions |                  |
+
+### validierenTargetIntentions
+
+**Art:** Funktion
+
+```typescript
+function validateTargetIntentions(
+  intentions: unknown,
+  expectedFramework?: FrameworkId,
+): TargetIntentionsValidationResult;
+```
+
+Validiert die Struktur und Integrität der Zielabsichten anhand des deklarativen Schemas.
+Gibt strukturierte Validierungsfehler und entsprechende CompilerDiagnostic-Objekte mit Quellspeicherorten zurück.
+
+#### Parameter
+
+| Name                | Geben Sie   | ein Beschreibung |
+| ------------------- | ----------- | ---------------- |
+| Absichten           | unbekannt   |                  |
+| erwartetesFramework | FrameworkId |                  |

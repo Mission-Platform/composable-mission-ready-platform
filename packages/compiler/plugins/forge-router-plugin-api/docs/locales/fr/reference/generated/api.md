@@ -29,7 +29,7 @@ Créez un diagnostic source-local pour une défaillance du compilateur de routeu
 
 | Nom        | Tapez                                                                                              | Descriptif |
 | ---------- | -------------------------------------------------------------------------------------------------- | ---------- |
-| diagnostic | Omit<CompilerDiagnostic, 'phase' \| 'fileName'> & { nom de fichier en lecture seule ? : chaîne ; } |            |
+| diagnostic | Omit<CompilerDiagnostic, "phase" \| "fileName"> & { nom de fichier en lecture seule ? : chaîne ; } |            |
 
 ### définirForgeRouterPlugin
 
@@ -145,16 +145,6 @@ export const MP_ROUTER_MODULE;
 ```
 
 Le package dont les importations sont comprises par la passe du compilateur du routeur.
-
-### Adaptateurs de construction de routeur
-
-**Genre :** interface
-
-```typescript
-export interface RouterBuildAdapters
-```
-
-Créez des hooks appartenant à une cible de routeur ; aucune dépendance de routeur n'est chargée par noyau.
 
 ### Capacité du routeur
 

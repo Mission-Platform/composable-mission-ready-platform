@@ -11,6 +11,16 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/forge-p
 
 ## `src/compiler/ast`
 
+### ADAPTERS_MODULE
+
+**Soort:** constant
+
+```typescript
+export const ADAPTERS_MODULE;
+```
+
+Geen beschrijving opgegeven.
+
 ### applySourceEdits
 
 **Soort:** functie
@@ -38,16 +48,6 @@ export const CLASS_NAME_ATTRIBUTE;
 
 Geen beschrijving opgegeven.
 
-### COMPONENTEN_JSX_MODULES
-
-**Soort:** constant
-
-```typescript
-export const COMPONENTS_JSX_MODULES;
-```
-
-Geen beschrijving opgegeven.
-
 ### gebeurtenisNaamForProperty
 
 **Soort:** functie
@@ -64,15 +64,37 @@ Leid de gebeurtenisnaam af die wordt weergegeven door een Vue-stijl `on<Event>`-
 | -------------- | ---------- | ------------ |
 | eigenschapNaam | tekenreeks |              |
 
-### ICONS_JSX_MODULE
+### frameworkAdapterModule
 
-**Soort:** constant
+**Soort:** functie
 
 ```typescript
-export const ICONS_JSX_MODULE;
+function frameworkAdapterModule(framework: JsxFramework): string;
 ```
 
-Geen beschrijving opgegeven.
+Leid de Forge-adapter/runtime-module af voor elk ingebouwd doelframework.
+
+#### Parameters
+
+| Naam  | Typ          | Beschrijving |
+| ----- | ------------ | ------------ |
+| kader | JsxFramework |              |
+
+### frameworkForDirective
+
+**Soort:** functie
+
+```typescript
+function frameworkForDirective(directive: string): JsxFramework | undefined;
+```
+
+Los een toonaangevende `use <framework>`-richtlijn op voor elk ingebouwd doel.
+
+#### Parameters
+
+| Naam      | Typ        | Beschrijving |
+| --------- | ---------- | ------------ |
+| richtlijn | tekenreeks |              |
 
 ### JSX_ATTRIBUTE_RENAMES
 
@@ -80,26 +102,6 @@ Geen beschrijving opgegeven.
 
 ```typescript
 export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
-```
-
-Geen beschrijving opgegeven.
-
-### LOCAL_EFFECT_FILE
-
-**Soort:** constant
-
-```typescript
-export const LOCAL_EFFECT_FILE;
-```
-
-Geen beschrijving opgegeven.
-
-### LOCAL_EFFECT_MODULE
-
-**Soort:** constant
-
-```typescript
-export const LOCAL_EFFECT_MODULE;
 ```
 
 Geen beschrijving opgegeven.
@@ -133,22 +135,6 @@ export const LOCAL_JSX_TYPES_MODULE;
 ```
 
 Geen beschrijving opgegeven.
-
-### localEffectModuleSource
-
-**Soort:** functie
-
-```typescript
-function localEffectModuleSource(framework: JsxFramework): string;
-```
-
-Zend de gedeelde Vue-effecthelper uit; andere doelen hebben dit bestand niet nodig.
-
-#### Parameters
-
-| Naam  | Typ          | Beschrijving |
-| ----- | ------------ | ------------ |
-| kader | JsxFramework |              |
 
 ### localJsxTypesModuleSource
 
@@ -226,16 +212,6 @@ export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
 
 Geen beschrijving opgegeven.
 
-### REACT_ADAPTER_MODULE
-
-**Soort:** constant
-
-```typescript
-export const REACT_ADAPTER_MODULE;
-```
-
-Geen beschrijving opgegeven.
-
 ### REACT_TYPE_ALIASES
 
 **Soort:** constant
@@ -265,16 +241,6 @@ export interface StyleImport
 ```
 
 Een stylesheet-import uitgevoerd in een gegenereerde platte boom.
-
-### VUE_ADAPTER_MODULE
-
-**Soort:** constant
-
-```typescript
-export const VUE_ADAPTER_MODULE;
-```
-
-Geen beschrijving opgegeven.
 
 ### VUE_BUILTIN_COMPONENTS
 
@@ -617,15 +583,26 @@ Breek een compilerpijplijn af wanneer een fase een of meer fouten rapporteert.
 
 ## `src/framework`
 
-### FrameworkBuildAdapters
+### ForgeBuildAdapters
 
 **Soort:** interface
 
 ```typescript
-export interface FrameworkBuildAdapters
+export interface ForgeBuildAdapters
 ```
 
-Onafhankelijk getypte framework-build-integraties.
+Uniforme build-integratieadapters voor Forge-plug-ins.
+
+### FrameworkId
+
+**Soort:** type
+
+```typescript
+export type FrameworkId = JsxFramework | (string &
+```
+
+Open raamwerk-ID voor doelplug-ins en compilerpijplijnen.
+Behoudt automatische aanvulling voor bekende ingebouwde raamwerken terwijl willekeurige aangepaste plug-indoelen worden geaccepteerd.
 
 ### FrameworkOutputPlugin
 
@@ -738,12 +715,23 @@ export interface TargetContext
 
 Context gedeeld door doelverlaging en optimalisatie.
 
+### DoelFrameworkId
+
+**Soort:** type
+
+```typescript
+export type TargetFrameworkId = FrameworkId;
+```
+
+Open raamwerkidentificatiealias voor doelplug-ins.
+Equivalent aan {@link FrameworkId}.
+
 ### DoelIntenties
 
 **Soort:** interface
 
 ```typescript
-export interface TargetIntentions
+export interface TargetIntentions< TLowered extends TargetLoweredModule = TargetLoweredModule, >
 ```
 
 Doelspecifieke intentieverpakking; neutrale feiten blijven beschikbaar voor latere passen.
@@ -1260,7 +1248,7 @@ Een ref-intentie die onafhankelijk is van de ref-representatie van het doelwit.
 function renderNodeTagName(node: GenericRenderNode): string | undefined;
 ```
 
-De gewone tagnaam van een weergave node, of `undefined` voor een berekende tag.
+De gewone tagnaam van een render node, of `undefined` voor een berekende tag.
 
 #### Parameters
 
@@ -1296,7 +1284,7 @@ De getypte semantische IR die door elke framework-uitvoerplug-in wordt gebruikt.
 export interface SlotIntention
 ```
 
-Een slot gelezen of doorgegeven aan een onderliggende component.
+Een slot gelezen of slot doorgegeven aan een onderliggende component.
 
 ### bronGesteund
 
@@ -1369,3 +1357,197 @@ Voer een renderboom eerst in de diepte uit, inclusief geneste expressiemarkering
 | ----------- | ------------------------------------- | ------------ |
 | knooppunten | alleen-lezen GenericRenderNode[]      |              |
 | bezoek      | (node: GenericRenderNode) => ongeldig |              |
+
+## `src/schema`
+
+### assertTargetIntentionsVerlaagd
+
+**Soort:** functie
+
+```typescript
+function assertTargetIntentionsLowered(
+  intentions: unknown,
+  expectedFramework?: FrameworkId,
+): asserts intentions is TargetIntentions<TLowered>;
+```
+
+Beweert dat de aangeleverde intenties geldig zijn en een verlaagd streefplan bevatten.
+Genereert een TargetIntentionsValidationError (subklasse van TypeError) als de bedoelingen onvolledig zijn
+of als de verlaagde plandiscriminator niet aansluit bij het verwachte kader.
+
+#### Parameters
+
+| Naam              | Typ         | Beschrijving |
+| ----------------- | ----------- | ------------ |
+| bedoelingen       | onbekend    |              |
+| verwachtFramework | FrameworkId |              |
+
+### DeclaratiefSchema
+
+**Soort:** interface
+
+```typescript
+export interface DeclarativeSchema
+```
+
+Declaratieve schemadefinitie voor tussenrepresentaties van de compiler.
+
+### vindActionableSpan
+
+**Soort:** functie
+
+```typescript
+function findActionableSpan(value: unknown): SourceSpan | undefined;
+```
+
+Zoek recursief naar een bruikbare bronreeks binnen intenties of hun AST-feiten.
+
+#### Parameters
+
+| Naam   | Typ      | Beschrijving |
+| ------ | -------- | ------------ |
+| waarde | onbekend |              |
+
+### Schemaveldregel
+
+**Soort:** interface
+
+```typescript
+export interface SchemaFieldRule
+```
+
+Declaratieve regel toegepast op een schema-eigenschap.
+
+### Schemaveldtype
+
+**Soort:** type
+
+```typescript
+export type SchemaFieldType =
+  "string" | "non-empty-string" | "object" | "array" | "boolean";
+```
+
+Ondersteunde veldtypen voor declaratieve schemavalidatie.
+
+### SchemaValidatieprobleem
+
+**Soort:** interface
+
+```typescript
+export interface SchemaValidationIssue
+```
+
+Er is één schemavalidatieprobleem geïdentificeerd tijdens de intentiecontrole.
+
+### SchemaValidationOptions
+
+**Soort:** interface
+
+```typescript
+export interface SchemaValidationOptions
+```
+
+Opties voor het configureren van declaratieve schemavalidatie.
+
+### semantischeModuleSchema
+
+**Soort:** constant
+
+```typescript
+export const semanticModuleSchema: DeclarativeSchema;
+```
+
+Schema dat de binnenkomende semantische module IR valideert.
+
+### targetContextSchema
+
+**Soort:** constant
+
+```typescript
+export const targetContextSchema: DeclarativeSchema;
+```
+
+Schema dat de doelcontext van de compilatie valideert.
+
+### doelIntentiesSchema
+
+**Soort:** constant
+
+```typescript
+export const targetIntentionsSchema: DeclarativeSchema;
+```
+
+Schema dat doelintenties valideert.
+
+### DoelIntentiesValidatieError
+
+**Soort:** klasse
+
+```typescript
+export class TargetIntentionsValidationError extends TypeError
+```
+
+Er wordt een fout gegenereerd wanneer doelintenties declaratieve schemaverificatie mislukken.
+
+### DoelIntentiesValidatieResultaat
+
+**Soort:** interface
+
+```typescript
+export interface TargetIntentionsValidationResult
+```
+
+Gestructureerd resultaat van validatie van doelintenties.
+
+### targetLoweredModuleSchema
+
+**Soort:** constant
+
+```typescript
+export const targetLoweredModuleSchema: DeclarativeSchema;
+```
+
+Schema dat de structuur van een verlaagd doelplan valideert.
+
+### valideren tegen schema
+
+**Soort:** functie
+
+```typescript
+function validateAgainstSchema(
+  target: unknown,
+  schema: DeclarativeSchema,
+  options?: SchemaValidationOptions,
+): SchemaValidationIssue[];
+```
+
+Valideert een doelobject tegen een declaratief schema, waarbij alle structurele problemen worden verzameld.
+
+#### Parameters
+
+| Naam   | Typ                   | Beschrijving |
+| ------ | --------------------- | ------------ |
+| doel   | onbekend              |              |
+| schema | DeclaratiefSchema     |              |
+| opties | SchemaValidatieOpties |              |
+
+### valideerTargetIntentions
+
+**Soort:** functie
+
+```typescript
+function validateTargetIntentions(
+  intentions: unknown,
+  expectedFramework?: FrameworkId,
+): TargetIntentionsValidationResult;
+```
+
+Valideert de structuur en integriteit van doelintenties tegen het declaratieve schema.
+Retourneert gestructureerde validatiefouten en bijbehorende CompilerDiagnostic-objecten met bronlocaties.
+
+#### Parameters
+
+| Naam              | Typ         | Beschrijving |
+| ----------------- | ----------- | ------------ |
+| bedoelingen       | onbekend    |              |
+| verwachtFramework | FrameworkId |              |

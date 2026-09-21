@@ -598,7 +598,11 @@ describe("Forge output-plugin API", () => {
         expect(error).toBeInstanceOf(TargetIntentionsValidationError);
         const validationError = error as TargetIntentionsValidationError;
         expect(validationError.diagnostics.length).toBeGreaterThan(0);
-        const diagnostic = validationError.diagnostics[0]!;
+        const [diagnostic] = validationError.diagnostics;
+        expect(diagnostic).toBeDefined();
+        if (!diagnostic) {
+          throw new Error("Expected at least one diagnostic");
+        }
         expect(diagnostic.phase).toBe("target-lowering");
         expect(diagnostic.severity).toBe("error");
         expect(diagnostic.fileName).toBe("Custom.tsx");
