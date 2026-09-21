@@ -129,10 +129,17 @@ async function fileExists(path: string): Promise<boolean> {
 }
 
 async function walk(directory: string, predicate: (path: string) => boolean): Promise<string[]> {
-  const entries = await readdir(directory, { withFileTypes: true });
+  const entries = await readdir(directory, { withFileTypes: true }).catch(() => []);
   const paths: string[] = [];
   for (const entry of entries.toSorted((left, right) => left.name.localeCompare(right.name))) {
-    if (entry.isSymbolicLink() || entry.name === 'node_modules' || entry.name === 'dist' || entry.name.startsWith('.'))
+    if (
+      entry.isSymbolicLink() ||
+      entry.name === 'node_modules' ||
+      entry.name === 'dist' ||
+      entry.name.startsWith('dist.') ||
+      entry.name.startsWith('.forge') ||
+      entry.name.startsWith('.')
+    )
       continue;
     const path = resolve(directory, entry.name);
     if (entry.isDirectory()) paths.push(...(await walk(path, predicate)));

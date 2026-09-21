@@ -130,22 +130,6 @@ async function removeNewSourceCompilerArtifacts(packageRoot: string, before: Set
   }
 }
 
-async function removeCachedCompilerArtifacts(packageRoot: string): Promise<void> {
-  const cacheRoot = path.join(packageRoot, 'node_modules/.cache');
-  // `null` is the explicit missing-cache sentinel for this optional cleanup.
-  // eslint-disable-next-line unicorn/no-null
-  const cacheStats = await fs.stat(cacheRoot).catch(() => null);
-  if (cacheStats?.isDirectory() !== true) return;
-  const walk = async (directory: string): Promise<void> => {
-    for (const entry of await fs.readdir(directory, { withFileTypes: true })) {
-      const fullPath = path.join(directory, entry.name);
-      if (entry.isDirectory()) await walk(fullPath);
-      else if (entry.name.endsWith('.d.ts') || entry.name.endsWith('.js')) await fs.rm(fullPath, { force: true });
-    }
-  };
-  await walk(cacheRoot);
-}
-
 const STAGE_MANIFEST = '.forge-build-manifest.json';
 const ENTRY_NAMES = new Set(['index.js', 'index.mjs', 'index.cjs', 'index.ts', 'index.tsx', 'index.d.ts']);
 
@@ -219,7 +203,7 @@ async function validateForgeArtifactManifests(stageRoot: string, target: ForgeBu
   }
 }
 
-async function assertCompleteStage(stageRoot: string, target: ForgeBuildSelection): Promise<string> {
+export async function assertCompleteStage(stageRoot: string, target: ForgeBuildSelection): Promise<string> {
   const stagedDist = path.join(stageRoot, 'dist');
   const entries = await fs.readdir(stagedDist).catch(() => []);
   if (entries.length === 0) {
@@ -231,8 +215,12 @@ async function assertCompleteStage(stageRoot: string, target: ForgeBuildSelectio
     throw new Error(`Forge build stage is missing expected target output "${target}": ${expectedRoot}`);
   }
   if (target !== 'all') {
-    const hasEntry = expectedEntries.some((entry) => !entry.isDirectory() && ENTRY_NAMES.has(entry.name));
-    if (!hasEntry) {
+    const rootHasEntry = expectedEntries.some((entry) => !entry.isDirectory() && ENTRY_NAMES.has(entry.name));
+    const componentsHasEntry =
+      target === 'forge' &&
+      ((await pathExists(path.join(expectedRoot, 'components', 'index.js'))) ||
+        (await pathExists(path.join(expectedRoot, 'components', 'index.d.ts'))));
+    if (!rootHasEntry && !componentsHasEntry) {
       throw new Error(`Forge build stage is missing the expected ${target} entry (index.*): ${expectedRoot}`);
     }
   }
@@ -338,22 +326,42 @@ export async function promoteTarget(options: {
   assertSafeStageRoot(packageRoot, stageRoot);
   const stagedDist = await assertCompleteStage(stageRoot, target);
   const destination = path.join(packageRoot, 'dist');
-  const promotionRoot = await fs.mkdtemp(path.join(packageRoot, '.forge-promotion-'));
-  const promotionDist = path.join(promotionRoot, 'dist');
+  await fs.mkdir(destination, { recursive: true });
 
-  try {
-    const destinationExists = await fs.stat(destination).then(
-      () => true,
-      () => false,
-    );
-    await (destinationExists
-      ? fs.cp(destination, promotionDist, { recursive: true })
-      : fs.mkdir(promotionDist, { recursive: true }));
-    await removeSelectedOutput(promotionDist, target, stagedDist);
-    await fs.cp(stagedDist, promotionDist, { recursive: true, force: true });
-    await atomicReplaceDirectory(promotionDist, destination);
-  } finally {
-    await fs.rm(promotionRoot, { recursive: true, force: true });
+  if (target === 'forge') {
+    const stagedComponents = path.join(stagedDist, 'components');
+    if (await pathExists(stagedComponents)) {
+      await atomicReplaceDirectory(stagedComponents, path.join(destination, 'components'));
+    }
+    const stagedEntries = await fs.readdir(stagedDist, { withFileTypes: true }).catch(() => []);
+    for (const entry of stagedEntries) {
+      if (entry.name === 'components' || entry.name.startsWith('.')) continue;
+      const src = path.join(stagedDist, entry.name);
+      const dest = path.join(destination, entry.name);
+      await (entry.isDirectory() ? atomicReplaceDirectory(src, dest) : fs.copyFile(src, dest));
+    }
+  } else {
+    const stagedTarget = path.join(stagedDist, target);
+    await ((await pathExists(stagedTarget))
+      ? atomicReplaceDirectory(stagedTarget, path.join(destination, target))
+      : fs.cp(stagedDist, destination, { recursive: true, force: true }));
+    const stagedManifest = path.join(stagedDist, STAGE_MANIFEST);
+    if (await pathExists(stagedManifest)) {
+      await fs.copyFile(stagedManifest, path.join(destination, STAGE_MANIFEST));
+    }
+    const stagedCmsRoot = path.join(stagedDist, 'cms');
+    if (await pathExists(stagedCmsRoot)) {
+      for (const cms of await fs.readdir(stagedCmsRoot, { withFileTypes: true })) {
+        if (cms.isDirectory()) {
+          const stagedCmsTarget = path.join(stagedCmsRoot, cms.name, target);
+          if (await pathExists(stagedCmsTarget)) {
+            const destCmsTarget = path.join(destination, 'cms', cms.name, target);
+            await fs.mkdir(path.dirname(destCmsTarget), { recursive: true });
+            await atomicReplaceDirectory(stagedCmsTarget, destCmsTarget);
+          }
+        }
+      }
+    }
   }
 
   return {
@@ -440,6 +448,21 @@ async function executeCommand(context: ForgeBuildCommandContext): Promise<void> 
   });
 }
 
+/**
+ * Resolve the tsdown execution command for the target.
+ * Uses `tsdown.<target>.config.ts` if present, falling back to standard `tsdown`.
+ */
+export function resolveTargetCommand(packageRoot: string, target: ForgeBuildSelection): string[] {
+  if (target === 'all') {
+    return ['pnpm', 'exec', 'tsdown'];
+  }
+  const targetConfig = path.join(packageRoot, `tsdown.${target}.config.ts`);
+  if (fsSync.existsSync(targetConfig)) {
+    return ['pnpm', 'exec', 'tsdown', '--config', `tsdown.${target}.config.ts`];
+  }
+  return ['pnpm', 'exec', 'tsdown'];
+}
+
 /** Execute tsdown in an isolated stage and promote only after a complete build. */
 export async function runForgeBuild(options: ForgeBuildOptions): Promise<BuildPromotion> {
   const packageRoot = path.resolve(options.packageRoot);
@@ -448,12 +471,66 @@ export async function runForgeBuild(options: ForgeBuildOptions): Promise<BuildPr
   assertSafeStageRoot(packageRoot, stageRoot);
   await removeStage(packageRoot, stageRoot);
   await fs.mkdir(stageRoot, { recursive: true });
-  const command = options.command ?? ['pnpm', 'exec', 'tsdown'];
+  const command = options.command ?? resolveTargetCommand(packageRoot, target);
   const controller = new AbortController();
   const abortParent = (): void => controller.abort();
   options.signal?.addEventListener('abort', abortParent, { once: true });
   const timeout = options.timeoutMs === undefined ? undefined : setTimeout(() => controller.abort(), options.timeoutMs);
   const sourceCompilerArtifacts = await collectSourceCompilerArtifacts(packageRoot);
+
+  if (
+    target === 'all' &&
+    options.command === undefined &&
+    !fsSync.existsSync(path.join(packageRoot, 'tsdown.config.ts'))
+  ) {
+    const candidateTargets: readonly (ForgeBuildTarget | 'cms')[] = [
+      'forge',
+      'react',
+      'vue',
+      'svelte',
+      'solid',
+      'web-components',
+      'cms',
+    ];
+    const availableTargets = candidateTargets.filter((candidate) =>
+      fsSync.existsSync(path.join(packageRoot, `tsdown.${candidate}.config.ts`)),
+    );
+    if (availableTargets.length > 0) {
+      try {
+        for (const currentTarget of availableTargets) {
+          if (controller.signal.aborted) throw new Error('Forge build was cancelled.');
+          const targetContext: ForgeBuildCommandContext = {
+            packageRoot,
+            stageRoot,
+            command: ['pnpm', 'exec', 'tsdown', '--config', `tsdown.${currentTarget}.config.ts`],
+            env:
+              currentTarget === 'cms'
+                ? {
+                    ...process.env,
+                    ...options.env,
+                    FORGE_BUILD_STAGE_ROOT: stageRoot,
+                    FORGE_BUILD_TARGET: 'all',
+                  }
+                : commandEnvironment({ ...options, target: currentTarget }, stageRoot),
+            signal: controller.signal,
+          };
+          const stepPromise = (options.runCommand ?? executeCommand)(targetContext);
+          await new Promise<void>((resolve, reject) => {
+            const onAbort = (): void => reject(new Error('Forge build was cancelled.'));
+            controller.signal.addEventListener('abort', onAbort, { once: true });
+            stepPromise.then(resolve, reject).finally(() => controller.signal.removeEventListener('abort', onAbort));
+          });
+        }
+        return await promoteAggregate({ packageRoot, stageRoot });
+      } finally {
+        if (timeout !== undefined) clearTimeout(timeout);
+        options.signal?.removeEventListener('abort', abortParent);
+        await removeStage(packageRoot, stageRoot);
+        await removeNewSourceCompilerArtifacts(packageRoot, sourceCompilerArtifacts);
+      }
+    }
+  }
+
   const context: ForgeBuildCommandContext = {
     packageRoot,
     stageRoot,
@@ -483,7 +560,6 @@ export async function runForgeBuild(options: ForgeBuildOptions): Promise<BuildPr
     options.signal?.removeEventListener('abort', abortParent);
     await removeStage(packageRoot, stageRoot);
     await removeNewSourceCompilerArtifacts(packageRoot, sourceCompilerArtifacts);
-    await removeCachedCompilerArtifacts(packageRoot);
   }
 }
 

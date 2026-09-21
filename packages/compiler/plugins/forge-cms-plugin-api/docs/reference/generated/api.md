@@ -979,6 +979,27 @@ Convert a public name to its technical name (`InView` → `in_view`).
 
 ## `src/tsdown`
 
+### defineTsdownForgeCmsTargetConfigs
+
+**Kind:** function
+
+```typescript
+function defineTsdownForgeCmsTargetConfigs(
+  options: TsdownForgeCmsPluginsOptions,
+): UserConfig[];
+```
+
+Return native tsdown `UserConfig[]` configurations for the selected CMS targets.
+Each configuration directly compiles its own CMS target and projections,
+allowing tsdown / Rolldown to run targets concurrently without dummy disk entries
+or nested execution loops.
+
+#### Parameters
+
+| Name    | Type                         | Description |
+| ------- | ---------------------------- | ----------- |
+| options | TsdownForgeCmsPluginsOptions |             |
+
 ### ForgeCmsTsdownPlugin
 
 **Kind:** type
@@ -999,14 +1020,8 @@ function tsdownForgeCmsPlugins(
 ): TsdownPlugin[];
 ```
 
-Native tsdown-plugin form of the CMS adapter. The returned
-plugins inject CMS lifecycle/config through `tsdownConfig`, matching the
-Forge component/hook plugin adapters so callers compose one
-`defineTsdownLibrary` configuration.
-
-Multi-framework compositions keep one caller-owned config: the adapter runs
-one nested tsdown build per selected target so entry/outDir/lifecycle plugins
-never last-wins collide on the shared host object.
+Native tsdown-plugin form of the CMS adapter for single-target usage.
+For multi-target generation, prefer {@link defineTsdownForgeCmsTargetConfigs}.
 
 #### Parameters
 
