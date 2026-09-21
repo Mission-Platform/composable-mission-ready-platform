@@ -64,6 +64,43 @@ const emptySpan: FlintSourceSpan = {
   endColumn: 1,
 };
 
+const C_BASE_TYPE_MAP: Readonly<Record<string, string>> = {
+  void: 'c_void',
+  bool: 'bool',
+  _Bool: 'bool',
+  char: 'c_char',
+  'unsigned char': 'u8',
+  uint8_t: 'u8',
+  u8: 'u8',
+  'signed char': 'i8',
+  int8_t: 'i8',
+  i8: 'i8',
+  short: 'c_short',
+  'short int': 'c_short',
+  int16_t: 'c_short',
+  'unsigned short': 'c_ushort',
+  uint16_t: 'c_ushort',
+  int: 'c_int',
+  'signed int': 'c_int',
+  int32_t: 'c_int',
+  'unsigned int': 'c_uint',
+  uint32_t: 'c_uint',
+  unsigned: 'c_uint',
+  long: 'c_long',
+  'long int': 'c_long',
+  'unsigned long': 'c_ulong',
+  'long long': 'c_longlong',
+  int64_t: 'c_longlong',
+  'unsigned long long': 'c_ulonglong',
+  uint64_t: 'c_ulonglong',
+  size_t: 'c_size',
+  uintptr_t: 'c_size',
+  ssize_t: 'c_ssize',
+  intptr_t: 'c_ssize',
+  float: 'c_float',
+  double: 'c_double',
+};
+
 /**
  * Maps a C scalar or pointer type signature to a Flint type name.
  *
@@ -85,98 +122,7 @@ export function mapCTypeToFlint(cType: string): string {
     .replace(/\s+const$/, '')
     .trim();
 
-  let flintBase: string;
-  switch (base) {
-    case 'void': {
-      flintBase = 'c_void';
-      break;
-    }
-    case 'bool':
-    case '_Bool': {
-      flintBase = 'bool';
-      break;
-    }
-    case 'char': {
-      flintBase = 'c_char';
-      break;
-    }
-    case 'unsigned char':
-    case 'uint8_t':
-    case 'u8': {
-      flintBase = 'u8';
-      break;
-    }
-    case 'signed char':
-    case 'int8_t':
-    case 'i8': {
-      flintBase = 'i8';
-      break;
-    }
-    case 'short':
-    case 'short int':
-    case 'int16_t': {
-      flintBase = 'c_short';
-      break;
-    }
-    case 'unsigned short':
-    case 'uint16_t': {
-      flintBase = 'c_ushort';
-      break;
-    }
-    case 'int':
-    case 'signed int':
-    case 'int32_t': {
-      flintBase = 'c_int';
-      break;
-    }
-    case 'unsigned int':
-    case 'uint32_t':
-    case 'unsigned': {
-      flintBase = 'c_uint';
-      break;
-    }
-    case 'long':
-    case 'long int': {
-      flintBase = 'c_long';
-      break;
-    }
-    case 'unsigned long': {
-      flintBase = 'c_ulong';
-      break;
-    }
-    case 'long long':
-    case 'int64_t': {
-      flintBase = 'c_longlong';
-      break;
-    }
-    case 'unsigned long long':
-    case 'uint64_t': {
-      flintBase = 'c_ulonglong';
-      break;
-    }
-    case 'size_t':
-    case 'uintptr_t': {
-      flintBase = 'c_size';
-      break;
-    }
-    case 'ssize_t':
-    case 'intptr_t': {
-      flintBase = 'c_ssize';
-      break;
-    }
-    case 'float': {
-      flintBase = 'c_float';
-      break;
-    }
-    case 'double': {
-      flintBase = 'c_double';
-      break;
-    }
-    default: {
-      flintBase = base;
-      break;
-    }
-  }
+  const flintBase = C_BASE_TYPE_MAP[base] ?? base;
 
   if (!isPointer) return flintBase;
   if (flintBase === 'c_void') return 'COpaquePtr';
@@ -194,19 +140,9 @@ function sanitizeCSource(source: string): string {
     .trim();
 }
 
-/**
- * Parses C struct definitions and function prototypes from C header or cbindgen text.
- *
- * @param source - C header source code.
- * @returns Structured CHeaderAst.
- */
-export function parseCHeader(source: string): CHeaderAst {
-  const clean = sanitizeCSource(source);
-  const structs: CStructDefinition[] = [];
-  const functions: CFunctionDefinition[] = [];
+/** Parses opaque typedefs: typedef struct Name Name; */
+function parseOpaqueTypes(clean: string): string[] {
   const opaqueTypes: string[] = [];
-
-  // Parse opaque typedefs: typedef struct Name Name;
   const opaqueRegex = /typedef\s+struct\s+([A-Za-z0-9_]+)\s+\1\s*;/g;
   let opaqueMatch: RegExpExecArray | undefined;
   while ((opaqueMatch = opaqueRegex.exec(clean) ?? undefined) !== undefined) {
@@ -214,47 +150,90 @@ export function parseCHeader(source: string): CHeaderAst {
       opaqueTypes.push(opaqueMatch[1]);
     }
   }
+  return opaqueTypes;
+}
 
-  // Parse structs: typedef struct Name { ... } Name; or struct Name { ... };
+/** Parses struct fields from a C struct body. */
+function parseStructFields(body: string): CStructField[] {
+  const fields: CStructField[] = [];
+  const fieldStatements = body
+    .split(';')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  for (const statement of fieldStatements) {
+    const parts = statement.split(/\s+/);
+    if (parts.length >= 2) {
+      const fieldName = parts.pop();
+      if (!fieldName) continue;
+      let cleanFieldName = fieldName;
+      let isPointer = false;
+      if (cleanFieldName.startsWith('*')) {
+        isPointer = true;
+        cleanFieldName = cleanFieldName.slice(1);
+      }
+      const rawType = parts.join(' ') + (isPointer ? '*' : '');
+      const flintType = mapCTypeToFlint(rawType);
+      fields.push({
+        name: cleanFieldName,
+        cType: rawType,
+        flintType,
+        isPointer: rawType.includes('*'),
+        isConst: rawType.includes('const'),
+      });
+    }
+  }
+  return fields;
+}
+
+/** Parses struct definitions from C header text. */
+function parseStructs(clean: string): CStructDefinition[] {
+  const structs: CStructDefinition[] = [];
   const structRegex = /(?:typedef\s+)?struct\s+([A-Za-z0-9_]+)\s*\{([^}]*)\}\s*(?:([A-Za-z0-9_]+))?\s*;/g;
   let structMatch: RegExpExecArray | undefined;
   while ((structMatch = structRegex.exec(clean) ?? undefined) !== undefined) {
     const structName = structMatch[1] ?? structMatch[3] ?? 'AnonymousStruct';
     const body = structMatch[2] ?? '';
-    const fields: CStructField[] = [];
-
-    const fieldStatements = body
-      .split(';')
-      .map((s) => s.trim())
-      .filter(Boolean);
-    for (const statement of fieldStatements) {
-      const parts = statement.split(/\s+/);
-      if (parts.length >= 2) {
-        let fieldName = parts.pop()!;
-        let isPointer = false;
-        if (fieldName.startsWith('*')) {
-          isPointer = true;
-          fieldName = fieldName.slice(1);
-        }
-        const rawType = parts.join(' ') + (isPointer ? '*' : '');
-        const flintType = mapCTypeToFlint(rawType);
-        fields.push({
-          name: fieldName,
-          cType: rawType,
-          flintType,
-          isPointer: rawType.includes('*'),
-          isConst: rawType.includes('const'),
-        });
-      }
-    }
-
     structs.push({
       name: structName,
-      fields,
+      fields: parseStructFields(body),
     });
   }
+  return structs;
+}
 
-  // Parse function prototypes: return_type func_name(param1, ...);
+/** Parses function parameter list from C prototype parameter string. */
+function parseFunctionParameters(rawParameters: string): CFunctionParameter[] {
+  const parameters: CFunctionParameter[] = [];
+  if (rawParameters.length === 0 || rawParameters === 'void') return parameters;
+  const parameterList = rawParameters.split(',').map((p) => p.trim());
+  for (const [index, p] of parameterList.entries()) {
+    const parameterMatch = /^(.*?)(?:(?:\s+)|(?:\s*(\*+)\s*))([A-Za-z0-9_]+)$/.exec(p);
+    let parameterName: string;
+    let rawType: string;
+    if (parameterMatch) {
+      const typeBase = parameterMatch[1]?.trim() ?? '';
+      const typeStars = parameterMatch[2] ?? '';
+      parameterName = parameterMatch[3];
+      rawType = `${typeBase}${typeStars ? ` ${typeStars}` : ''}`.trim();
+    } else {
+      parameterName = `arg${index}`;
+      rawType = p.trim();
+    }
+    const flintType = mapCTypeToFlint(rawType);
+    parameters.push({
+      name: parameterName,
+      cType: rawType,
+      flintType,
+      isPointer: rawType.includes('*'),
+      isConst: rawType.includes('const'),
+    });
+  }
+  return parameters;
+}
+
+/** Parses function prototypes from C header text. */
+function parseFunctionPrototypes(clean: string): CFunctionDefinition[] {
+  const functions: CFunctionDefinition[] = [];
   const functionRegex = /([^;{}]*?)\(([^)]*)\)\s*;/g;
   let functionMatch: RegExpExecArray | undefined;
   while ((functionMatch = functionRegex.exec(clean) ?? undefined) !== undefined) {
@@ -273,42 +252,49 @@ export function parseCHeader(source: string): CHeaderAst {
     const functionName = nameMatch[3];
     const rawReturn = `${returnBase}${returnStars ? ` ${returnStars}` : ''}`.trim();
 
-    const parameters: CFunctionParameter[] = [];
-    if (rawParameters.length > 0 && rawParameters !== 'void') {
-      const parameterList = rawParameters.split(',').map((p) => p.trim());
-      for (const [index, p] of parameterList.entries()) {
-        const parameterMatch = /^(.*?)(?:(?:\s+)|(?:\s*(\*+)\s*))([A-Za-z0-9_]+)$/.exec(p);
-        let parameterName: string;
-        let rawType: string;
-        if (parameterMatch) {
-          const typeBase = parameterMatch[1]?.trim() ?? '';
-          const typeStars = parameterMatch[2] ?? '';
-          parameterName = parameterMatch[3];
-          rawType = `${typeBase}${typeStars ? ` ${typeStars}` : ''}`.trim();
-        } else {
-          parameterName = `arg${index}`;
-          rawType = p.trim();
-        }
-        const flintType = mapCTypeToFlint(rawType);
-        parameters.push({
-          name: parameterName,
-          cType: rawType,
-          flintType,
-          isPointer: rawType.includes('*'),
-          isConst: rawType.includes('const'),
-        });
-      }
-    }
-
     functions.push({
       name: functionName,
       returnType: rawReturn,
       flintReturnType: mapCTypeToFlint(rawReturn),
-      parameters,
+      parameters: parseFunctionParameters(rawParameters),
     });
   }
+  return functions;
+}
 
-  return { structs, functions, opaqueTypes };
+/**
+ * Parses C struct definitions and function prototypes from C header or cbindgen text.
+ *
+ * @param source - C header source code.
+ * @returns Structured CHeaderAst.
+ */
+export function parseCHeader(source: string): CHeaderAst {
+  const clean = sanitizeCSource(source);
+  return {
+    opaqueTypes: parseOpaqueTypes(clean),
+    structs: parseStructs(clean),
+    functions: parseFunctionPrototypes(clean),
+  };
+}
+
+function renderFlintStructs(structs: readonly CStructDefinition[], lines: string[]): void {
+  for (const structDefinition of structs) {
+    lines.push('#[repr(C)]', `c_struct ${structDefinition.name} {`);
+    for (const field of structDefinition.fields) {
+      lines.push(`  ${field.name}: ${field.flintType},`);
+    }
+    lines.push('}', '');
+  }
+}
+
+function renderFlintFunctions(functions: readonly CFunctionDefinition[], library: string, lines: string[]): void {
+  if (functions.length === 0) return;
+  lines.push(`foreign "C" capability "${library}" {`);
+  for (const function_ of functions) {
+    const parameters = function_.parameters.map((p) => `${p.name}: ${p.flintType}`).join(', ');
+    lines.push(`  fn ${function_.name}(${parameters}) -> ${function_.flintReturnType};`);
+  }
+  lines.push('}', '');
 }
 
 /**
@@ -330,22 +316,8 @@ export function generateFlintFromC(ast: CHeaderAst, library: string): string {
     lines.push(`opaque foreign type ${opaque};`, '');
   }
 
-  for (const structDefinition of ast.structs) {
-    lines.push(`#[repr(C)]`, `c_struct ${structDefinition.name} {`);
-    for (const field of structDefinition.fields) {
-      lines.push(`  ${field.name}: ${field.flintType},`);
-    }
-    lines.push('}', '');
-  }
-
-  if (ast.functions.length > 0) {
-    lines.push(`foreign "C" capability "${library}" {`);
-    for (const function_ of ast.functions) {
-      const parameters = function_.parameters.map((p) => `${p.name}: ${p.flintType}`).join(', ');
-      lines.push(`  fn ${function_.name}(${parameters}) -> ${function_.flintReturnType};`);
-    }
-    lines.push('}', '');
-  }
+  renderFlintStructs(ast.structs, lines);
+  renderFlintFunctions(ast.functions, library, lines);
 
   return `${lines.join('\n').trim()}\n`;
 }
@@ -477,15 +449,18 @@ export function generateDtsFromC(ast: CHeaderAst, moduleName: string): string {
   return `${lines.join('\n').trim()}\n`;
 }
 
+const BIGINT_FLINT_TYPES = new Set(['c_longlong', 'c_ulonglong', 'i64', 'u64']);
+
+/**
+ * Maps a Flint type representation to its corresponding TypeScript type declaration string.
+ *
+ * @param flintType - Flint type representation name.
+ * @returns TypeScript type string.
+ */
 function mapFlintToTsType(flintType: string): string {
   if (flintType === 'bool') return 'boolean';
   if (flintType === 'c_void' || flintType === 'unit') return 'void';
-  if (flintType === 'c_longlong' || flintType === 'c_ulonglong' || flintType === 'i64' || flintType === 'u64') {
-    return 'bigint';
-  }
-  if (flintType.startsWith('CPtr') || flintType.startsWith('MutCPtr') || flintType === 'COpaquePtr') {
-    return 'number';
-  }
+  if (BIGINT_FLINT_TYPES.has(flintType)) return 'bigint';
   return 'number';
 }
 
@@ -520,17 +495,28 @@ export function generateFfiHostShim(ast: CHeaderAst, libraryPath: string): strin
   return `${lines.join('\n').trim()}\n`;
 }
 
+const FFI_TYPE_MAP: Readonly<Record<string, string>> = {
+  c_void: 'FFIType.void',
+  unit: 'FFIType.void',
+  c_float: 'FFIType.f32',
+  c_double: 'FFIType.f64',
+  c_longlong: 'FFIType.i64',
+  c_ulonglong: 'FFIType.i64',
+  i64: 'FFIType.i64',
+  u64: 'FFIType.i64',
+};
+
+/**
+ * Maps a Flint type representation to its bun:ffi FFIType identifier.
+ *
+ * @param flintType - Flint type representation name.
+ * @returns Corresponding bun:ffi FFIType string.
+ */
 function mapFlintToFfiType(flintType: string): string {
   if (flintType.startsWith('CPtr') || flintType.startsWith('MutCPtr') || flintType === 'COpaquePtr') {
     return 'FFIType.ptr';
   }
-  if (flintType === 'c_void' || flintType === 'unit') return 'FFIType.void';
-  if (flintType === 'c_float') return 'FFIType.f32';
-  if (flintType === 'c_double') return 'FFIType.f64';
-  if (flintType === 'c_longlong' || flintType === 'c_ulonglong' || flintType === 'i64' || flintType === 'u64') {
-    return 'FFIType.i64';
-  }
-  return 'FFIType.i32';
+  return FFI_TYPE_MAP[flintType] ?? 'FFIType.i32';
 }
 
 /**

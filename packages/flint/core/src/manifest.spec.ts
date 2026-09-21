@@ -25,8 +25,9 @@ describe('Flint ABI Manifest with Foreign Capabilities', () => {
     const parsed = parseFlint(source, 'manifest_test.flint');
     expect(parsed.diagnostics).toEqual([]);
     expect(parsed.module).toBeDefined();
+    if (!parsed.module) throw new Error('Expected parsed module to be defined');
 
-    const manifest = createFlintAbiManifest(parsed.module!);
+    const manifest = createFlintAbiManifest(parsed.module);
     expect(manifest.foreignCapabilities).toBeDefined();
     expect(manifest.foreignCapabilities).toEqual([
       {
@@ -72,8 +73,9 @@ describe('Flint ABI Manifest with Foreign Capabilities', () => {
     const parsed = parseFlint(source, 'crypto.flint');
     expect(parsed.diagnostics).toEqual([]);
     expect(parsed.module).toBeDefined();
+    if (!parsed.module) throw new Error('Expected parsed module to be defined');
 
-    const manifest64 = createFlintAbiManifest(parsed.module!, {
+    const manifest64 = createFlintAbiManifest(parsed.module, {
       targetFeatures: ['memory64'],
     });
 
@@ -96,7 +98,8 @@ describe('Flint ABI Manifest with Foreign Capabilities', () => {
       }
     `;
     const parsed = parseFlint(source, 'pure.flint');
-    const manifest = createFlintAbiManifest(parsed.module!);
+    if (!parsed.module) throw new Error('Expected parsed module to be defined');
+    const manifest = createFlintAbiManifest(parsed.module);
     expect(manifest.foreignCapabilities).toBeUndefined();
   });
 });

@@ -993,6 +993,21 @@ function metadataCustomSection(metadata: FlintWasmBackendInput['metadata']): num
   return section(0, [...wasmString('fws.metadata'), ...encoder.encode(JSON.stringify(metadata))]);
 }
 
+const STATIC_WASM_PRIMITIVE_TYPES: Readonly<Record<string, FlintWasmPrimitiveType>> = {
+  f32: 'f32',
+  c_float: 'f32',
+  f64: 'f64',
+  c_double: 'f64',
+  i64: 'i64',
+  u64: 'i64',
+  c_longlong: 'i64',
+  c_ulonglong: 'i64',
+  unit: 'unit',
+  c_void: 'unit',
+};
+
+const POINTER_LIKE_PRIMITIVE_TYPES = new Set(['c_long', 'c_ulong', 'c_size', 'c_ssize']);
+
 /** Maps a Flint or C type representation string to WebAssembly primitive value type. */
 function toWasmPrimitiveType(
   type: string | { readonly name?: string; readonly reference?: string } | undefined,
@@ -1002,35 +1017,13 @@ function toWasmPrimitiveType(
   if (typeString.startsWith('CPtr') || typeString.startsWith('MutCPtr') || typeString === 'COpaquePtr') {
     return memory64 ? 'u64' : 'u32';
   }
-  switch (typeString) {
-    case 'f32':
-    case 'c_float': {
-      return 'f32';
-    }
-    case 'f64':
-    case 'c_double': {
-      return 'f64';
-    }
-    case 'i64':
-    case 'u64':
-    case 'c_longlong':
-    case 'c_ulonglong': {
-      return 'i64';
-    }
-    case 'c_long':
-    case 'c_ulong':
-    case 'c_size':
-    case 'c_ssize': {
-      return memory64 ? 'u64' : 'u32';
-    }
-    case 'unit':
-    case 'c_void': {
-      return 'unit';
-    }
-    default: {
-      return 'i32';
-    }
+  if (STATIC_WASM_PRIMITIVE_TYPES[typeString]) {
+    return STATIC_WASM_PRIMITIVE_TYPES[typeString];
   }
+  if (POINTER_LIKE_PRIMITIVE_TYPES.has(typeString)) {
+    return memory64 ? 'u64' : 'u32';
+  }
+  return 'i32';
 }
 
 /** Core emitter lowering module IR to binary WebAssembly bytecode. */

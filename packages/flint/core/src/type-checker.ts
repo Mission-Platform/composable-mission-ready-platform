@@ -8,6 +8,7 @@ import { TypeAlgebra, createTypeAlgebra } from './type-algebra.js';
 
 import type {
   FlintExpression,
+  FlintForeignFunctionDeclaration,
   FlintFunction,
   FlintModule,
   FlintOpaqueForeignTypeDeclaration,
@@ -367,6 +368,34 @@ function checkCapabilityImports(
   }
 }
 
+function registerForeignFunction(
+  function_: FlintForeignFunctionDeclaration,
+  module: FlintModule,
+  fileName: string,
+  diagnostics: FlintDiagnostic[],
+  names: Set<string>,
+  callables: Map<string, Callable>,
+): void {
+  if (names.has(function_.name)) {
+    diagnostics.push(
+      createDiagnostic(
+        fileName,
+        'abi',
+        'FLINT-ABI-001',
+        `The name '${function_.name}' is declared more than once.`,
+        function_.span,
+      ),
+    );
+  }
+  names.add(function_.name);
+  callables.set(function_.name, {
+    parameters: function_.parameters.map((p) => typeNameKey(p.type)),
+    result: typeNameKey(function_.result),
+  });
+  validateType(function_.result, fileName, diagnostics, module);
+  for (const parameter of function_.parameters) validateType(parameter.type, fileName, diagnostics, module);
+}
+
 /**
  * Validates and registers foreign capability function declarations.
  *
@@ -385,24 +414,7 @@ function checkForeignCapabilities(
 ): void {
   for (const cap of module.foreignCapabilities ?? []) {
     for (const function_ of cap.functions) {
-      if (names.has(function_.name)) {
-        diagnostics.push(
-          createDiagnostic(
-            fileName,
-            'abi',
-            'FLINT-ABI-001',
-            `The name '${function_.name}' is declared more than once.`,
-            function_.span,
-          ),
-        );
-      }
-      names.add(function_.name);
-      callables.set(function_.name, {
-        parameters: function_.parameters.map((p) => typeNameKey(p.type)),
-        result: typeNameKey(function_.result),
-      });
-      validateType(function_.result, fileName, diagnostics, module);
-      for (const parameter of function_.parameters) validateType(parameter.type, fileName, diagnostics, module);
+      registerForeignFunction(function_, module, fileName, diagnostics, names, callables);
     }
   }
 }

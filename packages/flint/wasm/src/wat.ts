@@ -370,21 +370,28 @@ function renderMemory(targetFeatures: FlintTargetFeatures | undefined): string {
     const name = typeof targetFeatures.importMemory === 'object' ? targetFeatures.importMemory.name : 'memory';
     return `  (import "${importModule}" "${name}" (memory 1))\n  (export "memory" (memory 0))`;
   }
-  if (targetFeatures?.memory64 === true && targetFeatures.threads === true)
-    return '  (memory (export "memory") i64 1 1 shared)';
-  if (targetFeatures?.memory64 === true) return '  (memory (export "memory") i64 1)';
-  if (targetFeatures?.threads === true) return '  (memory (export "memory") 1 1 shared)';
-  return '  (memory (export "memory") 1)';
+  const isMemory64 = targetFeatures?.memory64 === true;
+  const isShared = targetFeatures?.threads === true;
+  const memType = isMemory64 ? 'i64 1' : '1';
+  const sharedSuffix = isShared ? ' 1 shared' : '';
+  return `  (memory (export "memory") ${memType}${sharedSuffix})`;
 }
+
+const STATIC_WAT_TYPES: Readonly<Record<string, string>> = {
+  f32: 'f32',
+  c_float: 'f32',
+  f64: 'f64',
+  c_double: 'f64',
+  i64: 'i64',
+  u64: 'i64',
+  c_longlong: 'i64',
+  c_ulonglong: 'i64',
+};
 
 /** Maps a Flint or C type representation string to WebAssembly WAT value type. */
 function toWatType(type: string | { readonly name?: string; readonly reference?: string } | undefined): string {
   const typeString = typeof type === 'string' ? type : (type?.reference ?? type?.name ?? 'i32');
-  if (typeString === 'f32' || typeString === 'c_float') return 'f32';
-  if (typeString === 'f64' || typeString === 'c_double') return 'f64';
-  if (typeString === 'i64' || typeString === 'u64' || typeString === 'c_longlong' || typeString === 'c_ulonglong')
-    return 'i64';
-  return 'i32';
+  return STATIC_WAT_TYPES[typeString] ?? 'i32';
 }
 
 /**

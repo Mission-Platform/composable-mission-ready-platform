@@ -112,7 +112,8 @@ describe('Tiered Hybrid Memory & Multi-Memory Sandboxing', () => {
 
     const parsed = parseFlint(source, 'zstd_demo.flint');
     expect(parsed.diagnostics).toEqual([]);
-    const manifest = createFlintAbiManifest(parsed.module!);
+    if (!parsed.module) throw new Error('Expected parsed module to be defined');
+    const manifest = createFlintAbiManifest(parsed.module);
 
     let foreignCalled = false;
     const host = createFlintHost(
@@ -364,9 +365,10 @@ describe('Tiered Hybrid Memory & Multi-Memory Sandboxing', () => {
 
     expect(compiled.diagnostics).toEqual([]);
     expect(compiled.wasm).toBeDefined();
+    if (!compiled.wasm) throw new Error('Expected compiled wasm bytes to be defined');
 
     // 2. Instantiate with guestHeap Wasm memory
-    const instance = await WebAssembly.instantiate(compiled.wasm!, {
+    const instance = await WebAssembly.instantiate(compiled.wasm, {
       env: { memory: multiMemory.guestHeap.wasmMemory },
     });
 
@@ -431,7 +433,8 @@ describe('Tiered Hybrid Memory & Multi-Memory Sandboxing', () => {
 
     const parsed = parseFlint(sqlite3CapabilityHeader, 'sqlite_multi_memory.flint');
     expect(parsed.diagnostics).toEqual([]);
-    const manifest = createFlintAbiManifest(parsed.module!);
+    if (!parsed.module) throw new Error('Expected parsed module to be defined');
+    const manifest = createFlintAbiManifest(parsed.module);
 
     const host = createFlintHost(
       manifest,
@@ -688,8 +691,9 @@ describe('Tiered Hybrid Memory & Multi-Memory Sandboxing', () => {
 
     expect(compiled.diagnostics).toEqual([]);
     expect(compiled.wasm).toBeDefined();
+    if (!compiled.wasm) throw new Error('Expected compiled wasm bytes to be defined');
 
-    const instance = await WebAssembly.instantiate(compiled.wasm!, {
+    const instance = await WebAssembly.instantiate(compiled.wasm, {
       env: { memory: multiMemory.guestHeap.wasmMemory },
     });
 

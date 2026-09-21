@@ -777,26 +777,34 @@ function detectStaticLinkingCycles(
   }
 }
 
-/**
- * Resolves declared foreign capability symbols against provided foreign relocatable objects.
- *
- * @param graph - Module dependency graph containing ASTs.
- * @param foreignObjects - List of foreign relocatable object descriptors.
- * @param diagnostics - Diagnostic accumulator.
- * @returns List of foreign symbol resolution records.
- */
-function resolveForeignSymbols(
-  graph: FlintModuleGraph,
-  foreignObjects: readonly FlintForeignObjectReference[] = [],
-  diagnostics: FlintDiagnostic[],
-): FlintResolvedForeignSymbol[] {
-  const resolved: FlintResolvedForeignSymbol[] = [];
+/** Builds index mapping exported foreign symbols to their defining relocatable object. */
+function buildForeignSymbolIndex(
+  foreignObjects: readonly FlintForeignObjectReference[],
+): Map<string, FlintForeignObjectReference> {
   const symbolToObject = new Map<string, FlintForeignObjectReference>();
   for (const object_ of foreignObjects) {
     for (const symbol of object_.exportedSymbols) {
       symbolToObject.set(symbol, object_);
     }
   }
+  return symbolToObject;
+}
+
+/**
+ * Resolves declared foreign capability symbols against provided foreign relocatable objects.
+ *
+ * @param graph - Module dependency graph containing ASTs.
+ * @param diagnostics - Diagnostic accumulator.
+ * @param foreignObjects - List of foreign relocatable object descriptors.
+ * @returns List of foreign symbol resolution records.
+ */
+function resolveForeignSymbols(
+  graph: FlintModuleGraph,
+  diagnostics: FlintDiagnostic[],
+  foreignObjects: readonly FlintForeignObjectReference[] = [],
+): FlintResolvedForeignSymbol[] {
+  const resolved: FlintResolvedForeignSymbol[] = [];
+  const symbolToObject = buildForeignSymbolIndex(foreignObjects);
 
   for (const resolvedModule of graph.modules) {
     for (const capability of resolvedModule.module.foreignCapabilities ?? []) {
@@ -853,7 +861,7 @@ export function validateFlintLinks(
   }
   detectStaticLinkingCycles(graph.modules, adjacency, modulesByFile, diagnostics);
 
-  const foreignSymbols = resolveForeignSymbols(graph, configuration.foreignObjects, diagnostics);
+  const foreignSymbols = resolveForeignSymbols(graph, diagnostics, configuration.foreignObjects);
 
   return {
     graph,

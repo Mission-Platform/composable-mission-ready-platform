@@ -6,7 +6,7 @@ import { createFlintHost } from './host.ts';
 import { createFlintMemory, createFlintMultiMemory, FLINT_MEMORY_CAPABILITIES } from './memory.ts';
 
 describe('End-to-End C & Rust Interoperability', () => {
-  it('Scenario 2: compiles Rust cbindgen header, links with Wasm kernel, and executes with zero copy', async () => {
+  it('Scenario 2: compiles Rust cbindgen header, links with Wasm kernel, and executes with zero copy', () => {
     // 1. Rust cbindgen C Header definition
     const rustCbindgenHeader = `
       /* Generated with cbindgen:0.26.0 */
@@ -43,8 +43,9 @@ describe('End-to-End C & Rust Interoperability', () => {
     const parsed = parseFlint(flintApplicationSource, 'app.flint');
     expect(parsed.diagnostics).toEqual([]);
     expect(parsed.module).toBeDefined();
+    if (!parsed.module) throw new Error('Expected parsed module to be defined');
 
-    const manifest = createFlintAbiManifest(parsed.module!);
+    const manifest = createFlintAbiManifest(parsed.module);
     expect(manifest.foreignCapabilities).toBeDefined();
 
     // 4. Instantiate WebAssembly memory and real compiled Wasm scanner kernel
@@ -169,8 +170,9 @@ describe('End-to-End C & Rust Interoperability', () => {
     const parsed = parseFlint(flintSource, 'sqlite_demo.flint');
     expect(parsed.diagnostics).toEqual([]);
     expect(parsed.module).toBeDefined();
+    if (!parsed.module) throw new Error('Expected parsed module to be defined');
 
-    const manifest = createFlintAbiManifest(parsed.module!);
+    const manifest = createFlintAbiManifest(parsed.module);
     expect(manifest.foreignCapabilities).toBeDefined();
     expect(manifest.foreignCapabilities?.[0].library).toBe('sqlite3');
     expect(manifest.foreignCapabilities?.[0].functions.map((function_) => function_.symbol)).toEqual([
@@ -316,7 +318,8 @@ describe('End-to-End C & Rust Interoperability', () => {
     // 3. Parse and create manifest
     const parsed = parseFlint(bindgenResult.flintBindings, 'sqlite3_stmt.flint');
     expect(parsed.diagnostics).toEqual([]);
-    const manifest = createFlintAbiManifest(parsed.module!);
+    if (!parsed.module) throw new Error('Expected parsed module to be defined');
+    const manifest = createFlintAbiManifest(parsed.module);
     expect(manifest.foreignCapabilities).toBeDefined();
 
     // 4. Load real SQLite3 WebAssembly module
@@ -563,7 +566,7 @@ describe('End-to-End C & Rust Interoperability', () => {
         memory_store_u8(pIns + 28, 49); // '1'
         memory_store_u8(pIns + 29, 44); // ','
         memory_store_u8(pIns + 30, 32); // ' '
-        memory_store_u8(pIns + 31, 39); // '\''
+        memory_store_u8(pIns + 31, 39); // "'"
         memory_store_u8(pIns + 32, 97); // 'a'
         memory_store_u8(pIns + 33, 108); // 'l'
         memory_store_u8(pIns + 34, 105); // 'i'
@@ -575,7 +578,7 @@ describe('End-to-End C & Rust Interoperability', () => {
         memory_store_u8(pIns + 40, 105); // 'i'
         memory_store_u8(pIns + 41, 110); // 'n'
         memory_store_u8(pIns + 42, 116); // 't'
-        memory_store_u8(pIns + 43, 39); // '\''
+        memory_store_u8(pIns + 43, 39); // "'"
         memory_store_u8(pIns + 44, 44); // ','
         memory_store_u8(pIns + 45, 32); // ' '
         memory_store_u8(pIns + 46, 57); // '9'
@@ -587,7 +590,7 @@ describe('End-to-End C & Rust Interoperability', () => {
         memory_store_u8(pIns + 52, 50); // '2'
         memory_store_u8(pIns + 53, 44); // ','
         memory_store_u8(pIns + 54, 32); // ' '
-        memory_store_u8(pIns + 55, 39); // '\''
+        memory_store_u8(pIns + 55, 39); // "'"
         memory_store_u8(pIns + 56, 98); // 'b'
         memory_store_u8(pIns + 57, 111); // 'o'
         memory_store_u8(pIns + 58, 98); // 'b'
@@ -596,7 +599,7 @@ describe('End-to-End C & Rust Interoperability', () => {
         memory_store_u8(pIns + 61, 97); // 'a'
         memory_store_u8(pIns + 62, 115); // 's'
         memory_store_u8(pIns + 63, 109); // 'm'
-        memory_store_u8(pIns + 64, 39); // '\''
+        memory_store_u8(pIns + 64, 39); // "'"
         memory_store_u8(pIns + 65, 44); // ','
         memory_store_u8(pIns + 66, 32); // ' '
         memory_store_u8(pIns + 67, 56); // '8'
@@ -723,7 +726,8 @@ describe('End-to-End C & Rust Interoperability', () => {
     expect(flintMemory.wasmMemory).toBe(sqlite3.config.memory);
 
     // 5. Instantiate compiled Flint module passing the runtime memory and foreign SQLite3 capabilities
-    const flintInstance = await WebAssembly.instantiate(compilation.wasm!, {
+    if (!compilation.wasm) throw new Error('Expected compilation.wasm to be defined');
+    const flintInstance = await WebAssembly.instantiate(compilation.wasm, {
       env: {
         memory: flintMemory.wasmMemory,
       },
@@ -823,7 +827,8 @@ describe('End-to-End C & Rust Interoperability', () => {
     const sqlite3 = await sqlite3InitModule();
 
     // 4. Instantiate the compiled Flint WebAssembly module, wiring foreign import to real SQLite3 export
-    const flintInstance = await WebAssembly.instantiate(compilation.wasm!, {
+    if (!compilation.wasm) throw new Error('Expected compilation.wasm to be defined');
+    const flintInstance = await WebAssembly.instantiate(compilation.wasm, {
       sqlite3: {
         sqlite3_libversion_number: sqlite3.wasm.exports.sqlite3_libversion_number,
       },

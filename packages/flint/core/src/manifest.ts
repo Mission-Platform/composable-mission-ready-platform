@@ -683,6 +683,45 @@ function createMemoryLayout(memory64: boolean): FlintMemoryLayout {
   };
 }
 
+const BASE_VALUE_REPRESENTATIONS: Readonly<Record<FlintPrimitiveType, FlintValueRepresentation>> = {
+  bool: 'bool-i32',
+  bytes: 'pointer-length-u32',
+  f32: 'f32',
+  f64: 'f64',
+  i32: 'i32',
+  i64: 'i64',
+  string: 'pointer-length-u32',
+  u32: 'u32',
+  u64: 'u64',
+  unit: 'unit',
+  u8: 'u32',
+  i8: 'i32',
+  c_char: 'i32',
+  c_uchar: 'u32',
+  c_short: 'i32',
+  c_ushort: 'u32',
+  c_int: 'i32',
+  c_uint: 'u32',
+  c_long: 'i32',
+  c_ulong: 'u32',
+  c_longlong: 'i64',
+  c_ulonglong: 'u64',
+  c_size: 'u32',
+  c_ssize: 'i32',
+  c_float: 'f32',
+  c_double: 'f64',
+  c_void: 'unit',
+};
+
+const MEMORY64_VALUE_OVERRIDES: Readonly<Partial<Record<FlintPrimitiveType, FlintValueRepresentation>>> = {
+  bytes: 'pointer-length-u64',
+  string: 'pointer-length-u64',
+  c_long: 'i64',
+  c_ulong: 'u64',
+  c_size: 'u64',
+  c_ssize: 'i64',
+};
+
 /**
  * Creates the value representations mapping for the ABI manifest.
  *
@@ -690,35 +729,8 @@ function createMemoryLayout(memory64: boolean): FlintMemoryLayout {
  * @returns Mapping of primitive types to their binary ABI representation.
  */
 function createValueRepresentations(memory64: boolean): Readonly<Record<FlintPrimitiveType, FlintValueRepresentation>> {
-  return {
-    bool: 'bool-i32',
-    bytes: memory64 ? 'pointer-length-u64' : 'pointer-length-u32',
-    f32: 'f32',
-    f64: 'f64',
-    i32: 'i32',
-    i64: 'i64',
-    string: memory64 ? 'pointer-length-u64' : 'pointer-length-u32',
-    u32: 'u32',
-    u64: 'u64',
-    unit: 'unit',
-    u8: 'u32',
-    i8: 'i32',
-    c_char: 'i32',
-    c_uchar: 'u32',
-    c_short: 'i32',
-    c_ushort: 'u32',
-    c_int: 'i32',
-    c_uint: 'u32',
-    c_long: memory64 ? 'i64' : 'i32',
-    c_ulong: memory64 ? 'u64' : 'u32',
-    c_longlong: 'i64',
-    c_ulonglong: 'u64',
-    c_size: memory64 ? 'u64' : 'u32',
-    c_ssize: memory64 ? 'i64' : 'i32',
-    c_float: 'f32',
-    c_double: 'f64',
-    c_void: 'unit',
-  };
+  if (!memory64) return BASE_VALUE_REPRESENTATIONS;
+  return { ...BASE_VALUE_REPRESENTATIONS, ...MEMORY64_VALUE_OVERRIDES };
 }
 
 /**
@@ -740,6 +752,21 @@ function extractLinkOptions(options: FlintAbiManifestOptions): Partial<FlintAbiM
   };
 }
 
+const STATIC_WASM_TYPES: Readonly<Record<string, string>> = {
+  f32: 'f32',
+  c_float: 'f32',
+  f64: 'f64',
+  c_double: 'f64',
+  i64: 'i64',
+  u64: 'i64',
+  c_longlong: 'i64',
+  c_ulonglong: 'i64',
+  unit: 'void',
+  c_void: 'void',
+};
+
+const POINTER_LIKE_WASM_TYPES = new Set(['CPtr', 'MutCPtr', 'COpaquePtr', 'c_long', 'c_ulong', 'c_size', 'c_ssize']);
+
 /**
  * Maps a Flint type AST node to its corresponding WebAssembly ABI value type.
  *
@@ -749,38 +776,11 @@ function extractLinkOptions(options: FlintAbiManifestOptions): Partial<FlintAbiM
  */
 function toWasmType(type: FlintTypeName, memory64: boolean): string {
   const name = type.reference ?? type.name;
-  if (name === 'CPtr' || name === 'MutCPtr' || name === 'COpaquePtr') {
+  if (STATIC_WASM_TYPES[name]) return STATIC_WASM_TYPES[name];
+  if (POINTER_LIKE_WASM_TYPES.has(name)) {
     return memory64 ? 'i64' : 'i32';
   }
-  switch (name) {
-    case 'f32':
-    case 'c_float': {
-      return 'f32';
-    }
-    case 'f64':
-    case 'c_double': {
-      return 'f64';
-    }
-    case 'i64':
-    case 'u64':
-    case 'c_longlong':
-    case 'c_ulonglong': {
-      return 'i64';
-    }
-    case 'c_long':
-    case 'c_ulong':
-    case 'c_size':
-    case 'c_ssize': {
-      return memory64 ? 'i64' : 'i32';
-    }
-    case 'unit':
-    case 'c_void': {
-      return 'void';
-    }
-    default: {
-      return 'i32';
-    }
-  }
+  return 'i32';
 }
 
 /**
