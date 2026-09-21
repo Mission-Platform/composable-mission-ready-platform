@@ -1,6 +1,6 @@
-# Forge Web Script Compiler Architecture: Sea-of-Nodes Intermediate Representation (SonIR)
+# Flint Compiler Architecture: Sea-of-Nodes Intermediate Representation (SonIR)
 
-This document provides the architectural specification for the **Forge Web Script (`FWS`)** compiler pipeline, focusing on its core intermediate representation: **SonIR** (Sea-of-Nodes IR).
+This document provides the architectural specification for the **Flint** compiler pipeline, focusing on its core intermediate representation: **SonIR** (Sea-of-Nodes IR).
 
 SonIR adapts Cliff Click's Sea-of-Nodes calculus to high-performance WebAssembly compilation. By unifying control flow, pure dataflow, and memory side effects into a single graph with explicit typed ports, SonIR enables aggressive optimization passes—including Global Value Numbering (GVN), Sparse Conditional Constant Propagation (SCCP), Memory SSA Redundant Load Elimination (RLE), Loop-Invariant Code Motion (LICM), and Compile-Time Bounds Proof Elimination.
 
@@ -8,11 +8,11 @@ SonIR adapts Cliff Click's Sea-of-Nodes calculus to high-performance WebAssembly
 
 ## 1. High-Level Compilation Pipeline
 
-The FWS compiler pipeline transforms high-level Forge Web Script source code into verified, capability-attenuated WebAssembly:
+The Flint compiler pipeline transforms high-level Flint source code into verified, capability-attenuated WebAssembly:
 
 ```mermaid
 flowchart TD
-    Source["FWS Source Code (.fws)"] --> Lexer["Lexer & Tokenizer"]
+    Source["Flint Source Code (.flint)"] --> Lexer["Lexer & Tokenizer"]
     Lexer --> Parser["AST Parser (ast.ts)"]
     Parser --> TypeChecker["Type Checker & Inference (type-checker.ts)"]
     TypeChecker --> SemanticAnalysis["Capability & Purity Analysis"]
@@ -91,12 +91,12 @@ flowchart LR
 
 ## 3. Node Anatomy & TypeScript Representation
 
-Within `@mission-platform/forge-web-script`, nodes are represented by the `ForgeWebScriptSoNNode` interface and serialized into deterministic `.sonir.json` module artifacts.
+Within `@mission-platform/flint`, nodes are represented by the `FlintSoNNode` interface and serialized into deterministic `.sonir.json` module artifacts.
 
 ### 3.1 Node Interface Structure
 
 ```typescript
-export interface ForgeWebScriptSoNNode {
+export interface FlintSoNNode {
   /** Unique sequential identifier within the compilation unit */
   readonly id: number;
   /** Operation classification (e.g., 'start', 'constant', 'load', 'store', 'region', 'if', 'return') */
@@ -106,11 +106,11 @@ export interface ForgeWebScriptSoNNode {
   /** Input node dependencies (in SonIR 2.0 partitioned into control, memory, and value inputs) */
   readonly inputs: readonly number[];
   /** Effect classifications: 'pure' | 'read' | 'write' | 'call' | 'control' | 'allocation' | 'unknown' */
-  readonly effects: readonly ForgeWebScriptSoNEffect[];
+  readonly effects: readonly FlintSoNEffect[];
   /** Alias analysis classification: 'none' | 'local' | 'borrowed' | 'mutable' | 'unknown' */
-  readonly alias: ForgeWebScriptSoNAliasFact;
+  readonly alias: FlintSoNAliasFact;
   /** Affine ownership classification: 'value' | 'borrowed' | 'owned' | 'shared' | 'unknown' */
-  readonly ownership: ForgeWebScriptSoNOwnershipFact;
+  readonly ownership: FlintSoNOwnershipFact;
   /** Value type representation (e.g., 'i32', 'f64', 'bool', 'ptr', 'v128') */
   readonly type?: string;
   /** Literal constant payload */
@@ -118,7 +118,7 @@ export interface ForgeWebScriptSoNNode {
   /** Callee name for call nodes */
   readonly callee?: string;
   /** Source span provenance for diagnostics and debugging */
-  readonly span?: ForgeWebScriptSourceSpan;
+  readonly span?: FlintSourceSpan;
 }
 ```
 
@@ -173,9 +173,9 @@ The optimizer proves that a `Store` to $P_2$ cannot alter the contents of $P_1$.
 
 ## 5. End-to-End Transformation Example: Conditional Memory Mutation
 
-To illustrate how high-level code maps to SonIR, undergoes optimization, and lowers to Wasm, consider this FWS function:
+To illustrate how high-level code maps to SonIR, undergoes optimization, and lowers to Wasm, consider this Flint function:
 
-```fws
+```flint
 fn compute(x: i32, ptr: &mut i32) -> i32 {
   if x > 10 {
     *ptr = x * 2;
@@ -420,7 +420,7 @@ graph TD
 
 ## 7. Artifact Schema & Tooling Integration
 
-Every compiled FWS module emits its verified SonIR graph alongside Wasm binaries:
+Every compiled Flint module emits its verified SonIR graph alongside Wasm binaries:
 
 - Artifact path convention: `<target>.sonir.json`
-- Tools such as `mcp_mission-platform_fws_inspect_sonir` and `mcp_mission-platform_fws_verify_artifact` inspect this artifact to verify bounds checks, graph hashes, and capability compliance before deployment to sandboxes.
+- Tools such as `mcp_mission-platform_flint_inspect_sonir` and `mcp_mission-platform_flint_verify_artifact` inspect this artifact to verify bounds checks, graph hashes, and capability compliance before deployment to sandboxes.
