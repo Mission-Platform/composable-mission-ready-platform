@@ -146,6 +146,20 @@ function findSpanInLowered(lowered: unknown): SourceSpan | undefined {
 }
 
 /**
+ * Resolves a span from an optional record using an extractor.
+ *
+ * @param candidate - Candidate value.
+ * @param extractor - Function to extract span from record.
+ * @returns SourceSpan or undefined.
+ */
+function resolveSubstructureSpan(
+  candidate: unknown,
+  extractor: (record: Record<string, unknown>) => SourceSpan | undefined,
+): SourceSpan | undefined {
+  return isRecord(candidate) ? extractor(candidate) : undefined;
+}
+
+/**
  * Finds a source span within child compiler records.
  *
  * @param value - Parent record to inspect.
@@ -154,16 +168,12 @@ function findSpanInLowered(lowered: unknown): SourceSpan | undefined {
 function findSpanInSubstructures(
   value: Record<string, unknown>,
 ): SourceSpan | undefined {
-  if (isRecord(value.module)) {
-    return findActionableSpan(value.module);
-  }
-  if (isRecord(value.ast)) {
-    return findSpanInAst(value.ast);
-  }
-  if (isRecord(value.intentions)) {
-    return findSpanInIntentions(value.intentions);
-  }
-  return findSpanInLowered(value.lowered);
+  return (
+    resolveSubstructureSpan(value.module, findActionableSpan) ??
+    resolveSubstructureSpan(value.ast, findSpanInAst) ??
+    resolveSubstructureSpan(value.intentions, findSpanInIntentions) ??
+    findSpanInLowered(value.lowered)
+  );
 }
 
 /** Recursively search for an actionable source span within intentions or their AST facts. */
@@ -423,7 +433,7 @@ const SCHEMA_TYPE_VALIDATORS: Record<
 > = {
   string: (value) => typeof value === "string",
   "non-empty-string": (value) => typeof value === "string" && value.length > 0,
-  object: isRecord,
+  object: (value) => isRecord(value) && !Array.isArray(value),
   array: Array.isArray,
   boolean: (value) => typeof value === "boolean",
 };

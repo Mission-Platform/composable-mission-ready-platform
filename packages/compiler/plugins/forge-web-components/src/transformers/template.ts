@@ -901,7 +901,7 @@ function resolvePropertyPrefix(
  */
 function formatSpreadAttributeEntry(
   attribute: Extract<GenericAttribute, { kind: "jsx-spread-attribute" }>,
-  scope: unknown,
+  scope: TemplateContext["scope"],
 ): string | undefined {
   return attribute.expression !== undefined
     ? `...${rewriteExpressionText(attribute.expression.text, scope)}`
@@ -1312,7 +1312,7 @@ function domSlotExpression(
  */
 function resolveDynamicTagExpression(
   tag: GenericRenderNode["tag"],
-  scope: unknown,
+  scope: TemplateContext["scope"],
 ): string {
   return typeof tag === "string"
     ? JSON.stringify(tag)
@@ -1452,6 +1452,9 @@ function domSpecialNodeExpression(
   if (isFragmentOrTeleport(node)) {
     return `[${renderChildrenExpressionList(node.children, childContext)}]`;
   }
+  if (typeof node.tag !== "string") {
+    return undefined;
+  }
   return domSpecialTaggedExpression(node.tag, node, context, childContext);
 }
 
@@ -1561,7 +1564,7 @@ function resolveStaticAttrPrefix(
 function applyStaticSpreadAttribute(
   attribute: Extract<GenericAttribute, { kind: "jsx-spread-attribute" }>,
   variable: string,
-  scope: unknown,
+  scope: TemplateContext["scope"],
   builder: DomTemplateBuilder,
 ): void {
   if (attribute.expression !== undefined) {

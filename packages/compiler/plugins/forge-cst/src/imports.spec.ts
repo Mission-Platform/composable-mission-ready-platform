@@ -327,6 +327,39 @@ import { Button } from '@mission-platform/ui';
 `);
   });
 
+  it("throws when dynamic import matches conflicting replacement modules or removal", () => {
+    const source = `export async function loadRouter() {
+  const router = await import('@mission-platform/router');
+  return router;
+}
+`;
+
+    expect(() => {
+      rewriteImportsWithCst(source, {
+        rewrites: [
+          {
+            targetModule: "@mission-platform/router",
+            replacementModule: "package-a",
+          },
+          {
+            targetModule: "@mission-platform/router",
+            replacementModule: "package-b",
+          },
+        ],
+      });
+    }).toThrow("conflicting replacements");
+
+    expect(() => {
+      rewriteImportsWithCst(source, {
+        rewrites: [
+          {
+            targetModule: "@mission-platform/router",
+          },
+        ],
+      });
+    }).toThrow("no replacement or removal");
+  });
+
   it("throws SyntaxError when input source cannot be parsed", () => {
     const invalidSource =
       "import { from '@mission-platform/router' incomplete syntax ;;;;; {{{";

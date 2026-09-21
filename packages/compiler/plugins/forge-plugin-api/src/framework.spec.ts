@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   assertTargetIntentionsLowered,
   defineForgeOutputPlugin,
+  findActionableSpan,
   formatCompilerDiagnostic,
   frameworkForDirective,
   semanticModuleSchema,
@@ -658,6 +659,33 @@ describe("Forge output-plugin API", () => {
       expect(
         loweredIssues.some((issue) => issue.path === "appliedOptimizations"),
       ).toBe(true);
+
+      const arrayAsObjectIssues = validateAgainstSchema(
+        { kind: "semantic-module", module: [] },
+        {
+          name: "TestSchema",
+          rules: [{ path: "module", type: "object", required: true }],
+        },
+      );
+      expect(arrayAsObjectIssues.length).toBeGreaterThan(0);
+      expect(arrayAsObjectIssues[0]?.message).toContain(
+        'field "module" must be of type object.',
+      );
+    });
+
+    it("chains substructure lookups to locate span when module yields no span", () => {
+      const fallbackSpan = { start: 15, end: 25, line: 2, column: 4 };
+      const intentionsWithoutModuleSpan = {
+        module: { kind: "semantic-module" },
+        ast: {
+          span: fallbackSpan,
+          renderNodes: [],
+          declarations: [],
+        },
+      };
+
+      const span = findActionableSpan(intentionsWithoutModuleSpan);
+      expect(span).toEqual(fallbackSpan);
     });
   });
 });

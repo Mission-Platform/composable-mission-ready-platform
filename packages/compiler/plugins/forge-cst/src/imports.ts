@@ -241,6 +241,48 @@ function parseSpecifiersFromDeclaration(
 }
 
 /**
+ * Checks whether a rule matches the given parsed specifier.
+ *
+ * @param rule - Candidate mapping rule.
+ * @param item - Parsed import specifier.
+ * @returns True if rule matches the specifier.
+ */
+function matchesRule(
+  rule: {
+    readonly importedName: string;
+    readonly localName?: string;
+    readonly sourceName?: string;
+  },
+  item: ParsedSpecifier,
+): boolean {
+  if (rule.sourceName !== undefined) {
+    return rule.sourceName === item.importedName;
+  }
+  return (
+    rule.localName === item.importedName ||
+    rule.localName === item.localName ||
+    rule.importedName === item.importedName
+  );
+}
+
+/**
+ * Resolves the remapped local name for a matched specifier.
+ *
+ * @param item - Parsed import specifier.
+ * @param ruleLocalName - Optional local alias from mapping rule.
+ * @returns Resolved local identifier name.
+ */
+function resolveRemappedLocalName(
+  item: ParsedSpecifier,
+  ruleLocalName?: string,
+): string {
+  if (item.localName !== item.importedName) {
+    return item.localName;
+  }
+  return ruleLocalName ?? item.localName;
+}
+
+/**
  * Maps a single parsed specifier against rewrite rules.
  *
  * @param item - Parsed import specifier.
@@ -255,22 +297,39 @@ function mapSpecifierWithRules(
     readonly sourceName?: string;
   }[],
 ): ParsedSpecifier | undefined {
-  const mapping = rules.find((m) =>
-    m.sourceName === undefined
-      ? m.localName === item.importedName ||
-        m.localName === item.localName ||
-        m.importedName === item.importedName
-      : m.sourceName === item.importedName,
-  );
+  const mapping = rules.find((rule) => matchesRule(rule, item));
   if (!mapping) return undefined;
   return {
     ...item,
     importedName: mapping.importedName,
-    localName:
-      item.localName === item.importedName
-        ? (mapping.localName ?? item.localName)
-        : item.localName,
+    localName: resolveRemappedLocalName(item, mapping.localName),
   };
+}
+
+/**
+ * Resolves the initial array of kept specifiers prior to usage-based pruning.
+ *
+ * @param parsed - Parsed specifiers.
+ * @param moduleSpecs - Specifications for the module.
+ * @param totalModules - Total number of target modules.
+ * @returns Array of kept specifiers.
+ */
+function resolveInitialKeptSpecifiers(
+  parsed: readonly ParsedSpecifier[],
+  moduleSpecs: readonly ImportRewriteSpec[],
+  totalModules: number,
+): ParsedSpecifier[] {
+  const hasDefinedSpecifiers = moduleSpecs.some(
+    (sp) => sp.specifiers !== undefined,
+  );
+  if (hasDefinedSpecifiers) {
+    const rules = moduleSpecs.flatMap((sp) => sp.specifiers ?? []);
+    return parsed.flatMap((item) => {
+      const mapped = mapSpecifierWithRules(item, rules);
+      return mapped ? [mapped] : [];
+    });
+  }
+  return totalModules === 1 ? [...parsed] : [];
 }
 
 /**
@@ -288,31 +347,123 @@ function filterKeptSpecifiers(
   totalModules: number,
   referencedIdentifiers?: Set<string>,
 ): ParsedSpecifier[] {
-  const hasDefinedSpecifiers = moduleSpecs.some(
-    (sp) => sp.specifiers !== undefined,
+  const keptSpecifiers = resolveInitialKeptSpecifiers(
+    parsed,
+    moduleSpecs,
+    totalModules,
   );
-
-  let keptSpecifiers: ParsedSpecifier[];
-  if (hasDefinedSpecifiers) {
-    const rules = moduleSpecs.flatMap((sp) => sp.specifiers ?? []);
-    keptSpecifiers = parsed.flatMap((item) => {
-      const mapped = mapSpecifierWithRules(item, rules);
-      return mapped ? [mapped] : [];
-    });
-  } else if (totalModules === 1) {
-    keptSpecifiers = [...parsed];
-  } else {
-    keptSpecifiers = [];
-  }
-
   const hasRemoveUnused = moduleSpecs.some((sp) => sp.removeUnused);
-  if (hasRemoveUnused && referencedIdentifiers) {
-    keptSpecifiers = keptSpecifiers.filter((item) =>
-      referencedIdentifiers.has(item.localName),
-    );
+  if (!hasRemoveUnused || !referencedIdentifiers) {
+    return keptSpecifiers;
+  }
+  return keptSpecifiers.filter((item) =>
+    referencedIdentifiers.has(item.localName),
+  );
+}
+
+/**
+ * Formats named specifiers into a curly-brace import clause.
+ *
+ * @param namedSpecs - Named import specifiers.
+ * @param isTypeOnly - Whether the import declaration is type-only.
+ * @returns Formatted curly-brace clause or undefined if empty.
+ */
+function formatNamedSpecifiersClause(
+  namedSpecs: readonly ParsedSpecifier[],
+  isTypeOnly: boolean,
+): string | undefined {
+  if (namedSpecs.length === 0) {
+    return undefined;
+  }
+  const namedStrings = namedSpecs.map((item) => {
+    const inlineType = !isTypeOnly && item.typeOnly ? "type " : "";
+    if (item.localName === item.importedName) {
+      return `${inlineType}${item.importedName}`;
+    }
+    return `${inlineType}${item.importedName} as ${item.localName}`;
+  });
+  return `{ ${namedStrings.join(", ")} }`;
+}
+
+/**
+ * Finds the default specifier local identifier if present.
+ *
+ * @param keptSpecifiers - List of kept specifiers.
+ * @returns Local identifier or undefined.
+ */
+function findDefaultSpecifierClause(
+  keptSpecifiers: readonly ParsedSpecifier[],
+): string | undefined {
+  const defaultSpec = keptSpecifiers.find(
+    (item) => item.kind === "default" || item.importedName === "default",
+  );
+  return defaultSpec?.localName;
+}
+
+/**
+ * Finds the namespace specifier import clause if present.
+ *
+ * @param keptSpecifiers - List of kept specifiers.
+ * @returns Formatted namespace clause or undefined.
+ */
+function findNamespaceSpecifierClause(
+  keptSpecifiers: readonly ParsedSpecifier[],
+): string | undefined {
+  const namespaceSpec = keptSpecifiers.find(
+    (item) => item.kind === "namespace" || item.importedName === "*",
+  );
+  return namespaceSpec ? `* as ${namespaceSpec.localName}` : undefined;
+}
+
+/**
+ * Finds the named specifiers clause if present.
+ *
+ * @param keptSpecifiers - List of kept specifiers.
+ * @param isTypeOnly - Whether the import declaration is type-only.
+ * @returns Formatted named specifiers clause or undefined.
+ */
+function findNamedSpecifiersClause(
+  keptSpecifiers: readonly ParsedSpecifier[],
+  isTypeOnly: boolean,
+): string | undefined {
+  const namedSpecs = keptSpecifiers.filter(
+    (item) =>
+      item.kind === "named" &&
+      item.importedName !== "default" &&
+      item.importedName !== "*",
+  );
+  return formatNamedSpecifiersClause(namedSpecs, isTypeOnly);
+}
+
+/**
+ * Collects formatted import specifier clauses for the statement.
+ *
+ * @param keptSpecifiers - Filtered import specifiers.
+ * @param isTypeOnly - Whether declaration is type-only.
+ * @returns Array of formatted import clause segments.
+ */
+function collectImportClauseParts(
+  keptSpecifiers: readonly ParsedSpecifier[],
+  isTypeOnly: boolean,
+): string[] {
+  const parts: string[] = [];
+
+  const defaultClause = findDefaultSpecifierClause(keptSpecifiers);
+  if (defaultClause) {
+    parts.push(defaultClause);
   }
 
-  return keptSpecifiers;
+  const namespaceClause = findNamespaceSpecifierClause(keptSpecifiers);
+  if (namespaceClause) {
+    parts.push(namespaceClause);
+  }
+
+  const namedClause = findNamedSpecifiersClause(keptSpecifiers, isTypeOnly);
+  if (namedClause) {
+    parts.push(namedClause);
+  }
+
+  return parts;
 }
 
 /**
@@ -331,39 +482,7 @@ function buildImportStatement(
   quote: string,
 ): string {
   const typePrefix = isTypeOnly ? "type " : "";
-  const parts: string[] = [];
-
-  const defaultSpec = keptSpecifiers.find(
-    (item) => item.kind === "default" || item.importedName === "default",
-  );
-  if (defaultSpec) {
-    parts.push(defaultSpec.localName);
-  }
-
-  const namespaceSpec = keptSpecifiers.find(
-    (item) => item.kind === "namespace" || item.importedName === "*",
-  );
-  if (namespaceSpec) {
-    parts.push(`* as ${namespaceSpec.localName}`);
-  }
-
-  const namedSpecs = keptSpecifiers.filter(
-    (item) =>
-      item.kind === "named" &&
-      item.importedName !== "default" &&
-      item.importedName !== "*",
-  );
-  if (namedSpecs.length > 0) {
-    const namedStrings = namedSpecs.map((item) => {
-      const inlineType = !isTypeOnly && item.typeOnly ? "type " : "";
-      if (item.localName === item.importedName) {
-        return `${inlineType}${item.importedName}`;
-      }
-      return `${inlineType}${item.importedName} as ${item.localName}`;
-    });
-    parts.push(`{ ${namedStrings.join(", ")} }`);
-  }
-
+  const parts = collectImportClauseParts(keptSpecifiers, isTypeOnly);
   return `import ${typePrefix}${parts.join(", ")} from ${quote}${replacementModule}${quote};`;
 }
 
@@ -588,6 +707,40 @@ function rewriteStaticImportDeclaration(
 }
 
 /**
+ * Resolves the single valid replacement module for a dynamic import request.
+ *
+ * @param matchingSpecs - Specifications matching the dynamic import target.
+ * @param unquoted - Unquoted module request string.
+ * @returns The unique replacement module identifier.
+ */
+function resolveDynamicReplacementModule(
+  matchingSpecs: readonly ImportRewriteSpec[],
+  unquoted: string,
+): string {
+  const replacementModules = [
+    ...new Set(
+      matchingSpecs
+        .map((spec) => spec.replacementModule)
+        .filter(
+          (moduleName): moduleName is string =>
+            typeof moduleName === "string" && moduleName.length > 0,
+        ),
+    ),
+  ];
+  const hasRemoval = matchingSpecs.some((s) => !s.replacementModule);
+  if (replacementModules.length !== 1 || hasRemoval) {
+    throw new Error(
+      `Dynamic import("${unquoted}") cannot be rewritten: expected exactly one distinct replacementModule without removals, but found ${
+        replacementModules.length === 0
+          ? "no replacement or removal"
+          : `conflicting replacements (${replacementModules.join(", ")})`
+      }.`,
+    );
+  }
+  return replacementModules[0];
+}
+
+/**
  * Rewrites a single dynamic import if matching rewrite specifications exist.
  *
  * @param dyn - Dynamic import metadata.
@@ -606,18 +759,24 @@ function rewriteSingleDynamicImport(
 ): boolean {
   const raw = source.slice(dyn.moduleRequest.start, dyn.moduleRequest.end);
   const unquoted = raw.replaceAll(/^['"`]|['"`]$/g, "");
-  const spec = specs.find((candidate) => candidate.targetModule === unquoted);
-  if (!spec?.replacementModule) {
+  const matchingSpecs = specs.filter(
+    (candidate) => candidate.targetModule === unquoted,
+  );
+  if (matchingSpecs.length === 0) {
     return false;
   }
 
+  const replacementModule = resolveDynamicReplacementModule(
+    matchingSpecs,
+    unquoted,
+  );
   const quote = raw[0];
   const validQuote =
     quote === "'" || quote === '"' || quote === "`" ? quote : "'";
   magicString.overwrite(
     dyn.moduleRequest.start,
     dyn.moduleRequest.end,
-    `${validQuote}${spec.replacementModule}${validQuote}`,
+    `${validQuote}${replacementModule}${validQuote}`,
   );
   return true;
 }
