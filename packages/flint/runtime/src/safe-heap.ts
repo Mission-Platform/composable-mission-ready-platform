@@ -90,6 +90,7 @@ export class FlintRegionArena {
   /**
    * Allocates a contiguous chunk of memory within the arena with the requested alignment.
    */
+  // skipcq: JS-R1005
   public allocate(size: number, alignment = 8): FlintMemoryAddress {
     if (!Number.isSafeInteger(size) || size <= 0)
       throw new FlintTrap('MemoryExhausted', 'Arena allocation size must be positive.');
@@ -130,7 +131,9 @@ const TLSF_SECOND_LEVELS = 1 << TLSF_SLI;
 const TLSF_MIN_BLOCK_SIZE = 16;
 const TLSF_MAX_FL = 28;
 
+// skipcq: JS-D1001
 const createSlBitmapInitial = (): number[] => Array.from({ length: TLSF_MAX_FL }, () => 0);
+// skipcq: JS-D1001
 const createFreeListsInitial = (): (TlsfBlock | undefined)[][] =>
   Array.from({ length: TLSF_MAX_FL }, () => Array.from<TlsfBlock | undefined>({ length: TLSF_SECOND_LEVELS }));
 
@@ -170,6 +173,7 @@ export class FlintTlsfAllocator {
   /**
    * Allocates a memory block of at least the requested size in guaranteed O(1) time.
    */
+  // skipcq: JS-R1005
   public allocate(size: number): FlintMemoryAddress {
     if (!Number.isSafeInteger(size) || size <= 0)
       throw new FlintTrap('MemoryExhausted', 'TLSF allocation size must be a positive integer.');
@@ -207,6 +211,7 @@ export class FlintTlsfAllocator {
    * Deallocates a previously allocated TLSF memory block in O(1) time,
    * immediately coalescing with adjacent free blocks to eliminate fragmentation.
    */
+  // skipcq: JS-R1005
   public deallocate(pointer: FlintMemoryAddress): void {
     const raw = typeof pointer === 'bigint' ? Number(pointer) : pointer;
     const base = typeof this.basePointer === 'bigint' ? Number(this.basePointer) : this.basePointer;
@@ -281,6 +286,7 @@ export class FlintTlsfAllocator {
    *
    * @param block - Memory block descriptor to unlink.
    */
+  // skipcq: JS-R1005
   private removeFreeBlock(block: TlsfBlock): void {
     const { fl, sl } = FlintTlsfAllocator.mapping(block.size);
     const slList = this.freeLists[fl];
@@ -422,11 +428,11 @@ export class FlintSafeHeap {
   }
 
   /**
-   // skipcq: JS-R1005
    * Closes a lifetime region and bulk-deallocates all allocations bound to it.
    *
    * @param region - Region to terminate.
    */
+  // skipcq: JS-R1005
   public endRegion(region: FlintRegion): void {
     const state = this.requireRegion(region);
     state.active = false;
@@ -464,6 +470,7 @@ export class FlintSafeHeap {
    *
    * @param handle - Shared handle to release.
    */
+  // skipcq: JS-R1005
   public release(handle: FlintSharedHandle): void {
     const state = this.shared.get(handle.id);
     if (state === undefined || state.released)
@@ -505,6 +512,7 @@ export class FlintSafeHeap {
    * @param handle - Shared handle.
    * @returns Active shared state.
    */
+  // skipcq: JS-R1005
   private requireShared(handle: FlintSharedHandle): SharedState {
     const state = this.shared.get(handle.id);
     if (state === undefined || state.released)

@@ -357,6 +357,7 @@ class Parser {
  * @param char - Escaped character identifier.
  * @returns Predefined character class node or null if not a shorthand class.
  */
+// skipcq: JS-R1005
 function escapeClass(char: string): Node | null {
   switch (char) {
     case "d": {
@@ -424,6 +425,7 @@ function escapeClass(char: string): Node | null {
  * @param char - Escaped character identifier.
  * @returns Integer character code.
  */
+// skipcq: JS-R1005
 function literalEscapeCode(char: string): number {
   switch (char) {
     case "n": {

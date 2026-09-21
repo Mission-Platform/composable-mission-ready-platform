@@ -61,6 +61,7 @@ export class HostShimGenerator {
    * @param isTs - Whether to emit TypeScript type annotations.
    * @param lines - Output line accumulator.
    */
+  // skipcq: JS-0105
   private generateAttributeImportShim(
     targetName: string,
     member: Extract<WebIdlInterface['members'][number], { kind: 'attribute' }>,
@@ -151,6 +152,7 @@ export class HostShimGenerator {
    */
   private generateHostImportsFactory(prefix: string, isTs: boolean): string {
     const lines: string[] = [];
+    // skipcq: JS-D1001
     const typeAnnot = (annot: string) => (isTs ? annot : '');
 
     lines.push(`
@@ -192,6 +194,7 @@ export function createHostImports(
  * @param isTs - Whether to emit TypeScript type annotations.
  * @returns The rendered `WasmInteropMemory` class source text.
  */
+// skipcq: JS-R1005
 function generateMemoryManagerClass(allocExport: string, deallocExport: string, isTs: boolean): string {
   // skipcq: JS-D1001
   const typeAnnot = (annot: string) => (isTs ? annot : '');

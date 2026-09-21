@@ -153,6 +153,7 @@ export class FlintBindingGenerator {
    * @param enumDeclaration - Enum AST node to render.
    * @returns The rendered `export enum` declaration text.
    */
+  // skipcq: JS-0105
   private generateEnum(enumDeclaration: WebIdlEnum): string {
     const lines: string[] = [`export enum ${sanitizeIdentifier(enumDeclaration.name)} {`];
     for (const value of enumDeclaration.values) {

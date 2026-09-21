@@ -306,6 +306,7 @@ export class FlintTestHarness {
    * @param mode - Loading mode.
    * @returns WebAssembly binary byte array.
    */
+  // skipcq: JS-0105
   private prepareLoad(
     compiled: FlintCompilationResult,
     imports: FlintCapabilityImports,

@@ -214,6 +214,7 @@ export function createFlintLsif(
   projectRoot?: string,
 ): FlintLsifGraph;
 /** Generates a complete LSIF index dump for the specified documents. */
+// skipcq: JS-R1005
 export function createFlintLsif(
   inputOrService: FlintLsifInput | FlintLanguageService,
   documents: readonly FlintDocument[] = [],

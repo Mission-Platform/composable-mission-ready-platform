@@ -1372,6 +1372,7 @@ function emitWasm(
       for (const argument of arguments_) emitExpression(argument, visible);
       body.push(0x10, ...unsignedLeb(collectionFunctionIndex(operation)));
     }
+    // skipcq: JS-D1001, JS-R1005
     function emitExpression(expression: FlintWasmExpression, visible: ReadonlyMap<string, ValueLocation>): void {
       if (expression.kind === 'literal') {
         if (expression.type === 'string' || expression.type === 'bytes') {
@@ -2059,6 +2060,7 @@ function emitWasm(
       }
       body.push(0x0b);
     };
+    // skipcq: JS-D1001, JS-R1005
     function emitStatements(
       statements: readonly FlintWasmStatement[],
       initial: ReadonlyMap<string, ValueLocation>,

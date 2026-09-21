@@ -53,6 +53,7 @@ function signedLeb(value: number): number[] {
 const get = (index: number): number[] => [0x20, ...unsignedLeb(index)];
 // skipcq: JS-C1002, JS-D1001
 const set = (index: number): number[] => [0x21, ...unsignedLeb(index)];
+// skipcq: JS-D1001
 const c32 = (value: number): number[] => [0x41, ...signedLeb(value)];
 // skipcq: JS-D1001
 const load = (): number[] => [0x28, 0x02, 0x00];

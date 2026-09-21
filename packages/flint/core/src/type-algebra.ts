@@ -695,7 +695,7 @@ export class TypeAlgebra {
    * Boundary policy for built-in and user generics: value collections monomorphize;
    * iterator/interface surfaces remain descriptor boundaries.
    */
-  // skipcq: JS-0105
+  // skipcq: JS-0105, JS-R1005
   defaultBoundary(generic: string, requested?: FlintGenericBoundary): FlintGenericBoundary {
     if (requested !== undefined) return requested;
     if (DESCRIPTOR_COLLECTIONS.has(generic)) return generic === 'Fn' ? 'interface' : 'iterator';

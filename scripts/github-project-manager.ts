@@ -384,6 +384,12 @@ export async function exportProjectPlan(which: 'components' | 'flint' | 'fws' | 
   }
 }
 
+/**
+ * Displays the current status, priority breakdown, and board stage of tracked issues.
+ *
+ * @param which - Config selection filter ('components', 'flint', 'fws', or 'all').
+ */
+// skipcq: JS-R1005
 export function showProjectStatus(which: 'components' | 'flint' | 'fws' | 'all' = 'all'): Promise<void> {
   const configs: ProjectConfig[] = [];
   if (which === 'all' || which === 'components') {

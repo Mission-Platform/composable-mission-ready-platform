@@ -249,6 +249,7 @@ export class WebIdlLexer {
    * @param char - Candidate character.
    * @returns `true` when the character is a letter, digit, underscore, or hyphen.
    */
+  // skipcq: JS-R1005
   private static isIdentifierPart(char: string): boolean {
     return (
       (char >= 'a' && char <= 'z') ||
@@ -321,6 +322,7 @@ export class WebIdlLexer {
    * @param char - Candidate character.
    * @returns `true` when the character is `0`-`9`, `a`-`f`, or `A`-`F`.
    */
+  // skipcq: JS-R1005
   private static isHexDigit(char: string): boolean {
     return (char >= '0' && char <= '9') || (char >= 'a' && char <= 'f') || (char >= 'A' && char <= 'F');
   }

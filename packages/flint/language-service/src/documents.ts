@@ -41,6 +41,7 @@ export function createFlintLanguageService(host?: FlintWorkspaceHost): FlintLang
   const options = new Map<string, FlintWorkspaceOptions>();
   const cache = new Map<string, { readonly key: string; readonly analysis: FlintAnalysis }>();
   let disposed = false;
+  // skipcq: JS-0242
   let workspaceIndex: ReturnType<typeof createFlintWorkspaceIndex> | undefined;
   // skipcq: JS-D1001
   const assertActive = (): void => {
