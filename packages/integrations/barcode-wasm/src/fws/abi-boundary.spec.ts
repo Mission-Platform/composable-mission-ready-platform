@@ -1,18 +1,18 @@
 import { describe, expect, it } from 'vitest';
 
-import { load as loadBarcode, loadSync as loadBarcodeSync, manifest as barcodeManifest } from './barcode.fws';
-import { load as loadCodabar, loadSync as loadCodabarSync, manifest as codabarManifest } from './codabar.fws';
-import { load as loadCode128, loadSync as loadCode128Sync, manifest as code128Manifest } from './code128.fws';
-import { load as loadCode39, loadSync as loadCode39Sync, manifest as code39Manifest } from './code39.fws';
-import { load as loadCode93, loadSync as loadCode93Sync, manifest as code93Manifest } from './code93.fws';
-import { load as loadDataBar, loadSync as loadDataBarSync, manifest as dataBarManifest } from './databar.fws';
-import { load as loadItf, loadSync as loadItfSync, manifest as itfManifest } from './itf.fws';
-import { load as loadMsi, loadSync as loadMsiSync, manifest as msiManifest } from './msi.fws';
+import { load as loadBarcode, loadSync as loadBarcodeSync, manifest as barcodeManifest } from './barcode.flint';
+import { load as loadCodabar, loadSync as loadCodabarSync, manifest as codabarManifest } from './codabar.flint';
+import { load as loadCode128, loadSync as loadCode128Sync, manifest as code128Manifest } from './code128.flint';
+import { load as loadCode39, loadSync as loadCode39Sync, manifest as code39Manifest } from './code39.flint';
+import { load as loadCode93, loadSync as loadCode93Sync, manifest as code93Manifest } from './code93.flint';
+import { load as loadDataBar, loadSync as loadDataBarSync, manifest as dataBarManifest } from './databar.flint';
+import { load as loadItf, loadSync as loadItfSync, manifest as itfManifest } from './itf.flint';
+import { load as loadMsi, loadSync as loadMsiSync, manifest as msiManifest } from './msi.flint';
 import {
   load as loadPharmacode,
   loadSync as loadPharmacodeSync,
   manifest as pharmacodeManifest,
-} from './pharmacode.fws';
+} from './pharmacode.flint';
 
 interface AbiManifest {
   readonly exports: readonly { readonly name: string }[];
@@ -72,7 +72,7 @@ function expectAbiBoundary(graph: BarcodeGraph, loaded: LoadedExports): void {
   }
 }
 
-describe('barcode FWS ABI boundaries', () => {
+describe('barcode Flint ABI boundaries', () => {
   it('exposes only declared functions and runtime support through synchronous loaders', () => {
     for (const graph of barcodeGraphs) {
       expectAbiBoundary(graph, graph.loadSync());

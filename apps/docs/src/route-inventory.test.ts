@@ -33,8 +33,8 @@ describe('documentation route inventory', () => {
   });
 
   it('discovers documentation for the DAP package', () => {
-    expect(roots.some((root) => root.routePrefix === 'packages/compiler/forge/forge-web-script-dap')).toBe(true);
-    expect(slugs).toContain('packages/compiler/forge/forge-web-script-dap/reference/generated/api');
+    expect(roots.some((root) => root.routePrefix === 'packages/flint/dap')).toBe(true);
+    expect(slugs).toContain('packages/flint/dap/reference/generated/api');
   });
 
   it('uses one ownership parser for root, nested package, and unsupported paths', () => {
@@ -42,8 +42,8 @@ describe('documentation route inventory', () => {
       workspaceDirectory: '',
       documentPath: 'overview.md',
     });
-    expect(parseWorkspaceDocumentationPath('extensions/fws-vscode/server/dap/docs/reference/api.md')).toEqual({
-      workspaceDirectory: 'extensions/fws-vscode/server/dap',
+    expect(parseWorkspaceDocumentationPath('extensions/flint-vscode/server/dap/docs/reference/api.md')).toEqual({
+      workspaceDirectory: 'extensions/flint-vscode/server/dap',
       documentPath: 'reference/api.md',
     });
     expect(parseWorkspaceDocumentationPath('apps/website/docs/index.md')).toBeUndefined();

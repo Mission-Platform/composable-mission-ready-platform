@@ -818,18 +818,18 @@ export interface WysiwygEditorProperties
 
 لم يتم تقديم أي وصف.
 
-## `src/monaco/forge-web-script`
+## `src/monaco/flint`
 
-### AttachForgeWebScriptMonaco
+### AttachFlintMonaco
 
 **النوع:** الوظيفة
 
 ```typescript
-function attachForgeWebScriptMonaco(
+function attachFlintMonaco(
   editor: monaco.editor.IStandaloneCodeEditor,
   monacoRuntime: MonacoRuntime,
-  options: ForgeWebScriptMonacoOptions = {},
-): ForgeWebScriptMonacoHandle;
+  options: FlintMonacoOptions = {},
+): FlintMonacoHandle;
 ```
 
 قم بإرفاق التشخيصات والإكمال والتحويم ومزامنة النموذج والترميز إلى المحرر.
@@ -842,45 +842,42 @@ function attachForgeWebScriptMonaco(
 | موناكو وقت التشغيل | موناكو وقت التشغيل                   |       |
 | خيارات             | فورجي ويب سكريبت موناكو أوبتيونس     |       |
 
-### forgeWebScriptLanguageId
+### flintLanguageId
 
 **النوع:** ثابت
 
 ```typescript
-export const forgeWebScriptLanguageId;
+export const flintLanguageId;
 ```
 
 لم يتم تقديم أي وصف.
 
-### ForgeWebScriptMonacoHandle
+### FlintMonacoHandle
 
 **النوع:** الواجهة
 
 ```typescript
-export interface ForgeWebScriptMonacoHandle
+export interface FlintMonacoHandle
 ```
 
 لم يتم تقديم أي وصف.
 
-### ForgeWebScriptMonacoOptions
+### FlintMonacoOptions
 
 **النوع:** الواجهة
 
 ```typescript
-export interface ForgeWebScriptMonacoOptions
+export interface FlintMonacoOptions
 ```
 
 لم يتم تقديم أي وصف.
 
-### تسجيل ForgeWebScriptLanguage
+### تسجيل FlintLanguage
 
 **النوع:** الوظيفة
 
 ```typescript
-function registerForgeWebScriptLanguage(
-  monacoRuntime: MonacoRuntime,
-  languageId = forgeWebScriptLanguageId,
-): monaco.IDisposable;
+function registerFlintLanguage(monacoRuntime: MonacoRuntime, languageId = flintLanguageId): monaco.IDisposable;
 ```
 
 قم بتسجيل لغة Forge Web Script وموفر الرمز المعجمي.

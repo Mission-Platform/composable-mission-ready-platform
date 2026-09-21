@@ -5,7 +5,7 @@
     "access": "public"
   },
   "license": "BSD-4-Clause",
-  "description": "Dependency-free QR Code encoder backed by a package-local Forge Web Script artifact, with a typed ES module wrapper and a write-once React/Vue component",
+  "description": "Dependency-free QR Code encoder backed by a package-local Flint artifact, with a typed ES module wrapper and a write-once React/Vue component",
   "type": "module",
   "sideEffects": [
     "**/*.css",
@@ -120,7 +120,7 @@
     "@mission-platform/forge-plugin-svelte": "workspace:*",
     "@mission-platform/forge-plugin-vue": "workspace:*",
     "@mission-platform/forge-plugin-web-components": "workspace:*",
-    "@mission-platform/forge-web-script": "workspace:*",
+    "@mission-platform/flint": "workspace:*",
     "@mission-platform/i18n-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
     "@mission-platform/storybook-framework": "workspace:*",
@@ -129,7 +129,7 @@
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
     "@mission-platform/vite-plugin-forge": "workspace:*",
-    "@mission-platform/vite-plugin-forge-web-script": "workspace:*",
+    "@mission-platform/vite-plugin-flint": "workspace:*",
     "@storybook/react-vite": "catalog:storybook",
     "@storybook/vue3-vite": "catalog:storybook",
     "@tsdown/css": "catalog:build",

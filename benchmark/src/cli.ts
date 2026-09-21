@@ -126,7 +126,7 @@ async function main(): Promise<void> {
       `node: ${node === undefined ? "not requested" : `${node.measurements.length} phase results`}`,
       `chromium: ${browser?.status ?? "not requested"}`,
       `failures: ${failures.length}`,
-      `performance gate: ${report.performanceGates?.failed ? "failed" : "passed"} (${report.performanceGates?.results.length ?? 0} FWS execute rows)`,
+      `performance gate: ${report.performanceGates?.failed ? "failed" : "passed"} (${report.performanceGates?.results.length ?? 0} Flint execute rows)`,
       `report: ${reportPaths.directory}`,
       ...failures
         .slice(0, 10)

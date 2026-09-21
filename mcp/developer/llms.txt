@@ -18,9 +18,9 @@ Give an AI assistant grounded, repo-specific help with core workflows:
 7. App development — compose packages; deploy via Cloudflare/forge-spa.
 8. Worker creation — scaffold a `workers/<name>` Cloudflare Worker.
 9. Worker development — typed `fetch` handler; keep workers thin.
-10. Forge Web Script (FWS) — author, analyze, verify, and safely debug the
+10. Flint (Flint) — author, analyze, verify, and safely debug the
     statically typed ownership/capability-constrained language. “FMS” is a
-    terminology error; use FWS.
+    terminology error; use Flint.
 
 ## Capabilities
 
@@ -29,13 +29,13 @@ Give an AI assistant grounded, repo-specific help with core workflows:
   `get_member_info`, `scaffold_package`, `scaffold_app`, `scaffold_worker`,
   `scaffold_crate`, `scaffold_component`, `scaffold_composable`, `scaffold_store`,
   `scaffold_util`, `test_accessibility`, `list_locales`, `locale_coverage`, `add_locale`, `remove_locale`,
-  `update_translation`, `fws_analyze_source`, `fws_analyze_workspace`,
-  `fws_inspect_manifest`, `fws_verify_artifact`, `fws_run_trace`.
+  `update_translation`, `flint_analyze_source`, `flint_analyze_workspace`,
+  `flint_inspect_manifest`, `flint_verify_artifact`, `flint_run_trace`.
 - Resources: `mission://guide/<id>`, `mission://inventory`, `mission://docs/<slug>`.
-- FWS guides: `mission://guide/fws-authoring`, `fws-security`,
-  `fws-artifact-verification`, `fws-forensics`.
-- Prompts: `fws-authoring`, `fws-secure-review`, `fws-compile-verify`,
-  `fws-forensic-debug`, `use-component`, `create-package`, `develop-package`,
+- Flint guides: `mission://guide/flint-authoring`, `flint-security`,
+  `flint-artifact-verification`, `flint-forensics`.
+- Prompts: `flint-authoring`, `flint-secure-review`, `flint-compile-verify`,
+  `flint-forensic-debug`, `use-component`, `create-package`, `develop-package`,
   `create-app`, `develop-app`, `create-worker`, `develop-worker`.
 
 ## Safety
@@ -43,8 +43,8 @@ Give an AI assistant grounded, repo-specific help with core workflows:
 All repo inspection is read-only. Scaffolding tools and the i18n locale tools
 (`add_locale`, `remove_locale`, `update_translation`) are dry-run unless
 `apply: true`; scaffolding never overwrites existing files/folders.
-FWS tools are root-bounded and size-capped. Analysis and verification delegate
-to canonical FWS packages; `fws_run_trace` uses only the bounded,
+Flint tools are root-bounded and size-capped. Analysis and verification delegate
+to canonical Flint packages; `flint_run_trace` uses only the bounded,
 capability-denied self-hosted probe. It never executes arbitrary Wasm, commands,
 filesystem reads, or host imports, and trace values are redacted and capped.
 `lsp_capabilities`, `lsp_detect_servers`, and `lsp_status` are read-only. The

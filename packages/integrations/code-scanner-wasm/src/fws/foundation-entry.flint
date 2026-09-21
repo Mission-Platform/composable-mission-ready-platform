@@ -1,0 +1,65 @@
+// Minimal graph entry used by foundation contract tests.
+import "./foundation.flint" as foundation;
+
+export fn foundation_probe_dimensions(width: i32, height: i32, stride: i32) -> i32 {
+  return foundation.foundation_validate_dimensions(width, height, stride);
+}
+
+export fn foundation_probe_gf256(a: i32, b: i32) -> i32 {
+  return foundation.foundation_gf256_mul(a, b);
+}
+
+export fn foundation_probe_luminance(width: i32, height: i32, stride: i32, data: u32, state: Array<i32>) -> i32 {
+  return foundation.foundation_luminance_record(width, height, stride, data, state);
+}
+
+export fn foundation_probe_luminance_row(state: Array<i32>, row: i32, output: Array<i32>) -> i32 {
+  return foundation.foundation_luminance_row(state, row, output);
+}
+
+export fn foundation_probe_bit_array(bits: u32, capacity: i32, state: Array<i32>, value: i32, index: i32) -> i32 {
+  let initialized: i32 = foundation.foundation_bit_array_init(bits, capacity, state);
+  if initialized < 0 { return initialized; }
+  let appended: i32 = foundation.foundation_bit_array_append(state, value);
+  if appended < 0 { return appended; }
+  return foundation.foundation_bit_array_get(state, index);
+}
+
+export fn foundation_probe_bit_matrix(bits: u32, width: i32, height: i32, state: Array<i32>, x: i32, y: i32, value: i32) -> i32 {
+  let initialized: i32 = foundation.foundation_bit_matrix_init(bits, width, height, state);
+  if initialized < 0 { return initialized; }
+  let set: i32 = foundation.foundation_bit_matrix_set(state, x, y, value);
+  if set < 0 { return set; }
+  return foundation.foundation_bit_matrix_get(state, x, y);
+}
+
+export fn foundation_probe_global(data: u32, width: i32, height: i32, bits: u32, histogram: u32) -> i32 {
+  return foundation.foundation_global_binarize(data, width, height, bits, histogram);
+}
+
+export fn foundation_probe_hybrid(data: u32, width: i32, height: i32, bits: u32) -> i32 {
+  return foundation.foundation_hybrid_binarize(data, width, height, bits);
+}
+
+export fn foundation_probe_perspective(source: u32, source_width: i32, source_height: i32, size: i32, output: u32) -> i32 {
+  return foundation.foundation_sample_perspective(
+    source, source_width, source_height,
+    0, 0, source_width * 256, 0,
+    source_width * 256, source_height * 256, 0, source_height * 256,
+    size, output
+  );
+}
+
+export fn foundation_probe_rs(data: u32, data_length: i32, ec_count: i32, output: u32) -> i32 {
+  return foundation.foundation_reed_solomon_syndrome(data, data_length, ec_count, output);
+}
+
+export fn foundation_probe_records(candidate: Array<i32>, outcome: Array<i32>, format: i32) -> i32 {
+  let candidate_status: i32 = foundation.foundation_candidate_init(candidate, format);
+  if candidate_status < 0 { return candidate_status; }
+  return foundation.foundation_outcome_init(outcome);
+}
+
+export fn foundation_probe_validate_outcome(outcome: Array<i32>) -> i32 {
+  return foundation.foundation_validate_outcome(outcome);
+}

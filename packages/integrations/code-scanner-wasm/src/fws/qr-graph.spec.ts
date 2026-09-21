@@ -4,9 +4,9 @@ import { dirname, join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import {
-  createForgeWebScriptCompilerService,
-  resolveForgeWebScriptModuleGraph,
-} from '../../../../compiler/forge/forge-web-script/dist/index.js';
+  createFlintCompilerService,
+  resolveFlintModuleGraph,
+} from '../../../../flint/core/dist/index.js';
 
 const fwsDirectory = resolve(import.meta.dirname);
 const linkConfiguration = {
@@ -20,7 +20,7 @@ function loadTree(directory: string, files: Record<string, string>): void {
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
     const fileName = join(directory, entry.name);
     if (entry.isDirectory()) loadTree(fileName, files);
-    else if (entry.name.endsWith('.fws')) files[resolve(fileName)] = readFileSync(fileName, 'utf8');
+    else if (entry.name.endsWith('.fws') || entry.name.endsWith('.flint')) files[resolve(fileName)] = readFileSync(fileName, 'utf8');
   }
 }
 
@@ -28,7 +28,7 @@ describe('QR decoder graph', () => {
   it('emits valid Wasm and executes the QR adapter failure path', async () => {
     const files: Record<string, string> = {};
     loadTree(fwsDirectory, files);
-    const entry = resolve(fwsDirectory, 'decoders.fws');
+    const entry = resolve(fwsDirectory, 'decoders.flint');
     const resolver = {
       resolve(source: string, importer: string): string | undefined {
         const target = resolve(dirname(importer), source);
@@ -38,8 +38,8 @@ describe('QR decoder graph', () => {
         return files[fileName] ?? '';
       },
     };
-    const graph = await resolveForgeWebScriptModuleGraph([entry], resolver, linkConfiguration);
-    const service = createForgeWebScriptCompilerService();
+    const graph = await resolveFlintModuleGraph([entry], resolver, linkConfiguration);
+    const service = createFlintCompilerService();
     try {
       const artifact = service.compileGraph({
         graph: graph.graph,

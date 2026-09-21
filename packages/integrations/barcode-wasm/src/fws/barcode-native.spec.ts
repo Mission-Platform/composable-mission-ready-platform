@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { BarcodeSymbology, load, loadSync } from './barcode-native.fws';
+import { BarcodeSymbology, load, loadSync } from './barcode-native.flint';
 
 const cases = [
   [BarcodeSymbology.Code128, 'ABC'],

@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
-import { load, loadSync, manifest } from './qr-compact-encoder.fws';
+import { load, loadSync, manifest } from './qr-compact-encoder.flint';
 
 function unpack(packed: string): { width: number; height: number; modules: string } {
   const [width, height, modules] = packed.split(',');
   return { width: Number(width), height: Number(height), modules };
 }
 
-describe('compact QR encoder FWS graph', () => {
+describe('compact QR encoder Flint graph', () => {
   it('publishes the compact ABI and Micro QR geometry', () => {
     const encoder = loadSync();
     expect(manifest).toBeDefined();

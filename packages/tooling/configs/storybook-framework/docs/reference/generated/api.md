@@ -441,4 +441,6 @@ export type StoryObj<TMetaOrComponentOrArgs = Args> =
     : StoryAnnotations<Renderer, ArgumentsOf<TMetaOrComponentOrArgs>>;
 ```
 
-No description provided.
+Framework-agnostic Storybook `StoryObj`, the neutral counterpart to
+{@link Meta}. Accepts either `typeof meta` (reusing its args) or an explicit
+args/component type.

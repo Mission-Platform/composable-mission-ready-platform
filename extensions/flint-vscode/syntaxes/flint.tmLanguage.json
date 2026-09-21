@@ -1,0 +1,42 @@
+{
+  "name": "Flint",
+  "scopeName": "source.flint",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#numbers" },
+    { "include": "#keywords" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        { "match": "//.*$", "name": "comment.line.double-slash.flint" },
+        { "begin": "/\\*", "end": "\\*/", "name": "comment.block.flint" }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "begin": "\"",
+          "end": "\"",
+          "name": "string.quoted.double.flint",
+          "patterns": [{ "match": "\\\\.", "name": "constant.character.escape.flint" }]
+        },
+        {
+          "begin": "'",
+          "end": "'",
+          "name": "string.quoted.single.flint",
+          "patterns": [{ "match": "\\\\.", "name": "constant.character.escape.flint" }]
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [{ "match": "\\b(?:0[xX][0-9a-fA-F]+|\\d+(?:\\.\\d+)?)\\b", "name": "constant.numeric.flint" }]
+    },
+    "keywords": {
+      "patterns": [
+        { "match": "\\b(?:let|const|fn|if|else|for|while|return|true|false|null)\\b", "name": "keyword.control.flint" }
+      ]
+    }
+  }
+}

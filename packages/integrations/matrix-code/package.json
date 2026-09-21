@@ -5,7 +5,7 @@
     "access": "public"
   },
   "license": "BSD-4-Clause",
-  "description": "Dependency-free 2D matrix barcode encoder (Data Matrix, GS1, rectangular, compact Aztec) implemented with package-local Forge Web Script artifacts, a typed ES module wrapper, and a write-once React/Vue component",
+  "description": "Dependency-free 2D matrix barcode encoder (Data Matrix, GS1, rectangular, compact Aztec) implemented with package-local Flint artifacts, a typed ES module wrapper, and a write-once React/Vue component",
   "type": "module",
   "sideEffects": [
     "**/*.css",
@@ -123,7 +123,7 @@
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
     "@mission-platform/vite-plugin-forge": "workspace:*",
-    "@mission-platform/vite-plugin-forge-web-script": "workspace:*",
+    "@mission-platform/vite-plugin-flint": "workspace:*",
     "@storybook/react-vite": "catalog:storybook",
     "@storybook/vue3-vite": "catalog:storybook",
     "@tsdown/css": "catalog:build",

@@ -302,9 +302,9 @@ Un hash de contenido **detecta cambios de contenido accidentales o no autorizado
 #### Flujo de trabajo de verificación
 
 1. **Obtenga el hash esperado** de una fuente confiable (por ejemplo, un manifiesto firmado, un registro de compilación de CI o una configuración segura).
-2. **Calcule el hash del artefacto** usando el verificador: `fws_verify_artifact(artifact)` devuelve `contentHash`.
+2. **Calcule el hash del artefacto** usando el verificador: `flint_verify_artifact(artifact)` devuelve `contentHash`.
 3. **Comparar hashes**: si coinciden, el artefacto no ha sido alterado accidental o maliciosamente desde que se registró el valor esperado.
-4. **Verifique el manifiesto**: use `fws_inspect_manifest` para verificar las importaciones, exportaciones, metadatos y el cumplimiento de políticas de capacidad de forma independiente.
+4. **Verifique el manifiesto**: use `flint_inspect_manifest` para verificar las importaciones, exportaciones, metadatos y el cumplimiento de políticas de capacidad de forma independiente.
 
 #### Versionado
 

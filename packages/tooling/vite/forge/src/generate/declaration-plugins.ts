@@ -299,6 +299,20 @@ const CSS_MODULE_SHIM = [
   "declare module '*.scss' { const classes: Record<string, string>; export default classes; }",
   "declare module '*.css' { const classes: Record<string, string>; export default classes; }",
   "declare module '*.svelte' { const component: any; export default component; }",
+  "declare module '*.flint' {",
+  '  interface ForgeFlintExports { readonly [name: string]: (value: string) => string; }',
+  '  const manifest: Readonly<Record<string, unknown>>;',
+  '  function load(): Promise<ForgeFlintExports>;',
+  '  function loadSync(): ForgeFlintExports;',
+  '  export { manifest, load, loadSync };',
+  '}',
+  "declare module '*.flt' {",
+  '  interface ForgeFlintExports { readonly [name: string]: (value: string) => string; }',
+  '  const manifest: Readonly<Record<string, unknown>>;',
+  '  function load(): Promise<ForgeFlintExports>;',
+  '  function loadSync(): ForgeFlintExports;',
+  '  export { manifest, load, loadSync };',
+  '}',
   "declare module '*.fws' {",
   '  interface ForgeFwsExports { readonly [name: string]: (value: string) => string; }',
   '  const manifest: Readonly<Record<string, unknown>>;',
@@ -615,9 +629,7 @@ async function emitSvelteComponentDeclarations(
     return;
   }
   this.warn(
-    "jsxComponentsDtsPlugin: svelte2tsx's emitDts did not produce usable declarations " +
-      '(dangling props-type references in the generated .svelte.d.ts sidecars); ' +
-      'falling back to the synthesised entry declaration for the Svelte build.',
+    "jsxComponentsDtsPlugin: svelte2tsx's emitDts did not produce usable declarations (dangling props-type references in the generated .svelte.d.ts sidecars); falling back to the synthesised entry declaration for the Svelte build.",
   );
   if (existsSync(options.outDir)) {
     for (const file of readdirSync(options.outDir).filter((entry) => entry.endsWith('.d.ts'))) {

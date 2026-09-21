@@ -6,10 +6,10 @@
 > 언어: 한국어 (ko)
 
 실제 캡처(업로드 및 라이브 카메라)에서 `@mission-platform/code-scanner`의 판독률을 높이기 위한 계획
-프레임), 정적으로 링크된 하나의 Forge Web Script/WebAssembly 아티팩트 내부에 스캔 파이프라인을 유지하기 위한 것입니다.
+프레임), 정적으로 링크된 하나의 Flint/WebAssembly 아티팩트 내부에 스캔 파이프라인을 유지하기 위한 것입니다.
 
 > **현재 구현:** 스캐너는 정적으로 연결된 상태로 배송됩니다.
-> 동적 소스 모듈 프로필을 사용하여 `src/fws` 아래의 Forge Web Script 그래프
+> 동적 소스 모듈 프로필을 사용하여 `src/fws` 아래의 Flint 그래프
 > 독립적으로 캐시 가능한 디코더 모듈에 사용할 수 있습니다. 녹과 상자
 > 아래에 포함된 참고 자료는 역사적 마이그레이션 출처일 뿐입니다. 그들은
 > 런타임 종속성을 패키지하거나 입력을 빌드하지 않습니다.
@@ -28,9 +28,9 @@
   **태그가 지정된 버퍼** `[format, ...payload]`를 반환했습니다. — 디코딩하지 **않았습니다**.
 - **디코드**는 JavaScript로 실행되었으며 별도의 디코더 모듈을 호출했습니다.
 
-1단계에서는 이를 단일 FWS `scan_and_decode` 호출로 대체했습니다(§1 참조). 는
+1단계에서는 이를 단일 Flint `scan_and_decode` 호출로 대체했습니다(§1 참조). 는
 아래의 역사적 동기는 근거로 유지되는 반면, 현재의 출처는
-진실은 FWS 그래프와 Vitest 적합성 제품군입니다.
+진실은 Flint 그래프와 Vitest 적합성 제품군입니다.
 
 ## 1. 핵심 구조적 문제: 파이프라인이 wasm ← JS 경계를 두 번 넘었습니다.
 
@@ -40,7 +40,7 @@
 image (JS)
   → wasm code-scan.scan()            [Rust: binarise + locate + sample]
   → tagged module buffer (JS)        [cross back into JS]
-  → scanner-owned FWS decoder graph   [decode inside the scanner artifact]
+  → scanner-owned Flint decoder graph   [decode inside the scanner artifact]
   → payload string (JS)
 ```
 
@@ -60,21 +60,21 @@ image (JS)
   EAN-13으로 보고되었습니다(새 테스트 모음에서 확인됨). Rust에서 디코딩하면 로케이터가 구조적 힌트(요소
   카운트, 가드 패턴)을 사용하여 올바른 기호를 선택하세요.
 
-### 대상 아키텍처 — FWS 호출 1개, 이미지 입력, 페이로드 출력
+### 대상 아키텍처 — Flint 호출 1개, 이미지 입력, 페이로드 출력
 
 > **상태: 구현됨.** 스캐너는 `scan_and_decode`을 내보내고
-> 디코더 FWS 그래프를 직접 작성하고 JS façade는 해당 단일을 통해 디코딩합니다.
+> 디코더 Flint 그래프를 직접 작성하고 JS façade는 해당 단일을 통해 디코딩합니다.
 > 전화하세요. 아래 세부정보에는 마이그레이션 근거가 기록되어 있습니다.
 
 ```
 image (JS)
-  → FWS scanner.scan_and_decode()      [binarise + locate + sample + decode]
+  → Flint scanner.scan_and_decode()      [binarise + locate + sample + decode]
   → ScanOutcome { format, value } (JS)
 ```
 
-`scan_and_decode(width, height, luma) -> Option<ScanOutcome>`은 `src/fws/scanner.fws` 내부에서 전체 파이프라인을 실행하고
+`scan_and_decode(width, height, luma) -> Option<ScanOutcome>`은 `src/fws/scanner.flint` 내부에서 전체 파이프라인을 실행하고
 **디코딩된 페이로드**를 직접 반환합니다(기호가 있지만 디코딩할 수 없는 경우 `value`는 비어 있음). JS 파사드
-(`scanner/index.ts`)은 빌드 시 QR, 매트릭스 및 바코드 FWS 소스를 연결하는 얇은 마샬링 레이어입니다.
+(`scanner/index.ts`)은 빌드 시 QR, 매트릭스 및 바코드 Flint 소스를 연결하는 얇은 마샬링 레이어입니다.
 해당 패키지는 독립적으로 게시 가능한 상태로 유지됩니다.
 
 #### 이것이 지금 다루기 쉬운 이유
@@ -384,7 +384,7 @@ MaxiCode가 아닌 이미지는 이런 방식으로 샘플링됩니다. `scan_an
 기준선 0(회전된 기호가 육각형 그리드를 잘못 샘플링하고 RS가 이를 거부합니다. 거짓 긍정 없음). 불스아이
 샘플링 전에 기호의 회전을 복구하는 파인더는 나머지 세 회전을 해제합니다.
 
-### 6단계 - 새로운 형식을 JS 외관에 연결하고 FWS 아티팩트를 구축합니다_(완료)_
+### 6단계 - 새로운 형식을 JS 외관에 연결하고 Flint 아티팩트를 구축합니다_(완료)_
 
 3~5단계에서는 PDF417, GS1 DataBar(RSS-14) 및 MaxiCode를 스캐너에 배치했습니다.
 `FORMAT_PDF417` / `FORMAT_DATABAR` / `FORMAT_MAXICODE` 태그 뒤의 파이프라인에 비해 JS 외관은
@@ -394,7 +394,7 @@ MaxiCode가 아닌 이미지는 이런 방식으로 샘플링됩니다. `scan_an
   `5 → 'databar'`, `6 → 'maxicode'` 및 `src/types.ts`의 `ScanFormat` 공용체
   동일한 세 가지 이름을 얻습니다. 따라서 `scanImageData` / `scanImageDataAsync`(및
   `*All` / ROI 변형)은 다른 형식과 마찬가지로 이를 반환합니다.
-- **스캐너 FWS 아티팩트는 Forge Web Script Vite 플러그인에 의해 `src/fws/scanner.fws`에서 구축**됩니다. 정적 프로필
+- **스캐너 Flint 아티팩트는 Flint Vite 플러그인에 의해 `src/fws/scanner.flint`에서 구축**됩니다. 정적 프로필
   디코더 그래프를 하나의 독립형 아티팩트에 연결하고 WebAssembly SIMD를 활성화하며 공격적인 링크 시간을 적용합니다.
   최적화; 동적 프로필은 명시적인 디코더 모듈 경계를 유지하고 내보내기 디스패치를 ​​캐시합니다.
 - **FWS 그래프 및 외관 제품군**(`src/fws/scanner-graph.spec.ts` 및
@@ -404,7 +404,7 @@ MaxiCode가 아닌 이미지는 이런 방식으로 샘플링됩니다. `scan_an
   package-local PDF417 텍스트 고정 장치는 적합성 사례를 독립적으로 유지합니다.
   은퇴한 네이티브 코퍼스 작업공간.
 
-**결과:** FWS 아티팩트 및 `tsc` 빌드에 비해 `vitest`은 녹색입니다.
+**결과:** Flint 아티팩트 및 `tsc` 빌드에 비해 `vitest`은 녹색입니다.
 점검은 깨끗합니다. 지원받는 가족은
 그래프 및 공개 파사드 제품군, 그리고 단계별 모델 계층화를 안내했습니다.
 노력은 `docs/model-cost-strategy.md`에 문서화되어 있습니다.

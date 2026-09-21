@@ -17,14 +17,15 @@
       ]
     },
     {
-      "language_id": "forge-web-script",
+      "language_id": "flint",
       "extensions": [
-        "fws"
+        "flint",
+        "flt"
       ],
       "command": [
         "pnpm",
         "--dir",
-        "packages/compiler/forge/forge-web-script-lsp",
+        "packages/flint/lsp",
         "exec",
         "./dist/main.js",
         "--stdio"

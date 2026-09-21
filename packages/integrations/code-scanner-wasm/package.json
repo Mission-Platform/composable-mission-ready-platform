@@ -26,7 +26,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@mission-platform/forge-web-script-runtime": "workspace:*"
+    "@mission-platform/flint-runtime": "workspace:*"
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
@@ -34,8 +34,8 @@
     "@mission-platform/tsdown-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
-    "@mission-platform/vite-plugin-forge-web-script": "workspace:*",
-    "@mission-platform/forge-web-script-vitest": "workspace:*",
+    "@mission-platform/vite-plugin-flint": "workspace:*",
+    "@mission-platform/flint-vitest": "workspace:*",
     "@types/node": "catalog:typescript",
     "eslint": "catalog:eslint",
     "jsdom": "catalog:testing",

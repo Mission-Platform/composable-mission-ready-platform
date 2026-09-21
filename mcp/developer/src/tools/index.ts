@@ -1,27 +1,24 @@
 /**
  * Tool definitions exposed to MCP clients using `@modelcontextprotocol/sdk`.
  * Tools are grouped by the Mission Platform workflows this server assists with:
- * component usage, workspace creation/development, FWS security, and discovery.
+ * component usage, workspace creation/development, Flint security, and discovery.
  */
 
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 
 import {
-  analyzeForgeWebScript,
-  deserializeForgeWebScriptSoN,
-  prepareForgeWebScriptFrontend,
-  type ForgeWebScriptAnalysisOptions,
-} from '@mission-platform/forge-web-script';
+  analyzeFlint,
+  deserializeFlintSoN,
+  prepareFlintFrontend,
+  type FlintAnalysisOptions,
+} from '@mission-platform/flint';
+import { runFlintSelfHostedLexStage, type FlintSelfHostedRunOptions } from '@mission-platform/flint-runtime';
 import {
-  runForgeWebScriptSelfHostedLexStage,
-  type ForgeWebScriptSelfHostedRunOptions,
-} from '@mission-platform/forge-web-script-runtime';
-import {
-  verifyForgeWebScriptWasmArtifact,
-  type ForgeWebScriptWasmArtifactManifest,
-  type ForgeWebScriptWasmArtifactMetadata,
-} from '@mission-platform/forge-web-script-wasm';
+  verifyFlintWasmArtifact,
+  type FlintWasmArtifactManifest,
+  type FlintWasmArtifactMetadata,
+} from '@mission-platform/flint-wasm';
 import { getGuide, GUIDE_IDS } from '@mission-platform/mcp-shared/knowledge/guides';
 import {
   appFiles,
@@ -329,14 +326,14 @@ function collectFwsFiles(target: string, maxFiles: number): string[] {
       if (entry.isSymbolicLink()) continue;
       const path = join(directory, entry.name);
       if (entry.isDirectory()) visit(path, depth + 1);
-      else if (entry.isFile() && entry.name.endsWith('.fws')) {
+      else if (entry.isFile() && entry.name.endsWith('.flint')) {
         files.push(path);
         if (files.length >= maxFiles) return;
       }
     }
   };
   if (statSync(target).isFile()) {
-    if (!target.endsWith('.fws')) throw new Error('sourcePath must point to a .fws file or directory.');
+    if (!target.endsWith('.flint')) throw new Error('sourcePath must point to a .flint file or directory.');
     return [target];
   }
   visit(target, 0);
@@ -346,8 +343,8 @@ function collectFwsFiles(target: string, maxFiles: number): string[] {
 function fwsAnalysisOptions(
   policy: z.infer<typeof analysisPolicySchema>,
   targetFeatures: z.infer<typeof targetFeaturesSchema>,
-): ForgeWebScriptAnalysisOptions {
-  const normalizedPolicy: ForgeWebScriptAnalysisOptions['policy'] =
+): FlintAnalysisOptions {
+  const normalizedPolicy: FlintAnalysisOptions['policy'] =
     policy === undefined
       ? undefined
       : {
@@ -373,7 +370,7 @@ function fwsAnalysisOptions(
                 },
               }),
         };
-  const normalizedTargetFeatures: ForgeWebScriptAnalysisOptions['targetFeatures'] =
+  const normalizedTargetFeatures: FlintAnalysisOptions['targetFeatures'] =
     targetFeatures === undefined
       ? undefined
       : {
@@ -389,8 +386,8 @@ function fwsAnalysisOptions(
   };
 }
 
-function analyzeSource(source: string, fileName: string, options: ForgeWebScriptAnalysisOptions) {
-  const frontend = prepareForgeWebScriptFrontend({
+function analyzeSource(source: string, fileName: string, options: FlintAnalysisOptions) {
+  const frontend = prepareFlintFrontend({
     source,
     fileName,
     compilerVersion: 'mcp-analysis',
@@ -398,7 +395,7 @@ function analyzeSource(source: string, fileName: string, options: ForgeWebScript
     boundsChecks: options.policy?.boundsChecks,
     analysis: options,
   });
-  const analysis = analyzeForgeWebScript(frontend, options);
+  const analysis = analyzeFlint(frontend, options);
   return { fileName, diagnostics: frontend.diagnostics, analysis };
 }
 
@@ -406,7 +403,7 @@ function record(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
 
-function readManifest(path: string): ForgeWebScriptWasmArtifactManifest {
+function readManifest(path: string): FlintWasmArtifactManifest {
   let value: unknown;
   try {
     value = JSON.parse(readBoundedText(path, MAX_MANIFEST_BYTES, 'Manifest'));
@@ -421,13 +418,13 @@ function readManifest(path: string): ForgeWebScriptWasmArtifactManifest {
     !record(value.memory)
   )
     throw new Error('Manifest must contain exports, imports, requiredCapabilities, and memory arrays/objects.');
-  return value as unknown as ForgeWebScriptWasmArtifactManifest;
+  return value as unknown as FlintWasmArtifactManifest;
 }
 
 function artifactMetadata(
   metadata: z.infer<typeof artifactMetadataSchema> | undefined,
-  manifest: ForgeWebScriptWasmArtifactManifest,
-): ForgeWebScriptWasmArtifactMetadata {
+  manifest: FlintWasmArtifactManifest,
+): FlintWasmArtifactMetadata {
   return {
     compilerVersion: metadata?.compilerVersion ?? 'mcp-verification',
     optimization: metadata?.optimization ?? 'debug',
@@ -1562,7 +1559,7 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
     'get_guide',
     {
       description:
-        'Return a curated, repository-specific guide for a Mission Platform workflow, including FWS authoring, security, Wasm verification, and forensics.',
+        'Return a curated, repository-specific guide for a Mission Platform workflow, including Flint authoring, security, Wasm verification, and forensics.',
       inputSchema: {
         area: z.string().describe('The workflow to explain.'),
       },
@@ -1580,15 +1577,15 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
     },
   );
 
-  // ---- Forge Web Script security workflows ---------------------------------
+  // ---- Flint security workflows ---------------------------------
   server.registerTool(
-    'fws_analyze_source',
+    'flint_analyze_source',
     {
       description:
-        'Run canonical FWS source analysis and return frontend diagnostics, stable findings, facts, and policy. Accepts bounded inline source or a repository-rooted .fws path; it never executes guest code.',
+        'Run canonical Flint source analysis and return frontend diagnostics, stable findings, facts, and policy. Accepts bounded inline source or a repository-rooted .flint path; it never executes guest code.',
       inputSchema: {
-        source: z.string().max(MAX_SOURCE_BYTES).optional().describe('Inline FWS source, capped at 256 KiB.'),
-        sourcePath: z.string().max(1024).optional().describe('Repository-rooted .fws file to read.'),
+        source: z.string().max(MAX_SOURCE_BYTES).optional().describe('Inline Flint source, capped at 256 KiB.'),
+        sourcePath: z.string().max(1024).optional().describe('Repository-rooted .flint file to read.'),
         fileName: z.string().max(1024).optional().describe('Logical source name for inline source.'),
         policy: analysisPolicySchema,
         targetFeatures: targetFeaturesSchema,
@@ -1600,7 +1597,7 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
       if (args.source !== undefined && args.sourcePath !== undefined)
         return toolError(new Error('Provide only one of "source" and "sourcePath".'));
       try {
-        const fileName = args.fileName?.trim() || '<mcp-input>.fws';
+        const fileName = args.fileName?.trim() || '<mcp-input>.flint';
         const source =
           args.source ?? readBoundedText(repoPath(args.sourcePath as string, 'sourcePath'), MAX_SOURCE_BYTES, 'Source');
         if (new TextEncoder().encode(source).byteLength > MAX_SOURCE_BYTES)
@@ -1613,12 +1610,12 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
   );
 
   server.registerTool(
-    'fws_analyze_workspace',
+    'flint_analyze_workspace',
     {
       description:
-        'Analyze bounded .fws files below a repository-rooted path using the canonical FWS analyzer. Symlinks are skipped, file count and source size are capped, and no code is executed.',
+        'Analyze bounded .flint files below a repository-rooted path using the canonical Flint analyzer. Symlinks are skipped, file count and source size are capped, and no code is executed.',
       inputSchema: {
-        sourcePath: z.string().max(1024).describe('Repository-rooted .fws file or directory.'),
+        sourcePath: z.string().max(1024).describe('Repository-rooted .flint file or directory.'),
         maxFiles: z
           .number()
           .int()
@@ -1651,10 +1648,10 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
   );
 
   server.registerTool(
-    'fws_inspect_manifest',
+    'flint_inspect_manifest',
     {
       description:
-        'Read a bounded, repository-rooted FWS ABI manifest and return its safe structural summary. This is inspection only and does not instantiate Wasm.',
+        'Read a bounded, repository-rooted Flint ABI manifest and return its safe structural summary. This is inspection only and does not instantiate Wasm.',
       inputSchema: {
         manifestPath: z.string().max(1024).describe('Repository-rooted JSON manifest path.'),
       },
@@ -1699,7 +1696,7 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
   );
 
   server.registerTool(
-    'fws_inspect_sonir',
+    'flint_inspect_sonir',
     {
       description:
         'Read a bounded, repository-rooted .sonir.json artifact and return deterministic graph, optimization, and bounds-policy metadata. This is read-only inspection and never executes guest code.',
@@ -1724,7 +1721,7 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
     async (args) => {
       try {
         const fileName = repoPath(args.sonIrPath, 'sonIrPath');
-        const module = deserializeForgeWebScriptSoN(readBoundedText(fileName, MAX_ARTIFACT_BYTES, 'SoN artifact'));
+        const module = deserializeFlintSoN(readBoundedText(fileName, MAX_ARTIFACT_BYTES, 'SoN artifact'));
         if (module === undefined) throw new Error('SoN artifact is malformed, stale, or exceeds the safety limits.');
         const maxNodes = args.maxNodes ?? 0;
         const maxFunctions = args.maxFunctions ?? 100;
@@ -1763,10 +1760,10 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
   );
 
   server.registerTool(
-    'fws_verify_artifact',
+    'flint_verify_artifact',
     {
       description:
-        'Verify a bounded Wasm artifact against a repository-rooted FWS manifest, deterministic metadata, target features, and capability policy. This never executes the artifact or host imports.',
+        'Verify a bounded Wasm artifact against a repository-rooted Flint manifest, deterministic metadata, target features, and capability policy. This never executes the artifact or host imports.',
       inputSchema: {
         artifactPath: z.string().max(1024).describe('Repository-rooted Wasm binary path.'),
         manifestPath: z.string().max(1024).describe('Repository-rooted ABI manifest JSON path.'),
@@ -1793,7 +1790,7 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
       try {
         const manifest = readManifest(repoPath(args.manifestPath, 'manifestPath'));
         const wasm = readBoundedBytes(repoPath(args.artifactPath, 'artifactPath'), MAX_ARTIFACT_BYTES, 'Artifact');
-        const result = verifyForgeWebScriptWasmArtifact({
+        const result = verifyFlintWasmArtifact({
           wasm,
           fileName: args.artifactPath,
           manifest,
@@ -1810,13 +1807,13 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
   );
 
   server.registerTool(
-    'fws_run_trace',
+    'flint_run_trace',
     {
       description:
-        'Capture a bounded deterministic trace from the built-in capability-denied FWS self-hosted lex/parser probe. It accepts only bounded source, never arbitrary Wasm, commands, filesystem reads, or host capability bindings.',
+        'Capture a bounded deterministic trace from the built-in capability-denied Flint self-hosted lex/parser probe. It accepts only bounded source, never arbitrary Wasm, commands, filesystem reads, or host capability bindings.',
       inputSchema: {
-        source: z.string().max(MAX_SOURCE_BYTES).optional().describe('Inline FWS source, capped at 256 KiB.'),
-        sourcePath: z.string().max(1024).optional().describe('Repository-rooted .fws file to read.'),
+        source: z.string().max(MAX_SOURCE_BYTES).optional().describe('Inline Flint source, capped at 256 KiB.'),
+        sourcePath: z.string().max(1024).optional().describe('Repository-rooted .flint file to read.'),
         mode: z
           .enum(['interpret', 'jit', 'aot'])
           .optional()
@@ -1846,12 +1843,12 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
           ...(args.maxSnapshotBytes === undefined ? {} : { maxSnapshotBytes: args.maxSnapshotBytes }),
           ...(args.replayId === undefined ? {} : { replayId: args.replayId }),
         } as const;
-        const options: ForgeWebScriptSelfHostedRunOptions = {
+        const options: FlintSelfHostedRunOptions = {
           ...(args.maxSteps === undefined ? {} : { maxSteps: args.maxSteps }),
           trace: traceOptions,
         };
-        const report = runForgeWebScriptSelfHostedLexStage(
-          { source, fileName: args.sourcePath ?? '<mcp-input>.fws', compilerVersion: 'mcp-trace' },
+        const report = runFlintSelfHostedLexStage(
+          { source, fileName: args.sourcePath ?? '<mcp-input>.flint', compilerVersion: 'mcp-trace' },
           args.mode ?? 'interpret',
           options,
         );

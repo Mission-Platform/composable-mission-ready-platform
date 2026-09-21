@@ -54,7 +54,7 @@ Simbologie di codici a barre lineari supportate.
 function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
 ```
 
-Codifica `data` in un codice a barre lineare utilizzando il grafico FWS locale del pacchetto.
+Codifica `data` in un codice a barre lineare utilizzando il grafico Flint locale del pacchetto.
 
 #### Parametri
 
@@ -75,7 +75,7 @@ Codifica `data` in un codice a barre lineare utilizzando il grafico FWS locale d
 function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>;
 ```
 
-Codifica `data` in modo asincrono utilizzando il grafico FWS locale del pacchetto.
+Codifica `data` in modo asincrono utilizzando il grafico Flint locale del pacchetto.
 
 #### Parametri
 
@@ -182,7 +182,7 @@ Codifica in modo asincrono un payload EAN-8 a sette cifre con il caricatore FWS.
 function encodeUpcaFws(value: string): string;
 ```
 
-Codifica un carico utile UPC-A tramite il grafico FWS EAN-13 con prefisso zero.
+Codifica un carico utile UPC-A tramite il grafico Flint EAN-13 con prefisso zero.
 
 #### Parametri
 
@@ -214,7 +214,7 @@ Codifica in modo asincrono un payload UPC-A tramite FWS.
 function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string;
 ```
 
-Codifica un codice a barre a lunghezza variabile supportato tramite il grafico FWS nativo, quando disponibile.
+Codifica un codice a barre a lunghezza variabile supportato tramite il grafico Flint nativo, quando disponibile.
 
 #### Parametri
 
@@ -248,7 +248,7 @@ Codifica in modo asincrono un codice a barre a lunghezza variabile supportato tr
 function validateGs1DataBarValue(value: string): boolean;
 ```
 
-Convalida un valore GTIN-14 GS1 DataBar/RSS-14 nel grafico FWS locale del pacchetto.
+Convalida un valore GTIN-14 GS1 DataBar/RSS-14 nel grafico Flint locale del pacchetto.
 
 #### Parametri
 
@@ -293,4 +293,4 @@ export type VariableBarcodeSymbology = Extract<
 >;
 ```
 
-Simbologie a lunghezza variabile supportate dall'adattatore FWS diretto per codici a barre.
+Simbologie a lunghezza variabile supportate dall'adattatore Flint diretto per codici a barre.

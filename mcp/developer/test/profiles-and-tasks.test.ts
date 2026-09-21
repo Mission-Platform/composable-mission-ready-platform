@@ -45,7 +45,7 @@ describe('MCP Profiles & Surface Area Scoping', () => {
     assert.ok(toolNames.has('repo_affected_packages'));
 
     // Non-core tools must be omitted to conserve tokens
-    assert.equal(toolNames.has('fws_run_trace'), false);
+    assert.equal(toolNames.has('flint_run_trace'), false);
     assert.equal(toolNames.has('scaffold_crate'), false);
     assert.equal(toolNames.has('git_commit_apply'), false);
     assert.equal(toolNames.has('lsp_apply_edit'), false);
@@ -100,7 +100,7 @@ describe('MCP Profiles & Surface Area Scoping', () => {
     assert.ok(toolNames.has('security_audit_compliance'));
     assert.ok(toolNames.has('scaffold'));
 
-    assert.equal(toolNames.has('fws_run_trace'), false);
+    assert.equal(toolNames.has('flint_run_trace'), false);
     assert.equal(toolNames.has('git_commit_apply'), false);
   });
 

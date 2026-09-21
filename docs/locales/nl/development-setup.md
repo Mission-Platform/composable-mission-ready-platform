@@ -70,7 +70,7 @@ pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
 De `...` bouwt ook de Forge-afhankelijkheden die door het pakket vereist zijn. De
-neutrale codescanner is samengesteld uit de Forge Web Script-grafiek; dat is niet het geval
+neutrale codescanner is samengesteld uit de Flint-grafiek; dat is niet het geval
 vereisen een Roest of `wasm-pack` stap bouwen.
 
 ## Ontwikkelingsworkflow
@@ -150,7 +150,7 @@ pnpm install
 
 ### WASM-buildfouten
 
-Als een Forge Web Script-artefact niet kan worden gebouwd, controleer dan de diagnostische gegevens van de compiler
+Als een Flint-artefact niet kan worden gebouwd, controleer dan de diagnostische gegevens van de compiler
 en verifieer het geselecteerde statische of dynamische linkprofiel. De
 `@mission-platform/hunspell` Voor het bouwen van Emscripten is Docker bovendien vereist
 rennen.

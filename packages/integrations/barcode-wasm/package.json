@@ -5,7 +5,7 @@
     "access": "public"
   },
   "license": "BSD-4-Clause",
-  "description": "Dependency-free 1D (linear) barcode encoder backed by Forge Web Script",
+  "description": "Dependency-free 1D (linear) barcode encoder backed by Flint",
   "type": "module",
   "sideEffects": false,
   "exports": {
@@ -28,17 +28,17 @@
     "format:write": "prettier --write ."
   },
   "dependencies": {
-    "@mission-platform/forge-web-script-runtime": "workspace:*"
+    "@mission-platform/flint-runtime": "workspace:*"
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
-    "@mission-platform/forge-web-script": "workspace:*",
-    "@mission-platform/forge-web-script-vitest": "workspace:*",
+    "@mission-platform/flint": "workspace:*",
+    "@mission-platform/flint-vitest": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
     "@mission-platform/tsdown-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
-    "@mission-platform/vite-plugin-forge-web-script": "workspace:*",
+    "@mission-platform/vite-plugin-flint": "workspace:*",
     "@types/node": "catalog:typescript",
     "eslint": "catalog:eslint",
     "jsdom": "catalog:testing",

@@ -5,9 +5,9 @@ import { encodeMatrix } from '@mission-platform/matrix-code';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import {
-  createForgeWebScriptCompilerService,
-  resolveForgeWebScriptModuleGraph,
-} from '../../../../compiler/forge/forge-web-script/dist/index.js';
+  createFlintCompilerService,
+  resolveFlintModuleGraph,
+} from '../../../../flint/core/dist/index.js';
 
 interface ScannerExports {
   readonly memory: WebAssembly.Memory;
@@ -69,7 +69,7 @@ function loadTree(directory: string, files: Record<string, string>): void {
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
     const fileName = join(directory, entry.name);
     if (entry.isDirectory()) loadTree(fileName, files);
-    else if (entry.name.endsWith('.fws')) files[resolve(fileName)] = readFileSync(fileName, 'utf8');
+    else if (entry.name.endsWith('.flint') || entry.name.endsWith('.fws')) files[resolve(fileName)] = readFileSync(fileName, 'utf8');
   }
 }
 
@@ -305,7 +305,7 @@ function code128Modules(value: string): number[] {
 // These helpers mirror the exact ZXing RSSUtils/RSS14Reader/RSSExpandedReader
 // arithmetic (including the `stuck_count` replacement for the non-idempotent
 // `narrowMask` bit trick ZXing implements with real bitwise AND) so that
-// fixtures built here are independently, verifiably consistent with the FWS
+// fixtures built here are independently, verifiably consistent with the Flint
 // port rather than hand-picked "expected" strings.
 function computeCombinsProduct(n: number, maxDenom: number, minDenom: number): number {
   let value = 1;
@@ -919,13 +919,13 @@ function renderMaxicodeLuma(
   return { width, height, luma };
 }
 
-describe('compiled scanner FWS foundation graph', () => {
+describe('compiled scanner Flint foundation graph', () => {
   let api: ScannerExports;
 
   beforeAll(async () => {
     const files: Record<string, string> = {};
     loadTree(scannerDirectory, files);
-    const entry = resolve(scannerDirectory, 'scanner.fws');
+    const entry = resolve(scannerDirectory, 'scanner.flint');
     const resolver = {
       resolve(source: string, importer: string): string | undefined {
         const target = resolve(dirname(importer), source);
@@ -941,8 +941,8 @@ describe('compiled scanner FWS foundation graph', () => {
       crossProjectLinkMode: 'static' as const,
       linkProfile: 'static' as const,
     };
-    const graph = await resolveForgeWebScriptModuleGraph([entry], resolver, linkConfiguration);
-    const service = createForgeWebScriptCompilerService();
+    const graph = await resolveFlintModuleGraph([entry], resolver, linkConfiguration);
+    const service = createFlintCompilerService();
     try {
       const artifact = service.compileGraph({
         graph: graph.graph,
@@ -963,19 +963,19 @@ describe('compiled scanner FWS foundation graph', () => {
   }, 180_000);
 
   it('links the foundation, 1D readers, and bounded 2D dispatch layer', () => {
-    const source = readFileSync(resolve(scannerDirectory, 'scanner.fws'), 'utf8');
-    expect(source).toContain('import "./foundation.fws" as foundation;');
-    expect(source).toContain('import "./common.fws" as c;');
-    expect(source).toContain('import "./oned.fws" as oned;');
-    expect(source).toContain('import "./image.fws" as image;');
-    expect(source).toContain('import "./locate-matrix.fws" as matrix_locator;');
-    expect(source).toContain('import "./pdf417.fws" as pdf417;');
-    expect(source).toContain('import "./maxicode.fws" as maxicode;');
+    const source = readFileSync(resolve(scannerDirectory, 'scanner.flint'), 'utf8');
+    expect(source).toContain('import "./foundation.flint" as foundation;');
+    expect(source).toContain('import "./common.flint" as c;');
+    expect(source).toContain('import "./oned.flint" as oned;');
+    expect(source).toContain('import "./image.flint" as image;');
+    expect(source).toContain('import "./locate-matrix.flint" as matrix_locator;');
+    expect(source).toContain('import "./pdf417.flint" as pdf417;');
+    expect(source).toContain('import "./maxicode.flint" as maxicode;');
     expect(source).toContain('locate_datamatrix_modules');
     expect(source).toContain('locate_aztec_modules');
     expect(source).toContain('locate_pdf417_modules');
     expect(source).toContain('locate_maxicode_modules');
-    expect(source).not.toContain('import "./databar.fws"');
+    expect(source).not.toContain('import "./databar.flint"');
     expect(source).toContain('sc_foundation_version');
   });
   it('decodes clean Data Matrix and compact Aztec symbols through the linked 2D entry', () => {

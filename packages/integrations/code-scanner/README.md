@@ -1,16 +1,16 @@
 # @mission-platform/code-scanner
 
-A dependency-free **image / camera code scanner** compiled as a Forge Web Script graph with WebAssembly SIMD support. It locates and decodes
+A dependency-free **image / camera code scanner** compiled as a Flint graph with WebAssembly SIMD support. It locates and decodes
 Data Matrix symbols, compact Aztec codes, 1D/RSS readers, PDF417, and MaxiCode from either a decoded image or a live camera stream,
 and ships a write-once component available for React, Vue 3, Solid, Svelte, and Web Components. QR decoder sources are retained as a
-standalone graph while combined QR emission is blocked by a Forge Web Script emitter limitation; they are not advertised as linked runtime coverage.
+standalone graph while combined QR emission is blocked by a Flint emitter limitation; they are not advertised as linked runtime coverage.
 
-The scanner runs the **entire pipeline in one statically linked FWS/WebAssembly call**
-(`src/fws/scanner.fws`, `scan_and_decode`): it binarises the image, locates the code (the Data Matrix
+The scanner runs the **entire pipeline in one statically linked Flint/WebAssembly call**
+(`src/fws/scanner.flint`, `scan_and_decode`): it binarises the image, locates the code (the Data Matrix
 "L" finder / the Aztec bullseye / linear scan-line runs), samples its module grid, **and decodes it** — the located
 modules never cross back into JS to be decoded. It does this by linking each format's decoder graph directly:
 
-| Format             | Linked FWS library                           |
+| Format             | Linked Flint library                         |
 | ------------------ | -------------------------------------------- |
 | Data Matrix        | `packages/integrations/code-scanner/src/fws` |
 | Aztec (compact)    | `packages/integrations/code-scanner/src/fws` |
@@ -19,7 +19,7 @@ modules never cross back into JS to be decoded. It does this by linking each for
 | RSS-14             | `packages/integrations/code-scanner/src/fws` |
 | MaxiCode           | `packages/integrations/code-scanner/src/fws` |
 
-The scanner links the decoder FWS sources at build time, so decoder package runtime imports do not cross the neutral
+The scanner links the decoder Flint sources at build time, so decoder package runtime imports do not cross the neutral
 artifact boundary.
 
 ## Programmatic API
@@ -27,7 +27,7 @@ artifact boundary.
 ```ts
 import { scanImageData, scanFile, type ScanResult } from '@mission-platform/code-scanner';
 
-// From a canvas `ImageData` (synchronous; the FWS artifact self-initialises):
+// From a canvas `ImageData` (synchronous; the Flint artifact self-initialises):
 const result: ScanResult | null = scanImageData(imageData, {
   formats: ['DATA_MATRIX', 'CODE_128'],
   tryHarder: true,
@@ -45,7 +45,7 @@ represented by an empty byte value, zero, or an empty collection.
 
 ### Initialisation
 
-No setup is required: the neutral package loads its statically linked FWS artifact on demand. `scanImageData` /
+No setup is required: the neutral package loads its statically linked Flint artifact on demand. `scanImageData` /
 `scanFile` (and their `scanImageDataAsync` / `scanFileAsync` async counterparts) retain their synchronous and lazy
 initialisation behavior.
 
@@ -104,7 +104,7 @@ import { CodeScanner } from '@mission-platform/code-scanner';
 
 ## Building
 
-The scanner artifact is compiled by the Forge Web Script Vite plugin. The static profile enables SIMD and aggressive
+The scanner artifact is compiled by the Flint Vite plugin. The static profile enables SIMD and aggressive
 link-time optimization; the dynamic profile preserves explicit decoder module boundaries with cached dispatch. Build
 the whole package with:
 
@@ -125,6 +125,6 @@ pnpm exec turbo run build --filter @mission-platform/code-scanner
 - **PDF417**, **RSS-14/RSS Expanded**, and **MaxiCode** are bounded reduced readers: clean upright fixtures are covered,
   while full ZXing correction, rotation, and metadata parity remain outstanding.
 - Data Matrix currently covers the implemented ASCII subset; compact Aztec currently covers the implemented binary subset.
-- QR decoder graphs emit independently, but combined scanner linkage currently fails Forge Web Script `FWS-EMIT-001` and is
+- QR decoder graphs emit independently, but combined scanner linkage currently fails Flint `FLINT-WASM-001` and is
   intentionally not included in the linked artifact. The linked result envelope is currently a bounded compatibility string;
   points, metadata, and binary-result preservation remain follow-up work tracked in `docs/accuracy-improvement-plan.md`.

@@ -1,5 +1,5 @@
 import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
-import forgeWebScriptPlugin from '@mission-platform/vite-plugin-forge-web-script';
+import flintPlugin from '@mission-platform/vite-plugin-flint';
 
 export default [
   defineTsdownLibrary({
@@ -10,7 +10,7 @@ export default [
     unbundle: false,
     clean: true,
     overrides: {
-      plugins: [forgeWebScriptPlugin({ rootDir: import.meta.dirname, requireExports: false, selfHostedVmMode: 'aot' })],
+      plugins: [flintPlugin({ rootDir: import.meta.dirname, requireExports: false, selfHostedVmMode: 'aot' })],
     },
   }),
 ];

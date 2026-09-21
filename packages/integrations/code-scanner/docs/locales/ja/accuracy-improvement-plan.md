@@ -6,10 +6,10 @@
 > 言語: 日本語 (ja)
 
 実世界のキャプチャ (アップロードとライブカメラ) での `@mission-platform/code-scanner` の読み取り率を上げるための計画
-フレーム）、および静的にリンクされた 1 つの Forge Web Script/WebAssembly アーティファクト内にスキャン パイプラインを保持するためです。
+フレーム）、および静的にリンクされた 1 つの Flint/WebAssembly アーティファクト内にスキャン パイプラインを保持するためです。
 
 > **現在の実装:** スキャナは静的にリンクされた状態で出荷されます。
-> `src/fws` の下の Forge Web Script グラフ、動的なソース モジュール プロファイル
+> `src/fws` の下の Flint グラフ、動的なソース モジュール プロファイル
 > 独立してキャッシュ可能なデコーダ モジュールで利用可能。錆びと木箱
 > 以下に保持されている参照は、歴史的な移住の起源のみです。彼らは
 > ランタイムの依存関係をパッケージ化したり、入力をビルドしたりしません。
@@ -28,7 +28,7 @@
   **タグ付きバッファ** `[format, ...payload]` を返しました — **デコードされませんでした**。
 - **デコード** は JavaScript で実行され、別のデコーダー モジュールを呼び出しました。
 
-フェーズ 1 では、これを単一の FWS `scan_and_decode` 呼び出しに置き換えました (§1 を参照)。の
+フェーズ 1 では、これを単一の Flint `scan_and_decode` 呼び出しに置き換えました (§1 を参照)。の
 以下の歴史的動機は理論的根拠として保持されますが、現在の情報源は
 真実は、FWS グラフとその Vitest 準拠スイートです。
 
@@ -40,7 +40,7 @@
 image (JS)
   → wasm code-scan.scan()            [Rust: binarise + locate + sample]
   → tagged module buffer (JS)        [cross back into JS]
-  → scanner-owned FWS decoder graph   [decode inside the scanner artifact]
+  → scanner-owned Flint decoder graph   [decode inside the scanner artifact]
   → payload string (JS)
 ```
 
@@ -60,21 +60,21 @@ image (JS)
   EAN-13 として報告されます (新しいテスト スイートで検証済み)。 Rust でデコードすると、ロケーターに構造上のヒント (要素
   カウント、ガード パターン) を使用して、適切なシンボルを選択します。
 
-### ターゲット アーキテクチャ — 1 回の FWS 呼び出し、イメージ入力、ペイロード出力
+### ターゲット アーキテクチャ — 1 回の Flint 呼び出し、イメージ入力、ペイロード出力
 
 > **ステータス: 実装されました。** スキャナは `scan_and_decode` をエクスポートし、
-> デコーダ FWS グラフを直接デコードし、JS ファサードはその 1 つを介してデコードします
+> デコーダ Flint グラフを直接デコードし、JS ファサードはその 1 つを介してデコードします
 > 電話してください。以下の詳細は、移行の理論的根拠を記録したものです。
 
 ```
 image (JS)
-  → FWS scanner.scan_and_decode()      [binarise + locate + sample + decode]
+  → Flint scanner.scan_and_decode()      [binarise + locate + sample + decode]
   → ScanOutcome { format, value } (JS)
 ```
 
-`scan_and_decode(width, height, luma) -> Option<ScanOutcome>` は `src/fws/scanner.fws` 内でパイプライン全体を実行し、
+`scan_and_decode(width, height, luma) -> Option<ScanOutcome>` は `src/fws/scanner.flint` 内でパイプライン全体を実行し、
 **デコードされたペイロード**を直接返します (シンボルが見つかってもデコードできない場合、`value` は空です)。 JSのファサード
-(`scanner/index.ts`) は、ビルド時に QR、マトリックス、およびバーコード FWS ソースをリンクする薄いマーシャリング レイヤーです。
+(`scanner/index.ts`) は、ビルド時に QR、マトリックス、およびバーコード Flint ソースをリンクする薄いマーシャリング レイヤーです。
 これらのパッケージは引き続き独立して公開できます。
 
 #### なぜこれが今対処可能なのか
@@ -394,7 +394,7 @@ MaxiCode 以外の画像はこの方法でサンプリングされます。こ�
   `5 → 'databar'`、`6 → 'maxicode'`、および `src/types.ts` 内の `ScanFormat` 共用体
   同じ 3 つの名前を取得します。つまり、`scanImageData` / `scanImageDataAsync` (および
   `*All` / ROI バリアント) は、他の形式と同様にそれらを返します。
-- **スキャナ FWS アーティファクトは、Forge Web Script Vite プラグインによって `src/fws/scanner.fws` から構築されます**。静的プロファイル
+- **スキャナ Flint アーティファクトは、Flint Vite プラグインによって `src/fws/scanner.flint` から構築されます**。静的プロファイル
   デコーダ グラフを 1 つの自己完結型アーティファクトにリンクし、WebAssembly SIMD を有効にし、積極的なリンクタイムを適用します。
   最適化。動的プロファイルは明示的なデコーダ モジュール境界を保持し、エクスポート ディスパッチをキャッシュします。
 - **FWS グラフとファサード スイート** (`src/fws/scanner-graph.spec.ts` および

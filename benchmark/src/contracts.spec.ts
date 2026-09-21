@@ -3,22 +3,22 @@ import { describe, expect, it } from "vitest";
 import { createBenchmarkKey, type BenchmarkKey } from "./contracts.ts";
 
 describe("benchmark contracts", () => {
-  it("creates stable keys with an explicit FWS mode slot", () => {
+  it("creates stable keys with an explicit Flint mode slot", () => {
     const key: BenchmarkKey = {
       caseId: "arithmetic:standard:small",
       workload: "arithmetic",
       inputSize: "small",
-      implementation: "fws",
-      fwsMode: "jit",
+      implementation: "flint",
+      flintMode: "jit",
       hostRuntime: "node",
       phase: "execute",
     };
 
     expect(createBenchmarkKey(key)).toBe(
-      "arithmetic:standard:small|arithmetic|small|fws|jit|node|execute",
+      "arithmetic:standard:small|arithmetic|small|flint|jit|node|execute",
     );
-    expect(createBenchmarkKey({ ...key, fwsMode: undefined })).toBe(
-      "arithmetic:standard:small|arithmetic|small|fws|-|node|execute",
+    expect(createBenchmarkKey({ ...key, flintMode: undefined })).toBe(
+      "arithmetic:standard:small|arithmetic|small|flint|-|node|execute",
     );
   });
 

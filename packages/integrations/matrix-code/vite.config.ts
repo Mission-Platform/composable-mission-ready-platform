@@ -7,14 +7,14 @@ import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 import { defineLibraryConfig } from '@mission-platform/vite-config';
 import { defineJsxLibraryConfig, type JsxFramework } from '@mission-platform/vite-plugin-forge';
-import forgeWebScriptPlugin from '@mission-platform/vite-plugin-forge-web-script';
+import flintPlugin from '@mission-platform/vite-plugin-flint';
 import { defineConfig, type UserConfig } from 'vite';
 
 /**
  * `@mission-platform/matrix-code` ships **three** distinct build artifacts from
  * a single Vite config, selected by `--mode`:
  *
- * - **default** — the dependency-free package-local FWS **encoder**
+ * - **default** — the dependency-free package-local Flint **encoder**
  *   (`src/index.ts`), emitted as the self-contained `dist/index.js`. This is
  *   the package's `.` export.
  * - **`vue` / `react`** — the write-once `ForgeMatrixCode` **component** compiled
@@ -38,11 +38,11 @@ function defineEncoderConfig(): UserConfig {
       index: 'src/index.ts',
     },
     name: 'MissionPlatformMatrixCode',
-    // Keep the package-local FWS loaders self-contained rather than emitting a
+    // Keep the package-local Flint loaders self-contained rather than emitting a
     // separate module graph.
     preserveModules: false,
     overrides: {
-      plugins: [forgeWebScriptPlugin({ root: import.meta.dirname, requireExports: false, selfHostedVmMode: 'aot' })],
+      plugins: [flintPlugin({ root: import.meta.dirname, requireExports: false, selfHostedVmMode: 'aot' })],
     },
   });
 }

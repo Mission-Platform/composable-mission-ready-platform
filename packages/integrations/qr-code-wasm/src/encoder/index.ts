@@ -1,14 +1,14 @@
-// Public, typed wrapper around the package-local Forge Web Script QR encoder.
+// Public, typed wrapper around the package-local Flint QR encoder.
 //
-// The FWS graph uses byte mode for arbitrary UTF-8 strings, selects the
+// The Flint graph uses byte mode for arbitrary UTF-8 strings, selects the
 // smallest fitting symbol, and chooses the data mask with the lowest penalty.
 
-import { load as loadQrCompactEncoder, loadSync as loadQrCompactEncoderSync } from '../fws/qr-compact-encoder.fws';
-import { load as loadQrEncoder, loadSync as loadQrEncoderSync } from '../fws/qr-encoder.fws';
+import { load as loadQrCompactEncoder, loadSync as loadQrCompactEncoderSync } from '../fws/qr-compact-encoder.flint';
+import { load as loadQrEncoder, loadSync as loadQrEncoderSync } from '../fws/qr-encoder.flint';
 
 import type { CompactQrMatrix, QrErrorCorrection, QrMatrix } from '../types';
 
-/** Ordinal for each error-correction level, matching the FWS encoder contract. */
+/** Ordinal for each error-correction level, matching the Flint encoder contract. */
 const ECC_ORDINAL: Record<QrErrorCorrection, number> = { L: 0, M: 1, Q: 2, H: 3 };
 
 /** Validates that the encoder produced non-empty QR code output. */
@@ -62,7 +62,7 @@ function unpackModuleGrid(size: number, moduleWords: readonly number[]): boolean
   return modules;
 }
 
-/** Read the FWS encoder's fixed-layout record and its module words. */
+/** Read the Flint encoder's fixed-layout record and its module words. */
 function unpack(encoded: { version: number; size: number; modules: readonly number[] }): QrMatrix {
   assertValidQrDimensions(encoded);
   const { version, size, modules: moduleWords } = encoded;
@@ -155,7 +155,7 @@ function unpackCompactGrid(width: number, height: number, bits: string): boolean
 }
 
 /**
- * Unpack a compact FWS encoder result (`width,height,row-major-bits`) into a
+ * Unpack a compact Flint encoder result (`width,height,row-major-bits`) into a
  * {@link CompactQrMatrix}.
  */
 function unpackCompact(packed: string, kind: string): CompactQrMatrix {

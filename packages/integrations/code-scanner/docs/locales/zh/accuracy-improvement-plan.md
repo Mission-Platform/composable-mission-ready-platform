@@ -6,7 +6,7 @@
 > 语言: 简体中文 (zh)
 
 提高 `@mission-platform/code-scanner` 在现实世界捕获（上传和实时摄像头）读取率的计划
-帧），以及将扫描管道保留在一个静态链接的 Forge Web Script/WebAssembly 工件内。
+帧），以及将扫描管道保留在一个静态链接的 Flint/WebAssembly 工件内。
 
 > **当前实现：** 扫描仪作为静态链接提供
 > 在 `src/fws` 下伪造 Web 脚本图，具有动态源模块配置文件
@@ -28,9 +28,9 @@
   返回了一个**标记的缓冲区** `[format, ...payload]` - 它**没有**解码。
 - **解码** 在 JavaScript 中运行并调用单独的解码器模块。
 
-第 1 阶段用单个 FWS `scan_and_decode` 调用替换了这一点（请参阅§1）；的
+第 1 阶段用单个 Flint `scan_and_decode` 调用替换了这一点（请参阅§1）；的
 下面的历史动机保留为基本原理，而当前的来源
-事实是 FWS 图及其 Vitest 一致性套件。
+事实是 Flint 图及其 Vitest 一致性套件。
 
 ## 1.核心结构问题：管道两次跨越wasm↔JS边界
 
@@ -40,7 +40,7 @@
 image (JS)
   → wasm code-scan.scan()            [Rust: binarise + locate + sample]
   → tagged module buffer (JS)        [cross back into JS]
-  → scanner-owned FWS decoder graph   [decode inside the scanner artifact]
+  → scanner-owned Flint decoder graph   [decode inside the scanner artifact]
   → payload string (JS)
 ```
 
@@ -60,21 +60,21 @@ image (JS)
   报告为 EAN-13（由新测试套件验证）。 Rust 中的解码让定位器携带结构提示（元素
   计数、守卫模式）来选择正确的符号系统。
 
-### 目标架构 — 一次 FWS 调用、图像输入、负载输出
+### 目标架构 — 一次 Flint 调用、图像输入、负载输出
 
 > **状态：已实施。** 扫描仪导出 `scan_and_decode`，链接
-> 直接解码 FWS 图，JS 外观通过该单一解码
+> 直接解码 Flint 图，JS 外观通过该单一解码
 > 打电话。下面的详细信息记录了迁移的理由。
 
 ```
 image (JS)
-  → FWS scanner.scan_and_decode()      [binarise + locate + sample + decode]
+  → Flint scanner.scan_and_decode()      [binarise + locate + sample + decode]
   → ScanOutcome { format, value } (JS)
 ```
 
-`scan_and_decode(width, height, luma) -> Option<ScanOutcome>` 在 `src/fws/scanner.fws` 内运行整个管道，并且
+`scan_and_decode(width, height, luma) -> Option<ScanOutcome>` 在 `src/fws/scanner.flint` 内运行整个管道，并且
 直接返回**解码后的有效负载**（当符号已定位但无法解码时，`value` 为空）。 JS 外观
-(`scanner/index.ts`) 是一个薄编组层，在构建时链接 QR、矩阵和条形码 FWS 源；
+(`scanner/index.ts`) 是一个薄编组层，在构建时链接 QR、矩阵和条形码 Flint 源；
 这些软件包仍然可以独立发布。
 
 #### 为什么现在这很容易处理
@@ -384,7 +384,7 @@ _回归_——因此，在衡量真正的胜利时，无法修复的异常值永
 基线 0（旋转符号错误地对六角形网格进行采样，RS 拒绝它 — 无误报）。一个靶心
 在采样之前恢复符号旋转的取景器将提升其他三个旋转。
 
-### 第 6 步 — 将新格式连接到 JS 外观 + 构建 FWS 工件_（完成）_
+### 第 6 步 — 将新格式连接到 JS 外观 + 构建 Flint 工件_（完成）_
 
 步骤 3-5 将 PDF417、GS1 DataBar (RSS-14) 和 MaxiCode 放入扫描仪中
 `FORMAT_PDF417` / `FORMAT_DATABAR` / `FORMAT_MAXICODE` 标签后面的管道，而 JS 外观只知道
@@ -394,7 +394,7 @@ _回归_——因此，在衡量真正的胜利时，无法修复的异常值永
   `5 → 'databar'`、`6 → 'maxicode'` 和 `src/types.ts` 中的 `ScanFormat` 联合
   获得相同的三个名称 - 因此 `scanImageData` / `scanImageDataAsync` （以及
   `*All` / ROI 变体）像任何其他格式一样返回它们。
-- **扫描仪 FWS 工件是由 Forge Web 脚本 Vite 插件从 `src/fws/scanner.fws` 构建的**。静态配置文件
+- **扫描仪 Flint 工件是由 Forge Web 脚本 Vite 插件从 `src/fws/scanner.flint` 构建的**。静态配置文件
   将解码器图链接到一个独立的工件中，启用 WebAssembly SIMD，并应用积极的链接时间
   优化；动态配置文件保持明确的解码器模块边界并缓存导出调度。
 - **FWS 图形和外观套件**（`src/fws/scanner-graph.spec.ts` 和
@@ -404,7 +404,7 @@ _回归_——因此，在衡量真正的胜利时，无法修复的异常值永
   包本地 PDF417 文本固定装置使一致性情况独立于
   已退休的本机语料库工作区。
 
-**结果：** `vitest` 针对 FWS 工件和 `tsc` 版本呈绿色
+**结果：** `vitest` 针对 Flint 工件和 `tsc` 版本呈绿色
 检查是否干净。受支持的家庭仍然受到全面的保障
 图形和公共立面套件，以及指导的每阶段模型分层
 工作记录在 `docs/model-cost-strategy.md` 中。

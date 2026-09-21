@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest';
 
 import { encodeBarcode } from '../encoder';
 
-import { load as loadCode128, loadSync as loadCode128Sync } from './code128.fws';
+import { load as loadCode128, loadSync as loadCode128Sync } from './code128.flint';
 
-describe('native Code 128 FWS encoder', () => {
+describe('native Code 128 Flint encoder', () => {
   it('matches Code B output for printable mixed ASCII', () => {
     const code128 = loadCode128Sync();
 

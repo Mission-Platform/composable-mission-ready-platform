@@ -70,7 +70,7 @@ pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
 ה `...` גם בונה את התלות של Forge הנדרשת על ידי החבילה. ה
-סורק קוד ניטרלי מורכב מגרף Forge Web Script שלו; זה לא
+סורק קוד ניטרלי מורכב מגרף Flint שלו; זה לא
 דורשים חלודה או `wasm-pack` שלב לבנות.
 
 ## זרימת עבודה לפיתוח
@@ -150,7 +150,7 @@ pnpm install
 
 ### כשלים בבניית WASM
 
-אם חפץ Forge Web Script לא מצליח להיבנות, בדוק את אבחון המהדר שלו
+אם חפץ Flint לא מצליח להיבנות, בדוק את אבחון המהדר שלו
 ואמת את פרופיל הקישור הסטטי או הדינמי שנבחר. ה
 `@mission-platform/hunspell` בניית Emscripten מחייבת בנוסף את Docker
 להיות רץ.

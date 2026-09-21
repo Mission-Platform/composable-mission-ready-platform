@@ -49,7 +49,7 @@ const DATASET_COUNTS: Readonly<Record<BenchmarkSize, number>> = {
   large: 16_384,
 };
 
-const TEXT_SEEDS = ["Forge Web Script", "Δοκιμή", "日本語", "emoji 🚀"];
+const TEXT_SEEDS = ["Flint language", "Δοκιμή", "日本語", "emoji 🚀"];
 
 export function stableStringify(value: unknown): string {
   if (value === null || typeof value !== "object") {
@@ -126,11 +126,12 @@ function createCase(
 }
 
 function arithmeticCases(size: BenchmarkSize): readonly BenchmarkCase[] {
-  const n = SIZE_COUNTS[size];
+  const count = SIZE_COUNTS[size];
   const seed = ARITHMETIC_SEEDS[size];
   return [
     createCase("arithmetic", size, "standard", {
-      n,
+      // eslint-disable-next-line id-length -- ArithmeticInput contract property name
+      n: count,
       multiplier: 3,
       offset: -7,
       seed,
@@ -138,12 +139,14 @@ function arithmeticCases(size: BenchmarkSize): readonly BenchmarkCase[] {
     ...(size === "small"
       ? [
           createCase("arithmetic", size, "empty", {
+            // eslint-disable-next-line id-length -- ArithmeticInput contract property name
             n: 0,
             multiplier: 3,
             offset: -7,
             seed,
           }),
           createCase("arithmetic", size, "singleton", {
+            // eslint-disable-next-line id-length -- ArithmeticInput contract property name
             n: 1,
             multiplier: 3,
             offset: -7,
