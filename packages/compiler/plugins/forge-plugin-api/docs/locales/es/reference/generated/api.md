@@ -1525,11 +1525,18 @@ Valida un objeto de destino frente a un esquema declarativo, recopilando todos l
 
 #### Parámetros
 
-| Nombre   | Tipo                              | Descripción |
-| -------- | --------------------------------- | ----------- |
-| objetivo | desconocido                       |             |
-| esquema  | Esquema declarativo               |             |
-| opciones | Opciones de validación de esquema |             |
+| Nombre   | Tipo                              | Descripción                                            |
+| -------- | --------------------------------- | ------------------------------------------------------ |
+| objetivo | desconocido                       | - Objeto objetivo o registro a validar.                |
+| esquema  | Esquema declarativo               | - Esquema declarativo que define reglas estructurales. |
+| opciones | Opciones de validación de esquema | - Opciones de configuración de validación.             |
+
+#### Contrato
+
+- **@param:** - Objeto o registro de destino para validar.
+- **@param:** - Esquema declarativo que define reglas estructurales.
+- **@param:** - Opciones de configuración de validación.
+- **@returns:** Conjunto de problemas de validación recopilados.
 
 ### validarTargetIntentions
 

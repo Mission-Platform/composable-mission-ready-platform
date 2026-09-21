@@ -43,10 +43,16 @@ con posizioni dei token, commenti e metadati AST completi.
 
 #### Parametri
 
-| Nome    | Digitare                   | Descrizione |
-| ------- | -------------------------- | ----------- |
-| fonte   | stringa                    |             |
-| opzioni | ParseCstOptions \| stringa |             |
+| Nome    | Digitare                   | Descrizione                           |
+| ------- | -------------------------- | ------------------------------------- |
+| fonte   | stringa                    | - Codice sorgente da analizzare.      |
+| opzioni | ParseCstOptions \| stringa | - Opzioni di analisi CST o nome file. |
+
+#### Contrarre
+
+- **@param:** - Codice sorgente da analizzare.
+- **@param:** - Opzioni di analisi CST o nome file.
+- **@returns:** Risultato dell'analisi incluso AST del programma e commenti.
 
 ### ParseCstOptions
 

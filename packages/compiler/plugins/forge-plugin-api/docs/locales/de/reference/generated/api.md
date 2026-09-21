@@ -1525,11 +1525,18 @@ Validiert ein Zielobjekt anhand eines deklarativen Schemas und erfasst alle stru
 
 #### Parameter
 
-| Name     | Geben Sie               | ein Beschreibung |
-| -------- | ----------------------- | ---------------- |
-| Ziel     | unbekannt               |                  |
-| Schema   | Deklaratives Schema     |                  |
-| Optionen | SchemaValidationOptions |                  |
+| Name     | Geben Sie               | ein Beschreibung                                     |
+| -------- | ----------------------- | ---------------------------------------------------- |
+| Ziel     | unbekannt               | - Zielobjekt oder Datensatz zur Validierung.         |
+| Schema   | Deklaratives Schema     | - Deklaratives Schema, das Strukturregeln definiert. |
+| Optionen | SchemaValidationOptions | - Validierungskonfigurationsoptionen.                |
+
+#### Vertrag
+
+- **@param:** – Zielobjekt oder Datensatz zur Validierung.
+- **@param:** – Deklaratives Schema, das Strukturregeln definiert.
+- **@param:** – Validierungskonfigurationsoptionen.
+- **@returns:** Array gesammelter Validierungsprobleme.
 
 ### validierenTargetIntentions
 

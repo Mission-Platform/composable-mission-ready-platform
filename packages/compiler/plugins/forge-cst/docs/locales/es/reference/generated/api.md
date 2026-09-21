@@ -43,10 +43,16 @@ con posiciones de tokens, comentarios y metadatos AST completos.
 
 #### Parámetros
 
-| Nombre   | Tipo                      | Descripción |
-| -------- | ------------------------- | ----------- |
-| fuente   | cadena                    |             |
-| opciones | ParseCstOptions \| cadena |             |
+| Nombre   | Tipo                      | Descripción                                     |
+| -------- | ------------------------- | ----------------------------------------------- |
+| fuente   | cadena                    | - Código fuente para analizar.                  |
+| opciones | ParseCstOptions \| cadena | - Opciones de análisis CST o nombre de archivo. |
+
+#### Contrato
+
+- **@param:** - Código fuente para analizar.
+- **@param:** - Opciones de análisis de CST o nombre de archivo.
+- **@returns:** Resultado del análisis que incluye el programa AST y los comentarios.
 
 ### Opciones de ParseCst
 

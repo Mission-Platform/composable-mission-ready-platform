@@ -43,10 +43,16 @@ mit Token-Positionen, Kommentaren und vollständigen AST-Metadaten.
 
 #### Parameter
 
-| Name     | Geben Sie                       | ein Beschreibung |
-| -------- | ------------------------------- | ---------------- |
-| Quelle   | Zeichenfolge                    |                  |
-| Optionen | ParseCstOptions \| Zeichenfolge |                  |
+| Name     | Geben Sie                       | ein Beschreibung                       |
+| -------- | ------------------------------- | -------------------------------------- |
+| Quelle   | Zeichenfolge                    | - Quellcode zum Parsen.                |
+| Optionen | ParseCstOptions \| Zeichenfolge | - CST-Parsing-Optionen oder Dateiname. |
+
+#### Vertrag
+
+- **@param:** – Quellcode zum Parsen.
+- **@param:** – CST-Parsing-Optionen oder Dateiname.
+- **@returns:** Analyseergebnis einschließlich Programm-AST und Kommentaren.
 
 ### ParseCstOptions
 

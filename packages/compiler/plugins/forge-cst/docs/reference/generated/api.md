@@ -38,10 +38,16 @@ with token positions, comments, and full AST metadata.
 
 #### Parameters
 
-| Name    | Type                      | Description |
-| ------- | ------------------------- | ----------- |
-| source  | string                    |             |
-| options | ParseCstOptions \| string |             |
+| Name    | Type                      | Description                         |
+| ------- | ------------------------- | ----------------------------------- |
+| source  | string                    | - Source code to parse.             |
+| options | ParseCstOptions \| string | - CST parsing options or file name. |
+
+#### Contract
+
+- **@param:** - Source code to parse.
+- **@param:** - CST parsing options or file name.
+- **@returns:** Parse result including program AST and comments.
 
 ### ParseCstOptions
 

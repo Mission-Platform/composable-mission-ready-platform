@@ -43,10 +43,16 @@ avec les positions des jetons, les commentaires et les métadonnées AST complè
 
 #### Paramètres
 
-| Nom     | Tapez                     | Descriptif |
-| ------- | ------------------------- | ---------- |
-| source  | chaîne                    |            |
-| options | ParseCstOptions \| chaîne |            |
+| Nom     | Tapez                     | Descriptif                                 |
+| ------- | ------------------------- | ------------------------------------------ |
+| source  | chaîne                    | - Code source à analyser.                  |
+| options | ParseCstOptions \| chaîne | - Options d'analyse CST ou nom de fichier. |
+
+#### Contracter
+
+- **@param:** - Code source à analyser.
+- **@param:** - Options d'analyse CST ou nom de fichier.
+- **@returns :** Analyser le résultat, y compris le programme AST et les commentaires.
 
 ### ParseCstOptions
 

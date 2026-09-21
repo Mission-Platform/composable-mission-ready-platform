@@ -43,10 +43,16 @@ met tokenposities, opmerkingen en volledige AST-metagegevens.
 
 #### Parameters
 
-| Naam   | Typ                           | Beschrijving |
-| ------ | ----------------------------- | ------------ |
-| bron   | tekenreeks                    |              |
-| opties | ParseCstOptions \| tekenreeks |              |
+| Naam   | Typ                           | Beschrijving                         |
+| ------ | ----------------------------- | ------------------------------------ |
+| bron   | tekenreeks                    | - Broncode om te parseren.           |
+| opties | ParseCstOptions \| tekenreeks | - CST-parseeropties of bestandsnaam. |
+
+#### Contract
+
+- **@param:** - Broncode om te parseren.
+- **@param:** - CST-parseeropties of bestandsnaam.
+- **@returns:** Parseerresultaat inclusief programma AST en opmerkingen.
 
 ### ParseCstOptions
 

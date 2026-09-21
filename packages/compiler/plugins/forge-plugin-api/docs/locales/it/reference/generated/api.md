@@ -1525,11 +1525,18 @@ Convalida un oggetto di destinazione rispetto a uno schema dichiarativo, raccogl
 
 #### Parametri
 
-| Nome      | Digitare                 | Descrizione |
-| --------- | ------------------------ | ----------- |
-| obiettivo | sconosciuto              |             |
-| schema    | Schema dichiarativo      |             |
-| opzioni   | OpzioniValidazioneSchema |             |
+| Nome      | Digitare                 | Descrizione                                             |
+| --------- | ------------------------ | ------------------------------------------------------- |
+| obiettivo | sconosciuto              | - Oggetto o record di destinazione da convalidare.      |
+| schema    | Schema dichiarativo      | - Schema dichiarativo che definisce regole strutturali. |
+| opzioni   | OpzioniValidazioneSchema | - Opzioni di configurazione della convalida.            |
+
+#### Contrarre
+
+- **@param:** - Oggetto o record di destinazione da convalidare.
+- **@param:** - Schema dichiarativo che definisce le regole strutturali.
+- **@param:** - Opzioni di configurazione della convalida.
+- **@returns:** Array di problemi di convalida raccolti.
 
 ### validateTargetIntentions
 

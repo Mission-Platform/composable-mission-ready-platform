@@ -1520,11 +1520,18 @@ Validates a target object against a declarative schema, collecting all structura
 
 #### Parameters
 
-| Name    | Type                    | Description |
-| ------- | ----------------------- | ----------- |
-| target  | unknown                 |             |
-| schema  | DeclarativeSchema       |             |
-| options | SchemaValidationOptions |             |
+| Name    | Type                    | Description                                     |
+| ------- | ----------------------- | ----------------------------------------------- |
+| target  | unknown                 | - Target object or record to validate.          |
+| schema  | DeclarativeSchema       | - Declarative schema defining structural rules. |
+| options | SchemaValidationOptions | - Validation configuration options.             |
+
+#### Contract
+
+- **@param:** - Target object or record to validate.
+- **@param:** - Declarative schema defining structural rules.
+- **@param:** - Validation configuration options.
+- **@returns:** Array of collected validation issues.
 
 ### validateTargetIntentions
 

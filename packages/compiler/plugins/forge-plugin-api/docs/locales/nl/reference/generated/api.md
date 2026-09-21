@@ -1525,11 +1525,18 @@ Valideert een doelobject tegen een declaratief schema, waarbij alle structurele 
 
 #### Parameters
 
-| Naam   | Typ                   | Beschrijving |
-| ------ | --------------------- | ------------ |
-| doel   | onbekend              |              |
-| schema | DeclaratiefSchema     |              |
-| opties | SchemaValidatieOpties |              |
+| Naam   | Typ                   | Beschrijving                                            |
+| ------ | --------------------- | ------------------------------------------------------- |
+| doel   | onbekend              | - Doelobject of record om te valideren.                 |
+| schema | DeclaratiefSchema     | - Declaratief schema dat structurele regels definieert. |
+| opties | SchemaValidatieOpties | - Validatieconfiguratieopties.                          |
+
+#### Contract
+
+- **@param:** - Doelobject of record om te valideren.
+- **@param:** - Declaratief schema dat structurele regels definieert.
+- **@param:** - Validatieconfiguratieopties.
+- **@returns:** Een reeks verzamelde validatieproblemen.
 
 ### valideerTargetIntentions
 

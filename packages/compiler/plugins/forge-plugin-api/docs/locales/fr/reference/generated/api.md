@@ -1525,11 +1525,18 @@ Valide un objet cible par rapport à un schéma déclaratif, en collectant tous 
 
 #### Paramètres
 
-| Nom     | Tapez                           | Descriptif |
-| ------- | ------------------------------- | ---------- |
-| cible   | inconnu                         |            |
-| schéma  | Schéma déclaratif               |            |
-| options | Options de validation de schéma |            |
+| Nom     | Tapez                           | Descriptif                                                |
+| ------- | ------------------------------- | --------------------------------------------------------- |
+| cible   | inconnu                         | - Objet ou enregistrement cible à valider.                |
+| schéma  | Schéma déclaratif               | - Schéma déclaratif définissant des règles structurelles. |
+| options | Options de validation de schéma | - Options de configuration de validation.                 |
+
+#### Contracter
+
+- **@param:** - Objet ou enregistrement cible à valider.
+- **@param:** - Schéma déclaratif définissant les règles structurelles.
+- **@param:** - Options de configuration de validation.
+- **@returns :** Tableau des problèmes de validation collectés.
 
 ### validerTargetIntentions
 
