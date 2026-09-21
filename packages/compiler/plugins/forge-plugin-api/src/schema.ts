@@ -796,6 +796,57 @@ function validateRootFramework(
 }
 
 /**
+ * Resolves a string value from an unknown field, returning empty string if not a string.
+ *
+ * @param value - Value to inspect.
+ * @returns String representation or empty string.
+ */
+function resolveFrameworkString(value: unknown): string {
+  if (typeof value === "string") {
+    return value;
+  }
+  return "";
+}
+
+/**
+ * Resolves the actionable source span for a section record with a fallback.
+ *
+ * @param section - Section record.
+ * @param fallback - Fallback source span.
+ * @returns Resolved source span or undefined.
+ */
+function resolveSectionSpan(
+  section: Record<string, unknown>,
+  fallback?: SourceSpan,
+): SourceSpan | undefined {
+  const span = findActionableSpan(section);
+  if (span !== undefined) {
+    return span;
+  }
+  return fallback;
+}
+
+/**
+ * Checks whether two framework identifiers are defined and unequal.
+ *
+ * @param contextFramework - Framework defined in context.
+ * @param rootFramework - Framework defined in root intentions.
+ * @returns True if frameworks conflict.
+ */
+function hasContextFrameworkMismatch(
+  contextFramework: string,
+  rootFramework: string,
+): boolean {
+  if (contextFramework.length === 0) {
+    return false;
+  }
+  if (rootFramework.length === 0) {
+    return false;
+  }
+  return contextFramework !== rootFramework;
+}
+
+/**
  * Checks for mismatch between context framework and target intentions framework.
  *
  * @param context - Target context record.
@@ -808,23 +859,17 @@ function checkContextFrameworkMismatch(
   intentions: Record<string, unknown>,
   span?: SourceSpan,
 ): SchemaValidationIssue | undefined {
-  const contextFramework =
-    typeof context.framework === "string" ? context.framework : "";
-  const rootFramework =
-    typeof intentions.framework === "string" ? intentions.framework : "";
-  if (
-    contextFramework.length > 0 &&
-    rootFramework.length > 0 &&
-    contextFramework !== rootFramework
-  ) {
-    return {
-      path: "context.framework",
-      code: "FORGE_INTENTIONS_INVALID_CONTEXT",
-      message: `Target context framework "${contextFramework}" does not match target intentions framework "${rootFramework}".`,
-      span,
-    };
+  const contextFramework = resolveFrameworkString(context.framework);
+  const rootFramework = resolveFrameworkString(intentions.framework);
+  if (!hasContextFrameworkMismatch(contextFramework, rootFramework)) {
+    return undefined;
   }
-  return undefined;
+  return {
+    path: "context.framework",
+    code: "FORGE_INTENTIONS_INVALID_CONTEXT",
+    message: `Target context framework "${contextFramework}" does not match target intentions framework "${rootFramework}".`,
+    span,
+  };
 }
 
 /**
@@ -842,7 +887,7 @@ function validateContextSection(
     return [];
   }
   const context = intentions.context;
-  const contextSpan = findActionableSpan(context) ?? rootSpan;
+  const contextSpan = resolveSectionSpan(context, rootSpan);
   const issues = validateAgainstSchema(context, targetContextSchema, {
     basePath: "context",
     root: intentions,
@@ -919,7 +964,7 @@ function validateModuleSection(
     return [];
   }
   const module_ = intentions.module;
-  const moduleSpan = findActionableSpan(module_) ?? rootSpan;
+  const moduleSpan = resolveSectionSpan(module_, rootSpan);
   const issues = validateAgainstSchema(module_, semanticModuleSchema, {
     basePath: "module",
     root: intentions,
@@ -991,6 +1036,41 @@ function checkLoweredRootFrameworkMismatch(
 }
 
 /**
+ * Collects framework mismatch issues for the lowered section.
+ *
+ * @param loweredFramework - Framework string from lowered plan.
+ * @param expectedFramework - Expected target framework.
+ * @param rootFramework - Framework from intentions root.
+ * @param span - Source span for issues.
+ * @returns Array of mismatch issues.
+ */
+function collectLoweredFrameworkIssues(
+  loweredFramework: string,
+  expectedFramework?: FrameworkId,
+  rootFramework?: unknown,
+  span?: SourceSpan,
+): SchemaValidationIssue[] {
+  const issues: SchemaValidationIssue[] = [];
+  const expectedMismatch = checkLoweredFrameworkMismatch(
+    loweredFramework,
+    expectedFramework,
+    span,
+  );
+  if (expectedMismatch !== undefined) {
+    issues.push(expectedMismatch);
+  }
+  const rootMismatch = checkLoweredRootFrameworkMismatch(
+    loweredFramework,
+    rootFramework,
+    span,
+  );
+  if (rootMismatch !== undefined) {
+    issues.push(rootMismatch);
+  }
+  return issues;
+}
+
+/**
  * Validates the lowered section of target intentions and its cross-field consistency.
  *
  * @param intentions - Target intentions record.
@@ -1007,32 +1087,23 @@ function validateLoweredSection(
     return [];
   }
   const lowered = intentions.lowered;
-  const loweredSpan = findActionableSpan(lowered) ?? rootSpan;
+  const loweredSpan = resolveSectionSpan(lowered, rootSpan);
   const issues = validateAgainstSchema(lowered, targetLoweredModuleSchema, {
     basePath: "lowered",
     root: intentions,
     fallbackSpan: loweredSpan,
   });
 
-  const loweredFw =
-    typeof lowered.framework === "string" ? lowered.framework : "";
+  const loweredFw = resolveFrameworkString(lowered.framework);
   if (loweredFw.length > 0) {
-    const expectedMismatch = checkLoweredFrameworkMismatch(
-      loweredFw,
-      expectedFramework,
-      loweredSpan,
+    issues.push(
+      ...collectLoweredFrameworkIssues(
+        loweredFw,
+        expectedFramework,
+        intentions.framework,
+        loweredSpan,
+      ),
     );
-    if (expectedMismatch !== undefined) {
-      issues.push(expectedMismatch);
-    }
-    const rootMismatch = checkLoweredRootFrameworkMismatch(
-      loweredFw,
-      intentions.framework,
-      loweredSpan,
-    );
-    if (rootMismatch !== undefined) {
-      issues.push(rootMismatch);
-    }
   }
 
   return issues;

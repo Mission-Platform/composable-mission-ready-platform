@@ -742,6 +742,133 @@ function assertAstParseSuccess(
 }
 
 /**
+ * Matched imports found in an AST program.
+ */
+interface MatchedImports {
+  readonly staticDeclarations: readonly ImportDeclaration[];
+  readonly dynamicImports: readonly {
+    readonly moduleRequest: { readonly start: number; readonly end: number };
+  }[];
+  readonly allDeclarations: readonly ImportDeclaration[];
+}
+
+/**
+ * Checks whether rewrite processing can be skipped early.
+ *
+ * @param source - Original source code.
+ * @param specs - Normalized rewrite specs.
+ * @returns True if rewrite can be skipped.
+ */
+function canSkipRewrite(
+  source: string,
+  specs: readonly ImportRewriteSpec[],
+): boolean {
+  if (specs.length === 0) {
+    return true;
+  }
+  return !containsTargetModule(source, specs);
+}
+
+/**
+ * Finds all static and dynamic imports matching rewrite specifications.
+ *
+ * @param ast - CST parse result.
+ * @param source - Original source code.
+ * @param specs - Normalized rewrite specs.
+ * @returns Matched imports record.
+ */
+function findMatchedImports(
+  ast: ParseResult,
+  source: string,
+  specs: readonly ImportRewriteSpec[],
+): MatchedImports {
+  const allDeclarations = getImportDeclarations(ast.program);
+  const staticDeclarations = allDeclarations.filter((decl) =>
+    specs.some((spec) => spec.targetModule === decl.source.value),
+  );
+  const dynamicImports = filterMatchingDynamicImports(
+    source,
+    ast.module.dynamicImports ?? [],
+    specs,
+  );
+  return { staticDeclarations, dynamicImports, allDeclarations };
+}
+
+/**
+ * Checks if at least one matching import was identified.
+ *
+ * @param matched - Matched imports record.
+ * @returns True if any import matched.
+ */
+function hasAnyMatchedImports(matched: MatchedImports): boolean {
+  if (matched.staticDeclarations.length > 0) {
+    return true;
+  }
+  return matched.dynamicImports.length > 0;
+}
+
+/**
+ * Resolves referenced identifiers for unused import binding removal.
+ *
+ * @param program - AST program node.
+ * @param declarations - All import declarations.
+ * @param specs - Rewrite specifications.
+ * @returns Set of referenced identifiers if pruning is requested.
+ */
+function resolveReferencedIdentifiers(
+  program: Program,
+  declarations: readonly ImportDeclaration[],
+  specs: readonly ImportRewriteSpec[],
+): Set<string> | undefined {
+  const hasRemoveUnused = specs.some((spec) => spec.removeUnused);
+  if (hasRemoveUnused) {
+    return collectReferencedIdentifiers(program, declarations);
+  }
+  return undefined;
+}
+
+/**
+ * Checks whether at least one static or dynamic transformation was applied.
+ *
+ * @param staticCount - Number of matching static declarations.
+ * @param dynamicTransformed - Whether dynamic imports were transformed.
+ * @returns True if transformations were performed.
+ */
+function hasAppliedTransformations(
+  staticCount: number,
+  dynamicTransformed: boolean,
+): boolean {
+  if (staticCount > 0) {
+    return true;
+  }
+  return dynamicTransformed;
+}
+
+/**
+ * Constructs the successful rewrite result with generated source map.
+ *
+ * @param magicString - Mutated MagicString instance.
+ * @param sourceFileName - Source file name for source map.
+ * @returns Structured rewrite result.
+ */
+function createRewriteResult(
+  magicString: MagicString,
+  sourceFileName?: string,
+): RewriteResult {
+  const fileName =
+    typeof sourceFileName === "string" ? sourceFileName : "source.tsx";
+  return {
+    code: magicString.toString(),
+    map: magicString.generateMap({
+      source: fileName,
+      hires: "boundary",
+      includeContent: true,
+    }),
+    transformed: true,
+  };
+}
+
+/**
  * Rewrite imports in TypeScript/TSX source code using an accurate Concrete Syntax Tree (CST).
  *
  * Preserves comments, multiline formatting, and AST integrity without fragile regex parsing.
@@ -751,35 +878,27 @@ export function rewriteImportsWithCst(
   options: RewriteImportsOptions,
 ): RewriteResult {
   const specs = normalizeRewriteSpecs(options);
-  if (specs.length === 0 || !containsTargetModule(source, specs)) {
+  if (canSkipRewrite(source, specs)) {
     return { code: source, map: undefined, transformed: false };
   }
 
   const ast = parseCst(source, options.sourceFileName);
   assertAstParseSuccess(ast, options.sourceFileName);
 
-  const allImportDeclarations = getImportDeclarations(ast.program);
-  const matchingDeclarations = allImportDeclarations.filter((decl) =>
-    specs.some((spec) => spec.targetModule === decl.source.value),
-  );
-  const matchingDynamic = filterMatchingDynamicImports(
-    source,
-    ast.module.dynamicImports ?? [],
-    specs,
-  );
-
-  if (matchingDeclarations.length === 0 && matchingDynamic.length === 0) {
+  const matched = findMatchedImports(ast, source, specs);
+  if (!hasAnyMatchedImports(matched)) {
     return { code: source, map: undefined, transformed: false };
   }
 
   const magicString = new MagicString(source);
-  const hasRemoveUnused = specs.some((spec) => spec.removeUnused);
-  const referencedIdentifiers = hasRemoveUnused
-    ? collectReferencedIdentifiers(ast.program, allImportDeclarations)
-    : undefined;
+  const referencedIdentifiers = resolveReferencedIdentifiers(
+    ast.program,
+    matched.allDeclarations,
+    specs,
+  );
 
   applyMatchingStaticRewrites(
-    matchingDeclarations,
+    matched.staticDeclarations,
     specs,
     magicString,
     source,
@@ -790,23 +909,18 @@ export function rewriteImportsWithCst(
   const dynamicTransformed = rewriteDynamicImports(
     magicString,
     source,
-    matchingDynamic,
+    matched.dynamicImports,
     specs,
   );
 
-  if (matchingDeclarations.length === 0 && !dynamicTransformed) {
+  if (
+    !hasAppliedTransformations(
+      matched.staticDeclarations.length,
+      dynamicTransformed,
+    )
+  ) {
     return { code: source, map: undefined, transformed: false };
   }
 
-  const map = magicString.generateMap({
-    source: options.sourceFileName ?? "source.tsx",
-    hires: "boundary",
-    includeContent: true,
-  });
-
-  return {
-    code: magicString.toString(),
-    map,
-    transformed: true,
-  };
+  return createRewriteResult(magicString, options.sourceFileName);
 }

@@ -960,6 +960,55 @@ function formatValueAttributeEntry(
 }
 
 /**
+ * Resolves an aliased attribute name according to HTML/JSX convention mapping.
+ *
+ * @param name - Raw attribute name.
+ * @returns Aliased or canonical attribute name.
+ */
+function resolveAttributeAlias(name: string): string {
+  const aliased = ATTRIBUTE_ALIASES[name];
+  if (aliased !== undefined) {
+    return aliased;
+  }
+  return name;
+}
+
+/**
+ * Checks whether an attribute should be omitted from DOM property dictionary.
+ *
+ * @param attribute - The attribute to inspect.
+ * @returns True if attribute should be skipped.
+ */
+function isIgnoredDomPropertyAttribute(attribute: GenericAttribute): boolean {
+  if (attribute.kind !== "jsx-attribute") {
+    return true;
+  }
+  return attribute.name === MP_STATIC_ATTR;
+}
+
+/**
+ * Dispatches formatting for an event or standard value attribute entry.
+ *
+ * @param rawName - Raw attribute name.
+ * @param normalizedName - Aliased attribute name.
+ * @param value - Attribute value node.
+ * @param context - Template context.
+ * @returns Formatted dictionary entry or undefined.
+ */
+function formatResolvedPropertyEntry(
+  rawName: string,
+  normalizedName: string,
+  value: GenericAttribute["value"],
+  context: TemplateContext,
+): string | undefined {
+  const eventEntry = formatEventAttributeEntry(rawName, value, context);
+  if (eventEntry !== undefined) {
+    return eventEntry;
+  }
+  return formatValueAttributeEntry(rawName, normalizedName, value, context);
+}
+
+/**
  * Formats a single JSX attribute into a DOM property dictionary entry.
  *
  * @param attribute - The attribute to process.
@@ -973,13 +1022,15 @@ function formatDomPropertyEntry(
   if (attribute.kind === "jsx-spread-attribute") {
     return formatSpreadAttributeEntry(attribute, context.scope);
   }
-  if (attribute.kind !== "jsx-attribute" || attribute.name === MP_STATIC_ATTR) {
+  if (isIgnoredDomPropertyAttribute(attribute)) {
     return undefined;
   }
-  const name = ATTRIBUTE_ALIASES[attribute.name] ?? attribute.name;
-  return (
-    formatEventAttributeEntry(attribute.name, attribute.value, context) ??
-    formatValueAttributeEntry(attribute.name, name, attribute.value, context)
+  const name = resolveAttributeAlias(attribute.name);
+  return formatResolvedPropertyEntry(
+    attribute.name,
+    name,
+    attribute.value,
+    context,
   );
 }
 
@@ -1342,6 +1393,50 @@ function resolveNodeChildContext(
 }
 
 /**
+ * Checks whether a render node is a fragment or teleport element.
+ *
+ * @param node - Candidate render node.
+ * @returns True if fragment or teleport.
+ */
+function isFragmentOrTeleport(node: GenericRenderNode): boolean {
+  if (node.tagKind === "fragment") {
+    return true;
+  }
+  return node.tag === TELEPORT_TAG;
+}
+
+/**
+ * Dispatches special tagged control element rendering expressions.
+ *
+ * @param tag - Node tag string.
+ * @param node - Render node.
+ * @param context - Template context.
+ * @param childContext - Child template context.
+ * @returns Serialized expression if handled, or undefined.
+ */
+function domSpecialTaggedExpression(
+  tag: string,
+  node: GenericRenderNode,
+  context: TemplateContext,
+  childContext: TemplateContext,
+): string | undefined {
+  switch (tag) {
+    case SUSPENSE_TAG: {
+      return domSuspenseExpression(node, childContext);
+    }
+    case HTML_CONTENT_TAG: {
+      return domHtmlContentExpression(node, childContext);
+    }
+    case "Slot": {
+      return domSlotExpression(node, context, childContext);
+    }
+    default: {
+      return undefined;
+    }
+  }
+}
+
+/**
  * Renders special control and container nodes (fragment, suspense, slot, html).
  *
  * @param node - Render node.
@@ -1354,19 +1449,10 @@ function domSpecialNodeExpression(
   context: TemplateContext,
   childContext: TemplateContext,
 ): string | undefined {
-  if (node.tagKind === "fragment" || node.tag === TELEPORT_TAG) {
+  if (isFragmentOrTeleport(node)) {
     return `[${renderChildrenExpressionList(node.children, childContext)}]`;
   }
-  if (node.tag === SUSPENSE_TAG) {
-    return domSuspenseExpression(node, childContext);
-  }
-  if (node.tag === HTML_CONTENT_TAG) {
-    return domHtmlContentExpression(node, childContext);
-  }
-  if (node.tag === "Slot") {
-    return domSlotExpression(node, context, childContext);
-  }
-  return undefined;
+  return domSpecialTaggedExpression(node.tag, node, context, childContext);
 }
 
 /**
@@ -1490,6 +1576,111 @@ function applyStaticSpreadAttribute(
 }
 
 /**
+ * Resolves whether an attribute name corresponds to an event listener or a static attribute.
+ *
+ * @param rawName - Original authored attribute name.
+ * @param normalizedName - Aliased attribute name.
+ * @returns Event name without prefix or normalized attribute name.
+ */
+function resolveStaticEventOrAttributeName(
+  rawName: string,
+  normalizedName: string,
+): string {
+  if (/^on[A-Z]/u.test(rawName)) {
+    return eventNameOf(rawName);
+  }
+  return normalizedName;
+}
+
+/**
+ * Appends static literal or boolean attribute statements to the template builder.
+ *
+ * @param value - Attribute value.
+ * @param name - Normalized attribute name.
+ * @param variable - Element variable identifier.
+ * @param builder - Template builder.
+ * @returns True if handled as a literal attribute.
+ */
+function applyStaticLiteralAttribute(
+  value: GenericAttribute["value"],
+  name: string,
+  variable: string,
+  builder: DomTemplateBuilder,
+): boolean {
+  if (value === undefined) {
+    builder.statements.push(
+      `${variable}.setAttribute(${JSON.stringify(name)}, "");`,
+    );
+    return true;
+  }
+  if (value.kind === "string") {
+    builder.statements.push(
+      `${variable}.setAttribute(${JSON.stringify(name)}, ${JSON.stringify(value.value)});`,
+    );
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Checks whether an attribute value contains a valid AST expression.
+ *
+ * @param value - Attribute value.
+ * @returns True if expression is present.
+ */
+function hasExpressionPayload(
+  value: GenericAttribute["value"],
+): value is Extract<GenericAttribute["value"], { kind: "expression" }> & {
+  readonly expression: { readonly text: string };
+} {
+  if (value === undefined) {
+    return false;
+  }
+  if (value.kind !== "expression") {
+    return false;
+  }
+  return value.expression !== undefined;
+}
+
+/**
+ * Appends dynamic expression attribute parts to the template builder.
+ *
+ * @param attribute - JSX attribute.
+ * @param node - Render node.
+ * @param tag - Tag name.
+ * @param name - Normalized attribute name.
+ * @param variable - Element variable identifier.
+ * @param context - Template context.
+ * @param builder - Template builder.
+ */
+function applyStaticExpressionAttribute(
+  attribute: Extract<GenericAttribute, { kind: "jsx-attribute" }>,
+  node: GenericRenderNode,
+  tag: string,
+  name: string,
+  variable: string,
+  context: TemplateContext,
+  builder: DomTemplateBuilder,
+): void {
+  const value = attribute.value;
+  if (!hasExpressionPayload(value)) {
+    return;
+  }
+  const valueId =
+    builder.values.push(
+      domValue(value.expression.text, nestedOf(value), context),
+    ) - 1;
+  const prefix = resolveStaticAttrPrefix(node, tag, attribute.name, name);
+  const eventOrAttributeName = resolveStaticEventOrAttributeName(
+    attribute.name,
+    name,
+  );
+  builder.parts.push(
+    `{ kind: "attr", id: ${valueId}, element: ${variable}, prefix: ${JSON.stringify(prefix)}, name: ${JSON.stringify(eventOrAttributeName)} }`,
+  );
+}
+
+/**
  * Applies a static JSX attribute to the template builder.
  *
  * @param attribute - JSX attribute.
@@ -1510,33 +1701,19 @@ function applyStaticSingleAttribute(
   if (attribute.name === MP_STATIC_ATTR) {
     return;
   }
-  const name = ATTRIBUTE_ALIASES[attribute.name] ?? attribute.name;
-  const value = attribute.value;
-  if (value?.kind === "string") {
-    builder.statements.push(
-      `${variable}.setAttribute(${JSON.stringify(name)}, ${JSON.stringify(value.value)});`,
-    );
+  const name = resolveAttributeAlias(attribute.name);
+  if (applyStaticLiteralAttribute(attribute.value, name, variable, builder)) {
     return;
   }
-  if (value === undefined) {
-    builder.statements.push(
-      `${variable}.setAttribute(${JSON.stringify(name)}, "");`,
-    );
-    return;
-  }
-  if (value.expression !== undefined) {
-    const valueId =
-      builder.values.push(
-        domValue(value.expression.text, nestedOf(value), context),
-      ) - 1;
-    const prefix = resolveStaticAttrPrefix(node, tag, attribute.name, name);
-    const eventOrAttributeName = /^on[A-Z]/u.test(attribute.name)
-      ? eventNameOf(attribute.name)
-      : name;
-    builder.parts.push(
-      `{ kind: "attr", id: ${valueId}, element: ${variable}, prefix: ${JSON.stringify(prefix)}, name: ${JSON.stringify(eventOrAttributeName)} }`,
-    );
-  }
+  applyStaticExpressionAttribute(
+    attribute,
+    node,
+    tag,
+    name,
+    variable,
+    context,
+    builder,
+  );
 }
 
 /**
@@ -1586,7 +1763,7 @@ function applyStaticNodeAttributes(
  * @returns True if fragment or teleport.
  */
 function isStaticFragmentOrTeleport(node: GenericRenderNode): boolean {
-  return node.tagKind === "fragment" || node.tag === TELEPORT_TAG;
+  return isFragmentOrTeleport(node);
 }
 
 /**
