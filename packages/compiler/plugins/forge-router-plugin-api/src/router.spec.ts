@@ -98,7 +98,7 @@ describe("Forge router plugin API", () => {
     expect(() =>
       defineForgeRouterPlugin({
         ...plugin,
-        build: { vite: () => [] } satisfies ForgeBuildAdapters,
+        build: { vite: "not-a-function" } as unknown as ForgeBuildAdapters,
       }),
     ).toThrow("valid Vite or tsdown adapters");
   });
