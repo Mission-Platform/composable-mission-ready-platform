@@ -1,41 +1,41 @@
 aria:
-  delete: Delete
-  geodesic: Geodesic mode
-  join: Join Lines
-  rotate-ccw: Rotate Counter-Clockwise
-  rotate-cw: Rotate Clockwise
-  scale-down: Scale Down
-  scale-up: Scale Up
-  split: Split Line
+  delete: 删除
+  geodesic: 测地线模式
+  join: 合并线条
+  rotate-ccw: 逆时针旋转
+  rotate-cw: 顺时针旋转
+  scale-down: 缩小
+  scale-up: 放大
+  split: 分割线条
 draw:
-  circle: Circle
-  line: Line
-  none: None
-  polygon: Polygon
-  square: Square
-  triangle: Triangle
-geojson-summary_zero: GeoJSON output ({count} features)
-geojson-summary_one: GeoJSON output ({count} feature)
-geojson-summary_other: GeoJSON output ({count} features)
+  circle: 圆形
+  line: 线条
+  none: 无
+  polygon: 多边形
+  square: 正方形
+  triangle: 三角形
+geojson-summary_zero: GeoJSON 输出（{count} 个要素）
+geojson-summary_one: GeoJSON 输出（{count} 个要素）
+geojson-summary_other: geojson-summary
 label:
-  draw: 'Draw:'
-  edit: 'Edit:'
+  draw: '绘制:'
+  edit: '编辑:'
 mode:
-  flat: Flat
-  geodesic: Geodesic
+  flat: 平面
+  geodesic: 测地线
 status:
-  joining: '⚡ Click another line to join with {id}'
-  none: Click a shape to select
-  selected: 'Selected: {id}'
-title: Map Draw Toolbar
+  joining: '⚡ 点击另一条线条以与 {id} 合并'
+  none: 点击形状以选择
+  selected: '已选择: {id}'
+title: 地图绘制工具栏
 tooltip:
-  delete: Delete selected feature
-  flat: 'Flat mode: move/scale preserves visual shape. Click for geodesic mode.'
-  geodesic: 'Geodesic mode: move/scale respects ground distances. Click for flat/visual mode.'
-  join: Join two lines at nearest endpoints
-  join-active: Joining — select another line to complete join
-  rotate-ccw: Rotate −45°
-  rotate-cw: Rotate +45°
-  scale-down: Scale Down ×0.75
-  scale-up: Scale Up ×1.5
-  split: Split line at midpoint
+  delete: 删除所选要素
+  flat: '平面模式：移动/缩放保持视觉形状。点击切换到测地线模式。'
+  geodesic: '测地线模式：移动/缩放遵循地面距离。点击切换到平面/视觉模式。'
+  join: 在最近的端点处合并两条线条
+  join-active: 正在合并 — 选择另一条线条以完成合并
+  rotate-ccw: 旋转 −45°
+  rotate-cw: 旋转 +45°
+  scale-down: 缩小 ×0.75
+  scale-up: 放大 ×1.5
+  split: 在中点处分割线条
