@@ -1,19 +1,19 @@
 btn:
-  cancel: Cancel
-  delete: Delete
-  save: Save
+  cancel: 取消
+  delete: 删除
+  save: 保存
 col:
-  actions: Actions
-  content: Content
-  name: Name
-content_label: Content
-date_row_content: Current date (DD/MM/YYYY)
+  actions: 操作
+  content: 内容
+  name: 名称
+content_label: 内容
+date_row_content: 当前日期 (YYYY/MM/DD)
 name:
-  hint: Type {preview} in the editor to insert this snippet
-  label: Snippet name
-  placeholder: e.g. greeting
+  hint: 在编辑器中输入 {preview} 以插入此代码段
+  label: 代码段名称
+  placeholder: 例如 greeting
 rename:
-  label: Tab name
+  label: 标签页名称
 title:
-  edit: Edit Snippet
-  new: New Snippet
+  edit: 编辑代码段
+  new: 新建代码段
