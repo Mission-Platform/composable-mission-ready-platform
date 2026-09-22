@@ -3,7 +3,7 @@ import sqlite3InitModule from '@sqlite.org/sqlite-wasm';
 import { describe, expect, it } from 'vitest';
 
 import { createFlintHost } from './host.ts';
-import { createFlintMemory, createFlintMultiMemory, FLINT_MEMORY_CAPABILITIES } from './memory.ts';
+import { createFlintMemory, createFlintMultiMemory, FlintRegionalArena, FLINT_MEMORY_CAPABILITIES } from './memory.ts';
 
 describe('End-to-End C & Rust Interoperability', () => {
   it('Scenario 2: compiles Rust cbindgen header, links with Wasm kernel, and executes with zero copy', () => {
@@ -27,7 +27,8 @@ describe('End-to-End C & Rust Interoperability', () => {
 
     // 2. Generate Flint foreign bindings using flint-bindgen
     const bindgenResult = compileCHeader(rustCbindgenHeader, 'scanner_engine');
-    expect(bindgenResult.flintBindings).toContain('c_struct ScannerResult');
+    expect(bindgenResult.flintBindings).toContain('struct ScannerResult');
+    expect(bindgenResult.flintBindings).not.toContain('c_struct');
     expect(bindgenResult.flintBindings).toContain('foreign "C" capability "scanner_engine"');
 
     // 3. User application code in Flint utilizing the generated bindings
@@ -430,9 +431,9 @@ describe('End-to-End C & Rust Interoperability', () => {
     // 1. Flint source module managing its own linear memory, string buffers, and SQLite3 query lifecycle
     const flintSource = `
       foreign "C" capability "sqlite3" {
-        fn sqlite3_open(filename: u32, ppDb: u32) -> i32;
-        fn sqlite3_exec(db: u32, sql: u32, callback: u32, arg: u32, errmsg: u32) -> i32;
-        fn sqlite3_prepare_v2(db: u32, zSql: u32, nByte: i32, ppStmt: u32, pzTail: u32) -> i32;
+        fn sqlite3_open(filename: CPtr<c_char>, ppDb: u32) -> i32;
+        fn sqlite3_exec(db: u32, sql: CPtr<c_char>, callback: u32, arg: u32, errmsg: u32) -> i32;
+        fn sqlite3_prepare_v2(db: u32, zSql: CPtr<c_char>, nByte: i32, ppStmt: u32, pzTail: u32) -> i32;
         fn sqlite3_step(pStmt: u32) -> i32;
         fn sqlite3_column_int(pStmt: u32, iCol: i32) -> i32;
         fn sqlite3_column_text(pStmt: u32, iCol: i32) -> u32;
@@ -443,236 +444,40 @@ describe('End-to-End C & Rust Interoperability', () => {
       }
 
       export fn open_database() -> u32 {
-        let pFilename: u32 = sqlite3_malloc(10);
-        // ":memory:\0"
-        memory_store_u8(pFilename, 58);      // ':'
-        memory_store_u8(pFilename + 1, 109); // 'm'
-        memory_store_u8(pFilename + 2, 101); // 'e'
-        memory_store_u8(pFilename + 3, 109); // 'm'
-        memory_store_u8(pFilename + 4, 111); // 'o'
-        memory_store_u8(pFilename + 5, 114); // 'r'
-        memory_store_u8(pFilename + 6, 121); // 'y'
-        memory_store_u8(pFilename + 7, 58);  // ':'
-        memory_store_u8(pFilename + 8, 0);   // '\0'
-
+        let filename: string = ":memory:";
+        let pFilename: CPtr<c_char> = filename.as_c_str();
         let ppDb: u32 = sqlite3_malloc(4);
         memory_store_u32(ppDb, 0);
 
         let rc: i32 = sqlite3_open(pFilename, ppDb);
         let db: u32 = memory_load_u32(ppDb);
 
-        sqlite3_free(pFilename);
         sqlite3_free(ppDb);
         return db;
       }
 
       export fn setup_tables_and_data(db: u32) -> i32 {
         // 1. DDL: "CREATE TABLE members (id INT, username TEXT, score INT);\0"
-        let pDdl: u32 = sqlite3_malloc(64);
-        memory_store_u8(pDdl, 67);  // 'C'
-        memory_store_u8(pDdl + 1, 82);  // 'R'
-        memory_store_u8(pDdl + 2, 69);  // 'E'
-        memory_store_u8(pDdl + 3, 65);  // 'A'
-        memory_store_u8(pDdl + 4, 84);  // 'T'
-        memory_store_u8(pDdl + 5, 69);  // 'E'
-        memory_store_u8(pDdl + 6, 32);  // ' '
-        memory_store_u8(pDdl + 7, 84);  // 'T'
-        memory_store_u8(pDdl + 8, 65);  // 'A'
-        memory_store_u8(pDdl + 9, 66);  // 'B'
-        memory_store_u8(pDdl + 10, 76); // 'L'
-        memory_store_u8(pDdl + 11, 69); // 'E'
-        memory_store_u8(pDdl + 12, 32); // ' '
-        memory_store_u8(pDdl + 13, 109); // 'm'
-        memory_store_u8(pDdl + 14, 101); // 'e'
-        memory_store_u8(pDdl + 15, 109); // 'm'
-        memory_store_u8(pDdl + 16, 98); // 'b'
-        memory_store_u8(pDdl + 17, 101); // 'e'
-        memory_store_u8(pDdl + 18, 114); // 'r'
-        memory_store_u8(pDdl + 19, 115); // 's'
-        memory_store_u8(pDdl + 20, 32);  // ' '
-        memory_store_u8(pDdl + 21, 40);  // '('
-        memory_store_u8(pDdl + 22, 105); // 'i'
-        memory_store_u8(pDdl + 23, 100); // 'd'
-        memory_store_u8(pDdl + 24, 32);  // ' '
-        memory_store_u8(pDdl + 25, 73);  // 'I'
-        memory_store_u8(pDdl + 26, 78);  // 'N'
-        memory_store_u8(pDdl + 27, 84);  // 'T'
-        memory_store_u8(pDdl + 28, 44);  // ','
-        memory_store_u8(pDdl + 29, 32);  // ' '
-        memory_store_u8(pDdl + 30, 117); // 'u'
-        memory_store_u8(pDdl + 31, 115); // 's'
-        memory_store_u8(pDdl + 32, 101); // 'e'
-        memory_store_u8(pDdl + 33, 114); // 'r'
-        memory_store_u8(pDdl + 34, 110); // 'n'
-        memory_store_u8(pDdl + 35, 97);  // 'a'
-        memory_store_u8(pDdl + 36, 109); // 'm'
-        memory_store_u8(pDdl + 37, 101); // 'e'
-        memory_store_u8(pDdl + 38, 32);  // ' '
-        memory_store_u8(pDdl + 39, 84);  // 'T'
-        memory_store_u8(pDdl + 40, 69);  // 'E'
-        memory_store_u8(pDdl + 41, 88);  // 'X'
-        memory_store_u8(pDdl + 42, 84);  // 'T'
-        memory_store_u8(pDdl + 43, 44);  // ','
-        memory_store_u8(pDdl + 44, 32);  // ' '
-        memory_store_u8(pDdl + 45, 115); // 's'
-        memory_store_u8(pDdl + 46, 99);  // 'c'
-        memory_store_u8(pDdl + 47, 111); // 'o'
-        memory_store_u8(pDdl + 48, 114); // 'r'
-        memory_store_u8(pDdl + 49, 101); // 'e'
-        memory_store_u8(pDdl + 50, 32);  // ' '
-        memory_store_u8(pDdl + 51, 73);  // 'I'
-        memory_store_u8(pDdl + 52, 78);  // 'N'
-        memory_store_u8(pDdl + 53, 84);  // 'T'
-        memory_store_u8(pDdl + 54, 41);  // ')'
-        memory_store_u8(pDdl + 55, 59);  // ';'
-        memory_store_u8(pDdl + 56, 0);   // '\0'
+        let ddl: string = "CREATE TABLE members (id INT, username TEXT, score INT);";
+        let pDdl: CPtr<c_char> = ddl.as_c_str();
 
         let ddlRc: i32 = sqlite3_exec(db, pDdl, 0, 0, 0);
-        sqlite3_free(pDdl);
         if (ddlRc != 0) {
           return ddlRc;
         }
 
         // 2. DML: "INSERT INTO members VALUES (1, 'alice_flint', 95), (2, 'bob_wasm', 88);\0"
-        let pIns: u32 = sqlite3_malloc(80);
-        memory_store_u8(pIns, 73);  // 'I'
-        memory_store_u8(pIns + 1, 78); // 'N'
-        memory_store_u8(pIns + 2, 83); // 'S'
-        memory_store_u8(pIns + 3, 69); // 'E'
-        memory_store_u8(pIns + 4, 82); // 'R'
-        memory_store_u8(pIns + 5, 84); // 'T'
-        memory_store_u8(pIns + 6, 32); // ' '
-        memory_store_u8(pIns + 7, 73); // 'I'
-        memory_store_u8(pIns + 8, 78); // 'N'
-        memory_store_u8(pIns + 9, 84); // 'T'
-        memory_store_u8(pIns + 10, 79); // 'O'
-        memory_store_u8(pIns + 11, 32); // ' '
-        memory_store_u8(pIns + 12, 109); // 'm'
-        memory_store_u8(pIns + 13, 101); // 'e'
-        memory_store_u8(pIns + 14, 109); // 'm'
-        memory_store_u8(pIns + 15, 98); // 'b'
-        memory_store_u8(pIns + 16, 101); // 'e'
-        memory_store_u8(pIns + 17, 114); // 'r'
-        memory_store_u8(pIns + 18, 115); // 's'
-        memory_store_u8(pIns + 19, 32); // ' '
-        memory_store_u8(pIns + 20, 86); // 'V'
-        memory_store_u8(pIns + 21, 65); // 'A'
-        memory_store_u8(pIns + 22, 76); // 'L'
-        memory_store_u8(pIns + 23, 85); // 'U'
-        memory_store_u8(pIns + 24, 69); // 'E'
-        memory_store_u8(pIns + 25, 83); // 'S'
-        memory_store_u8(pIns + 26, 32); // ' '
-        memory_store_u8(pIns + 27, 40); // '('
-        memory_store_u8(pIns + 28, 49); // '1'
-        memory_store_u8(pIns + 29, 44); // ','
-        memory_store_u8(pIns + 30, 32); // ' '
-        memory_store_u8(pIns + 31, 39); // "'"
-        memory_store_u8(pIns + 32, 97); // 'a'
-        memory_store_u8(pIns + 33, 108); // 'l'
-        memory_store_u8(pIns + 34, 105); // 'i'
-        memory_store_u8(pIns + 35, 99); // 'c'
-        memory_store_u8(pIns + 36, 101); // 'e'
-        memory_store_u8(pIns + 37, 95); // '_'
-        memory_store_u8(pIns + 38, 102); // 'f'
-        memory_store_u8(pIns + 39, 108); // 'l'
-        memory_store_u8(pIns + 40, 105); // 'i'
-        memory_store_u8(pIns + 41, 110); // 'n'
-        memory_store_u8(pIns + 42, 116); // 't'
-        memory_store_u8(pIns + 43, 39); // "'"
-        memory_store_u8(pIns + 44, 44); // ','
-        memory_store_u8(pIns + 45, 32); // ' '
-        memory_store_u8(pIns + 46, 57); // '9'
-        memory_store_u8(pIns + 47, 53); // '5'
-        memory_store_u8(pIns + 48, 41); // ')'
-        memory_store_u8(pIns + 49, 44); // ','
-        memory_store_u8(pIns + 50, 32); // ' '
-        memory_store_u8(pIns + 51, 40); // '('
-        memory_store_u8(pIns + 52, 50); // '2'
-        memory_store_u8(pIns + 53, 44); // ','
-        memory_store_u8(pIns + 54, 32); // ' '
-        memory_store_u8(pIns + 55, 39); // "'"
-        memory_store_u8(pIns + 56, 98); // 'b'
-        memory_store_u8(pIns + 57, 111); // 'o'
-        memory_store_u8(pIns + 58, 98); // 'b'
-        memory_store_u8(pIns + 59, 95); // '_'
-        memory_store_u8(pIns + 60, 119); // 'w'
-        memory_store_u8(pIns + 61, 97); // 'a'
-        memory_store_u8(pIns + 62, 115); // 's'
-        memory_store_u8(pIns + 63, 109); // 'm'
-        memory_store_u8(pIns + 64, 39); // "'"
-        memory_store_u8(pIns + 65, 44); // ','
-        memory_store_u8(pIns + 66, 32); // ' '
-        memory_store_u8(pIns + 67, 56); // '8'
-        memory_store_u8(pIns + 68, 56); // '8'
-        memory_store_u8(pIns + 69, 41); // ')'
-        memory_store_u8(pIns + 70, 59); // ';'
-        memory_store_u8(pIns + 71, 0);  // '\0'
+        let ins: string = "INSERT INTO members VALUES (1, 'alice_flint', 95), (2, 'bob_wasm', 88);";
+        let pIns: CPtr<c_char> = ins.as_c_str();
 
         let insRc: i32 = sqlite3_exec(db, pIns, 0, 0, 0);
-        sqlite3_free(pIns);
         return insRc;
       }
 
       export fn prepare_query(db: u32) -> u32 {
         // "SELECT id, username, score FROM members ORDER BY id ASC;\0"
-        let pQuery: u32 = sqlite3_malloc(64);
-        memory_store_u8(pQuery, 83);  // 'S'
-        memory_store_u8(pQuery + 1, 69);  // 'E'
-        memory_store_u8(pQuery + 2, 76);  // 'L'
-        memory_store_u8(pQuery + 3, 69);  // 'E'
-        memory_store_u8(pQuery + 4, 67);  // 'C'
-        memory_store_u8(pQuery + 5, 84);  // 'T'
-        memory_store_u8(pQuery + 6, 32);  // ' '
-        memory_store_u8(pQuery + 7, 105); // 'i'
-        memory_store_u8(pQuery + 8, 100); // 'd'
-        memory_store_u8(pQuery + 9, 44);  // ','
-        memory_store_u8(pQuery + 10, 32); // ' '
-        memory_store_u8(pQuery + 11, 117); // 'u'
-        memory_store_u8(pQuery + 12, 115); // 's'
-        memory_store_u8(pQuery + 13, 101); // 'e'
-        memory_store_u8(pQuery + 14, 114); // 'r'
-        memory_store_u8(pQuery + 15, 110); // 'n'
-        memory_store_u8(pQuery + 16, 97);  // 'a'
-        memory_store_u8(pQuery + 17, 109); // 'm'
-        memory_store_u8(pQuery + 18, 101); // 'e'
-        memory_store_u8(pQuery + 19, 44);  // ','
-        memory_store_u8(pQuery + 20, 32);  // ' '
-        memory_store_u8(pQuery + 21, 115); // 's'
-        memory_store_u8(pQuery + 22, 99);  // 'c'
-        memory_store_u8(pQuery + 23, 111); // 'o'
-        memory_store_u8(pQuery + 24, 114); // 'r'
-        memory_store_u8(pQuery + 25, 101); // 'e'
-        memory_store_u8(pQuery + 26, 32);  // ' '
-        memory_store_u8(pQuery + 27, 70);  // 'F'
-        memory_store_u8(pQuery + 28, 82);  // 'R'
-        memory_store_u8(pQuery + 29, 79);  // 'O'
-        memory_store_u8(pQuery + 30, 77);  // 'M'
-        memory_store_u8(pQuery + 31, 32);  // ' '
-        memory_store_u8(pQuery + 32, 109); // 'm'
-        memory_store_u8(pQuery + 33, 101); // 'e'
-        memory_store_u8(pQuery + 34, 109); // 'm'
-        memory_store_u8(pQuery + 35, 98); // 'b'
-        memory_store_u8(pQuery + 36, 101); // 'e'
-        memory_store_u8(pQuery + 37, 114); // 'r'
-        memory_store_u8(pQuery + 38, 115); // 's'
-        memory_store_u8(pQuery + 39, 32);  // ' '
-        memory_store_u8(pQuery + 40, 79);  // 'O'
-        memory_store_u8(pQuery + 41, 82);  // 'R'
-        memory_store_u8(pQuery + 42, 68);  // 'D'
-        memory_store_u8(pQuery + 43, 69);  // 'E'
-        memory_store_u8(pQuery + 44, 82);  // 'R'
-        memory_store_u8(pQuery + 45, 32);  // ' '
-        memory_store_u8(pQuery + 46, 66);  // 'B'
-        memory_store_u8(pQuery + 47, 89);  // 'Y'
-        memory_store_u8(pQuery + 48, 32);  // ' '
-        memory_store_u8(pQuery + 49, 105); // 'i'
-        memory_store_u8(pQuery + 50, 100); // 'd'
-        memory_store_u8(pQuery + 51, 32);  // ' '
-        memory_store_u8(pQuery + 52, 65);  // 'A'
-        memory_store_u8(pQuery + 53, 83);  // 'S'
-        memory_store_u8(pQuery + 54, 67);  // 'C'
-        memory_store_u8(pQuery + 55, 59);  // ';'
-        memory_store_u8(pQuery + 56, 0);   // '\0'
+        let query: string = "SELECT id, username, score FROM members ORDER BY id ASC;";
+        let pQuery: CPtr<c_char> = query.as_c_str();
 
         let ppStmt: u32 = sqlite3_malloc(4);
         memory_store_u32(ppStmt, 0);
@@ -680,7 +485,6 @@ describe('End-to-End C & Rust Interoperability', () => {
         let prepRc: i32 = sqlite3_prepare_v2(db, pQuery, -1, ppStmt, 0);
         let stmt: u32 = memory_load_u32(ppStmt);
 
-        sqlite3_free(pQuery);
         sqlite3_free(ppStmt);
         return stmt;
       }
@@ -798,7 +602,8 @@ describe('End-to-End C & Rust Interoperability', () => {
   it('Scenario 4: compiles Flint code with foreign C capability to WebAssembly and executes linked with SQLite3 Wasm', async () => {
     // 1. Flint source module calling SQLite3 C API via foreign capability
     const flintSource = `
-      c_struct DatabaseVersion {
+      #[repr(C)]
+      struct DatabaseVersion {
         major: c_int,
         minor: c_int,
       }
@@ -926,5 +731,68 @@ describe('End-to-End C & Rust Interoperability', () => {
     // Verify original Memory 0 source data remains completely untouched
     const originalMemory0 = multiMemory.guestHeap.readBytes(sourcePointer, sourcePayload.length);
     expect(originalMemory0).toEqual(sourcePayload);
+  });
+
+  it('Scenario 6: reads and writes null-terminated C strings in linear memory and regional arenas', () => {
+    const memory = createFlintMemory({ initialPages: 1 });
+
+    // writeCString
+    const ptr = memory.allocate(64);
+    const written = memory.writeCString(ptr, 'hello flint C FFI');
+    expect(written).toBe('hello flint C FFI'.length + 1);
+
+    // Verify null terminator in raw memory
+    expect(memory.bytes[Number(ptr) + 'hello flint C FFI'.length]).toBe(0x00);
+
+    // readCString
+    const read = memory.readCString(ptr);
+    expect(read).toBe('hello flint C FFI');
+
+    // readCString with maxLength bounds check
+    expect(() => memory.readCString(ptr, 5)).toThrowError(/Null terminator not found within bounds/);
+
+    // FlintRegionalArena writeCString
+    FlintRegionalArena.withRegion(memory, 4096, (arena) => {
+      const arenaPtr = arena.writeCString('temporary query string');
+      expect(arenaPtr).toBeGreaterThan(0);
+      expect(memory.readCString(arenaPtr)).toBe('temporary query string');
+    });
+  });
+
+  it('Scenario 7: safely converts rejected foreign asynchronous promises into FlintTrap HostError', async () => {
+    const source = `
+      foreign "C" capability "async_lib" {
+        fn async_op(x: i32) -> i32;
+      }
+
+      export fn entry() -> i32 {
+        return 0;
+      }
+    `;
+    const parsed = parseFlint(source, 'async_lib.flint');
+    if (!parsed.module) throw new Error('Expected parsed module to be defined');
+    const manifest = createFlintAbiManifest(parsed.module);
+
+    const host = createFlintHost(
+      manifest,
+      {},
+      {
+        foreignRegistry: {
+          async_lib: {
+            library: 'async_lib',
+            call: (_symbol, _arguments) => {
+              return Promise.reject(new Error('Async foreign operation failed'));
+            },
+          },
+        },
+      },
+    );
+
+    await expect(host.invokeForeign?.('async_lib', 'async_op', [123])).rejects.toMatchObject({
+      code: 'HostError',
+      capability: 'async_lib',
+      message: expect.stringContaining("Capability 'async_lib' failed with host error"),
+      cause: expect.objectContaining({ message: 'Async foreign operation failed' }),
+    });
   });
 });

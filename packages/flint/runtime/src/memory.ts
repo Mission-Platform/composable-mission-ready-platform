@@ -99,7 +99,15 @@ export class FlintMemory {
         logger: this.logger,
       });
     }
-    this.nextPointer = options.initialPointer ?? (this.addressBits === 64 ? 8n : 8);
+    const defaultPointer =
+      targetMemory === undefined
+        ? this.addressBits === 64
+          ? 8n
+          : 8
+        : this.addressBits === 64
+          ? BigInt(this.wasmMemory.buffer.byteLength)
+          : this.wasmMemory.buffer.byteLength;
+    this.nextPointer = options.initialPointer ?? defaultPointer;
   }
 
   /**
@@ -212,6 +220,65 @@ export class FlintMemory {
     const bytes = textEncoder.encode(value);
     this.writeBytes(pointer, bytes);
     return bytes.byteLength;
+  }
+
+  /**
+   * Reads a null-terminated UTF-8 C string from linear memory starting at pointer.
+   *
+   * @param pointer - Starting memory address.
+   * @param maxLength - Maximum number of bytes to search for null terminator (default: 4096).
+   * @returns Decoded string excluding the null terminator.
+   * @throws {FlintTrap} If null terminator is not found within maxLength or memory bounds.
+   */
+  public readCString(pointer: FlintMemoryAddress, maxLength = 4096): string {
+    const offset = this.normalizeAddress(pointer);
+    const memoryBytes = this.bytes;
+    if (offset >= memoryBytes.byteLength) {
+      throw new FlintTrap('MemoryOutOfBounds', `Memory address ${offset} is outside linear memory bounds.`, undefined, {
+        logger: this.logger,
+      });
+    }
+    const limit = Math.min(maxLength, memoryBytes.byteLength - offset);
+    let terminatorIndex = -1;
+    for (let index = 0; index < limit; index++) {
+      if (memoryBytes[offset + index] === 0x00) {
+        terminatorIndex = index;
+        break;
+      }
+    }
+    if (terminatorIndex === -1) {
+      throw new FlintTrap(
+        'MemoryOutOfBounds',
+        `Null terminator not found within bounds (${limit} bytes scanned).`,
+        undefined,
+        { logger: this.logger },
+      );
+    }
+    try {
+      return textDecoder.decode(memoryBytes.subarray(offset, offset + terminatorIndex));
+    } catch (error) {
+      throw new FlintTrap('MemoryOutOfBounds', 'The C string is not valid UTF-8.', undefined, {
+        cause: error,
+        logger: this.logger,
+      });
+    }
+  }
+
+  /**
+   * Writes a null-terminated UTF-8 C string to linear memory.
+   *
+   * @param pointer - Destination memory address.
+   * @param value - String value to encode and write.
+   * @returns Total number of bytes written including the null terminator.
+   */
+  public writeCString(pointer: FlintMemoryAddress, value: string): number {
+    const encoded = textEncoder.encode(value);
+    const totalBytes = encoded.byteLength + 1;
+    this.checkRange(pointer, totalBytes);
+    const offset = this.normalizeAddress(pointer);
+    this.bytes.set(encoded, offset);
+    this.bytes[offset + encoded.byteLength] = 0x00;
+    return totalBytes;
   }
 
   /**
@@ -529,10 +596,9 @@ export class FlintMultiMemory {
   // skipcq: JS-R1005
   public getPartition(partition: number | FlintMemoryPartitionName): FlintMemory {
     if (partition === 0 || partition === 'guestHeap') return this.guestHeap;
-    if (partition === 'foreignHeap') return this.foreignHeap;
-    if (partition === 1 || partition === 'hostInterop') return this.hostInterop;
-    if (partition === 2 || partition === 'staticData') return this.staticData;
-    if (partition === 3) return this.foreignHeap;
+    if (partition === 1 || partition === 'foreignHeap') return this.foreignHeap;
+    if (partition === 2 || partition === 'hostInterop') return this.hostInterop;
+    if (partition === 3 || partition === 'staticData') return this.staticData;
     throw new FlintTrap('MemoryOutOfBounds', `Unknown memory partition: ${String(partition)}`, undefined, {
       logger: this.logger,
     });
@@ -610,6 +676,21 @@ export class FlintRegionalArena {
     }
     this.currentOffset = aligned + size;
     return aligned;
+  }
+
+  /**
+   * Encodes a string as a null-terminated UTF-8 C string, bump-allocates space in the arena,
+   * writes the bytes followed by 0x00, and returns the allocated pointer address.
+   *
+   * @param value - String value to write.
+   * @returns Allocated base address pointer in linear memory.
+   */
+  public writeCString(value: string): number {
+    const encoded = textEncoder.encode(value);
+    const totalBytes = encoded.byteLength + 1;
+    const pointer = this.allocate(totalBytes, 1);
+    this.memory.writeCString(pointer, value);
+    return pointer;
   }
 
   /**

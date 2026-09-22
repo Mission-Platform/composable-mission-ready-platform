@@ -32,7 +32,8 @@
     "format:write": "prettier --write ."
   },
   "dependencies": {
-    "@mission-platform/flint": "workspace:*"
+    "@mission-platform/flint": "workspace:*",
+    "@mission-platform/flint-c-abi": "workspace:*"
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",

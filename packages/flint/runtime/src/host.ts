@@ -1,3 +1,5 @@
+import { mapCTypeToWasmValType } from '@mission-platform/flint-c-abi';
+
 import { assertValidFlintAbiManifest, equalFunction } from './abi.js';
 import { createFlintLogger, type FlintLogger } from './logging.js';
 import { toFlintHostError, FlintTrap } from './traps.js';
@@ -192,6 +194,40 @@ export function createFlintHost(
           { logger },
         );
       }
+      if (arguments_.length !== function_.parameters.length) {
+        throw new FlintTrap(
+          'HostError',
+          `Foreign function '${symbol}' in capability '${library}' received an invalid argument count: expected ${function_.parameters.length}, got ${arguments_.length}.`,
+          library,
+          { logger },
+        );
+      }
+      for (const [index, parameter] of function_.parameters.entries()) {
+        const argument = arguments_[index];
+        const parameterType =
+          ('wasmType' in parameter && typeof parameter.wasmType === 'string' ? parameter.wasmType : undefined) ??
+          ('type' in parameter && typeof parameter.type === 'string' ? parameter.type : undefined) ??
+          ('cType' in parameter && typeof parameter.cType === 'string' ? parameter.cType : undefined) ??
+          'i32';
+        const expectedWasm = mapCTypeToWasmValType(parameterType);
+        const actualType = typeof argument;
+        let valid = false;
+        if (expectedWasm === 'i32' || expectedWasm === 'f32' || expectedWasm === 'f64') {
+          valid = actualType === 'number';
+        } else if (expectedWasm === 'i64') {
+          valid = actualType === 'bigint' || actualType === 'number';
+        } else {
+          valid = true;
+        }
+        if (!valid) {
+          throw new FlintTrap(
+            'HostError',
+            `Foreign function '${symbol}' parameter '${parameter.name}' expected Wasm type '${expectedWasm}', got '${actualType}'.`,
+            library,
+            { logger },
+          );
+        }
+      }
       const implementation = foreignImplementations.get(library);
       if (implementation === undefined) {
         throw new FlintTrap(
@@ -203,7 +239,15 @@ export function createFlintHost(
       }
       try {
         logger.debug('foreign.invoke', { library, symbol, argumentCount: arguments_.length });
-        return implementation.call(symbol, arguments_);
+        const result = implementation.call(symbol, arguments_);
+        if (result instanceof Promise) {
+          return result.catch((error: unknown) => {
+            const hostError = toFlintHostError(error, library, logger);
+            logger.error('foreign.reject', { library, symbol, code: hostError.code });
+            throw hostError;
+          });
+        }
+        return result;
       } catch (error) {
         const hostError = toFlintHostError(error, library, logger);
         logger.error('foreign.throw', { library, symbol, code: hostError.code });

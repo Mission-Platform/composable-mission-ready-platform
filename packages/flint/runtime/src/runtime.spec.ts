@@ -169,4 +169,80 @@ describe('Forge Web Script runtime', () => {
     memory.deallocate(pointer, value.byteLength);
     expect(() => memory.deallocate(pointer, value.byteLength)).toThrowError(FlintTrap);
   });
+
+  it('strictly validates foreign host call arity, parameter types, and async rejection handling', async () => {
+    const foreignManifest = {
+      ...manifest,
+      imports: [],
+      requiredCapabilities: [],
+      foreignCapabilities: [
+        {
+          abi: 'C' as const,
+          library: 'native_lib',
+          callingConvention: 'wasm-c-abi' as const,
+          memoryModel: 'shared' as const,
+          functions: [
+            {
+              symbol: 'add_numbers',
+              parameters: [
+                { name: 'a', type: 'c_int', wasmType: 'i32', cType: 'int' },
+                { name: 'b', type: 'c_int', wasmType: 'i32', cType: 'int' },
+              ],
+              result: { wasmType: 'i32', cType: 'int' },
+            },
+            {
+              symbol: 'async_op',
+              parameters: [{ name: 'id', type: 'c_int', wasmType: 'i32', cType: 'int' }],
+              result: { wasmType: 'i32', cType: 'int' },
+            },
+          ],
+        },
+      ],
+    };
+
+    const host = createFlintHost(
+      foreignManifest,
+      {},
+      {
+        foreignRegistry: {
+          native_lib: {
+            library: 'native_lib',
+            call: (symbol, arguments_) => {
+              if (symbol === 'add_numbers') {
+                const [a, b] = arguments_ as [number, number];
+                return a + b;
+              }
+              if (symbol === 'async_op') {
+                return Promise.reject(new Error('async foreign failure'));
+              }
+              throw new Error(`Unknown symbol: ${symbol}`);
+            },
+          },
+        },
+      },
+    );
+
+    // Valid call
+    expect(host.invokeForeign?.('native_lib', 'add_numbers', [10, 20])).toBe(30);
+
+    // Arity validation: too few arguments
+    expect(() => host.invokeForeign?.('native_lib', 'add_numbers', [10])).toThrowError(
+      /Foreign function 'add_numbers' in capability 'native_lib' received an invalid argument count: expected 2, got 1/,
+    );
+
+    // Arity validation: too many arguments
+    expect(() => host.invokeForeign?.('native_lib', 'add_numbers', [10, 20, 30])).toThrowError(
+      /Foreign function 'add_numbers' in capability 'native_lib' received an invalid argument count: expected 2, got 3/,
+    );
+
+    // Type validation: string passed instead of number for c_int
+    expect(() => host.invokeForeign?.('native_lib', 'add_numbers', [10, 'invalid' as unknown as number])).toThrowError(
+      /Foreign function 'add_numbers' parameter 'b' expected Wasm type 'i32', got 'string'/,
+    );
+
+    // Async rejection handling converted to FlintHostError
+    await expect(host.invokeForeign?.('native_lib', 'async_op', [42])).rejects.toThrow(
+      /Capability 'native_lib' failed/,
+    );
+  });
 });
