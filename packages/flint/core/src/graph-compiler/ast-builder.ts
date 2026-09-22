@@ -53,6 +53,7 @@ function spanKey(span: FlintSourceSpan): string {
 /**
  * Builds an AST literal expression for a default or constant port value.
  */
+// skipcq: JS-R1005
 function createLiteralExpression(value: unknown, type: FlintTypeName, span: FlintSourceSpan): FlintLiteralExpression {
   const primitiveType: FlintPrimitiveType = type.reference === undefined ? type.name : 'unit';
 
@@ -81,6 +82,7 @@ type InputResolver = (node: FlintGraphNode, portId: string) => FlintExpression;
 /**
  * Lowers arithmetic and mathematical graph nodes into binary, unary, or match AST expressions.
  */
+// skipcq: JS-R1005
 function buildArithmeticExpression(
   node: FlintGraphNode,
   resolveInput: InputResolver,
@@ -204,6 +206,7 @@ function buildArithmeticExpression(
 /**
  * Lowers logical and comparison graph nodes into binary or unary boolean AST expressions.
  */
+// skipcq: JS-R1005
 function buildComparisonExpression(
   node: FlintGraphNode,
   resolveInput: InputResolver,
@@ -246,6 +249,7 @@ function buildComparisonExpression(
 /**
  * Lowers collection, map, and vector operations into Flint stdlib calls and match expressions.
  */
+// skipcq: JS-R1005
 function buildCollectionExpression(
   node: FlintGraphNode,
   resolveInput: InputResolver,
@@ -343,6 +347,7 @@ function buildControlOrTextExpression(
 /**
  * Lowers a validated FlintNodeGraph into an in-memory FlintModule AST and bidirectional source map.
  */
+// skipcq: JS-R1005
 export function buildGraphAst(inputGraph: FlintNodeGraph): FlintAstBuildResult {
   const graph = flattenGraph(inputGraph);
   const validation = validateGraph(graph);

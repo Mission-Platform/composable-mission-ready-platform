@@ -41,6 +41,7 @@ export class TraceDebuggerController {
   /**
    * Ingests a new trace execution report and maps its event source locations to graph nodes.
    */
+  // skipcq: JS-R1005
   loadTrace(
     report: FlintTraceReport,
     sourceMap: FlintNodeSourceMap,

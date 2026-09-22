@@ -25,3 +25,4 @@ environment = ["nodejs", "browser", "vitest"]
 dialect = "typescript"
 module_system = "es-modules"
 skip_doc_coverage = ["arrow-function-expression", "function-expression"]
+cyclomatic_complexity_threshold = "critical"

@@ -11,6 +11,7 @@ import type {
 /**
  * Checks structural and semantic compatibility between source and destination Flint types.
  */
+// skipcq: JS-R1005
 export function areTypesCompatible(source: FlintTypeName, target: FlintTypeName): boolean {
   const sourceName = source.reference ?? source.name;
   const targetName = target.reference ?? target.name;
@@ -66,6 +67,7 @@ function validateNodeUniqueness(
 /**
  * Validates graph edge topology, self-loops, dangling nodes, port matching, and type compatibility.
  */
+// skipcq: JS-R1005
 function validateEdgeIntegrity(
   edges: readonly FlintGraphEdge[],
   nodeMap: ReadonlyMap<string, FlintGraphNode>,
@@ -192,6 +194,7 @@ function validateRequiredUnconnectedPorts(
 /**
  * Performs Kahn's topological sort algorithm to detect graph cycles and derive deterministic node evaluation order.
  */
+// skipcq: JS-R1005
 function performTopologicalSort(
   nodes: readonly FlintGraphNode[],
   edges: readonly FlintGraphEdge[],

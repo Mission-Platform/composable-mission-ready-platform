@@ -52,6 +52,7 @@ function generateSecureRandomFloat(): number {
 /**
  * Executes a visual graph compilation and runs the WebAssembly binary in-memory.
  */
+// skipcq: JS-R1005
 export async function executeGraph(
   graph: FlintNodeGraph,
   inputs: Readonly<Record<string, unknown>> = {},

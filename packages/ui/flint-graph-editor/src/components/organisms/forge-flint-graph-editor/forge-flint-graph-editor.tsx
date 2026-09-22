@@ -14,7 +14,7 @@ import {
   type FlintGraphNode,
   type FlintNodeCategory,
 } from '@mission-platform/flint';
-import { classNames, useEffect, useRef, useState, type MpElement } from '@mission-platform/forge-jsx';
+import { classNames, useEffect, useRef, useState, type MpElement, type MpRef } from '@mission-platform/forge-jsx';
 
 import { FlintEditorStore, type FlintEditorStoreState } from '../../../editor/editor-store';
 import {
@@ -274,6 +274,99 @@ interface FlintRendererBridge {
 }
 
 /**
+ * Performs port hit-testing against candidate nodes within a snap radius.
+ */
+function hitTestPorts(
+  worldX: number,
+  worldY: number,
+  nodes: readonly FlintGraphNode[],
+  snapRadius: number,
+): FlintHitResult | undefined {
+  for (const node of nodes) {
+    for (const [index, port] of (node.inputs ?? []).entries()) {
+      const portY = node.position.y + 44 + index * 28 + 14;
+      if (Math.hypot(worldX - node.position.x, worldY - portY) <= snapRadius) {
+        return { type: 'port', nodeId: node.id, portId: port.id, worldX, worldY };
+      }
+    }
+    for (const [index, port] of (node.outputs ?? []).entries()) {
+      const portY = node.position.y + 44 + index * 28 + 14;
+      if (Math.hypot(worldX - (node.position.x + 220), worldY - portY) <= snapRadius) {
+        return { type: 'port', nodeId: node.id, portId: port.id, worldX, worldY };
+      }
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Performs node bounding box hit-testing using WebAssembly spatial routines.
+ */
+function hitTestNodes(
+  worldX: number,
+  worldY: number,
+  nodes: readonly FlintGraphNode[],
+  wasm: ReturnType<typeof getFlintRenderWorkerWasm>,
+): FlintHitResult | undefined {
+  for (const node of nodes) {
+    const maxPorts = Math.max(node.inputs?.length ?? 0, node.outputs?.length ?? 0);
+    wasm.getNodeBounds(node.position.x, node.position.y, maxPorts);
+    const minX = wasm.get_node_bounds_min_x();
+    const minY = wasm.get_node_bounds_min_y();
+    const maxX = wasm.get_node_bounds_max_x();
+    const maxY = wasm.get_node_bounds_max_y();
+    if (worldX >= minX && worldX <= maxX && worldY >= minY && worldY <= maxY) {
+      return { type: 'node', nodeId: node.id, worldX, worldY };
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Performs edge spline curve hit-testing using WebAssembly geometry routines.
+ */
+function hitTestEdges(
+  worldX: number,
+  worldY: number,
+  edges: readonly FlintGraphEdge[],
+  nodes: readonly FlintGraphNode[],
+  wasm: ReturnType<typeof getFlintRenderWorkerWasm>,
+): FlintHitResult | undefined {
+  const nodeMap = new Map<string, FlintGraphNode>(nodes.map((n) => [n.id, n]));
+  for (const edge of edges) {
+    const from = nodeMap.get(edge.fromNodeId);
+    const to = nodeMap.get(edge.toNodeId);
+    if (!from || !to) continue;
+    const fromIndex = Math.max(
+      0,
+      from.outputs.findIndex((p) => p.id === edge.fromPortId),
+    );
+    const toIndex = Math.max(
+      0,
+      to.inputs.findIndex((p) => p.id === edge.toPortId),
+    );
+    const p0x = from.position.x + 220;
+    const p0y = from.position.y + 44 + fromIndex * 28 + 14;
+    const p3x = to.position.x;
+    const p3y = to.position.y + 44 + toIndex * 28 + 14;
+    if (
+      wasm.edge_hit_test(
+        Math.round(worldX),
+        Math.round(worldY),
+        Math.round(p0x),
+        Math.round(p0y),
+        Math.round(p3x),
+        Math.round(p3y),
+        14,
+      )
+    ) {
+      return { type: 'edge', nodeId: '', edgeId: edge.id, worldX, worldY };
+    }
+  }
+  return undefined;
+}
+
+/**
  * Creates a bridge communicating with the native Flint WebAssembly render worker or canvas context.
  */
 function createRendererBridge(
@@ -314,22 +407,13 @@ function createRendererBridge(
 
   let cleanupListener: (() => void) | undefined;
   if (globalThis.self !== undefined && 'addEventListener' in globalThis.self) {
+    const validMessageTypes = new Set(['ready', 'frame', 'camera_changed', 'hit_result', 'hit_test_result', 'error']);
     /**
      * Handles incoming response messages from the render worker.
      */
     const handleOutputMessage = (event: MessageEvent<RenderWorkerOutputMessage>): void => {
       const data = event.data;
-      if (
-        data &&
-        typeof data === 'object' &&
-        'type' in data &&
-        (data.type === 'ready' ||
-          data.type === 'frame' ||
-          data.type === 'camera_changed' ||
-          data.type === 'hit_result' ||
-          data.type === 'hit_test_result' ||
-          data.type === 'error')
-      ) {
+      if (data && typeof data === 'object' && 'type' in data && validMessageTypes.has(data.type)) {
         onMessage(data);
       }
     };
@@ -466,62 +550,13 @@ function createRendererBridge(
       const worldX = wasm.get_point_x();
       const worldY = wasm.get_point_y();
 
-      for (const node of currentNodes) {
-        for (const [index, port] of (node.inputs ?? []).entries()) {
-          const portY = node.position.y + 44 + index * 28 + 14;
-          if (Math.hypot(worldX - node.position.x, worldY - portY) <= snapRadius) {
-            return { type: 'port', nodeId: node.id, portId: port.id, worldX, worldY };
-          }
-        }
-        for (const [index, port] of (node.outputs ?? []).entries()) {
-          const portY = node.position.y + 44 + index * 28 + 14;
-          if (Math.hypot(worldX - (node.position.x + 220), worldY - portY) <= snapRadius) {
-            return { type: 'port', nodeId: node.id, portId: port.id, worldX, worldY };
-          }
-        }
-        const maxPorts = Math.max(node.inputs?.length ?? 0, node.outputs?.length ?? 0);
-        wasm.getNodeBounds(node.position.x, node.position.y, maxPorts);
-        const minX = wasm.get_node_bounds_min_x();
-        const minY = wasm.get_node_bounds_min_y();
-        const maxX = wasm.get_node_bounds_max_x();
-        const maxY = wasm.get_node_bounds_max_y();
-        if (worldX >= minX && worldX <= maxX && worldY >= minY && worldY <= maxY) {
-          return { type: 'node', nodeId: node.id, worldX, worldY };
-        }
-      }
+      const portHit = hitTestPorts(worldX, worldY, currentNodes, snapRadius);
+      if (portHit) return portHit;
 
-      const nodeMap = new Map<string, FlintGraphNode>(currentNodes.map((n) => [n.id, n]));
-      for (const edge of currentEdges) {
-        const from = nodeMap.get(edge.fromNodeId);
-        const to = nodeMap.get(edge.toNodeId);
-        if (!from || !to) continue;
-        const fromIndex = Math.max(
-          0,
-          from.outputs.findIndex((p) => p.id === edge.fromPortId),
-        );
-        const toIndex = Math.max(
-          0,
-          to.inputs.findIndex((p) => p.id === edge.toPortId),
-        );
-        const p0x = from.position.x + 220;
-        const p0y = from.position.y + 44 + fromIndex * 28 + 14;
-        const p3x = to.position.x;
-        const p3y = to.position.y + 44 + toIndex * 28 + 14;
-        if (
-          wasm.edge_hit_test(
-            Math.round(worldX),
-            Math.round(worldY),
-            Math.round(p0x),
-            Math.round(p0y),
-            Math.round(p3x),
-            Math.round(p3y),
-            14,
-          )
-        ) {
-          return { type: 'edge', nodeId: '', edgeId: edge.id, worldX, worldY };
-        }
-      }
-      return;
+      const nodeHit = hitTestNodes(worldX, worldY, currentNodes, wasm);
+      if (nodeHit) return nodeHit;
+
+      return hitTestEdges(worldX, worldY, currentEdges, currentNodes, wasm);
     },
     destroy: () => {
       postToRenderer({ type: 'destroy' });
@@ -546,6 +581,7 @@ function createRendererBridge(
 /**
  * Detects the active color theme from the DOM data-theme attribute or system color preference.
  */
+// skipcq: JS-R1005
 function detectCurrentTheme(): 'light' | 'dark' {
   if (typeof document !== 'undefined') {
     const documentTheme = document.documentElement.dataset.theme ?? document.body?.dataset.theme;
@@ -563,17 +599,268 @@ function detectCurrentTheme(): 'light' | 'dark' {
   return 'dark';
 }
 
+interface ExportModalProperties {
+  readonly exportedSource: string;
+  readonly onClose: () => void;
+}
+
+/**
+ * Modal dialog displaying the exported Flint source code.
+ */
+function ExportModal({ exportedSource, onClose }: ExportModalProperties): MpElement {
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      className={styles.modalOverlay}
+      onClick={onClose}
+    >
+      <div
+        className={styles.modalCard}
+        onClick={(event: unknown) => {
+          if (typeof MouseEvent !== 'undefined' && event instanceof MouseEvent) {
+            event.stopPropagation();
+          }
+        }}
+      >
+        <div className={styles.modalHeader}>
+          <span
+            className={styles.inspectorTitle}
+            style={{ margin: 0 }}
+          >
+            Generated Flint Source
+          </span>
+          <ForgeButton
+            variant="ghost"
+            size="xs"
+            onClick={onClose}
+            ariaLabel="Close export modal"
+          >
+            ✕
+          </ForgeButton>
+        </div>
+        <div className={styles.modalBody}>
+          <pre className={styles.codeBlock}>
+            <code>{exportedSource}</code>
+          </pre>
+        </div>
+        <div className={styles.modalFooter}>
+          <ForgeButton
+            variant="primary"
+            size="sm"
+            onClick={onClose}
+          >
+            Close
+          </ForgeButton>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+interface SpriteSheetSectionProperties {
+  readonly spriteSheetMode: 'crisp' | 'raw';
+  readonly onSetSpriteSheetMode: (mode: 'crisp' | 'raw') => void;
+  readonly spriteSheetGrid: boolean;
+  readonly onToggleSpriteSheetGrid: () => void;
+  readonly hoveredGlyph?: HoveredGlyphInfo;
+  readonly spriteSheetCanvasReference: MpRef<HTMLCanvasElement | undefined>;
+  readonly inspectCanvasReference: MpRef<HTMLCanvasElement | undefined>;
+  readonly onSpriteSheetPointerMove: (event: PointerEvent) => void;
+  readonly onSpriteSheetPointerLeave: () => void;
+  readonly onToggleSpriteSheet: () => void;
+}
+
+/**
+ * Interactive debug collapse section for inspecting the 512x512 SDF font atlas texture.
+ */
+function SpriteSheetDebugSection({
+  spriteSheetMode,
+  onSetSpriteSheetMode,
+  spriteSheetGrid,
+  onToggleSpriteSheetGrid,
+  hoveredGlyph,
+  spriteSheetCanvasReference,
+  inspectCanvasReference,
+  onSpriteSheetPointerMove,
+  onSpriteSheetPointerLeave,
+  onToggleSpriteSheet,
+}: SpriteSheetSectionProperties): MpElement {
+  return (
+    <div style={{ marginTop: '16px' }}>
+      <ForgeCollapse
+        summary="Debug Glyph Sprite Sheet (512x512 SDF Atlas)"
+        open={true}
+        size="sm"
+        onToggle={onToggleSpriteSheet}
+      >
+        <div className={styles.spriteSheetContainer}>
+          <div className={styles.spriteSheetToolbar}>
+            <ForgeButtonGroup size="xs">
+              <ForgeButton
+                variant={spriteSheetMode === 'crisp' ? 'primary' : 'ghost'}
+                size="xs"
+                onClick={() => onSetSpriteSheetMode('crisp')}
+              >
+                Crisp Glyphs
+              </ForgeButton>
+              <ForgeButton
+                variant={spriteSheetMode === 'raw' ? 'primary' : 'ghost'}
+                size="xs"
+                onClick={() => onSetSpriteSheetMode('raw')}
+              >
+                Raw SDF
+              </ForgeButton>
+            </ForgeButtonGroup>
+            <ForgeButton
+              variant={spriteSheetGrid ? 'secondary' : 'ghost'}
+              size="xs"
+              onClick={onToggleSpriteSheetGrid}
+            >
+              {spriteSheetGrid ? 'Grid: ON' : 'Grid: OFF'}
+            </ForgeButton>
+          </div>
+          <div className={styles.spriteSheetMeta}>
+            <ForgeBadge
+              variant="primary"
+              size="xs"
+            >
+              512 × 512 px
+            </ForgeBadge>
+            <ForgeBadge
+              variant="neutral"
+              size="xs"
+            >
+              16 × 16 Grid (256 Cells)
+            </ForgeBadge>
+            <ForgeBadge
+              variant="info"
+              size="xs"
+            >
+              Comfortaa & Datatype
+            </ForgeBadge>
+            <ForgeBadge
+              variant="success"
+              size="xs"
+            >
+              157 Active Glyphs
+            </ForgeBadge>
+          </div>
+          <canvas
+            ref={spriteSheetCanvasReference}
+            width={512}
+            height={512}
+            className={styles.spriteSheetCanvas}
+            onPointerMove={onSpriteSheetPointerMove}
+            onPointerLeave={onSpriteSheetPointerLeave}
+          />
+          {hoveredGlyph && (
+            <div className={styles.spriteSheetInspector}>
+              <canvas
+                ref={inspectCanvasReference}
+                width={64}
+                height={64}
+                className={styles.spriteSheetInspectCanvas}
+              />
+              <div className={styles.spriteSheetInspectDetails}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span className={styles.spriteSheetInspectChar}>
+                    {hoveredGlyph.char === ' ' ? 'Space' : hoveredGlyph.char}
+                  </span>
+                  <ForgeBadge
+                    variant="info"
+                    size="xs"
+                  >
+                    {hoveredGlyph.codeHex}
+                  </ForgeBadge>
+                  <ForgeBadge
+                    variant="neutral"
+                    size="xs"
+                  >
+                    Idx {hoveredGlyph.index}
+                  </ForgeBadge>
+                </div>
+                <div>
+                  Advance: {hoveredGlyph.advance}px | Cell: ({hoveredGlyph.column}, {hoveredGlyph.row})
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </ForgeCollapse>
+    </div>
+  );
+}
+
+interface PerfProfilerModalProperties extends SpriteSheetSectionProperties {
+  readonly perfMetrics: FlintPerformanceMetrics;
+  readonly onClose: () => void;
+}
+
+/**
+ * Modal dialog for inspecting D3 rendering metrics and the SDF font atlas sprite sheet.
+ */
+function PerfProfilerModal(properties: PerfProfilerModalProperties): MpElement {
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      className={styles.modalOverlay}
+      onClick={properties.onClose}
+    >
+      <div
+        className={styles.perfModal}
+        onClick={(event: unknown) => {
+          if (typeof MouseEvent !== 'undefined' && event instanceof MouseEvent) {
+            event.stopPropagation();
+          }
+        }}
+      >
+        <div className={styles.modalHeader}>
+          <span className={styles.modalTitle}>Performance Profiler (D3)</span>
+          <ForgeButton
+            variant="ghost"
+            size="xs"
+            onClick={properties.onClose}
+            ariaLabel="Close performance modal"
+          >
+            ✕
+          </ForgeButton>
+        </div>
+        <div className={styles.modalBody}>
+          <ForgePerformancePieChart
+            metrics={properties.perfMetrics}
+            width={280}
+            height={240}
+          />
+          <SpriteSheetDebugSection {...properties} />
+        </div>
+        <div className={styles.modalFooter}>
+          <ForgeButton
+            variant="primary"
+            size="sm"
+            onClick={properties.onClose}
+          >
+            Close
+          </ForgeButton>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /**
  * Framework-neutral Forge component for the Flint visual node graph editor.
  * Authors interactive dataflow programs, renders instanced WebGPU primitives,
  * and compiles natively to WebAssembly.
  */
+// skipcq: JS-R1005
 export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorProperties>): MpElement {
   const storeReference = useRef<FlintEditorStore>(properties.store ?? new FlintEditorStore());
   const store = properties.store ?? storeReference.current;
 
-  const canvasReference = useRef<HTMLCanvasElement | undefined>(undefined);
-  const rendererReference = useRef<FlintRendererBridge | undefined>(undefined);
+  const canvasReference = useRef<HTMLCanvasElement | undefined>();
+  const rendererReference = useRef<FlintRendererBridge | undefined>();
 
   const [editorState, setEditorState] = useState<FlintEditorStoreState>(store.getState());
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(() => {
@@ -624,11 +911,10 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
 
   const [spriteSheetMode, setSpriteSheetMode] = useState<'crisp' | 'raw'>('crisp');
   const [spriteSheetGrid, setSpriteSheetGrid] = useState<boolean>(true);
-  // eslint-disable-next-line unicorn/no-useless-undefined -- the neutral `useState` requires an explicit initial value
-  const [hoveredGlyph, setHoveredGlyph] = useState<HoveredGlyphInfo | undefined>(undefined);
+  const [hoveredGlyph, setHoveredGlyph] = useState<HoveredGlyphInfo | undefined>();
 
-  const spriteSheetCanvasReference = useRef<HTMLCanvasElement | undefined>(undefined);
-  const inspectCanvasReference = useRef<HTMLCanvasElement | undefined>(undefined);
+  const spriteSheetCanvasReference = useRef<HTMLCanvasElement | undefined>();
+  const inspectCanvasReference = useRef<HTMLCanvasElement | undefined>();
 
   /**
    * Renders a magnified 32x32 glyph cell to the hover inspection canvas.
@@ -793,7 +1079,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
    * Resets glyph hover inspection when the pointer leaves the sprite sheet canvas.
    */
   const onSpriteSheetPointerLeave = (): void => {
-    setHoveredGlyph(undefined);
+    setHoveredGlyph();
     paintSpriteSheet(spriteSheetMode, spriteSheetGrid);
   };
 
@@ -806,27 +1092,30 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
   }, [showPerfModal]);
 
   useEffect(() => {
+    let cleanup: (() => void) | undefined;
     if (properties.theme && properties.theme !== 'auto') {
       setResolvedTheme(properties.theme);
-      return;
-    }
-    /**
-     * Checks and synchronizes color theme changes from the document environment.
-     */
-    const checkTheme = (): void => {
-      const detected = detectCurrentTheme();
-      setResolvedTheme(detected);
-    };
-    checkTheme();
-    if (typeof MutationObserver !== 'undefined' && typeof document !== 'undefined') {
-      const observer = new MutationObserver(checkTheme);
-      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
-      if (document.body) {
-        observer.observe(document.body, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+    } else {
+      /**
+       * Checks and synchronizes color theme changes from the document environment.
+       */
+      const checkTheme = (): void => {
+        const detected = detectCurrentTheme();
+        setResolvedTheme(detected);
+      };
+      checkTheme();
+      if (typeof MutationObserver !== 'undefined' && typeof document !== 'undefined') {
+        const observer = new MutationObserver(checkTheme);
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+        if (document.body) {
+          observer.observe(document.body, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+        }
+        cleanup = () => {
+          observer.disconnect();
+        };
       }
-      return () => observer.disconnect();
     }
-    return;
+    return cleanup;
   }, [properties.theme]);
 
   useEffect(() => {
@@ -884,6 +1173,9 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
               } else if (!message.hit) {
                 store.deselectAll();
               }
+              break;
+            }
+            default: {
               break;
             }
           }
@@ -1166,6 +1458,9 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           case 'node': {
             store.commitNodeMove();
             renderer.renderFrame();
+            break;
+          }
+          default: {
             break;
           }
         }
@@ -2387,215 +2682,35 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
 
       {/* Code Export Dialog Modal */}
       {showExportModal && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className={styles.modalOverlay}
-          onClick={() => setShowExportModal(false)}
-        >
-          <div
-            className={styles.modalCard}
-            onClick={(event: unknown) => {
-              if (typeof MouseEvent !== 'undefined' && event instanceof MouseEvent) {
-                event.stopPropagation();
-              }
-            }}
-          >
-            <div className={styles.modalHeader}>
-              <span
-                className={styles.inspectorTitle}
-                style={{ margin: 0 }}
-              >
-                Generated Flint Source
-              </span>
-              <ForgeButton
-                variant="ghost"
-                size="xs"
-                onClick={() => setShowExportModal(false)}
-                ariaLabel="Close export modal"
-              >
-                ✕
-              </ForgeButton>
-            </div>
-            <div className={styles.modalBody}>
-              <pre className={styles.codeBlock}>
-                <code>{exportedSource}</code>
-              </pre>
-            </div>
-            <div className={styles.modalFooter}>
-              <ForgeButton
-                variant="primary"
-                size="sm"
-                onClick={() => setShowExportModal(false)}
-              >
-                Close
-              </ForgeButton>
-            </div>
-          </div>
-        </div>
+        <ExportModal
+          exportedSource={exportedSource}
+          onClose={() => setShowExportModal(false)}
+        />
       )}
 
       {/* Detailed D3 Performance Profiler Modal */}
       {showPerfModal && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className={styles.modalOverlay}
-          onClick={() => setShowPerfModal(false)}
-        >
-          <div
-            className={styles.perfModal}
-            onClick={(event: unknown) => {
-              if (typeof MouseEvent !== 'undefined' && event instanceof MouseEvent) {
-                event.stopPropagation();
-              }
-            }}
-          >
-            <div className={styles.modalHeader}>
-              <span className={styles.modalTitle}>Performance Profiler (D3)</span>
-              <ForgeButton
-                variant="ghost"
-                size="xs"
-                onClick={() => setShowPerfModal(false)}
-                ariaLabel="Close performance modal"
-              >
-                ✕
-              </ForgeButton>
-            </div>
-            <div className={styles.modalBody}>
-              <ForgePerformancePieChart
-                metrics={perfMetrics}
-                width={280}
-                height={240}
-              />
-              <div style={{ marginTop: '16px' }}>
-                <ForgeCollapse
-                  summary="Debug Glyph Sprite Sheet (512x512 SDF Atlas)"
-                  open={true}
-                  size="sm"
-                  onToggle={() => paintSpriteSheet()}
-                >
-                  <div className={styles.spriteSheetContainer}>
-                    <div className={styles.spriteSheetToolbar}>
-                      <ForgeButtonGroup size="xs">
-                        <ForgeButton
-                          variant={spriteSheetMode === 'crisp' ? 'primary' : 'ghost'}
-                          size="xs"
-                          onClick={() => {
-                            setSpriteSheetMode('crisp');
-                            paintSpriteSheet('crisp', spriteSheetGrid, hoveredGlyph?.index);
-                          }}
-                        >
-                          Crisp Glyphs
-                        </ForgeButton>
-                        <ForgeButton
-                          variant={spriteSheetMode === 'raw' ? 'primary' : 'ghost'}
-                          size="xs"
-                          onClick={() => {
-                            setSpriteSheetMode('raw');
-                            paintSpriteSheet('raw', spriteSheetGrid, hoveredGlyph?.index);
-                          }}
-                        >
-                          Raw SDF
-                        </ForgeButton>
-                      </ForgeButtonGroup>
-
-                      <ForgeButton
-                        variant={spriteSheetGrid ? 'secondary' : 'ghost'}
-                        size="xs"
-                        onClick={() => {
-                          const nextGrid = !spriteSheetGrid;
-                          setSpriteSheetGrid(nextGrid);
-                          paintSpriteSheet(spriteSheetMode, nextGrid, hoveredGlyph?.index);
-                        }}
-                      >
-                        {spriteSheetGrid ? 'Grid: ON' : 'Grid: OFF'}
-                      </ForgeButton>
-                    </div>
-
-                    <div className={styles.spriteSheetMeta}>
-                      <ForgeBadge
-                        variant="primary"
-                        size="xs"
-                      >
-                        512 × 512 px
-                      </ForgeBadge>
-                      <ForgeBadge
-                        variant="neutral"
-                        size="xs"
-                      >
-                        16 × 16 Grid (256 Cells)
-                      </ForgeBadge>
-                      <ForgeBadge
-                        variant="info"
-                        size="xs"
-                      >
-                        Comfortaa & Datatype
-                      </ForgeBadge>
-                      <ForgeBadge
-                        variant="success"
-                        size="xs"
-                      >
-                        157 Active Glyphs
-                      </ForgeBadge>
-                    </div>
-
-                    <canvas
-                      ref={spriteSheetCanvasReference}
-                      width={512}
-                      height={512}
-                      className={styles.spriteSheetCanvas}
-                      onPointerMove={onSpriteSheetPointerMove}
-                      onPointerLeave={onSpriteSheetPointerLeave}
-                    />
-
-                    {hoveredGlyph && (
-                      <div className={styles.spriteSheetInspector}>
-                        <canvas
-                          ref={inspectCanvasReference}
-                          width={64}
-                          height={64}
-                          className={styles.spriteSheetInspectCanvas}
-                        />
-                        <div className={styles.spriteSheetInspectDetails}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span className={styles.spriteSheetInspectChar}>
-                              {hoveredGlyph.char === ' ' ? 'Space' : hoveredGlyph.char}
-                            </span>
-                            <ForgeBadge
-                              variant="info"
-                              size="xs"
-                            >
-                              {hoveredGlyph.codeHex}
-                            </ForgeBadge>
-                            <ForgeBadge
-                              variant="neutral"
-                              size="xs"
-                            >
-                              Idx {hoveredGlyph.index}
-                            </ForgeBadge>
-                          </div>
-                          <div>
-                            Advance: {hoveredGlyph.advance}px | Cell: ({hoveredGlyph.column}, {hoveredGlyph.row})
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </ForgeCollapse>
-              </div>
-            </div>
-            <div className={styles.modalFooter}>
-              <ForgeButton
-                variant="primary"
-                size="sm"
-                onClick={() => setShowPerfModal(false)}
-              >
-                Close
-              </ForgeButton>
-            </div>
-          </div>
-        </div>
+        <PerfProfilerModal
+          perfMetrics={perfMetrics}
+          onClose={() => setShowPerfModal(false)}
+          spriteSheetMode={spriteSheetMode}
+          onSetSpriteSheetMode={(nextMode) => {
+            setSpriteSheetMode(nextMode);
+            paintSpriteSheet(nextMode, spriteSheetGrid, hoveredGlyph?.index);
+          }}
+          spriteSheetGrid={spriteSheetGrid}
+          onToggleSpriteSheetGrid={() => {
+            const nextGrid = !spriteSheetGrid;
+            setSpriteSheetGrid(nextGrid);
+            paintSpriteSheet(spriteSheetMode, nextGrid, hoveredGlyph?.index);
+          }}
+          hoveredGlyph={hoveredGlyph}
+          spriteSheetCanvasReference={spriteSheetCanvasReference}
+          inspectCanvasReference={inspectCanvasReference}
+          onSpriteSheetPointerMove={onSpriteSheetPointerMove}
+          onSpriteSheetPointerLeave={onSpriteSheetPointerLeave}
+          onToggleSpriteSheet={() => paintSpriteSheet()}
+        />
       )}
     </div>
   );

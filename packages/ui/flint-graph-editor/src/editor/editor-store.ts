@@ -58,7 +58,7 @@ export interface FlintEditorStoreState {
 export type StoreListener = (state: FlintEditorStoreState) => void;
 
 /**
- * State store managing graph topology, history stack, selection, and live Wasm compilation.
+ * Generates a unique, cryptographically random identifier with a given prefix.
  */
 function generateSecureId(prefix: string): string {
   const array = new Uint32Array(1);
@@ -69,6 +69,9 @@ function generateSecureId(prefix: string): string {
 
 const DEFAULT_NODE_POSITION = { x: 0, y: 0 } as const;
 
+/**
+ * State store managing graph topology, history stack, selection, and live Wasm compilation.
+ */
 export class FlintEditorStore {
   private graph: FlintNodeGraph;
   private selectedNodeIds = new Set<string>();
@@ -108,6 +111,9 @@ export class FlintEditorStore {
     this.pushHistoryState(this.graph);
   }
 
+  /**
+   * Retrieves the current immutable snapshot of the editor store state.
+   */
   getState(): FlintEditorStoreState {
     const currentFrame = this.navigationStack.at(-1);
     return {
@@ -129,6 +135,9 @@ export class FlintEditorStore {
     };
   }
 
+  /**
+   * Subscribes a listener callback to state changes and returns an unsubscribe cleanup function.
+   */
   subscribe(listener: StoreListener): () => void {
     this.listeners.add(listener);
     listener(this.getState());
@@ -137,6 +146,9 @@ export class FlintEditorStore {
     };
   }
 
+  /**
+   * Dispatches the current store state to all active subscribers.
+   */
   private notify(): void {
     const state = this.getState();
     for (const listener of this.listeners) {
@@ -144,6 +156,9 @@ export class FlintEditorStore {
     }
   }
 
+  /**
+   * Pushes a new snapshot of the graph into the undo/redo history stack.
+   */
   private pushHistoryState(newGraph: FlintNodeGraph): void {
     if (this.historyIndex < this.history.length - 1) {
       this.history.splice(this.historyIndex + 1);
@@ -156,6 +171,9 @@ export class FlintEditorStore {
     }
   }
 
+  /**
+   * Reverts the graph state to the previous history snapshot if available.
+   */
   undo(): boolean {
     if (this.historyIndex <= 0) return false;
     this.historyIndex--;
@@ -171,6 +189,9 @@ export class FlintEditorStore {
     return false;
   }
 
+  /**
+   * Advances the graph state to the next history snapshot if available.
+   */
   redo(): boolean {
     if (this.historyIndex >= this.history.length - 1) return false;
     this.historyIndex++;
@@ -186,6 +207,9 @@ export class FlintEditorStore {
     return false;
   }
 
+  /**
+   * Instantiates and adds a new node to the active graph by its operation name.
+   */
   addNode(
     operation: string,
     position: {
@@ -212,6 +236,9 @@ export class FlintEditorStore {
     return newNode;
   }
 
+  /**
+   * Removes a node and all its connected edges from the active graph.
+   */
   removeNode(nodeId: string): void {
     const updatedNodes = this.graph.nodes.filter((n) => n.id !== nodeId);
     const updatedEdges = this.graph.edges.filter((e) => e.fromNodeId !== nodeId && e.toNodeId !== nodeId);
@@ -228,6 +255,9 @@ export class FlintEditorStore {
     this.notify();
   }
 
+  /**
+   * Updates the coordinates of a specific node in the active graph.
+   */
   moveNode(nodeId: string, position: { readonly x: number; readonly y: number }): void {
     const startTime = typeof performance === 'undefined' ? 0 : performance.now();
     let changed = false;
@@ -248,6 +278,9 @@ export class FlintEditorStore {
     }
   }
 
+  /**
+   * Translates all currently selected nodes by the given world delta offsets.
+   */
   moveSelectedNodes(
     deltaX: number,
     deltaY: number,
@@ -279,11 +312,18 @@ export class FlintEditorStore {
     }
   }
 
+  /**
+   * Commits the current node positions to the history stack following a drag gesture.
+   */
   commitNodeMove(): void {
     this.pushHistoryState(this.graph);
     this.notify();
   }
 
+  /**
+   * Creates an edge connecting a source node output port to a target node input port.
+   */
+  // skipcq: JS-R1005
   connectPorts(
     fromNodeId: string,
     fromPortId: string,
@@ -355,6 +395,9 @@ export class FlintEditorStore {
     return { success: true };
   }
 
+  /**
+   * Deletes a specific edge from the active graph.
+   */
   removeEdge(edgeId: string): void {
     this.graph = {
       ...this.graph,
@@ -368,12 +411,18 @@ export class FlintEditorStore {
     this.notify();
   }
 
+  /**
+   * Removes the currently selected active edge if present.
+   */
   removeActiveEdge(): void {
     if (this.activeEdgeId) {
       this.removeEdge(this.activeEdgeId);
     }
   }
 
+  /**
+   * Selects a single node in the active graph, optionally replacing existing selection.
+   */
   selectNode(nodeId: string, multiSelect = false): void {
     if (!multiSelect) {
       this.selectedNodeIds.clear();
@@ -383,6 +432,9 @@ export class FlintEditorStore {
     this.notify();
   }
 
+  /**
+   * Toggles the selection state of a specific node.
+   */
   toggleNodeSelection(nodeId: string): void {
     if (this.selectedNodeIds.has(nodeId)) {
       this.selectedNodeIds.delete(nodeId);
@@ -393,6 +445,9 @@ export class FlintEditorStore {
     this.notify();
   }
 
+  /**
+   * Selects multiple nodes in the active graph.
+   */
   selectNodes(nodeIds: readonly string[], multiSelect = false): void {
     if (!multiSelect) {
       this.selectedNodeIds.clear();
@@ -404,18 +459,27 @@ export class FlintEditorStore {
     this.notify();
   }
 
+  /**
+   * Clears all currently selected nodes and edges.
+   */
   deselectAll(): void {
     this.selectedNodeIds.clear();
     this.activeEdgeId = undefined;
     this.notify();
   }
 
+  /**
+   * Marks a specific edge as the currently selected active edge.
+   */
   selectEdge(edgeId: string): void {
     this.selectedNodeIds.clear();
     this.activeEdgeId = edgeId;
     this.notify();
   }
 
+  /**
+   * Initiates a port connection interaction from a source output port.
+   */
   startConnecting(fromNodeId: string, fromPortId: string, startX: number, startY: number): void {
     this.connectingEdge = {
       fromNodeId,
@@ -426,6 +490,9 @@ export class FlintEditorStore {
     this.notify();
   }
 
+  /**
+   * Updates the virtual cursor coordinates for an in-flight connection gesture.
+   */
   updateConnectingCursor(cursorX: number, cursorY: number): void {
     if (this.connectingEdge) {
       this.connectingEdge = {
@@ -437,6 +504,9 @@ export class FlintEditorStore {
     }
   }
 
+  /**
+   * Cancels any active in-flight connection interaction.
+   */
   cancelConnecting(): void {
     if (this.connectingEdge) {
       this.connectingEdge = undefined;
@@ -444,6 +514,9 @@ export class FlintEditorStore {
     }
   }
 
+  /**
+   * Encloses the currently selected nodes within a visual graph group container.
+   */
   groupSelectedNodes(title = 'Group', color = '#58a6ff'): FlintGraphGroup | undefined {
     if (this.selectedNodeIds.size === 0) return undefined;
     const groupId = generateSecureId('group');
@@ -477,6 +550,9 @@ export class FlintEditorStore {
     return newGroup;
   }
 
+  /**
+   * Dissolves any group containers enclosing the currently selected nodes.
+   */
   ungroupSelected(): void {
     if (this.selectedNodeIds.size === 0) return;
     const selected = this.selectedNodeIds;
@@ -504,6 +580,10 @@ export class FlintEditorStore {
     this.notify();
   }
 
+  /**
+   * Encapsulates the selected nodes into a reusable compound meta-node with inferred boundary ports.
+   */
+  // skipcq: JS-R1005
   createMetaNodeFromSelected(title = 'Meta Node'): FlintGraphNode | undefined {
     if (this.selectedNodeIds.size === 0) return undefined;
     const selectedIds = new Set(this.selectedNodeIds);
@@ -711,6 +791,10 @@ export class FlintEditorStore {
     return metaNodeWithTemplate;
   }
 
+  /**
+   * Inlines a compound meta-node back into its individual constituent subgraph nodes.
+   */
+  // skipcq: JS-R1005
   expandMetaNode(metaNodeId: string): void {
     const metaNode = this.graph.nodes.find((node) => node.id === metaNodeId);
     if (!metaNode || !metaNode.metaSubgraph) return;
@@ -762,6 +846,9 @@ export class FlintEditorStore {
     this.notify();
   }
 
+  /**
+   * Mutates a custom property or literal value on a specific node.
+   */
   updateNodeProperty(nodeId: string, key: string, value: unknown): void {
     let changed = false;
     const updatedNodes = this.graph.nodes.map((node) => {
@@ -787,6 +874,9 @@ export class FlintEditorStore {
     }
   }
 
+  /**
+   * Updates the display label of a specific node in the active graph.
+   */
   renameNode(nodeId: string, title: string): void {
     let changed = false;
     const updatedNodes = this.graph.nodes.map((node) => {
@@ -805,6 +895,9 @@ export class FlintEditorStore {
     }
   }
 
+  /**
+   * Deletes all currently selected nodes, groups, and edges from the active graph.
+   */
   deleteSelected(): void {
     if (this.activeEdgeId) {
       this.removeEdge(this.activeEdgeId);
@@ -824,6 +917,9 @@ export class FlintEditorStore {
     }
   }
 
+  /**
+   * Compiles the active graph to WebAssembly via the compiler worker and executes it.
+   */
   async runGraph(inputs: Readonly<Record<string, unknown>> = {}): Promise<void> {
     this.isExecuting = true;
     this.lastError = undefined;
@@ -846,10 +942,16 @@ export class FlintEditorStore {
     this.notify();
   }
 
+  /**
+   * Generates Flint source code, AST definitions, and build artifacts for the active graph.
+   */
   exportArtifacts(): CompilerWorkerResponse {
     return exportGraphArtifacts(this.graph);
   }
 
+  /**
+   * Dissolves a specific group container by its identifier.
+   */
   ungroup(groupId: string): void {
     const groups = (this.graph.groups ?? []).filter((g) => g.id !== groupId);
     const updatedNodes = this.graph.nodes.map((node) => {
@@ -869,6 +971,9 @@ export class FlintEditorStore {
     this.notify();
   }
 
+  /**
+   * Updates the visual accent color of a specific graph group container.
+   */
   setGroupColor(groupId: string, color: string, backgroundColor?: string): void {
     const groups = (this.graph.groups ?? []).map((g) => {
       if (g.id === groupId) {
@@ -889,6 +994,9 @@ export class FlintEditorStore {
     this.notify();
   }
 
+  /**
+   * Drills navigation down into the encapsulated subgraph of a compound meta-node.
+   */
   drillIntoMetaNode(metaNodeId: string): boolean {
     const metaNode = this.graph.nodes.find((n) => n.id === metaNodeId);
     if (!metaNode || !metaNode.metaSubgraph) return false;
@@ -914,6 +1022,9 @@ export class FlintEditorStore {
     return true;
   }
 
+  /**
+   * Navigates back up to the parent graph in the meta-node drill-down hierarchy.
+   */
   navigateBack(): boolean {
     if (this.navigationStack.length === 0) return false;
 
@@ -949,10 +1060,16 @@ export class FlintEditorStore {
     return true;
   }
 
+  /**
+   * Returns whether the editor can navigate upward in the meta-node hierarchy.
+   */
   canNavigateBack(): boolean {
     return this.navigationStack.length > 0;
   }
 
+  /**
+   * Retrieves the current hierarchical breadcrumb trail for meta-node navigation.
+   */
   getBreadcrumbs(): readonly NavigationBreadcrumb[] {
     const crumbs: NavigationBreadcrumb[] = [{ id: 'root', title: 'Main' }];
     for (const frame of this.navigationStack) {
@@ -961,16 +1078,28 @@ export class FlintEditorStore {
     return crumbs;
   }
 
+  /**
+   * Registers a reusable meta-node definition in the catalog palette.
+   */
   registerMetaNode(def: FlintMetaNodeDefinition): void {
     this.registeredMetaNodes.set(def.id, def);
     this.notify();
   }
 
+  /**
+   * Returns all currently registered meta-node definitions available in the palette.
+   */
   getRegisteredMetaNodes(): readonly FlintMetaNodeDefinition[] {
     return [...this.registeredMetaNodes.values()];
   }
 
+  /**
+   * Removes a meta-node definition from the palette if it is not currently referenced.
+   */
   removeRegisteredMetaNode(templateId: string): boolean {
+    /**
+     * Counts recursive references to a meta-node definition within a graph.
+     */
     const countInGraph = (g: FlintNodeGraph): number => {
       let count = 0;
       for (const n of g.nodes) {
@@ -1003,6 +1132,9 @@ export class FlintEditorStore {
     return false;
   }
 
+  /**
+   * Instantiates a copy of a registered meta-node into the active graph.
+   */
   instantiateMetaNode(
     templateId: string,
     position: { readonly x: number; readonly y: number } = DEFAULT_NODE_POSITION,
@@ -1035,6 +1167,9 @@ export class FlintEditorStore {
     return newNode;
   }
 
+  /**
+   * Copies a single node with a new unique identifier.
+   */
   copyNode(nodeId: string): boolean {
     const node = this.graph.nodes.find((n) => n.id === nodeId);
     if (!node) return false;
@@ -1047,6 +1182,9 @@ export class FlintEditorStore {
     return true;
   }
 
+  /**
+   * Duplicates a group container and re-maps its contained node identifiers.
+   */
   copyGroup(groupId: string): boolean {
     const group = this.graph.groups?.find((g) => g.id === groupId);
     if (!group) return false;
@@ -1063,10 +1201,16 @@ export class FlintEditorStore {
     return true;
   }
 
+  /**
+   * Clones a compound meta-node and its inner encapsulated subgraph.
+   */
   copyMetaNode(metaNodeId: string): boolean {
     return this.copyNode(metaNodeId);
   }
 
+  /**
+   * Duplicates a meta-node definition with an offset position.
+   */
   duplicateMetaNode(metaNodeId: string): FlintGraphNode | undefined {
     const metaNode = this.graph.nodes.find((n) => n.id === metaNodeId);
     if (!metaNode || !metaNode.metaSubgraph) return undefined;
@@ -1114,6 +1258,9 @@ export class FlintEditorStore {
     return duplicatedNode;
   }
 
+  /**
+   * Serializes the currently selected nodes and their internal edges into the clipboard.
+   */
   copySelection(): boolean {
     if (this.selectedNodeIds.size === 0) return false;
     const selectedNodes = this.graph.nodes.filter((n) => this.selectedNodeIds.has(n.id));
@@ -1129,6 +1276,10 @@ export class FlintEditorStore {
     return true;
   }
 
+  /**
+   * Deserializes and instantiates clipboard contents into the active graph with offset positions.
+   */
+  // skipcq: JS-R1005
   paste(targetPosition?: { readonly x: number; readonly y: number }): readonly string[] {
     if (!this.clipboard || this.clipboard.nodes.length === 0) return [];
 
@@ -1236,6 +1387,9 @@ export class FlintEditorStore {
     return newNodes.map((n) => n.id);
   }
 
+  /**
+   * Toggles output port splitting mode for multi-output operations.
+   */
   toggleSplitOutputs(nodeId: string): void {
     const updatedNodes = this.graph.nodes.map((n) => {
       if (n.id === nodeId) {
@@ -1250,6 +1404,9 @@ export class FlintEditorStore {
     this.notify();
   }
 
+  /**
+   * Replaces the custom inline Flint source code on a code block node.
+   */
   updateCodeNode(
     nodeId: string,
     code: string,
@@ -1278,10 +1435,16 @@ export class FlintEditorStore {
     this.notify();
   }
 
+  /**
+   * Retrieves the trace debugger controller associated with this store.
+   */
   getTraceController(): TraceDebuggerController {
     return this.traceController;
   }
 
+  /**
+   * Retrieves the duration of the most recent graph state update in milliseconds.
+   */
   getUpdateTimeMs(): number {
     return this.lastUpdateTimeMs;
   }

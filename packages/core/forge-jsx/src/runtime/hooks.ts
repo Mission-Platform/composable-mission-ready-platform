@@ -24,7 +24,7 @@ export interface MpRef<T> {
 }
 
 /** Update a piece of state, either to a new value or via an updater function. */
-export type MpSetState<T> = (value: T | ((previous: T) => T)) => void;
+export type MpSetState<T> = (value?: T | ((previous: T) => T)) => void;
 
 /** The cleanup function an effect may return. */
 export type MpEffectCleanup = () => void;
@@ -40,8 +40,8 @@ export type MpDependencyList = readonly unknown[];
  * a no-op setter (state never changes without a framework re-render), which is
  * the correct behaviour for a single SSR/adapter render.
  */
-export function useState<T>(initial: T | (() => T)): [T, MpSetState<T>] {
-  const value = typeof initial === 'function' ? (initial as () => T)() : initial;
+export function useState<T>(initial?: T | (() => T)): [T, MpSetState<T>] {
+  const value = typeof initial === 'function' ? (initial as () => T)() : (initial as T);
   return [value, () => {}];
 }
 
@@ -49,8 +49,8 @@ export function useState<T>(initial: T | (() => T)): [T, MpSetState<T>] {
  * Neutral `useRef`. Returns a fresh `{ current }` container for the single
  * render; the framework runtimes preserve it across renders.
  */
-export function useRef<T>(initial: T): MpRef<T> {
-  return { current: initial };
+export function useRef<T>(initial?: T): MpRef<T> {
+  return { current: initial as T };
 }
 
 /**

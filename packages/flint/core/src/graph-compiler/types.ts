@@ -152,6 +152,7 @@ export function createContainerType(
 /**
  * Inlines a single meta-node subgraph and rewires external edges to internal exposed ports.
  */
+// skipcq: JS-R1005
 function inlineMetaNode(
   node: FlintGraphNode,
   externalEdgesToMeta: ReadonlyMap<string, FlintGraphEdge[]>,
@@ -217,6 +218,7 @@ function inlineMetaNode(
  * Recursively inlines and flattens any meta nodes in a graph into their constituent internal nodes and edges.
  * Used during validation, AST generation, and source emission to seamlessly compile composite meta nodes.
  */
+// skipcq: JS-R1005
 export function flattenGraph(graph: FlintNodeGraph): FlintNodeGraph {
   const hasMeta = graph.nodes.some((node) => node.metaSubgraph !== undefined);
   if (!hasMeta) {

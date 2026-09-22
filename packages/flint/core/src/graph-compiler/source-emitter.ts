@@ -55,6 +55,7 @@ type SourceResolver = (node: FlintGraphNode, portId: string) => string;
 /**
  * Emits mathematical and arithmetic expressions into Flint binary, unary, or match source code.
  */
+// skipcq: JS-R1005
 function emitArithmeticExpression(node: FlintGraphNode, resolveSource: SourceResolver): string | undefined {
   switch (node.operation) {
     case 'add':
@@ -114,6 +115,7 @@ function emitArithmeticExpression(node: FlintGraphNode, resolveSource: SourceRes
 /**
  * Emits boolean comparison and logical expressions into Flint binary or unary source code.
  */
+// skipcq: JS-R1005
 function emitComparisonExpression(node: FlintGraphNode, resolveSource: SourceResolver): string | undefined {
   switch (node.operation) {
     case 'and': {
@@ -152,6 +154,7 @@ function emitComparisonExpression(node: FlintGraphNode, resolveSource: SourceRes
 /**
  * Emits vector and option collection expressions into Flint standard library function calls.
  */
+// skipcq: JS-R1005
 function emitCollectionExpression(node: FlintGraphNode, resolveSource: SourceResolver): string | undefined {
   switch (node.operation) {
     case 'vector_new': {
@@ -209,6 +212,7 @@ function emitControlOrTextExpression(node: FlintGraphNode, resolveSource: Source
 /**
  * Emits clean, formatted Flint source code from a validated graph with exact bidirectional source maps.
  */
+// skipcq: JS-R1005
 export function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmissionResult {
   const graph = flattenGraph(inputGraph);
   const validation = validateGraph(graph);

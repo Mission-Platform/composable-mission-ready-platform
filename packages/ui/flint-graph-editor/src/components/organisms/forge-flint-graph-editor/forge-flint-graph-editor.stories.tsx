@@ -40,6 +40,9 @@ const storyWrapperStyle = {
   flexDirection: 'column' as const,
 };
 
+/**
+ * Retrieves a node definition by operation name, throwing an error if missing.
+ */
 function getStoryNodeDefinition(operation: string) {
   const definition = getNodeDefinition(operation);
   if (!definition) {
