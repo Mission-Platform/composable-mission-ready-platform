@@ -4009,6 +4009,42 @@ importers:
         specifier: catalog:testing
         version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
 
+  packages/flint/c-abi:
+    devDependencies:
+      '@mission-platform/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/eslint-config
+      '@mission-platform/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/prettier-config
+      '@mission-platform/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/typescript-config
+      '@mission-platform/vite-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/vite-config
+      '@types/node':
+        specifier: catalog:typescript
+        version: 24.13.4
+      '@vitest/coverage-v8':
+        specifier: catalog:testing
+        version: 5.0.1(@vitest/browser@5.0.1)(vitest@5.0.1)
+      eslint:
+        specifier: catalog:eslint
+        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
+      prettier:
+        specifier: catalog:prettier
+        version: 3.9.6
+      typescript:
+        specifier: catalog:typescript
+        version: 7.0.2
+      vite:
+        specifier: catalog:vite
+        version: 8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
+      vitest:
+        specifier: catalog:testing
+        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
+
   packages/flint/cli:
     dependencies:
       '@mission-platform/flint':
@@ -4051,6 +4087,9 @@ importers:
 
   packages/flint/core:
     dependencies:
+      '@mission-platform/flint-c-abi':
+        specifier: workspace:*
+        version: link:../c-abi
       '@mission-platform/flint-regex':
         specifier: workspace:*
         version: link:../regex
@@ -4252,6 +4291,9 @@ importers:
       '@mission-platform/flint':
         specifier: workspace:*
         version: link:../core
+      '@mission-platform/flint-c-abi':
+        specifier: workspace:*
+        version: link:../c-abi
     devDependencies:
       '@mission-platform/eslint-config':
         specifier: workspace:*
@@ -4378,6 +4420,9 @@ importers:
 
   packages/flint/wasm:
     dependencies:
+      '@mission-platform/flint-c-abi':
+        specifier: workspace:*
+        version: link:../c-abi
       '@mission-platform/flint-regex':
         specifier: workspace:*
         version: link:../regex
