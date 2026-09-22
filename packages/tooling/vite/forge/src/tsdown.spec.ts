@@ -371,7 +371,7 @@ describe('Forge tsdown component helpers', () => {
   }, 30_000);
 
   it('resolves CSS owner and threads CSS imports into JS chunks cleanly', () => {
-    const tempDir = path.resolve(import.meta.dirname, '../../../.test-tmp-css-' + Date.now());
+    const tempDir = path.resolve(import.meta.dirname, `../../../.test-tmp-css-${Date.now()}`);
     fs.mkdirSync(path.join(tempDir, 'components'), { recursive: true });
     fs.mkdirSync(path.join(tempDir, 'styles'), { recursive: true });
 

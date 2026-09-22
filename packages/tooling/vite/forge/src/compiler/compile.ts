@@ -283,6 +283,7 @@ export function compileHookModule(source: string, options: CompileHookOptions): 
   });
 }
 
+/** Project an internal generated module output into the public compiled module shape. */
 function projectGeneratedModule(module: GeneratedModule): CompiledModule {
   return {
     code: module.code,

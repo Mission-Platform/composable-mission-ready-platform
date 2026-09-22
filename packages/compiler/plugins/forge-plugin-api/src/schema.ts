@@ -396,6 +396,36 @@ function resolveIssuePath(
 }
 
 /**
+ * Constructs a validation issue from a failed custom rule evaluation.
+ *
+ * @param rule - The schema field rule.
+ * @param customResult - Custom validation failure result.
+ * @param options - Schema validation options.
+ * @param defaultPath - Default error path if custom error does not specify one.
+ * @param defaultSpan - Fallback source span.
+ * @returns SchemaValidationIssue instance.
+ */
+function createCustomValidationIssue(
+  rule: SchemaFieldRule,
+  customResult: {
+    readonly valid: boolean;
+    readonly message: string;
+    readonly span?: SourceSpan;
+    readonly path?: string;
+  },
+  options: SchemaValidationOptions,
+  defaultPath: string,
+  defaultSpan: SourceSpan | undefined,
+): SchemaValidationIssue {
+  return {
+    path: resolveIssuePath(customResult.path, options.basePath, defaultPath),
+    code: rule.code,
+    message: customResult.message,
+    span: customResult.span ?? defaultSpan,
+  };
+}
+
+/**
  * Evaluates custom validation rule if defined.
  *
  * @param rule - The schema field rule.
@@ -419,12 +449,13 @@ function evaluateCustomValidation(
   if (customResult === undefined || customResult.valid) {
     return undefined;
   }
-  return {
-    path: resolveIssuePath(customResult.path, options.basePath, defaultPath),
-    code: rule.code,
-    message: customResult.message,
-    span: customResult.span ?? defaultSpan,
-  };
+  return createCustomValidationIssue(
+    rule,
+    customResult,
+    options,
+    defaultPath,
+    defaultSpan,
+  );
 }
 
 const SCHEMA_TYPE_VALIDATORS: Record<
@@ -461,6 +492,43 @@ function isValuePresent(value: unknown): boolean {
 }
 
 /**
+ * Resolves or constructs a validation issue for a rule violation.
+ *
+ * @param rule - Schema field rule.
+ * @param value - Extracted value.
+ * @param options - Validation options.
+ * @param fullPath - Full path string.
+ * @param span - Source span.
+ * @param defaultMessage - Fallback error message.
+ * @returns SchemaValidationIssue instance.
+ */
+function createRuleIssue(
+  rule: SchemaFieldRule,
+  value: unknown,
+  options: SchemaValidationOptions,
+  fullPath: string,
+  span: SourceSpan | undefined,
+  defaultMessage: string,
+): SchemaValidationIssue {
+  const customIssue = evaluateCustomValidation(
+    rule,
+    value,
+    options,
+    fullPath,
+    span,
+  );
+  if (customIssue !== undefined) {
+    return customIssue;
+  }
+  return {
+    path: fullPath,
+    code: rule.code,
+    message: rule.message ?? defaultMessage,
+    span,
+  };
+}
+
+/**
  * Validates a required field rule when the value is absent.
  *
  * @param rule - Schema field rule.
@@ -482,14 +550,13 @@ function validateRequiredRule(
   if (!rule.required || isValuePresent(value)) {
     return undefined;
   }
-  return (
-    evaluateCustomValidation(rule, value, options, fullPath, span) ?? {
-      path: fullPath,
-      code: rule.code,
-      message:
-        rule.message ?? `${schema.name} field "${fullPath}" is required.`,
-      span,
-    }
+  return createRuleIssue(
+    rule,
+    value,
+    options,
+    fullPath,
+    span,
+    `${schema.name} field "${fullPath}" is required.`,
   );
 }
 
@@ -515,24 +582,28 @@ function validateTypeRule(
   if (rule.type === undefined || matchesSchemaType(rule.type, value)) {
     return undefined;
   }
-  const customIssue = evaluateCustomValidation(
+  return createRuleIssue(
     rule,
     value,
     options,
     fullPath,
     span,
+    `${schema.name} field "${fullPath}" must be of type ${rule.type}.`,
   );
-  if (customIssue !== undefined) {
-    return customIssue;
-  }
-  return {
-    path: fullPath,
-    code: rule.code,
-    message:
-      rule.message ??
-      `${schema.name} field "${fullPath}" must be of type ${rule.type}.`,
-    span,
-  };
+}
+
+/**
+ * Formats allowed values into an "or"-delimited string representation.
+ *
+ * @param allowedValues - List of allowed scalar values.
+ * @returns Formatted allowed values description.
+ */
+function formatAllowedValuesExpected(
+  allowedValues: readonly unknown[],
+): string {
+  return allowedValues
+    .map((allowedValue) => `"${String(allowedValue)}"`)
+    .join(" or ");
 }
 
 /**
@@ -560,27 +631,15 @@ function validateAllowedValuesRule(
   ) {
     return undefined;
   }
-  const customIssue = evaluateCustomValidation(
+  const expected = formatAllowedValuesExpected(rule.allowedValues);
+  return createRuleIssue(
     rule,
     value,
     options,
     fullPath,
     span,
+    `${schema.name} ${rule.path} must be ${expected}, received "${String(value)}".`,
   );
-  if (customIssue !== undefined) {
-    return customIssue;
-  }
-  const expected = rule.allowedValues
-    .map((allowedValue) => `"${String(allowedValue)}"`)
-    .join(" or ");
-  return {
-    path: fullPath,
-    code: rule.code,
-    message:
-      rule.message ??
-      `${schema.name} ${rule.path} must be ${expected}, received "${String(value)}".`,
-    span,
-  };
 }
 
 /**
@@ -663,6 +722,47 @@ function validateSchemaRule(
 }
 
 /**
+ * Normalizes validation options with fallback defaults.
+ *
+ * @param target - Target object or record to validate.
+ * @param options - Optional validation configuration options.
+ * @returns Normalized options object.
+ */
+function resolveSchemaValidationOptions(
+  target: unknown,
+  options?: SchemaValidationOptions,
+): SchemaValidationOptions {
+  return {
+    basePath: options?.basePath,
+    root: options?.root ?? target,
+    fallbackSpan: options?.fallbackSpan,
+  };
+}
+
+/**
+ * Validates a single rule for a target record and appends any detected issue.
+ *
+ * @param issues - Output issues collection.
+ * @param rule - Schema field rule definition.
+ * @param targetRecord - Optional target object record.
+ * @param schema - Declarative schema defining structural rules.
+ * @param options - Validation configuration options.
+ */
+function collectRuleIssue(
+  issues: SchemaValidationIssue[],
+  rule: SchemaFieldRule,
+  targetRecord: Record<string, unknown> | undefined,
+  schema: DeclarativeSchema,
+  options: SchemaValidationOptions,
+): void {
+  const value = targetRecord?.[rule.path];
+  const issue = validateSchemaRule(rule, value, schema, options);
+  if (issue !== undefined) {
+    issues.push(issue);
+  }
+}
+
+/**
  * Validates a target object against a declarative schema, collecting all structural issues.
  *
  * @param target - Target object or record to validate.
@@ -676,19 +776,11 @@ export function validateAgainstSchema(
   options?: SchemaValidationOptions,
 ): SchemaValidationIssue[] {
   const targetRecord = isRecord(target) ? target : undefined;
-  const resolvedOptions: SchemaValidationOptions = {
-    basePath: options?.basePath,
-    root: options?.root ?? target,
-    fallbackSpan: options?.fallbackSpan,
-  };
+  const resolvedOptions = resolveSchemaValidationOptions(target, options);
 
   const issues: SchemaValidationIssue[] = [];
   for (const rule of schema.rules) {
-    const value = targetRecord?.[rule.path];
-    const issue = validateSchemaRule(rule, value, schema, resolvedOptions);
-    if (issue !== undefined) {
-      issues.push(issue);
-    }
+    collectRuleIssue(issues, rule, targetRecord, schema, resolvedOptions);
   }
 
   return issues;
@@ -775,6 +867,23 @@ function resolveTargetFrameworkId(
 }
 
 /**
+ * Checks whether the root framework string conflicts with the expected target framework.
+ *
+ * @param framework - Framework value on intentions root.
+ * @param expectedFramework - Expected target framework.
+ * @returns True if frameworks conflict.
+ */
+function isRootFrameworkMismatch(
+  framework: unknown,
+  expectedFramework: FrameworkId | undefined,
+): boolean {
+  if (typeof framework !== "string" || framework.length === 0) {
+    return false;
+  }
+  return expectedFramework !== undefined && framework !== expectedFramework;
+}
+
+/**
  * Validates cross-field consistency between root framework and expected framework.
  *
  * @param intentions - Target intentions record.
@@ -787,17 +896,12 @@ function validateRootFramework(
   expectedFramework?: FrameworkId,
   rootSpan?: SourceSpan,
 ): SchemaValidationIssue[] {
-  if (
-    typeof intentions.framework === "string" &&
-    intentions.framework.length > 0 &&
-    expectedFramework !== undefined &&
-    intentions.framework !== expectedFramework
-  ) {
+  if (isRootFrameworkMismatch(intentions.framework, expectedFramework)) {
     return [
       {
         path: "framework",
         code: "FORGE_INTENTIONS_FRAMEWORK_MISMATCH",
-        message: `Target intentions root framework "${intentions.framework}" does not match expected target "${expectedFramework}".`,
+        message: `Target intentions root framework "${String(intentions.framework)}" does not match expected target "${expectedFramework}".`,
         span: rootSpan,
       },
     ];
@@ -927,6 +1031,23 @@ function isKnownModuleKind(kind: unknown): kind is "component" | "composable" {
 }
 
 /**
+ * Checks whether module kind and context kind are both valid and unequal.
+ *
+ * @param moduleKind - Semantic module kind.
+ * @param contextKind - Target context module kind.
+ * @returns True if both kinds are known but distinct.
+ */
+function haveMismatchedModuleKinds(
+  moduleKind: unknown,
+  contextKind: unknown,
+): boolean {
+  if (!isKnownModuleKind(moduleKind) || !isKnownModuleKind(contextKind)) {
+    return false;
+  }
+  return moduleKind !== contextKind;
+}
+
+/**
  * Checks for mismatch between semantic module kind and target context module kind.
  *
  * @param module_ - Semantic module record.
@@ -942,21 +1063,15 @@ function checkModuleKindMismatch(
   if (!isRecord(context)) {
     return undefined;
   }
-  if (
-    !isKnownModuleKind(module_.moduleKind) ||
-    !isKnownModuleKind(context.moduleKind)
-  ) {
+  if (!haveMismatchedModuleKinds(module_.moduleKind, context.moduleKind)) {
     return undefined;
   }
-  if (module_.moduleKind !== context.moduleKind) {
-    return {
-      path: "module.moduleKind",
-      code: "FORGE_INTENTIONS_INVALID_MODULE",
-      message: `Semantic module moduleKind "${module_.moduleKind}" does not match context moduleKind "${context.moduleKind}".`,
-      span,
-    };
-  }
-  return undefined;
+  return {
+    path: "module.moduleKind",
+    code: "FORGE_INTENTIONS_INVALID_MODULE",
+    message: `Semantic module moduleKind "${String(module_.moduleKind)}" does not match context moduleKind "${String(context.moduleKind)}".`,
+    span,
+  };
 }
 
 /**
@@ -1173,6 +1288,20 @@ const PRIMARY_ERROR_PRIORITY_SUBSTRINGS = [
 ] as const;
 
 /**
+ * Finds the first error string matching a priority needle substring.
+ *
+ * @param errors - List of error messages.
+ * @param needle - Substring to search for.
+ * @returns Matching error or undefined.
+ */
+function findPriorityError(
+  errors: readonly string[],
+  needle: string,
+): string | undefined {
+  return errors.find((candidateError) => candidateError.includes(needle));
+}
+
+/**
  * Selects the primary error message to represent a validation failure.
  *
  * @param errors - List of validation error strings.
@@ -1183,9 +1312,7 @@ function pickPrimaryErrorMessage(errors: readonly string[]): string {
     return "Target intentions validation failed.";
   }
   for (const needle of PRIMARY_ERROR_PRIORITY_SUBSTRINGS) {
-    const matched = errors.find((candidateError) =>
-      candidateError.includes(needle),
-    );
+    const matched = findPriorityError(errors, needle);
     if (matched !== undefined) {
       return matched;
     }

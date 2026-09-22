@@ -36,6 +36,24 @@ function detectSourceLanguage(
 }
 
 /**
+ * Extracts optional fileName property from options object if present.
+ *
+ * @param options - Candidate options object.
+ * @returns File name string if found.
+ */
+function extractOptionsFileName(options: unknown): string | undefined {
+  if (
+    typeof options === "object" &&
+    options !== null &&
+    "fileName" in options
+  ) {
+    const candidate = options.fileName;
+    return typeof candidate === "string" ? candidate : undefined;
+  }
+  return undefined;
+}
+
+/**
  * Resolves the source file name from options or positional parameter.
  *
  * @param options - Parsing options or file name.
@@ -45,7 +63,7 @@ function resolveParseFileName(options?: ParseCstOptions | string): string {
   if (typeof options === "string") {
     return options;
   }
-  return options?.fileName ?? "source.tsx";
+  return extractOptionsFileName(options) ?? "source.tsx";
 }
 
 /**
@@ -64,6 +82,23 @@ function resolveExplicitOptions(
 }
 
 /**
+ * Resolves the language variant, prioritizing explicit options before extension detection.
+ *
+ * @param explicitOptions - Normalized options.
+ * @param fileName - File name to inspect.
+ * @returns Language identifier.
+ */
+function resolveSourceLanguage(
+  explicitOptions: ParseCstOptions,
+  fileName: string,
+): NonNullable<ParserOptions["lang"]> {
+  if (explicitOptions.lang !== undefined) {
+    return explicitOptions.lang;
+  }
+  return detectSourceLanguage(fileName);
+}
+
+/**
  * Parse TypeScript/JavaScript/TSX source text into a Concrete Syntax Tree (CST)
  * with token positions, comments, and full AST metadata.
  *
@@ -77,7 +112,7 @@ export function parseCst(
 ): ParseResult {
   const fileName = resolveParseFileName(options);
   const explicitOptions = resolveExplicitOptions(options);
-  const lang = explicitOptions.lang ?? detectSourceLanguage(fileName);
+  const lang = resolveSourceLanguage(explicitOptions, fileName);
 
   return parseSync(fileName, source, {
     lang,

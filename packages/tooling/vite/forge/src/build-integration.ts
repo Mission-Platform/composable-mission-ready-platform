@@ -26,6 +26,92 @@ export interface ForgeArtifactPublishOptions {
   readonly targetId: string;
 }
 
+const NATIVE_ENTRY_PATTERN = /^(?:index\.(?:js|mjs|cjs|ts|tsx|d\.ts)|entry(?:[:_]).+\.(?:js|mjs|cjs|ts|tsx))$/;
+
+/** Check if a file name matches standard Forge entry naming conventions. */
+function isNativeEntryFile(name: string): boolean {
+  return NATIVE_ENTRY_PATTERN.test(name);
+}
+
+/** Walk directory tree to find candidate native entry relative paths. */
+function collectNativeEntries(rootDirectory: string, currentDirectory: string, entries: string[]): void {
+  for (const entry of readdirSync(currentDirectory, { withFileTypes: true })) {
+    const absolute = path.join(currentDirectory, entry.name);
+    if (entry.isDirectory()) {
+      if (!lstatSync(absolute).isSymbolicLink()) {
+        collectNativeEntries(rootDirectory, absolute, entries);
+      }
+    } else if (entry.isFile() && isNativeEntryFile(entry.name)) {
+      entries.push(path.relative(rootDirectory, absolute).split(path.sep).join('/'));
+    }
+  }
+}
+
+/** Find all candidate native entry file names relative to the directory root. */
+function findNativeEntryNames(directory: string): string[] {
+  const entries: string[] = [];
+  collectNativeEntries(directory, directory, entries);
+  const runtimeEntries = entries.filter((entry) => !entry.endsWith('.d.ts'));
+  return runtimeEntries.length > 0 ? runtimeEntries : entries;
+}
+
+/** Check if a directory entry represents a native JavaScript file. */
+function isJavaScriptEntry(entry: { isFile(): boolean; name: string }): boolean {
+  return entry.isFile() && entry.name.endsWith('.js');
+}
+
+/** Recursively check if a directory contains at least one compiled JavaScript file. */
+function hasNativeJavaScript(directory: string): boolean {
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    if (isJavaScriptEntry(entry)) return true;
+    if (entry.isDirectory()) {
+      const absolute = path.join(directory, entry.name);
+      if (hasNativeJavaScript(absolute)) return true;
+    }
+  }
+  return false;
+}
+
+/** Wait for native JavaScript artifacts to appear in the staging directory. */
+async function waitForNativeJavaScript(stageDirectory: string, maxAttempts = 1500, intervalMs = 20): Promise<boolean> {
+  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+    if (hasNativeJavaScript(stageDirectory)) return true;
+    await new Promise((resolve) => setTimeout(resolve, intervalMs));
+  }
+  return hasNativeJavaScript(stageDirectory);
+}
+
+/** Resolve effective entry point names from bundle entries or native files. */
+function resolveNativeEntries(stageDirectory: string, entryNames: readonly string[]): string[] {
+  if (entryNames.length > 0) return [...entryNames];
+  if (!existsSync(stageDirectory)) return [];
+  return findNativeEntryNames(stageDirectory);
+}
+
+/** Record and commit published artifacts from the stage directory. */
+async function commitPublishedArtifacts(
+  writer: ForgeArtifactWriter,
+  targetId: string,
+  entryNames: readonly string[],
+): Promise<void> {
+  if (!existsSync(writer.stageDirectory)) {
+    writer.recordTree();
+    return;
+  }
+  const hasJs = await waitForNativeJavaScript(writer.stageDirectory);
+  if (!hasJs) {
+    throw new Error(
+      `Forge artifact target "${targetId}" produced no native JavaScript artifacts in ${writer.stageDirectory} after build completion.`,
+    );
+  }
+  const resolvedEntries = resolveNativeEntries(writer.stageDirectory, entryNames);
+  if (resolvedEntries.length === 0) {
+    throw new Error(`Forge artifact target "${targetId}" produced no entry points in ${writer.stageDirectory}.`);
+  }
+  writer.recordTree(resolvedEntries);
+  writer.commit();
+}
+
 /**
  * Publish all native output through the same manifest transaction as Forge
  * generated sources. Native bundlers and declaration tools may write freely
@@ -37,60 +123,11 @@ export function forgeArtifactPublishPlugin(options: ForgeArtifactPublishOptions)
   let finalized = false;
   let aborted = false;
 
-  function findNativeEntryNames(directory: string): string[] {
-    const entries: string[] = [];
-    const visit = (currentDirectory: string): void => {
-      for (const entry of readdirSync(currentDirectory, { withFileTypes: true })) {
-        const absolute = path.join(currentDirectory, entry.name);
-        if (entry.isDirectory()) {
-          if (!lstatSync(absolute).isSymbolicLink()) visit(absolute);
-        } else if (
-          entry.isFile() &&
-          (/^index\.(?:js|mjs|cjs|ts|tsx|d\.ts)$/.test(entry.name) ||
-            /^entry(?:[:_]).+\.(?:js|mjs|cjs|ts|tsx)$/.test(entry.name))
-        ) {
-          entries.push(path.relative(directory, absolute).split(path.sep).join('/'));
-        }
-      }
-    };
-    visit(directory);
-    const runtimeEntries = entries.filter((entry) => !entry.endsWith('.d.ts'));
-    return runtimeEntries.length > 0 ? runtimeEntries : entries;
-  }
-
-  function hasNativeJavaScript(directory: string): boolean {
-    for (const entry of readdirSync(directory, { withFileTypes: true })) {
-      const absolute = path.join(directory, entry.name);
-      if (entry.isDirectory() && hasNativeJavaScript(absolute)) return true;
-      if (entry.isFile() && entry.name.endsWith('.js')) return true;
-    }
-    return false;
-  }
-
+  /** Finalize the artifact publication by committing staged artifacts. */
   async function finalize(): Promise<void> {
     if (writer === undefined || finalized) return;
     try {
-      if (!existsSync(writer.stageDirectory)) {
-        writer.recordTree();
-        return;
-      }
-      for (let attempt = 0; attempt < 1500 && !hasNativeJavaScript(writer.stageDirectory); attempt += 1) {
-        await new Promise((resolve) => setTimeout(resolve, 20));
-      }
-      if (!hasNativeJavaScript(writer.stageDirectory)) {
-        throw new Error(
-          `Forge artifact target "${options.targetId}" produced no native JavaScript artifacts in ${writer.stageDirectory} after build completion.`,
-        );
-      }
-      const nativeEntryNames = existsSync(writer.stageDirectory) ? findNativeEntryNames(writer.stageDirectory) : [];
-      const resolvedEntries = entryNames.length > 0 ? entryNames : nativeEntryNames;
-      if (resolvedEntries.length === 0) {
-        throw new Error(
-          `Forge artifact target "${options.targetId}" produced no entry points in ${writer.stageDirectory}.`,
-        );
-      }
-      writer.recordTree(resolvedEntries);
-      writer.commit();
+      await commitPublishedArtifacts(writer, options.targetId, entryNames);
       finalized = true;
     } catch (error) {
       writer.abort();
@@ -153,10 +190,12 @@ export function forgeBuildLifecyclePlugin(options: ForgeBuildLifecycleOptions): 
   let watchMode = false;
   let disposed = false;
 
+  /** Ensure the target has been prepared and return cached target result. */
   const ensureTarget = async (): Promise<ForgeTargetResult> => {
     targetResult ??= await options.session.ensureTarget(options.target);
     return targetResult;
   };
+  /** Dispose of the owned build session unless in watch mode. */
   const dispose = (): void => {
     if (disposed) return;
     disposed = true;

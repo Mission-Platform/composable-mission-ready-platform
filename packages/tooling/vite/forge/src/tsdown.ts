@@ -40,11 +40,13 @@ function flattenPlugins(plugins: UserConfig['plugins']): TsdownPlugin[] {
   return [plugins as TsdownPlugin];
 }
 
+/** Compute the cached directory path for generated Forge framework sources. */
 function forgeGeneratedDirectory(rootDir: string, targetId: string, entryModule: string, outputRoot?: string): string {
   const fingerprint = createForgeFingerprint({ entryModule, outputRoot, rootDir, targetId });
   return path.join(rootDir, 'node_modules/.cache/forge-build', fingerprint.slice(0, 20), targetId);
 }
 
+/** Clean up abandoned attempt artifacts for a generated directory on bundle close. */
 function removeGeneratedDirectoryPlugin(generatedDirectory: string, targetId: string): TsdownPlugin {
   return {
     name: '@mission-platform/vite-plugin-forge:remove-generated-directory',
@@ -52,6 +54,31 @@ function removeGeneratedDirectoryPlugin(generatedDirectory: string, targetId: st
       cleanupForgeArtifactAttempts(generatedDirectory, targetId);
     },
   } as TsdownPlugin;
+}
+
+/** Resolve overrides outDir relative to the isolated output root when provided. */
+function resolveOverrideOutDir(overrides: UserConfig, rootDir?: string, outputRoot?: string): UserConfig {
+  if (rootDir === undefined || outputRoot === undefined || typeof overrides.outDir !== 'string') {
+    return overrides;
+  }
+  return {
+    ...overrides,
+    outDir: resolveTsdownOutputDirectory(rootDir, overrides.outDir, outputRoot),
+  };
+}
+
+type BundlerOption = UserConfig['inputOptions'] | UserConfig['outputOptions'];
+
+/** Merge bundler options that can be either a function or an options object. */
+function mergeBundlerOptions<T extends BundlerOption>(base?: T, overrides?: T): T | undefined {
+  if (typeof overrides === 'function' || typeof base === 'function') {
+    return (overrides ?? base) as T;
+  }
+  if (base === undefined && overrides === undefined) return undefined;
+  return {
+    ...(typeof base === 'object' ? base : {}),
+    ...(typeof overrides === 'object' ? overrides : {}),
+  } as T;
 }
 
 /** Deep-merge a base tsdown config with caller overrides (shallow for top-level, concat plugins). */
@@ -65,14 +92,7 @@ function mergeTsdownConfig(
     return base;
   }
 
-  const resolvedOverrides =
-    rootDir !== undefined && outputRoot !== undefined && typeof overrides.outDir === 'string'
-      ? {
-          ...overrides,
-          outDir: resolveTsdownOutputDirectory(rootDir, overrides.outDir, outputRoot),
-        }
-      : overrides;
-
+  const resolvedOverrides = resolveOverrideOutDir(overrides, rootDir, outputRoot);
   const mergedPlugins = [...flattenPlugins(base.plugins), ...flattenPlugins(resolvedOverrides.plugins)];
 
   return {
@@ -84,20 +104,8 @@ function mergeTsdownConfig(
     },
     dts: resolvedOverrides.dts === undefined ? base.dts : resolvedOverrides.dts,
     hooks: resolvedOverrides.hooks ?? base.hooks,
-    inputOptions:
-      typeof resolvedOverrides.inputOptions === 'function' || typeof base.inputOptions === 'function'
-        ? (resolvedOverrides.inputOptions ?? base.inputOptions)
-        : {
-            ...(typeof base.inputOptions === 'object' ? base.inputOptions : {}),
-            ...(typeof resolvedOverrides.inputOptions === 'object' ? resolvedOverrides.inputOptions : {}),
-          },
-    outputOptions:
-      typeof resolvedOverrides.outputOptions === 'function' || typeof base.outputOptions === 'function'
-        ? (resolvedOverrides.outputOptions ?? base.outputOptions)
-        : {
-            ...(typeof base.outputOptions === 'object' ? base.outputOptions : {}),
-            ...(typeof resolvedOverrides.outputOptions === 'object' ? resolvedOverrides.outputOptions : {}),
-          },
+    inputOptions: mergeBundlerOptions(base.inputOptions, resolvedOverrides.inputOptions),
+    outputOptions: mergeBundlerOptions(base.outputOptions, resolvedOverrides.outputOptions),
     plugins: mergedPlugins.length > 0 ? mergedPlugins : undefined,
   };
 }
@@ -396,6 +404,26 @@ export interface TsdownForgeHooksAllOptions {
   rejectFixturePlaceholder?: boolean;
 }
 
+/** Create the neutral library config for Forge hooks when requested. */
+function createNeutralHooksLibraryConfig(
+  rootDir: string,
+  outputRoot: string | undefined,
+  entryModule: string | undefined,
+  external: readonly string[] | undefined,
+  neutralOverrides: UserConfig | undefined,
+): UserConfig {
+  return defineTsdownLibrary({
+    rootDir,
+    outputRoot,
+    entry: entryModule ? path.relative(rootDir, entryModule) : 'src/index.ts',
+    external,
+    // The isolated stage starts empty; cleaning its aggregate `dist/` while
+    // framework configs run in parallel would clobber sibling outputs.
+    clean: outputRoot === undefined,
+    overrides: neutralOverrides,
+  });
+}
+
 /**
  * Build an array of tsdown configs for every requested forge hooks framework
  * (plus the neutral root entry by default). A package's `tsdown.config.ts` can
@@ -423,18 +451,7 @@ export function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): 
   const configs: UserConfig[] = [];
 
   if (includeNeutral) {
-    configs.push(
-      defineTsdownLibrary({
-        rootDir,
-        outputRoot,
-        entry: entryModule ? path.relative(rootDir, entryModule) : 'src/index.ts',
-        external,
-        // The isolated stage starts empty; cleaning its aggregate `dist/` while
-        // framework configs run in parallel would clobber sibling outputs.
-        clean: outputRoot === undefined,
-        overrides: neutralOverrides,
-      }),
-    );
+    configs.push(createNeutralHooksLibraryConfig(rootDir, outputRoot, entryModule, external, neutralOverrides));
   }
 
   for (const [index, plugin] of selected.entries()) {
@@ -526,26 +543,40 @@ function ignoreDisposalRejection(): void {
 }
 
 /**
+ * Filter selected framework output plugins by environment target variables.
+ *
+ * @param selected - Validated framework output plugins.
+ * @returns Filtered plugins matching target environment, or empty array if skipped.
+ */
+function resolveSelectedComponentFrameworks(
+  selected: readonly FrameworkOutputPlugin[],
+): readonly FrameworkOutputPlugin[] {
+  const requestedFramework = process.env.FORGE_FRAMEWORK_TARGET;
+  const cmsOnlyBuild = process.env.FORGE_CMS_STORYBLOK_TARGET !== undefined;
+
+  if (requestedFramework === 'none' || (cmsOnlyBuild && requestedFramework === undefined)) {
+    return [];
+  }
+  if (requestedFramework === undefined) {
+    return selected;
+  }
+  const filtered = selected.filter((plugin) => plugin.id === requestedFramework);
+  if (filtered.length === 0) {
+    throw new Error(`Forge build target "${requestedFramework}" is not available in the selected framework plugins.`);
+  }
+  return filtered;
+}
+
+/**
  * Reproduce one Archetype-C **component** framework build under tsdown:
  * Stage 1 (`generateFrameworkSources`) + Stage 2 plugins + css-import + dts plugins,
  * emitting into `dist/<framework>/`.
  */
 export function tsdownForgeComponentPlugins(options: TsdownForgeComponentPluginsOptions): TsdownPlugin[] {
   const selected = validateForgeBuildSelection(options.frameworks, 'tsdown');
-  const requestedFramework = process.env.FORGE_FRAMEWORK_TARGET;
-  const cmsOnlyBuild = process.env.FORGE_CMS_STORYBLOK_TARGET !== undefined;
-  const frameworks =
-    requestedFramework === undefined || requestedFramework === 'none'
-      ? cmsOnlyBuild
-        ? []
-        : requestedFramework === 'none'
-          ? []
-          : selected
-      : selected.filter((plugin) => plugin.id === requestedFramework);
-  if (frameworks.length === 0) {
-    if (requestedFramework === 'none' || (cmsOnlyBuild && requestedFramework === undefined)) return [];
-    throw new Error(`Forge build target "${requestedFramework}" is not available in the selected framework plugins.`);
-  }
+  const frameworks = resolveSelectedComponentFrameworks(selected);
+  if (frameworks.length === 0) return [];
+
   const session = options.session ?? createForgeBuildSession({ service: options.service });
   let activePlugins = frameworks.length;
   return frameworks.map((plugin) =>
@@ -572,20 +603,8 @@ export function tsdownForgeComponentPlugins(options: TsdownForgeComponentPlugins
 /** Build independent tsdown configs for every requested Forge component framework. */
 export function defineTsdownForgeComponentsAll(options: TsdownForgeComponentPluginsOptions): UserConfig[] {
   const selected = validateForgeBuildSelection(options.frameworks, 'tsdown');
-  const requestedFramework = process.env.FORGE_FRAMEWORK_TARGET;
-  const cmsOnlyBuild = process.env.FORGE_CMS_STORYBLOK_TARGET !== undefined;
-  const frameworks =
-    requestedFramework === undefined || requestedFramework === 'none'
-      ? cmsOnlyBuild
-        ? []
-        : requestedFramework === 'none'
-          ? []
-          : selected
-      : selected.filter((plugin) => plugin.id === requestedFramework);
-  if (frameworks.length === 0) {
-    if (requestedFramework === 'none' || (cmsOnlyBuild && requestedFramework === undefined)) return [];
-    throw new Error(`Forge build target "${requestedFramework}" is not available in the selected framework plugins.`);
-  }
+  const frameworks = resolveSelectedComponentFrameworks(selected);
+  if (frameworks.length === 0) return [];
 
   const session = options.session ?? createForgeBuildSession({ service: options.service });
   let activeConfigs = frameworks.length;
@@ -605,6 +624,7 @@ export function defineTsdownForgeComponentsAll(options: TsdownForgeComponentPlug
   );
 }
 
+/** Wrap a component config in a Tsdown plugin that injects settings into the caller config. */
 function tsdownConfigPlugin(
   forgeConfig: UserConfig,
   targetId: string,
@@ -622,6 +642,7 @@ function tsdownConfigPlugin(
   } as TsdownPlugin;
 }
 
+/** Create the internal Tsdown UserConfig for a single Forge component framework target. */
 function createTsdownForgeComponentPlugin(
   options: Readonly<
     Omit<TsdownForgeComponentPluginsOptions, 'frameworks'> & {

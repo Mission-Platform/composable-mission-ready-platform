@@ -9,14 +9,19 @@ import { createForgeArtifactWriter } from './compiler/artifact-writer';
 
 import type { ForgeBuildSession } from './compiler/session';
 
-function invokeHook(hook: unknown, receiver: object, ...args: unknown[]): void | Promise<unknown> {
-  const handler =
-    typeof hook === 'function'
-      ? hook
-      : hook !== null && typeof hook === 'object' && 'handler' in hook
-        ? hook.handler
-        : undefined;
-  if (typeof handler !== 'function') return;
+/** Resolves a callable handler from a hook function or object. */
+function resolveHookHandler(hook: unknown): unknown {
+  if (typeof hook === 'function') return hook;
+  if (hook !== null && typeof hook === 'object' && 'handler' in hook) {
+    return Reflect.get(hook, 'handler');
+  }
+  return undefined;
+}
+
+/** Invokes a hook or hook object if a valid handler is present. */
+function invokeHook(hook: unknown, receiver: object, ...args: unknown[]): Promise<unknown> | undefined {
+  const handler = resolveHookHandler(hook);
+  if (typeof handler !== 'function') return undefined;
   return Reflect.apply(handler, receiver, args);
 }
 
@@ -81,22 +86,24 @@ describe('Forge Vite compiler service lifecycle', () => {
 
   it('invalidates changed files and disposes an owned one-shot session', async () => {
     const session = {
-      prepare: vi.fn(async () => ({ fingerprint: 'fixture' })),
-      ensureTarget: vi.fn(async () => ({
-        targetId: 'react',
-        entry: '/workspace/.forge/react.ts',
-        manifest: { targetId: 'react', artifacts: [], complete: true },
-        cache: { hit: false, affectedFiles: [] },
-      })),
+      prepare: vi.fn(() => Promise.resolve({ fingerprint: 'fixture' })),
+      ensureTarget: vi.fn(() =>
+        Promise.resolve({
+          targetId: 'react',
+          entry: '/workspace/.forge/react.ts',
+          manifest: { targetId: 'react', artifacts: [], complete: true },
+          cache: { hit: false, affectedFiles: [] },
+        }),
+      ),
       invalidate: vi.fn(() => ({ changedFiles: [], invalidatedFiles: [], invalidatedEntries: 0 })),
       report: vi.fn(),
-      dispose: vi.fn(async () => undefined),
+      dispose: vi.fn(() => Promise.resolve()),
     } as unknown as ForgeBuildSession;
     const target = {
       targetId: 'react',
       kind: 'component' as const,
       entryModule: '/workspace/src/index.ts',
-      generate: vi.fn(async () => '/workspace/.forge/react.ts'),
+      generate: vi.fn(() => Promise.resolve('/workspace/.forge/react.ts')),
     };
     const plugin = forgeBuildLifecyclePlugin({
       session,
@@ -119,13 +126,13 @@ describe('Forge Vite compiler service lifecycle', () => {
       ensureTarget: vi.fn(),
       invalidate: vi.fn(),
       report: vi.fn(),
-      dispose: vi.fn(async () => undefined),
+      dispose: vi.fn(() => Promise.resolve()),
     } as unknown as ForgeBuildSession;
     const target = {
       targetId: 'vue',
       kind: 'component' as const,
       entryModule: '/workspace/src/index.ts',
-      generate: vi.fn(async () => '/workspace/.forge/vue.ts'),
+      generate: vi.fn(() => Promise.resolve('/workspace/.forge/vue.ts')),
     };
     const plugin = forgeBuildLifecyclePlugin({
       session,

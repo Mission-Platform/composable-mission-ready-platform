@@ -79,6 +79,18 @@ function getTrailingNewlineLength(source: string, offset: number): number {
 }
 
 /**
+ * Calculates the removal end position including trailing newlines when removing a full line.
+ *
+ * @param source - Original source code string.
+ * @param end - The declaration end offset.
+ * @returns The end offset including trailing newline.
+ */
+function resolveFullLineRemovalEnd(source: string, end: number): number {
+  if (end === source.length) return end;
+  return end + getTrailingNewlineLength(source, end);
+}
+
+/**
  * Removes an import declaration from the source code, trimming enclosing whitespace and newlines.
  *
  * @param magicString - The MagicString instance being mutated.
@@ -96,13 +108,27 @@ function removeDeclaration(
   const isLineStartWhitespace = source.slice(lineStart, start).trim() === "";
 
   if (isLineStartWhitespace) {
-    const newlineLength = getTrailingNewlineLength(source, end);
-    const removeEnd = end === source.length ? end : end + newlineLength;
-    magicString.remove(lineStart, removeEnd);
+    magicString.remove(lineStart, resolveFullLineRemovalEnd(source, end));
     return;
   }
 
   magicString.remove(start, end);
+}
+
+/**
+ * Checks whether an AST node span is enclosed within any import declaration spans.
+ *
+ * @param node - AST node with start and end offsets.
+ * @param importSpans - List of import declaration spans.
+ * @returns True if the node is located inside an import declaration.
+ */
+function isNodeInsideImportSpans(
+  node: { readonly start: number; readonly end: number },
+  importSpans: readonly { readonly start: number; readonly end: number }[],
+): boolean {
+  return importSpans.some(
+    (span) => node.start >= span.start && node.end <= span.end,
+  );
 }
 
 /**
@@ -124,18 +150,12 @@ function collectReferencedIdentifiers(
 
   const visitor = new Visitor({
     Identifier(node) {
-      const isInsideImport = importSpans.some(
-        (span) => node.start >= span.start && node.end <= span.end,
-      );
-      if (!isInsideImport) {
+      if (!isNodeInsideImportSpans(node, importSpans)) {
         referenced.add(node.name);
       }
     },
     JSXIdentifier(node) {
-      const isInsideImport = importSpans.some(
-        (span) => node.start >= span.start && node.end <= span.end,
-      );
-      if (!isInsideImport) {
+      if (!isNodeInsideImportSpans(node, importSpans)) {
         referenced.add(node.name);
       }
     },
@@ -183,6 +203,25 @@ function parseNamedImportName(specifier: ImportSpecifier): string {
 }
 
 /**
+ * Parses a named import specifier node into a normalized record.
+ *
+ * @param specifier - The named specifier node.
+ * @param isTypeDecl - Whether the parent declaration is type-only.
+ * @returns Normalized named specifier record.
+ */
+function parseNamedSpecifier(
+  specifier: ImportSpecifier,
+  isTypeDecl: boolean,
+): ParsedSpecifier {
+  return {
+    kind: "named",
+    importedName: parseNamedImportName(specifier),
+    localName: specifier.local.name,
+    typeOnly: isTypeDecl || specifier.importKind === "type",
+  };
+}
+
+/**
  * Parses a single import specifier node into a normalized record.
  *
  * @param specifier - The AST specifier node.
@@ -210,14 +249,27 @@ function parseSpecifier(
     };
   }
   if (specifier.type === "ImportSpecifier") {
-    return {
-      kind: "named",
-      importedName: parseNamedImportName(specifier),
-      localName: specifier.local.name,
-      typeOnly: isTypeDecl || specifier.importKind === "type",
-    };
+    return parseNamedSpecifier(specifier, isTypeDecl);
   }
   return undefined;
+}
+
+/**
+ * Appends a parsed specifier to target list if successfully parsed.
+ *
+ * @param target - Accumulator array.
+ * @param specifier - AST specifier node.
+ * @param isTypeDecl - Whether declaration is type-only.
+ */
+function appendParsedSpecifier(
+  target: ParsedSpecifier[],
+  specifier: ImportDeclaration["specifiers"][number],
+  isTypeDecl: boolean,
+): void {
+  const parsed = parseSpecifier(specifier, isTypeDecl);
+  if (parsed !== undefined) {
+    target.push(parsed);
+  }
 }
 
 /**
@@ -232,10 +284,7 @@ function parseSpecifiersFromDeclaration(
   const isTypeDecl = decl.importKind === "type";
   const parsedSpecifiers: ParsedSpecifier[] = [];
   for (const specifier of decl.specifiers) {
-    const parsed = parseSpecifier(specifier, isTypeDecl);
-    if (parsed !== undefined) {
-      parsedSpecifiers.push(parsed);
-    }
+    appendParsedSpecifier(parsedSpecifiers, specifier, isTypeDecl);
   }
   return parsedSpecifiers;
 }
@@ -307,6 +356,24 @@ function mapSpecifierWithRules(
 }
 
 /**
+ * Maps parsed specifiers through module rewrite rules.
+ *
+ * @param parsed - Parsed specifiers.
+ * @param moduleSpecs - Specifications for the module.
+ * @returns Array of remapped kept specifiers.
+ */
+function mapParsedSpecifiersWithRules(
+  parsed: readonly ParsedSpecifier[],
+  moduleSpecs: readonly ImportRewriteSpec[],
+): ParsedSpecifier[] {
+  const rules = moduleSpecs.flatMap((sp) => sp.specifiers ?? []);
+  return parsed.flatMap((item) => {
+    const mapped = mapSpecifierWithRules(item, rules);
+    return mapped ? [mapped] : [];
+  });
+}
+
+/**
  * Resolves the initial array of kept specifiers prior to usage-based pruning.
  *
  * @param parsed - Parsed specifiers.
@@ -323,11 +390,7 @@ function resolveInitialKeptSpecifiers(
     (sp) => sp.specifiers !== undefined,
   );
   if (hasDefinedSpecifiers) {
-    const rules = moduleSpecs.flatMap((sp) => sp.specifiers ?? []);
-    return parsed.flatMap((item) => {
-      const mapped = mapSpecifierWithRules(item, rules);
-      return mapped ? [mapped] : [];
-    });
+    return mapParsedSpecifiersWithRules(parsed, moduleSpecs);
   }
   return totalModules === 1 ? [...parsed] : [];
 }
@@ -362,6 +425,24 @@ function filterKeptSpecifiers(
 }
 
 /**
+ * Formats a single named import specifier.
+ *
+ * @param item - Parsed named specifier.
+ * @param isTypeOnly - Whether parent declaration is type-only.
+ * @returns Formatted import specifier string.
+ */
+function formatNamedSpecifier(
+  item: ParsedSpecifier,
+  isTypeOnly: boolean,
+): string {
+  const inlineType = !isTypeOnly && item.typeOnly ? "type " : "";
+  if (item.localName === item.importedName) {
+    return `${inlineType}${item.importedName}`;
+  }
+  return `${inlineType}${item.importedName} as ${item.localName}`;
+}
+
+/**
  * Formats named specifiers into a curly-brace import clause.
  *
  * @param namedSpecs - Named import specifiers.
@@ -375,13 +456,9 @@ function formatNamedSpecifiersClause(
   if (namedSpecs.length === 0) {
     return undefined;
   }
-  const namedStrings = namedSpecs.map((item) => {
-    const inlineType = !isTypeOnly && item.typeOnly ? "type " : "";
-    if (item.localName === item.importedName) {
-      return `${inlineType}${item.importedName}`;
-    }
-    return `${inlineType}${item.importedName} as ${item.localName}`;
-  });
+  const namedStrings = namedSpecs.map((item) =>
+    formatNamedSpecifier(item, isTypeOnly),
+  );
   return `{ ${namedStrings.join(", ")} }`;
 }
 
@@ -536,6 +613,32 @@ function isEligibleForPreserveFastPath(
 }
 
 /**
+ * Applies the single-specifier fast path replacement or removal.
+ *
+ * @param singleSpec - The single matching rewrite spec.
+ * @param decl - Import declaration node.
+ * @param magicString - MagicString being mutated.
+ * @param source - Original source text.
+ */
+function applyPreserveFastPath(
+  singleSpec: ImportRewriteSpec,
+  decl: ImportDeclaration,
+  magicString: MagicString,
+  source: string,
+): void {
+  if (!singleSpec.replacementModule) {
+    removeDeclaration(magicString, source, decl.start, decl.end);
+    return;
+  }
+  const validQuote = extractValidQuote(source, decl.source.start);
+  magicString.overwrite(
+    decl.source.start,
+    decl.source.end,
+    `${validQuote}${singleSpec.replacementModule}${validQuote}`,
+  );
+}
+
+/**
  * Fast-path check for single module specifier preservation without rewriting named tokens.
  *
  * @param matchingSpecs - Matching rewrite specs.
@@ -555,19 +658,7 @@ function tryPreserveSpecifiersFastPath(
   if (!isEligibleForPreserveFastPath(matchingSpecs, preserveNamedSpecifiers)) {
     return false;
   }
-
-  const singleSpec = matchingSpecs[0];
-  if (!singleSpec.replacementModule) {
-    removeDeclaration(magicString, source, decl.start, decl.end);
-    return true;
-  }
-
-  const validQuote = extractValidQuote(source, decl.source.start);
-  magicString.overwrite(
-    decl.source.start,
-    decl.source.end,
-    `${validQuote}${singleSpec.replacementModule}${validQuote}`,
-  );
+  applyPreserveFastPath(matchingSpecs[0], decl, magicString, source);
   return true;
 }
 
@@ -649,40 +740,25 @@ function rewriteNamedImportDeclaration(
 }
 
 /**
- * Rewrites a single static import declaration.
+ * Applies grouped module rewrite to side-effect or named import declarations.
  *
  * @param decl - Import declaration to rewrite.
- * @param matchingSpecs - Specifications matching this declaration.
+ * @param specsByModule - Replacement specs grouped by module.
  * @param magicString - The MagicString instance being mutated.
  * @param source - Original source code.
- * @param preserveNamedSpecifiers - Whether to preserve exact authored specifiers.
+ * @param quote - Quote character.
  * @param newline - Newline style of source.
  * @param referencedIdentifiers - Referenced identifiers for unused binding pruning.
  */
-function rewriteStaticImportDeclaration(
+function applyGroupedStaticRewrite(
   decl: ImportDeclaration,
-  matchingSpecs: readonly ImportRewriteSpec[],
+  specsByModule: Map<string, ImportRewriteSpec[]>,
   magicString: MagicString,
   source: string,
-  preserveNamedSpecifiers: boolean | undefined,
+  quote: string,
   newline: string,
   referencedIdentifiers?: Set<string>,
 ): void {
-  if (
-    tryPreserveSpecifiersFastPath(
-      matchingSpecs,
-      preserveNamedSpecifiers,
-      decl,
-      magicString,
-      source,
-    )
-  ) {
-    return;
-  }
-
-  const specsByModule = groupSpecsByReplacementModule(matchingSpecs);
-  const quote = extractValidQuote(source, decl.source.start);
-
   if (decl.specifiers.length === 0) {
     rewriteSideEffectImport(
       decl,
@@ -704,6 +780,65 @@ function rewriteStaticImportDeclaration(
     newline,
     referencedIdentifiers,
   );
+}
+
+/**
+ * Rewrites a single static import declaration.
+ *
+ * @param decl - Import declaration to rewrite.
+ * @param matchingSpecs - Specifications matching this declaration.
+ * @param magicString - The MagicString instance being mutated.
+ * @param source - Original source code.
+ * @param preserveNamedSpecifiers - Whether to preserve exact authored specifiers.
+ * @param newline - Newline style of source.
+ * @param referencedIdentifiers - Referenced identifiers for unused binding pruning.
+ */
+function rewriteStaticImportDeclaration(
+  decl: ImportDeclaration,
+  matchingSpecs: readonly ImportRewriteSpec[],
+  magicString: MagicString,
+  source: string,
+  preserveNamedSpecifiers: boolean | undefined,
+  newline: string,
+  referencedIdentifiers?: Set<string>,
+): void {
+  const handled = tryPreserveSpecifiersFastPath(
+    matchingSpecs,
+    preserveNamedSpecifiers,
+    decl,
+    magicString,
+    source,
+  );
+  if (handled) {
+    return;
+  }
+
+  const specsByModule = groupSpecsByReplacementModule(matchingSpecs);
+  const quote = extractValidQuote(source, decl.source.start);
+  applyGroupedStaticRewrite(
+    decl,
+    specsByModule,
+    magicString,
+    source,
+    quote,
+    newline,
+    referencedIdentifiers,
+  );
+}
+
+/**
+ * Formats diagnostic detail describing dynamic import replacement conflict.
+ *
+ * @param replacementModules - Unique list of replacement modules.
+ * @returns Description of conflict or missing target.
+ */
+function formatDynamicConflictMessage(
+  replacementModules: readonly string[],
+): string {
+  if (replacementModules.length === 0) {
+    return "no replacement or removal";
+  }
+  return `conflicting replacements (${replacementModules.join(", ")})`;
 }
 
 /**
@@ -729,15 +864,26 @@ function resolveDynamicReplacementModule(
   ];
   const hasRemoval = matchingSpecs.some((s) => !s.replacementModule);
   if (replacementModules.length !== 1 || hasRemoval) {
+    const detail = formatDynamicConflictMessage(replacementModules);
     throw new Error(
-      `Dynamic import("${unquoted}") cannot be rewritten: expected exactly one distinct replacementModule without removals, but found ${
-        replacementModules.length === 0
-          ? "no replacement or removal"
-          : `conflicting replacements (${replacementModules.join(", ")})`
-      }.`,
+      `Dynamic import("${unquoted}") cannot be rewritten: expected exactly one distinct replacementModule without removals, but found ${detail}.`,
     );
   }
   return replacementModules[0];
+}
+
+/**
+ * Resolves quote character enclosing raw dynamic import specifier.
+ *
+ * @param raw - Raw module request text.
+ * @returns Valid quote character.
+ */
+function resolveDynamicQuote(raw: string): string {
+  const quote = raw[0];
+  if (quote === "'" || quote === '"' || quote === "`") {
+    return quote;
+  }
+  return "'";
 }
 
 /**
@@ -770,9 +916,7 @@ function rewriteSingleDynamicImport(
     matchingSpecs,
     unquoted,
   );
-  const quote = raw[0];
-  const validQuote =
-    quote === "'" || quote === '"' || quote === "`" ? quote : "'";
+  const validQuote = resolveDynamicQuote(raw);
   magicString.overwrite(
     dyn.moduleRequest.start,
     dyn.moduleRequest.end,
@@ -800,9 +944,8 @@ function rewriteDynamicImports(
 ): boolean {
   let transformed = false;
   for (const dyn of dynamicImports) {
-    if (rewriteSingleDynamicImport(dyn, source, specs, magicString)) {
-      transformed = true;
-    }
+    const changed = rewriteSingleDynamicImport(dyn, source, specs, magicString);
+    transformed = changed || transformed;
   }
   return transformed;
 }
@@ -1028,27 +1171,32 @@ function createRewriteResult(
 }
 
 /**
- * Rewrite imports in TypeScript/TSX source code using an accurate Concrete Syntax Tree (CST).
+ * Returns an unchanged rewrite result with no source map.
  *
- * Preserves comments, multiline formatting, and AST integrity without fragile regex parsing.
+ * @param source - Original source string.
+ * @returns Untransformed rewrite result.
  */
-export function rewriteImportsWithCst(
+function untransformedResult(source: string): RewriteResult {
+  return { code: source, map: undefined, transformed: false };
+}
+
+/**
+ * Applies AST import rewrites and generates updated output and source map.
+ *
+ * @param source - Original source string.
+ * @param ast - Parsed AST result.
+ * @param matched - Matched static and dynamic imports.
+ * @param specs - Normalized rewrite specifications.
+ * @param options - Rewrite options.
+ * @returns Structured rewrite result.
+ */
+function applyCstRewrites(
   source: string,
+  ast: ParseResult,
+  matched: MatchedImports,
+  specs: readonly ImportRewriteSpec[],
   options: RewriteImportsOptions,
 ): RewriteResult {
-  const specs = normalizeRewriteSpecs(options);
-  if (canSkipRewrite(source, specs)) {
-    return { code: source, map: undefined, transformed: false };
-  }
-
-  const ast = parseCst(source, options.sourceFileName);
-  assertAstParseSuccess(ast, options.sourceFileName);
-
-  const matched = findMatchedImports(ast, source, specs);
-  if (!hasAnyMatchedImports(matched)) {
-    return { code: source, map: undefined, transformed: false };
-  }
-
   const magicString = new MagicString(source);
   const referencedIdentifiers = resolveReferencedIdentifiers(
     ast.program,
@@ -1078,8 +1226,33 @@ export function rewriteImportsWithCst(
       dynamicTransformed,
     )
   ) {
-    return { code: source, map: undefined, transformed: false };
+    return untransformedResult(source);
   }
 
   return createRewriteResult(magicString, options.sourceFileName);
+}
+
+/**
+ * Rewrite imports in TypeScript/TSX source code using an accurate Concrete Syntax Tree (CST).
+ *
+ * Preserves comments, multiline formatting, and AST integrity without fragile regex parsing.
+ */
+export function rewriteImportsWithCst(
+  source: string,
+  options: RewriteImportsOptions,
+): RewriteResult {
+  const specs = normalizeRewriteSpecs(options);
+  if (canSkipRewrite(source, specs)) {
+    return untransformedResult(source);
+  }
+
+  const ast = parseCst(source, options.sourceFileName);
+  assertAstParseSuccess(ast, options.sourceFileName);
+
+  const matched = findMatchedImports(ast, source, specs);
+  if (!hasAnyMatchedImports(matched)) {
+    return untransformedResult(source);
+  }
+
+  return applyCstRewrites(source, ast, matched, specs, options);
 }
