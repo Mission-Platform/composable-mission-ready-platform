@@ -14,6 +14,184 @@ struct ViewportBounds {
   max_y: i32;
 }
 
+export fn createCamera(viewport_w: f64, viewport_h: f64, x: f64, y: f64, zoom: f64) -> unit {
+  let min_dim: f64 = f64_from_u32(1);
+  let mut actual_w: f64 = viewport_w;
+  if actual_w < min_dim { actual_w = min_dim; }
+  let mut actual_h: f64 = viewport_h;
+  if actual_h < min_dim { actual_h = min_dim; }
+  let min_zoom: f64 = f64_from_u32(1) / f64_from_u32(10);
+  let max_zoom: f64 = f64_from_u32(5);
+  let mut clamped_zoom: f64 = zoom;
+  if clamped_zoom < min_zoom { clamped_zoom = min_zoom; }
+  if clamped_zoom > max_zoom { clamped_zoom = max_zoom; }
+  memory_store_f64(0, x);
+  memory_store_f64(8, y);
+  memory_store_f64(16, clamped_zoom);
+  memory_store_f64(24, actual_w);
+  memory_store_f64(32, actual_h);
+}
+
+export fn get_camera_x() -> f64 { return memory_load_f64(0); }
+export fn get_camera_y() -> f64 { return memory_load_f64(8); }
+export fn get_camera_zoom() -> f64 { return memory_load_f64(16); }
+export fn get_camera_viewport_width() -> f64 { return memory_load_f64(24); }
+export fn get_camera_viewport_height() -> f64 { return memory_load_f64(32); }
+
+export fn screenToWorld(screen_x: f64, screen_y: f64) -> unit {
+  let cam_x: f64 = memory_load_f64(0);
+  let cam_y: f64 = memory_load_f64(8);
+  let zoom: f64 = memory_load_f64(16);
+  let viewport_w: f64 = memory_load_f64(24);
+  let viewport_h: f64 = memory_load_f64(32);
+  let two: f64 = f64_from_u32(2);
+  let center_x: f64 = viewport_w / two;
+  let center_y: f64 = viewport_h / two;
+  let world_x: f64 = cam_x + ((screen_x - center_x) / zoom);
+  let world_y: f64 = cam_y + ((screen_y - center_y) / zoom);
+  memory_store_f64(48, world_x);
+  memory_store_f64(56, world_y);
+}
+export fn get_point_x() -> f64 { return memory_load_f64(48); }
+export fn get_point_y() -> f64 { return memory_load_f64(56); }
+
+export fn worldToScreen(world_x: f64, world_y: f64) -> unit {
+  let cam_x: f64 = memory_load_f64(0);
+  let cam_y: f64 = memory_load_f64(8);
+  let zoom: f64 = memory_load_f64(16);
+  let viewport_w: f64 = memory_load_f64(24);
+  let viewport_h: f64 = memory_load_f64(32);
+  let two: f64 = f64_from_u32(2);
+  let center_x: f64 = viewport_w / two;
+  let center_y: f64 = viewport_h / two;
+  let screen_x: f64 = center_x + ((world_x - cam_x) * zoom);
+  let screen_y: f64 = center_y + ((world_y - cam_y) * zoom);
+  memory_store_f64(48, screen_x);
+  memory_store_f64(56, screen_y);
+}
+
+export fn getViewportBounds(padding: f64) -> unit {
+  let cam_x: f64 = memory_load_f64(0);
+  let cam_y: f64 = memory_load_f64(8);
+  let zoom: f64 = memory_load_f64(16);
+  let viewport_w: f64 = memory_load_f64(24);
+  let viewport_h: f64 = memory_load_f64(32);
+  let two: f64 = f64_from_u32(2);
+  let half_w: f64 = (viewport_w / two + padding) / zoom;
+  let half_h: f64 = (viewport_h / two + padding) / zoom;
+  memory_store_f64(64, cam_x - half_w);
+  memory_store_f64(72, cam_y - half_h);
+  memory_store_f64(80, cam_x + half_w);
+  memory_store_f64(88, cam_y + half_h);
+}
+export fn get_bounds_min_x() -> f64 { return memory_load_f64(64); }
+export fn get_bounds_min_y() -> f64 { return memory_load_f64(72); }
+export fn get_bounds_max_x() -> f64 { return memory_load_f64(80); }
+export fn get_bounds_max_y() -> f64 { return memory_load_f64(88); }
+
+export fn panCamera(delta_x: f64, delta_y: f64) -> unit {
+  let cam_x: f64 = memory_load_f64(0);
+  let cam_y: f64 = memory_load_f64(8);
+  let zoom: f64 = memory_load_f64(16);
+  let new_x: f64 = cam_x - (delta_x / zoom);
+  let new_y: f64 = cam_y - (delta_y / zoom);
+  memory_store_f64(0, new_x);
+  memory_store_f64(8, new_y);
+}
+
+export fn zoomCamera(cursor_x: f64, cursor_y: f64, factor: f64) -> unit {
+  let cam_x: f64 = memory_load_f64(0);
+  let cam_y: f64 = memory_load_f64(8);
+  let old_zoom: f64 = memory_load_f64(16);
+  let viewport_w: f64 = memory_load_f64(24);
+  let viewport_h: f64 = memory_load_f64(32);
+  let two: f64 = f64_from_u32(2);
+  let center_x: f64 = viewport_w / two;
+  let center_y: f64 = viewport_h / two;
+
+  let mut new_zoom: f64 = old_zoom * factor;
+  let min_zoom: f64 = f64_from_u32(1) / f64_from_u32(10);
+  let max_zoom: f64 = f64_from_u32(5);
+  if new_zoom < min_zoom { new_zoom = min_zoom; }
+  if new_zoom > max_zoom { new_zoom = max_zoom; }
+
+  let world_anchor_x: f64 = cam_x + ((cursor_x - center_x) / old_zoom);
+  let world_anchor_y: f64 = cam_y + ((cursor_y - center_y) / old_zoom);
+
+  let new_cam_x: f64 = world_anchor_x - ((cursor_x - center_x) / new_zoom);
+  let new_cam_y: f64 = world_anchor_y - ((cursor_y - center_y) / new_zoom);
+
+  memory_store_f64(0, new_cam_x);
+  memory_store_f64(8, new_cam_y);
+  memory_store_f64(16, new_zoom);
+}
+
+export fn createViewProjectionMatrix(matrix_ptr: u32) -> unit {
+  let cam_x: f64 = memory_load_f64(0);
+  let cam_y: f64 = memory_load_f64(8);
+  let zoom: f64 = memory_load_f64(16);
+  let viewport_w: f64 = memory_load_f64(24);
+  let viewport_h: f64 = memory_load_f64(32);
+
+  let two: f64 = f64_from_u32(2);
+  let zero: f64 = f64_from_u32(0);
+  let one: f64 = f64_from_u32(1);
+
+  let sx: f64 = (two * zoom) / viewport_w;
+  let sy: f64 = (zero - two * zoom) / viewport_h;
+  let tx: f64 = ((zero - cam_x) * two * zoom) / viewport_w;
+  let ty: f64 = (cam_y * two * zoom) / viewport_h;
+
+  let mut i: u32 = 0;
+  while i < 16 {
+    memory_store_f64(matrix_ptr + (i * 8), zero);
+    i = i + 1;
+  }
+  memory_store_f64(matrix_ptr, sx);
+  memory_store_f64(matrix_ptr + 40, sy);
+  memory_store_f64(matrix_ptr + 80, one);
+  memory_store_f64(matrix_ptr + 96, tx);
+  memory_store_f64(matrix_ptr + 104, ty);
+  memory_store_f64(matrix_ptr + 120, one);
+}
+
+export fn getNodeBounds(node_x: f64, node_y: f64, max_ports: u32) -> unit {
+  let mut ports: u32 = max_ports;
+  let min_p: u32 = 1;
+  if ports < min_p { ports = min_p; }
+  let header_h: f64 = f64_from_u32(44);
+  let row_h: f64 = f64_from_u32(28);
+  let pad: f64 = f64_from_u32(16);
+  let height: f64 = header_h + (f64_from_u32(ports) * row_h) + pad;
+  let width: f64 = f64_from_u32(220);
+  memory_store_f64(144, node_x);
+  memory_store_f64(152, node_y);
+  memory_store_f64(160, node_x + width);
+  memory_store_f64(168, node_y + height);
+}
+export fn get_node_bounds_min_x() -> f64 { return memory_load_f64(144); }
+export fn get_node_bounds_min_y() -> f64 { return memory_load_f64(152); }
+export fn get_node_bounds_max_x() -> f64 { return memory_load_f64(160); }
+export fn get_node_bounds_max_y() -> f64 { return memory_load_f64(168); }
+
+export fn getCategoryRgb(category_id: i32) -> u32 {
+  if category_id == 1 { return 5875455; }
+  if category_id == 2 { return 13731826; }
+  if category_id == 3 { return 3718573; }
+  if category_id == 4 { return 5427563; }
+  if category_id == 5 { return 15901501; }
+  if category_id == 6 { return 16085875; }
+  return 9213094;
+}
+
+export fn getPortTypeRgb(type_id: i32) -> u32 {
+  if type_id == 1 { return 5875455; }
+  if type_id == 2 { return 13731826; }
+  if type_id == 3 { return 3718573; }
+  if type_id == 4 { return 5427563; }
+  return 12567991;
+}
+
 export fn camera_pan_x(cam_x: i32, delta_x: i32, zoom_percent: i32) -> i32 {
   return cam_x - (delta_x * 100) / zoom_percent;
 }

@@ -4,8 +4,11 @@ import {
   createCamera,
   createViewProjectionMatrix,
   FlintRenderEngine,
+  getCategoryRgb,
   getFlintCameraWasm,
   getFlintRenderWorkerWasm,
+  getNodeBounds,
+  getPortTypeRgb,
   getViewportBounds,
   isWebGpuSupported,
   panCamera,
@@ -564,5 +567,60 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
 
     expect(fillRectCount).toBeGreaterThan(0);
     expect(fillTextCount).toBeGreaterThan(0);
+  });
+
+  it('computes node bounds in Flint accurately', () => {
+    const node = {
+      id: 'node-1',
+      title: 'Add',
+      category: 'math' as const,
+      operation: 'add',
+      inputs: [
+        { id: 'in_1', name: 'a', direction: 'input' as const, type: { kind: 'type-name' as const, name: 'f32' } },
+      ],
+      outputs: [
+        {
+          id: 'out_1',
+          name: 'result',
+          direction: 'output' as const,
+          type: { kind: 'type-name' as const, name: 'f32' },
+        },
+      ],
+      position: { x: 100, y: 150 },
+    };
+    const bounds = getNodeBounds(node);
+    expect(bounds.minX).toBe(100);
+    expect(bounds.minY).toBe(150);
+    expect(bounds.maxX).toBe(320); // 100 + 220
+    expect(bounds.maxY).toBe(238); // 150 + 44 + 28 + 16
+  });
+
+  it('maps categories and port types to RGB values in Flint', () => {
+    const mathRgb = getCategoryRgb('math');
+    expect(mathRgb.r).toBeCloseTo(0.35, 1);
+    expect(mathRgb.g).toBeCloseTo(0.65, 1);
+    expect(mathRgb.b).toBeCloseTo(1, 1);
+
+    const f32Rgb = getPortTypeRgb('f32');
+    expect(f32Rgb.r).toBeCloseTo(0.35, 1);
+    expect(f32Rgb.g).toBeCloseTo(0.65, 1);
+    expect(f32Rgb.b).toBeCloseTo(1, 1);
+
+    const boolRgb = getPortTypeRgb('bool');
+    expect(boolRgb.r).toBeCloseTo(0.82, 1);
+  });
+
+  it('manages engine lifecycle and backend switching in Flint', () => {
+    const wasm = getFlintRenderWorkerWasm();
+    wasm.engine_create(1024, 768, 1.5);
+    expect(wasm.get_camera_viewport_width()).toBe(1024);
+    expect(wasm.get_camera_viewport_height()).toBe(768);
+
+    wasm.engine_set_backend(2);
+    expect(wasm.engine_get_backend()).toBe(2);
+
+    wasm.engine_pan(50, 25);
+    expect(wasm.get_camera_x()).toBeCloseTo(-50);
+    expect(wasm.get_camera_y()).toBeCloseTo(-25);
   });
 });

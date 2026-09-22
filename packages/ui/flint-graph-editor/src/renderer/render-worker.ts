@@ -125,6 +125,47 @@ export interface FlintRenderWorkerWasmExports {
   readonly camera_zoom_f32?: (current_zoom: number, factor: number, min_zoom: number, max_zoom: number) => number;
   readonly renderer_execute_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
   readonly renderer_render_webgpu_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
+
+  readonly createCamera: (viewport_w: number, viewport_h: number, x: number, y: number, zoom: number) => void;
+  readonly get_camera_x: () => number;
+  readonly get_camera_y: () => number;
+  readonly get_camera_zoom: () => number;
+  readonly get_camera_viewport_width: () => number;
+  readonly get_camera_viewport_height: () => number;
+
+  readonly screenToWorld: (screen_x: number, screen_y: number) => void;
+  readonly get_point_x: () => number;
+  readonly get_point_y: () => number;
+
+  readonly worldToScreen: (world_x: number, world_y: number) => void;
+
+  readonly getViewportBounds: (padding: number) => void;
+  readonly get_bounds_min_x: () => number;
+  readonly get_bounds_min_y: () => number;
+  readonly get_bounds_max_x: () => number;
+  readonly get_bounds_max_y: () => number;
+
+  readonly panCamera: (delta_x: number, delta_y: number) => void;
+  readonly zoomCamera: (cursor_x: number, cursor_y: number, factor: number) => void;
+  readonly createViewProjectionMatrix: (matrix_ptr: number) => void;
+
+  readonly getNodeBounds: (node_x: number, node_y: number, max_ports: number) => void;
+  readonly get_node_bounds_min_x: () => number;
+  readonly get_node_bounds_min_y: () => number;
+  readonly get_node_bounds_max_x: () => number;
+  readonly get_node_bounds_max_y: () => number;
+
+  readonly getCategoryRgb: (category_id: number) => number;
+  readonly getPortTypeRgb: (type_id: number) => number;
+
+  readonly engine_create: (viewport_w: number, viewport_h: number, dpr: number) => void;
+  readonly engine_resize: (viewport_w: number, viewport_h: number, dpr: number) => void;
+  readonly engine_pan: (delta_x: number, delta_y: number) => void;
+  readonly engine_zoom: (cursor_x: number, cursor_y: number, factor: number) => void;
+  readonly engine_set_backend: (tier: number) => void;
+  readonly engine_get_backend: () => number;
+  readonly engine_render_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
+
   readonly memory: WebAssembly.Memory;
 }
 
@@ -258,25 +299,29 @@ export interface FlintWebGpuContext {
 let cachedFlintWasm: FlintRenderWorkerWasmExports | undefined;
 
 export function getFlintRenderWorkerWasm(imports?: WebAssembly.Imports): FlintRenderWorkerWasmExports {
+  const defaultCapabilities: WebAssembly.Imports = {
+    'webgpu.upload_camera_buffer': { gpu_upload_camera_buffer: () => {} },
+    'webgpu.upload_node_buffer': { gpu_upload_node_buffer: () => {} },
+    'webgpu.upload_edge_buffer': { gpu_upload_edge_buffer: () => {} },
+    'webgpu.upload_pin_buffer': { gpu_upload_pin_buffer: () => {} },
+    'webgpu.render_begin': { gpu_render_begin: () => {} },
+    'webgpu.render_grid': { gpu_render_grid: () => {} },
+    'webgpu.render_edges': { gpu_render_edges: () => {} },
+    'webgpu.render_nodes': { gpu_render_nodes: () => {} },
+    'webgpu.render_pins': { gpu_render_pins: () => {} },
+    'webgpu.render_end': { gpu_render_end: () => {} },
+    'webgpu.write_node_instance': { gpu_write_node_instance: () => {} },
+    'webgpu.write_edge_instance': { gpu_write_edge_instance: () => {} },
+    'webgpu.write_pin_instance': { gpu_write_pin_instance: () => {} },
+    'webgl.render_frame': { webgl_render_frame: () => {} },
+    'canvas2d.render_frame': { canvas2d_render_frame: () => {} },
+  };
+
   if (imports !== undefined) {
-    return loadSync(imports);
+    const merged: WebAssembly.Imports = { ...defaultCapabilities, ...imports };
+    return loadSync(merged);
   }
   if (cachedFlintWasm === undefined) {
-    const defaultCapabilities: WebAssembly.Imports = {
-      'webgpu.upload_camera_buffer': { gpu_upload_camera_buffer: () => {} },
-      'webgpu.upload_node_buffer': { gpu_upload_node_buffer: () => {} },
-      'webgpu.upload_edge_buffer': { gpu_upload_edge_buffer: () => {} },
-      'webgpu.upload_pin_buffer': { gpu_upload_pin_buffer: () => {} },
-      'webgpu.render_begin': { gpu_render_begin: () => {} },
-      'webgpu.render_grid': { gpu_render_grid: () => {} },
-      'webgpu.render_edges': { gpu_render_edges: () => {} },
-      'webgpu.render_nodes': { gpu_render_nodes: () => {} },
-      'webgpu.render_pins': { gpu_render_pins: () => {} },
-      'webgpu.render_end': { gpu_render_end: () => {} },
-      'webgpu.write_node_instance': { gpu_write_node_instance: () => {} },
-      'webgpu.write_edge_instance': { gpu_write_edge_instance: () => {} },
-      'webgpu.write_pin_instance': { gpu_write_pin_instance: () => {} },
-    };
     cachedFlintWasm = loadSync(defaultCapabilities);
   }
   return cachedFlintWasm;
@@ -380,76 +425,59 @@ export function createCamera(
   zoom: number = DEFAULT_ZOOM,
 ): FlintCamera {
   const wasm = getFlintRenderWorkerWasm();
-  const clampedZoomPercent = wasm.clamp_i32(Math.round(zoom * 100), 10, 500);
+  wasm.createCamera(viewportWidth, viewportHeight, x, y, zoom);
   return {
-    x,
-    y,
-    zoom: clampedZoomPercent / 100,
-    viewportWidth: Math.max(1, viewportWidth),
-    viewportHeight: Math.max(1, viewportHeight),
+    x: wasm.get_camera_x(),
+    y: wasm.get_camera_y(),
+    zoom: wasm.get_camera_zoom(),
+    viewportWidth: wasm.get_camera_viewport_width(),
+    viewportHeight: wasm.get_camera_viewport_height(),
   };
 }
 
 export function screenToWorld(screenX: number, screenY: number, camera: FlintCamera): WorldPoint {
   const wasm = getFlintRenderWorkerWasm();
-  const centerX = camera.viewportWidth / 2;
-  const centerY = camera.viewportHeight / 2;
+  wasm.createCamera(camera.viewportWidth, camera.viewportHeight, camera.x, camera.y, camera.zoom);
+  wasm.screenToWorld(screenX, screenY);
   return {
-    x: wasm.screen_to_world_f32(screenX, camera.x, centerX, camera.zoom),
-    y: wasm.screen_to_world_f32(screenY, camera.y, centerY, camera.zoom),
+    x: wasm.get_point_x(),
+    y: wasm.get_point_y(),
   };
 }
 
 export function worldToScreen(worldX: number, worldY: number, camera: FlintCamera): ScreenPoint {
   const wasm = getFlintRenderWorkerWasm();
-  const centerX = camera.viewportWidth / 2;
-  const centerY = camera.viewportHeight / 2;
+  wasm.createCamera(camera.viewportWidth, camera.viewportHeight, camera.x, camera.y, camera.zoom);
+  wasm.worldToScreen(worldX, worldY);
   return {
-    x: wasm.world_to_screen_f32(worldX, camera.x, centerX, camera.zoom),
-    y: wasm.world_to_screen_f32(worldY, camera.y, centerY, camera.zoom),
+    x: wasm.get_point_x(),
+    y: wasm.get_point_y(),
   };
 }
 
 export function getViewportBounds(camera: FlintCamera, padding = 0): ViewBounds {
   const wasm = getFlintRenderWorkerWasm();
-  const zoomPercent = Math.max(1, Math.round(camera.zoom * 100));
+  wasm.createCamera(camera.viewportWidth, camera.viewportHeight, camera.x, camera.y, camera.zoom);
+  wasm.getViewportBounds(padding);
   return {
-    minX: wasm.viewport_bounds_min_x(
-      Math.round(camera.x),
-      Math.round(camera.viewportWidth),
-      zoomPercent,
-      Math.round(padding),
-    ),
-    maxX: wasm.viewport_bounds_max_x(
-      Math.round(camera.x),
-      Math.round(camera.viewportWidth),
-      zoomPercent,
-      Math.round(padding),
-    ),
-    minY: wasm.viewport_bounds_min_y(
-      Math.round(camera.y),
-      Math.round(camera.viewportHeight),
-      zoomPercent,
-      Math.round(padding),
-    ),
-    maxY: wasm.viewport_bounds_max_y(
-      Math.round(camera.y),
-      Math.round(camera.viewportHeight),
-      zoomPercent,
-      Math.round(padding),
-    ),
+    minX: wasm.get_bounds_min_x(),
+    minY: wasm.get_bounds_min_y(),
+    maxX: wasm.get_bounds_max_x(),
+    maxY: wasm.get_bounds_max_y(),
   };
 }
 
 export function panCamera(camera: FlintCamera, screenDeltaX: number, screenDeltaY: number): FlintCamera {
   const wasm = getFlintRenderWorkerWasm();
-  const zoomPercent = Math.max(1, Math.round(camera.zoom * 100));
-  const newX = wasm.camera_pan_x(Math.round(camera.x), Math.round(screenDeltaX), zoomPercent);
-  const newY = wasm.camera_pan_y(Math.round(camera.y), Math.round(screenDeltaY), zoomPercent);
+  wasm.createCamera(camera.viewportWidth, camera.viewportHeight, camera.x, camera.y, camera.zoom);
+  wasm.panCamera(screenDeltaX, screenDeltaY);
   return {
     ...camera,
-    x: newX,
-    y: newY,
+    x: wasm.get_camera_x(),
+    y: wasm.get_camera_y(),
+    zoom: wasm.get_camera_zoom(),
+    viewportWidth: wasm.get_camera_viewport_width(),
+    viewportHeight: wasm.get_camera_viewport_height(),
   };
 }
 
@@ -460,51 +488,26 @@ export function zoomCamera(
   factor: number,
 ): FlintCamera {
   const wasm = getFlintRenderWorkerWasm();
-  const newZoom = wasm.camera_zoom_f32
-    ? wasm.camera_zoom_f32(camera.zoom, factor, 0.1, 5)
-    : Math.max(0.1, Math.min(5, camera.zoom * factor));
-
-  const cursorWorld = screenToWorld(cursorScreenX, cursorScreenY, camera);
-  const centerX = camera.viewportWidth / 2;
-  const centerY = camera.viewportHeight / 2;
-
-  const newX = wasm.screen_to_world_f32(centerX, cursorWorld.x, cursorScreenX, newZoom);
-  const newY = wasm.screen_to_world_f32(centerY, cursorWorld.y, cursorScreenY, newZoom);
-
+  wasm.createCamera(camera.viewportWidth, camera.viewportHeight, camera.x, camera.y, camera.zoom);
+  wasm.zoomCamera(cursorScreenX, cursorScreenY, factor);
   return {
     ...camera,
-    zoom: newZoom,
-    x: newX,
-    y: newY,
+    x: wasm.get_camera_x(),
+    y: wasm.get_camera_y(),
+    zoom: wasm.get_camera_zoom(),
+    viewportWidth: wasm.get_camera_viewport_width(),
+    viewportHeight: wasm.get_camera_viewport_height(),
   };
 }
 
 export function createViewProjectionMatrix(camera: FlintCamera): Float32Array {
-  const matrix = new Float32Array(16);
-  const sx = (2 * camera.zoom) / camera.viewportWidth;
-  const sy = (-2 * camera.zoom) / camera.viewportHeight;
-
-  matrix[0] = sx;
-  matrix[1] = 0;
-  matrix[2] = 0;
-  matrix[3] = 0;
-
-  matrix[4] = 0;
-  matrix[5] = sy;
-  matrix[6] = 0;
-  matrix[7] = 0;
-
-  matrix[8] = 0;
-  matrix[9] = 0;
-  matrix[10] = 1;
-  matrix[11] = 0;
-
-  matrix[12] = -camera.x * sx;
-  matrix[13] = -camera.y * sy;
-  matrix[14] = 0;
-  matrix[15] = 1;
-
-  return matrix;
+  const wasm = getFlintRenderWorkerWasm();
+  wasm.createCamera(camera.viewportWidth, camera.viewportHeight, camera.x, camera.y, camera.zoom);
+  const matrixPtr = 256;
+  wasm.createViewProjectionMatrix(matrixPtr);
+  const memory = (wasm as unknown as { memory: WebAssembly.Memory }).memory;
+  const f64s = new Float64Array(memory.buffer, matrixPtr, 16);
+  return new Float32Array(f64s);
 }
 
 export class SpatialGridIndex {
@@ -599,12 +602,80 @@ export class SpatialGridIndex {
 export function getNodeBounds(node: FlintGraphNode): ViewBounds {
   const wasm = getFlintRenderWorkerWasm();
   const maxPorts = Math.max(node.inputs.length, node.outputs.length, 1);
-  const height = wasm.node_bounds_height(NODE_HEADER_HEIGHT, maxPorts, PORT_ROW_HEIGHT, 16);
+  wasm.getNodeBounds(node.position.x, node.position.y, maxPorts);
   return {
-    minX: node.position.x,
-    minY: node.position.y,
-    maxX: node.position.x + NODE_WIDTH,
-    maxY: node.position.y + height,
+    minX: wasm.get_node_bounds_min_x(),
+    minY: wasm.get_node_bounds_min_y(),
+    maxX: wasm.get_node_bounds_max_x(),
+    maxY: wasm.get_node_bounds_max_y(),
+  };
+}
+
+const CATEGORY_MAP: Record<string, number> = {
+  math: 1,
+  logic: 2,
+  text: 3,
+  collection: 4,
+  control: 5,
+  capability: 6,
+};
+
+export function getCategoryRgb(category: string): { readonly r: number; readonly g: number; readonly b: number } {
+  const wasm = getFlintRenderWorkerWasm();
+  const packed = wasm.getCategoryRgb(CATEGORY_MAP[category] ?? 0);
+  return {
+    r: Math.round(((packed >> 16) & 255) / 2.55) / 100,
+    g: Math.round(((packed >> 8) & 255) / 2.55) / 100,
+    b: Math.round((packed & 255) / 2.55) / 100,
+  };
+}
+
+export function getPortTypeRgb(typeName: FlintTypeName): {
+  readonly r: number;
+  readonly g: number;
+  readonly b: number;
+} {
+  const wasm = getFlintRenderWorkerWasm();
+  const name: string =
+    typeof typeName === 'string'
+      ? typeName
+      : typeName.kind === 'type-name'
+        ? (typeName.reference ?? typeName.name)
+        : 'f32';
+  let typeId = 0;
+  switch (name) {
+    case 'f32':
+    case 'f64':
+    case 'i32':
+    case 'i64':
+    case 'u32':
+    case 'u64': {
+      typeId = 1;
+      break;
+    }
+    case 'bool': {
+      typeId = 2;
+      break;
+    }
+    case 'string': {
+      typeId = 3;
+      break;
+    }
+    case 'Vector':
+    case 'Map': {
+      typeId = 4;
+      break;
+    }
+    default: {
+      break;
+    }
+  }
+
+  const packed = wasm.getPortTypeRgb(typeId);
+  return {
+    r: Math.round(((packed >> 16) & 255) / 2.55) / 100,
+    g: Math.round(((packed >> 8) & 255) / 2.55) / 100,
+    b: Math.round((packed & 255) / 2.55) / 100,
   };
 }
 
@@ -671,64 +742,6 @@ export interface RenderWorkerOutputMessage {
 
 export const getFlintCameraWasm: (imports?: WebAssembly.Imports) => FlintRenderWorkerWasmExports =
   getFlintRenderWorkerWasm;
-
-function getCategoryRgb(category: string): { readonly r: number; readonly g: number; readonly b: number } {
-  switch (category) {
-    case 'math': {
-      return { r: 0.35, g: 0.65, b: 1 };
-    }
-    case 'logic': {
-      return { r: 0.82, g: 0.53, b: 0.95 };
-    }
-    case 'text': {
-      return { r: 0.22, g: 0.74, b: 0.68 };
-    }
-    case 'collection': {
-      return { r: 0.32, g: 0.82, b: 0.42 };
-    }
-    case 'control': {
-      return { r: 0.95, g: 0.64, b: 0.24 };
-    }
-    case 'capability': {
-      return { r: 0.96, g: 0.45, b: 0.45 };
-    }
-    default: {
-      return { r: 0.55, g: 0.58, b: 0.65 };
-    }
-  }
-}
-
-function getPortTypeRgb(typeName: FlintTypeName): { readonly r: number; readonly g: number; readonly b: number } {
-  const name: string =
-    typeof typeName === 'string'
-      ? typeName
-      : typeName.kind === 'type-name'
-        ? (typeName.reference ?? typeName.name)
-        : 'f32';
-  switch (name) {
-    case 'f32':
-    case 'f64':
-    case 'i32':
-    case 'i64':
-    case 'u32':
-    case 'u64': {
-      return { r: 0.35, g: 0.65, b: 1 };
-    }
-    case 'bool': {
-      return { r: 0.82, g: 0.53, b: 0.95 };
-    }
-    case 'string': {
-      return { r: 0.22, g: 0.74, b: 0.68 };
-    }
-    case 'Vector':
-    case 'Map': {
-      return { r: 0.32, g: 0.82, b: 0.42 };
-    }
-    default: {
-      return { r: 0.75, g: 0.78, b: 0.85 };
-    }
-  }
-}
 
 export class FlintRenderEngine {
   private camera: FlintCamera;
@@ -812,6 +825,7 @@ export class FlintRenderEngine {
       'webgpu.upload_camera_buffer': {
         gpu_upload_camera_buffer: () => {
           if (!this.gpuContext || !this.cameraBuffer) return;
+          this.prepareWebGpuInstances();
           const vpMatrix = createViewProjectionMatrix(this.camera);
           const cameraUniforms = new Float32Array(24);
           cameraUniforms.set(vpMatrix, 0);
@@ -1022,6 +1036,12 @@ export class FlintRenderEngine {
         gpu_render_pins: (count: number) => this.gpuDrawPins(count),
       },
       'webgpu.render_end': { gpu_render_end: () => this.gpuEndPass() },
+      'webgl.render_frame': {
+        webgl_render_frame: () => this.renderWebGLFrame(),
+      },
+      'canvas2d.render_frame': {
+        canvas2d_render_frame: () => this.render2dFrame(),
+      },
     };
     try {
       this.flintWasmInstance = getFlintRenderWorkerWasm(capabilities);
@@ -1121,7 +1141,7 @@ export class FlintRenderEngine {
     }
     this.updateCanvasDimensions();
 
-    const wasm = getFlintRenderWorkerWasm();
+    const wasm = this.flintWasmInstance ?? getFlintRenderWorkerWasm();
     const hasWebGpu =
       typeof navigator !== 'undefined' && 'gpu' in navigator && (navigator as WebGpuNavigator).gpu !== undefined;
     let hasWebGL = false;
@@ -1154,6 +1174,7 @@ export class FlintRenderEngine {
     }
 
     let selectedTier = Number(wasm.backend_select_tier(hasWebGpu, hasWebGL, has2D));
+    wasm.engine_set_backend(selectedTier);
     let initialized = false;
 
     if (selectedTier === 1) {
@@ -1162,6 +1183,7 @@ export class FlintRenderEngine {
         this.activeBackend = 'webgpu';
       } else {
         selectedTier = Number(wasm.backend_fallback_next(1, hasWebGL, has2D));
+        wasm.engine_set_backend(selectedTier);
       }
     }
 
@@ -1171,12 +1193,14 @@ export class FlintRenderEngine {
         this.activeBackend = 'webgl';
       } else {
         selectedTier = Number(wasm.backend_fallback_next(2, false, has2D));
+        wasm.engine_set_backend(selectedTier);
       }
     }
 
     if (!initialized) {
       this.init2dFallback(canvas);
       this.activeBackend = 'canvas2d';
+      wasm.engine_set_backend(3);
       initialized = this.canvas2dCtx !== undefined;
     }
 
@@ -1609,13 +1633,15 @@ export class FlintRenderEngine {
 
   renderFrame(): void {
     const startTime = typeof performance === 'undefined' ? 0 : performance.now();
-    if (this.gpuContext && this.gridPipeline && this.nodesPipeline && this.edgesPipeline) {
-      this.renderWebGpuFrame();
-    } else if (this.glCtx && this.glProgram) {
-      this.renderWebGLFrame();
-    } else if (this.canvas2dCtx) {
-      this.render2dFrame();
-    }
+    const wasm = this.flintWasmInstance ?? getFlintRenderWorkerWasm();
+
+    const visibleBounds = getViewportBounds(this.camera, 200);
+    const visibleNodeIds = new Set(this.spatialIndex.queryBox(visibleBounds));
+    const visibleNodesCount = visibleNodeIds.size;
+    const visibleEdgesCount = this.edges.length;
+    const visiblePinsCount = visibleNodesCount * 4;
+
+    wasm.engine_render_frame(visibleNodesCount, visibleEdgesCount, visiblePinsCount);
     if (startTime > 0) {
       const renderDuration = Math.max(0.05, performance.now() - startTime);
       this.performanceStats = {
@@ -1636,7 +1662,7 @@ export class FlintRenderEngine {
     }
   }
 
-  private renderWebGpuFrame(): void {
+  private prepareWebGpuInstances(): void {
     if (!this.gpuContext || !this.cameraBuffer) return;
     const wasm = this.flintWasmInstance ?? getFlintRenderWorkerWasm();
 
@@ -1727,15 +1753,6 @@ export class FlintRenderEngine {
       this.performanceStats = {
         ...this.performanceStats,
         bufferUploadTimeMs: Math.round((this.performanceStats.bufferUploadTimeMs * 0.7 + (t2 - t1) * 0.3) * 100) / 100,
-      };
-    }
-
-    wasm.renderer_render_webgpu_frame(this.currentVisibleNodesCount, this.currentVisibleEdgesCount, visiblePinsCount);
-    const t3 = typeof performance === 'undefined' ? 0 : performance.now();
-    if (t2 > 0) {
-      this.performanceStats = {
-        ...this.performanceStats,
-        drawPassTimeMs: Math.round((this.performanceStats.drawPassTimeMs * 0.7 + (t3 - t2) * 0.3) * 100) / 100,
         visibleNodesCount: this.currentVisibleNodesCount,
         visibleEdgesCount: this.currentVisibleEdgesCount,
         visiblePinsCount,
@@ -2600,42 +2617,36 @@ if (
         case 'set_graph': {
           if (engine && msg.nodes && msg.edges) {
             engine.setGraph(msg.nodes, msg.edges, msg.groups ?? []);
-            engine.renderFrame();
           }
           break;
         }
         case 'pan': {
           if (engine && msg.deltaX !== undefined && msg.deltaY !== undefined) {
             engine.pan(msg.deltaX, msg.deltaY);
-            engine.renderFrame();
           }
           break;
         }
         case 'zoom': {
           if (engine && msg.factor !== undefined) {
             engine.zoom(msg.factor, msg.cursorX, msg.cursorY);
-            engine.renderFrame();
           }
           break;
         }
         case 'resize': {
           if (engine && msg.width !== undefined && msg.height !== undefined) {
             engine.resize(msg.width, msg.height, msg.dpr);
-            engine.renderFrame();
           }
           break;
         }
         case 'set_selection': {
           if (engine && msg.selectedNodeIds) {
             engine.setSelection(msg.selectedNodeIds, msg.selectedEdgeIds ?? []);
-            engine.renderFrame();
           }
           break;
         }
         case 'set_pulse': {
           if (engine && msg.edgeId && msg.progress !== undefined) {
             engine.setEdgePulse(msg.edgeId, msg.progress);
-            engine.renderFrame();
           }
           break;
         }

@@ -120,6 +120,47 @@ export interface FlintRenderWorkerWasmExports {
   readonly camera_zoom_f32: (current_zoom: number, factor: number, min_zoom: number, max_zoom: number) => number;
   readonly renderer_execute_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
   readonly renderer_render_webgpu_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
+
+  readonly createCamera: (viewport_w: number, viewport_h: number, x: number, y: number, zoom: number) => void;
+  readonly get_camera_x: () => number;
+  readonly get_camera_y: () => number;
+  readonly get_camera_zoom: () => number;
+  readonly get_camera_viewport_width: () => number;
+  readonly get_camera_viewport_height: () => number;
+
+  readonly screenToWorld: (screen_x: number, screen_y: number) => void;
+  readonly get_point_x: () => number;
+  readonly get_point_y: () => number;
+
+  readonly worldToScreen: (world_x: number, world_y: number) => void;
+
+  readonly getViewportBounds: (padding: number) => void;
+  readonly get_bounds_min_x: () => number;
+  readonly get_bounds_min_y: () => number;
+  readonly get_bounds_max_x: () => number;
+  readonly get_bounds_max_y: () => number;
+
+  readonly panCamera: (delta_x: number, delta_y: number) => void;
+  readonly zoomCamera: (cursor_x: number, cursor_y: number, factor: number) => void;
+  readonly createViewProjectionMatrix: (matrix_ptr: number) => void;
+
+  readonly getNodeBounds: (node_x: number, node_y: number, max_ports: number) => void;
+  readonly get_node_bounds_min_x: () => number;
+  readonly get_node_bounds_min_y: () => number;
+  readonly get_node_bounds_max_x: () => number;
+  readonly get_node_bounds_max_y: () => number;
+
+  readonly getCategoryRgb: (category_id: number) => number;
+  readonly getPortTypeRgb: (type_id: number) => number;
+
+  readonly engine_create: (viewport_w: number, viewport_h: number, dpr: number) => void;
+  readonly engine_resize: (viewport_w: number, viewport_h: number, dpr: number) => void;
+  readonly engine_pan: (delta_x: number, delta_y: number) => void;
+  readonly engine_zoom: (cursor_x: number, cursor_y: number, factor: number) => void;
+  readonly engine_set_backend: (tier: number) => void;
+  readonly engine_get_backend: () => number;
+  readonly engine_render_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
+
   readonly memory: WebAssembly.Memory;
 }
 

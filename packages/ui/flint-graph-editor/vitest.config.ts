@@ -25,6 +25,8 @@ export default defineVitestConfig({
           'webgpu.write_node_instance',
           'webgpu.write_edge_instance',
           'webgpu.write_pin_instance',
+          'webgl.render_frame',
+          'canvas2d.render_frame',
         ],
       }),
     ],

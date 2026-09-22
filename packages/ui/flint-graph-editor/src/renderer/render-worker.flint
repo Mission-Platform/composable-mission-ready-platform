@@ -15,6 +15,9 @@ import capability "webgpu.render_nodes" as gpu_render_nodes(count: u32) -> unit;
 import capability "webgpu.render_pins" as gpu_render_pins(count: u32) -> unit;
 import capability "webgpu.render_end" as gpu_render_end() -> unit;
 
+import capability "webgl.render_frame" as webgl_render_frame(visible_nodes: u32, visible_edges: u32) -> unit;
+import capability "canvas2d.render_frame" as canvas2d_render_frame(visible_nodes: u32, visible_edges: u32) -> unit;
+
 import capability "webgpu.write_node_instance" as gpu_write_node_instance(
   cx: i32, cy: i32, w: i32, h: i32, radius: i32,
   is_selected: u32, is_active: u32, is_trapped: u32
@@ -198,4 +201,55 @@ export fn renderer_render_webgpu_frame(
   }
 
   renderer_execute_frame(visible_nodes, visible_edges, visible_pins);
+}
+
+struct FlintRenderEngine {
+  viewport_w: f64;
+  viewport_h: f64;
+  dpr: f64;
+  backend_tier: u32;
+}
+
+export fn engine_create(viewport_w: f64, viewport_h: f64, dpr: f64) -> unit {
+  camera.createCamera(viewport_w, viewport_h, f64_from_u32(0), f64_from_u32(0), f64_from_u32(1));
+  memory_store_f64(40, dpr);
+  memory_store_u32(128, 1);
+  spatial.spatial_init();
+}
+
+export fn engine_resize(viewport_w: f64, viewport_h: f64, dpr: f64) -> unit {
+  let cam_x: f64 = memory_load_f64(0);
+  let cam_y: f64 = memory_load_f64(8);
+  let zoom: f64 = memory_load_f64(16);
+  camera.createCamera(viewport_w, viewport_h, cam_x, cam_y, zoom);
+  memory_store_f64(40, dpr);
+}
+
+export fn engine_pan(delta_x: f64, delta_y: f64) -> unit {
+  camera.panCamera(delta_x, delta_y);
+}
+
+export fn engine_zoom(cursor_x: f64, cursor_y: f64, factor: f64) -> unit {
+  camera.zoomCamera(cursor_x, cursor_y, factor);
+}
+
+export fn engine_set_backend(tier: u32) -> unit {
+  memory_store_u32(128, tier);
+}
+
+export fn engine_get_backend() -> u32 {
+  return memory_load_u32(128);
+}
+
+export fn engine_render_frame(visible_nodes: u32, visible_edges: u32, visible_pins: u32) -> unit {
+  let tier: u32 = memory_load_u32(128);
+  if tier == 1 {
+    renderer_render_webgpu_frame(visible_nodes, visible_edges, visible_pins);
+  }
+  if tier == 2 {
+    webgl_render_frame(visible_nodes, visible_edges);
+  }
+  if tier == 3 {
+    canvas2d_render_frame(visible_nodes, visible_edges);
+  }
 }
