@@ -14,13 +14,36 @@ export interface PortInspectorProperties {
 }
 
 /**
+ * Formats a raw port inspection value into a displayable string.
+ */
+function formatInspectorValue(value: unknown): string {
+  if (typeof value === 'object' && value !== null) {
+    return JSON.stringify(value);
+  }
+  return String(value ?? 'undefined');
+}
+
+/**
+ * Returns color styling for port direction tags.
+ */
+function getDirectionBadgeStyle(direction: 'input' | 'output') {
+  return direction === 'output'
+    ? {
+        backgroundColor: 'rgba(31, 111, 235, 0.2)',
+        color: '#58a6ff',
+      }
+    : {
+        backgroundColor: 'rgba(139, 148, 158, 0.2)',
+        color: '#8b949e',
+      };
+}
+
+/**
  * Framework-neutral Forge popover for live port inspection during trace replay.
  */
 export function ForgePortInspector(properties: Readonly<PortInspectorProperties>): MpElement {
-  const formattedValue =
-    typeof properties.value === 'object' && properties.value !== null
-      ? JSON.stringify(properties.value)
-      : String(properties.value ?? 'undefined');
+  const formattedValue = formatInspectorValue(properties.value);
+  const badgeStyle = getDirectionBadgeStyle(properties.direction);
 
   return (
     <div
@@ -48,8 +71,7 @@ export function ForgePortInspector(properties: Readonly<PortInspectorProperties>
             textTransform: 'uppercase',
             padding: '1px 4px',
             borderRadius: '3px',
-            backgroundColor: properties.direction === 'output' ? 'rgba(31, 111, 235, 0.2)' : 'rgba(139, 148, 158, 0.2)',
-            color: properties.direction === 'output' ? '#58a6ff' : '#8b949e',
+            ...badgeStyle,
           }}
         >
           {properties.direction}

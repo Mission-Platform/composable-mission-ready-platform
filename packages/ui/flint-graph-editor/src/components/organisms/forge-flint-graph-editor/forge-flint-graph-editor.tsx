@@ -273,6 +273,9 @@ interface FlintRendererBridge {
   readonly getPerformanceStats: () => FlintPerformanceMetrics;
 }
 
+/**
+ * Creates a bridge communicating with the native Flint WebAssembly render worker or canvas context.
+ */
 function createRendererBridge(
   canvasElement: HTMLCanvasElement,
   initialWidth: number,
@@ -299,6 +302,9 @@ function createRendererBridge(
   let currentEdges: readonly FlintGraphEdge[] = [];
   let currentDpr = initialDpr;
 
+  /**
+   * Dispatches an input message to the render worker or offscreen worker bridge.
+   */
   const postToRenderer = (inputMessage: RenderWorkerInputMessage): void => {
     const messageWithId: RenderWorkerInputMessage = { id: 'flint_render_bridge', ...inputMessage };
     if (globalThis.self !== undefined && 'dispatchEvent' in globalThis.self) {
@@ -308,6 +314,9 @@ function createRendererBridge(
 
   let cleanupListener: (() => void) | undefined;
   if (globalThis.self !== undefined && 'addEventListener' in globalThis.self) {
+    /**
+     * Handles incoming response messages from the render worker.
+     */
     const handleOutputMessage = (event: MessageEvent<RenderWorkerOutputMessage>): void => {
       const data = event.data;
       if (
@@ -343,6 +352,9 @@ function createRendererBridge(
     theme: initialTheme,
   });
 
+  /**
+   * Reads the current camera parameters from the native WebAssembly memory table.
+   */
   const syncCameraFromWasm = (): FlintCamera => {
     camera = {
       x: wasm.get_camera_x(),
@@ -531,6 +543,9 @@ function createRendererBridge(
   };
 }
 
+/**
+ * Detects the active color theme from the DOM data-theme attribute or system color preference.
+ */
 function detectCurrentTheme(): 'light' | 'dark' {
   if (typeof document !== 'undefined') {
     const documentTheme = document.documentElement.dataset.theme ?? document.body?.dataset.theme;
@@ -615,6 +630,9 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
   const spriteSheetCanvasReference = useRef<HTMLCanvasElement | undefined>(undefined);
   const inspectCanvasReference = useRef<HTMLCanvasElement | undefined>(undefined);
 
+  /**
+   * Renders a magnified 32x32 glyph cell to the hover inspection canvas.
+   */
   const paintInspectCell = (glyphIndex: number): void => {
     const inspectCanvas = inspectCanvasReference.current;
     const mainCanvas = spriteSheetCanvasReference.current;
@@ -638,6 +656,9 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
     );
   };
 
+  /**
+   * Renders the 512x512 Signed Distance Field font atlas texture with optional grid overlay and cell highlighting.
+   */
   const paintSpriteSheet = (
     mode: 'crisp' | 'raw' = spriteSheetMode,
     grid: boolean = spriteSheetGrid,
@@ -671,10 +692,10 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
               outBytes[outputIndex + 2] = 255;
               outBytes[outputIndex + 3] = 255;
             } else {
-              const t = (distanceValue - 112) / 32;
-              outBytes[outputIndex] = Math.round(13 + (255 - 13) * t);
-              outBytes[outputIndex + 1] = Math.round(17 + (255 - 17) * t);
-              outBytes[outputIndex + 2] = Math.round(23 + (255 - 23) * t);
+              const factor = (distanceValue - 112) / 32;
+              outBytes[outputIndex] = Math.round(13 + (255 - 13) * factor);
+              outBytes[outputIndex + 1] = Math.round(17 + (255 - 17) * factor);
+              outBytes[outputIndex + 2] = Math.round(23 + (255 - 23) * factor);
               outBytes[outputIndex + 3] = 255;
             }
           }
@@ -697,14 +718,14 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           canvasContext.lineWidth = 1;
           canvasContext.strokeStyle = 'rgba(88, 166, 255, 0.2)';
           for (let gridIndex = 0; gridIndex <= 16; gridIndex++) {
-            const p = gridIndex * cellSize;
+            const position = gridIndex * cellSize;
             canvasContext.beginPath();
-            canvasContext.moveTo(p, 0);
-            canvasContext.lineTo(p, atlasSize);
+            canvasContext.moveTo(position, 0);
+            canvasContext.lineTo(position, atlasSize);
             canvasContext.stroke();
             canvasContext.beginPath();
-            canvasContext.moveTo(0, p);
-            canvasContext.lineTo(atlasSize, p);
+            canvasContext.moveTo(0, position);
+            canvasContext.lineTo(atlasSize, position);
             canvasContext.stroke();
           }
 
@@ -728,6 +749,9 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
     }
   };
 
+  /**
+   * Tracks cursor movements across the font sprite sheet canvas and updates the hovered glyph details.
+   */
   const onSpriteSheetPointerMove = (event: PointerEvent): void => {
     const canvas = spriteSheetCanvasReference.current;
     if (!canvas) return;
@@ -765,6 +789,9 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
     }
   };
 
+  /**
+   * Resets glyph hover inspection when the pointer leaves the sprite sheet canvas.
+   */
   const onSpriteSheetPointerLeave = (): void => {
     setHoveredGlyph(undefined);
     paintSpriteSheet(spriteSheetMode, spriteSheetGrid);
@@ -783,6 +810,9 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
       setResolvedTheme(properties.theme);
       return;
     }
+    /**
+     * Checks and synchronizes color theme changes from the document environment.
+     */
     const checkTheme = (): void => {
       const detected = detectCurrentTheme();
       setResolvedTheme(detected);
@@ -906,6 +936,9 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         }
       }, 1000);
 
+      /**
+       * Handles mouse wheel events to zoom the editor canvas centered at cursor coordinates.
+       */
       const onWheel = (event: WheelEvent): void => {
         event.preventDefault();
         const normalizedDelta = Math.max(-100, Math.min(100, event.deltaY));
@@ -913,6 +946,9 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         renderer.zoom(event.offsetX, event.offsetY, factor);
       };
 
+      /**
+       * Handles pointer down events to initiate node dragging, port connection, or pan navigation.
+       */
       const onPointerDown = (event: PointerEvent): void => {
         if (event.button !== 0) return;
         setContextMenu((previous) => (previous.open ? { ...previous, open: false } : previous));
@@ -956,14 +992,14 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           return;
         }
 
-        if (hit?.type === 'port') {
+        if (hit?.type === 'port' && hit.portId) {
           dragMode = 'connect';
           connectingSourceNodeId = hit.nodeId;
-          connectingSourcePortId = hit.portId!;
-          store.startConnecting(hit.nodeId, hit.portId!, hit.worldX ?? 0, hit.worldY ?? 0);
+          connectingSourcePortId = hit.portId;
+          store.startConnecting(hit.nodeId, hit.portId, hit.worldX ?? 0, hit.worldY ?? 0);
           renderer.setConnectingEdge({
             fromNodeId: hit.nodeId,
-            fromPortId: hit.portId!,
+            fromPortId: hit.portId,
             cursorX: hit.worldX ?? 0,
             cursorY: hit.worldY ?? 0,
           });
@@ -1004,35 +1040,37 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         }
       };
 
+      /**
+       * Handles pointer move events for dragging nodes, updating connection preview cables, or box selection.
+       */
       const onPointerMove = (event: PointerEvent): void => {
         if (!isPointerDown) {
           const hoverHit = renderer.hitTestSync(event.offsetX, event.offsetY);
           switch (hoverHit?.type) {
             case 'port': {
               canvasElement.style.cursor = 'crosshair';
-              renderer.setHoveredPort({ nodeId: hoverHit.nodeId, portId: hoverHit.portId! });
-              renderer.renderFrame();
-
+              if (hoverHit.portId) {
+                renderer.setHoveredPort({ nodeId: hoverHit.nodeId, portId: hoverHit.portId });
+                renderer.renderFrame();
+              }
               break;
             }
             case 'edge': {
               canvasElement.style.cursor = 'pointer';
-              renderer.setHoveredPort(undefined);
+              renderer.setHoveredPort();
               renderer.renderFrame();
-
               break;
             }
             case 'node': {
               canvasElement.style.cursor = 'move';
-              renderer.setHoveredPort(undefined);
+              renderer.setHoveredPort();
               renderer.renderFrame();
-
               break;
             }
             default: {
               canvasElement.style.cursor = 'default';
               if (renderer.getHoveredPort()) {
-                renderer.setHoveredPort(undefined);
+                renderer.setHoveredPort();
                 renderer.renderFrame();
               }
             }
@@ -1066,7 +1104,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
               portId: hoverHit.portId,
             });
           } else {
-            renderer.setHoveredPort(undefined);
+            renderer.setHoveredPort();
           }
           renderer.renderFrame();
         } else if (dragMode === 'node' && nodesStartPositions.size > 0) {
@@ -1081,6 +1119,9 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         }
       };
 
+      /**
+       * Handles pointer up events to commit node moves or complete connection linking.
+       */
       const onPointerUp = (event: PointerEvent): void => {
         if (!isPointerDown) return;
         isPointerDown = false;
@@ -1117,8 +1158,8 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
               store.connectPorts(connectingSourceNodeId, connectingSourcePortId, targetHit.nodeId, targetHit.portId);
             }
             store.cancelConnecting();
-            renderer.setConnectingEdge(undefined);
-            renderer.setHoveredPort(undefined);
+            renderer.setConnectingEdge();
+            renderer.setHoveredPort();
             renderer.renderFrame();
             break;
           }
@@ -1132,6 +1173,9 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         nodesStartPositions.clear();
       };
 
+      /**
+       * Handles right-click events to display context actions for nodes, groups, edges, or the canvas.
+       */
       const onContextMenu = (event: MouseEvent): void => {
         event.preventDefault();
         const canvasRect = canvasElement.getBoundingClientRect();
@@ -1201,6 +1245,9 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         });
       };
 
+      /**
+       * Handles global keyboard shortcuts for escape navigation, node deletion, and clipboard actions.
+       */
       const onKeyDown = (event: KeyboardEvent): void => {
         if (event.key === 'Escape') {
           if (store.canNavigateBack()) {
@@ -1299,12 +1346,18 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
 
   const selectedDefinition = selectedNode ? getNodeDefinition(selectedNode.operation) : undefined;
 
+  /**
+   * Instantiates a new node from the catalog at the current viewport center.
+   */
   const handleAddNode = (operation: string): void => {
     const center = rendererReference.current?.getCamera();
     const position = center ? { x: Math.round(center.x), y: Math.round(center.y) } : { x: 0, y: 0 };
     store.addNode(operation, position);
   };
 
+  /**
+   * Compiles the active graph to Flint source code and displays the export modal.
+   */
   const handleExport = (): void => {
     const artifacts = store.exportArtifacts();
     if (artifacts.type === 'export_result') {
@@ -1313,8 +1366,11 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
     }
   };
 
+  /**
+   * Triggers asynchronous graph compilation and WebAssembly execution.
+   */
   const handleRun = (): void => {
-    void store.runGraph();
+    store.runGraph().catch(console.error);
   };
 
   const populatedCategories = CATEGORIES.map((category) => ({
@@ -1942,13 +1998,15 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                           className={styles.colorSwatch}
                           style={{ backgroundColor: c }}
                           onClick={() => {
-                            store.setGroupColor(selectedNode.groupId!, c);
-                            rendererReference.current?.setGraph(
-                              store.getState().graph.nodes,
-                              store.getState().graph.edges,
-                              store.getState().graph.groups ?? [],
-                            );
-                            rendererReference.current?.renderFrame();
+                            if (selectedNode.groupId) {
+                              store.setGroupColor(selectedNode.groupId, c);
+                              rendererReference.current?.setGraph(
+                                store.getState().graph.nodes,
+                                store.getState().graph.edges,
+                                store.getState().graph.groups ?? [],
+                              );
+                              rendererReference.current?.renderFrame();
+                            }
                           }}
                         />
                       ))}
@@ -2046,7 +2104,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                 className={styles.contextMenuItem}
                 style={{ color: '#f85149' }}
                 onClick={() => {
-                  store.removeEdge(contextMenu.targetId!);
+                  store.removeEdge(contextMenu.targetId ?? '');
                   rendererReference.current?.setGraph(
                     store.getState().graph.nodes,
                     store.getState().graph.edges,
@@ -2067,7 +2125,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                 type="button"
                 className={styles.contextMenuItem}
                 onClick={() => {
-                  store.copyNode(contextMenu.targetId!);
+                  store.copyNode(contextMenu.targetId ?? '');
                   setContextMenu({ ...contextMenu, open: false });
                 }}
               >
@@ -2079,7 +2137,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                     type="button"
                     className={styles.contextMenuItem}
                     onClick={() => {
-                      store.drillIntoMetaNode(contextMenu.targetId!);
+                      store.drillIntoMetaNode(contextMenu.targetId ?? '');
                       rendererReference.current?.setGraph(
                         store.getState().graph.nodes,
                         store.getState().graph.edges,
@@ -2095,7 +2153,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                     type="button"
                     className={styles.contextMenuItem}
                     onClick={() => {
-                      store.duplicateMetaNode(contextMenu.targetId!);
+                      store.duplicateMetaNode(contextMenu.targetId ?? '');
                       rendererReference.current?.setGraph(
                         store.getState().graph.nodes,
                         store.getState().graph.edges,
@@ -2115,7 +2173,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                     type="button"
                     className={styles.contextMenuItem}
                     onClick={() => {
-                      store.copyGroup(contextMenu.targetGroupId!);
+                      store.copyGroup(contextMenu.targetGroupId ?? '');
                       setContextMenu({ ...contextMenu, open: false });
                     }}
                   >
@@ -2125,7 +2183,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                     type="button"
                     className={styles.contextMenuItem}
                     onClick={() => {
-                      store.ungroup(contextMenu.targetGroupId!);
+                      store.ungroup(contextMenu.targetGroupId ?? '');
                       rendererReference.current?.setGraph(
                         store.getState().graph.nodes,
                         store.getState().graph.edges,
@@ -2144,7 +2202,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                   type="button"
                   className={styles.contextMenuItem}
                   onClick={() => {
-                    store.toggleSplitOutputs(contextMenu.targetId!);
+                    store.toggleSplitOutputs(contextMenu.targetId ?? '');
                     setContextMenu({ ...contextMenu, open: false });
                   }}
                 >
@@ -2156,7 +2214,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                 className={styles.contextMenuItem}
                 style={{ color: '#f85149' }}
                 onClick={() => {
-                  store.removeNode(contextMenu.targetId!);
+                  store.removeNode(contextMenu.targetId ?? '');
                   rendererReference.current?.setGraph(
                     store.getState().graph.nodes,
                     store.getState().graph.edges,
@@ -2177,7 +2235,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                 type="button"
                 className={styles.contextMenuItem}
                 onClick={() => {
-                  store.copyGroup(contextMenu.targetGroupId!);
+                  store.copyGroup(contextMenu.targetGroupId ?? '');
                   setContextMenu({ ...contextMenu, open: false });
                 }}
               >
@@ -2187,7 +2245,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                 type="button"
                 className={styles.contextMenuItem}
                 onClick={() => {
-                  store.ungroup(contextMenu.targetGroupId!);
+                  store.ungroup(contextMenu.targetGroupId ?? '');
                   rendererReference.current?.setGraph(
                     store.getState().graph.nodes,
                     store.getState().graph.edges,
@@ -2211,7 +2269,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                     className={styles.colorSwatch}
                     style={{ backgroundColor: c }}
                     onClick={() => {
-                      store.setGroupColor(contextMenu.targetGroupId!, c);
+                      store.setGroupColor(contextMenu.targetGroupId ?? '', c);
                       rendererReference.current?.setGraph(
                         store.getState().graph.nodes,
                         store.getState().graph.edges,

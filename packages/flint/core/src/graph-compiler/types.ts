@@ -150,6 +150,70 @@ export function createContainerType(
 }
 
 /**
+ * Inlines a single meta-node subgraph and rewires external edges to internal exposed ports.
+ */
+function inlineMetaNode(
+  node: FlintGraphNode,
+  externalEdgesToMeta: ReadonlyMap<string, FlintGraphEdge[]>,
+  externalEdgesFromMeta: ReadonlyMap<string, FlintGraphEdge[]>,
+  flattenedNodes: FlintGraphNode[],
+  flattenedEdges: FlintGraphEdge[],
+): void {
+  const sub = node.metaSubgraph;
+  if (!sub) return;
+
+  const prefix = `${node.id}__`;
+  const internalIdMap = new Map<string, string>();
+
+  for (const internalNode of sub.nodes) {
+    const newId = `${prefix}${internalNode.id}`;
+    internalIdMap.set(internalNode.id, newId);
+    flattenedNodes.push({
+      ...internalNode,
+      id: newId,
+    });
+  }
+
+  for (const edge of sub.edges) {
+    flattenedEdges.push({
+      id: `${prefix}${edge.id}`,
+      fromNodeId: internalIdMap.get(edge.fromNodeId) ?? edge.fromNodeId,
+      fromPortId: edge.fromPortId,
+      toNodeId: internalIdMap.get(edge.toNodeId) ?? edge.toNodeId,
+      toPortId: edge.toPortId,
+    });
+  }
+
+  const incoming = externalEdgesToMeta.get(node.id) ?? [];
+  for (const inEdge of incoming) {
+    const mapping = sub.exposedInputPortMap[inEdge.toPortId];
+    if (mapping) {
+      flattenedEdges.push({
+        id: inEdge.id,
+        fromNodeId: inEdge.fromNodeId,
+        fromPortId: inEdge.fromPortId,
+        toNodeId: internalIdMap.get(mapping.internalNodeId) ?? mapping.internalNodeId,
+        toPortId: mapping.internalPortId,
+      });
+    }
+  }
+
+  const outgoing = externalEdgesFromMeta.get(node.id) ?? [];
+  for (const outEdge of outgoing) {
+    const mapping = sub.exposedOutputPortMap[outEdge.fromPortId];
+    if (mapping) {
+      flattenedEdges.push({
+        id: outEdge.id,
+        fromNodeId: internalIdMap.get(mapping.internalNodeId) ?? mapping.internalNodeId,
+        fromPortId: mapping.internalPortId,
+        toNodeId: outEdge.toNodeId,
+        toPortId: outEdge.toPortId,
+      });
+    }
+  }
+}
+
+/**
  * Recursively inlines and flattens any meta nodes in a graph into their constituent internal nodes and edges.
  * Used during validation, AST generation, and source emission to seamlessly compile composite meta nodes.
  */
@@ -186,60 +250,10 @@ export function flattenGraph(graph: FlintNodeGraph): FlintNodeGraph {
   }
 
   for (const node of graph.nodes) {
-    if (!node.metaSubgraph) {
+    if (node.metaSubgraph) {
+      inlineMetaNode(node, externalEdgesToMeta, externalEdgesFromMeta, flattenedNodes, flattenedEdges);
+    } else {
       flattenedNodes.push(node);
-      continue;
-    }
-
-    const sub = node.metaSubgraph;
-    const prefix = `${node.id}__`;
-    const internalIdMap = new Map<string, string>();
-
-    for (const internalNode of sub.nodes) {
-      const newId = `${prefix}${internalNode.id}`;
-      internalIdMap.set(internalNode.id, newId);
-      flattenedNodes.push({
-        ...internalNode,
-        id: newId,
-      });
-    }
-
-    for (const edge of sub.edges) {
-      flattenedEdges.push({
-        id: `${prefix}${edge.id}`,
-        fromNodeId: internalIdMap.get(edge.fromNodeId) ?? edge.fromNodeId,
-        fromPortId: edge.fromPortId,
-        toNodeId: internalIdMap.get(edge.toNodeId) ?? edge.toNodeId,
-        toPortId: edge.toPortId,
-      });
-    }
-
-    const incoming = externalEdgesToMeta.get(node.id) ?? [];
-    for (const inEdge of incoming) {
-      const mapping = sub.exposedInputPortMap[inEdge.toPortId];
-      if (mapping) {
-        flattenedEdges.push({
-          id: inEdge.id,
-          fromNodeId: inEdge.fromNodeId,
-          fromPortId: inEdge.fromPortId,
-          toNodeId: internalIdMap.get(mapping.internalNodeId) ?? mapping.internalNodeId,
-          toPortId: mapping.internalPortId,
-        });
-      }
-    }
-
-    const outgoing = externalEdgesFromMeta.get(node.id) ?? [];
-    for (const outEdge of outgoing) {
-      const mapping = sub.exposedOutputPortMap[outEdge.fromPortId];
-      if (mapping) {
-        flattenedEdges.push({
-          id: outEdge.id,
-          fromNodeId: internalIdMap.get(mapping.internalNodeId) ?? mapping.internalNodeId,
-          fromPortId: mapping.internalPortId,
-          toNodeId: outEdge.toNodeId,
-          toPortId: outEdge.toPortId,
-        });
-      }
     }
   }
 

@@ -38,6 +38,9 @@ export class TraceDebuggerController {
     }
   }
 
+  /**
+   * Ingests a new trace execution report and maps its event source locations to graph nodes.
+   */
   loadTrace(
     report: FlintTraceReport,
     sourceMap: FlintNodeSourceMap,
@@ -101,18 +104,30 @@ export class TraceDebuggerController {
     this.notify();
   }
 
+  /**
+   * Returns the complete sequence of correlated execution steps.
+   */
   getSteps(): readonly TraceExecutionStep[] {
     return this.steps;
   }
 
+  /**
+   * Returns the 0-based index of the currently active execution step.
+   */
   getCurrentStepIndex(): number {
     return this.currentStep;
   }
 
+  /**
+   * Returns the currently active execution step details.
+   */
   getCurrentStep(): TraceExecutionStep | undefined {
     return this.steps[this.currentStep];
   }
 
+  /**
+   * Returns the current playback status, current step, step count, and speed.
+   */
   getPlaybackState(): {
     readonly isPlaying: boolean;
     readonly currentStep: number;
@@ -127,6 +142,9 @@ export class TraceDebuggerController {
     };
   }
 
+  /**
+   * Subscribes a listener callback to step navigation events.
+   */
   subscribe(listener: TraceStepListener): () => void {
     this.listeners.add(listener);
     const current = this.getCurrentStep();
@@ -138,6 +156,9 @@ export class TraceDebuggerController {
     };
   }
 
+  /**
+   * Dispatches the active step to all registered listeners.
+   */
   private notify(): void {
     const current = this.getCurrentStep();
     if (current) {
@@ -147,6 +168,9 @@ export class TraceDebuggerController {
     }
   }
 
+  /**
+   * Advances the playback timeline forward by one step.
+   */
   stepForward(): boolean {
     if (this.currentStep < this.steps.length - 1) {
       this.currentStep++;
@@ -157,6 +181,9 @@ export class TraceDebuggerController {
     return false;
   }
 
+  /**
+   * Rewinds the playback timeline backward by one step.
+   */
   stepBackward(): boolean {
     if (this.currentStep > 0) {
       this.currentStep--;
@@ -166,6 +193,9 @@ export class TraceDebuggerController {
     return false;
   }
 
+  /**
+   * Seeks directly to a specific step index in the execution timeline.
+   */
   seekTo(stepIndex: number): void {
     const clamped = Math.max(0, Math.min(stepIndex, this.steps.length - 1));
     if (this.currentStep !== clamped) {
@@ -174,6 +204,9 @@ export class TraceDebuggerController {
     }
   }
 
+  /**
+   * Updates the playback speed multiplier.
+   */
   setPlaybackSpeed(speed: number): void {
     this.playbackSpeed = Math.max(0.25, Math.min(speed, 5));
     if (this.isPlaying) {
@@ -181,6 +214,9 @@ export class TraceDebuggerController {
     }
   }
 
+  /**
+   * Starts automatic step playback.
+   */
   play(): void {
     if (this.isPlaying || this.steps.length === 0) return;
     if (this.currentStep >= this.steps.length - 1) {
@@ -190,6 +226,9 @@ export class TraceDebuggerController {
     this.scheduleNextPlaybackTick();
   }
 
+  /**
+   * Pauses automatic step playback.
+   */
   pause(): void {
     this.isPlaying = false;
     if (this.timerId !== undefined) {
@@ -198,6 +237,9 @@ export class TraceDebuggerController {
     }
   }
 
+  /**
+   * Schedules the next playback tick based on current playback speed.
+   */
   private scheduleNextPlaybackTick(): void {
     if (this.timerId !== undefined) {
       clearTimeout(this.timerId);
@@ -213,6 +255,9 @@ export class TraceDebuggerController {
     }, intervalMs);
   }
 
+  /**
+   * Tears down the controller, pauses timers, and unregisters all listeners.
+   */
   destroy(): void {
     this.pause();
     this.listeners.clear();

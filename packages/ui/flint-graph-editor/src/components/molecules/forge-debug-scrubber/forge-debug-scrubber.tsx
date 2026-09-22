@@ -27,6 +27,9 @@ export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>
     };
   }, [controller]);
 
+  /**
+   * Toggles playback between playing and paused states.
+   */
   const handleTogglePlay = (): void => {
     if (playbackState.isPlaying) {
       controller.pause();
@@ -36,6 +39,9 @@ export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>
     setPlaybackState(controller.getPlaybackState());
   };
 
+  /**
+   * Seeks the execution timeline to the slider's target step index.
+   */
   const handleSliderChange = (event: unknown): void => {
     if (
       typeof HTMLInputElement !== 'undefined' &&
@@ -49,6 +55,9 @@ export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>
     }
   };
 
+  /**
+   * Sets the playback speed multiplier and updates component state.
+   */
   const handleSpeedChange = (speed: number): void => {
     controller.setPlaybackSpeed(speed);
     setPlaybackState(controller.getPlaybackState());

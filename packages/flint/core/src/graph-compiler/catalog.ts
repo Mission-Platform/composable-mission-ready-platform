@@ -652,12 +652,18 @@ export function getNodeDefinitionsByCategory(category: FlintNodeCategory): reado
 
 const DEFAULT_NODE_POSITION = { x: 0, y: 0 } as const;
 
+/**
+ * Type guard checking if a value is a FlintTypeName AST node.
+ */
 function isFlintTypeName(value: unknown): value is FlintTypeName {
   return typeof value === 'object' && value !== null && 'kind' in value && value.kind === 'type-name';
 }
 
 const PRIMITIVE_NAMES = new Set(['bool', 'bytes', 'f32', 'f64', 'i32', 'i64', 'string', 'u32', 'u64', 'unit']);
 
+/**
+ * Type guard checking if a value is a valid Flint primitive type name string.
+ */
 function isFlintPrimitiveType(value: unknown): value is Parameters<typeof createPrimitiveType>[0] {
   return typeof value === 'string' && PRIMITIVE_NAMES.has(value);
 }

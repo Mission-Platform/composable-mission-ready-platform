@@ -253,32 +253,61 @@ describe('WebGPU Graph Renderer - Worker Protocol & Serialization', () => {
     };
 
     const mockCtx2d = {
-      save: () => {},
-      restore: () => {},
-      setTransform: () => {},
-      scale: () => {},
-      translate: () => {},
-      fillRect: () => {},
-      beginPath: () => {},
-      moveTo: () => {},
-      lineTo: () => {},
-      stroke: () => {},
-      fill: () => {},
-      arc: () => {},
-      bezierCurveTo: () => {},
-      setLineDash: () => {},
-      fillText: () => {},
+      save: () => {
+        /* no-op */
+      },
+      restore: () => {
+        /* no-op */
+      },
+      setTransform: () => {
+        /* no-op */
+      },
+      scale: () => {
+        /* no-op */
+      },
+      translate: () => {
+        /* no-op */
+      },
+      fillRect: () => {
+        /* no-op */
+      },
+      beginPath: () => {
+        /* no-op */
+      },
+      moveTo: () => {
+        /* no-op */
+      },
+      lineTo: () => {
+        /* no-op */
+      },
+      stroke: () => {
+        /* no-op */
+      },
+      fill: () => {
+        /* no-op */
+      },
+      arc: () => {
+        /* no-op */
+      },
+      bezierCurveTo: () => {
+        /* no-op */
+      },
+      setLineDash: () => {
+        /* no-op */
+      },
+      fillText: () => {
+        /* no-op */
+      },
       measureText: () => ({ width: 40 }),
-      roundRect: () => {},
+      roundRect: () => {
+        /* no-op */
+      },
     };
 
     const mockCanvas = {
       width: 800,
       height: 600,
-      getContext: (type: string) => {
-        if (type === '2d') return mockCtx2d;
-        return;
-      },
+      getContext: (type: string) => (type === '2d' ? mockCtx2d : undefined),
     } as unknown as HTMLCanvasElement;
 
     try {
@@ -392,27 +421,51 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
           recordedPin = { px, py, radius };
         },
       },
-      'webgpu.upload_node_buffer': { gpu_upload_node_buffer: () => {} },
+      'webgpu.upload_node_buffer': {
+        gpu_upload_node_buffer: () => {
+          /* no-op */
+        },
+      },
       'webgpu.upload_edge_buffer': {
         gpu_upload_edge_buffer: (count: number) => {
           uploadedEdgeCount = count;
         },
       },
-      'webgpu.upload_pin_buffer': { gpu_upload_pin_buffer: () => {} },
-      'webgpu.render_begin': { gpu_render_begin: () => {} },
+      'webgpu.upload_pin_buffer': {
+        gpu_upload_pin_buffer: () => {
+          /* no-op */
+        },
+      },
+      'webgpu.render_begin': {
+        gpu_render_begin: () => {
+          /* no-op */
+        },
+      },
       'webgpu.render_grid': {
         gpu_render_grid: () => {
           renderedGrid = true;
         },
       },
-      'webgpu.render_edges': { gpu_render_edges: () => {} },
+      'webgpu.render_edges': {
+        gpu_render_edges: () => {
+          /* no-op */
+        },
+      },
       'webgpu.render_nodes': {
         gpu_render_nodes: (count: number) => {
           renderedNodesCount = count;
         },
       },
-      'webgpu.render_pins': { gpu_render_pins: () => {} },
-      'webgpu.render_end': { gpu_render_end: () => {} },
+      'webgpu.render_pins': {
+        gpu_render_pins: () => {
+          /* no-op */
+        },
+      },
+      'webgpu.render_end': {
+        gpu_render_end: () => {
+          /* no-op */
+        },
+      },
     });
 
     testWasm.compute_node_instance(0, 0, 220, 100, 1, 0, 0);
@@ -604,6 +657,7 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
         ) => {
           expect(p0x).toBe(100);
           expect(p3x).toBe(300);
+          expect(p3y).toBeDefined();
           expect(p1x).toBeGreaterThan(p0x);
           expect(p2x).toBeLessThan(p3x);
           edgeDrawn = true;
@@ -681,6 +735,7 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
         ) => {
           expect(p0x).toBe(100);
           expect(p3x).toBe(400);
+          expect(p3y).toBeDefined();
           expect(p1x).toBeGreaterThan(p0x);
           expect(p2x).toBeLessThan(p3x);
           edgeDrawn = true;
@@ -769,7 +824,7 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     expect(errorCaught).toBe(false);
   });
 
-  it('generates SDF font atlas and measures text correctly in Flint Wasm', async () => {
+  it('generates SDF font atlas and measures text correctly in Flint Wasm', () => {
     const wasm = getFlintRenderWorkerWasm();
     const atlasSize = wasm.font_get_atlas_size();
     expect(atlasSize).toBe(512);

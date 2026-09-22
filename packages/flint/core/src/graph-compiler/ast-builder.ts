@@ -32,6 +32,9 @@ export interface FlintAstBuildResult {
   readonly returnType: FlintTypeName;
 }
 
+/**
+ * Normalizes an arbitrary name into a valid Flint identifier.
+ */
 function sanitizeIdentifier(name: string): string {
   const sanitized = name.replaceAll(/[^a-zA-Z0-9_]/g, '_');
   if (/^[0-9]/.test(sanitized)) {
@@ -40,6 +43,9 @@ function sanitizeIdentifier(name: string): string {
   return sanitized.length === 0 ? '_val' : sanitized;
 }
 
+/**
+ * Computes a unique string key for a source span location.
+ */
 function spanKey(span: FlintSourceSpan): string {
   return `${span.line}:${span.column}:${span.endLine}:${span.endColumn}`;
 }
@@ -72,6 +78,9 @@ function createLiteralExpression(value: unknown, type: FlintTypeName, span: Flin
 
 type InputResolver = (node: FlintGraphNode, portId: string) => FlintExpression;
 
+/**
+ * Lowers arithmetic and mathematical graph nodes into binary, unary, or match AST expressions.
+ */
 function buildArithmeticExpression(
   node: FlintGraphNode,
   resolveInput: InputResolver,
@@ -101,54 +110,64 @@ function buildArithmeticExpression(
       return { kind: 'unary', operator: '-', operand: resolveInput(node, 'a'), span };
     }
     case 'abs': {
-      const a = resolveInput(node, 'a');
+      const operand = resolveInput(node, 'a');
       const zero = createLiteralExpression(0, createPrimitiveType('i32'), span);
       const arms: readonly FlintMatchArm[] = [
         {
           kind: 'match-arm',
           pattern: { kind: 'literal', value: true, span },
-          value: { kind: 'unary', operator: '-', operand: a, span },
+          value: { kind: 'unary', operator: '-', operand, span },
           span,
         },
-        { kind: 'match-arm', pattern: { kind: 'literal', value: false, span }, value: a, span },
+        { kind: 'match-arm', pattern: { kind: 'literal', value: false, span }, value: operand, span },
       ];
-      return { kind: 'match', value: { kind: 'binary', operator: '<', left: a, right: zero, span }, arms, span };
+      return { kind: 'match', value: { kind: 'binary', operator: '<', left: operand, right: zero, span }, arms, span };
     }
     case 'min': {
-      const a = resolveInput(node, 'a');
-      const b = resolveInput(node, 'b');
+      const leftValue = resolveInput(node, 'a');
+      const rightValue = resolveInput(node, 'b');
       const arms: readonly FlintMatchArm[] = [
-        { kind: 'match-arm', pattern: { kind: 'literal', value: true, span }, value: a, span },
-        { kind: 'match-arm', pattern: { kind: 'literal', value: false, span }, value: b, span },
+        { kind: 'match-arm', pattern: { kind: 'literal', value: true, span }, value: leftValue, span },
+        { kind: 'match-arm', pattern: { kind: 'literal', value: false, span }, value: rightValue, span },
       ];
-      return { kind: 'match', value: { kind: 'binary', operator: '<', left: a, right: b, span }, arms, span };
+      return {
+        kind: 'match',
+        value: { kind: 'binary', operator: '<', left: leftValue, right: rightValue, span },
+        arms,
+        span,
+      };
     }
     case 'max': {
-      const a = resolveInput(node, 'a');
-      const b = resolveInput(node, 'b');
+      const leftValue = resolveInput(node, 'a');
+      const rightValue = resolveInput(node, 'b');
       const arms: readonly FlintMatchArm[] = [
-        { kind: 'match-arm', pattern: { kind: 'literal', value: true, span }, value: a, span },
-        { kind: 'match-arm', pattern: { kind: 'literal', value: false, span }, value: b, span },
+        { kind: 'match-arm', pattern: { kind: 'literal', value: true, span }, value: leftValue, span },
+        { kind: 'match-arm', pattern: { kind: 'literal', value: false, span }, value: rightValue, span },
       ];
-      return { kind: 'match', value: { kind: 'binary', operator: '>', left: a, right: b, span }, arms, span };
+      return {
+        kind: 'match',
+        value: { kind: 'binary', operator: '>', left: leftValue, right: rightValue, span },
+        arms,
+        span,
+      };
     }
     case 'div_rem': {
-      const a = resolveInput(node, 'a');
-      const b = resolveInput(node, 'b');
+      const dividend = resolveInput(node, 'a');
+      const divisor = resolveInput(node, 'b');
       const structName = `Record_${sanitizeIdentifier(node.id)}`;
       return {
         kind: 'struct-value',
         type: { kind: 'type-name', name: 'unit', reference: structName, span },
         fields: {
-          quotient: { kind: 'binary', operator: '/', left: a, right: b, span },
-          remainder: { kind: 'binary', operator: '%', left: a, right: b, span },
+          quotient: { kind: 'binary', operator: '/', left: dividend, right: divisor, span },
+          remainder: { kind: 'binary', operator: '%', left: dividend, right: divisor, span },
         },
         span,
       };
     }
     case 'min_max': {
-      const a = resolveInput(node, 'a');
-      const b = resolveInput(node, 'b');
+      const firstValue = resolveInput(node, 'a');
+      const secondValue = resolveInput(node, 'b');
       const structName = `Record_${sanitizeIdentifier(node.id)}`;
       return {
         kind: 'struct-value',
@@ -156,19 +175,19 @@ function buildArithmeticExpression(
         fields: {
           min: {
             kind: 'match',
-            value: { kind: 'binary', operator: '<', left: a, right: b, span },
+            value: { kind: 'binary', operator: '<', left: firstValue, right: secondValue, span },
             arms: [
-              { kind: 'match-arm', pattern: { kind: 'literal', value: true, span }, value: a, span },
-              { kind: 'match-arm', pattern: { kind: 'literal', value: false, span }, value: b, span },
+              { kind: 'match-arm', pattern: { kind: 'literal', value: true, span }, value: firstValue, span },
+              { kind: 'match-arm', pattern: { kind: 'literal', value: false, span }, value: secondValue, span },
             ],
             span,
           },
           max: {
             kind: 'match',
-            value: { kind: 'binary', operator: '>', left: a, right: b, span },
+            value: { kind: 'binary', operator: '>', left: firstValue, right: secondValue, span },
             arms: [
-              { kind: 'match-arm', pattern: { kind: 'literal', value: true, span }, value: a, span },
-              { kind: 'match-arm', pattern: { kind: 'literal', value: false, span }, value: b, span },
+              { kind: 'match-arm', pattern: { kind: 'literal', value: true, span }, value: firstValue, span },
+              { kind: 'match-arm', pattern: { kind: 'literal', value: false, span }, value: secondValue, span },
             ],
             span,
           },
@@ -182,6 +201,9 @@ function buildArithmeticExpression(
   }
 }
 
+/**
+ * Lowers logical and comparison graph nodes into binary or unary boolean AST expressions.
+ */
 function buildComparisonExpression(
   node: FlintGraphNode,
   resolveInput: InputResolver,
@@ -221,6 +243,9 @@ function buildComparisonExpression(
   }
 }
 
+/**
+ * Lowers collection, map, and vector operations into Flint stdlib calls and match expressions.
+ */
 function buildCollectionExpression(
   node: FlintGraphNode,
   resolveInput: InputResolver,
@@ -279,6 +304,9 @@ function buildCollectionExpression(
   }
 }
 
+/**
+ * Lowers string manipulation, branching, and text operations into function calls or match expressions.
+ */
 function buildControlOrTextExpression(
   node: FlintGraphNode,
   resolveInput: InputResolver,
@@ -435,6 +463,9 @@ export function buildGraphAst(inputGraph: FlintNodeGraph): FlintAstBuildResult {
 
   currentLine++;
 
+  /**
+   * Resolves an incoming port connection or constant fallback into an AST expression.
+   */
   function resolveInputExpression(node: FlintGraphNode, portId: string): FlintExpression {
     const port = node.inputs.find((p) => p.id === portId);
     const key = `${node.id}:${portId}`;

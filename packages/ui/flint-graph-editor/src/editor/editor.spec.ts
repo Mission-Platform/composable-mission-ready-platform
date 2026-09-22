@@ -3,6 +3,20 @@ import { describe, expect, it } from 'vitest';
 import { executeGraph, exportGraphArtifacts } from './compiler-worker';
 import { FlintEditorStore } from './editor-store';
 
+import type { FlintGraphNode } from '@mission-platform/flint';
+
+function addRequiredNode(
+  store: FlintEditorStore,
+  operation: string,
+  position?: { readonly x: number; readonly y: number },
+  properties?: Record<string, unknown>,
+): FlintGraphNode {
+  const node = store.addNode(operation, position, properties);
+  expect(node).toBeDefined();
+  if (!node) throw new Error(`Failed to add node: ${operation}`);
+  return node;
+}
+
 describe('Flint Graph Editor - Reactive Store & History', () => {
   it('initializes with empty or default graph state', () => {
     const store = new FlintEditorStore();
@@ -42,8 +56,8 @@ describe('Flint Graph Editor - Reactive Store & History', () => {
 
   it('connects compatible ports and rejects invalid connections', () => {
     const store = new FlintEditorStore();
-    const inputNode = store.addNode('input', { x: 0, y: 0 })!;
-    const addNode = store.addNode('add', { x: 150, y: 0 })!;
+    const inputNode = addRequiredNode(store, 'input', { x: 0, y: 0 });
+    const addNode = addRequiredNode(store, 'add', { x: 150, y: 0 });
 
     // Valid connection: input output -> add input 'a'
     const connectResult = store.connectPorts(inputNode.id, 'value', addNode.id, 'a');
@@ -62,8 +76,8 @@ describe('Flint Graph Editor - Reactive Store & History', () => {
 
   it('deletes selected nodes and cleans up connected edges with undo support', () => {
     const store = new FlintEditorStore();
-    const inNode = store.addNode('input')!;
-    const outNode = store.addNode('output')!;
+    const inNode = addRequiredNode(store, 'input');
+    const outNode = addRequiredNode(store, 'output');
     store.connectPorts(inNode.id, 'value', outNode.id, 'value');
 
     expect(store.getState().graph.nodes).toHaveLength(2);
@@ -84,7 +98,7 @@ describe('Flint Graph Editor - Reactive Store & History', () => {
 
   it('moves nodes and updates positions', () => {
     const store = new FlintEditorStore();
-    const node = store.addNode('constant', { x: 10, y: 20 })!;
+    const node = addRequiredNode(store, 'constant', { x: 10, y: 20 });
 
     store.moveNode(node.id, { x: 85, y: 95 });
     const moved = store.getState().graph.nodes.find((n) => n.id === node.id);
@@ -97,9 +111,9 @@ describe('Flint Graph Editor - Reactive Store & History', () => {
 
   it('supports multi-node selection and multi-node translation', () => {
     const store = new FlintEditorStore();
-    const nodeA = store.addNode('constant', { x: 10, y: 20 })!;
-    const nodeB = store.addNode('add', { x: 100, y: 150 })!;
-    const nodeC = store.addNode('output', { x: 300, y: 200 })!;
+    const nodeA = addRequiredNode(store, 'constant', { x: 10, y: 20 });
+    const nodeB = addRequiredNode(store, 'add', { x: 100, y: 150 });
+    const nodeC = addRequiredNode(store, 'output', { x: 300, y: 200 });
 
     // Select single node
     store.selectNode(nodeA.id);
@@ -136,16 +150,17 @@ describe('Flint Graph Editor - Reactive Store & History', () => {
 
   it('supports clipboard copy/paste, group copying with connections, and duplicate meta node naming', () => {
     const store = new FlintEditorStore();
-    const inA = store.addNode('input', { x: 10, y: 10 }, { name: 'in_1' })!;
-    const inB = store.addNode('input', { x: 10, y: 60 }, { name: 'in_2' })!;
-    const addNode = store.addNode('add', { x: 150, y: 30 })!;
+    const inA = addRequiredNode(store, 'input', { x: 10, y: 10 }, { name: 'in_1' });
+    const inB = addRequiredNode(store, 'input', { x: 10, y: 60 }, { name: 'in_2' });
+    const addNode = addRequiredNode(store, 'add', { x: 150, y: 30 });
     store.connectPorts(inA.id, 'value', addNode.id, 'a');
     store.connectPorts(inB.id, 'value', addNode.id, 'b');
 
     // Group the nodes
     store.selectNodes([inA.id, inB.id, addNode.id]);
-    const group = store.groupSelectedNodes('MathGroup')!;
+    const group = store.groupSelectedNodes('MathGroup');
     expect(group).toBeDefined();
+    if (!group) return;
 
     // Copy group and paste
     const copyResult = store.copyGroup(group.id);
@@ -159,13 +174,14 @@ describe('Flint Graph Editor - Reactive Store & History', () => {
 
     // Create a meta node from selection
     store.selectNodes([inA.id, inB.id, addNode.id]);
-    const metaNode = store.createMetaNodeFromSelected('SumMeta')!;
+    const metaNode = store.createMetaNodeFromSelected('SumMeta');
     expect(metaNode).toBeDefined();
+    if (!metaNode) return;
 
     // Duplicate meta node appends count .001
-    const duplicate = store.duplicateMetaNode(metaNode.id)!;
+    const duplicate = store.duplicateMetaNode(metaNode.id);
     expect(duplicate).toBeDefined();
-    expect(duplicate.title).toBe('SumMeta.001');
+    expect(duplicate?.title).toBe('SumMeta.001');
 
     // Drill into meta node and back
     expect(store.drillIntoMetaNode(metaNode.id)).toBe(true);
@@ -184,7 +200,7 @@ describe('Flint Graph Editor - Reactive Store & History', () => {
 
   it('supports custom code node updates, output splitting, and edge removal', () => {
     const store = new FlintEditorStore();
-    const codeNode = store.addNode('flint_code', { x: 50, y: 50 })!;
+    const codeNode = addRequiredNode(store, 'flint_code', { x: 50, y: 50 });
     expect(codeNode).toBeDefined();
 
     store.updateCodeNode(
@@ -198,17 +214,18 @@ describe('Flint Graph Editor - Reactive Store & History', () => {
     expect(updated?.properties?.code).toContain('fn custom_add');
 
     // Toggle split outputs
-    const divRem = store.addNode('div_rem', { x: 100, y: 100 })!;
+    const divRem = addRequiredNode(store, 'div_rem', { x: 100, y: 100 });
     expect(divRem.splitOutputs).toBe(true);
     store.toggleSplitOutputs(divRem.id);
     const updatedDivRem = store.getState().graph.nodes.find((n) => n.id === divRem.id);
     expect(updatedDivRem?.splitOutputs).toBe(false);
 
     // Edge selection and removal
-    const outNode = store.addNode('output', { x: 300, y: 100 })!;
+    const outNode = addRequiredNode(store, 'output', { x: 300, y: 100 });
     store.connectPorts(divRem.id, 'quotient', outNode.id, 'value');
-    const edge = store.getState().graph.edges[0]!;
+    const edge = store.getState().graph.edges[0];
     expect(edge).toBeDefined();
+    if (!edge) return;
 
     store.selectEdge(edge.id);
     expect(store.getState().activeEdgeId).toBe(edge.id);
@@ -220,10 +237,10 @@ describe('Flint Graph Editor - Reactive Store & History', () => {
 describe('Flint Graph Editor - Compiler Worker Execution & Export', () => {
   it('executes a complete graph pipeline in WebAssembly with input reactivity', async () => {
     const store = new FlintEditorStore();
-    const inA = store.addNode('input', { x: 0, y: 0 }, { name: 'a' })!;
-    const inB = store.addNode('input', { x: 0, y: 100 }, { name: 'b' })!;
-    const addNode = store.addNode('add', { x: 150, y: 50 })!;
-    const outNode = store.addNode('output', { x: 300, y: 50 })!;
+    const inA = addRequiredNode(store, 'input', { x: 0, y: 0 }, { name: 'a' });
+    const inB = addRequiredNode(store, 'input', { x: 0, y: 100 }, { name: 'b' });
+    const addNode = addRequiredNode(store, 'add', { x: 150, y: 50 });
+    const outNode = addRequiredNode(store, 'output', { x: 300, y: 50 });
 
     const resA = store.connectPorts(inA.id, 'value', addNode.id, 'a');
     const resB = store.connectPorts(inB.id, 'value', addNode.id, 'b');
@@ -245,7 +262,7 @@ describe('Flint Graph Editor - Compiler Worker Execution & Export', () => {
   it('reports descriptive node errors for disconnected required ports', async () => {
     const store = new FlintEditorStore();
     // Output node requires input 'value'
-    store.addNode('output')!;
+    store.addNode('output');
 
     const result = await executeGraph(store.getState().graph);
     expect(result.type).toBe('run_error');
@@ -257,8 +274,8 @@ describe('Flint Graph Editor - Compiler Worker Execution & Export', () => {
 
   it('exports formatted Flint source code and ABI manifest', () => {
     const store = new FlintEditorStore();
-    const inNode = store.addNode('input', { x: 0, y: 0 }, { name: 'x' })!;
-    const outNode = store.addNode('output', { x: 200, y: 0 })!;
+    const inNode = addRequiredNode(store, 'input', { x: 0, y: 0 }, { name: 'x' });
+    const outNode = addRequiredNode(store, 'output', { x: 200, y: 0 });
     store.connectPorts(inNode.id, 'value', outNode.id, 'value');
 
     const exportResult = exportGraphArtifacts(store.getState().graph);

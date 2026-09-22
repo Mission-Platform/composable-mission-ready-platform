@@ -9,6 +9,13 @@ import {
 import { createContainerType, createPrimitiveType, type FlintGraphEdge, type FlintNodeGraph } from './types.js';
 import { areTypesCompatible, validateGraph } from './validator.js';
 
+function getRequiredNodeDefinition(operation: string) {
+  const definition = getNodeDefinition(operation);
+  expect(definition).toBeDefined();
+  if (!definition) throw new Error(`Missing node definition for: ${operation}`);
+  return definition;
+}
+
 describe('Flint Graph Compiler - Validator & Catalog', () => {
   describe('areTypesCompatible', () => {
     it('confirms identical primitive types are compatible', () => {
@@ -77,10 +84,10 @@ describe('Flint Graph Compiler - Validator & Catalog', () => {
 
   describe('validateGraph', () => {
     it('validates a valid linear arithmetic pipeline and returns topological ordering', () => {
-      const inputDefinition = getNodeDefinition('input')!;
-      const addDefinition = getNodeDefinition('add')!;
-      const multiplyDefinition = getNodeDefinition('multiply')!;
-      const outputDefinition = getNodeDefinition('output')!;
+      const inputDefinition = getRequiredNodeDefinition('input');
+      const addDefinition = getRequiredNodeDefinition('add');
+      const multiplyDefinition = getRequiredNodeDefinition('multiply');
+      const outputDefinition = getRequiredNodeDefinition('output');
 
       const nodeInput = createNodeFromDefinition(inputDefinition, 'n-input');
       const nodeAdd = createNodeFromDefinition(addDefinition, 'n-add');
@@ -107,14 +114,14 @@ describe('Flint Graph Compiler - Validator & Catalog', () => {
       expect(result.issues).toHaveLength(0);
       expect(result.sortedNodeIds).toBeDefined();
 
-      const sorted = result.sortedNodeIds!;
+      const sorted = result.sortedNodeIds ?? [];
       expect(sorted.indexOf('n-input')).toBeLessThan(sorted.indexOf('n-add'));
       expect(sorted.indexOf('n-add')).toBeLessThan(sorted.indexOf('n-mult'));
       expect(sorted.indexOf('n-mult')).toBeLessThan(sorted.indexOf('n-output'));
     });
 
     it('detects and rejects duplicate node IDs', () => {
-      const addDefinition = getNodeDefinition('add')!;
+      const addDefinition = getRequiredNodeDefinition('add');
       const node1 = createNodeFromDefinition(addDefinition, 'duplicate-id');
       const node2 = createNodeFromDefinition(addDefinition, 'duplicate-id');
 
@@ -136,7 +143,7 @@ describe('Flint Graph Compiler - Validator & Catalog', () => {
     });
 
     it('detects self-loop edges', () => {
-      const addDefinition = getNodeDefinition('add')!;
+      const addDefinition = getRequiredNodeDefinition('add');
       const node = createNodeFromDefinition(addDefinition, 'n1');
 
       const graph: FlintNodeGraph = {
@@ -157,7 +164,7 @@ describe('Flint Graph Compiler - Validator & Catalog', () => {
     });
 
     it('detects 2-node cycles', () => {
-      const addDefinition = getNodeDefinition('add')!;
+      const addDefinition = getRequiredNodeDefinition('add');
       const nodeA = createNodeFromDefinition(addDefinition, 'nA');
       const nodeB = createNodeFromDefinition(addDefinition, 'nB');
 
@@ -181,7 +188,7 @@ describe('Flint Graph Compiler - Validator & Catalog', () => {
     });
 
     it('detects 3-node cycles', () => {
-      const addDefinition = getNodeDefinition('add')!;
+      const addDefinition = getRequiredNodeDefinition('add');
       const nodeA = createNodeFromDefinition(addDefinition, 'nA');
       const nodeB = createNodeFromDefinition(addDefinition, 'nB');
       const nodeC = createNodeFromDefinition(addDefinition, 'nC');
@@ -207,8 +214,8 @@ describe('Flint Graph Compiler - Validator & Catalog', () => {
     });
 
     it('rejects multiple incoming connections to a single input port', () => {
-      const addDefinition = getNodeDefinition('add')!;
-      const inputDefinition = getNodeDefinition('input')!;
+      const addDefinition = getRequiredNodeDefinition('add');
+      const inputDefinition = getRequiredNodeDefinition('input');
 
       const nodeInput1 = createNodeFromDefinition(inputDefinition, 'in-1');
       const nodeInput2 = createNodeFromDefinition(inputDefinition, 'in-2');
@@ -236,8 +243,8 @@ describe('Flint Graph Compiler - Validator & Catalog', () => {
     });
 
     it('rejects edges connecting incompatible port types', () => {
-      const concatDefinition = getNodeDefinition('concat')!;
-      const addDefinition = getNodeDefinition('add')!;
+      const concatDefinition = getRequiredNodeDefinition('concat');
+      const addDefinition = getRequiredNodeDefinition('add');
 
       const nodeConcat = createNodeFromDefinition(concatDefinition, 'concat-1');
       const nodeAdd = createNodeFromDefinition(addDefinition, 'add-1');
@@ -264,7 +271,7 @@ describe('Flint Graph Compiler - Validator & Catalog', () => {
     });
 
     it('flags unconnected required input ports with no default value', () => {
-      const outputDefinition = getNodeDefinition('output')!;
+      const outputDefinition = getRequiredNodeDefinition('output');
       const nodeOutput = createNodeFromDefinition(outputDefinition, 'out-1'); // required input 'value', no default
 
       const graph: FlintNodeGraph = {
@@ -286,7 +293,7 @@ describe('Flint Graph Compiler - Validator & Catalog', () => {
     });
 
     it('flags dangling edges pointing to non-existent nodes or ports', () => {
-      const addDefinition = getNodeDefinition('add')!;
+      const addDefinition = getRequiredNodeDefinition('add');
       const node1 = createNodeFromDefinition(addDefinition, 'node-1');
       const node2 = createNodeFromDefinition(addDefinition, 'node-2');
 

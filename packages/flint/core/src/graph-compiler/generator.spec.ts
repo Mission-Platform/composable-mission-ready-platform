@@ -9,12 +9,19 @@ import { emitGraphSource } from './source-emitter.js';
 
 import type { FlintGraphEdge, FlintNodeGraph } from './types.js';
 
+function getRequiredNodeDefinition(operation: string) {
+  const definition = getNodeDefinition(operation);
+  expect(definition).toBeDefined();
+  if (!definition) throw new Error(`Missing node definition for: ${operation}`);
+  return definition;
+}
+
 describe('Flint Graph Compiler - AST & Source Generation', () => {
-  const inputDefinition = getNodeDefinition('input')!;
-  const outputDefinition = getNodeDefinition('output')!;
-  const addDefinition = getNodeDefinition('add')!;
-  const multiplyDefinition = getNodeDefinition('multiply')!;
-  const constantDefinition = getNodeDefinition('constant')!;
+  const inputDefinition = getRequiredNodeDefinition('input');
+  const outputDefinition = getRequiredNodeDefinition('output');
+  const addDefinition = getRequiredNodeDefinition('add');
+  const multiplyDefinition = getRequiredNodeDefinition('multiply');
+  const constantDefinition = getRequiredNodeDefinition('constant');
 
   it('builds a typed in-memory FlintModule AST from a dataflow graph', () => {
     const nodeA = createNodeFromDefinition(inputDefinition, 'in_a', { x: 0, y: 0 }, { name: 'a' });
@@ -40,25 +47,27 @@ describe('Flint Graph Compiler - AST & Source Generation', () => {
     expect(result.entryFunctionName).toBe('evaluate');
     expect(result.module.functions).toHaveLength(1);
 
-    const function_ = result.module.functions[0]!;
+    const function_ = result.module.functions[0];
+    expect(function_).toBeDefined();
+    if (!function_) return;
     expect(function_.name).toBe('evaluate');
     expect(function_.exported).toBe(true);
     expect(function_.parameters).toHaveLength(2);
-    expect(function_.parameters[0]!.name).toBe('a');
-    expect(function_.parameters[1]!.name).toBe('b');
+    expect(function_.parameters[0]?.name).toBe('a');
+    expect(function_.parameters[1]?.name).toBe('b');
 
     // Body should have let statement for add_1 and a return statement
     expect(function_.body).toHaveLength(2);
-    const letStmt = function_.body[0]!;
-    expect(letStmt.kind).toBe('let');
-    if (letStmt.kind === 'let') {
+    const letStmt = function_.body[0];
+    expect(letStmt).toBeDefined();
+    if (letStmt?.kind === 'let') {
       expect(letStmt.name).toBe('v_add_1_result');
       expect(letStmt.value.kind).toBe('binary');
     }
 
-    const returnValueStmt = function_.body[1]!;
-    expect(returnValueStmt.kind).toBe('return');
-    if (returnValueStmt.kind === 'return') {
+    const returnValueStmt = function_.body[1];
+    expect(returnValueStmt).toBeDefined();
+    if (returnValueStmt?.kind === 'return') {
       expect(returnValueStmt.value).toBeDefined();
       expect(returnValueStmt.value?.kind).toBe('identifier');
     }
@@ -116,7 +125,7 @@ describe('Flint Graph Compiler - AST & Source Generation', () => {
   });
 
   it('generates capability imports for host capability nodes', () => {
-    const clockDefinition = getNodeDefinition('clock_now')!;
+    const clockDefinition = getRequiredNodeDefinition('clock_now');
     const nodeClock = createNodeFromDefinition(clockDefinition, 'clock_node');
     const nodeOut = createNodeFromDefinition(outputDefinition, 'out_node', undefined, { typeName: 'i64' });
 
@@ -132,7 +141,7 @@ describe('Flint Graph Compiler - AST & Source Generation', () => {
     expect(compilation.source).toContain('import capability "clock.now" as host_clock_now() -> i64;');
     expect(compilation.source).toContain('let v_clock_node_timestamp: i64 = host_clock_now();');
     expect(compilation.module.imports).toHaveLength(1);
-    expect(compilation.module.imports[0]!.capability).toBe('clock.now');
+    expect(compilation.module.imports[0]?.capability).toBe('clock.now');
   });
 
   it('compiles graph to WebAssembly binary and executes with numerical correctness', async () => {
@@ -177,7 +186,7 @@ describe('Flint Graph Compiler - AST & Source Generation', () => {
   });
 
   it('emits record structs and splits outputs for multi-output operations', () => {
-    const divRemDefinition = getNodeDefinition('div_rem')!;
+    const divRemDefinition = getRequiredNodeDefinition('div_rem');
     const nodeA = createNodeFromDefinition(inputDefinition, 'in_a', { x: 0, y: 0 }, { name: 'a' });
     const nodeB = createNodeFromDefinition(inputDefinition, 'in_b', { x: 0, y: 50 }, { name: 'b' });
     const nodeDivRem = createNodeFromDefinition(
@@ -214,7 +223,7 @@ describe('Flint Graph Compiler - AST & Source Generation', () => {
   });
 
   it('supports custom Flint code node declarations', () => {
-    const codeDefinition = getNodeDefinition('flint_code')!;
+    const codeDefinition = getRequiredNodeDefinition('flint_code');
     const nodeA = createNodeFromDefinition(inputDefinition, 'in_a', { x: 0, y: 0 }, { name: 'a' });
     const nodeB = createNodeFromDefinition(inputDefinition, 'in_b', { x: 0, y: 50 }, { name: 'b' });
     const nodeCode = createNodeFromDefinition(

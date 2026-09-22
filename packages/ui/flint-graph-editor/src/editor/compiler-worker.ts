@@ -38,6 +38,9 @@ export type CompilerWorkerResponse =
       readonly abiManifest?: unknown;
     };
 
+/**
+ * Generates a cryptographically random double-precision floating point number in [0, 1).
+ */
 function generateSecureRandomFloat(): number {
   const array = new Uint32Array(2);
   crypto.getRandomValues(array);
@@ -102,7 +105,9 @@ export async function executeGraph(
         memory: new WebAssembly.Memory({ initial: 256 }),
         host_clock_now: () => BigInt(Date.now()),
         host_random_f64: () => generateSecureRandomFloat(),
-        host_log_debug: () => {},
+        host_log_debug: () => {
+          /* no-op debug logger */
+        },
       },
     });
 

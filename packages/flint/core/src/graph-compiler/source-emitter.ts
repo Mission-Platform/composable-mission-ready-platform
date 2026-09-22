@@ -12,6 +12,9 @@ export interface FlintSourceEmissionResult {
   readonly returnType: FlintTypeName;
 }
 
+/**
+ * Normalizes an arbitrary string into a valid Flint identifier.
+ */
 function sanitizeIdentifier(name: string): string {
   const sanitized = name.replaceAll(/[^a-zA-Z0-9_]/g, '_');
   if (/^[0-9]/.test(sanitized)) {
@@ -20,10 +23,16 @@ function sanitizeIdentifier(name: string): string {
   return sanitized.length === 0 ? '_val' : sanitized;
 }
 
+/**
+ * Computes a unique string key for a source span location.
+ */
 function spanKey(span: FlintSourceSpan): string {
   return `${span.line}:${span.column}:${span.endLine}:${span.endColumn}`;
 }
 
+/**
+ * Formats a primitive or default port value as a valid Flint literal code string.
+ */
 function formatLiteral(value: unknown, type: FlintTypeName): string {
   if (typeof value === 'boolean') {
     return value ? 'true' : 'false';
@@ -43,6 +52,9 @@ function formatLiteral(value: unknown, type: FlintTypeName): string {
 
 type SourceResolver = (node: FlintGraphNode, portId: string) => string;
 
+/**
+ * Emits mathematical and arithmetic expressions into Flint binary, unary, or match source code.
+ */
 function emitArithmeticExpression(node: FlintGraphNode, resolveSource: SourceResolver): string | undefined {
   switch (node.operation) {
     case 'add':
@@ -68,30 +80,30 @@ function emitArithmeticExpression(node: FlintGraphNode, resolveSource: SourceRes
       return `-${resolveSource(node, 'a')}`;
     }
     case 'min': {
-      const a = resolveSource(node, 'a');
-      const b = resolveSource(node, 'b');
-      return `match ${a} < ${b} { true => ${a}, false => ${b} }`;
+      const leftValue = resolveSource(node, 'a');
+      const rightValue = resolveSource(node, 'b');
+      return `match ${leftValue} < ${rightValue} { true => ${leftValue}, false => ${rightValue} }`;
     }
     case 'max': {
-      const a = resolveSource(node, 'a');
-      const b = resolveSource(node, 'b');
-      return `match ${a} > ${b} { true => ${a}, false => ${b} }`;
+      const leftValue = resolveSource(node, 'a');
+      const rightValue = resolveSource(node, 'b');
+      return `match ${leftValue} > ${rightValue} { true => ${leftValue}, false => ${rightValue} }`;
     }
     case 'abs': {
-      const a = resolveSource(node, 'a');
-      return `match ${a} < 0 { true => -${a}, false => ${a} }`;
+      const operandValue = resolveSource(node, 'a');
+      return `match ${operandValue} < 0 { true => -${operandValue}, false => ${operandValue} }`;
     }
     case 'div_rem': {
       const structName = `Record_${sanitizeIdentifier(node.id)}`;
-      const a = resolveSource(node, 'a');
-      const b = resolveSource(node, 'b');
-      return `${structName} { quotient: ${a} / ${b}, remainder: ${a} % ${b} }`;
+      const dividendValue = resolveSource(node, 'a');
+      const divisorValue = resolveSource(node, 'b');
+      return `${structName} { quotient: ${dividendValue} / ${divisorValue}, remainder: ${dividendValue} % ${divisorValue} }`;
     }
     case 'min_max': {
       const structName = `Record_${sanitizeIdentifier(node.id)}`;
-      const a = resolveSource(node, 'a');
-      const b = resolveSource(node, 'b');
-      return `${structName} { min: match ${a} < ${b} { true => ${a}, false => ${b} }, max: match ${a} > ${b} { true => ${a}, false => ${b} } }`;
+      const firstValue = resolveSource(node, 'a');
+      const secondValue = resolveSource(node, 'b');
+      return `${structName} { min: match ${firstValue} < ${secondValue} { true => ${firstValue}, false => ${secondValue} }, max: match ${firstValue} > ${secondValue} { true => ${firstValue}, false => ${secondValue} } }`;
     }
     default: {
       return undefined;
@@ -99,6 +111,9 @@ function emitArithmeticExpression(node: FlintGraphNode, resolveSource: SourceRes
   }
 }
 
+/**
+ * Emits boolean comparison and logical expressions into Flint binary or unary source code.
+ */
 function emitComparisonExpression(node: FlintGraphNode, resolveSource: SourceResolver): string | undefined {
   switch (node.operation) {
     case 'and': {
@@ -134,10 +149,13 @@ function emitComparisonExpression(node: FlintGraphNode, resolveSource: SourceRes
   }
 }
 
+/**
+ * Emits vector and option collection expressions into Flint standard library function calls.
+ */
 function emitCollectionExpression(node: FlintGraphNode, resolveSource: SourceResolver): string | undefined {
   switch (node.operation) {
     case 'vector_new': {
-      return `vector[]`;
+      return 'vector[]';
     }
     case 'vector_push': {
       return `Vector.push(${resolveSource(node, 'vector')}, ${resolveSource(node, 'item')})`;
@@ -152,7 +170,7 @@ function emitCollectionExpression(node: FlintGraphNode, resolveSource: SourceRes
       return `Option::Some(${resolveSource(node, 'value')})`;
     }
     case 'option_none': {
-      return `Option::None`;
+      return 'Option::None';
     }
     case 'option_unwrap_or': {
       const opt = resolveSource(node, 'option');
@@ -165,6 +183,9 @@ function emitCollectionExpression(node: FlintGraphNode, resolveSource: SourceRes
   }
 }
 
+/**
+ * Emits string operations and branching conditionals into Flint expressions.
+ */
 function emitControlOrTextExpression(node: FlintGraphNode, resolveSource: SourceResolver): string | undefined {
   switch (node.operation) {
     case 'concat': {
@@ -215,6 +236,9 @@ export function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmission
   const lines: string[] = [];
   let currentOffset = 0;
 
+  /**
+   * Appends a source line to the emitted output and records its source offset and line metadata.
+   */
   function appendLine(text: string): { start: number; end: number; line: number; text: string } {
     const lineIndex = lines.length + 1;
     const lineStart = currentOffset;
@@ -253,18 +277,18 @@ export function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmission
     const alias = `host_${sanitizeIdentifier(capability)}`;
     capabilityAliases.set(capability, alias);
 
-    let signature = `() -> unit;`;
+    let signature = '() -> unit;';
     switch (capability) {
       case 'clock.now': {
-        signature = `() -> i64;`;
+        signature = '() -> i64;';
         break;
       }
       case 'random.f64': {
-        signature = `() -> f64;`;
+        signature = '() -> f64;';
         break;
       }
       case 'env.log': {
-        signature = `(message: string) -> unit;`;
+        signature = '(message: string) -> unit;';
         break;
       }
       default: {
@@ -374,6 +398,9 @@ export function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmission
     }
   }
 
+  /**
+   * Resolves an incoming port connection or literal fallback into a Flint source code string.
+   */
   function resolveInputSource(node: FlintGraphNode, portId: string): string {
     const port = node.inputs.find((p) => p.id === portId);
     const key = `${node.id}:${portId}`;

@@ -685,14 +685,16 @@ export class FlintEditorStore {
       metaTemplateId: templateId,
     };
 
-    this.registerMetaNode({
-      id: templateId,
-      name: title,
-      title,
-      subgraph: metaNode.metaSubgraph!,
-      inputs: metaNode.inputs,
-      outputs: metaNode.outputs,
-    });
+    if (metaNode.metaSubgraph) {
+      this.registerMetaNode({
+        id: templateId,
+        name: title,
+        title,
+        subgraph: metaNode.metaSubgraph,
+        inputs: metaNode.inputs,
+        outputs: metaNode.outputs,
+      });
+    }
 
     const remainingNodes = this.graph.nodes.filter((node) => !selectedIds.has(node.id));
     this.graph = {
@@ -920,7 +922,7 @@ export class FlintEditorStore {
 
     const parentGraph = frame.parentGraph;
     const metaNode = parentGraph.nodes.find((n) => n.id === frame.metaNodeId);
-    if (metaNode && metaNode.metaSubgraph) {
+    if (metaNode?.metaSubgraph) {
       const updatedMetaNode: FlintGraphNode = {
         ...metaNode,
         metaSubgraph: {
@@ -1074,7 +1076,7 @@ export class FlintEditorStore {
     let maxCount = 0;
     for (const n of this.graph.nodes) {
       const match = n.title.match(regex);
-      if (match && match[1]) {
+      if (match?.[1]) {
         maxCount = Math.max(maxCount, Number.parseInt(match[1], 10));
       }
     }
@@ -1156,20 +1158,22 @@ export class FlintEditorStore {
         let maxCount = 0;
         for (const existing of this.graph.nodes) {
           const match = existing.title.match(regex);
-          if (match && match[1]) {
+          if (match?.[1]) {
             maxCount = Math.max(maxCount, Number.parseInt(match[1], 10));
           }
         }
         title = `${baseTitle}.${String(maxCount + 1).padStart(3, '0')}`;
         metaTemplateId = generateSecureId('template_meta');
-        this.registerMetaNode({
-          id: metaTemplateId,
-          name: title,
-          title,
-          subgraph: structuredClone(n.metaSubgraph!),
-          inputs: n.inputs,
-          outputs: n.outputs,
-        });
+        if (n.metaSubgraph) {
+          this.registerMetaNode({
+            id: metaTemplateId,
+            name: title,
+            title,
+            subgraph: structuredClone(n.metaSubgraph),
+            inputs: n.inputs,
+            outputs: n.outputs,
+          });
+        }
       }
 
       return {
@@ -1184,21 +1188,21 @@ export class FlintEditorStore {
       };
     });
 
-    const newEdges: FlintGraphEdge[] = this.clipboard.edges
-      .map((e) => {
-        const from = idMap.get(e.fromNodeId);
-        const to = idMap.get(e.toNodeId);
-        if (from && to) {
-          return {
-            ...e,
+    const newEdges: FlintGraphEdge[] = this.clipboard.edges.flatMap((edge) => {
+      const fromNodeId = idMap.get(edge.fromNodeId);
+      const toNodeId = idMap.get(edge.toNodeId);
+      if (fromNodeId && toNodeId) {
+        return [
+          {
+            ...edge,
             id: generateSecureId('edge'),
-            fromNodeId: from,
-            toNodeId: to,
-          };
-        }
-        return;
-      })
-      .filter((e): e is FlintGraphEdge => e !== undefined);
+            fromNodeId,
+            toNodeId,
+          },
+        ];
+      }
+      return [];
+    });
 
     let updatedGroups = this.graph.groups ?? [];
     if (this.clipboard.group) {

@@ -1,6 +1,12 @@
 import { flintTypeNameToString, type FlintTypeName } from '../ast.js';
 
-import type { FlintGraphNode, FlintGraphValidationIssue, FlintGraphValidationResult, FlintNodeGraph } from './types.js';
+import type {
+  FlintGraphEdge,
+  FlintGraphNode,
+  FlintGraphValidationIssue,
+  FlintGraphValidationResult,
+  FlintNodeGraph,
+} from './types.js';
 
 /**
  * Checks structural and semantic compatibility between source and destination Flint types.
@@ -35,15 +41,14 @@ export function areTypesCompatible(source: FlintTypeName, target: FlintTypeName)
 }
 
 /**
- * Validates graph topology, edge connections, port types, and detects cycles.
- * Returns sorted node IDs if the graph is a valid Directed Acyclic Graph (DAG).
+ * Validates that all node IDs within the graph are unique and indexes them in a lookup map.
  */
-export function validateGraph(graph: FlintNodeGraph): FlintGraphValidationResult {
-  const issues: FlintGraphValidationIssue[] = [];
+function validateNodeUniqueness(
+  nodes: readonly FlintGraphNode[],
+  issues: FlintGraphValidationIssue[],
+): Map<string, FlintGraphNode> {
   const nodeMap = new Map<string, FlintGraphNode>();
-
-  // 1. Validate Node ID Uniqueness
-  for (const node of graph.nodes) {
+  for (const node of nodes) {
     if (nodeMap.has(node.id)) {
       issues.push({
         code: 'FLINT-GRAPH-DUPLICATE-NODE',
@@ -55,12 +60,20 @@ export function validateGraph(graph: FlintNodeGraph): FlintGraphValidationResult
       nodeMap.set(node.id, node);
     }
   }
+  return nodeMap;
+}
 
-  // Map input ports to incoming edge IDs to detect multiple incoming connections
-  const inputPortConnections = new Map<string, string>(); // key: `${nodeId}:${portId}`, value: edgeId
+/**
+ * Validates graph edge topology, self-loops, dangling nodes, port matching, and type compatibility.
+ */
+function validateEdgeIntegrity(
+  edges: readonly FlintGraphEdge[],
+  nodeMap: ReadonlyMap<string, FlintGraphNode>,
+  issues: FlintGraphValidationIssue[],
+): Map<string, string> {
+  const inputPortConnections = new Map<string, string>();
 
-  // 2. Validate Edges
-  for (const edge of graph.edges) {
+  for (const edge of edges) {
     if (edge.fromNodeId === edge.toNodeId) {
       issues.push({
         code: 'FLINT-GRAPH-SELF-LOOP',
@@ -122,7 +135,6 @@ export function validateGraph(graph: FlintNodeGraph): FlintGraphValidationResult
       continue;
     }
 
-    // Check single assignment for input port
     const targetKey = `${toNode.id}:${toPort.id}`;
     const existingEdgeId = inputPortConnections.get(targetKey);
     if (existingEdgeId === undefined) {
@@ -138,7 +150,6 @@ export function validateGraph(graph: FlintNodeGraph): FlintGraphValidationResult
       });
     }
 
-    // Type Compatibility Check
     if (!areTypesCompatible(fromPort.type, toPort.type)) {
       issues.push({
         code: 'FLINT-GRAPH-TYPE-MISMATCH',
@@ -151,8 +162,18 @@ export function validateGraph(graph: FlintNodeGraph): FlintGraphValidationResult
     }
   }
 
-  // 3. Check for Required Unconnected Inputs
-  for (const node of graph.nodes) {
+  return inputPortConnections;
+}
+
+/**
+ * Ensures all required input ports have either an active incoming edge or an explicit default value.
+ */
+function validateRequiredUnconnectedPorts(
+  nodes: readonly FlintGraphNode[],
+  inputPortConnections: ReadonlyMap<string, string>,
+  issues: FlintGraphValidationIssue[],
+): void {
+  for (const node of nodes) {
     for (const inputPort of node.inputs) {
       const isConnected = inputPortConnections.has(`${node.id}:${inputPort.id}`);
       if (!isConnected && inputPort.required && inputPort.defaultValue === undefined) {
@@ -166,18 +187,26 @@ export function validateGraph(graph: FlintNodeGraph): FlintGraphValidationResult
       }
     }
   }
+}
 
-  // 4. Cycle Detection & Topological Sort (Kahn's algorithm)
-  // Build adjacency list: fromNodeId -> set of toNodeIds
+/**
+ * Performs Kahn's topological sort algorithm to detect graph cycles and derive deterministic node evaluation order.
+ */
+function performTopologicalSort(
+  nodes: readonly FlintGraphNode[],
+  edges: readonly FlintGraphEdge[],
+  nodeMap: ReadonlyMap<string, FlintGraphNode>,
+  issues: FlintGraphValidationIssue[],
+): readonly string[] | undefined {
   const inDegree = new Map<string, number>();
   const adjacency = new Map<string, Set<string>>();
 
-  for (const node of graph.nodes) {
+  for (const node of nodes) {
     inDegree.set(node.id, 0);
     adjacency.set(node.id, new Set<string>());
   }
 
-  for (const edge of graph.edges) {
+  for (const edge of edges) {
     if (nodeMap.has(edge.fromNodeId) && nodeMap.has(edge.toNodeId) && edge.fromNodeId !== edge.toNodeId) {
       const neighbors = adjacency.get(edge.fromNodeId);
       if (neighbors !== undefined && !neighbors.has(edge.toNodeId)) {
@@ -212,17 +241,28 @@ export function validateGraph(graph: FlintNodeGraph): FlintGraphValidationResult
     }
   }
 
-  // If sorted count < total nodes, cycle exists
-  if (sortedNodeIds.length < graph.nodes.length) {
-    // Identify nodes involved in the cycle
-    const cycleNodes = graph.nodes.filter((n) => (inDegree.get(n.id) ?? 0) > 0).map((n) => n.id);
-
+  if (sortedNodeIds.length < nodes.length) {
+    const cycleNodes = nodes.filter((n) => (inDegree.get(n.id) ?? 0) > 0).map((n) => n.id);
     issues.push({
       code: 'FLINT-GRAPH-CYCLE',
       severity: 'error',
       message: `Circular dependency detected in node graph. Nodes involved: [${cycleNodes.join(', ')}].`,
     });
   }
+
+  return sortedNodeIds;
+}
+
+/**
+ * Validates graph topology, edge connections, port types, and detects cycles.
+ * Returns sorted node IDs if the graph is a valid Directed Acyclic Graph (DAG).
+ */
+export function validateGraph(graph: FlintNodeGraph): FlintGraphValidationResult {
+  const issues: FlintGraphValidationIssue[] = [];
+  const nodeMap = validateNodeUniqueness(graph.nodes, issues);
+  const inputPortConnections = validateEdgeIntegrity(graph.edges, nodeMap, issues);
+  validateRequiredUnconnectedPorts(graph.nodes, inputPortConnections, issues);
+  const sortedNodeIds = performTopologicalSort(graph.nodes, graph.edges, nodeMap, issues);
 
   const hasErrors = issues.some((issue) => issue.severity === 'error');
 

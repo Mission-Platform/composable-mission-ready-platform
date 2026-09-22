@@ -40,12 +40,23 @@ const storyWrapperStyle = {
   flexDirection: 'column' as const,
 };
 
+function getStoryNodeDefinition(operation: string) {
+  const definition = getNodeDefinition(operation);
+  if (!definition) {
+    throw new Error(`Missing node definition for story: ${operation}`);
+  }
+  return definition;
+}
+
+/**
+ * Creates an editor store initialized with a sample arithmetic math pipeline.
+ */
 function createMathPipelineStore(): FlintEditorStore {
-  const inputDefinition = getNodeDefinition('input')!;
-  const addDefinition = getNodeDefinition('add')!;
-  const multiplyDefinition = getNodeDefinition('multiply')!;
-  const constantDefinition = getNodeDefinition('constant')!;
-  const outputDefinition = getNodeDefinition('output')!;
+  const inputDefinition = getStoryNodeDefinition('input');
+  const addDefinition = getStoryNodeDefinition('add');
+  const multiplyDefinition = getStoryNodeDefinition('multiply');
+  const constantDefinition = getStoryNodeDefinition('constant');
+  const outputDefinition = getStoryNodeDefinition('output');
 
   const inA = createNodeFromDefinition(inputDefinition, 'in_a', { x: 80, y: 120 }, { name: 'a' });
   const inB = createNodeFromDefinition(inputDefinition, 'in_b', { x: 80, y: 260 }, { name: 'b' });
@@ -108,13 +119,16 @@ function createMathPipelineStore(): FlintEditorStore {
   return new FlintEditorStore(graph);
 }
 
+/**
+ * Creates an editor store initialized with vector and option collection nodes.
+ */
 function createStdlibCollectionsStore(): FlintEditorStore {
-  const vecNewDefinition = getNodeDefinition('vector_new')!;
-  const vecPushDefinition = getNodeDefinition('vector_push')!;
-  const vecGetDefinition = getNodeDefinition('vector_get')!;
-  const optUnwrapDefinition = getNodeDefinition('option_unwrap_or')!;
-  const constantDefinition = getNodeDefinition('constant')!;
-  const outputDefinition = getNodeDefinition('output')!;
+  const vecNewDefinition = getStoryNodeDefinition('vector_new');
+  const vecPushDefinition = getStoryNodeDefinition('vector_push');
+  const vecGetDefinition = getStoryNodeDefinition('vector_get');
+  const optUnwrapDefinition = getStoryNodeDefinition('option_unwrap_or');
+  const constantDefinition = getStoryNodeDefinition('constant');
+  const outputDefinition = getStoryNodeDefinition('output');
 
   const vecNew = createNodeFromDefinition(vecNewDefinition, 'vec_init', {
     x: 60,
@@ -199,11 +213,14 @@ function createStdlibCollectionsStore(): FlintEditorStore {
   return new FlintEditorStore(graph);
 }
 
+/**
+ * Creates an editor store initialized with grouped arithmetic stages and color themes.
+ */
 function createGroupingPipelineStore(): FlintEditorStore {
-  const inputDefinition = getNodeDefinition('input')!;
-  const addDefinition = getNodeDefinition('add')!;
-  const multiplyDefinition = getNodeDefinition('multiply')!;
-  const outputDefinition = getNodeDefinition('output')!;
+  const inputDefinition = getStoryNodeDefinition('input');
+  const addDefinition = getStoryNodeDefinition('add');
+  const multiplyDefinition = getStoryNodeDefinition('multiply');
+  const outputDefinition = getStoryNodeDefinition('output');
 
   const inA = createNodeFromDefinition(inputDefinition, 'in_a', { x: -350, y: -100 }, { name: 'a' });
   const inB = createNodeFromDefinition(inputDefinition, 'in_b', { x: -350, y: 100 }, { name: 'b' });
@@ -286,11 +303,14 @@ function createGroupingPipelineStore(): FlintEditorStore {
   return new FlintEditorStore(graph);
 }
 
+/**
+ * Creates an editor store initialized with reusable composite meta-node subgraphs.
+ */
 function createMetaNodesStore(): FlintEditorStore {
-  const inputDefinition = getNodeDefinition('input')!;
-  const outputDefinition = getNodeDefinition('output')!;
-  const addDefinition = getNodeDefinition('add')!;
-  const multiplyDefinition = getNodeDefinition('multiply')!;
+  const inputDefinition = getStoryNodeDefinition('input');
+  const outputDefinition = getStoryNodeDefinition('output');
+  const addDefinition = getStoryNodeDefinition('add');
+  const multiplyDefinition = getStoryNodeDefinition('multiply');
 
   // Internal subgraph nodes for a "LinearTransform" meta node: (x + offset) * scale
   const subInX = createNodeFromDefinition(inputDefinition, 'sub_x', { x: -200, y: -50 }, { name: 'x' });
@@ -442,8 +462,11 @@ function createMetaNodesStore(): FlintEditorStore {
   return new FlintEditorStore(graph);
 }
 
+/**
+ * Creates an editor store initialized with a 10,000 node stress test benchmark graph.
+ */
 function create10kStressTestStore(): FlintEditorStore {
-  const addDefinition = getNodeDefinition('add')!;
+  const addDefinition = getStoryNodeDefinition('add');
   const nodeCount = 10_000;
   const nodes = [];
   const edges: FlintGraphEdge[] = [];
@@ -479,12 +502,15 @@ function create10kStressTestStore(): FlintEditorStore {
   return new FlintEditorStore(graph);
 }
 
+/**
+ * Creates an editor store initialized with Unicode math symbols and Greek characters.
+ */
 function createUtf8TypographyStore(): FlintEditorStore {
-  const inputDefinition = getNodeDefinition('input')!;
-  const addDefinition = getNodeDefinition('add')!;
-  const multiplyDefinition = getNodeDefinition('multiply')!;
-  const constantDefinition = getNodeDefinition('constant')!;
-  const outputDefinition = getNodeDefinition('output')!;
+  const inputDefinition = getStoryNodeDefinition('input');
+  const addDefinition = getStoryNodeDefinition('add');
+  const multiplyDefinition = getStoryNodeDefinition('multiply');
+  const constantDefinition = getStoryNodeDefinition('constant');
+  const outputDefinition = getStoryNodeDefinition('output');
 
   const inAlpha = createNodeFromDefinition(inputDefinition, 'in_alpha', { x: 80, y: 120 }, { name: 'α_input' });
   inAlpha.title = 'Param α (Alpha)';

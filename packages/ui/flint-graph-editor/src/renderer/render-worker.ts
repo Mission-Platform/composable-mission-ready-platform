@@ -195,18 +195,34 @@ export interface GPUBuffer {
   destroy(): void;
 }
 
-export interface GPUSampler {}
-export interface GPUShaderModule {}
-export interface GPUBindGroupLayout {}
-export interface GPUPipelineLayout {}
-export interface GPURenderPipeline {}
-export interface GPUBindGroup {}
-export interface GPUCommandBuffer {}
+export interface GPUSampler {
+  readonly label?: string;
+}
+export interface GPUShaderModule {
+  readonly label?: string;
+}
+export interface GPUBindGroupLayout {
+  readonly label?: string;
+}
+export interface GPUPipelineLayout {
+  readonly label?: string;
+}
+export interface GPURenderPipeline {
+  readonly label?: string;
+}
+export interface GPUBindGroup {
+  readonly label?: string;
+}
+export interface GPUCommandBuffer {
+  readonly label?: string;
+}
 export interface GPUTexture {
   createView(): GPUTextureView;
   destroy?(): void;
 }
-export interface GPUTextureView {}
+export interface GPUTextureView {
+  readonly label?: string;
+}
 
 export interface GPUCommandEncoder {
   beginRenderPass(descriptor: Record<string, unknown>): GPURenderPassEncoder;
@@ -233,6 +249,9 @@ interface WebGpuNavigator {
   };
 }
 
+/**
+ * Creates a camera viewport configuration with given dimensions, pan offsets, and zoom.
+ */
 export function createCamera(viewportWidth: number, viewportHeight: number, x = 0, y = 0, zoom = 1): FlintCamera {
   return {
     viewportWidth,
@@ -243,6 +262,9 @@ export function createCamera(viewportWidth: number, viewportHeight: number, x = 
   };
 }
 
+/**
+ * Computes a 4x4 orthographic view-projection matrix for the given camera.
+ */
 export function createViewProjectionMatrix(camera: FlintCamera): Float32Array {
   const matrix = new Float32Array(16);
   const sx = (2 * camera.zoom) / camera.viewportWidth;
@@ -260,6 +282,9 @@ export function createViewProjectionMatrix(camera: FlintCamera): Float32Array {
   return matrix;
 }
 
+/**
+ * Computes the axis-aligned bounding box for a graph node in world coordinates.
+ */
 export function getNodeBounds(node: FlintGraphNode, wasmOverride?: FlintRenderWorkerWasmExports): ViewBounds {
   const maxPorts = Math.max(node.inputs?.length ?? 0, node.outputs?.length ?? 0);
   const instance = wasmOverride ?? getFlintRenderWorkerWasm();
@@ -272,6 +297,9 @@ export function getNodeBounds(node: FlintGraphNode, wasmOverride?: FlintRenderWo
   };
 }
 
+/**
+ * Computes the visible world-coordinate bounds for the camera viewport with padding.
+ */
 export function getViewportBounds(camera: FlintCamera, padding = 100): ViewBounds {
   const wasm = getFlintRenderWorkerWasm();
   wasm.createCamera(camera.viewportWidth, camera.viewportHeight, camera.x, camera.y, camera.zoom);
@@ -289,35 +317,45 @@ export const getFlintCameraWasm: (imports?: WebAssembly.Imports) => FlintRenderW
 
 let cachedFlintWasm: FlintRenderWorkerWasmExports | undefined;
 
+/**
+ * Default fallback callback for unconfigured host capability imports.
+ */
+const noopHostCapability = (): void => {
+  /* no-op fallback capability import */
+};
+
+/**
+ * Instantiates or retrieves the cached native Flint WebAssembly render worker module.
+ */
 export function getFlintRenderWorkerWasm(imports?: WebAssembly.Imports): FlintRenderWorkerWasmExports {
   const defaultCapabilities: WebAssembly.Imports = {
-    'webgpu.upload_camera_buffer': { gpu_upload_camera_buffer: () => {} },
-    'webgpu.upload_node_buffer': { gpu_upload_node_buffer: () => {} },
-    'webgpu.upload_edge_buffer': { gpu_upload_edge_buffer: () => {} },
-    'webgpu.upload_pin_buffer': { gpu_upload_pin_buffer: () => {} },
-    'webgpu.render_begin': { gpu_render_begin: () => {} },
-    'webgpu.render_grid': { gpu_render_grid: () => {} },
-    'webgpu.render_edges': { gpu_render_edges: () => {} },
-    'webgpu.render_nodes': { gpu_render_nodes: () => {} },
-    'webgpu.render_pins': { gpu_render_pins: () => {} },
-    'webgpu.render_end': { gpu_render_end: () => {} },
-    'webgpu.write_node_instance': { gpu_write_node_instance: () => {} },
-    'webgpu.write_edge_instance': { gpu_write_edge_instance: () => {} },
-    'webgpu.write_pin_instance': { gpu_write_pin_instance: () => {} },
-    'webgl.render_begin': { gl_render_begin: () => {} },
-    'webgl.render_grid': { gl_render_grid: () => {} },
-    'webgl.draw_edge': { gl_draw_edge: () => {} },
-    'webgl.draw_node': { gl_draw_node: () => {} },
-    'webgl.draw_pin': { gl_draw_pin: () => {} },
-    'webgl.render_end': { gl_render_end: () => {} },
-    'webgl.render_frame': { webgl_render_frame: () => {} },
-    'canvas2d.render_begin': { c2d_render_begin: () => {} },
-    'canvas2d.render_grid': { c2d_render_grid: () => {} },
-    'canvas2d.draw_edge': { c2d_draw_edge: () => {} },
-    'canvas2d.draw_node': { c2d_draw_node: () => {} },
-    'canvas2d.draw_pin': { c2d_draw_pin: () => {} },
-    'canvas2d.render_end': { c2d_render_end: () => {} },
-    'canvas2d.render_frame': { canvas2d_render_frame: () => {} },
+    'webgpu.upload_camera_buffer': { gpu_upload_camera_buffer: noopHostCapability },
+    'webgpu.upload_node_buffer': { gpu_upload_node_buffer: noopHostCapability },
+    'webgpu.upload_edge_buffer': { gpu_upload_edge_buffer: noopHostCapability },
+    'webgpu.upload_pin_buffer': { gpu_upload_pin_buffer: noopHostCapability },
+    'webgpu.render_begin': { gpu_render_begin: noopHostCapability },
+    'webgpu.render_grid': { gpu_render_grid: noopHostCapability },
+    'webgpu.render_edges': { gpu_render_edges: noopHostCapability },
+    'webgpu.render_nodes': { gpu_render_nodes: noopHostCapability },
+    'webgpu.render_pins': { gpu_render_pins: noopHostCapability },
+    'webgpu.render_end': { gpu_render_end: noopHostCapability },
+    'webgpu.write_node_instance': { gpu_write_node_instance: noopHostCapability },
+    'webgpu.write_edge_instance': { gpu_write_edge_instance: noopHostCapability },
+    'webgpu.write_pin_instance': { gpu_write_pin_instance: noopHostCapability },
+    'webgl.render_begin': { gl_render_begin: noopHostCapability },
+    'webgl.render_grid': { gl_render_grid: noopHostCapability },
+    'webgl.draw_edge': { gl_draw_edge: noopHostCapability },
+    'webgl.draw_node': { gl_draw_node: noopHostCapability },
+    'webgl.draw_pin': { gl_draw_pin: noopHostCapability },
+    'webgl.render_end': { gl_render_end: noopHostCapability },
+    'webgl.render_frame': { webgl_render_frame: noopHostCapability },
+    'canvas2d.render_begin': { c2d_render_begin: noopHostCapability },
+    'canvas2d.render_grid': { c2d_render_grid: noopHostCapability },
+    'canvas2d.draw_edge': { c2d_draw_edge: noopHostCapability },
+    'canvas2d.draw_node': { c2d_draw_node: noopHostCapability },
+    'canvas2d.draw_pin': { c2d_draw_pin: noopHostCapability },
+    'canvas2d.render_end': { c2d_render_end: noopHostCapability },
+    'canvas2d.render_frame': { canvas2d_render_frame: noopHostCapability },
   };
 
   if (imports !== undefined) {
@@ -443,6 +481,9 @@ if (
     memory: [0.812, 0.133, 0.18, 1],
   };
 
+  /**
+   * Maps a graph node category to an RGBA color tuple adapted to light or dark themes.
+   */
   function getCategoryRgba(
     category?: string,
     isMeta?: boolean,
@@ -467,6 +508,9 @@ if (
     boolean: [0.051, 0.518, 0.549, 1],
   };
 
+  /**
+   * Maps a port data type to an RGBA color tuple adapted to light or dark themes.
+   */
   function getPortTypeRgba(
     type?: string | unknown,
     isDark = currentTheme !== 'light',
@@ -476,11 +520,14 @@ if (
     return (key ? table[key] : undefined) ?? (isDark ? [0.788, 0.82, 0.851, 1] : [0.141, 0.161, 0.184, 1]);
   }
 
+  /**
+   * Enqueues an instanced WebGPU node rectangle with position, size, borders, and glow.
+   */
   const pushGpuNodeInstance = (
     posX: number,
     posY: number,
-    w: number,
-    h: number,
+    width: number,
+    height: number,
     radius: number,
     fillRgba: readonly [number, number, number, number],
     borderRgba: readonly [number, number, number, number] = [0, 0, 0, 0],
@@ -490,8 +537,8 @@ if (
     nodeInstanceFloats.push(
       posX,
       posY,
-      w,
-      h,
+      width,
+      height,
       radius,
       fillRgba[0],
       fillRgba[1],
@@ -509,6 +556,9 @@ if (
     );
   };
 
+  /**
+   * Enqueues an instanced WebGPU port pin circle with fill and optional selection border.
+   */
   const pushGpuPinInstance = (
     posX: number,
     posY: number,
@@ -539,84 +589,105 @@ if (
     );
   };
 
+  /**
+   * Appends line vertex coordinates and colors to the batch line buffer.
+   */
   const pushLine = (
     x1: number,
     y1: number,
     x2: number,
     y2: number,
-    r: number,
-    g: number,
-    b: number,
-    a: number,
+    red: number,
+    green: number,
+    blue: number,
+    alpha: number,
   ): void => {
-    lineVertices.push(x1, y1, r, g, b, a, x2, y2, r, g, b, a);
+    lineVertices.push(x1, y1, red, green, blue, alpha, x2, y2, red, green, blue, alpha);
   };
 
-  const pushRect = (x: number, y: number, w: number, h: number, r: number, g: number, b: number, a: number): void => {
+  /**
+   * Appends solid triangle quad vertices and colors to the batch triangle buffer.
+   */
+  const pushRect = (
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    red: number,
+    green: number,
+    blue: number,
+    alpha: number,
+  ): void => {
     triVertices.push(
       x,
       y,
-      r,
-      g,
-      b,
-      a,
-      x + w,
+      red,
+      green,
+      blue,
+      alpha,
+      x + width,
       y,
-      r,
-      g,
-      b,
-      a,
+      red,
+      green,
+      blue,
+      alpha,
       x,
-      y + h,
-      r,
-      g,
-      b,
-      a,
+      y + height,
+      red,
+      green,
+      blue,
+      alpha,
       x,
-      y + h,
-      r,
-      g,
-      b,
-      a,
-      x + w,
+      y + height,
+      red,
+      green,
+      blue,
+      alpha,
+      x + width,
       y,
-      r,
-      g,
-      b,
-      a,
-      x + w,
-      y + h,
-      r,
-      g,
-      b,
-      a,
+      red,
+      green,
+      blue,
+      alpha,
+      x + width,
+      y + height,
+      red,
+      green,
+      blue,
+      alpha,
     );
   };
 
+  /**
+   * Appends outline line segments for a rectangle to the batch line buffer.
+   */
   const pushRectBorder = (
     x: number,
     y: number,
-    w: number,
-    h: number,
-    r: number,
-    g: number,
-    b: number,
-    a: number,
+    width: number,
+    height: number,
+    red: number,
+    green: number,
+    blue: number,
+    alpha: number,
   ): void => {
-    pushLine(x, y, x + w, y, r, g, b, a);
-    pushLine(x + w, y, x + w, y + h, r, g, b, a);
-    pushLine(x + w, y + h, x, y + h, r, g, b, a);
-    pushLine(x, y + h, x, y, r, g, b, a);
+    pushLine(x, y, x + width, y, red, green, blue, alpha);
+    pushLine(x + width, y, x + width, y + height, red, green, blue, alpha);
+    pushLine(x + width, y + height, x, y + height, red, green, blue, alpha);
+    pushLine(x, y + height, x, y, red, green, blue, alpha);
   };
 
+  /**
+   * Appends triangle fan vertices for a solid circle to the batch triangle buffer.
+   */
   const pushCircle = (
     cx: number,
     cy: number,
     radius: number,
-    r: number,
-    g: number,
-    b: number,
-    a: number,
+    red: number,
+    green: number,
+    blue: number,
+    alpha: number,
     segments = 12,
   ): void => {
     for (let i = 0; i < segments; i++) {
@@ -625,22 +696,22 @@ if (
       triVertices.push(
         cx,
         cy,
-        r,
-        g,
-        b,
-        a,
+        red,
+        green,
+        blue,
+        alpha,
         cx + Math.cos(a1) * radius,
         cy + Math.sin(a1) * radius,
-        r,
-        g,
-        b,
-        a,
+        red,
+        green,
+        blue,
+        alpha,
         cx + Math.cos(a2) * radius,
         cy + Math.sin(a2) * radius,
-        r,
-        g,
-        b,
-        a,
+        red,
+        green,
+        blue,
+        alpha,
       );
     }
   };
@@ -662,6 +733,9 @@ if (
     isFallback: false,
   };
 
+  /**
+   * Prepares instanced WebGPU vertex buffers and text quads for active nodes, groups, edges, and pins.
+   */
   function prepareWebGpuInstances(): void {
     if (!gpuContext || !cameraBuffer || !wasm) return;
 
@@ -720,8 +794,8 @@ if (
     const isDark = currentTheme !== 'light';
     for (const node of nodes) {
       const bounds = getNodeBounds(node);
-      const w = bounds.maxX - bounds.minX;
-      const h = bounds.maxY - bounds.minY;
+      const nodeWidth = bounds.maxX - bounds.minX;
+      const nodeHeight = bounds.maxY - bounds.minY;
       const x = bounds.minX;
       const y = bounds.minY;
 
@@ -776,7 +850,17 @@ if (
               : [0, 0, 0, 0];
 
       // Node body
-      pushGpuNodeInstance(x + w / 2, y + h / 2, w, h, 8, fillRgba, borderRgba, borderWidth, glowRgba);
+      pushGpuNodeInstance(
+        x + nodeWidth / 2,
+        y + nodeHeight / 2,
+        nodeWidth,
+        nodeHeight,
+        8,
+        fillRgba,
+        borderRgba,
+        borderWidth,
+        glowRgba,
+      );
 
       // Node header background
       const headerRgba: [number, number, number, number] = isDark
@@ -794,17 +878,17 @@ if (
             : isMeta
               ? [0.882, 0.925, 0.969, 1]
               : [0.941, 0.949, 0.961, 1];
-      pushGpuNodeInstance(x + w / 2, y + 16, w - 2, 30, 4, headerRgba);
+      pushGpuNodeInstance(x + nodeWidth / 2, y + 16, nodeWidth - 2, 30, 4, headerRgba);
 
       // Category accent bar (4px)
       const catColor = getCategoryRgba(node.category, isMeta, isDark);
-      pushGpuNodeInstance(x + w / 2, y + 3, w - 4, 4, 2, catColor);
+      pushGpuNodeInstance(x + nodeWidth / 2, y + 3, nodeWidth - 4, 4, 2, catColor);
 
       // Header separator
       const sepColor: [number, number, number, number] = isDark
         ? [0.188, 0.212, 0.239, 0.8]
         : [0.816, 0.843, 0.871, 0.8];
-      pushGpuNodeInstance(x + w / 2, y + NODE_HEADER_HEIGHT, w - 2, 1, 0, sepColor);
+      pushGpuNodeInstance(x + nodeWidth / 2, y + NODE_HEADER_HEIGHT, nodeWidth - 2, 1, 0, sepColor);
 
       // Node Text
       // Title
@@ -824,7 +908,7 @@ if (
           : [0.341, 0.376, 0.416, 1];
       wasm.font_append_text_quads_mono(
         catText,
-        x + w - 10,
+        x + nodeWidth - 10,
         y + 17,
         10,
         catTextColor[0],
@@ -908,7 +992,7 @@ if (
         wasm.font_append_text_quads_mono(
           `= ${firstVal}`,
           x + 10,
-          y + h - 8,
+          y + nodeHeight - 8,
           10,
           propColor[0],
           propColor[1],
@@ -967,6 +1051,9 @@ if (
     }
   }
 
+  /**
+   * Initializes the WebGPU device, swapchain context, pipelines, and uniform bind groups.
+   */
   async function initWebGpuBackend(targetCanvas: OffscreenCanvas | HTMLCanvasElement): Promise<boolean> {
     try {
       const nav = typeof navigator === 'undefined' ? undefined : (navigator as unknown as WebGpuNavigator);
@@ -1193,6 +1280,9 @@ if (
     }
   }
 
+  /**
+   * Initializes WebGL 1.0 or 2.0 context, compiles vertex and fragment shaders, and configures vertex attributes.
+   */
   function initWebGLBackend(targetCanvas: OffscreenCanvas | HTMLCanvasElement): boolean {
     try {
       const gl = (targetCanvas.getContext('webgl2', { preserveDrawingBuffer: true, alpha: true }) ||
@@ -1348,6 +1438,9 @@ if (
     }
   }
 
+  /**
+   * Initializes standard 2D canvas context as a fallback rendering pipeline.
+   */
   function init2dBackend(targetCanvas: OffscreenCanvas | HTMLCanvasElement): boolean {
     try {
       const ctx = targetCanvas.getContext('2d') as CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null;
@@ -1361,6 +1454,9 @@ if (
     }
   }
 
+  /**
+   * Renders the complete node graph using the 2D canvas context and native Flint geometry projections.
+   */
   function render2dFrame(): void {
     if (!canvas2dCtx || !wasm) return;
     const ctx = canvas2dCtx;
@@ -1540,8 +1636,8 @@ if (
       ctx.stroke();
 
       if (isPulseActive && pulseOffset !== undefined) {
-        const t = Math.max(0, Math.min(1, pulseOffset));
-        const tPermille = Math.round(t * 1000);
+        const pulseProgress = Math.max(0, Math.min(1, pulseOffset));
+        const tPermille = Math.round(pulseProgress * 1000);
         const pulseX = wasm.bezier_point_1d(
           Math.round(p0x),
           Math.round(p1x),
@@ -1609,13 +1705,13 @@ if (
     // 5. Nodes
     for (const node of nodes) {
       const bounds = getNodeBounds(node);
-      const w = bounds.maxX - bounds.minX;
-      const h = bounds.maxY - bounds.minY;
+      const nodeWidth = bounds.maxX - bounds.minX;
+      const nodeHeight = bounds.maxY - bounds.minY;
       const x = bounds.minX;
       const y = bounds.minY;
 
       // Cull nodes completely outside viewport
-      if (x + w < minX || x > maxX || y + h < minY || y > maxY) continue;
+      if (x + nodeWidth < minX || x > maxX || y + nodeHeight < minY || y > maxY) continue;
 
       const isSelected = selectedNodeIds.has(node.id);
       const isActive = activeNodeIds.has(node.id);
@@ -1658,9 +1754,9 @@ if (
 
       ctx.beginPath();
       if (typeof ctx.roundRect === 'function') {
-        ctx.roundRect(x, y, w, h, 8);
+        ctx.roundRect(x, y, nodeWidth, nodeHeight, 8);
       } else {
-        ctx.rect(x, y, w, h);
+        ctx.rect(x, y, nodeWidth, nodeHeight);
       }
       ctx.fill();
       ctx.stroke();
@@ -1670,9 +1766,9 @@ if (
       ctx.save();
       ctx.beginPath();
       if (typeof ctx.roundRect === 'function') {
-        ctx.roundRect(x, y, w, NODE_HEADER_HEIGHT, [8, 8, 0, 0]);
+        ctx.roundRect(x, y, nodeWidth, NODE_HEADER_HEIGHT, [8, 8, 0, 0]);
       } else {
-        ctx.rect(x, y, w, NODE_HEADER_HEIGHT);
+        ctx.rect(x, y, nodeWidth, NODE_HEADER_HEIGHT);
       }
       ctx.fillStyle = isTrapped
         ? isDark
@@ -1694,14 +1790,14 @@ if (
       // Category accent bar (4px)
       const catColor = getCategoryRgba(node.category, isMeta, isDark);
       ctx.fillStyle = `rgba(${Math.round(catColor[0] * 255)},${Math.round(catColor[1] * 255)},${Math.round(catColor[2] * 255)},${catColor[3]})`;
-      ctx.fillRect(x + 1, y + 1, w - 2, 4);
+      ctx.fillRect(x + 1, y + 1, nodeWidth - 2, 4);
 
       // Header separator
       ctx.strokeStyle = isDark ? 'rgba(48, 54, 61, 0.8)' : 'rgba(208, 215, 222, 0.8)';
       ctx.lineWidth = 1 / zoom;
       ctx.beginPath();
       ctx.moveTo(x + 1, y + NODE_HEADER_HEIGHT);
-      ctx.lineTo(x + w - 1, y + NODE_HEADER_HEIGHT);
+      ctx.lineTo(x + nodeWidth - 1, y + NODE_HEADER_HEIGHT);
       ctx.stroke();
 
       // Title
@@ -1714,7 +1810,7 @@ if (
       ctx.font = '10px "Datatype", monospace';
       const catText = isMeta ? `META (${node.metaSubgraph?.nodes.length ?? 0})` : node.category.toUpperCase();
       const catWidth = ctx.measureText(catText).width;
-      ctx.fillText(catText, x + w - catWidth - 10, y + 17);
+      ctx.fillText(catText, x + nodeWidth - catWidth - 10, y + 17);
 
       // Subtitle operation identifier
       ctx.fillStyle = isDark ? '#8b949e' : '#57606a';
@@ -1760,20 +1856,20 @@ if (
         ctx.strokeStyle = portColor;
         ctx.lineWidth = (isHovered ? 2.5 : 1.5) / zoom;
         ctx.beginPath();
-        ctx.arc(x + w, portY, 5 / zoom, 0, Math.PI * 2);
+        ctx.arc(x + nodeWidth, portY, 5 / zoom, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
 
         ctx.fillStyle = isHovered ? '#ffffff' : portColor;
         ctx.beginPath();
-        ctx.arc(x + w, portY, 2.5 / zoom, 0, Math.PI * 2);
+        ctx.arc(x + nodeWidth, portY, 2.5 / zoom, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
 
         // Label
         ctx.fillStyle = isDark ? '#c9d1d9' : '#24292f';
         const labelWidth = ctx.measureText(port.name).width;
-        ctx.fillText(port.name, x + w - labelWidth - 12, portY + 4);
+        ctx.fillText(port.name, x + nodeWidth - labelWidth - 12, portY + 4);
       }
 
       // Literal properties preview
@@ -1782,7 +1878,7 @@ if (
         const firstVal = String(node.properties[propKeys[0]]);
         ctx.fillStyle = isDark ? '#58a6ff' : '#0969da';
         ctx.font = '10px "Datatype", monospace';
-        ctx.fillText(`= ${firstVal}`, x + 10, y + h - 8);
+        ctx.fillText(`= ${firstVal}`, x + 10, y + nodeHeight - 8);
       }
 
       ctx.restore();
@@ -1803,6 +1899,9 @@ if (
     };
   }
 
+  /**
+   * Renders the complete node graph using WebGL draw arrays and native Flint vertex batching.
+   */
   function renderWebGLFrame(): void {
     const gl = glCtx;
     if (!gl || !glProgram || !glVertexBuffer || !glUniformLocations || !glAttribLocations || !wasm) return;
@@ -2007,12 +2106,12 @@ if (
     // 5. Nodes
     for (const node of nodes) {
       const bounds = getNodeBounds(node);
-      const w = bounds.maxX - bounds.minX;
-      const h = bounds.maxY - bounds.minY;
+      const nodeWidth = bounds.maxX - bounds.minX;
+      const nodeHeight = bounds.maxY - bounds.minY;
       const x = bounds.minX;
       const y = bounds.minY;
 
-      if (x + w < minX || x > maxX || y + h < minY || y > maxY) continue;
+      if (x + nodeWidth < minX || x > maxX || y + nodeHeight < minY || y > maxY) continue;
 
       const isSelected = selectedNodeIds.has(node.id);
       const isActive = activeNodeIds.has(node.id);
@@ -2022,7 +2121,7 @@ if (
       const fillR = isDark ? (isMeta ? 0.086 : 0.129) : isMeta ? 0.941 : 1;
       const fillG = isDark ? (isMeta ? 0.118 : 0.149) : isMeta ? 0.957 : 1;
       const fillB = isDark ? (isMeta ? 0.18 : 0.176) : isMeta ? 0.973 : 1;
-      pushRect(x, y, w, h, fillR, fillG, fillB, isDark ? 0.95 : 0.98);
+      pushRect(x, y, nodeWidth, nodeHeight, fillR, fillG, fillB, isDark ? 0.95 : 0.98);
 
       const borderR = isDark
         ? isTrapped
@@ -2082,7 +2181,7 @@ if (
                 ? 0.855
                 : 0.871;
       const borderA = isSelected || isTrapped || isActive ? 1 : isDark ? 0.8 : 0.9;
-      pushRectBorder(x, y, w, h, borderR, borderG, borderB, borderA);
+      pushRectBorder(x, y, nodeWidth, nodeHeight, borderR, borderG, borderB, borderA);
 
       // Node Header fill
       const headerR = isDark
@@ -2130,18 +2229,18 @@ if (
             : isMeta
               ? 0.969
               : 0.961;
-      pushRect(x + 1, y + 1, w - 2, NODE_HEADER_HEIGHT - 1, headerR, headerG, headerB, 1);
+      pushRect(x + 1, y + 1, nodeWidth - 2, NODE_HEADER_HEIGHT - 1, headerR, headerG, headerB, 1);
 
       // Category accent bar (4px)
       const catColor = getCategoryRgba(node.category, isMeta, isDark);
-      pushRect(x + 1, y + 1, w - 2, 4, catColor[0], catColor[1], catColor[2], 1);
+      pushRect(x + 1, y + 1, nodeWidth - 2, 4, catColor[0], catColor[1], catColor[2], 1);
 
       // Header separator
       const sepColor = isDark ? [0.188, 0.212, 0.239, 0.8] : [0.816, 0.843, 0.871, 0.8];
       pushLine(
         x + 1,
         y + NODE_HEADER_HEIGHT,
-        x + w - 1,
+        x + nodeWidth - 1,
         y + NODE_HEADER_HEIGHT,
         sepColor[0],
         sepColor[1],
@@ -2167,7 +2266,7 @@ if (
           : [0.341, 0.376, 0.416, 1];
       wasm.font_append_text_quads_mono(
         catText,
-        x + w - 10,
+        x + nodeWidth - 10,
         y + 17,
         10,
         catTextColor[0],
@@ -2220,17 +2319,17 @@ if (
         const pinInner = isDark ? [0.086, 0.106, 0.133] : [0.941, 0.949, 0.961];
 
         // Outer ring + inner dot
-        pushCircle(x + w, portY, pinRadius, portColor[0], portColor[1], portColor[2], 1);
-        pushCircle(x + w, portY, Math.max(1, pinRadius - 2), pinInner[0], pinInner[1], pinInner[2], 1);
+        pushCircle(x + nodeWidth, portY, pinRadius, portColor[0], portColor[1], portColor[2], 1);
+        pushCircle(x + nodeWidth, portY, Math.max(1, pinRadius - 2), pinInner[0], pinInner[1], pinInner[2], 1);
         if (isHovered) {
-          pushCircle(x + w, portY, Math.max(1, pinRadius - 2), 1, 1, 1, 1);
+          pushCircle(x + nodeWidth, portY, Math.max(1, pinRadius - 2), 1, 1, 1, 1);
         }
 
         // Port label text
         const portTextColor = isDark ? [0.788, 0.82, 0.851] : [0.141, 0.161, 0.184];
         wasm.font_append_text_quads(
           port.name,
-          x + w - 12,
+          x + nodeWidth - 12,
           portY + 4,
           11,
           portTextColor[0],
@@ -2248,7 +2347,7 @@ if (
         wasm.font_append_text_quads_mono(
           `= ${firstVal}`,
           x + 10,
-          y + h - 8,
+          y + nodeHeight - 8,
           10,
           propColor[0],
           propColor[1],
@@ -2781,19 +2880,40 @@ if (
         _isActive: number,
       ) => {
         const isDark = currentTheme !== 'light';
-        const r = isSelected ? (isDark ? 0.35 : 0.035) : isDark ? 0.47 : 0.34;
-        const g = isSelected ? (isDark ? 0.65 : 0.412) : isDark ? 0.66 : 0.38;
-        const b = isSelected ? (isDark ? 1 : 0.855) : isDark ? 1 : 0.42;
-        const a = isSelected ? 1 : isDark ? 0.7 : 0.65;
+        const edgeRed = isSelected ? (isDark ? 0.35 : 0.035) : isDark ? 0.47 : 0.34;
+        const edgeGreen = isSelected ? (isDark ? 0.65 : 0.412) : isDark ? 0.66 : 0.38;
+        const edgeBlue = isSelected ? (isDark ? 1 : 0.855) : isDark ? 1 : 0.42;
+        const edgeAlpha = isSelected ? 1 : isDark ? 0.7 : 0.65;
 
         let prevX = p0x;
         let prevY = p0y;
         for (let step = 1; step <= 20; step++) {
-          const t = step / 20;
-          const u = 1 - t;
-          const currX = u * u * u * p0x + 3 * u * u * t * p1x + 3 * u * t * t * p2x + t * t * t * p3x;
-          const currY = u * u * u * p0y + 3 * u * u * t * p1y + 3 * u * t * t * p2y + t * t * t * p3y;
-          lineVertices.push(prevX, prevY, r, g, b, a, currX, currY, r, g, b, a);
+          const stepFactor = step / 20;
+          const invStepFactor = 1 - stepFactor;
+          const currX =
+            invStepFactor * invStepFactor * invStepFactor * p0x +
+            3 * invStepFactor * invStepFactor * stepFactor * p1x +
+            3 * invStepFactor * stepFactor * stepFactor * p2x +
+            stepFactor * stepFactor * stepFactor * p3x;
+          const currY =
+            invStepFactor * invStepFactor * invStepFactor * p0y +
+            3 * invStepFactor * invStepFactor * stepFactor * p1y +
+            3 * invStepFactor * stepFactor * stepFactor * p2y +
+            stepFactor * stepFactor * stepFactor * p3y;
+          lineVertices.push(
+            prevX,
+            prevY,
+            edgeRed,
+            edgeGreen,
+            edgeBlue,
+            edgeAlpha,
+            currX,
+            currY,
+            edgeRed,
+            edgeGreen,
+            edgeBlue,
+            edgeAlpha,
+          );
           prevX = currX;
           prevY = currY;
         }
@@ -3040,10 +3160,18 @@ if (
         ctx.stroke();
 
         if (isActive) {
-          const t = pulseOffsetPermille / 1000;
-          const u = 1 - t;
-          const bx = u * u * u * p0x + 3 * u * u * t * p1x + 3 * u * t * t * p2x + t * t * t * p3x;
-          const by = u * u * u * p0y + 3 * u * u * t * p1y + 3 * u * t * t * p2y + t * t * t * p3y;
+          const pulseRatio = pulseOffsetPermille / 1000;
+          const invPulseRatio = 1 - pulseRatio;
+          const bx =
+            invPulseRatio * invPulseRatio * invPulseRatio * p0x +
+            3 * invPulseRatio * invPulseRatio * pulseRatio * p1x +
+            3 * invPulseRatio * pulseRatio * pulseRatio * p2x +
+            pulseRatio * pulseRatio * pulseRatio * p3x;
+          const by =
+            invPulseRatio * invPulseRatio * invPulseRatio * p0y +
+            3 * invPulseRatio * invPulseRatio * pulseRatio * p1y +
+            3 * invPulseRatio * pulseRatio * pulseRatio * p2y +
+            pulseRatio * pulseRatio * pulseRatio * p3y;
           ctx.fillStyle = isDark ? '#79c0ff' : '#0969da';
           ctx.beginPath();
           ctx.arc(bx, by, 4, 0, Math.PI * 2);
@@ -3090,10 +3218,10 @@ if (
         ctx.fill();
         ctx.stroke();
 
-        const r = (categoryRgb >> 16) & 255;
-        const g = (categoryRgb >> 8) & 255;
-        const b = categoryRgb & 255;
-        ctx.fillStyle = `rgb(${r},${g},${b})`;
+        const catRed = (categoryRgb >> 16) & 255;
+        const catGreen = (categoryRgb >> 8) & 255;
+        const catBlue = categoryRgb & 255;
+        ctx.fillStyle = `rgb(${catRed},${catGreen},${catBlue})`;
         ctx.fillRect(x + 1, y + 1, w - 2, 4);
         ctx.restore();
       },
@@ -3144,6 +3272,9 @@ if (
     },
   };
 
+  /**
+   * Dispatches a response message from the render worker back to the main thread or window.
+   */
   const postReply = (reply: RenderWorkerOutputMessage): void => {
     const messageWithId: RenderWorkerOutputMessage = { id: 'flint_render_worker', ...reply };
     if (globalThis.window !== undefined && globalThis.self === globalThis.window) {
@@ -3556,6 +3687,9 @@ if (
           glCtx = undefined;
           canvas2dCtx = undefined;
           canvas = undefined;
+          break;
+        }
+        default: {
           break;
         }
       }

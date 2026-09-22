@@ -18,6 +18,9 @@ export interface ForgePerformancePieChartProperties {
   readonly height?: number;
 }
 
+/**
+ * D3-powered SVG donut chart visualizing rendering and pipeline execution performance metrics.
+ */
 export function ForgePerformancePieChart(properties: Readonly<ForgePerformancePieChartProperties>): MpElement {
   const { metrics, width = 240, height = 240 } = properties;
   const slices: PerformanceSliceData[] = [
@@ -64,11 +67,12 @@ export function ForgePerformancePieChart(properties: Readonly<ForgePerformancePi
         .outerRadius(radius)
         .cornerRadius(3);
 
-      const g = selection.append('g').attr('transform', `translate(${width / 2}, ${height / 2})`);
+      const group = selection.append('g').attr('transform', `translate(${width / 2}, ${height / 2})`);
 
       const pieData = pieGenerator(slices);
 
-      g.selectAll('path')
+      group
+        .selectAll('path')
         .data(pieData)
         .join('path')
         .attr('d', (d) => arcGenerator(d) ?? '')
@@ -76,7 +80,8 @@ export function ForgePerformancePieChart(properties: Readonly<ForgePerformancePi
         .attr('stroke', '#0d1117')
         .attr('stroke-width', 2);
 
-      g.append('text')
+      group
+        .append('text')
         .attr('text-anchor', 'middle')
         .attr('dy', '-0.1em')
         .attr('fill', '#f0f6fc')
@@ -85,7 +90,8 @@ export function ForgePerformancePieChart(properties: Readonly<ForgePerformancePi
         .attr('font-family', 'var(--mp-font-family-mono, "Datatype", monospace)')
         .text(`${metrics.totalFrameTimeMs.toFixed(1)}ms`);
 
-      g.append('text')
+      group
+        .append('text')
         .attr('text-anchor', 'middle')
         .attr('dy', '1.3em')
         .attr('fill', '#8b949e')
