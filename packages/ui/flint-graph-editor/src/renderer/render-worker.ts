@@ -111,6 +111,7 @@ export interface FlintRenderWorkerWasmExports {
     is_active: number,
     is_output: number,
   ) => void;
+  readonly camera_zoom_f32?: (current_zoom: number, factor: number, min_zoom: number, max_zoom: number) => number;
   readonly renderer_execute_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
   readonly renderer_render_webgpu_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
   readonly memory: WebAssembly.Memory;
@@ -447,10 +448,9 @@ export function zoomCamera(
   factor: number,
 ): FlintCamera {
   const wasm = getFlintRenderWorkerWasm();
-  const currentPercent = Math.max(1, Math.round(camera.zoom * 100));
-  const factorPermille = Math.round(factor * 1000);
-  const nextPercent = wasm.camera_zoom_percent(currentPercent, factorPermille, 10, 500);
-  const newZoom = nextPercent / 100;
+  const newZoom = wasm.camera_zoom_f32
+    ? wasm.camera_zoom_f32(camera.zoom, factor, 0.1, 5)
+    : Math.max(0.1, Math.min(5, camera.zoom * factor));
 
   const cursorWorld = screenToWorld(cursorScreenX, cursorScreenY, camera);
   const centerX = camera.viewportWidth / 2;
@@ -602,6 +602,7 @@ export interface RenderWorkerInputMessage {
   readonly canvas?: OffscreenCanvas;
   readonly width?: number;
   readonly height?: number;
+  readonly dpr?: number;
   readonly nodes?: readonly FlintGraphNode[];
   readonly edges?: readonly FlintGraphEdge[];
   readonly groups?: readonly FlintGraphGroup[];
@@ -629,10 +630,25 @@ export interface RenderWorkerInputMessage {
   readonly requestId?: string;
 }
 
+export interface FlintPerformanceMetrics {
+  readonly updateTimeMs: number;
+  readonly renderTimeMs: number;
+  readonly spatialIndexTimeMs: number;
+  readonly bufferUploadTimeMs: number;
+  readonly drawPassTimeMs: number;
+  readonly totalFrameTimeMs: number;
+  readonly visibleNodesCount: number;
+  readonly visibleEdgesCount: number;
+  readonly visiblePinsCount: number;
+  readonly dpr: number;
+  readonly isFallback: boolean;
+}
+
 export interface RenderWorkerOutputMessage {
   readonly type: 'ready' | 'frame' | 'hit_test_result' | 'hit_result' | 'camera_changed' | 'error';
   readonly supported?: boolean;
   readonly fps?: number;
+  readonly performance?: FlintPerformanceMetrics;
   readonly visibleNodes?: number;
   readonly visibleEdges?: number;
   readonly camera?: FlintCamera;
@@ -667,6 +683,21 @@ export class FlintRenderEngine {
   private flintWasmInstance?: FlintRenderWorkerWasmExports;
   private gpuContext?: FlintWebGpuContext;
   private canvas2dCtx?: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
+  private canvas?: OffscreenCanvas | HTMLCanvasElement;
+  private dpr = 1;
+  private performanceStats: FlintPerformanceMetrics = {
+    updateTimeMs: 0.5,
+    renderTimeMs: 1.2,
+    spatialIndexTimeMs: 0.2,
+    bufferUploadTimeMs: 0.4,
+    drawPassTimeMs: 0.6,
+    totalFrameTimeMs: 1.7,
+    visibleNodesCount: 0,
+    visibleEdgesCount: 0,
+    visiblePinsCount: 0,
+    dpr: 1,
+    isFallback: false,
+  };
 
   private gridPipeline?: GPURenderPipeline;
   private nodesPipeline?: GPURenderPipeline;
@@ -938,7 +969,12 @@ export class FlintRenderEngine {
     }
   }
 
-  async initialize(canvas: OffscreenCanvas | HTMLCanvasElement): Promise<boolean> {
+  async initialize(canvas: OffscreenCanvas | HTMLCanvasElement, dpr?: number): Promise<boolean> {
+    this.canvas = canvas;
+    if (dpr !== undefined && dpr > 0) {
+      this.dpr = dpr;
+    }
+    this.updateCanvasDimensions();
     const supported = await this.initWebGpu(canvas);
     if (!supported) {
       this.init2dFallback(canvas);
@@ -1114,10 +1150,18 @@ export class FlintRenderEngine {
     edges: readonly FlintGraphEdge[],
     groups: readonly FlintGraphGroup[] = [],
   ): void {
+    const startTime = typeof performance === 'undefined' ? 0 : performance.now();
     this.nodes = nodes;
     this.edges = edges;
     this.groups = groups;
     this.rebuildSpatialIndex();
+    if (startTime > 0) {
+      const updateDuration = Math.max(0.05, performance.now() - startTime);
+      this.performanceStats = {
+        ...this.performanceStats,
+        updateTimeMs: Math.round((this.performanceStats.updateTimeMs * 0.7 + updateDuration * 0.3) * 10) / 10,
+      };
+    }
   }
 
   setSelection(selectedNodeIds: readonly string[], selectedEdgeIds: readonly string[] = []): void {
@@ -1180,8 +1224,58 @@ export class FlintRenderEngine {
     this.onMessageCallback?.({ type: 'camera_changed', camera: this.camera });
   }
 
-  resize(width: number, height: number): void {
+  resize(width: number, height: number, dpr?: number): void {
+    if (dpr !== undefined && dpr > 0) {
+      this.dpr = dpr;
+    }
     this.camera = createCamera(width, height, this.camera.x, this.camera.y, this.camera.zoom);
+    this.updateCanvasDimensions();
+    this.renderFrame();
+  }
+
+  setDpr(dpr: number): void {
+    if (dpr > 0 && dpr !== this.dpr) {
+      this.dpr = dpr;
+      this.updateCanvasDimensions();
+      this.renderFrame();
+    }
+  }
+
+  getDpr(): number {
+    return this.dpr;
+  }
+
+  getPerformanceStats(): FlintPerformanceMetrics {
+    return {
+      ...this.performanceStats,
+      dpr: this.dpr,
+      isFallback: !this.gpuContext,
+    };
+  }
+
+  queryNodesInBox(worldBounds: ViewBounds): readonly string[] {
+    return this.spatialIndex.queryBox(worldBounds);
+  }
+
+  private updateCanvasDimensions(): void {
+    if (!this.canvas) return;
+    const targetW = Math.max(1, Math.round(this.camera.viewportWidth * this.dpr));
+    const targetH = Math.max(1, Math.round(this.camera.viewportHeight * this.dpr));
+    if (this.canvas.width !== targetW || this.canvas.height !== targetH) {
+      this.canvas.width = targetW;
+      this.canvas.height = targetH;
+      if (this.gpuContext && this.gpuContext.context) {
+        try {
+          this.gpuContext.context.configure({
+            device: this.gpuContext.device,
+            format: this.gpuContext.format,
+            alphaMode: 'premultiplied',
+          });
+        } catch {
+          // Ignore reconfiguration failure during teardown
+        }
+      }
+    }
   }
 
   screenToWorld(screenX: number, screenY: number): WorldPoint {
@@ -1252,10 +1346,29 @@ export class FlintRenderEngine {
   }
 
   renderFrame(): void {
+    const startTime = typeof performance === 'undefined' ? 0 : performance.now();
     if (this.gpuContext && this.gridPipeline && this.nodesPipeline && this.edgesPipeline) {
       this.renderWebGpuFrame();
     } else if (this.canvas2dCtx) {
       this.render2dFrame();
+    }
+    if (startTime > 0) {
+      const renderDuration = Math.max(0.05, performance.now() - startTime);
+      this.performanceStats = {
+        ...this.performanceStats,
+        renderTimeMs: Math.round((this.performanceStats.renderTimeMs * 0.7 + renderDuration * 0.3) * 10) / 10,
+        totalFrameTimeMs:
+          Math.round(
+            (this.performanceStats.updateTimeMs + (this.performanceStats.renderTimeMs * 0.7 + renderDuration * 0.3)) *
+              10,
+          ) / 10,
+      };
+      this.onMessageCallback?.({
+        type: 'frame',
+        performance: this.getPerformanceStats(),
+        visibleNodes: this.currentVisibleNodesCount,
+        visibleEdges: this.currentVisibleEdgesCount,
+      });
     }
   }
 
@@ -1263,6 +1376,7 @@ export class FlintRenderEngine {
     if (!this.gpuContext || !this.cameraBuffer) return;
     const wasm = this.flintWasmInstance ?? getFlintRenderWorkerWasm();
 
+    const t0 = typeof performance === 'undefined' ? 0 : performance.now();
     this.nodeInstanceFloats = [];
     this.edgeInstanceFloats = [];
     this.pinInstanceFloats = [];
@@ -1270,6 +1384,13 @@ export class FlintRenderEngine {
     const visibleBounds = getViewportBounds(this.camera, 200);
     const visibleNodeIds = new Set(this.spatialIndex.queryBox(visibleBounds));
     const visibleNodes = this.nodes.filter((n) => visibleNodeIds.has(n.id));
+    const t1 = typeof performance === 'undefined' ? 0 : performance.now();
+    if (t0 > 0) {
+      this.performanceStats = {
+        ...this.performanceStats,
+        spatialIndexTimeMs: Math.round((this.performanceStats.spatialIndexTimeMs * 0.7 + (t1 - t0) * 0.3) * 100) / 100,
+      };
+    }
 
     for (const node of visibleNodes) {
       const bounds = getNodeBounds(node);
@@ -1337,7 +1458,25 @@ export class FlintRenderEngine {
     this.currentVisibleEdgesCount = Math.floor(this.edgeInstanceFloats.length / 15);
     const visiblePinsCount = Math.floor(this.pinInstanceFloats.length / 18);
 
+    const t2 = typeof performance === 'undefined' ? 0 : performance.now();
+    if (t1 > 0) {
+      this.performanceStats = {
+        ...this.performanceStats,
+        bufferUploadTimeMs: Math.round((this.performanceStats.bufferUploadTimeMs * 0.7 + (t2 - t1) * 0.3) * 100) / 100,
+      };
+    }
+
     wasm.renderer_render_webgpu_frame(this.currentVisibleNodesCount, this.currentVisibleEdgesCount, visiblePinsCount);
+    const t3 = typeof performance === 'undefined' ? 0 : performance.now();
+    if (t2 > 0) {
+      this.performanceStats = {
+        ...this.performanceStats,
+        drawPassTimeMs: Math.round((this.performanceStats.drawPassTimeMs * 0.7 + (t3 - t2) * 0.3) * 100) / 100,
+        visibleNodesCount: this.currentVisibleNodesCount,
+        visibleEdgesCount: this.currentVisibleEdgesCount,
+        visiblePinsCount,
+      };
+    }
   }
 
   private gpuBeginPass(): void {
@@ -1423,11 +1562,13 @@ export class FlintRenderEngine {
     const ctx = this.canvas2dCtx;
     if (!ctx) return;
 
+    const t0 = typeof performance === 'undefined' ? 0 : performance.now();
     const width = this.camera.viewportWidth;
     const height = this.camera.viewportHeight;
+    const dpr = this.dpr || 1;
 
     ctx.save();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = '#0d1117';
     ctx.fillRect(0, 0, width, height);
 
@@ -1436,6 +1577,14 @@ export class FlintRenderEngine {
     ctx.translate(-this.camera.x, -this.camera.y);
 
     const visibleBounds = getViewportBounds(this.camera, 100);
+    const visibleNodeIds = new Set(this.spatialIndex.queryBox(visibleBounds));
+    const t1 = typeof performance === 'undefined' ? 0 : performance.now();
+    if (t0 > 0) {
+      this.performanceStats = {
+        ...this.performanceStats,
+        spatialIndexTimeMs: Math.round((this.performanceStats.spatialIndexTimeMs * 0.7 + (t1 - t0) * 0.3) * 100) / 100,
+      };
+    }
 
     // 1. Grid
     const minorSpacing = 24;
@@ -1628,7 +1777,6 @@ export class FlintRenderEngine {
     }
 
     // 5. Nodes
-    const visibleNodeIds = new Set(this.spatialIndex.queryBox(visibleBounds));
     const visibleNodes = this.nodes.filter((n) => visibleNodeIds.has(n.id));
 
     for (const node of visibleNodes) {
@@ -1668,7 +1816,11 @@ export class FlintRenderEngine {
       ctx.lineWidth = (isSelected || isTrapped || isActive ? 2.5 : 1.5) / this.camera.zoom;
 
       ctx.beginPath();
-      ctx.roundRect(x, y, w, h, 8);
+      if (typeof ctx.roundRect === 'function') {
+        ctx.roundRect(x, y, w, h, 8);
+      } else {
+        ctx.rect(x, y, w, h);
+      }
       ctx.fill();
       ctx.stroke();
       ctx.restore();
@@ -1763,6 +1915,16 @@ export class FlintRenderEngine {
     }
 
     ctx.restore();
+    const t2 = typeof performance === 'undefined' ? 0 : performance.now();
+    if (t0 > 0) {
+      this.performanceStats = {
+        ...this.performanceStats,
+        drawPassTimeMs: Math.round((this.performanceStats.drawPassTimeMs * 0.7 + (t2 - t1) * 0.3) * 100) / 100,
+        visibleNodesCount: visibleNodeIds.size,
+        visibleEdgesCount: this.edges.length,
+        visiblePinsCount: visibleNodeIds.size * 4,
+      };
+    }
   }
 }
 
@@ -1781,10 +1943,10 @@ if (
         case 'init': {
           if (msg.canvas) {
             engine = new FlintRenderEngine(msg.width ?? 800, msg.height ?? 600);
-            await engine.initWebGpu(msg.canvas);
-            engine.renderFrame();
+            await engine.initialize(msg.canvas, msg.dpr);
             globalThis.self.postMessage({
               type: 'ready',
+              performance: engine.getPerformanceStats(),
             } as RenderWorkerOutputMessage);
           }
           break;
@@ -1812,7 +1974,7 @@ if (
         }
         case 'resize': {
           if (engine && msg.width !== undefined && msg.height !== undefined) {
-            engine.resize(msg.width, msg.height);
+            engine.resize(msg.width, msg.height, msg.dpr);
             engine.renderFrame();
           }
           break;

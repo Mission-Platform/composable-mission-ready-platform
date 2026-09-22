@@ -27,6 +27,11 @@ export fn camera_zoom_percent(current_zoom_percent: i32, factor_permille: i32, m
   return common.clamp_i32(next_zoom, min_percent, max_percent);
 }
 
+export fn camera_zoom_f32(current_zoom: f32, factor: f32, min_zoom: f32, max_zoom: f32) -> f32 {
+  let next_zoom: f32 = current_zoom * factor;
+  return common.clamp_f32(next_zoom, min_zoom, max_zoom);
+}
+
 export fn camera_zoom_anchor_x(cam_x: i32, cursor_x: i32, viewport_w: i32, old_zoom_percent: i32, new_zoom_percent: i32) -> i32 {
   let center_x: i32 = viewport_w / 2;
   let offset: i32 = cursor_x - center_x;

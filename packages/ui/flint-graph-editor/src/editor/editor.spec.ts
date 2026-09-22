@@ -94,6 +94,45 @@ describe('Flint Graph Editor - Reactive Store & History', () => {
     store.commitNodeMove();
     expect(store.getState().canUndo).toBe(true);
   });
+
+  it('supports multi-node selection and multi-node translation', () => {
+    const store = new FlintEditorStore();
+    const nodeA = store.addNode('constant', { x: 10, y: 20 })!;
+    const nodeB = store.addNode('add', { x: 100, y: 150 })!;
+    const nodeC = store.addNode('output', { x: 300, y: 200 })!;
+
+    // Select single node
+    store.selectNode(nodeA.id);
+    expect(store.getState().selectedNodeIds).toEqual([nodeA.id]);
+
+    // Multi-select with shift/flag
+    store.selectNode(nodeB.id, true);
+    expect(store.getState().selectedNodeIds).toContain(nodeA.id);
+    expect(store.getState().selectedNodeIds).toContain(nodeB.id);
+
+    // Toggle selection
+    store.toggleNodeSelection(nodeA.id);
+    expect(store.getState().selectedNodeIds).not.toContain(nodeA.id);
+    expect(store.getState().selectedNodeIds).toContain(nodeB.id);
+
+    // Batch select nodes
+    store.selectNodes([nodeA.id, nodeC.id]);
+    expect(store.getState().selectedNodeIds).toEqual([nodeA.id, nodeC.id]);
+
+    // Move multiple selected nodes by delta
+    const startPositions = new Map<string, { readonly x: number; readonly y: number }>([
+      [nodeA.id, { x: 10, y: 20 }],
+      [nodeC.id, { x: 300, y: 200 }],
+    ]);
+    store.moveSelectedNodes(25, 35, startPositions);
+
+    const movedA = store.getState().graph.nodes.find((n) => n.id === nodeA.id);
+    const movedC = store.getState().graph.nodes.find((n) => n.id === nodeC.id);
+    expect(movedA?.position).toEqual({ x: 35, y: 55 });
+    expect(movedC?.position).toEqual({ x: 325, y: 235 });
+
+    expect(store.getUpdateTimeMs()).toBeGreaterThan(0);
+  });
 });
 
 describe('Flint Graph Editor - Compiler Worker Execution & Export', () => {

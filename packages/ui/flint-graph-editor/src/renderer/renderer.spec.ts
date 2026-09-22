@@ -379,4 +379,86 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     expect(renderedGrid).toBe(true);
     expect(renderedNodesCount).toBe(5);
   });
+
+  it('supports continuous floating-point zoom, DPR scaling, and box queries', () => {
+    const cameraWasm = getFlintCameraWasm();
+    // Test continuous float zoom math
+    const zoomed = cameraWasm.camera_zoom_f32(1, 1.15, 0.1, 5);
+    expect(zoomed).toBeCloseTo(1.15, 2);
+
+    const clampedMax = cameraWasm.camera_zoom_f32(4.5, 2, 0.1, 5);
+    expect(clampedMax).toBeCloseTo(5, 2);
+
+    const clampedMin = cameraWasm.camera_zoom_f32(0.2, 0.1, 0.1, 5);
+    expect(clampedMin).toBeCloseTo(0.1, 2);
+
+    // Test FlintRenderEngine DPR and box query
+    const engine = new FlintRenderEngine(800, 600);
+    engine.setDpr(2);
+    expect(engine.getDpr()).toBe(2);
+
+    const mockCanvas = {
+      width: 0,
+      height: 0,
+      getContext: () => ({
+        save: () => {},
+        restore: () => {},
+        setTransform: () => {},
+        fillRect: () => {},
+        translate: () => {},
+        scale: () => {},
+        beginPath: () => {},
+        moveTo: () => {},
+        lineTo: () => {},
+        stroke: () => {},
+        measureText: () => ({ width: 40 }),
+        fillText: () => {},
+        fill: () => {},
+        arc: () => {},
+        roundRect: () => {},
+      }),
+    } as unknown as HTMLCanvasElement;
+
+    void engine.initialize(mockCanvas, 2);
+    expect(mockCanvas.width).toBe(1600);
+    expect(mockCanvas.height).toBe(1200);
+
+    engine.setGraph(
+      [
+        {
+          id: 'node-box-1',
+          title: 'Add',
+          category: 'math',
+          operation: 'add',
+          inputs: [],
+          outputs: [],
+          position: { x: 100, y: 100 },
+        },
+        {
+          id: 'node-box-2',
+          title: 'Multiply',
+          category: 'math',
+          operation: 'multiply',
+          inputs: [],
+          outputs: [],
+          position: { x: 500, y: 400 },
+        },
+      ],
+      [],
+    );
+
+    const matched = engine.queryNodesInBox({
+      minX: 50,
+      minY: 50,
+      maxX: 350,
+      maxY: 300,
+    });
+    expect(matched).toContain('node-box-1');
+    expect(matched).not.toContain('node-box-2');
+
+    const perf = engine.getPerformanceStats();
+    expect(perf.dpr).toBe(2);
+    expect(perf.updateTimeMs).toBeGreaterThan(0);
+    expect(perf.renderTimeMs).toBeGreaterThan(0);
+  });
 });

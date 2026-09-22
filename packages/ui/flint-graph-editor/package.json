@@ -81,12 +81,14 @@
   },
   "dependencies": {
     "@mission-platform/components": "workspace:*",
+    "@mission-platform/d3": "workspace:*",
     "@mission-platform/flint": "workspace:*",
     "@mission-platform/flint-runtime": "workspace:*",
     "@mission-platform/forge-adapters": "workspace:*",
     "@mission-platform/forge-jsx": "workspace:*",
     "@mission-platform/icons": "workspace:*",
-    "@mission-platform/tokens": "workspace:*"
+    "@mission-platform/tokens": "workspace:*",
+    "d3": "catalog:d3"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
@@ -127,6 +129,7 @@
     "@mission-platform/vite-plugin-flint": "workspace:*",
     "@mission-platform/vite-plugin-forge": "workspace:*",
     "@tsdown/css": "catalog:build",
+    "@types/d3": "catalog:d3",
     "@types/node": "catalog:typescript",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",

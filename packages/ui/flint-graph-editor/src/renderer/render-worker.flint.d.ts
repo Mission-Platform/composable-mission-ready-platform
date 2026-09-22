@@ -106,6 +106,7 @@ export interface FlintRenderWorkerWasmExports {
     is_active: number,
     is_output: number,
   ) => void;
+  readonly camera_zoom_f32: (current_zoom: number, factor: number, min_zoom: number, max_zoom: number) => number;
   readonly renderer_execute_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
   readonly renderer_render_webgpu_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
   readonly memory: WebAssembly.Memory;

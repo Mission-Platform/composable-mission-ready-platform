@@ -1,13 +1,17 @@
-import { getAllNodeDefinitions, getNodeDefinition } from '@mission-platform/flint';
+import {
+  getAllNodeDefinitions,
+  getNodeDefinition,
+  type FlintGraphNode,
+  type FlintNodeCategory,
+} from '@mission-platform/flint';
 import { classNames, useEffect, useRef, useState, type MpElement } from '@mission-platform/forge-jsx';
 
 import { FlintEditorStore, type FlintEditorStoreState } from '../../../editor/editor-store';
-import { FlintRenderEngine } from '../../../renderer/render-worker';
+import { FlintRenderEngine, type FlintPerformanceMetrics } from '../../../renderer/render-worker';
 import { ForgeDebugScrubber } from '../../molecules/forge-debug-scrubber';
+import { ForgePerformancePieChart } from '../../molecules/forge-performance-pie-chart';
 
 import styles from './forge-flint-graph-editor.module.scss';
-
-import type { FlintGraphNode, FlintNodeCategory } from '@mission-platform/flint';
 
 export interface FlintGraphEditorProperties {
   readonly store?: FlintEditorStore;
@@ -40,9 +44,35 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
   const [editorState, setEditorState] = useState<FlintEditorStoreState>(store.getState());
   const [searchQuery, setSearchQuery] = useState('');
   const [showExportModal, setShowExportModal] = useState(false);
+  const [showPerfModal, setShowPerfModal] = useState(false);
   const [exportedSource, setExportedSource] = useState('');
-  const [fps, setFps] = useState(60);
+  const [perfMetrics, setPerfMetrics] = useState<FlintPerformanceMetrics>({
+    updateTimeMs: 0.5,
+    renderTimeMs: 1.2,
+    spatialIndexTimeMs: 0.2,
+    bufferUploadTimeMs: 0.4,
+    drawPassTimeMs: 0.6,
+    totalFrameTimeMs: 1.7,
+    visibleNodesCount: 0,
+    visibleEdgesCount: 0,
+    visiblePinsCount: 0,
+    dpr: 1,
+    isFallback: false,
+  });
   const [isFallback, setIsFallback] = useState(false);
+  const [selectionSquare, setSelectionSquare] = useState<{
+    readonly active: boolean;
+    readonly startX: number;
+    readonly startY: number;
+    readonly currentX: number;
+    readonly currentY: number;
+  }>({
+    active: false,
+    startX: 0,
+    startY: 0,
+    currentX: 0,
+    currentY: 0,
+  });
   const [contextMenu, setContextMenu] = useState<ContextMenuState>({
     open: false,
     x: 0,
@@ -69,18 +99,22 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
       const rect = canvasElement.getBoundingClientRect();
       const width = Math.max(rect.width, 800);
       const height = Math.max(rect.height, 600);
+      const initialDpr = globalThis.window === undefined ? 1 : globalThis.window.devicePixelRatio || 1;
 
       const engine = new FlintRenderEngine(width, height, (message) => {
         switch (message.type) {
           case 'frame': {
-            if (message.fps !== undefined) {
-              setFps(message.fps);
+            if (message.performance) {
+              setPerfMetrics(message.performance);
             }
             break;
           }
           case 'ready': {
             if (message.supported === false) {
               setIsFallback(true);
+            }
+            if (message.performance) {
+              setPerfMetrics(message.performance);
             }
             break;
           }
@@ -96,12 +130,13 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
       });
 
       engineReference.current = engine;
-      void engine.initialize(canvasElement).then(() => {
+      void engine.initialize(canvasElement, initialDpr).then(() => {
         engine.setGraph(
           store.getState().graph.nodes,
           store.getState().graph.edges,
           store.getState().graph.groups ?? [],
         );
+        setPerfMetrics(engine.getPerformanceStats());
       });
 
       if (typeof ResizeObserver !== 'undefined') {
@@ -109,7 +144,9 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           for (const entry of entries) {
             const contentRect = entry.contentRect;
             if (contentRect.width > 0 && contentRect.height > 0) {
-              engine.resize(contentRect.width, contentRect.height);
+              const currentDpr = globalThis.window === undefined ? 1 : globalThis.window.devicePixelRatio || 1;
+              engine.resize(contentRect.width, contentRect.height, currentDpr);
+              setPerfMetrics(engine.getPerformanceStats());
             }
           }
         });
@@ -117,16 +154,17 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
       }
 
       let isPointerDown = false;
-      let dragMode: 'pan' | 'node' | 'connect' | 'none' = 'none';
-      let draggedNodeId: string | undefined;
+      let dragMode: 'pan' | 'node' | 'connect' | 'box_select' | 'none' = 'none';
       let connectingSourceNodeId = '';
       let connectingSourcePortId = '';
-      let nodeStartPosition = { x: 0, y: 0 };
       let dragStartScreen = { x: 0, y: 0 };
+      let boxSelectStart = { x: 0, y: 0 };
+      const nodesStartPositions = new Map<string, { readonly x: number; readonly y: number }>();
 
       const onWheel = (event: WheelEvent): void => {
         event.preventDefault();
-        const factor = event.deltaY < 0 ? 1.1 : 0.9;
+        const normalizedDelta = Math.max(-100, Math.min(100, event.deltaY));
+        const factor = Math.exp(-normalizedDelta * 0.003);
         engine.zoom(event.offsetX, event.offsetY, factor);
       };
 
@@ -141,6 +179,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           // pointer capture optional
         }
 
+        const isShift = event.shiftKey;
         const hit = engine.hitTestSync(event.offsetX, event.offsetY);
         if (hit?.type === 'port') {
           dragMode = 'connect';
@@ -155,14 +194,34 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           });
         } else if (hit?.type === 'node') {
           dragMode = 'node';
-          draggedNodeId = hit.nodeId;
-          store.selectNode(hit.nodeId);
-          const foundNode = store.getState().graph.nodes.find((nodeItem) => nodeItem.id === hit.nodeId);
-          nodeStartPosition = foundNode ? { ...foundNode.position } : { x: 0, y: 0 };
+          if (isShift) {
+            store.toggleNodeSelection(hit.nodeId);
+          } else if (!store.getState().selectedNodeIds.includes(hit.nodeId)) {
+            store.selectNode(hit.nodeId);
+          }
+          const currentNodes = store.getState().graph.nodes;
+          const selectedSet = new Set(store.getState().selectedNodeIds);
+          nodesStartPositions.clear();
+          for (const n of currentNodes) {
+            if (selectedSet.has(n.id) || n.id === hit.nodeId) {
+              nodesStartPositions.set(n.id, { ...n.position });
+            }
+          }
         } else {
-          dragMode = 'pan';
-          draggedNodeId = undefined;
-          store.deselectAll();
+          if (isShift) {
+            dragMode = 'box_select';
+            boxSelectStart = { x: event.offsetX, y: event.offsetY };
+            setSelectionSquare({
+              active: true,
+              startX: event.offsetX,
+              startY: event.offsetY,
+              currentX: event.offsetX,
+              currentY: event.offsetY,
+            });
+          } else {
+            dragMode = 'pan';
+            store.deselectAll();
+          }
         }
       };
 
@@ -172,7 +231,13 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         const deltaX = event.clientX - dragStartScreen.x;
         const deltaY = event.clientY - dragStartScreen.y;
 
-        if (dragMode === 'connect') {
+        if (dragMode === 'box_select') {
+          setSelectionSquare((previous) => ({
+            ...previous,
+            currentX: event.offsetX,
+            currentY: event.offsetY,
+          }));
+        } else if (dragMode === 'connect') {
           const { x: worldX, y: worldY } = engine.screenToWorld(event.offsetX, event.offsetY);
           store.updateConnectingCursor(worldX, worldY);
           engine.setConnectingEdge({
@@ -191,13 +256,10 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
             engine.setHoveredPort(undefined);
           }
           engine.renderFrame();
-        } else if (dragMode === 'node' && draggedNodeId) {
+        } else if (dragMode === 'node' && nodesStartPositions.size > 0) {
           const worldDeltaX = deltaX / camera.zoom;
           const worldDeltaY = deltaY / camera.zoom;
-          store.moveNode(draggedNodeId, {
-            x: Math.round(nodeStartPosition.x + worldDeltaX),
-            y: Math.round(nodeStartPosition.y + worldDeltaY),
-          });
+          store.moveSelectedNodes(worldDeltaX, worldDeltaY, nodesStartPositions);
           engine.renderFrame();
         } else if (dragMode === 'pan') {
           dragStartScreen = { x: event.clientX, y: event.clientY };
@@ -215,21 +277,46 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           // ignore release error
         }
 
-        if (dragMode === 'connect') {
-          const targetHit = engine.hitTestSync(event.offsetX, event.offsetY, 18);
-          if (targetHit?.type === 'port' && targetHit.nodeId !== connectingSourceNodeId && targetHit.portId) {
-            store.connectPorts(connectingSourceNodeId, connectingSourcePortId, targetHit.nodeId, targetHit.portId);
+        switch (dragMode) {
+          case 'box_select': {
+            const minScreenX = Math.min(boxSelectStart.x, event.offsetX);
+            const maxScreenX = Math.max(boxSelectStart.x, event.offsetX);
+            const minScreenY = Math.min(boxSelectStart.y, event.offsetY);
+            const maxScreenY = Math.max(boxSelectStart.y, event.offsetY);
+
+            const topLeftWorld = engine.screenToWorld(minScreenX, minScreenY);
+            const bottomRightWorld = engine.screenToWorld(maxScreenX, maxScreenY);
+
+            const matchedNodeIds = engine.queryNodesInBox({
+              minX: Math.min(topLeftWorld.x, bottomRightWorld.x),
+              minY: Math.min(topLeftWorld.y, bottomRightWorld.y),
+              maxX: Math.max(topLeftWorld.x, bottomRightWorld.x),
+              maxY: Math.max(topLeftWorld.y, bottomRightWorld.y),
+            });
+
+            store.selectNodes(matchedNodeIds, event.shiftKey);
+            setSelectionSquare({ active: false, startX: 0, startY: 0, currentX: 0, currentY: 0 });
+            break;
           }
-          store.cancelConnecting();
-          engine.setConnectingEdge(undefined);
-          engine.setHoveredPort(undefined);
-          engine.renderFrame();
-        } else if (dragMode === 'node') {
-          store.commitNodeMove();
-          engine.renderFrame();
+          case 'connect': {
+            const targetHit = engine.hitTestSync(event.offsetX, event.offsetY, 18);
+            if (targetHit?.type === 'port' && targetHit.nodeId !== connectingSourceNodeId && targetHit.portId) {
+              store.connectPorts(connectingSourceNodeId, connectingSourcePortId, targetHit.nodeId, targetHit.portId);
+            }
+            store.cancelConnecting();
+            engine.setConnectingEdge(undefined);
+            engine.setHoveredPort(undefined);
+            engine.renderFrame();
+            break;
+          }
+          case 'node': {
+            store.commitNodeMove();
+            engine.renderFrame();
+            break;
+          }
         }
         dragMode = 'none';
-        draggedNodeId = undefined;
+        nodesStartPositions.clear();
       };
 
       const onContextMenu = (event: MouseEvent): void => {
@@ -422,9 +509,18 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           >
             {isFallback ? '2D Canvas' : 'WebGPU'}
           </span>
-          <span style={{ fontSize: '11px', color: '#8b949e', marginLeft: '12px' }}>
-            {fps} FPS | {editorState.graph.nodes.length} Nodes
-          </span>
+          <button
+            type="button"
+            className={styles.btnPerformance}
+            onClick={() => setShowPerfModal(true)}
+            title="Click to view detailed D3 performance breakdown"
+          >
+            <span className={styles.perfDot} />
+            <span>
+              update: {perfMetrics.updateTimeMs.toFixed(1)}ms | render: {perfMetrics.renderTimeMs.toFixed(1)}ms{' '}
+              {isFallback ? '(2D)' : '(WebGPU)'}
+            </span>
+          </button>
         </div>
       </header>
 
@@ -530,6 +626,17 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
             ref={canvasReference}
             className={styles.canvas}
           />
+          {selectionSquare.active && (
+            <div
+              className={styles.selectionSquare}
+              style={{
+                left: `${Math.min(selectionSquare.startX, selectionSquare.currentX)}px`,
+                top: `${Math.min(selectionSquare.startY, selectionSquare.currentY)}px`,
+                width: `${Math.abs(selectionSquare.currentX - selectionSquare.startX)}px`,
+                height: `${Math.abs(selectionSquare.currentY - selectionSquare.startY)}px`,
+              }}
+            />
+          )}
         </main>
 
         {/* Right Property & Output Inspector */}
@@ -941,6 +1048,53 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                 type="button"
                 className={classNames(styles.btn, styles.btnPrimary)}
                 onClick={() => setShowExportModal(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Detailed D3 Performance Profiler Modal */}
+      {showPerfModal && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className={styles.modalOverlay}
+          onClick={() => setShowPerfModal(false)}
+        >
+          <div
+            className={styles.perfModal}
+            onClick={(event: unknown) => {
+              if (typeof MouseEvent !== 'undefined' && event instanceof MouseEvent) {
+                event.stopPropagation();
+              }
+            }}
+          >
+            <div className={styles.modalHeader}>
+              <span className={styles.modalTitle}>Performance Profiler (D3)</span>
+              <button
+                type="button"
+                className={styles.modalClose}
+                onClick={() => setShowPerfModal(false)}
+                aria-label="Close performance modal"
+              >
+                ✕
+              </button>
+            </div>
+            <div className={styles.modalBody}>
+              <ForgePerformancePieChart
+                metrics={perfMetrics}
+                width={280}
+                height={240}
+              />
+            </div>
+            <div className={styles.modalFooter}>
+              <button
+                type="button"
+                className={classNames(styles.btn, styles.btnPrimary)}
+                onClick={() => setShowPerfModal(false)}
               >
                 Close
               </button>

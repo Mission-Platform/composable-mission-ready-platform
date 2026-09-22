@@ -6943,6 +6943,9 @@ importers:
       '@mission-platform/components':
         specifier: workspace:*
         version: link:../components
+      '@mission-platform/d3':
+        specifier: workspace:*
+        version: link:../../integrations/d3
       '@mission-platform/flint':
         specifier: workspace:*
         version: link:../../flint/core
@@ -6961,6 +6964,9 @@ importers:
       '@mission-platform/tokens':
         specifier: workspace:*
         version: link:../tokens
+      d3:
+        specifier: catalog:d3
+        version: 7.9.0
     devDependencies:
       '@mission-platform/eslint-config':
         specifier: workspace:*
@@ -7004,6 +7010,9 @@ importers:
       '@tsdown/css':
         specifier: catalog:build
         version: 0.23.0(jiti@2.7.0)(postcss@8.5.28)(sass-embedded@1.104.1)(sass@1.104.1)(tsdown@0.23.0)(yaml@2.9.1)
+      '@types/d3':
+        specifier: catalog:d3
+        version: 7.4.3
       '@types/node':
         specifier: catalog:typescript
         version: 24.13.4

@@ -65,10 +65,12 @@ export default [
         name: 'MissionPlatformFlintGraphEditor',
         external: [
           '@mission-platform/components',
+          '@mission-platform/d3',
           '@mission-platform/flint',
           '@mission-platform/flint-runtime',
           '@mission-platform/icons',
           '@mission-platform/tokens',
+          'd3',
         ],
         declarationModule: '..',
         overrides: {

@@ -67,6 +67,7 @@ export class FlintEditorStore {
   private nodeErrors: Record<string, string> = {};
   private lastError?: string;
   private readonly traceController = new TraceDebuggerController();
+  private lastUpdateTimeMs = 0.5;
 
   private readonly listeners = new Set<StoreListener>();
 
@@ -197,6 +198,7 @@ export class FlintEditorStore {
   }
 
   moveNode(nodeId: string, position: { readonly x: number; readonly y: number }): void {
+    const startTime = typeof performance === 'undefined' ? 0 : performance.now();
     let changed = false;
     const updatedNodes = this.graph.nodes.map((n) => {
       if (n.id === nodeId) {
@@ -208,6 +210,40 @@ export class FlintEditorStore {
 
     if (changed) {
       this.graph = { ...this.graph, nodes: updatedNodes };
+      if (startTime > 0) {
+        this.lastUpdateTimeMs = Math.max(0.1, performance.now() - startTime);
+      }
+      this.notify();
+    }
+  }
+
+  moveSelectedNodes(
+    deltaX: number,
+    deltaY: number,
+    startPositions: ReadonlyMap<string, { readonly x: number; readonly y: number }>,
+  ): void {
+    const startTime = typeof performance === 'undefined' ? 0 : performance.now();
+    let changed = false;
+    const updatedNodes = this.graph.nodes.map((node) => {
+      const initial = startPositions.get(node.id);
+      if (initial !== undefined) {
+        changed = true;
+        return {
+          ...node,
+          position: {
+            x: Math.round(initial.x + deltaX),
+            y: Math.round(initial.y + deltaY),
+          },
+        };
+      }
+      return node;
+    });
+
+    if (changed) {
+      this.graph = { ...this.graph, nodes: updatedNodes };
+      if (startTime > 0) {
+        this.lastUpdateTimeMs = Math.max(0.1, performance.now() - startTime);
+      }
       this.notify();
     }
   }
@@ -306,6 +342,27 @@ export class FlintEditorStore {
       this.selectedNodeIds.clear();
     }
     this.selectedNodeIds.add(nodeId);
+    this.activeEdgeId = undefined;
+    this.notify();
+  }
+
+  toggleNodeSelection(nodeId: string): void {
+    if (this.selectedNodeIds.has(nodeId)) {
+      this.selectedNodeIds.delete(nodeId);
+    } else {
+      this.selectedNodeIds.add(nodeId);
+    }
+    this.activeEdgeId = undefined;
+    this.notify();
+  }
+
+  selectNodes(nodeIds: readonly string[], multiSelect = false): void {
+    if (!multiSelect) {
+      this.selectedNodeIds.clear();
+    }
+    for (const id of nodeIds) {
+      this.selectedNodeIds.add(id);
+    }
     this.activeEdgeId = undefined;
     this.notify();
   }
@@ -741,5 +798,9 @@ export class FlintEditorStore {
 
   getTraceController(): TraceDebuggerController {
     return this.traceController;
+  }
+
+  getUpdateTimeMs(): number {
+    return this.lastUpdateTimeMs;
   }
 }
