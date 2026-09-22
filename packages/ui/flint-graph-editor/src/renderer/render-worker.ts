@@ -1,173 +1,9 @@
 import { loadSync } from './render-worker.flint';
-import { EDGES_WGSL, GRID_WGSL, NODES_WGSL } from './shaders';
+import { EDGES_WGSL, GRID_WGSL, NODES_WGSL, TEXT_WGSL } from './shaders';
 
-import type { FlintGraphEdge, FlintGraphGroup, FlintGraphNode, FlintTypeName } from '@mission-platform/flint';
+import type { FlintGraphEdge, FlintGraphGroup, FlintGraphNode } from '@mission-platform/flint';
 
-export interface FlintRenderWorkerWasmExports {
-  readonly abs_i32: (val: number) => number;
-  readonly clamp_i32: (val: number, min_val: number, max_val: number) => number;
-  readonly compute_center: (min_val: number, max_val: number) => number;
-  readonly camera_pan_x: (cam_x: number, delta_x: number, zoom_percent: number) => number;
-  readonly camera_pan_y: (cam_y: number, delta_y: number, zoom_percent: number) => number;
-  readonly camera_zoom_percent: (
-    current_zoom_percent: number,
-    factor_permille: number,
-    min_percent: number,
-    max_percent: number,
-  ) => number;
-  readonly camera_zoom_anchor_x: (
-    cam_x: number,
-    cursor_x: number,
-    viewport_w: number,
-    old_zoom_percent: number,
-    new_zoom_percent: number,
-  ) => number;
-  readonly camera_zoom_anchor_y: (
-    cam_y: number,
-    cursor_y: number,
-    viewport_h: number,
-    old_zoom_percent: number,
-    new_zoom_percent: number,
-  ) => number;
-  readonly viewport_bounds_min_x: (cam_x: number, viewport_w: number, zoom_percent: number, padding: number) => number;
-  readonly viewport_bounds_max_x: (cam_x: number, viewport_w: number, zoom_percent: number, padding: number) => number;
-  readonly viewport_bounds_min_y: (cam_y: number, viewport_h: number, zoom_percent: number, padding: number) => number;
-  readonly viewport_bounds_max_y: (cam_y: number, viewport_h: number, zoom_percent: number, padding: number) => number;
-  readonly screen_to_world_x: (screen_x: number, camera_x: number, viewport_w: number, zoom_percent: number) => number;
-  readonly screen_to_world_y: (screen_y: number, camera_y: number, viewport_h: number, zoom_percent: number) => number;
-  readonly world_to_screen_x: (world_x: number, camera_x: number, viewport_w: number, zoom_percent: number) => number;
-  readonly world_to_screen_y: (world_y: number, camera_y: number, viewport_h: number, zoom_percent: number) => number;
-  readonly screen_to_world_f32: (
-    screen_coord: number,
-    camera_coord: number,
-    center_coord: number,
-    zoom: number,
-  ) => number;
-  readonly world_to_screen_f32: (
-    world_coord: number,
-    camera_coord: number,
-    center_coord: number,
-    zoom: number,
-  ) => number;
-  readonly node_bounds_height: (header_h: number, max_ports: number, row_h: number, pad: number) => number;
-  readonly node_bounds_max_y: (
-    node_y: number,
-    header_h: number,
-    max_ports: number,
-    row_h: number,
-    pad: number,
-  ) => number;
-  readonly port_y_position: (
-    node_y: number,
-    header_h: number,
-    row_index: number,
-    row_h: number,
-    port_offset: number,
-  ) => number;
-  readonly point_in_rect: (px: number, py: number, rx: number, ry: number, rw: number, rh: number) => number;
-  readonly point_in_circle: (px: number, py: number, cx: number, cy: number, radius: number) => number;
-  readonly rect_intersects_box: (
-    rx: number,
-    ry: number,
-    rw: number,
-    rh: number,
-    min_x: number,
-    min_y: number,
-    max_x: number,
-    max_y: number,
-  ) => number;
-  readonly bezier_point_1d: (p0: number, p1: number, p2: number, p3: number, t_permille: number) => number;
-  readonly bezier_control_dx: (p0x: number, p3x: number) => number;
-  readonly spatial_init: () => number;
-  readonly spatial_clear: () => void;
-  readonly spatial_insert_node: (node_idx: number, min_x: number, min_y: number, max_x: number, max_y: number) => void;
-  readonly spatial_insert_port: (node_idx: number, port_idx: number, dir: number, x: number, y: number) => void;
-  readonly spatial_query_box: (min_x: number, min_y: number, max_x: number, max_y: number) => number;
-  readonly spatial_get_query_result: (index: number) => number;
-  readonly spatial_hit_test_point: (px: number, py: number) => number;
-  readonly spatial_hit_test_port: (px: number, py: number, snap_radius: number) => number;
-  readonly compute_node_instance: (
-    min_x: number,
-    min_y: number,
-    max_x: number,
-    max_y: number,
-    is_selected: number,
-    is_active: number,
-    is_trapped: number,
-  ) => void;
-  readonly compute_edge_instance: (
-    p0x: number,
-    p0y: number,
-    p3x: number,
-    p3y: number,
-    is_selected: number,
-    is_active: number,
-    pulse_offset_permille: number,
-  ) => void;
-  readonly compute_pin_instance: (
-    px: number,
-    py: number,
-    is_hovered: number,
-    is_active: number,
-    is_output: number,
-  ) => void;
-  readonly edge_hit_test: (
-    cursor_x: number,
-    cursor_y: number,
-    p0x: number,
-    p0y: number,
-    p3x: number,
-    p3y: number,
-    threshold: number,
-  ) => number | boolean;
-  readonly backend_select_tier: (has_webgpu: boolean, has_webgl: boolean, has_canvas2d: boolean) => number;
-  readonly backend_fallback_next: (current_tier: number, has_webgl: boolean, has_canvas2d: boolean) => number;
-  readonly camera_zoom_f32?: (current_zoom: number, factor: number, min_zoom: number, max_zoom: number) => number;
-  readonly renderer_execute_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
-  readonly renderer_render_webgpu_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
-
-  readonly createCamera: (viewport_w: number, viewport_h: number, x: number, y: number, zoom: number) => void;
-  readonly get_camera_x: () => number;
-  readonly get_camera_y: () => number;
-  readonly get_camera_zoom: () => number;
-  readonly get_camera_viewport_width: () => number;
-  readonly get_camera_viewport_height: () => number;
-
-  readonly screenToWorld: (screen_x: number, screen_y: number) => void;
-  readonly get_point_x: () => number;
-  readonly get_point_y: () => number;
-
-  readonly worldToScreen: (world_x: number, world_y: number) => void;
-
-  readonly getViewportBounds: (padding: number) => void;
-  readonly get_bounds_min_x: () => number;
-  readonly get_bounds_min_y: () => number;
-  readonly get_bounds_max_x: () => number;
-  readonly get_bounds_max_y: () => number;
-
-  readonly panCamera: (delta_x: number, delta_y: number) => void;
-  readonly zoomCamera: (cursor_x: number, cursor_y: number, factor: number) => void;
-  readonly createViewProjectionMatrix: (matrix_ptr: number) => void;
-
-  readonly getNodeBounds: (node_x: number, node_y: number, max_ports: number) => void;
-  readonly get_node_bounds_min_x: () => number;
-  readonly get_node_bounds_min_y: () => number;
-  readonly get_node_bounds_max_x: () => number;
-  readonly get_node_bounds_max_y: () => number;
-
-  readonly getCategoryRgb: (category_id: number) => number;
-  readonly getPortTypeRgb: (type_id: number) => number;
-
-  readonly engine_create: (viewport_w: number, viewport_h: number, dpr: number) => void;
-  readonly engine_resize: (viewport_w: number, viewport_h: number, dpr: number) => void;
-  readonly engine_pan: (delta_x: number, delta_y: number) => void;
-  readonly engine_zoom: (cursor_x: number, cursor_y: number, factor: number) => void;
-  readonly engine_set_backend: (tier: number) => void;
-  readonly engine_get_backend: () => number;
-  readonly engine_render_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
-
-  readonly memory: WebAssembly.Memory;
-}
+export type FlintRenderWorkerWasmExports = ReturnType<typeof loadSync>;
 
 export interface FlintCamera {
   readonly x: number;
@@ -175,16 +11,6 @@ export interface FlintCamera {
   readonly zoom: number;
   readonly viewportWidth: number;
   readonly viewportHeight: number;
-}
-
-export interface WorldPoint {
-  readonly x: number;
-  readonly y: number;
-}
-
-export interface ScreenPoint {
-  readonly x: number;
-  readonly y: number;
 }
 
 export interface ViewBounds {
@@ -195,19 +21,128 @@ export interface ViewBounds {
 }
 
 export interface FlintHitResult {
-  readonly type: 'node' | 'port' | 'edge' | 'none';
+  readonly type: 'node' | 'edge' | 'port';
   readonly nodeId: string;
-  readonly portId?: string;
   readonly edgeId?: string;
-  readonly worldX: number;
-  readonly worldY: number;
+  readonly portId?: string;
+  readonly worldX?: number;
+  readonly worldY?: number;
 }
 
-export interface PortSpatialItem {
-  readonly nodeId: string;
-  readonly portId: string;
-  readonly direction: 'input' | 'output';
-  readonly position: { readonly x: number; readonly y: number };
+export interface ScreenPoint {
+  readonly x: number;
+  readonly y: number;
+}
+
+export type RenderWorkerInputMessage =
+  | {
+      readonly type: 'init';
+      readonly id?: string;
+      readonly canvas?: OffscreenCanvas | HTMLCanvasElement;
+      readonly width?: number;
+      readonly height?: number;
+      readonly dpr?: number;
+      readonly renderer?: 'webgpu' | 'webgl' | 'canvas2d';
+      readonly theme?: 'light' | 'dark';
+    }
+  | {
+      readonly type: 'set_theme';
+      readonly id?: string;
+      readonly theme: 'light' | 'dark';
+    }
+  | {
+      readonly type: 'set_graph';
+      readonly id?: string;
+      readonly nodes: readonly FlintGraphNode[];
+      readonly edges: readonly FlintGraphEdge[];
+      readonly groups?: readonly FlintGraphGroup[];
+    }
+  | {
+      readonly type: 'pan';
+      readonly id?: string;
+      readonly deltaX: number;
+      readonly deltaY: number;
+    }
+  | {
+      readonly type: 'zoom';
+      readonly id?: string;
+      readonly factor: number;
+      readonly cursorX?: number;
+      readonly cursorY?: number;
+    }
+  | {
+      readonly type: 'resize';
+      readonly id?: string;
+      readonly width: number;
+      readonly height: number;
+      readonly dpr?: number;
+    }
+  | {
+      readonly type: 'set_selection';
+      readonly id?: string;
+      readonly selectedNodeIds?: readonly string[];
+      readonly selectedEdgeIds?: readonly string[];
+    }
+  | {
+      readonly type: 'set_pulse';
+      readonly id?: string;
+      readonly edgeId: string;
+      readonly progress: number;
+    }
+  | {
+      readonly type: 'hit_test';
+      readonly id?: string;
+      readonly cursorX: number;
+      readonly cursorY: number;
+      readonly snapRadius?: number;
+      readonly requestId?: string;
+    }
+  | {
+      readonly type: 'set_trace_state';
+      readonly id?: string;
+      readonly activeNodeIds?: readonly string[];
+      readonly trappedNodeId?: string;
+      readonly edgePulses?: readonly {
+        readonly edgeId: string;
+        readonly offset: number;
+      }[];
+      readonly requestId?: string;
+    }
+  | {
+      readonly type: 'render_frame';
+      readonly id?: string;
+    }
+  | {
+      readonly type: 'destroy';
+      readonly id?: string;
+    };
+
+export interface FlintPerformanceMetrics {
+  readonly updateTimeMs: number;
+  readonly renderTimeMs: number;
+  readonly spatialIndexTimeMs: number;
+  readonly bufferUploadTimeMs: number;
+  readonly drawPassTimeMs: number;
+  readonly totalFrameTimeMs: number;
+  readonly visibleNodesCount: number;
+  readonly visibleEdgesCount: number;
+  readonly visiblePinsCount: number;
+  readonly dpr: number;
+  readonly isFallback: boolean;
+}
+
+export interface RenderWorkerOutputMessage {
+  readonly id?: string;
+  readonly type: 'ready' | 'frame' | 'hit_test_result' | 'hit_result' | 'camera_changed' | 'error';
+  readonly supported?: boolean;
+  readonly fps?: number;
+  readonly performance?: FlintPerformanceMetrics;
+  readonly visibleNodes?: number;
+  readonly visibleEdges?: number;
+  readonly camera?: FlintCamera;
+  readonly hit?: FlintHitResult;
+  readonly requestId?: string;
+  readonly error?: string;
 }
 
 export const MIN_ZOOM = 0.1;
@@ -215,7 +150,7 @@ export const MAX_ZOOM = 5;
 export const DEFAULT_ZOOM = 1;
 
 export const NODE_WIDTH = 220;
-export const NODE_HEADER_HEIGHT = 38;
+export const NODE_HEADER_HEIGHT = 44;
 export const PORT_ROW_HEIGHT = 28;
 
 const COORD_OFFSET = 1_000_000;
@@ -237,6 +172,8 @@ export interface GPUDevice {
   createPipelineLayout(descriptor: { bindGroupLayouts: readonly GPUBindGroupLayout[] }): GPUPipelineLayout;
   createRenderPipeline(descriptor: Record<string, unknown>): GPURenderPipeline;
   createBuffer(descriptor: { size: number; usage: number }): GPUBuffer;
+  createTexture(descriptor: Record<string, unknown>): GPUTexture;
+  createSampler(descriptor?: Record<string, unknown>): GPUSampler;
   createBindGroup(descriptor: { layout: GPUBindGroupLayout; entries: readonly unknown[] }): GPUBindGroup;
   createCommandEncoder(): GPUCommandEncoder;
   destroy(): void;
@@ -244,6 +181,12 @@ export interface GPUDevice {
 
 export interface GPUQueue {
   writeBuffer(buffer: GPUBuffer, bufferOffset: number, data: BufferSource | ArrayBufferView | Float32Array): void;
+  writeTexture(
+    destination: { texture: GPUTexture },
+    data: BufferSource | ArrayBufferView | Uint8Array,
+    dataLayout: { bytesPerRow: number; rowsPerImage?: number },
+    size: readonly number[],
+  ): void;
   submit(commandBuffers: readonly GPUCommandBuffer[]): void;
 }
 
@@ -252,6 +195,7 @@ export interface GPUBuffer {
   destroy(): void;
 }
 
+export interface GPUSampler {}
 export interface GPUShaderModule {}
 export interface GPUBindGroupLayout {}
 export interface GPUPipelineLayout {}
@@ -260,6 +204,7 @@ export interface GPUBindGroup {}
 export interface GPUCommandBuffer {}
 export interface GPUTexture {
   createView(): GPUTextureView;
+  destroy?(): void;
 }
 export interface GPUTextureView {}
 
@@ -288,13 +233,59 @@ interface WebGpuNavigator {
   };
 }
 
-export interface FlintWebGpuContext {
-  readonly supported: boolean;
-  readonly device: GPUDevice;
-  readonly queue: GPUQueue;
-  readonly context: GPUCanvasContext;
-  readonly format: string;
+export function createCamera(viewportWidth: number, viewportHeight: number, x = 0, y = 0, zoom = 1): FlintCamera {
+  return {
+    viewportWidth,
+    viewportHeight,
+    x,
+    y,
+    zoom,
+  };
 }
+
+export function createViewProjectionMatrix(camera: FlintCamera): Float32Array {
+  const matrix = new Float32Array(16);
+  const sx = (2 * camera.zoom) / camera.viewportWidth;
+  const sy = (-2 * camera.zoom) / camera.viewportHeight;
+  const tx = -camera.x * sx;
+  const ty = -camera.y * sy;
+
+  matrix[0] = sx;
+  matrix[5] = sy;
+  matrix[10] = 1;
+  matrix[12] = tx;
+  matrix[13] = ty;
+  matrix[15] = 1;
+
+  return matrix;
+}
+
+export function getNodeBounds(node: FlintGraphNode, wasmOverride?: FlintRenderWorkerWasmExports): ViewBounds {
+  const maxPorts = Math.max(node.inputs?.length ?? 0, node.outputs?.length ?? 0);
+  const instance = wasmOverride ?? getFlintRenderWorkerWasm();
+  instance.getNodeBounds(node.position.x, node.position.y, maxPorts);
+  return {
+    minX: instance.get_node_bounds_min_x(),
+    minY: instance.get_node_bounds_min_y(),
+    maxX: instance.get_node_bounds_max_x(),
+    maxY: instance.get_node_bounds_max_y(),
+  };
+}
+
+export function getViewportBounds(camera: FlintCamera, padding = 100): ViewBounds {
+  const wasm = getFlintRenderWorkerWasm();
+  wasm.createCamera(camera.viewportWidth, camera.viewportHeight, camera.x, camera.y, camera.zoom);
+  wasm.getViewportBounds(padding);
+  return {
+    minX: wasm.get_bounds_min_x(),
+    minY: wasm.get_bounds_min_y(),
+    maxX: wasm.get_bounds_max_x(),
+    maxY: wasm.get_bounds_max_y(),
+  };
+}
+
+export const getFlintCameraWasm: (imports?: WebAssembly.Imports) => FlintRenderWorkerWasmExports =
+  getFlintRenderWorkerWasm;
 
 let cachedFlintWasm: FlintRenderWorkerWasmExports | undefined;
 
@@ -313,7 +304,19 @@ export function getFlintRenderWorkerWasm(imports?: WebAssembly.Imports): FlintRe
     'webgpu.write_node_instance': { gpu_write_node_instance: () => {} },
     'webgpu.write_edge_instance': { gpu_write_edge_instance: () => {} },
     'webgpu.write_pin_instance': { gpu_write_pin_instance: () => {} },
+    'webgl.render_begin': { gl_render_begin: () => {} },
+    'webgl.render_grid': { gl_render_grid: () => {} },
+    'webgl.draw_edge': { gl_draw_edge: () => {} },
+    'webgl.draw_node': { gl_draw_node: () => {} },
+    'webgl.draw_pin': { gl_draw_pin: () => {} },
+    'webgl.render_end': { gl_render_end: () => {} },
     'webgl.render_frame': { webgl_render_frame: () => {} },
+    'canvas2d.render_begin': { c2d_render_begin: () => {} },
+    'canvas2d.render_grid': { c2d_render_grid: () => {} },
+    'canvas2d.draw_edge': { c2d_draw_edge: () => {} },
+    'canvas2d.draw_node': { c2d_draw_node: () => {} },
+    'canvas2d.draw_pin': { c2d_draw_pin: () => {} },
+    'canvas2d.render_end': { c2d_render_end: () => {} },
     'canvas2d.render_frame': { canvas2d_render_frame: () => {} },
   };
 
@@ -327,449 +330,325 @@ export function getFlintRenderWorkerWasm(imports?: WebAssembly.Imports): FlintRe
   return cachedFlintWasm;
 }
 
-export async function isWebGpuSupported(): Promise<boolean> {
-  const nav = typeof navigator === 'undefined' ? undefined : (navigator as unknown as WebGpuNavigator);
-  if (!nav?.gpu) return false;
-  try {
-    const adapter = await nav.gpu.requestAdapter();
-    return adapter !== null;
-  } catch {
-    return false;
-  }
-}
+// Dedicated OffscreenCanvas Web Worker message listener
+if (
+  globalThis.self !== undefined &&
+  typeof (globalThis as unknown as { postMessage?: unknown }).postMessage === 'function'
+) {
+  let wasm: FlintRenderWorkerWasmExports | undefined;
+  let canvas: OffscreenCanvas | HTMLCanvasElement | undefined;
+  let width = 800;
+  let height = 600;
+  let dpr = 1;
 
-export async function createWebGpuContext(canvas: OffscreenCanvas | HTMLCanvasElement): Promise<FlintWebGpuContext> {
-  const nav = typeof navigator === 'undefined' ? undefined : (navigator as unknown as WebGpuNavigator);
-  if (!nav?.gpu) {
-    throw new Error('WebGPU is not supported in this browser or worker environment.');
-  }
-
-  const adapter = await nav.gpu.requestAdapter({
-    powerPreference: 'high-performance',
-  });
-
-  if (!adapter) {
-    throw new Error('No suitable WebGPU adapter found on this system.');
-  }
-
-  const device = await adapter.requestDevice();
-  const canvasObj = canvas as unknown as {
-    getContext(id: string): GPUCanvasContext | null;
-  };
-  const context = canvasObj.getContext('webgpu');
-  if (!context) {
-    throw new Error('Failed to acquire webgpu canvas context.');
-  }
-
-  const format = nav.gpu.getPreferredCanvasFormat();
-  context.configure({
-    device,
-    format,
-    alphaMode: 'premultiplied',
-  });
-
-  return {
-    supported: true,
-    device,
-    queue: device.queue,
-    context,
-    format,
-  };
-}
-
-export interface WebGPUCapabilityStatus {
-  readonly supported: boolean;
-  readonly message?: string;
-  readonly adapterInfo?: {
-    readonly vendor?: string;
-    readonly architecture?: string;
-    readonly device?: string;
-    readonly description?: string;
-  };
-}
-
-export async function getWebGPUCapability(): Promise<WebGPUCapabilityStatus> {
-  const nav = typeof navigator === 'undefined' ? undefined : (navigator as unknown as WebGpuNavigator);
-  if (!nav?.gpu) {
-    return {
-      supported: false,
-      message: 'WebGPU is not supported by your current browser. Utilizing 2D canvas fallback.',
-    };
-  }
-
-  try {
-    const adapter = await nav.gpu.requestAdapter();
-    if (!adapter) {
-      return {
-        supported: false,
-        message: 'No compatible WebGPU hardware adapter found. Utilizing 2D canvas fallback.',
-      };
-    }
-    return {
-      supported: true,
-      adapterInfo: adapter.info,
-    };
-  } catch (error) {
-    return {
-      supported: false,
-      message: error instanceof Error ? error.message : 'WebGPU initialization failed.',
-    };
-  }
-}
-
-export function createCamera(
-  viewportWidth = 800,
-  viewportHeight = 600,
-  x = 0,
-  y = 0,
-  zoom: number = DEFAULT_ZOOM,
-): FlintCamera {
-  const wasm = getFlintRenderWorkerWasm();
-  wasm.createCamera(viewportWidth, viewportHeight, x, y, zoom);
-  return {
-    x: wasm.get_camera_x(),
-    y: wasm.get_camera_y(),
-    zoom: wasm.get_camera_zoom(),
-    viewportWidth: wasm.get_camera_viewport_width(),
-    viewportHeight: wasm.get_camera_viewport_height(),
-  };
-}
-
-export function screenToWorld(screenX: number, screenY: number, camera: FlintCamera): WorldPoint {
-  const wasm = getFlintRenderWorkerWasm();
-  wasm.createCamera(camera.viewportWidth, camera.viewportHeight, camera.x, camera.y, camera.zoom);
-  wasm.screenToWorld(screenX, screenY);
-  return {
-    x: wasm.get_point_x(),
-    y: wasm.get_point_y(),
-  };
-}
-
-export function worldToScreen(worldX: number, worldY: number, camera: FlintCamera): ScreenPoint {
-  const wasm = getFlintRenderWorkerWasm();
-  wasm.createCamera(camera.viewportWidth, camera.viewportHeight, camera.x, camera.y, camera.zoom);
-  wasm.worldToScreen(worldX, worldY);
-  return {
-    x: wasm.get_point_x(),
-    y: wasm.get_point_y(),
-  };
-}
-
-export function getViewportBounds(camera: FlintCamera, padding = 0): ViewBounds {
-  const wasm = getFlintRenderWorkerWasm();
-  wasm.createCamera(camera.viewportWidth, camera.viewportHeight, camera.x, camera.y, camera.zoom);
-  wasm.getViewportBounds(padding);
-  return {
-    minX: wasm.get_bounds_min_x(),
-    minY: wasm.get_bounds_min_y(),
-    maxX: wasm.get_bounds_max_x(),
-    maxY: wasm.get_bounds_max_y(),
-  };
-}
-
-export function panCamera(camera: FlintCamera, screenDeltaX: number, screenDeltaY: number): FlintCamera {
-  const wasm = getFlintRenderWorkerWasm();
-  wasm.createCamera(camera.viewportWidth, camera.viewportHeight, camera.x, camera.y, camera.zoom);
-  wasm.panCamera(screenDeltaX, screenDeltaY);
-  return {
-    ...camera,
-    x: wasm.get_camera_x(),
-    y: wasm.get_camera_y(),
-    zoom: wasm.get_camera_zoom(),
-    viewportWidth: wasm.get_camera_viewport_width(),
-    viewportHeight: wasm.get_camera_viewport_height(),
-  };
-}
-
-export function zoomCamera(
-  camera: FlintCamera,
-  cursorScreenX: number,
-  cursorScreenY: number,
-  factor: number,
-): FlintCamera {
-  const wasm = getFlintRenderWorkerWasm();
-  wasm.createCamera(camera.viewportWidth, camera.viewportHeight, camera.x, camera.y, camera.zoom);
-  wasm.zoomCamera(cursorScreenX, cursorScreenY, factor);
-  return {
-    ...camera,
-    x: wasm.get_camera_x(),
-    y: wasm.get_camera_y(),
-    zoom: wasm.get_camera_zoom(),
-    viewportWidth: wasm.get_camera_viewport_width(),
-    viewportHeight: wasm.get_camera_viewport_height(),
-  };
-}
-
-export function createViewProjectionMatrix(camera: FlintCamera): Float32Array {
-  const wasm = getFlintRenderWorkerWasm();
-  wasm.createCamera(camera.viewportWidth, camera.viewportHeight, camera.x, camera.y, camera.zoom);
-  const matrixPtr = 256;
-  wasm.createViewProjectionMatrix(matrixPtr);
-  const memory = (wasm as unknown as { memory: WebAssembly.Memory }).memory;
-  const f64s = new Float64Array(memory.buffer, matrixPtr, 16);
-  return new Float32Array(f64s);
-}
-
-export class SpatialGridIndex {
-  private readonly nodeIds: string[] = [];
-  private readonly nodeIdMap = new Map<string, number>();
-  private readonly ports: PortSpatialItem[] = [];
-
-  constructor(_cellSize = 256) {
-    const wasm = getFlintRenderWorkerWasm();
-    wasm.spatial_init();
-    this.clear();
-  }
-
-  insert(id: string, bounds: ViewBounds): void {
-    const wasm = getFlintRenderWorkerWasm();
-    let index = this.nodeIdMap.get(id);
-    if (index === undefined) {
-      index = this.nodeIds.length;
-      this.nodeIds.push(id);
-      this.nodeIdMap.set(id, index);
-    }
-
-    const minX = Math.round(bounds.minX) + COORD_OFFSET;
-    const minY = Math.round(bounds.minY) + COORD_OFFSET;
-    const maxX = Math.round(bounds.maxX) + COORD_OFFSET;
-    const maxY = Math.round(bounds.maxY) + COORD_OFFSET;
-
-    wasm.spatial_insert_node(index, minX, minY, maxX, maxY);
-  }
-
-  registerPort(item: PortSpatialItem): void {
-    const wasm = getFlintRenderWorkerWasm();
-    const portIndex = this.ports.length;
-    this.ports.push(item);
-    const nodeIndex = this.nodeIdMap.get(item.nodeId) ?? 0;
-    const dir = item.direction === 'output' ? 1 : 0;
-    const px = Math.round(item.position.x) + COORD_OFFSET;
-    const py = Math.round(item.position.y) + COORD_OFFSET;
-
-    wasm.spatial_insert_port(nodeIndex, portIndex, dir, px, py);
-  }
-
-  queryBox(queryBounds: ViewBounds): readonly string[] {
-    const wasm = getFlintRenderWorkerWasm();
-    const qMinX = Math.round(queryBounds.minX) + COORD_OFFSET;
-    const qMinY = Math.round(queryBounds.minY) + COORD_OFFSET;
-    const qMaxX = Math.round(queryBounds.maxX) + COORD_OFFSET;
-    const qMaxY = Math.round(queryBounds.maxY) + COORD_OFFSET;
-
-    const count = wasm.spatial_query_box(qMinX, qMinY, qMaxX, qMaxY);
-    const results: string[] = [];
-    for (let i = 0; i < count; i++) {
-      const nodeIndex = wasm.spatial_get_query_result(i);
-      const id = this.nodeIds[nodeIndex];
-      if (id !== undefined) {
-        results.push(id);
+  let nodes: readonly FlintGraphNode[] = [];
+  let edges: readonly FlintGraphEdge[] = [];
+  let groups: readonly FlintGraphGroup[] = [];
+  const selectedNodeIds = new Set<string>();
+  const selectedEdgeIds = new Set<string>();
+  const activeNodeIds = new Set<string>();
+  let trappedNodeId: string | undefined;
+  const edgePulses = new Map<string, number>();
+  const hoveredPort: { readonly nodeId: string; readonly portId: string } | undefined = undefined;
+  const connectingEdge:
+    | {
+        readonly fromNodeId: string;
+        readonly fromPortId: string;
+        readonly cursorX: number;
+        readonly cursorY: number;
       }
-    }
-    return results;
-  }
+    | undefined = undefined;
 
-  hitTestPoint(pointX: number, pointY: number): string | undefined {
-    const wasm = getFlintRenderWorkerWasm();
-    const px = Math.round(pointX) + COORD_OFFSET;
-    const py = Math.round(pointY) + COORD_OFFSET;
+  let gpuContext: GPUCanvasContext | undefined;
+  let gpuDevice: GPUDevice | undefined;
+  let cameraBuffer: GPUBuffer | undefined;
+  let cameraBindGroup: GPUBindGroup | undefined;
+  let gridPipeline: GPURenderPipeline | undefined;
+  let nodesPipeline: GPURenderPipeline | undefined;
+  let edgesPipeline: GPURenderPipeline | undefined;
+  let nodeInstanceBuffer: GPUBuffer | undefined;
+  let edgeInstanceBuffer: GPUBuffer | undefined;
+  let pinInstanceBuffer: GPUBuffer | undefined;
+  let currentCommandEncoder: GPUCommandEncoder | undefined;
+  let currentPassEncoder: GPURenderPassEncoder | undefined;
 
-    const hit = wasm.spatial_hit_test_point(px, py);
-    if (hit === 0) return undefined;
-    return this.nodeIds[hit - 1];
-  }
+  let nodeInstanceFloats: number[] = [];
+  let edgeInstanceFloats: number[] = [];
+  let pinInstanceFloats: number[] = [];
 
-  hitTestPort(pointX: number, pointY: number, snapRadius = 14): PortSpatialItem | undefined {
-    const wasm = getFlintRenderWorkerWasm();
-    const px = Math.round(pointX) + COORD_OFFSET;
-    const py = Math.round(pointY) + COORD_OFFSET;
+  let textPipeline: GPURenderPipeline | undefined;
+  let textVertexBuffer: GPUBuffer | undefined;
+  let fontTexture: GPUTexture | undefined;
+  let fontSampler: GPUSampler | undefined;
+  let fontBindGroup: GPUBindGroup | undefined;
+  let webGpuTextVertices: number[] = [];
 
-    const hit = wasm.spatial_hit_test_port(px, py, snapRadius);
-    if (hit === 0) return undefined;
-    const portIndex = (hit % 65_536) - 1;
-    return this.ports[portIndex];
-  }
+  let glCtx: WebGLRenderingContext | WebGL2RenderingContext | undefined;
+  let glProgram: WebGLProgram | undefined;
+  let glVertexBuffer: WebGLBuffer | undefined;
+  let glUniformLocations:
+    | {
+        readonly u_resolution: WebGLUniformLocation | null;
+        readonly u_camera: WebGLUniformLocation | null;
+        readonly u_zoom: WebGLUniformLocation | null;
+      }
+    | undefined;
+  let glAttribLocations:
+    | {
+        readonly a_position: number;
+        readonly a_color: number;
+      }
+    | undefined;
 
-  clear(): void {
-    const wasm = getFlintRenderWorkerWasm();
-    wasm.spatial_clear();
-    this.nodeIds.length = 0;
-    this.nodeIdMap.clear();
-    this.ports.length = 0;
-  }
-}
+  let glTextProgram: WebGLProgram | undefined;
+  let glTexVertexBuffer: WebGLBuffer | undefined;
+  let glFontTexture: WebGLTexture | undefined;
+  let glTextUniformLocations:
+    | {
+        readonly u_resolution: WebGLUniformLocation | null;
+        readonly u_camera: WebGLUniformLocation | null;
+        readonly u_zoom: WebGLUniformLocation | null;
+        readonly u_fontTexture: WebGLUniformLocation | null;
+      }
+    | undefined;
+  let glTextAttribLocations:
+    | {
+        readonly a_position: number;
+        readonly a_uv: number;
+        readonly a_color: number;
+      }
+    | undefined;
 
-export function getNodeBounds(node: FlintGraphNode): ViewBounds {
-  const wasm = getFlintRenderWorkerWasm();
-  const maxPorts = Math.max(node.inputs.length, node.outputs.length, 1);
-  wasm.getNodeBounds(node.position.x, node.position.y, maxPorts);
-  return {
-    minX: wasm.get_node_bounds_min_x(),
-    minY: wasm.get_node_bounds_min_y(),
-    maxX: wasm.get_node_bounds_max_x(),
-    maxY: wasm.get_node_bounds_max_y(),
+  let lineVertices: number[] = [];
+  let triVertices: number[] = [];
+  let textTriVertices: number[] = [];
+
+  let currentTheme: 'light' | 'dark' = 'dark';
+
+  const CATEGORY_RGBA_DARK: Record<string, [number, number, number, number]> = {
+    math: [0.345, 0.651, 1, 1],
+    logic: [0.82, 0.529, 0.949, 1],
+    string: [0.247, 0.725, 0.314, 1],
+    flow: [0.337, 0.741, 0.741, 1],
+    io: [0.949, 0.6, 0.2, 1],
+    memory: [0.961, 0.318, 0.286, 1],
   };
-}
 
-const CATEGORY_MAP: Record<string, number> = {
-  math: 1,
-  logic: 2,
-  text: 3,
-  collection: 4,
-  control: 5,
-  capability: 6,
-};
-
-export function getCategoryRgb(category: string): { readonly r: number; readonly g: number; readonly b: number } {
-  const wasm = getFlintRenderWorkerWasm();
-  const packed = wasm.getCategoryRgb(CATEGORY_MAP[category] ?? 0);
-  return {
-    r: Math.round(((packed >> 16) & 255) / 2.55) / 100,
-    g: Math.round(((packed >> 8) & 255) / 2.55) / 100,
-    b: Math.round((packed & 255) / 2.55) / 100,
+  const CATEGORY_RGBA_LIGHT: Record<string, [number, number, number, number]> = {
+    math: [0.035, 0.412, 0.855, 1],
+    logic: [0.51, 0.22, 0.76, 1],
+    string: [0.102, 0.498, 0.216, 1],
+    flow: [0.051, 0.518, 0.549, 1],
+    io: [0.749, 0.42, 0.051, 1],
+    memory: [0.812, 0.133, 0.18, 1],
   };
-}
 
-export function getPortTypeRgb(typeName: FlintTypeName): {
-  readonly r: number;
-  readonly g: number;
-  readonly b: number;
-} {
-  const wasm = getFlintRenderWorkerWasm();
-  const name: string =
-    typeof typeName === 'string'
-      ? typeName
-      : typeName.kind === 'type-name'
-        ? (typeName.reference ?? typeName.name)
-        : 'f32';
-  let typeId = 0;
-  switch (name) {
-    case 'f32':
-    case 'f64':
-    case 'i32':
-    case 'i64':
-    case 'u32':
-    case 'u64': {
-      typeId = 1;
-      break;
-    }
-    case 'bool': {
-      typeId = 2;
-      break;
-    }
-    case 'string': {
-      typeId = 3;
-      break;
-    }
-    case 'Vector':
-    case 'Map': {
-      typeId = 4;
-      break;
-    }
-    default: {
-      break;
-    }
+  function getCategoryRgba(
+    category?: string,
+    isMeta?: boolean,
+    isDark = currentTheme !== 'light',
+  ): [number, number, number, number] {
+    if (isMeta) return isDark ? [0.345, 0.651, 1, 1] : [0.035, 0.412, 0.855, 1];
+    const table = isDark ? CATEGORY_RGBA_DARK : CATEGORY_RGBA_LIGHT;
+    return (category ? table[category] : undefined) ?? (isDark ? [0.545, 0.58, 0.62, 1] : [0.341, 0.376, 0.416, 1]);
   }
 
-  const packed = wasm.getPortTypeRgb(typeId);
-  return {
-    r: Math.round(((packed >> 16) & 255) / 2.55) / 100,
-    g: Math.round(((packed >> 8) & 255) / 2.55) / 100,
-    b: Math.round((packed & 255) / 2.55) / 100,
+  const PORT_TYPE_RGBA_DARK: Record<string, [number, number, number, number]> = {
+    float32: [0.345, 0.651, 1, 1],
+    int32: [0.82, 0.529, 0.949, 1],
+    string: [0.247, 0.725, 0.314, 1],
+    boolean: [0.337, 0.741, 0.741, 1],
   };
-}
 
-export interface RenderWorkerInputMessage {
-  readonly type:
-    'init' | 'set_graph' | 'pan' | 'zoom' | 'resize' | 'set_selection' | 'set_pulse' | 'hit_test' | 'set_trace_state';
-  readonly canvas?: OffscreenCanvas;
-  readonly width?: number;
-  readonly height?: number;
-  readonly dpr?: number;
-  readonly nodes?: readonly FlintGraphNode[];
-  readonly edges?: readonly FlintGraphEdge[];
-  readonly groups?: readonly FlintGraphGroup[];
-  readonly deltaX?: number;
-  readonly deltaY?: number;
-  readonly dx?: number;
-  readonly dy?: number;
-  readonly factor?: number;
-  readonly cursorX?: number;
-  readonly cursorY?: number;
-  readonly screenX?: number;
-  readonly screenY?: number;
-  readonly snapRadius?: number;
-  readonly selectedNodeIds?: readonly string[];
-  readonly selectedEdgeIds?: readonly string[];
-  readonly activeEdgeId?: string;
-  readonly edgeId?: string;
-  readonly progress?: number;
-  readonly activeNodeIds?: readonly string[];
-  readonly trappedNodeId?: string;
-  readonly edgePulses?: readonly {
-    readonly edgeId: string;
-    readonly offset: number;
-  }[];
-  readonly requestId?: string;
-}
-
-export interface FlintPerformanceMetrics {
-  readonly updateTimeMs: number;
-  readonly renderTimeMs: number;
-  readonly spatialIndexTimeMs: number;
-  readonly bufferUploadTimeMs: number;
-  readonly drawPassTimeMs: number;
-  readonly totalFrameTimeMs: number;
-  readonly visibleNodesCount: number;
-  readonly visibleEdgesCount: number;
-  readonly visiblePinsCount: number;
-  readonly dpr: number;
-  readonly isFallback: boolean;
-}
-
-export interface RenderWorkerOutputMessage {
-  readonly type: 'ready' | 'frame' | 'hit_test_result' | 'hit_result' | 'camera_changed' | 'error';
-  readonly supported?: boolean;
-  readonly fps?: number;
-  readonly performance?: FlintPerformanceMetrics;
-  readonly visibleNodes?: number;
-  readonly visibleEdges?: number;
-  readonly camera?: FlintCamera;
-  readonly hit?: FlintHitResult;
-  readonly requestId?: string;
-  readonly error?: string;
-}
-
-export const getFlintCameraWasm: (imports?: WebAssembly.Imports) => FlintRenderWorkerWasmExports =
-  getFlintRenderWorkerWasm;
-
-export class FlintRenderEngine {
-  private camera: FlintCamera;
-  private readonly spatialIndex: SpatialGridIndex;
-  private nodes: readonly FlintGraphNode[] = [];
-  private edges: readonly FlintGraphEdge[] = [];
-  private groups: readonly FlintGraphGroup[] = [];
-  private selectedNodeIds = new Set<string>();
-  private readonly selectedEdgeIds = new Set<string>();
-  private readonly activeNodeIds = new Set<string>();
-  private trappedNodeId?: string;
-  private readonly edgePulses = new Map<string, number>();
-  private connectingEdge?: {
-    readonly fromNodeId: string;
-    readonly fromPortId: string;
-    readonly cursorX: number;
-    readonly cursorY: number;
+  const PORT_TYPE_RGBA_LIGHT: Record<string, [number, number, number, number]> = {
+    float32: [0.035, 0.412, 0.855, 1],
+    int32: [0.51, 0.22, 0.76, 1],
+    string: [0.102, 0.498, 0.216, 1],
+    boolean: [0.051, 0.518, 0.549, 1],
   };
-  private hoveredPort?: { readonly nodeId: string; readonly portId: string };
-  private onMessageCallback?: (message: RenderWorkerOutputMessage) => void;
 
-  private flintWasmInstance?: FlintRenderWorkerWasmExports;
-  private gpuContext?: FlintWebGpuContext;
-  private canvas2dCtx?: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
-  private canvas?: OffscreenCanvas | HTMLCanvasElement;
-  private dpr = 1;
-  private activeBackend: 'webgpu' | 'webgl' | 'canvas2d' = 'webgpu';
-  private performanceStats: FlintPerformanceMetrics = {
+  function getPortTypeRgba(
+    type?: string | unknown,
+    isDark = currentTheme !== 'light',
+  ): [number, number, number, number] {
+    const key = typeof type === 'string' ? type : undefined;
+    const table = isDark ? PORT_TYPE_RGBA_DARK : PORT_TYPE_RGBA_LIGHT;
+    return (key ? table[key] : undefined) ?? (isDark ? [0.788, 0.82, 0.851, 1] : [0.141, 0.161, 0.184, 1]);
+  }
+
+  const pushGpuNodeInstance = (
+    posX: number,
+    posY: number,
+    w: number,
+    h: number,
+    radius: number,
+    fillRgba: readonly [number, number, number, number],
+    borderRgba: readonly [number, number, number, number] = [0, 0, 0, 0],
+    borderWidth = 0,
+    glowRgba: readonly [number, number, number, number] = [0, 0, 0, 0],
+  ): void => {
+    nodeInstanceFloats.push(
+      posX,
+      posY,
+      w,
+      h,
+      radius,
+      fillRgba[0],
+      fillRgba[1],
+      fillRgba[2],
+      fillRgba[3],
+      borderRgba[0],
+      borderRgba[1],
+      borderRgba[2],
+      borderRgba[3],
+      borderWidth,
+      glowRgba[0],
+      glowRgba[1],
+      glowRgba[2],
+      glowRgba[3],
+    );
+  };
+
+  const pushGpuPinInstance = (
+    posX: number,
+    posY: number,
+    radius: number,
+    fillRgba: readonly [number, number, number, number],
+    borderWidth = 0,
+    borderRgba: readonly [number, number, number, number] = [0, 0, 0, 0],
+  ): void => {
+    pinInstanceFloats.push(
+      posX,
+      posY,
+      radius * 2,
+      radius * 2,
+      radius,
+      fillRgba[0],
+      fillRgba[1],
+      fillRgba[2],
+      fillRgba[3],
+      borderRgba[0],
+      borderRgba[1],
+      borderRgba[2],
+      borderRgba[3],
+      borderWidth,
+      0,
+      0,
+      0,
+      0,
+    );
+  };
+
+  const pushLine = (
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number,
+    r: number,
+    g: number,
+    b: number,
+    a: number,
+  ): void => {
+    lineVertices.push(x1, y1, r, g, b, a, x2, y2, r, g, b, a);
+  };
+
+  const pushRect = (x: number, y: number, w: number, h: number, r: number, g: number, b: number, a: number): void => {
+    triVertices.push(
+      x,
+      y,
+      r,
+      g,
+      b,
+      a,
+      x + w,
+      y,
+      r,
+      g,
+      b,
+      a,
+      x,
+      y + h,
+      r,
+      g,
+      b,
+      a,
+      x,
+      y + h,
+      r,
+      g,
+      b,
+      a,
+      x + w,
+      y,
+      r,
+      g,
+      b,
+      a,
+      x + w,
+      y + h,
+      r,
+      g,
+      b,
+      a,
+    );
+  };
+
+  const pushRectBorder = (
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    r: number,
+    g: number,
+    b: number,
+    a: number,
+  ): void => {
+    pushLine(x, y, x + w, y, r, g, b, a);
+    pushLine(x + w, y, x + w, y + h, r, g, b, a);
+    pushLine(x + w, y + h, x, y + h, r, g, b, a);
+    pushLine(x, y + h, x, y, r, g, b, a);
+  };
+
+  const pushCircle = (
+    cx: number,
+    cy: number,
+    radius: number,
+    r: number,
+    g: number,
+    b: number,
+    a: number,
+    segments = 12,
+  ): void => {
+    for (let i = 0; i < segments; i++) {
+      const a1 = (i / segments) * Math.PI * 2;
+      const a2 = ((i + 1) / segments) * Math.PI * 2;
+      triVertices.push(
+        cx,
+        cy,
+        r,
+        g,
+        b,
+        a,
+        cx + Math.cos(a1) * radius,
+        cy + Math.sin(a1) * radius,
+        r,
+        g,
+        b,
+        a,
+        cx + Math.cos(a2) * radius,
+        cy + Math.sin(a2) * radius,
+        r,
+        g,
+        b,
+        a,
+      );
+    }
+  };
+
+  let canvas2dCtx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | undefined;
+  let activeBackend: 'webgpu' | 'webgl' | 'canvas2d' = 'canvas2d';
+
+  let performanceStats: FlintPerformanceMetrics = {
     updateTimeMs: 0.5,
     renderTimeMs: 1.2,
     spatialIndexTimeMs: 0.2,
@@ -783,291 +662,544 @@ export class FlintRenderEngine {
     isFallback: false,
   };
 
-  private gridPipeline?: GPURenderPipeline;
-  private nodesPipeline?: GPURenderPipeline;
-  private edgesPipeline?: GPURenderPipeline;
-  private cameraBuffer?: GPUBuffer;
-  private cameraBindGroup?: GPUBindGroup;
-  private nodeInstanceBuffer?: GPUBuffer;
-  private edgeInstanceBuffer?: GPUBuffer;
-  private pinInstanceBuffer?: GPUBuffer;
-  private nodeInstanceFloats: number[] = [];
-  private edgeInstanceFloats: number[] = [];
-  private pinInstanceFloats: number[] = [];
+  function prepareWebGpuInstances(): void {
+    if (!gpuContext || !cameraBuffer || !wasm) return;
 
-  private currentPassEncoder?: GPURenderPassEncoder;
-  private currentCommandEncoder?: GPUCommandEncoder;
-  private currentVisibleNodesCount = 0;
-  private currentVisibleEdgesCount = 0;
+    nodeInstanceFloats = [];
+    edgeInstanceFloats = [];
+    pinInstanceFloats = [];
+    webGpuTextVertices = [];
 
-  private glCtx?: WebGLRenderingContext | WebGL2RenderingContext;
-  private glProgram?: WebGLProgram;
-  private glVertexBuffer?: WebGLBuffer;
-  private glUniformLocations?: {
-    readonly u_resolution: WebGLUniformLocation | null;
-    readonly u_camera: WebGLUniformLocation | null;
-    readonly u_zoom: WebGLUniformLocation | null;
-  };
-  private glAttribLocations?: {
-    readonly a_position: number;
-    readonly a_color: number;
-  };
+    wasm.font_clear_text_vertices();
+    wasm.getViewportBounds(200);
 
-  constructor(viewportWidth = 800, viewportHeight = 600, onMessage?: (message: RenderWorkerOutputMessage) => void) {
-    this.camera = createCamera(viewportWidth, viewportHeight, 0, 0, 1);
-    this.spatialIndex = new SpatialGridIndex(256);
-    this.onMessageCallback = onMessage;
-    this.initFlintWasm();
-  }
+    // 1. Groups
+    for (const group of groups) {
+      const groupNodes = nodes.filter((n) => group.nodeIds.includes(n.id));
+      if (groupNodes.length === 0) continue;
 
-  private initFlintWasm(): void {
-    const capabilities: WebAssembly.Imports = {
-      'webgpu.upload_camera_buffer': {
-        gpu_upload_camera_buffer: () => {
-          if (!this.gpuContext || !this.cameraBuffer) return;
-          this.prepareWebGpuInstances();
-          const vpMatrix = createViewProjectionMatrix(this.camera);
-          const cameraUniforms = new Float32Array(24);
-          cameraUniforms.set(vpMatrix, 0);
-          cameraUniforms[16] = this.camera.viewportWidth;
-          cameraUniforms[17] = this.camera.viewportHeight;
-          cameraUniforms[18] = this.camera.x;
-          cameraUniforms[19] = this.camera.y;
-          cameraUniforms[20] = this.camera.zoom;
-          cameraUniforms[21] = 1;
-          this.gpuContext.queue.writeBuffer(this.cameraBuffer, 0, cameraUniforms);
-        },
-      },
-      'webgpu.write_node_instance': {
-        gpu_write_node_instance: (
-          posX: number,
-          posY: number,
-          width: number,
-          height: number,
-          radius: number,
-          isSelected: number,
-          isActive: number,
-          isTrapped: number,
-        ) => {
-          const glowR = isTrapped ? 0.95 : isActive ? 0.15 : 0;
-          const glowG = isTrapped ? 0.15 : isActive ? 0.75 : 0;
-          const glowB = isTrapped ? 0.2 : isActive ? 1 : 0;
-          const glowA = isTrapped ? 0.9 : isActive ? 0.8 : isSelected ? 0.5 : 0;
+      let gMinX = Number.POSITIVE_INFINITY;
+      let gMinY = Number.POSITIVE_INFINITY;
+      let gMaxX = Number.NEGATIVE_INFINITY;
+      let gMaxY = Number.NEGATIVE_INFINITY;
+      for (const node of groupNodes) {
+        const bounds = getNodeBounds(node);
+        if (bounds.minX < gMinX) gMinX = bounds.minX;
+        if (bounds.maxX > gMaxX) gMaxX = bounds.maxX;
+        if (bounds.minY < gMinY) gMinY = bounds.minY;
+        if (bounds.maxY > gMaxY) gMaxY = bounds.maxY;
+      }
+      const pad = 24;
+      const gx = gMinX - pad;
+      const gy = gMinY - pad - 22;
+      const gw = gMaxX - gMinX + pad * 2;
+      const gh = gMaxY - gMinY + pad * 2 + 22;
 
-          const fillR = 0.14;
-          const fillG = 0.16;
-          const fillB = 0.22;
-          const fillA = 0.95;
+      const isDark = currentTheme !== 'light';
 
-          const borderR = isSelected ? 0.35 : 0.28;
-          const borderG = isSelected ? 0.65 : 0.32;
-          const borderB = isSelected ? 1 : 0.42;
-          const borderA = isSelected ? 1 : 0.7;
-          const borderWidth = isSelected ? 2.5 : 1.2;
+      // Group background
+      const groupBg: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 0.08] : [0.035, 0.412, 0.855, 0.06];
+      const groupBorder: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 0.5] : [0.035, 0.412, 0.855, 0.6];
+      pushGpuNodeInstance(gx + gw / 2, gy + gh / 2, gw, gh, 12, groupBg, groupBorder, 2);
 
-          this.nodeInstanceFloats.push(
-            posX,
-            posY,
-            width,
-            height,
-            radius,
-            fillR,
-            fillG,
-            fillB,
-            fillA,
-            borderR,
-            borderG,
-            borderB,
-            borderA,
-            borderWidth,
-            glowR,
-            glowG,
-            glowB,
-            glowA,
-          );
-        },
-      },
-      'webgpu.write_edge_instance': {
-        gpu_write_edge_instance: (
-          p0x: number,
-          p0y: number,
-          p1x: number,
-          p1y: number,
-          p2x: number,
-          p2y: number,
-          p3x: number,
-          p3y: number,
-          isSelected: number,
-          isActive: number,
-          pulseOffsetPermille: number,
-        ) => {
-          const colorR = isSelected ? 0.35 : isActive ? 0.2 : 0.45;
-          const colorG = isSelected ? 0.65 : isActive ? 0.8 : 0.52;
-          const colorB = isSelected ? 1 : isActive ? 1 : 0.65;
-          const colorA = isSelected ? 1 : isActive ? 0.9 : 0.8;
-          const width = isSelected ? 3 : 2.5;
+      // Group title pill
+      const titleW = wasm.font_measure_text(group.title, 12);
+      const pillW = titleW + 16;
+      pushGpuNodeInstance(
+        gx + 10 + pillW / 2,
+        gy + 4 + 10,
+        pillW,
+        20,
+        4,
+        isDark ? [0.35, 0.65, 1, 0.9] : [0.035, 0.412, 0.855, 0.9],
+      );
+      wasm.font_append_text_quads(group.title, gx + 18, gy + 18, 12, 1, 1, 1, 1, 0);
+    }
 
-          this.edgeInstanceFloats.push(
-            p0x,
-            p0y,
-            p1x,
-            p1y,
-            p2x,
-            p2y,
-            p3x,
-            p3y,
-            colorR,
-            colorG,
-            colorB,
-            colorA,
-            width,
-            pulseOffsetPermille / 1000,
-            isActive,
-          );
-        },
-      },
-      'webgpu.write_pin_instance': {
-        gpu_write_pin_instance: (
-          posX: number,
-          posY: number,
-          radius: number,
-          isHovered: number,
-          isActive: number,
-          _isOutput: number,
-        ) => {
-          const fillR = isHovered ? 0 : isActive ? 0 : 0.15;
-          const fillG = isHovered ? 0.94 : isActive ? 1 : 0.2;
-          const fillB = isHovered ? 1 : isActive ? 0.53 : 0.28;
-          const fillA = 1;
+    // 2. Nodes
+    const isDark = currentTheme !== 'light';
+    for (const node of nodes) {
+      const bounds = getNodeBounds(node);
+      const w = bounds.maxX - bounds.minX;
+      const h = bounds.maxY - bounds.minY;
+      const x = bounds.minX;
+      const y = bounds.minY;
 
-          const borderR = 0.45;
-          const borderG = 0.52;
-          const borderB = 0.65;
-          const borderA = 0.8;
-          const borderWidth = isHovered ? 2.5 : 1.5;
+      const isSelected = selectedNodeIds.has(node.id);
+      const isActive = activeNodeIds.has(node.id);
+      const isTrapped = trappedNodeId === node.id;
+      const isMeta = node.metaSubgraph !== undefined || node.operation === 'meta';
 
-          const glowR = isHovered ? 0 : isActive ? 0 : 0;
-          const glowG = isHovered ? 0.94 : isActive ? 1 : 0;
-          const glowB = isHovered ? 1 : isActive ? 0.53 : 0;
-          const glowA = isHovered ? 0.8 : isActive ? 0.6 : 0;
+      const fillRgba: [number, number, number, number] = isDark
+        ? isMeta
+          ? [0.086, 0.118, 0.18, 0.95]
+          : [0.129, 0.149, 0.176, 0.95]
+        : isMeta
+          ? [0.941, 0.957, 0.973, 0.98]
+          : [1, 1, 1, 0.98];
 
-          this.pinInstanceFloats.push(
-            posX,
-            posY,
-            radius * 2,
-            radius * 2,
-            radius,
-            fillR,
-            fillG,
-            fillB,
-            fillA,
-            borderR,
-            borderG,
-            borderB,
-            borderA,
-            borderWidth,
-            glowR,
-            glowG,
-            glowB,
-            glowA,
-          );
-        },
-      },
-      'webgpu.upload_node_buffer': {
-        gpu_upload_node_buffer: () => {
-          if (!this.gpuContext) return;
-          const { device, queue } = this.gpuContext;
-          if (this.nodeInstanceFloats.length > 0) {
-            const nodeData = new Float32Array(this.nodeInstanceFloats);
-            if (!this.nodeInstanceBuffer || this.nodeInstanceBuffer.size < nodeData.byteLength) {
-              this.nodeInstanceBuffer?.destroy();
-              this.nodeInstanceBuffer = device.createBuffer({
-                size: Math.max(nodeData.byteLength, 1024),
-                usage: 0x00_20 | 0x00_08,
-              });
-            }
-            queue.writeBuffer(this.nodeInstanceBuffer, 0, nodeData);
-          }
-        },
-      },
-      'webgpu.upload_edge_buffer': {
-        gpu_upload_edge_buffer: () => {
-          if (!this.gpuContext) return;
-          const { device, queue } = this.gpuContext;
-          if (this.edgeInstanceFloats.length > 0) {
-            const edgeData = new Float32Array(this.edgeInstanceFloats);
-            if (!this.edgeInstanceBuffer || this.edgeInstanceBuffer.size < edgeData.byteLength) {
-              this.edgeInstanceBuffer?.destroy();
-              this.edgeInstanceBuffer = device.createBuffer({
-                size: Math.max(edgeData.byteLength, 1024),
-                usage: 0x00_20 | 0x00_08,
-              });
-            }
-            queue.writeBuffer(this.edgeInstanceBuffer, 0, edgeData);
-          }
-        },
-      },
-      'webgpu.upload_pin_buffer': {
-        gpu_upload_pin_buffer: () => {
-          if (!this.gpuContext) return;
-          const { device, queue } = this.gpuContext;
-          if (this.pinInstanceFloats.length > 0) {
-            const pinData = new Float32Array(this.pinInstanceFloats);
-            if (!this.pinInstanceBuffer || this.pinInstanceBuffer.size < pinData.byteLength) {
-              this.pinInstanceBuffer?.destroy();
-              this.pinInstanceBuffer = device.createBuffer({
-                size: Math.max(pinData.byteLength, 1024),
-                usage: 0x00_20 | 0x00_08,
-              });
-            }
-            queue.writeBuffer(this.pinInstanceBuffer, 0, pinData);
-          }
-        },
-      },
-      'webgpu.render_begin': { gpu_render_begin: () => this.gpuBeginPass() },
-      'webgpu.render_grid': { gpu_render_grid: () => this.gpuDrawGrid() },
-      'webgpu.render_edges': {
-        gpu_render_edges: (count: number) => this.gpuDrawEdges(count),
-      },
-      'webgpu.render_nodes': {
-        gpu_render_nodes: (count: number) => this.gpuDrawNodes(count),
-      },
-      'webgpu.render_pins': {
-        gpu_render_pins: (count: number) => this.gpuDrawPins(count),
-      },
-      'webgpu.render_end': { gpu_render_end: () => this.gpuEndPass() },
-      'webgl.render_frame': {
-        webgl_render_frame: () => this.renderWebGLFrame(),
-      },
-      'canvas2d.render_frame': {
-        canvas2d_render_frame: () => this.render2dFrame(),
-      },
-    };
-    try {
-      this.flintWasmInstance = getFlintRenderWorkerWasm(capabilities);
-      this.flintWasmInstance.spatial_init();
-    } catch {
-      this.flintWasmInstance = getFlintRenderWorkerWasm();
-      this.flintWasmInstance.spatial_init();
+      const borderRgba: [number, number, number, number] = isDark
+        ? isTrapped
+          ? [0.973, 0.318, 0.286, 1]
+          : isActive
+            ? [0.247, 0.725, 0.314, 1]
+            : isSelected
+              ? [0.345, 0.651, 1, 1]
+              : isMeta
+                ? [0.475, 0.753, 1, 0.8]
+                : [0.188, 0.212, 0.239, 0.8]
+        : isTrapped
+          ? [0.812, 0.133, 0.18, 1]
+          : isActive
+            ? [0.102, 0.498, 0.216, 1]
+            : isSelected
+              ? [0.035, 0.412, 0.855, 1]
+              : isMeta
+                ? [0.035, 0.412, 0.855, 0.85]
+                : [0.816, 0.843, 0.871, 0.9];
+
+      const borderWidth = isSelected || isTrapped || isActive ? 2.5 : 1.5;
+      const glowRgba: [number, number, number, number] = isDark
+        ? isTrapped
+          ? [0.973, 0.318, 0.286, 0.9]
+          : isActive
+            ? [0.247, 0.725, 0.314, 0.8]
+            : isSelected
+              ? [0.345, 0.651, 1, 0.5]
+              : [0, 0, 0, 0]
+        : isTrapped
+          ? [0.812, 0.133, 0.18, 0.5]
+          : isActive
+            ? [0.102, 0.498, 0.216, 0.5]
+            : isSelected
+              ? [0.035, 0.412, 0.855, 0.4]
+              : [0, 0, 0, 0];
+
+      // Node body
+      pushGpuNodeInstance(x + w / 2, y + h / 2, w, h, 8, fillRgba, borderRgba, borderWidth, glowRgba);
+
+      // Node header background
+      const headerRgba: [number, number, number, number] = isDark
+        ? isTrapped
+          ? [0.239, 0.078, 0.09, 1]
+          : isActive
+            ? [0.078, 0.239, 0.133, 1]
+            : isMeta
+              ? [0.051, 0.157, 0.278, 1]
+              : [0.086, 0.106, 0.133, 1]
+        : isTrapped
+          ? [0.996, 0.886, 0.886, 1]
+          : isActive
+            ? [0.863, 0.988, 0.906, 1]
+            : isMeta
+              ? [0.882, 0.925, 0.969, 1]
+              : [0.941, 0.949, 0.961, 1];
+      pushGpuNodeInstance(x + w / 2, y + 16, w - 2, 30, 4, headerRgba);
+
+      // Category accent bar (4px)
+      const catColor = getCategoryRgba(node.category, isMeta, isDark);
+      pushGpuNodeInstance(x + w / 2, y + 3, w - 4, 4, 2, catColor);
+
+      // Header separator
+      const sepColor: [number, number, number, number] = isDark
+        ? [0.188, 0.212, 0.239, 0.8]
+        : [0.816, 0.843, 0.871, 0.8];
+      pushGpuNodeInstance(x + w / 2, y + NODE_HEADER_HEIGHT, w - 2, 1, 0, sepColor);
+
+      // Node Text
+      // Title
+      const titleColor = isDark ? [0.941, 0.965, 0.988, 1] : [0.122, 0.137, 0.157, 1];
+      wasm.font_append_text_quads(node.title, x + 10, y + 17, 12, titleColor[0], titleColor[1], titleColor[2], 1, 0);
+
+      // Category / Meta pill
+      const catText = isMeta
+        ? `META (${node.metaSubgraph?.nodes.length ?? 0})`
+        : (node.category || 'OPERATION').toUpperCase();
+      const catTextColor = isMeta
+        ? isDark
+          ? [0.345, 0.651, 1, 1]
+          : [0.035, 0.412, 0.855, 1]
+        : isDark
+          ? [0.545, 0.58, 0.62, 1]
+          : [0.341, 0.376, 0.416, 1];
+      wasm.font_append_text_quads(
+        catText,
+        x + w - 10,
+        y + 17,
+        10,
+        catTextColor[0],
+        catTextColor[1],
+        catTextColor[2],
+        1,
+        1,
+      );
+
+      // Subtitle operation identifier
+      const subColor = isDark ? [0.545, 0.58, 0.62, 1] : [0.341, 0.376, 0.416, 1];
+      wasm.font_append_text_quads(node.operation, x + 10, y + 28, 9, subColor[0], subColor[1], subColor[2], 1, 0);
+
+      // Input pins & labels
+      for (const [idx, port] of (node.inputs ?? []).entries()) {
+        const py = node.position.y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
+        const isHovered = hoveredPort?.nodeId === node.id && hoveredPort?.portId === port.id;
+        const pinRadius = isHovered ? 7 : 5;
+        const portColor = getPortTypeRgba(port.type, isDark);
+        const pinInnerBg: [number, number, number, number] = isDark
+          ? [0.086, 0.106, 0.133, 1]
+          : [0.941, 0.949, 0.961, 1];
+
+        // Outer circle + inner dot
+        pushGpuPinInstance(node.position.x, py, pinRadius, portColor, 1.5, pinInnerBg);
+        pushGpuPinInstance(node.position.x, py, Math.max(1, pinRadius - 2), isHovered ? [1, 1, 1, 1] : portColor);
+
+        // Port label text
+        const portTextColor = isDark ? [0.788, 0.82, 0.851, 1] : [0.141, 0.161, 0.184, 1];
+        wasm.font_append_text_quads(
+          port.name,
+          node.position.x + 12,
+          py + 4,
+          11,
+          portTextColor[0],
+          portTextColor[1],
+          portTextColor[2],
+          1,
+          0,
+        );
+      }
+
+      // Output pins & labels
+      for (const [idx, port] of (node.outputs ?? []).entries()) {
+        const py = node.position.y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
+        const isHovered = hoveredPort?.nodeId === node.id && hoveredPort?.portId === port.id;
+        const pinRadius = isHovered ? 7 : 5;
+        const portColor = getPortTypeRgba(port.type, isDark);
+        const pinInnerBg: [number, number, number, number] = isDark
+          ? [0.086, 0.106, 0.133, 1]
+          : [0.941, 0.949, 0.961, 1];
+
+        // Outer circle + inner dot
+        pushGpuPinInstance(node.position.x + NODE_WIDTH, py, pinRadius, portColor, 1.5, pinInnerBg);
+        pushGpuPinInstance(
+          node.position.x + NODE_WIDTH,
+          py,
+          Math.max(1, pinRadius - 2),
+          isHovered ? [1, 1, 1, 1] : portColor,
+        );
+
+        // Port label text
+        const portTextColor = isDark ? [0.788, 0.82, 0.851, 1] : [0.141, 0.161, 0.184, 1];
+        wasm.font_append_text_quads(
+          port.name,
+          node.position.x + NODE_WIDTH - 12,
+          py + 4,
+          11,
+          portTextColor[0],
+          portTextColor[1],
+          portTextColor[2],
+          1,
+          1,
+        );
+      }
+
+      // Literal properties preview
+      if (node.properties && Object.keys(node.properties).length > 0) {
+        const firstVal = String(Object.values(node.properties)[0]);
+        const propColor = isDark ? [0.345, 0.651, 1, 1] : [0.035, 0.412, 0.855, 1];
+        wasm.font_append_text_quads(
+          `= ${firstVal}`,
+          x + 10,
+          y + h - 8,
+          10,
+          propColor[0],
+          propColor[1],
+          propColor[2],
+          1,
+          0,
+        );
+      }
+    }
+
+    const floatCount = wasm.font_get_vertex_float_count();
+    const vbufPtr = wasm.font_get_vertex_buffer_ptr();
+    const f64View = new Float64Array(wasm.memory.buffer, vbufPtr, floatCount);
+    webGpuTextVertices = [...f64View];
+
+    const nodeMap = new Map<string, FlintGraphNode>(nodes.map((n) => [n.id, n]));
+    for (const edge of edges) {
+      const fromNode = nodeMap.get(edge.fromNodeId);
+      const toNode = nodeMap.get(edge.toNodeId);
+      if (!fromNode || !toNode) continue;
+
+      const fromPortIndex = Math.max(
+        0,
+        (fromNode.outputs ?? []).findIndex((p) => p.id === edge.fromPortId),
+      );
+      const toPortIndex = Math.max(
+        0,
+        (toNode.inputs ?? []).findIndex((p) => p.id === edge.toPortId),
+      );
+
+      const p0x = fromNode.position.x + NODE_WIDTH;
+      const p0y = fromNode.position.y + NODE_HEADER_HEIGHT + fromPortIndex * PORT_ROW_HEIGHT + 14;
+      const p3x = toNode.position.x;
+      const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIndex * PORT_ROW_HEIGHT + 14;
+
+      const isSelected = selectedEdgeIds.has(edge.id) ? 1 : 0;
+      const isActive = edgePulses.has(edge.id) ? 1 : 0;
+      const pulseOffset = edgePulses.get(edge.id) ?? 0;
+
+      wasm.compute_edge_instance(p0x, p0y, p3x, p3y, isSelected, isActive, Math.round(pulseOffset * 1000));
+    }
+
+    if (connectingEdge) {
+      const fromNode = nodeMap.get(connectingEdge.fromNodeId);
+      if (fromNode) {
+        const outIdx = Math.max(
+          0,
+          (fromNode.outputs ?? []).findIndex((p) => p.id === connectingEdge?.fromPortId),
+        );
+        const p0x = fromNode.position.x + NODE_WIDTH;
+        const p0y = fromNode.position.y + NODE_HEADER_HEIGHT + outIdx * PORT_ROW_HEIGHT + 14;
+        const p3x = connectingEdge.cursorX;
+        const p3y = connectingEdge.cursorY;
+        wasm.compute_edge_instance(p0x, p0y, p3x, p3y, 1, 1, 500);
+      }
     }
   }
 
-  async initWebGpu(canvas: OffscreenCanvas | HTMLCanvasElement): Promise<boolean> {
+  async function initWebGpuBackend(targetCanvas: OffscreenCanvas | HTMLCanvasElement): Promise<boolean> {
     try {
-      this.gpuContext = await createWebGpuContext(canvas);
-      await this.initPipelines();
+      const nav = typeof navigator === 'undefined' ? undefined : (navigator as unknown as WebGpuNavigator);
+      if (!nav?.gpu) return false;
+      const adapter = await nav.gpu.requestAdapter({ powerPreference: 'high-performance' });
+      if (!adapter) return false;
+      const device = await adapter.requestDevice();
+      const canvasObj = targetCanvas as unknown as { getContext(id: string): GPUCanvasContext | null };
+      const context = canvasObj.getContext('webgpu');
+      if (!context) return false;
+      const format = nav.gpu.getPreferredCanvasFormat();
+      context.configure({ device, format, alphaMode: 'premultiplied' });
+
+      if (gpuDevice !== device) {
+        nodeInstanceBuffer?.destroy();
+        nodeInstanceBuffer = undefined;
+        edgeInstanceBuffer?.destroy();
+        edgeInstanceBuffer = undefined;
+        pinInstanceBuffer?.destroy();
+        pinInstanceBuffer = undefined;
+        textVertexBuffer?.destroy();
+        textVertexBuffer = undefined;
+        fontTexture?.destroy?.();
+        fontTexture = undefined;
+        fontSampler = undefined;
+        fontBindGroup = undefined;
+        textPipeline = undefined;
+        cameraBuffer?.destroy();
+        cameraBuffer = undefined;
+        cameraBindGroup = undefined;
+        gridPipeline = undefined;
+        nodesPipeline = undefined;
+        edgesPipeline = undefined;
+      }
+
+      gpuDevice = device;
+      gpuContext = context;
+
+      const cameraBindGroupLayout = device.createBindGroupLayout({
+        entries: [{ binding: 0, visibility: 3, buffer: { type: 'uniform' } }],
+      });
+      const pipelineLayout = device.createPipelineLayout({ bindGroupLayouts: [cameraBindGroupLayout] });
+
+      cameraBuffer = device.createBuffer({ size: 256, usage: 0x00_40 | 0x00_08 });
+      cameraBindGroup = device.createBindGroup({
+        layout: cameraBindGroupLayout,
+        entries: [{ binding: 0, resource: { buffer: cameraBuffer } }],
+      });
+
+      const gridModule = device.createShaderModule({ code: GRID_WGSL });
+      gridPipeline = device.createRenderPipeline({
+        layout: pipelineLayout,
+        vertex: { module: gridModule, entryPoint: 'vs_main' },
+        fragment: {
+          module: gridModule,
+          entryPoint: 'fs_main',
+          targets: [
+            {
+              format,
+              blend: {
+                color: { srcFactor: 'src-alpha', dstFactor: 'one-minus-src-alpha', operation: 'add' },
+                alpha: { srcFactor: 'one', dstFactor: 'one-minus-src-alpha', operation: 'add' },
+              },
+            },
+          ],
+        },
+        primitive: { topology: 'triangle-list' },
+      });
+
+      const nodesModule = device.createShaderModule({ code: NODES_WGSL });
+      nodesPipeline = device.createRenderPipeline({
+        layout: pipelineLayout,
+        vertex: {
+          module: nodesModule,
+          entryPoint: 'vs_main',
+          buffers: [
+            {
+              arrayStride: 72,
+              stepMode: 'instance',
+              attributes: [
+                { shaderLocation: 0, offset: 0, format: 'float32x2' },
+                { shaderLocation: 1, offset: 8, format: 'float32x2' },
+                { shaderLocation: 2, offset: 16, format: 'float32' },
+                { shaderLocation: 3, offset: 20, format: 'float32x4' },
+                { shaderLocation: 4, offset: 36, format: 'float32x4' },
+                { shaderLocation: 5, offset: 52, format: 'float32' },
+                { shaderLocation: 6, offset: 56, format: 'float32x4' },
+              ],
+            },
+          ],
+        },
+        fragment: {
+          module: nodesModule,
+          entryPoint: 'fs_main',
+          targets: [
+            {
+              format,
+              blend: {
+                color: { srcFactor: 'src-alpha', dstFactor: 'one-minus-src-alpha', operation: 'add' },
+                alpha: { srcFactor: 'one', dstFactor: 'one-minus-src-alpha', operation: 'add' },
+              },
+            },
+          ],
+        },
+        primitive: { topology: 'triangle-list' },
+      });
+
+      const edgesModule = device.createShaderModule({ code: EDGES_WGSL });
+      edgesPipeline = device.createRenderPipeline({
+        layout: pipelineLayout,
+        vertex: {
+          module: edgesModule,
+          entryPoint: 'vs_main',
+          buffers: [
+            {
+              arrayStride: 60,
+              stepMode: 'instance',
+              attributes: [
+                { shaderLocation: 0, offset: 0, format: 'float32x2' },
+                { shaderLocation: 1, offset: 8, format: 'float32x2' },
+                { shaderLocation: 2, offset: 16, format: 'float32x2' },
+                { shaderLocation: 3, offset: 24, format: 'float32x2' },
+                { shaderLocation: 4, offset: 32, format: 'float32x4' },
+                { shaderLocation: 5, offset: 48, format: 'float32' },
+                { shaderLocation: 6, offset: 52, format: 'float32' },
+                { shaderLocation: 7, offset: 56, format: 'float32' },
+              ],
+            },
+          ],
+        },
+        fragment: {
+          module: edgesModule,
+          entryPoint: 'fs_main',
+          targets: [
+            {
+              format,
+              blend: {
+                color: { srcFactor: 'src-alpha', dstFactor: 'one-minus-src-alpha', operation: 'add' },
+                alpha: { srcFactor: 'one', dstFactor: 'one-minus-src-alpha', operation: 'add' },
+              },
+            },
+          ],
+        },
+        primitive: { topology: 'triangle-strip' },
+      });
+
+      const atlasSize = wasm ? wasm.font_get_atlas_size() : 512;
+      const atlasPtr = wasm ? wasm.font_get_atlas_ptr() : 0;
+      const rgbaData =
+        wasm && atlasPtr > 0
+          ? new Uint8Array(wasm.memory.buffer, atlasPtr, atlasSize * atlasSize * 4)
+          : new Uint8Array(atlasSize * atlasSize * 4);
+      fontTexture = device.createTexture({
+        size: [atlasSize, atlasSize, 1],
+        format: 'rgba8unorm',
+        usage: 0x00_04 | 0x00_02,
+      });
+      device.queue.writeTexture(
+        { texture: fontTexture },
+        rgbaData,
+        { bytesPerRow: atlasSize * 4, rowsPerImage: atlasSize },
+        [atlasSize, atlasSize, 1],
+      );
+      fontSampler = device.createSampler({
+        magFilter: 'linear',
+        minFilter: 'linear',
+      });
+      const fontBindGroupLayout = device.createBindGroupLayout({
+        entries: [
+          { binding: 0, visibility: 2, texture: { sampleType: 'float' } },
+          { binding: 1, visibility: 2, sampler: { type: 'filtering' } },
+        ],
+      });
+      if (fontTexture && fontSampler) {
+        fontBindGroup = device.createBindGroup({
+          layout: fontBindGroupLayout,
+          entries: [
+            { binding: 0, resource: fontTexture.createView() },
+            { binding: 1, resource: fontSampler },
+          ],
+        });
+      }
+
+      const textPipelineLayout = device.createPipelineLayout({
+        bindGroupLayouts: [cameraBindGroupLayout, fontBindGroupLayout],
+      });
+      const textModule = device.createShaderModule({ code: TEXT_WGSL });
+      textPipeline = device.createRenderPipeline({
+        layout: textPipelineLayout,
+        vertex: {
+          module: textModule,
+          entryPoint: 'vs_main',
+          buffers: [
+            {
+              arrayStride: 32,
+              stepMode: 'vertex',
+              attributes: [
+                { shaderLocation: 0, offset: 0, format: 'float32x2' },
+                { shaderLocation: 1, offset: 8, format: 'float32x2' },
+                { shaderLocation: 2, offset: 16, format: 'float32x4' },
+              ],
+            },
+          ],
+        },
+        fragment: {
+          module: textModule,
+          entryPoint: 'fs_main',
+          targets: [
+            {
+              format,
+              blend: {
+                color: { srcFactor: 'src-alpha', dstFactor: 'one-minus-src-alpha', operation: 'add' },
+                alpha: { srcFactor: 'one', dstFactor: 'one-minus-src-alpha', operation: 'add' },
+              },
+            },
+          ],
+        },
+        primitive: { topology: 'triangle-list' },
+      });
+
       return true;
     } catch {
       return false;
     }
   }
 
-  initWebGL(canvas: HTMLCanvasElement | OffscreenCanvas): boolean {
+  function initWebGLBackend(targetCanvas: OffscreenCanvas | HTMLCanvasElement): boolean {
     try {
-      const gl = (canvas.getContext('webgl2') || canvas.getContext('webgl')) as
+      const gl = (targetCanvas.getContext('webgl2', { preserveDrawingBuffer: true, alpha: true }) ||
+        targetCanvas.getContext('webgl', { preserveDrawingBuffer: true, alpha: true })) as
         WebGLRenderingContext | WebGL2RenderingContext | null;
       if (!gl) return false;
-      this.glCtx = gl;
+      glCtx = gl;
 
       const vsSource = `
         attribute vec2 a_position;
@@ -1110,1174 +1242,200 @@ export class FlintRenderEngine {
       gl.linkProgram(program);
       if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return false;
 
-      this.glProgram = program;
-      this.glVertexBuffer = gl.createBuffer() ?? undefined;
-      this.glUniformLocations = {
+      glProgram = program;
+      glVertexBuffer = gl.createBuffer() ?? undefined;
+      glUniformLocations = {
         u_resolution: gl.getUniformLocation(program, 'u_resolution'),
         u_camera: gl.getUniformLocation(program, 'u_camera'),
         u_zoom: gl.getUniformLocation(program, 'u_zoom'),
       };
-      this.glAttribLocations = {
+      glAttribLocations = {
         a_position: gl.getAttribLocation(program, 'a_position'),
         a_color: gl.getAttribLocation(program, 'a_color'),
       };
+
+      gl.getExtension('OES_standard_derivatives');
+
+      const vsTextSource = `
+        attribute vec2 a_position;
+        attribute vec2 a_uv;
+        attribute vec4 a_color;
+        uniform vec2 u_resolution;
+        uniform vec2 u_camera;
+        uniform float u_zoom;
+        varying vec2 v_uv;
+        varying vec4 v_color;
+        void main() {
+          vec2 screenPos = (a_position - u_camera) * u_zoom + (u_resolution * 0.5);
+          vec2 clipSpace = (screenPos / u_resolution) * 2.0 - 1.0;
+          gl_Position = vec4(clipSpace.x, -clipSpace.y, 0.0, 1.0);
+          v_uv = a_uv;
+          v_color = a_color;
+        }
+      `;
+      const fsTextSource = `
+        #extension GL_OES_standard_derivatives : enable
+        precision mediump float;
+        uniform sampler2D u_fontTexture;
+        varying vec2 v_uv;
+        varying vec4 v_color;
+        void main() {
+          float dist = texture2D(u_fontTexture, v_uv).r;
+          float edge = 0.5;
+          #ifdef GL_OES_standard_derivatives
+            float smoothing = clamp(fwidth(dist) * 0.65, 0.005, 0.15);
+          #else
+            float smoothing = 0.05;
+          #endif
+          float alpha = smoothstep(edge - smoothing, edge + smoothing, dist);
+          if (alpha < 0.01) discard;
+          gl_FragColor = vec4(v_color.rgb, v_color.a * alpha);
+        }
+      `;
+
+      const vsText = gl.createShader(gl.VERTEX_SHADER);
+      if (vsText) {
+        gl.shaderSource(vsText, vsTextSource);
+        gl.compileShader(vsText);
+        const fsText = gl.createShader(gl.FRAGMENT_SHADER);
+        if (fsText) {
+          gl.shaderSource(fsText, fsTextSource);
+          gl.compileShader(fsText);
+          const textProgram = gl.createProgram();
+          if (textProgram) {
+            gl.attachShader(textProgram, vsText);
+            gl.attachShader(textProgram, fsText);
+            gl.linkProgram(textProgram);
+            if (gl.getProgramParameter(textProgram, gl.LINK_STATUS)) {
+              glTextProgram = textProgram;
+              glTexVertexBuffer = gl.createBuffer() ?? undefined;
+              glTextUniformLocations = {
+                u_resolution: gl.getUniformLocation(textProgram, 'u_resolution'),
+                u_camera: gl.getUniformLocation(textProgram, 'u_camera'),
+                u_zoom: gl.getUniformLocation(textProgram, 'u_zoom'),
+                u_fontTexture: gl.getUniformLocation(textProgram, 'u_fontTexture'),
+              };
+              glTextAttribLocations = {
+                a_position: gl.getAttribLocation(textProgram, 'a_position'),
+                a_uv: gl.getAttribLocation(textProgram, 'a_uv'),
+                a_color: gl.getAttribLocation(textProgram, 'a_color'),
+              };
+
+              const atlasSize = wasm ? wasm.font_get_atlas_size() : 512;
+              const atlasPtr = wasm ? wasm.font_get_atlas_ptr() : 0;
+              const rgbaData =
+                wasm && atlasPtr > 0
+                  ? new Uint8Array(wasm.memory.buffer, atlasPtr, atlasSize * atlasSize * 4)
+                  : new Uint8Array(atlasSize * atlasSize * 4);
+              const tex = gl.createTexture();
+              if (tex) {
+                gl.bindTexture(gl.TEXTURE_2D, tex);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, atlasSize, atlasSize, 0, gl.RGBA, gl.UNSIGNED_BYTE, rgbaData);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                glFontTexture = tex;
+              }
+            }
+          }
+        }
+      }
+
       return true;
     } catch {
       return false;
     }
   }
 
-  init2dFallback(canvas: HTMLCanvasElement | OffscreenCanvas): void {
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      this.canvas2dCtx = ctx as CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
-    }
-  }
-
-  async initialize(canvas: OffscreenCanvas | HTMLCanvasElement, dpr?: number): Promise<boolean> {
-    this.canvas = canvas;
-    if (dpr !== undefined && dpr > 0) {
-      this.dpr = dpr;
-    }
-    this.updateCanvasDimensions();
-
-    const wasm = this.flintWasmInstance ?? getFlintRenderWorkerWasm();
-    const hasWebGpu =
-      typeof navigator !== 'undefined' && 'gpu' in navigator && (navigator as WebGpuNavigator).gpu !== undefined;
-    let hasWebGL = false;
-    let has2D = false;
+  function init2dBackend(targetCanvas: OffscreenCanvas | HTMLCanvasElement): boolean {
     try {
-      const probeCanvas =
-        typeof OffscreenCanvas === 'undefined'
-          ? typeof document === 'undefined'
-            ? undefined
-            : document.createElement('canvas')
-          : new OffscreenCanvas(1, 1);
-      if (probeCanvas) {
-        hasWebGL = Boolean(probeCanvas.getContext('webgl2') || probeCanvas.getContext('webgl'));
+      const ctx = targetCanvas.getContext('2d') as CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null;
+      if (ctx) {
+        canvas2dCtx = ctx;
+        return true;
       }
+      return false;
     } catch {
-      hasWebGL = false;
-    }
-    try {
-      const probe2d =
-        typeof OffscreenCanvas === 'undefined'
-          ? typeof document === 'undefined'
-            ? undefined
-            : document.createElement('canvas')
-          : new OffscreenCanvas(1, 1);
-      if (probe2d) {
-        has2D = Boolean(probe2d.getContext('2d'));
-      }
-    } catch {
-      has2D = false;
-    }
-
-    let selectedTier = Number(wasm.backend_select_tier(hasWebGpu, hasWebGL, has2D));
-    wasm.engine_set_backend(selectedTier);
-    let initialized = false;
-
-    if (selectedTier === 1) {
-      initialized = await this.initWebGpu(canvas);
-      if (initialized) {
-        this.activeBackend = 'webgpu';
-      } else {
-        selectedTier = Number(wasm.backend_fallback_next(1, hasWebGL, has2D));
-        wasm.engine_set_backend(selectedTier);
-      }
-    }
-
-    if (!initialized && selectedTier === 2) {
-      initialized = this.initWebGL(canvas);
-      if (initialized) {
-        this.activeBackend = 'webgl';
-      } else {
-        selectedTier = Number(wasm.backend_fallback_next(2, false, has2D));
-        wasm.engine_set_backend(selectedTier);
-      }
-    }
-
-    if (!initialized) {
-      this.init2dFallback(canvas);
-      this.activeBackend = 'canvas2d';
-      wasm.engine_set_backend(3);
-      initialized = this.canvas2dCtx !== undefined;
-    }
-
-    this.renderFrame();
-    return initialized && this.activeBackend === 'webgpu';
-  }
-
-  destroy(): void {
-    this.nodeInstanceBuffer?.destroy();
-    this.edgeInstanceBuffer?.destroy();
-    this.pinInstanceBuffer?.destroy();
-    this.cameraBuffer?.destroy();
-    if (this.glProgram && this.glCtx) {
-      this.glCtx.deleteProgram(this.glProgram);
-    }
-    if (this.glVertexBuffer && this.glCtx) {
-      this.glCtx.deleteBuffer(this.glVertexBuffer);
+      return false;
     }
   }
 
-  private async initPipelines(): Promise<void> {
-    if (!this.gpuContext) return;
-    const { device, format } = this.gpuContext;
-
-    const cameraBindGroupLayout = device.createBindGroupLayout({
-      entries: [
-        {
-          binding: 0,
-          visibility: 3, // GPUShaderStage.VERTEX (1) | GPUShaderStage.FRAGMENT (2)
-          buffer: { type: 'uniform' },
-        },
-      ],
-    });
-
-    const pipelineLayout = device.createPipelineLayout({
-      bindGroupLayouts: [cameraBindGroupLayout],
-    });
-
-    this.cameraBuffer = device.createBuffer({
-      size: 256, // Uniform buffer accommodating CameraUniform (88+ bytes) aligned to 256 bytes
-      usage: 0x00_40 | 0x00_08, // GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
-    });
-
-    this.cameraBindGroup = device.createBindGroup({
-      layout: cameraBindGroupLayout,
-      entries: [
-        {
-          binding: 0,
-          resource: { buffer: this.cameraBuffer },
-        },
-      ],
-    });
-
-    const gridModule = device.createShaderModule({ code: GRID_WGSL });
-    this.gridPipeline = device.createRenderPipeline({
-      layout: pipelineLayout,
-      vertex: { module: gridModule, entryPoint: 'vs_main' },
-      fragment: {
-        module: gridModule,
-        entryPoint: 'fs_main',
-        targets: [
-          {
-            format,
-            blend: {
-              color: {
-                srcFactor: 'src-alpha',
-                dstFactor: 'one-minus-src-alpha',
-                operation: 'add',
-              },
-              alpha: {
-                srcFactor: 'one',
-                dstFactor: 'one-minus-src-alpha',
-                operation: 'add',
-              },
-            },
-          },
-        ],
-      },
-      primitive: { topology: 'triangle-list' },
-    });
-
-    const nodesModule = device.createShaderModule({ code: NODES_WGSL });
-    this.nodesPipeline = device.createRenderPipeline({
-      layout: pipelineLayout,
-      vertex: {
-        module: nodesModule,
-        entryPoint: 'vs_main',
-        buffers: [
-          {
-            arrayStride: 72,
-            stepMode: 'instance',
-            attributes: [
-              { shaderLocation: 0, offset: 0, format: 'float32x2' },
-              { shaderLocation: 1, offset: 8, format: 'float32x2' },
-              { shaderLocation: 2, offset: 16, format: 'float32' },
-              { shaderLocation: 3, offset: 20, format: 'float32x4' },
-              { shaderLocation: 4, offset: 36, format: 'float32x4' },
-              { shaderLocation: 5, offset: 52, format: 'float32' },
-              { shaderLocation: 6, offset: 56, format: 'float32x4' },
-            ],
-          },
-        ],
-      },
-      fragment: {
-        module: nodesModule,
-        entryPoint: 'fs_main',
-        targets: [
-          {
-            format,
-            blend: {
-              color: {
-                srcFactor: 'src-alpha',
-                dstFactor: 'one-minus-src-alpha',
-                operation: 'add',
-              },
-              alpha: {
-                srcFactor: 'one',
-                dstFactor: 'one-minus-src-alpha',
-                operation: 'add',
-              },
-            },
-          },
-        ],
-      },
-      primitive: { topology: 'triangle-list' },
-    });
-
-    const edgesModule = device.createShaderModule({ code: EDGES_WGSL });
-    this.edgesPipeline = device.createRenderPipeline({
-      layout: pipelineLayout,
-      vertex: {
-        module: edgesModule,
-        entryPoint: 'vs_main',
-        buffers: [
-          {
-            arrayStride: 60,
-            stepMode: 'instance',
-            attributes: [
-              { shaderLocation: 0, offset: 0, format: 'float32x2' },
-              { shaderLocation: 1, offset: 8, format: 'float32x2' },
-              { shaderLocation: 2, offset: 16, format: 'float32x2' },
-              { shaderLocation: 3, offset: 24, format: 'float32x2' },
-              { shaderLocation: 4, offset: 32, format: 'float32x4' },
-              { shaderLocation: 5, offset: 48, format: 'float32' },
-              { shaderLocation: 6, offset: 52, format: 'float32' },
-              { shaderLocation: 7, offset: 56, format: 'float32' },
-            ],
-          },
-        ],
-      },
-      fragment: {
-        module: edgesModule,
-        entryPoint: 'fs_main',
-        targets: [
-          {
-            format,
-            blend: {
-              color: {
-                srcFactor: 'src-alpha',
-                dstFactor: 'one-minus-src-alpha',
-                operation: 'add',
-              },
-              alpha: {
-                srcFactor: 'one',
-                dstFactor: 'one-minus-src-alpha',
-                operation: 'add',
-              },
-            },
-          },
-        ],
-      },
-      primitive: { topology: 'triangle-strip' },
-    });
-  }
-
-  setGraph(
-    nodes: readonly FlintGraphNode[],
-    edges: readonly FlintGraphEdge[],
-    groups: readonly FlintGraphGroup[] = [],
-  ): void {
-    const startTime = typeof performance === 'undefined' ? 0 : performance.now();
-    this.nodes = nodes;
-    this.edges = edges;
-    this.groups = groups;
-    this.rebuildSpatialIndex();
-    if (startTime > 0) {
-      const updateDuration = Math.max(0.05, performance.now() - startTime);
-      this.performanceStats = {
-        ...this.performanceStats,
-        updateTimeMs: Math.round((this.performanceStats.updateTimeMs * 0.7 + updateDuration * 0.3) * 10) / 10,
-      };
-    }
-    this.renderFrame();
-  }
-
-  setSelection(selectedNodeIds: readonly string[], selectedEdgeIds: readonly string[] = []): void {
-    this.selectedNodeIds = new Set(selectedNodeIds);
-    this.selectedEdgeIds.clear();
-    for (const edgeId of selectedEdgeIds) {
-      this.selectedEdgeIds.add(edgeId);
-    }
-    this.renderFrame();
-  }
-
-  setConnectingEdge(edge?: {
-    readonly fromNodeId: string;
-    readonly fromPortId: string;
-    readonly cursorX: number;
-    readonly cursorY: number;
-  }): void {
-    this.connectingEdge = edge;
-    this.renderFrame();
-  }
-
-  setHoveredPort(port?: { readonly nodeId: string; readonly portId: string }): void {
-    this.hoveredPort = port;
-    this.renderFrame();
-  }
-
-  getHoveredPort(): { readonly nodeId: string; readonly portId: string } | undefined {
-    return this.hoveredPort;
-  }
-
-  setEdgePulse(edgeId: string, progress: number): void {
-    this.edgePulses.set(edgeId, progress);
-    this.renderFrame();
-  }
-
-  clearEdgePulses(): void {
-    this.edgePulses.clear();
-    this.renderFrame();
-  }
-
-  setActiveNodes(nodeIds: readonly string[]): void {
-    this.activeNodeIds.clear();
-    for (const id of nodeIds) {
-      this.activeNodeIds.add(id);
-    }
-    this.renderFrame();
-  }
-
-  setTrappedNode(nodeId?: string): void {
-    this.trappedNodeId = nodeId;
-    this.renderFrame();
-  }
-
-  pan(deltaX: number, deltaY: number): void {
-    this.camera = panCamera(this.camera, deltaX, deltaY);
-    this.onMessageCallback?.({ type: 'camera_changed', camera: this.camera });
-    this.renderFrame();
-  }
-
-  zoom(arg1: number, arg2?: number, arg3?: number): void {
-    let factor = arg1;
-    let cx = arg2;
-    let cy = arg3;
-    if (arg3 !== undefined && typeof arg3 === 'number') {
-      cx = arg1;
-      cy = arg2;
-      factor = arg3;
-    }
-    const cursorX = cx ?? this.camera.viewportWidth / 2;
-    const cursorY = cy ?? this.camera.viewportHeight / 2;
-    this.camera = zoomCamera(this.camera, cursorX, cursorY, factor);
-    this.onMessageCallback?.({ type: 'camera_changed', camera: this.camera });
-    this.renderFrame();
-  }
-
-  resize(width: number, height: number, dpr?: number): void {
-    if (dpr !== undefined && dpr > 0) {
-      this.dpr = dpr;
-    }
-    this.camera = createCamera(width, height, this.camera.x, this.camera.y, this.camera.zoom);
-    this.updateCanvasDimensions();
-    this.renderFrame();
-  }
-
-  setDpr(dpr: number): void {
-    if (dpr > 0 && dpr !== this.dpr) {
-      this.dpr = dpr;
-      this.updateCanvasDimensions();
-      this.renderFrame();
-    }
-  }
-
-  getDpr(): number {
-    return this.dpr;
-  }
-
-  getPerformanceStats(): FlintPerformanceMetrics {
-    return {
-      ...this.performanceStats,
-      dpr: this.dpr,
-      isFallback: !this.gpuContext,
-    };
-  }
-
-  queryNodesInBox(worldBounds: ViewBounds): readonly string[] {
-    return this.spatialIndex.queryBox(worldBounds);
-  }
-
-  private updateCanvasDimensions(): void {
-    if (!this.canvas) return;
-    const targetW = Math.max(1, Math.round(this.camera.viewportWidth * this.dpr));
-    const targetH = Math.max(1, Math.round(this.camera.viewportHeight * this.dpr));
-    if (this.canvas.width !== targetW || this.canvas.height !== targetH) {
-      this.canvas.width = targetW;
-      this.canvas.height = targetH;
-      if (this.gpuContext && this.gpuContext.context) {
-        try {
-          this.gpuContext.context.configure({
-            device: this.gpuContext.device,
-            format: this.gpuContext.format,
-            alphaMode: 'premultiplied',
-          });
-        } catch {
-          // Ignore reconfiguration failure during teardown
-        }
-      }
-    }
-  }
-
-  screenToWorld(screenX: number, screenY: number): WorldPoint {
-    return screenToWorld(screenX, screenY, this.camera);
-  }
-
-  worldToScreen(worldX: number, worldY: number): ScreenPoint {
-    return worldToScreen(worldX, worldY, this.camera);
-  }
-
-  getCamera(): FlintCamera {
-    return this.camera;
-  }
-
-  hitTestSync(screenX: number, screenY: number, snapRadius = 14): FlintHitResult | undefined {
-    const world = this.screenToWorld(screenX, screenY);
-
-    const hitPort = this.spatialIndex.hitTestPort(world.x, world.y, snapRadius);
-    if (hitPort) {
-      return {
-        type: 'port',
-        nodeId: hitPort.nodeId,
-        portId: hitPort.portId,
-        worldX: world.x,
-        worldY: world.y,
-      };
-    }
-
-    const hitNodeId = this.spatialIndex.hitTestPoint(world.x, world.y);
-    if (hitNodeId) {
-      return {
-        type: 'node',
-        nodeId: hitNodeId,
-        worldX: world.x,
-        worldY: world.y,
-      };
-    }
-
-    const wasm = getFlintRenderWorkerWasm();
-    const nodeMap = new Map<string, FlintGraphNode>(this.nodes.map((n) => [n.id, n]));
-    const threshold = Math.max(8, 12 / Math.max(0.2, this.camera.zoom));
-
-    for (const edge of this.edges) {
-      const fromNode = nodeMap.get(edge.fromNodeId);
-      const toNode = nodeMap.get(edge.toNodeId);
-      if (!fromNode || !toNode) continue;
-      const fromPortIdx = Math.max(
-        0,
-        fromNode.outputs.findIndex((p) => p.id === edge.fromPortId),
-      );
-      const toPortIdx = Math.max(
-        0,
-        toNode.inputs.findIndex((p) => p.id === edge.toPortId),
-      );
-      const p0x = fromNode.position.x + NODE_WIDTH;
-      const p0y = fromNode.position.y + NODE_HEADER_HEIGHT + fromPortIdx * PORT_ROW_HEIGHT + 14;
-      const p3x = toNode.position.x;
-      const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIdx * PORT_ROW_HEIGHT + 14;
-
-      const isHit = wasm.edge_hit_test(
-        Math.round(world.x),
-        Math.round(world.y),
-        Math.round(p0x),
-        Math.round(p0y),
-        Math.round(p3x),
-        Math.round(p3y),
-        Math.round(threshold),
-      );
-      if (isHit) {
-        return {
-          type: 'edge',
-          nodeId: '',
-          edgeId: edge.id,
-          worldX: world.x,
-          worldY: world.y,
-        };
-      }
-    }
-
-    return undefined;
-  }
-
-  private rebuildSpatialIndex(): void {
-    this.spatialIndex.clear();
-    for (const node of this.nodes) {
-      const bounds = getNodeBounds(node);
-      this.spatialIndex.insert(node.id, bounds);
-
-      for (const [idx, port] of node.inputs.entries()) {
-        const portY = node.position.y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
-        this.spatialIndex.registerPort({
-          nodeId: node.id,
-          portId: port.id,
-          direction: 'input',
-          position: { x: node.position.x, y: portY },
-        });
-      }
-
-      for (const [idx, port] of node.outputs.entries()) {
-        const portY = node.position.y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
-        this.spatialIndex.registerPort({
-          nodeId: node.id,
-          portId: port.id,
-          direction: 'output',
-          position: { x: node.position.x + NODE_WIDTH, y: portY },
-        });
-      }
-    }
-  }
-
-  renderFrame(): void {
-    const startTime = typeof performance === 'undefined' ? 0 : performance.now();
-    const wasm = this.flintWasmInstance ?? getFlintRenderWorkerWasm();
-
-    const visibleBounds = getViewportBounds(this.camera, 200);
-    const visibleNodeIds = new Set(this.spatialIndex.queryBox(visibleBounds));
-    const visibleNodesCount = visibleNodeIds.size;
-    const visibleEdgesCount = this.edges.length;
-    const visiblePinsCount = visibleNodesCount * 4;
-
-    wasm.engine_render_frame(visibleNodesCount, visibleEdgesCount, visiblePinsCount);
-    if (startTime > 0) {
-      const renderDuration = Math.max(0.05, performance.now() - startTime);
-      this.performanceStats = {
-        ...this.performanceStats,
-        renderTimeMs: Math.round((this.performanceStats.renderTimeMs * 0.7 + renderDuration * 0.3) * 10) / 10,
-        totalFrameTimeMs:
-          Math.round(
-            (this.performanceStats.updateTimeMs + (this.performanceStats.renderTimeMs * 0.7 + renderDuration * 0.3)) *
-              10,
-          ) / 10,
-      };
-      this.onMessageCallback?.({
-        type: 'frame',
-        performance: this.getPerformanceStats(),
-        visibleNodes: this.currentVisibleNodesCount,
-        visibleEdges: this.currentVisibleEdgesCount,
-      });
-    }
-  }
-
-  private prepareWebGpuInstances(): void {
-    if (!this.gpuContext || !this.cameraBuffer) return;
-    const wasm = this.flintWasmInstance ?? getFlintRenderWorkerWasm();
-
+  function render2dFrame(): void {
+    if (!canvas2dCtx || !wasm) return;
+    const ctx = canvas2dCtx;
+    const isDark = currentTheme !== 'light';
     const t0 = typeof performance === 'undefined' ? 0 : performance.now();
-    this.nodeInstanceFloats = [];
-    this.edgeInstanceFloats = [];
-    this.pinInstanceFloats = [];
-
-    const visibleBounds = getViewportBounds(this.camera, 200);
-    const visibleNodeIds = new Set(this.spatialIndex.queryBox(visibleBounds));
-    const visibleNodes = this.nodes.filter((n) => visibleNodeIds.has(n.id));
-    const t1 = typeof performance === 'undefined' ? 0 : performance.now();
-    if (t0 > 0) {
-      this.performanceStats = {
-        ...this.performanceStats,
-        spatialIndexTimeMs: Math.round((this.performanceStats.spatialIndexTimeMs * 0.7 + (t1 - t0) * 0.3) * 100) / 100,
-      };
-    }
-
-    for (const node of visibleNodes) {
-      const bounds = getNodeBounds(node);
-      const isSelected = this.selectedNodeIds.has(node.id) ? 1 : 0;
-      const isActive = this.activeNodeIds.has(node.id) ? 1 : 0;
-      const isTrapped = this.trappedNodeId === node.id ? 1 : 0;
-
-      wasm.compute_node_instance(bounds.minX, bounds.minY, bounds.maxX, bounds.maxY, isSelected, isActive, isTrapped);
-
-      for (const [idx, port] of node.inputs.entries()) {
-        const py = node.position.y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
-        const isHovered = this.hoveredPort?.nodeId === node.id && this.hoveredPort?.portId === port.id ? 1 : 0;
-        wasm.compute_pin_instance(node.position.x, py, isHovered, 0, 0);
-      }
-      for (const [idx, port] of node.outputs.entries()) {
-        const py = node.position.y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
-        const isHovered = this.hoveredPort?.nodeId === node.id && this.hoveredPort?.portId === port.id ? 1 : 0;
-        wasm.compute_pin_instance(node.position.x + NODE_WIDTH, py, isHovered, 0, 1);
-      }
-    }
-
-    const nodeMap = new Map<string, FlintGraphNode>(this.nodes.map((n) => [n.id, n]));
-    for (const edge of this.edges) {
-      const fromNode = nodeMap.get(edge.fromNodeId);
-      const toNode = nodeMap.get(edge.toNodeId);
-      if (!fromNode || !toNode) continue;
-
-      const fromPortIndex = Math.max(
-        0,
-        fromNode.outputs.findIndex((p) => p.id === edge.fromPortId),
-      );
-      const toPortIndex = Math.max(
-        0,
-        toNode.inputs.findIndex((p) => p.id === edge.toPortId),
-      );
-
-      const p0x = fromNode.position.x + NODE_WIDTH;
-      const p0y = fromNode.position.y + NODE_HEADER_HEIGHT + fromPortIndex * PORT_ROW_HEIGHT + 14;
-      const p3x = toNode.position.x;
-      const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIndex * PORT_ROW_HEIGHT + 14;
-
-      const isSelected = this.selectedEdgeIds.has(edge.id) ? 1 : 0;
-      const isActive = this.edgePulses.has(edge.id) ? 1 : 0;
-      const pulseOffset = this.edgePulses.get(edge.id) ?? 0;
-
-      wasm.compute_edge_instance(p0x, p0y, p3x, p3y, isSelected, isActive, Math.round(pulseOffset * 1000));
-    }
-
-    if (this.connectingEdge) {
-      const fromNode = nodeMap.get(this.connectingEdge.fromNodeId);
-      if (fromNode) {
-        const outIdx = Math.max(
-          0,
-          fromNode.outputs.findIndex((p) => p.id === this.connectingEdge?.fromPortId),
-        );
-        const p0x = fromNode.position.x + NODE_WIDTH;
-        const p0y = fromNode.position.y + NODE_HEADER_HEIGHT + outIdx * PORT_ROW_HEIGHT + 14;
-        const p3x = this.connectingEdge.cursorX;
-        const p3y = this.connectingEdge.cursorY;
-        wasm.compute_edge_instance(p0x, p0y, p3x, p3y, 1, 1, 500);
-      }
-    }
-
-    this.currentVisibleNodesCount = visibleNodes.length;
-    this.currentVisibleEdgesCount = Math.floor(this.edgeInstanceFloats.length / 15);
-    const visiblePinsCount = Math.floor(this.pinInstanceFloats.length / 18);
-
-    const t2 = typeof performance === 'undefined' ? 0 : performance.now();
-    if (t1 > 0) {
-      this.performanceStats = {
-        ...this.performanceStats,
-        bufferUploadTimeMs: Math.round((this.performanceStats.bufferUploadTimeMs * 0.7 + (t2 - t1) * 0.3) * 100) / 100,
-        visibleNodesCount: this.currentVisibleNodesCount,
-        visibleEdgesCount: this.currentVisibleEdgesCount,
-        visiblePinsCount,
-      };
-    }
-  }
-
-  private gpuBeginPass(): void {
-    if (!this.gpuContext) return;
-    const { device, context } = this.gpuContext;
-    this.currentCommandEncoder = device.createCommandEncoder();
-    const currentTexture = context.getCurrentTexture();
-    const textureView = currentTexture.createView();
-
-    this.currentPassEncoder = this.currentCommandEncoder.beginRenderPass({
-      colorAttachments: [
-        {
-          view: textureView,
-          clearValue: { r: 0.08, g: 0.09, b: 0.12, a: 1 },
-          loadOp: 'clear',
-          storeOp: 'store',
-        },
-      ],
-    });
-  }
-
-  private gpuDrawGrid(): void {
-    if (!this.currentPassEncoder || !this.gridPipeline || !this.cameraBindGroup) return;
-    this.currentPassEncoder.setPipeline(this.gridPipeline);
-    this.currentPassEncoder.setBindGroup(0, this.cameraBindGroup);
-    this.currentPassEncoder.draw(6, 1, 0, 0);
-  }
-
-  private gpuDrawEdges(count: number): void {
-    if (
-      !this.currentPassEncoder ||
-      !this.edgesPipeline ||
-      !this.cameraBindGroup ||
-      !this.edgeInstanceBuffer ||
-      count === 0
-    )
-      return;
-    this.currentPassEncoder.setPipeline(this.edgesPipeline);
-    this.currentPassEncoder.setBindGroup(0, this.cameraBindGroup);
-    this.currentPassEncoder.setVertexBuffer(0, this.edgeInstanceBuffer);
-    this.currentPassEncoder.draw(66, count, 0, 0);
-  }
-
-  private gpuDrawNodes(count: number): void {
-    if (
-      !this.currentPassEncoder ||
-      !this.nodesPipeline ||
-      !this.cameraBindGroup ||
-      !this.nodeInstanceBuffer ||
-      count === 0
-    )
-      return;
-    this.currentPassEncoder.setPipeline(this.nodesPipeline);
-    this.currentPassEncoder.setBindGroup(0, this.cameraBindGroup);
-    this.currentPassEncoder.setVertexBuffer(0, this.nodeInstanceBuffer);
-    this.currentPassEncoder.draw(6, count, 0, 0);
-  }
-
-  private gpuDrawPins(count: number): void {
-    if (
-      !this.currentPassEncoder ||
-      !this.nodesPipeline ||
-      !this.cameraBindGroup ||
-      !this.pinInstanceBuffer ||
-      count === 0
-    )
-      return;
-    this.currentPassEncoder.setPipeline(this.nodesPipeline);
-    this.currentPassEncoder.setBindGroup(0, this.cameraBindGroup);
-    this.currentPassEncoder.setVertexBuffer(0, this.pinInstanceBuffer);
-    this.currentPassEncoder.draw(6, count, 0, 0);
-  }
-
-  private gpuEndPass(): void {
-    if (!this.currentPassEncoder || !this.currentCommandEncoder || !this.gpuContext) return;
-    this.currentPassEncoder.end();
-    this.gpuContext.queue.submit([this.currentCommandEncoder.finish()]);
-    this.currentPassEncoder = undefined;
-    this.currentCommandEncoder = undefined;
-  }
-
-  private renderWebGLFrame(): void {
-    const gl = this.glCtx;
-    if (!gl || !this.glProgram || !this.glVertexBuffer || !this.glUniformLocations || !this.glAttribLocations) return;
-
-    const t0 = typeof performance === 'undefined' ? 0 : performance.now();
-    const visibleBounds = getViewportBounds(this.camera, 200);
-    const visibleNodeIds = new Set(this.spatialIndex.queryBox(visibleBounds));
-    const visibleNodes = this.nodes.filter((n) => visibleNodeIds.has(n.id));
-
-    this.currentVisibleNodesCount = visibleNodes.length;
-    this.currentVisibleEdgesCount = this.edges.length;
-
-    const lineVertices: number[] = [];
-    const triVertices: number[] = [];
-
-    const pushLine = (
-      x1: number,
-      y1: number,
-      x2: number,
-      y2: number,
-      r: number,
-      g: number,
-      b: number,
-      a: number,
-    ): void => {
-      lineVertices.push(x1, y1, r, g, b, a, x2, y2, r, g, b, a);
-    };
-
-    const pushRect = (x: number, y: number, w: number, h: number, r: number, g: number, b: number, a: number): void => {
-      triVertices.push(
-        x,
-        y,
-        r,
-        g,
-        b,
-        a,
-        x + w,
-        y,
-        r,
-        g,
-        b,
-        a,
-        x,
-        y + h,
-        r,
-        g,
-        b,
-        a,
-        x,
-        y + h,
-        r,
-        g,
-        b,
-        a,
-        x + w,
-        y,
-        r,
-        g,
-        b,
-        a,
-        x + w,
-        y + h,
-        r,
-        g,
-        b,
-        a,
-      );
-    };
-
-    const pushRectBorder = (
-      x: number,
-      y: number,
-      w: number,
-      h: number,
-      r: number,
-      g: number,
-      b: number,
-      a: number,
-    ): void => {
-      pushLine(x, y, x + w, y, r, g, b, a);
-      pushLine(x + w, y, x + w, y + h, r, g, b, a);
-      pushLine(x + w, y + h, x, y + h, r, g, b, a);
-      pushLine(x, y + h, x, y, r, g, b, a);
-    };
-
-    const pushCircle = (
-      cx: number,
-      cy: number,
-      radius: number,
-      r: number,
-      g: number,
-      b: number,
-      a: number,
-      segments = 12,
-    ): void => {
-      for (let index = 0; index < segments; index++) {
-        const theta1 = (index / segments) * Math.PI * 2;
-        const theta2 = ((index + 1) / segments) * Math.PI * 2;
-        triVertices.push(
-          cx,
-          cy,
-          r,
-          g,
-          b,
-          a,
-          cx + Math.cos(theta1) * radius,
-          cy + Math.sin(theta1) * radius,
-          r,
-          g,
-          b,
-          a,
-          cx + Math.cos(theta2) * radius,
-          cy + Math.sin(theta2) * radius,
-          r,
-          g,
-          b,
-          a,
-        );
-      }
-    };
-
-    // 1. Grid
-    const minorSpacing = 24;
-    const majorSpacing = 120;
-    const startX = Math.floor(visibleBounds.minX / minorSpacing) * minorSpacing;
-    const endX = Math.ceil(visibleBounds.maxX / minorSpacing) * minorSpacing;
-    const startY = Math.floor(visibleBounds.minY / minorSpacing) * minorSpacing;
-    const endY = Math.ceil(visibleBounds.maxY / minorSpacing) * minorSpacing;
-
-    for (let x = startX; x <= endX; x += minorSpacing) {
-      const isMajor = Math.round(x) % majorSpacing === 0;
-      const alpha = isMajor ? 0.35 : 0.15;
-      pushLine(x, visibleBounds.minY, x, visibleBounds.maxY, 0.35, 0.45, 0.6, alpha);
-    }
-    for (let y = startY; y <= endY; y += minorSpacing) {
-      const isMajor = Math.round(y) % majorSpacing === 0;
-      const alpha = isMajor ? 0.35 : 0.15;
-      pushLine(visibleBounds.minX, y, visibleBounds.maxX, y, 0.35, 0.45, 0.6, alpha);
-    }
-
-    // 2. Groups
-    for (const group of this.groups) {
-      const groupNodes = this.nodes.filter((n) => group.nodeIds.includes(n.id));
-      if (groupNodes.length === 0) continue;
-
-      let minX = Infinity;
-      let minY = Infinity;
-      let maxX = -Infinity;
-      let maxY = -Infinity;
-      for (const node of groupNodes) {
-        const b = getNodeBounds(node);
-        minX = Math.min(minX, b.minX);
-        minY = Math.min(minY, b.minY);
-        maxX = Math.max(maxX, b.maxX);
-        maxY = Math.max(maxY, b.maxY);
-      }
-      const padding = 28;
-      const gx = minX - padding;
-      const gy = minY - padding - 24;
-      const gw = maxX - minX + padding * 2;
-      const gh = maxY - minY + padding * 2 + 24;
-
-      pushRect(gx, gy, gw, gh, 0.22, 0.27, 0.34, 0.25);
-      pushRectBorder(gx, gy, gw, gh, 0.35, 0.42, 0.52, 0.7);
-      pushRect(gx + 10, gy + 4, 80, 20, 0.18, 0.22, 0.28, 0.9);
-    }
-
-    // 3. Edges
-    const wasm = this.flintWasmInstance ?? getFlintRenderWorkerWasm();
-    const nodeMap = new Map<string, FlintGraphNode>(this.nodes.map((n) => [n.id, n]));
-
-    for (const edge of this.edges) {
-      const fromNode = nodeMap.get(edge.fromNodeId);
-      const toNode = nodeMap.get(edge.toNodeId);
-      if (!fromNode || !toNode) continue;
-
-      const fromPortIndex = Math.max(
-        0,
-        fromNode.outputs.findIndex((p) => p.id === edge.fromPortId),
-      );
-      const toPortIndex = Math.max(
-        0,
-        toNode.inputs.findIndex((p) => p.id === edge.toPortId),
-      );
-
-      const p0x = fromNode.position.x + NODE_WIDTH;
-      const p0y = fromNode.position.y + NODE_HEADER_HEIGHT + fromPortIndex * PORT_ROW_HEIGHT + 14;
-      const p3x = toNode.position.x;
-      const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIndex * PORT_ROW_HEIGHT + 14;
-
-      const isSelected = this.selectedEdgeIds.has(edge.id);
-      const isActive = this.edgePulses.has(edge.id);
-      const dx = wasm.bezier_control_dx(p0x, p3x);
-      const p1x = p0x + dx;
-      const p1y = p0y;
-      const p2x = p3x - dx;
-      const p2y = p3y;
-
-      const segments = 16;
-      let prevX = p0x;
-      let prevY = p0y;
-
-      const r = isSelected ? 0.35 : isActive ? 0.25 : 0.45;
-      const g = isSelected ? 0.65 : isActive ? 0.85 : 0.52;
-      const b = isSelected ? 1 : isActive ? 1 : 0.65;
-      const a = isSelected || isActive ? 1 : 0.85;
-
-      for (let s = 1; s <= segments; s++) {
-        const t = s / segments;
-        const u = 1 - t;
-        const curX = u * u * u * p0x + 3 * u * u * t * p1x + 3 * u * t * t * p2x + t * t * t * p3x;
-        const curY = u * u * u * p0y + 3 * u * u * t * p1y + 3 * u * t * t * p2y + t * t * t * p3y;
-        pushLine(prevX, prevY, curX, curY, r, g, b, a);
-        if (isSelected || isActive) {
-          pushLine(prevX, prevY + 1, curX, curY + 1, r, g, b, 0.6);
-          pushLine(prevX, prevY - 1, curX, curY - 1, r, g, b, 0.6);
-        }
-        prevX = curX;
-        prevY = curY;
-      }
-    }
-
-    // 4. Connecting Edge (dragging)
-    if (this.connectingEdge) {
-      const fromNode = nodeMap.get(this.connectingEdge.fromNodeId);
-      if (fromNode) {
-        const outIndex = fromNode.outputs.findIndex((p) => p.id === this.connectingEdge?.fromPortId);
-        const inIndex = fromNode.inputs.findIndex((p) => p.id === this.connectingEdge?.fromPortId);
-        let p0x = fromNode.position.x + NODE_WIDTH;
-        let p0y = fromNode.position.y + NODE_HEADER_HEIGHT + 14;
-        if (outIndex !== -1) {
-          p0x = fromNode.position.x + NODE_WIDTH;
-          p0y = fromNode.position.y + NODE_HEADER_HEIGHT + outIndex * PORT_ROW_HEIGHT + 14;
-        } else if (inIndex !== -1) {
-          p0x = fromNode.position.x;
-          p0y = fromNode.position.y + NODE_HEADER_HEIGHT + inIndex * PORT_ROW_HEIGHT + 14;
-        }
-        const p3x = this.connectingEdge.cursorX;
-        const p3y = this.connectingEdge.cursorY;
-        const dx = Math.max(Math.abs(p3x - p0x) * 0.5, 40);
-        const p1x = p0x + dx;
-        const p1y = p0y;
-        const p2x = p3x - dx;
-        const p2y = p3y;
-        let prevX = p0x;
-        let prevY = p0y;
-        const segments = 16;
-        for (let s = 1; s <= segments; s++) {
-          const t = s / segments;
-          const u = 1 - t;
-          const curX = u * u * u * p0x + 3 * u * u * t * p1x + 3 * u * t * t * p2x + t * t * t * p3x;
-          const curY = u * u * u * p0y + 3 * u * u * t * p1y + 3 * u * t * t * p2y + t * t * t * p3y;
-          pushLine(prevX, prevY, curX, curY, 0.35, 0.65, 1, 0.9);
-          prevX = curX;
-          prevY = curY;
-        }
-        pushCircle(p3x, p3y, 5, 0.35, 0.65, 1, 1);
-      }
-    }
-
-    // 5. Nodes
-    for (const node of visibleNodes) {
-      const bounds = getNodeBounds(node);
-      const w = bounds.maxX - bounds.minX;
-      const h = bounds.maxY - bounds.minY;
-      const x = bounds.minX;
-      const y = bounds.minY;
-
-      const isSelected = this.selectedNodeIds.has(node.id);
-      const isActive = this.activeNodeIds.has(node.id);
-      const isTrapped = this.trappedNodeId === node.id;
-      const isMeta = node.metaSubgraph !== undefined || node.operation === 'meta';
-
-      const bodyR = isMeta ? 0.08 : 0.13;
-      const bodyG = isMeta ? 0.12 : 0.15;
-      const bodyB = isMeta ? 0.18 : 0.2;
-      pushRect(x, y, w, h, bodyR, bodyG, bodyB, 0.96);
-
-      const headerR = isTrapped ? 0.24 : isActive ? 0.08 : isMeta ? 0.05 : 0.18;
-      const headerG = isTrapped ? 0.08 : isActive ? 0.24 : isMeta ? 0.16 : 0.21;
-      const headerB = isTrapped ? 0.09 : isActive ? 0.13 : isMeta ? 0.28 : 0.28;
-      pushRect(x, y, w, NODE_HEADER_HEIGHT, headerR, headerG, headerB, 0.98);
-
-      const borderR = isTrapped ? 0.97 : isActive ? 0.25 : isSelected ? 0.35 : isMeta ? 0.47 : 0.22;
-      const borderG = isTrapped ? 0.32 : isActive ? 0.73 : isSelected ? 0.65 : isMeta ? 0.75 : 0.26;
-      const borderB = isTrapped ? 0.29 : isActive ? 0.31 : isSelected ? 1 : isMeta ? 1 : 0.32;
-      const borderA = isSelected || isTrapped || isActive ? 1 : 0.8;
-      pushRectBorder(x, y, w, h, borderR, borderG, borderB, borderA);
-
-      // Category accent strip
-      const catColor = getCategoryRgb(node.category);
-      pushRect(x + 2, y + 2, 4, NODE_HEADER_HEIGHT - 4, catColor.r, catColor.g, catColor.b, 1);
-
-      // Pins (Inputs)
-      for (const [index, port] of node.inputs.entries()) {
-        const portY = y + NODE_HEADER_HEIGHT + index * PORT_ROW_HEIGHT + 14;
-        const isHovered = this.hoveredPort?.nodeId === node.id && this.hoveredPort?.portId === port.id;
-        const pinRadius = isHovered ? 7 : 5;
-        const pColor = getPortTypeRgb(port.type);
-        pushCircle(x, portY, pinRadius, pColor.r, pColor.g, pColor.b, 1);
-        pushCircle(x, portY, pinRadius + 1.5, 0.9, 0.95, 1, 0.7);
-      }
-
-      // Pins (Outputs)
-      for (const [index, port] of node.outputs.entries()) {
-        const portY = y + NODE_HEADER_HEIGHT + index * PORT_ROW_HEIGHT + 14;
-        const isHovered = this.hoveredPort?.nodeId === node.id && this.hoveredPort?.portId === port.id;
-        const pinRadius = isHovered ? 7 : 5;
-        const pColor = getPortTypeRgb(port.type);
-        pushCircle(x + w, portY, pinRadius, pColor.r, pColor.g, pColor.b, 1);
-        pushCircle(x + w, portY, pinRadius + 1.5, 0.9, 0.95, 1, 0.7);
-      }
-    }
-
-    // Render WebGL draw calls
-    gl.viewport(0, 0, this.canvas!.width, this.canvas!.height);
-    gl.clearColor(0.05, 0.07, 0.09, 1);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    gl.useProgram(this.glProgram);
-
-    gl.uniform2f(this.glUniformLocations.u_resolution, this.camera.viewportWidth, this.camera.viewportHeight);
-    gl.uniform2f(this.glUniformLocations.u_camera, this.camera.x, this.camera.y);
-    gl.uniform1f(this.glUniformLocations.u_zoom, this.camera.zoom);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.glVertexBuffer);
-
-    if (triVertices.length > 0) {
-      const triData = new Float32Array(triVertices);
-      gl.bufferData(gl.ARRAY_BUFFER, triData, gl.DYNAMIC_DRAW);
-      gl.vertexAttribPointer(this.glAttribLocations.a_position, 2, gl.FLOAT, false, 24, 0);
-      gl.enableVertexAttribArray(this.glAttribLocations.a_position);
-      gl.vertexAttribPointer(this.glAttribLocations.a_color, 4, gl.FLOAT, false, 24, 8);
-      gl.enableVertexAttribArray(this.glAttribLocations.a_color);
-      gl.drawArrays(gl.TRIANGLES, 0, triVertices.length / 6);
-    }
-
-    if (lineVertices.length > 0) {
-      const lineData = new Float32Array(lineVertices);
-      gl.bufferData(gl.ARRAY_BUFFER, lineData, gl.DYNAMIC_DRAW);
-      gl.vertexAttribPointer(this.glAttribLocations.a_position, 2, gl.FLOAT, false, 24, 0);
-      gl.enableVertexAttribArray(this.glAttribLocations.a_position);
-      gl.vertexAttribPointer(this.glAttribLocations.a_color, 4, gl.FLOAT, false, 24, 8);
-      gl.enableVertexAttribArray(this.glAttribLocations.a_color);
-      gl.drawArrays(gl.LINES, 0, lineVertices.length / 6);
-    }
-
-    const t1 = typeof performance === 'undefined' ? 0 : performance.now();
-    if (t0 > 0) {
-      this.performanceStats = {
-        ...this.performanceStats,
-        drawPassTimeMs: Math.round((this.performanceStats.drawPassTimeMs * 0.7 + (t1 - t0) * 0.3) * 100) / 100,
-        visibleNodesCount: this.currentVisibleNodesCount,
-        visibleEdgesCount: this.currentVisibleEdgesCount,
-      };
-    }
-  }
-
-  private render2dFrame(): void {
-    const ctx = this.canvas2dCtx;
-    if (!ctx) return;
-
-    const t0 = typeof performance === 'undefined' ? 0 : performance.now();
-    const width = this.camera.viewportWidth;
-    const height = this.camera.viewportHeight;
-    const dpr = this.dpr || 1;
-
     ctx.save();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = '#0d1117';
+    ctx.fillStyle = isDark ? '#0b1219' : '#f5f6f8';
     ctx.fillRect(0, 0, width, height);
 
     ctx.translate(width / 2, height / 2);
-    ctx.scale(this.camera.zoom, this.camera.zoom);
-    ctx.translate(-this.camera.x, -this.camera.y);
+    const zoom = wasm.get_camera_zoom();
+    const camX = wasm.get_camera_x();
+    const camY = wasm.get_camera_y();
+    ctx.scale(zoom, zoom);
+    ctx.translate(-camX, -camY);
 
-    const visibleBounds = getViewportBounds(this.camera, 100);
-    const visibleNodeIds = new Set(this.spatialIndex.queryBox(visibleBounds));
-    const t1 = typeof performance === 'undefined' ? 0 : performance.now();
-    if (t0 > 0) {
-      this.performanceStats = {
-        ...this.performanceStats,
-        spatialIndexTimeMs: Math.round((this.performanceStats.spatialIndexTimeMs * 0.7 + (t1 - t0) * 0.3) * 100) / 100,
-      };
-    }
+    wasm.getViewportBounds(100);
+    const minX = wasm.get_bounds_min_x();
+    const minY = wasm.get_bounds_min_y();
+    const maxX = wasm.get_bounds_max_x();
+    const maxY = wasm.get_bounds_max_y();
 
     // 1. Grid
     const minorSpacing = 24;
     const majorSpacing = 120;
-    const startX = Math.floor(visibleBounds.minX / minorSpacing) * minorSpacing;
-    const endX = Math.ceil(visibleBounds.maxX / minorSpacing) * minorSpacing;
-    const startY = Math.floor(visibleBounds.minY / minorSpacing) * minorSpacing;
-    const endY = Math.ceil(visibleBounds.maxY / minorSpacing) * minorSpacing;
+    const startX = Math.floor(minX / minorSpacing) * minorSpacing;
+    const endX = Math.ceil(maxX / minorSpacing) * minorSpacing;
+    const startY = Math.floor(minY / minorSpacing) * minorSpacing;
+    const endY = Math.ceil(maxY / minorSpacing) * minorSpacing;
 
-    ctx.lineWidth = 1 / this.camera.zoom;
-    if (this.camera.zoom > 0.4) {
-      ctx.strokeStyle = 'rgba(56, 64, 82, 0.25)';
+    ctx.lineWidth = 1 / zoom;
+    if (zoom > 0.4) {
+      ctx.strokeStyle = isDark ? 'rgba(56, 64, 82, 0.25)' : 'rgba(140, 155, 175, 0.25)';
       ctx.beginPath();
       for (let x = startX; x <= endX; x += minorSpacing) {
         if (x % majorSpacing !== 0) {
-          ctx.moveTo(x, visibleBounds.minY);
-          ctx.lineTo(x, visibleBounds.maxY);
+          ctx.moveTo(x, minY);
+          ctx.lineTo(x, maxY);
         }
       }
       for (let y = startY; y <= endY; y += minorSpacing) {
         if (y % majorSpacing !== 0) {
-          ctx.moveTo(visibleBounds.minX, y);
-          ctx.lineTo(visibleBounds.maxX, y);
+          ctx.moveTo(minX, y);
+          ctx.lineTo(maxX, y);
         }
       }
       ctx.stroke();
     }
 
-    ctx.strokeStyle = 'rgba(89, 102, 128, 0.35)';
+    ctx.strokeStyle = isDark ? 'rgba(89, 102, 128, 0.35)' : 'rgba(100, 120, 145, 0.45)';
     ctx.beginPath();
-    const majorStartX = Math.floor(visibleBounds.minX / majorSpacing) * majorSpacing;
-    const majorEndX = Math.ceil(visibleBounds.maxX / majorSpacing) * majorSpacing;
-    const majorStartY = Math.floor(visibleBounds.minY / majorSpacing) * majorSpacing;
-    const majorEndY = Math.ceil(visibleBounds.maxY / majorSpacing) * majorSpacing;
+    const majorStartX = Math.floor(minX / majorSpacing) * majorSpacing;
+    const majorEndX = Math.ceil(maxX / majorSpacing) * majorSpacing;
+    const majorStartY = Math.floor(minY / majorSpacing) * majorSpacing;
+    const majorEndY = Math.ceil(maxY / majorSpacing) * majorSpacing;
     for (let x = majorStartX; x <= majorEndX; x += majorSpacing) {
-      ctx.moveTo(x, visibleBounds.minX);
-      ctx.lineTo(x, visibleBounds.maxX);
+      ctx.moveTo(x, minY);
+      ctx.lineTo(x, maxY);
     }
     for (let y = majorStartY; y <= majorEndY; y += majorSpacing) {
-      ctx.moveTo(visibleBounds.minX, y);
-      ctx.lineTo(visibleBounds.maxX, y);
+      ctx.moveTo(minX, y);
+      ctx.lineTo(maxX, y);
     }
     ctx.stroke();
 
     // 2. Groups
-    for (const group of this.groups) {
-      const groupNodes = this.nodes.filter((node) => group.nodeIds.includes(node.id));
+    for (const group of groups) {
+      const groupNodes = nodes.filter((node) => group.nodeIds.includes(node.id));
       if (groupNodes.length === 0) continue;
 
-      let gMinX = Infinity;
-      let gMinY = Infinity;
-      let gMaxX = -Infinity;
-      let gMaxY = -Infinity;
+      let gMinX = Number.POSITIVE_INFINITY;
+      let gMinY = Number.POSITIVE_INFINITY;
+      let gMaxX = Number.NEGATIVE_INFINITY;
+      let gMaxY = Number.NEGATIVE_INFINITY;
 
       for (const node of groupNodes) {
         const bounds = getNodeBounds(node);
@@ -2294,14 +1452,20 @@ export class FlintRenderEngine {
       const gh = gMaxY - gMinY + padding * 2 + 22;
 
       ctx.save();
-      const groupBg = group.backgroundColor ?? (group.color ? `${group.color}25` : 'rgba(88, 166, 255, 0.12)');
-      const groupBorder = group.color ?? '#58a6ff';
+      const groupBg =
+        group.backgroundColor ??
+        (group.color ? `${group.color}25` : isDark ? 'rgba(88, 166, 255, 0.12)' : 'rgba(9, 105, 218, 0.08)');
+      const groupBorder = group.color ?? (isDark ? '#58a6ff' : '#0969da');
       ctx.fillStyle = groupBg;
       ctx.strokeStyle = groupBorder;
-      ctx.lineWidth = 2 / this.camera.zoom;
+      ctx.lineWidth = 2 / zoom;
       ctx.setLineDash([8, 4]);
       ctx.beginPath();
-      ctx.roundRect(gx, gy, gw, gh, 12);
+      if (typeof ctx.roundRect === 'function') {
+        ctx.roundRect(gx, gy, gw, gh, 12);
+      } else {
+        ctx.rect(gx, gy, gw, gh);
+      }
       ctx.fill();
       ctx.stroke();
       ctx.setLineDash([]);
@@ -2310,7 +1474,11 @@ export class FlintRenderEngine {
       ctx.font = 'bold 12px sans-serif';
       const labelW = ctx.measureText(group.title).width;
       ctx.beginPath();
-      ctx.roundRect(gx + 10, gy + 4, labelW + 16, 20, 4);
+      if (typeof ctx.roundRect === 'function') {
+        ctx.roundRect(gx + 10, gy + 4, labelW + 16, 20, 4);
+      } else {
+        ctx.rect(gx + 10, gy + 4, labelW + 16, 20);
+      }
       ctx.fill();
 
       ctx.fillStyle = '#ffffff';
@@ -2319,19 +1487,19 @@ export class FlintRenderEngine {
     }
 
     // 3. Edges
-    const nodeMap = new Map<string, FlintGraphNode>(this.nodes.map((n) => [n.id, n]));
-    for (const edge of this.edges) {
+    const nodeMap = new Map<string, FlintGraphNode>(nodes.map((n) => [n.id, n]));
+    for (const edge of edges) {
       const fromNode = nodeMap.get(edge.fromNodeId);
       const toNode = nodeMap.get(edge.toNodeId);
       if (!fromNode || !toNode) continue;
 
       const fromPortIndex = Math.max(
         0,
-        fromNode.outputs.findIndex((p) => p.id === edge.fromPortId),
+        (fromNode.outputs ?? []).findIndex((p) => p.id === edge.fromPortId),
       );
       const toPortIndex = Math.max(
         0,
-        toNode.inputs.findIndex((p) => p.id === edge.toPortId),
+        (toNode.inputs ?? []).findIndex((p) => p.id === edge.toPortId),
       );
 
       const p0x = fromNode.position.x + NODE_WIDTH;
@@ -2339,32 +1507,31 @@ export class FlintRenderEngine {
       const p3x = toNode.position.x;
       const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIndex * PORT_ROW_HEIGHT + 14;
 
-      const wasm = getFlintRenderWorkerWasm();
       const dx = wasm.bezier_control_dx(Math.round(p0x), Math.round(p3x));
       const p1x = p0x + dx;
       const p1y = p0y;
       const p2x = p3x - dx;
       const p2y = p3y;
 
-      const pulseOffset = this.edgePulses.get(edge.id);
+      const pulseOffset = edgePulses.get(edge.id);
       const isPulseActive = pulseOffset !== undefined;
-      const isSelected = this.selectedEdgeIds.has(edge.id);
+      const isSelected = selectedEdgeIds.has(edge.id);
 
       ctx.save();
       if (isSelected) {
-        ctx.strokeStyle = '#58a6ff';
-        ctx.lineWidth = 4.5 / this.camera.zoom;
-        ctx.shadowColor = 'rgba(88, 166, 255, 0.9)';
+        ctx.strokeStyle = isDark ? '#58a6ff' : '#0969da';
+        ctx.lineWidth = 4.5 / zoom;
+        ctx.shadowColor = isDark ? 'rgba(88, 166, 255, 0.9)' : 'rgba(9, 105, 218, 0.7)';
         ctx.shadowBlur = 10;
       } else if (isPulseActive) {
-        ctx.strokeStyle = '#3fb950';
-        ctx.lineWidth = 4 / this.camera.zoom;
-        ctx.shadowColor = 'rgba(63, 185, 80, 0.9)';
+        ctx.strokeStyle = isDark ? '#3fb950' : '#1a7f37';
+        ctx.lineWidth = 4 / zoom;
+        ctx.shadowColor = isDark ? 'rgba(63, 185, 80, 0.9)' : 'rgba(26, 127, 55, 0.7)';
         ctx.shadowBlur = 10;
       } else {
-        ctx.strokeStyle = '#79a8ff';
-        ctx.lineWidth = 3.2 / this.camera.zoom;
-        ctx.shadowColor = 'rgba(121, 168, 255, 0.35)';
+        ctx.strokeStyle = isDark ? '#79a8ff' : '#57606a';
+        ctx.lineWidth = 3.2 / zoom;
+        ctx.shadowColor = isDark ? 'rgba(121, 168, 255, 0.35)' : 'rgba(87, 96, 106, 0.2)';
         ctx.shadowBlur = 4;
       }
       ctx.beginPath();
@@ -2390,21 +1557,21 @@ export class FlintRenderEngine {
           tPermille,
         );
         ctx.fillStyle = '#ffffff';
-        ctx.shadowColor = '#58a6ff';
+        ctx.shadowColor = isDark ? '#58a6ff' : '#0969da';
         ctx.shadowBlur = 10;
         ctx.beginPath();
-        ctx.arc(pulseX, pulseY, 6 / this.camera.zoom, 0, Math.PI * 2);
+        ctx.arc(pulseX, pulseY, 6 / zoom, 0, Math.PI * 2);
         ctx.fill();
       }
       ctx.restore();
     }
 
-    // 4. Connecting Edge (in-flight drag between pins)
-    if (this.connectingEdge) {
-      const fromNode = nodeMap.get(this.connectingEdge.fromNodeId);
+    // 4. Connecting Edge
+    if (connectingEdge) {
+      const fromNode = nodeMap.get(connectingEdge.fromNodeId);
       if (fromNode) {
-        const outIdx = fromNode.outputs.findIndex((p) => p.id === this.connectingEdge?.fromPortId);
-        const inIdx = fromNode.inputs.findIndex((p) => p.id === this.connectingEdge?.fromPortId);
+        const outIdx = (fromNode.outputs ?? []).findIndex((p) => p.id === connectingEdge?.fromPortId);
+        const inIdx = (fromNode.inputs ?? []).findIndex((p) => p.id === connectingEdge?.fromPortId);
 
         let p0x = fromNode.position.x + NODE_WIDTH;
         let p0y = fromNode.position.y + NODE_HEADER_HEIGHT + 14;
@@ -2417,13 +1584,13 @@ export class FlintRenderEngine {
           p0y = fromNode.position.y + NODE_HEADER_HEIGHT + inIdx * PORT_ROW_HEIGHT + 14;
         }
 
-        const p3x = this.connectingEdge.cursorX;
-        const p3y = this.connectingEdge.cursorY;
+        const p3x = connectingEdge.cursorX;
+        const p3y = connectingEdge.cursorY;
         const dx = Math.max(Math.abs(p3x - p0x) * 0.5, 40);
 
         ctx.save();
-        ctx.strokeStyle = '#58a6ff';
-        ctx.lineWidth = 2.5 / this.camera.zoom;
+        ctx.strokeStyle = isDark ? '#58a6ff' : '#0969da';
+        ctx.lineWidth = 2.5 / zoom;
         ctx.setLineDash([5, 5]);
         ctx.beginPath();
         ctx.moveTo(p0x, p0y);
@@ -2431,52 +1598,63 @@ export class FlintRenderEngine {
         ctx.stroke();
         ctx.setLineDash([]);
 
-        ctx.fillStyle = '#58a6ff';
+        ctx.fillStyle = isDark ? '#58a6ff' : '#0969da';
         ctx.beginPath();
-        ctx.arc(p3x, p3y, 5 / this.camera.zoom, 0, Math.PI * 2);
+        ctx.arc(p3x, p3y, 5 / zoom, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       }
     }
 
     // 5. Nodes
-    const visibleNodes = this.nodes.filter((n) => visibleNodeIds.has(n.id));
-
-    for (const node of visibleNodes) {
+    for (const node of nodes) {
       const bounds = getNodeBounds(node);
       const w = bounds.maxX - bounds.minX;
       const h = bounds.maxY - bounds.minY;
       const x = bounds.minX;
       const y = bounds.minY;
 
-      const isSelected = this.selectedNodeIds.has(node.id);
-      const isActive = this.activeNodeIds.has(node.id);
-      const isTrapped = this.trappedNodeId === node.id;
+      // Cull nodes completely outside viewport
+      if (x + w < minX || x > maxX || y + h < minY || y > maxY) continue;
+
+      const isSelected = selectedNodeIds.has(node.id);
+      const isActive = activeNodeIds.has(node.id);
+      const isTrapped = trappedNodeId === node.id;
       const isMeta = node.metaSubgraph !== undefined || node.operation === 'meta';
 
       ctx.save();
       if (isTrapped) {
-        ctx.shadowColor = '#f85149';
+        ctx.shadowColor = isDark ? '#f85149' : '#cf222e';
         ctx.shadowBlur = 14;
       } else if (isActive) {
-        ctx.shadowColor = '#3fb950';
+        ctx.shadowColor = isDark ? '#3fb950' : '#1a7f37';
         ctx.shadowBlur = 14;
       } else if (isSelected) {
-        ctx.shadowColor = '#58a6ff';
+        ctx.shadowColor = isDark ? '#58a6ff' : '#0969da';
         ctx.shadowBlur = 10;
       }
 
-      ctx.fillStyle = isMeta ? '#161e2e' : '#21262d';
+      ctx.fillStyle = isDark ? (isMeta ? '#161e2e' : '#21262d') : isMeta ? '#f0f4f8' : '#ffffff';
       ctx.strokeStyle = isTrapped
-        ? '#f85149'
+        ? isDark
+          ? '#f85149'
+          : '#cf222e'
         : isActive
-          ? '#3fb950'
+          ? isDark
+            ? '#3fb950'
+            : '#1a7f37'
           : isSelected
-            ? '#58a6ff'
+            ? isDark
+              ? '#58a6ff'
+              : '#0969da'
             : isMeta
-              ? '#79c0ff'
-              : '#30363d';
-      ctx.lineWidth = (isSelected || isTrapped || isActive ? 2.5 : 1.5) / this.camera.zoom;
+              ? isDark
+                ? '#79c0ff'
+                : '#0969da'
+              : isDark
+                ? '#30363d'
+                : '#d0d7de';
+      ctx.lineWidth = (isSelected || isTrapped || isActive ? 2.5 : 1.5) / zoom;
 
       ctx.beginPath();
       if (typeof ctx.roundRect === 'function') {
@@ -2491,76 +1669,109 @@ export class FlintRenderEngine {
       // Node Header
       ctx.save();
       ctx.beginPath();
-      ctx.roundRect(x, y, w, NODE_HEADER_HEIGHT, [8, 8, 0, 0]);
-      ctx.fillStyle = isTrapped ? '#3d1417' : isActive ? '#143d22' : isMeta ? '#0d2847' : '#161b22';
+      if (typeof ctx.roundRect === 'function') {
+        ctx.roundRect(x, y, w, NODE_HEADER_HEIGHT, [8, 8, 0, 0]);
+      } else {
+        ctx.rect(x, y, w, NODE_HEADER_HEIGHT);
+      }
+      ctx.fillStyle = isTrapped
+        ? isDark
+          ? '#3d1417'
+          : '#fee2e2'
+        : isActive
+          ? isDark
+            ? '#143d22'
+            : '#dcfce7'
+          : isMeta
+            ? isDark
+              ? '#0d2847'
+              : '#e1ecf7'
+            : isDark
+              ? '#161b22'
+              : '#f0f2f5';
       ctx.fill();
 
+      // Category accent bar (4px)
+      const catColor = getCategoryRgba(node.category, isMeta, isDark);
+      ctx.fillStyle = `rgba(${Math.round(catColor[0] * 255)},${Math.round(catColor[1] * 255)},${Math.round(catColor[2] * 255)},${catColor[3]})`;
+      ctx.fillRect(x + 1, y + 1, w - 2, 4);
+
+      // Header separator
+      ctx.strokeStyle = isDark ? 'rgba(48, 54, 61, 0.8)' : 'rgba(208, 215, 222, 0.8)';
+      ctx.lineWidth = 1 / zoom;
+      ctx.beginPath();
+      ctx.moveTo(x + 1, y + NODE_HEADER_HEIGHT);
+      ctx.lineTo(x + w - 1, y + NODE_HEADER_HEIGHT);
+      ctx.stroke();
+
       // Title
-      ctx.fillStyle = '#f0f6fc';
+      ctx.fillStyle = isDark ? '#f0f6fc' : '#1f2328';
       ctx.font = 'bold 12px sans-serif';
       ctx.fillText(node.title, x + 10, y + 17);
 
       // Category / Meta pill
-      ctx.fillStyle = isMeta ? '#58a6ff' : '#8b949e';
+      ctx.fillStyle = isMeta ? (isDark ? '#58a6ff' : '#0969da') : isDark ? '#8b949e' : '#57606a';
       ctx.font = '10px monospace';
       const catText = isMeta ? `META (${node.metaSubgraph?.nodes.length ?? 0})` : node.category.toUpperCase();
       const catWidth = ctx.measureText(catText).width;
       ctx.fillText(catText, x + w - catWidth - 10, y + 17);
 
       // Subtitle operation identifier
-      ctx.fillStyle = '#8b949e';
+      ctx.fillStyle = isDark ? '#8b949e' : '#57606a';
       ctx.font = '9px monospace';
       ctx.fillText(node.operation, x + 10, y + 28);
 
       // Port circles (Pins) and labels
       ctx.font = '11px sans-serif';
-      for (const [idx, port] of node.inputs.entries()) {
+      for (const [idx, port] of (node.inputs ?? []).entries()) {
         const portY = y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
-        const isHovered = this.hoveredPort?.nodeId === node.id && this.hoveredPort.portId === port.id;
+        const isHovered = hoveredPort?.nodeId === node.id && hoveredPort.portId === port.id;
+        const portRgb = getPortTypeRgba(port.type, isDark);
+        const portColor = `rgba(${Math.round(portRgb[0] * 255)},${Math.round(portRgb[1] * 255)},${Math.round(portRgb[2] * 255)},${portRgb[3]})`;
 
-        // Input Pin (Outer ring + inner core)
         ctx.save();
-        ctx.fillStyle = '#161b22';
-        ctx.strokeStyle = isHovered ? '#58a6ff' : '#58a6ff';
-        ctx.lineWidth = (isHovered ? 2.5 : 1.5) / this.camera.zoom;
+        ctx.fillStyle = isDark ? '#161b22' : '#f0f2f5';
+        ctx.strokeStyle = portColor;
+        ctx.lineWidth = (isHovered ? 2.5 : 1.5) / zoom;
         ctx.beginPath();
-        ctx.arc(x, portY, 5 / this.camera.zoom, 0, Math.PI * 2);
+        ctx.arc(x, portY, 5 / zoom, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
 
-        ctx.fillStyle = isHovered ? '#ffffff' : '#58a6ff';
+        ctx.fillStyle = isHovered ? '#ffffff' : portColor;
         ctx.beginPath();
-        ctx.arc(x, portY, 2.5 / this.camera.zoom, 0, Math.PI * 2);
+        ctx.arc(x, portY, 2.5 / zoom, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
 
         // Label
-        ctx.fillStyle = '#c9d1d9';
+        ctx.fillStyle = isDark ? '#c9d1d9' : '#24292f';
         ctx.fillText(port.name, x + 12, portY + 4);
       }
 
-      for (const [idx, port] of node.outputs.entries()) {
+      for (const [idx, port] of (node.outputs ?? []).entries()) {
         const portY = y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
-        const isHovered = this.hoveredPort?.nodeId === node.id && this.hoveredPort.portId === port.id;
+        const isHovered = hoveredPort?.nodeId === node.id && hoveredPort.portId === port.id;
+        const portRgb = getPortTypeRgba(port.type, isDark);
+        const portColor = `rgba(${Math.round(portRgb[0] * 255)},${Math.round(portRgb[1] * 255)},${Math.round(portRgb[2] * 255)},${portRgb[3]})`;
 
-        // Output Pin (Outer ring + inner core)
         ctx.save();
-        ctx.fillStyle = '#161b22';
-        ctx.strokeStyle = isHovered ? '#3fb950' : '#3fb950';
-        ctx.lineWidth = (isHovered ? 2.5 : 1.5) / this.camera.zoom;
+        ctx.fillStyle = isDark ? '#161b22' : '#f0f2f5';
+        ctx.strokeStyle = portColor;
+        ctx.lineWidth = (isHovered ? 2.5 : 1.5) / zoom;
         ctx.beginPath();
-        ctx.arc(x + w, portY, 5 / this.camera.zoom, 0, Math.PI * 2);
+        ctx.arc(x + w, portY, 5 / zoom, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
 
-        ctx.fillStyle = isHovered ? '#ffffff' : '#3fb950';
+        ctx.fillStyle = isHovered ? '#ffffff' : portColor;
         ctx.beginPath();
-        ctx.arc(x + w, portY, 2.5 / this.camera.zoom, 0, Math.PI * 2);
+        ctx.arc(x + w, portY, 2.5 / zoom, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
 
         // Label
-        ctx.fillStyle = '#c9d1d9';
+        ctx.fillStyle = isDark ? '#c9d1d9' : '#24292f';
         const labelWidth = ctx.measureText(port.name).width;
         ctx.fillText(port.name, x + w - labelWidth - 12, portY + 4);
       }
@@ -2569,7 +1780,7 @@ export class FlintRenderEngine {
       if (node.properties && Object.keys(node.properties).length > 0) {
         const propKeys = Object.keys(node.properties);
         const firstVal = String(node.properties[propKeys[0]]);
-        ctx.fillStyle = '#58a6ff';
+        ctx.fillStyle = isDark ? '#58a6ff' : '#0969da';
         ctx.font = '10px monospace';
         ctx.fillText(`= ${firstVal}`, x + 10, y + h - 8);
       }
@@ -2578,92 +1789,1778 @@ export class FlintRenderEngine {
     }
 
     ctx.restore();
-    const t2 = typeof performance === 'undefined' ? 0 : performance.now();
-    if (t0 > 0) {
-      this.performanceStats = {
-        ...this.performanceStats,
-        drawPassTimeMs: Math.round((this.performanceStats.drawPassTimeMs * 0.7 + (t2 - t1) * 0.3) * 100) / 100,
-        visibleNodesCount: visibleNodeIds.size,
-        visibleEdgesCount: this.edges.length,
-        visiblePinsCount: visibleNodeIds.size * 4,
-      };
-    }
-  }
-}
 
-// Dedicated OffscreenCanvas Web Worker message listener
-if (
-  globalThis.self !== undefined &&
-  typeof (globalThis as unknown as { postMessage?: unknown }).postMessage === 'function'
-) {
-  let engine: FlintRenderEngine | undefined;
+    const tEnd = typeof performance === 'undefined' ? 0 : performance.now();
+    const frameTime = t0 > 0 && tEnd > 0 ? tEnd - t0 : 1.7;
+    performanceStats = {
+      ...performanceStats,
+      renderTimeMs: Math.round(frameTime * 100) / 100,
+      totalFrameTimeMs: Math.round((frameTime + 0.5) * 100) / 100,
+      visibleNodesCount: nodes.length,
+      visibleEdgesCount: edges.length,
+      visiblePinsCount: nodes.length * 4,
+      isFallback: activeBackend === 'canvas2d',
+    };
+  }
+
+  function renderWebGLFrame(): void {
+    const gl = glCtx;
+    if (!gl || !glProgram || !glVertexBuffer || !glUniformLocations || !glAttribLocations || !wasm) return;
+
+    const isDark = currentTheme !== 'light';
+    const t0 = typeof performance === 'undefined' ? 0 : performance.now();
+    const canvasW = canvas ? canvas.width : Math.round(width * dpr);
+    const canvasH = canvas ? canvas.height : Math.round(height * dpr);
+    gl.viewport(0, 0, canvasW, canvasH);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    if (isDark) {
+      gl.clearColor(0.043, 0.071, 0.098, 1);
+    } else {
+      gl.clearColor(0.961, 0.965, 0.973, 1);
+    }
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    gl.useProgram(glProgram);
+    gl.uniform2f(glUniformLocations.u_resolution, width, height);
+    gl.uniform2f(glUniformLocations.u_camera, wasm.get_camera_x(), wasm.get_camera_y());
+    gl.uniform1f(glUniformLocations.u_zoom, wasm.get_camera_zoom());
+
+    lineVertices = [];
+    triVertices = [];
+    textTriVertices = [];
+
+    wasm.font_clear_text_vertices();
+    wasm.getViewportBounds(200);
+    const minX = wasm.get_bounds_min_x();
+    const minY = wasm.get_bounds_min_y();
+    const maxX = wasm.get_bounds_max_x();
+    const maxY = wasm.get_bounds_max_y();
+
+    // 1. Grid
+    const minorSpacing = 24;
+    const majorSpacing = 120;
+    const startX = Math.floor(minX / minorSpacing) * minorSpacing;
+    const endX = Math.ceil(maxX / minorSpacing) * minorSpacing;
+    const startY = Math.floor(minY / minorSpacing) * minorSpacing;
+    const endY = Math.ceil(maxY / minorSpacing) * minorSpacing;
+
+    if (wasm.get_camera_zoom() > 0.4) {
+      const minorColor = isDark ? [0.22, 0.25, 0.32, 0.18] : [0.55, 0.61, 0.69, 0.25];
+      for (let x = startX; x <= endX; x += minorSpacing) {
+        if (x % majorSpacing !== 0) {
+          pushLine(x, minY, x, maxY, minorColor[0], minorColor[1], minorColor[2], minorColor[3]);
+        }
+      }
+      for (let y = startY; y <= endY; y += minorSpacing) {
+        if (y % majorSpacing !== 0) {
+          pushLine(minX, y, maxX, y, minorColor[0], minorColor[1], minorColor[2], minorColor[3]);
+        }
+      }
+    }
+
+    const majorColor = isDark ? [0.35, 0.4, 0.5, 0.35] : [0.39, 0.47, 0.57, 0.45];
+    const majorStartX = Math.floor(minX / majorSpacing) * majorSpacing;
+    const majorEndX = Math.ceil(maxX / majorSpacing) * majorSpacing;
+    const majorStartY = Math.floor(minY / majorSpacing) * majorSpacing;
+    const majorEndY = Math.ceil(maxY / majorSpacing) * majorSpacing;
+    for (let x = majorStartX; x <= majorEndX; x += majorSpacing) {
+      pushLine(x, minY, x, maxY, majorColor[0], majorColor[1], majorColor[2], majorColor[3]);
+    }
+    for (let y = majorStartY; y <= majorEndY; y += majorSpacing) {
+      pushLine(minX, y, maxX, y, majorColor[0], majorColor[1], majorColor[2], majorColor[3]);
+    }
+
+    // 2. Groups
+    for (const group of groups) {
+      const groupNodes = nodes.filter((n) => group.nodeIds.includes(n.id));
+      if (groupNodes.length === 0) continue;
+
+      let gMinX = Number.POSITIVE_INFINITY;
+      let gMinY = Number.POSITIVE_INFINITY;
+      let gMaxX = Number.NEGATIVE_INFINITY;
+      let gMaxY = Number.NEGATIVE_INFINITY;
+      for (const node of groupNodes) {
+        const bounds = getNodeBounds(node);
+        if (bounds.minX < gMinX) gMinX = bounds.minX;
+        if (bounds.maxX > gMaxX) gMaxX = bounds.maxX;
+        if (bounds.minY < gMinY) gMinY = bounds.minY;
+        if (bounds.maxY > gMaxY) gMaxY = bounds.maxY;
+      }
+      const pad = 24;
+      const gx = gMinX - pad;
+      const gy = gMinY - pad - 22;
+      const gw = gMaxX - gMinX + pad * 2;
+      const gh = gMaxY - gMinY + pad * 2 + 22;
+
+      const groupBg: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 0.08] : [0.035, 0.412, 0.855, 0.06];
+      const groupBorder: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 0.5] : [0.035, 0.412, 0.855, 0.6];
+      pushRect(gx, gy, gw, gh, groupBg[0], groupBg[1], groupBg[2], groupBg[3]);
+      pushRectBorder(gx, gy, gw, gh, groupBorder[0], groupBorder[1], groupBorder[2], groupBorder[3]);
+
+      const titleW = wasm.font_measure_text(group.title, 12);
+      const pillW = titleW + 16;
+      pushRect(gx + 10, gy + 4, pillW, 20, isDark ? 0.35 : 0.035, isDark ? 0.65 : 0.412, isDark ? 1 : 0.855, 0.9);
+      wasm.font_append_text_quads(group.title, gx + 18, gy + 18, 12, 1, 1, 1, 1, 0);
+    }
+
+    // 3. Edges
+    const nodeMap = new Map<string, FlintGraphNode>(nodes.map((n) => [n.id, n]));
+    for (const edge of edges) {
+      const fromNode = nodeMap.get(edge.fromNodeId);
+      const toNode = nodeMap.get(edge.toNodeId);
+      if (!fromNode || !toNode) continue;
+
+      const fromPortIndex = Math.max(
+        0,
+        (fromNode.outputs ?? []).findIndex((p) => p.id === edge.fromPortId),
+      );
+      const toPortIndex = Math.max(
+        0,
+        (toNode.inputs ?? []).findIndex((p) => p.id === edge.toPortId),
+      );
+
+      const p0x = fromNode.position.x + NODE_WIDTH;
+      const p0y = fromNode.position.y + NODE_HEADER_HEIGHT + fromPortIndex * PORT_ROW_HEIGHT + 14;
+      const p3x = toNode.position.x;
+      const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIndex * PORT_ROW_HEIGHT + 14;
+
+      const dx = wasm.bezier_control_dx(Math.round(p0x), Math.round(p3x));
+      const p1x = p0x + dx;
+      const p1y = p0y;
+      const p2x = p3x - dx;
+      const p2y = p3y;
+
+      const isSelected = selectedEdgeIds.has(edge.id);
+      const pulseOffset = edgePulses.get(edge.id);
+      const isActive = pulseOffset !== undefined;
+
+      const colorR = isDark ? (isSelected ? 0.35 : isActive ? 0.25 : 0.47) : isSelected ? 0.035 : isActive ? 0.1 : 0.34;
+      const colorG = isDark ? (isSelected ? 0.65 : isActive ? 0.73 : 0.66) : isSelected ? 0.412 : isActive ? 0.5 : 0.38;
+      const colorB = isDark ? (isSelected ? 1 : isActive ? 0.31 : 1) : isSelected ? 0.855 : isActive ? 0.22 : 0.42;
+      const colorA = isSelected || isActive ? 1 : isDark ? 0.7 : 0.65;
+
+      const steps = 16;
+      for (let s = 0; s < steps; s++) {
+        const t1Permille = Math.round((s / steps) * 1000);
+        const t2Permille = Math.round(((s + 1) / steps) * 1000);
+        const sx1 = wasm.bezier_point_1d(
+          Math.round(p0x),
+          Math.round(p1x),
+          Math.round(p2x),
+          Math.round(p3x),
+          t1Permille,
+        );
+        const sy1 = wasm.bezier_point_1d(
+          Math.round(p0y),
+          Math.round(p1y),
+          Math.round(p2y),
+          Math.round(p3y),
+          t1Permille,
+        );
+        const sx2 = wasm.bezier_point_1d(
+          Math.round(p0x),
+          Math.round(p1x),
+          Math.round(p2x),
+          Math.round(p3x),
+          t2Permille,
+        );
+        const sy2 = wasm.bezier_point_1d(
+          Math.round(p0y),
+          Math.round(p1y),
+          Math.round(p2y),
+          Math.round(p3y),
+          t2Permille,
+        );
+        pushLine(sx1, sy1, sx2, sy2, colorR, colorG, colorB, colorA);
+      }
+    }
+
+    // 4. Connecting Edge
+    if (connectingEdge) {
+      const fromNode = nodeMap.get(connectingEdge.fromNodeId);
+      if (fromNode) {
+        const outIdx = (fromNode.outputs ?? []).findIndex((p) => p.id === connectingEdge?.fromPortId);
+        const inIdx = (fromNode.inputs ?? []).findIndex((p) => p.id === connectingEdge?.fromPortId);
+        let p0x = fromNode.position.x + NODE_WIDTH;
+        let p0y = fromNode.position.y + NODE_HEADER_HEIGHT + 14;
+        if (outIdx !== -1) {
+          p0x = fromNode.position.x + NODE_WIDTH;
+          p0y = fromNode.position.y + NODE_HEADER_HEIGHT + outIdx * PORT_ROW_HEIGHT + 14;
+        } else if (inIdx !== -1) {
+          p0x = fromNode.position.x;
+          p0y = fromNode.position.y + NODE_HEADER_HEIGHT + inIdx * PORT_ROW_HEIGHT + 14;
+        }
+        pushLine(
+          p0x,
+          p0y,
+          connectingEdge.cursorX,
+          connectingEdge.cursorY,
+          isDark ? 0.35 : 0.035,
+          isDark ? 0.65 : 0.412,
+          isDark ? 1 : 0.855,
+          0.9,
+        );
+      }
+    }
+
+    // 5. Nodes
+    for (const node of nodes) {
+      const bounds = getNodeBounds(node);
+      const w = bounds.maxX - bounds.minX;
+      const h = bounds.maxY - bounds.minY;
+      const x = bounds.minX;
+      const y = bounds.minY;
+
+      if (x + w < minX || x > maxX || y + h < minY || y > maxY) continue;
+
+      const isSelected = selectedNodeIds.has(node.id);
+      const isActive = activeNodeIds.has(node.id);
+      const isTrapped = trappedNodeId === node.id;
+      const isMeta = node.metaSubgraph !== undefined || node.operation === 'meta';
+
+      const fillR = isDark ? (isMeta ? 0.086 : 0.129) : isMeta ? 0.941 : 1;
+      const fillG = isDark ? (isMeta ? 0.118 : 0.149) : isMeta ? 0.957 : 1;
+      const fillB = isDark ? (isMeta ? 0.18 : 0.176) : isMeta ? 0.973 : 1;
+      pushRect(x, y, w, h, fillR, fillG, fillB, isDark ? 0.95 : 0.98);
+
+      const borderR = isDark
+        ? isTrapped
+          ? 0.973
+          : isActive
+            ? 0.247
+            : isSelected
+              ? 0.345
+              : isMeta
+                ? 0.475
+                : 0.188
+        : isTrapped
+          ? 0.812
+          : isActive
+            ? 0.102
+            : isSelected
+              ? 0.035
+              : isMeta
+                ? 0.035
+                : 0.816;
+      const borderG = isDark
+        ? isTrapped
+          ? 0.318
+          : isActive
+            ? 0.725
+            : isSelected
+              ? 0.651
+              : isMeta
+                ? 0.753
+                : 0.212
+        : isTrapped
+          ? 0.133
+          : isActive
+            ? 0.498
+            : isSelected
+              ? 0.412
+              : isMeta
+                ? 0.412
+                : 0.843;
+      const borderB = isDark
+        ? isTrapped
+          ? 0.286
+          : isActive
+            ? 0.314
+            : isSelected
+              ? 1
+              : isMeta
+                ? 1
+                : 0.239
+        : isTrapped
+          ? 0.18
+          : isActive
+            ? 0.216
+            : isSelected
+              ? 0.855
+              : isMeta
+                ? 0.855
+                : 0.871;
+      const borderA = isSelected || isTrapped || isActive ? 1 : isDark ? 0.8 : 0.9;
+      pushRectBorder(x, y, w, h, borderR, borderG, borderB, borderA);
+
+      // Node Header fill
+      const headerR = isDark
+        ? isTrapped
+          ? 0.239
+          : isActive
+            ? 0.078
+            : isMeta
+              ? 0.051
+              : 0.086
+        : isTrapped
+          ? 0.996
+          : isActive
+            ? 0.863
+            : isMeta
+              ? 0.882
+              : 0.941;
+      const headerG = isDark
+        ? isTrapped
+          ? 0.078
+          : isActive
+            ? 0.239
+            : isMeta
+              ? 0.157
+              : 0.106
+        : isTrapped
+          ? 0.886
+          : isActive
+            ? 0.988
+            : isMeta
+              ? 0.925
+              : 0.949;
+      const headerB = isDark
+        ? isTrapped
+          ? 0.09
+          : isActive
+            ? 0.133
+            : isMeta
+              ? 0.278
+              : 0.133
+        : isTrapped
+          ? 0.886
+          : isActive
+            ? 0.906
+            : isMeta
+              ? 0.969
+              : 0.961;
+      pushRect(x + 1, y + 1, w - 2, NODE_HEADER_HEIGHT - 1, headerR, headerG, headerB, 1);
+
+      // Category accent bar (4px)
+      const catColor = getCategoryRgba(node.category, isMeta, isDark);
+      pushRect(x + 1, y + 1, w - 2, 4, catColor[0], catColor[1], catColor[2], 1);
+
+      // Header separator
+      const sepColor = isDark ? [0.188, 0.212, 0.239, 0.8] : [0.816, 0.843, 0.871, 0.8];
+      pushLine(
+        x + 1,
+        y + NODE_HEADER_HEIGHT,
+        x + w - 1,
+        y + NODE_HEADER_HEIGHT,
+        sepColor[0],
+        sepColor[1],
+        sepColor[2],
+        sepColor[3],
+      );
+
+      // Node Text
+      // Title
+      const titleColor = isDark ? [0.941, 0.965, 0.988] : [0.122, 0.137, 0.157];
+      wasm.font_append_text_quads(node.title, x + 10, y + 17, 12, titleColor[0], titleColor[1], titleColor[2], 1, 0);
+
+      // Category / Meta pill
+      const catText = isMeta
+        ? `META (${node.metaSubgraph?.nodes.length ?? 0})`
+        : (node.category || 'OPERATION').toUpperCase();
+      const catTextColor = isMeta
+        ? isDark
+          ? [0.345, 0.651, 1, 1]
+          : [0.035, 0.412, 0.855, 1]
+        : isDark
+          ? [0.545, 0.58, 0.62, 1]
+          : [0.341, 0.376, 0.416, 1];
+      wasm.font_append_text_quads(
+        catText,
+        x + w - 10,
+        y + 17,
+        10,
+        catTextColor[0],
+        catTextColor[1],
+        catTextColor[2],
+        1,
+        1,
+      );
+
+      // Subtitle operation identifier
+      const subColor = isDark ? [0.545, 0.58, 0.62] : [0.341, 0.376, 0.416];
+      wasm.font_append_text_quads(node.operation, x + 10, y + 28, 9, subColor[0], subColor[1], subColor[2], 1, 0);
+
+      // Pins (Inputs)
+      for (const [idx, port] of (node.inputs ?? []).entries()) {
+        const portY = y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
+        const isHovered = hoveredPort?.nodeId === node.id && hoveredPort?.portId === port.id;
+        const pinRadius = isHovered ? 7 : 5;
+        const portColor = getPortTypeRgba(port.type, isDark);
+        const pinInner = isDark ? [0.086, 0.106, 0.133] : [0.941, 0.949, 0.961];
+
+        // Outer ring + inner dot
+        pushCircle(x, portY, pinRadius, portColor[0], portColor[1], portColor[2], 1);
+        pushCircle(x, portY, Math.max(1, pinRadius - 2), pinInner[0], pinInner[1], pinInner[2], 1);
+        if (isHovered) {
+          pushCircle(x, portY, Math.max(1, pinRadius - 2), 1, 1, 1, 1);
+        }
+
+        // Port label text
+        const portTextColor = isDark ? [0.788, 0.82, 0.851] : [0.141, 0.161, 0.184];
+        wasm.font_append_text_quads(
+          port.name,
+          x + 12,
+          portY + 4,
+          11,
+          portTextColor[0],
+          portTextColor[1],
+          portTextColor[2],
+          1,
+          0,
+        );
+      }
+
+      // Pins (Outputs)
+      for (const [idx, port] of (node.outputs ?? []).entries()) {
+        const portY = y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
+        const isHovered = hoveredPort?.nodeId === node.id && hoveredPort?.portId === port.id;
+        const pinRadius = isHovered ? 7 : 5;
+        const portColor = getPortTypeRgba(port.type, isDark);
+        const pinInner = isDark ? [0.086, 0.106, 0.133] : [0.941, 0.949, 0.961];
+
+        // Outer ring + inner dot
+        pushCircle(x + w, portY, pinRadius, portColor[0], portColor[1], portColor[2], 1);
+        pushCircle(x + w, portY, Math.max(1, pinRadius - 2), pinInner[0], pinInner[1], pinInner[2], 1);
+        if (isHovered) {
+          pushCircle(x + w, portY, Math.max(1, pinRadius - 2), 1, 1, 1, 1);
+        }
+
+        // Port label text
+        const portTextColor = isDark ? [0.788, 0.82, 0.851] : [0.141, 0.161, 0.184];
+        wasm.font_append_text_quads(
+          port.name,
+          x + w - 12,
+          portY + 4,
+          11,
+          portTextColor[0],
+          portTextColor[1],
+          portTextColor[2],
+          1,
+          1,
+        );
+      }
+
+      // Literal properties preview
+      if (node.properties && Object.keys(node.properties).length > 0) {
+        const firstVal = String(Object.values(node.properties)[0]);
+        const propColor = isDark ? [0.345, 0.651, 1] : [0.035, 0.412, 0.855];
+        wasm.font_append_text_quads(
+          `= ${firstVal}`,
+          x + 10,
+          y + h - 8,
+          10,
+          propColor[0],
+          propColor[1],
+          propColor[2],
+          1,
+          0,
+        );
+      }
+    }
+
+    const glTextFloatCount = wasm.font_get_vertex_float_count();
+    const glTextBufPtr = wasm.font_get_vertex_buffer_ptr();
+    const glTextF64View = new Float64Array(wasm.memory.buffer, glTextBufPtr, glTextFloatCount);
+    textTriVertices = [...glTextF64View];
+
+    // Draw triangles
+    if (triVertices.length > 0 && glVertexBuffer) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, glVertexBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(triVertices), gl.DYNAMIC_DRAW);
+      gl.enableVertexAttribArray(glAttribLocations.a_position);
+      gl.vertexAttribPointer(glAttribLocations.a_position, 2, gl.FLOAT, false, 24, 0);
+      gl.enableVertexAttribArray(glAttribLocations.a_color);
+      gl.vertexAttribPointer(glAttribLocations.a_color, 4, gl.FLOAT, false, 24, 8);
+      gl.drawArrays(gl.TRIANGLES, 0, triVertices.length / 6);
+    }
+
+    // Draw lines
+    if (lineVertices.length > 0 && glVertexBuffer) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, glVertexBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(lineVertices), gl.DYNAMIC_DRAW);
+      gl.enableVertexAttribArray(glAttribLocations.a_position);
+      gl.vertexAttribPointer(glAttribLocations.a_position, 2, gl.FLOAT, false, 24, 0);
+      gl.enableVertexAttribArray(glAttribLocations.a_color);
+      gl.vertexAttribPointer(glAttribLocations.a_color, 4, gl.FLOAT, false, 24, 8);
+      gl.drawArrays(gl.LINES, 0, lineVertices.length / 6);
+    }
+
+    // Draw text
+    if (
+      textTriVertices.length > 0 &&
+      glTextProgram &&
+      glTexVertexBuffer &&
+      glFontTexture &&
+      glTextUniformLocations &&
+      glTextAttribLocations
+    ) {
+      gl.useProgram(glTextProgram);
+      gl.uniform2f(glTextUniformLocations.u_resolution, width, height);
+      gl.uniform2f(glTextUniformLocations.u_camera, wasm.get_camera_x(), wasm.get_camera_y());
+      gl.uniform1f(glTextUniformLocations.u_zoom, wasm.get_camera_zoom());
+
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, glFontTexture);
+      gl.uniform1i(glTextUniformLocations.u_fontTexture, 0);
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, glTexVertexBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textTriVertices), gl.DYNAMIC_DRAW);
+      gl.enableVertexAttribArray(glTextAttribLocations.a_position);
+      gl.vertexAttribPointer(glTextAttribLocations.a_position, 2, gl.FLOAT, false, 32, 0);
+      gl.enableVertexAttribArray(glTextAttribLocations.a_uv);
+      gl.vertexAttribPointer(glTextAttribLocations.a_uv, 2, gl.FLOAT, false, 32, 8);
+      gl.enableVertexAttribArray(glTextAttribLocations.a_color);
+      gl.vertexAttribPointer(glTextAttribLocations.a_color, 4, gl.FLOAT, false, 32, 16);
+      gl.drawArrays(gl.TRIANGLES, 0, textTriVertices.length / 8);
+    }
+
+    const tEnd = typeof performance === 'undefined' ? 0 : performance.now();
+    const frameTime = t0 > 0 && tEnd > 0 ? tEnd - t0 : 1.2;
+    performanceStats = {
+      ...performanceStats,
+      renderTimeMs: Math.round(frameTime * 100) / 100,
+      totalFrameTimeMs: Math.round((frameTime + 0.4) * 100) / 100,
+      visibleNodesCount: nodes.length,
+      visibleEdgesCount: edges.length,
+      visiblePinsCount: nodes.length * 4,
+      isFallback: false,
+    };
+  }
+
+  const capabilities: WebAssembly.Imports = {
+    'webgpu.upload_camera_buffer': {
+      gpu_upload_camera_buffer: () => {
+        if (!gpuContext || !cameraBuffer || !wasm || !gpuDevice) return;
+        prepareWebGpuInstances();
+        const cameraUniforms = new Float32Array(24);
+        wasm.createViewProjectionMatrix(256);
+        const f64Array = new Float64Array(wasm.memory.buffer, 256, 16);
+        for (let i = 0; i < 16; i++) {
+          cameraUniforms[i] = f64Array[i] ?? 0;
+        }
+        cameraUniforms[16] = wasm.get_camera_viewport_width();
+        cameraUniforms[17] = wasm.get_camera_viewport_height();
+        cameraUniforms[18] = wasm.get_camera_x();
+        cameraUniforms[19] = wasm.get_camera_y();
+        cameraUniforms[20] = wasm.get_camera_zoom();
+        cameraUniforms[21] = 1;
+        cameraUniforms[22] = currentTheme === 'light' ? 0 : 1;
+        gpuDevice.queue.writeBuffer(cameraBuffer, 0, cameraUniforms);
+      },
+    },
+    'webgpu.write_node_instance': {
+      gpu_write_node_instance: (
+        posX: number,
+        posY: number,
+        w: number,
+        h: number,
+        radius: number,
+        isSelected: number,
+        isActive: number,
+        isTrapped: number,
+      ) => {
+        const isDark = currentTheme !== 'light';
+        const glowR = isDark ? (isTrapped ? 0.95 : isActive ? 0.15 : 0) : isTrapped ? 0.81 : isActive ? 0.1 : 0;
+        const glowG = isDark ? (isTrapped ? 0.15 : isActive ? 0.75 : 0) : isTrapped ? 0.13 : isActive ? 0.5 : 0;
+        const glowB = isDark ? (isTrapped ? 0.2 : isActive ? 1 : 0) : isTrapped ? 0.18 : isActive ? 0.22 : 0;
+        const glowA = isTrapped ? 0.9 : isActive ? 0.8 : isSelected ? 0.5 : 0;
+
+        const fillR = isDark ? 0.14 : 1;
+        const fillG = isDark ? 0.16 : 1;
+        const fillB = isDark ? 0.22 : 1;
+        const fillA = isDark ? 0.95 : 0.98;
+
+        const borderR = isDark ? (isSelected ? 0.35 : 0.28) : isSelected ? 0.035 : 0.816;
+        const borderG = isDark ? (isSelected ? 0.65 : 0.32) : isSelected ? 0.412 : 0.843;
+        const borderB = isDark ? (isSelected ? 1 : 0.42) : isSelected ? 0.855 : 0.871;
+        const borderA = isSelected ? 1 : 0.7;
+        const borderWidth = isSelected ? 2.5 : 1.2;
+
+        nodeInstanceFloats.push(
+          posX,
+          posY,
+          w,
+          h,
+          radius,
+          fillR,
+          fillG,
+          fillB,
+          fillA,
+          borderR,
+          borderG,
+          borderB,
+          borderA,
+          borderWidth,
+          glowR,
+          glowG,
+          glowB,
+          glowA,
+        );
+      },
+    },
+    'webgpu.write_edge_instance': {
+      gpu_write_edge_instance: (
+        p0x: number,
+        p0y: number,
+        p1x: number,
+        p1y: number,
+        p2x: number,
+        p2y: number,
+        p3x: number,
+        p3y: number,
+        isSelected: number,
+        isActive: number,
+        pulseOffsetPermille: number,
+      ) => {
+        const isDark = currentTheme !== 'light';
+        const colorR = isDark
+          ? isSelected
+            ? 0.35
+            : isActive
+              ? 0.2
+              : 0.45
+          : isSelected
+            ? 0.035
+            : isActive
+              ? 0.1
+              : 0.34;
+        const colorG = isDark
+          ? isSelected
+            ? 0.65
+            : isActive
+              ? 0.8
+              : 0.52
+          : isSelected
+            ? 0.412
+            : isActive
+              ? 0.5
+              : 0.38;
+        const colorB = isDark ? (isSelected ? 1 : isActive ? 1 : 0.65) : isSelected ? 0.855 : isActive ? 0.22 : 0.42;
+        const colorA = isSelected ? 1 : isActive ? 0.9 : isDark ? 0.8 : 0.65;
+        const widthVal = isSelected ? 3 : 2.5;
+
+        edgeInstanceFloats.push(
+          p0x,
+          p0y,
+          p1x,
+          p1y,
+          p2x,
+          p2y,
+          p3x,
+          p3y,
+          colorR,
+          colorG,
+          colorB,
+          colorA,
+          widthVal,
+          pulseOffsetPermille / 1000,
+          isActive,
+        );
+      },
+    },
+    'webgpu.write_pin_instance': {
+      gpu_write_pin_instance: (
+        posX: number,
+        posY: number,
+        radius: number,
+        isHovered: number,
+        isActive: number,
+        _isOutput: number,
+      ) => {
+        const isDark = currentTheme !== 'light';
+        const fillR = isHovered ? (isDark ? 0 : 1) : isActive ? (isDark ? 0 : 0.1) : isDark ? 0.15 : 0.94;
+        const fillG = isHovered ? (isDark ? 0.94 : 1) : isActive ? (isDark ? 1 : 0.5) : isDark ? 0.2 : 0.95;
+        const fillB = isHovered ? (isDark ? 1 : 1) : isActive ? (isDark ? 0.53 : 0.22) : isDark ? 0.28 : 0.96;
+        const fillA = 1;
+
+        const borderR = isDark ? 0.45 : 0.34;
+        const borderG = isDark ? 0.52 : 0.38;
+        const borderB = isDark ? 0.65 : 0.42;
+        const borderA = 0.8;
+        const borderWidth = isHovered ? 2.5 : 1.5;
+
+        const glowR = 0;
+        const glowG = isHovered ? (isDark ? 0.94 : 0.41) : isActive ? (isDark ? 1 : 0.5) : 0;
+        const glowB = isHovered ? (isDark ? 1 : 0.85) : isActive ? (isDark ? 0.53 : 0.22) : 0;
+        const glowA = isHovered ? 0.8 : isActive ? 0.6 : 0;
+
+        pinInstanceFloats.push(
+          posX,
+          posY,
+          radius * 2,
+          radius * 2,
+          radius,
+          fillR,
+          fillG,
+          fillB,
+          fillA,
+          borderR,
+          borderG,
+          borderB,
+          borderA,
+          borderWidth,
+          glowR,
+          glowG,
+          glowB,
+          glowA,
+        );
+      },
+    },
+    'webgpu.upload_node_buffer': {
+      gpu_upload_node_buffer: (count?: number) => {
+        if (!gpuDevice) return;
+        const requiredCount = Math.max(count ?? 0, Math.floor(nodeInstanceFloats.length / 18));
+        const requiredBytes = Math.max(requiredCount * 72, 1024);
+        if (!nodeInstanceBuffer || nodeInstanceBuffer.size < requiredBytes) {
+          nodeInstanceBuffer?.destroy();
+          nodeInstanceBuffer = gpuDevice.createBuffer({
+            size: Math.max(requiredBytes, 2048),
+            usage: 0x00_20 | 0x00_08,
+          });
+        }
+        if (nodeInstanceFloats.length > 0) {
+          const nodeData = new Float32Array(nodeInstanceFloats);
+          gpuDevice.queue.writeBuffer(nodeInstanceBuffer, 0, nodeData);
+        }
+      },
+    },
+    'webgpu.upload_edge_buffer': {
+      gpu_upload_edge_buffer: (count?: number) => {
+        if (!gpuDevice) return;
+        const requiredCount = Math.max(count ?? 0, Math.floor(edgeInstanceFloats.length / 15));
+        const requiredBytes = Math.max(requiredCount * 60, 1024);
+        if (!edgeInstanceBuffer || edgeInstanceBuffer.size < requiredBytes) {
+          edgeInstanceBuffer?.destroy();
+          edgeInstanceBuffer = gpuDevice.createBuffer({
+            size: Math.max(requiredBytes, 2048),
+            usage: 0x00_20 | 0x00_08,
+          });
+        }
+        if (edgeInstanceFloats.length > 0) {
+          const edgeData = new Float32Array(edgeInstanceFloats);
+          gpuDevice.queue.writeBuffer(edgeInstanceBuffer, 0, edgeData);
+        }
+      },
+    },
+    'webgpu.upload_pin_buffer': {
+      gpu_upload_pin_buffer: (count?: number) => {
+        if (!gpuDevice) return;
+        const requiredCount = Math.max(count ?? 0, Math.floor(pinInstanceFloats.length / 18));
+        const requiredBytes = Math.max(requiredCount * 72, 1024);
+        if (!pinInstanceBuffer || pinInstanceBuffer.size < requiredBytes) {
+          pinInstanceBuffer?.destroy();
+          pinInstanceBuffer = gpuDevice.createBuffer({
+            size: Math.max(requiredBytes, 2048),
+            usage: 0x00_20 | 0x00_08,
+          });
+        }
+        if (pinInstanceFloats.length > 0) {
+          const pinData = new Float32Array(pinInstanceFloats);
+          gpuDevice.queue.writeBuffer(pinInstanceBuffer, 0, pinData);
+        }
+      },
+    },
+    'webgpu.render_begin': {
+      gpu_render_begin: () => {
+        if (!gpuDevice || !gpuContext) return;
+        const isDark = currentTheme !== 'light';
+        currentCommandEncoder = gpuDevice.createCommandEncoder();
+        const currentTexture = gpuContext.getCurrentTexture();
+        const textureView = currentTexture.createView();
+        currentPassEncoder = currentCommandEncoder.beginRenderPass({
+          colorAttachments: [
+            {
+              view: textureView,
+              clearValue: isDark ? { r: 0.043, g: 0.071, b: 0.098, a: 1 } : { r: 0.961, g: 0.965, b: 0.973, a: 1 },
+              loadOp: 'clear',
+              storeOp: 'store',
+            },
+          ],
+        });
+      },
+    },
+    'webgpu.render_grid': {
+      gpu_render_grid: () => {
+        if (!currentPassEncoder || !gridPipeline || !cameraBindGroup) return;
+        currentPassEncoder.setPipeline(gridPipeline);
+        currentPassEncoder.setBindGroup(0, cameraBindGroup);
+        currentPassEncoder.draw(6, 1, 0, 0);
+      },
+    },
+    'webgpu.render_edges': {
+      gpu_render_edges: (count: number) => {
+        if (!currentPassEncoder || !edgesPipeline || !cameraBindGroup || !edgeInstanceBuffer) return;
+        const maxInstances = Math.floor(edgeInstanceBuffer.size / 60);
+        const actualCount = Math.min(count, Math.floor(edgeInstanceFloats.length / 15), maxInstances);
+        if (actualCount === 0) return;
+        currentPassEncoder.setPipeline(edgesPipeline);
+        currentPassEncoder.setBindGroup(0, cameraBindGroup);
+        currentPassEncoder.setVertexBuffer(0, edgeInstanceBuffer);
+        currentPassEncoder.draw(66, actualCount, 0, 0);
+      },
+    },
+    'webgpu.render_nodes': {
+      gpu_render_nodes: (_count: number) => {
+        if (!currentPassEncoder || !nodesPipeline || !cameraBindGroup || !nodeInstanceBuffer) return;
+        const maxInstances = Math.floor(nodeInstanceBuffer.size / 72);
+        const actualCount = Math.min(Math.floor(nodeInstanceFloats.length / 18), maxInstances);
+        if (actualCount === 0) return;
+        currentPassEncoder.setPipeline(nodesPipeline);
+        currentPassEncoder.setBindGroup(0, cameraBindGroup);
+        currentPassEncoder.setVertexBuffer(0, nodeInstanceBuffer);
+        currentPassEncoder.draw(6, actualCount, 0, 0);
+      },
+    },
+    'webgpu.render_pins': {
+      gpu_render_pins: (_count: number) => {
+        if (!currentPassEncoder || !nodesPipeline || !cameraBindGroup || !pinInstanceBuffer) return;
+        const maxInstances = Math.floor(pinInstanceBuffer.size / 72);
+        const actualCount = Math.min(Math.floor(pinInstanceFloats.length / 18), maxInstances);
+        if (actualCount === 0) return;
+        currentPassEncoder.setPipeline(nodesPipeline);
+        currentPassEncoder.setBindGroup(0, cameraBindGroup);
+        currentPassEncoder.setVertexBuffer(0, pinInstanceBuffer);
+        currentPassEncoder.draw(6, actualCount, 0, 0);
+      },
+    },
+    'webgpu.render_end': {
+      gpu_render_end: () => {
+        if (!currentPassEncoder || !currentCommandEncoder || !gpuContext) return;
+        if (textPipeline && cameraBindGroup && fontBindGroup && webGpuTextVertices.length > 0 && gpuDevice) {
+          const requiredBytes = webGpuTextVertices.length * 4;
+          if (!textVertexBuffer || textVertexBuffer.size < requiredBytes) {
+            textVertexBuffer?.destroy();
+            textVertexBuffer = gpuDevice.createBuffer({
+              size: Math.max(requiredBytes, 4096),
+              usage: 0x00_20 | 0x00_08,
+            });
+          }
+          if (textVertexBuffer) {
+            gpuDevice.queue.writeBuffer(textVertexBuffer, 0, new Float32Array(webGpuTextVertices));
+            currentPassEncoder.setPipeline(textPipeline);
+            currentPassEncoder.setBindGroup(0, cameraBindGroup);
+            currentPassEncoder.setBindGroup(1, fontBindGroup);
+            currentPassEncoder.setVertexBuffer(0, textVertexBuffer);
+            currentPassEncoder.draw(webGpuTextVertices.length / 8, 1, 0, 0);
+          }
+        }
+        currentPassEncoder.end();
+        gpuDevice?.queue.submit([currentCommandEncoder.finish()]);
+        currentPassEncoder = undefined;
+        currentCommandEncoder = undefined;
+      },
+    },
+    'webgl.render_begin': {
+      gl_render_begin: (w: number, h: number, dprVal: number, camX: number, camY: number, zoomVal: number) => {
+        if (!glCtx || !glProgram) return;
+        const gl = glCtx;
+        const isDark = currentTheme !== 'light';
+        const canvasW = canvas ? canvas.width : Math.round(w * dprVal);
+        const canvasH = canvas ? canvas.height : Math.round(h * dprVal);
+        gl.viewport(0, 0, canvasW, canvasH);
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        if (isDark) {
+          gl.clearColor(0.043, 0.071, 0.098, 1);
+        } else {
+          gl.clearColor(0.961, 0.965, 0.973, 1);
+        }
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.useProgram(glProgram);
+        if (glUniformLocations) {
+          gl.uniform2f(glUniformLocations.u_resolution, w, h);
+          gl.uniform2f(glUniformLocations.u_camera, camX, camY);
+          gl.uniform1f(glUniformLocations.u_zoom, zoomVal);
+        }
+        triVertices = [];
+        lineVertices = [];
+      },
+    },
+    'webgl.render_grid': {
+      gl_render_grid: (minX: number, minY: number, maxX: number, maxY: number, zoomVal: number) => {
+        const isDark = currentTheme !== 'light';
+        const minorSpacing = 24;
+        const majorSpacing = 120;
+        const startX = Math.floor(minX / minorSpacing) * minorSpacing;
+        const endX = Math.ceil(maxX / minorSpacing) * minorSpacing;
+        const startY = Math.floor(minY / minorSpacing) * minorSpacing;
+        const endY = Math.ceil(maxY / minorSpacing) * minorSpacing;
+
+        const minorColor = isDark ? [0.22, 0.25, 0.32, 0.18] : [0.55, 0.61, 0.69, 0.25];
+        const majorColor = isDark ? [0.35, 0.4, 0.5, 0.35] : [0.39, 0.47, 0.57, 0.45];
+
+        if (zoomVal > 0.4) {
+          for (let x = startX; x <= endX; x += minorSpacing) {
+            if (x % majorSpacing !== 0) {
+              lineVertices.push(
+                x,
+                minY,
+                minorColor[0],
+                minorColor[1],
+                minorColor[2],
+                minorColor[3],
+                x,
+                maxY,
+                minorColor[0],
+                minorColor[1],
+                minorColor[2],
+                minorColor[3],
+              );
+            }
+          }
+          for (let y = startY; y <= endY; y += minorSpacing) {
+            if (y % majorSpacing !== 0) {
+              lineVertices.push(
+                minX,
+                y,
+                minorColor[0],
+                minorColor[1],
+                minorColor[2],
+                minorColor[3],
+                maxX,
+                y,
+                minorColor[0],
+                minorColor[1],
+                minorColor[2],
+                minorColor[3],
+              );
+            }
+          }
+        }
+
+        const majorStartX = Math.floor(minX / majorSpacing) * majorSpacing;
+        const majorEndX = Math.ceil(maxX / majorSpacing) * majorSpacing;
+        const majorStartY = Math.floor(minY / majorSpacing) * majorSpacing;
+        const majorEndY = Math.ceil(maxY / majorSpacing) * majorSpacing;
+        for (let x = majorStartX; x <= majorEndX; x += majorSpacing) {
+          lineVertices.push(
+            x,
+            minY,
+            majorColor[0],
+            majorColor[1],
+            majorColor[2],
+            majorColor[3],
+            x,
+            maxY,
+            majorColor[0],
+            majorColor[1],
+            majorColor[2],
+            majorColor[3],
+          );
+        }
+        for (let y = majorStartY; y <= majorEndY; y += majorSpacing) {
+          lineVertices.push(
+            minX,
+            y,
+            majorColor[0],
+            majorColor[1],
+            majorColor[2],
+            majorColor[3],
+            maxX,
+            y,
+            majorColor[0],
+            majorColor[1],
+            majorColor[2],
+            majorColor[3],
+          );
+        }
+      },
+    },
+    'webgl.draw_edge': {
+      gl_draw_edge: (
+        p0x: number,
+        p0y: number,
+        p1x: number,
+        p1y: number,
+        p2x: number,
+        p2y: number,
+        p3x: number,
+        p3y: number,
+        isSelected: number,
+        _isActive: number,
+      ) => {
+        const isDark = currentTheme !== 'light';
+        const r = isSelected ? (isDark ? 0.35 : 0.035) : isDark ? 0.47 : 0.34;
+        const g = isSelected ? (isDark ? 0.65 : 0.412) : isDark ? 0.66 : 0.38;
+        const b = isSelected ? (isDark ? 1 : 0.855) : isDark ? 1 : 0.42;
+        const a = isSelected ? 1 : isDark ? 0.7 : 0.65;
+
+        let prevX = p0x;
+        let prevY = p0y;
+        for (let step = 1; step <= 20; step++) {
+          const t = step / 20;
+          const u = 1 - t;
+          const currX = u * u * u * p0x + 3 * u * u * t * p1x + 3 * u * t * t * p2x + t * t * t * p3x;
+          const currY = u * u * u * p0y + 3 * u * u * t * p1y + 3 * u * t * t * p2y + t * t * t * p3y;
+          lineVertices.push(prevX, prevY, r, g, b, a, currX, currY, r, g, b, a);
+          prevX = currX;
+          prevY = currY;
+        }
+      },
+    },
+    'webgl.draw_node': {
+      gl_draw_node: (
+        x: number,
+        y: number,
+        w: number,
+        h: number,
+        isSelected: number,
+        isActive: number,
+        isTrapped: number,
+      ) => {
+        const isDark = currentTheme !== 'light';
+        pushRect(x, y, w, h, isDark ? 0.086 : 1, isDark ? 0.106 : 1, isDark ? 0.133 : 1, isDark ? 1 : 0.98);
+        const br = isSelected
+          ? isDark
+            ? 0.35
+            : 0.035
+          : isTrapped
+            ? isDark
+              ? 0.97
+              : 0.81
+            : isActive
+              ? isDark
+                ? 0.25
+                : 0.1
+              : isDark
+                ? 0.22
+                : 0.816;
+        const bg = isSelected
+          ? isDark
+            ? 0.65
+            : 0.412
+          : isTrapped
+            ? isDark
+              ? 0.32
+              : 0.13
+            : isActive
+              ? isDark
+                ? 0.73
+                : 0.5
+              : isDark
+                ? 0.25
+                : 0.843;
+        const bb = isSelected
+          ? isDark
+            ? 1
+            : 0.855
+          : isTrapped
+            ? isDark
+              ? 0.29
+              : 0.18
+            : isActive
+              ? isDark
+                ? 0.31
+                : 0.22
+              : isDark
+                ? 0.32
+                : 0.871;
+        lineVertices.push(
+          x,
+          y,
+          br,
+          bg,
+          bb,
+          1,
+          x + w,
+          y,
+          br,
+          bg,
+          bb,
+          1,
+          x + w,
+          y,
+          br,
+          bg,
+          bb,
+          1,
+          x + w,
+          y + h,
+          br,
+          bg,
+          bb,
+          1,
+          x + w,
+          y + h,
+          br,
+          bg,
+          bb,
+          1,
+          x,
+          y + h,
+          br,
+          bg,
+          bb,
+          1,
+          x,
+          y + h,
+          br,
+          bg,
+          bb,
+          1,
+          x,
+          y,
+          br,
+          bg,
+          bb,
+          1,
+        );
+      },
+    },
+    'webgl.draw_pin': {
+      gl_draw_pin: (px: number, py: number, radius: number, isHovered: number, isActive: number, _isOutput: number) => {
+        const isDark = currentTheme !== 'light';
+        const pr = isHovered ? (isDark ? 0.47 : 0.035) : isActive ? (isDark ? 0.25 : 0.1) : isDark ? 0.55 : 0.34;
+        const pg = isHovered ? (isDark ? 0.75 : 0.412) : isActive ? (isDark ? 0.73 : 0.5) : isDark ? 0.58 : 0.38;
+        const pb = isHovered ? (isDark ? 1 : 0.855) : isActive ? (isDark ? 0.31 : 0.22) : isDark ? 0.62 : 0.42;
+        pushRect(px - radius, py - radius, radius * 2, radius * 2, pr, pg, pb, 1);
+      },
+    },
+    'webgl.render_end': {
+      gl_render_end: () => {
+        if (!glCtx || !glVertexBuffer || !glAttribLocations) return;
+        const gl = glCtx;
+        if (triVertices.length > 0) {
+          gl.bindBuffer(gl.ARRAY_BUFFER, glVertexBuffer);
+          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(triVertices), gl.DYNAMIC_DRAW);
+          gl.enableVertexAttribArray(glAttribLocations.a_position);
+          gl.vertexAttribPointer(glAttribLocations.a_position, 2, gl.FLOAT, false, 24, 0);
+          gl.enableVertexAttribArray(glAttribLocations.a_color);
+          gl.vertexAttribPointer(glAttribLocations.a_color, 4, gl.FLOAT, false, 24, 8);
+          gl.drawArrays(gl.TRIANGLES, 0, triVertices.length / 6);
+        }
+        if (lineVertices.length > 0) {
+          gl.bindBuffer(gl.ARRAY_BUFFER, glVertexBuffer);
+          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(lineVertices), gl.DYNAMIC_DRAW);
+          gl.enableVertexAttribArray(glAttribLocations.a_position);
+          gl.vertexAttribPointer(glAttribLocations.a_position, 2, gl.FLOAT, false, 24, 0);
+          gl.enableVertexAttribArray(glAttribLocations.a_color);
+          gl.vertexAttribPointer(glAttribLocations.a_color, 4, gl.FLOAT, false, 24, 8);
+          gl.drawArrays(gl.LINES, 0, lineVertices.length / 6);
+        }
+      },
+    },
+    'webgl.render_frame': {
+      webgl_render_frame: () => {
+        renderWebGLFrame();
+      },
+    },
+    'canvas2d.render_begin': {
+      c2d_render_begin: (w: number, h: number, dprVal: number, camX: number, camY: number, zoomVal: number) => {
+        if (!canvas2dCtx) return;
+        const ctx = canvas2dCtx;
+        const isDark = currentTheme !== 'light';
+        ctx.save();
+        ctx.setTransform(dprVal, 0, 0, dprVal, 0, 0);
+        ctx.fillStyle = isDark ? '#0b1219' : '#f5f6f8';
+        ctx.fillRect(0, 0, w, h);
+        ctx.translate(w / 2, h / 2);
+        ctx.scale(zoomVal, zoomVal);
+        ctx.translate(-camX, -camY);
+      },
+    },
+    'canvas2d.render_grid': {
+      c2d_render_grid: (minX: number, minY: number, maxX: number, maxY: number, zoomVal: number) => {
+        if (!canvas2dCtx) return;
+        const ctx = canvas2dCtx;
+        const isDark = currentTheme !== 'light';
+        const minorSpacing = 24;
+        const majorSpacing = 120;
+        const startX = Math.floor(minX / minorSpacing) * minorSpacing;
+        const endX = Math.ceil(maxX / minorSpacing) * minorSpacing;
+        const startY = Math.floor(minY / minorSpacing) * minorSpacing;
+        const endY = Math.ceil(maxY / minorSpacing) * minorSpacing;
+
+        ctx.lineWidth = 1 / zoomVal;
+        if (zoomVal > 0.4) {
+          ctx.strokeStyle = isDark ? 'rgba(56, 64, 82, 0.25)' : 'rgba(140, 155, 175, 0.25)';
+          ctx.beginPath();
+          for (let x = startX; x <= endX; x += minorSpacing) {
+            if (x % majorSpacing !== 0) {
+              ctx.moveTo(x, minY);
+              ctx.lineTo(x, maxY);
+            }
+          }
+          for (let y = startY; y <= endY; y += minorSpacing) {
+            if (y % majorSpacing !== 0) {
+              ctx.moveTo(minX, y);
+              ctx.lineTo(maxX, y);
+            }
+          }
+          ctx.stroke();
+        }
+
+        ctx.strokeStyle = isDark ? 'rgba(89, 102, 128, 0.35)' : 'rgba(100, 120, 145, 0.45)';
+        ctx.beginPath();
+        const majorStartX = Math.floor(minX / majorSpacing) * majorSpacing;
+        const majorEndX = Math.ceil(maxX / majorSpacing) * majorSpacing;
+        const majorStartY = Math.floor(minY / majorSpacing) * majorSpacing;
+        const majorEndY = Math.ceil(maxY / majorSpacing) * majorSpacing;
+        for (let x = majorStartX; x <= majorEndX; x += majorSpacing) {
+          ctx.moveTo(x, minY);
+          ctx.lineTo(x, maxY);
+        }
+        for (let y = majorStartY; y <= majorEndY; y += majorSpacing) {
+          ctx.moveTo(minX, y);
+          ctx.lineTo(maxX, y);
+        }
+        ctx.stroke();
+      },
+    },
+    'canvas2d.draw_edge': {
+      c2d_draw_edge: (
+        p0x: number,
+        p0y: number,
+        p1x: number,
+        p1y: number,
+        p2x: number,
+        p2y: number,
+        p3x: number,
+        p3y: number,
+        isSelected: number,
+        isActive: number,
+        pulseOffsetPermille: number,
+      ) => {
+        if (!canvas2dCtx) return;
+        const ctx = canvas2dCtx;
+        const isDark = currentTheme !== 'light';
+        ctx.save();
+        ctx.lineWidth = isSelected ? 3 : 2;
+        ctx.strokeStyle = isSelected
+          ? isDark
+            ? '#58a6ff'
+            : '#0969da'
+          : isDark
+            ? 'rgba(139, 148, 158, 0.6)'
+            : 'rgba(87, 96, 106, 0.6)';
+        ctx.beginPath();
+        ctx.moveTo(p0x, p0y);
+        ctx.bezierCurveTo(p1x, p1y, p2x, p2y, p3x, p3y);
+        ctx.stroke();
+
+        if (isActive) {
+          const t = pulseOffsetPermille / 1000;
+          const u = 1 - t;
+          const bx = u * u * u * p0x + 3 * u * u * t * p1x + 3 * u * t * t * p2x + t * t * t * p3x;
+          const by = u * u * u * p0y + 3 * u * u * t * p1y + 3 * u * t * t * p2y + t * t * t * p3y;
+          ctx.fillStyle = isDark ? '#79c0ff' : '#0969da';
+          ctx.beginPath();
+          ctx.arc(bx, by, 4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      },
+    },
+    'canvas2d.draw_node': {
+      c2d_draw_node: (
+        x: number,
+        y: number,
+        w: number,
+        h: number,
+        isSelected: number,
+        isActive: number,
+        isTrapped: number,
+        categoryRgb: number,
+      ) => {
+        if (!canvas2dCtx) return;
+        const ctx = canvas2dCtx;
+        const isDark = currentTheme !== 'light';
+        ctx.save();
+        if (isSelected) {
+          ctx.strokeStyle = isDark ? '#58a6ff' : '#0969da';
+          ctx.lineWidth = 2;
+        } else if (isTrapped) {
+          ctx.strokeStyle = isDark ? '#f85149' : '#cf222e';
+          ctx.lineWidth = 2;
+        } else if (isActive) {
+          ctx.strokeStyle = isDark ? '#3fb950' : '#1a7f37';
+          ctx.lineWidth = 2;
+        } else {
+          ctx.strokeStyle = isDark ? 'rgba(56, 64, 82, 0.8)' : '#d0d7de';
+          ctx.lineWidth = 1;
+        }
+        ctx.fillStyle = isDark ? '#161b22' : '#ffffff';
+        ctx.beginPath();
+        if (typeof ctx.roundRect === 'function') {
+          ctx.roundRect(x, y, w, h, 8);
+        } else {
+          ctx.rect(x, y, w, h);
+        }
+        ctx.fill();
+        ctx.stroke();
+
+        const r = (categoryRgb >> 16) & 255;
+        const g = (categoryRgb >> 8) & 255;
+        const b = categoryRgb & 255;
+        ctx.fillStyle = `rgb(${r},${g},${b})`;
+        ctx.fillRect(x + 1, y + 1, w - 2, 4);
+        ctx.restore();
+      },
+    },
+    'canvas2d.draw_pin': {
+      c2d_draw_pin: (
+        px: number,
+        py: number,
+        radius: number,
+        isHovered: number,
+        isActive: number,
+        _isOutput: number,
+      ) => {
+        if (!canvas2dCtx) return;
+        const ctx = canvas2dCtx;
+        const isDark = currentTheme !== 'light';
+        ctx.save();
+        ctx.fillStyle = isHovered
+          ? isDark
+            ? '#79c0ff'
+            : '#0969da'
+          : isActive
+            ? isDark
+              ? '#3fb950'
+              : '#1a7f37'
+            : isDark
+              ? '#8b949e'
+              : '#57606a';
+        ctx.strokeStyle = isDark ? '#0d1117' : '#ffffff';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(px, py, radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+      },
+    },
+    'canvas2d.render_end': {
+      c2d_render_end: () => {
+        if (!canvas2dCtx) return;
+        canvas2dCtx.restore();
+      },
+    },
+    'canvas2d.render_frame': {
+      canvas2d_render_frame: () => {
+        render2dFrame();
+      },
+    },
+  };
+
+  const postReply = (reply: RenderWorkerOutputMessage): void => {
+    const messageWithId: RenderWorkerOutputMessage = { id: 'flint_render_worker', ...reply };
+    if (globalThis.window !== undefined && globalThis.self === globalThis.window) {
+      globalThis.window.postMessage(messageWithId, '*');
+    } else if (globalThis.self !== undefined && 'postMessage' in globalThis.self) {
+      globalThis.self.postMessage(messageWithId);
+    }
+  };
 
   globalThis.self.addEventListener('message', async (event: MessageEvent<RenderWorkerInputMessage>) => {
     const msg = event.data;
+    if (!msg || typeof msg !== 'object' || !('type' in msg)) {
+      return;
+    }
+    const knownTypes = new Set([
+      'init',
+      'set_theme',
+      'set_graph',
+      'pan',
+      'zoom',
+      'resize',
+      'set_selection',
+      'set_pulse',
+      'set_trace_state',
+      'render_frame',
+      'hit_test',
+      'destroy',
+    ]);
+    if (!knownTypes.has(msg.type)) {
+      return;
+    }
+
+    if (!wasm) {
+      wasm = getFlintRenderWorkerWasm(capabilities);
+    }
 
     try {
       switch (msg.type) {
         case 'init': {
-          if (msg.canvas) {
-            engine = new FlintRenderEngine(msg.width ?? 800, msg.height ?? 600);
-            await engine.initialize(msg.canvas, msg.dpr);
-            globalThis.self.postMessage({
-              type: 'ready',
-              performance: engine.getPerformanceStats(),
+          canvas = msg.canvas;
+          width = msg.width ?? 800;
+          height = msg.height ?? 600;
+          dpr = msg.dpr ?? 1;
+          const preferredRenderer = msg.renderer;
+          if (msg.theme !== undefined) {
+            currentTheme = msg.theme;
+            wasm.engine_set_theme(currentTheme === 'light' ? 1 : 0);
+          }
+
+          if (canvas) {
+            canvas.width = Math.round(width * dpr);
+            canvas.height = Math.round(height * dpr);
+          }
+
+          wasm.engine_create(width, height, dpr);
+          wasm.engine_set_theme(currentTheme === 'light' ? 1 : 0);
+
+          let initialized = false;
+          let selectedTier = 3;
+
+          if (canvas) {
+            const hasWebGpu =
+              typeof navigator !== 'undefined' &&
+              'gpu' in navigator &&
+              (navigator as unknown as WebGpuNavigator).gpu !== undefined;
+
+            if ((preferredRenderer === 'webgpu' || !preferredRenderer) && hasWebGpu) {
+              initialized = await initWebGpuBackend(canvas);
+              if (initialized) {
+                selectedTier = 1;
+                activeBackend = 'webgpu';
+              }
+            }
+
+            if (!initialized && (preferredRenderer === 'webgl' || !preferredRenderer)) {
+              initialized = initWebGLBackend(canvas);
+              if (initialized) {
+                selectedTier = 2;
+                activeBackend = 'webgl';
+              }
+            }
+
+            if (!initialized && (preferredRenderer === 'canvas2d' || !preferredRenderer)) {
+              initialized = init2dBackend(canvas);
+              if (initialized) {
+                selectedTier = 3;
+                activeBackend = 'canvas2d';
+              }
+            }
+
+            if (!initialized && !preferredRenderer) {
+              if (hasWebGpu) {
+                initialized = await initWebGpuBackend(canvas);
+                if (initialized) {
+                  selectedTier = 1;
+                  activeBackend = 'webgpu';
+                }
+              }
+              if (!initialized) {
+                initialized = initWebGLBackend(canvas);
+                if (initialized) {
+                  selectedTier = 2;
+                  activeBackend = 'webgl';
+                }
+              }
+              if (!initialized) {
+                initialized = init2dBackend(canvas);
+                if (initialized) {
+                  selectedTier = 3;
+                  activeBackend = 'canvas2d';
+                }
+              }
+            }
+
+            wasm.engine_set_backend(selectedTier);
+          }
+
+          performanceStats = {
+            ...performanceStats,
+            dpr,
+          };
+          wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
+
+          postReply({
+            type: 'ready',
+            supported: true,
+            performance: performanceStats,
+          } as RenderWorkerOutputMessage);
+          break;
+        }
+        case 'set_theme': {
+          if (msg.theme !== undefined) {
+            currentTheme = msg.theme;
+            wasm.engine_set_theme(currentTheme === 'light' ? 1 : 0);
+            wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
+            postReply({
+              type: 'frame',
+              performance: performanceStats,
+              visibleNodes: nodes.length,
+              visibleEdges: edges.length,
             } as RenderWorkerOutputMessage);
           }
           break;
         }
         case 'set_graph': {
-          if (engine && msg.nodes && msg.edges) {
-            engine.setGraph(msg.nodes, msg.edges, msg.groups ?? []);
+          nodes = msg.nodes ?? [];
+          edges = msg.edges ?? [];
+          groups = msg.groups ?? [];
+
+          wasm.spatial_clear();
+          for (const [i, node] of nodes.entries()) {
+            if (node) {
+              const maxPorts = Math.max(node.inputs?.length ?? 0, node.outputs?.length ?? 0);
+              wasm.getNodeBounds(node.position.x, node.position.y, maxPorts);
+              const minX = wasm.get_node_bounds_min_x();
+              const minY = wasm.get_node_bounds_min_y();
+              const maxX = wasm.get_node_bounds_max_x();
+              const maxY = wasm.get_node_bounds_max_y();
+              wasm.spatial_insert_node(
+                i,
+                Math.round(minX) + COORD_OFFSET,
+                Math.round(minY) + COORD_OFFSET,
+                Math.round(maxX) + COORD_OFFSET,
+                Math.round(maxY) + COORD_OFFSET,
+              );
+            }
           }
+          wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
+          postReply({
+            type: 'frame',
+            performance: performanceStats,
+            visibleNodes: nodes.length,
+            visibleEdges: edges.length,
+          } as RenderWorkerOutputMessage);
           break;
         }
         case 'pan': {
-          if (engine && msg.deltaX !== undefined && msg.deltaY !== undefined) {
-            engine.pan(msg.deltaX, msg.deltaY);
+          if (msg.deltaX !== undefined && msg.deltaY !== undefined) {
+            wasm.engine_pan(msg.deltaX, msg.deltaY);
+            wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
+            postReply({
+              type: 'camera_changed',
+              camera: {
+                x: wasm.get_camera_x(),
+                y: wasm.get_camera_y(),
+                zoom: wasm.get_camera_zoom(),
+                viewportWidth: wasm.get_camera_viewport_width(),
+                viewportHeight: wasm.get_camera_viewport_height(),
+              },
+            } as RenderWorkerOutputMessage);
+            postReply({
+              type: 'frame',
+              performance: performanceStats,
+              visibleNodes: nodes.length,
+              visibleEdges: edges.length,
+            } as RenderWorkerOutputMessage);
           }
           break;
         }
         case 'zoom': {
-          if (engine && msg.factor !== undefined) {
-            engine.zoom(msg.factor, msg.cursorX, msg.cursorY);
+          if (msg.factor !== undefined) {
+            wasm.engine_zoom(msg.cursorX ?? 0, msg.cursorY ?? 0, msg.factor);
+            wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
+            postReply({
+              type: 'camera_changed',
+              camera: {
+                x: wasm.get_camera_x(),
+                y: wasm.get_camera_y(),
+                zoom: wasm.get_camera_zoom(),
+                viewportWidth: wasm.get_camera_viewport_width(),
+                viewportHeight: wasm.get_camera_viewport_height(),
+              },
+            } as RenderWorkerOutputMessage);
+            postReply({
+              type: 'frame',
+              performance: performanceStats,
+              visibleNodes: nodes.length,
+              visibleEdges: edges.length,
+            } as RenderWorkerOutputMessage);
           }
           break;
         }
         case 'resize': {
-          if (engine && msg.width !== undefined && msg.height !== undefined) {
-            engine.resize(msg.width, msg.height, msg.dpr);
+          if (msg.width !== undefined && msg.height !== undefined) {
+            width = msg.width;
+            height = msg.height;
+            dpr = msg.dpr ?? dpr;
+            if (canvas) {
+              canvas.width = Math.round(width * dpr);
+              canvas.height = Math.round(height * dpr);
+            }
+            wasm.engine_resize(width, height, dpr);
+            performanceStats = {
+              ...performanceStats,
+              dpr,
+            };
+            wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
+            postReply({
+              type: 'frame',
+              performance: performanceStats,
+              visibleNodes: nodes.length,
+              visibleEdges: edges.length,
+            } as RenderWorkerOutputMessage);
           }
           break;
         }
         case 'set_selection': {
-          if (engine && msg.selectedNodeIds) {
-            engine.setSelection(msg.selectedNodeIds, msg.selectedEdgeIds ?? []);
+          selectedNodeIds.clear();
+          if (msg.selectedNodeIds) {
+            for (const id of msg.selectedNodeIds) {
+              selectedNodeIds.add(id);
+            }
           }
+          selectedEdgeIds.clear();
+          if (msg.selectedEdgeIds) {
+            for (const id of msg.selectedEdgeIds) {
+              selectedEdgeIds.add(id);
+            }
+          }
+          wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
+          postReply({
+            type: 'frame',
+            performance: performanceStats,
+            visibleNodes: nodes.length,
+            visibleEdges: edges.length,
+          } as RenderWorkerOutputMessage);
           break;
         }
         case 'set_pulse': {
-          if (engine && msg.edgeId && msg.progress !== undefined) {
-            engine.setEdgePulse(msg.edgeId, msg.progress);
+          if (msg.edgeId !== undefined) {
+            edgePulses.set(msg.edgeId, msg.progress);
+            wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
+            postReply({
+              type: 'frame',
+              performance: performanceStats,
+              visibleNodes: nodes.length,
+              visibleEdges: edges.length,
+            } as RenderWorkerOutputMessage);
           }
           break;
         }
+        case 'set_trace_state': {
+          activeNodeIds.clear();
+          if (msg.activeNodeIds) {
+            for (const id of msg.activeNodeIds) {
+              activeNodeIds.add(id);
+            }
+          }
+          trappedNodeId = msg.trappedNodeId;
+          edgePulses.clear();
+          if (msg.edgePulses) {
+            for (const pulse of msg.edgePulses) {
+              edgePulses.set(pulse.edgeId, pulse.offset);
+            }
+          }
+          wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
+          postReply({
+            type: 'frame',
+            performance: performanceStats,
+            visibleNodes: nodes.length,
+            visibleEdges: edges.length,
+          } as RenderWorkerOutputMessage);
+          break;
+        }
+        case 'render_frame': {
+          wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
+          postReply({
+            type: 'frame',
+            performance: performanceStats,
+            visibleNodes: nodes.length,
+            visibleEdges: edges.length,
+          } as RenderWorkerOutputMessage);
+          break;
+        }
         case 'hit_test': {
-          if (engine && msg.cursorX !== undefined && msg.cursorY !== undefined) {
-            const hit = engine.hitTestSync(msg.cursorX, msg.cursorY);
-            globalThis.self.postMessage({
+          if (msg.cursorX !== undefined && msg.cursorY !== undefined) {
+            const px = Math.round(msg.cursorX) + COORD_OFFSET;
+            const py = Math.round(msg.cursorY) + COORD_OFFSET;
+            const hit = wasm.spatial_hit_test_point(px, py);
+            let hitResult: FlintHitResult | undefined;
+            if (hit > 0) {
+              const node = nodes[hit - 1];
+              if (node) {
+                hitResult = {
+                  type: 'node',
+                  nodeId: node.id,
+                  worldX: msg.cursorX,
+                  worldY: msg.cursorY,
+                };
+              }
+            } else {
+              const nodeMap = new Map<string, FlintGraphNode>(nodes.map((n) => [n.id, n]));
+              for (const edge of edges) {
+                const fromNode = nodeMap.get(edge.fromNodeId);
+                const toNode = nodeMap.get(edge.toNodeId);
+                if (!fromNode || !toNode) continue;
+                const fromPortIndex = Math.max(
+                  0,
+                  (fromNode.outputs ?? []).findIndex((p) => p.id === edge.fromPortId),
+                );
+                const toPortIndex = Math.max(
+                  0,
+                  (toNode.inputs ?? []).findIndex((p) => p.id === edge.toPortId),
+                );
+                const p0x = fromNode.position.x + NODE_WIDTH;
+                const p0y = fromNode.position.y + NODE_HEADER_HEIGHT + fromPortIndex * PORT_ROW_HEIGHT + 14;
+                const p3x = toNode.position.x;
+                const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIndex * PORT_ROW_HEIGHT + 14;
+                if (wasm.edge_hit_test(msg.cursorX, msg.cursorY, p0x, p0y, p3x, p3y, msg.snapRadius ?? 15)) {
+                  hitResult = {
+                    type: 'edge',
+                    nodeId: edge.fromNodeId,
+                    edgeId: edge.id,
+                    worldX: msg.cursorX,
+                    worldY: msg.cursorY,
+                  };
+                  break;
+                }
+              }
+            }
+            postReply({
               type: 'hit_test_result',
-              hit,
+              hit: hitResult,
+              requestId: msg.requestId,
+            } as RenderWorkerOutputMessage);
+            postReply({
+              type: 'hit_result',
+              hit: hitResult,
               requestId: msg.requestId,
             } as RenderWorkerOutputMessage);
           }
           break;
         }
+        case 'destroy': {
+          nodeInstanceBuffer?.destroy();
+          nodeInstanceBuffer = undefined;
+          edgeInstanceBuffer?.destroy();
+          edgeInstanceBuffer = undefined;
+          pinInstanceBuffer?.destroy();
+          pinInstanceBuffer = undefined;
+          textVertexBuffer?.destroy();
+          textVertexBuffer = undefined;
+          fontTexture?.destroy?.();
+          fontTexture = undefined;
+          fontSampler = undefined;
+          fontBindGroup = undefined;
+          cameraBuffer?.destroy();
+          cameraBuffer = undefined;
+          cameraBindGroup = undefined;
+          currentPassEncoder = undefined;
+          currentCommandEncoder = undefined;
+          gridPipeline = undefined;
+          nodesPipeline = undefined;
+          edgesPipeline = undefined;
+          textPipeline = undefined;
+          gpuDevice = undefined;
+          gpuContext = undefined;
+          if (glCtx) {
+            if (glVertexBuffer) glCtx.deleteBuffer(glVertexBuffer);
+            if (glTexVertexBuffer) glCtx.deleteBuffer(glTexVertexBuffer);
+            if (glFontTexture) glCtx.deleteTexture(glFontTexture);
+            if (glProgram) glCtx.deleteProgram(glProgram);
+            if (glTextProgram) glCtx.deleteProgram(glTextProgram);
+          }
+          glVertexBuffer = undefined;
+          glTexVertexBuffer = undefined;
+          glFontTexture = undefined;
+          glProgram = undefined;
+          glTextProgram = undefined;
+          glCtx = undefined;
+          canvas2dCtx = undefined;
+          canvas = undefined;
+          break;
+        }
       }
     } catch (error) {
-      globalThis.self.postMessage({
+      postReply({
         type: 'error',
         error: error instanceof Error ? error.message : String(error),
       } as RenderWorkerOutputMessage);

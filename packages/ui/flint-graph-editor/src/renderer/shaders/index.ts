@@ -7,6 +7,8 @@ struct CameraUniform {
   cameraPos: vec2<f32>,
   zoom: f32,
   gridOpacity: f32,
+  isDark: f32,
+  padding: f32,
 };
 
 @group(0) @binding(0) var<uniform> camera: CameraUniform;
@@ -52,10 +54,21 @@ fn fs_main(input: VertexOutput) -> @location(0) vec4<f32> {
   let majorLine = 1.0 - min(min(majorGrid.x, majorGrid.y), 1.0);
 
   let minorFade = smoothstep(0.2, 0.8, camera.zoom);
-  let minorColor = vec4<f32>(0.22, 0.25, 0.32, 0.18 * minorFade);
-  let majorColor = vec4<f32>(0.35, 0.40, 0.50, 0.35);
 
-  var color = mix(vec4<f32>(0.08, 0.09, 0.12, 1.0), minorColor, minorLine * minorFade);
+  let isDarkMode = camera.isDark > 0.5;
+  let bgDark = vec4<f32>(0.043, 0.071, 0.098, 1.0);
+  let bgLight = vec4<f32>(0.961, 0.965, 0.973, 1.0);
+  let bgColor = select(bgLight, bgDark, isDarkMode);
+
+  let minorDark = vec4<f32>(0.22, 0.25, 0.32, 0.18 * minorFade);
+  let minorLight = vec4<f32>(0.55, 0.61, 0.69, 0.25 * minorFade);
+  let minorColor = select(minorLight, minorDark, isDarkMode);
+
+  let majorDark = vec4<f32>(0.35, 0.40, 0.50, 0.35);
+  let majorLight = vec4<f32>(0.39, 0.47, 0.57, 0.45);
+  let majorColor = select(majorLight, majorDark, isDarkMode);
+
+  var color = mix(bgColor, minorColor, minorLine * minorFade);
   color = mix(color, majorColor, majorLine);
   return color;
 }
@@ -242,4 +255,57 @@ fn fs_main(input: VertexOutput) -> @location(0) vec4<f32> {
 }
 `;
 
-export { GRID_SHADER_WGSL as GRID_WGSL, NODES_SHADER_WGSL as NODES_WGSL, EDGES_SHADER_WGSL as EDGES_WGSL };
+export const TEXT_SHADER_WGSL = `
+struct CameraUniform {
+  viewProj: mat4x4<f32>,
+  viewportSize: vec2<f32>,
+  cameraPos: vec2<f32>,
+  zoom: f32,
+  time: f32,
+};
+
+@group(0) @binding(0) var<uniform> camera: CameraUniform;
+@group(1) @binding(0) var fontTexture: texture_2d<f32>;
+@group(1) @binding(1) var fontSampler: sampler;
+
+struct VertexInput {
+  @location(0) position: vec2<f32>,
+  @location(1) uv: vec2<f32>,
+  @location(2) color: vec4<f32>,
+};
+
+struct VertexOutput {
+  @builtin(position) position: vec4<f32>,
+  @location(0) uv: vec2<f32>,
+  @location(1) color: vec4<f32>,
+};
+
+@vertex
+fn vs_main(input: VertexInput) -> VertexOutput {
+  var output: VertexOutput;
+  output.position = camera.viewProj * vec4<f32>(input.position, 0.0, 1.0);
+  output.uv = input.uv;
+  output.color = input.color;
+  return output;
+}
+
+@fragment
+fn fs_main(input: VertexOutput) -> @location(0) vec4<f32> {
+  let sample = textureSample(fontTexture, fontSampler, input.uv);
+  let dist = sample.r;
+  let edge = 0.5;
+  let smoothing = clamp(fwidth(dist) * 0.65, 0.005, 0.15);
+  let alpha = smoothstep(edge - smoothing, edge + smoothing, dist);
+  if (alpha < 0.01) {
+    discard;
+  }
+  return vec4<f32>(input.color.rgb, input.color.a * alpha);
+}
+`;
+
+export {
+  GRID_SHADER_WGSL as GRID_WGSL,
+  NODES_SHADER_WGSL as NODES_WGSL,
+  EDGES_SHADER_WGSL as EDGES_WGSL,
+  TEXT_SHADER_WGSL as TEXT_WGSL,
+};

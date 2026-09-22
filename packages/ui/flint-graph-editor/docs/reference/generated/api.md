@@ -48,6 +48,34 @@ Framework-neutral Forge playback scrubber for Flint execution traces.
 | ---------- | --------------------------------- | ----------- |
 | properties | Readonly<DebugScrubberProperties> |             |
 
+## `src/components/molecules/forge-performance-pie-chart/forge-performance-pie-chart`
+
+### ForgePerformancePieChart
+
+**Kind:** function
+
+```typescript
+function ForgePerformancePieChart(properties: Readonly<ForgePerformancePieChartProperties>): MpElement;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name       | Type                                         | Description |
+| ---------- | -------------------------------------------- | ----------- |
+| properties | Readonly<ForgePerformancePieChartProperties> |             |
+
+### ForgePerformancePieChartProperties
+
+**Kind:** interface
+
+```typescript
+export interface ForgePerformancePieChartProperties
+```
+
+No description provided.
+
 ## `src/components/molecules/forge-port-inspector/forge-port-inspector`
 
 ### ForgePortInspector
@@ -232,6 +260,16 @@ Exports formatted Flint source, compiled WebAssembly, and ABI manifest for a gra
 
 ## `src/editor/editor-store`
 
+### ClipboardItem
+
+**Kind:** interface
+
+```typescript
+export interface ClipboardItem
+```
+
+No description provided.
+
 ### ConnectingEdgeState
 
 **Kind:** interface
@@ -262,6 +300,16 @@ export interface FlintEditorStoreState
 
 No description provided.
 
+### NavigationBreadcrumb
+
+**Kind:** interface
+
+```typescript
+export interface NavigationBreadcrumb
+```
+
+No description provided.
+
 ### StoreListener
 
 **Kind:** type
@@ -272,20 +320,14 @@ export type StoreListener = (state: FlintEditorStoreState) => void;
 
 No description provided.
 
-## `src/renderer/camera`
+## `src/renderer/render-worker`
 
 ### createCamera
 
 **Kind:** function
 
 ```typescript
-function createCamera(
-  viewportWidth: number = 800,
-  viewportHeight: number = 600,
-  x: number = 0,
-  y: number = 0,
-  zoom: number = DEFAULT_ZOOM,
-): FlintCamera;
+function createCamera(viewportWidth: number, viewportHeight: number, x = 0, y = 0, zoom = 1): FlintCamera;
 ```
 
 No description provided.
@@ -296,9 +338,9 @@ No description provided.
 | -------------- | ------ | ----------- |
 | viewportWidth  | number |             |
 | viewportHeight | number |             |
-| x              | number |             |
-| y              | number |             |
-| zoom           | number |             |
+| x              |        |             |
+| y              |        |             |
+| zoom           |        |             |
 
 ### createViewProjectionMatrix
 
@@ -308,7 +350,7 @@ No description provided.
 function createViewProjectionMatrix(camera: FlintCamera): Float32Array;
 ```
 
-Generates standard 4x4 column-major view-projection matrix for WebGPU vertex shaders.
+No description provided.
 
 #### Parameters
 
@@ -336,369 +378,95 @@ export interface FlintCamera
 
 No description provided.
 
+### FlintHitResult
+
+**Kind:** interface
+
+```typescript
+export interface FlintHitResult
+```
+
+No description provided.
+
+### FlintPerformanceMetrics
+
+**Kind:** interface
+
+```typescript
+export interface FlintPerformanceMetrics
+```
+
+No description provided.
+
+### FlintRenderWorkerWasmExports
+
+**Kind:** type
+
+```typescript
+export type FlintRenderWorkerWasmExports = ReturnType<typeof loadSync>;
+```
+
+No description provided.
+
+### getFlintCameraWasm
+
+**Kind:** constant
+
+```typescript
+export const getFlintCameraWasm: (imports?: WebAssembly.Imports) => FlintRenderWorkerWasmExports;
+```
+
+No description provided.
+
+### getFlintRenderWorkerWasm
+
+**Kind:** function
+
+```typescript
+function getFlintRenderWorkerWasm(imports?: WebAssembly.Imports): FlintRenderWorkerWasmExports;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name    | Type                | Description |
+| ------- | ------------------- | ----------- |
+| imports | WebAssembly.Imports |             |
+
+### getNodeBounds
+
+**Kind:** function
+
+```typescript
+function getNodeBounds(node: FlintGraphNode, wasmOverride?: FlintRenderWorkerWasmExports): ViewBounds;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name         | Type                         | Description |
+| ------------ | ---------------------------- | ----------- |
+| node         | FlintGraphNode               |             |
+| wasmOverride | FlintRenderWorkerWasmExports |             |
+
 ### getViewportBounds
 
 **Kind:** function
 
 ```typescript
-function getViewportBounds(camera: FlintCamera, padding: number = 0): ViewBounds;
+function getViewportBounds(camera: FlintCamera, padding = 100): ViewBounds;
 ```
 
-Computes bounding rectangle of the world visible in the current camera viewport.
+No description provided.
 
 #### Parameters
 
 | Name    | Type        | Description |
 | ------- | ----------- | ----------- |
 | camera  | FlintCamera |             |
-| padding | number      |             |
-
-### MAX_ZOOM
-
-**Kind:** constant
-
-```typescript
-export const MAX_ZOOM;
-```
-
-No description provided.
-
-### MIN_ZOOM
-
-**Kind:** constant
-
-```typescript
-export const MIN_ZOOM;
-```
-
-No description provided.
-
-### panCamera
-
-**Kind:** function
-
-```typescript
-function panCamera(camera: FlintCamera, screenDeltaX: number, screenDeltaY: number): FlintCamera;
-```
-
-Translates camera position by screen delta (dx, dy).
-
-#### Parameters
-
-| Name         | Type        | Description |
-| ------------ | ----------- | ----------- |
-| camera       | FlintCamera |             |
-| screenDeltaX | number      |             |
-| screenDeltaY | number      |             |
-
-### ScreenPoint
-
-**Kind:** interface
-
-```typescript
-export interface ScreenPoint
-```
-
-No description provided.
-
-### screenToWorld
-
-**Kind:** function
-
-```typescript
-function screenToWorld(screenX: number, screenY: number, camera: FlintCamera): WorldPoint;
-```
-
-Converts screen pixel coordinates to world coordinates.
-
-#### Parameters
-
-| Name    | Type        | Description |
-| ------- | ----------- | ----------- |
-| screenX | number      |             |
-| screenY | number      |             |
-| camera  | FlintCamera |             |
-
-### ViewBounds
-
-**Kind:** interface
-
-```typescript
-export interface ViewBounds
-```
-
-No description provided.
-
-### WorldPoint
-
-**Kind:** interface
-
-```typescript
-export interface WorldPoint
-```
-
-No description provided.
-
-### worldToScreen
-
-**Kind:** function
-
-```typescript
-function worldToScreen(worldX: number, worldY: number, camera: FlintCamera): ScreenPoint;
-```
-
-Converts world coordinates to screen pixel coordinates.
-
-#### Parameters
-
-| Name   | Type        | Description |
-| ------ | ----------- | ----------- |
-| worldX | number      |             |
-| worldY | number      |             |
-| camera | FlintCamera |             |
-
-### zoomCamera
-
-**Kind:** function
-
-```typescript
-function zoomCamera(camera: FlintCamera, cursorScreenX: number, cursorScreenY: number, factor: number): FlintCamera;
-```
-
-Zooms camera centered around a cursor screen location.
-
-#### Parameters
-
-| Name          | Type        | Description |
-| ------------- | ----------- | ----------- |
-| camera        | FlintCamera |             |
-| cursorScreenX | number      |             |
-| cursorScreenY | number      |             |
-| factor        | number      |             |
-
-## `src/renderer/render-worker`
-
-### FlintRenderEngine
-
-**Kind:** class
-
-```typescript
-export class FlintRenderEngine
-```
-
-No description provided.
-
-### RenderWorkerGraphMessage
-
-**Kind:** interface
-
-```typescript
-export interface RenderWorkerGraphMessage
-```
-
-No description provided.
-
-### RenderWorkerHitTestMessage
-
-**Kind:** interface
-
-```typescript
-export interface RenderWorkerHitTestMessage
-```
-
-No description provided.
-
-### RenderWorkerInitMessage
-
-**Kind:** interface
-
-```typescript
-export interface RenderWorkerInitMessage
-```
-
-No description provided.
-
-### RenderWorkerInputMessage
-
-**Kind:** type
-
-```typescript
-export type RenderWorkerInputMessage =
-  | RenderWorkerInitMessage
-  | RenderWorkerResizeMessage
-  | RenderWorkerGraphMessage
-  | RenderWorkerSelectionMessage
-  | RenderWorkerTraceMessage
-  | RenderWorkerPanMessage
-  | RenderWorkerZoomMessage
-  | RenderWorkerHitTestMessage;
-```
-
-No description provided.
-
-### RenderWorkerOutputMessage
-
-**Kind:** type
-
-```typescript
-export type RenderWorkerOutputMessage = |
-```
-
-No description provided.
-
-### RenderWorkerPanMessage
-
-**Kind:** interface
-
-```typescript
-export interface RenderWorkerPanMessage
-```
-
-No description provided.
-
-### RenderWorkerResizeMessage
-
-**Kind:** interface
-
-```typescript
-export interface RenderWorkerResizeMessage
-```
-
-No description provided.
-
-### RenderWorkerSelectionMessage
-
-**Kind:** interface
-
-```typescript
-export interface RenderWorkerSelectionMessage
-```
-
-No description provided.
-
-### RenderWorkerTraceMessage
-
-**Kind:** interface
-
-```typescript
-export interface RenderWorkerTraceMessage
-```
-
-No description provided.
-
-### RenderWorkerZoomMessage
-
-**Kind:** interface
-
-```typescript
-export interface RenderWorkerZoomMessage
-```
-
-No description provided.
-
-## `src/renderer/shaders/index`
-
-### EDGES_SHADER_WGSL
-
-**Kind:** constant
-
-```typescript
-export const EDGES_SHADER_WGSL;
-```
-
-No description provided.
-
-### GRID_SHADER_WGSL
-
-**Kind:** constant
-
-```typescript
-export const GRID_SHADER_WGSL;
-```
-
-No description provided.
-
-### NODES_SHADER_WGSL
-
-**Kind:** constant
-
-```typescript
-export const NODES_SHADER_WGSL;
-```
-
-No description provided.
-
-## `src/renderer/spatial-index`
-
-### PortSpatialItem
-
-**Kind:** interface
-
-```typescript
-export interface PortSpatialItem
-```
-
-No description provided.
-
-### SpatialGridIndex
-
-**Kind:** class
-
-```typescript
-export class SpatialGridIndex
-```
-
-High-performance 2D spatial grid index for sub-millisecond viewport culling and picking.
-
-### SpatialItem
-
-**Kind:** interface
-
-```typescript
-export interface SpatialItem
-```
-
-No description provided.
-
-## `src/renderer/webgpu-context`
-
-### createWebGpuContext
-
-**Kind:** function
-
-```typescript
-function createWebGpuContext(canvas: OffscreenCanvas | HTMLCanvasElement): Promise<FlintWebGpuContext>;
-```
-
-Initializes WebGPU device, queue, and canvas context on an HTMLCanvasElement or OffscreenCanvas.
-
-#### Parameters
-
-| Name   | Type                                 | Description |
-| ------ | ------------------------------------ | ----------- |
-| canvas | OffscreenCanvas \| HTMLCanvasElement |             |
-
-### FlintWebGpuContext
-
-**Kind:** interface
-
-```typescript
-export interface FlintWebGpuContext
-```
-
-No description provided.
-
-### isWebGpuSupported
-
-**Kind:** function
-
-```typescript
-function isWebGpuSupported(): Promise<boolean>;
-```
-
-Checks whether WebGPU is supported in the current runtime environment.
-
-## `src/renderer/webgpu-types`
+| padding |             |             |
 
 ### GPUAdapter
 
@@ -740,32 +508,12 @@ export interface GPUBuffer
 
 No description provided.
 
-### GPUBufferUsage
-
-**Kind:** constant
-
-```typescript
-export const GPUBufferUsage;
-```
-
-No description provided.
-
 ### GPUCanvasContext
 
 **Kind:** interface
 
 ```typescript
 export interface GPUCanvasContext
-```
-
-No description provided.
-
-### GPUColor
-
-**Kind:** interface
-
-```typescript
-export interface GPUColor
 ```
 
 No description provided.
@@ -800,22 +548,12 @@ export interface GPUDevice
 
 No description provided.
 
-### GPUExtent3D
+### GPUPipelineLayout
 
 **Kind:** interface
 
 ```typescript
-export interface GPUExtent3D
-```
-
-No description provided.
-
-### GPUOrigin3D
-
-**Kind:** interface
-
-```typescript
-export interface GPUOrigin3D
+export interface GPUPipelineLayout
 ```
 
 No description provided.
@@ -870,62 +608,164 @@ export interface GPUTexture
 
 No description provided.
 
-### GPUTextureFormat
-
-**Kind:** type
-
-```typescript
-export type GPUTextureFormat =
-  | 'r8unorm'
-  | 'r8snorm'
-  | 'r8uint'
-  | 'r8sint'
-  | 'r16uint'
-  | 'r16sint'
-  | 'r16float'
-  | 'rg8unorm'
-  | 'rg8snorm'
-  | 'rg8uint'
-  | 'rg8sint'
-  | 'r32uint'
-  | 'r32sint'
-  | 'r32float'
-  | 'rg16uint'
-  | 'rg16sint'
-  | 'rg16float'
-  | 'rgba8unorm'
-  | 'rgba8unorm-srgb'
-  | 'rgba8snorm'
-  | 'rgba8uint'
-  | 'rgba8sint'
-  | 'bgra8unorm'
-  | 'bgra8unorm-srgb'
-  | 'rgb10a2unorm'
-  | 'rg11b10ufloat'
-  | 'rgb9e5ufloat'
-  | 'rg32uint'
-  | 'rg32sint'
-  | 'rg32float'
-  | 'rgba16uint'
-  | 'rgba16sint'
-  | 'rgba16float'
-  | 'rgba32uint'
-  | 'rgba32sint'
-  | 'rgba32float'
-  | 'depth32float'
-  | 'depth24plus'
-  | 'depth24plus-stencil8';
-```
-
-WebGPU Interface Declarations
-Self-contained declarations enabling compile-time correctness in Worker and Node environments.
-
 ### GPUTextureView
 
 **Kind:** interface
 
 ```typescript
 export interface GPUTextureView
+```
+
+No description provided.
+
+### MAX_ZOOM
+
+**Kind:** constant
+
+```typescript
+export const MAX_ZOOM;
+```
+
+No description provided.
+
+### MIN_ZOOM
+
+**Kind:** constant
+
+```typescript
+export const MIN_ZOOM;
+```
+
+No description provided.
+
+### NODE_HEADER_HEIGHT
+
+**Kind:** constant
+
+```typescript
+export const NODE_HEADER_HEIGHT;
+```
+
+No description provided.
+
+### NODE_WIDTH
+
+**Kind:** constant
+
+```typescript
+export const NODE_WIDTH;
+```
+
+No description provided.
+
+### PORT_ROW_HEIGHT
+
+**Kind:** constant
+
+```typescript
+export const PORT_ROW_HEIGHT;
+```
+
+No description provided.
+
+### RenderWorkerInputMessage
+
+**Kind:** type
+
+```typescript
+export type RenderWorkerInputMessage = |
+```
+
+No description provided.
+
+### RenderWorkerOutputMessage
+
+**Kind:** interface
+
+```typescript
+export interface RenderWorkerOutputMessage
+```
+
+No description provided.
+
+### ScreenPoint
+
+**Kind:** interface
+
+```typescript
+export interface ScreenPoint
+```
+
+No description provided.
+
+### ViewBounds
+
+**Kind:** interface
+
+```typescript
+export interface ViewBounds
+```
+
+No description provided.
+
+## `src/renderer/shaders/index`
+
+### EDGES_SHADER_WGSL
+
+**Kind:** constant
+
+```typescript
+export const EDGES_SHADER_WGSL;
+```
+
+No description provided.
+
+### EDGES_WGSL
+
+**Kind:** constant
+
+```typescript
+export const EDGES_SHADER_WGSL;
+```
+
+No description provided.
+
+### GRID_SHADER_WGSL
+
+**Kind:** constant
+
+```typescript
+export const GRID_SHADER_WGSL;
+```
+
+No description provided.
+
+### GRID_WGSL
+
+**Kind:** constant
+
+```typescript
+export const GRID_SHADER_WGSL;
+```
+
+No description provided.
+
+### NODES_SHADER_WGSL
+
+**Kind:** constant
+
+```typescript
+export const NODES_SHADER_WGSL;
+```
+
+No description provided.
+
+### NODES_WGSL
+
+**Kind:** constant
+
+```typescript
+export const NODES_SHADER_WGSL;
 ```
 
 No description provided.

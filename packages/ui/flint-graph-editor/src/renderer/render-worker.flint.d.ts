@@ -120,6 +120,46 @@ export interface FlintRenderWorkerWasmExports {
   readonly camera_zoom_f32: (current_zoom: number, factor: number, min_zoom: number, max_zoom: number) => number;
   readonly renderer_execute_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
   readonly renderer_render_webgpu_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
+  readonly compute_c2d_edge: (
+    p0x: number,
+    p0y: number,
+    p3x: number,
+    p3y: number,
+    is_selected: number,
+    is_active: number,
+    pulse_offset_permille: number,
+  ) => void;
+  readonly compute_c2d_node: (
+    min_x: number,
+    min_y: number,
+    max_x: number,
+    max_y: number,
+    is_selected: number,
+    is_active: number,
+    is_trapped: number,
+    category_id: number,
+  ) => void;
+  readonly compute_c2d_pin: (px: number, py: number, is_hovered: number, is_active: number, is_output: number) => void;
+  readonly compute_gl_edge: (
+    p0x: number,
+    p0y: number,
+    p3x: number,
+    p3y: number,
+    is_selected: number,
+    is_active: number,
+  ) => void;
+  readonly compute_gl_node: (
+    min_x: number,
+    min_y: number,
+    max_x: number,
+    max_y: number,
+    is_selected: number,
+    is_active: number,
+    is_trapped: number,
+  ) => void;
+  readonly compute_gl_pin: (px: number, py: number, is_hovered: number, is_active: number, is_output: number) => void;
+  readonly renderer_render_canvas2d_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
+  readonly renderer_render_webgl_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
 
   readonly createCamera: (viewport_w: number, viewport_h: number, x: number, y: number, zoom: number) => void;
   readonly get_camera_x: () => number;
@@ -159,7 +199,37 @@ export interface FlintRenderWorkerWasmExports {
   readonly engine_zoom: (cursor_x: number, cursor_y: number, factor: number) => void;
   readonly engine_set_backend: (tier: number) => void;
   readonly engine_get_backend: () => number;
+  readonly engine_set_theme: (theme_mode: number) => void;
+  readonly engine_get_theme: () => number;
   readonly engine_render_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
+  readonly engine_get_dpr: () => number;
+  readonly engine_set_dpr: (dpr: number) => void;
+  readonly engine_hit_test: (px: number, py: number) => number;
+
+  readonly font_get_atlas_size: () => number;
+  readonly font_get_base_font_size: () => number;
+  readonly font_get_char_advance: (code: number) => number;
+  readonly font_measure_text: (text: string, fontSize: number) => number;
+  readonly font_init_atlas_data: () => number;
+  readonly font_get_atlas_ptr: () => number;
+  readonly font_clear_text_vertices: () => void;
+  readonly font_get_vertex_buffer_ptr: () => number;
+  readonly font_get_vertex_float_count: () => number;
+  readonly font_append_text_quads: (
+    text: string,
+    originX: number,
+    baselineY: number,
+    fontSize: number,
+    r: number,
+    g: number,
+    b: number,
+    a: number,
+    align: number,
+  ) => number;
+  readonly font_char_code_to_idx: (code: number) => number;
+  readonly font_unicode_to_idx: (code: number) => number;
+  readonly char_code_to_idx?: (code: number) => number;
+  readonly unicode_to_idx?: (code: number) => number;
 
   readonly memory: WebAssembly.Memory;
 }

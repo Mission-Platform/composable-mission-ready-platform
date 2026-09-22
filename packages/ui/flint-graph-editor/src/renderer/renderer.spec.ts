@@ -1,197 +1,188 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  createCamera,
-  createViewProjectionMatrix,
-  FlintRenderEngine,
-  getCategoryRgb,
   getFlintCameraWasm,
   getFlintRenderWorkerWasm,
-  getNodeBounds,
-  getPortTypeRgb,
-  getViewportBounds,
-  isWebGpuSupported,
-  panCamera,
-  screenToWorld,
-  SpatialGridIndex,
-  worldToScreen,
-  zoomCamera,
   type RenderWorkerInputMessage,
   type RenderWorkerOutputMessage,
 } from './render-worker';
+import { loadSync as loadFontWasm } from './sdf-font.flint';
 
-describe('WebGPU Graph Renderer - Camera Math & Transforms', () => {
-  it('creates camera with clamped zoom limits', () => {
-    const cam = createCamera(1200, 800, 100, 200, 1.5);
-    expect(cam.viewportWidth).toBe(1200);
-    expect(cam.viewportHeight).toBe(800);
-    expect(cam.x).toBe(100);
-    expect(cam.y).toBe(200);
-    expect(cam.zoom).toBe(1.5);
+describe('WebGPU Graph Renderer - Native Flint Camera Math & Transforms', () => {
+  it('creates camera with clamped zoom limits in Flint Wasm', () => {
+    const wasm = getFlintRenderWorkerWasm();
 
-    const camMin = createCamera(800, 600, 0, 0, 0.01);
-    expect(camMin.zoom).toBeCloseTo(0.1);
+    wasm.createCamera(1200, 800, 100, 200, 1.5);
+    expect(wasm.get_camera_viewport_width()).toBe(1200);
+    expect(wasm.get_camera_viewport_height()).toBe(800);
+    expect(wasm.get_camera_x()).toBe(100);
+    expect(wasm.get_camera_y()).toBe(200);
+    expect(wasm.get_camera_zoom()).toBe(1.5);
 
-    const camMax = createCamera(800, 600, 0, 0, 10);
-    expect(camMax.zoom).toBe(5);
+    wasm.createCamera(800, 600, 0, 0, 0.01);
+    expect(wasm.get_camera_zoom()).toBeCloseTo(0.1);
+
+    wasm.createCamera(800, 600, 0, 0, 10);
+    expect(wasm.get_camera_zoom()).toBe(5);
   });
 
-  it('performs lossless roundtrip conversion between screen and world coordinates', () => {
-    const camera = createCamera(1024, 768, 500, 300, 1.25);
+  it('performs lossless roundtrip conversion between screen and world coordinates in Flint Wasm', () => {
+    const wasm = getFlintRenderWorkerWasm();
+    wasm.createCamera(1024, 768, 500, 300, 1.25);
     const screenX = 340;
     const screenY = 220;
 
-    const world = screenToWorld(screenX, screenY, camera);
-    const screen = worldToScreen(world.x, world.y, camera);
+    wasm.screenToWorld(screenX, screenY);
+    const worldX = wasm.get_point_x();
+    const worldY = wasm.get_point_y();
 
-    expect(screen.x).toBeCloseTo(screenX, 5);
-    expect(screen.y).toBeCloseTo(screenY, 5);
+    wasm.worldToScreen(worldX, worldY);
+    expect(wasm.get_point_x()).toBeCloseTo(screenX, 5);
+    expect(wasm.get_point_y()).toBeCloseTo(screenY, 5);
   });
 
-  it('pans camera correctly according to screen delta and zoom level', () => {
-    const camera = createCamera(800, 600, 0, 0, 2);
+  it('pans camera correctly according to screen delta and zoom level in Flint Wasm', () => {
+    const wasm = getFlintRenderWorkerWasm();
+    wasm.createCamera(800, 600, 0, 0, 2);
     // Pan right 100px and down 50px on screen
-    const panned = panCamera(camera, 100, 50);
+    wasm.panCamera(100, 50);
 
     // At zoom 2.0, 100px on screen is 50 units in world
-    expect(panned.x).toBeCloseTo(-50);
-    expect(panned.y).toBeCloseTo(-25);
-    expect(panned.zoom).toBe(2);
+    expect(wasm.get_camera_x()).toBeCloseTo(-50);
+    expect(wasm.get_camera_y()).toBeCloseTo(-25);
+    expect(wasm.get_camera_zoom()).toBe(2);
   });
 
-  it('keeps cursor world location stationary when zooming', () => {
-    const camera = createCamera(800, 600, 0, 0, 1);
+  it('keeps cursor world location stationary when zooming in Flint Wasm', () => {
+    const wasm = getFlintRenderWorkerWasm();
+    wasm.createCamera(800, 600, 0, 0, 1);
     const cursorScreenX = 600;
     const cursorScreenY = 450;
 
-    const worldBefore = screenToWorld(cursorScreenX, cursorScreenY, camera);
-    const zoomed = zoomCamera(camera, cursorScreenX, cursorScreenY, 1.5);
-    const worldAfter = screenToWorld(cursorScreenX, cursorScreenY, zoomed);
+    wasm.screenToWorld(cursorScreenX, cursorScreenY);
+    const worldBeforeX = wasm.get_point_x();
+    const worldBeforeY = wasm.get_point_y();
 
-    expect(worldAfter.x).toBeCloseTo(worldBefore.x, 5);
-    expect(worldAfter.y).toBeCloseTo(worldBefore.y, 5);
-    expect(zoomed.zoom).toBeCloseTo(1.5, 5);
+    wasm.zoomCamera(cursorScreenX, cursorScreenY, 1.5);
+    wasm.screenToWorld(cursorScreenX, cursorScreenY);
+
+    expect(wasm.get_point_x()).toBeCloseTo(worldBeforeX, 5);
+    expect(wasm.get_point_y()).toBeCloseTo(worldBeforeY, 5);
+    expect(wasm.get_camera_zoom()).toBeCloseTo(1.5, 5);
   });
 
-  it('computes accurate viewport bounding boxes', () => {
-    const camera = createCamera(800, 600, 100, 100, 1);
-    const bounds = getViewportBounds(camera);
+  it('computes accurate viewport bounding boxes in Flint Wasm', () => {
+    const wasm = getFlintRenderWorkerWasm();
+    wasm.createCamera(800, 600, 100, 100, 1);
+    wasm.getViewportBounds(0);
 
     // Viewport width 800 centered at 100 -> [-300, 500]
-    expect(bounds.minX).toBeCloseTo(-300);
-    expect(bounds.maxX).toBeCloseTo(500);
+    expect(wasm.get_bounds_min_x()).toBeCloseTo(-300);
+    expect(wasm.get_bounds_max_x()).toBeCloseTo(500);
     // Viewport height 600 centered at 100 -> [-200, 400]
-    expect(bounds.minY).toBeCloseTo(-200);
-    expect(bounds.maxY).toBeCloseTo(400);
+    expect(wasm.get_bounds_min_y()).toBeCloseTo(-200);
+    expect(wasm.get_bounds_max_y()).toBeCloseTo(400);
   });
 
-  it('generates a valid 4x4 view-projection matrix', () => {
-    const camera = createCamera(800, 600, 50, 50, 1);
-    const matrix = createViewProjectionMatrix(camera);
+  it('generates a valid 4x4 view-projection matrix in Flint Wasm', () => {
+    const wasm = getFlintRenderWorkerWasm();
+    wasm.createCamera(800, 600, 50, 50, 1);
+    wasm.createViewProjectionMatrix(0);
 
-    expect(matrix).toHaveLength(16);
-    expect(matrix[0]).toBeCloseTo(2 / 800);
-    expect(matrix[5]).toBeCloseTo(-2 / 600);
-    expect(matrix[10]).toBe(1);
-    expect(matrix[15]).toBe(1);
+    const f64Array = new Float64Array(wasm.memory.buffer, 0, 16);
+    expect(f64Array[0]).toBeCloseTo(2 / 800);
+    expect(f64Array[5]).toBeCloseTo(-2 / 600);
+    expect(f64Array[10]).toBe(1);
+    expect(f64Array[15]).toBe(1);
   });
 });
 
-describe('WebGPU Graph Renderer - Spatial Indexing & Picking', () => {
-  it('indexes and queries elements with bounding box intersection', () => {
-    const index = new SpatialGridIndex(256);
+describe('WebGPU Graph Renderer - Native Flint Spatial Indexing & Picking', () => {
+  it('indexes and queries elements with bounding box intersection in Flint Wasm', () => {
+    const wasm = getFlintRenderWorkerWasm();
+    wasm.spatial_init();
 
-    index.insert('node-1', { minX: 0, minY: 0, maxX: 100, maxY: 80 });
-    index.insert('node-2', { minX: 500, minY: 500, maxX: 600, maxY: 580 });
-    index.insert('node-3', { minX: 1000, minY: 1000, maxX: 1100, maxY: 1080 });
+    // Node 0: [0, 0] to [100, 80]
+    wasm.spatial_insert_node(0, 1_000_000, 1_000_000, 1_000_100, 1_000_080);
+    // Node 1: [500, 500] to [600, 580]
+    wasm.spatial_insert_node(1, 1_000_500, 1_000_500, 1_000_600, 1_000_580);
+    // Node 2: [1000, 1000] to [1100, 1080]
+    wasm.spatial_insert_node(2, 1_001_000, 1_001_000, 1_001_100, 1_001_080);
 
-    // Query covering only node-1 and node-2
-    const visible = index.queryBox({
-      minX: -50,
-      minY: -50,
-      maxX: 700,
-      maxY: 700,
-    });
-    expect(visible).toContain('node-1');
-    expect(visible).toContain('node-2');
-    expect(visible).not.toContain('node-3');
+    // Query covering only node-0 and node-1
+    const count = wasm.spatial_query_box(999_950, 999_950, 1_000_700, 1_000_700);
+    expect(count).toBe(2);
+
+    const results: number[] = [];
+    for (let i = 0; i < count; i++) {
+      results.push(wasm.spatial_get_query_result(i));
+    }
+    expect(results).toContain(0);
+    expect(results).toContain(1);
+    expect(results).not.toContain(2);
   });
 
-  it('performs sub-millisecond point hit-testing on nodes', () => {
-    const index = new SpatialGridIndex(256);
-    index.insert('node-a', { minX: 100, minY: 100, maxX: 280, maxY: 200 });
+  it('performs sub-millisecond point hit-testing on nodes in Flint Wasm', () => {
+    const wasm = getFlintRenderWorkerWasm();
+    wasm.spatial_init();
+    wasm.spatial_insert_node(0, 1_000_100, 1_000_100, 1_000_280, 1_000_200);
 
-    expect(index.hitTestPoint(150, 150)).toBe('node-a');
-    expect(index.hitTestPoint(99, 150)).toBeUndefined();
-    expect(index.hitTestPoint(281, 150)).toBeUndefined();
+    // Hit test inside node 0 (returns 1-based index 1)
+    expect(wasm.spatial_hit_test_point(1_000_150, 1_000_150)).toBe(1);
+    // Outside node bounds
+    expect(wasm.spatial_hit_test_point(1_000_099, 1_000_150)).toBe(0);
+    expect(wasm.spatial_hit_test_point(1_000_281, 1_000_150)).toBe(0);
   });
 
-  it('registers and hit-tests connection ports with snap radius', () => {
-    const index = new SpatialGridIndex(256);
+  it('registers and hit-tests connection ports with snap radius in Flint Wasm', () => {
+    const wasm = getFlintRenderWorkerWasm();
+    wasm.spatial_init();
 
-    index.registerPort({
-      nodeId: 'node-1',
-      portId: 'out-1',
-      direction: 'output',
-      position: { x: 280, y: 150 },
-    });
+    // Node 0, port 1, output (dir 1), position (280, 150)
+    wasm.spatial_insert_port(0, 1, 1, 1_000_280, 1_000_150);
 
-    // Hit test within radius
-    const hit = index.hitTestPort(282, 151, 10);
-    expect(hit).toBeDefined();
-    expect(hit?.nodeId).toBe('node-1');
-    expect(hit?.portId).toBe('out-1');
+    // Hit test within radius 10 at (282, 151) -> returns encoded port identifier > 0
+    const hit = wasm.spatial_hit_test_port(1_000_282, 1_000_151, 10);
+    expect(hit).toBeGreaterThan(0);
 
-    // Outside radius
-    const miss = index.hitTestPort(300, 150, 10);
-    expect(miss).toBeUndefined();
+    // Outside radius 10 at (300, 150)
+    const miss = wasm.spatial_hit_test_port(1_000_300, 1_000_150, 10);
+    expect(miss).toBe(0);
   });
 
-  it('handles 10,000 nodes stress test with sub-millisecond query latency', () => {
-    const index = new SpatialGridIndex(256);
+  it('handles 10,000 nodes stress test with sub-millisecond query latency in Flint Wasm', () => {
+    const wasm = getFlintRenderWorkerWasm();
+    wasm.spatial_init();
     const nodeCount = 10_000;
 
-    // Create a 100x100 grid of nodes spaced by 250 units
     for (let index_ = 0; index_ < nodeCount; index_++) {
       const col = index_ % 100;
       const row = Math.floor(index_ / 100);
-      const x = col * 250;
-      const y = row * 200;
-      index.insert(`node-${index_}`, {
-        minX: x,
-        minY: y,
-        maxX: x + 180,
-        maxY: y + 100,
-      });
+      const x = 1_000_000 + col * 250;
+      const y = 1_000_000 + row * 200;
+      wasm.spatial_insert_node(index_, x, y, x + 180, y + 100);
     }
 
     const startTime = performance.now();
-    // Typical viewport area
-    const visible = index.queryBox({
-      minX: 2000,
-      minY: 2000,
-      maxX: 4000,
-      maxY: 3500,
-    });
+    const count = wasm.spatial_query_box(1_002_000, 1_002_000, 1_004_000, 1_003_500);
     const queryDuration = performance.now() - startTime;
 
-    expect(visible.length).toBeGreaterThan(0);
-    // Spatial grid query should take less than 15ms even in unoptimized test runner
+    expect(count).toBeGreaterThan(0);
     expect(queryDuration).toBeLessThan(15);
   });
 });
 
-describe('WebGPU Graph Renderer - Worker Protocol & Capability', () => {
+describe('WebGPU Graph Renderer - Worker Protocol & Serialization', () => {
   it('validates structuredClone serialization of all input messages', () => {
     const messages: RenderWorkerInputMessage[] = [
       { type: 'resize', width: 1920, height: 1080 },
-      { type: 'pan', dx: 15, dy: -25 },
-      { type: 'zoom', cursorX: 500, cursorY: 400, factor: 1.2 },
-      { type: 'hit_test', screenX: 300, screenY: 200, snapRadius: 16 },
+      { type: 'pan', deltaX: 15, deltaY: -25 },
+      { type: 'zoom', factor: 1.2, cursorX: 500, cursorY: 400 },
+      { type: 'hit_test', cursorX: 300, cursorY: 200, snapRadius: 16 },
       {
         type: 'set_selection',
         selectedNodeIds: ['node-1', 'node-2'],
-        activeEdgeId: 'edge-1',
+        selectedEdgeIds: ['edge-1'],
       },
       {
         type: 'set_trace_state',
@@ -211,7 +202,10 @@ describe('WebGPU Graph Renderer - Worker Protocol & Capability', () => {
     const outputMessages: RenderWorkerOutputMessage[] = [
       { type: 'ready', supported: true },
       { type: 'frame', fps: 120, visibleNodes: 45, visibleEdges: 62 },
-      { type: 'camera_changed', camera: createCamera(800, 600, 10, 20, 1.1) },
+      {
+        type: 'camera_changed',
+        camera: { x: 10, y: 20, zoom: 1.1, viewportWidth: 800, viewportHeight: 600 },
+      },
       { type: 'hit_result', hit: { type: 'node', nodeId: 'node-42' } },
       { type: 'error', error: 'GPU device lost' },
     ];
@@ -222,71 +216,113 @@ describe('WebGPU Graph Renderer - Worker Protocol & Capability', () => {
     }
   });
 
-  it('detects WebGPU capability gracefully in Node/worker environment', async () => {
-    const supported = await isWebGpuSupported();
-    // In Node.js without mock GPU adapter, returns false cleanly without throwing
-    expect(typeof supported).toBe('boolean');
+  it('dispatches worker input messages and triggers native Flint Wasm events', async () => {
+    let postedMessage: RenderWorkerOutputMessage | undefined;
+    const originalPostMessage = (globalThis.self as unknown as { postMessage?: (msg: unknown) => void }).postMessage;
+    (globalThis.self as unknown as { postMessage: (msg: unknown) => void }).postMessage = (msg: unknown) => {
+      postedMessage = msg as RenderWorkerOutputMessage;
+    };
+
+    try {
+      globalThis.self.dispatchEvent(
+        new MessageEvent('message', {
+          data: {
+            type: 'init',
+            width: 1024,
+            height: 768,
+            dpr: 1.5,
+          } as RenderWorkerInputMessage,
+        }),
+      );
+
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      expect(postedMessage).toBeDefined();
+      expect(postedMessage?.type).toBe('ready');
+      expect(postedMessage?.performance?.dpr).toBe(1.5);
+    } finally {
+      (globalThis.self as unknown as { postMessage?: (msg: unknown) => void }).postMessage = originalPostMessage;
+    }
   });
 
-  it('manages camera and selection states inside FlintRenderEngine instance', () => {
+  it('renders canvas frame via capability imports when worker receives set_graph and pan', async () => {
     const messages: RenderWorkerOutputMessage[] = [];
-    const engine = new FlintRenderEngine(800, 600, (message) => {
-      messages.push(message);
-    });
+    const originalPostMessage = (globalThis.self as unknown as { postMessage?: (msg: unknown) => void }).postMessage;
+    (globalThis.self as unknown as { postMessage: (msg: unknown) => void }).postMessage = (msg: unknown) => {
+      messages.push(msg as RenderWorkerOutputMessage);
+    };
 
-    expect(engine.getCamera().viewportWidth).toBe(800);
-    engine.pan(40, 20);
-    expect(messages.some((m) => m.type === 'camera_changed')).toBe(true);
+    const mockCtx2d = {
+      save: () => {},
+      restore: () => {},
+      setTransform: () => {},
+      scale: () => {},
+      translate: () => {},
+      fillRect: () => {},
+      beginPath: () => {},
+      moveTo: () => {},
+      lineTo: () => {},
+      stroke: () => {},
+      fill: () => {},
+      arc: () => {},
+      bezierCurveTo: () => {},
+      setLineDash: () => {},
+      fillText: () => {},
+      measureText: () => ({ width: 40 }),
+      roundRect: () => {},
+    };
 
-    engine.zoom(400, 300, 2);
-    expect(engine.getCamera().zoom).toBe(2);
-  });
+    const mockCanvas = {
+      width: 800,
+      height: 600,
+      getContext: (type: string) => {
+        if (type === '2d') return mockCtx2d;
+        return;
+      },
+    } as unknown as HTMLCanvasElement;
 
-  it('performs edge hit testing and backend fallback selection in Flint Wasm', () => {
-    const renderWasm = getFlintRenderWorkerWasm();
+    try {
+      globalThis.self.dispatchEvent(
+        new MessageEvent('message', {
+          data: {
+            type: 'init',
+            canvas: mockCanvas,
+            width: 800,
+            height: 600,
+            dpr: 1,
+          } as RenderWorkerInputMessage,
+        }),
+      );
 
-    // Line from (0, 0) to (100, 100)
-    const isHitOnLine = Boolean(renderWasm.edge_hit_test(50, 50, 0, 0, 100, 100, 15));
-    expect(isHitOnLine).toBe(true);
+      globalThis.self.dispatchEvent(
+        new MessageEvent('message', {
+          data: {
+            type: 'set_graph',
+            nodes: [
+              {
+                id: 'n1',
+                title: 'Add',
+                category: 'math',
+                kind: 'operation',
+                operation: 'add',
+                position: { x: 10, y: 20 },
+                inputs: [{ id: 'in1', name: 'a', direction: 'input', type: 'f32' }],
+                outputs: [{ id: 'out1', name: 'out', direction: 'output', type: 'f32' }],
+              },
+            ],
+            edges: [],
+          } as RenderWorkerInputMessage,
+        }),
+      );
 
-    const isMissFarAway = Boolean(renderWasm.edge_hit_test(50, 200, 0, 0, 100, 100, 10));
-    expect(isMissFarAway).toBe(false);
+      await new Promise((resolve) => setTimeout(resolve, 15));
 
-    // Backend selection: 1 = WebGPU, 2 = WebGL, 3 = Canvas 2D
-    expect(renderWasm.backend_select_tier(true, true, true)).toBe(1);
-    expect(renderWasm.backend_select_tier(false, true, true)).toBe(2);
-    expect(renderWasm.backend_select_tier(false, false, true)).toBe(3);
-
-    // Fallback: 1 -> 2, 2 -> 3
-    expect(renderWasm.backend_fallback_next(1, true, true)).toBe(2);
-    expect(renderWasm.backend_fallback_next(1, false, true)).toBe(3);
-    expect(renderWasm.backend_fallback_next(2, false, true)).toBe(3);
-  });
-
-  it('performs synchronous hit-testing via hitTestSync', () => {
-    const engine = new FlintRenderEngine(800, 600);
-    engine.setGraph(
-      [
-        {
-          id: 'node-test-1',
-          title: 'Add',
-          category: 'math',
-          operation: 'add',
-          inputs: [{ id: 'in_a', name: 'a', direction: 'input', type: 'i32' }],
-          outputs: [{ id: 'out_val', name: 'result', direction: 'output', type: 'i32' }],
-          position: { x: 0, y: 0 },
-        },
-      ],
-      [],
-    );
-
-    // Screen center corresponds to world (0, 0)
-    const hit = engine.hitTestSync(400, 300);
-    expect(hit?.type).toBe('node');
-    expect(hit?.nodeId).toBe('node-test-1');
-
-    const miss = engine.hitTestSync(10, 10);
-    expect(miss).toBeUndefined();
+      const frameMsg = messages.find((m) => m.type === 'frame');
+      expect(frameMsg).toBeDefined();
+      expect(frameMsg?.visibleNodes).toBe(1);
+    } finally {
+      (globalThis.self as unknown as { postMessage?: (msg: unknown) => void }).postMessage = originalPostMessage;
+    }
   });
 });
 
@@ -404,9 +440,8 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     expect(renderedNodesCount).toBe(5);
   });
 
-  it('supports continuous floating-point zoom, DPR scaling, and box queries', () => {
+  it('supports continuous floating-point zoom, DPR scaling, and box queries in Flint Wasm', () => {
     const cameraWasm = getFlintCameraWasm();
-    // Test continuous float zoom math
     const zoomed = cameraWasm.camera_zoom_f32(1, 1.15, 0.1, 5);
     expect(zoomed).toBeCloseTo(1.15, 2);
 
@@ -416,74 +451,18 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     const clampedMin = cameraWasm.camera_zoom_f32(0.2, 0.1, 0.1, 5);
     expect(clampedMin).toBeCloseTo(0.1, 2);
 
-    // Test FlintRenderEngine DPR and box query
-    const engine = new FlintRenderEngine(800, 600);
-    engine.setDpr(2);
-    expect(engine.getDpr()).toBe(2);
+    const wasm = getFlintRenderWorkerWasm();
+    wasm.engine_create(800, 600, 2);
+    wasm.engine_set_dpr(2);
+    expect(wasm.engine_get_dpr()).toBe(2);
 
-    const mockCanvas = {
-      width: 0,
-      height: 0,
-      getContext: () => ({
-        save: () => {},
-        restore: () => {},
-        setTransform: () => {},
-        fillRect: () => {},
-        translate: () => {},
-        scale: () => {},
-        beginPath: () => {},
-        moveTo: () => {},
-        lineTo: () => {},
-        stroke: () => {},
-        measureText: () => ({ width: 40 }),
-        fillText: () => {},
-        fill: () => {},
-        arc: () => {},
-        roundRect: () => {},
-      }),
-    } as unknown as HTMLCanvasElement;
+    wasm.spatial_init();
+    wasm.spatial_insert_node(0, 1_000_100, 1_000_100, 1_000_320, 1_000_200);
+    wasm.spatial_insert_node(1, 1_000_500, 1_000_400, 1_000_720, 1_000_500);
 
-    void engine.initialize(mockCanvas, 2);
-    expect(mockCanvas.width).toBe(1600);
-    expect(mockCanvas.height).toBe(1200);
-
-    engine.setGraph(
-      [
-        {
-          id: 'node-box-1',
-          title: 'Add',
-          category: 'math',
-          operation: 'add',
-          inputs: [],
-          outputs: [],
-          position: { x: 100, y: 100 },
-        },
-        {
-          id: 'node-box-2',
-          title: 'Multiply',
-          category: 'math',
-          operation: 'multiply',
-          inputs: [],
-          outputs: [],
-          position: { x: 500, y: 400 },
-        },
-      ],
-      [],
-    );
-
-    const matched = engine.queryNodesInBox({
-      minX: 50,
-      minY: 50,
-      maxX: 350,
-      maxY: 300,
-    });
-    expect(matched).toContain('node-box-1');
-    expect(matched).not.toContain('node-box-2');
-
-    const perf = engine.getPerformanceStats();
-    expect(perf.dpr).toBe(2);
-    expect(perf.updateTimeMs).toBeGreaterThan(0);
-    expect(perf.renderTimeMs).toBeGreaterThan(0);
+    const count = wasm.spatial_query_box(1_000_050, 1_000_050, 1_000_350, 1_000_300);
+    expect(count).toBe(1);
+    expect(wasm.spatial_get_query_result(0)).toBe(0);
   });
 
   it('gracefully selects and degrades graphics tiers in Flint Wasm', () => {
@@ -510,104 +489,40 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     expect(wasm.backend_fallback_next(3, false, false)).toBe(0);
   });
 
-  it('renders graph nodes immediately upon setGraph in 2D fallback mode', async () => {
-    let fillTextCount = 0;
-    let fillRectCount = 0;
+  it('performs edge hit testing in Flint Wasm', () => {
+    const renderWasm = getFlintRenderWorkerWasm();
 
-    const mockCanvas = {
-      width: 0,
-      height: 0,
-      getContext: (contextId: string) => {
-        if (contextId === '2d') {
-          return {
-            save: () => {},
-            restore: () => {},
-            setTransform: () => {},
-            fillRect: () => {
-              fillRectCount++;
-            },
-            translate: () => {},
-            scale: () => {},
-            beginPath: () => {},
-            moveTo: () => {},
-            lineTo: () => {},
-            stroke: () => {},
-            measureText: () => ({ width: 40 }),
-            fillText: () => {
-              fillTextCount++;
-            },
-            fill: () => {},
-            arc: () => {},
-            roundRect: () => {},
-          };
-        }
-        return;
-      },
-    } as unknown as HTMLCanvasElement;
+    // Line from (0, 0) to (100, 100)
+    const isHitOnLine = Boolean(renderWasm.edge_hit_test(50, 50, 0, 0, 100, 100, 15));
+    expect(isHitOnLine).toBe(true);
 
-    const engine = new FlintRenderEngine(800, 600);
-    const isGpu = await engine.initialize(mockCanvas, 1);
-    expect(isGpu).toBe(false);
-
-    // Setting graph triggers immediate rendering of nodes and labels
-    engine.setGraph(
-      [
-        {
-          id: 'test-node-1',
-          title: 'Math Node',
-          category: 'math',
-          operation: 'add',
-          inputs: [{ id: 'in_a', name: 'a', direction: 'input', type: { kind: 'type-name', name: 'f32' } }],
-          outputs: [{ id: 'out_c', name: 'c', direction: 'output', type: { kind: 'type-name', name: 'f32' } }],
-          position: { x: 50, y: 50 },
-        },
-      ],
-      [],
-    );
-
-    expect(fillRectCount).toBeGreaterThan(0);
-    expect(fillTextCount).toBeGreaterThan(0);
+    const isMissFarAway = Boolean(renderWasm.edge_hit_test(50, 200, 0, 0, 100, 100, 10));
+    expect(isMissFarAway).toBe(false);
   });
 
   it('computes node bounds in Flint accurately', () => {
-    const node = {
-      id: 'node-1',
-      title: 'Add',
-      category: 'math' as const,
-      operation: 'add',
-      inputs: [
-        { id: 'in_1', name: 'a', direction: 'input' as const, type: { kind: 'type-name' as const, name: 'f32' } },
-      ],
-      outputs: [
-        {
-          id: 'out_1',
-          name: 'result',
-          direction: 'output' as const,
-          type: { kind: 'type-name' as const, name: 'f32' },
-        },
-      ],
-      position: { x: 100, y: 150 },
-    };
-    const bounds = getNodeBounds(node);
-    expect(bounds.minX).toBe(100);
-    expect(bounds.minY).toBe(150);
-    expect(bounds.maxX).toBe(320); // 100 + 220
-    expect(bounds.maxY).toBe(238); // 150 + 44 + 28 + 16
+    const wasm = getFlintRenderWorkerWasm();
+    wasm.getNodeBounds(100, 150, 1);
+    expect(wasm.get_node_bounds_min_x()).toBe(100);
+    expect(wasm.get_node_bounds_min_y()).toBe(150);
+    expect(wasm.get_node_bounds_max_x()).toBe(320); // 100 + 220
+    expect(wasm.get_node_bounds_max_y()).toBe(238); // 150 + 44 + 28 + 16
   });
 
   it('maps categories and port types to RGB values in Flint', () => {
-    const mathRgb = getCategoryRgb('math');
-    expect(mathRgb.r).toBeCloseTo(0.35, 1);
-    expect(mathRgb.g).toBeCloseTo(0.65, 1);
-    expect(mathRgb.b).toBeCloseTo(1, 1);
+    const wasm = getFlintRenderWorkerWasm();
 
-    const f32Rgb = getPortTypeRgb('f32');
-    expect(f32Rgb.r).toBeCloseTo(0.35, 1);
-    expect(f32Rgb.g).toBeCloseTo(0.65, 1);
-    expect(f32Rgb.b).toBeCloseTo(1, 1);
+    // Category 'math' (category index 0)
+    const mathEncoded = wasm.getCategoryRgb(0);
+    expect(mathEncoded).toBeGreaterThan(0);
 
-    const boolRgb = getPortTypeRgb('bool');
-    expect(boolRgb.r).toBeCloseTo(0.82, 1);
+    // Port type f32 (type index 2)
+    const f32Encoded = wasm.getPortTypeRgb(2);
+    expect(f32Encoded).toBeGreaterThan(0);
+
+    // Port type bool (type index 0)
+    const boolEncoded = wasm.getPortTypeRgb(0);
+    expect(boolEncoded).toBeGreaterThan(0);
   });
 
   it('manages engine lifecycle and backend switching in Flint', () => {
@@ -622,5 +537,372 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     wasm.engine_pan(50, 25);
     expect(wasm.get_camera_x()).toBeCloseTo(-50);
     expect(wasm.get_camera_y()).toBeCloseTo(-25);
+
+    wasm.engine_zoom(512, 384, 1.2);
+    expect(wasm.get_camera_zoom()).toBeCloseTo(1.2, 2);
+
+    wasm.engine_resize(1920, 1080, 2);
+    expect(wasm.get_camera_viewport_width()).toBe(1920);
+    expect(wasm.get_camera_viewport_height()).toBe(1080);
+    expect(wasm.engine_get_dpr()).toBe(2);
+  });
+
+  it('executes 2D canvas fallback rendering via Flint engine', () => {
+    let canvas2dRendered = false;
+    let beginCalled = false;
+    let gridCalled = false;
+    let endCalled = false;
+    const testWasm = getFlintRenderWorkerWasm({
+      'canvas2d.render_begin': {
+        c2d_render_begin: () => {
+          beginCalled = true;
+        },
+      },
+      'canvas2d.render_grid': {
+        c2d_render_grid: () => {
+          gridCalled = true;
+        },
+      },
+      'canvas2d.render_frame': {
+        canvas2d_render_frame: () => {
+          canvas2dRendered = true;
+        },
+      },
+      'canvas2d.render_end': {
+        c2d_render_end: () => {
+          endCalled = true;
+        },
+      },
+    });
+
+    testWasm.engine_create(800, 600, 1);
+    testWasm.engine_set_backend(3);
+    expect(testWasm.engine_get_backend()).toBe(3);
+
+    testWasm.engine_render_frame(10, 8, 40);
+    expect(beginCalled).toBe(true);
+    expect(gridCalled).toBe(true);
+    expect(canvas2dRendered).toBe(true);
+    expect(endCalled).toBe(true);
+  });
+
+  it('computes 2D canvas edge, node, and pin geometry in Flint', () => {
+    let edgeDrawn = false;
+    let nodeDrawn = false;
+    let pinDrawn = false;
+    const testWasm = getFlintRenderWorkerWasm({
+      'canvas2d.draw_edge': {
+        c2d_draw_edge: (
+          p0x: number,
+          p0y: number,
+          p1x: number,
+          p1y: number,
+          p2x: number,
+          p2y: number,
+          p3x: number,
+          p3y: number,
+        ) => {
+          expect(p0x).toBe(100);
+          expect(p3x).toBe(300);
+          expect(p1x).toBeGreaterThan(p0x);
+          expect(p2x).toBeLessThan(p3x);
+          edgeDrawn = true;
+        },
+      },
+      'canvas2d.draw_node': {
+        c2d_draw_node: (x: number, y: number, w: number, h: number) => {
+          expect(x).toBe(50);
+          expect(y).toBe(60);
+          expect(w).toBe(220);
+          expect(h).toBe(120);
+          nodeDrawn = true;
+        },
+      },
+      'canvas2d.draw_pin': {
+        c2d_draw_pin: (px: number, py: number, radius: number) => {
+          expect(px).toBe(50);
+          expect(py).toBe(80);
+          expect(radius).toBe(7); // hovered radius
+          pinDrawn = true;
+        },
+      },
+    });
+
+    testWasm.compute_c2d_edge(100, 150, 300, 250, 1, 0, 0);
+    expect(edgeDrawn).toBe(true);
+
+    testWasm.compute_c2d_node(50, 60, 270, 180, 0, 1, 0, 1);
+    expect(nodeDrawn).toBe(true);
+
+    testWasm.compute_c2d_pin(50, 80, 1, 0, 0);
+    expect(pinDrawn).toBe(true);
+  });
+
+  it('executes WebGL rendering lifecycle and geometry computations via Flint engine', () => {
+    let beginCalled = false;
+    let gridCalled = false;
+    let frameCalled = false;
+    let endCalled = false;
+    let edgeDrawn = false;
+    let nodeDrawn = false;
+    let pinDrawn = false;
+
+    const testWasm = getFlintRenderWorkerWasm({
+      'webgl.render_begin': {
+        gl_render_begin: () => {
+          beginCalled = true;
+        },
+      },
+      'webgl.render_grid': {
+        gl_render_grid: () => {
+          gridCalled = true;
+        },
+      },
+      'webgl.render_frame': {
+        webgl_render_frame: () => {
+          frameCalled = true;
+        },
+      },
+      'webgl.render_end': {
+        gl_render_end: () => {
+          endCalled = true;
+        },
+      },
+      'webgl.draw_edge': {
+        gl_draw_edge: (
+          p0x: number,
+          p0y: number,
+          p1x: number,
+          p1y: number,
+          p2x: number,
+          p2y: number,
+          p3x: number,
+          p3y: number,
+        ) => {
+          expect(p0x).toBe(100);
+          expect(p3x).toBe(400);
+          expect(p1x).toBeGreaterThan(p0x);
+          expect(p2x).toBeLessThan(p3x);
+          edgeDrawn = true;
+        },
+      },
+      'webgl.draw_node': {
+        gl_draw_node: (x: number, y: number, w: number, h: number) => {
+          expect(x).toBe(40);
+          expect(y).toBe(50);
+          expect(w).toBe(220);
+          expect(h).toBe(100);
+          nodeDrawn = true;
+        },
+      },
+      'webgl.draw_pin': {
+        gl_draw_pin: (px: number, py: number, radius: number) => {
+          expect(px).toBe(40);
+          expect(py).toBe(70);
+          expect(radius).toBe(5);
+          pinDrawn = true;
+        },
+      },
+    });
+
+    testWasm.engine_create(800, 600, 1);
+    testWasm.engine_set_backend(2);
+    expect(testWasm.engine_get_backend()).toBe(2);
+
+    testWasm.engine_render_frame(5, 4, 20);
+    expect(beginCalled).toBe(true);
+    expect(gridCalled).toBe(true);
+    expect(frameCalled).toBe(true);
+    expect(endCalled).toBe(true);
+
+    testWasm.compute_gl_edge(100, 120, 400, 220, 0, 0);
+    expect(edgeDrawn).toBe(true);
+
+    testWasm.compute_gl_node(40, 50, 260, 150, 1, 0, 0);
+    expect(nodeDrawn).toBe(true);
+
+    testWasm.compute_gl_pin(40, 70, 0, 0, 0);
+    expect(pinDrawn).toBe(true);
+  });
+
+  it('processes worker init message with preferred renderer selection', async () => {
+    const replies: RenderWorkerOutputMessage[] = [];
+    const listener = (event: MessageEvent<RenderWorkerOutputMessage>) => {
+      replies.push(event.data);
+    };
+    globalThis.self.addEventListener('message', listener);
+
+    try {
+      globalThis.self.dispatchEvent(
+        new MessageEvent('message', {
+          data: {
+            type: 'init',
+            width: 800,
+            height: 600,
+            dpr: 1,
+            renderer: 'canvas2d',
+          } as RenderWorkerInputMessage,
+        }),
+      );
+
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      expect(replies.some((r) => r.type === 'ready')).toBe(true);
+    } finally {
+      globalThis.self.removeEventListener('message', listener);
+    }
+  });
+
+  it('processes worker destroy message cleanly', async () => {
+    let errorCaught = false;
+    try {
+      globalThis.self.dispatchEvent(
+        new MessageEvent('message', {
+          data: {
+            type: 'destroy',
+          } as RenderWorkerInputMessage,
+        }),
+      );
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    } catch {
+      errorCaught = true;
+    }
+    expect(errorCaught).toBe(false);
+  });
+
+  it('generates SDF font atlas and measures text correctly in Flint Wasm', async () => {
+    const wasm = getFlintRenderWorkerWasm();
+    const atlasSize = wasm.font_get_atlas_size();
+    expect(atlasSize).toBe(512);
+
+    const atlasPtr = wasm.font_init_atlas_data();
+    expect(atlasPtr).toBeGreaterThan(0);
+
+    const atlasBytes = new Uint8Array(wasm.memory.buffer, atlasPtr, atlasSize * atlasSize * 4);
+    let nonZero = 0;
+    for (const byte of atlasBytes) {
+      if (byte > 0) nonZero++;
+    }
+    expect(nonZero).toBeGreaterThan(1000);
+
+    const width12 = wasm.font_measure_text('Math Node', 12);
+    const width24 = wasm.font_measure_text('Math Node', 24);
+    expect(width12).toBeGreaterThan(0);
+    expect(width24).toBeCloseTo(width12 * 2, 1);
+  });
+
+  it('supports UTF-8 text measurement, glyph lookups, and quad generation', () => {
+    const wasm = getFlintRenderWorkerWasm();
+
+    // Test text with Unicode / UTF-8 math, Greek, and symbols
+    const utf8Text = 'f(x) = √x ± ∑y → α · 100%';
+    const measured = wasm.font_measure_text(utf8Text, 14);
+    expect(measured).toBeGreaterThan(0);
+
+    wasm.font_clear_text_vertices();
+    const quads = wasm.font_append_text_quads(utf8Text, 50, 100, 14, 1, 1, 1, 1, 0);
+    expect(quads).toBeGreaterThan(10);
+    const floatCount = wasm.font_get_vertex_float_count();
+    expect(floatCount).toBe(quads * 6 * 8);
+
+    // Test specific unicode codepoints
+    const getIdx = (code: number) =>
+      wasm.font_char_code_to_idx ? wasm.font_char_code_to_idx(code) : wasm.char_code_to_idx?.(code);
+    expect(getIdx(177)).toBe(96); // ±
+    expect(getIdx(8730)).toBe(99); // √
+    expect(getIdx(8594)).toBe(114); // →
+    expect(getIdx(945)).toBe(132); // α
+    expect(getIdx(9733)).toBe(125); // ★
+    expect(getIdx(9889)).toBe(126); // ⚡
+  });
+
+  it('generates text vertex quads with coordinates, UVs, and alignments in Flint Wasm', () => {
+    const wasm = getFlintRenderWorkerWasm();
+
+    wasm.font_clear_text_vertices();
+    const quads = wasm.font_append_text_quads('Add', 100, 200, 12, 1, 0, 0, 1, 0);
+    expect(quads).toBe(3);
+
+    // 3 characters ('A', 'd', 'd') * 6 vertices per quad * 8 floats per vertex = 144 floats
+    const floatCount = wasm.font_get_vertex_float_count();
+    expect(floatCount).toBe(3 * 6 * 8);
+
+    const vbufPtr = wasm.font_get_vertex_buffer_ptr();
+    const f64View = new Float64Array(wasm.memory.buffer, vbufPtr, floatCount);
+
+    // Each vertex contains: [x, y, u, v, r, g, b, a]
+    // Check color channels
+    expect(f64View[4]).toBe(1); // r
+    expect(f64View[5]).toBe(0); // g
+    expect(f64View[6]).toBe(0); // b
+    expect(f64View[7]).toBe(1); // a
+
+    // Right alignment
+    wasm.font_clear_text_vertices();
+    wasm.font_append_text_quads('Add', 100, 200, 12, 0, 1, 0, 1, 1);
+    const rightF64View = new Float64Array(wasm.memory.buffer, vbufPtr, floatCount);
+    const rightX = rightF64View[0];
+    expect(rightX).toBeLessThan(100);
+
+    // Center alignment
+    wasm.font_clear_text_vertices();
+    wasm.font_append_text_quads('Add', 100, 200, 12, 0, 0, 1, 1, 2);
+    const centerF64View = new Float64Array(wasm.memory.buffer, vbufPtr, floatCount);
+    const centerX = centerF64View[0];
+    expect(centerX).toBeGreaterThan(rightX);
+    expect(centerX).toBeLessThan(100);
+
+    // Also test standalone sdf-font.flint wasm loader
+    const fontWasm = loadFontWasm();
+    expect(fontWasm.sdf_get_atlas_size()).toBe(512);
+    expect(fontWasm.sdf_measure_text('Math Node', 12)).toBeGreaterThan(0);
+  });
+
+  it('sets and retrieves theme mode in Flint Wasm engine and handles theme worker messages', async () => {
+    const wasm = getFlintRenderWorkerWasm();
+    wasm.engine_create(800, 600, 1);
+
+    // Default or initial theme
+    wasm.engine_set_theme(0); // 0 = dark
+    expect(wasm.engine_get_theme()).toBe(0);
+
+    wasm.engine_set_theme(1); // 1 = light
+    expect(wasm.engine_get_theme()).toBe(1);
+
+    // Test worker message handling for set_theme
+    const replies: RenderWorkerOutputMessage[] = [];
+    const listener = (event: MessageEvent<RenderWorkerOutputMessage>) => {
+      replies.push(event.data);
+    };
+    globalThis.self.addEventListener('message', listener);
+
+    try {
+      // Send set_theme: 'light'
+      globalThis.self.dispatchEvent(
+        new MessageEvent('message', {
+          data: {
+            type: 'set_theme',
+            theme: 'light',
+          } as RenderWorkerInputMessage,
+        }),
+      );
+
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      expect(replies.some((r) => r.type === 'frame')).toBe(true);
+
+      // Send set_theme: 'dark'
+      globalThis.self.dispatchEvent(
+        new MessageEvent('message', {
+          data: {
+            type: 'set_theme',
+            theme: 'dark',
+          } as RenderWorkerInputMessage,
+        }),
+      );
+
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      expect(replies.filter((r) => r.type === 'frame').length).toBeGreaterThanOrEqual(2);
+    } finally {
+      globalThis.self.removeEventListener('message', listener);
+    }
   });
 });

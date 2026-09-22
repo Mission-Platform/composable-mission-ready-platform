@@ -1,3 +1,4 @@
+import { ForgeBadge, ForgeButton, ForgeButtonGroup } from '@mission-platform/components';
 import {
   compileNodeGraph,
   createNodeFromDefinition,
@@ -478,12 +479,296 @@ function create10kStressTestStore(): FlintEditorStore {
   return new FlintEditorStore(graph);
 }
 
+function createUtf8TypographyStore(): FlintEditorStore {
+  const inputDefinition = getNodeDefinition('input')!;
+  const addDefinition = getNodeDefinition('add')!;
+  const multiplyDefinition = getNodeDefinition('multiply')!;
+  const constantDefinition = getNodeDefinition('constant')!;
+  const outputDefinition = getNodeDefinition('output')!;
+
+  const inAlpha = createNodeFromDefinition(inputDefinition, 'in_alpha', { x: 80, y: 120 }, { name: 'α_input' });
+  inAlpha.title = 'Param α (Alpha)';
+  inAlpha.operation = 'in_α';
+
+  const inBeta = createNodeFromDefinition(inputDefinition, 'in_beta', { x: 80, y: 280 }, { name: 'β_input' });
+  inBeta.title = 'Param β (Beta)';
+  inBeta.operation = 'in_β';
+
+  const mathSum = createNodeFromDefinition(addDefinition, 'math_sum', { x: 360, y: 160 });
+  mathSum.title = 'f(x) = √x ± ∑y';
+  mathSum.operation = 'sqrt_sum_±';
+
+  const mathOmega = createNodeFromDefinition(multiplyDefinition, 'math_omega', { x: 620, y: 220 });
+  mathOmega.title = 'Transform (α → β · Ω)';
+  mathOmega.operation = 'scale_Ω';
+
+  const constPi = createNodeFromDefinition(constantDefinition, 'const_pi', { x: 360, y: 340 }, { value: 3.141_59 });
+  constPi.title = 'Constant π ≈ 3.14';
+  constPi.operation = 'const_π';
+
+  const outResult = createNodeFromDefinition(outputDefinition, 'out_result', { x: 900, y: 220 }, { name: 'out_✓' });
+  outResult.title = '⚡ Result (100% ✓)';
+  outResult.operation = 'out_⚡';
+
+  const edges: readonly FlintGraphEdge[] = [
+    { id: 'e1', fromNodeId: 'in_alpha', fromPortId: 'value', toNodeId: 'math_sum', toPortId: 'a' },
+    { id: 'e2', fromNodeId: 'in_beta', fromPortId: 'value', toNodeId: 'math_sum', toPortId: 'b' },
+    { id: 'e3', fromNodeId: 'math_sum', fromPortId: 'result', toNodeId: 'math_omega', toPortId: 'a' },
+    { id: 'e4', fromNodeId: 'const_pi', fromPortId: 'value', toNodeId: 'math_omega', toPortId: 'b' },
+    { id: 'e5', fromNodeId: 'math_omega', fromPortId: 'result', toNodeId: 'out_result', toPortId: 'value' },
+  ];
+
+  const graph: FlintNodeGraph = {
+    id: 'utf8_typography_graph',
+    name: 'UTF-8 Typography Graph',
+    nodes: [inAlpha, inBeta, mathSum, constPi, mathOmega, outResult],
+    edges,
+  };
+
+  return new FlintEditorStore(graph);
+}
+
 export const Default: Story = {
   render: () => {
     const store = createMathPipelineStore();
     return (
       <div style={storyWrapperStyle}>
         <ForgeFlintGraphEditor store={store} />
+      </div>
+    );
+  },
+};
+
+export const WebGpuRenderer: Story = {
+  render: () => {
+    const store = createMathPipelineStore();
+    return (
+      <div style={storyWrapperStyle}>
+        <div
+          style={{
+            padding: '8px 16px',
+            background: 'var(--mp-editor-surface, #161b22)',
+            borderBottom: '1px solid var(--mp-editor-border, #30363d)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <ForgeBadge
+              variant="primary"
+              size="xs"
+            >
+              Renderer
+            </ForgeBadge>
+            <ForgeBadge
+              variant="neutral"
+              size="xs"
+            >
+              WebGPU Instanced Buffer Pipeline
+            </ForgeBadge>
+          </div>
+          <ForgeButtonGroup
+            size="xs"
+            ariaLabel="Renderer controls"
+          >
+            <ForgeButton
+              variant="primary"
+              size="xs"
+            >
+              WebGPU
+            </ForgeButton>
+          </ForgeButtonGroup>
+        </div>
+        <ForgeFlintGraphEditor
+          store={store}
+          renderer="webgpu"
+        />
+      </div>
+    );
+  },
+};
+
+export const WebGlRenderer: Story = {
+  render: () => {
+    const store = createMathPipelineStore();
+    return (
+      <div style={storyWrapperStyle}>
+        <div
+          style={{
+            padding: '8px 16px',
+            background: 'var(--mp-editor-surface, #161b22)',
+            borderBottom: '1px solid var(--mp-editor-border, #30363d)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <ForgeBadge
+              variant="secondary"
+              size="xs"
+            >
+              Renderer
+            </ForgeBadge>
+            <ForgeBadge
+              variant="neutral"
+              size="xs"
+            >
+              WebGL 2.0 / 1.0 Pipeline
+            </ForgeBadge>
+          </div>
+          <ForgeButtonGroup
+            size="xs"
+            ariaLabel="Renderer controls"
+          >
+            <ForgeButton
+              variant="primary"
+              size="xs"
+            >
+              WebGL
+            </ForgeButton>
+          </ForgeButtonGroup>
+        </div>
+        <ForgeFlintGraphEditor
+          store={store}
+          renderer="webgl"
+        />
+      </div>
+    );
+  },
+};
+
+export const Canvas2DRenderer: Story = {
+  render: () => {
+    const store = createMathPipelineStore();
+    return (
+      <div style={storyWrapperStyle}>
+        <div
+          style={{
+            padding: '8px 16px',
+            background: 'var(--mp-editor-surface, #161b22)',
+            borderBottom: '1px solid var(--mp-editor-border, #30363d)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <ForgeBadge
+              variant="warning"
+              size="xs"
+            >
+              Renderer
+            </ForgeBadge>
+            <ForgeBadge
+              variant="neutral"
+              size="xs"
+            >
+              2D Canvas Context Fallback
+            </ForgeBadge>
+          </div>
+          <ForgeButtonGroup
+            size="xs"
+            ariaLabel="Renderer controls"
+          >
+            <ForgeButton
+              variant="primary"
+              size="xs"
+            >
+              Canvas2D
+            </ForgeButton>
+          </ForgeButtonGroup>
+        </div>
+        <ForgeFlintGraphEditor
+          store={store}
+          renderer="canvas2d"
+        />
+      </div>
+    );
+  },
+};
+
+export const Utf8SdfTypography: Story = {
+  render: () => {
+    const store = createUtf8TypographyStore();
+    return (
+      <div style={storyWrapperStyle}>
+        <div
+          style={{
+            padding: '8px 16px',
+            background: 'var(--mp-editor-surface, #161b22)',
+            borderBottom: '1px solid var(--mp-editor-border, #30363d)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <ForgeBadge
+              variant="primary"
+              size="xs"
+            >
+              SDF Typography
+            </ForgeBadge>
+            <ForgeBadge
+              variant="success"
+              size="xs"
+            >
+              UTF-8 / Math / Greek
+            </ForgeBadge>
+            <span style={{ fontSize: '12px', color: 'var(--mp-editor-text-secondary, #c9d1d9)' }}>
+              157 distance-field glyphs: √, ±, ∑, ∏, ∫, ≠, ≤, ≥, →, ←, ⚡, ★, α, β, Ω, Δ, é, ö, ñ, ß
+            </span>
+          </div>
+          <ForgeButtonGroup
+            size="xs"
+            ariaLabel="Actions"
+          >
+            <ForgeButton
+              variant="secondary"
+              size="xs"
+              onClick={() => store.resetView()}
+            >
+              Reset Camera
+            </ForgeButton>
+          </ForgeButtonGroup>
+        </div>
+        <ForgeFlintGraphEditor store={store} />
+      </div>
+    );
+  },
+};
+
+export const LightMode: Story = {
+  render: () => {
+    const store = createMathPipelineStore();
+    return (
+      <div
+        style={storyWrapperStyle}
+        data-theme="light"
+      >
+        <ForgeFlintGraphEditor
+          store={store}
+          theme="light"
+        />
+      </div>
+    );
+  },
+};
+
+export const DarkMode: Story = {
+  render: () => {
+    const store = createMathPipelineStore();
+    return (
+      <div
+        style={storyWrapperStyle}
+        data-theme="dark"
+      >
+        <ForgeFlintGraphEditor
+          store={store}
+          theme="dark"
+        />
       </div>
     );
   },
