@@ -56,6 +56,11 @@ function removeGeneratedDirectoryPlugin(generatedDirectory: string, targetId: st
   } as TsdownPlugin;
 }
 
+/** Converts an unknown value into an object record or empty record. */
+function toObjectRecord(value: unknown): Record<string, unknown> {
+  return typeof value === 'object' && value !== null ? (value as Record<string, unknown>) : {};
+}
+
 /** Merge rollup-style object or function options. */
 function mergeRollupOptions<T extends object | ((...args: never[]) => unknown)>(
   base?: T,
@@ -67,12 +72,10 @@ function mergeRollupOptions<T extends object | ((...args: never[]) => unknown)>(
   if (typeof base === 'function') {
     return base;
   }
-  if (base === undefined && overrides === undefined) {
+  if (!base && !overrides) {
     return undefined;
   }
-  const baseObject = typeof base === 'object' && base !== null ? base : {};
-  const overrideObject = typeof overrides === 'object' && overrides !== null ? overrides : {};
-  return { ...baseObject, ...overrideObject } as T;
+  return { ...toObjectRecord(base), ...toObjectRecord(overrides) } as T;
 }
 
 /** Resolves override outDir redirected into staging if applicable. */
@@ -90,6 +93,15 @@ function resolveOverridesOutDir(
   };
 }
 
+/** Resolves merged plugins list or undefined when empty. */
+function resolveMergedPlugins(
+  basePlugins: UserConfig['plugins'],
+  overridePlugins: UserConfig['plugins'],
+): TsdownPlugin[] | undefined {
+  const merged = [...flattenPlugins(basePlugins), ...flattenPlugins(overridePlugins)];
+  return merged.length > 0 ? merged : undefined;
+}
+
 /** Deep-merge a base tsdown config with caller overrides (shallow for top-level, concat plugins). */
 function mergeTsdownConfig(
   base: UserConfig,
@@ -101,9 +113,7 @@ function mergeTsdownConfig(
     return base;
   }
 
-  const resolvedOverrides = resolveOverridesOutDir(overrides, rootDir, outputRoot) ?? overrides;
-  const mergedPlugins = [...flattenPlugins(base.plugins), ...flattenPlugins(resolvedOverrides.plugins)];
-
+  const resolvedOverrides = resolveOverridesOutDir(overrides, rootDir, outputRoot) || overrides;
   return {
     ...base,
     ...resolvedOverrides,
@@ -111,11 +121,11 @@ function mergeTsdownConfig(
       ...base.deps,
       ...resolvedOverrides.deps,
     },
-    dts: resolvedOverrides.dts === undefined ? base.dts : resolvedOverrides.dts,
-    hooks: resolvedOverrides.hooks ?? base.hooks,
+    dts: resolvedOverrides.dts ?? base.dts,
+    hooks: resolvedOverrides.hooks || base.hooks,
     inputOptions: mergeRollupOptions(base.inputOptions, resolvedOverrides.inputOptions),
     outputOptions: mergeRollupOptions(base.outputOptions, resolvedOverrides.outputOptions),
-    plugins: mergedPlugins.length > 0 ? mergedPlugins : undefined,
+    plugins: resolveMergedPlugins(base.plugins, resolvedOverrides.plugins),
   };
 }
 
@@ -434,16 +444,22 @@ export interface TsdownForgeComponentPluginsOptions {
   rejectFixturePlaceholder?: boolean;
 }
 
+/** Determines whether target settings request skipping framework output compilation. */
+function isSkippedFrameworkBuild(requestedFramework: string | undefined): boolean {
+  if (requestedFramework === 'none') {
+    return true;
+  }
+  return requestedFramework === undefined && process.env.FORGE_CMS_STORYBLOK_TARGET !== undefined;
+}
+
 /** Resolves the framework plugins selected for compilation by environment variables. */
 function resolveSelectedFrameworks(allFrameworks: readonly FrameworkOutputPlugin[]): FrameworkOutputPlugin[] {
   const selected = validateForgeBuildSelection(allFrameworks, 'tsdown');
   const requestedFramework = process.env.FORGE_FRAMEWORK_TARGET;
-  const cmsOnlyBuild = process.env.FORGE_CMS_STORYBLOK_TARGET !== undefined;
-
-  if (requestedFramework === undefined || requestedFramework === 'none') {
-    if (cmsOnlyBuild || requestedFramework === 'none') {
-      return [];
-    }
+  if (isSkippedFrameworkBuild(requestedFramework)) {
+    return [];
+  }
+  if (!requestedFramework) {
     return selected;
   }
 

@@ -76,25 +76,28 @@ interface ReExport {
   from: string;
 }
 
+/** Parse raw export specifier tokens into value and type names. */
+function parseReExportTokens(specifiersText: string): { values: string[]; types: Set<string> } {
+  const values: string[] = [];
+  const types = new Set<string>();
+  for (const raw of specifiersText.split(',')) {
+    const token = raw.trim();
+    if (token.startsWith('type ')) {
+      types.add(token.slice('type '.length).trim());
+    } else if (/^[A-Z]/.test(token)) {
+      values.push(token);
+    }
+  }
+  return { values, types };
+}
+
 /** Parse every `export { … } from '…'` statement in a barrel module. */
 function parseReExports(source: string): ReExport[] {
   const result: ReExport[] = [];
   const reExport = /export\s*\{([^}]*)\}\s*from\s*['"]([^'"]+)['"]/g;
   let match: RegExpExecArray | null = reExport.exec(source);
   while (match !== null) {
-    const values: string[] = [];
-    const types = new Set<string>();
-    for (const raw of match[1].split(',')) {
-      const token = raw.trim();
-      if (token.length === 0) {
-        continue;
-      }
-      if (token.startsWith('type ')) {
-        types.add(token.slice('type '.length).trim());
-      } else if (/^[A-Z]/.test(token)) {
-        values.push(token);
-      }
-    }
+    const { values, types } = parseReExportTokens(match[1]);
     result.push({ values, types, from: match[2] });
     match = reExport.exec(source);
   }
@@ -180,6 +183,7 @@ export interface DiscoveredExternalExport {
   star: boolean;
 }
 
+/** Extracts the base module or directory name from a source file path. */
 export function sourceBase(filePath: string): string {
   const fileName = path.basename(filePath);
   if (fileName === 'index.ts' || fileName === 'index.tsx' || fileName === 'index.js' || fileName === 'index.jsx') {
@@ -188,6 +192,7 @@ export function sourceBase(filePath: string): string {
   return fileName.replace(/\.d?\w+$/, '');
 }
 
+/** Derives a disambiguated folder name for a source path relative to an entry module. */
 export function deriveDisambiguatedFolder(entryPath: string, sourcePath: string, base: string): string {
   const entryDir = path.dirname(entryPath);
   const sourceDir = path.dirname(sourcePath);
@@ -195,6 +200,7 @@ export function deriveDisambiguatedFolder(entryPath: string, sourcePath: string,
   return deriveDisambiguatedFolderFromDir(rel, base);
 }
 
+/** Derives a disambiguated folder name from a relative directory path and base component name. */
 export function deriveDisambiguatedFolderFromDir(relDir: string, base: string): string {
   const segments = relDir.split(/[\\/]/).filter((segment) => segment.length > 0 && segment !== '.' && segment !== '..');
   if (segments.length >= 1 && segments.at(-1) === base) {
@@ -206,11 +212,46 @@ export function deriveDisambiguatedFolderFromDir(relDir: string, base: string): 
   return `${segments.join('-')}-${base}`;
 }
 
+/** Computes POSIX relative module path between an entry and a source file path. */
 function relativeModulePath(entry: string, sourcePath: string): string {
   const relative = path.relative(path.dirname(entry), path.dirname(sourcePath)).split(path.sep).join('/');
   return relative.length === 0 ? '' : relative;
 }
 
+/** Resolve the target node of a module specifier edge in the graph. */
+function resolveEdgeTarget(graph: ForgeFileGraph, fromId: string, specifier: string): ForgeFileNode | undefined {
+  const edge = graph.edges.find(
+    (candidate) =>
+      candidate.from === fromId &&
+      candidate.specifier === specifier &&
+      candidate.resolved &&
+      candidate.to !== undefined,
+  );
+  return edge?.to === undefined ? undefined : graph.nodes.get(edge.to);
+}
+
+/** Resolve an export target across wildcard star re-export declarations. */
+function resolveStarExportTarget(
+  graph: ForgeFileGraph,
+  start: ForgeFileNode,
+  exportedName: string,
+  typeOnly: boolean,
+  visited: Set<string>,
+): ForgeFileNode | undefined {
+  for (const star of start.exports.filter((entryExport) => entryExport.star && entryExport.specifier !== undefined)) {
+    const target = resolveEdgeTarget(graph, start.id, star.specifier!);
+    const resolved =
+      target === undefined
+        ? undefined
+        : graphExportTarget(graph, target, exportedName, typeOnly || star.typeOnly, new Set(visited));
+    if (resolved !== undefined) {
+      return resolved;
+    }
+  }
+  return undefined;
+}
+
+/** Resolves the canonical export target node across module graph re-export edges. */
 function graphExportTarget(
   graph: ForgeFileGraph,
   start: ForgeFileNode,
@@ -227,10 +268,7 @@ function graphExportTarget(
     (entryExport) => entryExport.typeOnly === typeOnly && entryExport.exportedName === exportedName,
   );
   if (fact?.specifier !== undefined) {
-    const targetId = graph.edges.find(
-      (edge) => edge.from === start.id && edge.specifier === fact.specifier && edge.resolved && edge.to !== undefined,
-    )?.to;
-    const target = targetId === undefined ? undefined : graph.nodes.get(targetId);
+    const target = resolveEdgeTarget(graph, start.id, fact.specifier);
     return target === undefined
       ? undefined
       : graphExportTarget(graph, target, fact.localName ?? exportedName, typeOnly, visited);
@@ -239,28 +277,29 @@ function graphExportTarget(
     return start;
   }
 
-  for (const star of start.exports.filter((entryExport) => entryExport.star)) {
-    if (star.specifier === undefined) {
-      continue;
-    }
-    const targetId = graph.edges.find(
-      (edge) => edge.from === start.id && edge.specifier === star.specifier && edge.resolved && edge.to !== undefined,
-    )?.to;
-    const target = targetId === undefined ? undefined : graph.nodes.get(targetId);
-    const resolved =
-      target === undefined
-        ? undefined
-        : graphExportTarget(graph, target, exportedName, typeOnly || star.typeOnly, new Set(visited));
-    if (resolved !== undefined) {
-      return resolved;
-    }
-  }
-  return undefined;
+  return resolveStarExportTarget(graph, start, exportedName, typeOnly, visited);
 }
 
 interface ResolvedGraphExport {
   readonly fact: ForgeExportFact;
   readonly sourceNode: ForgeFileNode | undefined;
+}
+
+/** Resolves a single export fact against the graph. */
+function resolveSingleGraphExport(
+  graph: ForgeFileGraph,
+  node: ForgeFileNode,
+  fact: ForgeExportFact,
+  inheritedTypeOnly: boolean,
+): ResolvedGraphExport {
+  const target = fact.specifier === undefined ? undefined : resolveEdgeTarget(graph, node.id, fact.specifier);
+  return {
+    fact: { ...fact, typeOnly: inheritedTypeOnly || fact.typeOnly },
+    sourceNode:
+      target === undefined
+        ? undefined
+        : graphExportTarget(graph, node, fact.exportedName ?? '', inheritedTypeOnly || fact.typeOnly),
+  };
 }
 
 /**
@@ -270,6 +309,7 @@ interface ResolvedGraphExport {
  * how many local barrels sit between the package entry and the source.
  */
 function resolveGraphExports(graph: ForgeFileGraph, entry: ForgeFileNode): ResolvedGraphExport[] {
+  /** Recursively resolves export facts across barrel nodes. */
   const resolve = (
     node: ForgeFileNode,
     inheritedTypeOnly: boolean,
@@ -288,25 +328,12 @@ function resolveGraphExports(graph: ForgeFileGraph, entry: ForgeFileNode): Resol
         });
         continue;
       }
-      const edge = graph.edges.find(
-        (candidate) =>
-          candidate.from === node.id &&
-          candidate.specifier === fact.specifier &&
-          candidate.resolved &&
-          candidate.to !== undefined,
-      );
-      const target = edge?.to === undefined ? undefined : graph.nodes.get(edge.to);
+      const target = resolveEdgeTarget(graph, node.id, fact.specifier);
       if (fact.star && target !== undefined) {
         resolved.push(...resolve(target, inheritedTypeOnly || fact.typeOnly, nextVisited));
         continue;
       }
-      resolved.push({
-        fact: { ...fact, typeOnly: inheritedTypeOnly || fact.typeOnly },
-        sourceNode:
-          target === undefined
-            ? undefined
-            : graphExportTarget(graph, node, fact.exportedName ?? '', inheritedTypeOnly || fact.typeOnly),
-      });
+      resolved.push(resolveSingleGraphExport(graph, node, fact, inheritedTypeOnly));
     }
     return resolved;
   };
@@ -314,28 +341,32 @@ function resolveGraphExports(graph: ForgeFileGraph, entry: ForgeFileNode): Resol
   return resolve(entry, false, new Set());
 }
 
-function resolveLocalSymbolName(program: OxcNode, exportedName: string): string {
-  if (exportedName === 'default') {
-    for (const statement of oxcProgramBody(program)) {
-      if (statement.type === 'ExportDefaultDeclaration') {
-        const declaration = oxcObject(statement, 'declaration');
-        const id = oxcObject(declaration, 'id');
-        const name = oxcIdentifierName(id) ?? oxcIdentifierName(declaration);
-        if (name !== undefined) {
-          return name;
-        }
+/** Resolves the default exported symbol identifier from AST statements. */
+function resolveDefaultSymbolName(program: OxcNode): string | undefined {
+  for (const statement of oxcProgramBody(program)) {
+    if (statement.type === 'ExportDefaultDeclaration') {
+      const declaration = oxcObject(statement, 'declaration');
+      const id = oxcObject(declaration, 'id');
+      const name = oxcIdentifierName(id) ?? oxcIdentifierName(declaration);
+      if (name !== undefined) {
+        return name;
       }
     }
   }
+  return undefined;
+}
+
+/** Resolves a named exported symbol identifier from AST statements. */
+function resolveNamedSymbolName(program: OxcNode, exportedName: string): string | undefined {
   for (const statement of oxcProgramBody(program)) {
     if (statement.type === 'ExportNamedDeclaration') {
       const specifiers = oxcArray(statement, 'specifiers');
       for (const spec of specifiers) {
         const exported = oxcObject(spec, 'exported');
-        const local = oxcObject(spec, 'local');
         const exportedIdent =
           oxcIdentifierName(exported) ?? (exported?.type === 'Literal' ? String(exported.value) : undefined);
         if (exportedIdent === exportedName) {
+          const local = oxcObject(spec, 'local');
           const localIdent = oxcIdentifierName(local);
           if (localIdent !== undefined) {
             return localIdent;
@@ -344,9 +375,47 @@ function resolveLocalSymbolName(program: OxcNode, exportedName: string): string 
       }
     }
   }
-  return exportedName;
+  return undefined;
 }
 
+/** Resolves the local identifier name for an exported symbol in a module program AST. */
+function resolveLocalSymbolName(program: OxcNode, exportedName: string): string {
+  if (exportedName === 'default') {
+    const defaultName = resolveDefaultSymbolName(program);
+    if (defaultName !== undefined) {
+      return defaultName;
+    }
+  }
+  return resolveNamedSymbolName(program, exportedName) ?? exportedName;
+}
+
+/** Matches a declaration node against a target local symbol name. */
+function matchStatementDeclaration(node: OxcNode, localName: string): OxcNode | undefined {
+  switch (node.type) {
+    case 'FunctionDeclaration':
+    case 'ClassDeclaration':
+    case 'TSInterfaceDeclaration':
+    case 'TSTypeAliasDeclaration':
+    case 'TSEnumDeclaration': {
+      const id = oxcObject(node, 'id');
+      return oxcIdentifierName(id) === localName ? node : undefined;
+    }
+    case 'VariableDeclaration': {
+      for (const declarator of oxcArray(node, 'declarations')) {
+        const id = oxcObject(declarator, 'id');
+        if (oxcIdentifierName(id) === localName) {
+          return declarator;
+        }
+      }
+      return undefined;
+    }
+    default: {
+      return undefined;
+    }
+  }
+}
+
+/** Find a top-level AST declaration corresponding to a local symbol name. */
 function findDeclaration(program: OxcNode, localName: string): OxcNode | undefined {
   for (const statement of oxcProgramBody(program)) {
     if (statement.type === 'ExportDefaultDeclaration') {
@@ -359,43 +428,69 @@ function findDeclaration(program: OxcNode, localName: string): OxcNode | undefin
       }
     }
     const unwrapped = oxcUnwrapModuleStatement(statement);
-    const node = unwrapped.node;
-    switch (node.type) {
-      case 'FunctionDeclaration': {
-        const id = oxcObject(node, 'id');
-        if (oxcIdentifierName(id) === localName) {
-          return node;
-        }
-        break;
-      }
-      case 'VariableDeclaration': {
-        for (const declarator of oxcArray(node, 'declarations')) {
-          const id = oxcObject(declarator, 'id');
-          if (oxcIdentifierName(id) === localName) {
-            return declarator;
-          }
-        }
-        break;
-      }
-      case 'ClassDeclaration': {
-        const id = oxcObject(node, 'id');
-        if (oxcIdentifierName(id) === localName) {
-          return node;
-        }
-        break;
-      }
-      case 'TSInterfaceDeclaration':
-      case 'TSTypeAliasDeclaration':
-      case 'TSEnumDeclaration': {
-        const id = oxcObject(node, 'id');
-        if (oxcIdentifierName(id) === localName) {
-          return node;
-        }
-        break;
-      }
+    const matched = matchStatementDeclaration(unwrapped.node, localName);
+    if (matched !== undefined) {
+      return matched;
     }
   }
   return undefined;
+}
+
+/** Unwraps parentheses, type assertions, and non-null assertions from an expression. */
+function unwrapExpression(expression: OxcNode | undefined): OxcNode | undefined {
+  let current = expression;
+  while (
+    current !== undefined &&
+    (current.type === 'ParenthesizedExpression' ||
+      current.type === 'TSAsExpression' ||
+      current.type === 'TSTypeAssertion' ||
+      current.type === 'TSNonNullExpression')
+  ) {
+    current = oxcObject(current, 'expression');
+  }
+  return current;
+}
+
+/** Safely retrieves or parses an Oxc parsed module from cache or disk. */
+function getOrParseModule(sourcePath: string, astCache?: Map<string, OxcParsedModule>): OxcParsedModule | undefined {
+  let parsed = astCache?.get(sourcePath);
+  if (parsed === undefined) {
+    if (!fs.existsSync(sourcePath)) {
+      return undefined;
+    }
+    try {
+      const source = fs.readFileSync(sourcePath, 'utf8');
+      parsed = parseOxcModule(sourcePath, source);
+      astCache?.set(sourcePath, parsed);
+    } catch {
+      return undefined;
+    }
+  }
+  return parsed;
+}
+
+const COMPONENT_FACTORY_CALLEES = new Set(['forwardRef', 'memo', 'createComponent', 'defineComponent']);
+
+/** Check whether a callee represents a known component wrapper or factory. */
+function isComponentFactoryCallee(callee: OxcNode | undefined): boolean {
+  const calleeName =
+    oxcIdentifierName(callee) ??
+    (callee?.type === 'MemberExpression' ? oxcIdentifierName(oxcObject(callee, 'property')) : undefined);
+  return calleeName !== undefined && COMPONENT_FACTORY_CALLEES.has(calleeName);
+}
+
+/** Check whether an initializer expression represents a non-component value. */
+function isNonComponentInitializer(init: OxcNode | undefined): boolean {
+  if (init === undefined) {
+    return true;
+  }
+  if (init.type === 'ArrowFunctionExpression' || init.type === 'FunctionExpression') {
+    return false;
+  }
+  if (init.type === 'CallExpression') {
+    return !isComponentFactoryCallee(oxcObject(init, 'callee'));
+  }
+  return true;
 }
 
 /**
@@ -412,40 +507,13 @@ function isNonComponentDeclaration(declaration: OxcNode): boolean {
     return true;
   }
   if (declaration.type === 'VariableDeclarator') {
-    let init = oxcObject(declaration, 'init');
-    while (
-      init !== undefined &&
-      (init.type === 'ParenthesizedExpression' ||
-        init.type === 'TSAsExpression' ||
-        init.type === 'TSTypeAssertion' ||
-        init.type === 'TSNonNullExpression')
-    ) {
-      init = oxcObject(init, 'expression');
-    }
-    if (init === undefined) {
-      return true;
-    }
-    if (init.type === 'ArrowFunctionExpression' || init.type === 'FunctionExpression') {
-      return false;
-    }
-    if (init.type === 'CallExpression') {
-      const callee = oxcObject(init, 'callee');
-      const calleeName =
-        oxcIdentifierName(callee) ??
-        (callee?.type === 'MemberExpression' ? oxcIdentifierName(oxcObject(callee, 'property')) : undefined);
-      return !(
-        calleeName === 'forwardRef' ||
-        calleeName === 'memo' ||
-        calleeName === 'createComponent' ||
-        calleeName === 'defineComponent'
-      );
-    }
-    // ObjectExpression, Literal, ArrayExpression, NewExpression, MemberExpression, Identifier, etc.
-    return true;
+    const init = unwrapExpression(oxcObject(declaration, 'init'));
+    return isNonComponentInitializer(init);
   }
   return false;
 }
 
+/** Determine whether an exported symbol represents a UI component rather than a helper or type. */
 export function isComponentExport(
   sourcePath: string,
   symbolName: string,
@@ -454,25 +522,13 @@ export function isComponentExport(
   if (!/^[A-Z]/.test(symbolName)) {
     return false;
   }
-  let parsed = astCache?.get(sourcePath);
+  const parsed = getOrParseModule(sourcePath, astCache);
   if (parsed === undefined) {
-    if (!fs.existsSync(sourcePath)) {
-      return false;
-    }
-    try {
-      const source = fs.readFileSync(sourcePath, 'utf8');
-      parsed = parseOxcModule(sourcePath, source);
-      astCache?.set(sourcePath, parsed);
-    } catch {
-      return false;
-    }
+    return false;
   }
   const localName = resolveLocalSymbolName(parsed.program, symbolName);
   const declaration = findDeclaration(parsed.program, localName);
-  if (declaration === undefined) {
-    return true;
-  }
-  return !isNonComponentDeclaration(declaration);
+  return declaration === undefined ? true : !isNonComponentDeclaration(declaration);
 }
 
 /** Resolve a simple identifier alias declared in a source module. */
@@ -481,36 +537,33 @@ function componentAliasTarget(
   symbolName: string,
   astCache: Map<string, OxcParsedModule>,
 ): string | undefined {
-  let parsed = astCache.get(sourcePath);
+  const parsed = getOrParseModule(sourcePath, astCache);
   if (parsed === undefined) {
-    if (!fs.existsSync(sourcePath)) {
-      return undefined;
-    }
-    try {
-      parsed = parseOxcModule(sourcePath, fs.readFileSync(sourcePath, 'utf8'));
-      astCache.set(sourcePath, parsed);
-    } catch {
-      return undefined;
-    }
+    return undefined;
   }
   const localName = resolveLocalSymbolName(parsed.program, symbolName);
   const declaration = findDeclaration(parsed.program, localName);
   if (declaration?.type !== 'VariableDeclarator') {
     return undefined;
   }
-  let initializer = oxcObject(declaration, 'init');
-  while (
-    initializer !== undefined &&
-    (initializer.type === 'ParenthesizedExpression' ||
-      initializer.type === 'TSAsExpression' ||
-      initializer.type === 'TSTypeAssertion' ||
-      initializer.type === 'TSNonNullExpression')
-  ) {
-    initializer = oxcObject(initializer, 'expression');
-  }
+  const initializer = unwrapExpression(oxcObject(declaration, 'init'));
   return oxcIdentifierName(initializer);
 }
 
+/** Check whether a candidate type name matches one of the discovered helper names. */
+function isHelperTypeName(name: string, helperExportNames: ReadonlySet<string>): boolean {
+  if (helperExportNames.size === 0) {
+    return false;
+  }
+  for (const helperName of helperExportNames) {
+    if (name === helperName || name.startsWith(helperName)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/** Resolves all type exports related to a component from the entry barrel and source node. */
 function graphTypeExports(
   graph: ForgeFileGraph,
   entry: ForgeFileNode,
@@ -519,40 +572,31 @@ function graphTypeExports(
   helperExportNames: ReadonlySet<string> = new Set(),
 ): string[] {
   const names = new Set<string>();
-  const isHelperType = (name: string): boolean => {
-    if (helperExportNames.size === 0) {
-      return false;
-    }
-    for (const helperName of helperExportNames) {
-      if (name === helperName || name.startsWith(helperName)) {
-        return true;
-      }
-    }
-    return false;
-  };
 
   for (const entryExport of entry.exports) {
     if (!entryExport.typeOnly || entryExport.exportedName === undefined || entryExport.specifier === undefined) {
       continue;
     }
-    if (isHelperType(entryExport.exportedName)) {
+    if (isHelperTypeName(entryExport.exportedName, helperExportNames)) {
       continue;
     }
     if (componentSpecifier !== undefined && entryExport.specifier === componentSpecifier) {
       names.add(entryExport.exportedName);
       continue;
     }
-    const targetId = graph.edges.find(
-      (edge) =>
-        edge.from === entry.id && edge.specifier === entryExport.specifier && edge.resolved && edge.to !== undefined,
-    )?.to;
-    if (targetId === sourceNode.id) {
+    const target = resolveEdgeTarget(graph, entry.id, entryExport.specifier);
+    if (target?.id === sourceNode.id) {
       names.add(entryExport.exportedName);
     }
   }
-  for (const entryExport of sourceNode.exports) {
-    if (entryExport.typeOnly && entryExport.exportedName !== undefined && !isHelperType(entryExport.exportedName)) {
-      names.add(entryExport.exportedName);
+
+  for (const sourceExport of sourceNode.exports) {
+    if (
+      sourceExport.typeOnly &&
+      sourceExport.exportedName !== undefined &&
+      !isHelperTypeName(sourceExport.exportedName, helperExportNames)
+    ) {
+      names.add(sourceExport.exportedName);
     }
   }
   return [...names];
@@ -612,23 +656,64 @@ function deriveSourceSpecifier(graphEntry: string, sourcePath: string, specifier
   return `./${relative}`;
 }
 
+/** Extracts a function node from an AST declaration. */
+function extractFunctionNode(declaration: OxcNode): OxcNode | undefined {
+  if (declaration.type === 'FunctionDeclaration') {
+    return declaration;
+  }
+  if (declaration.type === 'VariableDeclarator') {
+    const init = unwrapExpression(oxcObject(declaration, 'init'));
+    if (init === undefined) {
+      return undefined;
+    }
+    if (init.type === 'ArrowFunctionExpression' || init.type === 'FunctionExpression') {
+      return init;
+    }
+    if (init.type === 'CallExpression') {
+      return oxcArray(init, 'arguments').find(
+        (arg) => arg.type === 'ArrowFunctionExpression' || arg.type === 'FunctionExpression',
+      );
+    }
+  }
+  return undefined;
+}
+
+/** Extracts the first parameter type annotation from a function node. */
+function extractFirstParameterTypeAnnotation(fn: OxcNode): OxcNode | undefined {
+  const paramsNode = oxcObject(fn, 'params');
+  const items = paramsNode ? oxcArray(paramsNode, 'items') : [];
+  const firstParam = items[0] ?? oxcArray(fn, 'params')[0];
+  if (firstParam === undefined) {
+    return undefined;
+  }
+  const typeAnnotation = oxcObject(firstParam, 'typeAnnotation');
+  if (typeAnnotation !== undefined) {
+    return typeAnnotation;
+  }
+  const pattern = oxcObject(firstParam, 'pattern') ?? oxcObject(firstParam, 'argument');
+  return pattern ? oxcObject(pattern, 'typeAnnotation') : undefined;
+}
+
+/** Extracts the props interface identifier from a type annotation node. */
+function parsePropsTypeIdentifier(typeAnnotation: OxcNode, source: string): string | undefined {
+  const rawText = oxcNodeText(source, typeAnnotation).trim().replace(/^:\s*/, '');
+  const readonlyMatch = /^Readonly<\s*([A-Za-z0-9_]+)\s*>$/.exec(rawText);
+  if (readonlyMatch !== null) {
+    return readonlyMatch[1];
+  }
+  const identMatch = /^[A-Za-z0-9_]+$/.exec(rawText);
+  return identMatch ? identMatch[0] : undefined;
+}
+
 /** Extracts the props type identifier from a component's AST declaration. */
 function extractPropsTypeFromAst(
   sourcePath: string,
   neutralName: string,
   astCache: Map<string, OxcParsedModule>,
 ): string | undefined {
-  let parsed = astCache.get(sourcePath);
+  const parsed = getOrParseModule(sourcePath, astCache);
   if (parsed === undefined) {
-    if (!fs.existsSync(sourcePath)) {
-      return undefined;
-    }
-    try {
-      parsed = parseOxcModule(sourcePath, fs.readFileSync(sourcePath, 'utf8'));
-      astCache.set(sourcePath, parsed);
-    } catch {
-      return undefined;
-    }
+    return undefined;
   }
 
   const localName = resolveLocalSymbolName(parsed.program, neutralName);
@@ -637,79 +722,20 @@ function extractPropsTypeFromAst(
     return undefined;
   }
 
-  let fn: OxcNode | undefined;
-  if (declaration.type === 'FunctionDeclaration') {
-    fn = declaration;
-  } else if (declaration.type === 'VariableDeclarator') {
-    let init = oxcObject(declaration, 'init');
-    while (
-      init !== undefined &&
-      (init.type === 'ParenthesizedExpression' ||
-        init.type === 'TSAsExpression' ||
-        init.type === 'TSTypeAssertion' ||
-        init.type === 'TSNonNullExpression')
-    ) {
-      init = oxcObject(init, 'expression');
-    }
-    if (init !== undefined) {
-      if (init.type === 'ArrowFunctionExpression' || init.type === 'FunctionExpression') {
-        fn = init;
-      } else if (init.type === 'CallExpression') {
-        for (const arg of oxcArray(init, 'arguments')) {
-          if (arg.type === 'ArrowFunctionExpression' || arg.type === 'FunctionExpression') {
-            fn = arg;
-            break;
-          }
-        }
-      }
-    }
-  }
-
+  const fn = extractFunctionNode(declaration);
   if (fn === undefined) {
     return undefined;
   }
 
-  const paramsNode = oxcObject(fn, 'params');
-  const items = paramsNode ? oxcArray(paramsNode, 'items') : [];
-  const firstParam = items[0] ?? oxcArray(fn, 'params')[0];
-  if (firstParam === undefined) {
-    return undefined;
-  }
-
-  let typeAnnotation = oxcObject(firstParam, 'typeAnnotation');
-  if (typeAnnotation === undefined) {
-    const pattern = oxcObject(firstParam, 'pattern') ?? oxcObject(firstParam, 'argument');
-    if (pattern !== undefined) {
-      typeAnnotation = oxcObject(pattern, 'typeAnnotation');
-    }
-  }
-  if (typeAnnotation === undefined) {
-    return undefined;
-  }
-
-  const rawText = oxcNodeText(parsed.source, typeAnnotation).trim().replace(/^:\s*/, '');
-  const readonlyMatch = /^Readonly<\s*([A-Za-z0-9_]+)\s*>$/.exec(rawText);
-  if (readonlyMatch !== null) {
-    return readonlyMatch[1];
-  }
-  const identMatch = /^[A-Za-z0-9_]+$/.exec(rawText);
-  if (identMatch !== null) {
-    return identMatch[0];
-  }
-  return undefined;
+  const typeAnnotation = extractFirstParameterTypeAnnotation(fn);
+  return typeAnnotation ? parsePropsTypeIdentifier(typeAnnotation, parsed.source) : undefined;
 }
 
-/** Resolves the properties type for a component using conventions and AST inspection. */
-function findComponentPropertiesType(
-  publicName: string,
-  neutralName: string,
-  typeExports: string[],
-  sourcePath: string,
-  astCache: Map<string, OxcParsedModule>,
-): string | undefined {
+/** Builds candidate props type names for a component. */
+function buildCandidatePropertiesNames(publicName: string, neutralName: string): string[] {
   const baseName = publicName.replace(/^Forge/, '');
   const neutralBase = neutralName.replace(/^Forge/, '');
-  const candidates = [
+  return [
     `${baseName}Properties`,
     `${neutralBase}Properties`,
     `${publicName}Properties`,
@@ -723,11 +749,10 @@ function findComponentPropertiesType(
     `Forge${baseName}Props`,
     `Forge${neutralBase}Props`,
   ];
-  const matchedCandidate = candidates.find((cand) => typeExports.includes(cand));
-  if (matchedCandidate !== undefined) {
-    return matchedCandidate;
-  }
+}
 
+/** Matches fallback props type names when explicit candidates are not found. */
+function matchFallbackPropertiesType(typeExports: string[], baseName: string, neutralBase: string): string | undefined {
   const propTypes = typeExports.filter(
     (t) =>
       (t.endsWith('Properties') || t.endsWith('Props')) &&
@@ -742,10 +767,30 @@ function findComponentPropertiesType(
     const match = propTypes.find(
       (t) => t.toLowerCase().includes(baseName.toLowerCase()) || t.toLowerCase().includes(neutralBase.toLowerCase()),
     );
-    if (match !== undefined) {
-      return match;
-    }
-    return propTypes[0];
+    return match ?? propTypes[0];
+  }
+  return undefined;
+}
+
+/** Resolves the properties type for a component using conventions and AST inspection. */
+function findComponentPropertiesType(
+  publicName: string,
+  neutralName: string,
+  typeExports: string[],
+  sourcePath: string,
+  astCache: Map<string, OxcParsedModule>,
+): string | undefined {
+  const candidates = buildCandidatePropertiesNames(publicName, neutralName);
+  const matchedCandidate = candidates.find((cand) => typeExports.includes(cand));
+  if (matchedCandidate !== undefined) {
+    return matchedCandidate;
+  }
+
+  const baseName = publicName.replace(/^Forge/, '');
+  const neutralBase = neutralName.replace(/^Forge/, '');
+  const fallback = matchFallbackPropertiesType(typeExports, baseName, neutralBase);
+  if (fallback !== undefined) {
+    return fallback;
   }
 
   const astPropsType = extractPropsTypeFromAst(sourcePath, neutralName, astCache);
@@ -1171,63 +1216,24 @@ function parseHelperBinding(token: string): DiscoveredHelperBinding {
   return { localName, exportedName: exportedName ?? localName };
 }
 
-/**
- * Discover the components a barrel exports and derive their public shape. Each
- * value export is paired with the props interface re-exported from the same
- * statement (by the `<PublicName>Properties` convention) and the folder it lives
- * in (the re-export's module base name).
- */
-export function discoverComponents(barrelSource: string, stripPrefix = 'Forge'): DiscoveredComponent[] {
-  const components: DiscoveredComponent[] = [];
-  for (const reExport of parseReExports(barrelSource)) {
-    const folder = moduleBaseName(reExport.from);
-    // The component's source **folder** relative to the barrel. A folder-style
-    // re-export (`./atoms/forge-badge`) yields the folder directly; a file-style
-    // re-export (`./organisms/three-canvas/three-canvas`, pointing at the file
-    // rather than the folder's `index`) ends with the basename twice, so drop
-    // the trailing duplicate — the generator appends `<folder>.tsx` itself.
-    const sourceDir = stripTrailingDuplicate(moduleRelativePath(reExport.from));
-    for (const neutralName of reExport.values) {
-      const publicName = neutralName.startsWith(stripPrefix) ? neutralName.slice(stripPrefix.length) : neutralName;
-      const baseName = publicName.replace(/^Forge/, '');
-      const neutralBase = neutralName.replace(/^Forge/, '');
-      const candidates = [
-        `${baseName}Properties`,
-        `${neutralBase}Properties`,
-        `${publicName}Properties`,
-        `${neutralName}Properties`,
-        `Forge${baseName}Properties`,
-        `Forge${neutralBase}Properties`,
-        `${baseName}Props`,
-        `${neutralBase}Props`,
-        `${publicName}Props`,
-        `${neutralName}Props`,
-        `Forge${baseName}Props`,
-        `Forge${neutralBase}Props`,
-      ];
-      const matched = candidates.find((c) => reExport.types.has(c));
-      const fallbackProp =
-        matched ??
-        [...reExport.types].find(
-          (t) =>
-            (t.endsWith('Properties') || t.endsWith('Props')) &&
-            !t.endsWith('StyleProperties') &&
-            !t.endsWith('CSSProperties') &&
-            !t.endsWith('StyleProps'),
-        );
-      components.push({
-        neutralName,
-        publicName,
-        propertiesType: fallbackProp,
-        typeExports: [...reExport.types],
-        folder,
-        sourceDir,
-        sourceSpecifier: reExport.from,
-      });
-    }
-  }
+/** Matches the properties interface name from candidate type exports. */
+function matchComponentPropertiesType(publicName: string, neutralName: string, types: Set<string>): string | undefined {
+  const candidates = buildCandidatePropertiesNames(publicName, neutralName);
+  const matched = candidates.find((c) => types.has(c));
+  return (
+    matched ??
+    [...types].find(
+      (t) =>
+        (t.endsWith('Properties') || t.endsWith('Props')) &&
+        !t.endsWith('StyleProperties') &&
+        !t.endsWith('CSSProperties') &&
+        !t.endsWith('StyleProps'),
+    )
+  );
+}
 
-  // Check for collision among component `folder` basenames and disambiguate nested paths
+/** Disambiguate folder basenames for colliding components from distinct source directories. */
+function disambiguateCollidingFolders(components: DiscoveredComponent[]): void {
   const componentsByFolder = new Map<string, DiscoveredComponent[]>();
   for (const component of components) {
     const list = componentsByFolder.get(component.folder);
@@ -1247,7 +1253,10 @@ export function discoverComponents(barrelSource: string, stripPrefix = 'Forge'):
       component.folder = deriveDisambiguatedFolderFromDir(component.sourceDir, folder);
     }
   }
+}
 
+/** Validates that each target folder name uniquely maps to a single source specifier. */
+function validateTargetFolderUniqueness(components: DiscoveredComponent[]): void {
   const targetFolders = new Map<string, DiscoveredComponent>();
   for (const component of components) {
     const existing = targetFolders.get(component.folder);
@@ -1264,6 +1273,36 @@ export function discoverComponents(barrelSource: string, stripPrefix = 'Forge'):
     }
     targetFolders.set(component.folder, component);
   }
+}
+
+/**
+ * Discover the components a barrel exports and derive their public shape. Each
+ * value export is paired with the props interface re-exported from the same
+ * statement (by the `<PublicName>Properties` convention) and the folder it lives
+ * in (the re-export's module base name).
+ */
+export function discoverComponents(barrelSource: string, stripPrefix = 'Forge'): DiscoveredComponent[] {
+  const components: DiscoveredComponent[] = [];
+  for (const reExport of parseReExports(barrelSource)) {
+    const folder = moduleBaseName(reExport.from);
+    const sourceDir = stripTrailingDuplicate(moduleRelativePath(reExport.from));
+    for (const neutralName of reExport.values) {
+      const publicName = neutralName.startsWith(stripPrefix) ? neutralName.slice(stripPrefix.length) : neutralName;
+      const propertiesType = matchComponentPropertiesType(publicName, neutralName, reExport.types);
+      components.push({
+        neutralName,
+        publicName,
+        propertiesType,
+        typeExports: [...reExport.types],
+        folder,
+        sourceDir,
+        sourceSpecifier: reExport.from,
+      });
+    }
+  }
+
+  disambiguateCollidingFolders(components);
+  validateTargetFolderUniqueness(components);
 
   return components;
 }

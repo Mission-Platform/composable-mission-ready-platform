@@ -30,10 +30,15 @@ export type MpSetState<T> = (value?: T | ((previous: T) => T)) => void;
 export type MpEffectCleanup = () => void;
 
 /** The effect callback run by {@link useEffect}. */
-export type MpEffectCallback = () => void | MpEffectCleanup;
+export type MpEffectCallback = (() => void) | (() => MpEffectCleanup);
 
 /** A dependency list controlling when an effect / memo re-runs. */
 export type MpDependencyList = readonly unknown[];
+
+/** No-op state updater used for static SSR/adapter rendering. */
+function noopSetState(): void {
+  // Intentionally empty for static SSR/adapter rendering.
+}
 
 /**
  * Neutral `useState`. The baseline implementation returns the initial value and
@@ -42,7 +47,7 @@ export type MpDependencyList = readonly unknown[];
  */
 export function useState<T>(initial?: T | (() => T)): [T, MpSetState<T>] {
   const value = typeof initial === 'function' ? (initial as () => T)() : initial;
-  return [value as T, () => {}];
+  return [value as T, noopSetState];
 }
 
 /**
@@ -58,19 +63,16 @@ export function useRef<T>(initial?: T): MpRef<T> {
  * do not run during a single SSR/adapter render.
  */
 export function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList): void {
-  void _effect;
-  void _dependencies;
+  // Effects are intentionally not executed during SSR/adapter render.
 }
 
 /** Neutral `useMemo`. Computes the value once for the render. */
 export function useMemo<T>(factory: () => T, _dependencies?: MpDependencyList): T {
-  void _dependencies;
   return factory();
 }
 
 /** Neutral `useCallback`. Returns the callback unchanged for the render. */
 export function useCallback<T extends (...args: never[]) => unknown>(callback: T, _dependencies?: MpDependencyList): T {
-  void _dependencies;
   return callback;
 }
 

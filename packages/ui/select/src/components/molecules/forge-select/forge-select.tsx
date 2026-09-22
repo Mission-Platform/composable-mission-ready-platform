@@ -303,30 +303,52 @@ interface SelectKeydownState {
   selectFirstVisibleOption: () => void;
 }
 
+/** Handles Enter key press for select control. */
+function handleEnterKey(state: SelectKeydownState): void {
+  if (!state.isDropdownOpen) {
+    state.openDropdown();
+    return;
+  }
+  if (state.searchable) {
+    state.selectFirstVisibleOption();
+  } else {
+    state.closeDropdown();
+  }
+}
+
+/** Handles Space key press for select control. */
+function handleSpaceKey(state: SelectKeydownState): void {
+  if (state.searchable) {
+    return;
+  }
+  if (state.isDropdownOpen) {
+    state.closeDropdown();
+  } else {
+    state.openDropdown();
+  }
+}
+
+/** Handles ArrowDown key press for select control. */
+function handleArrowDownKey(state: SelectKeydownState): void {
+  if (state.isDropdownOpen) {
+    state.selectAdjacentOption(1);
+  } else {
+    state.openDropdown();
+  }
+}
+
 /** Dispatches select keyboard interaction keys to navigate options and toggle the dropdown. */
 function handleSelectKeydown(event: KeyboardEvent, state: SelectKeydownState): void {
   switch (event.key) {
     case 'Enter': {
       event.preventDefault();
-      if (state.isDropdownOpen) {
-        if (state.searchable) {
-          state.selectFirstVisibleOption();
-        } else {
-          state.closeDropdown();
-        }
-      } else {
-        state.openDropdown();
-      }
+      handleEnterKey(state);
       break;
     }
     case ' ': {
       if (!state.searchable) {
         event.preventDefault();
-        if (state.isDropdownOpen) {
-          state.closeDropdown();
-        } else {
-          state.openDropdown();
-        }
+        handleSpaceKey(state);
       }
       break;
     }
@@ -336,11 +358,7 @@ function handleSelectKeydown(event: KeyboardEvent, state: SelectKeydownState): v
     }
     case 'ArrowDown': {
       event.preventDefault();
-      if (state.isDropdownOpen) {
-        state.selectAdjacentOption(1);
-      } else {
-        state.openDropdown();
-      }
+      handleArrowDownKey(state);
       break;
     }
     case 'ArrowUp': {
@@ -406,6 +424,231 @@ function getAdjacentOptionValue(
   return enabled[nextIndex]?.value;
 }
 
+/** Builds option elements for hidden native select element. */
+function buildNativeSelectOptions(
+  options: readonly SelectOption[],
+  placeholder: string | undefined,
+  selectedOption: SelectOption | undefined,
+): MpChild[] {
+  const nativeOptions: MpChild[] = [
+    <option
+      key="__placeholder__"
+      value=""
+    >
+      {placeholder}
+    </option>,
+    ...options.map((option) => (
+      <option
+        key={option.value}
+        disabled={option.disabled}
+        value={option.value}
+      >
+        {option.label}
+      </option>
+    )),
+  ];
+
+  if (selectedOption && !options.some((o) => o.value === selectedOption.value)) {
+    nativeOptions.push(
+      <option
+        key={selectedOption.value}
+        disabled={selectedOption.disabled}
+        value={selectedOption.value}
+      >
+        {selectedOption.label}
+      </option>,
+    );
+  }
+  return nativeOptions;
+}
+
+/** Builds list item elements for the dropdown listbox. */
+function buildSelectListItems(
+  visibleOptions: readonly SelectOption[],
+  modelValue: string | number,
+  isLoading: boolean,
+  searchQuery: string,
+  selectOption: (option: SelectOption) => void,
+): MpChild[] {
+  const listItems: MpChild[] = [];
+
+  if (isLoading) {
+    listItems.push(
+      <li
+        key="__loading__"
+        aria-disabled="true"
+        aria-selected="false"
+        className={[styles['forge-select__empty'], styles['forge-select__loading-item']]}
+        role="option"
+        tabindex={-1}
+      >
+        <span
+          aria-hidden="true"
+          className={styles['forge-select__loading']}
+        />
+        <span>Loading…</span>
+      </li>,
+    );
+  }
+
+  for (const option of visibleOptions) {
+    listItems.push(
+      <li
+        key={option.value}
+        aria-disabled={option.disabled || undefined}
+        aria-selected={option.value === modelValue}
+        className={[
+          styles['forge-select__option'],
+          {
+            [styles['forge-select__option--selected']]: option.value === modelValue,
+            [styles['forge-select__option--disabled']]: option.disabled,
+          },
+        ]}
+        role="option"
+        tabindex={-1}
+        onMousedown={(event: MouseEvent) => {
+          event.preventDefault();
+          selectOption(option);
+        }}
+      >
+        <span className={styles['forge-select__option-content']}>
+          {option.icon}
+          <span>{option.label}</span>
+        </span>
+      </li>,
+    );
+  }
+
+  if (!isLoading && visibleOptions.length === 0) {
+    listItems.push(
+      <li
+        aria-disabled="true"
+        aria-selected="false"
+        className={styles['forge-select__empty']}
+        role="option"
+        tabindex={-1}
+      >
+        {searchQuery ? `No results for "${searchQuery}"` : 'No options available'}
+      </li>,
+    );
+  }
+
+  return listItems;
+}
+
+/** Filters the visible options based on search query when local filtering is active. */
+function filterVisibleOptions(
+  currentOptions: readonly SelectOption[],
+  searchQuery: string,
+  isAsync: boolean,
+  searchable: boolean,
+): readonly SelectOption[] {
+  if (searchable && searchQuery && !isAsync) {
+    return currentOptions.filter((option) => option.label.toLowerCase().includes(searchQuery.toLowerCase()));
+  }
+  return currentOptions;
+}
+
+interface SelectTriggerProps {
+  searchable: boolean;
+  searchReference: { current: HTMLInputElement | null };
+  triggerReference: { current: HTMLButtonElement | null };
+  resolvedId: string;
+  isLoading: boolean;
+  isDropdownOpen: boolean;
+  describedBy?: string;
+  error?: string | boolean;
+  label?: string;
+  required?: boolean;
+  disabled: boolean;
+  hasPlaceholder: boolean;
+  searchValue: string;
+  searchPlaceholder: string;
+  displayLabel: string;
+  onBlur?: (event: FocusEvent) => void;
+  openDropdown: () => void;
+  closeDropdown: () => void;
+  handleSearchInput: (event: Event) => void;
+  handleKeydown: (event: KeyboardEvent) => void;
+}
+
+/** Renders the combobox input or button trigger control. */
+function renderSelectTrigger(config: SelectTriggerProps): MpChild {
+  if (config.searchable) {
+    return (
+      <input
+        ref={config.searchReference}
+        id={config.resolvedId}
+        aria-autocomplete="list"
+        aria-busy={config.isLoading || undefined}
+        aria-controls={config.isDropdownOpen ? `${config.resolvedId}-listbox` : undefined}
+        aria-describedby={config.describedBy}
+        aria-expanded={config.isDropdownOpen}
+        aria-haspopup="listbox"
+        aria-invalid={config.error ? 'true' : undefined}
+        aria-labelledby={config.label ? `${config.resolvedId}-label` : undefined}
+        aria-required={config.required || undefined}
+        autocomplete="off"
+        className={[
+          styles['forge-select__field'],
+          {
+            [styles['forge-select__field--placeholder']]: config.hasPlaceholder && !config.searchValue,
+          },
+        ]}
+        disabled={config.disabled}
+        placeholder={config.searchPlaceholder}
+        required={config.required}
+        role="combobox"
+        type="text"
+        value={config.searchValue}
+        onBlur={config.onBlur}
+        onFocus={config.openDropdown}
+        onInput={config.handleSearchInput}
+        onKeydown={config.handleKeydown}
+      />
+    );
+  }
+
+  return (
+    <button
+      ref={config.triggerReference}
+      id={config.resolvedId}
+      aria-busy={config.isLoading || undefined}
+      aria-controls={config.isDropdownOpen ? `${config.resolvedId}-listbox` : undefined}
+      aria-describedby={config.describedBy}
+      aria-expanded={config.isDropdownOpen}
+      aria-haspopup="listbox"
+      aria-invalid={config.error ? 'true' : undefined}
+      aria-labelledby={config.label ? `${config.resolvedId}-label` : undefined}
+      aria-required={config.required || undefined}
+      className={[
+        styles['forge-select__field'],
+        {
+          [styles['forge-select__field--placeholder']]: config.hasPlaceholder,
+        },
+      ]}
+      disabled={config.disabled}
+      role="combobox"
+      type="button"
+      onBlur={config.onBlur}
+      onClick={() => {
+        if (config.isDropdownOpen) {
+          config.closeDropdown();
+        } else {
+          config.openDropdown();
+        }
+      }}
+      onKeydown={config.handleKeydown}
+    >
+      {config.displayLabel || '\u00A0'}
+    </button>
+  );
+}
+
+/**
+ * ForgeSelect component providing an accessible, framework-neutral select control with
+ * support for live filtering, asynchronous search, keyboard navigation, and custom slots.
+ */
 export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
   const style = createSelectStyle(properties.properties);
 
@@ -453,11 +696,7 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
   const displayLabel = selectedOption ? selectedOption.label : (placeholder ?? '');
   const hasPlaceholder = selectedOption === undefined;
 
-  // When searchable and open, the trigger becomes a filtering text field.
-  const visibleOptions =
-    searchable && searchQuery && !asyncOptions
-      ? currentOptions.filter((option) => option.label.toLowerCase().includes(searchQuery.toLowerCase()))
-      : currentOptions;
+  const visibleOptions = filterVisibleOptions(currentOptions, searchQuery, Boolean(asyncOptions), searchable);
 
   /** Cancels any active search debounce timer. */
   const cancelDebounce = (): void => {
@@ -593,98 +832,8 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
 
   const describedBy = error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined;
 
-  const nativeOptions: MpChild[] = [
-    <option
-      key="__placeholder__"
-      value=""
-    >
-      {placeholder}
-    </option>,
-    ...options.map((option) => (
-      <option
-        key={option.value}
-        disabled={option.disabled}
-        value={option.value}
-      >
-        {option.label}
-      </option>
-    )),
-  ];
-
-  if (selectedOption && !options.some((o) => o.value === selectedOption.value)) {
-    nativeOptions.push(
-      <option
-        key={selectedOption.value}
-        disabled={selectedOption.disabled}
-        value={selectedOption.value}
-      >
-        {selectedOption.label}
-      </option>,
-    );
-  }
-
-  const listItems: MpChild[] = [];
-
-  if (isLoading) {
-    listItems.push(
-      <li
-        key="__loading__"
-        aria-disabled="true"
-        aria-selected="false"
-        className={[styles['forge-select__empty'], styles['forge-select__loading-item']]}
-        role="option"
-        tabindex={-1}
-      >
-        <span
-          aria-hidden="true"
-          className={styles['forge-select__loading']}
-        />
-        <span>Loading…</span>
-      </li>,
-    );
-  }
-
-  for (const option of visibleOptions) {
-    listItems.push(
-      <li
-        key={option.value}
-        aria-disabled={option.disabled || undefined}
-        aria-selected={option.value === modelValue}
-        className={[
-          styles['forge-select__option'],
-          {
-            [styles['forge-select__option--selected']]: option.value === modelValue,
-            [styles['forge-select__option--disabled']]: option.disabled,
-          },
-        ]}
-        role="option"
-        tabindex={-1}
-        onMousedown={(event: MouseEvent) => {
-          event.preventDefault();
-          selectOption(option);
-        }}
-      >
-        <span className={styles['forge-select__option-content']}>
-          {option.icon}
-          <span>{option.label}</span>
-        </span>
-      </li>,
-    );
-  }
-
-  if (!isLoading && visibleOptions.length === 0) {
-    listItems.push(
-      <li
-        aria-disabled="true"
-        aria-selected="false"
-        className={styles['forge-select__empty']}
-        role="option"
-        tabindex={-1}
-      >
-        {searchQuery ? `No results for "${searchQuery}"` : 'No options available'}
-      </li>,
-    );
-  }
+  const nativeOptions = buildNativeSelectOptions(options, placeholder, selectedOption);
+  const listItems = buildSelectListItems(visibleOptions, modelValue, isLoading, searchQuery, selectOption);
 
   // Text shown/typed in the search trigger: the live query while open,
   // otherwise the selected option's label (never the placeholder text).
@@ -692,71 +841,28 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
   // While open, keep the current selection visible as the input placeholder.
   const searchPlaceholder = isDropdownOpen && selectedOption ? selectedOption.label : (placeholder ?? '');
 
-  const triggerControl: MpChild = searchable ? (
-    <input
-      ref={searchReference}
-      id={resolvedId}
-      aria-autocomplete="list"
-      aria-busy={isLoading || undefined}
-      aria-controls={isDropdownOpen ? `${resolvedId}-listbox` : undefined}
-      aria-describedby={describedBy}
-      aria-expanded={isDropdownOpen}
-      aria-haspopup="listbox"
-      aria-invalid={error ? 'true' : undefined}
-      aria-labelledby={label ? `${resolvedId}-label` : undefined}
-      aria-required={required || undefined}
-      autocomplete="off"
-      className={[
-        styles['forge-select__field'],
-        {
-          [styles['forge-select__field--placeholder']]: hasPlaceholder && !searchValue,
-        },
-      ]}
-      disabled={disabled}
-      placeholder={searchPlaceholder}
-      required={required}
-      role="combobox"
-      type="text"
-      value={searchValue}
-      onBlur={(event: FocusEvent) => properties.onBlur?.(event)}
-      onFocus={openDropdown}
-      onInput={handleSearchInput}
-      onKeydown={handleKeydown}
-    />
-  ) : (
-    <button
-      ref={triggerReference}
-      id={resolvedId}
-      aria-busy={isLoading || undefined}
-      aria-controls={isDropdownOpen ? `${resolvedId}-listbox` : undefined}
-      aria-describedby={describedBy}
-      aria-expanded={isDropdownOpen}
-      aria-haspopup="listbox"
-      aria-invalid={error ? 'true' : undefined}
-      aria-labelledby={label ? `${resolvedId}-label` : undefined}
-      aria-required={required || undefined}
-      className={[
-        styles['forge-select__field'],
-        {
-          [styles['forge-select__field--placeholder']]: hasPlaceholder,
-        },
-      ]}
-      disabled={disabled}
-      role="combobox"
-      type="button"
-      onBlur={(event: FocusEvent) => properties.onBlur?.(event)}
-      onClick={() => {
-        if (isDropdownOpen) {
-          closeDropdown();
-        } else {
-          openDropdown();
-        }
-      }}
-      onKeydown={handleKeydown}
-    >
-      {displayLabel || '\u00A0'}
-    </button>
-  );
+  const triggerControl = renderSelectTrigger({
+    searchable,
+    searchReference,
+    triggerReference,
+    resolvedId,
+    isLoading,
+    isDropdownOpen,
+    describedBy,
+    error,
+    label,
+    required,
+    disabled,
+    hasPlaceholder,
+    searchValue,
+    searchPlaceholder,
+    displayLabel,
+    onBlur: (event: FocusEvent) => properties.onBlur?.(event),
+    openDropdown,
+    closeDropdown,
+    handleSearchInput,
+    handleKeydown,
+  });
 
   return (
     <div

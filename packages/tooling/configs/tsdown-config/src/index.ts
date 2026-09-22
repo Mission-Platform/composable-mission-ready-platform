@@ -209,6 +209,33 @@ function collectCssFiles(directory: string, base: string = directory): string[] 
   return results;
 }
 
+/** Read directory entries safely without throwing. */
+function readDirectorySafely(currentDirectory: string): fs.Dirent[] {
+  try {
+    return fs.readdirSync(currentDirectory, { withFileTypes: true });
+  } catch {
+    return [];
+  }
+}
+
+/** Check whether a directory entry matches one of the target JavaScript file names. */
+function checkJsEntry(
+  entry: fs.Dirent,
+  currentDirectory: string,
+  outputDirectory: string,
+  targetNames: Set<string>,
+): string | undefined {
+  if (!entry.isFile() || !entry.name.endsWith('.js')) {
+    return undefined;
+  }
+  const nameWithoutExtension = path.posix.basename(entry.name, '.js');
+  if (!targetNames.has(nameWithoutExtension)) {
+    return undefined;
+  }
+  const fullPath = path.join(currentDirectory, entry.name);
+  return path.relative(outputDirectory, fullPath).split(path.sep).join('/');
+}
+
 /** Search a directory for a JavaScript file matching any target name. */
 function findJsInDirectory(
   currentDirectory: string,
@@ -216,22 +243,15 @@ function findJsInDirectory(
   targetNames: Set<string>,
   queue: string[],
 ): string | undefined {
-  let entries: fs.Dirent[];
-  try {
-    entries = fs.readdirSync(currentDirectory, { withFileTypes: true });
-  } catch {
-    return undefined;
-  }
-
+  const entries = readDirectorySafely(currentDirectory);
   for (const entry of entries) {
-    const fullPath = path.join(currentDirectory, entry.name);
     if (entry.isDirectory()) {
-      queue.push(fullPath);
-    } else if (entry.isFile() && entry.name.endsWith('.js')) {
-      const nameWithoutExtension = path.posix.basename(entry.name, '.js');
-      if (targetNames.has(nameWithoutExtension)) {
-        return path.relative(outputDirectory, fullPath).split(path.sep).join('/');
-      }
+      queue.push(path.join(currentDirectory, entry.name));
+      continue;
+    }
+    const matched = checkJsEntry(entry, currentDirectory, outputDirectory, targetNames);
+    if (matched !== undefined) {
+      return matched;
     }
   }
   return undefined;
@@ -420,6 +440,11 @@ function buildStagedDtsOptions(
   };
 }
 
+/** Resolves the base DtsOptions object from boolean or DtsOptions value. */
+function toDtsOptions(dts: true | DtsOptions): DtsOptions {
+  return dts === true ? { build: false, generator: 'tsgo' } : { build: false, ...dts };
+}
+
 /**
  * Resolve the default dts option so project-references packages still emit.
  *
@@ -438,17 +463,15 @@ function resolveDtsOption(
     return false;
   }
 
-  const resolved: DtsOptions = dts === true ? { build: false, generator: 'tsgo' } : { build: false, ...dts };
-  if (!options?.outputRoot) {
+  const resolved = toDtsOptions(dts);
+  const outputRoot = options?.outputRoot;
+  if (!outputRoot) {
     return resolved;
   }
 
-  return buildStagedDtsOptions(
-    resolved,
-    options.rootDir ?? process.cwd(),
-    options.outDir ?? 'dist',
-    options.outputRoot,
-  );
+  const rootDirectory = options?.rootDir || process.cwd();
+  const outDirectory = options?.outDir || 'dist';
+  return buildStagedDtsOptions(resolved, rootDirectory, outDirectory, outputRoot);
 }
 
 /**
@@ -583,33 +606,46 @@ function readTsconfigAliases(rootDirectory: string, targetRoot: string): Tsconfi
   }
 }
 
+/** Parse prefix and suffix parts around a wildcard pattern. */
+function parseWildcardPattern(pattern: string): { prefix: string; suffix: string } {
+  const wildcard = pattern.indexOf('*');
+  if (wildcard === -1) {
+    return { prefix: pattern, suffix: '' };
+  }
+  return {
+    prefix: pattern.slice(0, wildcard),
+    suffix: pattern.slice(wildcard + 1),
+  };
+}
+
+/** Expand file extension candidates for a resolved target base path. */
+function expandTargetFileCandidates(resolvedTarget: string): string[] {
+  return [
+    `${resolvedTarget}.ts`,
+    `${resolvedTarget}.tsx`,
+    `${resolvedTarget}.vue`,
+    `${resolvedTarget}.svelte`,
+    `${resolvedTarget}.css`,
+    `${resolvedTarget}.scss`,
+    `${resolvedTarget}.module.css`,
+    `${resolvedTarget}.module.scss`,
+    `${resolvedTarget}/index.ts`,
+    `${resolvedTarget}/index.tsx`,
+    `${resolvedTarget}/index.vue`,
+    `${resolvedTarget}/index.svelte`,
+    resolvedTarget,
+  ];
+}
+
 /** Match a specifier against a tsconfig path alias and expand target file candidates. */
 function matchAliasCandidates(alias: { pattern: string; targets: string[] }, specifier: string): string[] | undefined {
-  const wildcard = alias.pattern.indexOf('*');
-  const suffix = wildcard === -1 ? '' : alias.pattern.slice(wildcard + 1);
-  const prefix = wildcard === -1 ? alias.pattern : alias.pattern.slice(0, wildcard);
+  const { prefix, suffix } = parseWildcardPattern(alias.pattern);
   if (!specifier.startsWith(prefix) || !specifier.endsWith(suffix)) {
     return undefined;
   }
-  const match = specifier.slice(prefix.length, specifier.length - suffix.length || undefined);
-  return alias.targets.flatMap((target) => {
-    const resolvedTarget = target.replace('*', match);
-    return [
-      `${resolvedTarget}.ts`,
-      `${resolvedTarget}.tsx`,
-      `${resolvedTarget}.vue`,
-      `${resolvedTarget}.svelte`,
-      `${resolvedTarget}.css`,
-      `${resolvedTarget}.scss`,
-      `${resolvedTarget}.module.css`,
-      `${resolvedTarget}.module.scss`,
-      `${resolvedTarget}/index.ts`,
-      `${resolvedTarget}/index.tsx`,
-      `${resolvedTarget}/index.vue`,
-      `${resolvedTarget}/index.svelte`,
-      resolvedTarget,
-    ];
-  });
+  const endIndex = suffix.length > 0 ? specifier.length - suffix.length : undefined;
+  const match = specifier.slice(prefix.length, endIndex);
+  return alias.targets.flatMap((target) => expandTargetFileCandidates(target.replace('*', match)));
 }
 
 /** Resolve TypeScript path aliases, optionally against a generated cache tree. */

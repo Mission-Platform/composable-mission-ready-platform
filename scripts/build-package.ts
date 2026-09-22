@@ -108,6 +108,7 @@ function runConcurrentCommands(commands: Array<{ command: string; args: string[]
   const activeChildren: ChildProcess[] = [];
   let isAborting = false;
 
+  /** Cleans up active child processes and marks the execution as aborting. */
   const cleanup = (): void => {
     if (isAborting) return;
     isAborting = true;

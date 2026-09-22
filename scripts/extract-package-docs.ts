@@ -55,6 +55,7 @@ type FormatterCommand = typeof execFile;
 
 type CommandError = Error & { readonly stderr?: string; readonly stdout?: string };
 
+/** Extracts combined stdout, stderr, and message text from a command execution error. */
 function commandOutput(error: unknown): string {
   if (!(error instanceof Error)) return String(error);
   const commandError = error as CommandError;
@@ -63,6 +64,7 @@ function commandOutput(error: unknown): string {
     .join('\n');
 }
 
+/** Determines whether a formatter failure was caused solely by generated code fence syntax errors. */
 function isGeneratedFenceParserFailure(error: unknown): boolean {
   const diagnostics = commandOutput(error)
     .split('\n')
@@ -115,10 +117,12 @@ export async function formatAllGeneratedDocumentation(
   await runCommand(prettierPath, ['--write', ...outputPaths], { cwd: repoRoot });
 }
 
+/** Checks whether a value is a non-null record object. */
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
 
+/** Checks whether a file exists at the specified path. */
 async function fileExists(path: string): Promise<boolean> {
   try {
     await readFile(path);
@@ -128,6 +132,7 @@ async function fileExists(path: string): Promise<boolean> {
   }
 }
 
+/** Recursively traverses directories yielding file paths that match the given predicate. */
 async function walk(directory: string, predicate: (path: string) => boolean): Promise<string[]> {
   const entries = await readdir(directory, { withFileTypes: true }).catch(() => []);
   const paths: string[] = [];
@@ -148,6 +153,7 @@ async function walk(directory: string, predicate: (path: string) => boolean): Pr
   return paths;
 }
 
+/** Reads and parses the package.json manifest for a package root directory. */
 async function readManifest(packageRoot: string): Promise<PackageManifest | undefined> {
   const path = resolve(packageRoot, 'package.json');
   if (!(await fileExists(path))) return undefined;
@@ -177,6 +183,7 @@ export async function discoverPackageRoots(repoRoot: string): Promise<readonly s
   return roots.sort();
 }
 
+/** Traverses manifest export conditions and maps them to target file specifiers. */
 function exportTargets(value: unknown, targets: string[]): void {
   if (typeof value === 'string') {
     targets.push(value);
@@ -193,6 +200,7 @@ function exportTargets(value: unknown, targets: string[]): void {
   }
 }
 
+/** Generates candidate source file paths from an exported target specifier. */
 function sourceCandidates(packageRoot: string, target: string): string[] {
   const normalized = target.replaceAll('\\', '/').replace(/^\.\//u, '');
   const sourceTarget = normalized.startsWith('dist/') ? `src/${normalized.slice('dist/'.length)}` : normalized;
@@ -205,6 +213,7 @@ function sourceCandidates(packageRoot: string, target: string): string[] {
   return candidates.map((candidate) => resolve(packageRoot, candidate));
 }
 
+/** Resolves TypeScript entrypoint source files declared in a package manifest. */
 async function typeScriptEntries(packageRoot: string, manifest: PackageManifest): Promise<readonly string[]> {
   const targets: string[] = [];
   exportTargets(manifest.exports, targets);
@@ -272,6 +281,7 @@ interface ScannedModule {
   readonly exports: readonly ExportBinding[];
 }
 
+/** Safely extracts an AST child object property from an Oxc node. */
 function oxcObject(node: OxcNode | undefined, key: string): OxcNode | undefined {
   const value = node?.[key];
   return typeof value === 'object' && value !== null && typeof (value as { type?: unknown }).type === 'string'
@@ -279,6 +289,7 @@ function oxcObject(node: OxcNode | undefined, key: string): OxcNode | undefined 
     : undefined;
 }
 
+/** Safely extracts an AST child array property from an Oxc node. */
 function oxcArray(node: OxcNode | undefined, key: string): readonly OxcNode[] {
   const value = node?.[key];
   return Array.isArray(value)
@@ -289,21 +300,25 @@ function oxcArray(node: OxcNode | undefined, key: string): readonly OxcNode[] {
     : [];
 }
 
+/** Extracts the string identifier name from an AST node if present. */
 function oxcName(node: OxcNode | undefined): string | undefined {
   if (node === undefined) return undefined;
   const name = node.name;
   return typeof name === 'string' ? name : undefined;
 }
 
+/** Extracts a string literal value from an AST literal node. */
 function oxcLiteral(node: OxcNode | undefined): string | undefined {
   const value = node?.value;
   return typeof value === 'string' ? value : undefined;
 }
 
+/** Determines parser language dialect based on file extension. */
 function parserLanguage(fileName: string): 'ts' | 'tsx' {
   return /\.tsx$/u.test(fileName) ? 'tsx' : 'ts';
 }
 
+/** Parses source text using oxc-parser into an AST and comments bundle. */
 function parseSource(fileName: string, source: string): ParsedModule {
   const result = parseSync(fileName, source, { lang: parserLanguage(fileName), sourceType: 'module', astType: 'ts' });
   return {
@@ -314,6 +329,7 @@ function parseSource(fileName: string, source: string): ParsedModule {
   };
 }
 
+/** Extracts leading JSDoc documentation, tags, and parameter descriptions for an AST node. */
 function documentationFor(module: ParsedModule, start: number): ParsedDocumentation {
   const comment = module.comments
     .filter((candidate) => candidate.type === 'Block' && candidate.value.startsWith('*') && candidate.end <= start)
@@ -357,6 +373,7 @@ function documentationFor(module: ParsedModule, start: number): ParsedDocumentat
   return { description: description.join('\n').trim(), tags, parameterDescriptions };
 }
 
+/** Maps an AST node type to an extracted symbol kind. */
 function declarationKind(node: OxcNode): ExtractedSymbolKind | undefined {
   switch (node.type) {
     case 'FunctionDeclaration': {
@@ -386,6 +403,7 @@ function declarationKind(node: OxcNode): ExtractedSymbolKind | undefined {
   }
 }
 
+/** Formats a TypeScript declaration signature for a scanned symbol. */
 function declarationSignature(module: ParsedModule, declaration: ScannedDeclaration): string {
   const node = declaration.node;
   if (declaration.kind === 'function') {
@@ -420,6 +438,7 @@ function declarationSignature(module: ParsedModule, declaration: ScannedDeclarat
     : exportedSignature;
 }
 
+/** Unwraps pattern wrappers (assignment, rest) to obtain the parameter binding node. */
 function parameterBinding(parameter: OxcNode): OxcNode {
   let binding = parameter;
   while (binding.type === 'AssignmentPattern' || binding.type === 'RestElement') {
@@ -430,6 +449,7 @@ function parameterBinding(parameter: OxcNode): OxcNode {
   return binding;
 }
 
+/** Extracts the name and type annotation from a parameter node. */
 function parameterDetails(
   module: ParsedModule,
   parameter: OxcNode,
@@ -443,6 +463,7 @@ function parameterDetails(
   return { name, ...(typeAnnotation === undefined ? {} : { typeAnnotation }) };
 }
 
+/** Extracts parameter names, types, and JSDoc descriptions for a function declaration. */
 function parametersFor(module: ParsedModule, declaration: ScannedDeclaration): readonly ExtractedParameter[] {
   const parameters = oxcArray(declaration.node, 'params');
   return parameters.map((parameter) => {
@@ -459,12 +480,14 @@ function parametersFor(module: ParsedModule, declaration: ScannedDeclaration): r
   });
 }
 
+/** Formats a POSIX module path relative to the package root without file extension. */
 function sourceModule(packageRoot: string, fileName: string): string {
   return relative(packageRoot, fileName)
     .replaceAll(sep, '/')
     .replace(/\.[^.]+$/u, '');
 }
 
+/** Scans top-level declarations and export bindings in a parsed module. */
 function scanModule(module: ParsedModule, packageRoot: string): ScannedModule {
   const declarations = new Map<string, ScannedDeclaration>();
   const exports: ExportBinding[] = [];
@@ -533,6 +556,7 @@ function scanModule(module: ParsedModule, packageRoot: string): ScannedModule {
   return { parsed: module, declarations, exports };
 }
 
+/** Resolves possible file paths for a relative module import specifier. */
 function relativeModuleCandidates(fileName: string, specifier: string): string[] {
   const base = resolve(dirname(fileName), specifier.replace(/\.[mc]?js$/u, ''));
   return [
@@ -542,6 +566,7 @@ function relativeModuleCandidates(fileName: string, specifier: string): string[]
   ];
 }
 
+/** Resolves a relative import specifier to an existing local module file within the package. */
 async function resolveLocalModule(
   fileName: string,
   packageRoot: string,
@@ -555,6 +580,7 @@ async function resolveLocalModule(
   return undefined;
 }
 
+/** Recursively collects all exported declarations for a module, following re-exports and star exports. */
 async function exportedDeclarations(
   fileName: string,
   packageRoot: string,
@@ -638,7 +664,7 @@ interface FlintSymbolLike {
   readonly iterable?: boolean;
 }
 
-// skipcq: JS-D1001, JS-R1005
+/** Converts a Flint AST type representation into its printable signature string. */
 function flintTypeNameToString(type: unknown): string {
   if (typeof type === 'string') return type;
   if (!isRecord(type)) return 'unknown';
@@ -651,12 +677,12 @@ function flintTypeNameToString(type: unknown): string {
   return `${name}${argumentsList}${length}`;
 }
 
-// skipcq: JS-D1001
+/** Formats a Flint parameter list into a comma-separated parameter string. */
 function flintParameters(parameters: readonly { readonly name: string; readonly type: unknown }[]): string {
   return parameters.map((parameter) => `${parameter.name}: ${flintTypeNameToString(parameter.type)}`).join(', ');
 }
 
-// skipcq: JS-D1001
+/** Normalizes Flint documentation tags into standard name and text records. */
 function flintDocumentationTags(
   documentation: FlintDocumentation,
 ): readonly { readonly name: string; readonly text: string }[] {
@@ -666,7 +692,7 @@ function flintDocumentationTags(
   }));
 }
 
-// skipcq: JS-D1001, JS-R1005
+/** Formats a Flint declaration signature string. */
 function flintSignature(declaration: FlintSymbolLike): string {
   if (declaration.kind === 'function') {
     const exportPrefix = declaration.exported === false ? '' : 'export ';
@@ -679,6 +705,7 @@ function flintSignature(declaration: FlintSymbolLike): string {
   return `interface ${declaration.name}`;
 }
 
+/** Filters a Flint module's declarations to include only those with documentation. */
 function documentedFlintDeclarations(module: {
   readonly functions: readonly FlintSymbolLike[];
   readonly enums: readonly FlintSymbolLike[];
@@ -693,7 +720,7 @@ function documentedFlintDeclarations(module: {
   );
 }
 
-// skipcq: JS-D1001
+/** Attempts to dynamically load the compiled Flint parser from disk. */
 async function loadFlintParser(repoRoot: string): Promise<FlintParseFunction | undefined> {
   const candidates = [
     resolve(repoRoot, 'packages/flint/core/dist/parser.js'),
@@ -792,6 +819,7 @@ type FlintParseResult = {
 
 type FlintParseFunction = (source: string, fileName?: string, options?: { readonly root?: string }) => FlintParseResult;
 
+/** Escapes special pipe and newline characters for formatting inside Markdown table cells. */
 function markdownTableCell(value: string): string {
   return value.replaceAll('|', String.raw`\|`).replaceAll('\n', ' ');
 }
@@ -841,6 +869,7 @@ export function renderReferenceMarkdown(documentation: PackageDocumentation): st
   return `${lines.join('\n').trimEnd()}\n`;
 }
 
+/** Extracts all TypeScript and Flint documentation symbols for a package. */
 async function extractPackage(packageRoot: string, repoRoot: string): Promise<PackageDocumentation> {
   const manifest = await readManifest(packageRoot);
   if (manifest?.name === undefined)
@@ -854,6 +883,7 @@ async function extractPackage(packageRoot: string, repoRoot: string): Promise<Pa
   return { packageName: manifest.name, packageRoot, symbols };
 }
 
+/** Writes generated reference Markdown for a package and formats it with ESLint and Prettier. */
 async function writePackageDocumentation(
   documentation: PackageDocumentation,
   repoRoot: string,
@@ -881,6 +911,7 @@ export async function extractPackageDocs(
   return documentation;
 }
 
+/** CLI entry point for extracting package documentation across the workspace. */
 async function main(): Promise<void> {
   const repoRoot = resolve(import.meta.dirname, '..');
   const inlinePackageArgument = process.argv
