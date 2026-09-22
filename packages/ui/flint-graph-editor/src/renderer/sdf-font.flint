@@ -1,4 +1,3 @@
-
 export fn isqrt_u32(val: u32) -> u32 {
   if val == 0 { return 0; }
   let mut x: u32 = val;
@@ -245,108 +244,127 @@ export fn char_code_to_idx(code: i32) -> u32 {
   return unicode_to_idx(code);
 }
 
+// Exact Comfortaa proportional advance widths at 24px
 export fn sdf_get_char_advance_u32(code: i32) -> u32 {
   if code < 32 { return 6; }
   if code > 126 {
-    if code == 8722 || code == 215 || code == 247 || code == 177 { return 14; }
-    if code >= 8704 && code <= 8959 { return 16; }
-    if code >= 8592 && code <= 8703 { return 16; }
-    if code >= 913 && code <= 969 { return 14; }
-    if code >= 160 && code <= 255 { return 13; }
-    return 14;
+    if code == 945 { return 15; } // α
+    if code == 946 { return 13; } // β
+    if code == 947 { return 12; } // γ
+    if code == 948 { return 13; } // δ
+    if code == 955 { return 12; } // λ
+    if code == 956 { return 13; } // μ
+    if code == 960 { return 13; } // π
+    if code == 963 { return 13; } // σ
+    if code == 969 { return 17; } // ω
+    if code == 916 { return 17; } // Δ
+    if code == 937 { return 18; } // Ω
+    if code == 952 { return 13; } // θ
+    if code == 8594 || code == 8592 { return 24; }
+    if code == 8593 || code == 8595 { return 12; }
+    if code == 8721 { return 17; } // ∑
+    if code == 8719 { return 20; } // ∏
+    if code == 8747 { return 7; } // ∫
+    if code == 8730 { return 13; } // √
+    if code == 177 || code == 215 || code == 247 || code == 8722 { return 14; }
+    if code == 9889 || code == 9733 { return 24; }
+    if code >= 224 && code <= 235 { return 11; }
+    if code == 236 || code == 237 { return 7; }
+    if code >= 241 && code <= 250 { return 12; }
+    return 13;
   }
   if code == 32 { return 6; }
-  if code == 33 { return 7; }
-  if code == 34 { return 9; }
-  if code == 35 { return 14; }
-  if code == 36 { return 14; }
-  if code == 37 { return 22; }
-  if code == 38 { return 17; }
+  if code == 33 { return 8; }
+  if code == 34 { return 10; }
+  if code == 35 { return 12; }
+  if code == 36 { return 12; }
+  if code == 37 { return 20; }
+  if code == 38 { return 19; }
   if code == 39 { return 5; }
   if code == 40 { return 8; }
   if code == 41 { return 8; }
-  if code == 42 { return 10; }
+  if code == 42 { return 12; }
   if code == 43 { return 14; }
-  if code == 44 { return 7; }
+  if code == 44 { return 6; }
   if code == 45 { return 8; }
-  if code == 46 { return 7; }
-  if code == 47 { return 8; }
-  if code >= 48 && code <= 57 { return 14; }
+  if code == 46 { return 6; }
+  if code == 47 { return 7; }
+  if code >= 48 && code <= 57 { return 12; }
   if code == 58 { return 7; }
   if code == 59 { return 7; }
   if code == 60 { return 14; }
   if code == 61 { return 14; }
   if code == 62 { return 14; }
-  if code == 63 { return 13; }
-  if code == 64 { return 25; }
+  if code == 63 { return 11; }
+  if code == 64 { return 22; }
 
-  if code == 65 { return 16; }
-  if code == 66 { return 15; }
-  if code == 67 { return 16; }
-  if code == 68 { return 16; }
-  if code == 69 { return 14; }
-  if code == 70 { return 13; }
-  if code == 71 { return 17; }
-  if code == 72 { return 17; }
-  if code == 73 { return 7; }
-  if code == 74 { return 12; }
-  if code == 75 { return 15; }
-  if code == 76 { return 13; }
-  if code == 77 { return 20; }
-  if code == 78 { return 17; }
-  if code == 79 { return 17; }
-  if code == 80 { return 15; }
-  if code == 81 { return 17; }
-  if code == 82 { return 16; }
-  if code == 83 { return 14; }
-  if code == 84 { return 14; }
-  if code == 85 { return 17; }
-  if code == 86 { return 15; }
-  if code == 87 { return 22; }
-  if code == 88 { return 15; }
-  if code == 89 { return 15; }
-  if code == 90 { return 14; }
+  if code == 65 { return 17; } // A
+  if code == 66 { return 16; } // B
+  if code == 67 { return 16; } // C
+  if code == 68 { return 17; } // D
+  if code == 69 { return 15; } // E
+  if code == 70 { return 13; } // F
+  if code == 71 { return 17; } // G
+  if code == 72 { return 17; } // H
+  if code == 73 { return 8; }  // I
+  if code == 74 { return 9; }  // J
+  if code == 75 { return 17; } // K
+  if code == 76 { return 15; } // L
+  if code == 77 { return 21; } // M
+  if code == 78 { return 17; } // N
+  if code == 79 { return 17; } // O
+  if code == 80 { return 13; } // P
+  if code == 81 { return 17; } // Q
+  if code == 82 { return 16; } // R
+  if code == 83 { return 13; } // S
+  if code == 84 { return 15; } // T
+  if code == 85 { return 17; } // U
+  if code == 86 { return 17; } // V
+  if code == 87 { return 23; } // W
+  if code == 88 { return 17; } // X
+  if code == 89 { return 17; } // Y
+  if code == 90 { return 15; } // Z
 
   if code == 91 { return 8; }
-  if code == 92 { return 8; }
+  if code == 92 { return 7; }
   if code == 93 { return 8; }
   if code == 94 { return 11; }
-  if code == 95 { return 14; }
+  if code == 95 { return 12; }
   if code == 96 { return 8; }
 
-  if code == 97 { return 13; }
-  if code == 98 { return 14; }
-  if code == 99 { return 12; }
-  if code == 100 { return 14; }
-  if code == 101 { return 13; }
-  if code == 102 { return 8; }
-  if code == 103 { return 14; }
-  if code == 104 { return 14; }
-  if code == 105 { return 6; }
-  if code == 106 { return 6; }
-  if code == 107 { return 13; }
-  if code == 108 { return 6; }
-  if code == 109 { return 20; }
-  if code == 110 { return 14; }
-  if code == 111 { return 14; }
-  if code == 112 { return 14; }
-  if code == 113 { return 14; }
-  if code == 114 { return 9; }
-  if code == 115 { return 11; }
-  if code == 116 { return 8; }
-  if code == 117 { return 14; }
-  if code == 118 { return 12; }
-  if code == 119 { return 18; }
-  if code == 120 { return 12; }
-  if code == 121 { return 12; }
-  if code == 122 { return 11; }
+  if code == 97 { return 11; }  // a
+  if code == 98 { return 12; }  // b
+  if code == 99 { return 11; }  // c
+  if code == 100 { return 12; } // d
+  if code == 101 { return 11; } // e
+  if code == 102 { return 8; }  // f
+  if code == 103 { return 12; } // g
+  if code == 104 { return 12; } // h
+  if code == 105 { return 7; }  // i
+  if code == 106 { return 7; }  // j
+  if code == 107 { return 12; } // k
+  if code == 108 { return 7; }  // l
+  if code == 109 { return 19; } // m
+  if code == 110 { return 12; } // n
+  if code == 111 { return 12; } // o
+  if code == 112 { return 12; } // p
+  if code == 113 { return 12; } // q
+  if code == 114 { return 8; }  // r
+  if code == 115 { return 9; }  // s
+  if code == 116 { return 7; }  // t
+  if code == 117 { return 12; } // u
+  if code == 118 { return 12; } // v
+  if code == 119 { return 17; } // w
+  if code == 120 { return 12; } // x
+  if code == 121 { return 12; } // y
+  if code == 122 { return 11; } // z
 
-  if code == 123 { return 8; }
-  if code == 124 { return 6; }
-  if code == 125 { return 8; }
-  if code == 126 { return 14; }
+  if code == 123 { return 12; }
+  if code == 124 { return 5; }
+  if code == 125 { return 12; }
+  if code == 126 { return 13; }
 
-  return 14;
+  return 12;
 }
 
 export fn sdf_get_char_advance(code: i32) -> f64 {
@@ -373,1190 +391,1356 @@ export fn sdf_measure_text(text: string, font_size: f64) -> f64 {
 
 export fn write_seg(seg_ptr: u32, seg_idx: u32, x1: u32, y1: u32, x2: u32, y2: u32) -> unit {
   let offset: u32 = seg_ptr + seg_idx * 16;
-  memory_store_u32(offset, x1 * 8);
-  memory_store_u32(offset + 4, y1 * 8);
-  memory_store_u32(offset + 8, x2 * 8);
-  memory_store_u32(offset + 12, y2 * 8);
+  memory_store_u32(offset, x1);
+  memory_store_u32(offset + 4, y1);
+  memory_store_u32(offset + 8, x2);
+  memory_store_u32(offset + 12, y2);
 }
 
 export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
-  // idx 0 is space (' ' = 32)
   if idx == 0 { return 0; }
-  // '-' = 45 -> idx = 13
-  if idx == 13 {
-    write_seg(seg_ptr, 0, 7, 16, 23, 16);
-    return 1;
-  }
-  // '+' = 43 -> idx = 11
-  if idx == 11 {
-    write_seg(seg_ptr, 0, 7, 16, 23, 16);
-    write_seg(seg_ptr, 1, 15, 8, 15, 24);
-    return 2;
-  }
-  // '=' = 61 -> idx = 29
-  if idx == 29 {
-    write_seg(seg_ptr, 0, 7, 13, 23, 13);
-    write_seg(seg_ptr, 1, 7, 19, 23, 19);
-    return 2;
-  }
-  // '_' = 95 -> idx = 63
-  if idx == 63 {
-    write_seg(seg_ptr, 0, 6, 24, 24, 24);
-    return 1;
-  }
-  // '|' = 124 -> idx = 92
-  if idx == 92 {
-    write_seg(seg_ptr, 0, 16, 6, 16, 25);
-    return 1;
-  }
-  // '/' = 47 -> idx = 15
-  if idx == 15 {
-    write_seg(seg_ptr, 0, 9, 24, 22, 7);
-    return 1;
-  }
-  // '\' = 92 -> idx = 60
-  if idx == 60 {
-    write_seg(seg_ptr, 0, 9, 7, 22, 24);
-    return 1;
-  }
-  // '<' = 60 -> idx = 28
-  if idx == 28 {
-    write_seg(seg_ptr, 0, 22, 9, 9, 16);
-    write_seg(seg_ptr, 1, 9, 16, 22, 23);
-    return 2;
-  }
-  // '>' = 62 -> idx = 30
-  if idx == 30 {
-    write_seg(seg_ptr, 0, 9, 9, 22, 16);
-    write_seg(seg_ptr, 1, 22, 16, 9, 23);
-    return 2;
-  }
-  // '(' = 40 -> idx = 8
-  if idx == 8 {
-    write_seg(seg_ptr, 0, 19, 7, 13, 15);
-    write_seg(seg_ptr, 1, 13, 15, 19, 24);
-    return 2;
-  }
-  // ')' = 41 -> idx = 9
-  if idx == 9 {
-    write_seg(seg_ptr, 0, 13, 7, 19, 15);
-    write_seg(seg_ptr, 1, 19, 15, 13, 24);
-    return 2;
-  }
-  // '[' = 91 -> idx = 59
-  if idx == 59 {
-    write_seg(seg_ptr, 0, 20, 7, 13, 7);
-    write_seg(seg_ptr, 1, 13, 7, 13, 24);
-    write_seg(seg_ptr, 2, 13, 24, 20, 24);
-    return 3;
-  }
-  // ']' = 93 -> idx = 61
-  if idx == 61 {
-    write_seg(seg_ptr, 0, 13, 7, 20, 7);
-    write_seg(seg_ptr, 1, 20, 7, 20, 24);
-    write_seg(seg_ptr, 2, 20, 24, 13, 24);
-    return 3;
-  }
-  // '.' = 46 -> idx = 14
-  if idx == 14 {
-    write_seg(seg_ptr, 0, 15, 23, 16, 23);
-    return 1;
-  }
-  // ',' = 44 -> idx = 12
-  if idx == 12 {
-    write_seg(seg_ptr, 0, 16, 22, 14, 26);
-    return 1;
-  }
-  // ':' = 58 -> idx = 26
-  if idx == 26 {
-    write_seg(seg_ptr, 0, 15, 12, 16, 12);
-    write_seg(seg_ptr, 1, 15, 21, 16, 21);
-    return 2;
-  }
-  // ';' = 59 -> idx = 27
-  if idx == 27 {
-    write_seg(seg_ptr, 0, 15, 12, 16, 12);
-    write_seg(seg_ptr, 1, 16, 21, 14, 25);
-    return 2;
-  }
-  // '!' = 33 -> idx = 1
   if idx == 1 {
-    write_seg(seg_ptr, 0, 15, 7, 15, 18);
-    write_seg(seg_ptr, 1, 15, 23, 16, 23);
+    write_seg(seg_ptr, 0, 80, 64, 80, 144);
+    write_seg(seg_ptr, 1, 80, 172, 80, 180);
     return 2;
   }
-  // '"' = 34 -> idx = 2
   if idx == 2 {
-    write_seg(seg_ptr, 0, 12, 7, 12, 12);
-    write_seg(seg_ptr, 1, 18, 7, 18, 12);
+    write_seg(seg_ptr, 0, 72, 64, 72, 96);
+    write_seg(seg_ptr, 1, 104, 64, 104, 96);
     return 2;
   }
-  // '#' = 35 -> idx = 3
   if idx == 3 {
-    write_seg(seg_ptr, 0, 13, 7, 13, 23);
-    write_seg(seg_ptr, 1, 18, 7, 18, 23);
-    write_seg(seg_ptr, 2, 9, 12, 22, 12);
-    write_seg(seg_ptr, 3, 9, 18, 22, 18);
+    write_seg(seg_ptr, 0, 80, 72, 80, 184);
+    write_seg(seg_ptr, 1, 112, 72, 112, 184);
+    write_seg(seg_ptr, 2, 64, 104, 128, 104);
+    write_seg(seg_ptr, 3, 64, 152, 128, 152);
     return 4;
   }
-  // '$' = 36 -> idx = 4
   if idx == 4 {
-    write_seg(seg_ptr, 0, 15, 6, 15, 24);
-    write_seg(seg_ptr, 1, 20, 10, 12, 10);
-    write_seg(seg_ptr, 2, 11, 11, 11, 14);
-    write_seg(seg_ptr, 3, 11, 14, 19, 16);
-    write_seg(seg_ptr, 4, 19, 16, 19, 20);
-    write_seg(seg_ptr, 5, 19, 20, 11, 20);
-    return 6;
-  }
-  // '%' = 37 -> idx = 5
-  if idx == 5 {
-    write_seg(seg_ptr, 0, 22, 7, 9, 23);
-    write_seg(seg_ptr, 1, 11, 8, 14, 8);
-    write_seg(seg_ptr, 2, 14, 8, 14, 12);
-    write_seg(seg_ptr, 3, 14, 12, 11, 12);
-    write_seg(seg_ptr, 4, 11, 12, 11, 8);
-    write_seg(seg_ptr, 5, 17, 18, 20, 18);
-    write_seg(seg_ptr, 6, 20, 18, 20, 22);
-    write_seg(seg_ptr, 7, 20, 22, 17, 22);
-    write_seg(seg_ptr, 8, 17, 22, 17, 18);
+    write_seg(seg_ptr, 0, 96, 56, 96, 184);
+    write_seg(seg_ptr, 1, 81, 117, 70, 94);
+    write_seg(seg_ptr, 2, 70, 94, 84, 73);
+    write_seg(seg_ptr, 3, 84, 73, 109, 74);
+    write_seg(seg_ptr, 4, 109, 74, 122, 96);
+    write_seg(seg_ptr, 5, 124, 144, 111, 168);
+    write_seg(seg_ptr, 6, 111, 168, 83, 169);
+    write_seg(seg_ptr, 7, 83, 169, 68, 146);
+    write_seg(seg_ptr, 8, 68, 146, 80, 121);
     return 9;
   }
-  // '&' = 38 -> idx = 6
-  if idx == 6 {
-    write_seg(seg_ptr, 0, 19, 21, 13, 23);
-    write_seg(seg_ptr, 1, 13, 23, 10, 19);
-    write_seg(seg_ptr, 2, 10, 19, 17, 13);
-    write_seg(seg_ptr, 3, 17, 13, 15, 8);
-    write_seg(seg_ptr, 4, 15, 8, 12, 11);
-    write_seg(seg_ptr, 5, 12, 11, 21, 23);
-    return 6;
+  if idx == 5 {
+    write_seg(seg_ptr, 0, 136, 56, 56, 184);
+    write_seg(seg_ptr, 1, 96, 88, 86, 105);
+    write_seg(seg_ptr, 2, 86, 105, 66, 105);
+    write_seg(seg_ptr, 3, 66, 105, 56, 88);
+    write_seg(seg_ptr, 4, 56, 88, 66, 71);
+    write_seg(seg_ptr, 5, 66, 71, 86, 71);
+    write_seg(seg_ptr, 6, 86, 71, 96, 88);
+    write_seg(seg_ptr, 7, 136, 152, 126, 169);
+    write_seg(seg_ptr, 8, 126, 169, 106, 169);
+    write_seg(seg_ptr, 9, 106, 169, 96, 152);
+    write_seg(seg_ptr, 10, 96, 152, 106, 135);
+    write_seg(seg_ptr, 11, 106, 135, 126, 135);
+    write_seg(seg_ptr, 12, 126, 135, 136, 152);
+    return 13;
   }
-  // '\'' = 39 -> idx = 7
+  if idx == 6 {
+    write_seg(seg_ptr, 0, 101, 111, 84, 90);
+    write_seg(seg_ptr, 1, 84, 90, 97, 67);
+    write_seg(seg_ptr, 2, 97, 67, 124, 70);
+    write_seg(seg_ptr, 3, 124, 70, 131, 95);
+    write_seg(seg_ptr, 4, 142, 163, 118, 176);
+    write_seg(seg_ptr, 5, 118, 176, 93, 166);
+    write_seg(seg_ptr, 6, 93, 166, 84, 140);
+    write_seg(seg_ptr, 7, 84, 140, 99, 117);
+    write_seg(seg_ptr, 8, 99, 117, 126, 114);
+    write_seg(seg_ptr, 9, 88, 120, 152, 184);
+    return 10;
+  }
   if idx == 7 {
-    write_seg(seg_ptr, 0, 15, 7, 15, 12);
+    write_seg(seg_ptr, 0, 68, 64, 68, 96);
     return 1;
   }
-  // '*' = 42 -> idx = 10
-  if idx == 10 {
-    write_seg(seg_ptr, 0, 11, 15, 20, 15);
-    write_seg(seg_ptr, 1, 13, 10, 18, 20);
-    write_seg(seg_ptr, 2, 18, 10, 13, 20);
-    return 3;
-  }
-  // '?' = 63 -> idx = 31
-  if idx == 31 {
-    write_seg(seg_ptr, 0, 10, 10, 16, 7);
-    write_seg(seg_ptr, 1, 16, 7, 21, 11);
-    write_seg(seg_ptr, 2, 21, 11, 16, 16);
-    write_seg(seg_ptr, 3, 16, 16, 16, 19);
-    write_seg(seg_ptr, 4, 16, 23, 16, 23);
+  if idx == 8 {
+    write_seg(seg_ptr, 0, 76, 159, 63, 146);
+    write_seg(seg_ptr, 1, 63, 146, 57, 129);
+    write_seg(seg_ptr, 2, 57, 129, 57, 111);
+    write_seg(seg_ptr, 3, 57, 111, 63, 94);
+    write_seg(seg_ptr, 4, 63, 94, 76, 81);
     return 5;
   }
-  // '@' = 64 -> idx = 32
-  if idx == 32 {
-    write_seg(seg_ptr, 0, 20, 12, 13, 8);
-    write_seg(seg_ptr, 1, 13, 8, 9, 15);
-    write_seg(seg_ptr, 2, 9, 15, 13, 23);
-    write_seg(seg_ptr, 3, 13, 23, 21, 23);
-    write_seg(seg_ptr, 4, 21, 23, 22, 15);
-    write_seg(seg_ptr, 5, 22, 15, 18, 15);
-    write_seg(seg_ptr, 6, 18, 15, 18, 20);
-    write_seg(seg_ptr, 7, 18, 17, 14, 17);
+  if idx == 9 {
+    write_seg(seg_ptr, 0, 84, 81, 97, 94);
+    write_seg(seg_ptr, 1, 97, 94, 103, 111);
+    write_seg(seg_ptr, 2, 103, 111, 103, 129);
+    write_seg(seg_ptr, 3, 103, 129, 97, 146);
+    write_seg(seg_ptr, 4, 97, 146, 84, 159);
+    return 5;
+  }
+  if idx == 10 {
+    write_seg(seg_ptr, 0, 64, 128, 128, 128);
+    write_seg(seg_ptr, 1, 96, 96, 96, 160);
+    write_seg(seg_ptr, 2, 76, 108, 116, 148);
+    write_seg(seg_ptr, 3, 76, 148, 116, 108);
+    return 4;
+  }
+  if idx == 11 {
+    write_seg(seg_ptr, 0, 64, 128, 144, 128);
+    write_seg(seg_ptr, 1, 104, 88, 104, 168);
+    return 2;
+  }
+  if idx == 12 {
+    write_seg(seg_ptr, 0, 72, 164, 72, 176);
+    write_seg(seg_ptr, 1, 72, 176, 60, 192);
+    return 2;
+  }
+  if idx == 13 {
+    write_seg(seg_ptr, 0, 64, 132, 112, 132);
+    return 1;
+  }
+  if idx == 14 {
+    write_seg(seg_ptr, 0, 72, 172, 72, 180);
+    return 1;
+  }
+  if idx == 15 {
+    write_seg(seg_ptr, 0, 56, 184, 104, 56);
+    return 1;
+  }
+  if idx == 16 {
+    write_seg(seg_ptr, 0, 140, 128, 127, 159);
+    write_seg(seg_ptr, 1, 127, 159, 96, 172);
+    write_seg(seg_ptr, 2, 96, 172, 65, 159);
+    write_seg(seg_ptr, 3, 65, 159, 52, 128);
+    write_seg(seg_ptr, 4, 52, 128, 65, 97);
+    write_seg(seg_ptr, 5, 65, 97, 96, 84);
+    write_seg(seg_ptr, 6, 96, 84, 127, 97);
+    write_seg(seg_ptr, 7, 127, 97, 140, 128);
     return 8;
   }
-
-  // Digits 0..9 (48..57 -> idx 16..25)
-  if idx == 16 {
-    write_seg(seg_ptr, 0, 10, 7, 21, 7);
-    write_seg(seg_ptr, 1, 21, 7, 21, 23);
-    write_seg(seg_ptr, 2, 21, 23, 10, 23);
-    write_seg(seg_ptr, 3, 10, 23, 10, 7);
-    write_seg(seg_ptr, 4, 20, 8, 11, 22);
-    return 5;
-  }
   if idx == 17 {
-    write_seg(seg_ptr, 0, 12, 10, 16, 7);
-    write_seg(seg_ptr, 1, 16, 7, 16, 23);
-    write_seg(seg_ptr, 2, 11, 23, 21, 23);
-    return 3;
+    write_seg(seg_ptr, 0, 76, 92, 96, 72);
+    write_seg(seg_ptr, 1, 96, 72, 96, 184);
+    return 2;
   }
   if idx == 18 {
-    write_seg(seg_ptr, 0, 9, 10, 15, 7);
-    write_seg(seg_ptr, 1, 15, 7, 21, 10);
-    write_seg(seg_ptr, 2, 21, 10, 9, 23);
-    write_seg(seg_ptr, 3, 9, 23, 21, 23);
-    return 4;
+    write_seg(seg_ptr, 0, 68, 100, 76, 120);
+    write_seg(seg_ptr, 1, 76, 120, 96, 128);
+    write_seg(seg_ptr, 2, 96, 128, 116, 120);
+    write_seg(seg_ptr, 3, 116, 120, 124, 100);
+    write_seg(seg_ptr, 4, 124, 100, 68, 184);
+    write_seg(seg_ptr, 5, 68, 184, 124, 184);
+    return 6;
   }
   if idx == 19 {
-    write_seg(seg_ptr, 0, 9, 7, 21, 7);
-    write_seg(seg_ptr, 1, 21, 7, 15, 14);
-    write_seg(seg_ptr, 2, 15, 14, 21, 17);
-    write_seg(seg_ptr, 3, 21, 17, 9, 23);
-    return 4;
+    write_seg(seg_ptr, 0, 73, 84, 94, 72);
+    write_seg(seg_ptr, 1, 94, 72, 116, 80);
+    write_seg(seg_ptr, 2, 116, 80, 124, 102);
+    write_seg(seg_ptr, 3, 124, 102, 112, 123);
+    write_seg(seg_ptr, 4, 115, 126, 127, 146);
+    write_seg(seg_ptr, 5, 127, 146, 123, 169);
+    write_seg(seg_ptr, 6, 123, 169, 104, 183);
+    write_seg(seg_ptr, 7, 104, 183, 81, 180);
+    write_seg(seg_ptr, 8, 81, 180, 66, 162);
+    return 9;
   }
   if idx == 20 {
-    write_seg(seg_ptr, 0, 18, 7, 18, 23);
-    write_seg(seg_ptr, 1, 18, 7, 8, 17);
-    write_seg(seg_ptr, 2, 8, 17, 22, 17);
+    write_seg(seg_ptr, 0, 112, 64, 68, 140);
+    write_seg(seg_ptr, 1, 68, 140, 128, 140);
+    write_seg(seg_ptr, 2, 112, 64, 112, 184);
     return 3;
   }
   if idx == 21 {
-    write_seg(seg_ptr, 0, 21, 7, 9, 7);
-    write_seg(seg_ptr, 1, 9, 7, 9, 14);
-    write_seg(seg_ptr, 2, 9, 14, 21, 15);
-    write_seg(seg_ptr, 3, 21, 15, 21, 22);
-    write_seg(seg_ptr, 4, 21, 22, 9, 23);
-    return 5;
+    write_seg(seg_ptr, 0, 120, 72, 72, 72);
+    write_seg(seg_ptr, 1, 72, 72, 72, 116);
+    write_seg(seg_ptr, 2, 76, 121, 101, 115);
+    write_seg(seg_ptr, 3, 101, 115, 123, 128);
+    write_seg(seg_ptr, 4, 123, 128, 129, 153);
+    write_seg(seg_ptr, 5, 129, 153, 116, 175);
+    write_seg(seg_ptr, 6, 116, 175, 91, 181);
+    write_seg(seg_ptr, 7, 91, 181, 69, 168);
+    return 8;
   }
   if idx == 22 {
-    write_seg(seg_ptr, 0, 20, 8, 10, 14);
-    write_seg(seg_ptr, 1, 10, 14, 10, 22);
-    write_seg(seg_ptr, 2, 10, 22, 21, 22);
-    write_seg(seg_ptr, 3, 21, 22, 21, 15);
-    write_seg(seg_ptr, 4, 21, 15, 10, 15);
-    return 5;
+    write_seg(seg_ptr, 0, 128, 148, 119, 171);
+    write_seg(seg_ptr, 1, 119, 171, 96, 180);
+    write_seg(seg_ptr, 2, 96, 180, 73, 171);
+    write_seg(seg_ptr, 3, 73, 171, 64, 148);
+    write_seg(seg_ptr, 4, 64, 148, 73, 125);
+    write_seg(seg_ptr, 5, 73, 125, 96, 116);
+    write_seg(seg_ptr, 6, 96, 116, 119, 125);
+    write_seg(seg_ptr, 7, 119, 125, 128, 148);
+    write_seg(seg_ptr, 8, 84, 155, 68, 136);
+    write_seg(seg_ptr, 9, 68, 136, 64, 111);
+    write_seg(seg_ptr, 10, 64, 111, 73, 88);
+    return 11;
   }
   if idx == 23 {
-    write_seg(seg_ptr, 0, 8, 7, 22, 7);
-    write_seg(seg_ptr, 1, 22, 7, 12, 23);
+    write_seg(seg_ptr, 0, 68, 72, 124, 72);
+    write_seg(seg_ptr, 1, 124, 72, 84, 184);
     return 2;
   }
   if idx == 24 {
-    write_seg(seg_ptr, 0, 10, 7, 20, 7);
-    write_seg(seg_ptr, 1, 20, 7, 20, 23);
-    write_seg(seg_ptr, 2, 20, 23, 10, 23);
-    write_seg(seg_ptr, 3, 10, 23, 10, 7);
-    write_seg(seg_ptr, 4, 10, 15, 20, 15);
-    return 5;
+    write_seg(seg_ptr, 0, 124, 100, 116, 120);
+    write_seg(seg_ptr, 1, 116, 120, 96, 128);
+    write_seg(seg_ptr, 2, 96, 128, 76, 120);
+    write_seg(seg_ptr, 3, 76, 120, 68, 100);
+    write_seg(seg_ptr, 4, 68, 100, 76, 80);
+    write_seg(seg_ptr, 5, 76, 80, 96, 72);
+    write_seg(seg_ptr, 6, 96, 72, 116, 80);
+    write_seg(seg_ptr, 7, 116, 80, 124, 100);
+    write_seg(seg_ptr, 8, 130, 148, 120, 172);
+    write_seg(seg_ptr, 9, 120, 172, 96, 182);
+    write_seg(seg_ptr, 10, 96, 182, 72, 172);
+    write_seg(seg_ptr, 11, 72, 172, 62, 148);
+    write_seg(seg_ptr, 12, 62, 148, 72, 124);
+    write_seg(seg_ptr, 13, 72, 124, 96, 114);
+    write_seg(seg_ptr, 14, 96, 114, 120, 124);
+    write_seg(seg_ptr, 15, 120, 124, 130, 148);
+    return 16;
   }
   if idx == 25 {
-    write_seg(seg_ptr, 0, 10, 15, 21, 15);
-    write_seg(seg_ptr, 1, 10, 8, 21, 8);
-    write_seg(seg_ptr, 2, 10, 8, 10, 15);
-    write_seg(seg_ptr, 3, 21, 8, 21, 22);
-    write_seg(seg_ptr, 4, 21, 22, 10, 22);
-    return 5;
+    write_seg(seg_ptr, 0, 128, 108, 119, 131);
+    write_seg(seg_ptr, 1, 119, 131, 96, 140);
+    write_seg(seg_ptr, 2, 96, 140, 73, 131);
+    write_seg(seg_ptr, 3, 73, 131, 64, 108);
+    write_seg(seg_ptr, 4, 64, 108, 73, 85);
+    write_seg(seg_ptr, 5, 73, 85, 96, 76);
+    write_seg(seg_ptr, 6, 96, 76, 119, 85);
+    write_seg(seg_ptr, 7, 119, 85, 128, 108);
+    write_seg(seg_ptr, 8, 108, 101, 124, 120);
+    write_seg(seg_ptr, 9, 124, 120, 128, 145);
+    write_seg(seg_ptr, 10, 128, 145, 119, 168);
+    return 11;
   }
-
-  // Uppercase A..Z (65..90 -> idx 33..58)
-  if idx == 33 {
-    write_seg(seg_ptr, 0, 8, 23, 15, 7);
-    write_seg(seg_ptr, 1, 15, 7, 22, 23);
-    write_seg(seg_ptr, 2, 10, 17, 20, 17);
+  if idx == 26 {
+    write_seg(seg_ptr, 0, 76, 112, 76, 120);
+    write_seg(seg_ptr, 1, 76, 172, 76, 180);
+    return 2;
+  }
+  if idx == 27 {
+    write_seg(seg_ptr, 0, 76, 112, 76, 120);
+    write_seg(seg_ptr, 1, 76, 168, 76, 176);
+    write_seg(seg_ptr, 2, 76, 176, 64, 192);
     return 3;
   }
-  if idx == 34 {
-    write_seg(seg_ptr, 0, 9, 7, 9, 23);
-    write_seg(seg_ptr, 1, 9, 7, 18, 7);
-    write_seg(seg_ptr, 2, 18, 7, 18, 14);
-    write_seg(seg_ptr, 3, 18, 14, 9, 14);
-    write_seg(seg_ptr, 4, 9, 14, 19, 15);
-    write_seg(seg_ptr, 5, 19, 15, 19, 23);
-    write_seg(seg_ptr, 6, 19, 23, 9, 23);
-    return 7;
+  if idx == 28 {
+    write_seg(seg_ptr, 0, 120, 88, 68, 128);
+    write_seg(seg_ptr, 1, 68, 128, 120, 168);
+    return 2;
   }
-  if idx == 35 {
-    write_seg(seg_ptr, 0, 21, 9, 13, 7);
-    write_seg(seg_ptr, 1, 13, 7, 9, 14);
-    write_seg(seg_ptr, 2, 9, 14, 13, 23);
-    write_seg(seg_ptr, 3, 13, 23, 21, 21);
+  if idx == 29 {
+    write_seg(seg_ptr, 0, 64, 112, 128, 112);
+    write_seg(seg_ptr, 1, 64, 144, 128, 144);
+    return 2;
+  }
+  if idx == 30 {
+    write_seg(seg_ptr, 0, 68, 88, 120, 128);
+    write_seg(seg_ptr, 1, 120, 128, 68, 168);
+    return 2;
+  }
+  if idx == 31 {
+    write_seg(seg_ptr, 0, 64, 88, 72, 108);
+    write_seg(seg_ptr, 1, 72, 108, 92, 116);
+    write_seg(seg_ptr, 2, 92, 116, 112, 108);
+    write_seg(seg_ptr, 3, 112, 108, 120, 88);
+    write_seg(seg_ptr, 4, 120, 88, 92, 136);
+    write_seg(seg_ptr, 5, 92, 172, 92, 180);
+    return 6;
+  }
+  if idx == 32 {
+    write_seg(seg_ptr, 0, 144, 128, 135, 151);
+    write_seg(seg_ptr, 1, 135, 151, 112, 160);
+    write_seg(seg_ptr, 2, 112, 160, 89, 151);
+    write_seg(seg_ptr, 3, 89, 151, 80, 128);
+    write_seg(seg_ptr, 4, 80, 128, 89, 105);
+    write_seg(seg_ptr, 5, 89, 105, 112, 96);
+    write_seg(seg_ptr, 6, 112, 96, 135, 105);
+    write_seg(seg_ptr, 7, 135, 105, 144, 128);
+    write_seg(seg_ptr, 8, 63, 93, 101, 69);
+    write_seg(seg_ptr, 9, 101, 69, 145, 78);
+    write_seg(seg_ptr, 10, 145, 78, 170, 115);
+    write_seg(seg_ptr, 11, 170, 115, 164, 159);
+    write_seg(seg_ptr, 12, 164, 159, 128, 186);
+    write_seg(seg_ptr, 13, 128, 186, 84, 181);
+    write_seg(seg_ptr, 14, 84, 181, 55, 147);
+    write_seg(seg_ptr, 15, 144, 128, 144, 160);
+    return 16;
+  }
+  if idx == 33 {
+    write_seg(seg_ptr, 0, 64, 184, 104, 64);
+    write_seg(seg_ptr, 1, 104, 64, 120, 64);
+    write_seg(seg_ptr, 2, 120, 64, 160, 184);
+    write_seg(seg_ptr, 3, 80, 136, 144, 136);
     return 4;
   }
+  if idx == 34 {
+    write_seg(seg_ptr, 0, 68, 56, 68, 184);
+    write_seg(seg_ptr, 1, 68, 58, 89, 67);
+    write_seg(seg_ptr, 2, 89, 67, 98, 88);
+    write_seg(seg_ptr, 3, 98, 88, 89, 109);
+    write_seg(seg_ptr, 4, 89, 109, 68, 118);
+    write_seg(seg_ptr, 5, 68, 118, 88, 125);
+    write_seg(seg_ptr, 6, 88, 125, 100, 142);
+    write_seg(seg_ptr, 7, 100, 142, 100, 162);
+    write_seg(seg_ptr, 8, 100, 162, 88, 179);
+    write_seg(seg_ptr, 9, 88, 179, 68, 186);
+    return 10;
+  }
+  if idx == 35 {
+    write_seg(seg_ptr, 0, 154, 162, 119, 180);
+    write_seg(seg_ptr, 1, 119, 180, 80, 171);
+    write_seg(seg_ptr, 2, 80, 171, 55, 140);
+    write_seg(seg_ptr, 3, 55, 140, 55, 100);
+    write_seg(seg_ptr, 4, 55, 100, 80, 69);
+    write_seg(seg_ptr, 5, 80, 69, 119, 60);
+    write_seg(seg_ptr, 6, 119, 60, 154, 78);
+    return 7;
+  }
   if idx == 36 {
-    write_seg(seg_ptr, 0, 9, 7, 9, 23);
-    write_seg(seg_ptr, 1, 9, 7, 17, 7);
-    write_seg(seg_ptr, 2, 17, 7, 21, 14);
-    write_seg(seg_ptr, 3, 21, 14, 17, 23);
-    write_seg(seg_ptr, 4, 17, 23, 9, 23);
-    return 5;
+    write_seg(seg_ptr, 0, 68, 56, 68, 184);
+    write_seg(seg_ptr, 1, 68, 58, 99, 66);
+    write_seg(seg_ptr, 2, 99, 66, 122, 89);
+    write_seg(seg_ptr, 3, 122, 89, 130, 120);
+    write_seg(seg_ptr, 4, 130, 120, 122, 151);
+    write_seg(seg_ptr, 5, 122, 151, 99, 174);
+    write_seg(seg_ptr, 6, 99, 174, 68, 182);
+    return 7;
   }
   if idx == 37 {
-    write_seg(seg_ptr, 0, 9, 7, 9, 23);
-    write_seg(seg_ptr, 1, 9, 7, 21, 7);
-    write_seg(seg_ptr, 2, 9, 15, 18, 15);
-    write_seg(seg_ptr, 3, 9, 23, 21, 23);
+    write_seg(seg_ptr, 0, 68, 56, 68, 184);
+    write_seg(seg_ptr, 1, 68, 56, 132, 56);
+    write_seg(seg_ptr, 2, 68, 120, 120, 120);
+    write_seg(seg_ptr, 3, 68, 184, 132, 184);
     return 4;
   }
   if idx == 38 {
-    write_seg(seg_ptr, 0, 9, 7, 9, 23);
-    write_seg(seg_ptr, 1, 9, 7, 21, 7);
-    write_seg(seg_ptr, 2, 9, 15, 18, 15);
+    write_seg(seg_ptr, 0, 68, 56, 68, 184);
+    write_seg(seg_ptr, 1, 68, 56, 132, 56);
+    write_seg(seg_ptr, 2, 68, 120, 116, 120);
     return 3;
   }
   if idx == 39 {
-    write_seg(seg_ptr, 0, 21, 9, 13, 7);
-    write_seg(seg_ptr, 1, 13, 7, 9, 14);
-    write_seg(seg_ptr, 2, 9, 14, 13, 23);
-    write_seg(seg_ptr, 3, 13, 23, 21, 23);
-    write_seg(seg_ptr, 4, 21, 23, 21, 15);
-    write_seg(seg_ptr, 5, 21, 15, 16, 15);
-    return 6;
+    write_seg(seg_ptr, 0, 154, 154, 128, 180);
+    write_seg(seg_ptr, 1, 128, 180, 84, 176);
+    write_seg(seg_ptr, 2, 84, 176, 56, 144);
+    write_seg(seg_ptr, 3, 56, 144, 56, 96);
+    write_seg(seg_ptr, 4, 56, 96, 84, 64);
+    write_seg(seg_ptr, 5, 84, 64, 128, 60);
+    write_seg(seg_ptr, 6, 128, 60, 154, 86);
+    write_seg(seg_ptr, 7, 154, 154, 154, 120);
+    write_seg(seg_ptr, 8, 154, 120, 116, 120);
+    return 9;
   }
   if idx == 40 {
-    write_seg(seg_ptr, 0, 9, 7, 9, 23);
-    write_seg(seg_ptr, 1, 21, 7, 21, 23);
-    write_seg(seg_ptr, 2, 9, 15, 21, 15);
+    write_seg(seg_ptr, 0, 68, 56, 68, 184);
+    write_seg(seg_ptr, 1, 148, 56, 148, 184);
+    write_seg(seg_ptr, 2, 68, 120, 148, 120);
     return 3;
   }
   if idx == 41 {
-    write_seg(seg_ptr, 0, 15, 7, 15, 23);
-    write_seg(seg_ptr, 1, 11, 7, 19, 7);
-    write_seg(seg_ptr, 2, 11, 23, 19, 23);
-    return 3;
+    write_seg(seg_ptr, 0, 80, 56, 80, 184);
+    return 1;
   }
   if idx == 42 {
-    write_seg(seg_ptr, 0, 19, 7, 19, 20);
-    write_seg(seg_ptr, 1, 19, 20, 14, 23);
-    write_seg(seg_ptr, 2, 14, 23, 9, 19);
-    return 3;
+    write_seg(seg_ptr, 0, 100, 56, 100, 152);
+    write_seg(seg_ptr, 1, 100, 152, 93, 169);
+    write_seg(seg_ptr, 2, 93, 169, 76, 176);
+    write_seg(seg_ptr, 3, 76, 176, 59, 169);
+    write_seg(seg_ptr, 4, 59, 169, 52, 152);
+    return 5;
   }
   if idx == 43 {
-    write_seg(seg_ptr, 0, 9, 7, 9, 23);
-    write_seg(seg_ptr, 1, 21, 7, 9, 16);
-    write_seg(seg_ptr, 2, 11, 14, 21, 23);
+    write_seg(seg_ptr, 0, 68, 56, 68, 184);
+    write_seg(seg_ptr, 1, 140, 56, 68, 128);
+    write_seg(seg_ptr, 2, 88, 112, 140, 184);
     return 3;
   }
   if idx == 44 {
-    write_seg(seg_ptr, 0, 9, 7, 9, 23);
-    write_seg(seg_ptr, 1, 9, 23, 21, 23);
+    write_seg(seg_ptr, 0, 68, 56, 68, 184);
+    write_seg(seg_ptr, 1, 68, 184, 132, 184);
     return 2;
   }
   if idx == 45 {
-    write_seg(seg_ptr, 0, 8, 23, 8, 7);
-    write_seg(seg_ptr, 1, 8, 7, 15, 17);
-    write_seg(seg_ptr, 2, 15, 17, 22, 7);
-    write_seg(seg_ptr, 3, 22, 7, 22, 23);
+    write_seg(seg_ptr, 0, 64, 184, 64, 56);
+    write_seg(seg_ptr, 1, 64, 56, 120, 136);
+    write_seg(seg_ptr, 2, 120, 136, 176, 56);
+    write_seg(seg_ptr, 3, 176, 56, 176, 184);
     return 4;
   }
   if idx == 46 {
-    write_seg(seg_ptr, 0, 9, 23, 9, 7);
-    write_seg(seg_ptr, 1, 9, 7, 21, 23);
-    write_seg(seg_ptr, 2, 21, 23, 21, 7);
+    write_seg(seg_ptr, 0, 68, 184, 68, 56);
+    write_seg(seg_ptr, 1, 68, 56, 148, 184);
+    write_seg(seg_ptr, 2, 148, 184, 148, 56);
     return 3;
   }
   if idx == 47 {
-    write_seg(seg_ptr, 0, 11, 7, 19, 7);
-    write_seg(seg_ptr, 1, 19, 7, 22, 14);
-    write_seg(seg_ptr, 2, 22, 14, 19, 23);
-    write_seg(seg_ptr, 3, 19, 23, 11, 23);
-    write_seg(seg_ptr, 4, 11, 23, 8, 14);
-    write_seg(seg_ptr, 5, 8, 14, 11, 7);
-    return 6;
+    write_seg(seg_ptr, 0, 176, 120, 158, 162);
+    write_seg(seg_ptr, 1, 158, 162, 116, 180);
+    write_seg(seg_ptr, 2, 116, 180, 74, 162);
+    write_seg(seg_ptr, 3, 74, 162, 56, 120);
+    write_seg(seg_ptr, 4, 56, 120, 74, 78);
+    write_seg(seg_ptr, 5, 74, 78, 116, 60);
+    write_seg(seg_ptr, 6, 116, 60, 158, 78);
+    write_seg(seg_ptr, 7, 158, 78, 176, 120);
+    return 8;
   }
   if idx == 48 {
-    write_seg(seg_ptr, 0, 9, 7, 9, 23);
-    write_seg(seg_ptr, 1, 9, 7, 19, 7);
-    write_seg(seg_ptr, 2, 19, 7, 19, 15);
-    write_seg(seg_ptr, 3, 19, 15, 9, 15);
-    return 4;
-  }
-  if idx == 49 {
-    write_seg(seg_ptr, 0, 11, 7, 19, 7);
-    write_seg(seg_ptr, 1, 19, 7, 22, 14);
-    write_seg(seg_ptr, 2, 22, 14, 19, 23);
-    write_seg(seg_ptr, 3, 19, 23, 11, 23);
-    write_seg(seg_ptr, 4, 11, 23, 8, 14);
-    write_seg(seg_ptr, 5, 8, 14, 11, 7);
-    write_seg(seg_ptr, 6, 16, 19, 22, 25);
+    write_seg(seg_ptr, 0, 68, 56, 68, 180);
+    write_seg(seg_ptr, 1, 68, 56, 96, 56);
+    write_seg(seg_ptr, 2, 96, 56, 120, 68);
+    write_seg(seg_ptr, 3, 120, 68, 124, 88);
+    write_seg(seg_ptr, 4, 124, 88, 120, 108);
+    write_seg(seg_ptr, 5, 120, 108, 96, 120);
+    write_seg(seg_ptr, 6, 96, 120, 68, 120);
     return 7;
   }
+  if idx == 49 {
+    write_seg(seg_ptr, 0, 176, 120, 158, 162);
+    write_seg(seg_ptr, 1, 158, 162, 116, 180);
+    write_seg(seg_ptr, 2, 116, 180, 74, 162);
+    write_seg(seg_ptr, 3, 74, 162, 56, 120);
+    write_seg(seg_ptr, 4, 56, 120, 74, 78);
+    write_seg(seg_ptr, 5, 74, 78, 116, 60);
+    write_seg(seg_ptr, 6, 116, 60, 158, 78);
+    write_seg(seg_ptr, 7, 158, 78, 176, 120);
+    write_seg(seg_ptr, 8, 120, 148, 156, 192);
+    return 9;
+  }
   if idx == 50 {
-    write_seg(seg_ptr, 0, 9, 7, 9, 23);
-    write_seg(seg_ptr, 1, 9, 7, 19, 7);
-    write_seg(seg_ptr, 2, 19, 7, 19, 15);
-    write_seg(seg_ptr, 3, 19, 15, 9, 15);
-    write_seg(seg_ptr, 4, 14, 15, 21, 23);
-    return 5;
+    write_seg(seg_ptr, 0, 68, 56, 68, 184);
+    write_seg(seg_ptr, 1, 68, 56, 96, 56);
+    write_seg(seg_ptr, 2, 96, 56, 120, 68);
+    write_seg(seg_ptr, 3, 120, 68, 124, 88);
+    write_seg(seg_ptr, 4, 124, 88, 120, 108);
+    write_seg(seg_ptr, 5, 120, 108, 96, 120);
+    write_seg(seg_ptr, 6, 96, 120, 68, 120);
+    write_seg(seg_ptr, 7, 96, 120, 136, 184);
+    return 8;
   }
   if idx == 51 {
-    write_seg(seg_ptr, 0, 20, 8, 12, 8);
-    write_seg(seg_ptr, 1, 10, 9, 10, 14);
-    write_seg(seg_ptr, 2, 10, 14, 20, 16);
-    write_seg(seg_ptr, 3, 20, 16, 20, 22);
-    write_seg(seg_ptr, 4, 20, 23, 11, 23);
-    return 5;
+    write_seg(seg_ptr, 0, 86, 113, 74, 92);
+    write_seg(seg_ptr, 1, 74, 92, 81, 69);
+    write_seg(seg_ptr, 2, 81, 69, 102, 58);
+    write_seg(seg_ptr, 3, 102, 58, 125, 66);
+    write_seg(seg_ptr, 4, 125, 66, 134, 88);
+    write_seg(seg_ptr, 5, 138, 148, 127, 172);
+    write_seg(seg_ptr, 6, 127, 172, 102, 182);
+    write_seg(seg_ptr, 7, 102, 182, 78, 169);
+    write_seg(seg_ptr, 8, 78, 169, 71, 144);
+    write_seg(seg_ptr, 9, 71, 144, 84, 121);
+    return 10;
   }
   if idx == 52 {
-    write_seg(seg_ptr, 0, 8, 7, 22, 7);
-    write_seg(seg_ptr, 1, 15, 7, 15, 23);
+    write_seg(seg_ptr, 0, 108, 56, 108, 184);
+    write_seg(seg_ptr, 1, 56, 56, 160, 56);
     return 2;
   }
   if idx == 53 {
-    write_seg(seg_ptr, 0, 9, 7, 9, 20);
-    write_seg(seg_ptr, 1, 9, 20, 15, 23);
-    write_seg(seg_ptr, 2, 15, 23, 21, 20);
-    write_seg(seg_ptr, 3, 21, 20, 21, 7);
-    return 4;
+    write_seg(seg_ptr, 0, 68, 56, 68, 136);
+    write_seg(seg_ptr, 1, 68, 136, 76, 160);
+    write_seg(seg_ptr, 2, 76, 160, 96, 174);
+    write_seg(seg_ptr, 3, 96, 174, 120, 174);
+    write_seg(seg_ptr, 4, 120, 174, 140, 160);
+    write_seg(seg_ptr, 5, 140, 160, 148, 136);
+    write_seg(seg_ptr, 6, 148, 136, 148, 56);
+    return 7;
   }
   if idx == 54 {
-    write_seg(seg_ptr, 0, 8, 7, 15, 23);
-    write_seg(seg_ptr, 1, 15, 23, 22, 7);
+    write_seg(seg_ptr, 0, 64, 56, 116, 184);
+    write_seg(seg_ptr, 1, 116, 184, 168, 56);
     return 2;
   }
   if idx == 55 {
-    write_seg(seg_ptr, 0, 7, 7, 10, 23);
-    write_seg(seg_ptr, 1, 10, 23, 15, 14);
-    write_seg(seg_ptr, 2, 15, 14, 20, 23);
-    write_seg(seg_ptr, 3, 20, 23, 23, 7);
+    write_seg(seg_ptr, 0, 60, 56, 88, 184);
+    write_seg(seg_ptr, 1, 88, 184, 116, 96);
+    write_seg(seg_ptr, 2, 116, 96, 144, 184);
+    write_seg(seg_ptr, 3, 144, 184, 172, 56);
     return 4;
   }
   if idx == 56 {
-    write_seg(seg_ptr, 0, 8, 7, 22, 23);
-    write_seg(seg_ptr, 1, 22, 7, 8, 23);
+    write_seg(seg_ptr, 0, 68, 56, 148, 184);
+    write_seg(seg_ptr, 1, 148, 56, 68, 184);
     return 2;
   }
   if idx == 57 {
-    write_seg(seg_ptr, 0, 8, 7, 15, 15);
-    write_seg(seg_ptr, 1, 22, 7, 15, 15);
-    write_seg(seg_ptr, 2, 15, 15, 15, 23);
+    write_seg(seg_ptr, 0, 64, 56, 116, 120);
+    write_seg(seg_ptr, 1, 168, 56, 116, 120);
+    write_seg(seg_ptr, 2, 116, 120, 116, 184);
     return 3;
   }
   if idx == 58 {
-    write_seg(seg_ptr, 0, 8, 7, 22, 7);
-    write_seg(seg_ptr, 1, 22, 7, 8, 23);
-    write_seg(seg_ptr, 2, 8, 23, 22, 23);
+    write_seg(seg_ptr, 0, 68, 56, 136, 56);
+    write_seg(seg_ptr, 1, 136, 56, 68, 184);
+    write_seg(seg_ptr, 2, 68, 184, 136, 184);
     return 3;
   }
-  // '^' = 94 -> idx = 62
-  if idx == 62 {
-    write_seg(seg_ptr, 0, 10, 14, 15, 8);
-    write_seg(seg_ptr, 1, 15, 8, 20, 14);
-    return 2;
+  if idx == 59 {
+    write_seg(seg_ptr, 0, 88, 56, 68, 56);
+    write_seg(seg_ptr, 1, 68, 56, 68, 184);
+    write_seg(seg_ptr, 2, 68, 184, 88, 184);
+    return 3;
   }
-  // '`' = 96 -> idx = 64
-  if idx == 64 {
-    write_seg(seg_ptr, 0, 13, 7, 16, 11);
+  if idx == 60 {
+    write_seg(seg_ptr, 0, 56, 56, 104, 184);
     return 1;
   }
-
-  // Lowercase a..z (97..122 -> idx 65..90)
+  if idx == 61 {
+    write_seg(seg_ptr, 0, 68, 56, 88, 56);
+    write_seg(seg_ptr, 1, 88, 56, 88, 184);
+    write_seg(seg_ptr, 2, 88, 184, 68, 184);
+    return 3;
+  }
+  if idx == 62 {
+    write_seg(seg_ptr, 0, 60, 104, 92, 64);
+    write_seg(seg_ptr, 1, 92, 64, 124, 104);
+    return 2;
+  }
+  if idx == 63 {
+    write_seg(seg_ptr, 0, 48, 192, 144, 192);
+    return 1;
+  }
+  if idx == 64 {
+    write_seg(seg_ptr, 0, 64, 64, 88, 88);
+    return 1;
+  }
   if idx == 65 {
-    write_seg(seg_ptr, 0, 19, 13, 19, 23);
-    write_seg(seg_ptr, 1, 19, 14, 12, 14);
-    write_seg(seg_ptr, 2, 11, 15, 11, 22);
-    write_seg(seg_ptr, 3, 12, 23, 19, 23);
-    return 4;
+    write_seg(seg_ptr, 0, 124, 108, 124, 180);
+    write_seg(seg_ptr, 1, 124, 108, 100, 108);
+    write_seg(seg_ptr, 2, 100, 108, 76, 120);
+    write_seg(seg_ptr, 3, 76, 120, 68, 144);
+    write_seg(seg_ptr, 4, 68, 144, 76, 168);
+    write_seg(seg_ptr, 5, 76, 168, 100, 180);
+    write_seg(seg_ptr, 6, 100, 180, 124, 180);
+    return 7;
   }
   if idx == 66 {
-    write_seg(seg_ptr, 0, 10, 7, 10, 23);
-    write_seg(seg_ptr, 1, 10, 14, 19, 14);
-    write_seg(seg_ptr, 2, 19, 14, 19, 23);
-    write_seg(seg_ptr, 3, 19, 23, 10, 23);
-    return 4;
+    write_seg(seg_ptr, 0, 68, 56, 68, 180);
+    write_seg(seg_ptr, 1, 68, 108, 100, 108);
+    write_seg(seg_ptr, 2, 100, 108, 124, 120);
+    write_seg(seg_ptr, 3, 124, 120, 132, 144);
+    write_seg(seg_ptr, 4, 132, 144, 124, 168);
+    write_seg(seg_ptr, 5, 124, 168, 100, 180);
+    write_seg(seg_ptr, 6, 100, 180, 68, 180);
+    return 7;
   }
   if idx == 67 {
-    write_seg(seg_ptr, 0, 19, 14, 11, 14);
-    write_seg(seg_ptr, 1, 11, 14, 11, 23);
-    write_seg(seg_ptr, 2, 11, 23, 19, 23);
-    return 3;
+    write_seg(seg_ptr, 0, 121, 165, 96, 176);
+    write_seg(seg_ptr, 1, 96, 176, 71, 165);
+    write_seg(seg_ptr, 2, 71, 165, 60, 140);
+    write_seg(seg_ptr, 3, 60, 140, 71, 115);
+    write_seg(seg_ptr, 4, 71, 115, 96, 104);
+    write_seg(seg_ptr, 5, 96, 104, 121, 115);
+    return 6;
   }
   if idx == 68 {
-    write_seg(seg_ptr, 0, 19, 7, 19, 23);
-    write_seg(seg_ptr, 1, 19, 14, 10, 14);
-    write_seg(seg_ptr, 2, 10, 14, 10, 23);
-    write_seg(seg_ptr, 3, 10, 23, 19, 23);
-    return 4;
+    write_seg(seg_ptr, 0, 132, 56, 132, 180);
+    write_seg(seg_ptr, 1, 132, 108, 100, 108);
+    write_seg(seg_ptr, 2, 100, 108, 76, 120);
+    write_seg(seg_ptr, 3, 76, 120, 68, 144);
+    write_seg(seg_ptr, 4, 68, 144, 76, 168);
+    write_seg(seg_ptr, 5, 76, 168, 100, 180);
+    write_seg(seg_ptr, 6, 100, 180, 132, 180);
+    return 7;
   }
   if idx == 69 {
-    write_seg(seg_ptr, 0, 10, 18, 19, 18);
-    write_seg(seg_ptr, 1, 19, 18, 19, 14);
-    write_seg(seg_ptr, 2, 19, 14, 10, 14);
-    write_seg(seg_ptr, 3, 10, 14, 10, 23);
-    write_seg(seg_ptr, 4, 10, 23, 19, 23);
-    return 5;
+    write_seg(seg_ptr, 0, 64, 140, 128, 140);
+    write_seg(seg_ptr, 1, 128, 140, 124, 120);
+    write_seg(seg_ptr, 2, 124, 120, 96, 108);
+    write_seg(seg_ptr, 3, 96, 108, 68, 120);
+    write_seg(seg_ptr, 4, 68, 120, 64, 140);
+    write_seg(seg_ptr, 5, 64, 140, 68, 164);
+    write_seg(seg_ptr, 6, 68, 164, 96, 176);
+    write_seg(seg_ptr, 7, 96, 176, 124, 168);
+    return 8;
   }
   if idx == 70 {
-    write_seg(seg_ptr, 0, 17, 7, 13, 7);
-    write_seg(seg_ptr, 1, 13, 7, 13, 23);
-    write_seg(seg_ptr, 2, 9, 14, 17, 14);
-    return 3;
-  }
-  if idx == 71 {
-    write_seg(seg_ptr, 0, 10, 14, 19, 14);
-    write_seg(seg_ptr, 1, 10, 14, 10, 22);
-    write_seg(seg_ptr, 2, 10, 22, 19, 22);
-    write_seg(seg_ptr, 3, 19, 14, 19, 27);
-    write_seg(seg_ptr, 4, 19, 27, 11, 27);
+    write_seg(seg_ptr, 0, 80, 88, 80, 180);
+    write_seg(seg_ptr, 1, 80, 88, 86, 68);
+    write_seg(seg_ptr, 2, 86, 68, 100, 56);
+    write_seg(seg_ptr, 3, 100, 56, 116, 64);
+    write_seg(seg_ptr, 4, 60, 108, 104, 108);
     return 5;
   }
+  if idx == 71 {
+    write_seg(seg_ptr, 0, 132, 108, 132, 204);
+    write_seg(seg_ptr, 1, 132, 204, 124, 220);
+    write_seg(seg_ptr, 2, 124, 220, 100, 228);
+    write_seg(seg_ptr, 3, 100, 228, 76, 220);
+    write_seg(seg_ptr, 4, 132, 108, 100, 108);
+    write_seg(seg_ptr, 5, 100, 108, 76, 120);
+    write_seg(seg_ptr, 6, 76, 120, 68, 144);
+    write_seg(seg_ptr, 7, 68, 144, 76, 168);
+    write_seg(seg_ptr, 8, 76, 168, 100, 180);
+    write_seg(seg_ptr, 9, 100, 180, 132, 180);
+    return 10;
+  }
   if idx == 72 {
-    write_seg(seg_ptr, 0, 10, 7, 10, 23);
-    write_seg(seg_ptr, 1, 10, 14, 19, 14);
-    write_seg(seg_ptr, 2, 19, 14, 19, 23);
-    return 3;
+    write_seg(seg_ptr, 0, 68, 56, 68, 180);
+    write_seg(seg_ptr, 1, 116, 132, 116, 180);
+    write_seg(seg_ptr, 2, 68, 132, 75, 115);
+    write_seg(seg_ptr, 3, 75, 115, 92, 108);
+    write_seg(seg_ptr, 4, 92, 108, 109, 115);
+    write_seg(seg_ptr, 5, 109, 115, 116, 132);
+    return 6;
   }
   if idx == 73 {
-    write_seg(seg_ptr, 0, 15, 13, 15, 23);
-    write_seg(seg_ptr, 1, 15, 9, 16, 9);
+    write_seg(seg_ptr, 0, 76, 108, 76, 180);
+    write_seg(seg_ptr, 1, 76, 76, 76, 84);
     return 2;
   }
   if idx == 74 {
-    write_seg(seg_ptr, 0, 17, 13, 17, 26);
-    write_seg(seg_ptr, 1, 17, 26, 12, 26);
-    write_seg(seg_ptr, 2, 17, 9, 18, 9);
-    return 3;
+    write_seg(seg_ptr, 0, 76, 108, 76, 200);
+    write_seg(seg_ptr, 1, 76, 200, 68, 214);
+    write_seg(seg_ptr, 2, 68, 214, 52, 214);
+    write_seg(seg_ptr, 3, 52, 214, 44, 200);
+    write_seg(seg_ptr, 4, 76, 76, 76, 84);
+    return 5;
   }
   if idx == 75 {
-    write_seg(seg_ptr, 0, 10, 7, 10, 23);
-    write_seg(seg_ptr, 1, 19, 12, 10, 18);
-    write_seg(seg_ptr, 2, 12, 17, 19, 23);
+    write_seg(seg_ptr, 0, 68, 56, 68, 180);
+    write_seg(seg_ptr, 1, 120, 108, 68, 144);
+    write_seg(seg_ptr, 2, 84, 132, 120, 180);
     return 3;
   }
   if idx == 76 {
-    write_seg(seg_ptr, 0, 15, 7, 15, 23);
+    write_seg(seg_ptr, 0, 76, 56, 76, 180);
     return 1;
   }
   if idx == 77 {
-    write_seg(seg_ptr, 0, 8, 13, 8, 23);
-    write_seg(seg_ptr, 1, 8, 14, 15, 14);
-    write_seg(seg_ptr, 2, 15, 14, 15, 23);
-    write_seg(seg_ptr, 3, 15, 14, 22, 14);
-    write_seg(seg_ptr, 4, 22, 14, 22, 23);
-    return 5;
+    write_seg(seg_ptr, 0, 60, 108, 60, 180);
+    write_seg(seg_ptr, 1, 104, 132, 104, 180);
+    write_seg(seg_ptr, 2, 148, 132, 148, 180);
+    write_seg(seg_ptr, 3, 60, 132, 67, 115);
+    write_seg(seg_ptr, 4, 67, 115, 82, 108);
+    write_seg(seg_ptr, 5, 82, 108, 97, 115);
+    write_seg(seg_ptr, 6, 97, 115, 104, 132);
+    write_seg(seg_ptr, 7, 104, 132, 111, 115);
+    write_seg(seg_ptr, 8, 111, 115, 126, 108);
+    write_seg(seg_ptr, 9, 126, 108, 141, 115);
+    write_seg(seg_ptr, 10, 141, 115, 148, 132);
+    return 11;
   }
   if idx == 78 {
-    write_seg(seg_ptr, 0, 10, 13, 10, 23);
-    write_seg(seg_ptr, 1, 10, 14, 19, 14);
-    write_seg(seg_ptr, 2, 19, 14, 19, 23);
-    return 3;
+    write_seg(seg_ptr, 0, 68, 108, 68, 180);
+    write_seg(seg_ptr, 1, 116, 132, 116, 180);
+    write_seg(seg_ptr, 2, 68, 132, 75, 115);
+    write_seg(seg_ptr, 3, 75, 115, 92, 108);
+    write_seg(seg_ptr, 4, 92, 108, 109, 115);
+    write_seg(seg_ptr, 5, 109, 115, 116, 132);
+    return 6;
   }
   if idx == 79 {
-    write_seg(seg_ptr, 0, 10, 14, 19, 14);
-    write_seg(seg_ptr, 1, 19, 14, 19, 23);
-    write_seg(seg_ptr, 2, 19, 23, 10, 23);
-    write_seg(seg_ptr, 3, 10, 23, 10, 14);
-    return 4;
+    write_seg(seg_ptr, 0, 132, 140, 121, 165);
+    write_seg(seg_ptr, 1, 121, 165, 96, 176);
+    write_seg(seg_ptr, 2, 96, 176, 71, 165);
+    write_seg(seg_ptr, 3, 71, 165, 60, 140);
+    write_seg(seg_ptr, 4, 60, 140, 71, 115);
+    write_seg(seg_ptr, 5, 71, 115, 96, 104);
+    write_seg(seg_ptr, 6, 96, 104, 121, 115);
+    write_seg(seg_ptr, 7, 121, 115, 132, 140);
+    return 8;
   }
   if idx == 80 {
-    write_seg(seg_ptr, 0, 10, 14, 10, 27);
-    write_seg(seg_ptr, 1, 10, 14, 19, 14);
-    write_seg(seg_ptr, 2, 19, 14, 19, 22);
-    write_seg(seg_ptr, 3, 19, 22, 10, 22);
-    return 4;
+    write_seg(seg_ptr, 0, 68, 108, 68, 224);
+    write_seg(seg_ptr, 1, 68, 108, 100, 108);
+    write_seg(seg_ptr, 2, 100, 108, 124, 120);
+    write_seg(seg_ptr, 3, 124, 120, 132, 140);
+    write_seg(seg_ptr, 4, 132, 140, 124, 160);
+    write_seg(seg_ptr, 5, 124, 160, 100, 172);
+    write_seg(seg_ptr, 6, 100, 172, 68, 172);
+    return 7;
   }
   if idx == 81 {
-    write_seg(seg_ptr, 0, 19, 14, 19, 27);
-    write_seg(seg_ptr, 1, 19, 14, 10, 14);
-    write_seg(seg_ptr, 2, 10, 14, 10, 22);
-    write_seg(seg_ptr, 3, 10, 22, 19, 22);
-    return 4;
+    write_seg(seg_ptr, 0, 132, 108, 132, 224);
+    write_seg(seg_ptr, 1, 132, 108, 100, 108);
+    write_seg(seg_ptr, 2, 100, 108, 76, 120);
+    write_seg(seg_ptr, 3, 76, 120, 68, 140);
+    write_seg(seg_ptr, 4, 68, 140, 76, 160);
+    write_seg(seg_ptr, 5, 76, 160, 100, 172);
+    write_seg(seg_ptr, 6, 100, 172, 132, 172);
+    return 7;
   }
   if idx == 82 {
-    write_seg(seg_ptr, 0, 11, 13, 11, 23);
-    write_seg(seg_ptr, 1, 11, 15, 15, 13);
-    write_seg(seg_ptr, 2, 15, 13, 18, 15);
-    return 3;
+    write_seg(seg_ptr, 0, 68, 108, 68, 180);
+    write_seg(seg_ptr, 1, 68, 132, 75, 115);
+    write_seg(seg_ptr, 2, 75, 115, 92, 108);
+    write_seg(seg_ptr, 3, 92, 108, 108, 115);
+    return 4;
   }
   if idx == 83 {
-    write_seg(seg_ptr, 0, 18, 14, 12, 14);
-    write_seg(seg_ptr, 1, 11, 15, 11, 18);
-    write_seg(seg_ptr, 2, 11, 18, 18, 19);
-    write_seg(seg_ptr, 3, 18, 19, 18, 22);
-    write_seg(seg_ptr, 4, 18, 23, 11, 23);
-    return 5;
+    write_seg(seg_ptr, 0, 80, 140, 72, 122);
+    write_seg(seg_ptr, 1, 72, 122, 83, 106);
+    write_seg(seg_ptr, 2, 83, 106, 102, 107);
+    write_seg(seg_ptr, 3, 102, 107, 112, 124);
+    write_seg(seg_ptr, 4, 112, 160, 102, 177);
+    write_seg(seg_ptr, 5, 102, 177, 83, 178);
+    write_seg(seg_ptr, 6, 83, 178, 72, 162);
+    write_seg(seg_ptr, 7, 72, 162, 80, 144);
+    return 8;
   }
   if idx == 84 {
-    write_seg(seg_ptr, 0, 13, 9, 13, 23);
-    write_seg(seg_ptr, 1, 13, 23, 17, 23);
-    write_seg(seg_ptr, 2, 9, 14, 17, 14);
-    return 3;
+    write_seg(seg_ptr, 0, 76, 72, 76, 164);
+    write_seg(seg_ptr, 1, 76, 164, 82, 178);
+    write_seg(seg_ptr, 2, 82, 178, 96, 174);
+    write_seg(seg_ptr, 3, 56, 108, 96, 108);
+    return 4;
   }
   if idx == 85 {
-    write_seg(seg_ptr, 0, 10, 13, 10, 22);
-    write_seg(seg_ptr, 1, 11, 23, 18, 23);
-    write_seg(seg_ptr, 2, 19, 13, 19, 23);
-    return 3;
+    write_seg(seg_ptr, 0, 68, 108, 68, 148);
+    write_seg(seg_ptr, 1, 68, 148, 76, 168);
+    write_seg(seg_ptr, 2, 76, 168, 92, 176);
+    write_seg(seg_ptr, 3, 92, 176, 108, 168);
+    write_seg(seg_ptr, 4, 108, 168, 116, 148);
+    write_seg(seg_ptr, 5, 116, 108, 116, 180);
+    return 6;
   }
   if idx == 86 {
-    write_seg(seg_ptr, 0, 9, 13, 15, 23);
-    write_seg(seg_ptr, 1, 15, 23, 21, 13);
+    write_seg(seg_ptr, 0, 64, 108, 96, 180);
+    write_seg(seg_ptr, 1, 96, 180, 128, 108);
     return 2;
   }
   if idx == 87 {
-    write_seg(seg_ptr, 0, 8, 13, 11, 23);
-    write_seg(seg_ptr, 1, 11, 23, 15, 17);
-    write_seg(seg_ptr, 2, 15, 17, 19, 23);
-    write_seg(seg_ptr, 3, 19, 23, 22, 13);
+    write_seg(seg_ptr, 0, 56, 108, 76, 180);
+    write_seg(seg_ptr, 1, 76, 180, 96, 128);
+    write_seg(seg_ptr, 2, 96, 128, 116, 180);
+    write_seg(seg_ptr, 3, 116, 180, 136, 108);
     return 4;
   }
   if idx == 88 {
-    write_seg(seg_ptr, 0, 10, 13, 20, 23);
-    write_seg(seg_ptr, 1, 20, 13, 10, 23);
+    write_seg(seg_ptr, 0, 64, 108, 128, 180);
+    write_seg(seg_ptr, 1, 128, 108, 64, 180);
     return 2;
   }
   if idx == 89 {
-    write_seg(seg_ptr, 0, 9, 13, 15, 23);
-    write_seg(seg_ptr, 1, 21, 13, 11, 27);
+    write_seg(seg_ptr, 0, 64, 108, 96, 168);
+    write_seg(seg_ptr, 1, 128, 108, 72, 224);
     return 2;
   }
   if idx == 90 {
-    write_seg(seg_ptr, 0, 10, 14, 19, 14);
-    write_seg(seg_ptr, 1, 19, 14, 10, 23);
-    write_seg(seg_ptr, 2, 10, 23, 19, 23);
+    write_seg(seg_ptr, 0, 64, 108, 120, 108);
+    write_seg(seg_ptr, 1, 120, 108, 64, 180);
+    write_seg(seg_ptr, 2, 64, 180, 120, 180);
     return 3;
   }
-  // '{' = 123 -> idx = 91
   if idx == 91 {
-    write_seg(seg_ptr, 0, 19, 7, 15, 7);
-    write_seg(seg_ptr, 1, 15, 7, 15, 13);
-    write_seg(seg_ptr, 2, 15, 13, 11, 15);
-    write_seg(seg_ptr, 3, 11, 15, 15, 17);
-    write_seg(seg_ptr, 4, 15, 17, 15, 23);
-    write_seg(seg_ptr, 5, 15, 23, 19, 23);
+    write_seg(seg_ptr, 0, 104, 56, 84, 80);
+    write_seg(seg_ptr, 1, 84, 80, 84, 112);
+    write_seg(seg_ptr, 2, 84, 112, 64, 124);
+    write_seg(seg_ptr, 3, 64, 124, 84, 136);
+    write_seg(seg_ptr, 4, 84, 136, 84, 168);
+    write_seg(seg_ptr, 5, 84, 168, 104, 184);
     return 6;
   }
-  // '}' = 125 -> idx = 93
+  if idx == 92 {
+    write_seg(seg_ptr, 0, 68, 48, 68, 192);
+    return 1;
+  }
   if idx == 93 {
-    write_seg(seg_ptr, 0, 11, 7, 15, 7);
-    write_seg(seg_ptr, 1, 15, 7, 15, 13);
-    write_seg(seg_ptr, 2, 15, 13, 19, 15);
-    write_seg(seg_ptr, 3, 19, 15, 15, 17);
-    write_seg(seg_ptr, 4, 15, 17, 15, 23);
-    write_seg(seg_ptr, 5, 15, 23, 11, 23);
+    write_seg(seg_ptr, 0, 64, 56, 84, 80);
+    write_seg(seg_ptr, 1, 84, 80, 84, 112);
+    write_seg(seg_ptr, 2, 84, 112, 104, 124);
+    write_seg(seg_ptr, 3, 104, 124, 84, 136);
+    write_seg(seg_ptr, 4, 84, 136, 84, 168);
+    write_seg(seg_ptr, 5, 84, 168, 64, 184);
     return 6;
   }
-  // '~' = 126 -> idx = 94
   if idx == 94 {
-    write_seg(seg_ptr, 0, 9, 16, 12, 13);
-    write_seg(seg_ptr, 1, 12, 13, 17, 17);
-    write_seg(seg_ptr, 2, 17, 17, 21, 14);
-    return 3;
+    write_seg(seg_ptr, 0, 64, 144, 56, 124);
+    write_seg(seg_ptr, 1, 56, 124, 72, 108);
+    write_seg(seg_ptr, 2, 72, 108, 92, 116);
+    write_seg(seg_ptr, 3, 132, 116, 134, 136);
+    write_seg(seg_ptr, 4, 134, 136, 118, 148);
+    write_seg(seg_ptr, 5, 118, 148, 100, 140);
+    return 6;
   }
-
   if idx == 95 {
-    // Fallback box
-    write_seg(seg_ptr, 0, 9, 7, 23, 7);
-    write_seg(seg_ptr, 1, 23, 7, 23, 23);
-    write_seg(seg_ptr, 2, 23, 23, 9, 23);
-    write_seg(seg_ptr, 3, 9, 23, 9, 7);
+    write_seg(seg_ptr, 0, 64, 64, 128, 64);
+    write_seg(seg_ptr, 1, 128, 64, 128, 176);
+    write_seg(seg_ptr, 2, 128, 176, 64, 176);
+    write_seg(seg_ptr, 3, 64, 176, 64, 64);
     return 4;
   }
   if idx == 96 {
-    // ±
-    write_seg(seg_ptr, 0, 8, 12, 24, 12);
-    write_seg(seg_ptr, 1, 16, 6, 16, 18);
-    write_seg(seg_ptr, 2, 8, 23, 24, 23);
+    write_seg(seg_ptr, 0, 64, 104, 144, 104);
+    write_seg(seg_ptr, 1, 104, 64, 104, 144);
+    write_seg(seg_ptr, 2, 64, 168, 144, 168);
     return 3;
   }
   if idx == 97 {
-    // ×
-    write_seg(seg_ptr, 0, 10, 10, 22, 22);
-    write_seg(seg_ptr, 1, 10, 22, 22, 10);
+    write_seg(seg_ptr, 0, 68, 92, 132, 156);
+    write_seg(seg_ptr, 1, 132, 92, 68, 156);
     return 2;
   }
   if idx == 98 {
-    // ÷
-    write_seg(seg_ptr, 0, 8, 16, 24, 16);
-    write_seg(seg_ptr, 1, 16, 9, 16, 10);
-    write_seg(seg_ptr, 2, 16, 22, 16, 23);
+    write_seg(seg_ptr, 0, 64, 128, 144, 128);
+    write_seg(seg_ptr, 1, 104, 92, 104, 100);
+    write_seg(seg_ptr, 2, 104, 156, 104, 164);
     return 3;
   }
   if idx == 99 {
-    // √
-    write_seg(seg_ptr, 0, 7, 17, 10, 24);
-    write_seg(seg_ptr, 1, 10, 24, 15, 7);
-    write_seg(seg_ptr, 2, 15, 7, 24, 7);
+    write_seg(seg_ptr, 0, 56, 128, 76, 176);
+    write_seg(seg_ptr, 1, 76, 176, 112, 64);
+    write_seg(seg_ptr, 2, 112, 64, 144, 64);
     return 3;
   }
   if idx == 100 {
-    // ∞
-    write_seg(seg_ptr, 0, 16, 16, 10, 10);
-    write_seg(seg_ptr, 1, 10, 10, 7, 16);
-    write_seg(seg_ptr, 2, 7, 16, 10, 22);
-    write_seg(seg_ptr, 3, 10, 22, 16, 16);
-    write_seg(seg_ptr, 4, 16, 16, 22, 10);
-    write_seg(seg_ptr, 5, 22, 10, 25, 16);
-    write_seg(seg_ptr, 6, 25, 16, 22, 22);
-    write_seg(seg_ptr, 7, 22, 22, 16, 16);
-    return 8;
+    write_seg(seg_ptr, 0, 110, 128, 97, 150);
+    write_seg(seg_ptr, 1, 97, 150, 71, 150);
+    write_seg(seg_ptr, 2, 71, 150, 58, 128);
+    write_seg(seg_ptr, 3, 58, 128, 71, 106);
+    write_seg(seg_ptr, 4, 71, 106, 97, 106);
+    write_seg(seg_ptr, 5, 97, 106, 110, 128);
+    write_seg(seg_ptr, 6, 158, 128, 145, 150);
+    write_seg(seg_ptr, 7, 145, 150, 119, 150);
+    write_seg(seg_ptr, 8, 119, 150, 106, 128);
+    write_seg(seg_ptr, 9, 106, 128, 119, 106);
+    write_seg(seg_ptr, 10, 119, 106, 145, 106);
+    write_seg(seg_ptr, 11, 145, 106, 158, 128);
+    return 12;
   }
   if idx == 101 {
-    // ≈
-    write_seg(seg_ptr, 0, 8, 12, 14, 10);
-    write_seg(seg_ptr, 1, 14, 10, 18, 14);
-    write_seg(seg_ptr, 2, 18, 14, 24, 12);
-    write_seg(seg_ptr, 3, 8, 20, 14, 18);
-    write_seg(seg_ptr, 4, 14, 18, 18, 22);
-    write_seg(seg_ptr, 5, 18, 22, 24, 20);
-    return 6;
+    write_seg(seg_ptr, 0, 68, 124, 60, 104);
+    write_seg(seg_ptr, 1, 60, 104, 76, 88);
+    write_seg(seg_ptr, 2, 76, 88, 96, 96);
+    write_seg(seg_ptr, 3, 136, 96, 138, 116);
+    write_seg(seg_ptr, 4, 138, 116, 122, 128);
+    write_seg(seg_ptr, 5, 122, 128, 104, 120);
+    write_seg(seg_ptr, 6, 68, 164, 60, 144);
+    write_seg(seg_ptr, 7, 60, 144, 76, 128);
+    write_seg(seg_ptr, 8, 76, 128, 96, 136);
+    write_seg(seg_ptr, 9, 136, 136, 138, 156);
+    write_seg(seg_ptr, 10, 138, 156, 122, 168);
+    write_seg(seg_ptr, 11, 122, 168, 104, 160);
+    return 12;
   }
   if idx == 102 {
-    // ≠
-    write_seg(seg_ptr, 0, 7, 13, 23, 13);
-    write_seg(seg_ptr, 1, 7, 19, 23, 19);
-    write_seg(seg_ptr, 2, 21, 8, 9, 24);
+    write_seg(seg_ptr, 0, 64, 104, 144, 104);
+    write_seg(seg_ptr, 1, 64, 152, 144, 152);
+    write_seg(seg_ptr, 2, 128, 64, 80, 192);
     return 3;
   }
   if idx == 103 {
-    // ≤
-    write_seg(seg_ptr, 0, 22, 8, 9, 14);
-    write_seg(seg_ptr, 1, 9, 14, 22, 20);
-    write_seg(seg_ptr, 2, 9, 24, 22, 24);
+    write_seg(seg_ptr, 0, 128, 80, 72, 120);
+    write_seg(seg_ptr, 1, 72, 120, 128, 160);
+    write_seg(seg_ptr, 2, 72, 184, 128, 184);
     return 3;
   }
   if idx == 104 {
-    // ≥
-    write_seg(seg_ptr, 0, 9, 8, 22, 14);
-    write_seg(seg_ptr, 1, 22, 14, 9, 20);
-    write_seg(seg_ptr, 2, 9, 24, 22, 24);
+    write_seg(seg_ptr, 0, 72, 80, 128, 120);
+    write_seg(seg_ptr, 1, 128, 120, 72, 160);
+    write_seg(seg_ptr, 2, 72, 184, 128, 184);
     return 3;
   }
   if idx == 105 {
-    // ∑
-    write_seg(seg_ptr, 0, 23, 7, 9, 7);
-    write_seg(seg_ptr, 1, 9, 7, 17, 16);
-    write_seg(seg_ptr, 2, 17, 16, 9, 24);
-    write_seg(seg_ptr, 3, 9, 24, 23, 24);
+    write_seg(seg_ptr, 0, 152, 56, 68, 56);
+    write_seg(seg_ptr, 1, 68, 56, 116, 120);
+    write_seg(seg_ptr, 2, 116, 120, 68, 184);
+    write_seg(seg_ptr, 3, 68, 184, 152, 184);
     return 4;
   }
   if idx == 106 {
-    // ∏
-    write_seg(seg_ptr, 0, 7, 7, 25, 7);
-    write_seg(seg_ptr, 1, 11, 7, 11, 24);
-    write_seg(seg_ptr, 2, 21, 7, 21, 24);
+    write_seg(seg_ptr, 0, 56, 56, 168, 56);
+    write_seg(seg_ptr, 1, 80, 56, 80, 184);
+    write_seg(seg_ptr, 2, 144, 56, 144, 184);
     return 3;
   }
   if idx == 107 {
-    // ∫
-    write_seg(seg_ptr, 0, 21, 7, 16, 7);
-    write_seg(seg_ptr, 1, 16, 7, 16, 24);
-    write_seg(seg_ptr, 2, 16, 24, 11, 24);
-    return 3;
+    write_seg(seg_ptr, 0, 72, 72, 82, 89);
+    write_seg(seg_ptr, 1, 82, 89, 102, 89);
+    write_seg(seg_ptr, 2, 102, 89, 112, 72);
+    write_seg(seg_ptr, 3, 80, 80, 80, 160);
+    write_seg(seg_ptr, 4, 88, 168, 78, 185);
+    write_seg(seg_ptr, 5, 78, 185, 58, 185);
+    write_seg(seg_ptr, 6, 58, 185, 48, 168);
+    return 7;
   }
   if idx == 108 {
-    // −
-    write_seg(seg_ptr, 0, 7, 16, 25, 16);
+    write_seg(seg_ptr, 0, 56, 128, 136, 128);
     return 1;
   }
   if idx == 109 {
-    // ∂
-    write_seg(seg_ptr, 0, 20, 8, 16, 7);
-    write_seg(seg_ptr, 1, 16, 7, 12, 15);
-    write_seg(seg_ptr, 2, 12, 15, 20, 15);
-    write_seg(seg_ptr, 3, 20, 15, 20, 24);
-    write_seg(seg_ptr, 4, 20, 24, 12, 24);
-    write_seg(seg_ptr, 5, 12, 24, 12, 15);
-    return 6;
+    write_seg(seg_ptr, 0, 128, 144, 119, 167);
+    write_seg(seg_ptr, 1, 119, 167, 96, 176);
+    write_seg(seg_ptr, 2, 96, 176, 73, 167);
+    write_seg(seg_ptr, 3, 73, 167, 64, 144);
+    write_seg(seg_ptr, 4, 64, 144, 73, 121);
+    write_seg(seg_ptr, 5, 73, 121, 96, 112);
+    write_seg(seg_ptr, 6, 96, 112, 119, 121);
+    write_seg(seg_ptr, 7, 119, 121, 128, 144);
+    write_seg(seg_ptr, 8, 104, 120, 81, 110);
+    write_seg(seg_ptr, 9, 81, 110, 72, 86);
+    write_seg(seg_ptr, 10, 72, 86, 84, 63);
+    write_seg(seg_ptr, 11, 84, 63, 108, 56);
+    write_seg(seg_ptr, 12, 108, 56, 130, 69);
+    return 13;
   }
   if idx == 110 {
-    // ∇
-    write_seg(seg_ptr, 0, 8, 7, 24, 7);
-    write_seg(seg_ptr, 1, 24, 7, 16, 24);
-    write_seg(seg_ptr, 2, 16, 24, 8, 7);
+    write_seg(seg_ptr, 0, 64, 56, 160, 56);
+    write_seg(seg_ptr, 1, 160, 56, 112, 184);
+    write_seg(seg_ptr, 2, 112, 184, 64, 56);
     return 3;
   }
   if idx == 111 {
-    // ∈
-    write_seg(seg_ptr, 0, 22, 8, 13, 8);
-    write_seg(seg_ptr, 1, 13, 8, 10, 16);
-    write_seg(seg_ptr, 2, 10, 16, 13, 24);
-    write_seg(seg_ptr, 3, 13, 24, 22, 24);
-    write_seg(seg_ptr, 4, 10, 16, 21, 16);
-    return 5;
+    write_seg(seg_ptr, 0, 104, 168, 80, 160);
+    write_seg(seg_ptr, 1, 80, 160, 66, 140);
+    write_seg(seg_ptr, 2, 66, 140, 66, 116);
+    write_seg(seg_ptr, 3, 66, 116, 80, 96);
+    write_seg(seg_ptr, 4, 80, 96, 104, 88);
+    write_seg(seg_ptr, 5, 64, 128, 136, 128);
+    return 6;
   }
   if idx == 112 {
-    // ←
-    write_seg(seg_ptr, 0, 6, 16, 25, 16);
-    write_seg(seg_ptr, 1, 6, 16, 14, 9);
-    write_seg(seg_ptr, 2, 6, 16, 14, 23);
+    write_seg(seg_ptr, 0, 56, 128, 184, 128);
+    write_seg(seg_ptr, 1, 96, 88, 56, 128);
+    write_seg(seg_ptr, 2, 96, 168, 56, 128);
     return 3;
   }
   if idx == 113 {
-    // ↑
-    write_seg(seg_ptr, 0, 16, 6, 16, 25);
-    write_seg(seg_ptr, 1, 16, 6, 9, 14);
-    write_seg(seg_ptr, 2, 16, 6, 23, 14);
+    write_seg(seg_ptr, 0, 96, 56, 96, 184);
+    write_seg(seg_ptr, 1, 56, 96, 96, 56);
+    write_seg(seg_ptr, 2, 136, 96, 96, 56);
     return 3;
   }
   if idx == 114 {
-    // →
-    write_seg(seg_ptr, 0, 6, 16, 25, 16);
-    write_seg(seg_ptr, 1, 25, 16, 17, 9);
-    write_seg(seg_ptr, 2, 25, 16, 17, 23);
+    write_seg(seg_ptr, 0, 56, 128, 184, 128);
+    write_seg(seg_ptr, 1, 144, 88, 184, 128);
+    write_seg(seg_ptr, 2, 144, 168, 184, 128);
     return 3;
   }
   if idx == 115 {
-    // ↓
-    write_seg(seg_ptr, 0, 16, 6, 16, 25);
-    write_seg(seg_ptr, 1, 16, 25, 9, 17);
-    write_seg(seg_ptr, 2, 16, 25, 23, 17);
+    write_seg(seg_ptr, 0, 96, 56, 96, 184);
+    write_seg(seg_ptr, 1, 56, 144, 96, 184);
+    write_seg(seg_ptr, 2, 136, 144, 96, 184);
     return 3;
   }
   if idx == 116 {
-    // ↔
-    write_seg(seg_ptr, 0, 6, 16, 25, 16);
-    write_seg(seg_ptr, 1, 6, 16, 12, 11);
-    write_seg(seg_ptr, 2, 6, 16, 12, 21);
-    write_seg(seg_ptr, 3, 25, 16, 19, 11);
-    write_seg(seg_ptr, 4, 25, 16, 19, 21);
+    write_seg(seg_ptr, 0, 56, 128, 184, 128);
+    write_seg(seg_ptr, 1, 88, 96, 56, 128);
+    write_seg(seg_ptr, 2, 88, 160, 56, 128);
+    write_seg(seg_ptr, 3, 152, 96, 184, 128);
+    write_seg(seg_ptr, 4, 152, 160, 184, 128);
     return 5;
   }
   if idx == 117 {
-    // ⇒
-    write_seg(seg_ptr, 0, 6, 13, 23, 13);
-    write_seg(seg_ptr, 1, 6, 19, 23, 19);
-    write_seg(seg_ptr, 2, 23, 16, 16, 9);
-    write_seg(seg_ptr, 3, 23, 16, 16, 23);
+    write_seg(seg_ptr, 0, 56, 112, 168, 112);
+    write_seg(seg_ptr, 1, 56, 144, 168, 144);
+    write_seg(seg_ptr, 2, 136, 80, 184, 128);
+    write_seg(seg_ptr, 3, 136, 176, 184, 128);
     return 4;
   }
   if idx == 118 {
-    // °
-    write_seg(seg_ptr, 0, 12, 8, 16, 8);
-    write_seg(seg_ptr, 1, 16, 8, 16, 12);
-    write_seg(seg_ptr, 2, 16, 12, 12, 12);
-    write_seg(seg_ptr, 3, 12, 12, 12, 8);
-    return 4;
+    write_seg(seg_ptr, 0, 108, 80, 98, 97);
+    write_seg(seg_ptr, 1, 98, 97, 78, 97);
+    write_seg(seg_ptr, 2, 78, 97, 68, 80);
+    write_seg(seg_ptr, 3, 68, 80, 78, 63);
+    write_seg(seg_ptr, 4, 78, 63, 98, 63);
+    write_seg(seg_ptr, 5, 98, 63, 108, 80);
+    return 6;
   }
   if idx == 119 {
-    // •
-    write_seg(seg_ptr, 0, 15, 15, 17, 15);
-    write_seg(seg_ptr, 1, 16, 14, 16, 16);
-    return 2;
+    write_seg(seg_ptr, 0, 108, 120, 98, 137);
+    write_seg(seg_ptr, 1, 98, 137, 78, 137);
+    write_seg(seg_ptr, 2, 78, 137, 68, 120);
+    write_seg(seg_ptr, 3, 68, 120, 78, 103);
+    write_seg(seg_ptr, 4, 78, 103, 98, 103);
+    write_seg(seg_ptr, 5, 98, 103, 108, 120);
+    return 6;
   }
   if idx == 120 {
-    // …
-    write_seg(seg_ptr, 0, 9, 22, 10, 22);
-    write_seg(seg_ptr, 1, 15, 22, 16, 22);
-    write_seg(seg_ptr, 2, 21, 22, 22, 22);
+    write_seg(seg_ptr, 0, 64, 172, 64, 180);
+    write_seg(seg_ptr, 1, 96, 172, 96, 180);
+    write_seg(seg_ptr, 2, 128, 172, 128, 180);
     return 3;
   }
   if idx == 121 {
-    // —
-    write_seg(seg_ptr, 0, 4, 16, 28, 16);
+    write_seg(seg_ptr, 0, 48, 128, 192, 128);
     return 1;
   }
   if idx == 122 {
-    // –
-    write_seg(seg_ptr, 0, 7, 16, 24, 16);
+    write_seg(seg_ptr, 0, 64, 128, 144, 128);
     return 1;
   }
   if idx == 123 {
-    // ✓
-    write_seg(seg_ptr, 0, 7, 16, 13, 23);
-    write_seg(seg_ptr, 1, 13, 23, 25, 7);
+    write_seg(seg_ptr, 0, 56, 128, 96, 176);
+    write_seg(seg_ptr, 1, 96, 176, 168, 64);
     return 2;
   }
   if idx == 124 {
-    // ✗
-    write_seg(seg_ptr, 0, 8, 8, 24, 24);
-    write_seg(seg_ptr, 1, 24, 8, 8, 24);
+    write_seg(seg_ptr, 0, 64, 80, 144, 176);
+    write_seg(seg_ptr, 1, 144, 80, 64, 176);
     return 2;
   }
   if idx == 125 {
-    // ★
-    write_seg(seg_ptr, 0, 16, 6, 19, 13);
-    write_seg(seg_ptr, 1, 19, 13, 26, 14);
-    write_seg(seg_ptr, 2, 26, 14, 21, 19);
-    write_seg(seg_ptr, 3, 21, 19, 23, 26);
-    write_seg(seg_ptr, 4, 23, 26, 16, 22);
-    write_seg(seg_ptr, 5, 16, 22, 9, 26);
-    write_seg(seg_ptr, 6, 9, 26, 11, 19);
-    write_seg(seg_ptr, 7, 11, 19, 6, 14);
-    write_seg(seg_ptr, 8, 6, 14, 13, 13);
-    write_seg(seg_ptr, 9, 13, 13, 16, 6);
+    write_seg(seg_ptr, 0, 112, 48, 132, 96);
+    write_seg(seg_ptr, 1, 132, 96, 184, 100);
+    write_seg(seg_ptr, 2, 184, 100, 144, 132);
+    write_seg(seg_ptr, 3, 144, 132, 156, 184);
+    write_seg(seg_ptr, 4, 156, 184, 112, 152);
+    write_seg(seg_ptr, 5, 112, 152, 68, 184);
+    write_seg(seg_ptr, 6, 68, 184, 80, 132);
+    write_seg(seg_ptr, 7, 80, 132, 40, 100);
+    write_seg(seg_ptr, 8, 40, 100, 92, 96);
+    write_seg(seg_ptr, 9, 92, 96, 112, 48);
     return 10;
   }
   if idx == 126 {
-    // ⚡
-    write_seg(seg_ptr, 0, 18, 6, 10, 16);
-    write_seg(seg_ptr, 1, 10, 16, 17, 16);
-    write_seg(seg_ptr, 2, 17, 16, 13, 26);
-    write_seg(seg_ptr, 3, 13, 26, 22, 14);
-    write_seg(seg_ptr, 4, 22, 14, 16, 14);
-    write_seg(seg_ptr, 5, 16, 14, 18, 6);
+    write_seg(seg_ptr, 0, 120, 48, 72, 120);
+    write_seg(seg_ptr, 1, 72, 120, 112, 120);
+    write_seg(seg_ptr, 2, 112, 120, 80, 200);
+    write_seg(seg_ptr, 3, 80, 200, 160, 104);
+    write_seg(seg_ptr, 4, 160, 104, 112, 104);
+    write_seg(seg_ptr, 5, 112, 104, 136, 48);
     return 6;
   }
   if idx == 127 {
-    // ©
-    write_seg(seg_ptr, 0, 10, 8, 22, 8);
-    write_seg(seg_ptr, 1, 22, 8, 24, 16);
-    write_seg(seg_ptr, 2, 24, 16, 22, 24);
-    write_seg(seg_ptr, 3, 22, 24, 10, 24);
-    write_seg(seg_ptr, 4, 10, 24, 8, 16);
-    write_seg(seg_ptr, 5, 8, 16, 10, 8);
-    write_seg(seg_ptr, 6, 18, 12, 14, 12);
-    write_seg(seg_ptr, 7, 14, 12, 14, 20);
-    write_seg(seg_ptr, 8, 14, 20, 18, 20);
-    return 9;
+    write_seg(seg_ptr, 0, 156, 128, 141, 165);
+    write_seg(seg_ptr, 1, 141, 165, 104, 180);
+    write_seg(seg_ptr, 2, 104, 180, 67, 165);
+    write_seg(seg_ptr, 3, 67, 165, 52, 128);
+    write_seg(seg_ptr, 4, 52, 128, 67, 91);
+    write_seg(seg_ptr, 5, 67, 91, 104, 76);
+    write_seg(seg_ptr, 6, 104, 76, 141, 91);
+    write_seg(seg_ptr, 7, 141, 91, 156, 128);
+    write_seg(seg_ptr, 8, 124, 148, 100, 156);
+    write_seg(seg_ptr, 9, 100, 156, 79, 141);
+    write_seg(seg_ptr, 10, 79, 141, 79, 115);
+    write_seg(seg_ptr, 11, 79, 115, 100, 100);
+    write_seg(seg_ptr, 12, 100, 100, 124, 108);
+    return 13;
   }
   if idx == 128 {
-    // ®
-    write_seg(seg_ptr, 0, 10, 8, 22, 8);
-    write_seg(seg_ptr, 1, 22, 8, 24, 16);
-    write_seg(seg_ptr, 2, 24, 16, 22, 24);
-    write_seg(seg_ptr, 3, 22, 24, 10, 24);
-    write_seg(seg_ptr, 4, 10, 24, 8, 16);
-    write_seg(seg_ptr, 5, 8, 16, 10, 8);
-    write_seg(seg_ptr, 6, 13, 12, 13, 20);
-    write_seg(seg_ptr, 7, 13, 12, 18, 12);
-    write_seg(seg_ptr, 8, 18, 12, 18, 16);
-    write_seg(seg_ptr, 9, 18, 16, 13, 16);
-    return 10;
+    write_seg(seg_ptr, 0, 156, 128, 141, 165);
+    write_seg(seg_ptr, 1, 141, 165, 104, 180);
+    write_seg(seg_ptr, 2, 104, 180, 67, 165);
+    write_seg(seg_ptr, 3, 67, 165, 52, 128);
+    write_seg(seg_ptr, 4, 52, 128, 67, 91);
+    write_seg(seg_ptr, 5, 67, 91, 104, 76);
+    write_seg(seg_ptr, 6, 104, 76, 141, 91);
+    write_seg(seg_ptr, 7, 141, 91, 156, 128);
+    write_seg(seg_ptr, 8, 84, 96, 84, 160);
+    write_seg(seg_ptr, 9, 84, 92, 98, 98);
+    write_seg(seg_ptr, 10, 98, 98, 104, 112);
+    write_seg(seg_ptr, 11, 104, 112, 98, 126);
+    write_seg(seg_ptr, 12, 98, 126, 84, 132);
+    write_seg(seg_ptr, 13, 92, 132, 116, 160);
+    return 14;
   }
   if idx == 129 {
-    // µ
-    write_seg(seg_ptr, 0, 10, 13, 10, 26);
-    write_seg(seg_ptr, 1, 10, 20, 18, 20);
-    write_seg(seg_ptr, 2, 18, 13, 18, 21);
-    return 3;
+    write_seg(seg_ptr, 0, 68, 108, 68, 216);
+    write_seg(seg_ptr, 1, 68, 152, 75, 169);
+    write_seg(seg_ptr, 2, 75, 169, 92, 176);
+    write_seg(seg_ptr, 3, 92, 176, 109, 169);
+    write_seg(seg_ptr, 4, 109, 169, 116, 152);
+    write_seg(seg_ptr, 5, 116, 108, 116, 180);
+    return 6;
   }
   if idx == 130 {
-    // ²
-    write_seg(seg_ptr, 0, 12, 8, 18, 8);
-    write_seg(seg_ptr, 1, 18, 8, 18, 11);
-    write_seg(seg_ptr, 2, 18, 11, 12, 15);
-    write_seg(seg_ptr, 3, 12, 15, 18, 15);
-    return 4;
+    write_seg(seg_ptr, 0, 70, 80, 76, 92);
+    write_seg(seg_ptr, 1, 76, 92, 88, 98);
+    write_seg(seg_ptr, 2, 88, 98, 100, 92);
+    write_seg(seg_ptr, 3, 100, 92, 106, 80);
+    write_seg(seg_ptr, 4, 106, 80, 70, 128);
+    write_seg(seg_ptr, 5, 70, 128, 106, 128);
+    return 6;
   }
   if idx == 131 {
-    // ³
-    write_seg(seg_ptr, 0, 12, 8, 18, 8);
-    write_seg(seg_ptr, 1, 18, 8, 15, 11);
-    write_seg(seg_ptr, 2, 15, 11, 18, 13);
-    write_seg(seg_ptr, 3, 18, 13, 12, 15);
-    return 4;
-  }
-  if idx == 132 {
-    // α
-    write_seg(seg_ptr, 0, 22, 13, 14, 21);
-    write_seg(seg_ptr, 1, 14, 21, 10, 17);
-    write_seg(seg_ptr, 2, 10, 17, 14, 13);
-    write_seg(seg_ptr, 3, 14, 13, 22, 21);
-    return 4;
-  }
-  if idx == 133 {
-    // β
-    write_seg(seg_ptr, 0, 11, 7, 11, 26);
-    write_seg(seg_ptr, 1, 11, 7, 19, 7);
-    write_seg(seg_ptr, 2, 19, 7, 19, 13);
-    write_seg(seg_ptr, 3, 19, 13, 11, 13);
-    write_seg(seg_ptr, 4, 11, 13, 20, 13);
-    write_seg(seg_ptr, 5, 20, 13, 20, 20);
-    write_seg(seg_ptr, 6, 20, 20, 11, 20);
+    write_seg(seg_ptr, 0, 74, 70, 92, 63);
+    write_seg(seg_ptr, 1, 92, 63, 105, 76);
+    write_seg(seg_ptr, 2, 105, 76, 98, 94);
+    write_seg(seg_ptr, 3, 99, 96, 107, 112);
+    write_seg(seg_ptr, 4, 107, 112, 99, 128);
+    write_seg(seg_ptr, 5, 99, 128, 82, 130);
+    write_seg(seg_ptr, 6, 82, 130, 70, 118);
     return 7;
   }
+  if idx == 132 {
+    write_seg(seg_ptr, 0, 78, 165, 66, 147);
+    write_seg(seg_ptr, 1, 66, 147, 69, 126);
+    write_seg(seg_ptr, 2, 69, 126, 85, 112);
+    write_seg(seg_ptr, 3, 85, 112, 107, 112);
+    write_seg(seg_ptr, 4, 107, 112, 123, 126);
+    write_seg(seg_ptr, 5, 123, 126, 126, 147);
+    write_seg(seg_ptr, 6, 126, 147, 114, 165);
+    write_seg(seg_ptr, 7, 112, 120, 140, 108);
+    write_seg(seg_ptr, 8, 112, 160, 140, 172);
+    return 9;
+  }
+  if idx == 133 {
+    write_seg(seg_ptr, 0, 68, 56, 68, 216);
+    write_seg(seg_ptr, 1, 68, 58, 89, 67);
+    write_seg(seg_ptr, 2, 89, 67, 98, 88);
+    write_seg(seg_ptr, 3, 98, 88, 89, 109);
+    write_seg(seg_ptr, 4, 89, 109, 68, 118);
+    write_seg(seg_ptr, 5, 68, 110, 88, 117);
+    write_seg(seg_ptr, 6, 88, 117, 100, 134);
+    write_seg(seg_ptr, 7, 100, 134, 100, 154);
+    write_seg(seg_ptr, 8, 100, 154, 88, 171);
+    write_seg(seg_ptr, 9, 88, 171, 68, 178);
+    return 10;
+  }
   if idx == 134 {
-    // γ
-    write_seg(seg_ptr, 0, 10, 13, 16, 20);
-    write_seg(seg_ptr, 1, 21, 13, 16, 20);
-    write_seg(seg_ptr, 2, 16, 20, 13, 26);
+    write_seg(seg_ptr, 0, 64, 108, 88, 160);
+    write_seg(seg_ptr, 1, 128, 108, 88, 160);
+    write_seg(seg_ptr, 2, 88, 160, 72, 216);
     return 3;
   }
   if idx == 135 {
-    // δ
-    write_seg(seg_ptr, 0, 19, 7, 16, 7);
-    write_seg(seg_ptr, 1, 16, 7, 12, 15);
-    write_seg(seg_ptr, 2, 12, 15, 20, 15);
-    write_seg(seg_ptr, 3, 20, 15, 20, 21);
-    write_seg(seg_ptr, 4, 20, 21, 12, 21);
-    write_seg(seg_ptr, 5, 12, 21, 12, 15);
-    return 6;
+    write_seg(seg_ptr, 0, 132, 144, 123, 167);
+    write_seg(seg_ptr, 1, 123, 167, 100, 176);
+    write_seg(seg_ptr, 2, 100, 176, 77, 167);
+    write_seg(seg_ptr, 3, 77, 167, 68, 144);
+    write_seg(seg_ptr, 4, 68, 144, 77, 121);
+    write_seg(seg_ptr, 5, 77, 121, 100, 112);
+    write_seg(seg_ptr, 6, 100, 112, 123, 121);
+    write_seg(seg_ptr, 7, 123, 121, 132, 144);
+    write_seg(seg_ptr, 8, 108, 108, 88, 100);
+    write_seg(seg_ptr, 9, 88, 100, 80, 80);
+    write_seg(seg_ptr, 10, 80, 80, 88, 60);
+    write_seg(seg_ptr, 11, 88, 60, 108, 52);
+    return 12;
   }
   if idx == 136 {
-    // λ
-    write_seg(seg_ptr, 0, 11, 24, 20, 7);
-    write_seg(seg_ptr, 1, 15, 14, 23, 24);
+    write_seg(seg_ptr, 0, 72, 56, 136, 184);
+    write_seg(seg_ptr, 1, 112, 104, 64, 184);
     return 2;
   }
   if idx == 137 {
-    // μ
-    write_seg(seg_ptr, 0, 10, 13, 10, 26);
-    write_seg(seg_ptr, 1, 10, 20, 18, 20);
-    write_seg(seg_ptr, 2, 18, 13, 18, 21);
-    return 3;
+    write_seg(seg_ptr, 0, 68, 108, 68, 216);
+    write_seg(seg_ptr, 1, 68, 152, 75, 169);
+    write_seg(seg_ptr, 2, 75, 169, 92, 176);
+    write_seg(seg_ptr, 3, 92, 176, 109, 169);
+    write_seg(seg_ptr, 4, 109, 169, 116, 152);
+    write_seg(seg_ptr, 5, 116, 108, 116, 180);
+    return 6;
   }
   if idx == 138 {
-    // π
-    write_seg(seg_ptr, 0, 8, 13, 24, 13);
-    write_seg(seg_ptr, 1, 12, 13, 12, 22);
-    write_seg(seg_ptr, 2, 19, 13, 20, 22);
+    write_seg(seg_ptr, 0, 56, 108, 152, 108);
+    write_seg(seg_ptr, 1, 80, 108, 80, 180);
+    write_seg(seg_ptr, 2, 128, 108, 128, 180);
     return 3;
   }
   if idx == 139 {
-    // σ
-    write_seg(seg_ptr, 0, 16, 13, 23, 13);
-    write_seg(seg_ptr, 1, 16, 13, 11, 13);
-    write_seg(seg_ptr, 2, 11, 13, 11, 21);
-    write_seg(seg_ptr, 3, 11, 21, 19, 21);
-    write_seg(seg_ptr, 4, 19, 21, 19, 13);
-    return 5;
+    write_seg(seg_ptr, 0, 126, 140, 116, 164);
+    write_seg(seg_ptr, 1, 116, 164, 92, 174);
+    write_seg(seg_ptr, 2, 92, 174, 68, 164);
+    write_seg(seg_ptr, 3, 68, 164, 58, 140);
+    write_seg(seg_ptr, 4, 58, 140, 68, 116);
+    write_seg(seg_ptr, 5, 68, 116, 92, 106);
+    write_seg(seg_ptr, 6, 92, 106, 116, 116);
+    write_seg(seg_ptr, 7, 116, 116, 126, 140);
+    write_seg(seg_ptr, 8, 92, 106, 140, 106);
+    return 9;
   }
   if idx == 140 {
-    // ω
-    write_seg(seg_ptr, 0, 8, 13, 11, 21);
-    write_seg(seg_ptr, 1, 11, 21, 16, 17);
-    write_seg(seg_ptr, 2, 16, 17, 21, 21);
-    write_seg(seg_ptr, 3, 21, 21, 24, 13);
-    return 4;
+    write_seg(seg_ptr, 0, 59, 159, 69, 167);
+    write_seg(seg_ptr, 1, 69, 167, 82, 170);
+    write_seg(seg_ptr, 2, 82, 170, 94, 166);
+    write_seg(seg_ptr, 3, 94, 166, 102, 156);
+    write_seg(seg_ptr, 4, 102, 156, 106, 144);
+    write_seg(seg_ptr, 5, 94, 144, 98, 156);
+    write_seg(seg_ptr, 6, 98, 156, 106, 166);
+    write_seg(seg_ptr, 7, 106, 166, 118, 170);
+    write_seg(seg_ptr, 8, 118, 170, 131, 167);
+    write_seg(seg_ptr, 9, 131, 167, 141, 159);
+    return 10;
   }
   if idx == 141 {
-    // Δ
-    write_seg(seg_ptr, 0, 16, 7, 8, 24);
-    write_seg(seg_ptr, 1, 8, 24, 24, 24);
-    write_seg(seg_ptr, 2, 24, 24, 16, 7);
+    write_seg(seg_ptr, 0, 64, 184, 112, 56);
+    write_seg(seg_ptr, 1, 112, 56, 160, 184);
+    write_seg(seg_ptr, 2, 64, 184, 160, 184);
     return 3;
   }
   if idx == 142 {
-    // Ω
-    write_seg(seg_ptr, 0, 8, 24, 12, 24);
-    write_seg(seg_ptr, 1, 12, 24, 10, 14);
-    write_seg(seg_ptr, 2, 10, 14, 16, 7);
-    write_seg(seg_ptr, 3, 16, 7, 22, 14);
-    write_seg(seg_ptr, 4, 22, 14, 20, 24);
-    write_seg(seg_ptr, 5, 20, 24, 24, 24);
-    return 6;
+    write_seg(seg_ptr, 0, 56, 184, 80, 184);
+    write_seg(seg_ptr, 1, 80, 184, 84, 152);
+    write_seg(seg_ptr, 2, 74, 131, 66, 104);
+    write_seg(seg_ptr, 3, 66, 104, 74, 77);
+    write_seg(seg_ptr, 4, 74, 77, 98, 60);
+    write_seg(seg_ptr, 5, 98, 60, 126, 60);
+    write_seg(seg_ptr, 6, 126, 60, 150, 77);
+    write_seg(seg_ptr, 7, 150, 77, 158, 104);
+    write_seg(seg_ptr, 8, 158, 104, 150, 131);
+    write_seg(seg_ptr, 9, 140, 152, 144, 184);
+    write_seg(seg_ptr, 10, 144, 184, 168, 184);
+    return 11;
   }
   if idx == 143 {
-    // θ
-    write_seg(seg_ptr, 0, 16, 7, 10, 14);
-    write_seg(seg_ptr, 1, 10, 14, 10, 18);
-    write_seg(seg_ptr, 2, 10, 18, 16, 24);
-    write_seg(seg_ptr, 3, 16, 24, 22, 18);
-    write_seg(seg_ptr, 4, 22, 18, 22, 14);
-    write_seg(seg_ptr, 5, 22, 14, 16, 7);
-    write_seg(seg_ptr, 6, 10, 16, 22, 16);
-    return 7;
+    write_seg(seg_ptr, 0, 152, 124, 137, 161);
+    write_seg(seg_ptr, 1, 137, 161, 100, 176);
+    write_seg(seg_ptr, 2, 100, 176, 63, 161);
+    write_seg(seg_ptr, 3, 63, 161, 48, 124);
+    write_seg(seg_ptr, 4, 48, 124, 63, 87);
+    write_seg(seg_ptr, 5, 63, 87, 100, 72);
+    write_seg(seg_ptr, 6, 100, 72, 137, 87);
+    write_seg(seg_ptr, 7, 137, 87, 152, 124);
+    write_seg(seg_ptr, 8, 52, 124, 148, 124);
+    return 9;
   }
   if idx == 144 {
-    // ä
-    write_seg(seg_ptr, 0, 13, 8, 14, 8);
-    write_seg(seg_ptr, 1, 18, 8, 19, 8);
-    write_seg(seg_ptr, 2, 19, 13, 13, 13);
-    write_seg(seg_ptr, 3, 13, 13, 11, 17);
-    write_seg(seg_ptr, 4, 11, 17, 19, 17);
-    write_seg(seg_ptr, 5, 19, 13, 19, 21);
-    write_seg(seg_ptr, 6, 11, 17, 11, 21);
-    write_seg(seg_ptr, 7, 11, 21, 19, 21);
-    return 8;
+    write_seg(seg_ptr, 0, 118, 140, 108, 164);
+    write_seg(seg_ptr, 1, 108, 164, 84, 174);
+    write_seg(seg_ptr, 2, 84, 174, 60, 164);
+    write_seg(seg_ptr, 3, 60, 164, 50, 140);
+    write_seg(seg_ptr, 4, 50, 140, 60, 116);
+    write_seg(seg_ptr, 5, 60, 116, 84, 106);
+    write_seg(seg_ptr, 6, 84, 106, 108, 116);
+    write_seg(seg_ptr, 7, 108, 116, 118, 140);
+    write_seg(seg_ptr, 8, 118, 106, 118, 180);
+    write_seg(seg_ptr, 9, 76, 68, 76, 76);
+    write_seg(seg_ptr, 10, 108, 68, 108, 76);
+    return 11;
   }
   if idx == 145 {
-    // ö
-    write_seg(seg_ptr, 0, 13, 8, 14, 8);
-    write_seg(seg_ptr, 1, 18, 8, 19, 8);
-    write_seg(seg_ptr, 2, 12, 13, 20, 13);
-    write_seg(seg_ptr, 3, 20, 13, 20, 21);
-    write_seg(seg_ptr, 4, 20, 21, 12, 21);
-    write_seg(seg_ptr, 5, 12, 21, 12, 13);
-    return 6;
+    write_seg(seg_ptr, 0, 132, 140, 121, 165);
+    write_seg(seg_ptr, 1, 121, 165, 96, 176);
+    write_seg(seg_ptr, 2, 96, 176, 71, 165);
+    write_seg(seg_ptr, 3, 71, 165, 60, 140);
+    write_seg(seg_ptr, 4, 60, 140, 71, 115);
+    write_seg(seg_ptr, 5, 71, 115, 96, 104);
+    write_seg(seg_ptr, 6, 96, 104, 121, 115);
+    write_seg(seg_ptr, 7, 121, 115, 132, 140);
+    write_seg(seg_ptr, 8, 80, 68, 80, 76);
+    write_seg(seg_ptr, 9, 112, 68, 112, 76);
+    return 10;
   }
   if idx == 146 {
-    // ü
-    write_seg(seg_ptr, 0, 13, 8, 14, 8);
-    write_seg(seg_ptr, 1, 18, 8, 19, 8);
-    write_seg(seg_ptr, 2, 12, 13, 12, 20);
-    write_seg(seg_ptr, 3, 12, 20, 20, 20);
-    write_seg(seg_ptr, 4, 20, 13, 20, 21);
-    return 5;
+    write_seg(seg_ptr, 0, 68, 108, 68, 152);
+    write_seg(seg_ptr, 1, 68, 152, 75, 169);
+    write_seg(seg_ptr, 2, 75, 169, 92, 176);
+    write_seg(seg_ptr, 3, 92, 176, 109, 169);
+    write_seg(seg_ptr, 4, 109, 169, 116, 152);
+    write_seg(seg_ptr, 5, 116, 108, 116, 180);
+    write_seg(seg_ptr, 6, 80, 68, 80, 76);
+    write_seg(seg_ptr, 7, 112, 68, 112, 76);
+    return 8;
   }
   if idx == 147 {
-    // é
-    write_seg(seg_ptr, 0, 14, 10, 18, 6);
-    write_seg(seg_ptr, 1, 12, 17, 20, 17);
-    write_seg(seg_ptr, 2, 20, 17, 20, 13);
-    write_seg(seg_ptr, 3, 20, 13, 12, 13);
-    write_seg(seg_ptr, 4, 12, 13, 12, 21);
-    write_seg(seg_ptr, 5, 12, 21, 20, 21);
-    return 6;
+    write_seg(seg_ptr, 0, 60, 140, 132, 140);
+    write_seg(seg_ptr, 1, 132, 140, 121, 166);
+    write_seg(seg_ptr, 2, 121, 166, 94, 176);
+    write_seg(seg_ptr, 3, 94, 176, 69, 164);
+    write_seg(seg_ptr, 4, 69, 164, 60, 137);
+    write_seg(seg_ptr, 5, 60, 137, 74, 112);
+    write_seg(seg_ptr, 6, 74, 112, 101, 104);
+    write_seg(seg_ptr, 7, 101, 104, 125, 119);
+    write_seg(seg_ptr, 8, 80, 84, 104, 64);
+    return 9;
   }
   if idx == 148 {
-    // è
-    write_seg(seg_ptr, 0, 18, 10, 14, 6);
-    write_seg(seg_ptr, 1, 12, 17, 20, 17);
-    write_seg(seg_ptr, 2, 20, 17, 20, 13);
-    write_seg(seg_ptr, 3, 20, 13, 12, 13);
-    write_seg(seg_ptr, 4, 12, 13, 12, 21);
-    write_seg(seg_ptr, 5, 12, 21, 20, 21);
-    return 6;
+    write_seg(seg_ptr, 0, 60, 140, 132, 140);
+    write_seg(seg_ptr, 1, 132, 140, 121, 166);
+    write_seg(seg_ptr, 2, 121, 166, 94, 176);
+    write_seg(seg_ptr, 3, 94, 176, 69, 164);
+    write_seg(seg_ptr, 4, 69, 164, 60, 137);
+    write_seg(seg_ptr, 5, 60, 137, 74, 112);
+    write_seg(seg_ptr, 6, 74, 112, 101, 104);
+    write_seg(seg_ptr, 7, 101, 104, 125, 119);
+    write_seg(seg_ptr, 8, 96, 64, 72, 84);
+    return 9;
   }
   if idx == 149 {
-    // ê
-    write_seg(seg_ptr, 0, 13, 10, 16, 7);
-    write_seg(seg_ptr, 1, 16, 7, 19, 10);
-    write_seg(seg_ptr, 2, 12, 17, 20, 17);
-    write_seg(seg_ptr, 3, 20, 17, 20, 13);
-    write_seg(seg_ptr, 4, 20, 13, 12, 13);
-    write_seg(seg_ptr, 5, 12, 13, 12, 21);
-    write_seg(seg_ptr, 6, 12, 21, 20, 21);
-    return 7;
+    write_seg(seg_ptr, 0, 60, 140, 132, 140);
+    write_seg(seg_ptr, 1, 132, 140, 121, 166);
+    write_seg(seg_ptr, 2, 121, 166, 94, 176);
+    write_seg(seg_ptr, 3, 94, 176, 69, 164);
+    write_seg(seg_ptr, 4, 69, 164, 60, 137);
+    write_seg(seg_ptr, 5, 60, 137, 74, 112);
+    write_seg(seg_ptr, 6, 74, 112, 101, 104);
+    write_seg(seg_ptr, 7, 101, 104, 125, 119);
+    write_seg(seg_ptr, 8, 76, 84, 96, 64);
+    write_seg(seg_ptr, 9, 96, 64, 116, 84);
+    return 10;
   }
   if idx == 150 {
-    // á
-    write_seg(seg_ptr, 0, 14, 10, 18, 6);
-    write_seg(seg_ptr, 1, 19, 13, 13, 13);
-    write_seg(seg_ptr, 2, 13, 13, 11, 17);
-    write_seg(seg_ptr, 3, 11, 17, 19, 17);
-    write_seg(seg_ptr, 4, 19, 13, 19, 21);
-    write_seg(seg_ptr, 5, 11, 17, 11, 21);
-    write_seg(seg_ptr, 6, 11, 21, 19, 21);
-    return 7;
+    write_seg(seg_ptr, 0, 118, 140, 108, 164);
+    write_seg(seg_ptr, 1, 108, 164, 84, 174);
+    write_seg(seg_ptr, 2, 84, 174, 60, 164);
+    write_seg(seg_ptr, 3, 60, 164, 50, 140);
+    write_seg(seg_ptr, 4, 50, 140, 60, 116);
+    write_seg(seg_ptr, 5, 60, 116, 84, 106);
+    write_seg(seg_ptr, 6, 84, 106, 108, 116);
+    write_seg(seg_ptr, 7, 108, 116, 118, 140);
+    write_seg(seg_ptr, 8, 118, 106, 118, 180);
+    write_seg(seg_ptr, 9, 80, 84, 104, 64);
+    return 10;
   }
   if idx == 151 {
-    // í
-    write_seg(seg_ptr, 0, 14, 10, 18, 6);
-    write_seg(seg_ptr, 1, 16, 13, 16, 21);
+    write_seg(seg_ptr, 0, 76, 108, 76, 180);
+    write_seg(seg_ptr, 1, 68, 84, 88, 68);
     return 2;
   }
   if idx == 152 {
-    // ó
-    write_seg(seg_ptr, 0, 14, 10, 18, 6);
-    write_seg(seg_ptr, 1, 12, 13, 20, 13);
-    write_seg(seg_ptr, 2, 20, 13, 20, 21);
-    write_seg(seg_ptr, 3, 20, 21, 12, 21);
-    write_seg(seg_ptr, 4, 12, 21, 12, 13);
-    return 5;
+    write_seg(seg_ptr, 0, 132, 140, 121, 165);
+    write_seg(seg_ptr, 1, 121, 165, 96, 176);
+    write_seg(seg_ptr, 2, 96, 176, 71, 165);
+    write_seg(seg_ptr, 3, 71, 165, 60, 140);
+    write_seg(seg_ptr, 4, 60, 140, 71, 115);
+    write_seg(seg_ptr, 5, 71, 115, 96, 104);
+    write_seg(seg_ptr, 6, 96, 104, 121, 115);
+    write_seg(seg_ptr, 7, 121, 115, 132, 140);
+    write_seg(seg_ptr, 8, 80, 84, 104, 64);
+    return 9;
   }
   if idx == 153 {
-    // ú
-    write_seg(seg_ptr, 0, 14, 10, 18, 6);
-    write_seg(seg_ptr, 1, 12, 13, 12, 20);
-    write_seg(seg_ptr, 2, 12, 20, 20, 20);
-    write_seg(seg_ptr, 3, 20, 13, 20, 21);
-    return 4;
-  }
-  if idx == 154 {
-    // ñ
-    write_seg(seg_ptr, 0, 13, 9, 15, 7);
-    write_seg(seg_ptr, 1, 15, 7, 17, 10);
-    write_seg(seg_ptr, 2, 17, 10, 19, 8);
-    write_seg(seg_ptr, 3, 12, 13, 12, 21);
-    write_seg(seg_ptr, 4, 12, 13, 20, 13);
-    write_seg(seg_ptr, 5, 20, 13, 20, 21);
-    return 6;
-  }
-  if idx == 155 {
-    // ç
-    write_seg(seg_ptr, 0, 20, 13, 12, 13);
-    write_seg(seg_ptr, 1, 12, 13, 12, 21);
-    write_seg(seg_ptr, 2, 12, 21, 20, 21);
-    write_seg(seg_ptr, 3, 16, 21, 14, 25);
-    write_seg(seg_ptr, 4, 14, 25, 17, 25);
-    return 5;
-  }
-  if idx == 156 {
-    // ß
-    write_seg(seg_ptr, 0, 12, 7, 12, 24);
-    write_seg(seg_ptr, 1, 12, 7, 18, 7);
-    write_seg(seg_ptr, 2, 18, 7, 18, 14);
-    write_seg(seg_ptr, 3, 18, 14, 12, 14);
-    write_seg(seg_ptr, 4, 18, 14, 19, 18);
-    write_seg(seg_ptr, 5, 19, 18, 15, 22);
-    write_seg(seg_ptr, 6, 15, 22, 12, 22);
+    write_seg(seg_ptr, 0, 68, 108, 68, 152);
+    write_seg(seg_ptr, 1, 68, 152, 75, 169);
+    write_seg(seg_ptr, 2, 75, 169, 92, 176);
+    write_seg(seg_ptr, 3, 92, 176, 109, 169);
+    write_seg(seg_ptr, 4, 109, 169, 116, 152);
+    write_seg(seg_ptr, 5, 116, 108, 116, 180);
+    write_seg(seg_ptr, 6, 80, 84, 104, 64);
     return 7;
   }
-
-  // Fallback box for unhandled printable characters
-  write_seg(seg_ptr, 0, 9, 7, 23, 7);
-  write_seg(seg_ptr, 1, 23, 7, 23, 23);
-  write_seg(seg_ptr, 2, 23, 23, 9, 23);
-  write_seg(seg_ptr, 3, 9, 23, 9, 7);
-  return 4;
+  if idx == 154 {
+    write_seg(seg_ptr, 0, 68, 108, 68, 180);
+    write_seg(seg_ptr, 1, 116, 132, 116, 180);
+    write_seg(seg_ptr, 2, 68, 132, 75, 115);
+    write_seg(seg_ptr, 3, 75, 115, 92, 108);
+    write_seg(seg_ptr, 4, 92, 108, 109, 115);
+    write_seg(seg_ptr, 5, 109, 115, 116, 132);
+    write_seg(seg_ptr, 6, 76, 72, 92, 64);
+    write_seg(seg_ptr, 7, 92, 64, 108, 72);
+    return 8;
+  }
+  if idx == 155 {
+    write_seg(seg_ptr, 0, 121, 165, 96, 176);
+    write_seg(seg_ptr, 1, 96, 176, 71, 165);
+    write_seg(seg_ptr, 2, 71, 165, 60, 140);
+    write_seg(seg_ptr, 3, 60, 140, 71, 115);
+    write_seg(seg_ptr, 4, 71, 115, 96, 104);
+    write_seg(seg_ptr, 5, 96, 104, 121, 115);
+    write_seg(seg_ptr, 6, 88, 180, 88, 200);
+    write_seg(seg_ptr, 7, 88, 200, 76, 212);
+    return 8;
+  }
+  if idx == 156 {
+    write_seg(seg_ptr, 0, 68, 56, 68, 184);
+    write_seg(seg_ptr, 1, 68, 58, 89, 67);
+    write_seg(seg_ptr, 2, 89, 67, 98, 88);
+    write_seg(seg_ptr, 3, 98, 88, 89, 109);
+    write_seg(seg_ptr, 4, 89, 109, 68, 118);
+    write_seg(seg_ptr, 5, 68, 110, 88, 117);
+    write_seg(seg_ptr, 6, 88, 117, 100, 134);
+    write_seg(seg_ptr, 7, 100, 134, 100, 154);
+    write_seg(seg_ptr, 8, 100, 154, 88, 171);
+    write_seg(seg_ptr, 9, 88, 171, 68, 178);
+    return 10;
+  }
+  return 0;
 }
 
-export fn sdf_render_char_cell(idx: u32, atlas_ptr: u32, col: u32, row: u32, temp_seg_ptr: u32) -> unit {
+export fn sdf_render_char_cell(
+  idx: u32,
+  atlas_ptr: u32,
+  col: u32,
+  row: u32,
+  temp_seg_ptr: u32
+) -> unit {
   let num_segs: u32 = sdf_load_char_segments(idx, temp_seg_ptr);
+
   let cell_x0: u32 = col * 32;
   let cell_y0: u32 = row * 32;
+
   let u_8: u32 = 8;
   let u_16: u32 = 16;
   let u_127: u32 = 127;
@@ -1628,8 +1812,8 @@ export fn sdf_init_atlas_data() -> u32 {
   }
   memory_store_u32(196, atlas_ptr);
 
-  // Scratch memory for 10 segments * 16 bytes = 160 bytes
-  let temp_seg_ptr: u32 = memory_alloc(160);
+  // Scratch memory for up to 32 segments * 16 bytes = 512 bytes
+  let temp_seg_ptr: u32 = memory_alloc(512);
 
   let mut idx: u32 = 0;
   while idx < 157 {
@@ -1745,7 +1929,6 @@ export fn sdf_append_text_quads(
       let v1: f64 = (cell_y + dim_f64) / atlas_size_f64;
 
       if float_count + 48 <= 64000 {
-        // 6 vertices per quad: (qx0,qy0), (qx1,qy0), (qx0,qy1), (qx0,qy1), (qx1,qy0), (qx1,qy1)
         let v0_ptr: u32 = vbuf_base + float_count * 8;
         memory_store_f64(v0_ptr, qx0); memory_store_f64(v0_ptr + 8, qy0); memory_store_f64(v0_ptr + 16, u0); memory_store_f64(v0_ptr + 24, v0);
         memory_store_f64(v0_ptr + 32, r); memory_store_f64(v0_ptr + 40, g); memory_store_f64(v0_ptr + 48, b); memory_store_f64(v0_ptr + 56, a);
