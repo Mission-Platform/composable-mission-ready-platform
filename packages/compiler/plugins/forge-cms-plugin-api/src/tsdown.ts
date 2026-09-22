@@ -563,7 +563,7 @@ export function tsdownForgeCmsPlugins(
   const plugin: ForgeCmsTsdownPlugin = {
     name: CMS_TSDOWN_PLUGIN_NAME,
     cmsTargetConfigs: forgeConfigs,
-    async tsdownConfig(config: UserConfig) {
+    tsdownConfig(config: UserConfig) {
       const callerPlugins = flattenPlugins(config.plugins).filter(
         (entry) => !isOrchestratorPlugin(entry),
       );
@@ -576,7 +576,6 @@ export function tsdownForgeCmsPlugins(
           options.rootDir,
           outputRoot,
         );
-        return;
       }
     },
   };

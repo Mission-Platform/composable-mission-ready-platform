@@ -93,17 +93,14 @@ function isFunctionNode(node) {
  * Find the enclosing TSTypeAnnotation for a nested type node.
  */
 function findEnclosingTypeAnnotation(node) {
-  let matched;
   for (let current = node?.parent; current; current = current.parent) {
     if (current.type === 'TSTypeAnnotation') {
-      matched = current;
-      break;
+      return current;
     }
     if (BOUNDARY_NODE_TYPES.has(current.type)) {
-      break;
+      return;
     }
   }
-  return matched;
 }
 
 /**

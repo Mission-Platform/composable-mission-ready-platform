@@ -7,7 +7,7 @@ import type { DtsOptions, TsdownPlugin, UserConfig } from 'tsdown';
 
 /** Flatten tsdown's recursive `plugins` option into a plain array for merging. */
 function flattenPlugins(plugins: UserConfig['plugins']): TsdownPlugin[] {
-  if (plugins == undefined || plugins === false) {
+  if (plugins === undefined || plugins === null || plugins === false) {
     return [];
   }
   if (Array.isArray(plugins)) {
@@ -73,13 +73,36 @@ function resolveEntry(
   return Object.fromEntries(Object.entries(entry).map(([key, value]) => [key, path.resolve(rootDirectory, value)]));
 }
 
+/** Merge rollup-style object or function options. */
+function mergeRollupOptions<T extends object | ((...args: never[]) => unknown)>(
+  base?: T,
+  overrides?: T,
+): T | undefined {
+  if (typeof overrides === 'function' || typeof base === 'function') {
+    return (overrides ?? base) as T;
+  }
+  if (base !== undefined || overrides !== undefined) {
+    const baseObject = typeof base === 'object' && base !== null ? base : {};
+    const overrideObject = typeof overrides === 'object' && overrides !== null ? overrides : {};
+    return { ...baseObject, ...overrideObject } as T;
+  }
+  return undefined;
+}
+
+/** Merge plugins from base and override configurations. */
+function mergeConfigPlugins(
+  basePlugins: UserConfig['plugins'],
+  overridePlugins: UserConfig['plugins'],
+): TsdownPlugin[] | undefined {
+  const merged = [...flattenPlugins(basePlugins), ...flattenPlugins(overridePlugins)];
+  return merged.length > 0 ? merged : undefined;
+}
+
 /** Deep-merge a base tsdown config with caller overrides (shallow for top-level, concat plugins). */
 function mergeTsdownConfig(base: UserConfig, overrides?: UserConfig): UserConfig {
   if (!overrides) {
     return base;
   }
-
-  const mergedPlugins = [...flattenPlugins(base.plugins), ...flattenPlugins(overrides.plugins)];
 
   return {
     ...base,
@@ -88,23 +111,11 @@ function mergeTsdownConfig(base: UserConfig, overrides?: UserConfig): UserConfig
       ...base.deps,
       ...overrides.deps,
     },
-    dts: overrides.dts === undefined ? base.dts : overrides.dts,
+    dts: overrides.dts ?? base.dts,
     hooks: overrides.hooks ?? base.hooks,
-    inputOptions:
-      typeof overrides.inputOptions === 'function' || typeof base.inputOptions === 'function'
-        ? (overrides.inputOptions ?? base.inputOptions)
-        : {
-            ...(typeof base.inputOptions === 'object' ? base.inputOptions : {}),
-            ...(typeof overrides.inputOptions === 'object' ? overrides.inputOptions : {}),
-          },
-    outputOptions:
-      typeof overrides.outputOptions === 'function' || typeof base.outputOptions === 'function'
-        ? (overrides.outputOptions ?? base.outputOptions)
-        : {
-            ...(typeof base.outputOptions === 'object' ? base.outputOptions : {}),
-            ...(typeof overrides.outputOptions === 'object' ? overrides.outputOptions : {}),
-          },
-    plugins: mergedPlugins.length > 0 ? mergedPlugins : undefined,
+    inputOptions: mergeRollupOptions(base.inputOptions, overrides.inputOptions),
+    outputOptions: mergeRollupOptions(base.outputOptions, overrides.outputOptions),
+    plugins: mergeConfigPlugins(base.plugins, overrides.plugins),
   };
 }
 
@@ -192,32 +203,40 @@ function collectCssFiles(directory: string, base: string = directory): string[] 
   return results;
 }
 
+/**
+ * Recursively find the first JS module in `outputDirectory` whose base name matches
+ * either `baseName` or `fileName`.
+ */
 function findJsByBaseName(outputDirectory: string, baseName: string, fileName: string): string | undefined {
-  const matches: string[] = [];
-  function walk(currentDirectory: string): void {
-    for (const entry of fs.readdirSync(currentDirectory, { withFileTypes: true })) {
+  const targetNames = new Set([baseName, `${baseName}.vue`, `${baseName}.module`, fileName]);
+  const queue = [outputDirectory];
+
+  while (queue.length > 0) {
+    const currentDirectory = queue.shift();
+    if (!currentDirectory) {
+      continue;
+    }
+    let entries: fs.Dirent[];
+    try {
+      entries = fs.readdirSync(currentDirectory, { withFileTypes: true });
+    } catch {
+      continue;
+    }
+
+    for (const entry of entries) {
       const fullPath = path.join(currentDirectory, entry.name);
       if (entry.isDirectory()) {
-        walk(fullPath);
+        queue.push(fullPath);
       } else if (entry.isFile() && entry.name.endsWith('.js')) {
         const nameWithoutExtension = path.posix.basename(entry.name, '.js');
-        if (
-          nameWithoutExtension === baseName ||
-          nameWithoutExtension === `${baseName}.vue` ||
-          nameWithoutExtension === `${baseName}.module` ||
-          nameWithoutExtension === fileName
-        ) {
-          matches.push(path.relative(outputDirectory, fullPath).split(path.sep).join('/'));
+        if (targetNames.has(nameWithoutExtension)) {
+          return path.relative(outputDirectory, fullPath).split(path.sep).join('/');
         }
       }
     }
   }
-  try {
-    walk(outputDirectory);
-  } catch {
-    return undefined;
-  }
-  return matches[0];
+
+  return undefined;
 }
 
 /**
@@ -237,12 +256,12 @@ function findJsByBaseName(outputDirectory: string, baseName: string, fileName: s
 export function resolveCssOwner(outputDirectory: string, cssRelative: string): string | undefined {
   const directory = path.posix.dirname(cssRelative);
   const fileName = path.posix.basename(cssRelative, '.css');
-  const join = (name: string): string => (directory === '.' ? name : `${directory}/${name}`);
+  const prefix = directory === '.' ? '' : `${directory}/`;
 
   const vueMarker = '.vue_vue_type_style';
   if (fileName.includes(vueMarker)) {
     const base = fileName.slice(0, fileName.indexOf(vueMarker));
-    const candidates = [join(`${base}.js`), join(`${base}.vue.js`)];
+    const candidates = [`${prefix}${base}.js`, `${prefix}${base}.vue.js`];
     const match = candidates.find((candidate) => fs.existsSync(path.join(outputDirectory, candidate)));
     if (match !== undefined) return match;
     return findJsByBaseName(outputDirectory, base, fileName);
@@ -250,12 +269,12 @@ export function resolveCssOwner(outputDirectory: string, cssRelative: string): s
 
   const baseName = fileName.endsWith('.module') ? fileName.slice(0, -'.module'.length) : fileName;
   const candidates: string[] = [
-    join(`${fileName}.module.js`),
-    join(`${fileName}.js`),
-    join(`${baseName}.module.js`),
-    join(`${baseName}.js`),
-    join(`${baseName}.vue.js`),
-    join('index.js'),
+    `${prefix}${fileName}.module.js`,
+    `${prefix}${fileName}.js`,
+    `${prefix}${baseName}.module.js`,
+    `${prefix}${baseName}.js`,
+    `${prefix}${baseName}.vue.js`,
+    `${prefix}index.js`,
   ];
 
   const localMatch = candidates.find((candidate) => fs.existsSync(path.join(outputDirectory, candidate)));
@@ -264,6 +283,40 @@ export function resolveCssOwner(outputDirectory: string, cssRelative: string): s
   }
 
   return findJsByBaseName(outputDirectory, baseName, fileName);
+}
+
+/** Prepend a CSS side-effect import to module code, preserving any leading directives. */
+function prependCssImport(code: string, specifier: string): string {
+  const importStatement = `import ${JSON.stringify(specifier)};`;
+  const directiveMatch = code.match(/^(?:['"]use client['"];?\s*\n?)+/);
+  if (directiveMatch === null) {
+    return `${importStatement}\n${code}`;
+  }
+  const directive = directiveMatch[0];
+  const rest = code.slice(directive.length);
+  return `${directive}${importStatement}\n${rest}`;
+}
+
+/** Relink a single extracted CSS stylesheet to its owning JS module. */
+function relinkStylesheet(outputDirectory: string, cssRelative: string): void {
+  const owner = resolveCssOwner(outputDirectory, cssRelative);
+  if (owner === undefined) {
+    return;
+  }
+  const ownerDirectory = path.posix.dirname(owner);
+  const relativeCss = path.posix.relative(ownerDirectory, cssRelative);
+  const specifier = relativeCss.startsWith('.') ? relativeCss : `./${relativeCss}`;
+  const ownerPath = path.join(outputDirectory, owner);
+  const code = fs.readFileSync(ownerPath, 'utf8');
+
+  // Check if the import already exists (with any quote style or optional semicolon)
+  const escapedSpecifier = specifier.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
+  const importRegex = new RegExp(String.raw`import\s*['"]${escapedSpecifier}['"]`);
+  if (importRegex.test(code)) {
+    return;
+  }
+
+  fs.writeFileSync(ownerPath, prependCssImport(code, specifier));
 }
 
 /**
@@ -300,34 +353,7 @@ export function cssBundlePlugin(): TsdownPlugin {
       }
 
       for (const cssRelative of collectCssFiles(outputDirectory)) {
-        const owner = resolveCssOwner(outputDirectory, cssRelative);
-        if (owner === undefined) {
-          continue;
-        }
-        const ownerDirectory = path.posix.dirname(owner);
-        const relativeCss = path.posix.relative(ownerDirectory, cssRelative);
-        const specifier = relativeCss.startsWith('.') ? relativeCss : `./${relativeCss}`;
-        const ownerPath = path.join(outputDirectory, owner);
-        const code = fs.readFileSync(ownerPath, 'utf8');
-
-        // Check if the import already exists (with any quote style or optional semicolon)
-        const escapedSpecifier = specifier.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
-        const importRegex = new RegExp(String.raw`import\s*['"]${escapedSpecifier}['"]`);
-        if (importRegex.test(code)) {
-          continue;
-        }
-
-        const importStatement = `import ${JSON.stringify(specifier)};`;
-        const directiveMatch = code.match(/^(?:['"]use client['"];?\s*\n?)+/);
-        let updatedCode: string;
-        if (directiveMatch === null) {
-          updatedCode = `${importStatement}\n${code}`;
-        } else {
-          const directive = directiveMatch[0];
-          const rest = code.slice(directive.length);
-          updatedCode = `${directive}${importStatement}\n${rest}`;
-        }
-        fs.writeFileSync(ownerPath, updatedCode);
+        relinkStylesheet(outputDirectory, cssRelative);
       }
     },
   };
@@ -335,36 +361,13 @@ export function cssBundlePlugin(): TsdownPlugin {
   return plugin as unknown as TsdownPlugin;
 }
 
-/**
- * Resolve the default dts option so project-references packages still emit.
- *
- * When a staged `outputRoot` is active, declaration emit and incremental tsc
- * artifacts are redirected under that root. Otherwise packages with
- * `declarationDir: "./dist"` keep reading and writing the live package `dist`
- * tree, and multi-outDir libraries (e.g. icons' `dist/components` +
- * `dist/sprite`) fail to resolve rewritten cross-entry imports such as
- * `./sprite/*.js` against a stale final tree.
- */
-function resolveDtsOption(
-  dts: boolean | DtsOptions,
-  options?: { readonly rootDir: string; readonly outputRoot?: string; readonly outDir?: string },
-): boolean | DtsOptions {
-  if (dts === false) {
-    return false;
-  }
-
-  const rootDirectory = options?.rootDir ?? process.cwd();
-  const outputRoot = options?.outputRoot;
-  const outDirectory = options?.outDir ?? 'dist';
-
-  const resolved: DtsOptions = dts === true ? { build: false, generator: 'tsgo' } : { build: false, ...dts };
-  if (outputRoot === undefined) {
-    return resolved;
-  }
-
-  // Staged non-Vue declarations are generated from isolated modules. OXC keeps
-  // the temporary tree out of the package source and writes the bundle to the
-  // staged `dist`; Vue custom-language declarations use their synthesized path.
+/** Build staged DtsOptions redirected into the isolated output root. */
+function buildStagedDtsOptions(
+  resolved: DtsOptions,
+  rootDirectory: string,
+  outDirectory: string,
+  outputRoot: string,
+): DtsOptions {
   if (resolved.vue !== true && resolved.generator === 'tsgo') {
     return { ...resolved, generator: 'oxc' };
   }
@@ -394,6 +397,35 @@ function resolveDtsOption(
 }
 
 /**
+ * Resolve the default dts option so project-references packages still emit.
+ *
+ * When a staged `outputRoot` is active, declaration emit and incremental tsc
+ * artifacts are redirected under that root. Otherwise packages with
+ * `declarationDir: "./dist"` keep reading and writing the live package `dist`
+ * tree, and multi-outDir libraries (e.g. icons' `dist/components` +
+ * `dist/sprite`) fail to resolve rewritten cross-entry imports such as
+ * `./sprite/*.js` against a stale final tree.
+ */
+function resolveDtsOption(
+  dts: boolean | DtsOptions,
+  options?: { readonly rootDir: string; readonly outputRoot?: string; readonly outDir?: string },
+): boolean | DtsOptions {
+  if (dts === false) {
+    return false;
+  }
+
+  const resolved: DtsOptions = dts === true ? { build: false, generator: 'tsgo' } : { build: false, ...dts };
+  const outputRoot = options?.outputRoot;
+  if (outputRoot === undefined) {
+    return resolved;
+  }
+
+  const rootDirectory = options?.rootDir ?? process.cwd();
+  const outDirectory = options?.outDir ?? 'dist';
+  return buildStagedDtsOptions(resolved, rootDirectory, outDirectory, outputRoot);
+}
+
+/**
  * Materialize a stage-local tsconfig so `tsc -b` cannot reuse the package's
  * live `declarationDir` / `tsBuildInfoFile` from a previous final build.
  */
@@ -401,7 +433,7 @@ function writeStagedTsconfig(
   rootDirectory: string,
   outputRoot: string,
   baseTsconfig: string,
-  outDirectory: string = 'dist',
+  outDirectory = 'dist',
 ): string {
   fs.mkdirSync(outputRoot, { recursive: true });
   const stagedTsconfigPath = path.join(outputRoot, 'tsconfig.forge-stage.json');
@@ -419,32 +451,37 @@ function writeStagedTsconfig(
   return stagedTsconfigPath;
 }
 
+/** Resolve the base tsconfig path when staging is active. */
+function resolveStagedBaseTsconfig(rootDirectory: string, resolvedBase: string | boolean): string {
+  if (typeof resolvedBase === 'string') {
+    return resolvedBase;
+  }
+  const buildConfig = path.resolve(rootDirectory, 'tsconfig.build.json');
+  return fs.existsSync(buildConfig) ? buildConfig : path.resolve(rootDirectory, 'tsconfig.json');
+}
+
 /** Prefer the package's `tsconfig.build.json` when present, stage-remapped if needed. */
 function resolveTsconfigOption(
   rootDirectory: string,
   tsconfig: string | boolean | undefined,
   outputRoot?: string,
-  outDirectory: string = 'dist',
+  outDirectory = 'dist',
 ): string | boolean {
-  const resolvedBase =
-    tsconfig === undefined
-      ? fs.existsSync(path.resolve(rootDirectory, 'tsconfig.build.json'))
-        ? path.resolve(rootDirectory, 'tsconfig.build.json')
-        : true
-      : tsconfig;
+  const buildConfig = path.resolve(rootDirectory, 'tsconfig.build.json');
+  const defaultTsconfig = fs.existsSync(buildConfig) ? buildConfig : true;
+  const resolvedBase = tsconfig ?? defaultTsconfig;
 
   if (outputRoot === undefined || resolvedBase === false) {
     return resolvedBase;
   }
 
-  const packageTsconfig = path.resolve(rootDirectory, 'tsconfig.build.json');
-  const baseTsconfig =
-    resolvedBase === true
-      ? fs.existsSync(packageTsconfig)
-        ? packageTsconfig
-        : path.resolve(rootDirectory, 'tsconfig.json')
-      : resolvedBase;
+  const baseTsconfig = resolveStagedBaseTsconfig(rootDirectory, resolvedBase);
   return writeStagedTsconfig(rootDirectory, outputRoot, baseTsconfig, outDirectory);
+}
+
+/** Check whether a staged relative output directory escapes the package root. */
+function isInvalidStagedPath(relativeOutput: string): boolean {
+  return relativeOutput === '' || relativeOutput.startsWith(`..${path.sep}`) || path.isAbsolute(relativeOutput);
 }
 
 /**
@@ -457,14 +494,12 @@ export function resolveTsdownOutputDirectory(
   outputDirectory: string,
   outputRoot?: string,
 ): string {
-  const resolvedOutput = path.isAbsolute(outputDirectory)
-    ? outputDirectory
-    : path.resolve(rootDirectory, outputDirectory);
+  const resolvedOutput = path.resolve(rootDirectory, outputDirectory);
   if (outputRoot === undefined) {
     return resolvedOutput;
   }
   const relativeOutput = path.relative(path.resolve(rootDirectory), resolvedOutput);
-  if (relativeOutput === '' || relativeOutput.startsWith(`..${path.sep}`) || path.isAbsolute(relativeOutput)) {
+  if (isInvalidStagedPath(relativeOutput)) {
     throw new Error(`tsdown output must be below rootDir when staging: ${outputDirectory}`);
   }
   return path.resolve(outputRoot, relativeOutput);
