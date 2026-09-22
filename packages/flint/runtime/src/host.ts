@@ -1,13 +1,29 @@
+import { mapCTypeToWasmValType } from '@mission-platform/flint-c-abi';
+
 import { assertValidFlintAbiManifest, equalFunction } from './abi.js';
 import { createFlintLogger, type FlintLogger } from './logging.js';
 import { toFlintHostError, FlintTrap } from './traps.js';
 
+import type { FlintMultiMemory } from './memory.js';
 import type { FlintAbiFunction, FlintAbiManifest, FlintPrimitiveType } from '@mission-platform/flint';
 
 /**
  * Callable host function invoked by guest runtime execution.
  */
 export type FlintHostCall = (arguments_: readonly unknown[]) => unknown | Promise<unknown>;
+
+/** Host foreign capability invocation handler. */
+export type FlintForeignCall = (symbol: string, arguments_: readonly unknown[]) => unknown | Promise<unknown>;
+
+/** Host foreign capability implementation descriptor. */
+export interface FlintForeignCapabilityImplementation {
+  readonly library: string;
+  readonly call: FlintForeignCall;
+  readonly memoryModel?: 'shared' | 'multi-memory-segregated';
+}
+
+/** Registry of available foreign capability implementations. */
+export type FlintForeignCapabilityRegistry = Readonly<Record<string, FlintForeignCapabilityImplementation>>;
 
 /**
  * Host capability implementation registering an invocation handler and ABI signature.
@@ -22,6 +38,7 @@ export interface FlintCapabilityImplementation {
  */
 export interface FlintHost {
   readonly capabilities: readonly string[];
+  readonly foreignCapabilities?: readonly string[];
   /**
    * Dispatches a host call for an imported capability function alias.
    *
@@ -30,6 +47,15 @@ export interface FlintHost {
    * @returns Result value or Promise resolving to result.
    */
   invoke(alias: string, arguments_: readonly unknown[]): unknown | Promise<unknown>;
+  /**
+   * Dispatches a capability-gated invocation call to a declared foreign C or Rust library.
+   *
+   * @param library - Foreign library name.
+   * @param symbol - Function symbol being invoked.
+   * @param arguments_ - Argument values passed to foreign function.
+   * @returns Foreign call result.
+   */
+  invokeForeign?(library: string, symbol: string, arguments_: readonly unknown[]): unknown | Promise<unknown>;
   /**
    * Disposes the host and releases bound capability resources.
    */
@@ -41,6 +67,8 @@ export interface FlintHost {
  */
 export interface FlintHostOptions {
   readonly logger?: FlintLogger;
+  readonly foreignRegistry?: FlintForeignCapabilityRegistry;
+  readonly multiMemory?: FlintMultiMemory;
 }
 
 /**
@@ -92,9 +120,17 @@ export function createFlintHost(
       );
     implementations.set(imported.alias, implementation);
   }
+  const foreignImplementations = new Map<string, FlintForeignCapabilityImplementation>();
+  for (const foreignCap of manifest.foreignCapabilities ?? []) {
+    const implementation = options.foreignRegistry?.[foreignCap.library];
+    if (implementation !== undefined) {
+      foreignImplementations.set(foreignCap.library, implementation);
+    }
+  }
   let disposed = false;
   return {
     capabilities: manifest.requiredCapabilities,
+    foreignCapabilities: manifest.foreignCapabilities?.map((c) => c.library) ?? [],
     /**
      * Dispatches an invocation call for the specified import alias.
      *
@@ -131,6 +167,90 @@ export function createFlintHost(
       } catch (error) {
         const hostError = toFlintHostError(error, imported.capability, logger);
         logger.error('capability.throw', { alias, capability: imported.capability, code: hostError.code });
+        throw hostError;
+      }
+    },
+    /**
+     * Dispatches a capability-gated invocation call to a declared foreign C or Rust library.
+     */
+    // skipcq: JS-R1005
+    invokeForeign(library, symbol, arguments_): unknown | Promise<unknown> {
+      if (disposed) throw new FlintTrap('GuestTrap', 'Flint host has been disposed.', undefined, { logger });
+      const declared = manifest.foreignCapabilities?.find((c) => c.library === library);
+      if (declared === undefined) {
+        throw new FlintTrap(
+          'CapabilityDenied',
+          `Foreign library capability '${library}' is not declared in module manifest.`,
+          library,
+          { logger },
+        );
+      }
+      const function_ = declared.functions.find((f) => f.symbol === symbol);
+      if (function_ === undefined) {
+        throw new FlintTrap(
+          'CapabilityDenied',
+          `Foreign symbol '${symbol}' is not declared in capability '${library}'.`,
+          library,
+          { logger },
+        );
+      }
+      if (arguments_.length !== function_.parameters.length) {
+        throw new FlintTrap(
+          'HostError',
+          `Foreign function '${symbol}' in capability '${library}' received an invalid argument count: expected ${function_.parameters.length}, got ${arguments_.length}.`,
+          library,
+          { logger },
+        );
+      }
+      for (const [index, parameter] of function_.parameters.entries()) {
+        const argument = arguments_[index];
+        const parameterType =
+          ('wasmType' in parameter && typeof parameter.wasmType === 'string' ? parameter.wasmType : undefined) ??
+          ('type' in parameter && typeof parameter.type === 'string' ? parameter.type : undefined) ??
+          ('cType' in parameter && typeof parameter.cType === 'string' ? parameter.cType : undefined) ??
+          'i32';
+        const expectedWasm = mapCTypeToWasmValType(parameterType);
+        const actualType = typeof argument;
+        let valid = false;
+        if (expectedWasm === 'i32' || expectedWasm === 'f32' || expectedWasm === 'f64') {
+          valid = actualType === 'number';
+        } else if (expectedWasm === 'i64') {
+          valid = actualType === 'bigint' || actualType === 'number';
+        } else {
+          valid = true;
+        }
+        if (!valid) {
+          throw new FlintTrap(
+            'HostError',
+            `Foreign function '${symbol}' parameter '${parameter.name}' expected Wasm type '${expectedWasm}', got '${actualType}'.`,
+            library,
+            { logger },
+          );
+        }
+      }
+      const implementation = foreignImplementations.get(library);
+      if (implementation === undefined) {
+        throw new FlintTrap(
+          'CapabilityDenied',
+          `Foreign capability provider for '${library}' is not registered with host.`,
+          library,
+          { logger },
+        );
+      }
+      try {
+        logger.debug('foreign.invoke', { library, symbol, argumentCount: arguments_.length });
+        const result = implementation.call(symbol, arguments_);
+        if (result instanceof Promise) {
+          return result.catch((error: unknown) => {
+            const hostError = toFlintHostError(error, library, logger);
+            logger.error('foreign.reject', { library, symbol, code: hostError.code });
+            throw hostError;
+          });
+        }
+        return result;
+      } catch (error) {
+        const hostError = toFlintHostError(error, library, logger);
+        logger.error('foreign.throw', { library, symbol, code: hostError.code });
         throw hostError;
       }
     },

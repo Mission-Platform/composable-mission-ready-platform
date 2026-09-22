@@ -62,6 +62,15 @@ export interface FlintWasmArtifactManifest {
   readonly moduleName?: string;
   readonly exports: readonly FlintWasmManifestFunction[];
   readonly imports: readonly FlintWasmManifestImport[];
+  readonly foreignCapabilities?: readonly {
+    readonly library: string;
+    readonly callingConvention: string;
+    readonly functions: readonly {
+      readonly symbol: string;
+      readonly parameters: readonly { readonly name: string; readonly cType: string; readonly wasmType: string }[];
+      readonly result: { readonly cType: string; readonly wasmType: string };
+    }[];
+  }[];
   readonly requiredCapabilities: readonly string[];
   readonly memory: FlintWasmMemoryLayout;
   readonly graphHash?: string;
@@ -154,10 +163,10 @@ function diagnostic(
 
 // skipcq: JS-D1001, JS-R1005
 function scalarLowLevelType(type: string): WasmType | undefined {
-  if (type === 'f32') return 0x7d;
-  if (type === 'f64') return 0x7c;
-  if (type === 'i64' || type === 'u64') return 0x7e;
-  if (type === 'unit') return undefined;
+  if (type === 'f32' || type === 'c_float') return 0x7d;
+  if (type === 'f64' || type === 'c_double') return 0x7c;
+  if (type === 'i64' || type === 'u64' || type === 'c_longlong' || type === 'c_ulonglong') return 0x7e;
+  if (type === 'unit' || type === 'c_void' || type === 'void') return undefined;
   return 0x7f;
 }
 
@@ -166,6 +175,17 @@ function scalarLowLevelType(type: string): WasmType | undefined {
 function lowLevelTypes(type: string, reference?: string, addressType: 'u32' | 'u64' = 'u32'): readonly WasmType[] {
   if (type === 'string' || type === 'bytes') return addressType === 'u64' ? [0x7e, 0x7e] : [0x7f, 0x7f];
   if (type.startsWith('Option<') || reference === 'Option') return [0x7e];
+  if (
+    type.startsWith('CPtr') ||
+    type.startsWith('MutCPtr') ||
+    type === 'COpaquePtr' ||
+    type === 'c_size' ||
+    type === 'c_ssize' ||
+    type === 'c_long' ||
+    type === 'c_ulong'
+  ) {
+    return [addressType === 'u64' ? 0x7e : 0x7f];
+  }
   if (reference !== undefined) return [addressType === 'u64' ? 0x7e : 0x7f];
   const scalar = scalarLowLevelType(type);
   return scalar === undefined ? [] : [scalar];
@@ -271,8 +291,27 @@ function verifyVariantImports(
     alias,
     function: declaration,
   }));
+  const foreignLibraryNames = new Set((input.manifest.foreignCapabilities ?? []).map((fc) => fc.library));
+  for (const foreignCap of input.manifest.foreignCapabilities ?? []) {
+    for (const functionDeclaration of foreignCap.functions) {
+      expectedImports.push({
+        capability: foreignCap.library,
+        alias: functionDeclaration.symbol,
+        function: {
+          name: functionDeclaration.symbol,
+          parameters: functionDeclaration.parameters.map((parameter) => ({
+            name: parameter.name,
+            type: parameter.wasmType,
+          })),
+          result: functionDeclaration.result.wasmType,
+        },
+      });
+    }
+  }
   const actualImports = parsed.imports.filter(({ kind }) => kind === 0);
-  if (parsed.imports.some(({ kind }) => kind !== 0)) {
+  const isImportMemoryAllowed =
+    input.targetFeatures?.importMemory !== undefined && input.targetFeatures.importMemory !== false;
+  if (parsed.imports.some(({ kind }) => kind !== 0 && (!isImportMemoryAllowed || kind !== 2))) {
     diagnostics.push(
       diagnostic(
         'FLINT-ARTIFACT-003',
@@ -306,13 +345,15 @@ function verifyVariantImports(
       );
       continue;
     }
-    checkImportAllowed(imported.module, allowed, fileName, diagnostics);
+    if (!foreignLibraryNames.has(imported.module)) {
+      checkImportAllowed(imported.module, allowed, fileName, diagnostics);
+    }
     verifyImportSignatures(imported, expected, parsed, input.manifest.memory.addressType, fileName, diagnostics);
   }
+  const nativeCapabilityImports = input.manifest.imports.map(({ capability }) => capability);
   if (
-    new Set(expectedImports.map(({ capability }) => capability)).size !==
-      new Set(input.manifest.requiredCapabilities).size ||
-    expectedImports.some(({ capability }) => !input.manifest.requiredCapabilities.includes(capability))
+    new Set(nativeCapabilityImports).size !== new Set(input.manifest.requiredCapabilities).size ||
+    nativeCapabilityImports.some((capability) => !input.manifest.requiredCapabilities.includes(capability))
   ) {
     diagnostics.push(
       diagnostic(

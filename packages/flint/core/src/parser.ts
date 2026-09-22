@@ -24,6 +24,11 @@ import type {
   FlintTypeName,
   FlintStructDeclaration,
   FlintStructField,
+  FlintStructRepr,
+  FlintForeignCapabilityDeclaration,
+  FlintForeignFunctionDeclaration,
+  FlintForeignFunctionParameter,
+  FlintOpaqueForeignTypeDeclaration,
 } from './ast.js';
 
 /**
@@ -52,6 +57,23 @@ export const primitiveTypes = new Set<FlintPrimitiveType>([
   'u32',
   'u64',
   'unit',
+  'u8',
+  'i8',
+  'c_char',
+  'c_uchar',
+  'c_short',
+  'c_ushort',
+  'c_int',
+  'c_uint',
+  'c_long',
+  'c_ulong',
+  'c_longlong',
+  'c_ulonglong',
+  'c_size',
+  'c_ssize',
+  'c_float',
+  'c_double',
+  'c_void',
 ]);
 
 /**
@@ -91,6 +113,8 @@ class Parser {
     const enums: FlintEnumDeclaration[] = [];
     const interfaces: FlintInterfaceDeclaration[] = [];
     const functions: FlintFunction[] = [];
+    const foreignCapabilities: FlintForeignCapabilityDeclaration[] = [];
+    const opaqueForeignTypes: FlintOpaqueForeignTypeDeclaration[] = [];
     let pendingDocumentation = this.consumeTopLevelTrivia();
     if (this.is('module')) {
       pendingDocumentation = undefined;
@@ -120,6 +144,8 @@ class Parser {
         enums,
         interfaces,
         functions,
+        foreignCapabilities,
+        opaqueForeignTypes,
       });
     }
     const end = this.is('}')
@@ -134,6 +160,8 @@ class Parser {
       enums,
       interfaces,
       functions,
+      ...(foreignCapabilities.length === 0 ? {} : { foreignCapabilities }),
+      ...(opaqueForeignTypes.length === 0 ? {} : { opaqueForeignTypes }),
       span: mergeSpans(start, end),
     };
     return { module, diagnostics: this.diagnostics };
@@ -169,6 +197,119 @@ class Parser {
     else declarations.sourceImports.push(this.parseSourceImport());
   }
 
+  /** Validates that an alignment number is a positive power of two. */
+  // skipcq: JS-0105
+  private static isPositivePowerOfTwo(value: number): boolean {
+    return Number.isInteger(value) && value > 0 && (value & (value - 1)) === 0;
+  }
+
+  /**
+   * Parses the argument clause of a `#[repr(packed(...))]` attribute.
+   *
+   * @returns Parsed packed struct representation directive.
+   */
+  // skipcq: JS-R1005
+  private parsePackedRepr(): FlintStructRepr {
+    let alignment = 1;
+    if (this.match('(')) {
+      const number_ = this.expectKind('number', 'FLINT-PARSE-094', 'Expected packed alignment number.');
+      alignment = Number(number_?.text || '1');
+      if (!Parser.isPositivePowerOfTwo(alignment)) {
+        this.diagnostics.push(
+          createDiagnostic(
+            this.fileName,
+            'parse',
+            'FLINT-PARSE-073',
+            `Packed alignment must be a positive power of two, got ${alignment}.`,
+            number_?.span ?? this.previous().span,
+          ),
+        );
+      }
+      this.expect(')', 'FLINT-PARSE-095', "Expected ')' after packed alignment.");
+    }
+    return { kind: 'packed', alignment };
+  }
+
+  /**
+   * Parses the argument clause of a `#[repr(align(...))]` attribute.
+   *
+   * @returns Parsed align struct representation directive.
+   */
+  // skipcq: JS-R1005
+  private parseAlignRepr(): FlintStructRepr {
+    this.expect('(', 'FLINT-PARSE-096', "Expected '(' after 'align'.");
+    const number_ = this.expectKind('number', 'FLINT-PARSE-097', 'Expected alignment number.');
+    const alignment = Number(number_?.text || '8');
+    if (!Parser.isPositivePowerOfTwo(alignment)) {
+      this.diagnostics.push(
+        createDiagnostic(
+          this.fileName,
+          'parse',
+          'FLINT-PARSE-073',
+          `Struct alignment must be a positive power of two, got ${alignment}.`,
+          number_?.span ?? this.previous().span,
+        ),
+      );
+    }
+    this.expect(')', 'FLINT-PARSE-098', "Expected ')' after alignment.");
+    return { kind: 'align', alignment };
+  }
+
+  /**
+   * Parses the representation kind inside a `#[repr(...)]` attribute clause.
+   *
+   * @returns Parsed struct representation directive or undefined if unrecognized.
+   */
+  private parseReprClause(): FlintStructRepr | undefined {
+    this.expect('(', 'FLINT-PARSE-092', "Expected '(' after 'repr'.");
+    const kind = this.expectIdentifier(
+      'FLINT-PARSE-093',
+      "Expected repr identifier ('C', 'packed', 'align', 'flint').",
+    );
+    let repr: FlintStructRepr | undefined;
+    switch (kind) {
+      case 'C': {
+        repr = { kind: 'c' };
+        break;
+      }
+      case 'packed': {
+        repr = this.parsePackedRepr();
+        break;
+      }
+      case 'align': {
+        repr = this.parseAlignRepr();
+        break;
+      }
+      case 'flint': {
+        repr = { kind: 'flint' };
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+    this.expect(')', 'FLINT-PARSE-099', "Expected ')' after repr attribute arguments.");
+    return repr;
+  }
+
+  /**
+   * Parses a #[repr(...)] attribute if present.
+   *
+   * @returns Parsed struct representation directive or undefined.
+   */
+  private parseStructReprAttribute(): FlintStructRepr | undefined {
+    if (!this.is('#')) return undefined;
+    this.consume();
+    this.expect('[', 'FLINT-PARSE-090', "Expected '[' after '#'.");
+    const attribute = this.expectIdentifier('FLINT-PARSE-091', 'Expected attribute name.');
+    let repr: FlintStructRepr | undefined;
+    if (attribute === 'repr') {
+      repr = this.parseReprClause();
+    }
+    this.expect(']', 'FLINT-PARSE-100', "Expected ']' after attribute.");
+    return repr;
+  }
+
   /**
    * Parses a single top-level module declaration item.
    *
@@ -185,12 +326,39 @@ class Parser {
       readonly enums: FlintEnumDeclaration[];
       readonly interfaces: FlintInterfaceDeclaration[];
       readonly functions: FlintFunction[];
+      readonly foreignCapabilities: FlintForeignCapabilityDeclaration[];
+      readonly opaqueForeignTypes: FlintOpaqueForeignTypeDeclaration[];
     },
   ): void {
-    if (this.is('import')) {
+    let repr: FlintStructRepr | undefined;
+    if (this.is('#')) {
+      repr = this.parseStructReprAttribute();
+      const attributeDocument = this.consumeTopLevelTrivia();
+      if (attributeDocument !== undefined) documentation = attributeDocument;
+    }
+    if (this.is('foreign')) {
+      declarations.foreignCapabilities.push(this.parseForeignCapability());
+    } else if (this.is('opaque') && this.isNext('foreign')) {
+      declarations.opaqueForeignTypes.push(this.parseOpaqueForeignType());
+    } else if (this.is('import')) {
       this.parseTopLevelImport(declarations);
     } else if (this.is('struct') || this.is('record')) {
-      declarations.structs.push(this.parseStruct(documentation, this.is('record')));
+      declarations.structs.push(this.parseStruct(documentation, this.is('record'), repr));
+    } else if (this.current().text === 'c_struct') {
+      this.diagnostics.push(
+        createDiagnostic(
+          this.fileName,
+          'parse',
+          'FLINT-PARSE-034',
+          "The 'c_struct' keyword is removed; use '#[repr(C)] struct' instead.",
+          this.current().span,
+        ),
+      );
+      this.consume();
+      while (!this.is('}') && !this.is('eof')) {
+        this.consume();
+      }
+      if (this.is('}')) this.consume();
     } else if (this.is('enum') || (this.is('export') && this.isNext('enum'))) {
       declarations.enums.push(this.parseEnum(documentation));
     } else if (this.is('interface')) {
@@ -200,6 +368,127 @@ class Parser {
     } else {
       declarations.functions.push(this.parseFunction(documentation));
     }
+  }
+
+  /**
+   * Parses the sequence of foreign function declarations within a foreign capability block.
+   *
+   * @returns List of parsed foreign function declarations.
+   */
+  private parseForeignCapabilityFunctions(): FlintForeignFunctionDeclaration[] {
+    const functions: FlintForeignFunctionDeclaration[] = [];
+    while (true) {
+      const documentation = this.consumeTopLevelTrivia();
+      if (this.is('}') || this.is('eof')) break;
+      functions.push(this.parseForeignFunction(documentation));
+    }
+    return functions;
+  }
+
+  /**
+   * Parses a foreign capability block (e.g. foreign "C" capability "zstd" { ... }).
+   *
+   * @returns Parsed foreign capability declaration AST node.
+   */
+  private parseForeignCapability(): FlintForeignCapabilityDeclaration {
+    const start = this.consume().span;
+    const abiToken = this.expectKind('string', 'FLINT-PARSE-110', 'Expected ABI string (e.g. "C") after foreign.');
+    const decodedAbi = abiToken === undefined ? 'C' : decodeString(abiToken.text);
+    if (decodedAbi !== 'C') {
+      this.diagnostics.push(
+        createDiagnostic(
+          this.fileName,
+          'parse',
+          'FLINT-PARSE-074',
+          `Unsupported foreign ABI '${decodedAbi}'; only "C" is currently supported.`,
+          abiToken?.span ?? start,
+        ),
+      );
+    }
+    const abi = 'C';
+    this.expect('capability', 'FLINT-PARSE-111', "Expected 'capability' after foreign ABI.");
+    const libraryToken = this.expectKind('string', 'FLINT-PARSE-112', 'Expected library name string after capability.');
+    const library = libraryToken === undefined ? '<missing>' : decodeString(libraryToken.text);
+    this.expect('{', 'FLINT-PARSE-113', "Expected '{' to start foreign capability block.");
+    const functions = this.parseForeignCapabilityFunctions();
+    const end = this.expect('}', 'FLINT-PARSE-114', "Expected '}' after foreign capability block.").span;
+    return {
+      kind: 'foreign-capability',
+      abi,
+      library,
+      callingConvention: 'wasm-c-abi',
+      functions,
+      span: mergeSpans(start, end),
+    };
+  }
+
+  /**
+   * Parses the parameter list of a foreign function declaration.
+   *
+   * @returns List of parsed foreign function parameters.
+   */
+  private parseForeignParameters(): FlintForeignFunctionParameter[] {
+    const parameters: FlintForeignFunctionParameter[] = [];
+    if (this.is(')')) return parameters;
+    while (true) {
+      const parameterStart = this.current().span;
+      const parameterName = this.expectIdentifier('FLINT-PARSE-118', 'Expected parameter name.');
+      this.expect(':', 'FLINT-PARSE-119', "Expected ':' after parameter name.");
+      const type = this.parseType();
+      const parameterEnd = this.previous().span;
+      parameters.push({
+        name: parameterName ?? '<missing>',
+        type,
+        span: mergeSpans(parameterStart, parameterEnd),
+      });
+      if (this.match(',')) continue;
+      break;
+    }
+    return parameters;
+  }
+
+  /**
+   * Parses an individual foreign function prototype inside a foreign capability block.
+   *
+   * @param documentation - Optional documentation comment.
+   * @returns Parsed foreign function declaration AST node.
+   */
+  private parseForeignFunction(documentation?: FlintFunction['documentation']): FlintForeignFunctionDeclaration {
+    const start = this.current().span;
+    this.expect('fn', 'FLINT-PARSE-115', "Expected 'fn' in foreign capability declaration.");
+    const name = this.expectIdentifier('FLINT-PARSE-116', 'Expected function name in foreign capability declaration.');
+    this.expect('(', 'FLINT-PARSE-117', "Expected '(' after function name.");
+    const parameters = this.parseForeignParameters();
+    this.expect(')', 'FLINT-PARSE-120', "Expected ')' after parameter list.");
+    this.expect('->', 'FLINT-PARSE-121', "Expected '->' after parameter list.");
+    const result = this.parseType();
+    const end = this.expect(';', 'FLINT-PARSE-122', "Expected ';' after foreign function declaration.").span;
+    return {
+      kind: 'foreign-function',
+      name: name ?? '<missing>',
+      parameters,
+      result,
+      ...(documentation === undefined ? {} : { documentation }),
+      span: mergeSpans(start, end),
+    };
+  }
+
+  /**
+   * Parses an opaque foreign type declaration (e.g. opaque foreign type ZstdContext;).
+   *
+   * @returns Parsed opaque foreign type AST node.
+   */
+  private parseOpaqueForeignType(): FlintOpaqueForeignTypeDeclaration {
+    const start = this.consume().span;
+    this.expect('foreign', 'FLINT-PARSE-123', "Expected 'foreign' after 'opaque'.");
+    this.expect('type', 'FLINT-PARSE-124', "Expected 'type' after 'opaque foreign'.");
+    const name = this.expectIdentifier('FLINT-PARSE-125', 'Expected type name after opaque foreign type.');
+    const end = this.expect(';', 'FLINT-PARSE-126', "Expected ';' after opaque foreign type declaration.").span;
+    return {
+      kind: 'opaque-foreign-type',
+      name: name ?? '<missing>',
+      span: mergeSpans(start, end),
+    };
   }
 
   /**
@@ -361,10 +650,15 @@ class Parser {
    *
    * @param documentation - Optional attached documentation comment.
    * @param record - True if declared as a value record.
+   * @param repr - Optional representation attribute metadata.
    * @returns Parsed struct declaration AST node.
    */
   // skipcq: JS-R1005
-  private parseStruct(documentation?: FlintFunction['documentation'], record = false): FlintStructDeclaration {
+  private parseStruct(
+    documentation?: FlintFunction['documentation'],
+    record = false,
+    repr?: FlintStructRepr,
+  ): FlintStructDeclaration {
     const start = this.consume().span;
     const name = this.expectIdentifier('FLINT-PARSE-034', 'Expected a struct name.');
     const genericParameters = this.parseGenericParameters();
@@ -380,6 +674,10 @@ class Parser {
       kind: 'struct',
       name: name ?? '<missing>',
       ...(record ? { record: true as const } : {}),
+      ...(repr?.kind === 'c' ? { c_struct: true as const } : {}),
+      ...(repr === undefined ? {} : { repr }),
+      ...(repr?.kind === 'packed' ? { packed: repr.alignment } : {}),
+      ...(repr?.kind === 'align' ? { align: repr.alignment } : {}),
       ...(documentation === undefined ? {} : { documentation }),
       genericParameters,
       fields,
@@ -1271,7 +1569,7 @@ class Parser {
   ): FlintExpression {
     let expression = initialExpression;
     let qualifiedName = initialQualifiedName;
-    while (this.match('.')) {
+    while (qualifiedName.length > 0 && this.match('.')) {
       const member = this.expectMemberName('FLINT-PARSE-078', 'Expected a member name after ".".');
       qualifiedName = `${qualifiedName}.${member ?? '<missing>'}`;
       if (this.match('(')) {
@@ -1349,13 +1647,13 @@ class Parser {
   }
 
   /**
-   * Parses unary prefix operators (!, -, &).
+   * Parses unary prefix operators (!, -, *, &, &mut).
    *
    * @param startSpan - Starting source span.
    * @param operator - Unary operator symbol.
    * @returns Parsed unary expression AST node.
    */
-  private parseUnaryExpression(startSpan: FlintSourceSpan, operator: '!' | '-'): FlintExpression {
+  private parseUnaryExpression(startSpan: FlintSourceSpan, operator: '!' | '-' | '*' | '&' | '&mut'): FlintExpression {
     return {
       kind: 'unary',
       operator,
@@ -1381,6 +1679,11 @@ class Parser {
     }
     if (this.match('!')) return this.parseUnaryExpression(token.span, '!');
     if (this.match('-')) return this.parseUnaryExpression(token.span, '-');
+    if (this.match('*')) return this.parseUnaryExpression(token.span, '*');
+    if (this.match('&')) {
+      const isMut = this.match('mut');
+      return this.parseUnaryExpression(token.span, isMut ? '&mut' : '&');
+    }
     return undefined;
   }
 
@@ -1398,8 +1701,11 @@ class Parser {
     if (scalar !== undefined) return scalar;
     if (token.kind === 'identifier') return this.parseIdentifierOrCallOrMemberExpression(token);
     if (this.match('(')) {
-      const expression = this.parseExpression();
-      this.expect(')', 'FLINT-PARSE-056', "Expected ')' after expression.");
+      const start = token.span;
+      let expression = this.parseExpression();
+      const end = this.expect(')', 'FLINT-PARSE-056', "Expected ')' after expression.").span;
+      const initialQualifiedName = expression.kind === 'identifier' ? expression.name : '';
+      expression = this.parseMemberAndIndexChain(expression, initialQualifiedName, mergeSpans(start, end));
       return expression;
     }
     if (this.match('{')) return this.parseStructLiteral(token);
