@@ -320,13 +320,13 @@ export function parseCHeader(source: string): CHeaderAst {
 }
 
 /** Formats C constants as Flint public constant declarations. */
+// skipcq: JS-R1005
 function renderFlintConstants(constants: readonly CConstantDefinition[] | undefined, lines: string[]): void {
-  for (const constant of constants ?? []) {
+  if (!constants || constants.length === 0) return;
+  for (const constant of constants) {
     lines.push(`pub const ${constant.name}: ${constant.flintType} = ${constant.value};`);
   }
-  if ((constants?.length ?? 0) > 0) {
-    lines.push('');
-  }
+  lines.push('');
 }
 
 /** Formats C struct definitions into Flint AST `#[repr(C)] struct` declarations. */
@@ -481,15 +481,20 @@ function parseTypeNameAst(typeString: string): FlintTypeName {
   return { kind: 'type-name' as const, name: typeString as never, span: emptySpan };
 }
 
+/** Maps a Flint constant type to its TypeScript equivalent representation. */
+function mapConstantTsType(flintType: string): string {
+  return flintType === 'string' ? 'string' : 'number';
+}
+
 /** Formats C constants as TypeScript declaration export statements. */
+// skipcq: JS-R1005
 function renderDtsConstants(constants: readonly CConstantDefinition[] | undefined, lines: string[]): void {
-  for (const constant of constants ?? []) {
-    const tsType = constant.flintType === 'string' ? 'string' : 'number';
+  if (!constants || constants.length === 0) return;
+  for (const constant of constants) {
+    const tsType = mapConstantTsType(constant.flintType);
     lines.push(`  export const ${constant.name}: ${tsType};`);
   }
-  if ((constants?.length ?? 0) > 0) {
-    lines.push('');
-  }
+  lines.push('');
 }
 
 /**

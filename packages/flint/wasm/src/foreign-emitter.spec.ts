@@ -5,6 +5,23 @@ import { renderFlintWasmWat } from './wat.ts';
 
 import type { FlintWasmModule } from './contracts.ts';
 
+/**
+ * Locates the starting byte offset of a needle sequence within a Uint8Array.
+ *
+ * @param haystack - Byte array to search within.
+ * @param needle - Byte sequence to match.
+ * @returns Starting byte offset, or -1 if not found.
+ */
+function findSubsequence(haystack: Uint8Array, needle: Uint8Array): number {
+  const maxOffset = haystack.length - needle.length;
+  for (let offset = 0; offset <= maxOffset; offset++) {
+    if (needle.every((byte, index) => haystack[offset + index] === byte)) {
+      return offset;
+    }
+  }
+  return -1;
+}
+
 describe('WebAssembly Foreign Capability Emitter', () => {
   it('lowers foreign capabilities to Wasm imports with C ABI type signatures', () => {
     const ir: FlintWasmModule = {
@@ -245,20 +262,7 @@ describe('WebAssembly Foreign Capability Emitter', () => {
     // Verify string in compiled Wasm data section contains "SELECT 1;\0"
     const wasmBytes = result.wasm;
     const needle = new TextEncoder().encode('SELECT 1;');
-    let foundOffset = -1;
-    for (let offset = 0; offset <= wasmBytes.length - needle.length - 1; offset++) {
-      let matched = true;
-      for (const [byteIndex, needleByte] of needle.entries()) {
-        if (wasmBytes[offset + byteIndex] !== needleByte) {
-          matched = false;
-          break;
-        }
-      }
-      if (matched) {
-        foundOffset = offset;
-        break;
-      }
-    }
+    const foundOffset = findSubsequence(wasmBytes, needle);
     expect(foundOffset).toBeGreaterThan(0);
     // Directly following 'SELECT 1;' must be null terminator 0x00
     expect(wasmBytes[foundOffset + needle.length]).toBe(0x00);
