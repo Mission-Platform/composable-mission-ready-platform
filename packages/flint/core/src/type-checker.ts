@@ -2563,16 +2563,8 @@ function parseCheckerTypeKey(type: string): ReturnType<TypeAlgebra['fromAst']> |
   return ast === undefined ? undefined : checkerAlgebra.fromAst(ast);
 }
 
-/**
- * Parses a checker type key string into a minimal type AST node.
- *
- * @param value - Type key fragment to parse.
- * @returns Type AST node, or undefined when the fragment is empty/invalid.
- */
-function parseTypeKeyAst(value: string): FlintTypeName | undefined {
-  const trimmed = value.trim();
-  if (trimmed.length === 0) return undefined;
-
+/** Parses reference type keys (&T, &mut T). */
+function parseReferenceTypeKey(trimmed: string): FlintTypeName | undefined {
   if (trimmed.startsWith('&mut ')) {
     const inner = parseTypeKeyAst(trimmed.slice(5));
     return inner === undefined ? undefined : { ...inner, referenceMode: 'mut-ref' };
@@ -2581,6 +2573,22 @@ function parseTypeKeyAst(value: string): FlintTypeName | undefined {
     const inner = parseTypeKeyAst(trimmed.slice(1));
     return inner === undefined ? undefined : { ...inner, referenceMode: 'ref' };
   }
+  return undefined;
+}
+
+/**
+ * Parses a checker type key string into a minimal type AST node.
+ *
+ * @param value - Type key fragment to parse.
+ * @returns Type AST node, or undefined when the fragment is empty/invalid.
+ */
+// skipcq: JS-R1005
+function parseTypeKeyAst(value: string): FlintTypeName | undefined {
+  const trimmed = value.trim();
+  if (trimmed.length === 0) return undefined;
+
+  const referenceAst = parseReferenceTypeKey(trimmed);
+  if (referenceAst !== undefined) return referenceAst;
 
   const arrayAst = parseFixedArrayTypeKey(trimmed);
   if (arrayAst !== undefined) return arrayAst;

@@ -28,7 +28,12 @@ import {
 import { buildRegexRuntimeBodies, REGEX_RUNTIME_FUNCTION_COUNT } from './regex-runtime.js';
 import { buildStringRuntimeBodies, STRING_RUNTIME_FUNCTION_COUNT } from './string-runtime.js';
 import { renderFlintWasmWat } from './wat.js';
-import { lowerFlintWasmFunctionToSsa, type FlintWasmSsaBindings, type FlintWasmSsaValue } from './cfg.js';
+import {
+  extractPointeeType,
+  lowerFlintWasmFunctionToSsa,
+  type FlintWasmSsaBindings,
+  type FlintWasmSsaValue,
+} from './cfg.js';
 import { optimizeFlintWasmModule } from './optimizer.js';
 
 const STATIC_DATA_START = 1024;
@@ -1255,32 +1260,6 @@ function emitWasm(
       bodies.push([...unsignedLeb(helperBody.length), ...helperBody]);
       continue;
     }
-    const extractPointeeType = (
-      type:
-        | {
-            readonly name: string;
-            readonly reference?: string;
-            readonly arguments?: readonly { readonly name?: string; readonly reference?: string }[];
-            readonly referenceMode?: 'ref' | 'mut-ref';
-          }
-        | undefined,
-    ): string | undefined => {
-      if (type === undefined) return undefined;
-      if (type.reference === 'CPtr' || type.reference === 'MutCPtr') {
-        const argument = type.arguments?.[0];
-        return argument?.reference ?? argument?.name;
-      }
-      if (typeof type.reference === 'string') {
-        if (type.reference.startsWith('CPtr<') && type.reference.endsWith('>')) return type.reference.slice(5, -1);
-        if (type.reference.startsWith('MutCPtr<') && type.reference.endsWith('>')) return type.reference.slice(8, -1);
-        if (type.reference.startsWith('&mut ')) return type.reference.slice(5);
-        if (type.reference.startsWith('&')) return type.reference.slice(1);
-      }
-      if (type.referenceMode !== undefined) {
-        return type.reference ?? type.name;
-      }
-      return undefined;
-    };
     const parameterLocations = new Map<string, ValueLocation>();
     let parameterIndex = 0;
     for (const parameter of declaration.parameters) {

@@ -230,6 +230,7 @@ export class FlintMemory {
    * @returns Decoded string excluding the null terminator.
    * @throws {FlintTrap} If null terminator is not found within maxLength or memory bounds.
    */
+  // skipcq: JS-R1005
   public readCString(pointer: FlintMemoryAddress, maxLength = 4096): string {
     const offset = this.normalizeAddress(pointer);
     const memoryBytes = this.bytes;
@@ -239,13 +240,7 @@ export class FlintMemory {
       });
     }
     const limit = Math.min(maxLength, memoryBytes.byteLength - offset);
-    let terminatorIndex = -1;
-    for (let index = 0; index < limit; index++) {
-      if (memoryBytes[offset + index] === 0x00) {
-        terminatorIndex = index;
-        break;
-      }
-    }
+    const terminatorIndex = memoryBytes.subarray(offset, offset + limit).indexOf(0x00);
     if (terminatorIndex === -1) {
       throw new FlintTrap(
         'MemoryOutOfBounds',

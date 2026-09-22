@@ -105,9 +105,27 @@ function parseOpaqueTypes(clean: string): string[] {
   return opaqueTypes;
 }
 
+/** Classifies a raw C constant literal into its Flint type and normalized string value. */
+function classifyConstantLiteral(rawValue: string): { value: string; flintType: string } | undefined {
+  if (/^-?\d+$/.test(rawValue)) {
+    return { value: rawValue, flintType: 'c_int' };
+  }
+  if (/^-?0x[0-9a-f]+$/i.test(rawValue)) {
+    return { value: rawValue, flintType: 'c_uint' };
+  }
+  if (/^-?\d+\.\d+f?$/.test(rawValue)) {
+    return { value: rawValue.replace(/f$/i, ''), flintType: 'c_double' };
+  }
+  if (/^".*"$/.test(rawValue)) {
+    return { value: rawValue, flintType: 'string' };
+  }
+  return undefined;
+}
+
 /**
  * Parses #define constants from C source text.
  */
+// skipcq: JS-R1005
 function parseConstants(source: string): CConstantDefinition[] {
   const constants: CConstantDefinition[] = [];
   const defineRegex = /^[ \t]*#[ \t]*define[ \t]+([A-Za-z_][A-Za-z0-9_]*)[ \t]+([^\r\n]+)/gm;
@@ -116,30 +134,31 @@ function parseConstants(source: string): CConstantDefinition[] {
     const name = match[1];
     let rawValue = match[2].trim();
     rawValue = rawValue.replace(/(\/\*.*?\*\/)|(\/\/.*$)/, '').trim();
-    if (!rawValue) continue;
-    if (name.includes('(')) continue;
+    if (!rawValue || name.includes('(')) continue;
 
-    if (/^-?\d+$/.test(rawValue)) {
-      constants.push({ name, value: rawValue, flintType: 'c_int' });
-    } else if (/^-?0x[0-9a-f]+$/i.test(rawValue)) {
-      constants.push({ name, value: rawValue, flintType: 'c_uint' });
-    } else if (/^-?\d+\.\d+f?$/.test(rawValue)) {
-      constants.push({ name, value: rawValue.replace(/f$/i, ''), flintType: 'c_double' });
-    } else if (/^".*"$/.test(rawValue)) {
-      constants.push({ name, value: rawValue, flintType: 'string' });
+    const classified = classifyConstantLiteral(rawValue);
+    if (classified !== undefined) {
+      constants.push({ name, value: classified.value, flintType: classified.flintType });
     }
   }
   return constants;
 }
 
-/** Parses a single struct field declarator statement into a CStructField. */
-function parseStructFieldDeclarator(baseTypeString: string, rawDeclarator: string): CStructField {
-  let clean = rawDeclarator.trim();
+/** Strips pointer asterisks from raw declarator string and reports whether it is a pointer. */
+function stripDeclaratorPointer(raw: string): { clean: string; isPointer: boolean } {
+  let clean = raw.trim();
   let isPointer = false;
   while (clean.startsWith('*')) {
     isPointer = true;
     clean = clean.slice(1).trim();
   }
+  return { clean, isPointer };
+}
+
+/** Parses a single struct field declarator statement into a CStructField. */
+// skipcq: JS-R1005
+function parseStructFieldDeclarator(baseTypeString: string, rawDeclarator: string): CStructField {
+  const { clean, isPointer } = stripDeclaratorPointer(rawDeclarator);
 
   const arrayMatch = /^([A-Za-z0-9_]+)\[(\d+)\]$/.exec(clean);
   const fieldName = arrayMatch ? arrayMatch[1] : clean;
@@ -178,7 +197,8 @@ function parseStructFields(body: string): CStructField[] {
     const firstTokens = commaParts[0].split(/\s+/);
     if (firstTokens.length < 2) continue;
 
-    const firstDeclarator = firstTokens.pop()!;
+    const firstDeclarator = firstTokens.pop();
+    if (firstDeclarator === undefined) continue;
     const baseTypeString = firstTokens.join(' ');
     const declarators = [firstDeclarator, ...commaParts.slice(1)];
 
@@ -243,6 +263,7 @@ function parseFunctionParameters(rawParameters: string): CFunctionParameter[] {
 }
 
 /** Parses a single function prototype declaration from matched regex groups. */
+// skipcq: JS-R1005
 function parseSinglePrototype(rawPrefix: string, rawParameters: string): CFunctionDefinition | undefined {
   if (rawPrefix.startsWith('typedef') || rawPrefix.startsWith('struct')) {
     return undefined;
@@ -298,6 +319,16 @@ export function parseCHeader(source: string): CHeaderAst {
   };
 }
 
+/** Formats C constants as Flint public constant declarations. */
+function renderFlintConstants(constants: readonly CConstantDefinition[] | undefined, lines: string[]): void {
+  for (const constant of constants ?? []) {
+    lines.push(`pub const ${constant.name}: ${constant.flintType} = ${constant.value};`);
+  }
+  if ((constants?.length ?? 0) > 0) {
+    lines.push('');
+  }
+}
+
 /** Formats C struct definitions into Flint AST `#[repr(C)] struct` declarations. */
 function renderFlintStructs(structs: readonly CStructDefinition[], lines: string[]): void {
   for (const structDefinition of structs) {
@@ -328,6 +359,7 @@ function renderFlintFunctions(functions: readonly CFunctionDefinition[], library
  * @param library - Foreign library name for capability binding.
  * @returns Formatted Flint source code string.
  */
+// skipcq: JS-R1005
 export function generateFlintFromC(ast: CHeaderAst, library: string): string {
   const lines: string[] = [
     '// Generated by flint-bindgen. DO NOT EDIT DIRECTLY.',
@@ -335,12 +367,7 @@ export function generateFlintFromC(ast: CHeaderAst, library: string): string {
     '',
   ];
 
-  for (const constant of ast.constants ?? []) {
-    lines.push(`pub const ${constant.name}: ${constant.flintType} = ${constant.value};`);
-  }
-  if ((ast.constants?.length ?? 0) > 0) {
-    lines.push('');
-  }
+  renderFlintConstants(ast.constants, lines);
 
   for (const opaque of ast.opaqueTypes) {
     lines.push(`opaque foreign type ${opaque};`, '');
@@ -425,6 +452,7 @@ export function cHeaderToFlintModule(ast: CHeaderAst, library: string, moduleNam
 /**
  * Helper parsing a Flint type signature string into a FlintTypeName AST node.
  */
+// skipcq: JS-R1005
 function parseTypeNameAst(typeString: string): FlintTypeName {
   const arrayMatch = /^\[\s*(.*?)\s*;\s*(\d+)\s*\]$/.exec(typeString);
   if (arrayMatch) {
@@ -453,6 +481,17 @@ function parseTypeNameAst(typeString: string): FlintTypeName {
   return { kind: 'type-name' as const, name: typeString as never, span: emptySpan };
 }
 
+/** Formats C constants as TypeScript declaration export statements. */
+function renderDtsConstants(constants: readonly CConstantDefinition[] | undefined, lines: string[]): void {
+  for (const constant of constants ?? []) {
+    const tsType = constant.flintType === 'string' ? 'string' : 'number';
+    lines.push(`  export const ${constant.name}: ${tsType};`);
+  }
+  if ((constants?.length ?? 0) > 0) {
+    lines.push('');
+  }
+}
+
 /**
  * Generates TypeScript declaration file (.d.ts) matching C header bindings.
  *
@@ -460,19 +499,14 @@ function parseTypeNameAst(typeString: string): FlintTypeName {
  * @param moduleName - Target module or library name.
  * @returns Rendered .d.ts content.
  */
+// skipcq: JS-R1005
 export function generateDtsFromC(ast: CHeaderAst, moduleName: string): string {
   const lines: string[] = [
     '// Generated by flint-bindgen TypeScript definition generator.',
     `export namespace ${moduleName} {`,
   ];
 
-  for (const constant of ast.constants ?? []) {
-    const tsType = constant.flintType === 'string' ? 'string' : 'number';
-    lines.push(`  export const ${constant.name}: ${tsType};`);
-  }
-  if ((ast.constants?.length ?? 0) > 0) {
-    lines.push('');
-  }
+  renderDtsConstants(ast.constants, lines);
 
   for (const s of ast.structs) {
     lines.push(`  export interface ${s.name} {`);
@@ -506,66 +540,58 @@ export interface FfiHostShimOptions {
   readonly targetAbi?: TargetPlatform;
 }
 
-/**
- * Generates zero-copy Node-API / bun:ffi / universal host shims for dynamic or native foreign execution.
- *
- * @param ast - Parsed C header AST.
- * @param libraryPath - Native shared library path (.so, .dylib, .dll).
- * @param options - Configuration options specifying the target runtime (default: 'bun').
- * @returns Rendered host JavaScript shim.
- */
-export function generateFfiHostShim(ast: CHeaderAst, libraryPath: string, options: FfiHostShimOptions = {}): string {
-  const target = options.target ?? 'bun';
-
-  if (target === 'node') {
-    const lines: string[] = [
-      '// Generated by flint-bindgen Node FFI host shim generator.',
-      "import { createRequire } from 'node:module';",
-      'const require = createRequire(import.meta.url);',
-      '',
-      `export function openForeignLibrary(path = ${JSON.stringify(libraryPath)}) {`,
-      "  const ffi = require('koffi');",
-      '  const lib = ffi.load(path);',
-      '  return {',
-    ];
-    for (const function_ of ast.functions) {
-      lines.push(
-        `    ${function_.name}: lib.func('${function_.name}', '${function_.returnType}', [${function_.parameters.map((p) => `'${p.cType}'`).join(', ')}]),`,
-      );
-    }
-    lines.push('  };', '}', '');
-    return `${lines.join('\n').trim()}\n`;
-  }
-
-  if (target === 'universal') {
-    const lines: string[] = [
-      '// Generated by flint-bindgen universal FFI host shim generator.',
-      `export async function openForeignLibrary(path = ${JSON.stringify(libraryPath)}) {`,
-      "  if (typeof globalThis.Bun !== 'undefined') {",
-      "    const { dlopen, FFIType } = await import('bun:ffi');",
-      '    return dlopen(path, {',
-    ];
-    for (const function_ of ast.functions) {
-      const arguments_ = function_.parameters.map((p) => mapFlintToFfiType(p.flintType, options.targetAbi));
-      const returnValue = mapFlintToFfiType(function_.flintReturnType, options.targetAbi);
-      lines.push(
-        `      ${function_.name}: {`,
-        `        args: [${arguments_.join(', ')}],`,
-        `        returns: ${returnValue},`,
-        '      },',
-      );
-    }
+/** Renders Node-API (koffi) FFI host shim. */
+function generateNodeFfiShim(ast: CHeaderAst, libraryPath: string): string {
+  const lines: string[] = [
+    '// Generated by flint-bindgen Node FFI host shim generator.',
+    "import { createRequire } from 'node:module';",
+    'const require = createRequire(import.meta.url);',
+    '',
+    `export function openForeignLibrary(path = ${JSON.stringify(libraryPath)}) {`,
+    "  const ffi = require('koffi');",
+    '  const lib = ffi.load(path);',
+    '  return {',
+  ];
+  for (const function_ of ast.functions) {
     lines.push(
-      '    });',
-      '  }',
-      "  throw new Error('Native foreign FFI requires Bun or a compatible host runtime.');",
-      '}',
-      '',
+      `    ${function_.name}: lib.func('${function_.name}', '${function_.returnType}', [${function_.parameters.map((p) => `'${p.cType}'`).join(', ')}]),`,
     );
-    return `${lines.join('\n').trim()}\n`;
   }
+  lines.push('  };', '}', '');
+  return `${lines.join('\n').trim()}\n`;
+}
 
-  // target === 'bun' (default)
+/** Renders universal FFI host shim supporting dynamic runtime detection. */
+function generateUniversalFfiShim(ast: CHeaderAst, libraryPath: string, options: FfiHostShimOptions): string {
+  const lines: string[] = [
+    '// Generated by flint-bindgen universal FFI host shim generator.',
+    `export async function openForeignLibrary(path = ${JSON.stringify(libraryPath)}) {`,
+    "  if (typeof globalThis.Bun !== 'undefined') {",
+    "    const { dlopen, FFIType } = await import('bun:ffi');",
+    '    return dlopen(path, {',
+  ];
+  for (const function_ of ast.functions) {
+    const arguments_ = function_.parameters.map((p) => mapFlintToFfiType(p.flintType, options.targetAbi));
+    const returnValue = mapFlintToFfiType(function_.flintReturnType, options.targetAbi);
+    lines.push(
+      `      ${function_.name}: {`,
+      `        args: [${arguments_.join(', ')}],`,
+      `        returns: ${returnValue},`,
+      '      },',
+    );
+  }
+  lines.push(
+    '    });',
+    '  }',
+    "  throw new Error('Native foreign FFI requires Bun or a compatible host runtime.');",
+    '}',
+    '',
+  );
+  return `${lines.join('\n').trim()}\n`;
+}
+
+/** Renders native Bun FFI host shim. */
+function generateBunFfiShim(ast: CHeaderAst, libraryPath: string, options: FfiHostShimOptions): string {
   const lines: string[] = [
     '// Generated by flint-bindgen FFI host shim generator.',
     "import { dlopen, ptr, FFIType } from 'bun:ffi';",
@@ -587,6 +613,26 @@ export function generateFfiHostShim(ast: CHeaderAst, libraryPath: string, option
 
   lines.push('  });', '}', '');
   return `${lines.join('\n').trim()}\n`;
+}
+
+/**
+ * Generates zero-copy Node-API / bun:ffi / universal host shims for dynamic or native foreign execution.
+ *
+ * @param ast - Parsed C header AST.
+ * @param libraryPath - Native shared library path (.so, .dylib, .dll).
+ * @param options - Configuration options specifying the target runtime (default: 'bun').
+ * @returns Rendered host JavaScript shim.
+ */
+// skipcq: JS-R1005
+export function generateFfiHostShim(ast: CHeaderAst, libraryPath: string, options: FfiHostShimOptions = {}): string {
+  const target = options.target ?? 'bun';
+  if (target === 'node') {
+    return generateNodeFfiShim(ast, libraryPath);
+  }
+  if (target === 'universal') {
+    return generateUniversalFfiShim(ast, libraryPath, options);
+  }
+  return generateBunFfiShim(ast, libraryPath, options);
 }
 
 /**

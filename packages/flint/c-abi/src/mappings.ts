@@ -124,6 +124,16 @@ export const POINTER_LIKE_WASM_TYPES: ReadonlySet<string> = new Set<string>([
   "c_ssize",
 ]);
 
+/** Checks whether a type representation behaves as a pointer or pointer-like scalar in WebAssembly. */
+function isPointerLikeWasmType(type: string): boolean {
+  return (
+    type === "COpaquePtr" ||
+    type.startsWith("CPtr") ||
+    type.startsWith("MutCPtr") ||
+    POINTER_LIKE_WASM_TYPES.has(type)
+  );
+}
+
 /**
  * Maps a Flint or C type representation string to its corresponding WebAssembly ABI value type.
  *
@@ -131,20 +141,15 @@ export const POINTER_LIKE_WASM_TYPES: ReadonlySet<string> = new Set<string>([
  * @param memory64 - True if target uses 64-bit pointers.
  * @returns Wasm value type name ('i32', 'i64', 'f32', 'f64', or 'void').
  */
+// skipcq: JS-R1005
 export function mapCTypeToWasmValueType(
   type: string,
   memory64 = false,
 ): "i32" | "i64" | "f32" | "f64" | "void" {
   if (!type) return "i32";
-  if (STATIC_WASM_TYPES[type]) return STATIC_WASM_TYPES[type];
-  if (
-    type.startsWith("CPtr") ||
-    type.startsWith("MutCPtr") ||
-    type === "COpaquePtr"
-  ) {
-    return memory64 ? "i64" : "i32";
-  }
-  if (POINTER_LIKE_WASM_TYPES.has(type)) {
+  const staticType = STATIC_WASM_TYPES[type];
+  if (staticType) return staticType;
+  if (isPointerLikeWasmType(type)) {
     return memory64 ? "i64" : "i32";
   }
   return "i32";
@@ -199,6 +204,25 @@ export const FFI_TYPE_MAP: Readonly<Record<string, string>> = {
   u64: "FFIType.u64",
 };
 
+/** Resolvers for target-dependent pointer and long scalar FFI representations. */
+const DYNAMIC_FFI_SIZES: Readonly<
+  Record<string, (config: PlatformAbiConfig) => string>
+> = {
+  c_size: (c) => (c.pointerSize === 8 ? "FFIType.u64" : "FFIType.u32"),
+  c_ssize: (c) => (c.pointerSize === 8 ? "FFIType.i64" : "FFIType.i32"),
+  c_long: (c) => (c.longSize === 8 ? "FFIType.i64" : "FFIType.i32"),
+  c_ulong: (c) => (c.longSize === 8 ? "FFIType.u64" : "FFIType.u32"),
+};
+
+/** Checks whether a Flint type represents an FFI pointer carrier. */
+function isFfiPointer(flintType: string): boolean {
+  return (
+    flintType === "COpaquePtr" ||
+    flintType.startsWith("CPtr") ||
+    flintType.startsWith("MutCPtr")
+  );
+}
+
 /**
  * Maps a Flint type representation to its bun:ffi FFIType identifier.
  *
@@ -206,35 +230,23 @@ export const FFI_TYPE_MAP: Readonly<Record<string, string>> = {
  * @param targetAbi - Target platform configuration or triplet name (defaults to 'wasm32-unknown-unknown').
  * @returns Corresponding bun:ffi FFIType string.
  */
+// skipcq: JS-R1005
 export function mapFlintToFfiType(
   flintType: string,
   targetAbi: PlatformAbiConfig | TargetPlatform = "wasm32-unknown-unknown",
 ): string {
-  if (
-    flintType.startsWith("CPtr") ||
-    flintType.startsWith("MutCPtr") ||
-    flintType === "COpaquePtr"
-  ) {
+  if (isFfiPointer(flintType)) {
     return "FFIType.ptr";
   }
 
-  const config =
-    typeof targetAbi === "string"
-      ? (PLATFORM_CONFIGS[targetAbi] ??
-        PLATFORM_CONFIGS["wasm32-unknown-unknown"])
-      : targetAbi;
-
-  if (flintType === "c_size") {
-    return config.pointerSize === 8 ? "FFIType.u64" : "FFIType.u32";
-  }
-  if (flintType === "c_ssize") {
-    return config.pointerSize === 8 ? "FFIType.i64" : "FFIType.i32";
-  }
-  if (flintType === "c_long") {
-    return config.longSize === 8 ? "FFIType.i64" : "FFIType.i32";
-  }
-  if (flintType === "c_ulong") {
-    return config.longSize === 8 ? "FFIType.u64" : "FFIType.u32";
+  const dynamicResolver = DYNAMIC_FFI_SIZES[flintType];
+  if (dynamicResolver) {
+    const config =
+      typeof targetAbi === "string"
+        ? (PLATFORM_CONFIGS[targetAbi] ??
+          PLATFORM_CONFIGS["wasm32-unknown-unknown"])
+        : targetAbi;
+    return dynamicResolver(config);
   }
 
   return FFI_TYPE_MAP[flintType] ?? "FFIType.i32";

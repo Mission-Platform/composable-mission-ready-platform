@@ -777,7 +777,41 @@ function detectStaticLinkingCycles(
   }
 }
 
+/** Registers an individual foreign symbol in the target index, detecting duplicate provider conflicts. */
+function registerForeignSymbol(
+  index: Map<string, FlintForeignObjectReference>,
+  key: string,
+  symbol: string,
+  object_: FlintForeignObjectReference,
+  diagnostics: FlintDiagnostic[],
+  library?: string,
+): void {
+  const existing = index.get(key);
+  if (existing !== undefined && existing.path !== object_.path) {
+    const message =
+      library === undefined
+        ? `Duplicate foreign symbol '${symbol}' provided by '${existing.path}' and '${object_.path}'.`
+        : `Duplicate foreign symbol '${symbol}' provided for library '${library}' by '${existing.path}' and '${object_.path}'.`;
+    diagnostics.push(
+      createDiagnostic(
+        object_.path,
+        'link',
+        'FLINT-LINK-007',
+        message,
+        emptySpan,
+        'error',
+        library === undefined
+          ? 'Ensure only one foreign object provides this symbol.'
+          : 'Ensure only one foreign object provides the symbol for this capability library.',
+      ),
+    );
+  } else {
+    index.set(key, object_);
+  }
+}
+
 /** Builds index mapping exported foreign symbols to their defining relocatable object. */
+// skipcq: JS-R1005
 function buildForeignSymbolIndex(
   foreignObjects: readonly FlintForeignObjectReference[],
   diagnostics: FlintDiagnostic[],
@@ -791,40 +825,9 @@ function buildForeignSymbolIndex(
   for (const object_ of foreignObjects) {
     for (const symbol of object_.exportedSymbols) {
       if (object_.library === undefined) {
-        const existing = unscoped.get(symbol);
-        if (existing !== undefined && existing.path !== object_.path) {
-          diagnostics.push(
-            createDiagnostic(
-              object_.path,
-              'link',
-              'FLINT-LINK-007',
-              `Duplicate foreign symbol '${symbol}' provided by '${existing.path}' and '${object_.path}'.`,
-              emptySpan,
-              'error',
-              'Ensure only one foreign object provides this symbol.',
-            ),
-          );
-        } else {
-          unscoped.set(symbol, object_);
-        }
+        registerForeignSymbol(unscoped, symbol, symbol, object_, diagnostics);
       } else {
-        const key = `${object_.library}:${symbol}`;
-        const existing = scoped.get(key);
-        if (existing !== undefined && existing.path !== object_.path) {
-          diagnostics.push(
-            createDiagnostic(
-              object_.path,
-              'link',
-              'FLINT-LINK-007',
-              `Duplicate foreign symbol '${symbol}' provided for library '${object_.library}' by '${existing.path}' and '${object_.path}'.`,
-              emptySpan,
-              'error',
-              'Ensure only one foreign object provides the symbol for this capability library.',
-            ),
-          );
-        } else {
-          scoped.set(key, object_);
-        }
+        registerForeignSymbol(scoped, `${object_.library}:${symbol}`, symbol, object_, diagnostics, object_.library);
       }
     }
   }

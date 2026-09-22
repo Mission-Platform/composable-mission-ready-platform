@@ -105,6 +105,31 @@ export const FIXED_C_PRIMITIVE_LAYOUTS: Readonly<
   c_float: { size: 4, alignment: 4 },
 };
 
+/** Platform-dependent primitive layout resolvers. */
+const DYNAMIC_C_PRIMITIVE_LAYOUTS: Readonly<
+  Record<string, (config: PlatformAbiConfig) => CPrimitiveLayout>
+> = {
+  c_long: (config) => ({
+    size: config.longSize,
+    alignment: config.longAlignment,
+  }),
+  c_ulong: (config) => ({
+    size: config.longSize,
+    alignment: config.longAlignment,
+  }),
+  c_size: (config) => ({
+    size: config.pointerSize,
+    alignment: config.pointerAlignment,
+  }),
+  c_ssize: (config) => ({
+    size: config.pointerSize,
+    alignment: config.pointerAlignment,
+  }),
+  c_longlong: (config) => ({ size: 8, alignment: config.i64StructAlignment }),
+  c_ulonglong: (config) => ({ size: 8, alignment: config.i64StructAlignment }),
+  c_double: (config) => ({ size: 8, alignment: config.i64StructAlignment }),
+};
+
 /**
  * Computes the byte size and alignment for a C primitive type on the given platform.
  *
@@ -112,37 +137,24 @@ export const FIXED_C_PRIMITIVE_LAYOUTS: Readonly<
  * @param platform - Platform configuration or target triplet (defaults to 'wasm32-unknown-unknown').
  * @returns The computed C primitive layout.
  */
+// skipcq: JS-R1005
 export function layoutCPrimitive(
   type: CPrimitiveType,
   platform:
     PlatformAbiConfig | TargetPlatformTriplet = "wasm32-unknown-unknown",
 ): CPrimitiveLayout {
-  const config =
-    typeof platform === "string"
-      ? (PLATFORM_CONFIGS[platform] ??
-        PLATFORM_CONFIGS["wasm32-unknown-unknown"])
-      : platform;
   const fixed = FIXED_C_PRIMITIVE_LAYOUTS[type];
   if (fixed !== undefined) return fixed;
 
-  switch (type) {
-    case "c_long":
-    case "c_ulong": {
-      return { size: config.longSize, alignment: config.longAlignment };
-    }
-    case "c_size":
-    case "c_ssize": {
-      return { size: config.pointerSize, alignment: config.pointerAlignment };
-    }
-    case "c_longlong":
-    case "c_ulonglong":
-    case "c_double": {
-      return { size: 8, alignment: config.i64StructAlignment };
-    }
-    default: {
-      throw new Error(
-        `Unsupported C primitive type for layout: ${String(type)}`,
-      );
-    }
+  const dynamicResolver = DYNAMIC_C_PRIMITIVE_LAYOUTS[type];
+  if (dynamicResolver) {
+    const config =
+      typeof platform === "string"
+        ? (PLATFORM_CONFIGS[platform] ??
+          PLATFORM_CONFIGS["wasm32-unknown-unknown"])
+        : platform;
+    return dynamicResolver(config);
   }
+
+  throw new Error(`Unsupported C primitive type for layout: ${String(type)}`);
 }

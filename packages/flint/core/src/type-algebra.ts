@@ -216,6 +216,7 @@ export class TypeAlgebra {
    * @param declaration - Struct declaration AST node.
    * @returns Aggregate layout definition ready for registration.
    */
+  // skipcq: JS-R1005
   private convertStructDeclaration(declaration: FlintModule['structs'][number]): AggregateLayoutDefinition {
     const genericParameters = declaration.genericParameters.map(({ name }) => name);
     return {

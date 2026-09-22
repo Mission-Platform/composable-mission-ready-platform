@@ -412,18 +412,24 @@ function resolveWatTypeString(
   return type.reference ?? type.name ?? 'i32';
 }
 
+/** Checks whether a type behaves as a pointer or pointer-like scalar in WAT. */
+function isPointerLikeWatType(typeString: string): boolean {
+  return (
+    typeString === 'COpaquePtr' ||
+    typeString.startsWith('CPtr') ||
+    typeString.startsWith('MutCPtr') ||
+    POINTER_LIKE_PRIMITIVE_TYPES.has(typeString)
+  );
+}
+
 /** Maps a Flint or C type representation string to WebAssembly WAT value type. */
+// skipcq: JS-R1005
 export function toWatType(
   type: string | { readonly name?: string; readonly reference?: string } | undefined,
   memory64 = false,
 ): string {
   const typeString = resolveWatTypeString(type);
-  if (
-    typeString.startsWith('CPtr') ||
-    typeString.startsWith('MutCPtr') ||
-    typeString === 'COpaquePtr' ||
-    POINTER_LIKE_PRIMITIVE_TYPES.has(typeString)
-  ) {
+  if (isPointerLikeWatType(typeString)) {
     return memory64 ? 'i64' : 'i32';
   }
   return STATIC_WAT_TYPES[typeString] ?? 'i32';

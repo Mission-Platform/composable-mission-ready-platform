@@ -240,9 +240,10 @@ describe('WebAssembly Foreign Capability Emitter', () => {
 
     expect(result.diagnostics).toEqual([]);
     expect(result.wasm).toBeDefined();
+    if (result.wasm === undefined) throw new Error('Expected result.wasm to be defined');
 
     // Verify string in compiled Wasm data section contains "SELECT 1;\0"
-    const wasmBytes = result.wasm!;
+    const wasmBytes = result.wasm;
     const needle = new TextEncoder().encode('SELECT 1;');
     let foundOffset = -1;
     for (let offset = 0; offset <= wasmBytes.length - needle.length - 1; offset++) {

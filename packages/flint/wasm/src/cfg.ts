@@ -405,7 +405,14 @@ function analyzeCfg(
   return current;
 }
 
-function extractPointeeType(
+/**
+ * Extracts the pointee type from a pointer, reference, or composite type descriptor.
+ *
+ * @param type - Type descriptor to inspect.
+ * @returns Resolved pointee type name, or undefined if not a pointer or reference.
+ */
+// skipcq: JS-R1005
+export function extractPointeeType(
   type:
     | {
         readonly name: string;

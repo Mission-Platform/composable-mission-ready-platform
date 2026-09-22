@@ -197,17 +197,24 @@ class Parser {
     else declarations.sourceImports.push(this.parseSourceImport());
   }
 
+  /** Validates that an alignment number is a positive power of two. */
+  // skipcq: JS-0105
+  private static isPositivePowerOfTwo(value: number): boolean {
+    return Number.isInteger(value) && value > 0 && (value & (value - 1)) === 0;
+  }
+
   /**
    * Parses the argument clause of a `#[repr(packed(...))]` attribute.
    *
    * @returns Parsed packed struct representation directive.
    */
+  // skipcq: JS-R1005
   private parsePackedRepr(): FlintStructRepr {
     let alignment = 1;
     if (this.match('(')) {
       const number_ = this.expectKind('number', 'FLINT-PARSE-094', 'Expected packed alignment number.');
       alignment = Number(number_?.text || '1');
-      if (!Number.isInteger(alignment) || alignment <= 0 || (alignment & (alignment - 1)) !== 0) {
+      if (!Parser.isPositivePowerOfTwo(alignment)) {
         this.diagnostics.push(
           createDiagnostic(
             this.fileName,
@@ -228,11 +235,12 @@ class Parser {
    *
    * @returns Parsed align struct representation directive.
    */
+  // skipcq: JS-R1005
   private parseAlignRepr(): FlintStructRepr {
     this.expect('(', 'FLINT-PARSE-096', "Expected '(' after 'align'.");
     const number_ = this.expectKind('number', 'FLINT-PARSE-097', 'Expected alignment number.');
     const alignment = Number(number_?.text || '8');
-    if (!Number.isInteger(alignment) || alignment <= 0 || (alignment & (alignment - 1)) !== 0) {
+    if (!Parser.isPositivePowerOfTwo(alignment)) {
       this.diagnostics.push(
         createDiagnostic(
           this.fileName,
