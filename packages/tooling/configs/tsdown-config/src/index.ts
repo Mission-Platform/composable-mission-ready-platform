@@ -73,20 +73,26 @@ function resolveEntry(
   return Object.fromEntries(Object.entries(entry).map(([key, value]) => [key, path.resolve(rootDirectory, value)]));
 }
 
+/** Safely cast an unknown option value to a record dictionary. */
+function toOptionObject(value: unknown): Record<string, unknown> {
+  return typeof value === 'object' && value !== null ? (value as Record<string, unknown>) : {};
+}
+
 /** Merge rollup-style object or function options. */
 function mergeRollupOptions<T extends object | ((...args: never[]) => unknown)>(
   base?: T,
   overrides?: T,
 ): T | undefined {
-  if (typeof overrides === 'function' || typeof base === 'function') {
-    return (overrides ?? base) as T;
+  if (typeof overrides === 'function') {
+    return overrides;
   }
-  if (base !== undefined || overrides !== undefined) {
-    const baseObject = typeof base === 'object' && base !== null ? base : {};
-    const overrideObject = typeof overrides === 'object' && overrides !== null ? overrides : {};
-    return { ...baseObject, ...overrideObject } as T;
+  if (typeof base === 'function') {
+    return base;
   }
-  return undefined;
+  if (base === undefined && overrides === undefined) {
+    return undefined;
+  }
+  return { ...toOptionObject(base), ...toOptionObject(overrides) } as T;
 }
 
 /** Merge plugins from base and override configurations. */
@@ -203,6 +209,34 @@ function collectCssFiles(directory: string, base: string = directory): string[] 
   return results;
 }
 
+/** Search a directory for a JavaScript file matching any target name. */
+function findJsInDirectory(
+  currentDirectory: string,
+  outputDirectory: string,
+  targetNames: Set<string>,
+  queue: string[],
+): string | undefined {
+  let entries: fs.Dirent[];
+  try {
+    entries = fs.readdirSync(currentDirectory, { withFileTypes: true });
+  } catch {
+    return undefined;
+  }
+
+  for (const entry of entries) {
+    const fullPath = path.join(currentDirectory, entry.name);
+    if (entry.isDirectory()) {
+      queue.push(fullPath);
+    } else if (entry.isFile() && entry.name.endsWith('.js')) {
+      const nameWithoutExtension = path.posix.basename(entry.name, '.js');
+      if (targetNames.has(nameWithoutExtension)) {
+        return path.relative(outputDirectory, fullPath).split(path.sep).join('/');
+      }
+    }
+  }
+  return undefined;
+}
+
 /**
  * Recursively find the first JS module in `outputDirectory` whose base name matches
  * either `baseName` or `fileName`.
@@ -216,27 +250,25 @@ function findJsByBaseName(outputDirectory: string, baseName: string, fileName: s
     if (!currentDirectory) {
       continue;
     }
-    let entries: fs.Dirent[];
-    try {
-      entries = fs.readdirSync(currentDirectory, { withFileTypes: true });
-    } catch {
-      continue;
-    }
-
-    for (const entry of entries) {
-      const fullPath = path.join(currentDirectory, entry.name);
-      if (entry.isDirectory()) {
-        queue.push(fullPath);
-      } else if (entry.isFile() && entry.name.endsWith('.js')) {
-        const nameWithoutExtension = path.posix.basename(entry.name, '.js');
-        if (targetNames.has(nameWithoutExtension)) {
-          return path.relative(outputDirectory, fullPath).split(path.sep).join('/');
-        }
-      }
+    const match = findJsInDirectory(currentDirectory, outputDirectory, targetNames, queue);
+    if (match !== undefined) {
+      return match;
     }
   }
 
   return undefined;
+}
+
+/** Resolve the owning JS module for a Vue SFC extracted stylesheet. */
+function resolveVueCssOwner(outputDirectory: string, fileName: string, prefix: string): string | undefined {
+  const vueMarker = '.vue_vue_type_style';
+  const base = fileName.slice(0, fileName.indexOf(vueMarker));
+  const candidates = [`${prefix}${base}.js`, `${prefix}${base}.vue.js`];
+  const match = candidates.find((candidate) => fs.existsSync(path.join(outputDirectory, candidate)));
+  if (match !== undefined) {
+    return match;
+  }
+  return findJsByBaseName(outputDirectory, base, fileName);
 }
 
 /**
@@ -258,13 +290,8 @@ export function resolveCssOwner(outputDirectory: string, cssRelative: string): s
   const fileName = path.posix.basename(cssRelative, '.css');
   const prefix = directory === '.' ? '' : `${directory}/`;
 
-  const vueMarker = '.vue_vue_type_style';
-  if (fileName.includes(vueMarker)) {
-    const base = fileName.slice(0, fileName.indexOf(vueMarker));
-    const candidates = [`${prefix}${base}.js`, `${prefix}${base}.vue.js`];
-    const match = candidates.find((candidate) => fs.existsSync(path.join(outputDirectory, candidate)));
-    if (match !== undefined) return match;
-    return findJsByBaseName(outputDirectory, base, fileName);
+  if (fileName.includes('.vue_vue_type_style')) {
+    return resolveVueCssOwner(outputDirectory, fileName, prefix);
   }
 
   const baseName = fileName.endsWith('.module') ? fileName.slice(0, -'.module'.length) : fileName;
@@ -373,10 +400,7 @@ function buildStagedDtsOptions(
   }
 
   const stagedDeclarationDirectory = resolveTsdownOutputDirectory(rootDirectory, outDirectory, outputRoot);
-  const existingCompilerOptions =
-    resolved.compilerOptions !== undefined && typeof resolved.compilerOptions === 'object'
-      ? resolved.compilerOptions
-      : {};
+  const existingCompilerOptions = toOptionObject(resolved.compilerOptions);
 
   return {
     ...resolved,
@@ -415,14 +439,16 @@ function resolveDtsOption(
   }
 
   const resolved: DtsOptions = dts === true ? { build: false, generator: 'tsgo' } : { build: false, ...dts };
-  const outputRoot = options?.outputRoot;
-  if (outputRoot === undefined) {
+  if (!options?.outputRoot) {
     return resolved;
   }
 
-  const rootDirectory = options?.rootDir ?? process.cwd();
-  const outDirectory = options?.outDir ?? 'dist';
-  return buildStagedDtsOptions(resolved, rootDirectory, outDirectory, outputRoot);
+  return buildStagedDtsOptions(
+    resolved,
+    options.rootDir ?? process.cwd(),
+    options.outDir ?? 'dist',
+    options.outputRoot,
+  );
 }
 
 /**
@@ -557,6 +583,35 @@ function readTsconfigAliases(rootDirectory: string, targetRoot: string): Tsconfi
   }
 }
 
+/** Match a specifier against a tsconfig path alias and expand target file candidates. */
+function matchAliasCandidates(alias: { pattern: string; targets: string[] }, specifier: string): string[] | undefined {
+  const wildcard = alias.pattern.indexOf('*');
+  const suffix = wildcard === -1 ? '' : alias.pattern.slice(wildcard + 1);
+  const prefix = wildcard === -1 ? alias.pattern : alias.pattern.slice(0, wildcard);
+  if (!specifier.startsWith(prefix) || !specifier.endsWith(suffix)) {
+    return undefined;
+  }
+  const match = specifier.slice(prefix.length, specifier.length - suffix.length || undefined);
+  return alias.targets.flatMap((target) => {
+    const resolvedTarget = target.replace('*', match);
+    return [
+      `${resolvedTarget}.ts`,
+      `${resolvedTarget}.tsx`,
+      `${resolvedTarget}.vue`,
+      `${resolvedTarget}.svelte`,
+      `${resolvedTarget}.css`,
+      `${resolvedTarget}.scss`,
+      `${resolvedTarget}.module.css`,
+      `${resolvedTarget}.module.scss`,
+      `${resolvedTarget}/index.ts`,
+      `${resolvedTarget}/index.tsx`,
+      `${resolvedTarget}/index.vue`,
+      `${resolvedTarget}/index.svelte`,
+      resolvedTarget,
+    ];
+  });
+}
+
 /** Resolve TypeScript path aliases, optionally against a generated cache tree. */
 function tsconfigPathsPlugin(rootDirectory: string, targetRoot = path.resolve(rootDirectory, 'src')): TsdownPlugin {
   const aliases = readTsconfigAliases(rootDirectory, targetRoot);
@@ -565,34 +620,15 @@ function tsconfigPathsPlugin(rootDirectory: string, targetRoot = path.resolve(ro
     resolveId(source) {
       const [specifier, query = ''] = source.split(/(?=[?#])/u);
       for (const alias of aliases) {
-        const wildcard = alias.pattern.indexOf('*');
-        const suffix = wildcard === -1 ? '' : alias.pattern.slice(wildcard + 1);
-        const prefix = wildcard === -1 ? alias.pattern : alias.pattern.slice(0, wildcard);
-        if (!specifier.startsWith(prefix) || !specifier.endsWith(suffix)) {
+        const candidates = matchAliasCandidates(alias, specifier);
+        if (candidates === undefined) {
           continue;
         }
-        const match = specifier.slice(prefix.length, specifier.length - suffix.length || undefined);
-        const candidates = alias.targets.flatMap((target) => {
-          const resolvedTarget = target.replace('*', match);
-          return [
-            `${resolvedTarget}.ts`,
-            `${resolvedTarget}.tsx`,
-            `${resolvedTarget}.vue`,
-            `${resolvedTarget}.svelte`,
-            `${resolvedTarget}.css`,
-            `${resolvedTarget}.scss`,
-            `${resolvedTarget}.module.css`,
-            `${resolvedTarget}.module.scss`,
-            `${resolvedTarget}/index.ts`,
-            `${resolvedTarget}/index.tsx`,
-            `${resolvedTarget}/index.vue`,
-            `${resolvedTarget}/index.svelte`,
-            resolvedTarget,
-          ];
-        });
         const resolved = candidates.find((candidate) => fs.existsSync(candidate) && fs.statSync(candidate).isFile());
         return `${resolved ?? candidates[0]}${query}`;
       }
+      // eslint-disable-next-line unicorn/no-null -- Rollup resolveId hook protocol returns null to pass through
+      return null;
     },
   } as TsdownPlugin;
 }

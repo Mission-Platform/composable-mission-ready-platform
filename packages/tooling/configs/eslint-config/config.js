@@ -98,9 +98,12 @@ function findEnclosingTypeAnnotation(node) {
       return current;
     }
     if (BOUNDARY_NODE_TYPES.has(current.type)) {
-      return;
+      // eslint-disable-next-line unicorn/no-useless-undefined
+      return undefined;
     }
   }
+  // eslint-disable-next-line unicorn/no-useless-undefined
+  return undefined;
 }
 
 /**

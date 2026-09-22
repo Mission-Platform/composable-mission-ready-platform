@@ -132,6 +132,7 @@ export type SelectStyle = CSSStyleProperties & {
   readonly '--forge-select-text-secondary'?: string | undefined;
 };
 
+/** Resolves visual custom-property style overrides for the select component. */
 function createSelectStyle(properties: Readonly<SelectStyleProperties> | undefined): SelectStyle | undefined {
   return createForgeStyle({
     '--forge-select-border-default': properties?.['border-default'],
@@ -231,7 +232,7 @@ export interface SelectProperties {
    * Callback fired when search query changes in searchable mode.
    * Can return a Promise of options to asynchronously populate the dropdown list.
    */
-  onSearch?: (query: string) => Promise<SelectOption[] | undefined> | Promise<void> | void;
+  onSearch?: (query: string) => Promise<SelectOption[] | undefined> | Promise<void> | undefined;
   /** Whether the control is currently loading data. Displays a loading indicator. */
   loading?: boolean;
   /**
@@ -292,6 +293,119 @@ export type ForgeComboboxProps = SelectProperties;
  * the `v-model` + emits become callback props. The `start`/`end` named slots are
  * preserved as neutral named slots.
  */
+/** State and handler callbacks for dispatching select keyboard interaction. */
+interface SelectKeydownState {
+  isDropdownOpen: boolean;
+  searchable: boolean;
+  openDropdown: () => void;
+  closeDropdown: () => void;
+  selectAdjacentOption: (direction: 1 | -1) => void;
+  selectFirstVisibleOption: () => void;
+}
+
+/** Dispatches select keyboard interaction keys to navigate options and toggle the dropdown. */
+function handleSelectKeydown(event: KeyboardEvent, state: SelectKeydownState): void {
+  switch (event.key) {
+    case 'Enter': {
+      event.preventDefault();
+      if (state.isDropdownOpen) {
+        if (state.searchable) {
+          state.selectFirstVisibleOption();
+        } else {
+          state.closeDropdown();
+        }
+      } else {
+        state.openDropdown();
+      }
+      break;
+    }
+    case ' ': {
+      if (!state.searchable) {
+        event.preventDefault();
+        if (state.isDropdownOpen) {
+          state.closeDropdown();
+        } else {
+          state.openDropdown();
+        }
+      }
+      break;
+    }
+    case 'Escape': {
+      state.closeDropdown();
+      break;
+    }
+    case 'ArrowDown': {
+      event.preventDefault();
+      if (state.isDropdownOpen) {
+        state.selectAdjacentOption(1);
+      } else {
+        state.openDropdown();
+      }
+      break;
+    }
+    case 'ArrowUp': {
+      event.preventDefault();
+      state.selectAdjacentOption(-1);
+      break;
+    }
+    default: {
+      break;
+    }
+  }
+}
+
+/** Executes asynchronous option searching and sets options if request is still current. */
+function handleAsyncSearch(
+  query: string,
+  onSearch: (query: string) => unknown,
+  requestIdReference: { current: number },
+  setIsSearching: (searching: boolean) => void,
+  setAsyncOptions: (options?: SelectOption[]) => void,
+): void {
+  const currentRequestId = ++requestIdReference.current;
+  try {
+    const result = onSearch(query);
+    if (result && typeof (result as Promise<SelectOption[] | undefined>).then === 'function') {
+      setIsSearching(true);
+      (result as Promise<SelectOption[] | undefined>).then(
+        (resolvedOptions) => {
+          if (requestIdReference.current === currentRequestId) {
+            if (Array.isArray(resolvedOptions)) {
+              setAsyncOptions(resolvedOptions);
+            }
+            setIsSearching(false);
+          }
+        },
+        () => {
+          if (requestIdReference.current === currentRequestId) {
+            setIsSearching(false);
+          }
+        },
+      );
+    }
+  } catch {
+    if (requestIdReference.current === currentRequestId) {
+      setIsSearching(false);
+    }
+  }
+}
+
+/** Computes the adjacent option value based on direction and current model value. */
+function getAdjacentOptionValue(
+  visibleOptions: readonly SelectOption[],
+  modelValue: string | number,
+  direction: 1 | -1,
+): string | number | undefined {
+  const enabled = visibleOptions.filter((option) => !option.disabled);
+  if (enabled.length === 0) {
+    return undefined;
+  }
+  const currentIndex = enabled.findIndex((option) => option.value === modelValue);
+  const baseIndex = currentIndex === -1 ? (direction === 1 ? -1 : 0) : currentIndex;
+  const nextIndex = Math.max(0, Math.min(enabled.length - 1, baseIndex + direction));
+  return enabled[nextIndex]?.value;
+}
+
 export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
   const style = createSelectStyle(properties.properties);
 
@@ -320,17 +434,15 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
   const resolvedId = properties.id ?? generatedId;
   const triggerReference = useRef<HTMLButtonElement | null>(null);
   const searchReference = useRef<HTMLInputElement | null>(null);
-  const debounceTimerReference = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const debounceTimerReference = useRef<ReturnType<typeof setTimeout> | undefined>();
   const searchRequestId = useRef<number>(0);
 
   const [isOpen, setIsOpen] = useState<boolean>(controlledOpen ?? false);
   const isDropdownOpen = controlledOpen ?? isOpen;
   const [searchQuery, setSearchQuery] = useState<string>('');
-  // eslint-disable-next-line unicorn/no-useless-undefined -- the neutral `useState` requires an explicit initial value
-  const [asyncOptions, setAsyncOptions] = useState<SelectOption[] | undefined>(undefined);
+  const [asyncOptions, setAsyncOptions] = useState<SelectOption[] | undefined>();
   const [isSearching, setIsSearching] = useState<boolean>(false);
-  // eslint-disable-next-line unicorn/no-useless-undefined -- the neutral `useState` requires an explicit initial value
-  const [selectedAsyncOption, setSelectedAsyncOption] = useState<SelectOption | undefined>(undefined);
+  const [selectedAsyncOption, setSelectedAsyncOption] = useState<SelectOption | undefined>();
 
   const isLoading = Boolean(loading || isSearching);
 
@@ -367,37 +479,12 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
    * incrementing request ID so stale or out-of-order responses are discarded.
    */
   const executeSearch = (query: string): void => {
-    if (!onSearch) {
-      return;
-    }
-    const currentRequestId = ++searchRequestId.current;
-    try {
-      const result = onSearch(query);
-      if (result && typeof (result as Promise<SelectOption[] | undefined>).then === 'function') {
-        setIsSearching(true);
-        (result as Promise<SelectOption[] | undefined>).then(
-          (resolvedOptions) => {
-            if (searchRequestId.current === currentRequestId) {
-              if (Array.isArray(resolvedOptions)) {
-                setAsyncOptions(resolvedOptions);
-              }
-              setIsSearching(false);
-            }
-          },
-          () => {
-            if (searchRequestId.current === currentRequestId) {
-              setIsSearching(false);
-            }
-          },
-        );
-      }
-    } catch {
-      if (searchRequestId.current === currentRequestId) {
-        setIsSearching(false);
-      }
+    if (onSearch) {
+      handleAsyncSearch(query, onSearch, searchRequestId, setIsSearching, setAsyncOptions);
     }
   };
 
+  /** Opens the select dropdown and triggers focus event. */
   const openDropdown = (): void => {
     if (disabled) {
       return;
@@ -405,28 +492,31 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
     cancelDebounce();
     searchRequestId.current += 1;
     setSearchQuery('');
-    setAsyncOptions(undefined);
+    setAsyncOptions();
     setIsSearching(false);
     setIsOpen(true);
     onUpdateOpen?.(true);
     properties.onFocus?.(new FocusEvent('focus'));
   };
 
+  /** Closes the select dropdown and clears search query. */
   const closeDropdown = (): void => {
     cancelDebounce();
     searchRequestId.current += 1;
     setIsOpen(false);
     onUpdateOpen?.(false);
     setSearchQuery('');
-    setAsyncOptions(undefined);
+    setAsyncOptions();
     setIsSearching(false);
   };
 
+  /** Commits the chosen option value to parent handlers. */
   const commit = (value: string | number): void => {
     properties.onUpdateModelValue?.(value);
     properties.onChange?.(value);
   };
 
+  /** Focuses the appropriate trigger element depending on searchable mode. */
   const focusTrigger = (): void => {
     if (searchable) {
       searchReference.current?.focus();
@@ -435,6 +525,7 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
     }
   };
 
+  /** Selects an option and updates component state. */
   const selectOption = (option: SelectOption): void => {
     if (option.disabled) {
       return;
@@ -445,21 +536,15 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
     focusTrigger();
   };
 
+  /** Selects the adjacent option in listbox navigation. */
   const selectAdjacentOption = (direction: 1 | -1): void => {
-    const enabled = visibleOptions.filter((option) => !option.disabled);
-    if (enabled.length === 0) {
-      return;
-    }
-    const currentIndex = enabled.findIndex((option) => option.value === modelValue);
-    // Default to the first option when the selection is not part of the filtered set.
-    const baseIndex = currentIndex === -1 ? (direction === 1 ? -1 : 0) : currentIndex;
-    const nextIndex = Math.max(0, Math.min(enabled.length - 1, baseIndex + direction));
-    const next = enabled[nextIndex];
-    if (next) {
-      commit(next.value);
+    const nextValue = getAdjacentOptionValue(visibleOptions, modelValue, direction);
+    if (nextValue !== undefined) {
+      commit(nextValue);
     }
   };
 
+  /** Selects the first enabled visible option in listbox. */
   const selectFirstVisibleOption = (): void => {
     const first = visibleOptions.find((option) => !option.disabled);
     if (first) {
@@ -467,61 +552,19 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
     }
   };
 
+  /** Dispatches keyboard navigation events for the select control. */
   const handleKeydown = (event: KeyboardEvent): void => {
-    switch (event.key) {
-      case 'Enter': {
-        event.preventDefault();
-        if (isDropdownOpen) {
-          if (searchable) {
-            selectFirstVisibleOption();
-          } else {
-            closeDropdown();
-          }
-        } else {
-          openDropdown();
-        }
-
-        break;
-      }
-      case ' ': {
-        // In searchable mode a space is a literal query character; only the
-        // button trigger toggles the dropdown on Space.
-        if (!searchable) {
-          event.preventDefault();
-          if (isDropdownOpen) {
-            closeDropdown();
-          } else {
-            openDropdown();
-          }
-        }
-
-        break;
-      }
-      case 'Escape': {
-        closeDropdown();
-
-        break;
-      }
-      case 'ArrowDown': {
-        event.preventDefault();
-        if (isDropdownOpen) {
-          selectAdjacentOption(1);
-        } else {
-          openDropdown();
-        }
-
-        break;
-      }
-      case 'ArrowUp': {
-        event.preventDefault();
-        selectAdjacentOption(-1);
-
-        break;
-      }
-      // No default
-    }
+    handleSelectKeydown(event, {
+      isDropdownOpen,
+      searchable,
+      openDropdown,
+      closeDropdown,
+      selectAdjacentOption,
+      selectFirstVisibleOption,
+    });
   };
 
+  /** Handles text input changes in the searchable trigger. */
   const handleSearchInput = (event: Event): void => {
     const query = (event.target as HTMLInputElement).value;
     setSearchQuery(query);
@@ -541,6 +584,7 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
     }
   };
 
+  /** Handles change events emitted from hidden native select. */
   const handleNativeChange = (event: Event): void => {
     const target = event.target as HTMLSelectElement;
     const matched = currentOptions.find((option) => String(option.value) === target.value);
@@ -720,7 +764,7 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
         styles['forge-select'],
         styles[`forge-select--${size}`],
         {
-          [styles['forge-select--error']]: !!error,
+          [styles['forge-select--error']]: Boolean(error),
           [styles['forge-select--disabled']]: disabled,
           [styles['forge-select--loading']]: isLoading,
           [styles['forge-select--open']]: isDropdownOpen,

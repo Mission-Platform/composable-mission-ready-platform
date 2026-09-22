@@ -40,11 +40,13 @@ function flattenPlugins(plugins: UserConfig['plugins']): TsdownPlugin[] {
   return [plugins as TsdownPlugin];
 }
 
+/** Computes the cache directory for generated forge artifacts. */
 function forgeGeneratedDirectory(rootDir: string, targetId: string, entryModule: string, outputRoot?: string): string {
   const fingerprint = createForgeFingerprint({ entryModule, outputRoot, rootDir, targetId });
   return path.join(rootDir, 'node_modules/.cache/forge-build', fingerprint.slice(0, 20), targetId);
 }
 
+/** Creates a plugin that cleans up in-flight generation staging attempts after bundle completion. */
 function removeGeneratedDirectoryPlugin(generatedDirectory: string, targetId: string): TsdownPlugin {
   return {
     name: '@mission-platform/vite-plugin-forge:remove-generated-directory',
@@ -52,6 +54,40 @@ function removeGeneratedDirectoryPlugin(generatedDirectory: string, targetId: st
       cleanupForgeArtifactAttempts(generatedDirectory, targetId);
     },
   } as TsdownPlugin;
+}
+
+/** Merge rollup-style object or function options. */
+function mergeRollupOptions<T extends object | ((...args: never[]) => unknown)>(
+  base?: T,
+  overrides?: T,
+): T | undefined {
+  if (typeof overrides === 'function') {
+    return overrides;
+  }
+  if (typeof base === 'function') {
+    return base;
+  }
+  if (base === undefined && overrides === undefined) {
+    return undefined;
+  }
+  const baseObject = typeof base === 'object' && base !== null ? base : {};
+  const overrideObject = typeof overrides === 'object' && overrides !== null ? overrides : {};
+  return { ...baseObject, ...overrideObject } as T;
+}
+
+/** Resolves override outDir redirected into staging if applicable. */
+function resolveOverridesOutDir(
+  overrides: UserConfig | undefined,
+  rootDir?: string,
+  outputRoot?: string,
+): UserConfig | undefined {
+  if (!overrides || rootDir === undefined || outputRoot === undefined || typeof overrides.outDir !== 'string') {
+    return overrides;
+  }
+  return {
+    ...overrides,
+    outDir: resolveTsdownOutputDirectory(rootDir, overrides.outDir, outputRoot),
+  };
 }
 
 /** Deep-merge a base tsdown config with caller overrides (shallow for top-level, concat plugins). */
@@ -65,14 +101,7 @@ function mergeTsdownConfig(
     return base;
   }
 
-  const resolvedOverrides =
-    rootDir !== undefined && outputRoot !== undefined && typeof overrides.outDir === 'string'
-      ? {
-          ...overrides,
-          outDir: resolveTsdownOutputDirectory(rootDir, overrides.outDir, outputRoot),
-        }
-      : overrides;
-
+  const resolvedOverrides = resolveOverridesOutDir(overrides, rootDir, outputRoot) ?? overrides;
   const mergedPlugins = [...flattenPlugins(base.plugins), ...flattenPlugins(resolvedOverrides.plugins)];
 
   return {
@@ -84,22 +113,41 @@ function mergeTsdownConfig(
     },
     dts: resolvedOverrides.dts === undefined ? base.dts : resolvedOverrides.dts,
     hooks: resolvedOverrides.hooks ?? base.hooks,
-    inputOptions:
-      typeof resolvedOverrides.inputOptions === 'function' || typeof base.inputOptions === 'function'
-        ? (resolvedOverrides.inputOptions ?? base.inputOptions)
-        : {
-            ...(typeof base.inputOptions === 'object' ? base.inputOptions : {}),
-            ...(typeof resolvedOverrides.inputOptions === 'object' ? resolvedOverrides.inputOptions : {}),
-          },
-    outputOptions:
-      typeof resolvedOverrides.outputOptions === 'function' || typeof base.outputOptions === 'function'
-        ? (resolvedOverrides.outputOptions ?? base.outputOptions)
-        : {
-            ...(typeof base.outputOptions === 'object' ? base.outputOptions : {}),
-            ...(typeof resolvedOverrides.outputOptions === 'object' ? resolvedOverrides.outputOptions : {}),
-          },
+    inputOptions: mergeRollupOptions(base.inputOptions, resolvedOverrides.inputOptions),
+    outputOptions: mergeRollupOptions(base.outputOptions, resolvedOverrides.outputOptions),
     plugins: mergedPlugins.length > 0 ? mergedPlugins : undefined,
   };
+}
+
+/** Resolves target output and attempt directories for a framework build. */
+function resolveTargetOutputDirs(
+  rootDir: string,
+  framework: string,
+  overridesOutDir: string | undefined,
+  outputRoot?: string,
+): { targetOutDir: string; publishedOutDir: string; attemptFinalOutDir: string; attemptOutDir: string } {
+  const targetOutDir =
+    typeof overridesOutDir === 'string'
+      ? path.resolve(rootDir, overridesOutDir)
+      : path.resolve(rootDir, `dist/${framework}`);
+  const publishedOutDir = resolveTsdownOutputDirectory(rootDir, targetOutDir, outputRoot);
+  const attemptFinalOutDir = forgeArtifactAttemptDirectory(targetOutDir, framework);
+  const attemptOutDir = resolveTsdownOutputDirectory(rootDir, attemptFinalOutDir, outputRoot);
+  return { targetOutDir, publishedOutDir, attemptFinalOutDir, attemptOutDir };
+}
+
+/** Resolves tsdown stage plugins configured for a framework build. */
+function resolveStagePlugins(
+  plugin: FrameworkOutputPlugin,
+  rootDir: string,
+  generatedDirectory: string,
+  attemptOutDir: string,
+): TsdownPlugin[] {
+  return (plugin.build.tsdown?.({
+    rootDir,
+    generatedDirectory,
+    outputDirectory: attemptOutDir,
+  }) ?? []) as TsdownPlugin[];
 }
 
 export interface TsdownForgeHooksOptions {
@@ -156,13 +204,12 @@ export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserCo
   const framework = plugin.id as JsxFramework;
   const resolvedEntry = resolveForgeHookEntryModule(rootDir, entryModule);
   const generatedDirectory = forgeGeneratedDirectory(rootDir, framework, resolvedEntry, outputRoot);
-  const targetOutDir =
-    typeof overrides?.outDir === 'string'
-      ? path.resolve(rootDir, overrides.outDir)
-      : path.resolve(rootDir, `dist/${framework}`);
-  const publishedOutDir = resolveTsdownOutputDirectory(rootDir, targetOutDir, outputRoot);
-  const attemptFinalOutDir = forgeArtifactAttemptDirectory(targetOutDir, framework);
-  const attemptOutDir = resolveTsdownOutputDirectory(rootDir, attemptFinalOutDir, outputRoot);
+  const { publishedOutDir, attemptFinalOutDir, attemptOutDir } = resolveTargetOutputDirs(
+    rootDir,
+    framework,
+    overrides?.outDir,
+    outputRoot,
+  );
 
   const target = createHookTargetPlan({
     plugin,
@@ -174,15 +221,7 @@ export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserCo
     rejectFixturePlaceholder,
   });
 
-  // Hook libraries emit plain `.ts`/`.tsx` (no `.svelte` SFCs). Only React
-  // needs a JSX transform for `.tsx` entry files; Solid/Svelte hooks stay plain
-  // TS and skip the heavier stage-2 compilers.
-  const stagePlugins = (plugin.build.tsdown?.({
-    rootDir,
-    generatedDirectory,
-    outputDirectory: attemptOutDir,
-  }) ?? []) as TsdownPlugin[];
-
+  const stagePlugins = resolveStagePlugins(plugin, rootDir, generatedDirectory, attemptOutDir);
   const frameworkExternals = plugin.runtimeExternals ?? [];
 
   const base = defineTsdownLibrary({
@@ -270,6 +309,19 @@ export interface TsdownForgeHooksAllOptions {
   rejectFixturePlaceholder?: boolean;
 }
 
+/** Builds the neutral tsdown configuration for hooks. */
+function createNeutralHooksConfig(options: TsdownForgeHooksAllOptions): UserConfig {
+  const { rootDir, outputRoot, entryModule, external, neutralOverrides } = options;
+  return defineTsdownLibrary({
+    rootDir,
+    outputRoot,
+    entry: entryModule ? path.relative(rootDir, entryModule) : 'src/index.ts',
+    external,
+    clean: outputRoot === undefined,
+    overrides: neutralOverrides,
+  });
+}
+
 /**
  * Build an array of tsdown configs for every requested forge hooks framework
  * (plus the neutral root entry by default). A package's `tsdown.config.ts` can
@@ -284,7 +336,6 @@ export function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): 
     name,
     external,
     includeNeutral = true,
-    neutralOverrides,
     frameworkOverrides,
     router,
     routerPlugins,
@@ -297,18 +348,7 @@ export function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): 
   const configs: UserConfig[] = [];
 
   if (includeNeutral) {
-    configs.push(
-      defineTsdownLibrary({
-        rootDir,
-        outputRoot,
-        entry: entryModule ? path.relative(rootDir, entryModule) : 'src/index.ts',
-        external,
-        // The isolated stage starts empty; cleaning its aggregate `dist/` while
-        // framework configs run in parallel would clobber sibling outputs.
-        clean: outputRoot === undefined,
-        overrides: neutralOverrides,
-      }),
-    );
+    configs.push(createNeutralHooksConfig(options));
   }
 
   for (const [index, plugin] of selected.entries()) {
@@ -394,6 +434,41 @@ export interface TsdownForgeComponentPluginsOptions {
   rejectFixturePlaceholder?: boolean;
 }
 
+/** Resolves the framework plugins selected for compilation by environment variables. */
+function resolveSelectedFrameworks(allFrameworks: readonly FrameworkOutputPlugin[]): FrameworkOutputPlugin[] {
+  const selected = validateForgeBuildSelection(allFrameworks, 'tsdown');
+  const requestedFramework = process.env.FORGE_FRAMEWORK_TARGET;
+  const cmsOnlyBuild = process.env.FORGE_CMS_STORYBLOK_TARGET !== undefined;
+
+  if (requestedFramework === undefined || requestedFramework === 'none') {
+    if (cmsOnlyBuild || requestedFramework === 'none') {
+      return [];
+    }
+    return selected;
+  }
+
+  const filtered = selected.filter((plugin) => plugin.id === requestedFramework);
+  if (filtered.length === 0) {
+    throw new Error(`Forge build target "${requestedFramework}" is not available in the selected framework plugins.`);
+  }
+  return filtered;
+}
+
+/** Resolves the relative module specifier used for component type declaration re-exports. */
+function resolveDeclarationModule(declarationModule?: string): string {
+  if (declarationModule === '..' || declarationModule === '../components' || !declarationModule) {
+    return './components';
+  }
+  return declarationModule;
+}
+
+/** Detects whether watch mode flags are present in process arguments. */
+function isWatchMode(): boolean {
+  return process.argv.some(
+    (argument) => argument === '--watch' || argument === '-w' || argument.startsWith('--watch='),
+  );
+}
+
 /** Suppresses unhandled rejection during asynchronous session disposal. */
 function ignoreDisposalRejection(): void {
   // Background fire-and-forget session disposal
@@ -405,21 +480,11 @@ function ignoreDisposalRejection(): void {
  * emitting into `dist/<framework>/`.
  */
 export function tsdownForgeComponentPlugins(options: TsdownForgeComponentPluginsOptions): TsdownPlugin[] {
-  const selected = validateForgeBuildSelection(options.frameworks, 'tsdown');
-  const requestedFramework = process.env.FORGE_FRAMEWORK_TARGET;
-  const cmsOnlyBuild = process.env.FORGE_CMS_STORYBLOK_TARGET !== undefined;
-  const frameworks =
-    requestedFramework === undefined || requestedFramework === 'none'
-      ? cmsOnlyBuild
-        ? []
-        : requestedFramework === 'none'
-          ? []
-          : selected
-      : selected.filter((plugin) => plugin.id === requestedFramework);
+  const frameworks = resolveSelectedFrameworks(options.frameworks);
   if (frameworks.length === 0) {
-    if (requestedFramework === 'none' || (cmsOnlyBuild && requestedFramework === undefined)) return [];
-    throw new Error(`Forge build target "${requestedFramework}" is not available in the selected framework plugins.`);
+    return [];
   }
+
   const session = options.session ?? createForgeBuildSession({ service: options.service });
   let activePlugins = frameworks.length;
   return frameworks.map((plugin) =>
@@ -445,20 +510,9 @@ export function tsdownForgeComponentPlugins(options: TsdownForgeComponentPlugins
 
 /** Build independent tsdown configs for every requested Forge component framework. */
 export function defineTsdownForgeComponentsAll(options: TsdownForgeComponentPluginsOptions): UserConfig[] {
-  const selected = validateForgeBuildSelection(options.frameworks, 'tsdown');
-  const requestedFramework = process.env.FORGE_FRAMEWORK_TARGET;
-  const cmsOnlyBuild = process.env.FORGE_CMS_STORYBLOK_TARGET !== undefined;
-  const frameworks =
-    requestedFramework === undefined || requestedFramework === 'none'
-      ? cmsOnlyBuild
-        ? []
-        : requestedFramework === 'none'
-          ? []
-          : selected
-      : selected.filter((plugin) => plugin.id === requestedFramework);
+  const frameworks = resolveSelectedFrameworks(options.frameworks);
   if (frameworks.length === 0) {
-    if (requestedFramework === 'none' || (cmsOnlyBuild && requestedFramework === undefined)) return [];
-    throw new Error(`Forge build target "${requestedFramework}" is not available in the selected framework plugins.`);
+    return [];
   }
 
   const session = options.session ?? createForgeBuildSession({ service: options.service });
@@ -479,6 +533,7 @@ export function defineTsdownForgeComponentsAll(options: TsdownForgeComponentPlug
   );
 }
 
+/** Wraps a forge tsdown config in a plugin hook that merges it into the caller config. */
 function tsdownConfigPlugin(
   forgeConfig: UserConfig,
   targetId: string,
@@ -496,6 +551,7 @@ function tsdownConfigPlugin(
   } as TsdownPlugin;
 }
 
+/** Creates a complete tsdown configuration for a single Forge framework component target. */
 function createTsdownForgeComponentPlugin(
   options: Readonly<
     Omit<TsdownForgeComponentPluginsOptions, 'frameworks'> & {
@@ -523,13 +579,10 @@ function createTsdownForgeComponentPlugin(
     disposeSession,
   } = options;
   const framework = plugin.id as JsxFramework;
-  const watchMode = process.argv.some(
-    (argument) => argument === '--watch' || argument === '-w' || argument.startsWith('--watch='),
-  );
+  const watchMode = isWatchMode();
 
   const resolvedComponentsModule = resolveForgeComponentsModule(rootDir, componentsModule);
   const resolvedPublicEntryModule = resolveForgePublicEntryModule(rootDir, resolvedComponentsModule, publicEntryModule);
-
   const generatedDirectory = forgeGeneratedDirectory(rootDir, framework, resolvedComponentsModule, outputRoot);
 
   validateForgeBuildPlugin(plugin, 'tsdown');
@@ -546,29 +599,15 @@ function createTsdownForgeComponentPlugin(
     rejectFixturePlaceholder,
   });
 
-  const targetOutDir =
-    typeof overrides?.outDir === 'string'
-      ? path.resolve(rootDir, overrides.outDir)
-      : path.resolve(rootDir, `dist/${framework}`);
-  const publishedOutDir = resolveTsdownOutputDirectory(rootDir, targetOutDir, outputRoot);
-  const attemptFinalOutDir = forgeArtifactAttemptDirectory(targetOutDir, framework);
-  const attemptOutDir = resolveTsdownOutputDirectory(rootDir, attemptFinalOutDir, outputRoot);
-
-  // Component packages need real Svelte/Solid compilers. Use the tsdown-safe
-  // adapters (`stagePluginsForTsdown`) — Vite's svelte/solid plugins crash here.
-  const stagePlugins = (plugin.build.tsdown?.({
+  const { publishedOutDir, attemptFinalOutDir, attemptOutDir } = resolveTargetOutputDirs(
     rootDir,
-    generatedDirectory,
-    outputDirectory: attemptOutDir,
-  }) ?? []) as TsdownPlugin[];
+    framework,
+    overrides?.outDir,
+    outputRoot,
+  );
 
-  // All framework targets use synthesized declarations. This avoids invoking
-  // the TypeScript 7 project builder against generated source trees and keeps
-  // every emitted declaration in the package's configured dist directory.
-  const resolvedDeclarationModule =
-    declarationModule === '..' || declarationModule === '../components' || !declarationModule
-      ? './components'
-      : declarationModule;
+  const stagePlugins = resolveStagePlugins(plugin, rootDir, generatedDirectory, attemptOutDir);
+  const resolvedDeclarationModule = resolveDeclarationModule(declarationModule);
 
   const dtsPlugin = jsxComponentsEntryDtsPlugin({
     framework,

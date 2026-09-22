@@ -4,11 +4,12 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import { defineTsdownForgeTarget, resolveTsdownOutputDirectory } from '@mission-platform/tsdown-config';
-import * as sass from 'sass-embedded';
+import { compile as compileSass } from 'sass-embedded';
 
 const rootDirectory = import.meta.dirname;
 const packageRequire = createRequire(path.join(rootDirectory, 'package.json'));
 
+/** Compiles and emits layout accessibility styles to the target distribution folder. */
 function emitA11yStyles(): void {
   const source = path.resolve(rootDirectory, 'src/styles/a11y.scss');
   const outFile = resolveTsdownOutputDirectory(
@@ -16,7 +17,7 @@ function emitA11yStyles(): void {
     path.resolve(rootDirectory, 'dist/styles/a11y.css'),
     process.env.FORGE_BUILD_STAGE_ROOT,
   );
-  const result = sass.compile(source, {
+  const result = compileSass(source, {
     style: 'expanded',
     importers: [
       {
@@ -24,7 +25,8 @@ function emitA11yStyles(): void {
           try {
             return pathToFileURL(packageRequire.resolve(url));
           } catch {
-            return;
+            // eslint-disable-next-line unicorn/no-null -- Sass Importer protocol returns null when unresolvable
+            return null;
           }
         },
       },

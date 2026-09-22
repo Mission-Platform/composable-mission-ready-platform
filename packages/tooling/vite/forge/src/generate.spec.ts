@@ -81,21 +81,32 @@ function runGenerateBundle(bundle: Record<string, Record<string, unknown>>): voi
   (hook as any).call(context, {}, bundle);
 }
 
+/** Resolve folder paths for test component definitions. */
+function resolveComponentFolder(
+  overrides: Partial<DiscoveredComponent>,
+  publicName: string,
+): { folder: string; sourceDir: string; sourceSpecifier: string } {
+  const folder = overrides.folder ?? `forge-${publicName.toLowerCase()}`;
+  const sourceDir = overrides.sourceDir ?? folder;
+  const sourceSpecifier = overrides.sourceSpecifier ?? `./${sourceDir}`;
+  return { folder, sourceDir, sourceSpecifier };
+}
+
 /** Build a `DiscoveredComponent` with sensible defaults for the entry tests. */
 function component(
   overrides: Partial<DiscoveredComponent> & Pick<DiscoveredComponent, 'neutralName'>,
 ): DiscoveredComponent {
   const neutralName = overrides.neutralName;
   const publicName = overrides.publicName ?? neutralName.replace(/^Forge/, '');
-  const folder = overrides.folder ?? `forge-${publicName.toLowerCase()}`;
+  const { folder, sourceDir, sourceSpecifier } = resolveComponentFolder(overrides, publicName);
   return {
     neutralName,
     publicName,
     propertiesType: overrides.propertiesType,
     typeExports: overrides.typeExports ?? [],
     folder,
-    sourceDir: overrides.sourceDir ?? folder,
-    sourceSpecifier: overrides.sourceSpecifier ?? `./${overrides.sourceDir ?? folder}`,
+    sourceDir,
+    sourceSpecifier,
   };
 }
 
@@ -163,6 +174,124 @@ const aliasPreservingPlugin: FrameworkOutputPlugin = {
   build: {},
 };
 
+function assertResolvableDeclarationImports(declarationFile: string, pluginId: string): void {
+  const declarationSource = readFileSync(declarationFile, 'utf8');
+  for (const [, specifier] of declarationSource.matchAll(/from ['"](\.[^'"]+)['"]/g)) {
+    const resolved = path.resolve(path.dirname(declarationFile), specifier);
+    expect(
+      [resolved, `${resolved}.d.ts`, path.join(resolved, 'index.d.ts')].some((candidate) => existsSync(candidate)),
+      `${pluginId} declaration import ${specifier}`,
+    ).toBe(true);
+  }
+}
+
+async function assertReactNativeDeclarations(outDir: string): Promise<void> {
+  const nativeOutDir = path.join(outDir, 'native-dts');
+  const nativeWarnings: string[] = [];
+  const nativeDeclarationPlugin = jsxComponentsDtsPlugin({
+    framework: 'react',
+    generatedDir: outDir,
+    outDir: nativeOutDir,
+  });
+  const nativeCloseBundle = nativeDeclarationPlugin.closeBundle;
+  if (typeof nativeCloseBundle !== 'function') {
+    throw new TypeError('expected a function closeBundle hook');
+  }
+  await nativeCloseBundle.call({ warn: (message: unknown) => nativeWarnings.push(String(message)) } as never);
+  const nativeEntry = readFileSync(path.join(nativeOutDir, 'index.d.ts'), 'utf8');
+  expect(nativeEntry).toContain('neutralValue');
+  expect(nativeEntry).toContain('aliasedNeutralValue');
+  expect(nativeEntry).toContain('NeutralOptions');
+  expect(nativeEntry).toContain('externalValue');
+  expect(nativeWarnings.some((warning) => warning.includes('Duplicate identifier'))).toBe(false);
+  for (const [, specifier] of nativeEntry.matchAll(/from ['"](\.[^'"]+)['"]/g)) {
+    const resolved = path.resolve(path.dirname(path.join(nativeOutDir, 'index.d.ts')), specifier);
+    expect(
+      [resolved, `${resolved}.d.ts`, path.join(resolved, 'index.d.ts')].some((candidate) => existsSync(candidate)),
+      `native declaration import ${specifier}`,
+    ).toBe(true);
+  }
+}
+
+async function verifyFrameworkPluginExport(
+  plugin: FrameworkOutputPlugin,
+  context: { packageDir: string; componentsModule: string; publicEntryModule: string },
+): Promise<void> {
+  const { packageDir, componentsModule, publicEntryModule } = context;
+  const outDir = path.join(packageDir, 'generated', plugin.id);
+  generateFrameworkSources({ plugin, componentsModule, publicEntryModule, outDir });
+
+  const entrySource = readFileSync(path.join(outDir, `index${plugin.source.entryExtension}`), 'utf8');
+  expect(entrySource, `${plugin.id} component`).toContain('ForgeCard');
+  expect(entrySource, `${plugin.id} neutral value`).toContain('neutralValue');
+  expect(entrySource, `${plugin.id} neutral value alias`).toContain('neutralValue as aliasedNeutralValue');
+  expect(entrySource, `${plugin.id} neutral type`).toContain('type NeutralOptions');
+  expect(entrySource, `${plugin.id} neutral type alias`).toContain('type NeutralOptions as AliasedNeutralOptions');
+  expect(entrySource, `${plugin.id} external`).toContain("externalValue } from '@external/package';");
+  expect(readFileSync(path.join(outDir, 'helpers', 'public', 'nested', 'store.ts'), 'utf8')).toContain("from './values'");
+  expect(readFileSync(path.join(outDir, 'helpers', 'public', 'nested', 'values.ts'), 'utf8')).toContain('neutralEnabled');
+
+  const declarationPlugin = jsxComponentsEntryDtsPlugin({
+    framework: plugin.id as 'react' | 'vue' | 'solid' | 'svelte' | 'web-components',
+    componentsModule,
+    publicEntryModule,
+    declarationFileName: 'index',
+    declarationModule: './components',
+    stripPrefix: '',
+  });
+  const emitted: string[] = [];
+  const generateBundle = declarationPlugin.generateBundle;
+  if (typeof generateBundle !== 'function') {
+    throw new TypeError('expected a function generateBundle hook');
+  }
+  generateBundle.call(
+    {
+      emitFile(file: { source: string }): void {
+        emitted.push(file.source);
+      },
+    } as never,
+    {},
+    {},
+  );
+  expect(emitted[0], `${plugin.id} declaration alias`).toContain('neutralValue as aliasedNeutralValue');
+  expect(emitted[0], `${plugin.id} declaration type alias`).toContain('NeutralOptions as AliasedNeutralOptions');
+  expect(emitted[0], `${plugin.id} declaration external`).toContain("externalValue } from '@external/package';");
+
+  const declarationFile = path.join(outDir, 'declarations', 'index.d.ts');
+  mkdirSync(path.join(outDir, 'components', 'helpers', 'public', 'nested'), { recursive: true });
+  writeFileSync(
+    path.join(outDir, 'components', 'helpers', 'public', 'nested', 'store.d.ts'),
+    'export declare const neutralValue: boolean;\nexport interface NeutralOptions { enabled: boolean; }\n',
+  );
+  mkdirSync(path.dirname(declarationFile), { recursive: true });
+  const resolvableDeclarationPlugin = jsxComponentsEntryDtsPlugin({
+    framework: plugin.id as 'react' | 'vue' | 'solid' | 'svelte' | 'web-components',
+    componentsModule,
+    publicEntryModule,
+    declarationFileName: 'index',
+    declarationModule: '../components',
+    stripPrefix: '',
+  });
+  const resolvableGenerateBundle = resolvableDeclarationPlugin.generateBundle;
+  if (typeof resolvableGenerateBundle !== 'function') {
+    throw new TypeError('expected a function generateBundle hook');
+  }
+  resolvableGenerateBundle.call(
+    {
+      emitFile(file: { fileName: string; source: string }): void {
+        writeFileSync(declarationFile, file.source);
+      },
+    } as never,
+    {},
+    {},
+  );
+  assertResolvableDeclarationImports(declarationFile, plugin.id);
+
+  if (plugin.id === 'react') {
+    await assertReactNativeDeclarations(outDir);
+  }
+}
+
 describe('generateFrameworkSources', () => {
   it('preserves neutral exports from a distinct public entry and nested helper barrels', async () => {
     const packageDir = mkdtempSync(path.join(os.tmpdir(), 'mp-public-entry-'));
@@ -203,124 +332,7 @@ describe('generateFrameworkSources', () => {
       writeFileSync(path.join(helperDir, 'nested', 'values.ts'), 'export const neutralEnabled = true;\n');
 
       for (const plugin of frameworkPlugins) {
-        const outDir = path.join(packageDir, 'generated', plugin.id);
-        generateFrameworkSources({ plugin, componentsModule, publicEntryModule, outDir });
-
-        const entrySource = readFileSync(path.join(outDir, `index${plugin.source.entryExtension}`), 'utf8');
-        expect(entrySource, `${plugin.id} component`).toContain('ForgeCard');
-        expect(entrySource, `${plugin.id} neutral value`).toContain('neutralValue');
-        expect(entrySource, `${plugin.id} neutral value alias`).toContain('neutralValue as aliasedNeutralValue');
-        expect(entrySource, `${plugin.id} neutral type`).toContain('type NeutralOptions');
-        expect(entrySource, `${plugin.id} neutral type alias`).toContain(
-          'type NeutralOptions as AliasedNeutralOptions',
-        );
-        expect(entrySource, `${plugin.id} external`).toContain("externalValue } from '@external/package';");
-        expect(readFileSync(path.join(outDir, 'helpers', 'public', 'nested', 'store.ts'), 'utf8')).toContain(
-          "from './values'",
-        );
-        expect(readFileSync(path.join(outDir, 'helpers', 'public', 'nested', 'values.ts'), 'utf8')).toContain(
-          'neutralEnabled',
-        );
-
-        const declarationPlugin = jsxComponentsEntryDtsPlugin({
-          framework: plugin.id as 'react' | 'vue' | 'solid' | 'svelte' | 'web-components',
-          componentsModule,
-          publicEntryModule,
-          declarationFileName: 'index',
-          declarationModule: './components',
-          stripPrefix: '',
-        });
-        const emitted: string[] = [];
-        const generateBundle = declarationPlugin.generateBundle;
-        if (typeof generateBundle !== 'function') {
-          throw new TypeError('expected a function generateBundle hook');
-        }
-        generateBundle.call(
-          {
-            emitFile(file: { source: string }): void {
-              emitted.push(file.source);
-            },
-          } as never,
-          {},
-          {},
-        );
-        expect(emitted[0], `${plugin.id} declaration alias`).toContain('neutralValue as aliasedNeutralValue');
-        expect(emitted[0], `${plugin.id} declaration type alias`).toContain('NeutralOptions as AliasedNeutralOptions');
-        expect(emitted[0], `${plugin.id} declaration external`).toContain("externalValue } from '@external/package';");
-
-        // Production configs use `../components`, whose declaration tree is
-        // emitted alongside each framework directory. Materialise the
-        // corresponding helper declaration and verify that every relative
-        // declaration import points at an existing module, not merely at a
-        // source-tree path that happened to look plausible.
-        const declarationFile = path.join(outDir, 'declarations', 'index.d.ts');
-        mkdirSync(path.join(outDir, 'components', 'helpers', 'public', 'nested'), { recursive: true });
-        writeFileSync(
-          path.join(outDir, 'components', 'helpers', 'public', 'nested', 'store.d.ts'),
-          'export declare const neutralValue: boolean;\nexport interface NeutralOptions { enabled: boolean; }\n',
-        );
-        mkdirSync(path.dirname(declarationFile), { recursive: true });
-        const resolvableDeclarationPlugin = jsxComponentsEntryDtsPlugin({
-          framework: plugin.id as 'react' | 'vue' | 'solid' | 'svelte' | 'web-components',
-          componentsModule,
-          publicEntryModule,
-          declarationFileName: 'index',
-          declarationModule: '../components',
-          stripPrefix: '',
-        });
-        const resolvableGenerateBundle = resolvableDeclarationPlugin.generateBundle;
-        if (typeof resolvableGenerateBundle !== 'function') {
-          throw new TypeError('expected a function generateBundle hook');
-        }
-        resolvableGenerateBundle.call(
-          {
-            emitFile(file: { fileName: string; source: string }): void {
-              writeFileSync(declarationFile, file.source);
-            },
-          } as never,
-          {},
-          {},
-        );
-        const declarationSource = readFileSync(declarationFile, 'utf8');
-        for (const [, specifier] of declarationSource.matchAll(/from ['"](\.[^'"]+)['"]/g)) {
-          const resolved = path.resolve(path.dirname(declarationFile), specifier);
-          expect(
-            [resolved, `${resolved}.d.ts`, path.join(resolved, 'index.d.ts')].some((candidate) =>
-              existsSync(candidate),
-            ),
-            `${plugin.id} declaration import ${specifier}`,
-          ).toBe(true);
-        }
-
-        if (plugin.id === 'react') {
-          const nativeOutDir = path.join(outDir, 'native-dts');
-          const nativeWarnings: string[] = [];
-          const nativeDeclarationPlugin = jsxComponentsDtsPlugin({
-            framework: 'react',
-            generatedDir: outDir,
-            outDir: nativeOutDir,
-          });
-          const nativeCloseBundle = nativeDeclarationPlugin.closeBundle;
-          if (typeof nativeCloseBundle !== 'function') {
-            throw new TypeError('expected a function closeBundle hook');
-          }
-          await nativeCloseBundle.call({ warn: (message: unknown) => nativeWarnings.push(String(message)) } as never);
-          const nativeEntry = readFileSync(path.join(nativeOutDir, 'index.d.ts'), 'utf8');
-          expect(nativeEntry).toContain('neutralValue');
-          expect(nativeEntry).toContain('aliasedNeutralValue');
-          expect(nativeEntry).toContain('NeutralOptions');
-          expect(nativeEntry).toContain('externalValue');
-          expect(nativeWarnings.some((warning) => warning.includes('Duplicate identifier'))).toBe(false);
-          for (const [, specifier] of nativeEntry.matchAll(/from ['"](\.[^'"]+)['"]/g)) {
-            const resolved = path.resolve(path.dirname(path.join(nativeOutDir, 'index.d.ts')), specifier);
-            expect(
-              [resolved, `${resolved}.d.ts`, path.join(resolved, 'index.d.ts')].some((candidate) =>
-                existsSync(candidate),
-              ),
-              `native declaration import ${specifier}`,
-            ).toBe(true);
-          }
-        }
+        await verifyFrameworkPluginExport(plugin, { packageDir, componentsModule, publicEntryModule });
       }
     } finally {
       rmSync(packageDir, { recursive: true, force: true });
@@ -1725,7 +1737,8 @@ describe('self-contained framework exports and types', () => {
           "export { default as ForgeAvatar, default as Avatar } from './components/atoms/forge-avatar/forge-avatar.vue';",
           "export { type AvatarProperties, type AvatarSize } from './components/atoms/forge-avatar/forge-avatar.vue';",
           "export { beginPointerDrag, type PointerDragHandlers } from './utils/pointer-drag/pointer-drag';",
-        ].join('\n') + '\n',
+          '',
+        ].join('\n'),
       );
 
       writeFileSync(

@@ -49,7 +49,8 @@ export function ignoreVueI18nBlocksPlugin(): Plugin {
       if (id.includes('vue&type=i18n')) {
         return 'export default function ignoredI18nBlock() {}';
       }
-      return;
+      // eslint-disable-next-line unicorn/no-null -- Rollup load hook protocol returns null to pass through
+      return null;
     },
   };
 }

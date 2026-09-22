@@ -3,26 +3,48 @@ import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 
+/** Reads package scripts declared in package.json at the target directory. */
+function readPackageScripts(packageRoot: string): Record<string, string> {
+  const packageJsonPath = path.join(packageRoot, 'package.json');
+  if (!fs.existsSync(packageJsonPath)) {
+    return {};
+  }
+  try {
+    const parsed = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+    return parsed.scripts || {};
+  } catch {
+    return {};
+  }
+}
+
+/** Discovers tsdown configuration files in the root package directory. */
+function findTsdownConfigs(packageRoot: string): string[] {
+  return fs
+    .readdirSync(packageRoot)
+    .filter((file) => file.startsWith('tsdown.') && file.endsWith('.config.ts'))
+    .sort();
+}
+
+/** Cleans non-dotfiles from the dist directory before launching builders. */
+function cleanDistNonDotfiles(packageRoot: string): void {
+  const distDir = path.join(packageRoot, 'dist');
+  if (!fs.existsSync(distDir)) {
+    return;
+  }
+  for (const file of fs.readdirSync(distDir)) {
+    if (!file.startsWith('.')) {
+      fs.rmSync(path.join(distDir, file), { recursive: true, force: true });
+    }
+  }
+}
+
 /**
  * Concurrently builds a package across all its discrete targets or sub-tasks.
  * If no target configs exist, falls back to standard tsdown.
  */
 export async function buildPackage(packageRoot: string = process.cwd()): Promise<void> {
-  const packageJsonPath = path.join(packageRoot, 'package.json');
-  let scripts: Record<string, string> = {};
-  if (fs.existsSync(packageJsonPath)) {
-    try {
-      const parsed = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-      scripts = parsed.scripts || {};
-    } catch {
-      // Ignore JSON parse errors
-    }
-  }
-
-  const tsdownConfigs = fs
-    .readdirSync(packageRoot)
-    .filter((file) => file.startsWith('tsdown.') && file.endsWith('.config.ts'))
-    .sort();
+  const scripts = readPackageScripts(packageRoot);
+  const tsdownConfigs = findTsdownConfigs(packageRoot);
 
   if (tsdownConfigs.length > 0) {
     await runConcurrentCommands(
@@ -40,16 +62,7 @@ export async function buildPackage(packageRoot: string = process.cwd()): Promise
   }
 
   if (fs.existsSync(path.join(packageRoot, 'vite.config.ts'))) {
-    // Clean non-dotfiles from dist/ once before launching concurrent builders
-    const distDir = path.join(packageRoot, 'dist');
-    if (fs.existsSync(distDir)) {
-      for (const file of fs.readdirSync(distDir)) {
-        if (!file.startsWith('.')) {
-          fs.rmSync(path.join(distDir, file), { recursive: true, force: true });
-        }
-      }
-    }
-
+    cleanDistNonDotfiles(packageRoot);
     const commands: Array<{ command: string; args: string[] }> = [{ command: 'pnpm', args: ['exec', 'vite', 'build'] }];
     if (scripts['build:types']) {
       commands.push({ command: 'pnpm', args: ['run', 'build:types'] });
@@ -62,6 +75,7 @@ export async function buildPackage(packageRoot: string = process.cwd()): Promise
   await runSingleCommand('pnpm', ['exec', 'tsdown'], packageRoot);
 }
 
+/** Executes a single command in child process and resolves when finished. */
 function runSingleCommand(command: string, args: string[], cwd: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     const child = spawn(command, args, {
@@ -80,6 +94,16 @@ function runSingleCommand(command: string, args: string[], cwd: string): Promise
   });
 }
 
+/** Kills any active child processes that are still running. */
+function killActiveChildren(activeChildren: readonly ChildProcess[]): void {
+  for (const child of activeChildren) {
+    if (!child.killed) {
+      child.kill('SIGTERM');
+    }
+  }
+}
+
+/** Executes multiple child commands concurrently with unified abort signal handling. */
 function runConcurrentCommands(commands: Array<{ command: string; args: string[] }>, cwd: string): Promise<void> {
   const activeChildren: ChildProcess[] = [];
   let isAborting = false;
@@ -87,11 +111,7 @@ function runConcurrentCommands(commands: Array<{ command: string; args: string[]
   const cleanup = (): void => {
     if (isAborting) return;
     isAborting = true;
-    for (const child of activeChildren) {
-      if (!child.killed) {
-        child.kill('SIGTERM');
-      }
-    }
+    killActiveChildren(activeChildren);
   };
 
   process.once('SIGINT', cleanup);
@@ -138,6 +158,6 @@ if (process.argv[1]?.endsWith('build-package.ts')) {
     await buildPackage();
   } catch (error) {
     console.error(`Error: ${error instanceof Error ? error.message : String(error)}`);
-    process.exit(1);
+    process.exitCode = 1;
   }
 }
