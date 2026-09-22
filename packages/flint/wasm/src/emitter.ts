@@ -41,6 +41,7 @@ type ValueLocation = {
   readonly type: FlintWasmPrimitiveType;
   readonly reference?: string;
   readonly length?: number;
+  readonly pointeeType?: string;
 };
 /** Resolved function index and signature descriptor for direct or runtime calls. */
 type Callable = {
@@ -761,8 +762,20 @@ function expressionType(
   if (expression.kind === 'atomic') return expression.operation === 'store' ? 'unit' : 'i32';
   if (expression.kind === 'array-literal' || expression.kind === 'vector-literal') return 'i32';
   if (expression.kind === 'index') return 'i32';
-  if (expression.kind === 'unary')
-    return expression.operator === '!' ? 'bool' : expressionType(expression.operand, locals, callables);
+  if (expression.kind === 'unary') {
+    if (expression.operator === '!') return 'bool';
+    if (expression.operator === '*') {
+      if (expression.operand.kind === 'identifier') {
+        const pointee = locals.get(expression.operand.name)?.pointeeType;
+        if (pointee === 'f32' || pointee === 'c_float') return 'f32';
+        if (pointee === 'f64' || pointee === 'c_double') return 'f64';
+        if (pointee === 'i64' || pointee === 'u64' || pointee === 'c_longlong' || pointee === 'c_ulonglong')
+          return 'i64';
+      }
+      return 'i32';
+    }
+    return expressionType(expression.operand, locals, callables);
+  }
   if (expression.kind !== 'binary') return 'unit';
   if (['<', '<=', '>', '>=', '==', '!=', '&&', '||'].includes(expression.operator)) return 'bool';
   return expressionType(expression.left, locals, callables);
@@ -1008,22 +1021,34 @@ const STATIC_WASM_PRIMITIVE_TYPES: Readonly<Record<string, FlintWasmPrimitiveTyp
 
 const POINTER_LIKE_PRIMITIVE_TYPES = new Set(['c_long', 'c_ulong', 'c_size', 'c_ssize']);
 
+/** Resolves the type representation string from a type name or reference. */
+function resolveTypeString(type: string | { readonly name?: string; readonly reference?: string } | undefined): string {
+  if (typeof type === 'string') return type;
+  if (!type) return 'i32';
+  return type.reference ?? type.name ?? 'i32';
+}
+
+/** Determines whether a type string represents a pointer-like value type in Wasm. */
+function isPointerLikeType(typeString: string): boolean {
+  return (
+    typeString.startsWith('CPtr') ||
+    typeString.startsWith('MutCPtr') ||
+    typeString === 'COpaquePtr' ||
+    POINTER_LIKE_PRIMITIVE_TYPES.has(typeString)
+  );
+}
+
 /** Maps a Flint or C type representation string to WebAssembly primitive value type. */
+// skipcq: JS-R1005
 function toWasmPrimitiveType(
   type: string | { readonly name?: string; readonly reference?: string } | undefined,
   memory64: boolean,
 ): FlintWasmPrimitiveType {
-  const typeString = typeof type === 'string' ? type : (type?.reference ?? type?.name ?? 'i32');
-  if (typeString.startsWith('CPtr') || typeString.startsWith('MutCPtr') || typeString === 'COpaquePtr') {
+  const typeString = resolveTypeString(type);
+  if (isPointerLikeType(typeString)) {
     return memory64 ? 'u64' : 'u32';
   }
-  if (STATIC_WASM_PRIMITIVE_TYPES[typeString]) {
-    return STATIC_WASM_PRIMITIVE_TYPES[typeString];
-  }
-  if (POINTER_LIKE_PRIMITIVE_TYPES.has(typeString)) {
-    return memory64 ? 'u64' : 'u32';
-  }
-  return 'i32';
+  return STATIC_WASM_PRIMITIVE_TYPES[typeString] ?? 'i32';
 }
 
 /** Core emitter lowering module IR to binary WebAssembly bytecode. */
@@ -1157,9 +1182,13 @@ function emitWasm(
     const existing = stringOffsets.get(value);
     if (existing !== undefined) return existing;
     const bytes = encoder.encode(value);
-    const entry = addData(bytes);
-    stringOffsets.set(value, entry);
-    return entry;
+    const withNull = new Uint8Array(bytes.byteLength + 1);
+    withNull.set(bytes, 0);
+    withNull[bytes.byteLength] = 0x00;
+    const entry = addData(withNull);
+    const result = { offset: entry.offset, bytes };
+    stringOffsets.set(value, result);
+    return result;
   };
   const regexTables = new Map<
     string,
@@ -1226,15 +1255,43 @@ function emitWasm(
       bodies.push([...unsignedLeb(helperBody.length), ...helperBody]);
       continue;
     }
+    const extractPointeeType = (
+      type:
+        | {
+            readonly name: string;
+            readonly reference?: string;
+            readonly arguments?: readonly { readonly name?: string; readonly reference?: string }[];
+            readonly referenceMode?: 'ref' | 'mut-ref';
+          }
+        | undefined,
+    ): string | undefined => {
+      if (type === undefined) return undefined;
+      if (type.reference === 'CPtr' || type.reference === 'MutCPtr') {
+        const argument = type.arguments?.[0];
+        return argument?.reference ?? argument?.name;
+      }
+      if (typeof type.reference === 'string') {
+        if (type.reference.startsWith('CPtr<') && type.reference.endsWith('>')) return type.reference.slice(5, -1);
+        if (type.reference.startsWith('MutCPtr<') && type.reference.endsWith('>')) return type.reference.slice(8, -1);
+        if (type.reference.startsWith('&mut ')) return type.reference.slice(5);
+        if (type.reference.startsWith('&')) return type.reference.slice(1);
+      }
+      if (type.referenceMode !== undefined) {
+        return type.reference ?? type.name;
+      }
+      return undefined;
+    };
     const parameterLocations = new Map<string, ValueLocation>();
     let parameterIndex = 0;
     for (const parameter of declaration.parameters) {
       const indexes = valueTypes(parameter.type.name).map(() => parameterIndex++);
+      const pointeeType = extractPointeeType(parameter.type);
       parameterLocations.set(parameter.name, {
         indexes,
         type: parameter.type.name,
         ...(parameter.type.reference === undefined ? {} : { reference: parameter.type.reference }),
         ...(parameter.type.length === undefined ? {} : { length: parameter.type.length }),
+        ...(pointeeType === undefined ? {} : { pointeeType }),
       });
     }
     const ssaPlan = lowerFlintWasmFunctionToSsa(declaration);
@@ -1288,6 +1345,7 @@ function emitWasm(
         type: value.type,
         ...(value.reference === undefined ? {} : { reference: value.reference }),
         ...(value.length === undefined ? {} : { length: value.length }),
+        ...(value.pointeeType === undefined ? {} : { pointeeType: value.pointeeType }),
       });
     }
     // skipcq: JS-D1001
@@ -1958,10 +2016,15 @@ function emitWasm(
           body.push(0x10, ...unsignedLeb(runtimeIndex + 2));
           return;
         }
-        if (expression.callee.endsWith('.as_c_ptr') || expression.callee.endsWith('.as_mut_c_ptr')) {
+        if (
+          expression.callee.endsWith('.as_c_ptr') ||
+          expression.callee.endsWith('.as_mut_c_ptr') ||
+          expression.callee.endsWith('.as_c_str')
+        ) {
           const receiver = expression.callee.slice(0, expression.callee.lastIndexOf('.'));
-          if (visible.has(receiver)) {
-            emitExpression({ kind: 'identifier', name: receiver, span: expression.span }, visible);
+          const location = visible.get(receiver);
+          if (location !== undefined && location.indexes.length > 0) {
+            body.push(0x20, ...unsignedLeb(location.indexes[0]));
           }
           return;
         }
@@ -1995,7 +2058,29 @@ function emitWasm(
           emitExpression(expression.operand, visible);
         } else if (expression.operator === '*') {
           emitExpression(expression.operand, visible);
-          body.push(0x28, 0x02, 0x00);
+          let pointeeType: string | undefined;
+          if (expression.operand.kind === 'identifier') {
+            pointeeType = visible.get(expression.operand.name)?.pointeeType;
+          }
+          if (pointeeType === 'f32' || pointeeType === 'c_float') {
+            body.push(0x2a, 0x02, 0x00);
+          } else if (pointeeType === 'f64' || pointeeType === 'c_double') {
+            body.push(0x2b, 0x03, 0x00);
+          } else if (
+            pointeeType === 'i64' ||
+            pointeeType === 'u64' ||
+            pointeeType === 'c_longlong' ||
+            pointeeType === 'c_ulonglong' ||
+            (isMemory64 &&
+              (pointeeType === 'c_size' ||
+                pointeeType === 'c_ssize' ||
+                pointeeType === 'c_long' ||
+                pointeeType === 'c_ulong'))
+          ) {
+            body.push(0x29, 0x03, 0x00);
+          } else {
+            body.push(0x28, 0x02, 0x00);
+          }
         } else if (operandType === 'f32') {
           emitExpression(expression.operand, visible);
           body.push(0x8c);

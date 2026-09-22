@@ -164,4 +164,102 @@ describe('WebAssembly Foreign Capability Emitter', () => {
     expect(result.wasm).toBeDefined();
     expect(result.wasm?.slice(0, 8)).toEqual(new Uint8Array([0x00, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00]));
   });
+
+  it('null-terminates string literals in data segments and lowers as_c_str to a single base pointer', () => {
+    const ir: FlintWasmModule = {
+      name: 'cstr_test',
+      imports: [],
+      sourceImports: [],
+      foreignCapabilities: [
+        {
+          library: 'c_runtime',
+          callingConvention: 'wasm-c-abi',
+          functions: [
+            {
+              symbol: 'puts',
+              parameters: [{ name: 'str', type: 'CPtr<c_char>' }],
+              result: 'c_int',
+            },
+          ],
+        },
+      ],
+      functions: [
+        {
+          name: 'print_message',
+          exported: true,
+          parameters: [],
+          result: { name: 'c_int', span: { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 } },
+          body: [
+            {
+              kind: 'let',
+              name: 'msg',
+              type: { name: 'string', span: { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 } },
+              value: {
+                kind: 'literal',
+                value: 'SELECT 1;',
+                type: 'string',
+                span: { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 },
+              },
+              span: { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 },
+            },
+            {
+              kind: 'return',
+              value: {
+                kind: 'call',
+                callee: 'puts',
+                arguments: [
+                  {
+                    kind: 'call',
+                    callee: 'msg.as_c_str',
+                    arguments: [],
+                    span: { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 },
+                  },
+                ],
+                span: { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 },
+              },
+              span: { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 },
+            },
+          ],
+          span: { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 },
+        },
+      ],
+      span: { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 },
+    };
+
+    const result = compileFlintWasm({
+      ir,
+      optimizedIr: ir,
+      abi: {},
+      links: {},
+      metadata: {
+        compilerVersion: '1.0.0',
+        optimization: 'debug',
+        sourceFiles: ['cstr_test.flint'],
+      },
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.wasm).toBeDefined();
+
+    // Verify string in compiled Wasm data section contains "SELECT 1;\0"
+    const wasmBytes = result.wasm!;
+    const needle = new TextEncoder().encode('SELECT 1;');
+    let foundOffset = -1;
+    for (let offset = 0; offset <= wasmBytes.length - needle.length - 1; offset++) {
+      let matched = true;
+      for (const [byteIndex, needleByte] of needle.entries()) {
+        if (wasmBytes[offset + byteIndex] !== needleByte) {
+          matched = false;
+          break;
+        }
+      }
+      if (matched) {
+        foundOffset = offset;
+        break;
+      }
+    }
+    expect(foundOffset).toBeGreaterThan(0);
+    // Directly following 'SELECT 1;' must be null terminator 0x00
+    expect(wasmBytes[foundOffset + needle.length]).toBe(0x00);
+  });
 });

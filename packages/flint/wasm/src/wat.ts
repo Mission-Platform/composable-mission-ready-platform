@@ -358,23 +358,36 @@ export interface FlintWasmWatMetadata {
   readonly wasmOptimizationPasses?: readonly string[];
 }
 
+/** Emits import and export memory declarations when external memory is configured. */
+function renderImportedMemory(importMemory: NonNullable<FlintTargetFeatures['importMemory']>): string {
+  const isCustom = typeof importMemory === 'object' && importMemory !== null;
+  const importModule = isCustom ? importMemory.module : 'env';
+  const name = isCustom ? importMemory.name : 'memory';
+  return `  (import "${importModule}" "${name}" (memory 1))\n  (export "memory" (memory 0))`;
+}
+
+/** Emits local linear memory definition for module-managed memory. */
+function renderLocalMemory(targetFeatures: FlintTargetFeatures | undefined): string {
+  const isMemory64 = targetFeatures?.memory64 === true;
+  const isShared = targetFeatures?.threads === true;
+  const memType = isMemory64 ? 'i64 1' : '1';
+  const sharedSuffix = isShared ? ' 1 shared' : '';
+  return `  (memory (export "memory") ${memType}${sharedSuffix})`;
+}
+
 /**
  * Emits the WebAssembly linear memory declaration based on configured target features.
  *
  * @param targetFeatures - Target WebAssembly proposal features.
  * @returns Formatted memory declaration line.
  */
+// skipcq: JS-R1005
 function renderMemory(targetFeatures: FlintTargetFeatures | undefined): string {
-  if (targetFeatures?.importMemory !== undefined && targetFeatures.importMemory !== false) {
-    const importModule = typeof targetFeatures.importMemory === 'object' ? targetFeatures.importMemory.module : 'env';
-    const name = typeof targetFeatures.importMemory === 'object' ? targetFeatures.importMemory.name : 'memory';
-    return `  (import "${importModule}" "${name}" (memory 1))\n  (export "memory" (memory 0))`;
+  const importMemory = targetFeatures?.importMemory;
+  if (importMemory !== undefined && importMemory !== false) {
+    return renderImportedMemory(importMemory);
   }
-  const isMemory64 = targetFeatures?.memory64 === true;
-  const isShared = targetFeatures?.threads === true;
-  const memType = isMemory64 ? 'i64 1' : '1';
-  const sharedSuffix = isShared ? ' 1 shared' : '';
-  return `  (memory (export "memory") ${memType}${sharedSuffix})`;
+  return renderLocalMemory(targetFeatures);
 }
 
 const STATIC_WAT_TYPES: Readonly<Record<string, string>> = {
@@ -388,9 +401,31 @@ const STATIC_WAT_TYPES: Readonly<Record<string, string>> = {
   c_ulonglong: 'i64',
 };
 
+const POINTER_LIKE_PRIMITIVE_TYPES = new Set(['c_long', 'c_ulong', 'c_size', 'c_ssize']);
+
+/** Resolves the type representation string from a type name or reference for WAT output. */
+function resolveWatTypeString(
+  type: string | { readonly name?: string; readonly reference?: string } | undefined,
+): string {
+  if (typeof type === 'string') return type;
+  if (!type) return 'i32';
+  return type.reference ?? type.name ?? 'i32';
+}
+
 /** Maps a Flint or C type representation string to WebAssembly WAT value type. */
-function toWatType(type: string | { readonly name?: string; readonly reference?: string } | undefined): string {
-  const typeString = typeof type === 'string' ? type : (type?.reference ?? type?.name ?? 'i32');
+export function toWatType(
+  type: string | { readonly name?: string; readonly reference?: string } | undefined,
+  memory64 = false,
+): string {
+  const typeString = resolveWatTypeString(type);
+  if (
+    typeString.startsWith('CPtr') ||
+    typeString.startsWith('MutCPtr') ||
+    typeString === 'COpaquePtr' ||
+    POINTER_LIKE_PRIMITIVE_TYPES.has(typeString)
+  ) {
+    return memory64 ? 'i64' : 'i32';
+  }
   return STATIC_WAT_TYPES[typeString] ?? 'i32';
 }
 
@@ -403,6 +438,7 @@ function toWatType(type: string | { readonly name?: string; readonly reference?:
  */
 // skipcq: JS-R1005
 export function renderFlintWasmWat(module: FlintWasmModule, metadata: FlintWasmWatMetadata = {}): string {
+  const isMemory64 = metadata.targetFeatures?.memory64 === true;
   const lines = [
     '(module',
     `  ;; forge-web-script module: ${module.name}`,
@@ -437,7 +473,9 @@ export function renderFlintWasmWat(module: FlintWasmModule, metadata: FlintWasmW
         (function_ as { readonly symbol?: string; readonly name?: string }).symbol ??
         (function_ as { readonly symbol?: string; readonly name?: string }).name ??
         '';
-      const parameters = function_.parameters.map(({ name, type }) => `(param $${name} ${toWatType(type as never)})`);
+      const parameters = function_.parameters.map(
+        ({ name, type }) => `(param $${name} ${toWatType(type as never, isMemory64)})`,
+      );
       const resultTypeString =
         typeof function_.result === 'string'
           ? function_.result
@@ -445,7 +483,7 @@ export function renderFlintWasmWat(module: FlintWasmModule, metadata: FlintWasmW
       const results =
         resultTypeString === 'unit' || resultTypeString === 'c_void'
           ? []
-          : [`(result ${toWatType(function_.result as never)})`];
+          : [`(result ${toWatType(function_.result as never, isMemory64)})`];
       lines.push(
         `  (import ${JSON.stringify(foreignCap.library)} ${JSON.stringify(symbol)} (func $${symbol} ${[...parameters, ...results].join(' ')}))`,
       );

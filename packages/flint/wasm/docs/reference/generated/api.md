@@ -676,3 +676,23 @@ Lowers a complete Flint WebAssembly module intermediate representation into text
 - **@param:** - Compiled module intermediate representation.
 - **@param:** - Compilation metadata and target feature configuration.
 - **@returns:** WebAssembly text representation string.
+
+### toWatType
+
+**Kind:** function
+
+```typescript
+function toWatType(
+  type: string | { readonly name?: string; readonly reference?: string } | undefined,
+  memory64 = false,
+): string;
+```
+
+Maps a Flint or C type representation string to WebAssembly WAT value type.
+
+#### Parameters
+
+| Name     | Type                                                                           | Description |
+| -------- | ------------------------------------------------------------------------------ | ----------- |
+| type     | string \| { readonly name?: string; readonly reference?: string } \| undefined |             |
+| memory64 |                                                                                |             |
