@@ -228,8 +228,12 @@ async function verifyFrameworkPluginExport(
   expect(entrySource, `${plugin.id} neutral type`).toContain('type NeutralOptions');
   expect(entrySource, `${plugin.id} neutral type alias`).toContain('type NeutralOptions as AliasedNeutralOptions');
   expect(entrySource, `${plugin.id} external`).toContain("externalValue } from '@external/package';");
-  expect(readFileSync(path.join(outDir, 'helpers', 'public', 'nested', 'store.ts'), 'utf8')).toContain("from './values'");
-  expect(readFileSync(path.join(outDir, 'helpers', 'public', 'nested', 'values.ts'), 'utf8')).toContain('neutralEnabled');
+  expect(readFileSync(path.join(outDir, 'helpers', 'public', 'nested', 'store.ts'), 'utf8')).toContain(
+    "from './values'",
+  );
+  expect(readFileSync(path.join(outDir, 'helpers', 'public', 'nested', 'values.ts'), 'utf8')).toContain(
+    'neutralEnabled',
+  );
 
   const declarationPlugin = jsxComponentsEntryDtsPlugin({
     framework: plugin.id as 'react' | 'vue' | 'solid' | 'svelte' | 'web-components',
