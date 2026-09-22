@@ -102,4 +102,41 @@ describe('Flint ABI Manifest with Foreign Capabilities', () => {
     const manifest = createFlintAbiManifest(parsed.module);
     expect(manifest.foreignCapabilities).toBeUndefined();
   });
+
+  it('aligns aggregate layouts and reference carriers with specified TargetPlatform', () => {
+    const source = `
+      struct Header {
+        len: c_size;
+        count: c_long;
+      }
+
+      export fn get_header(h: Header) -> Header {
+        return h;
+      }
+    `;
+    const parsed = parseFlint(source, 'header.flint');
+    if (!parsed.module) throw new Error('Expected parsed module to be defined');
+
+    // 64-bit target: pointerSize = 8, longSize = 8 on Linux x86_64
+    const manifest64 = createFlintAbiManifest(parsed.module, {
+      targetPlatform: 'x86_64-unknown-linux-gnu',
+    });
+    expect(manifest64.memory.addressType).toBe('u64');
+    expect(manifest64.exports[0].parameters[0].type).toBe('i64');
+    expect(manifest64.exports[0].result).toBe('i64');
+    const structLayout64 = manifest64.aggregateLayouts?.find((l) => l.name === 'Header');
+    expect(structLayout64?.size).toBe(16);
+    expect(structLayout64?.alignment).toBe(8);
+
+    // 32-bit target: pointerSize = 4, longSize = 4 on wasm32
+    const manifest32 = createFlintAbiManifest(parsed.module, {
+      targetPlatform: 'wasm32-unknown-unknown',
+    });
+    expect(manifest32.memory.addressType).toBe('u32');
+    expect(manifest32.exports[0].parameters[0].type).toBe('i32');
+    expect(manifest32.exports[0].result).toBe('i32');
+    const structLayout32 = manifest32.aggregateLayouts?.find((l) => l.name === 'Header');
+    expect(structLayout32?.size).toBe(8);
+    expect(structLayout32?.alignment).toBe(4);
+  });
 });

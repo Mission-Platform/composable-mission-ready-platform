@@ -1,3 +1,5 @@
+import { isCPrimitiveType } from '@mission-platform/flint-c-abi';
+
 import { createDiagnostic, type FlintDiagnostic, type FlintSourceSpan } from './diagnostics.js';
 import { primitiveTypes } from './parser.js';
 import { checkFlintSafety } from './safety.js';
@@ -195,7 +197,7 @@ export function checkFlint(
 
   checkSourceImports(module, fileName, diagnostics, standardLibraryNames, names);
   checkCapabilityImports(module, fileName, diagnostics, standardLibraryNames, names, callables, options);
-  checkForeignCapabilities(module, fileName, diagnostics, names, callables);
+  checkForeignCapabilities(module, fileName, diagnostics, standardLibraryNames, names, callables);
   checkStructFieldTypes(module, fileName, diagnostics);
   checkEnumDeclarations(module, fileName, diagnostics);
   checkInterfaceDeclarations(module, fileName, diagnostics);
@@ -368,14 +370,39 @@ function checkCapabilityImports(
   }
 }
 
+/**
+ * Validates and registers an individual foreign capability function declaration.
+ *
+ * @param function_ - Foreign function declaration AST node.
+ * @param module - Containing module AST.
+ * @param fileName - Source file name for diagnostics.
+ * @param diagnostics - Accumulator for diagnostics.
+ * @param standardLibraryNames - Reserved standard-library names.
+ * @param names - Mutable set of declared top-level names.
+ * @param callables - Mutable callable registry.
+ */
 function registerForeignFunction(
   function_: FlintForeignFunctionDeclaration,
   module: FlintModule,
   fileName: string,
   diagnostics: FlintDiagnostic[],
+  standardLibraryNames: ReadonlySet<string>,
   names: Set<string>,
   callables: Map<string, Callable>,
 ): void {
+  if (standardLibraryNames.has(function_.name)) {
+    diagnostics.push(
+      createDiagnostic(
+        fileName,
+        'abi',
+        'FLINT-ABI-005',
+        `The name '${function_.name}' is reserved by the Forge standard library.`,
+        function_.span,
+        'error',
+        'Choose a different foreign function name.',
+      ),
+    );
+  }
   if (names.has(function_.name)) {
     diagnostics.push(
       createDiagnostic(
@@ -402,6 +429,7 @@ function registerForeignFunction(
  * @param module - Module under check.
  * @param fileName - Source file name for diagnostics.
  * @param diagnostics - Accumulator for diagnostics.
+ * @param standardLibraryNames - Reserved standard-library names.
  * @param names - Mutable set of declared top-level names.
  * @param callables - Mutable callable registry.
  */
@@ -409,12 +437,13 @@ function checkForeignCapabilities(
   module: FlintModule,
   fileName: string,
   diagnostics: FlintDiagnostic[],
+  standardLibraryNames: ReadonlySet<string>,
   names: Set<string>,
   callables: Map<string, Callable>,
 ): void {
   for (const cap of module.foreignCapabilities ?? []) {
     for (const function_ of cap.functions) {
-      registerForeignFunction(function_, module, fileName, diagnostics, names, callables);
+      registerForeignFunction(function_, module, fileName, diagnostics, standardLibraryNames, names, callables);
     }
   }
 }
@@ -1361,6 +1390,16 @@ function inferCallExpression(
     return 'CPtr<u8>';
   }
 
+  if (expression.callee.endsWith('.as_c_str') && expression.arguments.length === 0) {
+    const receiver = expression.callee.slice(0, -'.as_c_str'.length);
+    const receiverType = memberReceiverType(receiver, locals, environment.callables);
+    if (receiverType !== undefined) {
+      if (receiverType === 'string' || receiverType === 'bytes') return 'CPtr<c_char>';
+      return 'CPtr<c_char>';
+    }
+    return 'CPtr<c_char>';
+  }
+
   if (expression.callee.endsWith('.as_mut_c_ptr') && expression.arguments.length === 0) {
     const receiver = expression.callee.slice(0, -'.as_mut_c_ptr'.length);
     const receiverType = memberReceiverType(receiver, locals, environment.callables);
@@ -2129,6 +2168,12 @@ function inferUnaryExpression(
     if (operand.startsWith('&')) return operand.slice(1);
     if (operand.startsWith('CPtr<') && operand.endsWith('>')) return operand.slice(5, -1);
     if (operand.startsWith('MutCPtr<') && operand.endsWith('>')) return operand.slice(8, -1);
+    mismatch(
+      expression.span,
+      environment.fileName,
+      environment.diagnostics,
+      `Cannot dereference non-pointer type '${operand}'.`,
+    );
     return operand;
   }
   return expression.operator === '!' ? 'bool' : operand;
@@ -2328,6 +2373,7 @@ function findDeclaredType(
  * @returns True when the name is a known primitive.
  */
 function isPrimitiveTypeName(name: string): name is FlintPrimitiveType {
+  if (isCPrimitiveType(name)) return true;
   for (const primitive of primitiveTypes) {
     if (primitive === name) return true;
   }
@@ -2410,8 +2456,7 @@ function expectedGenericArity(
  * @returns Canonical type key string.
  */
 function typeNameKey(type: FlintTypeName): string {
-  // Historical checker keys ignore referenceMode so `&T` and `T` share a carrier key.
-  const id = checkerAlgebra.fromAst(type.referenceMode === undefined ? type : { ...type, referenceMode: undefined });
+  const id = checkerAlgebra.fromAst(type);
   return checkerAlgebra.display(id);
 }
 
@@ -2527,6 +2572,15 @@ function parseCheckerTypeKey(type: string): ReturnType<TypeAlgebra['fromAst']> |
 function parseTypeKeyAst(value: string): FlintTypeName | undefined {
   const trimmed = value.trim();
   if (trimmed.length === 0) return undefined;
+
+  if (trimmed.startsWith('&mut ')) {
+    const inner = parseTypeKeyAst(trimmed.slice(5));
+    return inner === undefined ? undefined : { ...inner, referenceMode: 'mut-ref' };
+  }
+  if (trimmed.startsWith('&')) {
+    const inner = parseTypeKeyAst(trimmed.slice(1));
+    return inner === undefined ? undefined : { ...inner, referenceMode: 'ref' };
+  }
 
   const arrayAst = parseFixedArrayTypeKey(trimmed);
   if (arrayAst !== undefined) return arrayAst;

@@ -627,4 +627,54 @@ export fn add(left: i32, right: i32) -> i32 { return left + right; }`,
       ],
     });
   });
+
+  it('validates packed and align repr attributes require positive power-of-two alignment', () => {
+    const invalidPacked = parseFlint('#[repr(packed(3))]\nstruct S { a: u32; }', 'test.flint');
+    expect(invalidPacked.diagnostics).toContainEqual(
+      expect.objectContaining({ code: 'FLINT-PARSE-073', message: expect.stringContaining('3') }),
+    );
+
+    const invalidAlignZero = parseFlint('#[repr(align(0))]\nstruct S { a: u32; }', 'test.flint');
+    expect(invalidAlignZero.diagnostics).toContainEqual(
+      expect.objectContaining({ code: 'FLINT-PARSE-073', message: expect.stringContaining('0') }),
+    );
+
+    const invalidAlignSeven = parseFlint('#[repr(align(7))]\nstruct S { a: u32; }', 'test.flint');
+    expect(invalidAlignSeven.diagnostics).toContainEqual(
+      expect.objectContaining({ code: 'FLINT-PARSE-073', message: expect.stringContaining('7') }),
+    );
+
+    const valid = parseFlint(
+      '#[repr(packed(4))]\nstruct P { a: u32; }\n#[repr(align(8))]\nstruct A { a: u32; }',
+      'valid.flint',
+    );
+    expect(valid.diagnostics).toEqual([]);
+    expect(valid.module?.structs[0].repr).toEqual({ kind: 'packed', alignment: 4 });
+    expect(valid.module?.structs[1].repr).toEqual({ kind: 'align', alignment: 8 });
+  });
+
+  it('rejects unsupported foreign ABI specifications with FLINT-PARSE-074', () => {
+    const rustAbi = parseFlint('foreign "Rust" capability "crypto" {}', 'rust-abi.flint');
+    expect(rustAbi.diagnostics).toContainEqual(
+      expect.objectContaining({
+        code: 'FLINT-PARSE-074',
+        message: expect.stringContaining("Unsupported foreign ABI 'Rust'"),
+      }),
+    );
+
+    const cAbi = parseFlint('foreign "C" capability "crypto" {}', 'c-abi.flint');
+    expect(cAbi.diagnostics).toEqual([]);
+  });
+
+  it('preserves receiver context on parenthesized identifier member chains', () => {
+    const result = parseFlint('export fn test(reader: Reader) -> i32 { return (reader).next(); }', 'receiver.flint');
+    expect(result.diagnostics).toEqual([]);
+    expect(result.module?.functions[0].body[0]).toMatchObject({
+      kind: 'return',
+      value: {
+        kind: 'call',
+        callee: 'reader.next',
+      },
+    });
+  });
 });

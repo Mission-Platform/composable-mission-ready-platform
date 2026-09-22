@@ -124,4 +124,79 @@ describe('Forge Web Script linker boundary', () => {
       },
     ]);
   });
+
+  it('detects duplicate providers for the same foreign symbol with FLINT-LINK-007', () => {
+    const result = validateFlintLinks(
+      {
+        modules: [
+          {
+            fileName: '/app/interop.flint',
+            moduleId: 'interop',
+            projectRoot: '/app',
+            source: '',
+            contentHash: 'hash1',
+            module: {
+              kind: 'module',
+              name: 'interop',
+              imports: [],
+              sourceImports: [],
+              structs: [],
+              enums: [],
+              interfaces: [],
+              functions: [],
+              foreignCapabilities: [
+                {
+                  kind: 'foreign-capability',
+                  abi: 'C',
+                  library: 'crypto',
+                  callingConvention: 'wasm-c-abi',
+                  functions: [
+                    {
+                      kind: 'foreign-function',
+                      name: 'init',
+                      parameters: [],
+                      result: {
+                        name: 'u32',
+                        span: { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 },
+                      },
+                      span: { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 },
+                    },
+                  ],
+                  span: { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 },
+                },
+              ],
+              span: { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 },
+            },
+          },
+        ],
+        projects: [{ root: '/app', id: 'app' }],
+        edges: [],
+      },
+      {
+        foreignObjects: [
+          {
+            name: 'libcrypto-a',
+            path: '/vendor/libcrypto-a.a',
+            library: 'crypto',
+            format: 'wasm-relocatable',
+            exportedSymbols: ['init'],
+          },
+          {
+            name: 'libcrypto-b',
+            path: '/vendor/libcrypto-b.a',
+            library: 'crypto',
+            format: 'wasm-relocatable',
+            exportedSymbols: ['init'],
+          },
+        ],
+      },
+    );
+
+    expect(result.diagnostics).toContainEqual(
+      expect.objectContaining({
+        code: 'FLINT-LINK-007',
+        message: expect.stringContaining("Duplicate foreign symbol 'init' provided for library 'crypto'"),
+      }),
+    );
+  });
 });

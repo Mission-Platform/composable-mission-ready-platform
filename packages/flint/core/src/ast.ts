@@ -322,7 +322,10 @@ export interface FlintStructDeclaration {
   readonly name: string;
   /** Records use the same source representation but cross the host ABI as values. */
   readonly record?: true;
-  /** Explicit C ABI struct layout (c_struct or #[repr(C)]). */
+  /**
+   * Explicit C ABI struct layout (deprecated, use repr?.kind === 'c').
+   * @deprecated Use `repr?.kind === 'c'`.
+   */
   readonly c_struct?: boolean;
   /** Explicit representation attributes (e.g. #[repr(C)], #[repr(packed(N))], #[repr(align(N))]). */
   readonly repr?: FlintStructRepr;

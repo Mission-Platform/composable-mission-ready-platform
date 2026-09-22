@@ -17,7 +17,6 @@ legacy-module           = "module", identifier, "{", { top-level-declaration }, 
 top-level-declaration   = import-declaration
                         | foreign-capability-declaration
                         | opaque-foreign-type-declaration
-                        | c-struct-declaration
                         | struct-declaration
                         | record-declaration
                         | enum-declaration
@@ -50,7 +49,7 @@ operator                = "!=" | "&&" | "==" | "||" | "<=" | ">=" | "->" | "=>" 
 punctuation             = "{" | "}" | "(" | ")" | "[" | "]" | ":" | ";"
                         | "," | "|" | "." | "#" ;
 
-keyword                 = "as" | "capability" | "case" | "catch" | "c_struct" | "class"
+keyword                 = "as" | "capability" | "case" | "catch" | "class"
                         | "constructor" | "default" | "do" | "else" | "enum"
                         | "extends" | "export" | "for" | "foreign" | "fn" | "if" | "impl"
                         | "import" | "inline" | "interface" | "iter" | "let" | "mut"
@@ -89,10 +88,8 @@ function-modifier       = "export" | "iter" | "inline" | "noinline" ;
 generic-parameters      = "<", generic-parameter, { ",", generic-parameter }, ">" ;
 generic-parameter       = identifier, [ ":", identifier, { "+", identifier } ] ;
 
-c-struct-declaration    = [ struct-attribute ], "c_struct", identifier, [ generic-parameters ], "{",
-                          { struct-field }, "}" ;
 struct-attribute        = "#", "[", identifier, [ "(", identifier, [ "(", integer, ")" ], ")" ], "]" ;
-struct-declaration      = "struct", identifier, [ generic-parameters ], "{",
+struct-declaration      = [ struct-attribute ], "struct", identifier, [ generic-parameters ], "{",
                           { struct-field }, "}" ;
 record-declaration      = "record", identifier, [ generic-parameters ], "{",
                           { struct-field }, "}" ;

@@ -237,7 +237,7 @@ describe('Platform-dependent TypeAlgebra and C ABI layout', () => {
   });
 
   it('computes Scenario 1: Image struct layout across wasm32 and wasm64', () => {
-    // c_struct Image { width: c_uint, height: c_uint, stride: c_size, data: CPtr<u8> }
+    // #[repr(C)] struct Image { width: c_uint, height: c_uint, stride: c_size, data: CPtr<u8> }
     const wasm32 = new TypeAlgebra('wasm32-unknown-unknown');
     const wasm64 = new TypeAlgebra('wasm64-unknown-unknown');
 
@@ -254,13 +254,13 @@ describe('Platform-dependent TypeAlgebra and C ABI layout', () => {
       { name: 'data', type: wasm64.nominal('CPtr', [wasm64.primitive('u32')]) },
     ];
 
-    const layout32 = wasm32.layoutCStruct({ name: 'Image', fields: imageFields32, c_struct: true });
+    const layout32 = wasm32.layoutCStruct({ name: 'Image', fields: imageFields32, repr: { kind: 'c' } });
     expect(layout32.size).toBe(16);
     expect(layout32.alignment).toBe(4);
     expect(layout32.tailPadding).toBe(0);
     expect(layout32.fields.map((f) => `${f.name}@${f.offset}`)).toEqual(['width@0', 'height@4', 'stride@8', 'data@12']);
 
-    const layout64 = wasm64.layoutCStruct({ name: 'Image', fields: imageFields64, c_struct: true });
+    const layout64 = wasm64.layoutCStruct({ name: 'Image', fields: imageFields64, repr: { kind: 'c' } });
     expect(layout64.size).toBe(24);
     expect(layout64.alignment).toBe(8);
     expect(layout64.tailPadding).toBe(0);
@@ -268,11 +268,11 @@ describe('Platform-dependent TypeAlgebra and C ABI layout', () => {
   });
 
   it('computes tail padding and alignment correctly', () => {
-    // c_struct Padded { a: c_longlong, b: c_char }
+    // #[repr(C)] struct Padded { a: c_longlong, b: c_char }
     const algebra = new TypeAlgebra('x86_64-unknown-linux-gnu');
     const layout = algebra.layoutCStruct({
       name: 'Padded',
-      c_struct: true,
+      repr: { kind: 'c' },
       fields: [
         { name: 'a', type: algebra.primitive('c_longlong') },
         { name: 'b', type: algebra.primitive('c_char') },
@@ -287,13 +287,13 @@ describe('Platform-dependent TypeAlgebra and C ABI layout', () => {
   });
 
   it('verifies i686 clamped i64 struct alignment vs 64-bit platforms', () => {
-    // c_struct Clamped { a: c_char, b: c_longlong }
+    // #[repr(C)] struct Clamped { a: c_char, b: c_longlong }
     const x86Algebra = new TypeAlgebra('i686-unknown-linux-gnu');
     const x86_64 = new TypeAlgebra('x86_64-unknown-linux-gnu');
 
     const x86ClampedLayout = x86Algebra.layoutCStruct({
       name: 'Clamped',
-      c_struct: true,
+      repr: { kind: 'c' },
       fields: [
         { name: 'a', type: x86Algebra.primitive('c_char') },
         { name: 'b', type: x86Algebra.primitive('c_longlong') },
@@ -307,7 +307,7 @@ describe('Platform-dependent TypeAlgebra and C ABI layout', () => {
 
     const x64Layout = x86_64.layoutCStruct({
       name: 'Clamped',
-      c_struct: true,
+      repr: { kind: 'c' },
       fields: [
         { name: 'a', type: x86_64.primitive('c_char') },
         { name: 'b', type: x86_64.primitive('c_longlong') },
@@ -323,10 +323,10 @@ describe('Platform-dependent TypeAlgebra and C ABI layout', () => {
   it('supports packed and align attributes on structs', () => {
     const algebra = new TypeAlgebra('wasm32-unknown-unknown');
 
-    // #[repr(packed(2))] c_struct Packed { a: c_int, b: c_char, c: c_int }
+    // #[repr(packed(2))] struct Packed { a: c_int, b: c_char, c: c_int }
     const packed = algebra.layoutCStruct({
       name: 'Packed',
-      c_struct: true,
+      repr: { kind: 'packed', alignment: 2 },
       packed: 2,
       fields: [
         { name: 'a', type: algebra.primitive('c_int') },
@@ -341,10 +341,10 @@ describe('Platform-dependent TypeAlgebra and C ABI layout', () => {
     expect(packed.size).toBe(10);
     expect(packed.alignment).toBe(2);
 
-    // #[repr(align(64))] c_struct CacheLine { a: c_int }
+    // #[repr(align(64))] struct CacheLine { a: c_int }
     const aligned = algebra.layoutCStruct({
       name: 'CacheLine',
-      c_struct: true,
+      repr: { kind: 'align', alignment: 64 },
       align: 64,
       fields: [{ name: 'a', type: algebra.primitive('c_int') }],
     });
@@ -353,10 +353,10 @@ describe('Platform-dependent TypeAlgebra and C ABI layout', () => {
     expect(aligned.tailPadding).toBe(60);
   });
 
-  it('parses c_struct, attributes, and unary pointer expressions from source', () => {
+  it('parses #[repr(C)] struct, attributes, and unary pointer expressions from source', () => {
     const source = `
       #[repr(C)]
-      c_struct ScannerResult {
+      struct ScannerResult {
         code_type: c_uint,
         length: c_uint,
         confidence: c_float,
@@ -380,11 +380,22 @@ describe('Platform-dependent TypeAlgebra and C ABI layout', () => {
 
     const scannerStruct = parsed.module?.structs.find((s) => s.name === 'ScannerResult');
     expect(scannerStruct).toBeDefined();
-    expect(scannerStruct?.c_struct).toBe(true);
     expect(scannerStruct?.repr).toEqual({ kind: 'c' });
 
     const packedStruct = parsed.module?.structs.find((s) => s.name === 'PackedHeader');
     expect(packedStruct).toBeDefined();
     expect(packedStruct?.packed).toBe(2);
+  });
+
+  it('rejects legacy c_struct syntax with a syntax error', () => {
+    const source = `
+      c_struct LegacyPoint {
+        x: c_int,
+        y: c_int,
+      }
+    `;
+    const parsed = parseFlint(source, 'legacy.flint');
+    expect(parsed.diagnostics.length).toBeGreaterThan(0);
+    expect(parsed.diagnostics.some((d) => d.code === 'FLINT-PARSE-034' || d.code === 'FLINT-PARSE-001')).toBe(true);
   });
 });

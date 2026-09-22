@@ -197,24 +197,61 @@ class Parser {
     else declarations.sourceImports.push(this.parseSourceImport());
   }
 
+  /**
+   * Parses the argument clause of a `#[repr(packed(...))]` attribute.
+   *
+   * @returns Parsed packed struct representation directive.
+   */
   private parsePackedRepr(): FlintStructRepr {
     let alignment = 1;
     if (this.match('(')) {
       const number_ = this.expectKind('number', 'FLINT-PARSE-094', 'Expected packed alignment number.');
       alignment = Number(number_?.text || '1');
+      if (!Number.isInteger(alignment) || alignment <= 0 || (alignment & (alignment - 1)) !== 0) {
+        this.diagnostics.push(
+          createDiagnostic(
+            this.fileName,
+            'parse',
+            'FLINT-PARSE-073',
+            `Packed alignment must be a positive power of two, got ${alignment}.`,
+            number_?.span ?? this.previous().span,
+          ),
+        );
+      }
       this.expect(')', 'FLINT-PARSE-095', "Expected ')' after packed alignment.");
     }
     return { kind: 'packed', alignment };
   }
 
+  /**
+   * Parses the argument clause of a `#[repr(align(...))]` attribute.
+   *
+   * @returns Parsed align struct representation directive.
+   */
   private parseAlignRepr(): FlintStructRepr {
     this.expect('(', 'FLINT-PARSE-096', "Expected '(' after 'align'.");
     const number_ = this.expectKind('number', 'FLINT-PARSE-097', 'Expected alignment number.');
     const alignment = Number(number_?.text || '8');
+    if (!Number.isInteger(alignment) || alignment <= 0 || (alignment & (alignment - 1)) !== 0) {
+      this.diagnostics.push(
+        createDiagnostic(
+          this.fileName,
+          'parse',
+          'FLINT-PARSE-073',
+          `Struct alignment must be a positive power of two, got ${alignment}.`,
+          number_?.span ?? this.previous().span,
+        ),
+      );
+    }
     this.expect(')', 'FLINT-PARSE-098', "Expected ')' after alignment.");
     return { kind: 'align', alignment };
   }
 
+  /**
+   * Parses the representation kind inside a `#[repr(...)]` attribute clause.
+   *
+   * @returns Parsed struct representation directive or undefined if unrecognized.
+   */
   private parseReprClause(): FlintStructRepr | undefined {
     this.expect('(', 'FLINT-PARSE-092', "Expected '(' after 'repr'.");
     const kind = this.expectIdentifier(
@@ -297,9 +334,23 @@ class Parser {
       declarations.opaqueForeignTypes.push(this.parseOpaqueForeignType());
     } else if (this.is('import')) {
       this.parseTopLevelImport(declarations);
-    } else if (this.is('struct') || this.is('record') || this.is('c_struct')) {
-      const isCStruct = this.is('c_struct') || repr?.kind === 'c';
-      declarations.structs.push(this.parseStruct(documentation, this.is('record'), isCStruct, repr));
+    } else if (this.is('struct') || this.is('record')) {
+      declarations.structs.push(this.parseStruct(documentation, this.is('record'), repr));
+    } else if (this.current().text === 'c_struct') {
+      this.diagnostics.push(
+        createDiagnostic(
+          this.fileName,
+          'parse',
+          'FLINT-PARSE-034',
+          "The 'c_struct' keyword is removed; use '#[repr(C)] struct' instead.",
+          this.current().span,
+        ),
+      );
+      this.consume();
+      while (!this.is('}') && !this.is('eof')) {
+        this.consume();
+      }
+      if (this.is('}')) this.consume();
     } else if (this.is('enum') || (this.is('export') && this.isNext('enum'))) {
       declarations.enums.push(this.parseEnum(documentation));
     } else if (this.is('interface')) {
@@ -311,6 +362,11 @@ class Parser {
     }
   }
 
+  /**
+   * Parses the sequence of foreign function declarations within a foreign capability block.
+   *
+   * @returns List of parsed foreign function declarations.
+   */
   private parseForeignCapabilityFunctions(): FlintForeignFunctionDeclaration[] {
     const functions: FlintForeignFunctionDeclaration[] = [];
     while (true) {
@@ -329,7 +385,19 @@ class Parser {
   private parseForeignCapability(): FlintForeignCapabilityDeclaration {
     const start = this.consume().span;
     const abiToken = this.expectKind('string', 'FLINT-PARSE-110', 'Expected ABI string (e.g. "C") after foreign.');
-    const abi = abiToken?.text === '"C"' || abiToken?.text === 'C' ? 'C' : 'C';
+    const decodedAbi = abiToken === undefined ? 'C' : decodeString(abiToken.text);
+    if (decodedAbi !== 'C') {
+      this.diagnostics.push(
+        createDiagnostic(
+          this.fileName,
+          'parse',
+          'FLINT-PARSE-074',
+          `Unsupported foreign ABI '${decodedAbi}'; only "C" is currently supported.`,
+          abiToken?.span ?? start,
+        ),
+      );
+    }
+    const abi = 'C';
     this.expect('capability', 'FLINT-PARSE-111', "Expected 'capability' after foreign ABI.");
     const libraryToken = this.expectKind('string', 'FLINT-PARSE-112', 'Expected library name string after capability.');
     const library = libraryToken === undefined ? '<missing>' : decodeString(libraryToken.text);
@@ -346,6 +414,11 @@ class Parser {
     };
   }
 
+  /**
+   * Parses the parameter list of a foreign function declaration.
+   *
+   * @returns List of parsed foreign function parameters.
+   */
   private parseForeignParameters(): FlintForeignFunctionParameter[] {
     const parameters: FlintForeignFunctionParameter[] = [];
     if (this.is(')')) return parameters;
@@ -569,7 +642,6 @@ class Parser {
    *
    * @param documentation - Optional attached documentation comment.
    * @param record - True if declared as a value record.
-   * @param isCStruct - True if declared as a c_struct or #[repr(C)].
    * @param repr - Optional representation attribute metadata.
    * @returns Parsed struct declaration AST node.
    */
@@ -577,7 +649,6 @@ class Parser {
   private parseStruct(
     documentation?: FlintFunction['documentation'],
     record = false,
-    isCStruct = false,
     repr?: FlintStructRepr,
   ): FlintStructDeclaration {
     const start = this.consume().span;
@@ -595,7 +666,7 @@ class Parser {
       kind: 'struct',
       name: name ?? '<missing>',
       ...(record ? { record: true as const } : {}),
-      ...(isCStruct || repr?.kind === 'c' ? { c_struct: true as const } : {}),
+      ...(repr?.kind === 'c' ? { c_struct: true as const } : {}),
       ...(repr === undefined ? {} : { repr }),
       ...(repr?.kind === 'packed' ? { packed: repr.alignment } : {}),
       ...(repr?.kind === 'align' ? { align: repr.alignment } : {}),
@@ -1490,7 +1561,7 @@ class Parser {
   ): FlintExpression {
     let expression = initialExpression;
     let qualifiedName = initialQualifiedName;
-    while (this.match('.')) {
+    while (qualifiedName.length > 0 && this.match('.')) {
       const member = this.expectMemberName('FLINT-PARSE-078', 'Expected a member name after ".".');
       qualifiedName = `${qualifiedName}.${member ?? '<missing>'}`;
       if (this.match('(')) {
@@ -1625,7 +1696,8 @@ class Parser {
       const start = token.span;
       let expression = this.parseExpression();
       const end = this.expect(')', 'FLINT-PARSE-056', "Expected ')' after expression.").span;
-      expression = this.parseMemberAndIndexChain(expression, '', mergeSpans(start, end));
+      const initialQualifiedName = expression.kind === 'identifier' ? expression.name : '';
+      expression = this.parseMemberAndIndexChain(expression, initialQualifiedName, mergeSpans(start, end));
       return expression;
     }
     if (this.match('{')) return this.parseStructLiteral(token);

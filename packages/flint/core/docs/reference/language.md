@@ -167,7 +167,7 @@ Struct memory layout in Flint is target-dependent across standard platform ABI m
 
 Directives supported on structs:
 
-- `c_struct` or `#[repr(C)]`: Strict C ABI ordering, natural field alignment, and tail padding.
+- `#[repr(C)]`: Strict C ABI ordering, natural field alignment, and tail padding.
 - `#[repr(packed(N))]`: Clamps field alignment to maximum `N` bytes for compact binary formats.
 - `#[repr(align(N))]`: Elevates aggregate alignment to `N` bytes (e.g. 64-byte CPU cache lines or SIMD).
 

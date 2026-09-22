@@ -2880,6 +2880,16 @@ and collapses duplicate forward slashes.
 
 ## `src/interop/c-bindgen`
 
+### CConstantDefinition
+
+**Kind:** interface
+
+```typescript
+export interface CConstantDefinition
+```
+
+Parsed numeric or string #define constant definition.
+
 ### CFunctionDefinition
 
 **Kind:** interface
@@ -2944,6 +2954,7 @@ function compileCHeader(
   source: string,
   library: string,
   libraryPath = `lib${library}.so`,
+  options?: FfiHostShimOptions,
 ): {
   readonly ast: CHeaderAst;
   readonly flintBindings: string;
@@ -2957,11 +2968,12 @@ End-to-end compilation of a C header string into Flint bindings, AST, .d.ts, and
 
 #### Parameters
 
-| Name        | Type   | Description |
-| ----------- | ------ | ----------- |
-| source      | string |             |
-| library     | string |             |
-| libraryPath |        |             |
+| Name        | Type               | Description |
+| ----------- | ------------------ | ----------- |
+| source      | string             |             |
+| library     | string             |             |
+| libraryPath |                    |             |
+| options     | FfiHostShimOptions |             |
 
 ### CStructDefinition
 
@@ -2982,6 +2994,26 @@ export interface CStructField
 ```
 
 Field definition within a parsed C struct.
+
+### FfiHostShimOptions
+
+**Kind:** interface
+
+```typescript
+export interface FfiHostShimOptions
+```
+
+Options for generating FFI host shims.
+
+### FfiShimTarget
+
+**Kind:** type
+
+```typescript
+export type FfiShimTarget = 'bun' | 'node' | 'universal';
+```
+
+FFI target runtime environments for host shim generation.
 
 ### generateDtsFromC
 
@@ -3011,22 +3043,24 @@ Generates TypeScript declaration file (.d.ts) matching C header bindings.
 **Kind:** function
 
 ```typescript
-function generateFfiHostShim(ast: CHeaderAst, libraryPath: string): string;
+function generateFfiHostShim(ast: CHeaderAst, libraryPath: string, options: FfiHostShimOptions = {}): string;
 ```
 
-Generates zero-copy Node-API / bun:ffi host shims for dynamic or native foreign execution.
+Generates zero-copy Node-API / bun:ffi / universal host shims for dynamic or native foreign execution.
 
 #### Parameters
 
-| Name        | Type       | Description                                       |
-| ----------- | ---------- | ------------------------------------------------- |
-| ast         | CHeaderAst | - Parsed C header AST.                            |
-| libraryPath | string     | - Native shared library path (.so, .dylib, .dll). |
+| Name        | Type               | Description                                                             |
+| ----------- | ------------------ | ----------------------------------------------------------------------- |
+| ast         | CHeaderAst         | - Parsed C header AST.                                                  |
+| libraryPath | string             | - Native shared library path (.so, .dylib, .dll).                       |
+| options     | FfiHostShimOptions | - Configuration options specifying the target runtime (default: 'bun'). |
 
 #### Contract
 
 - **@param:** - Parsed C header AST.
 - **@param:** - Native shared library path (.so, .dylib, .dll).
+- **@param:** - Configuration options specifying the target runtime (default: 'bun').
 - **@returns:** Rendered host JavaScript shim.
 
 ### generateFlintFromC
@@ -3037,7 +3071,7 @@ Generates zero-copy Node-API / bun:ffi host shims for dynamic or native foreign 
 function generateFlintFromC(ast: CHeaderAst, library: string): string;
 ```
 
-Generates Flint source code containing `c_struct`, `opaque foreign type`,
+Generates Flint source code containing `#[repr(C)] struct`, `opaque foreign type`,
 and `foreign "C" capability` declarations from a CHeaderAst.
 
 #### Parameters
@@ -3052,27 +3086,6 @@ and `foreign "C" capability` declarations from a CHeaderAst.
 - **@param:** - Parsed C header AST.
 - **@param:** - Foreign library name for capability binding.
 - **@returns:** Formatted Flint source code string.
-
-### mapCTypeToFlint
-
-**Kind:** function
-
-```typescript
-function mapCTypeToFlint(cType: string): string;
-```
-
-Maps a C scalar or pointer type signature to a Flint type name.
-
-#### Parameters
-
-| Name  | Type   | Description                                                               |
-| ----- | ------ | ------------------------------------------------------------------------- |
-| cType | string | - Raw C type string (e.g. "const uint8_t*", "int32_t", "ScannerResult*"). |
-
-#### Contract
-
-- **@param:** - Raw C type string (e.g. "const uint8_t*", "int32_t", "ScannerResult*").
-- **@returns:** Flint type representation (e.g. "CPtr<u8>", "c_int", "MutCPtr<ScannerResult>").
 
 ### parseCHeader
 
@@ -6222,26 +6235,6 @@ Reads the ownership annotation carried by an AST type name.
 - **@param:** - Source AST type name.
 - **@returns:** The declared ownership mode, or `undefined` if unset.
 
-### PLATFORM_CONFIGS
-
-**Kind:** constant
-
-```typescript
-export const PLATFORM_CONFIGS: Readonly<Record<TargetPlatform, PlatformAbiConfig>>;
-```
-
-Pre-configured ABI layout parameters across the 6 supported compilation targets.
-
-### PlatformAbiConfig
-
-**Kind:** interface
-
-```typescript
-export interface PlatformAbiConfig
-```
-
-Platform-specific ABI layout configuration rules.
-
 ### primitiveLayout
 
 **Kind:** function
@@ -6267,22 +6260,6 @@ Looks up the fixed ABI layout for a primitive type name on the specified target 
 - **@param:** - Primitive type name.
 - **@param:** - Target platform profile.
 - **@returns:** The primitive's size and alignment (without a layout key).
-
-### TargetPlatform
-
-**Kind:** type
-
-```typescript
-export type TargetPlatform =
-  | 'wasm32-unknown-unknown'
-  | 'wasm64-unknown-unknown'
-  | 'x86_64-unknown-linux-gnu'
-  | 'x86_64-pc-windows-msvc'
-  | 'aarch64-apple-darwin'
-  | 'i686-unknown-linux-gnu';
-```
-
-Target platform architectures supported by the Flint compiler and TypeAlgebra.
 
 ### TypeAlgebra
 

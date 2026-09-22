@@ -22,11 +22,14 @@ export {
   generateFlintFromC,
   mapCTypeToFlint,
   parseCHeader,
+  type CConstantDefinition,
   type CFunctionDefinition,
   type CFunctionParameter,
   type CHeaderAst,
   type CStructDefinition,
   type CStructField,
+  type FfiHostShimOptions,
+  type FfiShimTarget,
 } from './c-bindgen.js';
 
 export * from './types.js';

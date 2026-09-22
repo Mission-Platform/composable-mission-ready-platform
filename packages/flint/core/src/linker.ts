@@ -780,14 +780,90 @@ function detectStaticLinkingCycles(
 /** Builds index mapping exported foreign symbols to their defining relocatable object. */
 function buildForeignSymbolIndex(
   foreignObjects: readonly FlintForeignObjectReference[],
-): Map<string, FlintForeignObjectReference> {
-  const symbolToObject = new Map<string, FlintForeignObjectReference>();
+  diagnostics: FlintDiagnostic[],
+): {
+  readonly scoped: Map<string, FlintForeignObjectReference>;
+  readonly unscoped: Map<string, FlintForeignObjectReference>;
+} {
+  const scoped = new Map<string, FlintForeignObjectReference>();
+  const unscoped = new Map<string, FlintForeignObjectReference>();
+
   for (const object_ of foreignObjects) {
     for (const symbol of object_.exportedSymbols) {
-      symbolToObject.set(symbol, object_);
+      if (object_.library === undefined) {
+        const existing = unscoped.get(symbol);
+        if (existing !== undefined && existing.path !== object_.path) {
+          diagnostics.push(
+            createDiagnostic(
+              object_.path,
+              'link',
+              'FLINT-LINK-007',
+              `Duplicate foreign symbol '${symbol}' provided by '${existing.path}' and '${object_.path}'.`,
+              emptySpan,
+              'error',
+              'Ensure only one foreign object provides this symbol.',
+            ),
+          );
+        } else {
+          unscoped.set(symbol, object_);
+        }
+      } else {
+        const key = `${object_.library}:${symbol}`;
+        const existing = scoped.get(key);
+        if (existing !== undefined && existing.path !== object_.path) {
+          diagnostics.push(
+            createDiagnostic(
+              object_.path,
+              'link',
+              'FLINT-LINK-007',
+              `Duplicate foreign symbol '${symbol}' provided for library '${object_.library}' by '${existing.path}' and '${object_.path}'.`,
+              emptySpan,
+              'error',
+              'Ensure only one foreign object provides the symbol for this capability library.',
+            ),
+          );
+        } else {
+          scoped.set(key, object_);
+        }
+      }
     }
   }
-  return symbolToObject;
+
+  return { scoped, unscoped };
+}
+
+/** Resolves an individual foreign capability function against indexed foreign objects. */
+function resolveCapabilityFunction(
+  function_: NonNullable<NonNullable<FlintModule['foreignCapabilities']>[number]['functions']>[number],
+  capability: NonNullable<FlintModule['foreignCapabilities']>[number],
+  fileName: string,
+  scoped: ReadonlyMap<string, FlintForeignObjectReference>,
+  unscoped: ReadonlyMap<string, FlintForeignObjectReference>,
+  hasObjects: boolean,
+  diagnostics: FlintDiagnostic[],
+): FlintResolvedForeignSymbol {
+  const scopedKey = `${capability.library}:${function_.name}`;
+  const matchingObject = scoped.get(scopedKey) ?? unscoped.get(function_.name);
+  if (hasObjects && matchingObject === undefined) {
+    diagnostics.push(
+      createDiagnostic(
+        fileName,
+        'link',
+        'FLINT-LINK-006',
+        `Unresolved foreign symbol '${function_.name}' required by library '${capability.library}'.`,
+        function_.span,
+        'error',
+        'Supply a foreign object defining this symbol.',
+      ),
+    );
+  }
+  return {
+    symbol: function_.name,
+    library: capability.library,
+    callingConvention: capability.callingConvention,
+    ...(matchingObject === undefined ? {} : { objectPath: matchingObject.path }),
+    resolved: matchingObject !== undefined,
+  };
 }
 
 /**
@@ -798,38 +874,30 @@ function buildForeignSymbolIndex(
  * @param foreignObjects - List of foreign relocatable object descriptors.
  * @returns List of foreign symbol resolution records.
  */
+// skipcq: JS-R1005
 function resolveForeignSymbols(
   graph: FlintModuleGraph,
   diagnostics: FlintDiagnostic[],
   foreignObjects: readonly FlintForeignObjectReference[] = [],
 ): FlintResolvedForeignSymbol[] {
   const resolved: FlintResolvedForeignSymbol[] = [];
-  const symbolToObject = buildForeignSymbolIndex(foreignObjects);
+  const { scoped, unscoped } = buildForeignSymbolIndex(foreignObjects, diagnostics);
+  const hasObjects = foreignObjects.length > 0;
 
   for (const resolvedModule of graph.modules) {
     for (const capability of resolvedModule.module.foreignCapabilities ?? []) {
       for (const function_ of capability.functions) {
-        const matchingObject = symbolToObject.get(function_.name);
-        if (foreignObjects.length > 0 && matchingObject === undefined) {
-          diagnostics.push(
-            createDiagnostic(
-              resolvedModule.fileName,
-              'link',
-              'FLINT-LINK-006',
-              `Unresolved foreign symbol '${function_.name}' required by library '${capability.library}'.`,
-              function_.span,
-              'error',
-              'Supply a foreign object defining this symbol.',
-            ),
-          );
-        }
-        resolved.push({
-          symbol: function_.name,
-          library: capability.library,
-          callingConvention: capability.callingConvention,
-          ...(matchingObject === undefined ? {} : { objectPath: matchingObject.path }),
-          resolved: matchingObject !== undefined,
-        });
+        resolved.push(
+          resolveCapabilityFunction(
+            function_,
+            capability,
+            resolvedModule.fileName,
+            scoped,
+            unscoped,
+            hasObjects,
+            diagnostics,
+          ),
+        );
       }
     }
   }

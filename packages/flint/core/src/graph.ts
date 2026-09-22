@@ -63,6 +63,7 @@ export type ForeignObjectFormat = 'wasm-relocatable' | 'elf-object' | 'mach-o';
 export interface FlintForeignObjectReference {
   readonly name: string;
   readonly path: string;
+  readonly library?: string;
   readonly format: ForeignObjectFormat;
   readonly exportedSymbols: readonly string[];
   readonly undefinedSymbols?: readonly string[];

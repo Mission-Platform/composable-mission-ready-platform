@@ -1,9 +1,18 @@
 import {
+  isCPrimitiveType,
+  layoutCPrimitive,
+  PLATFORM_CONFIGS,
+  type PlatformAbiConfig,
+  type TargetPlatform,
+} from '@mission-platform/flint-c-abi';
+
+import {
   type FlintModule,
   type FlintOwnership,
   type FlintPrimitiveType,
   type FlintReferenceMode,
   type FlintStructDeclaration,
+  type FlintStructRepr,
   type FlintTypeName,
   flintTypeNameToString,
 } from './ast.js';
@@ -72,88 +81,22 @@ export interface AggregateLayoutDefinition {
   readonly genericParameters?: readonly string[];
   readonly fields: readonly { readonly name: string; readonly type: TypeId }[];
   readonly record?: true | boolean;
+  /**
+   * Explicit C ABI struct layout (deprecated, use repr?.kind === 'c').
+   * @deprecated Use `repr?.kind === 'c'`.
+   */
   readonly c_struct?: boolean;
+  readonly repr?: FlintStructRepr;
   readonly packed?: number;
   readonly align?: number;
 }
 
-/** Target platform architectures supported by the Flint compiler and TypeAlgebra. */
-export type TargetPlatform =
-  | 'wasm32-unknown-unknown'
-  | 'wasm64-unknown-unknown'
-  | 'x86_64-unknown-linux-gnu'
-  | 'x86_64-pc-windows-msvc'
-  | 'aarch64-apple-darwin'
-  | 'i686-unknown-linux-gnu';
-
-/** Platform-specific ABI layout configuration rules. */
-export interface PlatformAbiConfig {
-  readonly platform: TargetPlatform;
-  readonly pointerSize: number;
-  readonly pointerAlignment: number;
-  readonly longSize: number;
-  readonly longAlignment: number;
-  readonly i64StructAlignment: number;
-  readonly maxNaturalAlignment: number;
-}
-
-/** Pre-configured ABI layout parameters across the 6 supported compilation targets. */
-export const PLATFORM_CONFIGS: Readonly<Record<TargetPlatform, PlatformAbiConfig>> = {
-  'wasm32-unknown-unknown': {
-    platform: 'wasm32-unknown-unknown',
-    pointerSize: 4,
-    pointerAlignment: 4,
-    longSize: 4,
-    longAlignment: 4,
-    i64StructAlignment: 8,
-    maxNaturalAlignment: 16,
-  },
-  'wasm64-unknown-unknown': {
-    platform: 'wasm64-unknown-unknown',
-    pointerSize: 8,
-    pointerAlignment: 8,
-    longSize: 8,
-    longAlignment: 8,
-    i64StructAlignment: 8,
-    maxNaturalAlignment: 16,
-  },
-  'x86_64-unknown-linux-gnu': {
-    platform: 'x86_64-unknown-linux-gnu',
-    pointerSize: 8,
-    pointerAlignment: 8,
-    longSize: 8,
-    longAlignment: 8,
-    i64StructAlignment: 8,
-    maxNaturalAlignment: 16,
-  },
-  'x86_64-pc-windows-msvc': {
-    platform: 'x86_64-pc-windows-msvc',
-    pointerSize: 8,
-    pointerAlignment: 8,
-    longSize: 4,
-    longAlignment: 4,
-    i64StructAlignment: 8,
-    maxNaturalAlignment: 16,
-  },
-  'aarch64-apple-darwin': {
-    platform: 'aarch64-apple-darwin',
-    pointerSize: 8,
-    pointerAlignment: 8,
-    longSize: 8,
-    longAlignment: 8,
-    i64StructAlignment: 8,
-    maxNaturalAlignment: 16,
-  },
-  'i686-unknown-linux-gnu': {
-    platform: 'i686-unknown-linux-gnu',
-    pointerSize: 4,
-    pointerAlignment: 4,
-    longSize: 4,
-    longAlignment: 4,
-    i64StructAlignment: 4, // 32-bit x86 C ABI clamps i64 struct alignment to 4
-    maxNaturalAlignment: 16,
-  },
-};
+export {
+  PLATFORM_CONFIGS,
+  type PlatformAbiConfig,
+  type TargetPlatform,
+  type TargetPlatformTriplet,
+} from '@mission-platform/flint-c-abi';
 
 /** Detailed field layout offset and padding for C structs. */
 export interface CStructFieldLayout {
@@ -204,6 +147,7 @@ const VALUE_COLLECTIONS = new Set(['Array', 'Vector', 'Option', 'Result', 'iterR
 const DESCRIPTOR_COLLECTIONS = new Set(['Iterable', 'Iterator', 'Fn']);
 const RESULT_LIKE_NOMINAL_NAMES = new Set(['Result', 'iterResult']);
 const COLLECTION_HANDLE_NOMINAL_NAMES = new Set(['Array', 'Vector']);
+const FOREIGN_POINTER_NAMES = new Set(['CPtr', 'MutCPtr', 'COpaquePtr']);
 
 /**
  * Determines whether a name refers to a built-in Flint primitive type.
@@ -266,6 +210,12 @@ export class TypeAlgebra {
     this.layoutCache.clear();
   }
 
+  /**
+   * Converts a module struct declaration AST node into an aggregate layout definition.
+   *
+   * @param declaration - Struct declaration AST node.
+   * @returns Aggregate layout definition ready for registration.
+   */
   private convertStructDeclaration(declaration: FlintModule['structs'][number]): AggregateLayoutDefinition {
     const genericParameters = declaration.genericParameters.map(({ name }) => name);
     return {
@@ -275,8 +225,9 @@ export class TypeAlgebra {
         name: field.name,
         type: this.fromAst(field.type, new Set(genericParameters)),
       })),
-      ...(declaration.record === true ? { record: true as const } : {}),
-      ...(declaration.c_struct === true ? { c_struct: true as const } : {}),
+      ...(declaration.record ? { record: true as const } : {}),
+      ...(declaration.repr ? { repr: declaration.repr } : {}),
+      ...(declaration.repr?.kind === 'c' || declaration.c_struct ? { c_struct: true as const } : {}),
       ...(declaration.packed === undefined ? {} : { packed: declaration.packed }),
       ...(declaration.align === undefined ? {} : { align: declaration.align }),
     };
@@ -631,25 +582,19 @@ export class TypeAlgebra {
    * @param name - Primitive type name.
    * @returns The primitive's size and alignment.
    */
+  // skipcq: JS-R1005
   primitiveLayout(name: FlintPrimitiveType): Omit<TypeLayout, 'layoutKey'> {
     const fixed = FIXED_PRIMITIVE_LAYOUTS[name];
     if (fixed !== undefined) return fixed;
 
+    if (isCPrimitiveType(name)) {
+      return layoutCPrimitive(name, this.platform);
+    }
+
     switch (name) {
-      case 'c_long':
-      case 'c_ulong': {
-        return { size: this.platform.longSize, alignment: this.platform.longAlignment };
-      }
-      case 'c_size':
-      case 'c_ssize': {
-        return { size: this.platform.pointerSize, alignment: this.platform.pointerAlignment };
-      }
       case 'i64':
       case 'u64':
-      case 'f64':
-      case 'c_longlong':
-      case 'c_ulonglong':
-      case 'c_double': {
+      case 'f64': {
         return { size: 8, alignment: this.platform.i64StructAlignment };
       }
       case 'string':
@@ -1040,6 +985,14 @@ export class TypeAlgebra {
     return environment;
   }
 
+  /**
+   * Computes the alignment for a C struct from the maximum field alignment and repr options.
+   *
+   * @param maxFieldAlignment - Maximum alignment across all fields in the struct.
+   * @param aggregate - Struct layout definition.
+   * @returns Calculated struct alignment.
+   */
+  // skipcq: JS-0105
   private computeCStructAlignment(maxFieldAlignment: number, aggregate: AggregateLayoutDefinition): number {
     let structAlignment = maxFieldAlignment;
     if (aggregate.packed !== undefined) {
@@ -1051,6 +1004,13 @@ export class TypeAlgebra {
     return Math.max(structAlignment, 1);
   }
 
+  /**
+   * Derives the representation flag string for a C struct layout key.
+   *
+   * @param aggregate - Struct layout definition.
+   * @returns Representation key component string.
+   */
+  // skipcq: JS-0105
   private computeReprFlag(aggregate: AggregateLayoutDefinition): string {
     if (aggregate.packed !== undefined) {
       return `packed(${aggregate.packed})`;
@@ -1121,8 +1081,20 @@ export class TypeAlgebra {
     };
   }
 
+  /**
+   * Determines whether an aggregate layout represents a C struct layout.
+   *
+   * @param aggregate - Aggregate definition under check.
+   * @returns True if C struct representation or alignment rules apply.
+   */
+  // skipcq: JS-0105
   private isCStructLayout(aggregate: AggregateLayoutDefinition): boolean {
-    return aggregate.c_struct === true || aggregate.packed !== undefined || aggregate.align !== undefined;
+    return (
+      aggregate.repr?.kind === 'c' ||
+      aggregate.c_struct === true ||
+      aggregate.packed !== undefined ||
+      aggregate.align !== undefined
+    );
   }
 
   /**
@@ -1198,6 +1170,15 @@ export class TypeAlgebra {
     return this.layoutAggregateFields(aggregate, environment, visiting, nextVisitingAggregates);
   }
 
+  /**
+   * Computes layout for foreign pointer types (CPtr, MutCPtr, COpaquePtr).
+   *
+   * @param name - Pointer family nominal type name.
+   * @param arguments_ - Generic type arguments applied to the pointer.
+   * @param visiting - Type ids currently on the layout recursion stack.
+   * @param visitingAggregates - Aggregate names currently on the recursion stack.
+   * @returns The pointer type layout.
+   */
   private layoutForeignPointer(
     name: string,
     arguments_: readonly TypeId[],
@@ -1223,6 +1204,7 @@ export class TypeAlgebra {
    * @param visitingAggregates - Aggregate names currently on the recursion stack.
    * @returns The computed layout for the nominal type.
    */
+  // skipcq: JS-R1005
   private layoutNominal(
     name: string,
     arguments_: readonly TypeId[],
@@ -1232,7 +1214,7 @@ export class TypeAlgebra {
     if (name === 'Option') {
       return this.layoutOption(arguments_, visiting, visitingAggregates);
     }
-    if (name === 'CPtr' || name === 'MutCPtr' || name === 'COpaquePtr') {
+    if (FOREIGN_POINTER_NAMES.has(name)) {
       return this.layoutForeignPointer(name, arguments_, visiting, visitingAggregates);
     }
     if (RESULT_LIKE_NOMINAL_NAMES.has(name)) {

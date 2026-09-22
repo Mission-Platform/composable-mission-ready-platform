@@ -4,7 +4,7 @@ import {
   DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY,
   type FlintStandardLibraryIdentity,
 } from './stdlib/regex.js';
-import { createMonomorphizationCache, primitiveLayout } from './type-algebra.js';
+import { createMonomorphizationCache, PLATFORM_CONFIGS, TypeAlgebra, type TargetPlatform } from './type-algebra.js';
 
 import type {
   FlintModule,
@@ -292,7 +292,13 @@ type FunctionDeclaration = {
  * @returns Serialized ABI function representation.
  */
 // skipcq: JS-R1005
-function toAbiFunction(declaration: FunctionDeclaration, module?: FlintModule): FlintAbiFunction {
+function toAbiFunction(
+  declaration: FunctionDeclaration,
+  module?: FlintModule,
+  targetPlatform: TargetPlatform = 'wasm32-unknown-unknown',
+): FlintAbiFunction {
+  const is64Bit = PLATFORM_CONFIGS[targetPlatform]?.pointerSize === 8;
+  const referenceCarrier: FlintPrimitiveType = is64Bit ? 'i64' : 'i32';
   // skipcq: JS-D1001
   const referenceOf = (type: { readonly name: FlintPrimitiveType; readonly reference?: string }): string | undefined =>
     type.reference ?? (module?.structs.some(({ name }) => name === type.name) ? type.name : undefined);
@@ -302,7 +308,7 @@ function toAbiFunction(declaration: FunctionDeclaration, module?: FlintModule): 
     readonly reference?: string;
   }): FlintPrimitiveType => {
     const reference = referenceOf(type);
-    return reference === undefined ? type.name : 'i32';
+    return reference === undefined ? type.name : referenceCarrier;
   };
   return {
     name: declaration.name,
@@ -373,16 +379,20 @@ function iteratorDescriptors(module: FlintModule): readonly FlintIteratorBoundar
  * @returns Size and alignment specification.
  */
 // skipcq: JS-R1005
-function fieldCarrierSize(type: FlintTypeName): { readonly size: number; readonly alignment: number } {
-  // Seed ABI keeps non-primitive aggregates as 4-byte handles; primitives use TypeAlgebra sizes.
+function fieldCarrierSize(
+  type: FlintTypeName,
+  targetPlatform: TargetPlatform = 'wasm32-unknown-unknown',
+): { readonly size: number; readonly alignment: number } {
+  const algebra = new TypeAlgebra(targetPlatform);
   if (type.reference !== undefined || type.arguments !== undefined || type.referenceMode !== undefined) {
-    return { size: 4, alignment: 4 };
+    return { size: algebra.platform.pointerSize, alignment: algebra.platform.pointerAlignment };
   }
   if (type.length !== undefined) {
-    const element = primitiveLayout(type.name);
-    return { size: Math.max(element.size, 4) * type.length, alignment: Math.max(element.alignment, 4) };
+    const element = algebra.primitiveLayout(type.name);
+    const minSize = algebra.platform.pointerSize;
+    return { size: Math.max(element.size, minSize) * type.length, alignment: Math.max(element.alignment, minSize) };
   }
-  const primitive = primitiveLayout(type.name);
+  const primitive = algebra.primitiveLayout(type.name);
   return { size: primitive.size, alignment: primitive.alignment === 0 ? 1 : primitive.alignment };
 }
 
@@ -390,14 +400,18 @@ function fieldCarrierSize(type: FlintTypeName): { readonly size: number; readonl
  * Computes binary memory layout offsets and alignments for all structs and enums declared in a module.
  *
  * @param module - Module AST containing structs and enums.
+ * @param targetPlatform - Target platform profile.
  * @returns Sorted collection of aggregate layouts.
  */
-function aggregateLayouts(module: FlintModule): readonly FlintAggregateLayout[] {
+function aggregateLayouts(
+  module: FlintModule,
+  targetPlatform: TargetPlatform = 'wasm32-unknown-unknown',
+): readonly FlintAggregateLayout[] {
   const structs = module.structs.map((declaration) => {
     let offset = 0;
     let alignment = 1;
     const fields = declaration.fields.map((field) => {
-      const carrier = fieldCarrierSize(field.type);
+      const carrier = fieldCarrierSize(field.type, targetPlatform);
       const size = carrier.size;
       const fieldAlignment = carrier.alignment;
       const alignedOffset = fieldAlignment <= 1 ? offset : (offset + fieldAlignment - 1) & ~(fieldAlignment - 1);
@@ -430,7 +444,7 @@ function aggregateLayouts(module: FlintModule): readonly FlintAggregateLayout[] 
     const fields = declaration.variants.flatMap((variant) => {
       let offset = 4;
       return variant.fields.map((field) => {
-        const carrier = fieldCarrierSize(field.type);
+        const carrier = fieldCarrierSize(field.type, targetPlatform);
         const size = Math.max(carrier.size, 4);
         const fieldAlignment = carrier.alignment;
         maxVariantAlignment = Math.max(maxVariantAlignment, fieldAlignment);
@@ -467,10 +481,11 @@ function aggregateLayouts(module: FlintModule): readonly FlintAggregateLayout[] 
  * Discovers and builds monomorphized specializations for generic usages within a module.
  *
  * @param module - Module AST to analyze.
+ * @param targetPlatform - Target platform profile.
  * @returns Monomorphized specialization entries.
  */
-function collectSpecializations(module: FlintModule): readonly FlintSpecialization[] {
-  const { cache } = createMonomorphizationCache(module);
+function collectSpecializations(module: FlintModule, targetPlatform?: TargetPlatform): readonly FlintSpecialization[] {
+  const { cache } = createMonomorphizationCache(module, targetPlatform);
   return cache.collectFromModule(module).map((entry) => entry.specialization);
 }
 
@@ -577,6 +592,7 @@ function collectionLayouts(module: FlintModule): readonly FlintCollectionLayout[
  * Optional parameters accepted by createFlintAbiManifest for custom compilation environments.
  */
 export interface FlintAbiManifestOptions {
+  readonly targetPlatform?: TargetPlatform;
   readonly graphHash?: string;
   readonly projectRoot?: string;
   readonly linkMode?: FlintLinkMode;
@@ -826,7 +842,12 @@ function buildForeignCapabilities(
 // skipcq: JS-R1005
 export function createFlintAbiManifest(module: FlintModule, options: FlintAbiManifestOptions = {}): FlintAbiManifest {
   const targetFeatures = extractEnabledTargetFeatures(options.targetFeatures);
-  const memory64 = targetFeatures.memory64 === true;
+  const memory64 =
+    options.targetPlatform === undefined
+      ? targetFeatures.memory64 === true
+      : PLATFORM_CONFIGS[options.targetPlatform]?.pointerSize === 8;
+  const targetPlatform: TargetPlatform =
+    options.targetPlatform ?? (memory64 ? 'wasm64-unknown-unknown' : 'wasm32-unknown-unknown');
   const foreignCapabilities = buildForeignCapabilities(module, memory64);
   return {
     format: 'forge-web-script-module',
@@ -835,7 +856,7 @@ export function createFlintAbiManifest(module: FlintModule, options: FlintAbiMan
     moduleName: module.name,
     exports: module.functions
       .filter((declaration) => declaration.exported)
-      .map((declaration) => toAbiFunction(declaration, module))
+      .map((declaration) => toAbiFunction(declaration, module, targetPlatform))
       .toSorted((left, right) => left.name.localeCompare(right.name)),
     imports: module.imports.map((declaration) => ({
       capability: declaration.capability,
@@ -847,6 +868,7 @@ export function createFlintAbiManifest(module: FlintModule, options: FlintAbiMan
           result: declaration.result,
         },
         module,
+        targetPlatform,
       ),
     })),
     sourceImports: options.sourceImports ?? module.sourceImports.map(({ source, alias }) => ({ source, alias })),
@@ -857,7 +879,7 @@ export function createFlintAbiManifest(module: FlintModule, options: FlintAbiMan
     valueRepresentations: createValueRepresentations(memory64),
     trapModel: 'explicit-trap',
     standardLibrary: options.standardLibrary ?? DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY,
-    aggregateLayouts: aggregateLayouts(module),
+    aggregateLayouts: aggregateLayouts(module, targetPlatform),
     enumDeclarations: module.enums
       .map((declaration) => ({
         name: declaration.name,
@@ -867,8 +889,8 @@ export function createFlintAbiManifest(module: FlintModule, options: FlintAbiMan
       }))
       .toSorted((left, right) => left.name.localeCompare(right.name)),
     collectionLayouts: collectionLayouts(module),
-    specializations: (options.specializations ?? collectSpecializations(module)).toSorted((left, right) =>
-      left.id.localeCompare(right.id),
+    specializations: (options.specializations ?? collectSpecializations(module, targetPlatform)).toSorted(
+      (left, right) => left.id.localeCompare(right.id),
     ),
     iteratorDescriptors: (options.iteratorDescriptors ?? iteratorDescriptors(module)).toSorted((left, right) =>
       left.id.localeCompare(right.id),

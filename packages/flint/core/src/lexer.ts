@@ -27,7 +27,6 @@ const keywords = new Set([
   'as',
   'capability',
   'case',
-  'c_struct',
   'class',
   'constructor',
   'default',
