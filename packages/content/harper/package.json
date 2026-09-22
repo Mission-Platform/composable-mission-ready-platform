@@ -25,7 +25,6 @@
   ],
   "scripts": {
     "build:check": "tsc --project tsconfig.build.json --noEmit",
-    "build:watch": "tsdown --watch",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",

@@ -36,7 +36,6 @@
   "scripts": {
     "build": "tsdown",
     "build:check": "tsc --project tsconfig.build.json --noEmit",
-    "build:watch": "tsdown --watch",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",

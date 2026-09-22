@@ -4,7 +4,8 @@
   "tasks": {
     "build": {
       "dependsOn": [
-        "^build",
+        "^build:web-components",
+        "^build:forge",
         "@mission-platform/scripts#docs:generate",
         "build:check",
         "build:bundle",
@@ -25,6 +26,14 @@
     },
     "build:verify": {
       "dependsOn": ["build:prerender"]
+    },
+    "build:check": {
+      "dependsOn": ["^build:web-components", "^build:forge"]
+    },
+    "dev": {
+      "dependsOn": ["^build:web-components", "^build:forge"],
+      "cache": false,
+      "persistent": true
     }
   }
 }

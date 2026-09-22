@@ -6,7 +6,6 @@
   "type": "module",
   "scripts": {
     "build:check": "vue-tsc --project tsconfig.app.json --noEmit",
-    "build": "node --input-type=module -e \"import { existsSync } from 'node:fs'; if (!existsSync('dist')) throw new Error('Turbo build tasks did not produce dist/.');\"",
     "build:main": "vite build --mode main",
     "build:ui": "vite build --mode ui",
     "test": "vitest run",
