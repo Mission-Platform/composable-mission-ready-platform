@@ -43,6 +43,7 @@
     "src"
   ],
   "scripts": {
+    "build": "node --experimental-strip-types ../../../scripts/build-package.ts",
     "build:forge": "tsdown --config tsdown.forge.config.ts",
     "build:react": "tsdown --config tsdown.react.config.ts",
     "build:vue": "tsdown --config tsdown.vue.config.ts",
@@ -50,7 +51,7 @@
     "build:solid": "tsdown --config tsdown.solid.config.ts",
     "build:web-components": "tsdown --config tsdown.web-components.config.ts",
     "build:cms-storyblok:assets": "tsdown --config tsdown.cms.config.ts",
-    "build:check": "tsc --project tsconfig.build.json --noEmit",
+    "type-check": "tsc --project tsconfig.build.json --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",

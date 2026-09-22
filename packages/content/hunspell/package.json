@@ -26,7 +26,7 @@
     "src/dictionaries"
   ],
   "scripts": {
-    "build:check": "tsc --project tsconfig.build.json --noEmit",
+    "type-check": "tsc --project tsconfig.build.json --noEmit",
     "build:wasm": "bash build.sh",
     "build:wasm:clean": "bash build.sh --no-cache",
     "test": "vitest run",

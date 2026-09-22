@@ -3,17 +3,17 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": ["^build:vue", "^build:forge"],
+      "dependsOn": ["^build"],
       "env": ["VITE_*"],
       "outputs": ["dist/**", ".output/**", ".vite/**", "public/sitemap.xml", "public/robots.txt"]
     },
     "build:spa": {
-      "dependsOn": ["^build:vue", "^build:forge"],
+      "dependsOn": ["^build"],
       "env": ["VITE_*"],
       "outputs": ["dist/**", ".output/**", ".vite/**", "public/sitemap.xml", "public/robots.txt"]
     },
     "dev": {
-      "dependsOn": ["^build:vue", "^build:forge"],
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
     },

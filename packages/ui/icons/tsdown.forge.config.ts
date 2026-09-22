@@ -8,7 +8,7 @@ export default [
   defineTsdownForgeTarget({
     rootDir: rootDirectory,
     entry: 'src/components/index.ts',
-    clean: true,
+    clean: false,
     overrides: {
       outDir: path.resolve(rootDirectory, 'dist/components'),
     },

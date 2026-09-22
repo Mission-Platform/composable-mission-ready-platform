@@ -600,7 +600,7 @@ const config = [
       'sonarjs/different-types-comparison': 'off',
       // Heuristic type-inference rule with frequent false positives on generic
       // calls and `Array#includes`/`Set#has` with union types (e.g. narrowed
-      // `string | number | boolean`). TypeScript's own type-checker (build:check)
+      // `string | number | boolean`). TypeScript's own type-checker (type-check)
       // already covers genuine argument-type mismatches.
       'sonarjs/argument-type': 'off',
       // Same heuristic family as `argument-type`: false-positives on `key in x`

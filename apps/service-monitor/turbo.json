@@ -3,12 +3,12 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": ["^build:react", "^build:forge"],
+      "dependsOn": ["^build"],
       "env": ["VITE_*"],
       "outputs": ["dist/**", ".vite/**"]
     },
     "dev": {
-      "dependsOn": ["^build:react", "^build:forge"],
+      "dependsOn": ["^build"],
       "with": [],
       "cache": false,
       "persistent": true

@@ -5,7 +5,7 @@
   "description": "Figma main-thread extraction and Forge source generation plugin.",
   "type": "module",
   "scripts": {
-    "build:check": "vue-tsc --project tsconfig.app.json --noEmit",
+    "type-check": "vue-tsc --project tsconfig.app.json --noEmit",
     "build:main": "vite build --mode main",
     "build:ui": "vite build --mode ui",
     "test": "vitest run",

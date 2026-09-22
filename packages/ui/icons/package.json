@@ -70,6 +70,7 @@
     "src"
   ],
   "scripts": {
+    "build": "node --experimental-strip-types ../../../scripts/build-package.ts",
     "build:forge": "tsdown --config tsdown.forge.config.ts",
     "build:react": "tsdown --config tsdown.react.config.ts",
     "build:vue": "tsdown --config tsdown.vue.config.ts",
@@ -79,7 +80,7 @@
     "build:cms-storyblok:assets": "tsdown --config tsdown.cms.config.ts",
     "build:generate": "pnpm run build:forge",
     "build:sprite": "node --input-type=module -e \"import { mkdirSync, writeFileSync } from 'node:fs'; import { ICON_SPRITE_ASSET } from './dist/sprite/asset.js'; mkdirSync('./dist', { recursive: true }); writeFileSync('./dist/icons.svg', ICON_SPRITE_ASSET);\"",
-    "build:check": "tsc --project tsconfig.build.json --noEmit",
+    "type-check": "tsc --project tsconfig.build.json --noEmit",
     "test": "vitest run",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",

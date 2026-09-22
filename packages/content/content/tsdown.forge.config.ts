@@ -5,4 +5,5 @@ const rootDirectory = import.meta.dirname;
 export default defineTsdownLibrary({
   rootDir: rootDirectory,
   entry: { index: 'src/index.ts' },
+  clean: false,
 });

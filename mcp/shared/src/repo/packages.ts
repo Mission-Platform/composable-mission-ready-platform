@@ -216,7 +216,12 @@ function resolvePeerDependencyVersions(
 /**
  * Build package installation command map across popular package managers.
  */
-function buildInstallCommands(name: string): Record<string, string> {
+function buildInstallCommands(name: string): {
+  readonly pnpm: string;
+  readonly npm: string;
+  readonly yarn: string;
+  readonly bun: string;
+} {
   return {
     pnpm: `pnpm add ${name}`,
     npm: `npm install ${name}`,

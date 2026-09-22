@@ -10,7 +10,7 @@
     "build:prerender": "node --experimental-strip-types scripts/prerender.ts",
     "build:verify": "node --experimental-strip-types scripts/check-build.ts",
     "build:spa": "tsc -b && vite build",
-    "build:check": "tsc -b",
+    "type-check": "tsc -b",
     "preview": "vite preview",
     "test": "vitest run --passWithNoTests",
     "test:e2e": "playwright test",

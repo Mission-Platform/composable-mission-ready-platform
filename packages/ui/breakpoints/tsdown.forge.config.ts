@@ -5,6 +5,6 @@ const rootDirectory = import.meta.dirname;
 export default defineTsdownLibrary({
   rootDir: rootDirectory,
   dts: { build: false, generator: 'oxc' },
-  clean: true,
+  clean: false,
   external: ['i18next'],
 });

@@ -193,7 +193,7 @@
   "scripts": {
     "build": "pnpm run compile && node --experimental-strip-types scripts/stage-server.ts",
     "compile": "tsc --project tsconfig.build.json",
-    "build:check": "tsc --project tsconfig.json --noEmit",
+    "type-check": "tsc --project tsconfig.json --noEmit",
     "check:packaging": "node --experimental-strip-types scripts/check-staged-server.ts",
     "test": "vitest run",
     "lint": "eslint .",

@@ -115,27 +115,16 @@ export function parsePackageTaskArgs(rawArgs: readonly string[]): ParsedPackageT
 }
 
 /**
- * Orchestrates upstream dependency priming followed by package task execution.
+ * Orchestrates package task execution utilizing Turborepo's dependency graph.
  *
  * @param rawArgs - Raw command line arguments.
  */
 export function runPackageTask(rawArgs: readonly string[] = process.argv.slice(2)): void {
   const { action, packageName, extraArgs } = parsePackageTaskArgs(rawArgs);
 
-  // Keep the helper-level warm-up explicit for both actions. The task graph also
-  // declares ^build for test-related tasks, so repeated work is cacheable and
-  // the graph remains the safety net for direct Turbo invocations.
-  console.log(`[package-task] Priming upstream dependencies for '${packageName}' (cached when already built)...`);
-  const primeResult = spawnSync('pnpm', ['exec', 'turbo', 'run', 'build', `--filter=${packageName}^...`], {
-    stdio: 'inherit',
-  });
-
-  if (primeResult.status !== 0) {
-    throw new Error(`Upstream build priming failed with status ${primeResult.status ?? 1}`);
-  }
-
+  const filterTarget = action === 'build' ? `${packageName}...` : packageName;
   console.log(`[package-task] Executing '${action}' on '${packageName}'...`);
-  const taskResult = spawnSync('pnpm', ['exec', 'turbo', 'run', action, `--filter=${packageName}`, ...extraArgs], {
+  const taskResult = spawnSync('pnpm', ['exec', 'turbo', 'run', action, `--filter=${filterTarget}`, ...extraArgs], {
     stdio: 'inherit',
   });
 

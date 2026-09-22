@@ -4,10 +4,9 @@
   "tasks": {
     "build": {
       "dependsOn": [
-        "^build:web-components",
-        "^build:forge",
+        "^build",
         "@mission-platform/scripts#docs:generate",
-        "build:check",
+        "type-check",
         "build:bundle",
         "build:prerender",
         "build:verify"
@@ -16,7 +15,7 @@
       "outputs": ["dist/**", ".vite/**"]
     },
     "build:bundle": {
-      "dependsOn": ["build:check"],
+      "dependsOn": ["type-check"],
       "env": ["VITE_*"],
       "outputs": ["dist/**", ".vite/**"]
     },
@@ -27,11 +26,11 @@
     "build:verify": {
       "dependsOn": ["build:prerender"]
     },
-    "build:check": {
-      "dependsOn": ["^build:web-components", "^build:forge"]
+    "type-check": {
+      "dependsOn": ["^build"]
     },
     "dev": {
-      "dependsOn": ["^build:web-components", "^build:forge"],
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
     }

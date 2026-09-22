@@ -230,6 +230,7 @@ export function defineLibraryConfig(options: LibraryConfigOptions): UserConfig {
     },
     plugins: [vue(), ignoreVueI18nBlocksPlugin()],
     build: {
+      emptyOutDir: false,
       lib: {
         entry: resolveLibraryEntry(rootDir, entry),
         name,

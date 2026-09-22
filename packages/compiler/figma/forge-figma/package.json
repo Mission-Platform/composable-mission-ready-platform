@@ -19,7 +19,8 @@
     "dist"
   ],
   "scripts": {
-    "build:check": "tsc --project tsconfig.build.json --noEmit",
+    "type-check": "tsc --project tsconfig.build.json --noEmit",
+    "build": "node --experimental-strip-types ../../../../scripts/build-package.ts",
     "build:bundle": "vite build",
     "build:types": "tsc --project tsconfig.build.json --emitDeclarationOnly",
     "test": "vitest run",

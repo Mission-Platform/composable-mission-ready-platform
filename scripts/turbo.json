@@ -1,0 +1,75 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "validate:locales": {
+      "inputs": [
+        "$TURBO_ROOT$/scripts/validate-doc-locales.ts",
+        "$TURBO_ROOT$/scripts/doc-locales-lib.ts",
+        "$TURBO_ROOT$/scripts/documentation-sources.ts",
+        "$TURBO_ROOT$/scripts/doc-locales-backlog.json",
+        "$TURBO_ROOT$/docs/**",
+        "$TURBO_ROOT$/packages/**/docs/**",
+        "$TURBO_ROOT$/extensions/**/docs/**"
+      ]
+    },
+    "validate:exports": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_ROOT$/scripts/validate-package-exports.mjs",
+        "$TURBO_ROOT$/packages/**/package.json",
+        "$TURBO_ROOT$/packages/**/dist/**"
+      ]
+    },
+    "validate:component-properties": {
+      "inputs": ["$TURBO_ROOT$/scripts/validate-component-property-declarations.ts", "$TURBO_ROOT$/packages/**/*.scss"]
+    },
+    "validate:inventory": {
+      "inputs": ["$TURBO_ROOT$/scripts/runtime-validation/**", "$TURBO_ROOT$/apps/**", "$TURBO_ROOT$/packages/**"],
+      "outputs": ["$TURBO_ROOT$/.artifacts/runtime-validation/**"]
+    },
+    "validate:framework": {
+      "inputs": [
+        "$TURBO_ROOT$/scripts/runtime-validation/**",
+        "$TURBO_ROOT$/apps/storybook/**",
+        "$TURBO_ROOT$/packages/**"
+      ],
+      "outputs": ["$TURBO_ROOT$/.artifacts/runtime-validation/**"]
+    },
+    "validate:app": {
+      "inputs": ["$TURBO_ROOT$/scripts/runtime-validation/**", "$TURBO_ROOT$/apps/**", "$TURBO_ROOT$/packages/**"],
+      "outputs": ["$TURBO_ROOT$/.artifacts/runtime-validation/**"]
+    },
+    "validate:target": {
+      "inputs": [
+        "$TURBO_ROOT$/scripts/runtime-validation/**",
+        "$TURBO_ROOT$/apps/storybook/**",
+        "$TURBO_ROOT$/packages/**"
+      ],
+      "outputs": ["$TURBO_ROOT$/.artifacts/runtime-validation/**"]
+    },
+    "validate:runtime": {
+      "inputs": ["$TURBO_ROOT$/scripts/runtime-validation/**", "$TURBO_ROOT$/apps/**", "$TURBO_ROOT$/packages/**"],
+      "outputs": ["$TURBO_ROOT$/.artifacts/runtime-validation/**"],
+      "cache": false
+    },
+    "visual:parity": {
+      "inputs": [
+        "$TURBO_ROOT$/scripts/visual-parity/**",
+        "$TURBO_ROOT$/scripts/runtime-validation/**",
+        "$TURBO_ROOT$/apps/storybook/**",
+        "$TURBO_ROOT$/packages/**"
+      ],
+      "outputs": ["$TURBO_ROOT$/.artifacts/visual-parity/**"],
+      "cache": false
+    },
+    "test:runtime-validation": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_ROOT$/scripts/runtime-validation/**",
+        "$TURBO_ROOT$/scripts/**/*.spec.ts",
+        "$TURBO_ROOT$/packages/ui/components/**"
+      ]
+    }
+  }
+}
