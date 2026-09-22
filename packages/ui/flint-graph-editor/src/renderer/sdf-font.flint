@@ -418,15 +418,19 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
   }
   if idx == 4 {
     write_seg(seg_ptr, 0, 96, 56, 96, 184);
-    write_seg(seg_ptr, 1, 81, 117, 70, 94);
-    write_seg(seg_ptr, 2, 70, 94, 84, 73);
-    write_seg(seg_ptr, 3, 84, 73, 109, 74);
-    write_seg(seg_ptr, 4, 109, 74, 122, 96);
-    write_seg(seg_ptr, 5, 124, 144, 111, 168);
-    write_seg(seg_ptr, 6, 111, 168, 83, 169);
-    write_seg(seg_ptr, 7, 83, 169, 68, 146);
-    write_seg(seg_ptr, 8, 68, 146, 80, 121);
-    return 9;
+    write_seg(seg_ptr, 1, 118, 90, 110, 74);
+    write_seg(seg_ptr, 2, 110, 74, 96, 68);
+    write_seg(seg_ptr, 3, 96, 68, 82, 74);
+    write_seg(seg_ptr, 4, 82, 74, 74, 90);
+    write_seg(seg_ptr, 5, 74, 90, 78, 108);
+    write_seg(seg_ptr, 6, 78, 108, 96, 120);
+    write_seg(seg_ptr, 7, 96, 120, 114, 132);
+    write_seg(seg_ptr, 8, 114, 132, 118, 150);
+    write_seg(seg_ptr, 9, 118, 150, 110, 166);
+    write_seg(seg_ptr, 10, 110, 166, 96, 172);
+    write_seg(seg_ptr, 11, 96, 172, 82, 166);
+    write_seg(seg_ptr, 12, 82, 166, 74, 150);
+    return 13;
   }
   if idx == 5 {
     write_seg(seg_ptr, 0, 136, 56, 56, 184);
@@ -523,13 +527,14 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
     return 2;
   }
   if idx == 18 {
-    write_seg(seg_ptr, 0, 68, 100, 76, 120);
-    write_seg(seg_ptr, 1, 76, 120, 96, 128);
-    write_seg(seg_ptr, 2, 96, 128, 116, 120);
-    write_seg(seg_ptr, 3, 116, 120, 124, 100);
-    write_seg(seg_ptr, 4, 124, 100, 68, 184);
-    write_seg(seg_ptr, 5, 68, 184, 124, 184);
-    return 6;
+    write_seg(seg_ptr, 0, 68, 88, 76, 68);
+    write_seg(seg_ptr, 1, 76, 68, 96, 56);
+    write_seg(seg_ptr, 2, 96, 56, 116, 68);
+    write_seg(seg_ptr, 3, 116, 68, 124, 88);
+    write_seg(seg_ptr, 4, 124, 88, 116, 112);
+    write_seg(seg_ptr, 5, 116, 112, 68, 180);
+    write_seg(seg_ptr, 6, 68, 180, 124, 180);
+    return 7;
   }
   if idx == 19 {
     write_seg(seg_ptr, 0, 73, 84, 94, 72);
@@ -561,18 +566,20 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
     return 8;
   }
   if idx == 22 {
-    write_seg(seg_ptr, 0, 128, 148, 119, 171);
-    write_seg(seg_ptr, 1, 119, 171, 96, 180);
-    write_seg(seg_ptr, 2, 96, 180, 73, 171);
-    write_seg(seg_ptr, 3, 73, 171, 64, 148);
-    write_seg(seg_ptr, 4, 64, 148, 73, 125);
-    write_seg(seg_ptr, 5, 73, 125, 96, 116);
-    write_seg(seg_ptr, 6, 96, 116, 119, 125);
-    write_seg(seg_ptr, 7, 119, 125, 128, 148);
-    write_seg(seg_ptr, 8, 84, 155, 68, 136);
-    write_seg(seg_ptr, 9, 68, 136, 64, 111);
-    write_seg(seg_ptr, 10, 64, 111, 73, 88);
-    return 11;
+    write_seg(seg_ptr, 0, 120, 68, 104, 60);
+    write_seg(seg_ptr, 1, 104, 60, 84, 68);
+    write_seg(seg_ptr, 2, 84, 68, 68, 92);
+    write_seg(seg_ptr, 3, 68, 92, 64, 128);
+    write_seg(seg_ptr, 4, 64, 128, 64, 152);
+    write_seg(seg_ptr, 5, 64, 152, 72, 174);
+    write_seg(seg_ptr, 6, 72, 174, 96, 184);
+    write_seg(seg_ptr, 7, 96, 184, 120, 174);
+    write_seg(seg_ptr, 8, 120, 174, 128, 152);
+    write_seg(seg_ptr, 9, 128, 152, 120, 130);
+    write_seg(seg_ptr, 10, 120, 130, 96, 120);
+    write_seg(seg_ptr, 11, 96, 120, 72, 130);
+    write_seg(seg_ptr, 12, 72, 130, 64, 152);
+    return 13;
   }
   if idx == 23 {
     write_seg(seg_ptr, 0, 68, 72, 124, 72);
@@ -580,37 +587,39 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
     return 2;
   }
   if idx == 24 {
-    write_seg(seg_ptr, 0, 124, 100, 116, 120);
-    write_seg(seg_ptr, 1, 116, 120, 96, 128);
-    write_seg(seg_ptr, 2, 96, 128, 76, 120);
-    write_seg(seg_ptr, 3, 76, 120, 68, 100);
-    write_seg(seg_ptr, 4, 68, 100, 76, 80);
-    write_seg(seg_ptr, 5, 76, 80, 96, 72);
-    write_seg(seg_ptr, 6, 96, 72, 116, 80);
-    write_seg(seg_ptr, 7, 116, 80, 124, 100);
-    write_seg(seg_ptr, 8, 130, 148, 120, 172);
-    write_seg(seg_ptr, 9, 120, 172, 96, 182);
-    write_seg(seg_ptr, 10, 96, 182, 72, 172);
-    write_seg(seg_ptr, 11, 72, 172, 62, 148);
-    write_seg(seg_ptr, 12, 62, 148, 72, 124);
-    write_seg(seg_ptr, 13, 72, 124, 96, 114);
-    write_seg(seg_ptr, 14, 96, 114, 120, 124);
-    write_seg(seg_ptr, 15, 120, 124, 130, 148);
+    write_seg(seg_ptr, 0, 96, 60, 118, 68);
+    write_seg(seg_ptr, 1, 118, 68, 124, 88);
+    write_seg(seg_ptr, 2, 124, 88, 118, 108);
+    write_seg(seg_ptr, 3, 118, 108, 96, 116);
+    write_seg(seg_ptr, 4, 96, 116, 74, 108);
+    write_seg(seg_ptr, 5, 74, 108, 68, 88);
+    write_seg(seg_ptr, 6, 68, 88, 74, 68);
+    write_seg(seg_ptr, 7, 74, 68, 96, 60);
+    write_seg(seg_ptr, 8, 96, 116, 122, 124);
+    write_seg(seg_ptr, 9, 122, 124, 128, 148);
+    write_seg(seg_ptr, 10, 128, 148, 122, 172);
+    write_seg(seg_ptr, 11, 122, 172, 96, 184);
+    write_seg(seg_ptr, 12, 96, 184, 70, 172);
+    write_seg(seg_ptr, 13, 70, 172, 64, 148);
+    write_seg(seg_ptr, 14, 64, 148, 70, 124);
+    write_seg(seg_ptr, 15, 70, 124, 96, 116);
     return 16;
   }
   if idx == 25 {
-    write_seg(seg_ptr, 0, 128, 108, 119, 131);
-    write_seg(seg_ptr, 1, 119, 131, 96, 140);
-    write_seg(seg_ptr, 2, 96, 140, 73, 131);
-    write_seg(seg_ptr, 3, 73, 131, 64, 108);
-    write_seg(seg_ptr, 4, 64, 108, 73, 85);
-    write_seg(seg_ptr, 5, 73, 85, 96, 76);
-    write_seg(seg_ptr, 6, 96, 76, 119, 85);
-    write_seg(seg_ptr, 7, 119, 85, 128, 108);
-    write_seg(seg_ptr, 8, 108, 101, 124, 120);
-    write_seg(seg_ptr, 9, 124, 120, 128, 145);
-    write_seg(seg_ptr, 10, 128, 145, 119, 168);
-    return 11;
+    write_seg(seg_ptr, 0, 128, 88, 120, 66);
+    write_seg(seg_ptr, 1, 120, 66, 96, 56);
+    write_seg(seg_ptr, 2, 96, 56, 72, 66);
+    write_seg(seg_ptr, 3, 72, 66, 64, 88);
+    write_seg(seg_ptr, 4, 64, 88, 72, 110);
+    write_seg(seg_ptr, 5, 72, 110, 96, 120);
+    write_seg(seg_ptr, 6, 96, 120, 120, 110);
+    write_seg(seg_ptr, 7, 120, 110, 128, 88);
+    write_seg(seg_ptr, 8, 128, 88, 128, 124);
+    write_seg(seg_ptr, 9, 128, 124, 124, 148);
+    write_seg(seg_ptr, 10, 124, 148, 108, 172);
+    write_seg(seg_ptr, 11, 108, 172, 88, 180);
+    write_seg(seg_ptr, 12, 88, 180, 72, 172);
+    return 13;
   }
   if idx == 26 {
     write_seg(seg_ptr, 0, 76, 112, 76, 120);
@@ -639,32 +648,40 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
     return 2;
   }
   if idx == 31 {
-    write_seg(seg_ptr, 0, 64, 88, 72, 108);
-    write_seg(seg_ptr, 1, 72, 108, 92, 116);
-    write_seg(seg_ptr, 2, 92, 116, 112, 108);
-    write_seg(seg_ptr, 3, 112, 108, 120, 88);
-    write_seg(seg_ptr, 4, 120, 88, 92, 136);
-    write_seg(seg_ptr, 5, 92, 172, 92, 180);
-    return 6;
+    write_seg(seg_ptr, 0, 68, 88, 76, 68);
+    write_seg(seg_ptr, 1, 76, 68, 96, 56);
+    write_seg(seg_ptr, 2, 96, 56, 116, 68);
+    write_seg(seg_ptr, 3, 116, 68, 124, 88);
+    write_seg(seg_ptr, 4, 124, 88, 116, 108);
+    write_seg(seg_ptr, 5, 116, 108, 96, 124);
+    write_seg(seg_ptr, 6, 96, 124, 96, 148);
+    write_seg(seg_ptr, 7, 96, 172, 96, 180);
+    return 8;
   }
   if idx == 32 {
-    write_seg(seg_ptr, 0, 144, 128, 135, 151);
-    write_seg(seg_ptr, 1, 135, 151, 112, 160);
-    write_seg(seg_ptr, 2, 112, 160, 89, 151);
-    write_seg(seg_ptr, 3, 89, 151, 80, 128);
-    write_seg(seg_ptr, 4, 80, 128, 89, 105);
-    write_seg(seg_ptr, 5, 89, 105, 112, 96);
-    write_seg(seg_ptr, 6, 112, 96, 135, 105);
-    write_seg(seg_ptr, 7, 135, 105, 144, 128);
-    write_seg(seg_ptr, 8, 63, 93, 101, 69);
-    write_seg(seg_ptr, 9, 101, 69, 145, 78);
-    write_seg(seg_ptr, 10, 145, 78, 170, 115);
-    write_seg(seg_ptr, 11, 170, 115, 164, 159);
-    write_seg(seg_ptr, 12, 164, 159, 128, 186);
-    write_seg(seg_ptr, 13, 128, 186, 84, 181);
-    write_seg(seg_ptr, 14, 84, 181, 55, 147);
-    write_seg(seg_ptr, 15, 144, 128, 144, 160);
-    return 16;
+    write_seg(seg_ptr, 0, 120, 128, 114, 112);
+    write_seg(seg_ptr, 1, 114, 112, 96, 108);
+    write_seg(seg_ptr, 2, 96, 108, 78, 112);
+    write_seg(seg_ptr, 3, 78, 112, 72, 128);
+    write_seg(seg_ptr, 4, 72, 128, 78, 144);
+    write_seg(seg_ptr, 5, 78, 144, 96, 148);
+    write_seg(seg_ptr, 6, 96, 148, 114, 144);
+    write_seg(seg_ptr, 7, 114, 144, 120, 128);
+    write_seg(seg_ptr, 8, 120, 128, 120, 148);
+    write_seg(seg_ptr, 9, 120, 148, 114, 164);
+    write_seg(seg_ptr, 10, 114, 164, 96, 172);
+    write_seg(seg_ptr, 11, 96, 172, 68, 164);
+    write_seg(seg_ptr, 12, 68, 164, 52, 136);
+    write_seg(seg_ptr, 13, 52, 136, 52, 104);
+    write_seg(seg_ptr, 14, 52, 104, 68, 76);
+    write_seg(seg_ptr, 15, 68, 76, 96, 64);
+    write_seg(seg_ptr, 16, 96, 64, 132, 64);
+    write_seg(seg_ptr, 17, 132, 64, 156, 88);
+    write_seg(seg_ptr, 18, 156, 88, 160, 124);
+    write_seg(seg_ptr, 19, 160, 124, 152, 156);
+    write_seg(seg_ptr, 20, 152, 156, 132, 176);
+    write_seg(seg_ptr, 21, 132, 176, 104, 184);
+    return 22;
   }
   if idx == 33 {
     write_seg(seg_ptr, 0, 64, 184, 104, 64);
@@ -675,16 +692,19 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
   }
   if idx == 34 {
     write_seg(seg_ptr, 0, 68, 56, 68, 184);
-    write_seg(seg_ptr, 1, 68, 58, 89, 67);
-    write_seg(seg_ptr, 2, 89, 67, 98, 88);
-    write_seg(seg_ptr, 3, 98, 88, 89, 109);
-    write_seg(seg_ptr, 4, 89, 109, 68, 118);
-    write_seg(seg_ptr, 5, 68, 118, 88, 125);
-    write_seg(seg_ptr, 6, 88, 125, 100, 142);
-    write_seg(seg_ptr, 7, 100, 142, 100, 162);
-    write_seg(seg_ptr, 8, 100, 162, 88, 179);
-    write_seg(seg_ptr, 9, 88, 179, 68, 186);
-    return 10;
+    write_seg(seg_ptr, 1, 68, 56, 104, 56);
+    write_seg(seg_ptr, 2, 104, 56, 124, 68);
+    write_seg(seg_ptr, 3, 124, 68, 128, 86);
+    write_seg(seg_ptr, 4, 128, 86, 124, 104);
+    write_seg(seg_ptr, 5, 124, 104, 104, 116);
+    write_seg(seg_ptr, 6, 104, 116, 68, 116);
+    write_seg(seg_ptr, 7, 68, 116, 108, 116);
+    write_seg(seg_ptr, 8, 108, 116, 128, 128);
+    write_seg(seg_ptr, 9, 128, 128, 132, 148);
+    write_seg(seg_ptr, 10, 132, 148, 128, 168);
+    write_seg(seg_ptr, 11, 128, 168, 108, 184);
+    write_seg(seg_ptr, 12, 108, 184, 68, 184);
+    return 13;
   }
   if idx == 35 {
     write_seg(seg_ptr, 0, 154, 162, 119, 180);
@@ -818,17 +838,19 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
     return 8;
   }
   if idx == 51 {
-    write_seg(seg_ptr, 0, 86, 113, 74, 92);
-    write_seg(seg_ptr, 1, 74, 92, 81, 69);
-    write_seg(seg_ptr, 2, 81, 69, 102, 58);
-    write_seg(seg_ptr, 3, 102, 58, 125, 66);
-    write_seg(seg_ptr, 4, 125, 66, 134, 88);
-    write_seg(seg_ptr, 5, 138, 148, 127, 172);
-    write_seg(seg_ptr, 6, 127, 172, 102, 182);
-    write_seg(seg_ptr, 7, 102, 182, 78, 169);
-    write_seg(seg_ptr, 8, 78, 169, 71, 144);
-    write_seg(seg_ptr, 9, 71, 144, 84, 121);
-    return 10;
+    write_seg(seg_ptr, 0, 124, 84, 114, 66);
+    write_seg(seg_ptr, 1, 114, 66, 96, 56);
+    write_seg(seg_ptr, 2, 96, 56, 78, 66);
+    write_seg(seg_ptr, 3, 78, 66, 68, 86);
+    write_seg(seg_ptr, 4, 68, 86, 72, 106);
+    write_seg(seg_ptr, 5, 72, 106, 96, 120);
+    write_seg(seg_ptr, 6, 96, 120, 120, 134);
+    write_seg(seg_ptr, 7, 120, 134, 124, 154);
+    write_seg(seg_ptr, 8, 124, 154, 114, 174);
+    write_seg(seg_ptr, 9, 114, 174, 96, 184);
+    write_seg(seg_ptr, 10, 96, 184, 78, 174);
+    write_seg(seg_ptr, 11, 78, 174, 68, 154);
+    return 12;
   }
   if idx == 52 {
     write_seg(seg_ptr, 0, 108, 56, 108, 184);
@@ -905,23 +927,27 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
   }
   if idx == 65 {
     write_seg(seg_ptr, 0, 124, 108, 124, 180);
-    write_seg(seg_ptr, 1, 124, 108, 100, 108);
-    write_seg(seg_ptr, 2, 100, 108, 76, 120);
-    write_seg(seg_ptr, 3, 76, 120, 68, 144);
-    write_seg(seg_ptr, 4, 68, 144, 76, 168);
-    write_seg(seg_ptr, 5, 76, 168, 100, 180);
-    write_seg(seg_ptr, 6, 100, 180, 124, 180);
-    return 7;
+    write_seg(seg_ptr, 1, 124, 144, 118, 118);
+    write_seg(seg_ptr, 2, 118, 118, 96, 108);
+    write_seg(seg_ptr, 3, 96, 108, 74, 118);
+    write_seg(seg_ptr, 4, 74, 118, 68, 144);
+    write_seg(seg_ptr, 5, 68, 144, 74, 170);
+    write_seg(seg_ptr, 6, 74, 170, 96, 180);
+    write_seg(seg_ptr, 7, 96, 180, 118, 170);
+    write_seg(seg_ptr, 8, 118, 170, 124, 144);
+    return 9;
   }
   if idx == 66 {
     write_seg(seg_ptr, 0, 68, 56, 68, 180);
-    write_seg(seg_ptr, 1, 68, 108, 100, 108);
-    write_seg(seg_ptr, 2, 100, 108, 124, 120);
-    write_seg(seg_ptr, 3, 124, 120, 132, 144);
-    write_seg(seg_ptr, 4, 132, 144, 124, 168);
-    write_seg(seg_ptr, 5, 124, 168, 100, 180);
-    write_seg(seg_ptr, 6, 100, 180, 68, 180);
-    return 7;
+    write_seg(seg_ptr, 1, 68, 144, 74, 118);
+    write_seg(seg_ptr, 2, 74, 118, 96, 108);
+    write_seg(seg_ptr, 3, 96, 108, 118, 118);
+    write_seg(seg_ptr, 4, 118, 118, 124, 144);
+    write_seg(seg_ptr, 5, 124, 144, 118, 170);
+    write_seg(seg_ptr, 6, 118, 170, 96, 180);
+    write_seg(seg_ptr, 7, 96, 180, 74, 170);
+    write_seg(seg_ptr, 8, 74, 170, 68, 144);
+    return 9;
   }
   if idx == 67 {
     write_seg(seg_ptr, 0, 121, 165, 96, 176);
@@ -933,14 +959,16 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
     return 6;
   }
   if idx == 68 {
-    write_seg(seg_ptr, 0, 132, 56, 132, 180);
-    write_seg(seg_ptr, 1, 132, 108, 100, 108);
-    write_seg(seg_ptr, 2, 100, 108, 76, 120);
-    write_seg(seg_ptr, 3, 76, 120, 68, 144);
-    write_seg(seg_ptr, 4, 68, 144, 76, 168);
-    write_seg(seg_ptr, 5, 76, 168, 100, 180);
-    write_seg(seg_ptr, 6, 100, 180, 132, 180);
-    return 7;
+    write_seg(seg_ptr, 0, 124, 56, 124, 180);
+    write_seg(seg_ptr, 1, 124, 144, 118, 118);
+    write_seg(seg_ptr, 2, 118, 118, 96, 108);
+    write_seg(seg_ptr, 3, 96, 108, 74, 118);
+    write_seg(seg_ptr, 4, 74, 118, 68, 144);
+    write_seg(seg_ptr, 5, 68, 144, 74, 170);
+    write_seg(seg_ptr, 6, 74, 170, 96, 180);
+    write_seg(seg_ptr, 7, 96, 180, 118, 170);
+    write_seg(seg_ptr, 8, 118, 170, 124, 144);
+    return 9;
   }
   if idx == 69 {
     write_seg(seg_ptr, 0, 64, 140, 128, 140);
@@ -962,17 +990,20 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
     return 5;
   }
   if idx == 71 {
-    write_seg(seg_ptr, 0, 132, 108, 132, 204);
-    write_seg(seg_ptr, 1, 132, 204, 124, 220);
-    write_seg(seg_ptr, 2, 124, 220, 100, 228);
-    write_seg(seg_ptr, 3, 100, 228, 76, 220);
-    write_seg(seg_ptr, 4, 132, 108, 100, 108);
-    write_seg(seg_ptr, 5, 100, 108, 76, 120);
-    write_seg(seg_ptr, 6, 76, 120, 68, 144);
-    write_seg(seg_ptr, 7, 68, 144, 76, 168);
-    write_seg(seg_ptr, 8, 76, 168, 100, 180);
-    write_seg(seg_ptr, 9, 100, 180, 132, 180);
-    return 10;
+    write_seg(seg_ptr, 0, 124, 144, 118, 118);
+    write_seg(seg_ptr, 1, 118, 118, 96, 108);
+    write_seg(seg_ptr, 2, 96, 108, 74, 118);
+    write_seg(seg_ptr, 3, 74, 118, 68, 144);
+    write_seg(seg_ptr, 4, 68, 144, 74, 170);
+    write_seg(seg_ptr, 5, 74, 170, 96, 180);
+    write_seg(seg_ptr, 6, 96, 180, 118, 170);
+    write_seg(seg_ptr, 7, 118, 170, 124, 144);
+    write_seg(seg_ptr, 8, 124, 108, 124, 204);
+    write_seg(seg_ptr, 9, 124, 204, 116, 220);
+    write_seg(seg_ptr, 10, 116, 220, 96, 228);
+    write_seg(seg_ptr, 11, 96, 228, 76, 220);
+    write_seg(seg_ptr, 12, 76, 220, 68, 204);
+    return 13;
   }
   if idx == 72 {
     write_seg(seg_ptr, 0, 68, 56, 68, 180);
@@ -1042,23 +1073,27 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
   }
   if idx == 80 {
     write_seg(seg_ptr, 0, 68, 108, 68, 224);
-    write_seg(seg_ptr, 1, 68, 108, 100, 108);
-    write_seg(seg_ptr, 2, 100, 108, 124, 120);
-    write_seg(seg_ptr, 3, 124, 120, 132, 140);
-    write_seg(seg_ptr, 4, 132, 140, 124, 160);
-    write_seg(seg_ptr, 5, 124, 160, 100, 172);
-    write_seg(seg_ptr, 6, 100, 172, 68, 172);
-    return 7;
+    write_seg(seg_ptr, 1, 68, 144, 74, 118);
+    write_seg(seg_ptr, 2, 74, 118, 96, 108);
+    write_seg(seg_ptr, 3, 96, 108, 118, 118);
+    write_seg(seg_ptr, 4, 118, 118, 124, 144);
+    write_seg(seg_ptr, 5, 124, 144, 118, 170);
+    write_seg(seg_ptr, 6, 118, 170, 96, 180);
+    write_seg(seg_ptr, 7, 96, 180, 74, 170);
+    write_seg(seg_ptr, 8, 74, 170, 68, 144);
+    return 9;
   }
   if idx == 81 {
-    write_seg(seg_ptr, 0, 132, 108, 132, 224);
-    write_seg(seg_ptr, 1, 132, 108, 100, 108);
-    write_seg(seg_ptr, 2, 100, 108, 76, 120);
-    write_seg(seg_ptr, 3, 76, 120, 68, 140);
-    write_seg(seg_ptr, 4, 68, 140, 76, 160);
-    write_seg(seg_ptr, 5, 76, 160, 100, 172);
-    write_seg(seg_ptr, 6, 100, 172, 132, 172);
-    return 7;
+    write_seg(seg_ptr, 0, 124, 108, 124, 224);
+    write_seg(seg_ptr, 1, 124, 144, 118, 118);
+    write_seg(seg_ptr, 2, 118, 118, 96, 108);
+    write_seg(seg_ptr, 3, 96, 108, 74, 118);
+    write_seg(seg_ptr, 4, 74, 118, 68, 144);
+    write_seg(seg_ptr, 5, 68, 144, 74, 170);
+    write_seg(seg_ptr, 6, 74, 170, 96, 180);
+    write_seg(seg_ptr, 7, 96, 180, 118, 170);
+    write_seg(seg_ptr, 8, 118, 170, 124, 144);
+    return 9;
   }
   if idx == 82 {
     write_seg(seg_ptr, 0, 68, 108, 68, 180);
@@ -1068,15 +1103,19 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
     return 4;
   }
   if idx == 83 {
-    write_seg(seg_ptr, 0, 80, 140, 72, 122);
-    write_seg(seg_ptr, 1, 72, 122, 83, 106);
-    write_seg(seg_ptr, 2, 83, 106, 102, 107);
-    write_seg(seg_ptr, 3, 102, 107, 112, 124);
-    write_seg(seg_ptr, 4, 112, 160, 102, 177);
-    write_seg(seg_ptr, 5, 102, 177, 83, 178);
-    write_seg(seg_ptr, 6, 83, 178, 72, 162);
-    write_seg(seg_ptr, 7, 72, 162, 80, 144);
-    return 8;
+    write_seg(seg_ptr, 0, 118, 126, 110, 114);
+    write_seg(seg_ptr, 1, 110, 114, 96, 108);
+    write_seg(seg_ptr, 2, 96, 108, 82, 114);
+    write_seg(seg_ptr, 3, 82, 114, 74, 126);
+    write_seg(seg_ptr, 4, 74, 126, 78, 138);
+    write_seg(seg_ptr, 5, 78, 138, 96, 144);
+    write_seg(seg_ptr, 6, 96, 144, 114, 150);
+    write_seg(seg_ptr, 7, 114, 150, 118, 162);
+    write_seg(seg_ptr, 8, 118, 162, 110, 174);
+    write_seg(seg_ptr, 9, 110, 174, 96, 180);
+    write_seg(seg_ptr, 10, 96, 180, 82, 174);
+    write_seg(seg_ptr, 11, 82, 174, 74, 162);
+    return 12;
   }
   if idx == 84 {
     write_seg(seg_ptr, 0, 76, 72, 76, 164);
@@ -1199,19 +1238,17 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
     return 12;
   }
   if idx == 101 {
-    write_seg(seg_ptr, 0, 68, 124, 60, 104);
-    write_seg(seg_ptr, 1, 60, 104, 76, 88);
-    write_seg(seg_ptr, 2, 76, 88, 96, 96);
-    write_seg(seg_ptr, 3, 136, 96, 138, 116);
-    write_seg(seg_ptr, 4, 138, 116, 122, 128);
-    write_seg(seg_ptr, 5, 122, 128, 104, 120);
-    write_seg(seg_ptr, 6, 68, 164, 60, 144);
-    write_seg(seg_ptr, 7, 60, 144, 76, 128);
-    write_seg(seg_ptr, 8, 76, 128, 96, 136);
-    write_seg(seg_ptr, 9, 136, 136, 138, 156);
-    write_seg(seg_ptr, 10, 138, 156, 122, 168);
-    write_seg(seg_ptr, 11, 122, 168, 104, 160);
-    return 12;
+    write_seg(seg_ptr, 0, 60, 112, 74, 100);
+    write_seg(seg_ptr, 1, 74, 100, 92, 100);
+    write_seg(seg_ptr, 2, 92, 100, 108, 116);
+    write_seg(seg_ptr, 3, 108, 116, 124, 124);
+    write_seg(seg_ptr, 4, 124, 124, 138, 118);
+    write_seg(seg_ptr, 5, 60, 148, 74, 136);
+    write_seg(seg_ptr, 6, 74, 136, 92, 136);
+    write_seg(seg_ptr, 7, 92, 136, 108, 152);
+    write_seg(seg_ptr, 8, 108, 152, 124, 160);
+    write_seg(seg_ptr, 9, 124, 160, 138, 154);
+    return 10;
   }
   if idx == 102 {
     write_seg(seg_ptr, 0, 64, 104, 144, 104);
@@ -1245,14 +1282,16 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
     return 3;
   }
   if idx == 107 {
-    write_seg(seg_ptr, 0, 72, 72, 82, 89);
-    write_seg(seg_ptr, 1, 82, 89, 102, 89);
-    write_seg(seg_ptr, 2, 102, 89, 112, 72);
-    write_seg(seg_ptr, 3, 80, 80, 80, 160);
-    write_seg(seg_ptr, 4, 88, 168, 78, 185);
-    write_seg(seg_ptr, 5, 78, 185, 58, 185);
-    write_seg(seg_ptr, 6, 58, 185, 48, 168);
-    return 7;
+    write_seg(seg_ptr, 0, 116, 68, 108, 56);
+    write_seg(seg_ptr, 1, 108, 56, 96, 56);
+    write_seg(seg_ptr, 2, 96, 56, 84, 68);
+    write_seg(seg_ptr, 3, 84, 68, 80, 84);
+    write_seg(seg_ptr, 4, 80, 84, 80, 156);
+    write_seg(seg_ptr, 5, 80, 156, 76, 172);
+    write_seg(seg_ptr, 6, 76, 172, 64, 184);
+    write_seg(seg_ptr, 7, 64, 184, 52, 184);
+    write_seg(seg_ptr, 8, 52, 184, 44, 172);
+    return 9;
   }
   if idx == 108 {
     write_seg(seg_ptr, 0, 56, 128, 136, 128);
@@ -1577,15 +1616,15 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
     return 9;
   }
   if idx == 144 {
-    write_seg(seg_ptr, 0, 118, 140, 108, 164);
-    write_seg(seg_ptr, 1, 108, 164, 84, 174);
-    write_seg(seg_ptr, 2, 84, 174, 60, 164);
-    write_seg(seg_ptr, 3, 60, 164, 50, 140);
-    write_seg(seg_ptr, 4, 50, 140, 60, 116);
-    write_seg(seg_ptr, 5, 60, 116, 84, 106);
-    write_seg(seg_ptr, 6, 84, 106, 108, 116);
-    write_seg(seg_ptr, 7, 108, 116, 118, 140);
-    write_seg(seg_ptr, 8, 118, 106, 118, 180);
+    write_seg(seg_ptr, 0, 124, 108, 124, 180);
+    write_seg(seg_ptr, 1, 124, 144, 118, 118);
+    write_seg(seg_ptr, 2, 118, 118, 96, 108);
+    write_seg(seg_ptr, 3, 96, 108, 74, 118);
+    write_seg(seg_ptr, 4, 74, 118, 68, 144);
+    write_seg(seg_ptr, 5, 68, 144, 74, 170);
+    write_seg(seg_ptr, 6, 74, 170, 96, 180);
+    write_seg(seg_ptr, 7, 96, 180, 118, 170);
+    write_seg(seg_ptr, 8, 118, 170, 124, 144);
     write_seg(seg_ptr, 9, 76, 68, 76, 76);
     write_seg(seg_ptr, 10, 108, 68, 108, 76);
     return 11;
@@ -1615,52 +1654,52 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
     return 8;
   }
   if idx == 147 {
-    write_seg(seg_ptr, 0, 60, 140, 132, 140);
-    write_seg(seg_ptr, 1, 132, 140, 121, 166);
-    write_seg(seg_ptr, 2, 121, 166, 94, 176);
-    write_seg(seg_ptr, 3, 94, 176, 69, 164);
-    write_seg(seg_ptr, 4, 69, 164, 60, 137);
-    write_seg(seg_ptr, 5, 60, 137, 74, 112);
-    write_seg(seg_ptr, 6, 74, 112, 101, 104);
-    write_seg(seg_ptr, 7, 101, 104, 125, 119);
+    write_seg(seg_ptr, 0, 64, 140, 128, 140);
+    write_seg(seg_ptr, 1, 128, 140, 124, 120);
+    write_seg(seg_ptr, 2, 124, 120, 96, 108);
+    write_seg(seg_ptr, 3, 96, 108, 68, 120);
+    write_seg(seg_ptr, 4, 68, 120, 64, 140);
+    write_seg(seg_ptr, 5, 64, 140, 68, 164);
+    write_seg(seg_ptr, 6, 68, 164, 96, 176);
+    write_seg(seg_ptr, 7, 96, 176, 124, 168);
     write_seg(seg_ptr, 8, 80, 84, 104, 64);
     return 9;
   }
   if idx == 148 {
-    write_seg(seg_ptr, 0, 60, 140, 132, 140);
-    write_seg(seg_ptr, 1, 132, 140, 121, 166);
-    write_seg(seg_ptr, 2, 121, 166, 94, 176);
-    write_seg(seg_ptr, 3, 94, 176, 69, 164);
-    write_seg(seg_ptr, 4, 69, 164, 60, 137);
-    write_seg(seg_ptr, 5, 60, 137, 74, 112);
-    write_seg(seg_ptr, 6, 74, 112, 101, 104);
-    write_seg(seg_ptr, 7, 101, 104, 125, 119);
+    write_seg(seg_ptr, 0, 64, 140, 128, 140);
+    write_seg(seg_ptr, 1, 128, 140, 124, 120);
+    write_seg(seg_ptr, 2, 124, 120, 96, 108);
+    write_seg(seg_ptr, 3, 96, 108, 68, 120);
+    write_seg(seg_ptr, 4, 68, 120, 64, 140);
+    write_seg(seg_ptr, 5, 64, 140, 68, 164);
+    write_seg(seg_ptr, 6, 68, 164, 96, 176);
+    write_seg(seg_ptr, 7, 96, 176, 124, 168);
     write_seg(seg_ptr, 8, 96, 64, 72, 84);
     return 9;
   }
   if idx == 149 {
-    write_seg(seg_ptr, 0, 60, 140, 132, 140);
-    write_seg(seg_ptr, 1, 132, 140, 121, 166);
-    write_seg(seg_ptr, 2, 121, 166, 94, 176);
-    write_seg(seg_ptr, 3, 94, 176, 69, 164);
-    write_seg(seg_ptr, 4, 69, 164, 60, 137);
-    write_seg(seg_ptr, 5, 60, 137, 74, 112);
-    write_seg(seg_ptr, 6, 74, 112, 101, 104);
-    write_seg(seg_ptr, 7, 101, 104, 125, 119);
+    write_seg(seg_ptr, 0, 64, 140, 128, 140);
+    write_seg(seg_ptr, 1, 128, 140, 124, 120);
+    write_seg(seg_ptr, 2, 124, 120, 96, 108);
+    write_seg(seg_ptr, 3, 96, 108, 68, 120);
+    write_seg(seg_ptr, 4, 68, 120, 64, 140);
+    write_seg(seg_ptr, 5, 64, 140, 68, 164);
+    write_seg(seg_ptr, 6, 68, 164, 96, 176);
+    write_seg(seg_ptr, 7, 96, 176, 124, 168);
     write_seg(seg_ptr, 8, 76, 84, 96, 64);
     write_seg(seg_ptr, 9, 96, 64, 116, 84);
     return 10;
   }
   if idx == 150 {
-    write_seg(seg_ptr, 0, 118, 140, 108, 164);
-    write_seg(seg_ptr, 1, 108, 164, 84, 174);
-    write_seg(seg_ptr, 2, 84, 174, 60, 164);
-    write_seg(seg_ptr, 3, 60, 164, 50, 140);
-    write_seg(seg_ptr, 4, 50, 140, 60, 116);
-    write_seg(seg_ptr, 5, 60, 116, 84, 106);
-    write_seg(seg_ptr, 6, 84, 106, 108, 116);
-    write_seg(seg_ptr, 7, 108, 116, 118, 140);
-    write_seg(seg_ptr, 8, 118, 106, 118, 180);
+    write_seg(seg_ptr, 0, 124, 108, 124, 180);
+    write_seg(seg_ptr, 1, 124, 144, 118, 118);
+    write_seg(seg_ptr, 2, 118, 118, 96, 108);
+    write_seg(seg_ptr, 3, 96, 108, 74, 118);
+    write_seg(seg_ptr, 4, 74, 118, 68, 144);
+    write_seg(seg_ptr, 5, 68, 144, 74, 170);
+    write_seg(seg_ptr, 6, 74, 170, 96, 180);
+    write_seg(seg_ptr, 7, 96, 180, 118, 170);
+    write_seg(seg_ptr, 8, 118, 170, 124, 144);
     write_seg(seg_ptr, 9, 80, 84, 104, 64);
     return 10;
   }

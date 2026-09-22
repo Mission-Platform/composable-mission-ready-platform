@@ -63,6 +63,176 @@ const CATEGORIES: readonly FlintNodeCategory[] = [
   'custom',
 ];
 
+const GLYPH_CHARS_BY_IDX: readonly string[] = [
+  ' ',
+  '!',
+  '"',
+  '#',
+  '$',
+  '%',
+  '&',
+  "'",
+  '(',
+  ')',
+  '*',
+  '+',
+  ',',
+  '-',
+  '.',
+  '/',
+  '0',
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  ':',
+  ';',
+  '<',
+  '=',
+  '>',
+  '?',
+  '@',
+  'A',
+  'B',
+  'C',
+  'D',
+  'E',
+  'F',
+  'G',
+  'H',
+  'I',
+  'J',
+  'K',
+  'L',
+  'M',
+  'N',
+  'O',
+  'P',
+  'Q',
+  'R',
+  'S',
+  'T',
+  'U',
+  'V',
+  'W',
+  'X',
+  'Y',
+  'Z',
+  '[',
+  '\\',
+  ']',
+  '^',
+  '_',
+  '`',
+  'a',
+  'b',
+  'c',
+  'd',
+  'e',
+  'f',
+  'g',
+  'h',
+  'i',
+  'j',
+  'k',
+  'l',
+  'm',
+  'n',
+  'o',
+  'p',
+  'q',
+  'r',
+  's',
+  't',
+  'u',
+  'v',
+  'w',
+  'x',
+  'y',
+  'z',
+  '{',
+  '|',
+  '}',
+  '~',
+  '▯',
+  '±',
+  '×',
+  '÷',
+  '√',
+  '∞',
+  '≈',
+  '≠',
+  '≤',
+  '≥',
+  '∑',
+  '∏',
+  '∫',
+  '−',
+  '∂',
+  '∇',
+  '∈',
+  '←',
+  '↑',
+  '→',
+  '↓',
+  '↔',
+  '⇒',
+  '°',
+  '•',
+  '…',
+  '—',
+  '–',
+  '✓',
+  '✗',
+  '★',
+  '⚡',
+  '©',
+  '®',
+  'µ',
+  '²',
+  '³',
+  'α',
+  'β',
+  'γ',
+  'δ',
+  'λ',
+  'μ',
+  'π',
+  'σ',
+  'ω',
+  'Δ',
+  'Ω',
+  'θ',
+  'ä',
+  'ö',
+  'ü',
+  'é',
+  'è',
+  'ê',
+  'á',
+  'í',
+  'ó',
+  'ú',
+  'ñ',
+  'ç',
+  'ß',
+];
+
+interface HoveredGlyphInfo {
+  readonly index: number;
+  readonly char: string;
+  readonly codeHex: string;
+  readonly codeDec: number;
+  readonly advance: number;
+  readonly column: number;
+  readonly row: number;
+}
+
 interface ContextMenuState {
   readonly open: boolean;
   readonly x: number;
@@ -437,9 +607,42 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
     query: '',
   });
 
-  const spriteSheetCanvasReference = useRef<HTMLCanvasElement | undefined>(undefined);
+  const [spriteSheetMode, setSpriteSheetMode] = useState<'crisp' | 'raw'>('crisp');
+  const [spriteSheetGrid, setSpriteSheetGrid] = useState<boolean>(true);
+  // eslint-disable-next-line unicorn/no-useless-undefined -- the neutral `useState` requires an explicit initial value
+  const [hoveredGlyph, setHoveredGlyph] = useState<HoveredGlyphInfo | undefined>(undefined);
 
-  const paintSpriteSheet = (): void => {
+  const spriteSheetCanvasReference = useRef<HTMLCanvasElement | undefined>(undefined);
+  const inspectCanvasReference = useRef<HTMLCanvasElement | undefined>(undefined);
+
+  const paintInspectCell = (glyphIndex: number): void => {
+    const inspectCanvas = inspectCanvasReference.current;
+    const mainCanvas = spriteSheetCanvasReference.current;
+    if (!inspectCanvas || !mainCanvas) return;
+    const inspectContext = inspectCanvas.getContext('2d');
+    if (!inspectContext) return;
+    const column = glyphIndex % 16;
+    const row = Math.floor(glyphIndex / 16);
+    inspectContext.imageSmoothingEnabled = false;
+    inspectContext.clearRect(0, 0, inspectCanvas.width, inspectCanvas.height);
+    inspectContext.drawImage(
+      mainCanvas,
+      column * 32,
+      row * 32,
+      32,
+      32,
+      0,
+      0,
+      inspectCanvas.width,
+      inspectCanvas.height,
+    );
+  };
+
+  const paintSpriteSheet = (
+    mode: 'crisp' | 'raw' = spriteSheetMode,
+    grid: boolean = spriteSheetGrid,
+    highlightIndex: number | undefined = hoveredGlyph?.index,
+  ): void => {
     const canvas = spriteSheetCanvasReference.current;
     if (!canvas) return;
     const canvasContext = canvas.getContext('2d');
@@ -450,12 +653,121 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
       const atlasPtr = wasm.font_init_atlas_data();
       if (atlasPtr > 0 && atlasSize > 0) {
         const rawBytes = new Uint8ClampedArray(wasm.memory.buffer, atlasPtr, atlasSize * atlasSize * 4);
-        const imgData = new ImageData(new Uint8ClampedArray(rawBytes), atlasSize, atlasSize);
-        canvasContext.putImageData(imgData, 0, 0);
+        const outData = canvasContext.createImageData(atlasSize, atlasSize);
+        const outBytes = outData.data;
+
+        if (mode === 'crisp') {
+          for (let pixelIndex = 0; pixelIndex < atlasSize * atlasSize; pixelIndex++) {
+            const distanceValue = rawBytes[pixelIndex * 4];
+            const outputIndex = pixelIndex * 4;
+            if (distanceValue <= 112) {
+              outBytes[outputIndex] = 13;
+              outBytes[outputIndex + 1] = 17;
+              outBytes[outputIndex + 2] = 23;
+              outBytes[outputIndex + 3] = 255;
+            } else if (distanceValue >= 144) {
+              outBytes[outputIndex] = 255;
+              outBytes[outputIndex + 1] = 255;
+              outBytes[outputIndex + 2] = 255;
+              outBytes[outputIndex + 3] = 255;
+            } else {
+              const t = (distanceValue - 112) / 32;
+              outBytes[outputIndex] = Math.round(13 + (255 - 13) * t);
+              outBytes[outputIndex + 1] = Math.round(17 + (255 - 17) * t);
+              outBytes[outputIndex + 2] = Math.round(23 + (255 - 23) * t);
+              outBytes[outputIndex + 3] = 255;
+            }
+          }
+        } else {
+          for (let pixelIndex = 0; pixelIndex < atlasSize * atlasSize; pixelIndex++) {
+            const distanceValue = rawBytes[pixelIndex * 4];
+            const outputIndex = pixelIndex * 4;
+            outBytes[outputIndex] = distanceValue;
+            outBytes[outputIndex + 1] = distanceValue;
+            outBytes[outputIndex + 2] = distanceValue;
+            outBytes[outputIndex + 3] = 255;
+          }
+        }
+
+        canvasContext.putImageData(outData, 0, 0);
+
+        if (grid) {
+          const cellSize = atlasSize / 16;
+          canvasContext.save();
+          canvasContext.lineWidth = 1;
+          canvasContext.strokeStyle = 'rgba(88, 166, 255, 0.2)';
+          for (let gridIndex = 0; gridIndex <= 16; gridIndex++) {
+            const p = gridIndex * cellSize;
+            canvasContext.beginPath();
+            canvasContext.moveTo(p, 0);
+            canvasContext.lineTo(p, atlasSize);
+            canvasContext.stroke();
+            canvasContext.beginPath();
+            canvasContext.moveTo(0, p);
+            canvasContext.lineTo(atlasSize, p);
+            canvasContext.stroke();
+          }
+
+          if (highlightIndex !== undefined && highlightIndex >= 0 && highlightIndex < 256) {
+            const highlightColumn = highlightIndex % 16;
+            const highlightRow = Math.floor(highlightIndex / 16);
+            canvasContext.strokeStyle = '#58a6ff';
+            canvasContext.lineWidth = 2;
+            canvasContext.strokeRect(
+              highlightColumn * cellSize + 0.5,
+              highlightRow * cellSize + 0.5,
+              cellSize - 1,
+              cellSize - 1,
+            );
+          }
+          canvasContext.restore();
+        }
       }
     } catch {
       // Ignore if wasm not ready yet
     }
+  };
+
+  const onSpriteSheetPointerMove = (event: PointerEvent): void => {
+    const canvas = spriteSheetCanvasReference.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const scale = 512 / rect.width;
+    const atlasX = x * scale;
+    const atlasY = y * scale;
+    const column = Math.floor(atlasX / 32);
+    const row = Math.floor(atlasY / 32);
+    if (column < 0 || column >= 16 || row < 0 || row >= 16) return;
+    const glyphIndex = row * 16 + column;
+    if (glyphIndex < GLYPH_CHARS_BY_IDX.length) {
+      const char = GLYPH_CHARS_BY_IDX[glyphIndex] ?? '';
+      const code = char.codePointAt(0) ?? 0;
+      let advance = 14;
+      try {
+        const wasm = getFlintRenderWorkerWasm();
+        advance = wasm.font_get_char_advance(glyphIndex);
+      } catch {
+        // fallback
+      }
+      setHoveredGlyph({
+        index: glyphIndex,
+        char,
+        codeHex: `U+${code.toString(16).toUpperCase().padStart(4, '0')}`,
+        codeDec: code,
+        advance,
+        column,
+        row,
+      });
+      paintSpriteSheet(spriteSheetMode, spriteSheetGrid, glyphIndex);
+      paintInspectCell(glyphIndex);
+    }
+  };
+
+  const onSpriteSheetPointerLeave = (): void => {
+    setHoveredGlyph(undefined);
+    paintSpriteSheet(spriteSheetMode, spriteSheetGrid);
   };
 
   useEffect(() => {
@@ -2106,6 +2418,43 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                   onToggle={() => paintSpriteSheet()}
                 >
                   <div className={styles.spriteSheetContainer}>
+                    <div className={styles.spriteSheetToolbar}>
+                      <ForgeButtonGroup size="xs">
+                        <ForgeButton
+                          variant={spriteSheetMode === 'crisp' ? 'primary' : 'ghost'}
+                          size="xs"
+                          onClick={() => {
+                            setSpriteSheetMode('crisp');
+                            paintSpriteSheet('crisp', spriteSheetGrid, hoveredGlyph?.index);
+                          }}
+                        >
+                          Crisp Glyphs
+                        </ForgeButton>
+                        <ForgeButton
+                          variant={spriteSheetMode === 'raw' ? 'primary' : 'ghost'}
+                          size="xs"
+                          onClick={() => {
+                            setSpriteSheetMode('raw');
+                            paintSpriteSheet('raw', spriteSheetGrid, hoveredGlyph?.index);
+                          }}
+                        >
+                          Raw SDF
+                        </ForgeButton>
+                      </ForgeButtonGroup>
+
+                      <ForgeButton
+                        variant={spriteSheetGrid ? 'secondary' : 'ghost'}
+                        size="xs"
+                        onClick={() => {
+                          const nextGrid = !spriteSheetGrid;
+                          setSpriteSheetGrid(nextGrid);
+                          paintSpriteSheet(spriteSheetMode, nextGrid, hoveredGlyph?.index);
+                        }}
+                      >
+                        {spriteSheetGrid ? 'Grid: ON' : 'Grid: OFF'}
+                      </ForgeButton>
+                    </div>
+
                     <div className={styles.spriteSheetMeta}>
                       <ForgeBadge
                         variant="primary"
@@ -2123,7 +2472,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                         variant="info"
                         size="xs"
                       >
-                        UTF-8 / ASCII
+                        Comfortaa & Datatype
                       </ForgeBadge>
                       <ForgeBadge
                         variant="success"
@@ -2132,12 +2481,48 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                         157 Active Glyphs
                       </ForgeBadge>
                     </div>
+
                     <canvas
                       ref={spriteSheetCanvasReference}
                       width={512}
                       height={512}
                       className={styles.spriteSheetCanvas}
+                      onPointerMove={onSpriteSheetPointerMove}
+                      onPointerLeave={onSpriteSheetPointerLeave}
                     />
+
+                    {hoveredGlyph && (
+                      <div className={styles.spriteSheetInspector}>
+                        <canvas
+                          ref={inspectCanvasReference}
+                          width={64}
+                          height={64}
+                          className={styles.spriteSheetInspectCanvas}
+                        />
+                        <div className={styles.spriteSheetInspectDetails}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span className={styles.spriteSheetInspectChar}>
+                              {hoveredGlyph.char === ' ' ? 'Space' : hoveredGlyph.char}
+                            </span>
+                            <ForgeBadge
+                              variant="info"
+                              size="xs"
+                            >
+                              {hoveredGlyph.codeHex}
+                            </ForgeBadge>
+                            <ForgeBadge
+                              variant="neutral"
+                              size="xs"
+                            >
+                              Idx {hoveredGlyph.index}
+                            </ForgeBadge>
+                          </div>
+                          <div>
+                            Advance: {hoveredGlyph.advance}px | Cell: ({hoveredGlyph.column}, {hoveredGlyph.row})
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </ForgeCollapse>
               </div>

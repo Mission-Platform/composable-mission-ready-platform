@@ -592,6 +592,15 @@
   margin-top: var(--mp-space-2, 8px);
 }
 
+.spriteSheetToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mp-space-2, 8px);
+  width: 100%;
+}
+
 .spriteSheetMeta {
   display: flex;
   flex-wrap: wrap;
@@ -607,6 +616,52 @@
   aspect-ratio: 1 / 1;
   border: 1px solid var(--mp-editor-border);
   border-radius: var(--mp-radius-sm, 4px);
-  background-color: #000000;
-  image-rendering: pixelated;
+  background-color: #0d1117;
+  cursor: crosshair;
+  transition: border-color 0.15s ease;
+
+  &:hover {
+    border-color: var(--mp-editor-brand);
+  }
+}
+
+.spriteSheetInspector {
+  display: flex;
+  align-items: center;
+  gap: var(--mp-space-3, 12px);
+  width: 100%;
+  max-width: 440px;
+  padding: var(--mp-space-2, 8px) var(--mp-space-3, 12px);
+  background-color: var(--mp-editor-surface);
+  border: 1px solid var(--mp-editor-border);
+  border-radius: var(--mp-radius-md, 6px);
+  box-sizing: border-box;
+}
+
+.spriteSheetInspectCanvas {
+  width: 56px;
+  height: 56px;
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--mp-editor-border);
+  border-radius: var(--mp-radius-sm, 4px);
+  background-color: #0d1117;
+  flex-shrink: 0;
+}
+
+.spriteSheetInspectDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-family: var(--mp-font-family-mono, 'Datatype', monospace);
+  font-size: 11px;
+  color: var(--mp-editor-text-secondary);
+  overflow: hidden;
+}
+
+.spriteSheetInspectChar {
+  font-family: var(--mp-font-family-sans, 'Comfortaa', sans-serif);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--mp-editor-text-primary);
+  line-height: 1;
 }
