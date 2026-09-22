@@ -9,6 +9,7 @@ import {
   type FlintGraphNode,
   type FlintGraphPort,
   type FlintGraphValidationResult,
+  type FlintMetaNodeDefinition,
   type FlintNodeGraph,
 } from '@mission-platform/flint';
 
@@ -23,6 +24,19 @@ export interface ConnectingEdgeState {
   readonly cursorY: number;
 }
 
+export interface NavigationBreadcrumb {
+  readonly id: string;
+  readonly title: string;
+}
+
+export interface ClipboardItem {
+  readonly type: 'node' | 'group' | 'meta_node' | 'selection';
+  readonly nodes: readonly FlintGraphNode[];
+  readonly edges: readonly FlintGraphEdge[];
+  readonly group?: FlintGraphGroup;
+  readonly metaDefinition?: FlintMetaNodeDefinition;
+}
+
 export interface FlintEditorStoreState {
   readonly graph: FlintNodeGraph;
   readonly selectedNodeIds: readonly string[];
@@ -35,6 +49,10 @@ export interface FlintEditorStoreState {
   readonly lastOutputs: Readonly<Record<string, unknown>>;
   readonly nodeErrors: Readonly<Record<string, string>>;
   readonly lastError?: string;
+  readonly breadcrumbs: readonly NavigationBreadcrumb[];
+  readonly currentMetaNodeId?: string;
+  readonly registeredMetaNodes: readonly FlintMetaNodeDefinition[];
+  readonly hasClipboard: boolean;
 }
 
 export type StoreListener = (state: FlintEditorStoreState) => void;
@@ -61,6 +79,14 @@ export class FlintEditorStore {
   private historyIndex = -1;
   private readonly maxHistory = 50;
 
+  private navigationStack: {
+    readonly parentGraph: FlintNodeGraph;
+    readonly metaNodeId: string;
+    readonly metaNodeTitle: string;
+  }[] = [];
+  private registeredMetaNodes = new Map<string, FlintMetaNodeDefinition>();
+  private clipboard?: ClipboardItem;
+
   private validation: FlintGraphValidationResult;
   private isExecuting = false;
   private lastOutputs: Record<string, unknown> = {};
@@ -83,6 +109,7 @@ export class FlintEditorStore {
   }
 
   getState(): FlintEditorStoreState {
+    const currentFrame = this.navigationStack.at(-1);
     return {
       graph: this.graph,
       selectedNodeIds: [...this.selectedNodeIds],
@@ -95,6 +122,10 @@ export class FlintEditorStore {
       lastOutputs: this.lastOutputs,
       nodeErrors: this.nodeErrors,
       lastError: this.lastError,
+      breadcrumbs: this.getBreadcrumbs(),
+      currentMetaNodeId: currentFrame?.metaNodeId,
+      registeredMetaNodes: this.getRegisteredMetaNodes(),
+      hasClipboard: this.clipboard !== undefined && this.clipboard.nodes.length > 0,
     };
   }
 
@@ -335,6 +366,12 @@ export class FlintEditorStore {
     this.validation = validateGraph(this.graph);
     this.pushHistoryState(this.graph);
     this.notify();
+  }
+
+  removeActiveEdge(): void {
+    if (this.activeEdgeId) {
+      this.removeEdge(this.activeEdgeId);
+    }
   }
 
   selectNode(nodeId: string, multiSelect = false): void {
@@ -642,19 +679,34 @@ export class FlintEditorStore {
       remainingEdges.push(edge);
     }
 
+    const templateId = generateSecureId('template_meta');
+    const metaNodeWithTemplate: FlintGraphNode = {
+      ...metaNode,
+      metaTemplateId: templateId,
+    };
+
+    this.registerMetaNode({
+      id: templateId,
+      name: title,
+      title,
+      subgraph: metaNode.metaSubgraph!,
+      inputs: metaNode.inputs,
+      outputs: metaNode.outputs,
+    });
+
     const remainingNodes = this.graph.nodes.filter((node) => !selectedIds.has(node.id));
     this.graph = {
       ...this.graph,
-      nodes: [...remainingNodes, metaNode],
+      nodes: [...remainingNodes, metaNodeWithTemplate],
       edges: remainingEdges,
     };
 
     this.selectedNodeIds.clear();
-    this.selectedNodeIds.add(metaNode.id);
+    this.selectedNodeIds.add(metaNodeWithTemplate.id);
     this.validation = validateGraph(this.graph);
     this.pushHistoryState(this.graph);
     this.notify();
-    return metaNode;
+    return metaNodeWithTemplate;
   }
 
   expandMetaNode(metaNodeId: string): void {
@@ -794,6 +846,432 @@ export class FlintEditorStore {
 
   exportArtifacts(): CompilerWorkerResponse {
     return exportGraphArtifacts(this.graph);
+  }
+
+  ungroup(groupId: string): void {
+    const groups = (this.graph.groups ?? []).filter((g) => g.id !== groupId);
+    const updatedNodes = this.graph.nodes.map((node) => {
+      if (node.groupId === groupId) {
+        const { groupId: _, ...rest } = node;
+        return rest as FlintGraphNode;
+      }
+      return node;
+    });
+
+    this.graph = {
+      ...this.graph,
+      groups,
+      nodes: updatedNodes,
+    };
+    this.pushHistoryState(this.graph);
+    this.notify();
+  }
+
+  setGroupColor(groupId: string, color: string, backgroundColor?: string): void {
+    const groups = (this.graph.groups ?? []).map((g) => {
+      if (g.id === groupId) {
+        return {
+          ...g,
+          color,
+          backgroundColor: backgroundColor ?? `${color}25`,
+        };
+      }
+      return g;
+    });
+
+    this.graph = {
+      ...this.graph,
+      groups,
+    };
+    this.pushHistoryState(this.graph);
+    this.notify();
+  }
+
+  drillIntoMetaNode(metaNodeId: string): boolean {
+    const metaNode = this.graph.nodes.find((n) => n.id === metaNodeId);
+    if (!metaNode || !metaNode.metaSubgraph) return false;
+
+    this.navigationStack.push({
+      parentGraph: this.graph,
+      metaNodeId,
+      metaNodeTitle: metaNode.title,
+    });
+
+    this.graph = {
+      id: `meta_${metaNodeId}`,
+      name: metaNode.title,
+      nodes: [...metaNode.metaSubgraph.nodes],
+      edges: [...metaNode.metaSubgraph.edges],
+      groups: [],
+    };
+
+    this.selectedNodeIds.clear();
+    this.activeEdgeId = undefined;
+    this.validation = validateGraph(this.graph);
+    this.notify();
+    return true;
+  }
+
+  navigateBack(): boolean {
+    if (this.navigationStack.length === 0) return false;
+
+    const frame = this.navigationStack.pop();
+    if (!frame) return false;
+
+    const parentGraph = frame.parentGraph;
+    const metaNode = parentGraph.nodes.find((n) => n.id === frame.metaNodeId);
+    if (metaNode && metaNode.metaSubgraph) {
+      const updatedMetaNode: FlintGraphNode = {
+        ...metaNode,
+        metaSubgraph: {
+          ...metaNode.metaSubgraph,
+          nodes: this.graph.nodes,
+          edges: this.graph.edges,
+        },
+      };
+
+      this.graph = {
+        ...parentGraph,
+        nodes: parentGraph.nodes.map((n) => (n.id === frame.metaNodeId ? updatedMetaNode : n)),
+      };
+    } else {
+      this.graph = parentGraph;
+    }
+
+    this.selectedNodeIds.clear();
+    this.selectedNodeIds.add(frame.metaNodeId);
+    this.activeEdgeId = undefined;
+    this.validation = validateGraph(this.graph);
+    this.pushHistoryState(this.graph);
+    this.notify();
+    return true;
+  }
+
+  canNavigateBack(): boolean {
+    return this.navigationStack.length > 0;
+  }
+
+  getBreadcrumbs(): readonly NavigationBreadcrumb[] {
+    const crumbs: NavigationBreadcrumb[] = [{ id: 'root', title: 'Main' }];
+    for (const frame of this.navigationStack) {
+      crumbs.push({ id: frame.metaNodeId, title: frame.metaNodeTitle });
+    }
+    return crumbs;
+  }
+
+  registerMetaNode(def: FlintMetaNodeDefinition): void {
+    this.registeredMetaNodes.set(def.id, def);
+    this.notify();
+  }
+
+  getRegisteredMetaNodes(): readonly FlintMetaNodeDefinition[] {
+    return [...this.registeredMetaNodes.values()];
+  }
+
+  removeRegisteredMetaNode(templateId: string): boolean {
+    const countInGraph = (g: FlintNodeGraph): number => {
+      let count = 0;
+      for (const n of g.nodes) {
+        if (n.metaTemplateId === templateId || n.operation === templateId) {
+          count++;
+        }
+        if (n.metaSubgraph) {
+          count += countInGraph({ id: '', name: '', nodes: n.metaSubgraph.nodes, edges: n.metaSubgraph.edges });
+        }
+      }
+      return count;
+    };
+
+    let totalRefs = countInGraph(this.graph);
+    for (const frame of this.navigationStack) {
+      totalRefs += countInGraph(frame.parentGraph);
+    }
+
+    const def = this.registeredMetaNodes.get(templateId);
+    let isRecursive = false;
+    if (def) {
+      isRecursive = countInGraph({ id: '', name: '', nodes: def.subgraph.nodes, edges: def.subgraph.edges }) > 0;
+    }
+
+    if (totalRefs === 0 || isRecursive) {
+      this.registeredMetaNodes.delete(templateId);
+      this.notify();
+      return true;
+    }
+    return false;
+  }
+
+  instantiateMetaNode(
+    templateId: string,
+    position: { readonly x: number; readonly y: number } = DEFAULT_NODE_POSITION,
+  ): FlintGraphNode | undefined {
+    const def = this.registeredMetaNodes.get(templateId);
+    if (!def) return undefined;
+
+    const metaNodeId = generateSecureId('meta');
+    const newNode: FlintGraphNode = {
+      id: metaNodeId,
+      title: def.title,
+      category: 'custom',
+      kind: 'operation',
+      operation: 'meta',
+      inputs: def.inputs,
+      outputs: def.outputs,
+      position,
+      metaTemplateId: def.id,
+      metaSubgraph: structuredClone(def.subgraph),
+    };
+
+    this.graph = {
+      ...this.graph,
+      nodes: [...this.graph.nodes, newNode],
+    };
+    this.validation = validateGraph(this.graph);
+    this.pushHistoryState(this.graph);
+    this.selectNode(newNode.id);
+    this.notify();
+    return newNode;
+  }
+
+  copyNode(nodeId: string): boolean {
+    const node = this.graph.nodes.find((n) => n.id === nodeId);
+    if (!node) return false;
+    this.clipboard = {
+      type: node.metaSubgraph ? 'meta_node' : 'node',
+      nodes: [structuredClone(node)],
+      edges: [],
+    };
+    this.notify();
+    return true;
+  }
+
+  copyGroup(groupId: string): boolean {
+    const group = this.graph.groups?.find((g) => g.id === groupId);
+    if (!group) return false;
+    const memberNodes = this.graph.nodes.filter((n) => group.nodeIds.includes(n.id));
+    const memberIds = new Set(memberNodes.map((n) => n.id));
+    const memberEdges = this.graph.edges.filter((e) => memberIds.has(e.fromNodeId) && memberIds.has(e.toNodeId));
+    this.clipboard = {
+      type: 'group',
+      nodes: structuredClone(memberNodes),
+      edges: structuredClone(memberEdges),
+      group: structuredClone(group),
+    };
+    this.notify();
+    return true;
+  }
+
+  copyMetaNode(metaNodeId: string): boolean {
+    return this.copyNode(metaNodeId);
+  }
+
+  duplicateMetaNode(metaNodeId: string): FlintGraphNode | undefined {
+    const metaNode = this.graph.nodes.find((n) => n.id === metaNodeId);
+    if (!metaNode || !metaNode.metaSubgraph) return undefined;
+
+    const baseTitle = metaNode.title.replace(/\.\d+$/, '');
+    const regex = new RegExp(String.raw`^${baseTitle}\.(\d+)$`);
+    let maxCount = 0;
+    for (const n of this.graph.nodes) {
+      const match = n.title.match(regex);
+      if (match && match[1]) {
+        maxCount = Math.max(maxCount, Number.parseInt(match[1], 10));
+      }
+    }
+    const newTitle = `${baseTitle}.${String(maxCount + 1).padStart(3, '0')}`;
+    const newTemplateId = generateSecureId('template_meta');
+
+    const duplicatedNode: FlintGraphNode = {
+      ...structuredClone(metaNode),
+      id: generateSecureId('meta'),
+      title: newTitle,
+      metaTemplateId: newTemplateId,
+      position: {
+        x: metaNode.position.x + 40,
+        y: metaNode.position.y + 40,
+      },
+    };
+
+    this.registerMetaNode({
+      id: newTemplateId,
+      name: newTitle,
+      title: newTitle,
+      subgraph: structuredClone(metaNode.metaSubgraph),
+      inputs: metaNode.inputs,
+      outputs: metaNode.outputs,
+    });
+
+    this.graph = {
+      ...this.graph,
+      nodes: [...this.graph.nodes, duplicatedNode],
+    };
+    this.validation = validateGraph(this.graph);
+    this.pushHistoryState(this.graph);
+    this.selectNode(duplicatedNode.id);
+    this.notify();
+    return duplicatedNode;
+  }
+
+  copySelection(): boolean {
+    if (this.selectedNodeIds.size === 0) return false;
+    const selectedNodes = this.graph.nodes.filter((n) => this.selectedNodeIds.has(n.id));
+    const selectedEdges = this.graph.edges.filter(
+      (e) => this.selectedNodeIds.has(e.fromNodeId) && this.selectedNodeIds.has(e.toNodeId),
+    );
+    this.clipboard = {
+      type: 'selection',
+      nodes: structuredClone(selectedNodes),
+      edges: structuredClone(selectedEdges),
+    };
+    this.notify();
+    return true;
+  }
+
+  paste(targetPosition?: { readonly x: number; readonly y: number }): readonly string[] {
+    if (!this.clipboard || this.clipboard.nodes.length === 0) return [];
+
+    const idMap = new Map<string, string>();
+    for (const n of this.clipboard.nodes) {
+      idMap.set(n.id, generateSecureId(n.operation));
+    }
+
+    let minX = Infinity;
+    let minY = Infinity;
+    for (const n of this.clipboard.nodes) {
+      if (n.position.x < minX) minX = n.position.x;
+      if (n.position.y < minY) minY = n.position.y;
+    }
+
+    const offsetX = targetPosition ? targetPosition.x - minX : 30;
+    const offsetY = targetPosition ? targetPosition.y - minY : 30;
+
+    const newNodes: FlintGraphNode[] = this.clipboard.nodes.map((n) => {
+      const newId = idMap.get(n.id) ?? generateSecureId(n.operation);
+      let title = n.title;
+      let metaTemplateId = n.metaTemplateId;
+
+      if (n.metaSubgraph || n.operation === 'meta') {
+        const baseTitle = n.title.replace(/\.\d+$/, '');
+        const regex = new RegExp(String.raw`^${baseTitle}\.(\d+)$`);
+        let maxCount = 0;
+        for (const existing of this.graph.nodes) {
+          const match = existing.title.match(regex);
+          if (match && match[1]) {
+            maxCount = Math.max(maxCount, Number.parseInt(match[1], 10));
+          }
+        }
+        title = `${baseTitle}.${String(maxCount + 1).padStart(3, '0')}`;
+        metaTemplateId = generateSecureId('template_meta');
+        this.registerMetaNode({
+          id: metaTemplateId,
+          name: title,
+          title,
+          subgraph: structuredClone(n.metaSubgraph!),
+          inputs: n.inputs,
+          outputs: n.outputs,
+        });
+      }
+
+      return {
+        ...structuredClone(n),
+        id: newId,
+        title,
+        metaTemplateId,
+        position: {
+          x: Math.round(n.position.x + offsetX),
+          y: Math.round(n.position.y + offsetY),
+        },
+      };
+    });
+
+    const newEdges: FlintGraphEdge[] = this.clipboard.edges
+      .map((e) => {
+        const from = idMap.get(e.fromNodeId);
+        const to = idMap.get(e.toNodeId);
+        if (from && to) {
+          return {
+            ...e,
+            id: generateSecureId('edge'),
+            fromNodeId: from,
+            toNodeId: to,
+          };
+        }
+        return;
+      })
+      .filter((e): e is FlintGraphEdge => e !== undefined);
+
+    let updatedGroups = this.graph.groups ?? [];
+    if (this.clipboard.group) {
+      const newGroupId = generateSecureId('group');
+      const newGroup: FlintGraphGroup = {
+        ...structuredClone(this.clipboard.group),
+        id: newGroupId,
+        nodeIds: newNodes.map((n) => n.id),
+      };
+      updatedGroups = [...updatedGroups, newGroup];
+      for (const n of newNodes) {
+        (n as { groupId?: string }).groupId = newGroupId;
+      }
+    }
+
+    this.graph = {
+      ...this.graph,
+      nodes: [...this.graph.nodes, ...newNodes],
+      edges: [...this.graph.edges, ...newEdges],
+      groups: updatedGroups,
+    };
+
+    this.selectedNodeIds.clear();
+    for (const n of newNodes) {
+      this.selectedNodeIds.add(n.id);
+    }
+    this.activeEdgeId = undefined;
+    this.validation = validateGraph(this.graph);
+    this.pushHistoryState(this.graph);
+    this.notify();
+    return newNodes.map((n) => n.id);
+  }
+
+  toggleSplitOutputs(nodeId: string): void {
+    const updatedNodes = this.graph.nodes.map((n) => {
+      if (n.id === nodeId) {
+        const current = n.splitOutputs ?? n.outputs.length > 1;
+        return { ...n, splitOutputs: !current };
+      }
+      return n;
+    });
+    this.graph = { ...this.graph, nodes: updatedNodes };
+    this.validation = validateGraph(this.graph);
+    this.pushHistoryState(this.graph);
+    this.notify();
+  }
+
+  updateCodeNode(
+    nodeId: string,
+    code: string,
+    inputs: readonly FlintGraphPort[],
+    outputs: readonly FlintGraphPort[],
+    functionName?: string,
+  ): void {
+    const updatedNodes = this.graph.nodes.map((n) => {
+      if (n.id === nodeId) {
+        return {
+          ...n,
+          inputs,
+          outputs,
+          properties: {
+            ...n.properties,
+            code,
+            functionName: functionName ?? (n.properties?.functionName as string | undefined) ?? 'custom_fn',
+          },
+        };
+      }
+      return n;
+    });
+    this.graph = { ...this.graph, nodes: updatedNodes };
+    this.validation = validateGraph(this.graph);
+    this.pushHistoryState(this.graph);
+    this.notify();
   }
 
   getTraceController(): TraceDebuggerController {

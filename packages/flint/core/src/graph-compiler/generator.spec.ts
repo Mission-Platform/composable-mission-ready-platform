@@ -175,4 +175,77 @@ describe('Flint Graph Compiler - AST & Source Generation', () => {
       expect(evalResult).toBe(14);
     }
   });
+
+  it('emits record structs and splits outputs for multi-output operations', () => {
+    const divRemDefinition = getNodeDefinition('div_rem')!;
+    const nodeA = createNodeFromDefinition(inputDefinition, 'in_a', { x: 0, y: 0 }, { name: 'a' });
+    const nodeB = createNodeFromDefinition(inputDefinition, 'in_b', { x: 0, y: 50 }, { name: 'b' });
+    const nodeDivRem = createNodeFromDefinition(
+      divRemDefinition,
+      'div_rem_1',
+      { x: 100, y: 25 },
+      { splitOutputs: true },
+    );
+    const nodeOut = createNodeFromDefinition(outputDefinition, 'out_1', { x: 200, y: 25 });
+
+    const edges: readonly FlintGraphEdge[] = [
+      { id: 'e1', fromNodeId: 'in_a', fromPortId: 'value', toNodeId: 'div_rem_1', toPortId: 'a' },
+      { id: 'e2', fromNodeId: 'in_b', fromPortId: 'value', toNodeId: 'div_rem_1', toPortId: 'b' },
+      { id: 'e3', fromNodeId: 'div_rem_1', fromPortId: 'quotient', toNodeId: 'out_1', toPortId: 'value' },
+    ];
+
+    const graph: FlintNodeGraph = {
+      id: 'div_rem_test',
+      name: 'DivRemTest',
+      nodes: [nodeA, nodeB, nodeDivRem, nodeOut],
+      edges,
+    };
+
+    const result = emitGraphSource(graph);
+    expect(result.source).toContain('record Record_div_rem_1');
+    expect(result.source).toContain('quotient: i32;');
+    expect(result.source).toContain('remainder: i32;');
+    expect(result.source).toContain('let v_div_rem_1_record: Record_div_rem_1 = Record_div_rem_1');
+    expect(result.source).toContain('let v_div_rem_1_quotient: i32 = v_div_rem_1_record.quotient;');
+    expect(result.source).toContain('return v_div_rem_1_quotient;');
+
+    const parsed = parseFlint(result.source, 'div_rem.flint');
+    expect(parsed.diagnostics.filter((d) => d.severity === 'error')).toHaveLength(0);
+  });
+
+  it('supports custom Flint code node declarations', () => {
+    const codeDefinition = getNodeDefinition('flint_code')!;
+    const nodeA = createNodeFromDefinition(inputDefinition, 'in_a', { x: 0, y: 0 }, { name: 'a' });
+    const nodeB = createNodeFromDefinition(inputDefinition, 'in_b', { x: 0, y: 50 }, { name: 'b' });
+    const nodeCode = createNodeFromDefinition(
+      codeDefinition,
+      'code_1',
+      { x: 100, y: 25 },
+      {
+        code: 'fn my_calc(a: i32, b: i32) -> i32 {\n  return a * 3 + b;\n}',
+        functionName: 'my_calc',
+      },
+    );
+    const nodeOut = createNodeFromDefinition(outputDefinition, 'out_1', { x: 200, y: 25 });
+
+    const edges: readonly FlintGraphEdge[] = [
+      { id: 'e1', fromNodeId: 'in_a', fromPortId: 'value', toNodeId: 'code_1', toPortId: 'a' },
+      { id: 'e2', fromNodeId: 'in_b', fromPortId: 'value', toNodeId: 'code_1', toPortId: 'b' },
+      { id: 'e3', fromNodeId: 'code_1', fromPortId: 'result', toNodeId: 'out_1', toPortId: 'value' },
+    ];
+
+    const graph: FlintNodeGraph = {
+      id: 'custom_code_test',
+      name: 'CustomCodeTest',
+      nodes: [nodeA, nodeB, nodeCode, nodeOut],
+      edges,
+    };
+
+    const result = emitGraphSource(graph);
+    expect(result.source).toContain('fn my_calc(a: i32, b: i32) -> i32 {');
+    expect(result.source).toContain('my_calc(a, b)');
+
+    const parsed = parseFlint(result.source, 'custom_code.flint');
+    expect(parsed.diagnostics.filter((d) => d.severity === 'error')).toHaveLength(0);
+  });
 });

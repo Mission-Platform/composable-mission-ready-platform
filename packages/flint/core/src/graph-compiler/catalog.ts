@@ -571,6 +571,58 @@ const DEFINITIONS: readonly FlintNodeDefinition[] = [
     defaultOutputs: [{ id: 'ack', name: 'ack', direction: 'output', type: unitType }],
     requiredCapabilities: ['env.log'],
   },
+
+  // Multi-Output Operations (Records / Split Outputs)
+  {
+    operation: 'div_rem',
+    title: 'Divide & Remainder',
+    category: 'math',
+    kind: 'operation',
+    description: 'Computes quotient and remainder of division as a record with split output fields.',
+    defaultInputs: [
+      { id: 'a', name: 'a', direction: 'input', type: typeInt32, defaultValue: 10, required: true },
+      { id: 'b', name: 'b', direction: 'input', type: typeInt32, defaultValue: 3, required: true },
+    ],
+    defaultOutputs: [
+      { id: 'quotient', name: 'quotient', direction: 'output', type: typeInt32 },
+      { id: 'remainder', name: 'remainder', direction: 'output', type: typeInt32 },
+    ],
+    defaultProperties: { splitOutputs: true },
+  },
+  {
+    operation: 'min_max',
+    title: 'Min & Max',
+    category: 'math',
+    kind: 'operation',
+    description: 'Computes both minimum and maximum of two values.',
+    defaultInputs: [
+      { id: 'a', name: 'a', direction: 'input', type: typeInt32, defaultValue: 0, required: true },
+      { id: 'b', name: 'b', direction: 'input', type: typeInt32, defaultValue: 0, required: true },
+    ],
+    defaultOutputs: [
+      { id: 'min', name: 'min', direction: 'output', type: typeInt32 },
+      { id: 'max', name: 'max', direction: 'output', type: typeInt32 },
+    ],
+    defaultProperties: { splitOutputs: true },
+  },
+
+  // Custom Flint Code
+  {
+    operation: 'flint_code',
+    title: 'Custom Flint Code',
+    category: 'custom',
+    kind: 'custom',
+    description: 'User-defined Flint function with configurable inputs and outputs.',
+    defaultInputs: [
+      { id: 'a', name: 'a', direction: 'input', type: typeInt32, defaultValue: 0, required: true },
+      { id: 'b', name: 'b', direction: 'input', type: typeInt32, defaultValue: 0, required: true },
+    ],
+    defaultOutputs: [{ id: 'result', name: 'result', direction: 'output', type: typeInt32 }],
+    defaultProperties: {
+      code: 'fn custom_fn(a: i32, b: i32) -> i32 {\n  return a + b;\n}',
+      functionName: 'custom_fn',
+    },
+  },
 ] satisfies readonly FlintNodeDefinition[];
 
 const DEFINITION_MAP = new Map<string, FlintNodeDefinition>(
@@ -639,6 +691,13 @@ export function createNodeFromDefinition(
     definition.kind === 'input' && typeOverride ? { ...port, type: typeOverride } : { ...port },
   );
 
+  const splitOutputs =
+    mergedProperties.splitOutputs === undefined
+      ? outputs.length > 1
+        ? true
+        : undefined
+      : Boolean(mergedProperties.splitOutputs);
+
   return {
     id,
     title: definition.title,
@@ -649,5 +708,6 @@ export function createNodeFromDefinition(
     outputs,
     position,
     properties: mergedProperties,
+    splitOutputs,
   };
 }

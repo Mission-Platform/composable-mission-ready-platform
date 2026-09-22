@@ -43,13 +43,20 @@ export fn rect_intersects_box(rx: i32, ry: i32, rw: i32, rh: i32, min_x: i32, mi
   return (rx + rw) >= min_x && rx <= max_x && (ry + rh) >= min_y && ry <= max_y;
 }
 
+export fn lerp_i32(a: i32, b: i32, t_permille: i32) -> i32 {
+  let diff: i32 = b - a;
+  return a + ((diff * t_permille) / 1000);
+}
+
 export fn bezier_point_1d(p0: i32, p1: i32, p2: i32, p3: i32, t_permille: i32) -> i32 {
-  let u: i32 = 1000 - t_permille;
-  let term0: i32 = (u * u * u * p0) / 1000000000;
-  let term1: i32 = (3 * u * u * t_permille * p1) / 1000000000;
-  let term2: i32 = (3 * u * t_permille * t_permille * p2) / 1000000000;
-  let term3: i32 = (t_permille * t_permille * t_permille * p3) / 1000000000;
-  return term0 + term1 + term2 + term3;
+  let p01: i32 = lerp_i32(p0, p1, t_permille);
+  let p12: i32 = lerp_i32(p1, p2, t_permille);
+  let p23: i32 = lerp_i32(p2, p3, t_permille);
+
+  let p012: i32 = lerp_i32(p01, p12, t_permille);
+  let p123: i32 = lerp_i32(p12, p23, t_permille);
+
+  return lerp_i32(p012, p123, t_permille);
 }
 
 export fn bezier_control_dx(p0x: i32, p3x: i32) -> i32 {
@@ -97,6 +104,65 @@ export fn compute_pin_instance(
     radius = 8;
   }
   gpu_write_pin_instance(px, py, radius, is_hovered, is_active, is_output);
+}
+
+export fn edge_hit_test(
+  cursor_x: i32, cursor_y: i32,
+  p0x: i32, p0y: i32, p3x: i32, p3y: i32,
+  threshold: i32
+) -> bool {
+  let dx: i32 = bezier_control_dx(p0x, p3x);
+  let p1x: i32 = p0x + dx;
+  let p1y: i32 = p0y;
+  let p2x: i32 = p3x - dx;
+  let p2y: i32 = p3y;
+
+  let thresh_sq: i32 = threshold * threshold;
+
+  let mut step: i32 = 0;
+  while step <= 10 {
+    let t_permille: i32 = step * 100;
+    let bx: i32 = bezier_point_1d(p0x, p1x, p2x, p3x, t_permille);
+    let by: i32 = bezier_point_1d(p0y, p1y, p2y, p3y, t_permille);
+    let diff_x: i32 = cursor_x - bx;
+    let diff_y: i32 = cursor_y - by;
+    let dist_sq: i32 = (diff_x * diff_x) + (diff_y * diff_y);
+    if dist_sq <= thresh_sq {
+      return true;
+    }
+    step = step + 1;
+  }
+  return false;
+}
+
+export fn backend_select_tier(has_webgpu: bool, has_webgl: bool, has_canvas2d: bool) -> i32 {
+  if has_webgpu {
+    return 1;
+  }
+  if has_webgl {
+    return 2;
+  }
+  if has_canvas2d {
+    return 3;
+  }
+  return 0;
+}
+
+export fn backend_fallback_next(current_tier: i32, has_webgl: bool, has_canvas2d: bool) -> i32 {
+  if current_tier == 1 {
+    if has_webgl {
+      return 2;
+    }
+    if has_canvas2d {
+      return 3;
+    }
+  }
+  if current_tier == 2 {
+    if has_canvas2d {
+      return 3;
+    }
+  }
+  return 0;
 }
 
 export fn renderer_execute_frame(visible_nodes: u32, visible_edges: u32, visible_pins: u32) -> unit {

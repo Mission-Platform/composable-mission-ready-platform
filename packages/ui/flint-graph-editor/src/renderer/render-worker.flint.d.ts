@@ -106,6 +106,17 @@ export interface FlintRenderWorkerWasmExports {
     is_active: number,
     is_output: number,
   ) => void;
+  readonly edge_hit_test: (
+    cursor_x: number,
+    cursor_y: number,
+    p0x: number,
+    p0y: number,
+    p3x: number,
+    p3y: number,
+    threshold: number,
+  ) => number | boolean;
+  readonly backend_select_tier: (has_webgpu: boolean, has_webgl: boolean, has_canvas2d: boolean) => number;
+  readonly backend_fallback_next: (current_tier: number, has_webgl: boolean, has_canvas2d: boolean) => number;
   readonly camera_zoom_f32: (current_zoom: number, factor: number, min_zoom: number, max_zoom: number) => number;
   readonly renderer_execute_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
   readonly renderer_render_webgpu_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;

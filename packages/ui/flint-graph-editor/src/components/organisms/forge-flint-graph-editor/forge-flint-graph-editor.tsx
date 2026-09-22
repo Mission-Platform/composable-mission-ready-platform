@@ -18,7 +18,15 @@ export interface FlintGraphEditorProperties {
   readonly className?: string;
 }
 
-const CATEGORIES: readonly FlintNodeCategory[] = ['math', 'logic', 'text', 'collection', 'control', 'capability'];
+const CATEGORIES: readonly FlintNodeCategory[] = [
+  'math',
+  'logic',
+  'text',
+  'collection',
+  'control',
+  'capability',
+  'custom',
+];
 
 interface ContextMenuState {
   readonly open: boolean;
@@ -27,6 +35,9 @@ interface ContextMenuState {
   readonly worldX: number;
   readonly worldY: number;
   readonly query: string;
+  readonly targetType?: 'empty' | 'node' | 'group' | 'selection' | 'edge';
+  readonly targetId?: string;
+  readonly targetGroupId?: string;
 }
 
 /**
@@ -159,7 +170,20 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
       let connectingSourcePortId = '';
       let dragStartScreen = { x: 0, y: 0 };
       let boxSelectStart = { x: 0, y: 0 };
+      let lastClickTime = 0;
+      let lastClickNodeId = '';
       const nodesStartPositions = new Map<string, { readonly x: number; readonly y: number }>();
+
+      const profilerInterval = setInterval(() => {
+        if (engineReference.current) {
+          const stats = engineReference.current.getPerformanceStats();
+          const storeUpdateTime = store.getUpdateTimeMs();
+          setPerfMetrics({
+            ...stats,
+            updateTimeMs: storeUpdateTime,
+          });
+        }
+      }, 1000);
 
       const onWheel = (event: WheelEvent): void => {
         event.preventDefault();
@@ -179,8 +203,38 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           // pointer capture optional
         }
 
+        const now = Date.now();
         const isShift = event.shiftKey;
         const hit = engine.hitTestSync(event.offsetX, event.offsetY);
+
+        if (hit?.type === 'node') {
+          if (now - lastClickTime < 350 && lastClickNodeId === hit.nodeId) {
+            const clickedNode = store.getState().graph.nodes.find((n) => n.id === hit.nodeId);
+            if (clickedNode && (clickedNode.metaSubgraph || clickedNode.operation === 'meta')) {
+              store.drillIntoMetaNode(clickedNode.id);
+              engine.setGraph(
+                store.getState().graph.nodes,
+                store.getState().graph.edges,
+                store.getState().graph.groups ?? [],
+              );
+              engine.renderFrame();
+              return;
+            }
+          }
+          lastClickTime = now;
+          lastClickNodeId = hit.nodeId;
+        } else {
+          lastClickTime = 0;
+          lastClickNodeId = '';
+        }
+
+        if (hit?.type === 'edge' && hit.edgeId) {
+          store.selectEdge(hit.edgeId);
+          engine.setSelection([], [hit.edgeId]);
+          engine.renderFrame();
+          return;
+        }
+
         if (hit?.type === 'port') {
           dragMode = 'connect';
           connectingSourceNodeId = hit.nodeId;
@@ -207,6 +261,8 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
               nodesStartPositions.set(n.id, { ...n.position });
             }
           }
+          engine.setSelection([...selectedSet, hit.nodeId]);
+          engine.renderFrame();
         } else {
           if (isShift) {
             dragMode = 'box_select';
@@ -221,12 +277,48 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           } else {
             dragMode = 'pan';
             store.deselectAll();
+            engine.setSelection([], []);
+            engine.renderFrame();
           }
         }
       };
 
       const onPointerMove = (event: PointerEvent): void => {
-        if (!isPointerDown) return;
+        if (!isPointerDown) {
+          const hoverHit = engine.hitTestSync(event.offsetX, event.offsetY);
+          switch (hoverHit?.type) {
+            case 'port': {
+              canvasElement.style.cursor = 'crosshair';
+              engine.setHoveredPort({ nodeId: hoverHit.nodeId, portId: hoverHit.portId! });
+              engine.renderFrame();
+
+              break;
+            }
+            case 'edge': {
+              canvasElement.style.cursor = 'pointer';
+              engine.setHoveredPort(undefined);
+              engine.renderFrame();
+
+              break;
+            }
+            case 'node': {
+              canvasElement.style.cursor = 'move';
+              engine.setHoveredPort(undefined);
+              engine.renderFrame();
+
+              break;
+            }
+            default: {
+              canvasElement.style.cursor = 'default';
+              if (engine.getHoveredPort()) {
+                engine.setHoveredPort(undefined);
+                engine.renderFrame();
+              }
+            }
+          }
+          return;
+        }
+
         const camera = engine.getCamera();
         const deltaX = event.clientX - dragStartScreen.x;
         const deltaY = event.clientY - dragStartScreen.y;
@@ -327,14 +419,110 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         const world = engine.screenToWorld(screenX, screenY);
         const windowWidth = globalThis.window ? window.innerWidth : 1200;
         const windowHeight = globalThis.window ? window.innerHeight : 800;
+
+        const hit = engine.hitTestSync(screenX, screenY);
+        let targetType: 'empty' | 'node' | 'group' | 'selection' | 'edge' = 'empty';
+        let targetId = '';
+        let targetGroupId = '';
+
+        if (hit?.type === 'edge' && hit.edgeId) {
+          targetType = 'edge';
+          targetId = hit.edgeId;
+          store.selectEdge(hit.edgeId);
+          engine.setSelection([], [hit.edgeId]);
+        } else if (hit?.type === 'node') {
+          const isSelected = store.getState().selectedNodeIds.includes(hit.nodeId);
+          if (store.getState().selectedNodeIds.length > 1 && isSelected) {
+            targetType = 'selection';
+          } else {
+            targetType = 'node';
+            targetId = hit.nodeId;
+            store.selectNode(hit.nodeId);
+            engine.setSelection([hit.nodeId]);
+          }
+          const node = store.getState().graph.nodes.find((n) => n.id === hit.nodeId);
+          if (node?.groupId) {
+            targetGroupId = node.groupId;
+          }
+        } else {
+          // Check if cursor is inside any group bounds
+          const groupHit = (store.getState().graph.groups ?? []).find((g) => {
+            const groupNodes = store.getState().graph.nodes.filter((n) => g.nodeIds.includes(n.id));
+            if (groupNodes.length === 0) return false;
+            let minX = Infinity;
+            let minY = Infinity;
+            let maxX = -Infinity;
+            let maxY = -Infinity;
+            for (const n of groupNodes) {
+              if (n.position.x < minX) minX = n.position.x;
+              if (n.position.y < minY) minY = n.position.y;
+              if (n.position.x + 220 > maxX) maxX = n.position.x + 220;
+              if (n.position.y + 100 > maxY) maxY = n.position.y + 100;
+            }
+            return world.x >= minX - 24 && world.x <= maxX + 24 && world.y >= minY - 46 && world.y <= maxY + 24;
+          });
+          if (groupHit) {
+            targetType = 'group';
+            targetGroupId = groupHit.id;
+          }
+        }
+
         setContextMenu({
           open: true,
-          x: Math.min(event.clientX, windowWidth - 260),
-          y: Math.min(event.clientY, windowHeight - 380),
+          x: Math.min(event.clientX, windowWidth - 280),
+          y: Math.min(event.clientY, windowHeight - 400),
           worldX: world.x,
           worldY: world.y,
           query: '',
+          targetType,
+          targetId,
+          targetGroupId,
         });
+      };
+
+      const onKeyDown = (event: KeyboardEvent): void => {
+        if (event.key === 'Escape') {
+          if (store.canNavigateBack()) {
+            store.navigateBack();
+            engine.setGraph(
+              store.getState().graph.nodes,
+              store.getState().graph.edges,
+              store.getState().graph.groups ?? [],
+            );
+            engine.renderFrame();
+          } else if (contextMenu.open) {
+            setContextMenu((previous) => ({ ...previous, open: false }));
+          } else {
+            store.deselectAll();
+            engine.setSelection([], []);
+            engine.renderFrame();
+          }
+        } else if (event.key === 'Delete' || event.key === 'Backspace') {
+          if (
+            typeof document !== 'undefined' &&
+            (document.activeElement instanceof HTMLInputElement ||
+              document.activeElement instanceof HTMLTextAreaElement)
+          ) {
+            return;
+          }
+          if (store.getState().activeEdgeId) {
+            store.removeActiveEdge();
+            engine.setGraph(
+              store.getState().graph.nodes,
+              store.getState().graph.edges,
+              store.getState().graph.groups ?? [],
+            );
+            engine.renderFrame();
+          } else if (store.getState().selectedNodeIds.length > 0) {
+            store.deleteSelected();
+            engine.setGraph(
+              store.getState().graph.nodes,
+              store.getState().graph.edges,
+              store.getState().graph.groups ?? [],
+            );
+            engine.renderFrame();
+          }
+        }
       };
 
       canvasElement.addEventListener('wheel', onWheel, { passive: false });
@@ -343,14 +531,21 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
       canvasElement.addEventListener('pointerup', onPointerUp);
       canvasElement.addEventListener('pointercancel', onPointerUp);
       canvasElement.addEventListener('contextmenu', onContextMenu);
+      if (globalThis.window !== undefined) {
+        globalThis.addEventListener('keydown', onKeyDown);
+      }
 
       cleanupListeners = () => {
+        clearInterval(profilerInterval);
         canvasElement.removeEventListener('wheel', onWheel);
         canvasElement.removeEventListener('pointerdown', onPointerDown);
         canvasElement.removeEventListener('pointermove', onPointerMove);
         canvasElement.removeEventListener('pointerup', onPointerUp);
         canvasElement.removeEventListener('pointercancel', onPointerUp);
         canvasElement.removeEventListener('contextmenu', onContextMenu);
+        if (globalThis.window !== undefined) {
+          globalThis.removeEventListener('keydown', onKeyDown);
+        }
       };
     }
 
@@ -550,6 +745,39 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           </div>
 
           <div className={styles.paletteList}>
+            {editorState.registeredMetaNodes && editorState.registeredMetaNodes.length > 0 && (
+              <div>
+                <div className={styles.paletteCategory}>Meta Nodes</div>
+                {editorState.registeredMetaNodes.map((meta) => (
+                  <button
+                    key={meta.id}
+                    type="button"
+                    draggable={true}
+                    className={styles.paletteItem}
+                    onClick={() => store.instantiateMetaNode(meta.id)}
+                    onDragStart={(event: unknown) => {
+                      if (typeof DragEvent !== 'undefined' && event instanceof DragEvent && event.dataTransfer) {
+                        event.dataTransfer.setData('text/plain', `meta_template:${meta.id}`);
+                        event.dataTransfer.effectAllowed = 'copy';
+                      }
+                    }}
+                    onContextMenu={(event: unknown) => {
+                      if (typeof MouseEvent !== 'undefined' && event instanceof MouseEvent) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        store.removeRegisteredMetaNode(meta.id);
+                      }
+                    }}
+                    title="Click or drag to add. Right-click to remove if unreferenced."
+                  >
+                    <span className={styles.paletteItemTitle}>{meta.title}</span>
+                    <span className={styles.paletteItemDesc}>
+                      {meta.description ?? 'Reusable composite meta node function'}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
             {populatedCategories.map((group) => (
               <div key={group.category}>
                 <div className={styles.paletteCategory}>{group.category}</div>
@@ -597,11 +825,51 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                   event.clientX - rect.left,
                   event.clientY - rect.top,
                 );
-                store.addNode(op, world);
+                if (op.startsWith('meta_template:')) {
+                  const templateId = op.slice('meta_template:'.length);
+                  store.instantiateMetaNode(templateId, world);
+                } else {
+                  store.addNode(op, world);
+                }
               }
             }
           }}
         >
+          {editorState.breadcrumbs && editorState.breadcrumbs.length > 1 && (
+            <div className={styles.breadcrumbBar}>
+              <button
+                type="button"
+                className={styles.breadcrumbBtn}
+                onClick={() => {
+                  store.navigateBack();
+                  engineReference.current?.setGraph(
+                    store.getState().graph.nodes,
+                    store.getState().graph.edges,
+                    store.getState().graph.groups ?? [],
+                  );
+                  engineReference.current?.renderFrame();
+                }}
+              >
+                ← Back
+              </button>
+              <span className={styles.breadcrumbDivider}>|</span>
+              {editorState.breadcrumbs.map((crumb, index) => (
+                <span
+                  key={crumb.id}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                >
+                  {index > 0 && <span className={styles.breadcrumbDivider}>/</span>}
+                  <span
+                    className={
+                      index === editorState.breadcrumbs.length - 1 ? styles.breadcrumbCurrent : styles.breadcrumbDivider
+                    }
+                  >
+                    {crumb.title}
+                  </span>
+                </span>
+              ))}
+            </div>
+          )}
           {isFallback && (
             <div
               style={{
@@ -843,6 +1111,89 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                   </span>
                 </div>
 
+                {(selectedNode.operation === 'flint_code' || selectedNode.kind === 'custom') && (
+                  <div
+                    className={styles.inspectorRow}
+                    style={{ flexDirection: 'column', alignItems: 'flex-start' }}
+                  >
+                    <label
+                      htmlFor="inspector-flint-code"
+                      className={styles.inspectorLabel}
+                    >
+                      Flint Function Code
+                    </label>
+                    <textarea
+                      id="inspector-flint-code"
+                      className={styles.codeEditorTextarea}
+                      value={String(selectedNode.properties?.code ?? '')}
+                      onInput={(event: unknown) => {
+                        if (
+                          typeof HTMLTextAreaElement !== 'undefined' &&
+                          event &&
+                          typeof event === 'object' &&
+                          'target' in event &&
+                          event.target instanceof HTMLTextAreaElement
+                        ) {
+                          store.updateCodeNode(
+                            selectedNode.id,
+                            event.target.value,
+                            selectedNode.inputs,
+                            selectedNode.outputs,
+                            typeof selectedNode.properties?.functionName === 'string'
+                              ? selectedNode.properties.functionName
+                              : undefined,
+                          );
+                        }
+                      }}
+                    />
+                  </div>
+                )}
+
+                {selectedNode.outputs.length > 1 && (
+                  <div className={styles.inspectorRow}>
+                    <label
+                      htmlFor="inspector-split-outputs"
+                      className={styles.inspectorLabel}
+                    >
+                      Split Outputs to Fields
+                    </label>
+                    <input
+                      id="inspector-split-outputs"
+                      type="checkbox"
+                      checked={selectedNode.splitOutputs !== false}
+                      onChange={() => store.toggleSplitOutputs(selectedNode.id)}
+                    />
+                  </div>
+                )}
+
+                {selectedNode.groupId && (
+                  <div
+                    className={styles.inspectorRow}
+                    style={{ flexDirection: 'column', alignItems: 'flex-start' }}
+                  >
+                    <span className={styles.inspectorLabel}>Group Color</span>
+                    <div className={styles.colorPickerRow}>
+                      {['#58a6ff', '#a371f7', '#3fb950', '#d29922', '#f85149', '#39c5bb'].map((c) => (
+                        <button
+                          key={c}
+                          type="button"
+                          className={styles.colorSwatch}
+                          style={{ backgroundColor: c }}
+                          onClick={() => {
+                            store.setGroupColor(selectedNode.groupId!, c);
+                            engineReference.current?.setGraph(
+                              store.getState().graph.nodes,
+                              store.getState().graph.edges,
+                              store.getState().graph.groups ?? [],
+                            );
+                            engineReference.current?.renderFrame();
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <button
                   type="button"
                   className={styles.paletteItem}
@@ -927,8 +1278,205 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
               }}
             />
           </div>
-          {editorState.selectedNodeIds.length > 0 && (
+          {contextMenu.targetType === 'edge' && contextMenu.targetId && (
             <div className={styles.contextMenuActions}>
+              <button
+                type="button"
+                className={styles.contextMenuItem}
+                style={{ color: '#f85149' }}
+                onClick={() => {
+                  store.removeEdge(contextMenu.targetId!);
+                  engineReference.current?.setGraph(
+                    store.getState().graph.nodes,
+                    store.getState().graph.edges,
+                    store.getState().graph.groups ?? [],
+                  );
+                  engineReference.current?.renderFrame();
+                  setContextMenu({ ...contextMenu, open: false });
+                }}
+              >
+                Remove Connection
+              </button>
+            </div>
+          )}
+
+          {contextMenu.targetType === 'node' && contextMenu.targetId && (
+            <div className={styles.contextMenuActions}>
+              <button
+                type="button"
+                className={styles.contextMenuItem}
+                onClick={() => {
+                  store.copyNode(contextMenu.targetId!);
+                  setContextMenu({ ...contextMenu, open: false });
+                }}
+              >
+                Copy Node
+              </button>
+              {selectedNode?.metaSubgraph && (
+                <div>
+                  <button
+                    type="button"
+                    className={styles.contextMenuItem}
+                    onClick={() => {
+                      store.drillIntoMetaNode(contextMenu.targetId!);
+                      engineReference.current?.setGraph(
+                        store.getState().graph.nodes,
+                        store.getState().graph.edges,
+                        store.getState().graph.groups ?? [],
+                      );
+                      engineReference.current?.renderFrame();
+                      setContextMenu({ ...contextMenu, open: false });
+                    }}
+                  >
+                    Enter Function (Drill Down)
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.contextMenuItem}
+                    onClick={() => {
+                      store.duplicateMetaNode(contextMenu.targetId!);
+                      engineReference.current?.setGraph(
+                        store.getState().graph.nodes,
+                        store.getState().graph.edges,
+                        store.getState().graph.groups ?? [],
+                      );
+                      engineReference.current?.renderFrame();
+                      setContextMenu({ ...contextMenu, open: false });
+                    }}
+                  >
+                    Duplicate Meta Node
+                  </button>
+                </div>
+              )}
+              {contextMenu.targetGroupId && (
+                <div>
+                  <button
+                    type="button"
+                    className={styles.contextMenuItem}
+                    onClick={() => {
+                      store.copyGroup(contextMenu.targetGroupId!);
+                      setContextMenu({ ...contextMenu, open: false });
+                    }}
+                  >
+                    Copy Group
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.contextMenuItem}
+                    onClick={() => {
+                      store.ungroup(contextMenu.targetGroupId!);
+                      engineReference.current?.setGraph(
+                        store.getState().graph.nodes,
+                        store.getState().graph.edges,
+                        store.getState().graph.groups ?? [],
+                      );
+                      engineReference.current?.renderFrame();
+                      setContextMenu({ ...contextMenu, open: false });
+                    }}
+                  >
+                    Ungroup
+                  </button>
+                </div>
+              )}
+              {selectedNode && selectedNode.outputs.length > 1 && (
+                <button
+                  type="button"
+                  className={styles.contextMenuItem}
+                  onClick={() => {
+                    store.toggleSplitOutputs(contextMenu.targetId!);
+                    setContextMenu({ ...contextMenu, open: false });
+                  }}
+                >
+                  {selectedNode.splitOutputs === false ? 'Split Outputs to Fields' : 'Combine Outputs to Record'}
+                </button>
+              )}
+              <button
+                type="button"
+                className={styles.contextMenuItem}
+                style={{ color: '#f85149' }}
+                onClick={() => {
+                  store.removeNode(contextMenu.targetId!);
+                  engineReference.current?.setGraph(
+                    store.getState().graph.nodes,
+                    store.getState().graph.edges,
+                    store.getState().graph.groups ?? [],
+                  );
+                  engineReference.current?.renderFrame();
+                  setContextMenu({ ...contextMenu, open: false });
+                }}
+              >
+                Delete Node
+              </button>
+            </div>
+          )}
+
+          {contextMenu.targetType === 'group' && contextMenu.targetGroupId && (
+            <div className={styles.contextMenuActions}>
+              <button
+                type="button"
+                className={styles.contextMenuItem}
+                onClick={() => {
+                  store.copyGroup(contextMenu.targetGroupId!);
+                  setContextMenu({ ...contextMenu, open: false });
+                }}
+              >
+                Copy Group (with Connections)
+              </button>
+              <button
+                type="button"
+                className={styles.contextMenuItem}
+                onClick={() => {
+                  store.ungroup(contextMenu.targetGroupId!);
+                  engineReference.current?.setGraph(
+                    store.getState().graph.nodes,
+                    store.getState().graph.edges,
+                    store.getState().graph.groups ?? [],
+                  );
+                  engineReference.current?.renderFrame();
+                  setContextMenu({ ...contextMenu, open: false });
+                }}
+              >
+                Ungroup
+              </button>
+              <div style={{ padding: '4px 8px', fontSize: '11px', color: '#8b949e' }}>Group Color:</div>
+              <div
+                className={styles.colorPickerRow}
+                style={{ padding: '0 8px' }}
+              >
+                {['#58a6ff', '#a371f7', '#3fb950', '#d29922', '#f85149', '#39c5bb'].map((c) => (
+                  <button
+                    key={c}
+                    type="button"
+                    className={styles.colorSwatch}
+                    style={{ backgroundColor: c }}
+                    onClick={() => {
+                      store.setGroupColor(contextMenu.targetGroupId!, c);
+                      engineReference.current?.setGraph(
+                        store.getState().graph.nodes,
+                        store.getState().graph.edges,
+                        store.getState().graph.groups ?? [],
+                      );
+                      engineReference.current?.renderFrame();
+                      setContextMenu({ ...contextMenu, open: false });
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {contextMenu.targetType === 'selection' && (
+            <div className={styles.contextMenuActions}>
+              <button
+                type="button"
+                className={styles.contextMenuItem}
+                onClick={() => {
+                  store.copySelection();
+                  setContextMenu({ ...contextMenu, open: false });
+                }}
+              >
+                Copy Selected ({editorState.selectedNodeIds.length} Nodes + Connections)
+              </button>
               <button
                 type="button"
                 className={styles.contextMenuItem}
@@ -937,7 +1485,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                   setContextMenu({ ...contextMenu, open: false });
                 }}
               >
-                Group Selected ({editorState.selectedNodeIds.length})
+                Group Selected
               </button>
               <button
                 type="button"
@@ -949,18 +1497,6 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
               >
                 Create Meta Node
               </button>
-              {selectedNode?.metaSubgraph && (
-                <button
-                  type="button"
-                  className={styles.contextMenuItem}
-                  onClick={() => {
-                    store.expandMetaNode(selectedNode.id);
-                    setContextMenu({ ...contextMenu, open: false });
-                  }}
-                >
-                  Expand Meta Node
-                </button>
-              )}
               <button
                 type="button"
                 className={styles.contextMenuItem}
@@ -971,6 +1507,30 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                 }}
               >
                 Delete Selected
+              </button>
+            </div>
+          )}
+
+          {editorState.hasClipboard && (
+            <div
+              className={styles.contextMenuActions}
+              style={{ borderTop: '1px solid #30363d' }}
+            >
+              <button
+                type="button"
+                className={styles.contextMenuItem}
+                onClick={() => {
+                  store.paste({ x: contextMenu.worldX, y: contextMenu.worldY });
+                  engineReference.current?.setGraph(
+                    store.getState().graph.nodes,
+                    store.getState().graph.edges,
+                    store.getState().graph.groups ?? [],
+                  );
+                  engineReference.current?.renderFrame();
+                  setContextMenu({ ...contextMenu, open: false });
+                }}
+              >
+                Paste
               </button>
             </div>
           )}

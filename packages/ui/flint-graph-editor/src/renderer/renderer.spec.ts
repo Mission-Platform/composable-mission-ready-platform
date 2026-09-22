@@ -226,17 +226,38 @@ describe('WebGPU Graph Renderer - Worker Protocol & Capability', () => {
   });
 
   it('manages camera and selection states inside FlintRenderEngine instance', () => {
-    let lastMessage: RenderWorkerOutputMessage | undefined;
+    const messages: RenderWorkerOutputMessage[] = [];
     const engine = new FlintRenderEngine(800, 600, (message) => {
-      lastMessage = message;
+      messages.push(message);
     });
 
     expect(engine.getCamera().viewportWidth).toBe(800);
     engine.pan(40, 20);
-    expect(lastMessage?.type).toBe('camera_changed');
+    expect(messages.some((m) => m.type === 'camera_changed')).toBe(true);
 
     engine.zoom(400, 300, 2);
     expect(engine.getCamera().zoom).toBe(2);
+  });
+
+  it('performs edge hit testing and backend fallback selection in Flint Wasm', () => {
+    const renderWasm = getFlintRenderWorkerWasm();
+
+    // Line from (0, 0) to (100, 100)
+    const isHitOnLine = Boolean(renderWasm.edge_hit_test(50, 50, 0, 0, 100, 100, 15));
+    expect(isHitOnLine).toBe(true);
+
+    const isMissFarAway = Boolean(renderWasm.edge_hit_test(50, 200, 0, 0, 100, 100, 10));
+    expect(isMissFarAway).toBe(false);
+
+    // Backend selection: 1 = WebGPU, 2 = WebGL, 3 = Canvas 2D
+    expect(renderWasm.backend_select_tier(true, true, true)).toBe(1);
+    expect(renderWasm.backend_select_tier(false, true, true)).toBe(2);
+    expect(renderWasm.backend_select_tier(false, false, true)).toBe(3);
+
+    // Fallback: 1 -> 2, 2 -> 3
+    expect(renderWasm.backend_fallback_next(1, true, true)).toBe(2);
+    expect(renderWasm.backend_fallback_next(1, false, true)).toBe(3);
+    expect(renderWasm.backend_fallback_next(2, false, true)).toBe(3);
   });
 
   it('performs synchronous hit-testing via hitTestSync', () => {

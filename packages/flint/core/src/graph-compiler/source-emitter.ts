@@ -81,6 +81,18 @@ function emitArithmeticExpression(node: FlintGraphNode, resolveSource: SourceRes
       const a = resolveSource(node, 'a');
       return `match ${a} < 0 { true => -${a}, false => ${a} }`;
     }
+    case 'div_rem': {
+      const structName = `Record_${sanitizeIdentifier(node.id)}`;
+      const a = resolveSource(node, 'a');
+      const b = resolveSource(node, 'b');
+      return `${structName} { quotient: ${a} / ${b}, remainder: ${a} % ${b} }`;
+    }
+    case 'min_max': {
+      const structName = `Record_${sanitizeIdentifier(node.id)}`;
+      const a = resolveSource(node, 'a');
+      const b = resolveSource(node, 'b');
+      return `${structName} { min: match ${a} < ${b} { true => ${a}, false => ${b} }, max: match ${a} > ${b} { true => ${a}, false => ${b} } }`;
+    }
     default: {
       return undefined;
     }
@@ -267,6 +279,30 @@ export function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmission
     appendLine('');
   }
 
+  // 1.5. Emit Record Structs for Multi-Output Nodes
+  for (const node of graph.nodes) {
+    if (node.outputs.length > 1) {
+      const structName = `Record_${sanitizeIdentifier(node.id)}`;
+      appendLine(`record ${structName} {`);
+      for (const port of node.outputs) {
+        appendLine(`  ${sanitizeIdentifier(port.id)}: ${flintTypeNameToString(port.type)};`);
+      }
+      appendLine('}\n');
+    }
+  }
+
+  // 1.6. Emit Custom Code Functions
+  const emittedCustomCode = new Set<string>();
+  for (const node of graph.nodes) {
+    if ((node.kind === 'custom' || node.operation === 'flint_code') && node.properties?.code) {
+      const codeString = String(node.properties.code).trim();
+      if (!emittedCustomCode.has(codeString)) {
+        emittedCustomCode.add(codeString);
+        appendLine(`${codeString}\n`);
+      }
+    }
+  }
+
   // 2. Identify Function Parameters (Input Nodes)
   const functionParameters: { name: string; type: string }[] = [];
   for (const nodeId of validation.sortedNodeIds) {
@@ -413,24 +449,61 @@ export function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmission
             break;
           }
           default: {
-            const arguments_ = node.inputs.map((port) => resolveInputSource(node, port.id)).join(', ');
-            expressionText = `${node.operation}(${arguments_})`;
+            if (node.operation === 'flint_code' || node.kind === 'custom') {
+              const customFunctionName = sanitizeIdentifier(
+                String(node.properties?.functionName ?? `custom_${node.id}`),
+              );
+              const arguments_ = node.inputs.map((port) => resolveInputSource(node, port.id)).join(', ');
+              expressionText = `${customFunctionName}(${arguments_})`;
+            } else {
+              const arguments_ = node.inputs.map((port) => resolveInputSource(node, port.id)).join(', ');
+              expressionText = `${node.operation}(${arguments_})`;
+            }
           }
         }
       }
     }
 
-    const statementRecord = appendLine(`  let ${letVariableName}: ${outTypeString} = ${expressionText};`);
-    const span: FlintSourceSpan = {
-      start: statementRecord.start,
-      end: statementRecord.end,
-      line: statementRecord.line,
-      column: 3,
-      endLine: statementRecord.line,
-      endColumn: statementRecord.text.length + 1,
-    };
-    nodeToSpan.set(node.id, span);
-    spanToNode.set(spanKey(span), node.id);
+    if (node.outputs.length > 1) {
+      const structName = `Record_${sanitizeIdentifier(node.id)}`;
+      const recordVariableName = `v_${sanitizeIdentifier(node.id)}_record`;
+      const statementRecord = appendLine(`  let ${recordVariableName}: ${structName} = ${expressionText};`);
+      const span: FlintSourceSpan = {
+        start: statementRecord.start,
+        end: statementRecord.end,
+        line: statementRecord.line,
+        column: 3,
+        endLine: statementRecord.line,
+        endColumn: statementRecord.text.length + 1,
+      };
+      nodeToSpan.set(node.id, span);
+      spanToNode.set(spanKey(span), node.id);
+
+      if (node.splitOutputs !== false) {
+        for (const outPort of node.outputs) {
+          const fieldVariableName = `v_${sanitizeIdentifier(node.id)}_${sanitizeIdentifier(outPort.id)}`;
+          const fieldTypeString = flintTypeNameToString(outPort.type);
+          portToAstIdentifier.set(`${node.id}:${outPort.id}`, fieldVariableName);
+          appendLine(
+            `  let ${fieldVariableName}: ${fieldTypeString} = ${recordVariableName}.${sanitizeIdentifier(outPort.id)};`,
+          );
+        }
+      } else if (primaryOutPort !== undefined) {
+        portToAstIdentifier.set(`${node.id}:${primaryOutPort.id}`, recordVariableName);
+      }
+    } else {
+      const statementRecord = appendLine(`  let ${letVariableName}: ${outTypeString} = ${expressionText};`);
+      const span: FlintSourceSpan = {
+        start: statementRecord.start,
+        end: statementRecord.end,
+        line: statementRecord.line,
+        column: 3,
+        endLine: statementRecord.line,
+        endColumn: statementRecord.text.length + 1,
+      };
+      nodeToSpan.set(node.id, span);
+      spanToNode.set(spanKey(span), node.id);
+    }
   }
 
   // 4. Emit Return Statement

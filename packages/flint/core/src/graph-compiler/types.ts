@@ -29,11 +29,22 @@ export interface FlintMetaNodeSubgraph {
   readonly exposedOutputPortMap: Readonly<Record<string, FlintMetaNodePortMapping>>;
 }
 
+export interface FlintMetaNodeDefinition {
+  readonly id: string;
+  readonly name: string;
+  readonly title: string;
+  readonly description?: string;
+  readonly subgraph: FlintMetaNodeSubgraph;
+  readonly inputs: readonly FlintGraphPort[];
+  readonly outputs: readonly FlintGraphPort[];
+}
+
 export interface FlintGraphGroup {
   readonly id: string;
   readonly title: string;
   readonly nodeIds: readonly string[];
   readonly color?: string;
+  readonly backgroundColor?: string;
 }
 
 export interface FlintGraphNode {
@@ -47,7 +58,9 @@ export interface FlintGraphNode {
   readonly position: { readonly x: number; readonly y: number };
   readonly properties?: Readonly<Record<string, unknown>>;
   readonly metaSubgraph?: FlintMetaNodeSubgraph;
+  readonly metaTemplateId?: string;
   readonly groupId?: string;
+  readonly splitOutputs?: boolean;
 }
 
 export interface FlintGraphEdge {

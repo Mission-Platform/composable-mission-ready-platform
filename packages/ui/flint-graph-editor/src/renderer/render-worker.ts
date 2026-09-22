@@ -111,6 +111,17 @@ export interface FlintRenderWorkerWasmExports {
     is_active: number,
     is_output: number,
   ) => void;
+  readonly edge_hit_test: (
+    cursor_x: number,
+    cursor_y: number,
+    p0x: number,
+    p0y: number,
+    p3x: number,
+    p3y: number,
+    threshold: number,
+  ) => number | boolean;
+  readonly backend_select_tier: (has_webgpu: boolean, has_webgl: boolean, has_canvas2d: boolean) => number;
+  readonly backend_fallback_next: (current_tier: number, has_webgl: boolean, has_canvas2d: boolean) => number;
   readonly camera_zoom_f32?: (current_zoom: number, factor: number, min_zoom: number, max_zoom: number) => number;
   readonly renderer_execute_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
   readonly renderer_render_webgpu_frame: (visible_nodes: number, visible_edges: number, visible_pins: number) => void;
@@ -143,9 +154,10 @@ export interface ViewBounds {
 }
 
 export interface FlintHitResult {
-  readonly type: 'node' | 'port' | 'none';
+  readonly type: 'node' | 'port' | 'edge' | 'none';
   readonly nodeId: string;
   readonly portId?: string;
+  readonly edgeId?: string;
   readonly worldX: number;
   readonly worldY: number;
 }
@@ -685,6 +697,7 @@ export class FlintRenderEngine {
   private canvas2dCtx?: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
   private canvas?: OffscreenCanvas | HTMLCanvasElement;
   private dpr = 1;
+  private activeBackend: 'webgpu' | 'webgl' | 'canvas2d' = 'webgpu';
   private performanceStats: FlintPerformanceMetrics = {
     updateTimeMs: 0.5,
     renderTimeMs: 1.2,
@@ -954,10 +967,16 @@ export class FlintRenderEngine {
       await this.initPipelines();
       return true;
     } catch {
-      const ctx2d = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D | null;
-      if (ctx2d) {
-        this.canvas2dCtx = ctx2d;
-      }
+      return false;
+    }
+  }
+
+  initWebGL(canvas: HTMLCanvasElement | OffscreenCanvas): boolean {
+    try {
+      const gl = (canvas.getContext('webgl2') || canvas.getContext('webgl')) as
+        WebGLRenderingContext | WebGL2RenderingContext | null;
+      return gl !== null;
+    } catch {
       return false;
     }
   }
@@ -975,12 +994,53 @@ export class FlintRenderEngine {
       this.dpr = dpr;
     }
     this.updateCanvasDimensions();
-    const supported = await this.initWebGpu(canvas);
-    if (!supported) {
-      this.init2dFallback(canvas);
+
+    const wasm = getFlintRenderWorkerWasm();
+    const hasWebGpu =
+      typeof navigator !== 'undefined' && 'gpu' in navigator && (navigator as WebGpuNavigator).gpu !== undefined;
+    let hasWebGL = false;
+    let has2D = false;
+    try {
+      hasWebGL = (canvas.getContext('webgl2') || canvas.getContext('webgl')) !== null;
+    } catch {
+      hasWebGL = false;
     }
+    try {
+      has2D = canvas.getContext('2d') !== null;
+    } catch {
+      has2D = false;
+    }
+
+    let selectedTier = Number(wasm.backend_select_tier(hasWebGpu, hasWebGL, has2D));
+    let initialized = false;
+
+    if (selectedTier === 1) {
+      initialized = await this.initWebGpu(canvas);
+      if (initialized) {
+        this.activeBackend = 'webgpu';
+      } else {
+        selectedTier = Number(wasm.backend_fallback_next(1, hasWebGL, has2D));
+      }
+    }
+
+    if (!initialized && selectedTier === 2) {
+      initialized = this.initWebGL(canvas);
+      if (initialized) {
+        this.activeBackend = 'webgl';
+        this.init2dFallback(canvas);
+      } else {
+        selectedTier = Number(wasm.backend_fallback_next(2, false, has2D));
+      }
+    }
+
+    if (!initialized && (selectedTier === 3 || has2D)) {
+      this.init2dFallback(canvas);
+      this.activeBackend = 'canvas2d';
+      initialized = true;
+    }
+
     this.renderFrame();
-    return supported;
+    return this.activeBackend === 'webgpu';
   }
 
   destroy(): void {
@@ -1170,6 +1230,7 @@ export class FlintRenderEngine {
     for (const edgeId of selectedEdgeIds) {
       this.selectedEdgeIds.add(edgeId);
     }
+    this.renderFrame();
   }
 
   setConnectingEdge(edge?: {
@@ -1183,6 +1244,10 @@ export class FlintRenderEngine {
 
   setHoveredPort(port?: { readonly nodeId: string; readonly portId: string }): void {
     this.hoveredPort = port;
+  }
+
+  getHoveredPort(): { readonly nodeId: string; readonly portId: string } | undefined {
+    return this.hoveredPort;
   }
 
   setEdgePulse(edgeId: string, progress: number): void {
@@ -1207,6 +1272,7 @@ export class FlintRenderEngine {
   pan(deltaX: number, deltaY: number): void {
     this.camera = panCamera(this.camera, deltaX, deltaY);
     this.onMessageCallback?.({ type: 'camera_changed', camera: this.camera });
+    this.renderFrame();
   }
 
   zoom(arg1: number, arg2?: number, arg3?: number): void {
@@ -1222,6 +1288,7 @@ export class FlintRenderEngine {
     const cursorY = cy ?? this.camera.viewportHeight / 2;
     this.camera = zoomCamera(this.camera, cursorX, cursorY, factor);
     this.onMessageCallback?.({ type: 'camera_changed', camera: this.camera });
+    this.renderFrame();
   }
 
   resize(width: number, height: number, dpr?: number): void {
@@ -1312,6 +1379,47 @@ export class FlintRenderEngine {
         worldX: world.x,
         worldY: world.y,
       };
+    }
+
+    const wasm = getFlintRenderWorkerWasm();
+    const nodeMap = new Map<string, FlintGraphNode>(this.nodes.map((n) => [n.id, n]));
+    const threshold = Math.max(8, 12 / Math.max(0.2, this.camera.zoom));
+
+    for (const edge of this.edges) {
+      const fromNode = nodeMap.get(edge.fromNodeId);
+      const toNode = nodeMap.get(edge.toNodeId);
+      if (!fromNode || !toNode) continue;
+      const fromPortIdx = Math.max(
+        0,
+        fromNode.outputs.findIndex((p) => p.id === edge.fromPortId),
+      );
+      const toPortIdx = Math.max(
+        0,
+        toNode.inputs.findIndex((p) => p.id === edge.toPortId),
+      );
+      const p0x = fromNode.position.x + NODE_WIDTH;
+      const p0y = fromNode.position.y + NODE_HEADER_HEIGHT + fromPortIdx * PORT_ROW_HEIGHT + 14;
+      const p3x = toNode.position.x;
+      const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIdx * PORT_ROW_HEIGHT + 14;
+
+      const isHit = wasm.edge_hit_test(
+        Math.round(world.x),
+        Math.round(world.y),
+        Math.round(p0x),
+        Math.round(p0y),
+        Math.round(p3x),
+        Math.round(p3y),
+        Math.round(threshold),
+      );
+      if (isHit) {
+        return {
+          type: 'edge',
+          nodeId: '',
+          edgeId: edge.id,
+          worldX: world.x,
+          worldY: world.y,
+        };
+      }
     }
 
     return undefined;
@@ -1654,19 +1762,27 @@ export class FlintRenderEngine {
       const gh = gMaxY - gMinY + padding * 2 + 22;
 
       ctx.save();
-      ctx.fillStyle = group.color ? `${group.color}15` : 'rgba(88, 166, 255, 0.08)';
-      ctx.strokeStyle = group.color ?? '#58a6ff';
-      ctx.lineWidth = 1.5 / this.camera.zoom;
-      ctx.setLineDash([6, 4]);
+      const groupBg = group.backgroundColor ?? (group.color ? `${group.color}25` : 'rgba(88, 166, 255, 0.12)');
+      const groupBorder = group.color ?? '#58a6ff';
+      ctx.fillStyle = groupBg;
+      ctx.strokeStyle = groupBorder;
+      ctx.lineWidth = 2 / this.camera.zoom;
+      ctx.setLineDash([8, 4]);
       ctx.beginPath();
       ctx.roundRect(gx, gy, gw, gh, 12);
       ctx.fill();
       ctx.stroke();
       ctx.setLineDash([]);
 
-      ctx.fillStyle = group.color ?? '#58a6ff';
+      ctx.fillStyle = groupBorder;
       ctx.font = 'bold 12px sans-serif';
-      ctx.fillText(group.title, gx + 12, gy + 18);
+      const labelW = ctx.measureText(group.title).width;
+      ctx.beginPath();
+      ctx.roundRect(gx + 10, gy + 4, labelW + 16, 20, 4);
+      ctx.fill();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(group.title, gx + 18, gy + 18);
       ctx.restore();
     }
 
@@ -1700,10 +1816,25 @@ export class FlintRenderEngine {
 
       const pulseOffset = this.edgePulses.get(edge.id);
       const isPulseActive = pulseOffset !== undefined;
+      const isSelected = this.selectedEdgeIds.has(edge.id);
 
       ctx.save();
-      ctx.strokeStyle = isPulseActive ? '#58a6ff' : '#7384a6';
-      ctx.lineWidth = (isPulseActive ? 3.5 : 2.5) / this.camera.zoom;
+      if (isSelected) {
+        ctx.strokeStyle = '#58a6ff';
+        ctx.lineWidth = 4.5 / this.camera.zoom;
+        ctx.shadowColor = 'rgba(88, 166, 255, 0.9)';
+        ctx.shadowBlur = 10;
+      } else if (isPulseActive) {
+        ctx.strokeStyle = '#3fb950';
+        ctx.lineWidth = 4 / this.camera.zoom;
+        ctx.shadowColor = 'rgba(63, 185, 80, 0.9)';
+        ctx.shadowBlur = 10;
+      } else {
+        ctx.strokeStyle = '#79a8ff';
+        ctx.lineWidth = 3.2 / this.camera.zoom;
+        ctx.shadowColor = 'rgba(121, 168, 255, 0.35)';
+        ctx.shadowBlur = 4;
+      }
       ctx.beginPath();
       ctx.moveTo(p0x, p0y);
       ctx.bezierCurveTo(p1x, p1y, p2x, p2y, p3x, p3y);
@@ -1728,9 +1859,9 @@ export class FlintRenderEngine {
         );
         ctx.fillStyle = '#ffffff';
         ctx.shadowColor = '#58a6ff';
-        ctx.shadowBlur = 8;
+        ctx.shadowBlur = 10;
         ctx.beginPath();
-        ctx.arc(pulseX, pulseY, 5 / this.camera.zoom, 0, Math.PI * 2);
+        ctx.arc(pulseX, pulseY, 6 / this.camera.zoom, 0, Math.PI * 2);
         ctx.fill();
       }
       ctx.restore();

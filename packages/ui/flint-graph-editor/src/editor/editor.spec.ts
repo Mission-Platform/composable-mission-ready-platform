@@ -133,6 +133,88 @@ describe('Flint Graph Editor - Reactive Store & History', () => {
 
     expect(store.getUpdateTimeMs()).toBeGreaterThan(0);
   });
+
+  it('supports clipboard copy/paste, group copying with connections, and duplicate meta node naming', () => {
+    const store = new FlintEditorStore();
+    const inA = store.addNode('input', { x: 10, y: 10 }, { name: 'in_1' })!;
+    const inB = store.addNode('input', { x: 10, y: 60 }, { name: 'in_2' })!;
+    const addNode = store.addNode('add', { x: 150, y: 30 })!;
+    store.connectPorts(inA.id, 'value', addNode.id, 'a');
+    store.connectPorts(inB.id, 'value', addNode.id, 'b');
+
+    // Group the nodes
+    store.selectNodes([inA.id, inB.id, addNode.id]);
+    const group = store.groupSelectedNodes('MathGroup')!;
+    expect(group).toBeDefined();
+
+    // Copy group and paste
+    const copyResult = store.copyGroup(group.id);
+    expect(copyResult).toBe(true);
+    expect(store.getState().hasClipboard).toBe(true);
+
+    const pastedIds = store.paste({ x: 300, y: 300 });
+    expect(pastedIds).toHaveLength(3);
+    // Group connections between pasted nodes should be duplicated
+    expect(store.getState().graph.edges.length).toBe(4);
+
+    // Create a meta node from selection
+    store.selectNodes([inA.id, inB.id, addNode.id]);
+    const metaNode = store.createMetaNodeFromSelected('SumMeta')!;
+    expect(metaNode).toBeDefined();
+
+    // Duplicate meta node appends count .001
+    const duplicate = store.duplicateMetaNode(metaNode.id)!;
+    expect(duplicate).toBeDefined();
+    expect(duplicate.title).toBe('SumMeta.001');
+
+    // Drill into meta node and back
+    expect(store.drillIntoMetaNode(metaNode.id)).toBe(true);
+    expect(store.canNavigateBack()).toBe(true);
+    expect(store.getState().breadcrumbs.length).toBe(2);
+
+    expect(store.navigateBack()).toBe(true);
+    expect(store.canNavigateBack()).toBe(false);
+
+    // Ungroup and color group
+    store.setGroupColor(group.id, '#a371f7');
+    expect(store.getState().graph.groups?.[0]?.color).toBe('#a371f7');
+    store.ungroup(group.id);
+    expect(store.getState().graph.groups?.length).toBe(1); // Only the pasted group remains
+  });
+
+  it('supports custom code node updates, output splitting, and edge removal', () => {
+    const store = new FlintEditorStore();
+    const codeNode = store.addNode('flint_code', { x: 50, y: 50 })!;
+    expect(codeNode).toBeDefined();
+
+    store.updateCodeNode(
+      codeNode.id,
+      'fn custom_add(a: i32, b: i32) -> i32 { return a + b; }',
+      codeNode.inputs,
+      codeNode.outputs,
+      'custom_add',
+    );
+    const updated = store.getState().graph.nodes.find((n) => n.id === codeNode.id);
+    expect(updated?.properties?.code).toContain('fn custom_add');
+
+    // Toggle split outputs
+    const divRem = store.addNode('div_rem', { x: 100, y: 100 })!;
+    expect(divRem.splitOutputs).toBe(true);
+    store.toggleSplitOutputs(divRem.id);
+    const updatedDivRem = store.getState().graph.nodes.find((n) => n.id === divRem.id);
+    expect(updatedDivRem?.splitOutputs).toBe(false);
+
+    // Edge selection and removal
+    const outNode = store.addNode('output', { x: 300, y: 100 })!;
+    store.connectPorts(divRem.id, 'quotient', outNode.id, 'value');
+    const edge = store.getState().graph.edges[0]!;
+    expect(edge).toBeDefined();
+
+    store.selectEdge(edge.id);
+    expect(store.getState().activeEdgeId).toBe(edge.id);
+    store.removeActiveEdge();
+    expect(store.getState().graph.edges).toHaveLength(0);
+  });
 });
 
 describe('Flint Graph Editor - Compiler Worker Execution & Export', () => {

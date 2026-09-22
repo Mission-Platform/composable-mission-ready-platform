@@ -20,6 +20,7 @@ import type {
   FlintPrimitiveType,
   FlintReturnStatement,
   FlintStatement,
+  FlintStructDeclaration,
   FlintTypeName,
 } from '../ast.js';
 import type { FlintSourceSpan } from '../diagnostics.js';
@@ -130,6 +131,50 @@ function buildArithmeticExpression(
         { kind: 'match-arm', pattern: { kind: 'literal', value: false, span }, value: b, span },
       ];
       return { kind: 'match', value: { kind: 'binary', operator: '>', left: a, right: b, span }, arms, span };
+    }
+    case 'div_rem': {
+      const a = resolveInput(node, 'a');
+      const b = resolveInput(node, 'b');
+      const structName = `Record_${sanitizeIdentifier(node.id)}`;
+      return {
+        kind: 'struct-value',
+        type: { kind: 'type-name', name: 'unit', reference: structName, span },
+        fields: {
+          quotient: { kind: 'binary', operator: '/', left: a, right: b, span },
+          remainder: { kind: 'binary', operator: '%', left: a, right: b, span },
+        },
+        span,
+      };
+    }
+    case 'min_max': {
+      const a = resolveInput(node, 'a');
+      const b = resolveInput(node, 'b');
+      const structName = `Record_${sanitizeIdentifier(node.id)}`;
+      return {
+        kind: 'struct-value',
+        type: { kind: 'type-name', name: 'unit', reference: structName, span },
+        fields: {
+          min: {
+            kind: 'match',
+            value: { kind: 'binary', operator: '<', left: a, right: b, span },
+            arms: [
+              { kind: 'match-arm', pattern: { kind: 'literal', value: true, span }, value: a, span },
+              { kind: 'match-arm', pattern: { kind: 'literal', value: false, span }, value: b, span },
+            ],
+            span,
+          },
+          max: {
+            kind: 'match',
+            value: { kind: 'binary', operator: '>', left: a, right: b, span },
+            arms: [
+              { kind: 'match-arm', pattern: { kind: 'literal', value: true, span }, value: a, span },
+              { kind: 'match-arm', pattern: { kind: 'literal', value: false, span }, value: b, span },
+            ],
+            span,
+          },
+        },
+        span,
+      };
     }
     default: {
       return undefined;
@@ -298,6 +343,8 @@ export function buildGraphAst(inputGraph: FlintNodeGraph): FlintAstBuildResult {
   const entryFunctionName = sanitizeIdentifier(graph.entryFunctionName ?? 'evaluate');
 
   const capabilityImports: FlintCapabilityImport[] = [];
+  const structDeclarations: FlintStructDeclaration[] = [];
+  const helperFunctions: FlintFunction[] = [];
   const parameters: FlintParameter[] = [];
   const statements: FlintStatement[] = [];
 
@@ -465,22 +512,112 @@ export function buildGraphAst(inputGraph: FlintNodeGraph): FlintAstBuildResult {
             break;
           }
           default: {
-            const arguments_ = node.inputs.map((port) => resolveInputExpression(node, port.id));
-            expression = { kind: 'call', callee: node.operation, arguments: arguments_, span: nodeSpan };
+            if (node.operation === 'flint_code' || node.kind === 'custom') {
+              const customFunctionName = sanitizeIdentifier(
+                String(node.properties?.functionName ?? `custom_${node.id}`),
+              );
+              const arguments_ = node.inputs.map((port) => resolveInputExpression(node, port.id));
+              expression = { kind: 'call', callee: customFunctionName, arguments: arguments_, span: nodeSpan };
+
+              if (!helperFunctions.some((f) => f.name === customFunctionName)) {
+                helperFunctions.push({
+                  kind: 'function',
+                  name: customFunctionName,
+                  exported: false,
+                  genericParameters: [],
+                  parameters: node.inputs.map((inp, index) => ({
+                    kind: 'parameter',
+                    name: sanitizeIdentifier(inp.name),
+                    type: inp.type,
+                    span: createSyntheticSpan(currentLine + index, 1, 10),
+                  })),
+                  result: primaryOutPort?.type ?? createPrimitiveType('f32'),
+                  body: [
+                    {
+                      kind: 'return',
+                      value: node.inputs[0]
+                        ? { kind: 'identifier', name: sanitizeIdentifier(node.inputs[0].name), span: nodeSpan }
+                        : undefined,
+                      span: nodeSpan,
+                    },
+                  ],
+                  span: nodeSpan,
+                });
+              }
+            } else {
+              const arguments_ = node.inputs.map((port) => resolveInputExpression(node, port.id));
+              expression = { kind: 'call', callee: node.operation, arguments: arguments_, span: nodeSpan };
+            }
           }
         }
       }
     }
 
-    const letStatement: FlintLetStatement = {
-      kind: 'let',
-      name: letVariableName,
-      type: primaryOutPort?.type ?? createPrimitiveType('f32'),
-      value: expression,
-      span: nodeSpan,
-    };
+    if (node.outputs.length > 1) {
+      const structName = `Record_${sanitizeIdentifier(node.id)}`;
+      const structFields = node.outputs.map((p, index) => ({
+        kind: 'struct-field' as const,
+        name: sanitizeIdentifier(p.id),
+        type: p.type,
+        span: createSyntheticSpan(currentLine + index, 3, 10),
+      }));
 
-    statements.push(letStatement);
+      structDeclarations.push({
+        kind: 'struct',
+        name: structName,
+        record: true,
+        genericParameters: [],
+        fields: structFields,
+        immutable: true,
+        span: nodeSpan,
+      });
+
+      const recordVariableName = `v_${sanitizeIdentifier(node.id)}_record`;
+      const recordType: FlintTypeName = {
+        kind: 'type-name',
+        name: 'unit',
+        reference: structName,
+        span: nodeSpan,
+      };
+
+      statements.push({
+        kind: 'let',
+        name: recordVariableName,
+        type: recordType,
+        value: expression ?? createLiteralExpression(0, recordType, nodeSpan),
+        span: nodeSpan,
+      });
+
+      if (node.splitOutputs !== false) {
+        for (const outPort of node.outputs) {
+          const fieldVariableName = `v_${sanitizeIdentifier(node.id)}_${sanitizeIdentifier(outPort.id)}`;
+          portToAstIdentifier.set(`${node.id}:${outPort.id}`, fieldVariableName);
+          statements.push({
+            kind: 'let',
+            name: fieldVariableName,
+            type: outPort.type,
+            value: {
+              kind: 'identifier',
+              name: `${recordVariableName}.${sanitizeIdentifier(outPort.id)}`,
+              span: nodeSpan,
+            },
+            span: nodeSpan,
+          });
+        }
+      } else if (primaryOutPort !== undefined) {
+        portToAstIdentifier.set(`${node.id}:${primaryOutPort.id}`, recordVariableName);
+      }
+    } else {
+      const letStatement: FlintLetStatement = {
+        kind: 'let',
+        name: letVariableName,
+        type: primaryOutPort?.type ?? createPrimitiveType('f32'),
+        value: expression ?? createLiteralExpression(0, primaryOutPort?.type ?? createPrimitiveType('f32'), nodeSpan),
+        span: nodeSpan,
+      };
+
+      statements.push(letStatement);
+    }
   }
 
   // 4. Process Output Node -> Return Statement
@@ -532,10 +669,10 @@ export function buildGraphAst(inputGraph: FlintNodeGraph): FlintAstBuildResult {
     name: moduleName,
     imports: capabilityImports,
     sourceImports: [],
-    structs: [],
+    structs: structDeclarations,
     enums: [],
     interfaces: [],
-    functions: [mainFunction],
+    functions: [...helperFunctions, mainFunction],
     span: moduleSpan,
   };
 
