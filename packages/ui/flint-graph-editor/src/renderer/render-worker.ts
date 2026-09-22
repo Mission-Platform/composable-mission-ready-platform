@@ -1,7 +1,7 @@
 import { loadSync } from './render-worker.flint';
 import { EDGES_WGSL, GRID_WGSL, NODES_WGSL } from './shaders';
 
-import type { FlintGraphEdge, FlintGraphGroup, FlintGraphNode } from '@mission-platform/flint';
+import type { FlintGraphEdge, FlintGraphGroup, FlintGraphNode, FlintTypeName } from '@mission-platform/flint';
 
 export interface FlintRenderWorkerWasmExports {
   readonly abs_i32: (val: number) => number;
@@ -672,6 +672,64 @@ export interface RenderWorkerOutputMessage {
 export const getFlintCameraWasm: (imports?: WebAssembly.Imports) => FlintRenderWorkerWasmExports =
   getFlintRenderWorkerWasm;
 
+function getCategoryRgb(category: string): { readonly r: number; readonly g: number; readonly b: number } {
+  switch (category) {
+    case 'math': {
+      return { r: 0.35, g: 0.65, b: 1 };
+    }
+    case 'logic': {
+      return { r: 0.82, g: 0.53, b: 0.95 };
+    }
+    case 'text': {
+      return { r: 0.22, g: 0.74, b: 0.68 };
+    }
+    case 'collection': {
+      return { r: 0.32, g: 0.82, b: 0.42 };
+    }
+    case 'control': {
+      return { r: 0.95, g: 0.64, b: 0.24 };
+    }
+    case 'capability': {
+      return { r: 0.96, g: 0.45, b: 0.45 };
+    }
+    default: {
+      return { r: 0.55, g: 0.58, b: 0.65 };
+    }
+  }
+}
+
+function getPortTypeRgb(typeName: FlintTypeName): { readonly r: number; readonly g: number; readonly b: number } {
+  const name: string =
+    typeof typeName === 'string'
+      ? typeName
+      : typeName.kind === 'type-name'
+        ? (typeName.reference ?? typeName.name)
+        : 'f32';
+  switch (name) {
+    case 'f32':
+    case 'f64':
+    case 'i32':
+    case 'i64':
+    case 'u32':
+    case 'u64': {
+      return { r: 0.35, g: 0.65, b: 1 };
+    }
+    case 'bool': {
+      return { r: 0.82, g: 0.53, b: 0.95 };
+    }
+    case 'string': {
+      return { r: 0.22, g: 0.74, b: 0.68 };
+    }
+    case 'Vector':
+    case 'Map': {
+      return { r: 0.32, g: 0.82, b: 0.42 };
+    }
+    default: {
+      return { r: 0.75, g: 0.78, b: 0.85 };
+    }
+  }
+}
+
 export class FlintRenderEngine {
   private camera: FlintCamera;
   private readonly spatialIndex: SpatialGridIndex;
@@ -728,6 +786,19 @@ export class FlintRenderEngine {
   private currentCommandEncoder?: GPUCommandEncoder;
   private currentVisibleNodesCount = 0;
   private currentVisibleEdgesCount = 0;
+
+  private glCtx?: WebGLRenderingContext | WebGL2RenderingContext;
+  private glProgram?: WebGLProgram;
+  private glVertexBuffer?: WebGLBuffer;
+  private glUniformLocations?: {
+    readonly u_resolution: WebGLUniformLocation | null;
+    readonly u_camera: WebGLUniformLocation | null;
+    readonly u_zoom: WebGLUniformLocation | null;
+  };
+  private glAttribLocations?: {
+    readonly a_position: number;
+    readonly a_color: number;
+  };
 
   constructor(viewportWidth = 800, viewportHeight = 600, onMessage?: (message: RenderWorkerOutputMessage) => void) {
     this.camera = createCamera(viewportWidth, viewportHeight, 0, 0, 1);
@@ -975,7 +1046,62 @@ export class FlintRenderEngine {
     try {
       const gl = (canvas.getContext('webgl2') || canvas.getContext('webgl')) as
         WebGLRenderingContext | WebGL2RenderingContext | null;
-      return gl !== null;
+      if (!gl) return false;
+      this.glCtx = gl;
+
+      const vsSource = `
+        attribute vec2 a_position;
+        attribute vec4 a_color;
+        uniform vec2 u_resolution;
+        uniform vec2 u_camera;
+        uniform float u_zoom;
+        varying vec4 v_color;
+        void main() {
+          vec2 screenPos = (a_position - u_camera) * u_zoom + (u_resolution * 0.5);
+          vec2 clipSpace = (screenPos / u_resolution) * 2.0 - 1.0;
+          gl_Position = vec4(clipSpace.x, -clipSpace.y, 0.0, 1.0);
+          v_color = a_color;
+        }
+      `;
+      const fsSource = `
+        precision mediump float;
+        varying vec4 v_color;
+        void main() {
+          gl_FragColor = v_color;
+        }
+      `;
+
+      const vs = gl.createShader(gl.VERTEX_SHADER);
+      if (!vs) return false;
+      gl.shaderSource(vs, vsSource);
+      gl.compileShader(vs);
+      if (!gl.getShaderParameter(vs, gl.COMPILE_STATUS)) return false;
+
+      const fs = gl.createShader(gl.FRAGMENT_SHADER);
+      if (!fs) return false;
+      gl.shaderSource(fs, fsSource);
+      gl.compileShader(fs);
+      if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS)) return false;
+
+      const program = gl.createProgram();
+      if (!program) return false;
+      gl.attachShader(program, vs);
+      gl.attachShader(program, fs);
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return false;
+
+      this.glProgram = program;
+      this.glVertexBuffer = gl.createBuffer() ?? undefined;
+      this.glUniformLocations = {
+        u_resolution: gl.getUniformLocation(program, 'u_resolution'),
+        u_camera: gl.getUniformLocation(program, 'u_camera'),
+        u_zoom: gl.getUniformLocation(program, 'u_zoom'),
+      };
+      this.glAttribLocations = {
+        a_position: gl.getAttribLocation(program, 'a_position'),
+        a_color: gl.getAttribLocation(program, 'a_color'),
+      };
+      return true;
     } catch {
       return false;
     }
@@ -1001,12 +1127,28 @@ export class FlintRenderEngine {
     let hasWebGL = false;
     let has2D = false;
     try {
-      hasWebGL = (canvas.getContext('webgl2') || canvas.getContext('webgl')) !== null;
+      const probeCanvas =
+        typeof OffscreenCanvas === 'undefined'
+          ? typeof document === 'undefined'
+            ? undefined
+            : document.createElement('canvas')
+          : new OffscreenCanvas(1, 1);
+      if (probeCanvas) {
+        hasWebGL = Boolean(probeCanvas.getContext('webgl2') || probeCanvas.getContext('webgl'));
+      }
     } catch {
       hasWebGL = false;
     }
     try {
-      has2D = canvas.getContext('2d') !== null;
+      const probe2d =
+        typeof OffscreenCanvas === 'undefined'
+          ? typeof document === 'undefined'
+            ? undefined
+            : document.createElement('canvas')
+          : new OffscreenCanvas(1, 1);
+      if (probe2d) {
+        has2D = Boolean(probe2d.getContext('2d'));
+      }
     } catch {
       has2D = false;
     }
@@ -1027,20 +1169,19 @@ export class FlintRenderEngine {
       initialized = this.initWebGL(canvas);
       if (initialized) {
         this.activeBackend = 'webgl';
-        this.init2dFallback(canvas);
       } else {
         selectedTier = Number(wasm.backend_fallback_next(2, false, has2D));
       }
     }
 
-    if (!initialized && (selectedTier === 3 || has2D)) {
+    if (!initialized) {
       this.init2dFallback(canvas);
       this.activeBackend = 'canvas2d';
-      initialized = true;
+      initialized = this.canvas2dCtx !== undefined;
     }
 
     this.renderFrame();
-    return this.activeBackend === 'webgpu';
+    return initialized && this.activeBackend === 'webgpu';
   }
 
   destroy(): void {
@@ -1048,6 +1189,12 @@ export class FlintRenderEngine {
     this.edgeInstanceBuffer?.destroy();
     this.pinInstanceBuffer?.destroy();
     this.cameraBuffer?.destroy();
+    if (this.glProgram && this.glCtx) {
+      this.glCtx.deleteProgram(this.glProgram);
+    }
+    if (this.glVertexBuffer && this.glCtx) {
+      this.glCtx.deleteBuffer(this.glVertexBuffer);
+    }
   }
 
   private async initPipelines(): Promise<void> {
@@ -1201,7 +1348,7 @@ export class FlintRenderEngine {
           },
         ],
       },
-      primitive: { topology: 'triangle-list' },
+      primitive: { topology: 'triangle-strip' },
     });
   }
 
@@ -1222,6 +1369,7 @@ export class FlintRenderEngine {
         updateTimeMs: Math.round((this.performanceStats.updateTimeMs * 0.7 + updateDuration * 0.3) * 10) / 10,
       };
     }
+    this.renderFrame();
   }
 
   setSelection(selectedNodeIds: readonly string[], selectedEdgeIds: readonly string[] = []): void {
@@ -1240,10 +1388,12 @@ export class FlintRenderEngine {
     readonly cursorY: number;
   }): void {
     this.connectingEdge = edge;
+    this.renderFrame();
   }
 
   setHoveredPort(port?: { readonly nodeId: string; readonly portId: string }): void {
     this.hoveredPort = port;
+    this.renderFrame();
   }
 
   getHoveredPort(): { readonly nodeId: string; readonly portId: string } | undefined {
@@ -1252,10 +1402,12 @@ export class FlintRenderEngine {
 
   setEdgePulse(edgeId: string, progress: number): void {
     this.edgePulses.set(edgeId, progress);
+    this.renderFrame();
   }
 
   clearEdgePulses(): void {
     this.edgePulses.clear();
+    this.renderFrame();
   }
 
   setActiveNodes(nodeIds: readonly string[]): void {
@@ -1263,10 +1415,12 @@ export class FlintRenderEngine {
     for (const id of nodeIds) {
       this.activeNodeIds.add(id);
     }
+    this.renderFrame();
   }
 
   setTrappedNode(nodeId?: string): void {
     this.trappedNodeId = nodeId;
+    this.renderFrame();
   }
 
   pan(deltaX: number, deltaY: number): void {
@@ -1457,6 +1611,8 @@ export class FlintRenderEngine {
     const startTime = typeof performance === 'undefined' ? 0 : performance.now();
     if (this.gpuContext && this.gridPipeline && this.nodesPipeline && this.edgesPipeline) {
       this.renderWebGpuFrame();
+    } else if (this.glCtx && this.glProgram) {
+      this.renderWebGLFrame();
     } else if (this.canvas2dCtx) {
       this.render2dFrame();
     }
@@ -1625,7 +1781,7 @@ export class FlintRenderEngine {
     this.currentPassEncoder.setPipeline(this.edgesPipeline);
     this.currentPassEncoder.setBindGroup(0, this.cameraBindGroup);
     this.currentPassEncoder.setVertexBuffer(0, this.edgeInstanceBuffer);
-    this.currentPassEncoder.draw(6, count, 0, 0);
+    this.currentPassEncoder.draw(66, count, 0, 0);
   }
 
   private gpuDrawNodes(count: number): void {
@@ -1664,6 +1820,365 @@ export class FlintRenderEngine {
     this.gpuContext.queue.submit([this.currentCommandEncoder.finish()]);
     this.currentPassEncoder = undefined;
     this.currentCommandEncoder = undefined;
+  }
+
+  private renderWebGLFrame(): void {
+    const gl = this.glCtx;
+    if (!gl || !this.glProgram || !this.glVertexBuffer || !this.glUniformLocations || !this.glAttribLocations) return;
+
+    const t0 = typeof performance === 'undefined' ? 0 : performance.now();
+    const visibleBounds = getViewportBounds(this.camera, 200);
+    const visibleNodeIds = new Set(this.spatialIndex.queryBox(visibleBounds));
+    const visibleNodes = this.nodes.filter((n) => visibleNodeIds.has(n.id));
+
+    this.currentVisibleNodesCount = visibleNodes.length;
+    this.currentVisibleEdgesCount = this.edges.length;
+
+    const lineVertices: number[] = [];
+    const triVertices: number[] = [];
+
+    const pushLine = (
+      x1: number,
+      y1: number,
+      x2: number,
+      y2: number,
+      r: number,
+      g: number,
+      b: number,
+      a: number,
+    ): void => {
+      lineVertices.push(x1, y1, r, g, b, a, x2, y2, r, g, b, a);
+    };
+
+    const pushRect = (x: number, y: number, w: number, h: number, r: number, g: number, b: number, a: number): void => {
+      triVertices.push(
+        x,
+        y,
+        r,
+        g,
+        b,
+        a,
+        x + w,
+        y,
+        r,
+        g,
+        b,
+        a,
+        x,
+        y + h,
+        r,
+        g,
+        b,
+        a,
+        x,
+        y + h,
+        r,
+        g,
+        b,
+        a,
+        x + w,
+        y,
+        r,
+        g,
+        b,
+        a,
+        x + w,
+        y + h,
+        r,
+        g,
+        b,
+        a,
+      );
+    };
+
+    const pushRectBorder = (
+      x: number,
+      y: number,
+      w: number,
+      h: number,
+      r: number,
+      g: number,
+      b: number,
+      a: number,
+    ): void => {
+      pushLine(x, y, x + w, y, r, g, b, a);
+      pushLine(x + w, y, x + w, y + h, r, g, b, a);
+      pushLine(x + w, y + h, x, y + h, r, g, b, a);
+      pushLine(x, y + h, x, y, r, g, b, a);
+    };
+
+    const pushCircle = (
+      cx: number,
+      cy: number,
+      radius: number,
+      r: number,
+      g: number,
+      b: number,
+      a: number,
+      segments = 12,
+    ): void => {
+      for (let index = 0; index < segments; index++) {
+        const theta1 = (index / segments) * Math.PI * 2;
+        const theta2 = ((index + 1) / segments) * Math.PI * 2;
+        triVertices.push(
+          cx,
+          cy,
+          r,
+          g,
+          b,
+          a,
+          cx + Math.cos(theta1) * radius,
+          cy + Math.sin(theta1) * radius,
+          r,
+          g,
+          b,
+          a,
+          cx + Math.cos(theta2) * radius,
+          cy + Math.sin(theta2) * radius,
+          r,
+          g,
+          b,
+          a,
+        );
+      }
+    };
+
+    // 1. Grid
+    const minorSpacing = 24;
+    const majorSpacing = 120;
+    const startX = Math.floor(visibleBounds.minX / minorSpacing) * minorSpacing;
+    const endX = Math.ceil(visibleBounds.maxX / minorSpacing) * minorSpacing;
+    const startY = Math.floor(visibleBounds.minY / minorSpacing) * minorSpacing;
+    const endY = Math.ceil(visibleBounds.maxY / minorSpacing) * minorSpacing;
+
+    for (let x = startX; x <= endX; x += minorSpacing) {
+      const isMajor = Math.round(x) % majorSpacing === 0;
+      const alpha = isMajor ? 0.35 : 0.15;
+      pushLine(x, visibleBounds.minY, x, visibleBounds.maxY, 0.35, 0.45, 0.6, alpha);
+    }
+    for (let y = startY; y <= endY; y += minorSpacing) {
+      const isMajor = Math.round(y) % majorSpacing === 0;
+      const alpha = isMajor ? 0.35 : 0.15;
+      pushLine(visibleBounds.minX, y, visibleBounds.maxX, y, 0.35, 0.45, 0.6, alpha);
+    }
+
+    // 2. Groups
+    for (const group of this.groups) {
+      const groupNodes = this.nodes.filter((n) => group.nodeIds.includes(n.id));
+      if (groupNodes.length === 0) continue;
+
+      let minX = Infinity;
+      let minY = Infinity;
+      let maxX = -Infinity;
+      let maxY = -Infinity;
+      for (const node of groupNodes) {
+        const b = getNodeBounds(node);
+        minX = Math.min(minX, b.minX);
+        minY = Math.min(minY, b.minY);
+        maxX = Math.max(maxX, b.maxX);
+        maxY = Math.max(maxY, b.maxY);
+      }
+      const padding = 28;
+      const gx = minX - padding;
+      const gy = minY - padding - 24;
+      const gw = maxX - minX + padding * 2;
+      const gh = maxY - minY + padding * 2 + 24;
+
+      pushRect(gx, gy, gw, gh, 0.22, 0.27, 0.34, 0.25);
+      pushRectBorder(gx, gy, gw, gh, 0.35, 0.42, 0.52, 0.7);
+      pushRect(gx + 10, gy + 4, 80, 20, 0.18, 0.22, 0.28, 0.9);
+    }
+
+    // 3. Edges
+    const wasm = this.flintWasmInstance ?? getFlintRenderWorkerWasm();
+    const nodeMap = new Map<string, FlintGraphNode>(this.nodes.map((n) => [n.id, n]));
+
+    for (const edge of this.edges) {
+      const fromNode = nodeMap.get(edge.fromNodeId);
+      const toNode = nodeMap.get(edge.toNodeId);
+      if (!fromNode || !toNode) continue;
+
+      const fromPortIndex = Math.max(
+        0,
+        fromNode.outputs.findIndex((p) => p.id === edge.fromPortId),
+      );
+      const toPortIndex = Math.max(
+        0,
+        toNode.inputs.findIndex((p) => p.id === edge.toPortId),
+      );
+
+      const p0x = fromNode.position.x + NODE_WIDTH;
+      const p0y = fromNode.position.y + NODE_HEADER_HEIGHT + fromPortIndex * PORT_ROW_HEIGHT + 14;
+      const p3x = toNode.position.x;
+      const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIndex * PORT_ROW_HEIGHT + 14;
+
+      const isSelected = this.selectedEdgeIds.has(edge.id);
+      const isActive = this.edgePulses.has(edge.id);
+      const dx = wasm.bezier_control_dx(p0x, p3x);
+      const p1x = p0x + dx;
+      const p1y = p0y;
+      const p2x = p3x - dx;
+      const p2y = p3y;
+
+      const segments = 16;
+      let prevX = p0x;
+      let prevY = p0y;
+
+      const r = isSelected ? 0.35 : isActive ? 0.25 : 0.45;
+      const g = isSelected ? 0.65 : isActive ? 0.85 : 0.52;
+      const b = isSelected ? 1 : isActive ? 1 : 0.65;
+      const a = isSelected || isActive ? 1 : 0.85;
+
+      for (let s = 1; s <= segments; s++) {
+        const t = s / segments;
+        const u = 1 - t;
+        const curX = u * u * u * p0x + 3 * u * u * t * p1x + 3 * u * t * t * p2x + t * t * t * p3x;
+        const curY = u * u * u * p0y + 3 * u * u * t * p1y + 3 * u * t * t * p2y + t * t * t * p3y;
+        pushLine(prevX, prevY, curX, curY, r, g, b, a);
+        if (isSelected || isActive) {
+          pushLine(prevX, prevY + 1, curX, curY + 1, r, g, b, 0.6);
+          pushLine(prevX, prevY - 1, curX, curY - 1, r, g, b, 0.6);
+        }
+        prevX = curX;
+        prevY = curY;
+      }
+    }
+
+    // 4. Connecting Edge (dragging)
+    if (this.connectingEdge) {
+      const fromNode = nodeMap.get(this.connectingEdge.fromNodeId);
+      if (fromNode) {
+        const outIndex = fromNode.outputs.findIndex((p) => p.id === this.connectingEdge?.fromPortId);
+        const inIndex = fromNode.inputs.findIndex((p) => p.id === this.connectingEdge?.fromPortId);
+        let p0x = fromNode.position.x + NODE_WIDTH;
+        let p0y = fromNode.position.y + NODE_HEADER_HEIGHT + 14;
+        if (outIndex !== -1) {
+          p0x = fromNode.position.x + NODE_WIDTH;
+          p0y = fromNode.position.y + NODE_HEADER_HEIGHT + outIndex * PORT_ROW_HEIGHT + 14;
+        } else if (inIndex !== -1) {
+          p0x = fromNode.position.x;
+          p0y = fromNode.position.y + NODE_HEADER_HEIGHT + inIndex * PORT_ROW_HEIGHT + 14;
+        }
+        const p3x = this.connectingEdge.cursorX;
+        const p3y = this.connectingEdge.cursorY;
+        const dx = Math.max(Math.abs(p3x - p0x) * 0.5, 40);
+        const p1x = p0x + dx;
+        const p1y = p0y;
+        const p2x = p3x - dx;
+        const p2y = p3y;
+        let prevX = p0x;
+        let prevY = p0y;
+        const segments = 16;
+        for (let s = 1; s <= segments; s++) {
+          const t = s / segments;
+          const u = 1 - t;
+          const curX = u * u * u * p0x + 3 * u * u * t * p1x + 3 * u * t * t * p2x + t * t * t * p3x;
+          const curY = u * u * u * p0y + 3 * u * u * t * p1y + 3 * u * t * t * p2y + t * t * t * p3y;
+          pushLine(prevX, prevY, curX, curY, 0.35, 0.65, 1, 0.9);
+          prevX = curX;
+          prevY = curY;
+        }
+        pushCircle(p3x, p3y, 5, 0.35, 0.65, 1, 1);
+      }
+    }
+
+    // 5. Nodes
+    for (const node of visibleNodes) {
+      const bounds = getNodeBounds(node);
+      const w = bounds.maxX - bounds.minX;
+      const h = bounds.maxY - bounds.minY;
+      const x = bounds.minX;
+      const y = bounds.minY;
+
+      const isSelected = this.selectedNodeIds.has(node.id);
+      const isActive = this.activeNodeIds.has(node.id);
+      const isTrapped = this.trappedNodeId === node.id;
+      const isMeta = node.metaSubgraph !== undefined || node.operation === 'meta';
+
+      const bodyR = isMeta ? 0.08 : 0.13;
+      const bodyG = isMeta ? 0.12 : 0.15;
+      const bodyB = isMeta ? 0.18 : 0.2;
+      pushRect(x, y, w, h, bodyR, bodyG, bodyB, 0.96);
+
+      const headerR = isTrapped ? 0.24 : isActive ? 0.08 : isMeta ? 0.05 : 0.18;
+      const headerG = isTrapped ? 0.08 : isActive ? 0.24 : isMeta ? 0.16 : 0.21;
+      const headerB = isTrapped ? 0.09 : isActive ? 0.13 : isMeta ? 0.28 : 0.28;
+      pushRect(x, y, w, NODE_HEADER_HEIGHT, headerR, headerG, headerB, 0.98);
+
+      const borderR = isTrapped ? 0.97 : isActive ? 0.25 : isSelected ? 0.35 : isMeta ? 0.47 : 0.22;
+      const borderG = isTrapped ? 0.32 : isActive ? 0.73 : isSelected ? 0.65 : isMeta ? 0.75 : 0.26;
+      const borderB = isTrapped ? 0.29 : isActive ? 0.31 : isSelected ? 1 : isMeta ? 1 : 0.32;
+      const borderA = isSelected || isTrapped || isActive ? 1 : 0.8;
+      pushRectBorder(x, y, w, h, borderR, borderG, borderB, borderA);
+
+      // Category accent strip
+      const catColor = getCategoryRgb(node.category);
+      pushRect(x + 2, y + 2, 4, NODE_HEADER_HEIGHT - 4, catColor.r, catColor.g, catColor.b, 1);
+
+      // Pins (Inputs)
+      for (const [index, port] of node.inputs.entries()) {
+        const portY = y + NODE_HEADER_HEIGHT + index * PORT_ROW_HEIGHT + 14;
+        const isHovered = this.hoveredPort?.nodeId === node.id && this.hoveredPort?.portId === port.id;
+        const pinRadius = isHovered ? 7 : 5;
+        const pColor = getPortTypeRgb(port.type);
+        pushCircle(x, portY, pinRadius, pColor.r, pColor.g, pColor.b, 1);
+        pushCircle(x, portY, pinRadius + 1.5, 0.9, 0.95, 1, 0.7);
+      }
+
+      // Pins (Outputs)
+      for (const [index, port] of node.outputs.entries()) {
+        const portY = y + NODE_HEADER_HEIGHT + index * PORT_ROW_HEIGHT + 14;
+        const isHovered = this.hoveredPort?.nodeId === node.id && this.hoveredPort?.portId === port.id;
+        const pinRadius = isHovered ? 7 : 5;
+        const pColor = getPortTypeRgb(port.type);
+        pushCircle(x + w, portY, pinRadius, pColor.r, pColor.g, pColor.b, 1);
+        pushCircle(x + w, portY, pinRadius + 1.5, 0.9, 0.95, 1, 0.7);
+      }
+    }
+
+    // Render WebGL draw calls
+    gl.viewport(0, 0, this.canvas!.width, this.canvas!.height);
+    gl.clearColor(0.05, 0.07, 0.09, 1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.useProgram(this.glProgram);
+
+    gl.uniform2f(this.glUniformLocations.u_resolution, this.camera.viewportWidth, this.camera.viewportHeight);
+    gl.uniform2f(this.glUniformLocations.u_camera, this.camera.x, this.camera.y);
+    gl.uniform1f(this.glUniformLocations.u_zoom, this.camera.zoom);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.glVertexBuffer);
+
+    if (triVertices.length > 0) {
+      const triData = new Float32Array(triVertices);
+      gl.bufferData(gl.ARRAY_BUFFER, triData, gl.DYNAMIC_DRAW);
+      gl.vertexAttribPointer(this.glAttribLocations.a_position, 2, gl.FLOAT, false, 24, 0);
+      gl.enableVertexAttribArray(this.glAttribLocations.a_position);
+      gl.vertexAttribPointer(this.glAttribLocations.a_color, 4, gl.FLOAT, false, 24, 8);
+      gl.enableVertexAttribArray(this.glAttribLocations.a_color);
+      gl.drawArrays(gl.TRIANGLES, 0, triVertices.length / 6);
+    }
+
+    if (lineVertices.length > 0) {
+      const lineData = new Float32Array(lineVertices);
+      gl.bufferData(gl.ARRAY_BUFFER, lineData, gl.DYNAMIC_DRAW);
+      gl.vertexAttribPointer(this.glAttribLocations.a_position, 2, gl.FLOAT, false, 24, 0);
+      gl.enableVertexAttribArray(this.glAttribLocations.a_position);
+      gl.vertexAttribPointer(this.glAttribLocations.a_color, 4, gl.FLOAT, false, 24, 8);
+      gl.enableVertexAttribArray(this.glAttribLocations.a_color);
+      gl.drawArrays(gl.LINES, 0, lineVertices.length / 6);
+    }
+
+    const t1 = typeof performance === 'undefined' ? 0 : performance.now();
+    if (t0 > 0) {
+      this.performanceStats = {
+        ...this.performanceStats,
+        drawPassTimeMs: Math.round((this.performanceStats.drawPassTimeMs * 0.7 + (t1 - t0) * 0.3) * 100) / 100,
+        visibleNodesCount: this.currentVisibleNodesCount,
+        visibleEdgesCount: this.currentVisibleEdgesCount,
+      };
+    }
   }
 
   private render2dFrame(): void {

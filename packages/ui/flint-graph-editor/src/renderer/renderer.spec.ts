@@ -482,4 +482,87 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     expect(perf.updateTimeMs).toBeGreaterThan(0);
     expect(perf.renderTimeMs).toBeGreaterThan(0);
   });
+
+  it('gracefully selects and degrades graphics tiers in Flint Wasm', () => {
+    const wasm = getFlintRenderWorkerWasm();
+
+    // WebGPU available -> Tier 1
+    expect(wasm.backend_select_tier(true, true, true)).toBe(1);
+    expect(wasm.backend_select_tier(true, false, true)).toBe(1);
+
+    // WebGPU unavailable, WebGL available -> Tier 2
+    expect(wasm.backend_select_tier(false, true, true)).toBe(2);
+    expect(wasm.backend_select_tier(false, true, false)).toBe(2);
+
+    // Only 2D Canvas available -> Tier 3
+    expect(wasm.backend_select_tier(false, false, true)).toBe(3);
+
+    // Nothing available -> 0
+    expect(wasm.backend_select_tier(false, false, false)).toBe(0);
+
+    // Fallbacks
+    expect(wasm.backend_fallback_next(1, true, true)).toBe(2);
+    expect(wasm.backend_fallback_next(1, false, true)).toBe(3);
+    expect(wasm.backend_fallback_next(2, false, true)).toBe(3);
+    expect(wasm.backend_fallback_next(3, false, false)).toBe(0);
+  });
+
+  it('renders graph nodes immediately upon setGraph in 2D fallback mode', async () => {
+    let fillTextCount = 0;
+    let fillRectCount = 0;
+
+    const mockCanvas = {
+      width: 0,
+      height: 0,
+      getContext: (contextId: string) => {
+        if (contextId === '2d') {
+          return {
+            save: () => {},
+            restore: () => {},
+            setTransform: () => {},
+            fillRect: () => {
+              fillRectCount++;
+            },
+            translate: () => {},
+            scale: () => {},
+            beginPath: () => {},
+            moveTo: () => {},
+            lineTo: () => {},
+            stroke: () => {},
+            measureText: () => ({ width: 40 }),
+            fillText: () => {
+              fillTextCount++;
+            },
+            fill: () => {},
+            arc: () => {},
+            roundRect: () => {},
+          };
+        }
+        return;
+      },
+    } as unknown as HTMLCanvasElement;
+
+    const engine = new FlintRenderEngine(800, 600);
+    const isGpu = await engine.initialize(mockCanvas, 1);
+    expect(isGpu).toBe(false);
+
+    // Setting graph triggers immediate rendering of nodes and labels
+    engine.setGraph(
+      [
+        {
+          id: 'test-node-1',
+          title: 'Math Node',
+          category: 'math',
+          operation: 'add',
+          inputs: [{ id: 'in_a', name: 'a', direction: 'input', type: { kind: 'type-name', name: 'f32' } }],
+          outputs: [{ id: 'out_c', name: 'c', direction: 'output', type: { kind: 'type-name', name: 'f32' } }],
+          position: { x: 50, y: 50 },
+        },
+      ],
+      [],
+    );
+
+    expect(fillRectCount).toBeGreaterThan(0);
+    expect(fillTextCount).toBeGreaterThan(0);
+  });
 });

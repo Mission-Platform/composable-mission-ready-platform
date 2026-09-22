@@ -141,12 +141,16 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
       });
 
       engineReference.current = engine;
-      void engine.initialize(canvasElement, initialDpr).then(() => {
+      void engine.initialize(canvasElement, initialDpr).then((supported) => {
+        if (!supported) {
+          setIsFallback(true);
+        }
         engine.setGraph(
           store.getState().graph.nodes,
           store.getState().graph.edges,
           store.getState().graph.groups ?? [],
         );
+        engine.renderFrame();
         setPerfMetrics(engine.getPerformanceStats());
       });
 
