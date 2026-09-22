@@ -29,6 +29,18 @@ export interface FlintSdfFontWasmExports {
     a: number,
     align: number,
   ) => number;
+  readonly sdf_measure_text_mono: (text: string, fontSize: number) => number;
+  readonly sdf_append_text_quads_mono: (
+    text: string,
+    originX: number,
+    baselineY: number,
+    fontSize: number,
+    r: number,
+    g: number,
+    b: number,
+    a: number,
+    align: number,
+  ) => number;
   readonly memory: WebAssembly.Memory;
 }
 

@@ -822,7 +822,7 @@ if (
         : isDark
           ? [0.545, 0.58, 0.62, 1]
           : [0.341, 0.376, 0.416, 1];
-      wasm.font_append_text_quads(
+      wasm.font_append_text_quads_mono(
         catText,
         x + w - 10,
         y + 17,
@@ -836,7 +836,7 @@ if (
 
       // Subtitle operation identifier
       const subColor = isDark ? [0.545, 0.58, 0.62, 1] : [0.341, 0.376, 0.416, 1];
-      wasm.font_append_text_quads(node.operation, x + 10, y + 28, 9, subColor[0], subColor[1], subColor[2], 1, 0);
+      wasm.font_append_text_quads_mono(node.operation, x + 10, y + 28, 9, subColor[0], subColor[1], subColor[2], 1, 0);
 
       // Input pins & labels
       for (const [idx, port] of (node.inputs ?? []).entries()) {
@@ -905,7 +905,7 @@ if (
       if (node.properties && Object.keys(node.properties).length > 0) {
         const firstVal = String(Object.values(node.properties)[0]);
         const propColor = isDark ? [0.345, 0.651, 1, 1] : [0.035, 0.412, 0.855, 1];
-        wasm.font_append_text_quads(
+        wasm.font_append_text_quads_mono(
           `= ${firstVal}`,
           x + 10,
           y + h - 8,
@@ -1471,7 +1471,7 @@ if (
       ctx.setLineDash([]);
 
       ctx.fillStyle = groupBorder;
-      ctx.font = 'bold 12px sans-serif';
+      ctx.font = 'bold 12px "Comfortaa", -apple-system, sans-serif';
       const labelW = ctx.measureText(group.title).width;
       ctx.beginPath();
       if (typeof ctx.roundRect === 'function') {
@@ -1706,23 +1706,23 @@ if (
 
       // Title
       ctx.fillStyle = isDark ? '#f0f6fc' : '#1f2328';
-      ctx.font = 'bold 12px sans-serif';
+      ctx.font = 'bold 12px "Comfortaa", -apple-system, sans-serif';
       ctx.fillText(node.title, x + 10, y + 17);
 
       // Category / Meta pill
       ctx.fillStyle = isMeta ? (isDark ? '#58a6ff' : '#0969da') : isDark ? '#8b949e' : '#57606a';
-      ctx.font = '10px monospace';
+      ctx.font = '10px "Datatype", monospace';
       const catText = isMeta ? `META (${node.metaSubgraph?.nodes.length ?? 0})` : node.category.toUpperCase();
       const catWidth = ctx.measureText(catText).width;
       ctx.fillText(catText, x + w - catWidth - 10, y + 17);
 
       // Subtitle operation identifier
       ctx.fillStyle = isDark ? '#8b949e' : '#57606a';
-      ctx.font = '9px monospace';
+      ctx.font = '9px "Datatype", monospace';
       ctx.fillText(node.operation, x + 10, y + 28);
 
       // Port circles (Pins) and labels
-      ctx.font = '11px sans-serif';
+      ctx.font = '11px "Comfortaa", -apple-system, sans-serif';
       for (const [idx, port] of (node.inputs ?? []).entries()) {
         const portY = y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
         const isHovered = hoveredPort?.nodeId === node.id && hoveredPort.portId === port.id;
@@ -1781,7 +1781,7 @@ if (
         const propKeys = Object.keys(node.properties);
         const firstVal = String(node.properties[propKeys[0]]);
         ctx.fillStyle = isDark ? '#58a6ff' : '#0969da';
-        ctx.font = '10px monospace';
+        ctx.font = '10px "Datatype", monospace';
         ctx.fillText(`= ${firstVal}`, x + 10, y + h - 8);
       }
 
@@ -2165,7 +2165,7 @@ if (
         : isDark
           ? [0.545, 0.58, 0.62, 1]
           : [0.341, 0.376, 0.416, 1];
-      wasm.font_append_text_quads(
+      wasm.font_append_text_quads_mono(
         catText,
         x + w - 10,
         y + 17,
@@ -2179,7 +2179,7 @@ if (
 
       // Subtitle operation identifier
       const subColor = isDark ? [0.545, 0.58, 0.62] : [0.341, 0.376, 0.416];
-      wasm.font_append_text_quads(node.operation, x + 10, y + 28, 9, subColor[0], subColor[1], subColor[2], 1, 0);
+      wasm.font_append_text_quads_mono(node.operation, x + 10, y + 28, 9, subColor[0], subColor[1], subColor[2], 1, 0);
 
       // Pins (Inputs)
       for (const [idx, port] of (node.inputs ?? []).entries()) {
@@ -2245,7 +2245,7 @@ if (
       if (node.properties && Object.keys(node.properties).length > 0) {
         const firstVal = String(Object.values(node.properties)[0]);
         const propColor = isDark ? [0.345, 0.651, 1] : [0.035, 0.412, 0.855];
-        wasm.font_append_text_quads(
+        wasm.font_append_text_quads_mono(
           `= ${firstVal}`,
           x + 10,
           y + h - 8,

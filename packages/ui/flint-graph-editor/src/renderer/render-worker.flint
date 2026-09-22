@@ -489,6 +489,24 @@ export fn font_append_text_quads(
   return font.sdf_append_text_quads(text, origin_x, baseline_y, font_size, r, g, b, a, align);
 }
 
+export fn font_measure_text_mono(text: string, font_size: f64) -> f64 {
+  return font.sdf_measure_text_mono(text, font_size);
+}
+
+export fn font_append_text_quads_mono(
+  text: string,
+  origin_x: f64,
+  baseline_y: f64,
+  font_size: f64,
+  r: f64,
+  g: f64,
+  b: f64,
+  a: f64,
+  align: u32
+) -> u32 {
+  return font.sdf_append_text_quads_mono(text, origin_x, baseline_y, font_size, r, g, b, a, align);
+}
+
 export fn font_char_code_to_idx(code: i32) -> u32 {
   return font.char_code_to_idx(code);
 }

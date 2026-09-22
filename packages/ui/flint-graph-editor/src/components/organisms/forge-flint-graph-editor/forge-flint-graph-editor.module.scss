@@ -29,7 +29,7 @@
   box-sizing: border-box;
   background-color: var(--mp-editor-bg);
   color: var(--mp-editor-text-primary);
-  font-family: var(--mp-font-family-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+  font-family: var(--mp-font-family-sans, 'Comfortaa', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
 
   &[data-theme='light'],
   :global([data-theme='light']) & {
@@ -295,7 +295,7 @@
   border: 1px solid var(--mp-editor-border);
   border-radius: var(--mp-radius-md, 6px);
   padding: var(--mp-space-3, 12px);
-  font-family: var(--mp-font-family-mono, monospace);
+  font-family: var(--mp-font-family-mono, 'Datatype', monospace);
   font-size: var(--mp-font-size-xs, 12px);
   color: var(--mp-editor-text-primary);
   white-space: pre;
@@ -312,7 +312,7 @@
 }
 
 .fpsCounter {
-  font-family: var(--mp-font-family-mono, monospace);
+  font-family: var(--mp-font-family-mono, 'Datatype', monospace);
   font-size: var(--mp-font-size-xs, 12px);
   color: var(--mp-editor-success);
   padding: 2px 6px;
@@ -415,7 +415,7 @@
 }
 
 .portBadge {
-  font-family: var(--mp-font-family-mono, monospace);
+  font-family: var(--mp-font-family-mono, 'Datatype', monospace);
   font-size: 10px;
   padding: 2px 5px;
   border-radius: 3px;
@@ -424,7 +424,7 @@
 }
 
 .portBadgeOut {
-  font-family: var(--mp-font-family-mono, monospace);
+  font-family: var(--mp-font-family-mono, 'Datatype', monospace);
   font-size: 10px;
   padding: 2px 5px;
   border-radius: 3px;
@@ -448,7 +448,7 @@
   border: 1px solid var(--mp-editor-border);
   border-radius: var(--mp-radius-sm, 4px);
   padding: 4px 8px;
-  font-family: var(--mp-font-family-mono, monospace);
+  font-family: var(--mp-font-family-mono, 'Datatype', monospace);
   font-size: var(--mp-font-size-xs, 11px);
   color: var(--mp-editor-text-secondary);
   cursor: pointer;
@@ -572,7 +572,7 @@
   border: 1px solid var(--mp-editor-border);
   border-radius: var(--mp-radius-sm, 4px);
   color: var(--mp-editor-text-primary);
-  font-family: var(--mp-font-family-mono, monospace);
+  font-family: var(--mp-font-family-mono, 'Datatype', monospace);
   font-size: 11px;
   padding: 6px 8px;
   resize: vertical;

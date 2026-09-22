@@ -1682,7 +1682,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                         style={{
                           fontSize: '13px',
                           color: '#3fb950',
-                          fontFamily: 'monospace',
+                          fontFamily: 'var(--mp-font-family-mono, "Datatype", monospace)',
                         }}
                       >
                         {String(value)}

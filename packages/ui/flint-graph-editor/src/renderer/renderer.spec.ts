@@ -857,6 +857,33 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     expect(fontWasm.sdf_measure_text('Math Node', 12)).toBeGreaterThan(0);
   });
 
+  it('supports Datatype monospace and Comfortaa proportional text measurement and quad generation', () => {
+    const wasm = getFlintRenderWorkerWasm();
+
+    // Datatype monospace font measurements
+    const monoText = 'CONST_42';
+    const monoWidth = wasm.font_measure_text_mono(monoText, 12);
+    expect(monoWidth).toBeCloseTo((8 * 14 * 12) / 24, 1);
+
+    // Monospace quads
+    wasm.font_clear_text_vertices();
+    const monoQuads = wasm.font_append_text_quads_mono(monoText, 50, 100, 12, 1, 1, 1, 1, 0);
+    expect(monoQuads).toBe(8);
+
+    // Proportional (Comfortaa)
+    const compText = 'Comfortaa UI';
+    const compWidth = wasm.font_measure_text(compText, 12);
+    expect(compWidth).toBeGreaterThan(0);
+
+    wasm.font_clear_text_vertices();
+    const compQuads = wasm.font_append_text_quads(compText, 50, 100, 12, 1, 1, 1, 1, 0);
+    expect(compQuads).toBe(11); // 'Comfortaa UI' without space is 11 quads
+
+    // Also verify standalone font loader
+    const fontWasm = loadFontWasm();
+    expect(fontWasm.sdf_measure_text_mono('TEST', 12)).toBeCloseTo((4 * 14 * 12) / 24, 1);
+  });
+
   it('sets and retrieves theme mode in Flint Wasm engine and handles theme worker messages', async () => {
     const wasm = getFlintRenderWorkerWasm();
     wasm.engine_create(800, 600, 1);

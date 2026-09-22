@@ -82,7 +82,7 @@ export function ForgePerformancePieChart(properties: Readonly<ForgePerformancePi
         .attr('fill', '#f0f6fc')
         .attr('font-size', '16px')
         .attr('font-weight', 'bold')
-        .attr('font-family', 'monospace')
+        .attr('font-family', 'var(--mp-font-family-mono, "Datatype", monospace)')
         .text(`${metrics.totalFrameTimeMs.toFixed(1)}ms`);
 
       g.append('text')
@@ -90,6 +90,7 @@ export function ForgePerformancePieChart(properties: Readonly<ForgePerformancePi
         .attr('dy', '1.3em')
         .attr('fill', '#8b949e')
         .attr('font-size', '10px')
+        .attr('font-family', 'var(--mp-font-family-sans, "Comfortaa", sans-serif)')
         .text(metrics.isFallback ? '2D Raster' : 'WebGPU');
     },
     [

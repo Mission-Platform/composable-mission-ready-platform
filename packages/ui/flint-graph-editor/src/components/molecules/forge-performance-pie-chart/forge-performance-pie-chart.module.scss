@@ -5,6 +5,7 @@
   gap: var(--mp-space-4, 16px);
   padding: var(--mp-space-3, 12px);
   color: var(--mp-color-text-primary, #e6edf3);
+  font-family: var(--mp-font-family-sans, 'Comfortaa', sans-serif);
 }
 
 .chartWrapper {
@@ -37,7 +38,7 @@
 }
 
 .summaryValue {
-  font-family: var(--mp-font-family-mono, monospace);
+  font-family: var(--mp-font-family-mono, 'Datatype', monospace);
   font-size: var(--mp-font-size-sm, 13px);
   font-weight: 600;
   color: var(--mp-color-text-primary, #f0f6fc);
@@ -78,7 +79,7 @@
 }
 
 .legendNumbers {
-  font-family: var(--mp-font-family-mono, monospace);
+  font-family: var(--mp-font-family-mono, 'Datatype', monospace);
   font-size: var(--mp-font-size-xs, 12px);
   color: var(--mp-color-text-secondary, #c9d1d9);
 }

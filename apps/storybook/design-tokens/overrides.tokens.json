@@ -16,15 +16,16 @@
   "font": {
     "family": {
       "sans": {
-        "$value": "'Avenir Next', Avenir, 'Segoe UI', ui-sans-serif, system-ui, sans-serif",
-        "$description": "Avenir Next is the primary body and UI face, with a clean system fallback stack."
+        "$value": "'Comfortaa', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif",
+        "$description": "Comfortaa is the primary body and UI face to match the rest of the app."
       },
       "heading": {
-        "$value": "'Agrandir Variable', Agrandir, 'Avenir Next', Avenir, ui-sans-serif, sans-serif",
-        "$description": "Agrandir is the display and heading face used by the Hide and Seek identity."
+        "$value": "'Comfortaa', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif",
+        "$description": "Comfortaa is the display and heading face to match the rest of the app."
       },
       "mono": {
-        "$value": "'Avenir Next', Avenir, ui-monospace, monospace"
+        "$value": "'Datatype', 'JetBrains Mono', 'Fira Code', ui-monospace, 'Cascadia Mono', monospace",
+        "$description": "Datatype is the monospace code face."
       }
     }
   },

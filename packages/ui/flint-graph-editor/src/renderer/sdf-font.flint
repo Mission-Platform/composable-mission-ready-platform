@@ -1781,3 +1781,123 @@ export fn sdf_append_text_quads(
   memory_store_u32(200, float_count);
   return quads_added;
 }
+
+export fn sdf_measure_text_mono(text: string, font_size: f64) -> f64 {
+  let len: i32 = string_length(text);
+  let base_size: f64 = f64_from_u32(24);
+  let adv_mono_f64: f64 = (f64_from_u32(14) * font_size) / base_size;
+  let mut total: f64 = f64_from_u32(0);
+  let mut i: i32 = 0;
+  while i < len {
+    let b0: i32 = string_byte_at(text, i);
+    let step: i32 = utf8_codepoint_length(b0);
+    total = total + adv_mono_f64;
+    i = i + step;
+  }
+  return total;
+}
+
+export fn sdf_append_text_quads_mono(
+  text: string,
+  origin_x: f64,
+  baseline_y: f64,
+  font_size: f64,
+  r: f64,
+  g: f64,
+  b: f64,
+  a: f64,
+  align: u32
+) -> u32 {
+  let len: i32 = string_length(text);
+  if len == 0 {
+    return 0;
+  }
+
+  let base_size: f64 = f64_from_u32(24);
+  let scale: f64 = font_size / base_size;
+  let adv_mono_f64: f64 = (f64_from_u32(14) * font_size) / base_size;
+  let mut cursor_x: f64 = origin_x;
+
+  if align == 1 {
+    let total_w: f64 = sdf_measure_text_mono(text, font_size);
+    cursor_x = origin_x - total_w;
+  } else {
+    if align == 2 {
+      let total_w: f64 = sdf_measure_text_mono(text, font_size);
+      let two: f64 = f64_from_u32(2);
+      cursor_x = origin_x - (total_w / two);
+    }
+  }
+
+  let vbuf_base: u32 = sdf_get_vertex_buffer_ptr();
+  let mut float_count: u32 = memory_load_u32(200);
+  let atlas_size_f64: f64 = f64_from_u32(512);
+
+  let buffer_f64: f64 = f64_from_u32(6);
+  let top_f64: f64 = f64_from_u32(23);
+  let dim_f64: f64 = f64_from_u32(32);
+
+  let mut i: i32 = 0;
+  let mut quads_added: u32 = 0;
+
+  while i < len {
+    let b0: i32 = string_byte_at(text, i);
+    let step: i32 = utf8_codepoint_length(b0);
+    let ucode: i32 = utf8_decode_codepoint(text, i, len);
+
+    if ucode == 32 {
+      cursor_x = cursor_x + adv_mono_f64;
+    } else {
+      let idx: u32 = char_code_to_idx(ucode);
+      let col: u32 = idx % 16;
+      let row: u32 = idx / 16;
+
+      let cell_x: f64 = f64_from_u32(col * 32);
+      let cell_y: f64 = f64_from_u32(row * 32);
+
+      let qx0: f64 = cursor_x - (buffer_f64 * scale);
+      let qy0: f64 = baseline_y - (top_f64 * scale);
+      let qx1: f64 = qx0 + (dim_f64 * scale);
+      let qy1: f64 = qy0 + (dim_f64 * scale);
+
+      let u0: f64 = cell_x / atlas_size_f64;
+      let v0: f64 = cell_y / atlas_size_f64;
+      let u1: f64 = (cell_x + dim_f64) / atlas_size_f64;
+      let v1: f64 = (cell_y + dim_f64) / atlas_size_f64;
+
+      if float_count + 48 <= 64000 {
+        let v0_ptr: u32 = vbuf_base + float_count * 8;
+        memory_store_f64(v0_ptr, qx0); memory_store_f64(v0_ptr + 8, qy0); memory_store_f64(v0_ptr + 16, u0); memory_store_f64(v0_ptr + 24, v0);
+        memory_store_f64(v0_ptr + 32, r); memory_store_f64(v0_ptr + 40, g); memory_store_f64(v0_ptr + 48, b); memory_store_f64(v0_ptr + 56, a);
+
+        let v1_ptr: u32 = v0_ptr + 64;
+        memory_store_f64(v1_ptr, qx1); memory_store_f64(v1_ptr + 8, qy0); memory_store_f64(v1_ptr + 16, u1); memory_store_f64(v1_ptr + 24, v0);
+        memory_store_f64(v1_ptr + 32, r); memory_store_f64(v1_ptr + 40, g); memory_store_f64(v1_ptr + 48, b); memory_store_f64(v1_ptr + 56, a);
+
+        let v2_ptr: u32 = v1_ptr + 64;
+        memory_store_f64(v2_ptr, qx0); memory_store_f64(v2_ptr + 8, qy1); memory_store_f64(v2_ptr + 16, u0); memory_store_f64(v2_ptr + 24, v1);
+        memory_store_f64(v2_ptr + 32, r); memory_store_f64(v2_ptr + 40, g); memory_store_f64(v2_ptr + 48, b); memory_store_f64(v2_ptr + 56, a);
+
+        let v3_ptr: u32 = v2_ptr + 64;
+        memory_store_f64(v3_ptr, qx0); memory_store_f64(v3_ptr + 8, qy1); memory_store_f64(v3_ptr + 16, u0); memory_store_f64(v3_ptr + 24, v1);
+        memory_store_f64(v3_ptr + 32, r); memory_store_f64(v3_ptr + 40, g); memory_store_f64(v3_ptr + 48, b); memory_store_f64(v3_ptr + 56, a);
+
+        let v4_ptr: u32 = v3_ptr + 64;
+        memory_store_f64(v4_ptr, qx1); memory_store_f64(v4_ptr + 8, qy0); memory_store_f64(v4_ptr + 16, u1); memory_store_f64(v4_ptr + 24, v0);
+        memory_store_f64(v4_ptr + 32, r); memory_store_f64(v4_ptr + 40, g); memory_store_f64(v4_ptr + 48, b); memory_store_f64(v4_ptr + 56, a);
+
+        let v5_ptr: u32 = v4_ptr + 64;
+        memory_store_f64(v5_ptr, qx1); memory_store_f64(v5_ptr + 8, qy1); memory_store_f64(v5_ptr + 16, u1); memory_store_f64(v5_ptr + 24, v1);
+        memory_store_f64(v5_ptr + 32, r); memory_store_f64(v5_ptr + 40, g); memory_store_f64(v5_ptr + 48, b); memory_store_f64(v5_ptr + 56, a);
+
+        float_count = float_count + 48;
+        quads_added = quads_added + 1;
+      }
+      cursor_x = cursor_x + adv_mono_f64;
+    }
+    i = i + step;
+  }
+
+  memory_store_u32(200, float_count);
+  return quads_added;
+}

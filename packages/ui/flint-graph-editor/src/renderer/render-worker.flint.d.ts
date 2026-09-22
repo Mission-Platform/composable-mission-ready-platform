@@ -226,6 +226,18 @@ export interface FlintRenderWorkerWasmExports {
     a: number,
     align: number,
   ) => number;
+  readonly font_measure_text_mono: (text: string, fontSize: number) => number;
+  readonly font_append_text_quads_mono: (
+    text: string,
+    originX: number,
+    baselineY: number,
+    fontSize: number,
+    r: number,
+    g: number,
+    b: number,
+    a: number,
+    align: number,
+  ) => number;
   readonly font_char_code_to_idx: (code: number) => number;
   readonly font_unicode_to_idx: (code: number) => number;
   readonly char_code_to_idx?: (code: number) => number;
