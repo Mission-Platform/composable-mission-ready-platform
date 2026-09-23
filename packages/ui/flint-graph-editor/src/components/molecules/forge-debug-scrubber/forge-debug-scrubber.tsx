@@ -12,7 +12,6 @@ export interface DebugScrubberProperties {
 /**
  * Framework-neutral Forge playback scrubber for Flint execution traces.
  */
-// skipcq: JS-R1005
 export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>): MpElement {
   const { controller } = properties;
   const [playbackState, setPlaybackState] = useState(controller.getPlaybackState());

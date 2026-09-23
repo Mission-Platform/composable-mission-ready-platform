@@ -17,6 +17,35 @@ export interface TraceExecutionStep {
 export type TraceStepListener = (step: TraceExecutionStep, controller: TraceDebuggerController) => void;
 
 /**
+ * Correlates an execution trace event source location with a graph node ID.
+ */
+function correlateEventToNodeId(event: FlintTraceEvent, sourceMap: FlintNodeSourceMap): string | undefined {
+  if (!event.source) return undefined;
+  const span = event.source;
+  for (const [mappedNodeId, nodeSpan] of sourceMap.nodeToSpan) {
+    if (nodeSpan.line === span.line && span.column >= nodeSpan.column && span.column <= nodeSpan.endColumn) {
+      return mappedNodeId;
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Computes edge pulse animation descriptors between consecutive executing nodes.
+ */
+function computeEdgePulses(
+  previousNodeId: string | undefined,
+  currentNodeId: string | undefined,
+  edgeMap: ReadonlyMap<string, string>,
+): readonly { edgeId: string; offset: number }[] {
+  if (!previousNodeId || !currentNodeId || previousNodeId === currentNodeId) {
+    return [];
+  }
+  const edgeId = edgeMap.get(`${previousNodeId}:${currentNodeId}`);
+  return edgeId ? [{ edgeId, offset: 0.5 }] : [];
+}
+
+/**
  * Controller bridging compiler runtime execution traces to visual node replay.
  */
 export class TraceDebuggerController {
@@ -41,7 +70,6 @@ export class TraceDebuggerController {
   /**
    * Ingests a new trace execution report and maps its event source locations to graph nodes.
    */
-  // skipcq: JS-R1005
   loadTrace(
     report: FlintTraceReport,
     sourceMap: FlintNodeSourceMap,
@@ -55,36 +83,15 @@ export class TraceDebuggerController {
     let previousNodeId: string | undefined;
 
     for (const [index, event] of report.events.entries()) {
-      let nodeId: string | undefined;
-
-      // Extract span from event to correlate with visual node
-      if (event.source) {
-        const span = event.source;
-        for (const [mappedNodeId, nodeSpan] of sourceMap.nodeToSpan) {
-          if (nodeSpan.line === span.line && span.column >= nodeSpan.column && span.column <= nodeSpan.endColumn) {
-            nodeId = mappedNodeId;
-            break;
-          }
-        }
-      }
-
+      const nodeId = correlateEventToNodeId(event, sourceMap);
       const isTrap = event.type === 'trap';
       const trapMessage = isTrap ? (event.detail ?? 'Runtime Trap') : undefined;
 
-      // Record any simulated or captured port value
       if (nodeId && event.value !== undefined) {
         portValues[nodeId] = event.value;
       }
 
-      // Calculate causal edge pulse between consecutive executing nodes
-      const edgePulses: { edgeId: string; offset: number }[] = [];
-      if (previousNodeId && nodeId && previousNodeId !== nodeId) {
-        const edgeKey = `${previousNodeId}:${nodeId}`;
-        const edgeId = edgeMap.get(edgeKey);
-        if (edgeId) {
-          edgePulses.push({ edgeId, offset: 0.5 });
-        }
-      }
+      const edgePulses = computeEdgePulses(previousNodeId, nodeId, edgeMap);
 
       steps.push({
         stepIndex: index,

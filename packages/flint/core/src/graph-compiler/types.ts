@@ -150,23 +150,15 @@ export function createContainerType(
 }
 
 /**
- * Inlines a single meta-node subgraph and rewires external edges to internal exposed ports.
+ * Clones and remaps internal nodes of a meta-subgraph with a unique prefix.
  */
-// skipcq: JS-R1005
-function inlineMetaNode(
-  node: FlintGraphNode,
-  externalEdgesToMeta: ReadonlyMap<string, FlintGraphEdge[]>,
-  externalEdgesFromMeta: ReadonlyMap<string, FlintGraphEdge[]>,
+function remapMetaNodes(
+  internalNodes: readonly FlintGraphNode[],
+  prefix: string,
+  internalIdMap: Map<string, string>,
   flattenedNodes: FlintGraphNode[],
-  flattenedEdges: FlintGraphEdge[],
 ): void {
-  const sub = node.metaSubgraph;
-  if (!sub) return;
-
-  const prefix = `${node.id}__`;
-  const internalIdMap = new Map<string, string>();
-
-  for (const internalNode of sub.nodes) {
+  for (const internalNode of internalNodes) {
     const newId = `${prefix}${internalNode.id}`;
     internalIdMap.set(internalNode.id, newId);
     flattenedNodes.push({
@@ -174,8 +166,18 @@ function inlineMetaNode(
       id: newId,
     });
   }
+}
 
-  for (const edge of sub.edges) {
+/**
+ * Clones and remaps internal edges of a meta-subgraph with a unique prefix.
+ */
+function remapMetaEdges(
+  internalEdges: readonly FlintGraphEdge[],
+  prefix: string,
+  internalIdMap: ReadonlyMap<string, string>,
+  flattenedEdges: FlintGraphEdge[],
+): void {
+  for (const edge of internalEdges) {
     flattenedEdges.push({
       id: `${prefix}${edge.id}`,
       fromNodeId: internalIdMap.get(edge.fromNodeId) ?? edge.fromNodeId,
@@ -184,10 +186,19 @@ function inlineMetaNode(
       toPortId: edge.toPortId,
     });
   }
+}
 
-  const incoming = externalEdgesToMeta.get(node.id) ?? [];
+/**
+ * Rewires incoming external edges targeting a meta-node to its internal mapped ports.
+ */
+function rewireIncomingMetaEdges(
+  incoming: readonly FlintGraphEdge[],
+  portMap: Readonly<Record<string, { internalNodeId: string; internalPortId: string }>>,
+  internalIdMap: ReadonlyMap<string, string>,
+  flattenedEdges: FlintGraphEdge[],
+): void {
   for (const inEdge of incoming) {
-    const mapping = sub.exposedInputPortMap[inEdge.toPortId];
+    const mapping = portMap[inEdge.toPortId];
     if (mapping) {
       flattenedEdges.push({
         id: inEdge.id,
@@ -198,10 +209,19 @@ function inlineMetaNode(
       });
     }
   }
+}
 
-  const outgoing = externalEdgesFromMeta.get(node.id) ?? [];
+/**
+ * Rewires outgoing external edges originating from a meta-node from its internal mapped ports.
+ */
+function rewireOutgoingMetaEdges(
+  outgoing: readonly FlintGraphEdge[],
+  portMap: Readonly<Record<string, { internalNodeId: string; internalPortId: string }>>,
+  internalIdMap: ReadonlyMap<string, string>,
+  flattenedEdges: FlintGraphEdge[],
+): void {
   for (const outEdge of outgoing) {
-    const mapping = sub.exposedOutputPortMap[outEdge.fromPortId];
+    const mapping = portMap[outEdge.fromPortId];
     if (mapping) {
       flattenedEdges.push({
         id: outEdge.id,
@@ -215,24 +235,53 @@ function inlineMetaNode(
 }
 
 /**
- * Recursively inlines and flattens any meta nodes in a graph into their constituent internal nodes and edges.
- * Used during validation, AST generation, and source emission to seamlessly compile composite meta nodes.
+ * Inlines a single meta-node subgraph and rewires external edges to internal exposed ports.
  */
-// skipcq: JS-R1005
-export function flattenGraph(graph: FlintNodeGraph): FlintNodeGraph {
-  const hasMeta = graph.nodes.some((node) => node.metaSubgraph !== undefined);
-  if (!hasMeta) {
-    return graph;
-  }
+function inlineMetaNode(
+  node: FlintGraphNode,
+  externalEdgesToMeta: ReadonlyMap<string, FlintGraphEdge[]>,
+  externalEdgesFromMeta: ReadonlyMap<string, FlintGraphEdge[]>,
+  flattenedNodes: FlintGraphNode[],
+  flattenedEdges: FlintGraphEdge[],
+): void {
+  const sub = node.metaSubgraph;
+  if (!sub) return;
 
-  const flattenedNodes: FlintGraphNode[] = [];
-  const flattenedEdges: FlintGraphEdge[] = [];
+  const prefix = `${node.id}__`;
+  const internalIdMap = new Map<string, string>();
+
+  remapMetaNodes(sub.nodes, prefix, internalIdMap, flattenedNodes);
+  remapMetaEdges(sub.edges, prefix, internalIdMap, flattenedEdges);
+  rewireIncomingMetaEdges(
+    externalEdgesToMeta.get(node.id) ?? [],
+    sub.exposedInputPortMap,
+    internalIdMap,
+    flattenedEdges,
+  );
+  rewireOutgoingMetaEdges(
+    externalEdgesFromMeta.get(node.id) ?? [],
+    sub.exposedOutputPortMap,
+    internalIdMap,
+    flattenedEdges,
+  );
+}
+
+/**
+ * Partitions graph edges into external meta-node connections and standard direct edges.
+ */
+function partitionGraphEdges(
+  edges: readonly FlintGraphEdge[],
+  metaNodeIds: ReadonlySet<string>,
+): {
+  externalEdgesToMeta: Map<string, FlintGraphEdge[]>;
+  externalEdgesFromMeta: Map<string, FlintGraphEdge[]>;
+  standardEdges: FlintGraphEdge[];
+} {
   const externalEdgesToMeta = new Map<string, FlintGraphEdge[]>();
   const externalEdgesFromMeta = new Map<string, FlintGraphEdge[]>();
+  const standardEdges: FlintGraphEdge[] = [];
 
-  const metaNodeIds = new Set(graph.nodes.filter((node) => node.metaSubgraph !== undefined).map((node) => node.id));
-
-  for (const edge of graph.edges) {
+  for (const edge of edges) {
     const toMeta = metaNodeIds.has(edge.toNodeId);
     const fromMeta = metaNodeIds.has(edge.fromNodeId);
 
@@ -247,9 +296,27 @@ export function flattenGraph(graph: FlintNodeGraph): FlintNodeGraph {
       externalEdgesFromMeta.set(edge.fromNodeId, list);
     }
     if (!toMeta && !fromMeta) {
-      flattenedEdges.push(edge);
+      standardEdges.push(edge);
     }
   }
+
+  return { externalEdgesToMeta, externalEdgesFromMeta, standardEdges };
+}
+
+/**
+ * Recursively inlines and flattens any meta nodes in a graph into their constituent internal nodes and edges.
+ * Used during validation, AST generation, and source emission to seamlessly compile composite meta nodes.
+ */
+export function flattenGraph(graph: FlintNodeGraph): FlintNodeGraph {
+  const hasMeta = graph.nodes.some((node) => node.metaSubgraph !== undefined);
+  if (!hasMeta) {
+    return graph;
+  }
+
+  const flattenedNodes: FlintGraphNode[] = [];
+  const metaNodeIds = new Set(graph.nodes.filter((node) => node.metaSubgraph !== undefined).map((node) => node.id));
+  const { externalEdgesToMeta, externalEdgesFromMeta, standardEdges } = partitionGraphEdges(graph.edges, metaNodeIds);
+  const flattenedEdges: FlintGraphEdge[] = [...standardEdges];
 
   for (const node of graph.nodes) {
     if (node.metaSubgraph) {

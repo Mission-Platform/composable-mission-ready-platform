@@ -9,18 +9,29 @@ import type {
 } from './types.js';
 
 /**
+ * Verifies that all corresponding type arguments in two type signatures are mutually compatible.
+ */
+function areTypeArgumentsCompatible(
+  sourceArguments: readonly FlintTypeName[],
+  targetArguments: readonly FlintTypeName[],
+): boolean {
+  for (const [index, sourceArgument] of sourceArguments.entries()) {
+    const targetArgument = targetArguments[index];
+    if (targetArgument === undefined || !areTypesCompatible(sourceArgument, targetArgument)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
  * Checks structural and semantic compatibility between source and destination Flint types.
  */
-// skipcq: JS-R1005
 export function areTypesCompatible(source: FlintTypeName, target: FlintTypeName): boolean {
   const sourceName = source.reference ?? source.name;
   const targetName = target.reference ?? target.name;
 
-  if (sourceName !== targetName) {
-    return false;
-  }
-
-  if (source.length !== target.length) {
+  if (sourceName !== targetName || source.length !== target.length) {
     return false;
   }
 
@@ -31,14 +42,7 @@ export function areTypesCompatible(source: FlintTypeName, target: FlintTypeName)
     return false;
   }
 
-  for (const [index, sourceArgument] of sourceArguments.entries()) {
-    const targetArgument = targetArguments[index];
-    if (targetArgument === undefined || !areTypesCompatible(sourceArgument, targetArgument)) {
-      return false;
-    }
-  }
-
-  return true;
+  return areTypeArgumentsCompatible(sourceArguments, targetArguments);
 }
 
 /**
@@ -65,9 +69,117 @@ function validateNodeUniqueness(
 }
 
 /**
+ * Resolves source and destination endpoints for an edge, reporting dangling reference issues if absent.
+ */
+function resolveEdgeEndpoints(
+  edge: FlintGraphEdge,
+  nodeMap: ReadonlyMap<string, FlintGraphNode>,
+  issues: FlintGraphValidationIssue[],
+): { fromNode: FlintGraphNode; toNode: FlintGraphNode } | undefined {
+  if (edge.fromNodeId === edge.toNodeId) {
+    issues.push({
+      code: 'FLINT-GRAPH-SELF-LOOP',
+      severity: 'error',
+      message: `Self-referential loop detected on node '${edge.fromNodeId}'.`,
+      nodeId: edge.fromNodeId,
+      edgeId: edge.id,
+    });
+    return undefined;
+  }
+
+  const fromNode = nodeMap.get(edge.fromNodeId);
+  const toNode = nodeMap.get(edge.toNodeId);
+
+  if (fromNode === undefined) {
+    issues.push({
+      code: 'FLINT-GRAPH-DANGLING-EDGE',
+      severity: 'error',
+      message: `Edge '${edge.id}' originates from non-existent source node '${edge.fromNodeId}'.`,
+      edgeId: edge.id,
+    });
+    return undefined;
+  }
+
+  if (toNode === undefined) {
+    issues.push({
+      code: 'FLINT-GRAPH-DANGLING-EDGE',
+      severity: 'error',
+      message: `Edge '${edge.id}' targets non-existent destination node '${edge.toNodeId}'.`,
+      edgeId: edge.id,
+    });
+    return undefined;
+  }
+
+  return { fromNode, toNode };
+}
+
+/**
+ * Validates port existence and type compatibility across an edge connection.
+ */
+function validateEdgeConnection(
+  edge: FlintGraphEdge,
+  fromNode: FlintGraphNode,
+  toNode: FlintGraphNode,
+  inputPortConnections: Map<string, string>,
+  issues: FlintGraphValidationIssue[],
+): void {
+  const fromPort = fromNode.outputs.find((p) => p.id === edge.fromPortId);
+  const toPort = toNode.inputs.find((p) => p.id === edge.toPortId);
+
+  if (fromPort === undefined) {
+    issues.push({
+      code: 'FLINT-GRAPH-MISSING-PORT',
+      severity: 'error',
+      message: `Source output port '${edge.fromPortId}' was not found on node '${fromNode.title}' (${fromNode.id}).`,
+      nodeId: fromNode.id,
+      portId: edge.fromPortId,
+      edgeId: edge.id,
+    });
+    return;
+  }
+
+  if (toPort === undefined) {
+    issues.push({
+      code: 'FLINT-GRAPH-MISSING-PORT',
+      severity: 'error',
+      message: `Destination input port '${edge.toPortId}' was not found on node '${toNode.title}' (${toNode.id}).`,
+      nodeId: toNode.id,
+      portId: edge.toPortId,
+      edgeId: edge.id,
+    });
+    return;
+  }
+
+  const targetKey = `${toNode.id}:${toPort.id}`;
+  const existingEdgeId = inputPortConnections.get(targetKey);
+  if (existingEdgeId === undefined) {
+    inputPortConnections.set(targetKey, edge.id);
+  } else {
+    issues.push({
+      code: 'FLINT-GRAPH-MULTI-INPUT',
+      severity: 'error',
+      message: `Input port '${toPort.name}' on node '${toNode.title}' (${toNode.id}) has multiple incoming connections (edges '${existingEdgeId}' and '${edge.id}').`,
+      nodeId: toNode.id,
+      portId: toPort.id,
+      edgeId: edge.id,
+    });
+  }
+
+  if (!areTypesCompatible(fromPort.type, toPort.type)) {
+    issues.push({
+      code: 'FLINT-GRAPH-TYPE-MISMATCH',
+      severity: 'error',
+      message: `Type mismatch on edge '${edge.id}': Output port '${fromPort.name}' (${flintTypeNameToString(fromPort.type)}) is incompatible with input port '${toPort.name}' (${flintTypeNameToString(toPort.type)}).`,
+      nodeId: toNode.id,
+      portId: toPort.id,
+      edgeId: edge.id,
+    });
+  }
+}
+
+/**
  * Validates graph edge topology, self-loops, dangling nodes, port matching, and type compatibility.
  */
-// skipcq: JS-R1005
 function validateEdgeIntegrity(
   edges: readonly FlintGraphEdge[],
   nodeMap: ReadonlyMap<string, FlintGraphNode>,
@@ -76,91 +188,9 @@ function validateEdgeIntegrity(
   const inputPortConnections = new Map<string, string>();
 
   for (const edge of edges) {
-    if (edge.fromNodeId === edge.toNodeId) {
-      issues.push({
-        code: 'FLINT-GRAPH-SELF-LOOP',
-        severity: 'error',
-        message: `Self-referential loop detected on node '${edge.fromNodeId}'.`,
-        nodeId: edge.fromNodeId,
-        edgeId: edge.id,
-      });
-      continue;
-    }
-
-    const fromNode = nodeMap.get(edge.fromNodeId);
-    const toNode = nodeMap.get(edge.toNodeId);
-
-    if (fromNode === undefined) {
-      issues.push({
-        code: 'FLINT-GRAPH-DANGLING-EDGE',
-        severity: 'error',
-        message: `Edge '${edge.id}' originates from non-existent source node '${edge.fromNodeId}'.`,
-        edgeId: edge.id,
-      });
-      continue;
-    }
-
-    if (toNode === undefined) {
-      issues.push({
-        code: 'FLINT-GRAPH-DANGLING-EDGE',
-        severity: 'error',
-        message: `Edge '${edge.id}' targets non-existent destination node '${edge.toNodeId}'.`,
-        edgeId: edge.id,
-      });
-      continue;
-    }
-
-    const fromPort = fromNode.outputs.find((p) => p.id === edge.fromPortId);
-    const toPort = toNode.inputs.find((p) => p.id === edge.toPortId);
-
-    if (fromPort === undefined) {
-      issues.push({
-        code: 'FLINT-GRAPH-MISSING-PORT',
-        severity: 'error',
-        message: `Source output port '${edge.fromPortId}' was not found on node '${fromNode.title}' (${fromNode.id}).`,
-        nodeId: fromNode.id,
-        portId: edge.fromPortId,
-        edgeId: edge.id,
-      });
-      continue;
-    }
-
-    if (toPort === undefined) {
-      issues.push({
-        code: 'FLINT-GRAPH-MISSING-PORT',
-        severity: 'error',
-        message: `Destination input port '${edge.toPortId}' was not found on node '${toNode.title}' (${toNode.id}).`,
-        nodeId: toNode.id,
-        portId: edge.toPortId,
-        edgeId: edge.id,
-      });
-      continue;
-    }
-
-    const targetKey = `${toNode.id}:${toPort.id}`;
-    const existingEdgeId = inputPortConnections.get(targetKey);
-    if (existingEdgeId === undefined) {
-      inputPortConnections.set(targetKey, edge.id);
-    } else {
-      issues.push({
-        code: 'FLINT-GRAPH-MULTI-INPUT',
-        severity: 'error',
-        message: `Input port '${toPort.name}' on node '${toNode.title}' (${toNode.id}) has multiple incoming connections (edges '${existingEdgeId}' and '${edge.id}').`,
-        nodeId: toNode.id,
-        portId: toPort.id,
-        edgeId: edge.id,
-      });
-    }
-
-    if (!areTypesCompatible(fromPort.type, toPort.type)) {
-      issues.push({
-        code: 'FLINT-GRAPH-TYPE-MISMATCH',
-        severity: 'error',
-        message: `Type mismatch on edge '${edge.id}': Output port '${fromPort.name}' (${flintTypeNameToString(fromPort.type)}) is incompatible with input port '${toPort.name}' (${flintTypeNameToString(toPort.type)}).`,
-        nodeId: toNode.id,
-        portId: toPort.id,
-        edgeId: edge.id,
-      });
+    const endpoints = resolveEdgeEndpoints(edge, nodeMap, issues);
+    if (endpoints !== undefined) {
+      validateEdgeConnection(edge, endpoints.fromNode, endpoints.toNode, inputPortConnections, issues);
     }
   }
 
@@ -192,15 +222,13 @@ function validateRequiredUnconnectedPorts(
 }
 
 /**
- * Performs Kahn's topological sort algorithm to detect graph cycles and derive deterministic node evaluation order.
+ * Constructs node in-degrees and neighbor adjacency sets for Kahn's algorithm.
  */
-// skipcq: JS-R1005
-function performTopologicalSort(
+function buildGraphAdjacency(
   nodes: readonly FlintGraphNode[],
   edges: readonly FlintGraphEdge[],
   nodeMap: ReadonlyMap<string, FlintGraphNode>,
-  issues: FlintGraphValidationIssue[],
-): readonly string[] | undefined {
+): { inDegree: Map<string, number>; adjacency: Map<string, Set<string>> } {
   const inDegree = new Map<string, number>();
   const adjacency = new Map<string, Set<string>>();
 
@@ -219,6 +247,18 @@ function performTopologicalSort(
     }
   }
 
+  return { inDegree, adjacency };
+}
+
+/**
+ * Resolves node evaluation order and detects cycles using Kahn's topological sort.
+ */
+function resolveKahnOrder(
+  nodes: readonly FlintGraphNode[],
+  inDegree: Map<string, number>,
+  adjacency: ReadonlyMap<string, Set<string>>,
+  issues: FlintGraphValidationIssue[],
+): readonly string[] | undefined {
   const queue: string[] = [...inDegree.entries()]
     .filter(([, degree]) => degree === 0)
     .map(([nodeId]) => nodeId)
@@ -254,6 +294,19 @@ function performTopologicalSort(
   }
 
   return sortedNodeIds;
+}
+
+/**
+ * Performs Kahn's topological sort algorithm to detect graph cycles and derive deterministic node evaluation order.
+ */
+function performTopologicalSort(
+  nodes: readonly FlintGraphNode[],
+  edges: readonly FlintGraphEdge[],
+  nodeMap: ReadonlyMap<string, FlintGraphNode>,
+  issues: FlintGraphValidationIssue[],
+): readonly string[] | undefined {
+  const { inDegree, adjacency } = buildGraphAdjacency(nodes, edges, nodeMap);
+  return resolveKahnOrder(nodes, inDegree, adjacency, issues);
 }
 
 /**

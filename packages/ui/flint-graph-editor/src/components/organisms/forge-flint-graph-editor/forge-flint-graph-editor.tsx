@@ -581,7 +581,6 @@ function createRendererBridge(
 /**
  * Detects the active color theme from the DOM data-theme attribute or system color preference.
  */
-// skipcq: JS-R1005
 function detectCurrentTheme(): 'light' | 'dark' {
   if (typeof document !== 'undefined') {
     const documentTheme = document.documentElement.dataset.theme ?? document.body?.dataset.theme;
@@ -854,7 +853,6 @@ function PerfProfilerModal(properties: PerfProfilerModalProperties): MpElement {
  * Authors interactive dataflow programs, renders instanced WebGPU primitives,
  * and compiles natively to WebAssembly.
  */
-// skipcq: JS-R1005
 export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorProperties>): MpElement {
   const storeReference = useRef<FlintEditorStore>(properties.store ?? new FlintEditorStore());
   const store = properties.store ?? storeReference.current;

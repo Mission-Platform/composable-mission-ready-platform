@@ -736,7 +736,6 @@ if (
   /**
    * Prepares instanced WebGPU vertex buffers and text quads for active nodes, groups, edges, and pins.
    */
-  // skipcq: JS-R1005
   function prepareWebGpuInstances(): void {
     if (!gpuContext || !cameraBuffer || !wasm) return;
 
@@ -1055,7 +1054,6 @@ if (
   /**
    * Initializes the WebGPU device, swapchain context, pipelines, and uniform bind groups.
    */
-  // skipcq: JS-R1005
   async function initWebGpuBackend(targetCanvas: OffscreenCanvas | HTMLCanvasElement): Promise<boolean> {
     try {
       const nav = typeof navigator === 'undefined' ? undefined : (navigator as unknown as WebGpuNavigator);
@@ -1285,7 +1283,6 @@ if (
   /**
    * Initializes WebGL 1.0 or 2.0 context, compiles vertex and fragment shaders, and configures vertex attributes.
    */
-  // skipcq: JS-R1005
   function initWebGLBackend(targetCanvas: OffscreenCanvas | HTMLCanvasElement): boolean {
     try {
       const gl = (targetCanvas.getContext('webgl2', { preserveDrawingBuffer: true, alpha: true }) ||
@@ -1460,7 +1457,6 @@ if (
   /**
    * Renders the complete node graph using the 2D canvas context and native Flint geometry projections.
    */
-  // skipcq: JS-R1005
   function render2dFrame(): void {
     if (!canvas2dCtx || !wasm) return;
     const ctx = canvas2dCtx;
@@ -1906,7 +1902,6 @@ if (
   /**
    * Renders the complete node graph using WebGL draw arrays and native Flint vertex batching.
    */
-  // skipcq: JS-R1005
   function renderWebGLFrame(): void {
     const gl = glCtx;
     if (!gl || !glProgram || !glVertexBuffer || !glUniformLocations || !glAttribLocations || !wasm) return;

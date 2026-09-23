@@ -70,6 +70,378 @@ function generateSecureId(prefix: string): string {
 const DEFAULT_NODE_POSITION = { x: 0, y: 0 } as const;
 
 /**
+ * Calculates the centroid position of a collection of graph nodes.
+ */
+function computeNodesCentroid(nodes: readonly FlintGraphNode[]): { x: number; y: number } {
+  let totalX = 0;
+  let totalY = 0;
+  for (const node of nodes) {
+    totalX += node.position.x;
+    totalY += node.position.y;
+  }
+  return {
+    x: Math.round(totalX / nodes.length),
+    y: Math.round(totalY / nodes.length),
+  };
+}
+
+/**
+ * Checks if a specific internal node port has already been mapped to an exposed boundary port.
+ */
+function isPortAlreadyExposed(
+  exposedPortMap: Readonly<Record<string, { internalNodeId: string; internalPortId: string }>>,
+  nodeId: string,
+  portId: string,
+): boolean {
+  const portKey = `${nodeId}:${portId}`;
+  return Object.values(exposedPortMap).some((map) => `${map.internalNodeId}:${map.internalPortId}` === portKey);
+}
+
+/**
+ * Exposes a single incoming boundary connection as an exposed meta input port.
+ */
+function exposeSingleIncomingEdgePort(
+  edge: FlintGraphEdge,
+  subNodes: readonly FlintGraphNode[],
+  exposedInputPortMap: Record<string, { internalNodeId: string; internalPortId: string }>,
+  metaInputs: FlintGraphPort[],
+): void {
+  if (isPortAlreadyExposed(exposedInputPortMap, edge.toNodeId, edge.toPortId)) {
+    return;
+  }
+  const targetNode = subNodes.find((node) => node.id === edge.toNodeId);
+  const targetPort = targetNode?.inputs.find((port) => port.id === edge.toPortId);
+  const nodeTitle = targetNode?.title ?? 'node';
+  const sanitizedNodeTitle = nodeTitle.toLowerCase().replaceAll(/[^a-z0-9]/g, '_');
+  const metaPortId = `in_${sanitizedNodeTitle}_${edge.toPortId}`;
+  exposedInputPortMap[metaPortId] = {
+    internalNodeId: edge.toNodeId,
+    internalPortId: edge.toPortId,
+  };
+  const portName = targetPort?.name ?? edge.toPortId;
+  metaInputs.push({
+    id: metaPortId,
+    name: `${nodeTitle}.${portName}`,
+    direction: 'input',
+    type: targetPort?.type ?? createPrimitiveType('i32'),
+  });
+}
+
+/**
+ * Exposes input ports driven by external incoming connections.
+ */
+function exposeIncomingEdgeInputPorts(
+  incomingExternalEdges: readonly FlintGraphEdge[],
+  subNodes: readonly FlintGraphNode[],
+  exposedInputPortMap: Record<string, { internalNodeId: string; internalPortId: string }>,
+  metaInputs: FlintGraphPort[],
+): void {
+  for (const edge of incomingExternalEdges) {
+    exposeSingleIncomingEdgePort(edge, subNodes, exposedInputPortMap, metaInputs);
+  }
+}
+
+/**
+ * Exposes unconnected internal input ports to allow external parameterization.
+ */
+function exposeUnconnectedInputPorts(
+  subNodes: readonly FlintGraphNode[],
+  internalDrivenInputs: ReadonlySet<string>,
+  exposedInputPortMap: Record<string, { internalNodeId: string; internalPortId: string }>,
+  metaInputs: FlintGraphPort[],
+): void {
+  for (const node of subNodes) {
+    for (const port of node.inputs) {
+      const portKey = `${node.id}:${port.id}`;
+      if (!internalDrivenInputs.has(portKey) && !isPortAlreadyExposed(exposedInputPortMap, node.id, port.id)) {
+        const sanitizedTitle = node.title.toLowerCase().replaceAll(/[^a-z0-9]/g, '_');
+        const metaPortId = `in_${sanitizedTitle}_${port.id}`;
+        exposedInputPortMap[metaPortId] = {
+          internalNodeId: node.id,
+          internalPortId: port.id,
+        };
+        metaInputs.push({
+          id: metaPortId,
+          name: `${node.title}.${port.name}`,
+          direction: 'input',
+          type: port.type,
+          defaultValue: port.defaultValue,
+        });
+      }
+    }
+  }
+}
+
+/**
+ * Infers exposed input ports for a compound meta-node from external incoming edges and unconnected inputs.
+ */
+function inferMetaInputPorts(
+  subNodes: readonly FlintGraphNode[],
+  subEdges: readonly FlintGraphEdge[],
+  incomingExternalEdges: readonly FlintGraphEdge[],
+): {
+  metaInputs: FlintGraphPort[];
+  exposedInputPortMap: Record<string, { internalNodeId: string; internalPortId: string }>;
+} {
+  const exposedInputPortMap: Record<string, { internalNodeId: string; internalPortId: string }> = {};
+  const metaInputs: FlintGraphPort[] = [];
+  const internalDrivenInputs = new Set<string>();
+
+  for (const edge of subEdges) {
+    internalDrivenInputs.add(`${edge.toNodeId}:${edge.toPortId}`);
+  }
+
+  exposeIncomingEdgeInputPorts(incomingExternalEdges, subNodes, exposedInputPortMap, metaInputs);
+  exposeUnconnectedInputPorts(subNodes, internalDrivenInputs, exposedInputPortMap, metaInputs);
+
+  return { metaInputs, exposedInputPortMap };
+}
+
+/**
+ * Exposes a single boundary output connection as an exposed meta output port.
+ */
+function exposeSingleOutgoingEdgePort(
+  edge: FlintGraphEdge,
+  subNodes: readonly FlintGraphNode[],
+  exposedOutputPortMap: Record<string, { internalNodeId: string; internalPortId: string }>,
+  metaOutputs: FlintGraphPort[],
+): void {
+  if (isPortAlreadyExposed(exposedOutputPortMap, edge.fromNodeId, edge.fromPortId)) {
+    return;
+  }
+  const sourceNode = subNodes.find((node) => node.id === edge.fromNodeId);
+  const sourcePort = sourceNode?.outputs.find((port) => port.id === edge.fromPortId);
+  const nodeTitle = sourceNode?.title ?? 'node';
+  const sanitizedTitle = nodeTitle.toLowerCase().replaceAll(/[^a-z0-9]/g, '_');
+  const metaPortId = `out_${sanitizedTitle}_${edge.fromPortId}`;
+  exposedOutputPortMap[metaPortId] = {
+    internalNodeId: edge.fromNodeId,
+    internalPortId: edge.fromPortId,
+  };
+  const portName = sourcePort?.name ?? edge.fromPortId;
+  metaOutputs.push({
+    id: metaPortId,
+    name: `${nodeTitle}.${portName}`,
+    direction: 'output',
+    type: sourcePort?.type ?? createPrimitiveType('i32'),
+  });
+}
+
+/**
+ * Exposes boundary output ports connected to external downstream nodes.
+ */
+function exposeOutgoingEdgeOutputPorts(
+  outgoingExternalEdges: readonly FlintGraphEdge[],
+  subNodes: readonly FlintGraphNode[],
+  exposedOutputPortMap: Record<string, { internalNodeId: string; internalPortId: string }>,
+  metaOutputs: FlintGraphPort[],
+): void {
+  for (const edge of outgoingExternalEdges) {
+    exposeSingleOutgoingEdgePort(edge, subNodes, exposedOutputPortMap, metaOutputs);
+  }
+}
+
+/**
+ * Exposes all internal node outputs when no external outgoing edges are present.
+ */
+function exposeFallbackOutputPorts(
+  subNodes: readonly FlintGraphNode[],
+  exposedOutputPortMap: Record<string, { internalNodeId: string; internalPortId: string }>,
+  metaOutputs: FlintGraphPort[],
+): void {
+  for (const node of subNodes) {
+    for (const port of node.outputs) {
+      const sanitizedTitle = node.title.toLowerCase().replaceAll(/[^a-z0-9]/g, '_');
+      const metaPortId = `out_${sanitizedTitle}_${port.id}`;
+      exposedOutputPortMap[metaPortId] = {
+        internalNodeId: node.id,
+        internalPortId: port.id,
+      };
+      metaOutputs.push({
+        id: metaPortId,
+        name: `${node.title}.${port.name}`,
+        direction: 'output',
+        type: port.type,
+      });
+    }
+  }
+}
+
+/**
+ * Infers exposed output ports for a compound meta-node from outgoing external edges or fallback ports.
+ */
+function inferMetaOutputPorts(
+  subNodes: readonly FlintGraphNode[],
+  outgoingExternalEdges: readonly FlintGraphEdge[],
+): {
+  metaOutputs: FlintGraphPort[];
+  exposedOutputPortMap: Record<string, { internalNodeId: string; internalPortId: string }>;
+} {
+  const exposedOutputPortMap: Record<string, { internalNodeId: string; internalPortId: string }> = {};
+  const metaOutputs: FlintGraphPort[] = [];
+
+  exposeOutgoingEdgeOutputPorts(outgoingExternalEdges, subNodes, exposedOutputPortMap, metaOutputs);
+  if (metaOutputs.length === 0) {
+    exposeFallbackOutputPorts(subNodes, exposedOutputPortMap, metaOutputs);
+  }
+
+  return { metaOutputs, exposedOutputPortMap };
+}
+
+/**
+ * Rewires external edges to connect to the exposed ports of a newly created compound meta-node.
+ */
+function rewireGraphEdgesToMetaNode(
+  graphEdges: readonly FlintGraphEdge[],
+  selectedIds: ReadonlySet<string>,
+  metaNodeId: string,
+  exposedInputPortMap: Readonly<Record<string, { internalNodeId: string; internalPortId: string }>>,
+  exposedOutputPortMap: Readonly<Record<string, { internalNodeId: string; internalPortId: string }>>,
+): FlintGraphEdge[] {
+  const remainingEdges: FlintGraphEdge[] = [];
+  for (const edge of graphEdges) {
+    if (selectedIds.has(edge.fromNodeId) && selectedIds.has(edge.toNodeId)) {
+      continue;
+    }
+    if (selectedIds.has(edge.toNodeId)) {
+      const entry = Object.entries(exposedInputPortMap).find(
+        ([, map]) => map.internalNodeId === edge.toNodeId && map.internalPortId === edge.toPortId,
+      );
+      if (entry) {
+        remainingEdges.push({
+          ...edge,
+          toNodeId: metaNodeId,
+          toPortId: entry[0],
+        });
+        continue;
+      }
+    }
+    if (selectedIds.has(edge.fromNodeId)) {
+      const entry = Object.entries(exposedOutputPortMap).find(
+        ([, map]) => map.internalNodeId === edge.fromNodeId && map.internalPortId === edge.fromPortId,
+      );
+      if (entry) {
+        remainingEdges.push({
+          ...edge,
+          fromNodeId: metaNodeId,
+          fromPortId: entry[0],
+        });
+        continue;
+      }
+    }
+    remainingEdges.push(edge);
+  }
+  return remainingEdges;
+}
+
+/**
+ * Calculates horizontal and vertical translation offsets for pasted nodes.
+ */
+function computePasteOffset(
+  clipboardNodes: readonly FlintGraphNode[],
+  targetPosition?: { readonly x: number; readonly y: number },
+): { offsetX: number; offsetY: number } {
+  let minX = Number.POSITIVE_INFINITY;
+  let minY = Number.POSITIVE_INFINITY;
+  for (const n of clipboardNodes) {
+    if (n.position.x < minX) minX = n.position.x;
+    if (n.position.y < minY) minY = n.position.y;
+  }
+  return {
+    offsetX: targetPosition ? targetPosition.x - minX : 30,
+    offsetY: targetPosition ? targetPosition.y - minY : 30,
+  };
+}
+
+/**
+ * Derives a deduplicated title and fresh meta-template registration for pasted meta-nodes.
+ */
+function derivePastedMetaDetails(
+  node: FlintGraphNode,
+  existingNodes: readonly FlintGraphNode[],
+  registerMeta: (def: FlintMetaNodeDefinition) => void,
+): { title: string; metaTemplateId: string } {
+  const baseTitle = node.title.replace(/\.\d+$/, '');
+  const regex = new RegExp(String.raw`^${baseTitle}\.(\d+)$`);
+  let maxCount = 0;
+  for (const existing of existingNodes) {
+    const match = existing.title.match(regex);
+    if (match?.[1]) {
+      maxCount = Math.max(maxCount, Number.parseInt(match[1], 10));
+    }
+  }
+  const title = `${baseTitle}.${String(maxCount + 1).padStart(3, '0')}`;
+  const metaTemplateId = generateSecureId('template_meta');
+  if (node.metaSubgraph) {
+    registerMeta({
+      id: metaTemplateId,
+      name: title,
+      title,
+      subgraph: structuredClone(node.metaSubgraph),
+      inputs: node.inputs,
+      outputs: node.outputs,
+    });
+  }
+  return { title, metaTemplateId };
+}
+
+/**
+ * Instantiates and relocates a node from clipboard data with fresh identity.
+ */
+function instantiatePastedNode(
+  node: FlintGraphNode,
+  newId: string,
+  offsetX: number,
+  offsetY: number,
+  existingNodes: readonly FlintGraphNode[],
+  registerMeta: (def: FlintMetaNodeDefinition) => void,
+): FlintGraphNode {
+  let title = node.title;
+  let metaTemplateId = node.metaTemplateId;
+
+  if (node.metaSubgraph || node.operation === 'meta') {
+    const details = derivePastedMetaDetails(node, existingNodes, registerMeta);
+    title = details.title;
+    metaTemplateId = details.metaTemplateId;
+  }
+
+  return {
+    ...structuredClone(node),
+    id: newId,
+    title,
+    metaTemplateId,
+    position: {
+      x: Math.round(node.position.x + offsetX),
+      y: Math.round(node.position.y + offsetY),
+    },
+  };
+}
+
+/**
+ * Remaps edge endpoints to newly instantiated node identifiers.
+ */
+function remapPastedEdges(
+  clipboardEdges: readonly FlintGraphEdge[],
+  idMap: ReadonlyMap<string, string>,
+): FlintGraphEdge[] {
+  return clipboardEdges.flatMap((edge) => {
+    const fromNodeId = idMap.get(edge.fromNodeId);
+    const toNodeId = idMap.get(edge.toNodeId);
+    if (fromNodeId && toNodeId) {
+      return [
+        {
+          ...edge,
+          id: generateSecureId('edge'),
+          fromNodeId,
+          toNodeId,
+        },
+      ];
+    }
+    return [];
+  });
+}
+
+/**
  * State store managing graph topology, history stack, selection, and live Wasm compilation.
  */
 export class FlintEditorStore {
@@ -323,7 +695,6 @@ export class FlintEditorStore {
   /**
    * Creates an edge connecting a source node output port to a target node input port.
    */
-  // skipcq: JS-R1005
   connectPorts(
     fromNodeId: string,
     fromPortId: string,
@@ -583,7 +954,6 @@ export class FlintEditorStore {
   /**
    * Encapsulates the selected nodes into a reusable compound meta-node with inferred boundary ports.
    */
-  // skipcq: JS-R1005
   createMetaNodeFromSelected(title = 'Meta Node'): FlintGraphNode | undefined {
     if (this.selectedNodeIds.size === 0) return undefined;
     const selectedIds = new Set(this.selectedNodeIds);
@@ -592,123 +962,21 @@ export class FlintEditorStore {
       (edge) => selectedIds.has(edge.fromNodeId) && selectedIds.has(edge.toNodeId),
     );
 
-    let totalX = 0;
-    let totalY = 0;
-    for (const node of subNodes) {
-      totalX += node.position.x;
-      totalY += node.position.y;
-    }
-    const metaPosition = {
-      x: Math.round(totalX / subNodes.length),
-      y: Math.round(totalY / subNodes.length),
-    };
-
-    const exposedInputPortMap: Record<string, { internalNodeId: string; internalPortId: string }> = {};
-    const metaInputs: FlintGraphPort[] = [];
-    const internalDrivenInputs = new Set<string>();
-    for (const edge of subEdges) {
-      internalDrivenInputs.add(`${edge.toNodeId}:${edge.toPortId}`);
-    }
+    const metaPosition = computeNodesCentroid(subNodes);
 
     const incomingExternalEdges = this.graph.edges.filter(
       (edge) => !selectedIds.has(edge.fromNodeId) && selectedIds.has(edge.toNodeId),
     );
+    const { metaInputs, exposedInputPortMap } = inferMetaInputPorts(subNodes, subEdges, incomingExternalEdges);
 
-    for (const edge of incomingExternalEdges) {
-      const portKey = `${edge.toNodeId}:${edge.toPortId}`;
-      if (
-        !Object.values(exposedInputPortMap).some((map) => `${map.internalNodeId}:${map.internalPortId}` === portKey)
-      ) {
-        const targetNode = subNodes.find((node) => node.id === edge.toNodeId);
-        const targetPort = targetNode?.inputs.find((port) => port.id === edge.toPortId);
-        const sanitizedNodeTitle = (targetNode?.title ?? 'node').toLowerCase().replaceAll(/[^a-z0-9]/g, '_');
-        const metaPortId = `in_${sanitizedNodeTitle}_${edge.toPortId}`;
-        exposedInputPortMap[metaPortId] = {
-          internalNodeId: edge.toNodeId,
-          internalPortId: edge.toPortId,
-        };
-        metaInputs.push({
-          id: metaPortId,
-          name: `${targetNode?.title ?? ''}.${targetPort?.name ?? edge.toPortId}`,
-          direction: 'input',
-          type: targetPort?.type ?? createPrimitiveType('i32'),
-        });
-      }
-    }
-
-    for (const node of subNodes) {
-      for (const port of node.inputs) {
-        const portKey = `${node.id}:${port.id}`;
-        if (
-          !internalDrivenInputs.has(portKey) &&
-          !Object.values(exposedInputPortMap).some((map) => `${map.internalNodeId}:${map.internalPortId}` === portKey)
-        ) {
-          const sanitizedTitle = node.title.toLowerCase().replaceAll(/[^a-z0-9]/g, '_');
-          const metaPortId = `in_${sanitizedTitle}_${port.id}`;
-          exposedInputPortMap[metaPortId] = {
-            internalNodeId: node.id,
-            internalPortId: port.id,
-          };
-          metaInputs.push({
-            id: metaPortId,
-            name: `${node.title}.${port.name}`,
-            direction: 'input',
-            type: port.type,
-            defaultValue: port.defaultValue,
-          });
-        }
-      }
-    }
-
-    const exposedOutputPortMap: Record<string, { internalNodeId: string; internalPortId: string }> = {};
-    const metaOutputs: FlintGraphPort[] = [];
     const outgoingExternalEdges = this.graph.edges.filter(
       (edge) => selectedIds.has(edge.fromNodeId) && !selectedIds.has(edge.toNodeId),
     );
-
-    for (const edge of outgoingExternalEdges) {
-      const portKey = `${edge.fromNodeId}:${edge.fromPortId}`;
-      if (
-        !Object.values(exposedOutputPortMap).some((map) => `${map.internalNodeId}:${map.internalPortId}` === portKey)
-      ) {
-        const sourceNode = subNodes.find((node) => node.id === edge.fromNodeId);
-        const sourcePort = sourceNode?.outputs.find((port) => port.id === edge.fromPortId);
-        const sanitizedTitle = (sourceNode?.title ?? 'node').toLowerCase().replaceAll(/[^a-z0-9]/g, '_');
-        const metaPortId = `out_${sanitizedTitle}_${edge.fromPortId}`;
-        exposedOutputPortMap[metaPortId] = {
-          internalNodeId: edge.fromNodeId,
-          internalPortId: edge.fromPortId,
-        };
-        metaOutputs.push({
-          id: metaPortId,
-          name: `${sourceNode?.title ?? ''}.${sourcePort?.name ?? edge.fromPortId}`,
-          direction: 'output',
-          type: sourcePort?.type ?? createPrimitiveType('i32'),
-        });
-      }
-    }
-
-    if (metaOutputs.length === 0) {
-      for (const node of subNodes) {
-        for (const port of node.outputs) {
-          const sanitizedTitle = node.title.toLowerCase().replaceAll(/[^a-z0-9]/g, '_');
-          const metaPortId = `out_${sanitizedTitle}_${port.id}`;
-          exposedOutputPortMap[metaPortId] = {
-            internalNodeId: node.id,
-            internalPortId: port.id,
-          };
-          metaOutputs.push({
-            id: metaPortId,
-            name: `${node.title}.${port.name}`,
-            direction: 'output',
-            type: port.type,
-          });
-        }
-      }
-    }
+    const { metaOutputs, exposedOutputPortMap } = inferMetaOutputPorts(subNodes, outgoingExternalEdges);
 
     const metaNodeId = generateSecureId('meta_node');
-    const metaNode: FlintGraphNode = {
+    const templateId = generateSecureId('template_meta');
+    const metaNodeWithTemplate: FlintGraphNode = {
       id: metaNodeId,
       title,
       category: 'custom',
@@ -723,56 +991,25 @@ export class FlintEditorStore {
         exposedInputPortMap,
         exposedOutputPortMap,
       },
-    };
-
-    const remainingEdges: FlintGraphEdge[] = [];
-    for (const edge of this.graph.edges) {
-      if (selectedIds.has(edge.fromNodeId) && selectedIds.has(edge.toNodeId)) {
-        continue;
-      }
-      if (selectedIds.has(edge.toNodeId)) {
-        const entry = Object.entries(exposedInputPortMap).find(
-          ([, map]) => map.internalNodeId === edge.toNodeId && map.internalPortId === edge.toPortId,
-        );
-        if (entry) {
-          remainingEdges.push({
-            ...edge,
-            toNodeId: metaNode.id,
-            toPortId: entry[0],
-          });
-          continue;
-        }
-      }
-      if (selectedIds.has(edge.fromNodeId)) {
-        const entry = Object.entries(exposedOutputPortMap).find(
-          ([, map]) => map.internalNodeId === edge.fromNodeId && map.internalPortId === edge.fromPortId,
-        );
-        if (entry) {
-          remainingEdges.push({
-            ...edge,
-            fromNodeId: metaNode.id,
-            fromPortId: entry[0],
-          });
-          continue;
-        }
-      }
-      remainingEdges.push(edge);
-    }
-
-    const templateId = generateSecureId('template_meta');
-    const metaNodeWithTemplate: FlintGraphNode = {
-      ...metaNode,
       metaTemplateId: templateId,
     };
 
-    if (metaNode.metaSubgraph) {
+    const remainingEdges = rewireGraphEdgesToMetaNode(
+      this.graph.edges,
+      selectedIds,
+      metaNodeId,
+      exposedInputPortMap,
+      exposedOutputPortMap,
+    );
+
+    if (metaNodeWithTemplate.metaSubgraph) {
       this.registerMetaNode({
         id: templateId,
         name: title,
         title,
-        subgraph: metaNode.metaSubgraph,
-        inputs: metaNode.inputs,
-        outputs: metaNode.outputs,
+        subgraph: metaNodeWithTemplate.metaSubgraph,
+        inputs: metaNodeWithTemplate.inputs,
+        outputs: metaNodeWithTemplate.outputs,
       });
     }
 
@@ -794,7 +1031,6 @@ export class FlintEditorStore {
   /**
    * Inlines a compound meta-node back into its individual constituent subgraph nodes.
    */
-  // skipcq: JS-R1005
   expandMetaNode(metaNodeId: string): void {
     const metaNode = this.graph.nodes.find((node) => node.id === metaNodeId);
     if (!metaNode || !metaNode.metaSubgraph) return;
@@ -1279,7 +1515,6 @@ export class FlintEditorStore {
   /**
    * Deserializes and instantiates clipboard contents into the active graph with offset positions.
    */
-  // skipcq: JS-R1005
   paste(targetPosition?: { readonly x: number; readonly y: number }): readonly string[] {
     if (!this.clipboard || this.clipboard.nodes.length === 0) return [];
 
@@ -1288,72 +1523,13 @@ export class FlintEditorStore {
       idMap.set(n.id, generateSecureId(n.operation));
     }
 
-    let minX = Infinity;
-    let minY = Infinity;
-    for (const n of this.clipboard.nodes) {
-      if (n.position.x < minX) minX = n.position.x;
-      if (n.position.y < minY) minY = n.position.y;
-    }
-
-    const offsetX = targetPosition ? targetPosition.x - minX : 30;
-    const offsetY = targetPosition ? targetPosition.y - minY : 30;
-
-    const newNodes: FlintGraphNode[] = this.clipboard.nodes.map((n) => {
+    const { offsetX, offsetY } = computePasteOffset(this.clipboard.nodes, targetPosition);
+    const newNodes = this.clipboard.nodes.map((n) => {
       const newId = idMap.get(n.id) ?? generateSecureId(n.operation);
-      let title = n.title;
-      let metaTemplateId = n.metaTemplateId;
-
-      if (n.metaSubgraph || n.operation === 'meta') {
-        const baseTitle = n.title.replace(/\.\d+$/, '');
-        const regex = new RegExp(String.raw`^${baseTitle}\.(\d+)$`);
-        let maxCount = 0;
-        for (const existing of this.graph.nodes) {
-          const match = existing.title.match(regex);
-          if (match?.[1]) {
-            maxCount = Math.max(maxCount, Number.parseInt(match[1], 10));
-          }
-        }
-        title = `${baseTitle}.${String(maxCount + 1).padStart(3, '0')}`;
-        metaTemplateId = generateSecureId('template_meta');
-        if (n.metaSubgraph) {
-          this.registerMetaNode({
-            id: metaTemplateId,
-            name: title,
-            title,
-            subgraph: structuredClone(n.metaSubgraph),
-            inputs: n.inputs,
-            outputs: n.outputs,
-          });
-        }
-      }
-
-      return {
-        ...structuredClone(n),
-        id: newId,
-        title,
-        metaTemplateId,
-        position: {
-          x: Math.round(n.position.x + offsetX),
-          y: Math.round(n.position.y + offsetY),
-        },
-      };
+      return instantiatePastedNode(n, newId, offsetX, offsetY, this.graph.nodes, (def) => this.registerMetaNode(def));
     });
 
-    const newEdges: FlintGraphEdge[] = this.clipboard.edges.flatMap((edge) => {
-      const fromNodeId = idMap.get(edge.fromNodeId);
-      const toNodeId = idMap.get(edge.toNodeId);
-      if (fromNodeId && toNodeId) {
-        return [
-          {
-            ...edge,
-            id: generateSecureId('edge'),
-            fromNodeId,
-            toNodeId,
-          },
-        ];
-      }
-      return [];
-    });
+    const newEdges = remapPastedEdges(this.clipboard.edges, idMap);
 
     let updatedGroups = this.graph.groups ?? [];
     if (this.clipboard.group) {

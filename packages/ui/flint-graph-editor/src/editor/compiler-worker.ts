@@ -2,7 +2,9 @@ import {
   compileNodeGraph,
   emitGraphSource,
   validateGraph,
+  type FlintDiagnostic,
   type FlintGraphNode,
+  type FlintGraphValidationIssue,
   type FlintNodeGraph,
 } from '@mission-platform/flint';
 
@@ -50,45 +52,108 @@ function generateSecureRandomFloat(): number {
 }
 
 /**
+ * Maps validation issues to node-keyed error messages.
+ */
+function collectValidationErrors(issues: readonly FlintGraphValidationIssue[]): Record<string, string> {
+  const nodeErrors: Record<string, string> = {};
+  for (const issue of issues) {
+    if (issue.nodeId) {
+      nodeErrors[issue.nodeId] = issue.message;
+    }
+  }
+  return nodeErrors;
+}
+
+/**
+ * Maps compiler diagnostic errors to node-keyed error messages using source map spans.
+ */
+function collectDiagnosticErrors(
+  diagnostics: readonly FlintDiagnostic[],
+  spanToNode: ReadonlyMap<string, string>,
+): Record<string, string> {
+  const nodeErrors: Record<string, string> = {};
+  for (const d of diagnostics) {
+    if (d.span) {
+      const key = `${d.span.line}:${d.span.column}:${d.span.endLine}:${d.span.endColumn}`;
+      const nodeId = spanToNode.get(key);
+      if (nodeId) {
+        nodeErrors[nodeId] = d.message;
+      }
+    }
+  }
+  return nodeErrors;
+}
+
+/**
+ * Prepares sorted arguments for invoking the exported entry function.
+ */
+function prepareCallArguments(
+  sortedNodeIds: readonly string[] | undefined,
+  nodes: readonly FlintGraphNode[],
+  inputs: Readonly<Record<string, unknown>>,
+): unknown[] {
+  const sortedInputNodes = (sortedNodeIds ?? [])
+    .map((id) => nodes.find((n) => n.id === id))
+    .filter((n): n is FlintGraphNode => n !== undefined && (n.kind === 'input' || n.operation === 'input'));
+
+  return sortedInputNodes.map((n) => {
+    const name = String(n.properties?.name ?? n.id);
+    return inputs[name] ?? inputs[n.id] ?? 0;
+  });
+}
+
+/**
+ * Instantiates and invokes the compiled WebAssembly module entry function.
+ */
+async function invokeWasmEntry(wasmBytes: Uint8Array, entryFnName: string, callArgs: unknown[]): Promise<unknown> {
+  const wasmModule = await WebAssembly.instantiate(wasmBytes, {
+    env: {
+      memory: new WebAssembly.Memory({ initial: 256 }),
+      host_clock_now: () => BigInt(Date.now()),
+      host_random_f64: () => generateSecureRandomFloat(),
+      host_log_debug: () => {
+        /* no-op debug logger */
+      },
+    },
+  });
+
+  const instantiated = wasmModule as {
+    instance?: { exports: Record<string, unknown> };
+    exports?: Record<string, unknown>;
+  };
+  const wasmExports = instantiated.instance?.exports ?? instantiated.exports ?? {};
+  const entryFn = wasmExports[entryFnName];
+
+  if (typeof entryFn !== 'function') {
+    throw new TypeError(`Exported function '${entryFnName}' was not found in WebAssembly exports.`);
+  }
+
+  return Reflect.apply(entryFn, undefined, callArgs);
+}
+
+/**
  * Executes a visual graph compilation and runs the WebAssembly binary in-memory.
  */
-// skipcq: JS-R1005
 export async function executeGraph(
   graph: FlintNodeGraph,
   inputs: Readonly<Record<string, unknown>> = {},
 ): Promise<CompilerWorkerResponse> {
   const validation = validateGraph(graph);
   if (!validation.valid) {
-    const nodeErrors: Record<string, string> = {};
-    for (const issue of validation.issues) {
-      if (issue.nodeId) {
-        nodeErrors[issue.nodeId] = issue.message;
-      }
-    }
     return {
       type: 'run_error',
       error: 'Graph validation failed.',
-      nodeErrors,
+      nodeErrors: collectValidationErrors(validation.issues),
     };
   }
 
   const artifact = compileNodeGraph(graph);
   const errorDiagnostics = artifact.diagnostics.filter((d) => d.severity === 'error');
   if (errorDiagnostics.length > 0) {
-    const nodeErrors: Record<string, string> = {};
-    for (const d of errorDiagnostics) {
-      if (d.span) {
-        const key = `${d.span.line}:${d.span.column}:${d.span.endLine}:${d.span.endColumn}`;
-        const nodeId = artifact.compilation.sourceMap.spanToNode.get(key);
-        if (nodeId) {
-          nodeErrors[nodeId] = d.message;
-        }
-      }
-    }
     return {
       type: 'run_error',
       error: errorDiagnostics.map((d) => d.message).join('\n'),
-      nodeErrors,
+      nodeErrors: collectDiagnosticErrors(errorDiagnostics, artifact.compilation.sourceMap.spanToNode),
     };
   }
 
@@ -101,50 +166,12 @@ export async function executeGraph(
   }
 
   try {
-    const wasmModule = await WebAssembly.instantiate(artifact.wasm, {
-      env: {
-        memory: new WebAssembly.Memory({ initial: 256 }),
-        host_clock_now: () => BigInt(Date.now()),
-        host_random_f64: () => generateSecureRandomFloat(),
-        host_log_debug: () => {
-          /* no-op debug logger */
-        },
-      },
-    });
-
-    const entryFnName = artifact.compilation.entryFunctionName;
-    const instantiated = wasmModule as {
-      instance?: { exports: Record<string, unknown> };
-      exports?: Record<string, unknown>;
-    };
-    const wasmExports = instantiated.instance?.exports ?? instantiated.exports ?? {};
-    const entryFn = wasmExports[entryFnName];
-
-    if (typeof entryFn !== 'function') {
-      return {
-        type: 'run_error',
-        error: `Exported function '${entryFnName}' was not found in WebAssembly exports.`,
-        nodeErrors: {},
-      };
-    }
-
-    const sortedInputNodes = (validation.sortedNodeIds ?? [])
-      .map((id) => graph.nodes.find((n) => n.id === id))
-      .filter((n): n is FlintGraphNode => n !== undefined && (n.kind === 'input' || n.operation === 'input'));
-
-    const callArgs = sortedInputNodes.map((n) => {
-      const name = String(n.properties?.name ?? n.id);
-      return inputs[name] ?? inputs[n.id] ?? 0;
-    });
-
-    const result = Reflect.apply(entryFn, undefined, callArgs);
-    const outputs: Record<string, unknown> = {
-      result,
-    };
+    const callArgs = prepareCallArguments(validation.sortedNodeIds, graph.nodes, inputs);
+    const result = await invokeWasmEntry(artifact.wasm, artifact.compilation.entryFunctionName, callArgs);
 
     return {
       type: 'run_success',
-      outputs,
+      outputs: { result },
       wasmBytes: artifact.wasm,
     };
   } catch (error) {
