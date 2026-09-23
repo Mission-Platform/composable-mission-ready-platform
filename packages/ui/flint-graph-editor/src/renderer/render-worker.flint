@@ -448,7 +448,27 @@ export fn font_get_base_font_size() -> f64 {
 }
 
 export fn font_get_char_advance(code: i32) -> f64 {
-  return font.sdf_get_char_advance(code);
+  return f64_from_u32(font.sdf_get_char_advance_u32(code));
+}
+
+export fn font_get_kerning(c1: i32, c2: i32) -> f64 {
+  return font.sdf_get_kerning(c1, c2);
+}
+
+export fn font_set_char_spacing(spacing: f64) -> unit {
+  font.sdf_set_char_spacing(spacing);
+}
+
+export fn font_get_char_spacing() -> f64 {
+  return font.sdf_get_char_spacing();
+}
+
+export fn font_set_line_height(height: f64) -> unit {
+  font.sdf_set_line_height(height);
+}
+
+export fn font_get_line_height() -> f64 {
+  return font.sdf_get_line_height();
 }
 
 export fn font_measure_text(text: string, font_size: f64) -> f64 {
@@ -486,7 +506,39 @@ export fn font_append_text_quads(
   a: f64,
   align: u32
 ) -> u32 {
-  return font.sdf_append_text_quads(text, origin_x, baseline_y, font_size, r, g, b, a, align);
+  return font.sdf_append_text_quads_styled(text, origin_x, baseline_y, font_size, r, g, b, a, align, false, false, false, f64_from_u32(0));
+}
+
+export fn font_append_text_quads_styled(
+  text: string,
+  origin_x: f64,
+  baseline_y: f64,
+  font_size: f64,
+  r: f64,
+  g: f64,
+  b: f64,
+  a: f64,
+  align: u32,
+  is_italic: bool,
+  is_underline: bool,
+  is_strike: bool,
+  max_width: f64
+) -> u32 {
+  return font.sdf_append_text_quads_styled(
+    text,
+    origin_x,
+    baseline_y,
+    font_size,
+    r,
+    g,
+    b,
+    a,
+    align,
+    is_italic,
+    is_underline,
+    is_strike,
+    max_width
+  );
 }
 
 export fn font_measure_text_mono(text: string, font_size: f64) -> f64 {

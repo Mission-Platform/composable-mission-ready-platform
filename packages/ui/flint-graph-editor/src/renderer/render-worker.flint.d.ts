@@ -209,6 +209,11 @@ export interface FlintRenderWorkerWasmExports {
   readonly font_get_atlas_size: () => number;
   readonly font_get_base_font_size: () => number;
   readonly font_get_char_advance: (code: number) => number;
+  readonly font_get_kerning: (c1: number, c2: number) => number;
+  readonly font_set_char_spacing: (spacing: number) => void;
+  readonly font_get_char_spacing: () => number;
+  readonly font_set_line_height: (height: number) => void;
+  readonly font_get_line_height: () => number;
   readonly font_measure_text: (text: string, fontSize: number) => number;
   readonly font_init_atlas_data: () => number;
   readonly font_get_atlas_ptr: () => number;
@@ -225,6 +230,21 @@ export interface FlintRenderWorkerWasmExports {
     b: number,
     a: number,
     align: number,
+  ) => number;
+  readonly font_append_text_quads_styled: (
+    text: string,
+    originX: number,
+    baselineY: number,
+    fontSize: number,
+    r: number,
+    g: number,
+    b: number,
+    a: number,
+    align: number,
+    isItalic: boolean,
+    isUnderline: boolean,
+    isStrike: boolean,
+    maxWidth: number,
   ) => number;
   readonly font_measure_text_mono: (text: string, fontSize: number) => number;
   readonly font_append_text_quads_mono: (

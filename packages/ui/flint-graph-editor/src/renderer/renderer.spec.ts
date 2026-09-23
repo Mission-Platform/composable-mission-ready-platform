@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { FlintEditorStore } from '../editor/editor-store';
+
 import {
   getFlintCameraWasm,
   getFlintRenderWorkerWasm,
@@ -827,7 +829,7 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
   it('generates SDF font atlas and measures text correctly in Flint Wasm', () => {
     const wasm = getFlintRenderWorkerWasm();
     const atlasSize = wasm.font_get_atlas_size();
-    expect(atlasSize).toBe(512);
+    expect(atlasSize).toBe(1024);
 
     const atlasPtr = wasm.font_init_atlas_data();
     expect(atlasPtr).toBeGreaterThan(0);
@@ -908,7 +910,7 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
 
     // Also test standalone sdf-font.flint wasm loader
     const fontWasm = loadFontWasm();
-    expect(fontWasm.sdf_get_atlas_size()).toBe(512);
+    expect(fontWasm.sdf_get_atlas_size()).toBe(1024);
     expect(fontWasm.sdf_measure_text('Math Node', 12)).toBeGreaterThan(0);
   });
 
@@ -918,7 +920,7 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     // Datatype monospace font measurements
     const monoText = 'CONST_42';
     const monoWidth = wasm.font_measure_text_mono(monoText, 12);
-    expect(monoWidth).toBeCloseTo((8 * 14 * 12) / 24, 1);
+    expect(monoWidth).toBeCloseTo((8 * 11 * 12) / 24, 1);
 
     // Monospace quads
     wasm.font_clear_text_vertices();
@@ -936,7 +938,7 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
 
     // Also verify standalone font loader
     const fontWasm = loadFontWasm();
-    expect(fontWasm.sdf_measure_text_mono('TEST', 12)).toBeCloseTo((4 * 14 * 12) / 24, 1);
+    expect(fontWasm.sdf_measure_text_mono('TEST', 12)).toBeCloseTo((4 * 11 * 12) / 24, 1);
   });
 
   it('sets and retrieves theme mode in Flint Wasm engine and handles theme worker messages', async () => {
@@ -986,5 +988,129 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     } finally {
       globalThis.self.removeEventListener('message', listener);
     }
+  });
+
+  it('supports 4-layer RGBA MSDF font shaping with kerning, ligatures, character spacing, and line spacing', () => {
+    const wasm = getFlintRenderWorkerWasm();
+
+    // 1. Verify 4-layer RGBA MSDF atlas initialization & 2D Shelf Packing
+    const atlasPtr = wasm.font_init_atlas_data();
+    expect(atlasPtr).toBeGreaterThan(0);
+    expect(wasm.font_get_atlas_size()).toBe(1024);
+
+    // 2. Kerning verification
+    const kernAV = wasm.font_get_kerning(65, 86); // 'A' and 'V'
+    expect(kernAV).toBeLessThan(0);
+    const kernTa = wasm.font_get_kerning(84, 97); // 'T' and 'a'
+    expect(kernTa).toBeLessThan(0);
+    const kernOO = wasm.font_get_kerning(79, 79); // 'O' and 'O'
+    expect(kernOO).toBe(0);
+
+    // 3. Ligature verification: '->' shaped as '→' (single glyph)
+    const arrowSingleW = wasm.font_measure_text('→', 12);
+    const arrowLigatureW = wasm.font_measure_text('->', 12);
+    expect(arrowLigatureW).toBeCloseTo(arrowSingleW, 1);
+
+    // Ligature '!=' shaped as '≠'
+    const notEqSingleW = wasm.font_measure_text('≠', 12);
+    const notEqLigatureW = wasm.font_measure_text('!=', 12);
+    expect(notEqLigatureW).toBeCloseTo(notEqSingleW, 1);
+
+    // Ligature '...' shaped as '…'
+    const ellipsisSingleW = wasm.font_measure_text('…', 12);
+    const ellipsisLigatureW = wasm.font_measure_text('...', 12);
+    expect(ellipsisLigatureW).toBeCloseTo(ellipsisSingleW, 1);
+
+    // 4. Character spacing (tracking)
+    const baseWidth = wasm.font_measure_text('Result', 12);
+    wasm.font_set_char_spacing(2);
+    expect(wasm.font_get_char_spacing()).toBe(2);
+    const trackedWidth = wasm.font_measure_text('Result', 12);
+    expect(trackedWidth).toBeGreaterThan(baseWidth);
+    wasm.font_set_char_spacing(0);
+
+    // 5. Line spacing (line height) on multi-line text
+    wasm.font_set_line_height(1.5);
+    expect(wasm.font_get_line_height()).toBe(1.5);
+    wasm.font_clear_text_vertices();
+    const multilineQuads = wasm.font_append_text_quads('Line1\nLine2', 0, 100, 12, 1, 1, 1, 1, 0);
+    expect(multilineQuads).toBe(10); // 5 letters on line 1 + 5 letters on line 2
+
+    // 6. Rich styling: italic, underline, strike-through, word wrap
+    wasm.font_clear_text_vertices();
+    const styledQuads = wasm.font_append_text_quads_styled(
+      'Styled Text',
+      0,
+      100,
+      14,
+      1,
+      0.5,
+      0.2,
+      1,
+      0,
+      true, // italic
+      true, // underline
+      true, // strike
+      200, // max width
+    );
+    expect(styledQuads).toBe(10);
+
+    // 7. Multi-color emoji quad generation
+    wasm.font_clear_text_vertices();
+    const emojiQuads = wasm.font_append_text_quads('⚡ Energy ✓', 0, 100, 14, 1, 1, 1, 1, 0);
+    expect(emojiQuads).toBe(8); // ⚡, E, n, e, r, g, y, ✓ (7 visible chars + 1 emoji)
+    const vbufPtr = wasm.font_get_vertex_buffer_ptr();
+    const f64View = new Float64Array(wasm.memory.buffer, vbufPtr, emojiQuads * 48);
+    // ⚡ is at index 0, vertex alpha is stored at offset 7, should be negative (-1.0)
+    expect(f64View[7]).toBeLessThan(0);
+  });
+
+  it('manages edge waypoints and group properties in editor store', () => {
+    const store = new FlintEditorStore();
+    const nodeA = store.addNode('add', { x: 100, y: 100 });
+    const nodeB = store.addNode('multiply', { x: 400, y: 100 });
+    store.connectPorts(nodeA.id, 'result', nodeB.id, 'a');
+
+    const edge = store.getState().graph.edges[0];
+    expect(edge).toBeDefined();
+
+    // Add waypoint
+    store.addEdgePoint(edge.id, { x: 250, y: 150 });
+    let updatedEdge = store.getState().graph.edges[0];
+    expect(updatedEdge.points).toHaveLength(1);
+    expect(updatedEdge.points?.[0]).toEqual({ x: 250, y: 150 });
+
+    // Update waypoint
+    store.updateEdgePoint(edge.id, 0, { x: 260, y: 160 });
+    updatedEdge = store.getState().graph.edges[0];
+    expect(updatedEdge.points?.[0]).toEqual({ x: 260, y: 160 });
+
+    // Reset waypoints
+    store.clearEdgePoints(edge.id);
+    updatedEdge = store.getState().graph.edges[0];
+    expect(updatedEdge.points).toBeUndefined();
+
+    // Group management
+    store.createGroup('Math Group', [nodeA.id, nodeB.id]);
+    const group = store.getState().graph.groups?.[0];
+    expect(group).toBeDefined();
+    expect(group?.title).toBe('Math Group');
+
+    // Select group
+    store.selectGroup(group?.id);
+    expect(store.getState().selectedGroupId).toBe(group?.id);
+
+    // Modify group title and color
+    store.setGroupTitle(group?.id ?? '', 'Calculations');
+    store.setGroupColor(group?.id ?? '', '#3fb950');
+    const modifiedGroup = store.getState().graph.groups?.[0];
+    expect(modifiedGroup?.title).toBe('Calculations');
+    expect(modifiedGroup?.color).toBe('#3fb950');
+
+    // Move group
+    const initialPosA = store.getState().graph.nodes.find((n) => n.id === nodeA.id)?.position.x ?? 0;
+    store.moveGroup(group?.id ?? '', 50, 30);
+    const movedPosA = store.getState().graph.nodes.find((n) => n.id === nodeA.id)?.position.x ?? 0;
+    expect(movedPosA).toBe(initialPosA + 50);
   });
 });

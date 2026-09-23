@@ -21,10 +21,12 @@ export interface ViewBounds {
 }
 
 export interface FlintHitResult {
-  readonly type: 'node' | 'edge' | 'port';
+  readonly type: 'node' | 'edge' | 'port' | 'group' | 'waypoint';
   readonly nodeId: string;
   readonly edgeId?: string;
   readonly portId?: string;
+  readonly groupId?: string;
+  readonly waypointIndex?: number;
   readonly worldX?: number;
   readonly worldY?: number;
 }
@@ -82,6 +84,25 @@ export type RenderWorkerInputMessage =
       readonly id?: string;
       readonly selectedNodeIds?: readonly string[];
       readonly selectedEdgeIds?: readonly string[];
+      readonly selectedGroupId?: string;
+    }
+  | {
+      readonly type: 'set_connecting_edge';
+      readonly id?: string;
+      readonly edge?: {
+        readonly fromNodeId: string;
+        readonly fromPortId: string;
+        readonly cursorX: number;
+        readonly cursorY: number;
+      };
+    }
+  | {
+      readonly type: 'set_hovered_port';
+      readonly id?: string;
+      readonly hoveredPort?: {
+        readonly nodeId: string;
+        readonly portId: string;
+      };
     }
   | {
       readonly type: 'set_pulse';
@@ -110,6 +131,10 @@ export type RenderWorkerInputMessage =
     }
   | {
       readonly type: 'render_frame';
+      readonly id?: string;
+    }
+  | {
+      readonly type: 'reload_font_atlas';
       readonly id?: string;
     }
   | {
@@ -387,15 +412,16 @@ if (
   const activeNodeIds = new Set<string>();
   let trappedNodeId: string | undefined;
   const edgePulses = new Map<string, number>();
-  const hoveredPort: { readonly nodeId: string; readonly portId: string } | undefined = undefined;
-  const connectingEdge:
+  let hoveredPort: { readonly nodeId: string; readonly portId: string } | undefined;
+  let connectingEdge:
     | {
         readonly fromNodeId: string;
         readonly fromPortId: string;
         readonly cursorX: number;
         readonly cursorY: number;
       }
-    | undefined = undefined;
+    | undefined;
+  let selectedGroupId: string | undefined;
 
   let gpuContext: GPUCanvasContext | undefined;
   let gpuDevice: GPUDevice | undefined;
@@ -770,11 +796,16 @@ if (
       const gh = gMaxY - gMinY + pad * 2 + 22;
 
       const isDark = currentTheme !== 'light';
+      const isSelectedGroup = selectedGroupId === group.id;
 
       // Group background
       const groupBg: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 0.08] : [0.035, 0.412, 0.855, 0.06];
-      const groupBorder: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 0.5] : [0.035, 0.412, 0.855, 0.6];
-      pushGpuNodeInstance(gx + gw / 2, gy + gh / 2, gw, gh, 12, groupBg, groupBorder, 2);
+      const groupBorder: [number, number, number, number] = isSelectedGroup
+        ? [0.45, 0.75, 1, 1]
+        : isDark
+          ? [0.35, 0.65, 1, 0.5]
+          : [0.035, 0.412, 0.855, 0.6];
+      pushGpuNodeInstance(gx + gw / 2, gy + gh / 2, gw, gh, 12, groupBg, groupBorder, isSelectedGroup ? 3.5 : 2);
 
       // Group title pill
       const titleW = wasm.font_measure_text(group.title, 12);
@@ -786,6 +817,8 @@ if (
         20,
         4,
         isDark ? [0.35, 0.65, 1, 0.9] : [0.035, 0.412, 0.855, 0.9],
+        isSelectedGroup ? [1, 1, 1, 1] : undefined,
+        isSelectedGroup ? 1.5 : 0,
       );
       wasm.font_append_text_quads(group.title, gx + 18, gy + 18, 12, 1, 1, 1, 1, 0);
     }
@@ -1032,7 +1065,19 @@ if (
       const isActive = edgePulses.has(edge.id) ? 1 : 0;
       const pulseOffset = edgePulses.get(edge.id) ?? 0;
 
-      wasm.compute_edge_instance(p0x, p0y, p3x, p3y, isSelected, isActive, Math.round(pulseOffset * 1000));
+      if (edge.points && edge.points.length > 0) {
+        let prevX = p0x;
+        let prevY = p0y;
+        for (const pt of edge.points) {
+          wasm.compute_edge_instance(prevX, prevY, pt.x, pt.y, isSelected, isActive, Math.round(pulseOffset * 1000));
+          pushGpuPinInstance(pt.x, pt.y, isSelected ? 6 : 4.5, isSelected ? [0.35, 0.65, 1, 1] : [0.7, 0.7, 0.7, 1]);
+          prevX = pt.x;
+          prevY = pt.y;
+        }
+        wasm.compute_edge_instance(prevX, prevY, p3x, p3y, isSelected, isActive, Math.round(pulseOffset * 1000));
+      } else {
+        wasm.compute_edge_instance(p0x, p0y, p3x, p3y, isSelected, isActive, Math.round(pulseOffset * 1000));
+      }
     }
 
     if (connectingEdge) {
@@ -1042,11 +1087,39 @@ if (
           0,
           (fromNode.outputs ?? []).findIndex((p) => p.id === connectingEdge?.fromPortId),
         );
-        const p0x = fromNode.position.x + NODE_WIDTH;
-        const p0y = fromNode.position.y + NODE_HEADER_HEIGHT + outIdx * PORT_ROW_HEIGHT + 14;
-        const p3x = connectingEdge.cursorX;
-        const p3y = connectingEdge.cursorY;
+        const inIdx = Math.max(
+          0,
+          (fromNode.inputs ?? []).findIndex((p) => p.id === connectingEdge?.fromPortId),
+        );
+        let p0x = fromNode.position.x + NODE_WIDTH;
+        let p0y = fromNode.position.y + NODE_HEADER_HEIGHT + 14;
+        if (outIdx !== -1) {
+          p0x = fromNode.position.x + NODE_WIDTH;
+          p0y = fromNode.position.y + NODE_HEADER_HEIGHT + outIdx * PORT_ROW_HEIGHT + 14;
+        } else if (inIdx !== -1) {
+          p0x = fromNode.position.x;
+          p0y = fromNode.position.y + NODE_HEADER_HEIGHT + inIdx * PORT_ROW_HEIGHT + 14;
+        }
+
+        let p3x = connectingEdge.cursorX;
+        let p3y = connectingEdge.cursorY;
+        if (hoveredPort) {
+          const targetNode = nodeMap.get(hoveredPort.nodeId);
+          if (targetNode) {
+            const tInIdx = (targetNode.inputs ?? []).findIndex((p) => p.id === hoveredPort?.portId);
+            const tOutIdx = (targetNode.outputs ?? []).findIndex((p) => p.id === hoveredPort?.portId);
+            if (tInIdx !== -1) {
+              p3x = targetNode.position.x;
+              p3y = targetNode.position.y + NODE_HEADER_HEIGHT + tInIdx * PORT_ROW_HEIGHT + 14;
+            } else if (tOutIdx !== -1) {
+              p3x = targetNode.position.x + NODE_WIDTH;
+              p3y = targetNode.position.y + NODE_HEADER_HEIGHT + tOutIdx * PORT_ROW_HEIGHT + 14;
+            }
+          }
+        }
+
         wasm.compute_edge_instance(p0x, p0y, p3x, p3y, 1, 1, 500);
+        pushGpuPinInstance(p3x, p3y, 6, isDark ? [0.475, 0.753, 1, 1] : [0.035, 0.412, 0.855, 1]);
       }
     }
   }
@@ -1200,7 +1273,7 @@ if (
         primitive: { topology: 'triangle-strip' },
       });
 
-      const atlasSize = wasm ? wasm.font_get_atlas_size() : 512;
+      const atlasSize = wasm ? wasm.font_get_atlas_size() : 1024;
       const atlasPtr = wasm ? wasm.font_get_atlas_ptr() : 0;
       const rgbaData =
         wasm && atlasPtr > 0
@@ -1369,8 +1442,18 @@ if (
         uniform sampler2D u_fontTexture;
         varying vec2 v_uv;
         varying vec4 v_color;
+        float median(float r, float g, float b) {
+          return max(min(r, g), min(max(r, g), b));
+        }
         void main() {
-          float dist = texture2D(u_fontTexture, v_uv).r;
+          vec4 sample = texture2D(u_fontTexture, v_uv);
+          if (v_color.a < 0.0) {
+            if (sample.a < 0.01) discard;
+            gl_FragColor = vec4(sample.rgb, sample.a * -v_color.a);
+            return;
+          }
+          float msdf = median(sample.r, sample.g, sample.b);
+          float dist = min(msdf, sample.a);
           float edge = 0.5;
           #ifdef GL_OES_standard_derivatives
             float smoothing = clamp(fwidth(dist) * 0.65, 0.005, 0.15);
@@ -1411,7 +1494,7 @@ if (
                 a_color: gl.getAttribLocation(textProgram, 'a_color'),
               };
 
-              const atlasSize = wasm ? wasm.font_get_atlas_size() : 512;
+              const atlasSize = wasm ? wasm.font_get_atlas_size() : 1024;
               const atlasPtr = wasm ? wasm.font_get_atlas_ptr() : 0;
               const rgbaData =
                 wasm && atlasPtr > 0
@@ -1547,6 +1630,7 @@ if (
       const gw = gMaxX - gMinX + padding * 2;
       const gh = gMaxY - gMinY + padding * 2 + 22;
 
+      const isSelectedGroup = selectedGroupId === group.id;
       ctx.save();
       const groupBg =
         group.backgroundColor ??
@@ -1554,8 +1638,12 @@ if (
       const groupBorder = group.color ?? (isDark ? '#58a6ff' : '#0969da');
       ctx.fillStyle = groupBg;
       ctx.strokeStyle = groupBorder;
-      ctx.lineWidth = 2 / zoom;
-      ctx.setLineDash([8, 4]);
+      ctx.lineWidth = (isSelectedGroup ? 3.5 : 2) / zoom;
+      if (isSelectedGroup) {
+        ctx.shadowColor = groupBorder;
+        ctx.shadowBlur = 12;
+      }
+      ctx.setLineDash(isSelectedGroup ? [] : [8, 4]);
       ctx.beginPath();
       if (typeof ctx.roundRect === 'function') {
         ctx.roundRect(gx, gy, gw, gh, 12);
@@ -1576,6 +1664,11 @@ if (
         ctx.rect(gx + 10, gy + 4, labelW + 16, 20);
       }
       ctx.fill();
+      if (isSelectedGroup) {
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1.5 / zoom;
+        ctx.stroke();
+      }
 
       ctx.fillStyle = '#ffffff';
       ctx.fillText(group.title, gx + 18, gy + 18);
@@ -1612,10 +1705,44 @@ if (
       const pulseOffset = edgePulses.get(edge.id);
       const isPulseActive = pulseOffset !== undefined;
       const isSelected = selectedEdgeIds.has(edge.id);
+      const hasWaypoints = edge.points && edge.points.length > 0;
 
       ctx.save();
+
+      // Outer backing stroke for crisp edge contrast
+      ctx.strokeStyle = isDark ? 'rgba(5, 10, 15, 0.85)' : 'rgba(255, 255, 255, 0.9)';
+      ctx.lineWidth = (isSelected ? 6.5 : 5) / zoom;
+      ctx.beginPath();
+      ctx.moveTo(p0x, p0y);
+      if (hasWaypoints && edge.points) {
+        for (let i = 0; i < edge.points.length; i++) {
+          const pt = edge.points[i];
+          if (pt) {
+            if (i === 0) {
+              const midX = (p0x + pt.x) / 2;
+              ctx.bezierCurveTo(midX, p0y, midX, pt.y, pt.x, pt.y);
+            } else {
+              const prev = edge.points[i - 1];
+              if (prev) {
+                const midX = (prev.x + pt.x) / 2;
+                ctx.bezierCurveTo(midX, prev.y, midX, pt.y, pt.x, pt.y);
+              }
+            }
+          }
+        }
+        const lastPt = edge.points.at(-1);
+        if (lastPt) {
+          const midX = (lastPt.x + p3x) / 2;
+          ctx.bezierCurveTo(midX, lastPt.y, midX, p3y, p3x, p3y);
+        }
+      } else {
+        ctx.bezierCurveTo(p1x, p1y, p2x, p2y, p3x, p3y);
+      }
+      ctx.stroke();
+
+      // Foreground colored cable
       if (isSelected) {
-        ctx.strokeStyle = isDark ? '#58a6ff' : '#0969da';
+        ctx.strokeStyle = isDark ? '#79c0ff' : '#0969da';
         ctx.lineWidth = 4.5 / zoom;
         ctx.shadowColor = isDark ? 'rgba(88, 166, 255, 0.9)' : 'rgba(9, 105, 218, 0.7)';
         ctx.shadowBlur = 10;
@@ -1625,15 +1752,68 @@ if (
         ctx.shadowColor = isDark ? 'rgba(63, 185, 80, 0.9)' : 'rgba(26, 127, 55, 0.7)';
         ctx.shadowBlur = 10;
       } else {
-        ctx.strokeStyle = isDark ? '#79a8ff' : '#57606a';
+        ctx.strokeStyle = isDark ? '#58a6ff' : '#0550ae';
         ctx.lineWidth = 3.2 / zoom;
-        ctx.shadowColor = isDark ? 'rgba(121, 168, 255, 0.35)' : 'rgba(87, 96, 106, 0.2)';
+        ctx.shadowColor = isDark ? 'rgba(88, 166, 255, 0.35)' : 'rgba(9, 105, 218, 0.25)';
         ctx.shadowBlur = 4;
       }
       ctx.beginPath();
       ctx.moveTo(p0x, p0y);
-      ctx.bezierCurveTo(p1x, p1y, p2x, p2y, p3x, p3y);
+      if (hasWaypoints && edge.points) {
+        for (let i = 0; i < edge.points.length; i++) {
+          const pt = edge.points[i];
+          if (pt) {
+            if (i === 0) {
+              const midX = (p0x + pt.x) / 2;
+              ctx.bezierCurveTo(midX, p0y, midX, pt.y, pt.x, pt.y);
+            } else {
+              const prev = edge.points[i - 1];
+              if (prev) {
+                const midX = (prev.x + pt.x) / 2;
+                ctx.bezierCurveTo(midX, prev.y, midX, pt.y, pt.x, pt.y);
+              }
+            }
+          }
+        }
+        const lastPt = edge.points.at(-1);
+        if (lastPt) {
+          const midX = (lastPt.x + p3x) / 2;
+          ctx.bezierCurveTo(midX, lastPt.y, midX, p3y, p3x, p3y);
+        }
+      } else {
+        ctx.bezierCurveTo(p1x, p1y, p2x, p2y, p3x, p3y);
+      }
       ctx.stroke();
+
+      // Pin connection terminal dots
+      ctx.fillStyle = isSelected ? '#79c0ff' : isDark ? '#58a6ff' : '#0969da';
+      ctx.beginPath();
+      ctx.arc(p0x, p0y, 4 / zoom, 0, Math.PI * 2);
+      ctx.arc(p3x, p3y, 4 / zoom, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Waypoint circular handles
+      if (hasWaypoints && edge.points) {
+        for (const pt of edge.points) {
+          ctx.fillStyle = isSelected ? '#58a6ff' : '#ffffff';
+          ctx.strokeStyle = isDark ? '#0d1117' : '#30363d';
+          ctx.lineWidth = 2 / zoom;
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, 6 / zoom, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+        }
+      }
+
+      // Directional chevron arrow indicating data flow
+      const arrowX = hasWaypoints && edge.points ? (edge.points[0]?.x ?? (p0x + p3x) / 2) : (p0x + p3x) / 2;
+      const arrowY = hasWaypoints && edge.points ? (edge.points[0]?.y ?? (p0y + p3y) / 2) : (p0y + p3y) / 2;
+      ctx.fillStyle = isSelected ? '#ffffff' : isDark ? '#79c0ff' : '#0969da';
+      ctx.beginPath();
+      ctx.moveTo(arrowX - 4 / zoom, arrowY - 4 / zoom);
+      ctx.lineTo(arrowX + 4 / zoom, arrowY);
+      ctx.lineTo(arrowX - 4 / zoom, arrowY + 4 / zoom);
+      ctx.fill();
 
       if (isPulseActive && pulseOffset !== undefined) {
         const pulseProgress = Math.max(0, Math.min(1, pulseOffset));
@@ -1680,24 +1860,67 @@ if (
           p0y = fromNode.position.y + NODE_HEADER_HEIGHT + inIdx * PORT_ROW_HEIGHT + 14;
         }
 
-        const p3x = connectingEdge.cursorX;
-        const p3y = connectingEdge.cursorY;
+        let p3x = connectingEdge.cursorX;
+        let p3y = connectingEdge.cursorY;
+        let isSnapped = false;
+
+        if (hoveredPort) {
+          const targetNode = nodeMap.get(hoveredPort.nodeId);
+          if (targetNode) {
+            const tInIdx = (targetNode.inputs ?? []).findIndex((p) => p.id === hoveredPort?.portId);
+            const tOutIdx = (targetNode.outputs ?? []).findIndex((p) => p.id === hoveredPort?.portId);
+            if (tInIdx !== -1) {
+              p3x = targetNode.position.x;
+              p3y = targetNode.position.y + NODE_HEADER_HEIGHT + tInIdx * PORT_ROW_HEIGHT + 14;
+              isSnapped = true;
+            } else if (tOutIdx !== -1) {
+              p3x = targetNode.position.x + NODE_WIDTH;
+              p3y = targetNode.position.y + NODE_HEADER_HEIGHT + tOutIdx * PORT_ROW_HEIGHT + 14;
+              isSnapped = true;
+            }
+          }
+        }
+
         const dx = Math.max(Math.abs(p3x - p0x) * 0.5, 40);
 
         ctx.save();
-        ctx.strokeStyle = isDark ? '#58a6ff' : '#0969da';
-        ctx.lineWidth = 2.5 / zoom;
-        ctx.setLineDash([5, 5]);
+        // Outer glow
+        ctx.strokeStyle = isSnapped
+          ? 'rgba(63, 185, 80, 0.45)'
+          : isDark
+            ? 'rgba(88, 166, 255, 0.45)'
+            : 'rgba(9, 105, 218, 0.35)';
+        ctx.lineWidth = 6 / zoom;
+        ctx.beginPath();
+        ctx.moveTo(p0x, p0y);
+        ctx.bezierCurveTo(p0x + dx, p0y, p3x - dx, p3y, p3x, p3y);
+        ctx.stroke();
+
+        // Main line
+        ctx.strokeStyle = isSnapped ? '#3fb950' : isDark ? '#58a6ff' : '#0969da';
+        ctx.lineWidth = 3.5 / zoom;
+        ctx.setLineDash([8 / zoom, 4 / zoom]);
         ctx.beginPath();
         ctx.moveTo(p0x, p0y);
         ctx.bezierCurveTo(p0x + dx, p0y, p3x - dx, p3y, p3x, p3y);
         ctx.stroke();
         ctx.setLineDash([]);
 
+        // Origin terminal dot
         ctx.fillStyle = isDark ? '#58a6ff' : '#0969da';
         ctx.beginPath();
-        ctx.arc(p3x, p3y, 5 / zoom, 0, Math.PI * 2);
+        ctx.arc(p0x, p0y, 5 / zoom, 0, Math.PI * 2);
         ctx.fill();
+
+        // Target cursor reticle
+        ctx.fillStyle = isSnapped ? '#3fb950' : isDark ? '#79c0ff' : '#218bff';
+        ctx.beginPath();
+        ctx.arc(p3x, p3y, (isSnapped ? 8 : 6) / zoom, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = isDark ? '#ffffff' : '#0d1117';
+        ctx.lineWidth = 2 / zoom;
+        ctx.stroke();
+
         ctx.restore();
       }
     }
@@ -2024,54 +2247,85 @@ if (
       const p3x = toNode.position.x;
       const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIndex * PORT_ROW_HEIGHT + 14;
 
-      const dx = wasm.bezier_control_dx(Math.round(p0x), Math.round(p3x));
-      const p1x = p0x + dx;
-      const p1y = p0y;
-      const p2x = p3x - dx;
-      const p2y = p3y;
-
       const isSelected = selectedEdgeIds.has(edge.id);
       const pulseOffset = edgePulses.get(edge.id);
       const isActive = pulseOffset !== undefined;
 
-      const colorR = isDark ? (isSelected ? 0.35 : isActive ? 0.25 : 0.47) : isSelected ? 0.035 : isActive ? 0.1 : 0.34;
-      const colorG = isDark ? (isSelected ? 0.65 : isActive ? 0.73 : 0.66) : isSelected ? 0.412 : isActive ? 0.5 : 0.38;
-      const colorB = isDark ? (isSelected ? 1 : isActive ? 0.31 : 1) : isSelected ? 0.855 : isActive ? 0.22 : 0.42;
-      const colorA = isSelected || isActive ? 1 : isDark ? 0.7 : 0.65;
+      const colorR = isDark
+        ? isSelected
+          ? 0.35
+          : isActive
+            ? 0.25
+            : 0.35
+        : isSelected
+          ? 0.035
+          : isActive
+            ? 0.1
+            : 0.035;
+      const colorG = isDark
+        ? isSelected
+          ? 0.65
+          : isActive
+            ? 0.73
+            : 0.65
+        : isSelected
+          ? 0.412
+          : isActive
+            ? 0.5
+            : 0.412;
+      const colorB = isDark ? (isSelected ? 1 : isActive ? 0.31 : 1) : isSelected ? 0.855 : isActive ? 0.22 : 0.855;
+      const colorA = isSelected || isActive ? 1 : isDark ? 0.85 : 0.8;
 
-      const steps = 16;
-      for (let s = 0; s < steps; s++) {
-        const t1Permille = Math.round((s / steps) * 1000);
-        const t2Permille = Math.round(((s + 1) / steps) * 1000);
-        const sx1 = wasm.bezier_point_1d(
-          Math.round(p0x),
-          Math.round(p1x),
-          Math.round(p2x),
-          Math.round(p3x),
-          t1Permille,
-        );
-        const sy1 = wasm.bezier_point_1d(
-          Math.round(p0y),
-          Math.round(p1y),
-          Math.round(p2y),
-          Math.round(p3y),
-          t1Permille,
-        );
-        const sx2 = wasm.bezier_point_1d(
-          Math.round(p0x),
-          Math.round(p1x),
-          Math.round(p2x),
-          Math.round(p3x),
-          t2Permille,
-        );
-        const sy2 = wasm.bezier_point_1d(
-          Math.round(p0y),
-          Math.round(p1y),
-          Math.round(p2y),
-          Math.round(p3y),
-          t2Permille,
-        );
-        pushLine(sx1, sy1, sx2, sy2, colorR, colorG, colorB, colorA);
+      const hasWaypoints = edge.points && edge.points.length > 0;
+      if (hasWaypoints && edge.points) {
+        let prevX = p0x;
+        let prevY = p0y;
+        for (const pt of edge.points) {
+          pushLine(prevX, prevY, pt.x, pt.y, colorR, colorG, colorB, colorA);
+          pushRect(pt.x - 3, pt.y - 3, 6, 6, isSelected ? 0.35 : 1, isSelected ? 0.65 : 1, 1, 1);
+          prevX = pt.x;
+          prevY = pt.y;
+        }
+        pushLine(prevX, prevY, p3x, p3y, colorR, colorG, colorB, colorA);
+      } else {
+        const p1x = p0x + wasm.bezier_control_dx(Math.round(p0x), Math.round(p3x));
+        const p1y = p0y;
+        const p2x = p3x - wasm.bezier_control_dx(Math.round(p0x), Math.round(p3x));
+        const p2y = p3y;
+        const steps = 16;
+        for (let s = 0; s < steps; s++) {
+          const t1Permille = Math.round((s / steps) * 1000);
+          const t2Permille = Math.round(((s + 1) / steps) * 1000);
+          const sx1 = wasm.bezier_point_1d(
+            Math.round(p0x),
+            Math.round(p1x),
+            Math.round(p2x),
+            Math.round(p3x),
+            t1Permille,
+          );
+          const sy1 = wasm.bezier_point_1d(
+            Math.round(p0y),
+            Math.round(p1y),
+            Math.round(p2y),
+            Math.round(p3y),
+            t1Permille,
+          );
+          const sx2 = wasm.bezier_point_1d(
+            Math.round(p0x),
+            Math.round(p1x),
+            Math.round(p2x),
+            Math.round(p3x),
+            t2Permille,
+          );
+          const sy2 = wasm.bezier_point_1d(
+            Math.round(p0y),
+            Math.round(p1y),
+            Math.round(p2y),
+            Math.round(p3y),
+            t2Permille,
+          );
+          pushLine(sx1, sy1, sx2, sy2, colorR, colorG, colorB, colorA);
+        }
       }
     }
 
@@ -2090,16 +2344,33 @@ if (
           p0x = fromNode.position.x;
           p0y = fromNode.position.y + NODE_HEADER_HEIGHT + inIdx * PORT_ROW_HEIGHT + 14;
         }
-        pushLine(
-          p0x,
-          p0y,
-          connectingEdge.cursorX,
-          connectingEdge.cursorY,
-          isDark ? 0.35 : 0.035,
-          isDark ? 0.65 : 0.412,
-          isDark ? 1 : 0.855,
-          0.9,
-        );
+
+        let p3x = connectingEdge.cursorX;
+        let p3y = connectingEdge.cursorY;
+        let isSnapped = false;
+
+        if (hoveredPort) {
+          const targetNode = nodeMap.get(hoveredPort.nodeId);
+          if (targetNode) {
+            const tInIdx = (targetNode.inputs ?? []).findIndex((p) => p.id === hoveredPort?.portId);
+            const tOutIdx = (targetNode.outputs ?? []).findIndex((p) => p.id === hoveredPort?.portId);
+            if (tInIdx !== -1) {
+              p3x = targetNode.position.x;
+              p3y = targetNode.position.y + NODE_HEADER_HEIGHT + tInIdx * PORT_ROW_HEIGHT + 14;
+              isSnapped = true;
+            } else if (tOutIdx !== -1) {
+              p3x = targetNode.position.x + NODE_WIDTH;
+              p3y = targetNode.position.y + NODE_HEADER_HEIGHT + tOutIdx * PORT_ROW_HEIGHT + 14;
+              isSnapped = true;
+            }
+          }
+        }
+
+        const connR = isSnapped ? 0.247 : isDark ? 0.35 : 0.035;
+        const connG = isSnapped ? 0.725 : isDark ? 0.65 : 0.412;
+        const connB = isSnapped ? 0.314 : isDark ? 1 : 0.855;
+        pushLine(p0x, p0y, p3x, p3y, connR, connG, connB, 1);
+        pushRect(p3x - 4, p3y - 4, 8, 8, connR, connG, connB, 1);
       }
     }
 
@@ -3297,6 +3568,8 @@ if (
       'zoom',
       'resize',
       'set_selection',
+      'set_connecting_edge',
+      'set_hovered_port',
       'set_pulse',
       'set_trace_state',
       'render_frame',
@@ -3534,6 +3807,29 @@ if (
               selectedEdgeIds.add(id);
             }
           }
+          selectedGroupId = msg.selectedGroupId;
+          wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
+          postReply({
+            type: 'frame',
+            performance: performanceStats,
+            visibleNodes: nodes.length,
+            visibleEdges: edges.length,
+          } as RenderWorkerOutputMessage);
+          break;
+        }
+        case 'set_connecting_edge': {
+          connectingEdge = msg.edge;
+          wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
+          postReply({
+            type: 'frame',
+            performance: performanceStats,
+            visibleNodes: nodes.length,
+            visibleEdges: edges.length,
+          } as RenderWorkerOutputMessage);
+          break;
+        }
+        case 'set_hovered_port': {
+          hoveredPort = msg.hoveredPort;
           wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
           postReply({
             type: 'frame',
@@ -3580,6 +3876,45 @@ if (
           break;
         }
         case 'render_frame': {
+          wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
+          postReply({
+            type: 'frame',
+            performance: performanceStats,
+            visibleNodes: nodes.length,
+            visibleEdges: edges.length,
+          } as RenderWorkerOutputMessage);
+          break;
+        }
+        case 'reload_font_atlas': {
+          if (wasm) {
+            const atlasSize = wasm.font_get_atlas_size();
+            const atlasPtr = wasm.font_init_atlas_data();
+            if (atlasPtr > 0 && atlasSize > 0) {
+              const rgbaData = new Uint8Array(wasm.memory.buffer, atlasPtr, atlasSize * atlasSize * 4);
+              if (gpuDevice && fontTexture) {
+                gpuDevice.queue.writeTexture(
+                  { texture: fontTexture },
+                  rgbaData,
+                  { bytesPerRow: atlasSize * 4, rowsPerImage: atlasSize },
+                  [atlasSize, atlasSize],
+                );
+              }
+              if (glCtx && glFontTexture) {
+                glCtx.bindTexture(glCtx.TEXTURE_2D, glFontTexture);
+                glCtx.texImage2D(
+                  glCtx.TEXTURE_2D,
+                  0,
+                  glCtx.RGBA,
+                  atlasSize,
+                  atlasSize,
+                  0,
+                  glCtx.RGBA,
+                  glCtx.UNSIGNED_BYTE,
+                  rgbaData,
+                );
+              }
+            }
+          }
           wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
           postReply({
             type: 'frame',

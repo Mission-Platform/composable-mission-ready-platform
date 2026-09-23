@@ -257,6 +257,7 @@ function createGroupingPipelineStore(): FlintEditorStore {
         fromPortId: 'value',
         toNodeId: 'add_1',
         toPortId: 'a',
+        points: [{ x: -180, y: -120 }],
       },
       {
         id: 'edge_2',

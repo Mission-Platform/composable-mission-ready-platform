@@ -69,6 +69,7 @@ export interface FlintGraphEdge {
   readonly fromPortId: string;
   readonly toNodeId: string;
   readonly toPortId: string;
+  readonly points?: readonly { readonly x: number; readonly y: number }[];
 }
 
 export interface FlintNodeGraph {
@@ -184,6 +185,7 @@ function remapMetaEdges(
       fromPortId: edge.fromPortId,
       toNodeId: internalIdMap.get(edge.toNodeId) ?? edge.toNodeId,
       toPortId: edge.toPortId,
+      ...(edge.points ? { points: edge.points } : {}),
     });
   }
 }
@@ -206,6 +208,7 @@ function rewireIncomingMetaEdges(
         fromPortId: inEdge.fromPortId,
         toNodeId: internalIdMap.get(mapping.internalNodeId) ?? mapping.internalNodeId,
         toPortId: mapping.internalPortId,
+        ...(inEdge.points ? { points: inEdge.points } : {}),
       });
     }
   }
@@ -229,6 +232,7 @@ function rewireOutgoingMetaEdges(
         fromPortId: mapping.internalPortId,
         toNodeId: outEdge.toNodeId,
         toPortId: outEdge.toPortId,
+        ...(outEdge.points ? { points: outEdge.points } : {}),
       });
     }
   }

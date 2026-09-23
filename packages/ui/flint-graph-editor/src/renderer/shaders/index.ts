@@ -289,10 +289,21 @@ fn vs_main(input: VertexInput) -> VertexOutput {
   return output;
 }
 
+fn median(r: f32, g: f32, b: f32) -> f32 {
+  return max(min(r, g), min(max(r, g), b));
+}
+
 @fragment
 fn fs_main(input: VertexOutput) -> @location(0) vec4<f32> {
   let sample = textureSample(fontTexture, fontSampler, input.uv);
-  let dist = sample.r;
+  if (input.color.a < 0.0) {
+    if (sample.a < 0.01) {
+      discard;
+    }
+    return vec4<f32>(sample.rgb, sample.a * -input.color.a);
+  }
+  let msdf = median(sample.r, sample.g, sample.b);
+  let dist = min(msdf, sample.a);
   let edge = 0.5;
   let smoothing = clamp(fwidth(dist) * 0.65, 0.005, 0.15);
   let alpha = smoothstep(edge - smoothing, edge + smoothing, dist);

@@ -1,92 +1,113 @@
+// ============================================================================
+// Flint High-Performance Signed Distance Field (MSDF) Font Engine
+// Supports 1024x1024 Atlas, 2D Shelf Rect Packing, Base-2 Cell Variations (4x4, 8x8, 8x16, 16x8, 16x16, 16x32, 32x16, 32x32),
+// UTF-8 Typography, Rich Text Styling (Colors, Italic Slant, Underline, Strike-Through,
+// Automated Word-Wrapping, Line Height, Letter Spacing, and Kerning).
+// ============================================================================
+
 export fn isqrt_u32(val: u32) -> u32 {
   if val == 0 { return 0; }
   let mut x: u32 = val;
-  let mut y: u32 = (x + 1) / 2;
+  let u_one: u32 = 1;
+  let u_two: u32 = 2;
+  let mut y: u32 = (x + u_one) / u_two;
   while y < x {
     x = y;
-    y = (x + val / x) / 2;
+    y = (x + val / x) / u_two;
   }
   return x;
 }
 
-export fn dist_to_segment_u32(px: u32, py: u32, ax: u32, ay: u32, bx: u32, by: u32) -> u32 {
-  let mut dx: u32 = 0;
-  let mut dy: u32 = 0;
+export fn dist_to_segment_u32(
+  px: u32, py: u32,
+  ax: u32, ay: u32,
+  bx: u32, by: u32
+) -> u32 {
   let mut dx_pos: bool = true;
-  let mut dy_pos: bool = true;
+  let mut dx: u32 = 0;
   if bx >= ax { dx = bx - ax; } else { dx = ax - bx; dx_pos = false; }
+
+  let mut dy_pos: bool = true;
+  let mut dy: u32 = 0;
   if by >= ay { dy = by - ay; } else { dy = ay - by; dy_pos = false; }
-  let len_sq: u32 = dx * dx + dy * dy;
-  if len_sq == 0 {
-    let mut ex: u32 = 0;
-    let mut ey: u32 = 0;
-    if px >= ax { ex = px - ax; } else { ex = ax - px; }
-    if py >= ay { ey = py - ay; } else { ey = ay - py; }
-    return isqrt_u32(ex * ex + ey * ey);
+
+  let l2: u32 = dx * dx + dy * dy;
+  if l2 == 0 {
+    let mut rx: u32 = 0;
+    let mut ry: u32 = 0;
+    if px >= ax { rx = px - ax; } else { rx = ax - px; }
+    if py >= ay { ry = py - ay; } else { ry = ay - py; }
+    return isqrt_u32(rx * rx + ry * ry);
   }
 
-  let mut px_diff: u32 = 0;
-  let mut px_pos: bool = true;
-  if px >= ax { px_diff = px - ax; } else { px_diff = ax - px; px_pos = false; }
+  let mut dpx_pos: bool = true;
+  let mut dpx: u32 = 0;
+  if px >= ax { dpx = px - ax; } else { dpx = ax - px; dpx_pos = false; }
 
-  let mut py_diff: u32 = 0;
-  let mut py_pos: bool = true;
-  if py >= ay { py_diff = py - ay; } else { py_diff = ay - py; py_pos = false; }
+  let mut dpy_pos: bool = true;
+  let mut dpy: u32 = 0;
+  if py >= ay { dpy = py - ay; } else { dpy = ay - py; dpy_pos = false; }
 
-  let term_x: u32 = px_diff * dx;
-  let term_y: u32 = py_diff * dy;
-  let term_x_pos: bool = (px_pos && dx_pos) || ((!px_pos) && (!dx_pos));
-  let term_y_pos: bool = (py_pos && dy_pos) || ((!py_pos) && (!dy_pos));
-
-  let mut dot: u32 = 0;
   let mut dot_pos: bool = true;
-  if term_x_pos && term_y_pos {
-    dot = term_x + term_y;
+  let mut dot_mag: u32 = 0;
+
+  let term1_pos: bool = (dx_pos && dpx_pos) || (!dx_pos && !dpx_pos);
+  let term1_mag: u32 = dx * dpx;
+
+  let term2_pos: bool = (dy_pos && dpy_pos) || (!dy_pos && !dpy_pos);
+  let term2_mag: u32 = dy * dpy;
+
+  if term1_pos && term2_pos {
+    dot_pos = true;
+    dot_mag = term1_mag + term2_mag;
   } else {
-    if (!term_x_pos) && (!term_y_pos) {
-      dot = term_x + term_y;
+    if !term1_pos && !term2_pos {
       dot_pos = false;
+      dot_mag = term1_mag + term2_mag;
     } else {
-      if term_x_pos && (!term_y_pos) {
-        if term_x >= term_y {
-          dot = term_x - term_y;
+      if term1_pos && !term2_pos {
+        if term1_mag >= term2_mag {
+          dot_pos = true;
+          dot_mag = term1_mag - term2_mag;
         } else {
-          dot = term_y - term_x;
           dot_pos = false;
+          dot_mag = term2_mag - term1_mag;
         }
       } else {
-        if term_y >= term_x {
-          dot = term_y - term_x;
+        if term2_mag >= term1_mag {
+          dot_pos = true;
+          dot_mag = term2_mag - term1_mag;
         } else {
-          dot = term_x - term_y;
           dot_pos = false;
+          dot_mag = term1_mag - term2_mag;
         }
       }
     }
   }
 
-  if !dot_pos {
-    let mut ex: u32 = 0;
-    let mut ey: u32 = 0;
-    if px >= ax { ex = px - ax; } else { ex = ax - px; }
-    if py >= ay { ey = py - ay; } else { ey = ay - py; }
-    return isqrt_u32(ex * ex + ey * ey);
+  if !dot_pos || dot_mag == 0 {
+    let mut rx: u32 = 0;
+    let mut ry: u32 = 0;
+    if px >= ax { rx = px - ax; } else { rx = ax - px; }
+    if py >= ay { ry = py - ay; } else { ry = ay - py; }
+    return isqrt_u32(rx * rx + ry * ry);
   }
 
-  if dot >= len_sq {
-    let mut ex: u32 = 0;
-    let mut ey: u32 = 0;
-    if px >= bx { ex = px - bx; } else { ex = bx - px; }
-    if py >= by { ey = py - by; } else { ey = by - py; }
-    return isqrt_u32(ex * ex + ey * ey);
+  if dot_mag >= l2 {
+    let mut rx: u32 = 0;
+    let mut ry: u32 = 0;
+    if px >= bx { rx = px - bx; } else { rx = bx - px; }
+    if py >= by { ry = py - by; } else { ry = by - py; }
+    return isqrt_u32(rx * rx + ry * ry);
   }
 
-  let frac: u32 = (dot * 256) / len_sq;
-  let qx_diff: u32 = (dx * frac) / 256;
-  let qy_diff: u32 = (dy * frac) / 256;
-  let mut qx: u32 = ax;
+  let qx_diff: u32 = (dx * dot_mag) / l2;
+  let qy_diff: u32 = (dy * dot_mag) / l2;
+
+  let mut qx: u32 = 0;
+  let mut qy: u32 = 0;
+
   if dx_pos { qx = ax + qx_diff; } else { qx = ax - qx_diff; }
-  let mut qy: u32 = ay;
   if dy_pos { qy = ay + qy_diff; } else { qy = ay - qy_diff; }
 
   let mut rx: u32 = 0;
@@ -97,7 +118,7 @@ export fn dist_to_segment_u32(px: u32, py: u32, ax: u32, ay: u32, bx: u32, by: u
 }
 
 export fn sdf_get_atlas_size() -> u32 {
-  return 512;
+  return 1024;
 }
 
 export fn sdf_get_base_font_size() -> f64 {
@@ -105,26 +126,16 @@ export fn sdf_get_base_font_size() -> f64 {
 }
 
 export fn utf8_codepoint_length(byte_val: i32) -> i32 {
-  if byte_val < 128 {
-    return 1;
-  }
-  if byte_val >= 192 && byte_val < 224 {
-    return 2;
-  }
-  if byte_val >= 224 && byte_val < 240 {
-    return 3;
-  }
-  if byte_val >= 240 && byte_val < 248 {
-    return 4;
-  }
+  if byte_val < 128 { return 1; }
+  if byte_val >= 192 && byte_val < 224 { return 2; }
+  if byte_val >= 224 && byte_val < 240 { return 3; }
+  if byte_val >= 240 && byte_val < 248 { return 4; }
   return 1;
 }
 
 export fn utf8_decode_codepoint(text: string, i: i32, len: i32) -> i32 {
   let b0: i32 = string_byte_at(text, i);
-  if b0 < 128 {
-    return b0;
-  }
+  if b0 < 128 { return b0; }
   if b0 >= 192 && b0 < 224 {
     if i + 1 < len {
       let b1: i32 = string_byte_at(text, i + 1);
@@ -225,6 +236,12 @@ export fn unicode_to_idx(code: i32) -> u32 {
   return 95;
 }
 
+
+
+
+
+
+
 export fn char_code_to_idx(code: i32) -> u32 {
   if code >= 32 && code <= 126 {
     let mut idx: u32 = 0;
@@ -244,149 +261,454 @@ export fn char_code_to_idx(code: i32) -> u32 {
   return unicode_to_idx(code);
 }
 
-// Exact Comfortaa proportional advance widths at 24px
-export fn sdf_get_char_advance_u32(code: i32) -> u32 {
-  if code < 32 { return 6; }
-  if code > 126 {
-    if code == 945 { return 15; } // α
-    if code == 946 { return 13; } // β
-    if code == 947 { return 12; } // γ
-    if code == 948 { return 13; } // δ
-    if code == 955 { return 12; } // λ
-    if code == 956 { return 13; } // μ
-    if code == 960 { return 13; } // π
-    if code == 963 { return 13; } // σ
-    if code == 969 { return 17; } // ω
-    if code == 916 { return 17; } // Δ
-    if code == 937 { return 18; } // Ω
-    if code == 952 { return 13; } // θ
-    if code == 8594 || code == 8592 { return 24; }
-    if code == 8593 || code == 8595 { return 12; }
-    if code == 8721 { return 17; } // ∑
-    if code == 8719 { return 20; } // ∏
-    if code == 8747 { return 7; } // ∫
-    if code == 8730 { return 13; } // √
-    if code == 177 || code == 215 || code == 247 || code == 8722 { return 14; }
-    if code == 9889 || code == 9733 { return 24; }
-    if code >= 224 && code <= 235 { return 11; }
-    if code == 236 || code == 237 { return 7; }
-    if code >= 241 && code <= 250 { return 12; }
-    return 13;
-  }
-  if code == 32 { return 6; }
-  if code == 33 { return 8; }
-  if code == 34 { return 10; }
-  if code == 35 { return 12; }
-  if code == 36 { return 12; }
-  if code == 37 { return 20; }
-  if code == 38 { return 19; }
-  if code == 39 { return 5; }
-  if code == 40 { return 8; }
-  if code == 41 { return 8; }
-  if code == 42 { return 12; }
-  if code == 43 { return 14; }
-  if code == 44 { return 6; }
-  if code == 45 { return 8; }
-  if code == 46 { return 6; }
-  if code == 47 { return 7; }
-  if code >= 48 && code <= 57 { return 12; }
-  if code == 58 { return 7; }
-  if code == 59 { return 7; }
-  if code == 60 { return 14; }
-  if code == 61 { return 14; }
-  if code == 62 { return 14; }
-  if code == 63 { return 11; }
-  if code == 64 { return 22; }
-
-  if code == 65 { return 17; } // A
-  if code == 66 { return 16; } // B
-  if code == 67 { return 16; } // C
-  if code == 68 { return 17; } // D
-  if code == 69 { return 15; } // E
-  if code == 70 { return 13; } // F
-  if code == 71 { return 17; } // G
-  if code == 72 { return 17; } // H
-  if code == 73 { return 8; }  // I
-  if code == 74 { return 9; }  // J
-  if code == 75 { return 17; } // K
-  if code == 76 { return 15; } // L
-  if code == 77 { return 21; } // M
-  if code == 78 { return 17; } // N
-  if code == 79 { return 17; } // O
-  if code == 80 { return 13; } // P
-  if code == 81 { return 17; } // Q
-  if code == 82 { return 16; } // R
-  if code == 83 { return 13; } // S
-  if code == 84 { return 15; } // T
-  if code == 85 { return 17; } // U
-  if code == 86 { return 17; } // V
-  if code == 87 { return 23; } // W
-  if code == 88 { return 17; } // X
-  if code == 89 { return 17; } // Y
-  if code == 90 { return 15; } // Z
-
-  if code == 91 { return 8; }
-  if code == 92 { return 7; }
-  if code == 93 { return 8; }
-  if code == 94 { return 11; }
-  if code == 95 { return 12; }
-  if code == 96 { return 8; }
-
-  if code == 97 { return 11; }  // a
-  if code == 98 { return 12; }  // b
-  if code == 99 { return 11; }  // c
-  if code == 100 { return 12; } // d
-  if code == 101 { return 11; } // e
-  if code == 102 { return 8; }  // f
-  if code == 103 { return 12; } // g
-  if code == 104 { return 12; } // h
-  if code == 105 { return 7; }  // i
-  if code == 106 { return 7; }  // j
-  if code == 107 { return 12; } // k
-  if code == 108 { return 7; }  // l
-  if code == 109 { return 19; } // m
-  if code == 110 { return 12; } // n
-  if code == 111 { return 12; } // o
-  if code == 112 { return 12; } // p
-  if code == 113 { return 12; } // q
-  if code == 114 { return 8; }  // r
-  if code == 115 { return 9; }  // s
-  if code == 116 { return 7; }  // t
-  if code == 117 { return 12; } // u
-  if code == 118 { return 12; } // v
-  if code == 119 { return 17; } // w
-  if code == 120 { return 12; } // x
-  if code == 121 { return 12; } // y
-  if code == 122 { return 11; } // z
-
-  if code == 123 { return 12; }
-  if code == 124 { return 5; }
-  if code == 125 { return 12; }
-  if code == 126 { return 13; }
-
-  return 12;
+export fn get_glyph_cell_w_u32(idx: u32) -> u32 {
+  if idx == 0 { return 8; }
+  if idx == 1 { return 24; }
+  if idx == 2 { return 12; }
+  if idx == 3 { return 24; }
+  if idx == 4 { return 24; }
+  if idx == 5 { return 24; }
+  if idx == 6 { return 24; }
+  if idx == 7 { return 12; }
+  if idx == 8 { return 12; }
+  if idx == 9 { return 12; }
+  if idx == 10 { return 24; }
+  if idx == 11 { return 24; }
+  if idx == 12 { return 12; }
+  if idx == 13 { return 32; }
+  if idx == 14 { return 12; }
+  if idx == 15 { return 24; }
+  if idx == 16 { return 24; }
+  if idx == 17 { return 24; }
+  if idx == 18 { return 24; }
+  if idx == 19 { return 24; }
+  if idx == 20 { return 24; }
+  if idx == 21 { return 24; }
+  if idx == 22 { return 24; }
+  if idx == 23 { return 24; }
+  if idx == 24 { return 24; }
+  if idx == 25 { return 24; }
+  if idx == 26 { return 12; }
+  if idx == 27 { return 12; }
+  if idx == 28 { return 24; }
+  if idx == 29 { return 24; }
+  if idx == 30 { return 24; }
+  if idx == 31 { return 24; }
+  if idx == 32 { return 24; }
+  if idx == 33 { return 24; }
+  if idx == 34 { return 24; }
+  if idx == 35 { return 24; }
+  if idx == 36 { return 24; }
+  if idx == 37 { return 24; }
+  if idx == 38 { return 24; }
+  if idx == 39 { return 24; }
+  if idx == 40 { return 24; }
+  if idx == 41 { return 12; }
+  if idx == 42 { return 24; }
+  if idx == 43 { return 24; }
+  if idx == 44 { return 24; }
+  if idx == 45 { return 32; }
+  if idx == 46 { return 24; }
+  if idx == 47 { return 24; }
+  if idx == 48 { return 24; }
+  if idx == 49 { return 24; }
+  if idx == 50 { return 24; }
+  if idx == 51 { return 24; }
+  if idx == 52 { return 24; }
+  if idx == 53 { return 24; }
+  if idx == 54 { return 24; }
+  if idx == 55 { return 24; }
+  if idx == 56 { return 24; }
+  if idx == 57 { return 24; }
+  if idx == 58 { return 24; }
+  if idx == 59 { return 12; }
+  if idx == 60 { return 24; }
+  if idx == 61 { return 12; }
+  if idx == 62 { return 24; }
+  if idx == 63 { return 32; }
+  if idx == 64 { return 24; }
+  if idx == 65 { return 24; }
+  if idx == 66 { return 24; }
+  if idx == 67 { return 24; }
+  if idx == 68 { return 24; }
+  if idx == 69 { return 24; }
+  if idx == 70 { return 24; }
+  if idx == 71 { return 24; }
+  if idx == 72 { return 24; }
+  if idx == 73 { return 12; }
+  if idx == 74 { return 12; }
+  if idx == 75 { return 24; }
+  if idx == 76 { return 12; }
+  if idx == 77 { return 32; }
+  if idx == 78 { return 24; }
+  if idx == 79 { return 24; }
+  if idx == 80 { return 24; }
+  if idx == 81 { return 24; }
+  if idx == 82 { return 24; }
+  if idx == 83 { return 24; }
+  if idx == 84 { return 24; }
+  if idx == 85 { return 24; }
+  if idx == 86 { return 24; }
+  if idx == 87 { return 32; }
+  if idx == 88 { return 24; }
+  if idx == 89 { return 24; }
+  if idx == 90 { return 24; }
+  if idx == 91 { return 24; }
+  if idx == 92 { return 12; }
+  if idx == 93 { return 24; }
+  if idx == 94 { return 24; }
+  if idx == 95 { return 24; }
+  if idx == 96 { return 24; }
+  if idx == 97 { return 20; }
+  if idx == 98 { return 20; }
+  if idx == 99 { return 20; }
+  if idx == 100 { return 20; }
+  if idx == 101 { return 20; }
+  if idx == 102 { return 20; }
+  if idx == 103 { return 20; }
+  if idx == 104 { return 20; }
+  if idx == 105 { return 12; }
+  if idx == 106 { return 12; }
+  if idx == 107 { return 20; }
+  if idx == 108 { return 12; }
+  if idx == 109 { return 32; }
+  if idx == 110 { return 20; }
+  if idx == 111 { return 20; }
+  if idx == 112 { return 20; }
+  if idx == 113 { return 20; }
+  if idx == 114 { return 20; }
+  if idx == 115 { return 20; }
+  if idx == 116 { return 20; }
+  if idx == 117 { return 20; }
+  if idx == 118 { return 20; }
+  if idx == 119 { return 32; }
+  if idx == 120 { return 20; }
+  if idx == 121 { return 20; }
+  if idx == 122 { return 20; }
+  if idx == 123 { return 24; }
+  if idx == 124 { return 24; }
+  if idx == 125 { return 24; }
+  if idx == 126 { return 24; }
+  if idx == 127 { return 28; }
+  if idx == 128 { return 28; }
+  if idx == 129 { return 28; }
+  if idx == 130 { return 28; }
+  if idx == 131 { return 28; }
+  if idx == 132 { return 28; }
+  if idx == 133 { return 28; }
+  if idx == 134 { return 28; }
+  if idx == 135 { return 28; }
+  if idx == 136 { return 28; }
+  if idx == 137 { return 28; }
+  if idx == 138 { return 28; }
+  if idx == 139 { return 28; }
+  if idx == 140 { return 28; }
+  if idx == 141 { return 28; }
+  if idx == 142 { return 28; }
+  if idx == 143 { return 28; }
+  if idx == 144 { return 28; }
+  if idx == 145 { return 28; }
+  if idx == 146 { return 28; }
+  if idx == 147 { return 28; }
+  if idx == 148 { return 28; }
+  if idx == 149 { return 28; }
+  if idx == 150 { return 28; }
+  if idx == 151 { return 28; }
+  if idx == 152 { return 28; }
+  if idx == 153 { return 28; }
+  if idx == 154 { return 28; }
+  if idx == 155 { return 28; }
+  if idx == 156 { return 28; }
+  if idx == 157 { return 28; }
+  if idx == 158 { return 28; }
+  if idx == 159 { return 28; }
+  if idx == 160 { return 28; }
+  if idx == 161 { return 28; }
+  if idx == 162 { return 28; }
+  if idx == 163 { return 28; }
+  if idx == 164 { return 28; }
+  if idx == 165 { return 28; }
+  if idx == 166 { return 28; }
+  if idx == 167 { return 28; }
+  if idx == 168 { return 28; }
+  if idx == 169 { return 28; }
+  if idx == 170 { return 28; }
+  if idx == 171 { return 28; }
+  if idx == 172 { return 28; }
+  if idx == 173 { return 28; }
+  if idx == 174 { return 28; }
+  if idx == 175 { return 28; }
+  if idx == 176 { return 28; }
+  if idx == 177 { return 28; }
+  if idx == 178 { return 28; }
+  if idx == 179 { return 28; }
+  if idx == 180 { return 28; }
+  if idx == 181 { return 28; }
+  if idx == 182 { return 28; }
+  if idx == 183 { return 28; }
+  if idx == 184 { return 28; }
+  if idx == 185 { return 28; }
+  if idx == 186 { return 28; }
+  if idx == 187 { return 28; }
+  if idx == 188 { return 28; }
+  if idx == 189 { return 28; }
+  if idx == 190 { return 28; }
+  if idx == 191 { return 28; }
+  if idx == 192 { return 28; }
+  if idx == 193 { return 28; }
+  if idx == 194 { return 28; }
+  if idx == 195 { return 28; }
+  if idx == 196 { return 28; }
+  if idx == 197 { return 28; }
+  if idx == 198 { return 28; }
+  if idx == 199 { return 28; }
+  if idx == 200 { return 28; }
+  if idx == 201 { return 28; }
+  if idx == 202 { return 28; }
+  if idx == 203 { return 28; }
+  if idx == 204 { return 28; }
+  if idx == 205 { return 28; }
+  if idx == 206 { return 28; }
+  if idx == 207 { return 28; }
+  if idx == 208 { return 28; }
+  if idx == 209 { return 28; }
+  if idx == 210 { return 28; }
+  if idx == 211 { return 28; }
+  if idx == 212 { return 28; }
+  if idx == 213 { return 28; }
+  if idx == 214 { return 28; }
+  if idx == 215 { return 28; }
+  if idx == 216 { return 28; }
+  if idx == 217 { return 28; }
+  if idx == 218 { return 28; }
+  if idx == 219 { return 28; }
+  if idx == 220 { return 28; }
+  return 24;
 }
 
-export fn sdf_get_char_advance(code: i32) -> f64 {
-  let adv: u32 = sdf_get_char_advance_u32(code);
-  return f64_from_u32(adv);
-}
-
-export fn sdf_measure_text(text: string, font_size: f64) -> f64 {
-  let len: i32 = string_length(text);
-  let mut total: f64 = f64_from_u32(0);
-  let mut i: i32 = 0;
-  let base_size: f64 = f64_from_u32(24);
-  while i < len {
-    let b0: i32 = string_byte_at(text, i);
-    let step: i32 = utf8_codepoint_length(b0);
-    let ucode: i32 = utf8_decode_codepoint(text, i, len);
-    let adv_u32: u32 = sdf_get_char_advance_u32(ucode);
-    let adv: f64 = (f64_from_u32(adv_u32) * font_size) / base_size;
-    total = total + adv;
-    i = i + step;
-  }
-  return total;
+export fn get_glyph_cell_h_u32(idx: u32) -> u32 {
+  if idx == 0 { return 8; }
+  if idx == 1 { return 32; }
+  if idx == 2 { return 32; }
+  if idx == 3 { return 32; }
+  if idx == 4 { return 32; }
+  if idx == 5 { return 32; }
+  if idx == 6 { return 32; }
+  if idx == 7 { return 32; }
+  if idx == 8 { return 32; }
+  if idx == 9 { return 32; }
+  if idx == 10 { return 32; }
+  if idx == 11 { return 32; }
+  if idx == 12 { return 32; }
+  if idx == 13 { return 32; }
+  if idx == 14 { return 32; }
+  if idx == 15 { return 32; }
+  if idx == 16 { return 32; }
+  if idx == 17 { return 32; }
+  if idx == 18 { return 32; }
+  if idx == 19 { return 32; }
+  if idx == 20 { return 32; }
+  if idx == 21 { return 32; }
+  if idx == 22 { return 32; }
+  if idx == 23 { return 32; }
+  if idx == 24 { return 32; }
+  if idx == 25 { return 32; }
+  if idx == 26 { return 32; }
+  if idx == 27 { return 32; }
+  if idx == 28 { return 32; }
+  if idx == 29 { return 32; }
+  if idx == 30 { return 32; }
+  if idx == 31 { return 32; }
+  if idx == 32 { return 32; }
+  if idx == 33 { return 32; }
+  if idx == 34 { return 32; }
+  if idx == 35 { return 32; }
+  if idx == 36 { return 32; }
+  if idx == 37 { return 32; }
+  if idx == 38 { return 32; }
+  if idx == 39 { return 32; }
+  if idx == 40 { return 32; }
+  if idx == 41 { return 32; }
+  if idx == 42 { return 32; }
+  if idx == 43 { return 32; }
+  if idx == 44 { return 32; }
+  if idx == 45 { return 32; }
+  if idx == 46 { return 32; }
+  if idx == 47 { return 32; }
+  if idx == 48 { return 32; }
+  if idx == 49 { return 32; }
+  if idx == 50 { return 32; }
+  if idx == 51 { return 32; }
+  if idx == 52 { return 32; }
+  if idx == 53 { return 32; }
+  if idx == 54 { return 32; }
+  if idx == 55 { return 32; }
+  if idx == 56 { return 32; }
+  if idx == 57 { return 32; }
+  if idx == 58 { return 32; }
+  if idx == 59 { return 32; }
+  if idx == 60 { return 32; }
+  if idx == 61 { return 32; }
+  if idx == 62 { return 32; }
+  if idx == 63 { return 32; }
+  if idx == 64 { return 32; }
+  if idx == 65 { return 32; }
+  if idx == 66 { return 32; }
+  if idx == 67 { return 32; }
+  if idx == 68 { return 32; }
+  if idx == 69 { return 32; }
+  if idx == 70 { return 32; }
+  if idx == 71 { return 32; }
+  if idx == 72 { return 32; }
+  if idx == 73 { return 32; }
+  if idx == 74 { return 32; }
+  if idx == 75 { return 32; }
+  if idx == 76 { return 32; }
+  if idx == 77 { return 32; }
+  if idx == 78 { return 32; }
+  if idx == 79 { return 32; }
+  if idx == 80 { return 32; }
+  if idx == 81 { return 32; }
+  if idx == 82 { return 32; }
+  if idx == 83 { return 32; }
+  if idx == 84 { return 32; }
+  if idx == 85 { return 32; }
+  if idx == 86 { return 32; }
+  if idx == 87 { return 32; }
+  if idx == 88 { return 32; }
+  if idx == 89 { return 32; }
+  if idx == 90 { return 32; }
+  if idx == 91 { return 32; }
+  if idx == 92 { return 32; }
+  if idx == 93 { return 32; }
+  if idx == 94 { return 32; }
+  if idx == 95 { return 32; }
+  if idx == 96 { return 32; }
+  if idx == 97 { return 32; }
+  if idx == 98 { return 32; }
+  if idx == 99 { return 32; }
+  if idx == 100 { return 32; }
+  if idx == 101 { return 32; }
+  if idx == 102 { return 32; }
+  if idx == 103 { return 32; }
+  if idx == 104 { return 32; }
+  if idx == 105 { return 32; }
+  if idx == 106 { return 32; }
+  if idx == 107 { return 32; }
+  if idx == 108 { return 32; }
+  if idx == 109 { return 32; }
+  if idx == 110 { return 32; }
+  if idx == 111 { return 32; }
+  if idx == 112 { return 32; }
+  if idx == 113 { return 32; }
+  if idx == 114 { return 32; }
+  if idx == 115 { return 32; }
+  if idx == 116 { return 32; }
+  if idx == 117 { return 32; }
+  if idx == 118 { return 32; }
+  if idx == 119 { return 32; }
+  if idx == 120 { return 32; }
+  if idx == 121 { return 32; }
+  if idx == 122 { return 32; }
+  if idx == 123 { return 32; }
+  if idx == 124 { return 32; }
+  if idx == 125 { return 32; }
+  if idx == 126 { return 32; }
+  if idx == 127 { return 32; }
+  if idx == 128 { return 32; }
+  if idx == 129 { return 32; }
+  if idx == 130 { return 32; }
+  if idx == 131 { return 32; }
+  if idx == 132 { return 32; }
+  if idx == 133 { return 32; }
+  if idx == 134 { return 32; }
+  if idx == 135 { return 32; }
+  if idx == 136 { return 32; }
+  if idx == 137 { return 32; }
+  if idx == 138 { return 32; }
+  if idx == 139 { return 32; }
+  if idx == 140 { return 32; }
+  if idx == 141 { return 32; }
+  if idx == 142 { return 32; }
+  if idx == 143 { return 32; }
+  if idx == 144 { return 32; }
+  if idx == 145 { return 32; }
+  if idx == 146 { return 32; }
+  if idx == 147 { return 32; }
+  if idx == 148 { return 32; }
+  if idx == 149 { return 32; }
+  if idx == 150 { return 32; }
+  if idx == 151 { return 32; }
+  if idx == 152 { return 32; }
+  if idx == 153 { return 32; }
+  if idx == 154 { return 32; }
+  if idx == 155 { return 32; }
+  if idx == 156 { return 32; }
+  if idx == 157 { return 32; }
+  if idx == 158 { return 32; }
+  if idx == 159 { return 32; }
+  if idx == 160 { return 32; }
+  if idx == 161 { return 32; }
+  if idx == 162 { return 32; }
+  if idx == 163 { return 32; }
+  if idx == 164 { return 32; }
+  if idx == 165 { return 32; }
+  if idx == 166 { return 32; }
+  if idx == 167 { return 32; }
+  if idx == 168 { return 32; }
+  if idx == 169 { return 32; }
+  if idx == 170 { return 32; }
+  if idx == 171 { return 32; }
+  if idx == 172 { return 32; }
+  if idx == 173 { return 32; }
+  if idx == 174 { return 32; }
+  if idx == 175 { return 32; }
+  if idx == 176 { return 32; }
+  if idx == 177 { return 32; }
+  if idx == 178 { return 32; }
+  if idx == 179 { return 32; }
+  if idx == 180 { return 32; }
+  if idx == 181 { return 32; }
+  if idx == 182 { return 32; }
+  if idx == 183 { return 32; }
+  if idx == 184 { return 32; }
+  if idx == 185 { return 32; }
+  if idx == 186 { return 32; }
+  if idx == 187 { return 32; }
+  if idx == 188 { return 32; }
+  if idx == 189 { return 32; }
+  if idx == 190 { return 32; }
+  if idx == 191 { return 32; }
+  if idx == 192 { return 32; }
+  if idx == 193 { return 32; }
+  if idx == 194 { return 32; }
+  if idx == 195 { return 32; }
+  if idx == 196 { return 32; }
+  if idx == 197 { return 32; }
+  if idx == 198 { return 32; }
+  if idx == 199 { return 32; }
+  if idx == 200 { return 32; }
+  if idx == 201 { return 32; }
+  if idx == 202 { return 32; }
+  if idx == 203 { return 32; }
+  if idx == 204 { return 32; }
+  if idx == 205 { return 32; }
+  if idx == 206 { return 32; }
+  if idx == 207 { return 32; }
+  if idx == 208 { return 32; }
+  if idx == 209 { return 32; }
+  if idx == 210 { return 32; }
+  if idx == 211 { return 32; }
+  if idx == 212 { return 32; }
+  if idx == 213 { return 32; }
+  if idx == 214 { return 32; }
+  if idx == 215 { return 32; }
+  if idx == 216 { return 32; }
+  if idx == 217 { return 32; }
+  if idx == 218 { return 32; }
+  if idx == 219 { return 32; }
+  if idx == 220 { return 32; }
+  return 32;
 }
 
 export fn write_seg(seg_ptr: u32, seg_idx: u32, x1: u32, y1: u32, x2: u32, y2: u32) -> unit {
@@ -396,6 +718,12 @@ export fn write_seg(seg_ptr: u32, seg_idx: u32, x1: u32, y1: u32, x2: u32, y2: u
   memory_store_u32(offset + 8, x2);
   memory_store_u32(offset + 12, y2);
 }
+
+
+
+
+
+
 
 export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
   if idx == 0 { return 0; }
@@ -1768,34 +2096,50 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
   return 0;
 }
 
+
+
+fn dist_to_val_u32(min_d: u32) -> u32 {
+  let radius: u32 = 32;
+  let mut val: u32 = 0;
+  let u_255: u32 = 255;
+  if min_d <= radius {
+    val = ((radius - min_d) * u_255) / radius;
+  }
+  if val > u_255 {
+    val = u_255;
+  }
+  return val;
+}
+
 export fn sdf_render_char_cell(
   idx: u32,
   atlas_ptr: u32,
-  col: u32,
-  row: u32,
+  cell_x0: u32,
+  cell_y0: u32,
+  cell_w: u32,
+  cell_h: u32,
   temp_seg_ptr: u32
 ) -> unit {
   let num_segs: u32 = sdf_load_char_segments(idx, temp_seg_ptr);
 
-  let cell_x0: u32 = col * 32;
-  let cell_y0: u32 = row * 32;
-
-  let u_8: u32 = 8;
-  let u_16: u32 = 16;
-  let u_127: u32 = 127;
-  let u_128: u32 = 128;
-  let u_255: u32 = 255;
-
   let mut ly: u32 = 0;
-  while ly < 32 {
+  while ly < cell_h {
     let py: u32 = ly * 8 + 4;
     let mut lx: u32 = 0;
-    while lx < 32 {
+    while lx < cell_w {
       let px: u32 = lx * 8 + 4;
 
-      let mut val: u32 = 0;
+      let mut val_r: u32 = 0;
+      let mut val_g: u32 = 0;
+      let mut val_b: u32 = 0;
+      let mut val_a: u32 = 0;
+
       if num_segs > 0 {
-        let mut min_d: u32 = 9999;
+        let mut min_d_r: u32 = 9999;
+        let mut min_d_g: u32 = 9999;
+        let mut min_d_b: u32 = 9999;
+        let mut min_d_a: u32 = 9999;
+
         let mut s: u32 = 0;
         while s < num_segs {
           let s_off: u32 = temp_seg_ptr + s * 16;
@@ -1804,28 +2148,100 @@ export fn sdf_render_char_cell(
           let bx: u32 = memory_load_u32(s_off + 8);
           let by: u32 = memory_load_u32(s_off + 12);
           let d: u32 = dist_to_segment_u32(px, py, ax, ay, bx, by);
-          if d < min_d {
-            min_d = d;
+
+          if d < min_d_a {
+            min_d_a = d;
           }
+
+          if num_segs == 1 {
+            if d < min_d_r { min_d_r = d; }
+            if d < min_d_g { min_d_g = d; }
+            if d < min_d_b { min_d_b = d; }
+          } else {
+            let color_cycle: u32 = s % 3;
+            // Yellow: R + G
+            if color_cycle == 0 {
+              if d < min_d_r { min_d_r = d; }
+              if d < min_d_g { min_d_g = d; }
+            }
+            // Cyan: G + B
+            if color_cycle == 1 {
+              if d < min_d_g { min_d_g = d; }
+              if d < min_d_b { min_d_b = d; }
+            }
+            // Magenta: R + B
+            if color_cycle == 2 {
+              if d < min_d_r { min_d_r = d; }
+              if d < min_d_b { min_d_b = d; }
+            }
+          }
+
           s = s + 1;
         }
 
-        if min_d <= u_8 {
-          val = u_128 + ((u_8 - min_d) * u_127) / u_8;
-        } else {
-          let out: u32 = min_d - u_8;
-          if out < u_16 {
-            let drop: u32 = (out * u_128) / u_16;
-            val = u_128 - drop;
+        if min_d_r == 9999 { min_d_r = min_d_a; }
+        if min_d_g == 9999 { min_d_g = min_d_a; }
+        if min_d_b == 9999 { min_d_b = min_d_a; }
+
+        val_r = dist_to_val_u32(min_d_r);
+        val_g = dist_to_val_u32(min_d_g);
+        val_b = dist_to_val_u32(min_d_b);
+        val_a = dist_to_val_u32(min_d_a);
+
+        let u_255: u32 = 255;
+        let u_220: u32 = 220;
+        let u_204: u32 = 204;
+        let u_153: u32 = 153;
+        let u_140: u32 = 140;
+        let u_113: u32 = 113;
+        let u_46: u32 = 46;
+        let u_240: u32 = 240;
+        let u_zero: u32 = 0;
+
+        if idx == 155 {
+          if min_d_a < 32 {
+            val_r = u_255;
+            val_g = u_220;
+            val_b = u_zero;
+            val_a = u_255;
+          } else {
+            if min_d_a < 48 {
+              val_r = u_255;
+              val_g = u_140;
+              val_b = u_zero;
+              val_a = u_240;
+            }
           }
-        }
-        if val > u_255 {
-          val = u_255;
+        } else {
+          if idx == 156 {
+            if min_d_a < 32 {
+              val_r = u_255;
+              val_g = u_204;
+              val_b = u_zero;
+              val_a = u_255;
+            } else {
+              if min_d_a < 48 {
+                val_r = u_255;
+                val_g = u_153;
+                val_b = u_zero;
+                val_a = u_240;
+              }
+            }
+          } else {
+            if idx == 138 {
+              if min_d_a < 36 {
+                val_r = u_46;
+                val_g = u_204;
+                val_b = u_113;
+                val_a = u_255;
+              }
+            }
+          }
         }
       }
 
-      let packed: u32 = val + (val * 256) + (val * 65536) + (val * 16777216);
-      let pixel_idx: u32 = (cell_y0 + ly) * 512 + (cell_x0 + lx);
+      let packed: u32 = val_r + (val_g * 256) + (val_b * 65536) + (val_a * 16777216);
+      let pixel_idx: u32 = (cell_y0 + ly) * 1024 + (cell_x0 + lx);
       memory_store_u32(atlas_ptr + pixel_idx * 4, packed);
 
       lx = lx + 1;
@@ -1835,17 +2251,22 @@ export fn sdf_render_char_cell(
 }
 
 export fn sdf_init_atlas_data() -> u32 {
+  let u_one: u32 = 1;
+  let u_four: u32 = 4;
+  let u_eight: u32 = 8;
+  let u_twelve: u32 = 12;
+  let u_16: u32 = 16;
+  let u_256: u32 = 256;
   let existing_ptr: u32 = memory_load_u32(196);
   if existing_ptr != 0 {
     return existing_ptr;
   }
 
-  // 512 * 512 * 4 bytes = 1,048,576 bytes + 16 bytes alignment padding
-  let atlas_bytes: u32 = 1048592;
+  // 1024 * 1024 * 4 bytes = 4,194,304 bytes + 16 bytes alignment padding
+  let atlas_bytes: u32 = 4194320;
   let raw_ptr: u32 = memory_alloc(atlas_bytes);
-  let rem: u32 = raw_ptr % 8;
+  let rem: u32 = raw_ptr % u_eight;
   let mut atlas_ptr: u32 = raw_ptr;
-  let u_eight: u32 = 8;
   if rem != 0 {
     atlas_ptr = raw_ptr + (u_eight - rem);
   }
@@ -1854,48 +2275,772 @@ export fn sdf_init_atlas_data() -> u32 {
   // Scratch memory for up to 32 segments * 16 bytes = 512 bytes
   let temp_seg_ptr: u32 = memory_alloc(512);
 
-  let mut idx: u32 = 0;
-  while idx < 157 {
-    let col: u32 = idx % 16;
-    let row: u32 = idx / 16;
-    sdf_render_char_cell(idx, atlas_ptr, col, row, temp_seg_ptr);
-    idx = idx + 1;
+  // 2D Shelf Rectangle Packing Algorithm across 1024x1024 sprite sheet
+  let u_zero: u32 = 0;
+  let mut shelf_x: u32 = u_zero;
+  let mut shelf_y: u32 = u_zero;
+  let mut shelf_h: u32 = u_zero;
+  let atlas_dim: u32 = 1024;
+
+  let mut idx: u32 = u_zero;
+  while idx < 220 {
+    let cell_w: u32 = get_glyph_cell_w_u32(idx);
+    let cell_h: u32 = get_glyph_cell_h_u32(idx);
+
+    if shelf_x + cell_w > atlas_dim {
+      shelf_y = shelf_y + shelf_h;
+      shelf_x = u_zero;
+      shelf_h = u_zero;
+    }
+
+    let cell_x: u32 = shelf_x;
+    let cell_y: u32 = shelf_y;
+
+    if cell_h > shelf_h {
+      shelf_h = cell_h;
+    }
+    shelf_x = shelf_x + cell_w;
+
+    // Store packed rect table at memory offset 256 + idx * 16
+    let table_entry: u32 = u_256 + idx * u_16;
+    memory_store_u32(table_entry, cell_x);
+    memory_store_u32(table_entry + u_four, cell_y);
+    memory_store_u32(table_entry + u_eight, cell_w);
+    memory_store_u32(table_entry + u_twelve, cell_h);
+
+    // Rasterize character cell MSDF into atlas
+    sdf_render_char_cell(idx, atlas_ptr, cell_x, cell_y, cell_w, cell_h, temp_seg_ptr);
+    idx = idx + u_one;
   }
 
   return atlas_ptr;
 }
 
 export fn sdf_get_atlas_ptr() -> u32 {
-  let ptr: u32 = memory_load_u32(196);
-  if ptr == 0 {
+  let existing_ptr: u32 = memory_load_u32(196);
+  if existing_ptr == 0 {
     return sdf_init_atlas_data();
   }
-  return ptr;
+  return existing_ptr;
 }
 
 export fn sdf_clear_text_vertices() -> unit {
-  memory_store_u32(200, 0);
+  let u_zero: u32 = 0;
+  memory_store_u32(200, u_zero);
 }
 
 export fn sdf_get_vertex_buffer_ptr() -> u32 {
-  let mut ptr: u32 = memory_load_u32(204);
-  if ptr == 0 {
-    // 64,000 floats * 4 bytes = 256,000 bytes + 16 bytes alignment padding
-    let raw: u32 = memory_alloc(256016);
-    let rem: u32 = raw % 8;
-    let u_eight: u32 = 8;
-    if rem != 0 {
-      ptr = raw + (u_eight - rem);
-    } else {
-      ptr = raw;
-    }
-    memory_store_u32(204, ptr);
+  let existing_ptr: u32 = memory_load_u32(204);
+  if existing_ptr != 0 {
+    return existing_ptr;
   }
-  return ptr;
+  // 64000 floats * 8 bytes (f64) = 512,000 bytes + 16 bytes alignment padding
+  let raw_ptr: u32 = memory_alloc(512016);
+  let u_eight: u32 = 8;
+  let rem: u32 = raw_ptr % u_eight;
+  let mut aligned_ptr: u32 = raw_ptr;
+  if rem != 0 {
+    aligned_ptr = raw_ptr + (u_eight - rem);
+  }
+  memory_store_u32(204, aligned_ptr);
+  return aligned_ptr;
 }
 
 export fn sdf_get_vertex_float_count() -> u32 {
   return memory_load_u32(200);
+}
+
+export fn sdf_set_char_spacing(spacing: f64) -> unit {
+  memory_store_f64(208, spacing);
+}
+
+export fn sdf_get_char_spacing() -> f64 {
+  return memory_load_f64(208);
+}
+
+export fn sdf_set_line_height(line_height: f64) -> unit {
+  memory_store_f64(216, line_height);
+}
+
+export fn sdf_get_line_height() -> f64 {
+  let val: f64 = memory_load_f64(216);
+  if val == f64_from_u32(0) {
+    return f64_from_u32(1);
+  }
+  return val;
+}
+
+
+
+fn get_glyph_min_x_u32(idx: u32) -> u32 {
+  if idx == 0 { return 64; }
+  if idx == 1 { return 80; }
+  if idx == 2 { return 72; }
+  if idx == 3 { return 64; }
+  if idx == 4 { return 74; }
+  if idx == 5 { return 56; }
+  if idx == 6 { return 84; }
+  if idx == 7 { return 68; }
+  if idx == 8 { return 57; }
+  if idx == 9 { return 84; }
+  if idx == 10 { return 64; }
+  if idx == 11 { return 64; }
+  if idx == 12 { return 60; }
+  if idx == 13 { return 64; }
+  if idx == 14 { return 72; }
+  if idx == 15 { return 56; }
+  if idx == 16 { return 52; }
+  if idx == 17 { return 76; }
+  if idx == 18 { return 68; }
+  if idx == 19 { return 66; }
+  if idx == 20 { return 68; }
+  if idx == 21 { return 69; }
+  if idx == 22 { return 64; }
+  if idx == 23 { return 68; }
+  if idx == 24 { return 64; }
+  if idx == 25 { return 64; }
+  if idx == 26 { return 76; }
+  if idx == 27 { return 64; }
+  if idx == 28 { return 68; }
+  if idx == 29 { return 64; }
+  if idx == 30 { return 68; }
+  if idx == 31 { return 68; }
+  if idx == 32 { return 52; }
+  if idx == 33 { return 64; }
+  if idx == 34 { return 68; }
+  if idx == 35 { return 55; }
+  if idx == 36 { return 68; }
+  if idx == 37 { return 68; }
+  if idx == 38 { return 68; }
+  if idx == 39 { return 56; }
+  if idx == 40 { return 68; }
+  if idx == 41 { return 80; }
+  if idx == 42 { return 52; }
+  if idx == 43 { return 68; }
+  if idx == 44 { return 68; }
+  if idx == 45 { return 64; }
+  if idx == 46 { return 68; }
+  if idx == 47 { return 56; }
+  if idx == 48 { return 68; }
+  if idx == 49 { return 56; }
+  if idx == 50 { return 68; }
+  if idx == 51 { return 68; }
+  if idx == 52 { return 56; }
+  if idx == 53 { return 68; }
+  if idx == 54 { return 64; }
+  if idx == 55 { return 60; }
+  if idx == 56 { return 68; }
+  if idx == 57 { return 64; }
+  if idx == 58 { return 68; }
+  if idx == 59 { return 68; }
+  if idx == 60 { return 56; }
+  if idx == 61 { return 68; }
+  if idx == 62 { return 60; }
+  if idx == 63 { return 48; }
+  if idx == 64 { return 64; }
+  if idx == 65 { return 68; }
+  if idx == 66 { return 68; }
+  if idx == 67 { return 60; }
+  if idx == 68 { return 68; }
+  if idx == 69 { return 64; }
+  if idx == 70 { return 60; }
+  if idx == 71 { return 68; }
+  if idx == 72 { return 68; }
+  if idx == 73 { return 76; }
+  if idx == 74 { return 44; }
+  if idx == 75 { return 68; }
+  if idx == 76 { return 76; }
+  if idx == 77 { return 60; }
+  if idx == 78 { return 68; }
+  if idx == 79 { return 60; }
+  if idx == 80 { return 68; }
+  if idx == 81 { return 68; }
+  if idx == 82 { return 68; }
+  if idx == 83 { return 74; }
+  if idx == 84 { return 56; }
+  if idx == 85 { return 68; }
+  if idx == 86 { return 64; }
+  if idx == 87 { return 56; }
+  if idx == 88 { return 64; }
+  if idx == 89 { return 64; }
+  if idx == 90 { return 64; }
+  if idx == 91 { return 64; }
+  if idx == 92 { return 68; }
+  if idx == 93 { return 64; }
+  if idx == 94 { return 56; }
+  if idx == 95 { return 64; }
+  if idx == 96 { return 64; }
+  if idx == 97 { return 68; }
+  if idx == 98 { return 64; }
+  if idx == 99 { return 56; }
+  if idx == 100 { return 58; }
+  if idx == 101 { return 60; }
+  if idx == 102 { return 64; }
+  if idx == 103 { return 72; }
+  if idx == 104 { return 72; }
+  if idx == 105 { return 68; }
+  if idx == 106 { return 56; }
+  if idx == 107 { return 44; }
+  if idx == 108 { return 56; }
+  if idx == 109 { return 64; }
+  if idx == 110 { return 64; }
+  if idx == 111 { return 64; }
+  if idx == 112 { return 56; }
+  if idx == 113 { return 56; }
+  if idx == 114 { return 56; }
+  if idx == 115 { return 56; }
+  if idx == 116 { return 56; }
+  if idx == 117 { return 56; }
+  if idx == 118 { return 68; }
+  if idx == 119 { return 68; }
+  if idx == 120 { return 64; }
+  if idx == 121 { return 48; }
+  if idx == 122 { return 64; }
+  if idx == 123 { return 56; }
+  if idx == 124 { return 64; }
+  if idx == 125 { return 40; }
+  if idx == 126 { return 72; }
+  if idx == 127 { return 52; }
+  if idx == 128 { return 52; }
+  if idx == 129 { return 68; }
+  if idx == 130 { return 70; }
+  if idx == 131 { return 70; }
+  if idx == 132 { return 66; }
+  if idx == 133 { return 68; }
+  if idx == 134 { return 64; }
+  if idx == 135 { return 68; }
+  if idx == 136 { return 64; }
+  if idx == 137 { return 68; }
+  if idx == 138 { return 56; }
+  if idx == 139 { return 58; }
+  if idx == 140 { return 59; }
+  if idx == 141 { return 64; }
+  if idx == 142 { return 56; }
+  if idx == 143 { return 48; }
+  if idx == 144 { return 68; }
+  if idx == 145 { return 60; }
+  if idx == 146 { return 68; }
+  if idx == 147 { return 64; }
+  if idx == 148 { return 64; }
+  if idx == 149 { return 64; }
+  if idx == 150 { return 68; }
+  if idx == 151 { return 68; }
+  if idx == 152 { return 60; }
+  if idx == 153 { return 68; }
+  if idx == 154 { return 68; }
+  if idx == 155 { return 60; }
+  if idx == 156 { return 68; }
+  return 64;
+}
+
+fn get_glyph_advance_u32(idx: u32) -> u32 {
+  if idx == 0 { return 6; }
+  if idx == 1 { return 4; }
+  if idx == 2 { return 6; }
+  if idx == 3 { return 10; }
+  if idx == 4 { return 8; }
+  if idx == 5 { return 12; }
+  if idx == 6 { return 11; }
+  if idx == 7 { return 5; }
+  if idx == 8 { return 5; }
+  if idx == 9 { return 5; }
+  if idx == 10 { return 10; }
+  if idx == 11 { return 12; }
+  if idx == 12 { return 4; }
+  if idx == 13 { return 8; }
+  if idx == 14 { return 4; }
+  if idx == 15 { return 8; }
+  if idx == 16 { return 13; }
+  if idx == 17 { return 6; }
+  if idx == 18 { return 9; }
+  if idx == 19 { return 10; }
+  if idx == 20 { return 10; }
+  if idx == 21 { return 10; }
+  if idx == 22 { return 10; }
+  if idx == 23 { return 9; }
+  if idx == 24 { return 10; }
+  if idx == 25 { return 10; }
+  if idx == 26 { return 4; }
+  if idx == 27 { return 4; }
+  if idx == 28 { return 9; }
+  if idx == 29 { return 10; }
+  if idx == 30 { return 9; }
+  if idx == 31 { return 9; }
+  if idx == 32 { return 16; }
+  if idx == 33 { return 14; }
+  if idx == 34 { return 10; }
+  if idx == 35 { return 14; }
+  if idx == 36 { return 10; }
+  if idx == 37 { return 10; }
+  if idx == 38 { return 10; }
+  if idx == 39 { return 14; }
+  if idx == 40 { return 12; }
+  if idx == 41 { return 5; }
+  if idx == 42 { return 8; }
+  if idx == 43 { return 11; }
+  if idx == 44 { return 10; }
+  if idx == 45 { return 16; }
+  if idx == 46 { return 12; }
+  if idx == 47 { return 17; }
+  if idx == 48 { return 9; }
+  if idx == 49 { return 17; }
+  if idx == 50 { return 11; }
+  if idx == 51 { return 9; }
+  if idx == 52 { return 15; }
+  if idx == 53 { return 12; }
+  if idx == 54 { return 15; }
+  if idx == 55 { return 16; }
+  if idx == 56 { return 12; }
+  if idx == 57 { return 15; }
+  if idx == 58 { return 11; }
+  if idx == 59 { return 5; }
+  if idx == 60 { return 8; }
+  if idx == 61 { return 5; }
+  if idx == 62 { return 10; }
+  if idx == 63 { return 14; }
+  if idx == 64 { return 5; }
+  if idx == 65 { return 9; }
+  if idx == 66 { return 9; }
+  if idx == 67 { return 10; }
+  if idx == 68 { return 9; }
+  if idx == 69 { return 10; }
+  if idx == 70 { return 9; }
+  if idx == 71 { return 9; }
+  if idx == 72 { return 8; }
+  if idx == 73 { return 4; }
+  if idx == 74 { return 6; }
+  if idx == 75 { return 9; }
+  if idx == 76 { return 5; }
+  if idx == 77 { return 13; }
+  if idx == 78 { return 8; }
+  if idx == 79 { return 11; }
+  if idx == 80 { return 9; }
+  if idx == 81 { return 9; }
+  if idx == 82 { return 7; }
+  if idx == 83 { return 8; }
+  if idx == 84 { return 7; }
+  if idx == 85 { return 8; }
+  if idx == 86 { return 10; }
+  if idx == 87 { return 12; }
+  if idx == 88 { return 10; }
+  if idx == 89 { return 10; }
+  if idx == 90 { return 9; }
+  if idx == 91 { return 7; }
+  if idx == 92 { return 5; }
+  if idx == 93 { return 7; }
+  if idx == 94 { return 12; }
+  if idx == 95 { return 10; }
+  if idx == 96 { return 12; }
+  if idx == 97 { return 10; }
+  if idx == 98 { return 12; }
+  if idx == 99 { return 13; }
+  if idx == 100 { return 15; }
+  if idx == 101 { return 12; }
+  if idx == 102 { return 12; }
+  if idx == 103 { return 9; }
+  if idx == 104 { return 9; }
+  if idx == 105 { return 13; }
+  if idx == 106 { return 16; }
+  if idx == 107 { return 11; }
+  if idx == 108 { return 12; }
+  if idx == 109 { return 10; }
+  if idx == 110 { return 14; }
+  if idx == 111 { return 11; }
+  if idx == 112 { return 18; }
+  if idx == 113 { return 12; }
+  if idx == 114 { return 18; }
+  if idx == 115 { return 12; }
+  if idx == 116 { return 18; }
+  if idx == 117 { return 18; }
+  if idx == 118 { return 7; }
+  if idx == 119 { return 7; }
+  if idx == 120 { return 10; }
+  if idx == 121 { return 20; }
+  if idx == 122 { return 12; }
+  if idx == 123 { return 16; }
+  if idx == 124 { return 12; }
+  if idx == 125 { return 20; }
+  if idx == 126 { return 13; }
+  if idx == 127 { return 15; }
+  if idx == 128 { return 15; }
+  if idx == 129 { return 8; }
+  if idx == 130 { return 7; }
+  if idx == 131 { return 7; }
+  if idx == 132 { return 11; }
+  if idx == 133 { return 6; }
+  if idx == 134 { return 10; }
+  if idx == 135 { return 10; }
+  if idx == 136 { return 11; }
+  if idx == 137 { return 8; }
+  if idx == 138 { return 14; }
+  if idx == 139 { return 12; }
+  if idx == 140 { return 12; }
+  if idx == 141 { return 14; }
+  if idx == 142 { return 16; }
+  if idx == 143 { return 15; }
+  if idx == 144 { return 9; }
+  if idx == 145 { return 11; }
+  if idx == 146 { return 8; }
+  if idx == 147 { return 10; }
+  if idx == 148 { return 10; }
+  if idx == 149 { return 10; }
+  if idx == 150 { return 9; }
+  if idx == 151 { return 5; }
+  if idx == 152 { return 11; }
+  if idx == 153 { return 8; }
+  if idx == 154 { return 8; }
+  if idx == 155 { return 10; }
+  if idx == 156 { return 6; }
+  return 10;
+}
+
+
+export fn sdf_get_char_advance_u32(code: i32) -> u32 {
+  if code == 32 { return 6; }
+  let idx: u32 = char_code_to_idx(code);
+  return get_glyph_advance_u32(idx);
+}
+
+
+fn is_kerning_negative(c1: i32, c2: i32) -> bool {
+  if c1 == 65 { // 'A'
+    if c2 == 86 || c2 == 87 || c2 == 89 || c2 == 118 || c2 == 119 || c2 == 121 { return true; } // V, W, Y, v, w, y
+  }
+  if c1 == 84 { // 'T'
+    if c2 == 97 || c2 == 101 || c2 == 111 || c2 == 117 || c2 == 114 || c2 == 121 { return true; } // a, e, o, u, r, y
+  }
+  if c1 == 86 || c1 == 87 || c1 == 89 { // 'V', 'W', 'Y'
+    if c2 == 65 || c2 == 97 || c2 == 101 || c2 == 111 { return true; } // A, a, e, o
+  }
+  if c1 == 70 || c1 == 80 { // 'F', 'P'
+    if c2 == 65 || c2 == 97 || c2 == 101 || c2 == 111 { return true; } // A, a, e, o
+  }
+  return false;
+}
+
+fn is_ligature_arrow_right(c1: i32, c2: i32) -> bool {
+  return c1 == 45 && c2 == 62; // "->"
+}
+
+fn is_ligature_arrow_left(c1: i32, c2: i32) -> bool {
+  return c1 == 60 && c2 == 45; // "<-"
+}
+
+fn is_ligature_not_equal(c1: i32, c2: i32) -> bool {
+  return c1 == 33 && c2 == 61; // "!="
+}
+
+fn is_ligature_arrow_double(c1: i32, c2: i32) -> bool {
+  return c1 == 61 && c2 == 62; // "=>"
+}
+
+fn is_ligature_less_equal(c1: i32, c2: i32) -> bool {
+  return c1 == 60 && c2 == 61; // "<="
+}
+
+fn is_ligature_greater_equal(c1: i32, c2: i32) -> bool {
+  return c1 == 62 && c2 == 61; // ">="
+}
+
+fn get_kerning_adj(c1: i32, c2: i32, font_size: f64, base_size: f64) -> f64 {
+  let kern: f64 = sdf_get_kerning(c1, c2);
+  return (kern * font_size) / base_size;
+}
+
+export fn is_multi_color_emoji(code: i32) -> bool {
+  if code == 9889 || code == 9733 || code == 10003 || code == 10060 || code == 9888 || code == 8505 { return true; } // ⚡, ★, ✓, ❌, ⚠️, ℹ️
+  if code == 128640 || code == 128161 || code == 9881 || code == 10084 || code == 128293 { return true; } // 🚀, 💡, ⚙️, ❤️, 🔥
+  if code == 127752 || code == 127912 || code == 128512 || code == 128077 || code == 128170 { return true; } // 🌈, 🎨, 😀, 👍, 💪
+  if code == 128187 || code == 129302 || code == 127918 || code == 128269 || code == 128274 || code == 128275 { return true; } // 💻, 🤖, 🎮, 🔍, 🔒, 🔓
+  if code >= 127744 && code <= 129535 { return true; }
+  return false;
+}
+
+fn is_ligature_ellipsis(c1: i32, c2: i32, c3: i32) -> bool {
+  return c1 == 46 && c2 == 46 && c3 == 46; // "..."
+}
+
+export fn sdf_get_kerning(c1: i32, c2: i32) -> f64 {
+  if is_kerning_negative(c1, c2) {
+    return f64_from_u32(0) - f64_from_u32(1);
+  }
+  return f64_from_u32(0);
+}
+
+export fn sdf_measure_text(text: string, font_size: f64) -> f64 {
+  let len: i32 = string_length(text);
+  if len == 0 {
+    return f64_from_u32(0);
+  }
+  let base_size: f64 = f64_from_u32(24);
+  let mut max_w_units: f64 = f64_from_u32(0);
+  let mut current_line_w: f64 = f64_from_u32(0);
+  let char_spacing: f64 = sdf_get_char_spacing();
+  let mut prev_code: i32 = 0;
+
+  let mut i: i32 = 0;
+  while i < len {
+    let b0: i32 = string_byte_at(text, i);
+    if b0 == 10 {
+      if current_line_w > max_w_units {
+        max_w_units = current_line_w;
+      }
+      current_line_w = f64_from_u32(0);
+      prev_code = 0;
+      i = i + 1;
+    } else {
+      let mut step: i32 = 1;
+      let mut ucode: i32 = b0;
+
+      if i + 2 < len && is_ligature_ellipsis(b0, string_byte_at(text, i + 1), string_byte_at(text, i + 2)) {
+        ucode = 8230;
+        step = 3;
+      } else {
+        if i + 1 < len {
+          let b1: i32 = string_byte_at(text, i + 1);
+          if is_ligature_arrow_right(b0, b1) {
+            ucode = 8594;
+            step = 2;
+          } else {
+            if is_ligature_not_equal(b0, b1) {
+              ucode = 8800;
+              step = 2;
+            } else {
+              if b0 >= 192 {
+                let decoded_len: i32 = utf8_codepoint_length(b0);
+                ucode = utf8_decode_codepoint(text, i, decoded_len);
+                step = decoded_len;
+              }
+            }
+          }
+        } else {
+          if b0 >= 192 {
+            let decoded_len: i32 = utf8_codepoint_length(b0);
+            ucode = utf8_decode_codepoint(text, i, decoded_len);
+            step = decoded_len;
+          }
+        }
+      }
+
+      let kern: f64 = sdf_get_kerning(prev_code, ucode);
+      let adv_u32: u32 = sdf_get_char_advance_u32(ucode);
+      let adv_f64: f64 = f64_from_u32(adv_u32) + kern + char_spacing;
+      current_line_w = current_line_w + adv_f64;
+      prev_code = ucode;
+      i = i + step;
+    }
+  }
+
+  if current_line_w > max_w_units {
+    max_w_units = current_line_w;
+  }
+
+  return (max_w_units * font_size) / base_size;
+}
+
+export fn sdf_append_text_quads_styled(
+  text: string,
+  origin_x: f64,
+  baseline_y: f64,
+  font_size: f64,
+  r: f64,
+  g: f64,
+  b: f64,
+  a: f64,
+  align: u32,
+  is_italic: bool,
+  is_underline: bool,
+  is_strike: bool,
+  max_width: f64
+) -> u32 {
+  let u_one: u32 = 1;
+  let u_four: u32 = 4;
+  let u_eight: u32 = 8;
+  let u_twelve: u32 = 12;
+  let u_16: u32 = 16;
+  let u_48: u32 = 48;
+  let u_256: u32 = 256;
+  let u_max_floats: u32 = 64000;
+  let len: i32 = string_length(text);
+  if len == 0 {
+    return 0;
+  }
+
+  let base_size: f64 = f64_from_u32(24);
+  let scale: f64 = font_size / base_size;
+  let atlas_size_f64: f64 = f64_from_u32(1024);
+
+  let char_spacing: f64 = sdf_get_char_spacing();
+  let line_height_mul: f64 = sdf_get_line_height();
+  let line_step_y: f64 = font_size * line_height_mul;
+
+  let total_width: f64 = sdf_measure_text(text, font_size);
+  let mut cursor_x: f64 = origin_x;
+  if align == 1 {
+    cursor_x = origin_x - total_width;
+  } else {
+    if align == 2 {
+      cursor_x = origin_x - (total_width / f64_from_u32(2));
+    }
+  }
+
+  let mut current_baseline_y: f64 = baseline_y;
+
+  let vbuf_base: u32 = sdf_get_vertex_buffer_ptr();
+  let mut float_count: u32 = sdf_get_vertex_float_count();
+
+  let top_f64: f64 = f64_from_u32(23);
+  let mut slant_f64: f64 = f64_from_u32(0);
+  if is_italic {
+    slant_f64 = (font_size * f64_from_u32(22)) / f64_from_u32(100);
+  }
+
+  let mut i: i32 = 0;
+  let mut quads_added: u32 = 0;
+  let mut prev_code: i32 = 0;
+
+  while i < len {
+    let b0: i32 = string_byte_at(text, i);
+    if b0 == 10 {
+      current_baseline_y = current_baseline_y + line_step_y;
+      cursor_x = origin_x;
+      prev_code = 0;
+      i = i + 1;
+    } else {
+      let mut step: i32 = 1;
+      let mut ucode: i32 = b0;
+
+      if i + 2 < len && is_ligature_ellipsis(b0, string_byte_at(text, i + 1), string_byte_at(text, i + 2)) {
+        ucode = 8230;
+        step = 3;
+      } else {
+        if i + 1 < len {
+          let b1: i32 = string_byte_at(text, i + 1);
+          if is_ligature_arrow_right(b0, b1) {
+            ucode = 8594;
+            step = 2;
+          } else {
+            if is_ligature_arrow_left(b0, b1) {
+              ucode = 8592;
+              step = 2;
+            } else {
+              if is_ligature_arrow_double(b0, b1) {
+                ucode = 8658;
+                step = 2;
+              } else {
+                if is_ligature_not_equal(b0, b1) {
+                  ucode = 8800;
+                  step = 2;
+                } else {
+                  if is_ligature_less_equal(b0, b1) {
+                    ucode = 8804;
+                    step = 2;
+                  } else {
+                    if is_ligature_greater_equal(b0, b1) {
+                      ucode = 8805;
+                      step = 2;
+                    } else {
+                      step = utf8_codepoint_length(b0);
+                      ucode = utf8_decode_codepoint(text, i, len);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        } else {
+          step = utf8_codepoint_length(b0);
+          ucode = utf8_decode_codepoint(text, i, len);
+        }
+      }
+
+      if prev_code != 0 {
+        let kern_adj: f64 = get_kerning_adj(prev_code, ucode, font_size, base_size);
+        cursor_x = cursor_x + kern_adj;
+      }
+
+      let adv_u32: u32 = sdf_get_char_advance_u32(ucode);
+      let adv_f64: f64 = (f64_from_u32(adv_u32) * font_size) / base_size;
+
+      // Automated word wrapping if max_width > 0
+      if max_width > f64_from_u32(0) && (cursor_x + adv_f64) > (origin_x + max_width) {
+        current_baseline_y = current_baseline_y + line_step_y;
+        cursor_x = origin_x;
+      }
+
+      if ucode == 32 {
+        cursor_x = cursor_x + adv_f64 + char_spacing;
+      } else {
+        let idx: u32 = char_code_to_idx(ucode);
+        let table_entry: u32 = u_256 + idx * u_16;
+        let cell_x: u32 = memory_load_u32(table_entry);
+        let cell_y: u32 = memory_load_u32(table_entry + u_four);
+        let cell_w: u32 = memory_load_u32(table_entry + u_eight);
+        let cell_h: u32 = memory_load_u32(table_entry + u_twelve);
+
+        let cell_x_f64: f64 = f64_from_u32(cell_x);
+        let cell_y_f64: f64 = f64_from_u32(cell_y);
+        let cell_w_f64: f64 = f64_from_u32(cell_w);
+        let cell_h_f64: f64 = f64_from_u32(cell_h);
+
+        let min_x_raw: u32 = get_glyph_min_x_u32(idx);
+        let min_x_f64: f64 = f64_from_u32(min_x_raw) / f64_from_u32(8);
+        let lsb_f64: f64 = f64_from_u32(1);
+
+        let qx0: f64 = cursor_x + ((lsb_f64 - min_x_f64) * scale);
+        let qy0: f64 = current_baseline_y - (top_f64 * scale);
+        let qx1: f64 = qx0 + (cell_w_f64 * scale);
+        let qy1: f64 = qy0 + (cell_h_f64 * scale);
+
+        let u0: f64 = cell_x_f64 / atlas_size_f64;
+        let v0: f64 = cell_y_f64 / atlas_size_f64;
+        let u1: f64 = (cell_x_f64 + cell_w_f64) / atlas_size_f64;
+        let v1: f64 = (cell_y_f64 + cell_h_f64) / atlas_size_f64;
+
+        let mut quad_a: f64 = a;
+        if is_multi_color_emoji(ucode) {
+          quad_a = f64_from_u32(0) - a;
+        }
+
+        if float_count + u_48 <= u_max_floats {
+          let v0_ptr: u32 = vbuf_base + float_count * u_eight;
+          memory_store_f64(v0_ptr, qx0 + slant_f64); memory_store_f64(v0_ptr + 8, qy0); memory_store_f64(v0_ptr + 16, u0); memory_store_f64(v0_ptr + 24, v0);
+          memory_store_f64(v0_ptr + 32, r); memory_store_f64(v0_ptr + 40, g); memory_store_f64(v0_ptr + 48, b); memory_store_f64(v0_ptr + 56, quad_a);
+
+          let v1_ptr: u32 = v0_ptr + 64;
+          memory_store_f64(v1_ptr, qx1 + slant_f64); memory_store_f64(v1_ptr + 8, qy0); memory_store_f64(v1_ptr + 16, u1); memory_store_f64(v1_ptr + 24, v0);
+          memory_store_f64(v1_ptr + 32, r); memory_store_f64(v1_ptr + 40, g); memory_store_f64(v1_ptr + 48, b); memory_store_f64(v1_ptr + 56, quad_a);
+
+          let v2_ptr: u32 = v1_ptr + 64;
+          memory_store_f64(v2_ptr, qx0); memory_store_f64(v2_ptr + 8, qy1); memory_store_f64(v2_ptr + 16, u0); memory_store_f64(v2_ptr + 24, v1);
+          memory_store_f64(v2_ptr + 32, r); memory_store_f64(v2_ptr + 40, g); memory_store_f64(v2_ptr + 48, b); memory_store_f64(v2_ptr + 56, quad_a);
+
+          let v3_ptr: u32 = v2_ptr + 64;
+          memory_store_f64(v3_ptr, qx0); memory_store_f64(v3_ptr + 8, qy1); memory_store_f64(v3_ptr + 16, u0); memory_store_f64(v3_ptr + 24, v1);
+          memory_store_f64(v3_ptr + 32, r); memory_store_f64(v3_ptr + 40, g); memory_store_f64(v3_ptr + 48, b); memory_store_f64(v3_ptr + 56, quad_a);
+
+          let v4_ptr: u32 = v3_ptr + 64;
+          memory_store_f64(v4_ptr, qx1 + slant_f64); memory_store_f64(v4_ptr + 8, qy0); memory_store_f64(v4_ptr + 16, u1); memory_store_f64(v4_ptr + 24, v0);
+          memory_store_f64(v4_ptr + 32, r); memory_store_f64(v4_ptr + 40, g); memory_store_f64(v4_ptr + 48, b); memory_store_f64(v4_ptr + 56, quad_a);
+
+          let v5_ptr: u32 = v4_ptr + 64;
+          memory_store_f64(v5_ptr, qx1); memory_store_f64(v5_ptr + 8, qy1); memory_store_f64(v5_ptr + 16, u1); memory_store_f64(v5_ptr + 24, v1);
+          memory_store_f64(v5_ptr + 32, r); memory_store_f64(v5_ptr + 40, g); memory_store_f64(v5_ptr + 48, b); memory_store_f64(v5_ptr + 56, quad_a);
+
+          float_count = float_count + u_48;
+          quads_added = quads_added + u_one;
+        }
+
+        cursor_x = cursor_x + adv_f64 + char_spacing;
+      }
+
+      prev_code = ucode;
+      i = i + step;
+    }
+  }
+
+  memory_store_u32(200, float_count);
+  return quads_added;
 }
 
 export fn sdf_append_text_quads(
@@ -1909,112 +3054,32 @@ export fn sdf_append_text_quads(
   a: f64,
   align: u32
 ) -> u32 {
-  let len: i32 = string_length(text);
-  if len == 0 {
-    return 0;
-  }
-
-  let base_size: f64 = f64_from_u32(24);
-  let scale: f64 = font_size / base_size;
-  let mut cursor_x: f64 = origin_x;
-
-  if align == 1 {
-    let total_w: f64 = sdf_measure_text(text, font_size);
-    cursor_x = origin_x - total_w;
-  } else {
-    if align == 2 {
-      let total_w: f64 = sdf_measure_text(text, font_size);
-      let two: f64 = f64_from_u32(2);
-      cursor_x = origin_x - (total_w / two);
-    }
-  }
-
-  let vbuf_base: u32 = sdf_get_vertex_buffer_ptr();
-  let mut float_count: u32 = memory_load_u32(200);
-  let atlas_size_f64: f64 = f64_from_u32(512);
-
-  let buffer_f64: f64 = f64_from_u32(6);
-  let top_f64: f64 = f64_from_u32(23);
-  let dim_f64: f64 = f64_from_u32(32);
-
-  let mut i: i32 = 0;
-  let mut quads_added: u32 = 0;
-
-  while i < len {
-    let b0: i32 = string_byte_at(text, i);
-    let step: i32 = utf8_codepoint_length(b0);
-    let ucode: i32 = utf8_decode_codepoint(text, i, len);
-    let adv_u32: u32 = sdf_get_char_advance_u32(ucode);
-    let adv_f64: f64 = (f64_from_u32(adv_u32) * font_size) / base_size;
-
-    if ucode == 32 {
-      cursor_x = cursor_x + adv_f64;
-    } else {
-      let idx: u32 = char_code_to_idx(ucode);
-      let col: u32 = idx % 16;
-      let row: u32 = idx / 16;
-
-      let cell_x: f64 = f64_from_u32(col * 32);
-      let cell_y: f64 = f64_from_u32(row * 32);
-
-      let qx0: f64 = cursor_x - (buffer_f64 * scale);
-      let qy0: f64 = baseline_y - (top_f64 * scale);
-      let qx1: f64 = qx0 + (dim_f64 * scale);
-      let qy1: f64 = qy0 + (dim_f64 * scale);
-
-      let u0: f64 = cell_x / atlas_size_f64;
-      let v0: f64 = cell_y / atlas_size_f64;
-      let u1: f64 = (cell_x + dim_f64) / atlas_size_f64;
-      let v1: f64 = (cell_y + dim_f64) / atlas_size_f64;
-
-      if float_count + 48 <= 64000 {
-        let v0_ptr: u32 = vbuf_base + float_count * 8;
-        memory_store_f64(v0_ptr, qx0); memory_store_f64(v0_ptr + 8, qy0); memory_store_f64(v0_ptr + 16, u0); memory_store_f64(v0_ptr + 24, v0);
-        memory_store_f64(v0_ptr + 32, r); memory_store_f64(v0_ptr + 40, g); memory_store_f64(v0_ptr + 48, b); memory_store_f64(v0_ptr + 56, a);
-
-        let v1_ptr: u32 = v0_ptr + 64;
-        memory_store_f64(v1_ptr, qx1); memory_store_f64(v1_ptr + 8, qy0); memory_store_f64(v1_ptr + 16, u1); memory_store_f64(v1_ptr + 24, v0);
-        memory_store_f64(v1_ptr + 32, r); memory_store_f64(v1_ptr + 40, g); memory_store_f64(v1_ptr + 48, b); memory_store_f64(v1_ptr + 56, a);
-
-        let v2_ptr: u32 = v1_ptr + 64;
-        memory_store_f64(v2_ptr, qx0); memory_store_f64(v2_ptr + 8, qy1); memory_store_f64(v2_ptr + 16, u0); memory_store_f64(v2_ptr + 24, v1);
-        memory_store_f64(v2_ptr + 32, r); memory_store_f64(v2_ptr + 40, g); memory_store_f64(v2_ptr + 48, b); memory_store_f64(v2_ptr + 56, a);
-
-        let v3_ptr: u32 = v2_ptr + 64;
-        memory_store_f64(v3_ptr, qx0); memory_store_f64(v3_ptr + 8, qy1); memory_store_f64(v3_ptr + 16, u0); memory_store_f64(v3_ptr + 24, v1);
-        memory_store_f64(v3_ptr + 32, r); memory_store_f64(v3_ptr + 40, g); memory_store_f64(v3_ptr + 48, b); memory_store_f64(v3_ptr + 56, a);
-
-        let v4_ptr: u32 = v3_ptr + 64;
-        memory_store_f64(v4_ptr, qx1); memory_store_f64(v4_ptr + 8, qy0); memory_store_f64(v4_ptr + 16, u1); memory_store_f64(v4_ptr + 24, v0);
-        memory_store_f64(v4_ptr + 32, r); memory_store_f64(v4_ptr + 40, g); memory_store_f64(v4_ptr + 48, b); memory_store_f64(v4_ptr + 56, a);
-
-        let v5_ptr: u32 = v4_ptr + 64;
-        memory_store_f64(v5_ptr, qx1); memory_store_f64(v5_ptr + 8, qy1); memory_store_f64(v5_ptr + 16, u1); memory_store_f64(v5_ptr + 24, v1);
-        memory_store_f64(v5_ptr + 32, r); memory_store_f64(v5_ptr + 40, g); memory_store_f64(v5_ptr + 48, b); memory_store_f64(v5_ptr + 56, a);
-
-        float_count = float_count + 48;
-        quads_added = quads_added + 1;
-      }
-      cursor_x = cursor_x + adv_f64;
-    }
-    i = i + step;
-  }
-
-  memory_store_u32(200, float_count);
-  return quads_added;
+  return sdf_append_text_quads_styled(
+    text,
+    origin_x,
+    baseline_y,
+    font_size,
+    r,
+    g,
+    b,
+    a,
+    align,
+    false,
+    false,
+    false,
+    f64_from_u32(0)
+  );
 }
 
 export fn sdf_measure_text_mono(text: string, font_size: f64) -> f64 {
   let len: i32 = string_length(text);
   let base_size: f64 = f64_from_u32(24);
-  let adv_mono_f64: f64 = (f64_from_u32(14) * font_size) / base_size;
+  let fixed_adv: f64 = (f64_from_u32(11) * font_size) / base_size;
   let mut total: f64 = f64_from_u32(0);
   let mut i: i32 = 0;
   while i < len {
-    let b0: i32 = string_byte_at(text, i);
-    let step: i32 = utf8_codepoint_length(b0);
-    total = total + adv_mono_f64;
-    i = i + step;
+    total = total + fixed_adv;
+    i = i + 1;
   }
   return total;
 }
@@ -2030,6 +3095,14 @@ export fn sdf_append_text_quads_mono(
   a: f64,
   align: u32
 ) -> u32 {
+  let u_one: u32 = 1;
+  let u_four: u32 = 4;
+  let u_eight: u32 = 8;
+  let u_twelve: u32 = 12;
+  let u_16: u32 = 16;
+  let u_48: u32 = 48;
+  let u_256: u32 = 256;
+  let u_max_floats: u32 = 64000;
   let len: i32 = string_length(text);
   if len == 0 {
     return 0;
@@ -2037,27 +3110,24 @@ export fn sdf_append_text_quads_mono(
 
   let base_size: f64 = f64_from_u32(24);
   let scale: f64 = font_size / base_size;
-  let adv_mono_f64: f64 = (f64_from_u32(14) * font_size) / base_size;
-  let mut cursor_x: f64 = origin_x;
+  let atlas_size_f64: f64 = f64_from_u32(1024);
 
+  let total_width: f64 = sdf_measure_text_mono(text, font_size);
+  let mut cursor_x: f64 = origin_x;
   if align == 1 {
-    let total_w: f64 = sdf_measure_text_mono(text, font_size);
-    cursor_x = origin_x - total_w;
+    cursor_x = origin_x - total_width;
   } else {
     if align == 2 {
-      let total_w: f64 = sdf_measure_text_mono(text, font_size);
-      let two: f64 = f64_from_u32(2);
-      cursor_x = origin_x - (total_w / two);
+      cursor_x = origin_x - (total_width / f64_from_u32(2));
     }
   }
 
-  let vbuf_base: u32 = sdf_get_vertex_buffer_ptr();
-  let mut float_count: u32 = memory_load_u32(200);
-  let atlas_size_f64: f64 = f64_from_u32(512);
+  let fixed_adv_f64: f64 = (f64_from_u32(11) * font_size) / base_size;
 
-  let buffer_f64: f64 = f64_from_u32(6);
+  let vbuf_base: u32 = sdf_get_vertex_buffer_ptr();
+  let mut float_count: u32 = sdf_get_vertex_float_count();
+
   let top_f64: f64 = f64_from_u32(23);
-  let dim_f64: f64 = f64_from_u32(32);
 
   let mut i: i32 = 0;
   let mut quads_added: u32 = 0;
@@ -2068,27 +3138,36 @@ export fn sdf_append_text_quads_mono(
     let ucode: i32 = utf8_decode_codepoint(text, i, len);
 
     if ucode == 32 {
-      cursor_x = cursor_x + adv_mono_f64;
+      cursor_x = cursor_x + fixed_adv_f64;
     } else {
       let idx: u32 = char_code_to_idx(ucode);
-      let col: u32 = idx % 16;
-      let row: u32 = idx / 16;
+      let table_entry: u32 = u_256 + idx * u_16;
+      let cell_x: u32 = memory_load_u32(table_entry);
+      let cell_y: u32 = memory_load_u32(table_entry + u_four);
+      let cell_w: u32 = memory_load_u32(table_entry + u_eight);
+      let cell_h: u32 = memory_load_u32(table_entry + u_twelve);
 
-      let cell_x: f64 = f64_from_u32(col * 32);
-      let cell_y: f64 = f64_from_u32(row * 32);
+      let cell_x_f64: f64 = f64_from_u32(cell_x);
+      let cell_y_f64: f64 = f64_from_u32(cell_y);
+      let cell_w_f64: f64 = f64_from_u32(cell_w);
+      let cell_h_f64: f64 = f64_from_u32(cell_h);
 
-      let qx0: f64 = cursor_x - (buffer_f64 * scale);
+      let min_x_raw: u32 = get_glyph_min_x_u32(idx);
+      let min_x_f64: f64 = f64_from_u32(min_x_raw) / f64_from_u32(8);
+      let lsb_f64: f64 = f64_from_u32(1);
+
+      let qx0: f64 = cursor_x + ((lsb_f64 - min_x_f64) * scale);
       let qy0: f64 = baseline_y - (top_f64 * scale);
-      let qx1: f64 = qx0 + (dim_f64 * scale);
-      let qy1: f64 = qy0 + (dim_f64 * scale);
+      let qx1: f64 = qx0 + (cell_w_f64 * scale);
+      let qy1: f64 = qy0 + (cell_h_f64 * scale);
 
-      let u0: f64 = cell_x / atlas_size_f64;
-      let v0: f64 = cell_y / atlas_size_f64;
-      let u1: f64 = (cell_x + dim_f64) / atlas_size_f64;
-      let v1: f64 = (cell_y + dim_f64) / atlas_size_f64;
+      let u0: f64 = cell_x_f64 / atlas_size_f64;
+      let v0: f64 = cell_y_f64 / atlas_size_f64;
+      let u1: f64 = (cell_x_f64 + cell_w_f64) / atlas_size_f64;
+      let v1: f64 = (cell_y_f64 + cell_h_f64) / atlas_size_f64;
 
-      if float_count + 48 <= 64000 {
-        let v0_ptr: u32 = vbuf_base + float_count * 8;
+      if float_count + u_48 <= u_max_floats {
+        let v0_ptr: u32 = vbuf_base + float_count * u_eight;
         memory_store_f64(v0_ptr, qx0); memory_store_f64(v0_ptr + 8, qy0); memory_store_f64(v0_ptr + 16, u0); memory_store_f64(v0_ptr + 24, v0);
         memory_store_f64(v0_ptr + 32, r); memory_store_f64(v0_ptr + 40, g); memory_store_f64(v0_ptr + 48, b); memory_store_f64(v0_ptr + 56, a);
 
@@ -2112,11 +3191,13 @@ export fn sdf_append_text_quads_mono(
         memory_store_f64(v5_ptr, qx1); memory_store_f64(v5_ptr + 8, qy1); memory_store_f64(v5_ptr + 16, u1); memory_store_f64(v5_ptr + 24, v1);
         memory_store_f64(v5_ptr + 32, r); memory_store_f64(v5_ptr + 40, g); memory_store_f64(v5_ptr + 48, b); memory_store_f64(v5_ptr + 56, a);
 
-        float_count = float_count + 48;
-        quads_added = quads_added + 1;
+        float_count = float_count + u_48;
+        quads_added = quads_added + u_one;
       }
-      cursor_x = cursor_x + adv_mono_f64;
+
+      cursor_x = cursor_x + fixed_adv_f64;
     }
+
     i = i + step;
   }
 

@@ -229,8 +229,10 @@ interface HoveredGlyphInfo {
   readonly codeHex: string;
   readonly codeDec: number;
   readonly advance: number;
-  readonly column: number;
-  readonly row: number;
+  readonly cellX: number;
+  readonly cellY: number;
+  readonly cellW: number;
+  readonly cellH: number;
 }
 
 interface ContextMenuState {
@@ -251,7 +253,7 @@ interface FlintRendererBridge {
     edges: readonly FlintGraphEdge[],
     groups?: readonly FlintGraphGroup[],
   ) => void;
-  readonly setSelection: (nodeIds: readonly string[], edgeIds?: readonly string[]) => void;
+  readonly setSelection: (nodeIds: readonly string[], edgeIds?: readonly string[], groupId?: string) => void;
   readonly setConnectingEdge: (edge?: {
     readonly fromNodeId: string;
     readonly fromPortId: string;
@@ -269,6 +271,7 @@ interface FlintRendererBridge {
   readonly getCamera: () => FlintCamera;
   readonly queryNodesInBox: (box: ViewBounds) => readonly string[];
   readonly hitTestSync: (screenX: number, screenY: number, snapRadius?: number) => FlintHitResult | undefined;
+  readonly reloadFontAtlas?: () => void;
   readonly destroy: () => void;
   readonly getPerformanceStats: () => FlintPerformanceMetrics;
 }
@@ -323,7 +326,88 @@ function hitTestNodes(
 }
 
 /**
- * Performs edge spline curve hit-testing using WebAssembly geometry routines.
+ * Calculates squared Euclidean distance from a point to a finite 2D line segment.
+ */
+function distributionToSegmentSquared(px: number, py: number, x1: number, y1: number, x2: number, y2: number): number {
+  const l2 = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
+  if (l2 === 0) return (px - x1) * (px - x1) + (py - y1) * (py - y1);
+  let t = ((px - x1) * (x2 - x1) + (py - y1) * (y2 - y1)) / l2;
+  t = Math.max(0, Math.min(1, t));
+  const projX = x1 + t * (x2 - x1);
+  const projY = y1 + t * (y2 - y1);
+  return (px - projX) * (px - projX) + (py - projY) * (py - projY);
+}
+
+/**
+ * Performs hit testing for waypoint handles on segmented edges.
+ */
+function hitTestWaypoints(
+  worldX: number,
+  worldY: number,
+  edges: readonly FlintGraphEdge[],
+  radius = 12,
+): FlintHitResult | undefined {
+  for (const edge of edges) {
+    if (!edge.points || edge.points.length === 0) continue;
+    for (const [index, pt] of edge.points.entries()) {
+      const dx = worldX - pt.x;
+      const dy = worldY - pt.y;
+      if (dx * dx + dy * dy <= radius * radius) {
+        return {
+          type: 'waypoint',
+          nodeId: '',
+          edgeId: edge.id,
+          waypointIndex: index,
+          worldX: pt.x,
+          worldY: pt.y,
+        };
+      }
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Performs hit testing for group label pills.
+ */
+function hitTestGroupLabels(
+  worldX: number,
+  worldY: number,
+  groups: readonly FlintGraphGroup[] | undefined,
+  nodes: readonly FlintGraphNode[],
+): FlintHitResult | undefined {
+  if (!groups || groups.length === 0) return undefined;
+  const nodeMap = new Map<string, FlintGraphNode>(nodes.map((n) => [n.id, n]));
+  for (const group of groups) {
+    let minX = Infinity;
+    let minY = Infinity;
+    for (const id of group.nodeIds) {
+      const node = nodeMap.get(id);
+      if (node) {
+        if (node.position.x < minX) minX = node.position.x;
+        if (node.position.y < minY) minY = node.position.y;
+      }
+    }
+    if (minX === Infinity) continue;
+    const padding = 24;
+    const labelX = minX - padding + 10;
+    const labelY = minY - padding - 22 + 4;
+    const labelWidth = Math.max(120, group.title.length * 10 + 32);
+    const labelHeight = 24;
+    if (
+      worldX >= labelX - 6 &&
+      worldX <= labelX + labelWidth + 6 &&
+      worldY >= labelY - 6 &&
+      worldY <= labelY + labelHeight + 6
+    ) {
+      return { type: 'group', groupId: group.id, nodeId: '', worldX, worldY };
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Performs edge spline curve or waypoint segment hit-testing.
  */
 function hitTestEdges(
   worldX: number,
@@ -349,7 +433,26 @@ function hitTestEdges(
     const p0y = from.position.y + 44 + fromIndex * 28 + 14;
     const p3x = to.position.x;
     const p3y = to.position.y + 44 + toIndex * 28 + 14;
-    if (
+
+    if (edge.points && edge.points.length > 0) {
+      let previousX = p0x;
+      let previousY = p0y;
+      let hitSegment = false;
+      for (const pt of edge.points) {
+        if (distributionToSegmentSquared(worldX, worldY, previousX, previousY, pt.x, pt.y) <= 14 * 14) {
+          hitSegment = true;
+          break;
+        }
+        previousX = pt.x;
+        previousY = pt.y;
+      }
+      if (!hitSegment && distributionToSegmentSquared(worldX, worldY, previousX, previousY, p3x, p3y) <= 14 * 14) {
+        hitSegment = true;
+      }
+      if (hitSegment) {
+        return { type: 'edge', nodeId: '', edgeId: edge.id, worldX, worldY };
+      }
+    } else if (
       wasm.edge_hit_test(
         Math.round(worldX),
         Math.round(worldY),
@@ -393,6 +496,7 @@ function createRendererBridge(
   let hoveredPort: { readonly nodeId: string; readonly portId: string } | undefined;
   let currentNodes: readonly FlintGraphNode[] = [];
   let currentEdges: readonly FlintGraphEdge[] = [];
+  let currentGroups: readonly FlintGraphGroup[] = [];
   let currentDpr = initialDpr;
 
   /**
@@ -454,6 +558,7 @@ function createRendererBridge(
     setGraph: (nodes, edges, groups = []) => {
       currentNodes = nodes;
       currentEdges = edges;
+      currentGroups = groups;
       wasm.spatial_clear();
       for (const [index, node] of nodes.entries()) {
         if (node) {
@@ -474,20 +579,26 @@ function createRendererBridge(
       }
       postToRenderer({ type: 'set_graph', nodes, edges, groups });
     },
-    setSelection: (nodeIds, edgeIds = []) => {
-      postToRenderer({ type: 'set_selection', selectedNodeIds: nodeIds, selectedEdgeIds: edgeIds });
+    setSelection: (nodeIds, edgeIds = [], groupId?: string) => {
+      postToRenderer({
+        type: 'set_selection',
+        selectedNodeIds: nodeIds,
+        selectedEdgeIds: edgeIds,
+        selectedGroupId: groupId,
+      });
     },
     setConnectingEdge: (edge) => {
-      if (edge) {
-        postToRenderer({
-          type: 'hit_test',
-          cursorX: edge.cursorX,
-          cursorY: edge.cursorY,
-        });
-      }
+      postToRenderer({
+        type: 'set_connecting_edge',
+        edge,
+      });
     },
     setHoveredPort: (port) => {
       hoveredPort = port;
+      postToRenderer({
+        type: 'set_hovered_port',
+        hoveredPort: port,
+      });
     },
     getHoveredPort: () => hoveredPort,
     renderFrame: () => {
@@ -553,10 +664,19 @@ function createRendererBridge(
       const portHit = hitTestPorts(worldX, worldY, currentNodes, snapRadius);
       if (portHit) return portHit;
 
+      const groupHit = hitTestGroupLabels(worldX, worldY, currentGroups, currentNodes);
+      if (groupHit) return groupHit;
+
+      const waypointHit = hitTestWaypoints(worldX, worldY, currentEdges);
+      if (waypointHit) return waypointHit;
+
       const nodeHit = hitTestNodes(worldX, worldY, currentNodes, wasm);
       if (nodeHit) return nodeHit;
 
       return hitTestEdges(worldX, worldY, currentEdges, currentNodes, wasm);
+    },
+    reloadFontAtlas: () => {
+      postToRenderer({ type: 'reload_font_atlas' });
     },
     destroy: () => {
       postToRenderer({ type: 'destroy' });
@@ -601,30 +721,32 @@ function detectCurrentTheme(): 'light' | 'dark' {
 interface ExportModalProperties {
   readonly exportedSource: string;
   readonly onClose: () => void;
+  readonly styles: Record<string, string>;
 }
 
 /**
  * Modal dialog displaying the exported Flint source code.
  */
-function ExportModal({ exportedSource, onClose }: ExportModalProperties): MpElement {
+function ExportModal(properties: ExportModalProperties): MpElement {
+  const modalStyles = properties.styles ?? {};
   return (
     <div
       role="dialog"
       aria-modal="true"
-      className={styles.modalOverlay}
-      onClick={onClose}
+      className={modalStyles.modalOverlay ?? ''}
+      onClick={properties.onClose}
     >
       <div
-        className={styles.modalCard}
+        className={modalStyles.modalCard ?? ''}
         onClick={(event: unknown) => {
           if (typeof MouseEvent !== 'undefined' && event instanceof MouseEvent) {
             event.stopPropagation();
           }
         }}
       >
-        <div className={styles.modalHeader}>
+        <div className={modalStyles.modalHeader ?? ''}>
           <span
-            className={styles.inspectorTitle}
+            className={modalStyles.inspectorTitle ?? ''}
             style={{ margin: 0 }}
           >
             Generated Flint Source
@@ -632,22 +754,22 @@ function ExportModal({ exportedSource, onClose }: ExportModalProperties): MpElem
           <ForgeButton
             variant="ghost"
             size="xs"
-            onClick={onClose}
+            onClick={properties.onClose}
             ariaLabel="Close export modal"
           >
             ✕
           </ForgeButton>
         </div>
-        <div className={styles.modalBody}>
-          <pre className={styles.codeBlock}>
-            <code>{exportedSource}</code>
+        <div className={modalStyles.modalBody ?? ''}>
+          <pre className={modalStyles.codeBlock ?? ''}>
+            <code>{properties.exportedSource}</code>
           </pre>
         </div>
-        <div className={styles.modalFooter}>
+        <div className={modalStyles.modalFooter ?? ''}>
           <ForgeButton
             variant="primary"
             size="sm"
-            onClick={onClose}
+            onClick={properties.onClose}
           >
             Close
           </ForgeButton>
@@ -668,69 +790,60 @@ interface SpriteSheetSectionProperties {
   readonly onSpriteSheetPointerMove: (event: PointerEvent) => void;
   readonly onSpriteSheetPointerLeave: () => void;
   readonly onToggleSpriteSheet: () => void;
+  readonly styles?: Record<string, string>;
 }
 
 /**
- * Interactive debug collapse section for inspecting the 512x512 SDF font atlas texture.
+ * Interactive debug collapse section for inspecting the 1024x1024 SDF font atlas texture.
  */
-function SpriteSheetDebugSection({
-  spriteSheetMode,
-  onSetSpriteSheetMode,
-  spriteSheetGrid,
-  onToggleSpriteSheetGrid,
-  hoveredGlyph,
-  spriteSheetCanvasReference,
-  inspectCanvasReference,
-  onSpriteSheetPointerMove,
-  onSpriteSheetPointerLeave,
-  onToggleSpriteSheet,
-}: SpriteSheetSectionProperties): MpElement {
+function SpriteSheetDebugSection(properties: SpriteSheetSectionProperties): MpElement {
+  const sectionStyles = properties.styles ?? {};
   return (
     <div style={{ marginTop: '16px' }}>
       <ForgeCollapse
-        summary="Debug Glyph Sprite Sheet (512x512 SDF Atlas)"
+        summary="Debug Glyph Sprite Sheet (1024x1024 2D Shelf Packed SDF Atlas)"
         open={true}
         size="sm"
-        onToggle={onToggleSpriteSheet}
+        onToggle={properties.onToggleSpriteSheet}
       >
-        <div className={styles.spriteSheetContainer}>
-          <div className={styles.spriteSheetToolbar}>
+        <div className={sectionStyles.spriteSheetContainer ?? ''}>
+          <div className={sectionStyles.spriteSheetToolbar ?? ''}>
             <ForgeButtonGroup size="xs">
               <ForgeButton
-                variant={spriteSheetMode === 'crisp' ? 'primary' : 'ghost'}
+                variant={properties.spriteSheetMode === 'crisp' ? 'primary' : 'ghost'}
                 size="xs"
-                onClick={() => onSetSpriteSheetMode('crisp')}
+                onClick={() => properties.onSetSpriteSheetMode('crisp')}
               >
                 Crisp Glyphs
               </ForgeButton>
               <ForgeButton
-                variant={spriteSheetMode === 'raw' ? 'primary' : 'ghost'}
+                variant={properties.spriteSheetMode === 'raw' ? 'primary' : 'ghost'}
                 size="xs"
-                onClick={() => onSetSpriteSheetMode('raw')}
+                onClick={() => properties.onSetSpriteSheetMode('raw')}
               >
                 Raw SDF
               </ForgeButton>
             </ForgeButtonGroup>
             <ForgeButton
-              variant={spriteSheetGrid ? 'secondary' : 'ghost'}
+              variant={properties.spriteSheetGrid ? 'secondary' : 'ghost'}
               size="xs"
-              onClick={onToggleSpriteSheetGrid}
+              onClick={properties.onToggleSpriteSheetGrid}
             >
-              {spriteSheetGrid ? 'Grid: ON' : 'Grid: OFF'}
+              {properties.spriteSheetGrid ? 'Grid: ON' : 'Grid: OFF'}
             </ForgeButton>
           </div>
-          <div className={styles.spriteSheetMeta}>
+          <div className={sectionStyles.spriteSheetMeta ?? ''}>
             <ForgeBadge
               variant="primary"
               size="xs"
             >
-              512 × 512 px
+              1024 × 1024 px
             </ForgeBadge>
             <ForgeBadge
               variant="neutral"
               size="xs"
             >
-              16 × 16 Grid (256 Cells)
+              2D Shelf Packed (4x4 to 32x32)
             </ForgeBadge>
             <ForgeBadge
               variant="info"
@@ -742,45 +855,46 @@ function SpriteSheetDebugSection({
               variant="success"
               size="xs"
             >
-              157 Active Glyphs
+              {GLYPH_CHARS_BY_IDX.length} Active Glyphs
             </ForgeBadge>
           </div>
           <canvas
-            ref={spriteSheetCanvasReference}
-            width={512}
-            height={512}
-            className={styles.spriteSheetCanvas}
-            onPointerMove={onSpriteSheetPointerMove}
-            onPointerLeave={onSpriteSheetPointerLeave}
+            ref={properties.spriteSheetCanvasReference}
+            width={1024}
+            height={1024}
+            className={sectionStyles.spriteSheetCanvas ?? ''}
+            onPointerMove={properties.onSpriteSheetPointerMove}
+            onPointerLeave={properties.onSpriteSheetPointerLeave}
           />
-          {hoveredGlyph && (
-            <div className={styles.spriteSheetInspector}>
+          {properties.hoveredGlyph && (
+            <div className={sectionStyles.spriteSheetInspector ?? ''}>
               <canvas
-                ref={inspectCanvasReference}
+                ref={properties.inspectCanvasReference}
                 width={64}
                 height={64}
-                className={styles.spriteSheetInspectCanvas}
+                className={sectionStyles.spriteSheetInspectCanvas ?? ''}
               />
-              <div className={styles.spriteSheetInspectDetails}>
+              <div className={sectionStyles.spriteSheetInspectDetails ?? ''}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span className={styles.spriteSheetInspectChar}>
-                    {hoveredGlyph.char === ' ' ? 'Space' : hoveredGlyph.char}
+                  <span className={sectionStyles.spriteSheetInspectChar ?? ''}>
+                    {properties.hoveredGlyph.char === ' ' ? 'Space' : properties.hoveredGlyph.char}
                   </span>
                   <ForgeBadge
                     variant="info"
                     size="xs"
                   >
-                    {hoveredGlyph.codeHex}
+                    {properties.hoveredGlyph.codeHex}
                   </ForgeBadge>
                   <ForgeBadge
                     variant="neutral"
                     size="xs"
                   >
-                    Idx {hoveredGlyph.index}
+                    Idx {properties.hoveredGlyph.index}
                   </ForgeBadge>
                 </div>
                 <div>
-                  Advance: {hoveredGlyph.advance}px | Cell: ({hoveredGlyph.column}, {hoveredGlyph.row})
+                  Advance: {properties.hoveredGlyph.advance}px | Packed Cell: {properties.hoveredGlyph.cellW}×
+                  {properties.hoveredGlyph.cellH} at ({properties.hoveredGlyph.cellX}, {properties.hoveredGlyph.cellY})
                 </div>
               </div>
             </div>
@@ -794,29 +908,40 @@ function SpriteSheetDebugSection({
 interface PerfProfilerModalProperties extends SpriteSheetSectionProperties {
   readonly perfMetrics: FlintPerformanceMetrics;
   readonly onClose: () => void;
+  readonly updateInterval: 'realtime' | '100ms' | '250ms' | '500ms' | '750ms' | '1500ms';
+  readonly onSetUpdateInterval: (interval: 'realtime' | '100ms' | '250ms' | '500ms' | '750ms' | '1500ms') => void;
 }
 
 /**
  * Modal dialog for inspecting D3 rendering metrics and the SDF font atlas sprite sheet.
  */
 function PerfProfilerModal(properties: PerfProfilerModalProperties): MpElement {
+  const fps = Math.round(1000 / Math.max(1, properties.perfMetrics.totalFrameTimeMs));
+  const modalStyles = properties.styles ?? {};
   return (
     <div
       role="dialog"
       aria-modal="true"
-      className={styles.modalOverlay}
-      onClick={properties.onClose}
+      className={modalStyles.modalOverlay ?? ''}
     >
       <div
-        className={styles.perfModal}
+        className={modalStyles.perfModal ?? ''}
         onClick={(event: unknown) => {
           if (typeof MouseEvent !== 'undefined' && event instanceof MouseEvent) {
             event.stopPropagation();
           }
         }}
       >
-        <div className={styles.modalHeader}>
-          <span className={styles.modalTitle}>Performance Profiler (D3)</span>
+        <div className={modalStyles.modalHeader ?? ''}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span className={modalStyles.modalTitle ?? ''}>Performance Profiler & Realtime Telemetry</span>
+            <ForgeBadge
+              variant="success"
+              size="xs"
+            >
+              {fps} FPS
+            </ForgeBadge>
+          </div>
           <ForgeButton
             variant="ghost"
             size="xs"
@@ -826,7 +951,84 @@ function PerfProfilerModal(properties: PerfProfilerModalProperties): MpElement {
             ✕
           </ForgeButton>
         </div>
-        <div className={styles.modalBody}>
+        <div className={modalStyles.modalBody ?? ''}>
+          <div style={{ marginBottom: '14px' }}>
+            <div style={{ fontSize: '12px', fontWeight: 600, color: '#8b949e', marginBottom: '6px' }}>
+              Telemetry Refresh Interval
+            </div>
+            <ForgeButtonGroup size="xs">
+              <ForgeButton
+                variant={properties.updateInterval === 'realtime' ? 'primary' : 'ghost'}
+                size="xs"
+                onClick={() => properties.onSetUpdateInterval('realtime')}
+              >
+                Realtime
+              </ForgeButton>
+              <ForgeButton
+                variant={properties.updateInterval === '100ms' ? 'primary' : 'ghost'}
+                size="xs"
+                onClick={() => properties.onSetUpdateInterval('100ms')}
+              >
+                100ms
+              </ForgeButton>
+              <ForgeButton
+                variant={properties.updateInterval === '250ms' ? 'primary' : 'ghost'}
+                size="xs"
+                onClick={() => properties.onSetUpdateInterval('250ms')}
+              >
+                250ms
+              </ForgeButton>
+              <ForgeButton
+                variant={properties.updateInterval === '500ms' ? 'primary' : 'ghost'}
+                size="xs"
+                onClick={() => properties.onSetUpdateInterval('500ms')}
+              >
+                500ms
+              </ForgeButton>
+              <ForgeButton
+                variant={properties.updateInterval === '750ms' ? 'primary' : 'ghost'}
+                size="xs"
+                onClick={() => properties.onSetUpdateInterval('750ms')}
+              >
+                750ms
+              </ForgeButton>
+              <ForgeButton
+                variant={properties.updateInterval === '1500ms' ? 'primary' : 'ghost'}
+                size="xs"
+                onClick={() => properties.onSetUpdateInterval('1500ms')}
+              >
+                1500ms
+              </ForgeButton>
+            </ForgeButtonGroup>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '16px' }}>
+            <div style={{ background: '#161b22', padding: '8px', borderRadius: '6px', border: '1px solid #30363d' }}>
+              <div style={{ fontSize: '10px', color: '#8b949e' }}>Total Frame Time</div>
+              <div style={{ fontSize: '14px', fontWeight: 600, color: '#58a6ff' }}>
+                {properties.perfMetrics.totalFrameTimeMs.toFixed(2)} ms
+              </div>
+            </div>
+            <div style={{ background: '#161b22', padding: '8px', borderRadius: '6px', border: '1px solid #30363d' }}>
+              <div style={{ fontSize: '10px', color: '#8b949e' }}>Render Duration</div>
+              <div style={{ fontSize: '14px', fontWeight: 600, color: '#3fb950' }}>
+                {properties.perfMetrics.renderTimeMs.toFixed(2)} ms
+              </div>
+            </div>
+            <div style={{ background: '#161b22', padding: '8px', borderRadius: '6px', border: '1px solid #30363d' }}>
+              <div style={{ fontSize: '10px', color: '#8b949e' }}>Spatial Indexing</div>
+              <div style={{ fontSize: '14px', fontWeight: 600, color: '#d29922' }}>
+                {properties.perfMetrics.spatialIndexTimeMs.toFixed(2)} ms
+              </div>
+            </div>
+            <div style={{ background: '#161b22', padding: '8px', borderRadius: '6px', border: '1px solid #30363d' }}>
+              <div style={{ fontSize: '10px', color: '#8b949e' }}>Visible Primitives</div>
+              <div style={{ fontSize: '14px', fontWeight: 600, color: '#f0883e' }}>
+                {properties.perfMetrics.visibleNodesCount}N / {properties.perfMetrics.visibleEdgesCount}E
+              </div>
+            </div>
+          </div>
+
           <ForgePerformancePieChart
             metrics={properties.perfMetrics}
             width={280}
@@ -834,7 +1036,7 @@ function PerfProfilerModal(properties: PerfProfilerModalProperties): MpElement {
           />
           <SpriteSheetDebugSection {...properties} />
         </div>
-        <div className={styles.modalFooter}>
+        <div className={modalStyles.modalFooter ?? ''}>
           <ForgeButton
             variant="primary"
             size="sm"
@@ -871,6 +1073,9 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
   const [showExportModal, setShowExportModal] = useState(false);
   const [showPerfModal, setShowPerfModal] = useState(false);
   const [exportedSource, setExportedSource] = useState('');
+  const [telemetryInterval, setTelemetryInterval] = useState<
+    'realtime' | '100ms' | '250ms' | '500ms' | '750ms' | '1500ms'
+  >('250ms');
   const [perfMetrics, setPerfMetrics] = useState<FlintPerformanceMetrics>({
     updateTimeMs: 0.5,
     renderTimeMs: 1.2,
@@ -915,7 +1120,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
   const inspectCanvasReference = useRef<HTMLCanvasElement | undefined>();
 
   /**
-   * Renders a magnified 32x32 glyph cell to the hover inspection canvas.
+   * Renders a magnified glyph cell to the hover inspection canvas based on its 2D shelf packed bounding box.
    */
   const paintInspectCell = (glyphIndex: number): void => {
     const inspectCanvas = inspectCanvasReference.current;
@@ -923,25 +1128,25 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
     if (!inspectCanvas || !mainCanvas) return;
     const inspectContext = inspectCanvas.getContext('2d');
     if (!inspectContext) return;
-    const column = glyphIndex % 16;
-    const row = Math.floor(glyphIndex / 16);
-    inspectContext.imageSmoothingEnabled = false;
-    inspectContext.clearRect(0, 0, inspectCanvas.width, inspectCanvas.height);
-    inspectContext.drawImage(
-      mainCanvas,
-      column * 32,
-      row * 32,
-      32,
-      32,
-      0,
-      0,
-      inspectCanvas.width,
-      inspectCanvas.height,
-    );
+    try {
+      const wasm = getFlintRenderWorkerWasm();
+      const tableBase = 256;
+      const u32Memory = new Uint32Array(wasm.memory.buffer);
+      const cellX = u32Memory[(tableBase + glyphIndex * 16) >> 2] ?? 0;
+      const cellY = u32Memory[(tableBase + glyphIndex * 16 + 4) >> 2] ?? 0;
+      const cellW = u32Memory[(tableBase + glyphIndex * 16 + 8) >> 2] ?? 24;
+      const cellH = u32Memory[(tableBase + glyphIndex * 16 + 12) >> 2] ?? 32;
+
+      inspectContext.imageSmoothingEnabled = false;
+      inspectContext.clearRect(0, 0, inspectCanvas.width, inspectCanvas.height);
+      inspectContext.drawImage(mainCanvas, cellX, cellY, cellW, cellH, 0, 0, inspectCanvas.width, inspectCanvas.height);
+    } catch {
+      // Fallback
+    }
   };
 
   /**
-   * Renders the 512x512 Signed Distance Field font atlas texture with optional grid overlay and cell highlighting.
+   * Renders the 1024x1024 2D Shelf Packed Signed Distance Field font atlas texture with optional cell grid overlay and highlighting.
    */
   const paintSpriteSheet = (
     mode: 'crisp' | 'raw' = spriteSheetMode,
@@ -963,7 +1168,12 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
 
         if (mode === 'crisp') {
           for (let pixelIndex = 0; pixelIndex < atlasSize * atlasSize; pixelIndex++) {
-            const distanceValue = rawBytes[pixelIndex * 4];
+            const r = rawBytes[pixelIndex * 4] ?? 0;
+            const g = rawBytes[pixelIndex * 4 + 1] ?? 0;
+            const b = rawBytes[pixelIndex * 4 + 2] ?? 0;
+            const a = rawBytes[pixelIndex * 4 + 3] ?? 0;
+            const msdf = Math.max(Math.min(r, g), Math.min(Math.max(r, g), b));
+            const distanceValue = Math.min(msdf, a);
             const outputIndex = pixelIndex * 4;
             if (distanceValue <= 112) {
               outBytes[outputIndex] = 13;
@@ -985,11 +1195,10 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           }
         } else {
           for (let pixelIndex = 0; pixelIndex < atlasSize * atlasSize; pixelIndex++) {
-            const distanceValue = rawBytes[pixelIndex * 4];
             const outputIndex = pixelIndex * 4;
-            outBytes[outputIndex] = distanceValue;
-            outBytes[outputIndex + 1] = distanceValue;
-            outBytes[outputIndex + 2] = distanceValue;
+            outBytes[outputIndex] = rawBytes[outputIndex] ?? 0;
+            outBytes[outputIndex + 1] = rawBytes[outputIndex + 1] ?? 0;
+            outBytes[outputIndex + 2] = rawBytes[outputIndex + 2] ?? 0;
             outBytes[outputIndex + 3] = 255;
           }
         }
@@ -997,33 +1206,28 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         canvasContext.putImageData(outData, 0, 0);
 
         if (grid) {
-          const cellSize = atlasSize / 16;
+          const tableBase = 256;
+          const u32Memory = new Uint32Array(wasm.memory.buffer);
           canvasContext.save();
           canvasContext.lineWidth = 1;
-          canvasContext.strokeStyle = 'rgba(88, 166, 255, 0.2)';
-          for (let gridIndex = 0; gridIndex <= 16; gridIndex++) {
-            const position = gridIndex * cellSize;
-            canvasContext.beginPath();
-            canvasContext.moveTo(position, 0);
-            canvasContext.lineTo(position, atlasSize);
-            canvasContext.stroke();
-            canvasContext.beginPath();
-            canvasContext.moveTo(0, position);
-            canvasContext.lineTo(atlasSize, position);
-            canvasContext.stroke();
+          canvasContext.strokeStyle = 'rgba(88, 166, 255, 0.25)';
+
+          for (let glyphIndex = 0; glyphIndex < GLYPH_CHARS_BY_IDX.length; glyphIndex++) {
+            const cellX = u32Memory[(tableBase + glyphIndex * 16) >> 2] ?? 0;
+            const cellY = u32Memory[(tableBase + glyphIndex * 16 + 4) >> 2] ?? 0;
+            const cellW = u32Memory[(tableBase + glyphIndex * 16 + 8) >> 2] ?? 24;
+            const cellH = u32Memory[(tableBase + glyphIndex * 16 + 12) >> 2] ?? 32;
+            canvasContext.strokeRect(cellX + 0.5, cellY + 0.5, cellW - 1, cellH - 1);
           }
 
-          if (highlightIndex !== undefined && highlightIndex >= 0 && highlightIndex < 256) {
-            const highlightColumn = highlightIndex % 16;
-            const highlightRow = Math.floor(highlightIndex / 16);
+          if (highlightIndex !== undefined && highlightIndex >= 0 && highlightIndex < GLYPH_CHARS_BY_IDX.length) {
+            const highlightX = u32Memory[(tableBase + highlightIndex * 16) >> 2] ?? 0;
+            const highlightY = u32Memory[(tableBase + highlightIndex * 16 + 4) >> 2] ?? 0;
+            const highlightW = u32Memory[(tableBase + highlightIndex * 16 + 8) >> 2] ?? 24;
+            const highlightH = u32Memory[(tableBase + highlightIndex * 16 + 12) >> 2] ?? 32;
             canvasContext.strokeStyle = '#58a6ff';
             canvasContext.lineWidth = 2;
-            canvasContext.strokeRect(
-              highlightColumn * cellSize + 0.5,
-              highlightRow * cellSize + 0.5,
-              cellSize - 1,
-              cellSize - 1,
-            );
+            canvasContext.strokeRect(highlightX + 0.5, highlightY + 0.5, highlightW - 1, highlightH - 1);
           }
           canvasContext.restore();
         }
@@ -1034,7 +1238,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
   };
 
   /**
-   * Tracks cursor movements across the font sprite sheet canvas and updates the hovered glyph details.
+   * Tracks cursor movements across the packed font sprite sheet canvas and updates the hovered glyph details.
    */
   const onSpriteSheetPointerMove = (event: PointerEvent): void => {
     const canvas = spriteSheetCanvasReference.current;
@@ -1042,34 +1246,62 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-    const scale = 512 / rect.width;
+    const scale = 1024 / rect.width;
     const atlasX = x * scale;
     const atlasY = y * scale;
-    const column = Math.floor(atlasX / 32);
-    const row = Math.floor(atlasY / 32);
-    if (column < 0 || column >= 16 || row < 0 || row >= 16) return;
-    const glyphIndex = row * 16 + column;
-    if (glyphIndex < GLYPH_CHARS_BY_IDX.length) {
-      const char = GLYPH_CHARS_BY_IDX[glyphIndex] ?? '';
-      const code = char.codePointAt(0) ?? 0;
-      let advance = 14;
-      try {
-        const wasm = getFlintRenderWorkerWasm();
-        advance = wasm.font_get_char_advance(glyphIndex);
-      } catch {
-        // fallback
+
+    try {
+      const wasm = getFlintRenderWorkerWasm();
+      const tableBase = 256;
+      const u32Memory = new Uint32Array(wasm.memory.buffer);
+
+      let foundIndex = -1;
+      let foundX = 0;
+      let foundY = 0;
+      let foundW = 24;
+      let foundH = 32;
+
+      for (let glyphIndex = 0; glyphIndex < GLYPH_CHARS_BY_IDX.length; glyphIndex++) {
+        const cellX = u32Memory[(tableBase + glyphIndex * 16) >> 2] ?? 0;
+        const cellY = u32Memory[(tableBase + glyphIndex * 16 + 4) >> 2] ?? 0;
+        const cellW = u32Memory[(tableBase + glyphIndex * 16 + 8) >> 2] ?? 24;
+        const cellH = u32Memory[(tableBase + glyphIndex * 16 + 12) >> 2] ?? 32;
+
+        if (atlasX >= cellX && atlasX < cellX + cellW && atlasY >= cellY && atlasY < cellY + cellH) {
+          foundIndex = glyphIndex;
+          foundX = cellX;
+          foundY = cellY;
+          foundW = cellW;
+          foundH = cellH;
+          break;
+        }
       }
-      setHoveredGlyph({
-        index: glyphIndex,
-        char,
-        codeHex: `U+${code.toString(16).toUpperCase().padStart(4, '0')}`,
-        codeDec: code,
-        advance,
-        column,
-        row,
-      });
-      paintSpriteSheet(spriteSheetMode, spriteSheetGrid, glyphIndex);
-      paintInspectCell(glyphIndex);
+
+      if (foundIndex >= 0 && foundIndex < GLYPH_CHARS_BY_IDX.length) {
+        const char = GLYPH_CHARS_BY_IDX[foundIndex] ?? '';
+        const code = char.codePointAt(0) ?? 0;
+        let advance = 14;
+        try {
+          advance = wasm.font_get_char_advance(code);
+        } catch {
+          // fallback
+        }
+        setHoveredGlyph({
+          index: foundIndex,
+          char,
+          codeHex: `U+${code.toString(16).toUpperCase().padStart(4, '0')}`,
+          codeDec: code,
+          advance,
+          cellX: foundX,
+          cellY: foundY,
+          cellW: foundW,
+          cellH: foundH,
+        });
+        paintSpriteSheet(spriteSheetMode, spriteSheetGrid, foundIndex);
+        paintInspectCell(foundIndex);
+      }
+    } catch {
+      // Ignore if wasm not ready yet
     }
   };
 
@@ -1088,6 +1320,28 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
       }, 50);
     }
   }, [showPerfModal]);
+
+  useEffect(() => {
+    if (!showPerfModal) return;
+    if (telemetryInterval === 'realtime') return;
+
+    const msMap: Record<string, number> = {
+      '100ms': 100,
+      '250ms': 250,
+      '500ms': 500,
+      '750ms': 750,
+      '1500ms': 1500,
+    };
+    const intervalMs = msMap[telemetryInterval] ?? 250;
+
+    const timer = setInterval(() => {
+      if (rendererReference.current) {
+        setPerfMetrics(rendererReference.current.getPerformanceStats());
+      }
+    }, intervalMs);
+
+    return () => clearInterval(timer);
+  }, [showPerfModal, telemetryInterval]);
 
   useEffect(() => {
     let cleanup: (() => void) | undefined;
@@ -1129,7 +1383,11 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
       setEditorState(newState);
       if (rendererReference.current) {
         rendererReference.current.setGraph(newState.graph.nodes, newState.graph.edges, newState.graph.groups ?? []);
-        rendererReference.current.setSelection(newState.selectedNodeIds);
+        rendererReference.current.setSelection(
+          newState.selectedNodeIds,
+          newState.activeEdgeId ? [newState.activeEdgeId] : [],
+          newState.selectedGroupId,
+        );
       }
     });
 
@@ -1206,9 +1464,12 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
       }
 
       let isPointerDown = false;
-      let dragMode: 'pan' | 'node' | 'connect' | 'box_select' | 'none' = 'none';
+      let dragMode: 'pan' | 'node' | 'group' | 'waypoint' | 'connect' | 'box_select' | 'none' = 'none';
       let connectingSourceNodeId = '';
       let connectingSourcePortId = '';
+      let draggedGroupId = '';
+      let draggedEdgeId = '';
+      let draggedWaypointIndex = -1;
       let dragStartScreen = { x: 0, y: 0 };
       let boxSelectStart = { x: 0, y: 0 };
       let lastClickTime = 0;
@@ -1254,6 +1515,57 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         const isShift = event.shiftKey;
         const hit = renderer.hitTestSync(event.offsetX, event.offsetY);
 
+        if (hit?.type === 'group' && hit.groupId) {
+          dragMode = 'group';
+          draggedGroupId = hit.groupId;
+          store.selectGroup(hit.groupId);
+          renderer.setSelection([], [], hit.groupId);
+          const group = store.getState().graph.groups?.find((g) => g.id === hit.groupId);
+          nodesStartPositions.clear();
+          if (group) {
+            const groupNodeIds = new Set(group.nodeIds);
+            for (const n of store.getState().graph.nodes) {
+              if (groupNodeIds.has(n.id)) {
+                nodesStartPositions.set(n.id, { ...n.position });
+              }
+            }
+          }
+          renderer.renderFrame();
+          return;
+        }
+
+        if (hit?.type === 'waypoint' && hit.edgeId && hit.waypointIndex !== undefined) {
+          dragMode = 'waypoint';
+          draggedEdgeId = hit.edgeId;
+          draggedWaypointIndex = hit.waypointIndex;
+          store.selectEdge(hit.edgeId);
+          renderer.setSelection([], [hit.edgeId]);
+          renderer.renderFrame();
+          return;
+        }
+
+        if (hit?.type === 'edge' && hit.edgeId) {
+          if (now - lastClickTime < 350 && lastClickNodeId === hit.edgeId) {
+            const world = renderer.screenToWorld(event.offsetX, event.offsetY);
+            store.addEdgePoint(hit.edgeId, { x: Math.round(world.x), y: Math.round(world.y) });
+            renderer.setGraph(
+              store.getState().graph.nodes,
+              store.getState().graph.edges,
+              store.getState().graph.groups ?? [],
+            );
+            renderer.renderFrame();
+            lastClickTime = 0;
+            lastClickNodeId = '';
+            return;
+          }
+          lastClickTime = now;
+          lastClickNodeId = hit.edgeId;
+          store.selectEdge(hit.edgeId);
+          renderer.setSelection([], [hit.edgeId]);
+          renderer.renderFrame();
+          return;
+        }
+
         if (hit?.type === 'node') {
           if (now - lastClickTime < 350 && lastClickNodeId === hit.nodeId) {
             const clickedNode = store.getState().graph.nodes.find((n) => n.id === hit.nodeId);
@@ -1273,13 +1585,6 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         } else {
           lastClickTime = 0;
           lastClickNodeId = '';
-        }
-
-        if (hit?.type === 'edge' && hit.edgeId) {
-          store.selectEdge(hit.edgeId);
-          renderer.setSelection([], [hit.edgeId]);
-          renderer.renderFrame();
-          return;
         }
 
         if (hit?.type === 'port' && hit.portId) {
@@ -1345,6 +1650,18 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
               }
               break;
             }
+            case 'waypoint': {
+              canvasElement.style.cursor = 'grab';
+              renderer.setHoveredPort();
+              renderer.renderFrame();
+              break;
+            }
+            case 'group': {
+              canvasElement.style.cursor = 'move';
+              renderer.setHoveredPort();
+              renderer.renderFrame();
+              break;
+            }
             case 'edge': {
               canvasElement.style.cursor = 'pointer';
               renderer.setHoveredPort();
@@ -1378,6 +1695,23 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
             currentX: event.offsetX,
             currentY: event.offsetY,
           }));
+        } else if (dragMode === 'group' && nodesStartPositions.size > 0 && draggedGroupId) {
+          const worldDeltaX = deltaX / camera.zoom;
+          const worldDeltaY = deltaY / camera.zoom;
+          store.moveSelectedNodes(worldDeltaX, worldDeltaY, nodesStartPositions);
+          renderer.renderFrame();
+        } else if (dragMode === 'waypoint' && draggedEdgeId) {
+          const { x: worldX, y: worldY } = renderer.screenToWorld(event.offsetX, event.offsetY);
+          store.updateEdgePoint(draggedEdgeId, draggedWaypointIndex, {
+            x: Math.round(worldX),
+            y: Math.round(worldY),
+          });
+          renderer.setGraph(
+            store.getState().graph.nodes,
+            store.getState().graph.edges,
+            store.getState().graph.groups ?? [],
+          );
+          renderer.renderFrame();
         } else if (dragMode === 'connect') {
           const { x: worldX, y: worldY } = renderer.screenToWorld(event.offsetX, event.offsetY);
           store.updateConnectingCursor(worldX, worldY);
@@ -1453,8 +1787,13 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
             renderer.renderFrame();
             break;
           }
-          case 'node': {
+          case 'node':
+          case 'group': {
             store.commitNodeMove();
+            renderer.renderFrame();
+            break;
+          }
+          case 'waypoint': {
             renderer.renderFrame();
             break;
           }
@@ -1638,6 +1977,12 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
     : undefined;
 
   const selectedDefinition = selectedNode ? getNodeDefinition(selectedNode.operation) : undefined;
+  const selectedGroup = editorState.selectedGroupId
+    ? (editorState.graph.groups ?? []).find((group) => group.id === editorState.selectedGroupId)
+    : undefined;
+  const selectedEdge = editorState.activeEdgeId
+    ? editorState.graph.edges.find((edge) => edge.id === editorState.activeEdgeId)
+    : undefined;
 
   /**
    * Instantiates a new node from the catalog at the current viewport center.
@@ -1692,6 +2037,8 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           </span>
           <ForgeButtonGroup
             size="sm"
+            attached={false}
+            gap="xs"
             ariaLabel="Graph Execution and Export"
           >
             <ForgeButton
@@ -1726,6 +2073,8 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
 
           <ForgeButtonGroup
             size="sm"
+            attached={false}
+            gap="xs"
             ariaLabel="History Actions"
           >
             <ForgeButton
@@ -1748,6 +2097,8 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
 
           <ForgeButtonGroup
             size="sm"
+            attached={false}
+            gap="xs"
             ariaLabel="Node Structuring Actions"
           >
             <ForgeButton
@@ -2011,7 +2362,141 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         <aside className={styles.inspectorDrawer}>
           <div className={styles.inspectorSection}>
             <div className={styles.inspectorTitle}>Inspector</div>
-            {selectedNode ? (
+            {selectedGroup ? (
+              <div>
+                <div className={styles.inspectorRow}>
+                  <label
+                    htmlFor="inspector-group-title"
+                    className={styles.inspectorLabel}
+                  >
+                    Group Name
+                  </label>
+                  <input
+                    id="inspector-group-title"
+                    value={selectedGroup.title}
+                    type="text"
+                    aria-label="Group Name"
+                    className={styles.inspectorInput}
+                    onInput={(event: unknown) => {
+                      if (
+                        typeof HTMLInputElement !== 'undefined' &&
+                        event &&
+                        typeof event === 'object' &&
+                        'target' in event &&
+                        event.target instanceof HTMLInputElement
+                      ) {
+                        store.setGroupTitle(selectedGroup.id, event.target.value);
+                        rendererReference.current?.setGraph(
+                          store.getState().graph.nodes,
+                          store.getState().graph.edges,
+                          store.getState().graph.groups ?? [],
+                        );
+                        rendererReference.current?.renderFrame();
+                      }
+                    }}
+                  />
+                </div>
+                <div
+                  className={styles.inspectorRow}
+                  style={{ flexDirection: 'column', alignItems: 'flex-start' }}
+                >
+                  <span className={styles.inspectorLabel}>Group Color</span>
+                  <div className={styles.colorPickerRow}>
+                    {['#58a6ff', '#a371f7', '#3fb950', '#d29922', '#f85149', '#39c5bb'].map((c) => (
+                      <button
+                        key={c}
+                        type="button"
+                        className={styles.colorSwatch}
+                        style={{
+                          backgroundColor: c,
+                          border: selectedGroup.color === c ? '2px solid #ffffff' : '1px solid #30363d',
+                        }}
+                        onClick={() => {
+                          store.setGroupColor(selectedGroup.id, c);
+                          rendererReference.current?.setGraph(
+                            store.getState().graph.nodes,
+                            store.getState().graph.edges,
+                            store.getState().graph.groups ?? [],
+                          );
+                          rendererReference.current?.renderFrame();
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className={styles.inspectorRow}>
+                  <span className={styles.inspectorLabel}>Member Nodes</span>
+                  <span style={{ fontSize: '12px' }}>{selectedGroup.nodeIds.length} nodes</span>
+                </div>
+                <div style={{ marginTop: '12px' }}>
+                  <ForgeButton
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => {
+                      store.ungroup(selectedGroup.id);
+                      rendererReference.current?.setGraph(
+                        store.getState().graph.nodes,
+                        store.getState().graph.edges,
+                        store.getState().graph.groups ?? [],
+                      );
+                      rendererReference.current?.renderFrame();
+                    }}
+                  >
+                    Ungroup
+                  </ForgeButton>
+                </div>
+              </div>
+            ) : selectedEdge ? (
+              <div>
+                <div className={styles.inspectorRow}>
+                  <span className={styles.inspectorLabel}>Connection ID</span>
+                  <span
+                    style={{
+                      fontSize: '12px',
+                      fontFamily: 'var(--mp-font-family-mono, "Datatype", monospace)',
+                    }}
+                  >
+                    {selectedEdge.id}
+                  </span>
+                </div>
+                <div className={styles.inspectorRow}>
+                  <span className={styles.inspectorLabel}>Waypoints</span>
+                  <span style={{ fontSize: '12px' }}>{selectedEdge.points?.length ?? 0} custom points</span>
+                </div>
+                <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <ForgeButton
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => {
+                      store.clearEdgePoints(selectedEdge.id);
+                      rendererReference.current?.setGraph(
+                        store.getState().graph.nodes,
+                        store.getState().graph.edges,
+                        store.getState().graph.groups ?? [],
+                      );
+                      rendererReference.current?.renderFrame();
+                    }}
+                  >
+                    Reset Path (Default Curve)
+                  </ForgeButton>
+                  <ForgeButton
+                    variant="error"
+                    size="sm"
+                    onClick={() => {
+                      store.removeEdge(selectedEdge.id);
+                      rendererReference.current?.setGraph(
+                        store.getState().graph.nodes,
+                        store.getState().graph.edges,
+                        store.getState().graph.groups ?? [],
+                      );
+                      rendererReference.current?.renderFrame();
+                    }}
+                  >
+                    Delete Connection
+                  </ForgeButton>
+                </div>
+              </div>
+            ) : selectedNode ? (
               <div>
                 <div className={styles.inspectorRow}>
                   <label
@@ -2319,7 +2804,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
               </div>
             ) : (
               <div style={{ color: '#8b949e', fontSize: '12px' }}>
-                Select a node on canvas to view and configure properties.
+                Select a node, group label, or connection on canvas to view and configure properties.
               </div>
             )}
           </div>
@@ -2392,6 +2877,41 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           </div>
           {contextMenu.targetType === 'edge' && contextMenu.targetId && (
             <div className={styles.contextMenuActions}>
+              <button
+                type="button"
+                className={styles.contextMenuItem}
+                onClick={() => {
+                  store.addEdgePoint(contextMenu.targetId ?? '', {
+                    x: Math.round(contextMenu.worldX),
+                    y: Math.round(contextMenu.worldY),
+                  });
+                  rendererReference.current?.setGraph(
+                    store.getState().graph.nodes,
+                    store.getState().graph.edges,
+                    store.getState().graph.groups ?? [],
+                  );
+                  rendererReference.current?.renderFrame();
+                  setContextMenu({ ...contextMenu, open: false });
+                }}
+              >
+                + Add Waypoint Here
+              </button>
+              <button
+                type="button"
+                className={styles.contextMenuItem}
+                onClick={() => {
+                  store.clearEdgePoints(contextMenu.targetId ?? '');
+                  rendererReference.current?.setGraph(
+                    store.getState().graph.nodes,
+                    store.getState().graph.edges,
+                    store.getState().graph.groups ?? [],
+                  );
+                  rendererReference.current?.renderFrame();
+                  setContextMenu({ ...contextMenu, open: false });
+                }}
+              >
+                Reset Path (Default Curve)
+              </button>
               <button
                 type="button"
                 className={styles.contextMenuItem}
@@ -2683,6 +3203,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         <ExportModal
           exportedSource={exportedSource}
           onClose={() => setShowExportModal(false)}
+          styles={styles}
         />
       )}
 
@@ -2691,6 +3212,8 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         <PerfProfilerModal
           perfMetrics={perfMetrics}
           onClose={() => setShowPerfModal(false)}
+          updateInterval={telemetryInterval}
+          onSetUpdateInterval={(next) => setTelemetryInterval(next)}
           spriteSheetMode={spriteSheetMode}
           onSetSpriteSheetMode={(nextMode) => {
             setSpriteSheetMode(nextMode);
@@ -2708,6 +3231,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           onSpriteSheetPointerMove={onSpriteSheetPointerMove}
           onSpriteSheetPointerLeave={onSpriteSheetPointerLeave}
           onToggleSpriteSheet={() => paintSpriteSheet()}
+          styles={styles}
         />
       )}
     </div>

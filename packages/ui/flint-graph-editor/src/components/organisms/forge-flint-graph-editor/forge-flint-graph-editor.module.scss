@@ -67,7 +67,9 @@
 .toolbarGroup {
   display: flex;
   align-items: center;
-  gap: var(--mp-space-2, 8px);
+  flex-wrap: nowrap;
+  gap: var(--mp-space-3, 12px);
+  flex-shrink: 0;
 }
 
 .mainArea {

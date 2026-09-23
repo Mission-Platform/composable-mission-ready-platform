@@ -40,6 +40,7 @@ export interface ClipboardItem {
 export interface FlintEditorStoreState {
   readonly graph: FlintNodeGraph;
   readonly selectedNodeIds: readonly string[];
+  readonly selectedGroupId?: string;
   readonly activeEdgeId?: string;
   readonly connectingEdge?: ConnectingEdgeState;
   readonly canUndo: boolean;
@@ -447,6 +448,7 @@ function remapPastedEdges(
 export class FlintEditorStore {
   private graph: FlintNodeGraph;
   private selectedNodeIds = new Set<string>();
+  private selectedGroupId?: string;
   private activeEdgeId?: string;
   private connectingEdge?: ConnectingEdgeState;
 
@@ -491,6 +493,7 @@ export class FlintEditorStore {
     return {
       graph: this.graph,
       selectedNodeIds: [...this.selectedNodeIds],
+      selectedGroupId: this.selectedGroupId,
       activeEdgeId: this.activeEdgeId,
       connectingEdge: this.connectingEdge,
       canUndo: this.historyIndex > 0,
@@ -799,6 +802,7 @@ export class FlintEditorStore {
       this.selectedNodeIds.clear();
     }
     this.selectedNodeIds.add(nodeId);
+    this.selectedGroupId = undefined;
     this.activeEdgeId = undefined;
     this.notify();
   }
@@ -812,6 +816,7 @@ export class FlintEditorStore {
     } else {
       this.selectedNodeIds.add(nodeId);
     }
+    this.selectedGroupId = undefined;
     this.activeEdgeId = undefined;
     this.notify();
   }
@@ -826,6 +831,7 @@ export class FlintEditorStore {
     for (const id of nodeIds) {
       this.selectedNodeIds.add(id);
     }
+    this.selectedGroupId = undefined;
     this.activeEdgeId = undefined;
     this.notify();
   }
@@ -835,6 +841,7 @@ export class FlintEditorStore {
    */
   deselectAll(): void {
     this.selectedNodeIds.clear();
+    this.selectedGroupId = undefined;
     this.activeEdgeId = undefined;
     this.notify();
   }
@@ -844,7 +851,18 @@ export class FlintEditorStore {
    */
   selectEdge(edgeId: string): void {
     this.selectedNodeIds.clear();
+    this.selectedGroupId = undefined;
     this.activeEdgeId = edgeId;
+    this.notify();
+  }
+
+  /**
+   * Marks a specific group as selected, clearing node and edge selections.
+   */
+  selectGroup(groupId: string | undefined): void {
+    this.selectedNodeIds.clear();
+    this.activeEdgeId = undefined;
+    this.selectedGroupId = groupId;
     this.notify();
   }
 
@@ -883,6 +901,42 @@ export class FlintEditorStore {
       this.connectingEdge = undefined;
       this.notify();
     }
+  }
+
+  /**
+   * Creates a visual group container enclosing specific nodes.
+   */
+  createGroup(title: string, nodeIds: readonly string[], color = '#58a6ff'): FlintGraphGroup {
+    const groupId = generateSecureId('group');
+    const newGroup: FlintGraphGroup = {
+      id: groupId,
+      title,
+      nodeIds: [...nodeIds],
+      color,
+    };
+
+    const targetNodeIds = new Set(nodeIds);
+    const existingGroups = (this.graph.groups ?? []).filter(
+      (group) => !group.nodeIds.some((id) => targetNodeIds.has(id)),
+    );
+
+    const updatedNodes = this.graph.nodes.map((node) => {
+      if (targetNodeIds.has(node.id)) {
+        return { ...node, groupId };
+      }
+      return node;
+    });
+
+    this.graph = {
+      ...this.graph,
+      groups: [...existingGroups, newGroup],
+      nodes: updatedNodes,
+    };
+
+    this.validation = validateGraph(this.graph);
+    this.pushHistoryState(this.graph);
+    this.notify();
+    return newGroup;
   }
 
   /**
@@ -1135,6 +1189,11 @@ export class FlintEditorStore {
    * Deletes all currently selected nodes, groups, and edges from the active graph.
    */
   deleteSelected(): void {
+    if (this.selectedGroupId) {
+      this.ungroup(this.selectedGroupId);
+      this.selectedGroupId = undefined;
+      return;
+    }
     if (this.activeEdgeId) {
       this.removeEdge(this.activeEdgeId);
       return;
@@ -1225,6 +1284,132 @@ export class FlintEditorStore {
     this.graph = {
       ...this.graph,
       groups,
+    };
+    this.pushHistoryState(this.graph);
+    this.notify();
+  }
+
+  /**
+   * Updates the display title of a specific graph group container.
+   */
+  setGroupTitle(groupId: string, title: string): void {
+    const groups = (this.graph.groups ?? []).map((g) => {
+      if (g.id === groupId) {
+        return { ...g, title };
+      }
+      return g;
+    });
+
+    this.graph = {
+      ...this.graph,
+      groups,
+    };
+    this.pushHistoryState(this.graph);
+    this.notify();
+  }
+
+  /**
+   * Translates all member nodes of a specific group by the given world delta offsets.
+   */
+  moveGroup(groupId: string, deltaX: number, deltaY: number): void {
+    const group = this.graph.groups?.find((g) => g.id === groupId);
+    if (!group) return;
+    const nodeIds = new Set(group.nodeIds);
+    this.graph = {
+      ...this.graph,
+      nodes: this.graph.nodes.map((node) => {
+        if (nodeIds.has(node.id)) {
+          return {
+            ...node,
+            position: {
+              x: node.position.x + deltaX,
+              y: node.position.y + deltaY,
+            },
+          };
+        }
+        return node;
+      }),
+    };
+    this.notify();
+  }
+
+  /**
+   * Appends or inserts a routing waypoint to a specific edge's path.
+   */
+  addEdgePoint(edgeId: string, point: { readonly x: number; readonly y: number }, index?: number): void {
+    this.graph = {
+      ...this.graph,
+      edges: this.graph.edges.map((edge) => {
+        if (edge.id !== edgeId) return edge;
+        const currentPoints = edge.points ? [...edge.points] : [];
+        if (typeof index === 'number' && index >= 0 && index <= currentPoints.length) {
+          currentPoints.splice(index, 0, point);
+        } else {
+          currentPoints.push(point);
+        }
+        return {
+          ...edge,
+          points: currentPoints,
+        };
+      }),
+    };
+    this.pushHistoryState(this.graph);
+    this.notify();
+  }
+
+  /**
+   * Updates coordinates of an existing routing waypoint on an edge.
+   */
+  updateEdgePoint(edgeId: string, pointIndex: number, point: { readonly x: number; readonly y: number }): void {
+    this.graph = {
+      ...this.graph,
+      edges: this.graph.edges.map((edge) => {
+        if (edge.id !== edgeId || !edge.points || pointIndex < 0 || pointIndex >= edge.points.length) {
+          return edge;
+        }
+        const updatedPoints = [...edge.points];
+        updatedPoints[pointIndex] = point;
+        return {
+          ...edge,
+          points: updatedPoints,
+        };
+      }),
+    };
+    this.notify();
+  }
+
+  /**
+   * Removes a specific routing waypoint from an edge's path.
+   */
+  removeEdgePoint(edgeId: string, pointIndex: number): void {
+    this.graph = {
+      ...this.graph,
+      edges: this.graph.edges.map((edge) => {
+        if (edge.id !== edgeId || !edge.points || pointIndex < 0 || pointIndex >= edge.points.length) {
+          return edge;
+        }
+        const updatedPoints = edge.points.filter((_, idx) => idx !== pointIndex);
+        return {
+          ...edge,
+          points: updatedPoints.length > 0 ? updatedPoints : undefined,
+        };
+      }),
+    };
+    this.pushHistoryState(this.graph);
+    this.notify();
+  }
+
+  /**
+   * Clears all custom routing waypoints from an edge, restoring the default bezier curve.
+   */
+  clearEdgePoints(edgeId: string): void {
+    this.graph = {
+      ...this.graph,
+      edges: this.graph.edges.map((edge) => {
+        if (edge.id !== edgeId) return edge;
+        const { points: _, ...rest } = edge;
+        return rest as FlintGraphEdge;
+      }),
     };
     this.pushHistoryState(this.graph);
     this.notify();

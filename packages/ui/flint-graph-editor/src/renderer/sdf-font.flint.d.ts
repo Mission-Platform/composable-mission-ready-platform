@@ -9,6 +9,11 @@ export interface FlintSdfFontWasmExports {
   readonly utf8_decode_codepoint: (text: string, i: number, len: number) => number;
   readonly sdf_get_char_advance_u32: (code: number) => number;
   readonly sdf_get_char_advance: (code: number) => number;
+  readonly sdf_get_kerning: (c1: number, c2: number) => number;
+  readonly sdf_set_char_spacing: (spacing: number) => void;
+  readonly sdf_get_char_spacing: () => number;
+  readonly sdf_set_line_height: (height: number) => void;
+  readonly sdf_get_line_height: () => number;
   readonly sdf_measure_text: (text: string, fontSize: number) => number;
   readonly write_seg: (segPtr: number, segIdx: number, x1: number, y1: number, x2: number, y2: number) => void;
   readonly sdf_load_char_segments: (idx: number, segPtr: number) => number;
@@ -29,6 +34,25 @@ export interface FlintSdfFontWasmExports {
     a: number,
     align: number,
   ) => number;
+  readonly sdf_append_text_quads_styled: (
+    text: string,
+    originX: number,
+    baselineY: number,
+    fontSize: number,
+    r: number,
+    g: number,
+    b: number,
+    a: number,
+    align: number,
+    isItalic: boolean,
+    isUnderline: boolean,
+    isStrike: boolean,
+    maxWidth: number,
+  ) => number;
+  readonly get_glyph_cell_w_u32?: (idx: number) => number;
+  readonly get_glyph_cell_h_u32?: (idx: number) => number;
+  readonly get_glyph_min_x_u32?: (idx: number) => number;
+  readonly get_glyph_advance_u32?: (idx: number) => number;
   readonly sdf_measure_text_mono: (text: string, fontSize: number) => number;
   readonly sdf_append_text_quads_mono: (
     text: string,
