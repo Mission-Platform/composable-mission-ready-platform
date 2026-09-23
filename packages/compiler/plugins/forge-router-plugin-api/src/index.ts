@@ -11,9 +11,9 @@ export {
 } from "./router.js";
 
 export type {
+  ForgeBuildAdapters,
   GeneratedRouterDeclaration,
   GeneratedRouterModule,
-  RouterBuildAdapters,
   RouterCapability,
   RouterCapabilityImport,
   RouterCapabilityModule,

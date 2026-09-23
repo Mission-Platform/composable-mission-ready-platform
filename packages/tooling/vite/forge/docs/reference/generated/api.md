@@ -210,7 +210,7 @@ function createForgeArtifactWriter(
 ): ForgeArtifactWriter;
 ```
 
-No description provided.
+Create an atomic artifact writer for staging and committing Forge artifacts.
 
 #### Parameters
 
@@ -1939,6 +1939,16 @@ Options for {@link generateFrameworkSources}.
 
 ## `src/tsdown`
 
+### CanonicalChunkCandidate
+
+**Kind:** type
+
+```typescript
+export type CanonicalChunkCandidate = | string |
+```
+
+No description provided.
+
 ### defineTsdownForgeComponentsAll
 
 **Kind:** function
@@ -2009,6 +2019,42 @@ Build an array of tsdown configs for every requested forge hooks framework
 | Name    | Type                       | Description |
 | ------- | -------------------------- | ----------- |
 | options | TsdownForgeHooksAllOptions |             |
+
+### resolveCanonicalChunkName
+
+**Kind:** function
+
+```typescript
+function resolveCanonicalChunkName(chunkInfo: CanonicalChunkCandidate): string;
+```
+
+Determine the canonical emitted chunk filename for a chunk.
+Preserves canonical `[name].js` paths without collisions and maps
+Vue virtual script modules to `${component}.script.js`.
+
+#### Parameters
+
+| Name      | Type                    | Description |
+| --------- | ----------------------- | ----------- |
+| chunkInfo | CanonicalChunkCandidate |             |
+
+### resolveCanonicalEntryName
+
+**Kind:** function
+
+```typescript
+function resolveCanonicalEntryName(chunkInfo: CanonicalChunkCandidate): string;
+```
+
+Determine the canonical emitted entry filename for a chunk.
+Virtual forge entries are mapped to `index.js`, while preserved
+modules delegate to chunk name resolution.
+
+#### Parameters
+
+| Name      | Type                    | Description |
+| --------- | ----------------------- | ----------- |
+| chunkInfo | CanonicalChunkCandidate |             |
 
 ### tsdownForgeComponentPlugins
 

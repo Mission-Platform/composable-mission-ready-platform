@@ -29,7 +29,7 @@ Cree un diagnóstico de origen local para una falla del compilador del enrutador
 
 | Nombre      | Tipo                                                                                                | Descripción |
 | ----------- | --------------------------------------------------------------------------------------------------- | ----------- |
-| diagnóstico | Omitir<CompilerDiagnostic, 'phase' \| 'fileName'> & { nombre de archivo de solo lectura?: cadena; } |             |
+| diagnóstico | Omitir<CompilerDiagnostic, "phase" \| "fileName"> & { nombre de archivo de solo lectura?: cadena; } |             |
 
 ### definirForgeRouterPlugin
 
@@ -145,16 +145,6 @@ export const MP_ROUTER_MODULE;
 ```
 
 El paquete cuyas importaciones son comprendidas por el paso del compilador del enrutador.
-
-### Adaptadores de construcción de enrutadores
-
-**Tipo:** interfaz
-
-```typescript
-export interface RouterBuildAdapters
-```
-
-Construir ganchos propiedad de un objetivo de enrutador; El núcleo no carga ninguna dependencia del enrutador.
 
 ### Capacidad del enrutador
 

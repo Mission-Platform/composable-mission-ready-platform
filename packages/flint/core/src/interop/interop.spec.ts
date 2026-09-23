@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { parseFlint } from '../parser.js';
 
 import {
+  compileCHeader,
   compileWebIdl,
   generateFlintBindings,
   generateHostShims,
@@ -411,5 +412,171 @@ describe('Web IDL Interop: End-to-End compileWebIdl', () => {
     // Verify FWS syntax validity
     const fwsParse = parseFlint(result.flintBindings, 'encoding.flint');
     expect(fwsParse.diagnostics.filter((d) => d.severity === 'error')).toHaveLength(0);
+  });
+});
+
+describe('C and Rust cbindgen Interop: flint-bindgen', () => {
+  it('parses C header and Rust cbindgen outputs into Flint AST and bindings', () => {
+    const cHeader = `
+      /* Generated with cbindgen:0.26.0 */
+      #include <stdint.h>
+      #include <stddef.h>
+
+      typedef struct ZstdContext ZstdContext;
+
+      typedef struct ScannerResult {
+        uint32_t code_type;
+        uint32_t length;
+        float confidence;
+      } ScannerResult;
+
+      uint32_t ZSTD_versionNumber(void);
+
+      int32_t scan_barcode_c(
+        const uint8_t *image_ptr,
+        uint32_t width,
+        uint32_t height,
+        ScannerResult *result_out
+      );
+    `;
+
+    const result = compileCHeader(cHeader, 'scanner');
+    expect(result.ast.structs).toHaveLength(1);
+    expect(result.ast.structs[0].name).toBe('ScannerResult');
+    expect(result.ast.structs[0].fields).toHaveLength(3);
+    expect(result.ast.functions).toHaveLength(2);
+    expect(result.ast.opaqueTypes).toEqual(['ZstdContext']);
+
+    // Check generated Flint bindings syntax
+    expect(result.flintBindings).toContain('opaque foreign type ZstdContext;');
+    expect(result.flintBindings).toContain('#[repr(C)]');
+    expect(result.flintBindings).toContain('struct ScannerResult {');
+    expect(result.flintBindings).not.toContain('c_struct');
+    expect(result.flintBindings).toContain('foreign "C" capability "scanner" {');
+    expect(result.flintBindings).toContain(
+      'fn scan_barcode_c(image_ptr: CPtr<u8>, width: c_uint, height: c_uint, result_out: MutCPtr<ScannerResult>) -> c_int;',
+    );
+
+    // Verify Flint parser accepts the emitted Flint bindings cleanly
+    const parseResult = parseFlint(result.flintBindings, 'scanner_bindings.flint');
+    expect(parseResult.diagnostics).toEqual([]);
+    expect(parseResult.module?.structs).toHaveLength(1);
+    expect(parseResult.module?.foreignCapabilities).toHaveLength(1);
+    expect(parseResult.module?.opaqueForeignTypes).toHaveLength(1);
+
+    // Check generated TypeScript .d.ts
+    expect(result.typeDeclarations).toContain('export namespace scanner {');
+    expect(result.typeDeclarations).toContain('export interface ScannerResult {');
+    expect(result.typeDeclarations).toContain('export type ZstdContext = number;');
+    expect(result.typeDeclarations).toContain(
+      'scan_barcode_c(image_ptr: number, width: number, height: number, result_out: number): number;',
+    );
+
+    // Check generated FFI host shim
+    expect(result.hostShim).toContain("import { dlopen, ptr, FFIType } from 'bun:ffi';");
+    expect(result.hostShim).toContain('scan_barcode_c: {');
+  });
+
+  it('parses #define constants, multi-variable fields, and fixed arrays into Flint bindings', () => {
+    const header = `
+      #define SQLITE_OK 0
+      #define SQLITE_ERROR 1
+      #define SQLITE_VERSION "3.45.0"
+      #define BUFFER_FLAGS 0x00FF
+
+      typedef struct PacketHeader {
+        int width, height;
+        uint8_t hash[32];
+      } PacketHeader;
+
+      int process_packet(PacketHeader *header);
+    `;
+
+    const result = compileCHeader(header, 'packet_service');
+
+    // 1. Check parsed constants
+    expect(result.ast.constants).toBeDefined();
+    expect(result.ast.constants).toHaveLength(4);
+    expect(result.ast.constants?.find((c) => c.name === 'SQLITE_OK')).toEqual({
+      name: 'SQLITE_OK',
+      value: '0',
+      flintType: 'c_int',
+    });
+    expect(result.ast.constants?.find((c) => c.name === 'BUFFER_FLAGS')).toEqual({
+      name: 'BUFFER_FLAGS',
+      value: '0x00FF',
+      flintType: 'c_uint',
+    });
+    expect(result.ast.constants?.find((c) => c.name === 'SQLITE_VERSION')).toEqual({
+      name: 'SQLITE_VERSION',
+      value: '"3.45.0"',
+      flintType: 'string',
+    });
+
+    // 2. Check generated Flint constants
+    expect(result.flintBindings).toContain('pub const SQLITE_OK: c_int = 0;');
+    expect(result.flintBindings).toContain('pub const SQLITE_ERROR: c_int = 1;');
+    expect(result.flintBindings).toContain('pub const BUFFER_FLAGS: c_uint = 0x00FF;');
+    expect(result.flintBindings).toContain('pub const SQLITE_VERSION: string = "3.45.0";');
+
+    // 3. Check multi-variable and array fields
+    const packetStruct = result.ast.structs.find((s) => s.name === 'PacketHeader');
+    expect(packetStruct).toBeDefined();
+    expect(packetStruct?.fields).toHaveLength(3);
+    expect(packetStruct?.fields[0].name).toBe('width');
+    expect(packetStruct?.fields[0].flintType).toBe('c_int');
+    expect(packetStruct?.fields[1].name).toBe('height');
+    expect(packetStruct?.fields[1].flintType).toBe('c_int');
+    expect(packetStruct?.fields[2].name).toBe('hash');
+    expect(packetStruct?.fields[2].flintType).toBe('[u8; 32]');
+
+    // Check generated Flint struct syntax
+    expect(result.flintBindings).toContain('width: c_int,');
+    expect(result.flintBindings).toContain('height: c_int,');
+    expect(result.flintBindings).toContain('hash: [u8; 32],');
+  });
+
+  it('generates target-specific FFI host shims for Bun, Node, and Universal environments', () => {
+    const header = `
+      int compute_hash(const uint8_t *data, int len);
+    `;
+
+    // Bun target
+    const bunResult = compileCHeader(header, 'crypto_lib', 'libcrypto.so', { target: 'bun' });
+    expect(bunResult.hostShim).toContain("import { dlopen, ptr, FFIType } from 'bun:ffi';");
+    expect(bunResult.hostShim).toContain('compute_hash: {');
+
+    // Node target
+    const nodeResult = compileCHeader(header, 'crypto_lib', 'libcrypto.so', { target: 'node' });
+    expect(nodeResult.hostShim).toContain("import { createRequire } from 'node:module';");
+    expect(nodeResult.hostShim).toContain("const ffi = require('koffi');");
+    expect(nodeResult.hostShim).toContain("compute_hash: lib.func('compute_hash', 'int', ['const uint8_t *', 'int']),");
+
+    // Universal target
+    const universalResult = compileCHeader(header, 'crypto_lib', 'libcrypto.so', { target: 'universal' });
+    expect(universalResult.hostShim).toContain("if (typeof globalThis.Bun !== 'undefined') {");
+    expect(universalResult.hostShim).toContain("const { dlopen, FFIType } = await import('bun:ffi');");
+  });
+
+  it('generates target-accurate 64-bit and unsigned scalar FFI types', () => {
+    const header = `
+      size_t process_buffer(const uint8_t *data, size_t len, long offset, uint32_t flags);
+    `;
+
+    // 64-bit target: size_t -> u64, long -> i64, uint32_t -> u32
+    const result64 = compileCHeader(header, 'proc_lib', 'libproc.so', {
+      target: 'bun',
+      targetAbi: 'x86_64-unknown-linux-gnu',
+    });
+    expect(result64.hostShim).toContain('args: [FFIType.ptr, FFIType.u64, FFIType.i64, FFIType.u32]');
+    expect(result64.hostShim).toContain('returns: FFIType.u64');
+
+    // 32-bit target: size_t -> u32, long -> i32
+    const result32 = compileCHeader(header, 'proc_lib', 'libproc.so', {
+      target: 'bun',
+      targetAbi: 'wasm32-unknown-unknown',
+    });
+    expect(result32.hostShim).toContain('args: [FFIType.ptr, FFIType.u32, FFIType.i32, FFIType.u32]');
+    expect(result32.hostShim).toContain('returns: FFIType.u32');
   });
 });

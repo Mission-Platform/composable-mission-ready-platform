@@ -209,6 +209,9 @@ catalogs:
       specifier: ^0.56.0
       version: 0.56.0
   compiler:
+    magic-string:
+      specifier: ^0.30.17
+      version: 0.30.21
     oxc-parser:
       specifier: 0.150.0
       version: 0.150.0
@@ -2148,6 +2151,52 @@ importers:
         specifier: catalog:testing
         version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
 
+  packages/compiler/plugins/forge-cst:
+    dependencies:
+      magic-string:
+        specifier: catalog:compiler
+        version: 0.30.21
+      oxc-parser:
+        specifier: catalog:compiler
+        version: 0.150.0
+    devDependencies:
+      '@mission-platform/eslint-config':
+        specifier: workspace:*
+        version: link:../../../tooling/configs/eslint-config
+      '@mission-platform/prettier-config':
+        specifier: workspace:*
+        version: link:../../../tooling/configs/prettier-config
+      '@mission-platform/tsdown-config':
+        specifier: workspace:*
+        version: link:../../../tooling/configs/tsdown-config
+      '@mission-platform/typescript-config':
+        specifier: workspace:*
+        version: link:../../../tooling/configs/typescript-config
+      '@mission-platform/vite-config':
+        specifier: workspace:*
+        version: link:../../../tooling/configs/vite-config
+      '@types/node':
+        specifier: catalog:typescript
+        version: 24.13.4
+      eslint:
+        specifier: catalog:eslint
+        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
+      prettier:
+        specifier: catalog:prettier
+        version: 3.9.6
+      tsdown:
+        specifier: catalog:build
+        version: 0.23.0(@tsdown/css@0.23.0)(@volar/typescript@2.4.28(typescript@7.0.2))(oxc-resolver@11.21.2)(typescript@7.0.2)(vue-tsc@3.3.11(typescript@7.0.2))
+      typescript:
+        specifier: catalog:typescript
+        version: 7.0.2
+      vite:
+        specifier: catalog:vite
+        version: 8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
+      vitest:
+        specifier: catalog:testing
+        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
+
   packages/compiler/plugins/forge-plugin-api:
     devDependencies:
       '@mission-platform/eslint-config':
@@ -2235,6 +2284,9 @@ importers:
 
   packages/compiler/plugins/forge-router-plugin-api:
     dependencies:
+      '@mission-platform/forge-cst':
+        specifier: workspace:*
+        version: link:../forge-cst
       '@mission-platform/forge-plugin-api':
         specifier: workspace:*
         version: link:../forge-plugin-api
@@ -4009,6 +4061,42 @@ importers:
         specifier: catalog:testing
         version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
 
+  packages/flint/c-abi:
+    devDependencies:
+      '@mission-platform/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/eslint-config
+      '@mission-platform/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/prettier-config
+      '@mission-platform/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/typescript-config
+      '@mission-platform/vite-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/vite-config
+      '@types/node':
+        specifier: catalog:typescript
+        version: 24.13.4
+      '@vitest/coverage-v8':
+        specifier: catalog:testing
+        version: 5.0.1(@vitest/browser@5.0.1)(vitest@5.0.1)
+      eslint:
+        specifier: catalog:eslint
+        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
+      prettier:
+        specifier: catalog:prettier
+        version: 3.9.6
+      typescript:
+        specifier: catalog:typescript
+        version: 7.0.2
+      vite:
+        specifier: catalog:vite
+        version: 8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
+      vitest:
+        specifier: catalog:testing
+        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
+
   packages/flint/cli:
     dependencies:
       '@mission-platform/flint':
@@ -4051,6 +4139,9 @@ importers:
 
   packages/flint/core:
     dependencies:
+      '@mission-platform/flint-c-abi':
+        specifier: workspace:*
+        version: link:../c-abi
       '@mission-platform/flint-regex':
         specifier: workspace:*
         version: link:../regex
@@ -4252,6 +4343,9 @@ importers:
       '@mission-platform/flint':
         specifier: workspace:*
         version: link:../core
+      '@mission-platform/flint-c-abi':
+        specifier: workspace:*
+        version: link:../c-abi
     devDependencies:
       '@mission-platform/eslint-config':
         specifier: workspace:*
@@ -4265,6 +4359,9 @@ importers:
       '@mission-platform/vite-config':
         specifier: workspace:*
         version: link:../../tooling/configs/vite-config
+      '@sqlite.org/sqlite-wasm':
+        specifier: 3.53.4-build1
+        version: 3.53.4-build1
       '@types/node':
         specifier: catalog:typescript
         version: 24.13.4
@@ -4375,6 +4472,9 @@ importers:
 
   packages/flint/wasm:
     dependencies:
+      '@mission-platform/flint-c-abi':
+        specifier: workspace:*
+        version: link:../c-abi
       '@mission-platform/flint-regex':
         specifier: workspace:*
         version: link:../regex
@@ -11455,6 +11555,10 @@ packages:
 
   '@speed-highlight/core@1.2.24':
     resolution: {integrity: sha512-qeW2e1l78afw8VhRPfPQ1Gjj+KU5XFQ/OFV5ti6eTa9bruO7mJyZtA4vw0ofqmA3tKCkROE9xLk3VZoeRc98nw==}
+
+  '@sqlite.org/sqlite-wasm@3.53.4-build1':
+    resolution: {integrity: sha512-U8pvL0patYHMgieD8JxxYJTlh9m1LUX8+BDYb7MiKQzBI89f2qbdmdcG/PvnPaLm9wsBbv4VlVG453ixnxBOnA==}
+    engines: {node: '>=22'}
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
@@ -21828,6 +21932,8 @@ snapshots:
   '@sonarsource/analyzer-commons-configurations@2.31.0-5284': {}
 
   '@speed-highlight/core@1.2.24': {}
+
+  '@sqlite.org/sqlite-wasm@3.53.4-build1': {}
 
   '@standard-schema/spec@1.1.0': {}
 

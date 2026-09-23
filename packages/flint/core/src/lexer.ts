@@ -36,6 +36,7 @@ const keywords = new Set([
   'export',
   'do',
   'for',
+  'foreign',
   'fn',
   'iter',
   'if',
@@ -47,11 +48,13 @@ const keywords = new Set([
   'module',
   'mut',
   'new',
+  'opaque',
   'return',
   'struct',
   'record',
   'switch',
   'trait',
+  'type',
   'while',
   'loop',
   'yield',
@@ -65,7 +68,7 @@ const keywords = new Set([
 ]);
 const twoCharacterOperators = new Set(['!=', '&&', '==', '||', '<=', '>=', '->', '=>', '::']);
 const oneCharacterOperators = new Set(['!', '%', '*', '+', '-', '/', '<', '>', '=', '&']);
-const punctuation = new Set(['{', '}', '(', ')', '[', ']', ':', ';', ',', '|', '.']);
+const punctuation = new Set(['{', '}', '(', ')', '[', ']', ':', ';', ',', '|', '.', '#']);
 const stringEscapes = new Set(['"', '\\', '/', 'b', 'f', 'n', 'r', 't']);
 
 /**

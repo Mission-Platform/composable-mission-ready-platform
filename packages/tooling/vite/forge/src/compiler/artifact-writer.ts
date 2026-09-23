@@ -47,10 +47,12 @@ export interface ForgeArtifactWriter {
   finalize(entries?: readonly string[]): ForgeArtifactManifest;
 }
 
+/** Compute SHA-256 hex digest for the given buffer contents. */
 function digest(contents: Buffer): string {
   return createHash('sha256').update(contents).digest('hex');
 }
 
+/** Determine the default artifact kind based on file extension. */
 function defaultArtifactKind(relativeName: string): ForgeArtifactKind {
   if (relativeName.endsWith('.d.ts')) return 'declaration';
   if (relativeName.endsWith('.map')) return 'map';
@@ -59,80 +61,20 @@ function defaultArtifactKind(relativeName: string): ForgeArtifactKind {
   return 'asset';
 }
 
-function normalizeGeneratedNativePaths(stageDirectory: string): void {
-  const files: string[] = [];
-  const visit = (directory: string): void => {
-    for (const entry of readdirSync(directory, { withFileTypes: true })) {
-      const absolute = path.join(directory, entry.name);
-      if (entry.isDirectory()) visit(absolute);
-      else if (entry.isFile()) files.push(path.relative(stageDirectory, absolute).split(path.sep).join('/'));
-    }
-  };
-  visit(stageDirectory);
-  const renames = new Map<string, string>();
-  for (const relativeFile of files.filter((file) => file.endsWith('.js'))) {
-    const source = readFileSync(path.join(stageDirectory, relativeFile), 'utf8');
-    const vueScriptModule = relativeFile.match(/^(.*)\.vue\?vue&type=script&setup=true&lang\.js$/);
-    if (vueScriptModule !== null) {
-      renames.set(relativeFile, `${vueScriptModule[1]}.script.js`);
-      continue;
-    }
-    if (/(?:^|\/)entry(?:[:_])[^/]+\.js$/.test(relativeFile)) {
-      renames.set(relativeFile, 'index.js');
-      continue;
-    }
-    const region = source.match(/\/\/#region .*?\/((?:components|composables|styles|utils)\/[^\n]+)/)?.[1];
-    if (region === undefined) {
-      continue;
-    }
-    const desired = region
-      .replace(/\.(?:tsx?|jsx?|vue|svelte)$/, '.js')
-      .replace(/\.module\.(?:scss|css)$/, '.module.js');
-    renames.set(relativeFile, desired);
-    if (/\.module\.(?:scss|css)$/.test(region)) {
-      const desiredCss = region.replace(/\.module\.(?:scss|css)$/, '.css');
-      for (const importedCss of source.matchAll(/import ["']\.\/([^"']+\.css)["'];/g)) {
-        renames.set(path.posix.join(path.posix.dirname(relativeFile), importedCss[1]), desiredCss);
-      }
-    }
-  }
-  for (const [oldName, newName] of renames) {
-    const oldPath = path.join(stageDirectory, oldName);
-    const newPath = path.join(stageDirectory, newName);
-    if (oldName === newName || !existsSync(oldPath) || existsSync(newPath)) continue;
-    mkdirSync(path.dirname(newPath), { recursive: true });
-    renameSync(oldPath, newPath);
-  }
-  for (const relativeFile of files.filter((file) => file.endsWith('.js'))) {
-    const outputFile = renames.get(relativeFile) ?? relativeFile;
-    const absoluteFile = path.join(stageDirectory, outputFile);
-    if (!existsSync(absoluteFile)) continue;
-    let source = readFileSync(absoluteFile, 'utf8');
-    for (const [oldName, newName] of renames) {
-      const oldSpecifier = path.posix.relative(path.posix.dirname(relativeFile), oldName);
-      const newSpecifier = path.posix.relative(path.posix.dirname(outputFile), newName);
-      source = source.replaceAll(`./${oldSpecifier}`, `./${newSpecifier}`);
-    }
-    source = source.replace(/import (["'])([^"']+\/index\.js)\1;\n/g, (statement, _quote, specifier) => {
-      const target = path.resolve(path.dirname(absoluteFile), specifier);
-      return existsSync(target) ? statement : '';
-    });
-    writeFileSync(absoluteFile, source, 'utf8');
+/** Read and parse a manifest file safely if present and valid JSON. */
+function tryReadManifest(manifestPath: string): Partial<ForgeArtifactManifest> | undefined {
+  if (!existsSync(manifestPath)) return undefined;
+  try {
+    return JSON.parse(readFileSync(manifestPath, 'utf8')) as Partial<ForgeArtifactManifest>;
+  } catch {
+    return undefined;
   }
 }
 
-function validatePreviousManifest(outDir: string): void {
-  const manifestPath = resolveForgeArtifactPath(outDir, MANIFEST_FILE);
-  if (!existsSync(manifestPath)) return;
-  let manifest: Partial<ForgeArtifactManifest>;
-  try {
-    manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as Partial<ForgeArtifactManifest>;
-  } catch {
-    return;
-  }
-  if (manifest.version !== 1 || !Array.isArray(manifest.artifacts)) return;
+/** Check artifact list for duplicate entries. */
+function assertNoDuplicateArtifacts(artifacts: readonly { readonly fileName: string }[]): void {
   const names = new Set<string>();
-  for (const artifact of manifest.artifacts) {
+  for (const artifact of artifacts) {
     validateForgeArtifactName(artifact.fileName);
     if (names.has(artifact.fileName)) {
       throw new Error(`Forge artifact manifest contains a duplicate: ${artifact.fileName}`);
@@ -141,38 +83,69 @@ function validatePreviousManifest(outDir: string): void {
   }
 }
 
+/** Validate any existing manifest in the target directory before attempting a write. */
+function validatePreviousManifest(outDir: string): void {
+  const manifestPath = resolveForgeArtifactPath(outDir, MANIFEST_FILE);
+  const manifest = tryReadManifest(manifestPath);
+  if (manifest === undefined || manifest.version !== 1 || !Array.isArray(manifest.artifacts)) return;
+  assertNoDuplicateArtifacts(manifest.artifacts);
+}
+
 interface ExistingArtifactTimes {
   readonly hash: string;
   readonly atimeMs: number;
   readonly mtimeMs: number;
 }
 
+/** Process an entry in the existing artifact directory for time collection. */
+function recordExistingEntryTime(
+  root: string,
+  entry: import('node:fs').Dirent,
+  directory: string,
+  result: Map<string, ExistingArtifactTimes>,
+): void {
+  const absolute = path.join(directory, entry.name);
+  const relative = path.relative(root, absolute).split(path.sep).join('/');
+  if (relative === MANIFEST_FILE) return;
+  if (lstatSync(absolute).isSymbolicLink()) {
+    throw new Error(`Forge artifact path contains a symlink: ${relative}`);
+  }
+  if (entry.isDirectory()) {
+    walkExistingArtifactTimes(root, absolute, result);
+    return;
+  }
+  if (entry.isFile()) {
+    const stat = statSync(absolute);
+    result.set(relative, { hash: digest(readFileSync(absolute)), atimeMs: stat.atimeMs, mtimeMs: stat.mtimeMs });
+  }
+}
+
+/** Recursively traverse a directory to record artifact modification times. */
+function walkExistingArtifactTimes(root: string, directory: string, result: Map<string, ExistingArtifactTimes>): void {
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    recordExistingEntryTime(root, entry, directory, result);
+  }
+}
+
+/** Collect modification timestamps and hashes of existing published artifacts. */
 function collectExistingArtifactTimes(root: string): Map<string, ExistingArtifactTimes> {
   const result = new Map<string, ExistingArtifactTimes>();
   if (!existsSync(root)) return result;
-  const visit = (directory: string): void => {
-    for (const entry of readdirSync(directory, { withFileTypes: true })) {
-      const absolute = path.join(directory, entry.name);
-      const relative = path.relative(root, absolute).split(path.sep).join('/');
-      if (relative === MANIFEST_FILE) continue;
-      if (lstatSync(absolute).isSymbolicLink()) {
-        throw new Error(`Forge artifact path contains a symlink: ${relative}`);
-      }
-      if (entry.isDirectory()) {
-        visit(absolute);
-      } else if (entry.isFile()) {
-        const stat = statSync(absolute);
-        result.set(relative, { hash: digest(readFileSync(absolute)), atimeMs: stat.atimeMs, mtimeMs: stat.mtimeMs });
-      }
-    }
-  };
-  visit(root);
+  walkExistingArtifactTimes(root, root, result);
   return result;
 }
 
 export interface ForgeArtifactWriterOptions {
   /** Caller-owned attempt directory. Defaults to a process-scoped sibling. */
   readonly attemptDirectory?: string;
+}
+
+/** Remove an attempt candidate directory if valid and not a symlink. */
+function removeAttemptCandidate(parent: string, entryName: string, prefix: string): void {
+  if (!entryName.startsWith(prefix)) return;
+  const candidate = path.join(parent, entryName);
+  if (lstatSync(candidate).isSymbolicLink()) return;
+  rmSync(candidate, { recursive: true, force: true });
 }
 
 /** Remove abandoned attempts belonging to one generated target tree only. */
@@ -182,10 +155,8 @@ export function cleanupForgeArtifactAttempts(outDir: string, targetId: string): 
   const parent = path.dirname(path.resolve(outDir));
   if (!existsSync(parent)) return;
   for (const entry of readdirSync(parent, { withFileTypes: true })) {
-    if (!entry.name.startsWith(prefix)) continue;
-    const candidate = path.join(parent, entry.name);
-    if (entry.isDirectory() && !lstatSync(candidate).isSymbolicLink()) {
-      rmSync(candidate, { recursive: true, force: true });
+    if (entry.isDirectory()) {
+      removeAttemptCandidate(parent, entry.name, prefix);
     }
   }
 }
@@ -202,6 +173,7 @@ export function forgeArtifactAttemptDirectory(outDir: string, targetId: string):
   );
 }
 
+/** Resolve fallback entry points from artifact records when no explicit entry is specified. */
 function resolveFallbackEntries(records: ReadonlyMap<string, ForgeArtifactRecord>): readonly string[] {
   if (records.has('index.js')) return ['index.js'];
   const indexMatch = [...records.keys()].find((fileName) => /(?:^|\/)index\.js$/.test(fileName));
@@ -210,6 +182,170 @@ function resolveFallbackEntries(records: ReadonlyMap<string, ForgeArtifactRecord
   return jsMatch !== undefined ? [jsMatch] : [];
 }
 
+/** Map candidate entry names to existing index or canonical file names. */
+function normalizeEntryCandidate(stageDirectory: string, entry: string): string {
+  const candidate = /(?:^|\/)entry(?:[:_])/.test(entry) ? 'index.js' : entry;
+  return validateForgeArtifactName(existsSync(path.join(stageDirectory, candidate)) ? candidate : entry);
+}
+
+/** Record a single file artifact from the staging directory into the records map. */
+function recordStageFile(
+  stageDirectory: string,
+  absolute: string,
+  recordedEntryNames: ReadonlySet<string>,
+  kindForFile: (relativeName: string) => ForgeArtifactKind,
+  records: Map<string, ForgeArtifactRecord>,
+): void {
+  const relativeName = path.relative(stageDirectory, absolute).split(path.sep).join('/');
+  if (relativeName === MANIFEST_FILE) return;
+  if (lstatSync(absolute).isSymbolicLink()) {
+    throw new Error(`Forge artifact path contains a symlink: ${relativeName}`);
+  }
+  const fileName = validateForgeArtifactName(relativeName);
+  const contents = readFileSync(absolute);
+  const kind = recordedEntryNames.has(fileName) ? 'entry' : kindForFile(fileName);
+  records.set(fileName, { fileName, kind, hash: digest(contents), size: contents.byteLength });
+}
+
+/** Recursively traverse and record artifacts in the stage directory. */
+function walkStageDirectory(
+  stageDirectory: string,
+  currentDirectory: string,
+  recordedEntryNames: ReadonlySet<string>,
+  kindForFile: (relativeName: string) => ForgeArtifactKind,
+  records: Map<string, ForgeArtifactRecord>,
+): void {
+  for (const entry of readdirSync(currentDirectory, { withFileTypes: true })) {
+    const absolute = path.join(currentDirectory, entry.name);
+    if (entry.isDirectory()) {
+      walkStageDirectory(stageDirectory, absolute, recordedEntryNames, kindForFile, records);
+    } else if (entry.isFile()) {
+      recordStageFile(stageDirectory, absolute, recordedEntryNames, kindForFile, records);
+    } else {
+      const relativeName = path.relative(stageDirectory, absolute).split(path.sep).join('/');
+      throw new Error(`Forge artifact path is not a regular file: ${relativeName}`);
+    }
+  }
+}
+
+/** Resolve effective entry points and promote fallback entry in artifact records if needed. */
+function resolveRecordedEntries(
+  recordedEntryNames: ReadonlySet<string>,
+  records: Map<string, ForgeArtifactRecord>,
+): string[] {
+  const availableEntries = [...recordedEntryNames].filter((entry) => records.has(entry));
+  if (availableEntries.length > 0) return availableEntries;
+  const fallbackEntries = resolveFallbackEntries(records);
+  const fallbackEntry = fallbackEntries[0];
+  if (fallbackEntry === undefined) return [];
+  const artifact = records.get(fallbackEntry);
+  if (artifact !== undefined) records.set(fallbackEntry, { ...artifact, kind: 'entry' });
+  return [fallbackEntry];
+}
+
+/** Resolve sorted, unique, and validated entry names for manifest validation. */
+function resolveValidationEntries(
+  entries: readonly string[],
+  manifestEntries: readonly string[],
+  records: ReadonlyMap<string, ForgeArtifactRecord>,
+  targetId: string,
+  stageDirectory: string,
+): string[] {
+  let candidateEntries = entries;
+  if (candidateEntries.length === 0) {
+    candidateEntries = manifestEntries.length > 0 ? manifestEntries : resolveFallbackEntries(records);
+  }
+  const safeEntries = [...new Set(candidateEntries.map((entry) => validateForgeArtifactName(entry)))].sort();
+  if (safeEntries.length === 0) {
+    throw new Error(`Forge artifact target "${targetId}" produced no entry points in ${stageDirectory}.`);
+  }
+  return safeEntries;
+}
+
+/** Verify that all declared entry names exist in the recorded artifacts set. */
+function assertEntriesRecorded(entries: readonly string[], artifacts: ReadonlySet<string>): void {
+  for (const entry of entries) {
+    if (!artifacts.has(entry)) {
+      throw new Error(`Forge artifact entry is not recorded: ${entry}`);
+    }
+  }
+}
+
+/** Verify that an on-disk artifact file exists and is a regular file. */
+function assertArtifactFileExists(artifactPath: string, fileName: string): void {
+  if (!existsSync(artifactPath) || !lstatSync(artifactPath).isFile()) {
+    throw new Error(`Forge artifact is missing from the attempt: ${fileName}`);
+  }
+}
+
+/** Verify that artifact file contents match recorded digest and byte size. */
+function assertArtifactContentsMatch(contents: Buffer, artifact: ForgeArtifactRecord): void {
+  if (digest(contents) !== artifact.hash || contents.byteLength !== artifact.size) {
+    throw new Error(`Forge artifact failed validation: ${artifact.fileName}`);
+  }
+}
+
+/** Verify that a single staged artifact matches its recorded metadata on disk. */
+function assertSingleArtifactMatch(stageDirectory: string, artifact: ForgeArtifactRecord): void {
+  const artifactPath = resolveForgeArtifactPath(stageDirectory, artifact.fileName);
+  assertArtifactFileExists(artifactPath, artifact.fileName);
+  assertArtifactContentsMatch(readFileSync(artifactPath), artifact);
+}
+
+/** Verify that on-disk files match recorded sizes and digests in the stage directory. */
+function assertArtifactFilesMatch(stageDirectory: string, artifacts: readonly ForgeArtifactRecord[]): void {
+  for (const artifact of artifacts) {
+    assertSingleArtifactMatch(stageDirectory, artifact);
+  }
+}
+
+/** Check whether published artifact exists on disk and its content hash is unchanged. */
+function isArtifactContentUnchanged(filePath: string, expectedHash: string): boolean {
+  return existsSync(filePath) && digest(readFileSync(filePath)) === expectedHash;
+}
+
+/** Restore previous access and modification timestamps for unchanged artifacts. */
+function restoreUnchangedArtifactTimes(
+  safeOutDir: string,
+  previousTimes: ReadonlyMap<string, ExistingArtifactTimes>,
+): void {
+  for (const [fileName, previous] of previousTimes) {
+    const currentPath = resolveForgeArtifactPath(safeOutDir, fileName);
+    if (isArtifactContentUnchanged(currentPath, previous.hash)) {
+      utimesSync(currentPath, previous.atimeMs / 1000, previous.mtimeMs / 1000);
+    }
+  }
+}
+
+/** Roll back staged output swap if committing the attempt fails. */
+function rollbackCommittedStage(safeOutDir: string, backup: string, backedUp: boolean): void {
+  if (existsSync(safeOutDir)) rmSync(safeOutDir, { recursive: true, force: true });
+  if (backedUp && existsSync(backup)) renameSync(backup, safeOutDir);
+}
+
+/** Atomically swap the staged attempt directory into the published destination. */
+function swapStageIntoPlace(
+  stageDirectory: string,
+  safeOutDir: string,
+  backup: string,
+  previousTimes: ReadonlyMap<string, ExistingArtifactTimes>,
+): void {
+  let backedUp = false;
+  try {
+    if (existsSync(safeOutDir)) {
+      renameSync(safeOutDir, backup);
+      backedUp = true;
+    }
+    renameSync(stageDirectory, safeOutDir);
+    restoreUnchangedArtifactTimes(safeOutDir, previousTimes);
+    if (backedUp) rmSync(backup, { recursive: true, force: true });
+  } catch (error) {
+    rollbackCommittedStage(safeOutDir, backup, backedUp);
+    throw error;
+  }
+}
+
+/** Create an atomic artifact writer for staging and committing Forge artifacts. */
 export function createForgeArtifactWriter(
   outDir: string,
   targetId: string,
@@ -236,6 +372,7 @@ export function createForgeArtifactWriter(
   if (existsSync(stageDirectory)) rmSync(stageDirectory, { recursive: true, force: true });
   ensureForgeArtifactDirectory(stageDirectory, stageDirectory);
 
+  /** Write a file buffer to the staging directory and record its artifact metadata. */
   const write = (relativeName: string, contents: Buffer, kind: ForgeArtifactKind): void => {
     if (aborted) throw new Error('Forge artifact attempt has been aborted.');
     const fileName = validateForgeArtifactName(relativeName);
@@ -262,47 +399,9 @@ export function createForgeArtifactWriter(
     },
     recordTree(entries = [], kindForFile = defaultArtifactKind) {
       if (aborted) throw new Error('Forge artifact attempt has been aborted.');
-      normalizeGeneratedNativePaths(stageDirectory);
-      const recordedEntryNames = new Set(
-        entries.map((entry) => {
-          const candidate = /(?:^|\/)entry(?:[:_])/.test(entry) ? 'index.js' : entry;
-          return validateForgeArtifactName(existsSync(path.join(stageDirectory, candidate)) ? candidate : entry);
-        }),
-      );
-      const visit = (directory: string): void => {
-        for (const entry of readdirSync(directory, { withFileTypes: true })) {
-          const absolute = path.join(directory, entry.name);
-          const relativeName = path.relative(stageDirectory, absolute).split(path.sep).join('/');
-          if (relativeName === MANIFEST_FILE) continue;
-          if (lstatSync(absolute).isSymbolicLink()) {
-            throw new Error(`Forge artifact path contains a symlink: ${relativeName}`);
-          }
-          if (entry.isDirectory()) {
-            visit(absolute);
-            continue;
-          }
-          if (!entry.isFile()) {
-            throw new Error(`Forge artifact path is not a regular file: ${relativeName}`);
-          }
-          const fileName = validateForgeArtifactName(relativeName);
-          const contents = readFileSync(absolute);
-          const kind = recordedEntryNames.has(fileName) ? 'entry' : kindForFile(fileName);
-          records.set(fileName, { fileName, kind, hash: digest(contents), size: contents.byteLength });
-        }
-      };
-      visit(stageDirectory);
-      const availableEntries = [...recordedEntryNames].filter((entry) => records.has(entry));
-      const fallbackEntries = resolveFallbackEntries(records);
-      const fallbackEntry = fallbackEntries[0];
-      const resolvedEntries =
-        availableEntries.length > 0 ? availableEntries : fallbackEntry === undefined ? [] : [fallbackEntry];
-      if (availableEntries.length === 0 && fallbackEntry !== undefined) {
-        const artifact = records.get(fallbackEntry);
-        if (artifact !== undefined) records.set(fallbackEntry, { ...artifact, kind: 'entry' });
-      }
-      recordedEntryNames.clear();
-      resolvedEntries.forEach((entry) => recordedEntryNames.add(entry));
-      entryNames = [...recordedEntryNames];
+      const recordedEntryNames = new Set(entries.map((entry) => normalizeEntryCandidate(stageDirectory, entry)));
+      walkStageDirectory(stageDirectory, stageDirectory, recordedEntryNames, kindForFile, records);
+      entryNames = resolveRecordedEntries(recordedEntryNames, records);
     },
     readText(relativeName) {
       if (aborted) throw new Error('Forge artifact attempt has been aborted.');
@@ -316,28 +415,10 @@ export function createForgeArtifactWriter(
       if (aborted) throw new Error('Forge artifact attempt has been aborted.');
       if (committed) throw new Error('Forge artifact attempt has already been committed.');
       const manifest = createForgeArtifactManifest(targetId, [...records.values()], true);
-      let candidateEntries = entries;
-      if (candidateEntries.length === 0) {
-        candidateEntries = manifest.entries.length > 0 ? manifest.entries : resolveFallbackEntries(records);
-      }
-      const safeEntries = [...new Set(candidateEntries.map((entry) => validateForgeArtifactName(entry)))].sort();
-      if (safeEntries.length === 0) {
-        throw new Error(`Forge artifact target "${targetId}" produced no entry points in ${stageDirectory}.`);
-      }
-      const artifacts = new Set(manifest.artifacts.map((artifact) => artifact.fileName));
-      for (const entry of safeEntries) {
-        if (!artifacts.has(entry)) throw new Error(`Forge artifact entry is not recorded: ${entry}`);
-      }
-      for (const artifact of manifest.artifacts) {
-        const artifactPath = resolveForgeArtifactPath(stageDirectory, artifact.fileName);
-        if (!existsSync(artifactPath) || !lstatSync(artifactPath).isFile()) {
-          throw new Error(`Forge artifact is missing from the attempt: ${artifact.fileName}`);
-        }
-        const contents = readFileSync(artifactPath);
-        if (digest(contents) !== artifact.hash || contents.byteLength !== artifact.size) {
-          throw new Error(`Forge artifact failed validation: ${artifact.fileName}`);
-        }
-      }
+      const safeEntries = resolveValidationEntries(entries, manifest.entries, records, targetId, stageDirectory);
+      const artifactNames = new Set(manifest.artifacts.map((artifact) => artifact.fileName));
+      assertEntriesRecorded(safeEntries, artifactNames);
+      assertArtifactFilesMatch(stageDirectory, manifest.artifacts);
       const complete = { ...manifest, entries: safeEntries };
       writeFileSync(manifestPath, `${JSON.stringify(complete, null, 2)}\n`, 'utf8');
       entryNames = safeEntries;
@@ -352,27 +433,9 @@ export function createForgeArtifactWriter(
       mkdirSync(parent, { recursive: true });
       const backup = `${safeOutDir}.forge-previous-${process.pid}-${attemptSequence}`;
       const previousTimes = collectExistingArtifactTimes(safeOutDir);
-      let backedUp = false;
-      try {
-        if (existsSync(safeOutDir)) {
-          renameSync(safeOutDir, backup);
-          backedUp = true;
-        }
-        renameSync(stageDirectory, safeOutDir);
-        committed = true;
-        for (const [fileName, previous] of previousTimes) {
-          const currentPath = resolveForgeArtifactPath(safeOutDir, fileName);
-          if (existsSync(currentPath) && digest(readFileSync(currentPath)) === previous.hash) {
-            utimesSync(currentPath, previous.atimeMs / 1000, previous.mtimeMs / 1000);
-          }
-        }
-        if (backedUp) rmSync(backup, { recursive: true, force: true });
-        return manifest;
-      } catch (error) {
-        if (existsSync(safeOutDir)) rmSync(safeOutDir, { recursive: true, force: true });
-        if (backedUp && existsSync(backup)) renameSync(backup, safeOutDir);
-        throw error;
-      }
+      swapStageIntoPlace(stageDirectory, safeOutDir, backup, previousTimes);
+      committed = true;
+      return manifest;
     },
     abort() {
       aborted = true;

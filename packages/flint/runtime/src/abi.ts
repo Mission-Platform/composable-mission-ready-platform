@@ -23,6 +23,23 @@ const primitiveTypes = new Set<FlintPrimitiveType>([
   'u32',
   'u64',
   'unit',
+  'u8',
+  'i8',
+  'c_char',
+  'c_uchar',
+  'c_short',
+  'c_ushort',
+  'c_int',
+  'c_uint',
+  'c_long',
+  'c_ulong',
+  'c_longlong',
+  'c_ulonglong',
+  'c_size',
+  'c_ssize',
+  'c_float',
+  'c_double',
+  'c_void',
 ]);
 
 /**
@@ -68,7 +85,10 @@ export function validateFlintAbiManifest(manifest: FlintAbiManifest): FlintAbiVa
   if (manifest.languageVersion !== FLINT_LANGUAGE_VERSION)
     errors.push(`Unsupported language version '${manifest.languageVersion}'.`);
   if (manifest.abiVersion !== FLINT_ABI_VERSION) errors.push(`Unsupported ABI version '${manifest.abiVersion}'.`);
-  if (manifest.memory.pageSize !== 65_536 || manifest.memory.addressType !== 'u32')
+  if (
+    manifest.memory.pageSize !== 65_536 ||
+    (manifest.memory.addressType !== 'u32' && manifest.memory.addressType !== 'u64')
+  )
     errors.push('Unsupported linear memory layout.');
   if (
     manifest.memory.allocatorExport !== 'fws_alloc' ||

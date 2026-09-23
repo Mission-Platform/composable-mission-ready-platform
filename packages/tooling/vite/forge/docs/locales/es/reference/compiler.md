@@ -125,7 +125,7 @@ Los contratos centrales viven en `packages/compiler/plugins/forge-plugin-api/src
 - `TargetContext` incluye un contexto de compilación genérico, como el tipo de módulo, el nombre del componente y las carpetas de los componentes descubiertos.
 - `TargetIntentions` envuelve el módulo semántico después de bajar el objetivo mientras conserva el diagnóstico.
 - `GeneratedModule` describe la fuente generada, su lenguaje de salida, módulos auxiliares y diagnósticos.
-- `FrameworkBuildAdapters` proporciona adaptadores Vite y tsdown de tipo independiente.
+- `ForgeBuildAdapters` proporciona adaptadores Vite y tsdown de tipo independiente.
 - `FrameworkSourceMetadata`, los elementos externos del tiempo de ejecución y los metadatos del nombre para mostrar permiten que la orquestación genérica derive detalles de salida
   sin una declaración de cambio de destino.
 

@@ -9,6 +9,59 @@
 
 根据 `@mission-platform/vite-plugin-forge` 中的公共源声明生成。
 
+## `src/build-integration`
+
+### forgeArtifactPublish插件
+
+**种类：**功能
+
+```typescript
+function forgeArtifactPublishPlugin(options: ForgeArtifactPublishOptions): Plugin;
+```
+
+通过与 Forge 相同的清单事务发布所有本机输出
+生成的来源。原生打包器和声明工具可以自由编写
+`attemptDirectory` 内；该目录永远不是发布的目标。
+
+#### 参数
+
+| 名称 | 类型                  | 描述 |
+| ---- | --------------------- | ---- |
+| 选项 | ForgeArtifact发布选项 |      |
+
+### forgeBuildLifecycle插件
+
+**种类：**功能
+
+```typescript
+function forgeBuildLifecyclePlugin(options: ForgeBuildLifecycleOptions): Plugin;
+```
+
+将一个目标计划连接到 Vite 或 Rolldown/tsdown。一代是
+故意等待生命周期挂钩，而不是在创建配置时等待。
+
+#### 参数
+
+| 名称 | 类型                       | 描述                       |
+| ---- | -------------------------- | -------------------------- |
+| 选项 | ForgeBuildLifecycleOptions | ForgeBuildLifecycleOptions | ForgeBuildLifecycleOptions | ForgeBuildLifecycleOptions |
+
+### 伪造虚拟入口
+
+**种类：**功能
+
+```typescript
+function forgeVirtualEntry(targetId: string): string;
+```
+
+在 buildStart 准备好目标之前使用稳定的虚拟入口。
+
+#### 参数
+
+| 名称    | 类型   | 描述 |
+| ------- | ------ | ---- |
+| 目标 ID | 字符串 |      |
+
 ## `src/compiler/artifact-manifest`
 
 ### 创建ForgeArtifactManifest
@@ -63,6 +116,91 @@ export interface ForgeArtifactRecord
 
 由目标范围的工件清单记录的一种确定性输出。
 
+## `src/compiler/artifact-path`
+
+### 断言ForgeArtifactRoot
+
+**种类：**功能
+
+```typescript
+function assertForgeArtifactRoot(root: string): string;
+```
+
+验证输出根并拒绝现有符号链接或非目录。
+后代组件在使用前由工件解析器检查。
+
+#### 参数
+
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 根   | 字符串 |      |
+
+### 确保ForgeArtifactDirectory
+
+**种类：**功能
+
+```typescript
+function ensureForgeArtifactDirectory(root: string, directory: string): string;
+```
+
+一次创建一个组件的输出目录，无需跟踪链接。
+
+#### 参数
+
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 根   | 字符串 |      |
+| 目录 | 字符串 |      |
+
+### 解析ForgeArtifactPath
+
+**种类：**功能
+
+```typescript
+function resolveForgeArtifactPath(root: string, relativeName: string): string;
+```
+
+解析工件名称并验证现有路径组件是否安全。
+
+#### 参数
+
+| 名称     | 类型   | 描述 |
+| -------- | ------ | ---- |
+| 根       | 字符串 |      |
+| 亲属姓名 | 字符串 |      |
+
+### validateForgeArtifactName
+
+**种类：**功能
+
+```typescript
+function validateForgeArtifactName(relativeName: string): string;
+```
+
+验证工件名称而不规范化不安全的路径段。
+
+#### 参数
+
+| 名称     | 类型   | 描述 |
+| -------- | ------ | ---- |
+| 亲属姓名 | 字符串 |      |
+
+### validateForgeArtifactSegment
+
+**种类：**功能
+
+```typescript
+function validateForgeArtifactSegment(segment: string): string;
+```
+
+验证用于构造工件根的单个路径组件。
+
+#### 参数
+
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 段   | 字符串 |      |
+
 ## `src/compiler/artifact-writer`
 
 ### createForgeArtifactWriter
@@ -70,10 +208,32 @@ export interface ForgeArtifactRecord
 **种类：**功能
 
 ```typescript
-function createForgeArtifactWriter(outDir: string, targetId: string): ForgeArtifactWriter;
+function createForgeArtifactWriter(
+  outDir: string,
+  targetId: string,
+  options: ForgeArtifactWriterOptions = {},
+): ForgeArtifactWriter;
 ```
 
 没有提供描述。
+
+#### 参数
+
+| 名称     | 类型                     | 描述 |
+| -------- | ------------------------ | ---- |
+| 输出目录 | 字符串                   |      |
+| 目标 ID  | 字符串                   |      |
+| 选项     | ForgeArtifactWriter 选项 |      |
+
+### forgeArtifactAttempt目录
+
+**种类：**功能
+
+```typescript
+function forgeArtifactAttemptDirectory(outDir: string, targetId: string): string;
+```
+
+为本机目标构建尝试分配一个拥有的同级目录。
 
 #### 参数
 
@@ -91,1631 +251,6 @@ export interface ForgeArtifactWriter
 ```
 
 没有提供描述。
-
-## `src/compiler/ast`
-
-### CLASS_NAME_ATTRIBUTE
-
-**种类：**常数
-
-```typescript
-export const CLASS_NAME_ATTRIBUTE;
-```
-
-驱动类名管理的中性 JSX 属性。作者写
-`className={…}`（`class` 属性保留用于静态字符串），
-传递 `classNames` 运行时帮助程序接受的相同参数 - 大多数
-通常是类值的**数组** (`className={['base', { active }]}`)，
-但任何单个 {@link import ('@mission-platform/forge-jsx').ClassValue} 也可以。
-该属性的拼写与 React 自己的 `className` 相同（与
-运行时帮助程序，仍为 `classNames`），以便组件可以合并自己的组件
-具有转发的 `properties.className` 且没有命名的计算类
-不匹配：`className={[classNames('base', …), properties.className]}`。的
-React 发射器将数组形式折叠为 `className={classNames(…)}` 字符串
-调用（重新注入中性 `classNames` 导入），而 Vue 发射器
-将其直接映射到 Vue 的本机 `class` 绑定，该绑定已经可以理解
-数组/对象形式。
-
-### 收集插槽名称
-
-**种类：**功能
-
-```typescript
-function collectSlotNames(sourceFile: ts.SourceFile): Set<string>;
-```
-
-收集模块中 `<Slot name="…" />` 元素声明的每个静态槽名称。
-
-#### 参数
-
-| 名称   | 类型          | 描述 |
-| ------ | ------------- | ---- |
-| 源文件 | ts.SourceFile |      |
-
-### 组件导入
-
-**种类：**接口
-
-```typescript
-export interface ComponentImport
-```
-
-同级组件的相对导入，例如`import { ForgeBadge } from '../forge-badge'`。
-
-### 组件_JSX_模块
-
-**种类：**常数
-
-```typescript
-export const COMPONENTS_JSX_MODULES;
-```
-
-一次写入**组件库**工作区包：例如
-`@mission-platform/icons`，中立作者从这些导入他们的组件
-软件包（例如 `@mission-platform/components/forge-drawer` 中的 `ForgeDrawer`，或
-`ForgeVerticalLayout` 到 `@mission-platform/layouts`)，进行类型检查
-针对中性源并通过 `@mission-platform/forge-jsx` 进行渲染
-单元测试中的适配器。生成的每个框架源将它们导入到
-完全相同的裸说明符 - 框架选择发生在每个
-包的 `mp:<framework>` 导出条件，不通过子路径。
-
-### 创建ReactHasSlotExpression
-
-**种类：**功能
-
-```typescript
-function createReactHasSlotExpression(
-  factory: ts.NodeFactory,
-  propsParamName: string,
-  name: string | undefined,
-): ts.Expression;
-```
-
-`<props>.<name> != null` — 针对 `hasSlot('name')` 读取 React 的存在。
-
-#### 参数
-
-| 名称         | 类型           | 描述 |
-| ------------ | -------------- | ---- |
-| 工厂         | ts.NodeFactory |      |
-| 道具参数名称 | 字符串         |      |
-| 名称         | 字符串\|未定义 |      |
-
-### 创建ReactSlotCallExpression
-
-**种类：**功能
-
-```typescript
-function createReactSlotCallExpression(
-  factory: ts.NodeFactory,
-  propsParamName: string,
-  name: string | undefined,
-  fallback: readonly ts.Expression[],
-  scope?: ts.Expression,
-): ts.Expression;
-```
-
-`typeof <props>.<name> === 'function' ? <props>.<name>(scope) : <props>.<name>`
-（使用 `?? <fallback>`） — `h(Slot, …)` 调用形式的 React 翻译
-（`h()` 对应于 {@link createReactSlotExpression}）。
-
-#### 参数
-
-| 名称         | 类型                 | 描述          |
-| ------------ | -------------------- | ------------- |
-| 工厂         | ts.NodeFactory       |               |
-| 道具参数名称 | 字符串               |               |
-| 名称         | 字符串\|未定义       |               |
-| 后备         | 只读 ts.Expression[] |               |
-| 范围         | ts.Expression        | ts.Expression |     |
-
-### 创建ReactSlotExpression
-
-**种类：**功能
-
-```typescript
-function createReactSlotExpression(
-  factory: ts.NodeFactory,
-  propsParamName: string,
-  name: string | undefined,
-  fallback: readonly ts.JsxChild[],
-  scope?: ts.Expression,
-): ts.Expression;
-```
-
-`<props>.<name>`（当插槽声明回退时使用 `?? <fallback>`
-内容）。当提供 `scope` 时，如果它是一个 slot 属性，则调用它
-render-prop 函数，或者如果它是 React node 则直接计算
-（`typeof <props>.<name> === 'function' ? <props>.<name>(scope) : <props>.<name>`）。
-
-#### 参数
-
-| 名称         | 类型               | 描述          |
-| ------------ | ------------------ | ------------- |
-| 工厂         | ts.NodeFactory     |               |
-| 道具参数名称 | 字符串             |               |
-| 名称         | 字符串\|未定义     |               |
-| 后备         | 只读 ts.JsxChild[] |               |
-| 范围         | ts.Expression      | ts.Expression |     |
-
-### 创建参考重写器
-
-**种类：**功能
-
-```typescript
-function createReferenceRewriter(scope: RewriteScope): ts.TransformerFactory<ts.Node>;
-```
-
-构建一个 TS 转换器，重写组件主体内的引用
-Vue 目标：`properties.children` → `slots.default?.()`，解构道具
-本地 → 实时 `properties.<name>` 访问，`useState` 读取 → `.value`，setter
-调用 → 分配，以及 `useRef` 的 `.current` → `.value`。
-
-#### 参数
-
-| 名称 | 类型     | 描述 |
-| ---- | -------- | ---- |
-| 范围 | 重写范围 |      |
-
-### 创建状态快照提升器
-
-**种类：**功能
-
-```typescript
-function createStateSnapshotHoister(scope: RewriteScope): ts.TransformerFactory<ts.Node>;
-```
-
-保留 TypeScript `useState` / `useMemo` 值的控制流缩小范围
-跨嵌套闭包，否则 `<name>` → `<name>.value` 会重写
-休息。
-
-在中立的 JSX 中，状态值是 `const` 本地值，因此缩小范围的保护
-它（`if (sortKey === undefined) return; … rows.toSorted((a) => a[sortKey])`）
-保持嵌套回调内的缩小范围 - `const` 永远不会重新分配，
-因此 TypeScript 相信通过功能边界缩小。 Vue 之后
-重写读取变成 `sortKey.value`，一个**可变属性访问**，其
-缩小 TypeScript 在进入任何嵌套函数时会丢弃 - 因此受保护的
-`a[sortKey.value]` / `draft.value.uid` 无法进行类型检查。
-
-对于每个块体函数，此过程会快照读取的每个此类值
-*在嵌套闭包内*到领先的 `const <name>$ = <name>.value;` 中，以及
-重写值**读取**（不是 `<name>.value = …` 写入目标）
-该函数指向 `const` 别名。快照恢复原始 `const`
-语义 - 再次缩小流入嵌套闭包的范围 - 而 `.value`
-顶部的访问使读取保持反应性（`computed` 仍然重新跟踪它）。
-
-#### 参数
-
-| 名称 | 类型     | 描述 |
-| ---- | -------- | ---- |
-| 范围 | 重写范围 |      |
-
-### 创建VueHasSlotExpression
-
-**种类：**功能
-
-```typescript
-function createVueHasSlotExpression(factory: ts.NodeFactory, name: string | undefined): ts.Expression;
-```
-
-`slots.<name>` — 针对 `hasSlot('name')` (`!!slots.x`) 读取 Vue 的 `useSlots()` 存在。
-
-#### 参数
-
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 工厂 | ts.NodeFactory |      |
-| 名称 | 字符串\|未定义 |      |
-
-### 创建VueSlotCallExpression
-
-**种类：**功能
-
-```typescript
-function createVueSlotCallExpression(
-  factory: ts.NodeFactory,
-  name: string | undefined,
-  fallback: readonly ts.Expression[],
-  scope?: ts.Expression,
-): ts.Expression;
-```
-
-`slots.<name>?.(scope) ?? <fallback>` — `h(Slot, …)` 的 Vue 翻译
-调用表单（`h()` 对应于 {@link createVueSlotExpression}）。的
-这里的后备是调用的子**表达式**而不是 JSX 子项。
-
-#### 参数
-
-| 名称 | 类型                 | 描述          |
-| ---- | -------------------- | ------------- |
-| 工厂 | ts.NodeFactory       |               |
-| 名称 | 字符串\|未定义       |               |
-| 后备 | 只读 ts.Expression[] |               |
-| 范围 | ts.Expression        | ts.Expression |     |
-
-### 创建VueSlot表达式
-
-**种类：**功能
-
-```typescript
-function createVueSlotExpression(
-  factory: ts.NodeFactory,
-  name: string | undefined,
-  fallback: readonly ts.JsxChild[],
-  scope?: ts.Expression,
-): ts.Expression;
-```
-
-`slots.<name>?.(scope)`（当插槽声明回退时使用 `?? <fallback>`
-内容）。当提供 `scope` 时，槽将被调用，发出
-Vue **范围**槽调用。
-
-#### 参数
-
-| 名称 | 类型               | 描述          |
-| ---- | ------------------ | ------------- |
-| 工厂 | ts.NodeFactory     |               |
-| 名称 | 字符串\|未定义     |               |
-| 后备 | 只读 ts.JsxChild[] |               |
-| 范围 | ts.Expression      | ts.Expression |     |
-
-### 解构财产
-
-**种类：**接口
-
-```typescript
-export interface DestructuredProperty
-```
-
-从 `const { … } = properties` 解构中拉出的绑定。
-
-### 动态ToHCall
-
-**种类：**功能
-
-```typescript
-function dynamicToHCall(
-  factory: ts.NodeFactory,
-  node: ts.JsxSelfClosingElement | ts.JsxElement,
-  visitExpression: (expression: ts.Expression) => ts.Expression,
-  aliasAttribute: (name: string) => string = (name) => name,
-  variadicChildren = false,
-): ts.CallExpression;
-```
-
-将 `<Dynamic is={X} a={…} …>children</Dynamic>` 元素重写为
-`h(X, { a: …, … }, ...children)` 调用 — 动态组件形式
-目标本地编译（React 的经典 `h` JSX 转换 / Vue 的
-`<component :is>`）。 `is` 属性成为元素类型，每隔一个
-属性（和展开）成为 props 对象，子对象成为
-尾随参数。属性值表达式和子级被传递
-通过 `visitExpression` （因此 prop/state/slot 重写并且 React 的
-`class`→`className` 别名仍然适用），并且 `aliasAttribute` 重命名
-目标的 prop 键（Vue 上的标识、React 上的 DOM 别名）。
-
-#### 参数
-
-| 名称             | 类型                                      | 描述 |
-| ---------------- | ----------------------------------------- | ---- |
-| 工厂             | ts.NodeFactory                            |      |
-| node             | ts.JsxSelfClosingElement \| ts.JsxElement |      |
-| 访问表达         | (表达式: ts.Expression) => ts.Expression  |      |
-| 别名属性         | （名称：字符串）=> 字符串                 |      |
-| 可变参数Children |                                           |      |
-
-### 确保I18nHookInComponent
-
-**种类：**功能
-
-```typescript
-function ensureI18nHookInComponent(factory: ts.NodeFactory, sourceFile: ts.SourceFile): ts.SourceFile;
-```
-
-确保调用 `i18next.t(...)` 的组件函数具有顶级 `const { t } = useI18n();` 语句。
-
-#### 参数
-
-| 名称   | 类型           | 描述 |
-| ------ | -------------- | ---- |
-| 工厂   | ts.NodeFactory |      |
-| 源文件 | ts.SourceFile  |      |
-
-### 属性的事件名称
-
-**种类：**功能
-
-```typescript
-function eventNameForProperty(propName: string): string;
-```
-
-派生 `on<Event>` 属性的 Vue 事件名称：去掉 `on` 前缀并
-小写剩余的第一个字母 (`onChange` → `change`,
-`onUpdateModelValue` → `updateModelValue`)。
-
-#### 参数
-
-| 名称     | 类型   | 描述 |
-| -------- | ------ | ---- |
-| 道具名称 | 字符串 |      |
-
-### 事件签名
-
-**种类：**接口
-
-```typescript
-export interface EventSignature
-```
-
-组件 **event** — 名为 `on<Event>` 的 props-interface 成员，其
-声明的类型是内联函数类型（例如 `onChange?: (openIds: string[])
-=> void`). The Vue emitter turns these into `defineEmits` 声明和
-`emit('<event>', …)` 调用而不是运行时属性。
-
-### 提取事件签名
-
-**种类：**功能
-
-```typescript
-function extractEventSignatures(sourceFile: ts.SourceFile, interfaceName: string): EventSignature[];
-```
-
-提取由 props 接口声明的（自己的）**事件** 签名 - 成员
-名为 `on<Event>`（`on` 后的大写字母），其类型为内联
-函数类型。这些是组件的事件：Vue 发射器声明它们
-与 `defineEmits` 并将其调用/引用重写为 `emit(...)`
-而不是将它们作为运行时道具携带。通过命名别名输入的回调 prop
-（类型引用而不是内联函数类型）保留为普通属性。
-
-#### 参数
-
-| 名称     | 类型          | 描述 |
-| -------- | ------------- | ---- |
-| 源文件   | ts.SourceFile |      |
-| 接口名称 | 字符串        |      |
-
-### 提取模型签名
-
-**种类：**功能
-
-```typescript
-function extractModelSignatures(sourceFile: ts.SourceFile, interfaceName: string): ModelSignature[];
-```
-
-提取标记为 `@model <onEvent>` 的 props-interface 成员 — 一个 prop 及其
-Vue 发射器融合成单个 `defineModel` 的成对更改事件
-双向绑定。模型名称是道具名称，除了规范名称
-`modelValue`，成为 Vue 的默认（无名）模型。
-
-#### 参数
-
-| 名称     | 类型          | 描述 |
-| -------- | ------------- | ---- |
-| 源文件   | ts.SourceFile |      |
-| 接口名称 | 字符串        |      |
-
-### 提取属性名称
-
-**种类：**功能
-
-```typescript
-function extractPropertyNames(sourceFile: ts.SourceFile, interfaceName: string): string[];
-```
-
-提取 props 接口声明的（自己的）属性名称，不包括 `children`。
-
-#### 参数
-
-| 名称     | 类型          | 描述 |
-| -------- | ------------- | ---- |
-| 源文件   | ts.SourceFile |      |
-| 接口名称 | 字符串        |      |
-
-### 提取属性签名
-
-**种类：**功能
-
-```typescript
-function extractPropertySignatures(sourceFile: ts.SourceFile, interfaceName: string): PropertySignature[];
-```
-
-提取 props 接口声明的（自己的）属性签名，不包括
-`children`。每个条目都包含属性的声明类型文本和
-可选性，因此 Vue 发射器可以渲染 **基于类型** `defineProps<{ … }>()`
-保留接口的精确类型（无类型运行时 `defineProps`
-会将它们折叠为 `{}` / `never[]`)。无法读取其类型的属性
-回退到 `unknown`。
-
-#### 参数
-
-| 名称     | 类型          | 描述 |
-| -------- | ------------- | ---- |
-| 源文件   | ts.SourceFile |      |
-| 接口名称 | 字符串        |      |
-
-### 查找组件函数
-
-**种类：**功能
-
-```typescript
-function findComponentFunction(sourceFile: ts.SourceFile, name: string): ts.FunctionDeclaration | undefined;
-```
-
-按名称查找中性组件的导出函数声明。
-
-#### 参数
-
-| 名称   | 类型          | 描述 |
-| ------ | ------------- | ---- |
-| 源文件 | ts.SourceFile |      |
-| 名称   | 字符串        |      |
-
-### 伪造出口事实
-
-**种类：**接口
-
-```typescript
-export interface ForgeExportFact
-```
-
-在 Forge 源模块中发现的声明或重新导出。
-
-### 伪造进口事实
-
-**种类：**接口
-
-```typescript
-export interface ForgeImportFact
-```
-
-在 Forge 源模块中发现的静态导入。
-
-### ForgeModule事实
-
-**种类：**接口
-
-```typescript
-export interface ForgeModuleFacts
-```
-
-构建规范的 Forge 文件图所需的所有静态模块事实。
-
-### ForgeSourceSpan
-
-**种类：**接口
-
-```typescript
-export interface ForgeSourceSpan
-```
-
-图形诊断和导入/导出事实使用的源位置。
-
-### 有槽儿童
-
-**种类：**功能
-
-```typescript
-function hasSlottedChildren(children: readonly ts.JsxChild[]): boolean;
-```
-
-父母的任何孩子是否携带 `slot="…"` 标记。
-
-#### 参数
-
-| 名称 | 类型               | 描述 |
-| ---- | ------------------ | ---- |
-| 儿童 | 只读 ts.JsxChild[] |      |
-
-### ICONS_JSX_MODULE
-
-**种类：**常数
-
-```typescript
-export const ICONS_JSX_MODULE;
-```
-
-一次写入图标库 `@mission-platform/icons` 的裸说明符。
-中立作者从这个根导入他们的图标，生成的
-每个框架源保留确切的说明符：每个框架拆分
-`@mission-platform/*` 包声明 `mp:vue` / `mp:react` / `mp:solid` /
-`mp:web-component` 在其裸 `.` 条目上自定义导出条件，因此
-_消费者的_ `resolve.conditions`（以及匹配的
-`customConditions` tsconfig 预设）选择正确的版本。没有
-要重新映射到的每个框架子路径。
-
-### 检查Forge模块
-
-**种类：**功能
-
-```typescript
-function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts;
-```
-
-从解析的模块中提取静态导入、导出、仅类型边缘和框架事实。
-
-#### 参数
-
-| 名称   | 类型   | 描述 |
-| ------ | ------ | ---- |
-| 文件名 | 字符串 |      |
-| 来源   | 字符串 |      |
-
-### isComponentTagName
-
-**种类：**功能
-
-```typescript
-function isComponentTagName(tagName: ts.JsxTagNameExpression): boolean;
-```
-
-JSX 标签名称是否引用 **组件**（大写标识符，例如
-作为 `ForgeDropdown`，或像 `Ctx.Provider` 这样的成员/`this` 表达式）
-比内在元素（`div`、`button`）。命名槽 **传递**
-(`slot="…"`) 仅对组件有意义，因此下面的槽布线为
-门控这一点——完全镜像运行时适配器，它折叠开槽
-仅在扩展组件时 (`typeof type === 'function'`)。
-
-#### 参数
-
-| 名称     | 类型                    | 描述                    |
-| -------- | ----------------------- | ----------------------- |
-| 标签名称 | ts.JsxTagNameExpression | ts.JsxTagNameExpression |
-
-### 是动态元素
-
-**种类：**功能
-
-```typescript
-function isDynamicElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
-```
-
-node 是否为中性动态分量元素 — `<Dynamic is={…} />`
-或 `<Dynamic is={…}>…</Dynamic>` — 由 `Dynamic` 标记生成。
-
-#### 参数
-
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| node | ts.Node |      |
-
-### isFragmentElement
-
-**种类：**功能
-
-```typescript
-function isFragmentElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
-```
-
-node 是否为中性 `<Fragment>` 元素 — 要么是自关闭
-`<Fragment />`（空）或 `<Fragment>…</Fragment>`（带子项）表格。
-
-#### 参数
-
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| node | ts.Node |      |
-
-### isHasSlotCall
-
-**种类：**功能
-
-```typescript
-function isHasSlotCall(node: ts.Node): node is ts.CallExpression;
-```
-
-node 是否是 `hasSlot('name')` / `hasSlot()` 调用 — 中性
-槽存在标记。编译器将其重写为每个框架的本机
-存在检查，因此它永远不会作为运行时调用发出。
-
-#### 参数
-
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| node | ts.Node |      |
-
-### 是槽元素
-
-**种类：**功能
-
-```typescript
-function isSlotElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
-```
-
-node 是否是中性命名槽元素 — `<Slot … />` 或
-`<Slot …>fallback</Slot>` — 由 `Slot` 标记生成。
-
-#### 参数
-
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| node | ts.Node |      |
-
-### 是SlotHCall
-
-**种类：**功能
-
-```typescript
-function isSlotHCall(node: ts.Node): node is ts.CallExpression;
-```
-
-node 是否是命名槽标记的**调用形式** — `h(Slot, …)` —
-`h()` 工厂对应的 `<Slot … />` JSX 元素。一些中立的
-组件用 `h(Slot, { name: 'x' }, …fallback)` 组成插槽（例如内部
-`const column = … ? h(ForgeDrawer, …, h(Slot, { name: 'start' })) : undefined`)
-而不是 JSX；两种形式都必须重写到每个框架的本机插槽读取。
-
-#### 参数
-
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| node | ts.Node |      |
-
-### JSX_ATTRIBUTE_RENAMES
-
-**种类：**常数
-
-```typescript
-export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
-```
-
-必须降低面向作者的驼峰式拼写的本机 JSX 属性
-符合 Vue 的 JSX 内在元素类型预期的 HTML 拼写。 Vue 类型
-`<td>`/`<th>` 将属性跨度为 `colspan`/`rowspan`（不是 React 的 `colSpan`/
-`rowSpan`)，因此渲染闭包 JSX 将无法进行类型检查。
-
-### 本地效果文件
-
-**种类：**常数
-
-```typescript
-export const LOCAL_EFFECT_FILE;
-```
-
-局部效果辅助模块的文件名（带扩展名）的编写方式与平面生成树中相同。
-
-### 本地效果模块
-
-**种类：**常数
-
-```typescript
-export const LOCAL_EFFECT_MODULE;
-```
-
-导入生成的 Vue {@link LOCAL_EFFECT_MODULE} 的相对说明符。
-
-### LOCAL_JSX_TYPE_NAMES
-
-**种类：**常数
-
-```typescript
-export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
-```
-
-没有单一一流框架等效项的中性 **类型** 导入
-别名 to （与 {@link REACT_TYPE_ALIASES} 不同），但可以轻松表达
-在每个框架自己的词汇中——渲染原语
-`MpRenderProperty<S>`，作用域槽/渲染属性函数返回
-给定范围的槽内容。
-
-而不是将其保留为生成的 `@mission-platform/forge-jsx` 导入
-代码，每个框架构建都会发出一个微小的并置模块
-({@link LOCAL_JSX_TYPES_MODULE}) 定义了**特定于框架的变体**
-其中 - React 超过 `ReactNode`，Vue 超过 `VNodeChild` - 以及每个发射器
-在那里重定向类型导入（请参阅 React 和 Vue `imports` 构建器）。
-因此生成的源不包含中性 `@mission-platform/forge-jsx`
-render-prop **type** 完全导入。
-
-### LOCAL_JSX_TYPES_FILE
-
-**种类：**常数
-
-```typescript
-export const LOCAL_JSX_TYPES_FILE;
-```
-
-本地 JSX 类型模块的文件名（带扩展名）的编写方式与平面生成树中相同。
-
-### LOCAL_JSX_TYPES_MODULE
-
-**种类：**常数
-
-```typescript
-export const LOCAL_JSX_TYPES_MODULE;
-```
-
-导入生成的每个框架 {@link LOCAL_JSX_TYPES_MODULE} 的相对说明符。
-
-### 本地效果模块源
-
-**种类：**功能
-
-```typescript
-function localEffectModuleSource(framework: JsxFramework): string;
-```
-
-目标的同位 {@link LOCAL_EFFECT_MODULE} 的源
-框架，每个输出树生成一次，与本地 JSX 类型完全相同
-模块（请参阅{@link localJsxTypesModuleSource}）。
-
-它将 Vue 发射器的 `useEffect` → 生命周期转换集中在一个
-基于 Vue 的本机构建的单个广义观察程序 (`mpEffect`)
-`watch`/`onMounted`/`onUpdated`/`onUnmounted`，所以每个组件的`setup`
-缩小为单个 `mpEffect(callback, () => [deps])` 调用，而不是
-内联的每个效果生命周期块。语义镜像 React 的
-`useEffect(callback, deps?)`：挂载后运行一次，依赖时重新运行
-更改（或在每次更新后，当省略 deps 时），并运行返回的
-每次重新运行之前和卸载时进行清理。
-
-助手仅**Vue**：React 发射器持续发射 `useEffect(…)`
-逐字记录（React 的本机形式），因此对于 `framework === 'react'` 这会返回一个
-空字符串，作者会跳过它。
-
-#### 参数
-
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| 框架 | Jsx框架 |      |
-
-### localJsxTypesModuleSource
-
-**种类：**功能
-
-```typescript
-function localJsxTypesModuleSource(framework: JsxFramework): string;
-```
-
-目标的同位 {@link LOCAL_JSX_TYPES_MODULE} 的源
-框架：名为的中性渲染基元的特定于框架的变体
-在 {@link LOCAL_JSX_TYPE_NAMES} 中，因此生成的组件导入
-`MpRenderProperty` 来自该本地模块而不是中性模块
-`@mission-platform/forge-jsx` 包。每个框架的定义都不同：
-“可渲染内容”位置是React的`ReactNode`和Vue的`VNodeChild`，
-因此每个构建的声明都以其运行时的惯用方式读取。
-
-故意**没有** `MpProperties` 变体：组件声明
-正是它接受的属性，因此不会为 props 库生成任何内容
-中性方言中不再存在。
-
-#### 参数
-
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| 框架 | Jsx框架 |      |
-
-### 模型签名
-
-**种类：**接口
-
-```typescript
-export interface ModelSignature
-```
-
-标有 `@model <onEvent>` JSDoc 标签的 prop：双向（v-model）绑定
-将 **input** 属性与其 **change 事件** 配对。 Vue 发射器崩溃
-将该对放入单个 `defineModel` 声明中（删除运行时
-prop 和 `defineEmits` 条目）- prop 的读取变为 `<local>.value`
-配对事件的调用变为 `<local>.value = …`。
-
-### 模块目标框架
-
-**种类：**功能
-
-```typescript
-function moduleTargetsFramework(fileName: string, source: string, framework: string): boolean;
-```
-
-是否应为 `framework` 发出模块。框架中立的模块
-（无 `"use <framework>"` 指令）针对每个目标发出；门控模块
-**仅**针对其指令名称的框架发出。
-
-#### 参数
-
-| 名称   | 类型   | 描述 |
-| ------ | ------ | ---- |
-| 文件名 | 字符串 |      |
-| 来源   | 字符串 |      |
-| 框架   | 字符串 |      |
-
-### NEUTRAL_COMPILE_TIME_MARKERS
-
-**种类：**常数
-
-```typescript
-export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>;
-```
-
-中性 **值** 导入是纯粹的编译时标记 - 它们仅存在
-所以编写的 JSX 类型检查并被发射器（他们的 JSX
-用法被重写为每个框架自己的机制），因此它们绝不能被
-作为真正的导入导入到生成的 React 或 Vue 源中。 `Slot`
-(`<Slot name="…" />`) 是命名槽标记，`Dynamic`
-(`<Dynamic is={…} />`) 是动态组件标记（重写为
-`h(is, …)`调用，然后将每个框架的JSX变换/`<component :is>`
-本机编译），`hasSlot` (`hasSlot('x')`) 是槽存在标记
-（重写为 Vue 的 `!!slots.x` / `$slots.x` 和 React 的 `properties.x != null`）。
-
-### NEUTRAL_CONTEXT_VALUES
-
-**种类：**常数
-
-```typescript
-export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
-```
-
-作为上下文原语的中性**值**导入。在 React 上，它们*是*
-React 自己的 (`createContext`/`useContext`)，因此它们落入
-`react` 值导入；在 Vue 上，它们的导入被重新映射到
-`@mission-platform/forge-adapters/vue` 适配器（支持 `provide`/`inject`
-`createContext`/`useContext`)。
-
-### NEUTRAL_FRAMEWORK_COMPONENTS
-
-**种类：**常数
-
-```typescript
-export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>;
-```
-
-中性**值**导入是真实的，每个框架**组件**而不是
-比标记、运行时实用程序或 React 自己的原语更重要。他们的 JSX 使用情况
-保持不变（它们仍然是组件标签），但是它们的
-`import { … } from '@mission-platform/forge-jsx'` 被重新映射到目标
-框架的本机实现：`Teleport`（门户原语）变为
-`import { Teleport } from '@mission-platform/forge-adapters/react'`（`createPortal`
-React 的包装器）和 Vue 的 `import { Teleport } from 'vue'`（内置）；
-`Transition`（进入/离开原语）成为
-`@mission-platform/forge-adapters/react` React 的 CSS 级驱动程序和内置
-`import { Transition } from 'vue'` 为 Vue； `TransitionGroup`（列表
-进入/离开/移动原语）以相同的方式重新映射（
-`@mission-platform/forge-adapters/react` React 的组驱动程序，内置
-`import { TransitionGroup } from 'vue'` 为 Vue)。
-
-### 中性模块
-
-**种类：**常数
-
-```typescript
-export const NEUTRAL_MODULE;
-```
-
-组件从中导入其原语的中性包。
-
-### NEUTRAL_RUNTIME_VALUES
-
-**种类：**常数
-
-```typescript
-export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
-```
-
-中性**值**导入是与框架无关的运行时实用程序 - 它们
-在每个目标上的行为都相同，因此（与 `h` 和钩子不同，它们是
-每个框架翻译/别名）他们的 `import { … } from '@mission-platform/forge-jsx'`
-必须逐字保留在生成的 React 和 Vue 源中。
-
-### NEUTRAL_VUE_RUNTIME_HOOKS
-
-**种类：**常数
-
-```typescript
-export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
-```
-
-中性 **值** 挂钩，具有相同名称的本机对应项
-每个框架的运行时，因此它们都不会被翻译（如 `useState`/
-`useEffect`) 也不保留为中性进口。 `useId` 是 React 自己的钩子（它
-自动进入 `react` 值导入），并且 Vue 公开
-与运行时相同的 `useId` — 因此 Vue 发射器直接从
-`vue` 并在 `setup` 中保持 `const id = useId()` 调用不变。
-
-### 中性进口
-
-**种类：**接口
-
-```typescript
-export interface NeutralImports
-```
-
-从中性包导入的模块的名称，按绑定类型划分。
-
-### 解析Tsx
-
-**种类：**功能
-
-```typescript
-function parseTsx(fileName: string, source: string): ts.SourceFile;
-```
-
-将 `.tsx` 源字符串解析为 TypeScript SourceFile 桥使用的
-优化器和遗留转换助手。中性前端 AST/推理使用
-{@link parseForgeSource} / Oxc 代替。
-
-#### 参数
-
-| 名称   | 类型   | 描述 |
-| ------ | ------ | ---- |
-| 文件名 | 字符串 |      |
-| 来源   | 字符串 |      |
-
-### 分区槽位
-
-**种类：**接口
-
-```typescript
-export interface PartitionedSlots
-```
-
-组件元素的子元素按其 `slot="…"` 标记进行分区。
-
-### 分区开槽儿童
-
-**种类：**功能
-
-```typescript
-function partitionSlottedChildren(children: readonly ts.JsxChild[]): PartitionedSlots;
-```
-
-将组件元素的子元素划分为命名槽组 + 默认子元素。
-
-#### 参数
-
-| 名称 | 类型               | 描述 |
-| ---- | ------------------ | ---- |
-| 儿童 | 只读 ts.JsxChild[] |      |
-
-### 打印节点
-
-**种类：**功能
-
-```typescript
-function printNode(node: ts.Node, sourceFile: ts.SourceFile): string;
-```
-
-将单个 node 打印回源文本，锚定到其源文件。
-
-#### 参数
-
-| 名称   | 类型          | 描述 |
-| ------ | ------------- | ---- |
-| node   | ts.Node       |      |
-| 源文件 | ts.SourceFile |      |
-
-### 打印源文件
-
-**种类：**功能
-
-```typescript
-function printSourceFile(sourceFile: ts.SourceFile): string;
-```
-
-将整个（可能已转换）源文件打印回源文本。
-
-#### 参数
-
-| 名称   | 类型          | 描述 |
-| ------ | ------------- | ---- |
-| 源文件 | ts.SourceFile |      |
-
-### 财产签名
-
-**种类：**接口
-
-```typescript
-export interface PropertySignature
-```
-
-props 接口的单个​​（自己的）属性 - 它的名称、声明的类型文本和可选性。
-
-### REACT_ADAPTER_MODULE
-
-**种类：**常数
-
-```typescript
-export const REACT_ADAPTER_MODULE;
-```
-
-React 框架组件从中导入的 `@mission-platform/forge-adapters/react` 子路径。
-
-### REACT_TYPE_ALIASES
-
-**种类：**常数
-
-```typescript
-export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>;
-```
-
-具有一流 React 等效项的中性 **类型** 导入
-`react` 本身。在 React 目标上，这些内容被重写为其 React 名称
-（导入 `import type { … } from 'react'`）而不是保持中立
-`@mission-platform/forge-jsx` 类型，因此 React 作者看到的是惯用类型。每个
-对发射源中中性名称的引用被重命名为映射的
-React 名称（请参阅 React 发射器）。每个中性钩子/渲染基元
-有一个精确的 React 对应项：
-
-- `MpChild`（“任何可能呈现为子级的东西”联合）⇒ React 的
-  `ReactNode`。
-- `MpElement`（中性虚拟树中的node，a的返回类型
-  中性组件）⇒ React 的 `ReactElement`，因此编译后的组件读取
-  作为真正的 `(props) => ReactElement` — 有效的 React 功能组件，
-  中性 `MpElement` 返回类型不是。
-- `MpRef<T>`（`useRef` 返回的 `{ current: T }` 容器）⇒ React 的
-  `RefObject<T>`。
-- `MpDependencyList`（效果/备忘录依赖数组）⇒ React
-  `DependencyList`。
-
-### 反应类名值
-
-**种类：**功能
-
-```typescript
-function reactClassNameValue(factory: ts.NodeFactory, value: ts.Expression): ts.Expression;
-```
-
-将 `className={…}` 属性值折叠到 **React** `className`
-值。 React 的 `className` 只接受字符串，因此条件/数组/
-对象形式*在*到达元素之前必须被简化。 **数组
-字面量**（规范形式 — `className={['base', { active }]}`）是
-传播到 `classNames(…)` 运行时调用 (`classNames('base', { active })`)，
-匹配可变参数助手签名；任何其他表达式都已经是
-单个类值（读取的 CSS 模块、预先计算的字符串、`… .join(' ')`、
-三元数）并作为 `className` 值直接传递。
-
-#### 参数
-
-| 名称 | 类型           | 描述          |
-| ---- | -------------- | ------------- |
-| 工厂 | ts.NodeFactory |               |
-| 价值 | ts.Expression  | ts.Expression |     |
-
-### 读取ChildSlotName
-
-**种类：**功能
-
-```typescript
-function readChildSlotName(child: ts.JsxChild): string | undefined;
-```
-
-读取 JSX **子** 元素的静态 `slot="…"` 标记 — 属性
-将子组件路由到父组件的命名槽中。返回槽位
-名称（除 `"default"` 之外的非空字符串），或 `undefined`（当
-child 不携带可用的 `slot` 标记（因此它属于默认槽）。
-
-#### 参数
-
-| 名称 | 类型        | 描述 |
-| ---- | ----------- | ---- |
-| 孩子 | ts.JsxChild |      |
-
-### 读取组件导入
-
-**种类：**功能
-
-```typescript
-function readComponentImports(sourceFile: ts.SourceFile, sourceRoot?: string): ComponentImport[];
-```
-
-从模块收集相对（同级组件）值+类型导入。
-
-#### 参数
-
-| 名称   | 类型          | 描述 |
-| ------ | ------------- | ---- |
-| 源文件 | ts.SourceFile |      |
-| 源根   | 字符串        |      |
-
-### 读取外部导入
-
-**种类：**功能
-
-```typescript
-function readExternalImports(fileName: string, source: string): string[];
-```
-
-收集模块的**外部**（裸包）导入 - 每个
-`import … from '<pkg>'` 其说明符既不是相对的（`.`/`..`，已处理
-作为同级组件或辅助导入），中性包（由
-{@link readNeutralImports}），也不是样式表（由
-{@link readStyleImports}）。这些是组件拉取的运行时依赖项
-来自其他工作区/第三方包（例如 `@mission-platform/forms-core`、
-`luxon`)，并且它们被**逐字**带入生成的每个框架中
-来源 so 值由 body、遗留的 helpers 或 prop 引用
-默认值在运行时解析。每个条目都是打印的 `import` 语句。
-
-框架分割工作区包，例如一次写入图标库
-{@link ICONS_JSX_MODULE} 也是逐字携带的：每个都声明一个
-`mp:<framework>` 在其裸 `.` 条目上导出条件，因此使用应用程序
-（或 Storybook/Vitest 配置）解析匹配的本机构建，而无需
-生成的源命名框架子路径。
-
-#### 参数
-
-| 名称   | 类型   | 描述 |
-| ------ | ------ | ---- |
-| 文件名 | 字符串 |      |
-| 来源   | 字符串 |      |
-
-### 阅读框架指令
-
-**种类：**功能
-
-```typescript
-function readFrameworkDirective(fileName: string, source: string): 'react' | 'vue' | undefined;
-```
-
-读取模块的 `"use <framework>";` 指令（如果有）。
-
-模块可以通过打开来选择**特定于框架的**实现
-`"use react";` 或 `"use vue";` 指令（镜像 `"use strict"` /
-`"use client"`）。这将返回指令将模块固定到的框架，
-或 `undefined`（当模块与框架无关时）（无此类指令）。
-
-只有领先的**指令序言**——连续的运行
-模块最顶部的字符串文字表达式语句 - 是
-检查，匹配 JavaScript 的指令语义；其他序言
-指令（例如 `"use strict"`）将被忽略。
-
-#### 参数
-
-| 名称   | 类型   | 描述 |
-| ------ | ------ | ---- |
-| 文件名 | 字符串 |      |
-| 来源   | 字符串 |      |
-
-### 读HasSlotName
-
-**种类：**功能
-
-```typescript
-function readHasSlotName(call: ts.CallExpression): string | undefined;
-```
-
-读取 `hasSlot('name')` 调用的静态槽名称（`undefined` → 默认槽）。
-
-#### 参数
-
-| 名称 | 类型              | 描述              |
-| ---- | ----------------- | ----------------- |
-| 致电 | ts.CallExpression | ts.CallExpression |     |
-
-### 阅读中性进口
-
-**种类：**功能
-
-```typescript
-function readNeutralImports(fileName: string, source: string): NeutralImports;
-```
-
-检查模块的 `import … from '@mission-platform/forge-jsx'` 绑定。
-
-#### 参数
-
-| 名称   | 类型   | 描述 |
-| ------ | ------ | ---- |
-| 文件名 | 字符串 |      |
-| 来源   | 字符串 |      |
-
-### 读取SlotHCallName
-
-**种类：**功能
-
-```typescript
-function readSlotHCallName(call: ts.CallExpression): string | undefined;
-```
-
-从 `h(Slot, { name: 'x' }, …)` 调用读取静态 `name`（`undefined` → 默认插槽）。
-
-#### 参数
-
-| 名称 | 类型              | 描述              |
-| ---- | ----------------- | ----------------- |
-| 致电 | ts.CallExpression | ts.CallExpression |     |
-
-### 读取SlotHCallScope
-
-**种类：**功能
-
-```typescript
-function readSlotHCallScope(
-  factory: ts.NodeFactory,
-  call: ts.CallExpression,
-  visit: ts.Visitor,
-): ts.ObjectLiteralExpression | undefined;
-```
-
-读取 `h(Slot, props, …)` 的**范围**（除 `name` 之外的每个属性）
-调用对象文字表达式，或 `undefined`（当没有作用域时）
-通过了。 JSX 表单的镜像 {@link readSlotScope}。支柱价值
-表达式使用提供的 `visit` 重写，因此读取解析
-目标框架。
-
-#### 参数
-
-| 名称 | 类型              | 描述              |
-| ---- | ----------------- | ----------------- |
-| 工厂 | ts.NodeFactory    |                   |
-| 致电 | ts.CallExpression | ts.CallExpression |     |
-| 访问 | ts.访客           |                   |
-
-### 读取槽位名称
-
-**种类：**功能
-
-```typescript
-function readSlotName(node: ts.JsxSelfClosingElement | ts.JsxElement): string | undefined;
-```
-
-读取 `<Slot>` 元素的静态 `name="…"`（`undefined` → 默认插槽）。
-
-#### 参数
-
-| 名称 | 类型                                      | 描述 |
-| ---- | ----------------------------------------- | ---- |
-| node | ts.JsxSelfClosingElement \| ts.JsxElement |      |
-
-### 读槽范围
-
-**种类：**功能
-
-```typescript
-function readSlotScope(
-  factory: ts.NodeFactory,
-  node: ts.JsxSelfClosingElement | ts.JsxElement,
-  visit: ts.Visitor,
-): ts.ObjectLiteralExpression | undefined;
-```
-
-读取 `<Slot>` 元素的 **范围** - 除 `name` 之外的每个属性
-— 转换为对象文字表达式 (`<Slot name="row" item={item} index={i}/>`
-→ `{ item: item, index: i }`)，或当槽未通过范围时 `undefined`。
-使用提供的 `visit` 重写属性值表达式
-（例如，解构属性或状态读取在 Vue 中正确解析
-目标）。这就是让一次写入组件驱动**作用域插槽**的原因：
-编译器发出 Vue `slots.x?.(scope)` 和 React `properties.x?.(scope)`。
-
-#### 参数
-
-| 名称 | 类型                                      | 描述 |
-| ---- | ----------------------------------------- | ---- |
-| 工厂 | ts.NodeFactory                            |      |
-| node | ts.JsxSelfClosingElement \| ts.JsxElement |      |
-| 访问 | ts.访客                                   |      |
-
-### 读取样式导入
-
-**种类：**功能
-
-```typescript
-function readStyleImports(fileName: string, source: string, sourceRoot?: string): StyleImport[];
-```
-
-收集模块的相关样式表导入（CSS 模块和裸 CSS
-副作用进口）。两阶段编译器将它们与
-生成每个框架源并将每个导入重新指向平面副本，因此
-组件可以拥有（并发布）自己的 `.module.scss`。
-
-#### 参数
-
-| 名称   | 类型   | 描述 |
-| ------ | ------ | ---- |
-| 文件名 | 字符串 |      |
-| 来源   | 字符串 |      |
-| 源根   | 字符串 |      |
-
-### 解决工作空间本地导入
-
-**种类：**功能
-
-```typescript
-function resolveWorkspaceLocalImport(
-  specifier: string,
-  sourceFileName: string,
-  sourceRoot: string | undefined,
-): string | undefined;
-```
-
-将工作区本地 `@/` 导入解析为相对于其所属源的路径
-文件。此处故意不处理裸包导入：仅处理文件
-在提供的工作区源根目录中拥有 `@/` 别名。
-
-#### 参数
-
-| 名称     | 类型           | 描述 |
-| -------- | -------------- | ---- |
-| 说明符   | 字符串         |      |
-| 源文件名 | 字符串         |      |
-| 源根     | 字符串\|未定义 |      |
-
-### 重写范围
-
-**种类：**接口
-
-```typescript
-export interface RewriteScope
-```
-
-描述组件体内的标识符必须如何重写的范围
-对于 Vue 目标。
-
-### 重写WorkspaceLocalImports
-
-**种类：**功能
-
-```typescript
-function rewriteWorkspaceLocalImports(sourceFile: ts.SourceFile, sourceRoot?: string): ts.SourceFile;
-```
-
-在特定于框架的发射之前重写工作区本地 `@/` 导入。
-
-#### 参数
-
-| 名称   | 类型          | 描述 |
-| ------ | ------------- | ---- |
-| 源文件 | ts.SourceFile |      |
-| 源根   | 字符串        |      |
-
-### slotFallbackChildren
-
-**种类：**功能
-
-```typescript
-function slotFallbackChildren(node: ts.JsxSelfClosingElement | ts.JsxElement): ts.JsxChild[];
-```
-
-`<Slot>…</Slot>` 的后备子级（对于自关闭槽为空）。
-
-#### 参数
-
-| 名称 | 类型                                      | 描述 |
-| ---- | ----------------------------------------- | ---- |
-| node | ts.JsxSelfClosingElement \| ts.JsxElement |      |
-
-### slotHCallFallback
-
-**种类：**功能
-
-```typescript
-function slotHCallFallback(call: ts.CallExpression): ts.Expression[];
-```
-
-`h(Slot, props, …fallback)` 调用的后备子级（props 之后的参数）。
-
-#### 参数
-
-| 名称 | 类型              | 描述              |
-| ---- | ----------------- | ----------------- |
-| 致电 | ts.CallExpression | ts.CallExpression |     |
-
-### strip框架指令
-
-**种类：**功能
-
-```typescript
-function stripFrameworkDirective(sourceFile: ts.SourceFile): ts.SourceFile;
-```
-
-返回带有任何前导 `"use react"` / `"use vue"` 指令的源文件
-已删除，因此编译时门控标记永远不会泄漏到发出的
-每个框架源。其他序言指令被保留。
-
-#### 参数
-
-| 名称   | 类型          | 描述 |
-| ------ | ------------- | ---- |
-| 源文件 | ts.SourceFile |      |
-
-### stripSlot属性
-
-**种类：**功能
-
-```typescript
-function stripSlotAttribute(factory: ts.NodeFactory, element: T): T;
-```
-
-JSX 元素/自关闭元素的副本，已删除其 `slot="…"` 标记属性。
-
-#### 参数
-
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 工厂 | ts.NodeFactory |      |
-| 元素 | T              |      |
-
-### 样式导入
-
-**种类：**接口
-
-```typescript
-export interface StyleImport
-```
-
-中性组件中的样式表导入，例如`import styles from './x.module.scss'`。
-
-### 转换I18next调用
-
-**种类：**功能
-
-```typescript
-function transformI18nextCalls(factory: ts.NodeFactory, node: ts.Node): ts.Node;
-```
-
-将 `i18next.t(...)` 调用表达式重写为 `t(...)`。
-
-#### 参数
-
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 工厂 | ts.NodeFactory |      |
-| node | ts.Node        |      |
-
-### 使用类名数组属性
-
-**种类：**功能
-
-```typescript
-function usesClassNamesArrayAttribute(sourceFile: ts.SourceFile): boolean;
-```
-
-模块是否携带`className={[…]}`属性，其值为
-**数组文字** — 编译为 `classNames(…)` 运行时的唯一形式
-调用 React 目标，因此发射器必须（重新）注入中性线
-`classNames` 为其导入（作者自己从未导入帮助器）。
-
-#### 参数
-
-| 名称   | 类型          | 描述 |
-| ------ | ------------- | ---- |
-| 源文件 | ts.SourceFile |      |
-
-### 使用组件自引用
-
-**种类：**功能
-
-```typescript
-function usesComponentSelfReference(sourceFile: ts.SourceFile, componentName: string): boolean;
-```
-
-组件是否将**自身**作为 JSX 标签引用（`<ForgeTreeView …>`
-在 `ForgeTreeView` 内）——即它是递归的。 Vue 发射器使用它来
-解析其渲染中的自引用 (`resolveComponent('<name>')`)
-闭包，因此递归组件可以在两个框架上进行本机编译。
-
-#### 参数
-
-| 名称     | 类型          | 描述 |
-| -------- | ------------- | ---- |
-| 源文件   | ts.SourceFile |      |
-| 组件名称 | 字符串        |      |
-
-### 使用HFactoryCall
-
-**种类：**功能
-
-```typescript
-function usesHFactoryCall(sourceFile: ts.SourceFile): boolean;
-```
-
-模块是否引用 `h` 作为调用表达式（显式 `h(...)`）。
-
-#### 参数
-
-| 名称   | 类型          | 描述 |
-| ------ | ------------- | ---- |
-| 源文件 | ts.SourceFile |      |
-
-### 使用I18nextT
-
-**种类：**功能
-
-```typescript
-function usesI18nextT(node: OxcNode): boolean;
-```
-
-Oxc 模块或 node 是否调用 `i18next.t(...)`。
-
-#### 参数
-
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| node | OxcNode |      |
-
-### VUE_ADAPTER_MODULE
-
-**种类：**常数
-
-```typescript
-export const VUE_ADAPTER_MODULE;
-```
-
-Vue 上下文基元从中导入的 `@mission-platform/forge-adapters/vue` 子路径。
-
-### VUE_BUILTIN_COMPONENTS
-
-**种类：**常数
-
-```typescript
-export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>;
-```
-
-中性框架组件导入 Vue 直接从 `vue` 运行时解析。
-
-### VUE_LOCAL_JSX_TYPE_NAMES
-
-**种类：**常数
-
-```typescript
-export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
-```
-
-中性渲染/道具类型将 **Vue** 构建重定向到其名称
-位于同一地点{@link LOCAL_JSX_TYPES_MODULE}。它是一个超集
-{@link LOCAL_JSX_TYPE_NAMES}：除了 `MpRenderProperty` 之外，还有 Vue 变体
-将中性 **element** 原语 `MpChild` 和 `MpElement` 重新声明为
-Vue 的 `VNodeChild` / `VNode`。在 `jsxImportSource: 'vue'` 下 a
-生成的 SFC 中的 JSX 表达式的类型为 `JSX.Element`（即 Vue 的 `VNode`）；
-保持中立的 `@mission-platform/forge-jsx` 定义（品牌为
-`__mpElement`) 将使每个 `const x: MpElement = <div/>` /
-`MpChild[] = items.map(() => <li/>)` 无法在 `vue-tsc` 下进行类型检查。 React
-相反，将它们重命名为 `ReactNode`/`ReactElement`（请参阅
-{@link REACT_TYPE_ALIASES}); Vue 保留 `Mp*` 名称，但将它们解析为
-Vue-native 类型通过本地模块，因此不需要重写引用。
-
-### vueComponentModelListenerTransformer
-
-**种类：**功能
-
-```typescript
-function vueComponentModelListenerTransformer(): ts.TransformerFactory<ts.Node>;
-```
-
-Vue的`v-model`更新事件被命名为`update:<model>`：子编译
-来自 `@model` 配对的 `onUpdate<Name>` 回调 prop 声明
-`defineModel('<name>')`，因此**发出 `update:<name>`**，其
-Listener 属性是字符串键控的 `onUpdate:<name>` — 不是驼峰命名法
-`onUpdate<Name>`。转发中立 `onUpdate<Name>` 的 **父级**
-回调到该子级必须绑定 `onUpdate:<name>`，否则 Vue 永远不会连接
-双向更新（`vue-tsc` 报告该属性未知，表明
-`"onUpdate:<name>"`）。该变压器重写每个 `onUpdate<Name>`
-**组件** 元素上的侦听器 — JSX 属性 (`<Child onUpdateOpen=…>`
-→ `<Child onUpdate:open=…>`) 或 `h(Component, { onUpdateOpen: … })` 属性
-（→ `'onUpdate:open'` 字符串键）— 转换为 `onUpdate:<name>` 形式。
-本机元素上的侦听器和非 `onUpdate` 侦听器保持不变，
-因此它是幂等且安全的，可以普遍应用于渲染闭包路径。
-
-### vueJsxSlotTransformer
-
-**种类：**功能
-
-```typescript
-function vueJsxSlotTransformer(): ts.TransformerFactory<ts.Node>;
-```
-
-Vue-重写命名槽 **传递** 形式的目标转换器 — a
-其子元素携带 `slot="…"` 标记的组件元素 — 进入
-`@vitejs/plugin-vue-jsx` 对象子语法。例如
-`<ForgeDropdown><button slot="trigger">…</button><ul>…</ul></ForgeDropdown>`
-变为 `<ForgeDropdown>{{ trigger: () => <><button>…</button></>, default: () => <><ul>…</ul></> }}</ForgeDropdown>`，
-`@vue/babel-plugin-jsx` 编译为本机命名槽。一个组件
-没有带槽子项的子项保持不变（其子项保持默认值
-槽）。这是在参考重写器**之前**编写的
-渲染闭包路径，因此生成的槽函数内的标识符是
-仍重写为 Vue 反应性（`.value` 等）。
-
-### vueNativeEventTransformer
-
-**种类：**功能
-
-```typescript
-function vueNativeEventTransformer(): ts.TransformerFactory<ts.Node>;
-```
-
-Vue-修复 React 风格多字 DOM 大小写的目标转换器
-事件侦听器（`onDragOver`、`onMouseEnter`、`onPointerDown`，...）
-**原生**（固有的、小写标记的）元素 — JSX 属性和
-`h('tag', { … })` 属性 — 使用 {@link lowercaseNativeEventName}，因此
-`@vitejs/plugin-vue-jsx`编译的render-closure绑定真实的native
-事件。 **组件**元素上的监听器（大写标签/动态
-组件）保持不变，因此它们保持与孩子的驼峰命名法相匹配
-发出名字。幂等且对组件无操作，因此应用是安全的
-普遍存在于渲染闭合路径上。
 
 ## `src/compiler/cache`
 
@@ -1772,7 +307,7 @@ function compileComponentModule(source: string, options: CompileOptions): Compil
 将一个中性（或框架门控）组件模块编译到其每个框架
 来源（第一阶段）。
 
-前导 `"use react";` / `"use vue";` 指令在发出之前被剥离
+前导 `"use <framework>";` 指令在发出之前被剥离
 因此标记永远不会泄漏到输出中；将模块门控出
 不匹配框架的构建由发现步骤在上游处理
 （参见{@link moduleTargetsFramework}）。
@@ -1803,7 +338,7 @@ function compileHookModule(source: string, options: CompileHookOptions): Compile
 ```
 
 编译一个中性的**钩子模块**（一种针对
-`@mission-platform/forge-jsx` 的 React 风格的挂钩（_不是_ UI 组件）到其
+`@mission-platform/forge-jsx` 的 React 风格的挂钩，_不是_ UI 组件）到其
 每个框架源（第一阶段）。
 
 #### 参数
@@ -1864,6 +399,142 @@ export interface CompileOptions
 
 {@linkcompileComponentModule} 的选项。
 
+## `src/compiler/components`
+
+### 查找组件函数
+
+**种类：**功能
+
+```typescript
+function findComponentFunction(sourceFile: OxcParsedModule, name: string): OxcNode | undefined;
+```
+
+按名称查找中性组件的导出 Oxc 函数声明。
+
+#### 参数
+
+| 名称   | 类型           | 描述 |
+| ------ | -------------- | ---- |
+| 源文件 | OxcParsed 模块 |      |
+| 名称   | 字符串         |      |
+
+### 是槽元素
+
+**种类：**功能
+
+```typescript
+function isSlotElement(node: OxcNode): boolean;
+```
+
+Oxc node 是否是中性命名槽元素。
+
+#### 参数
+
+| 名称 | 类型    | 描述 |
+| ---- | ------- | ---- |
+| node | OxcNode |      |
+
+### 读取槽位名称
+
+**种类：**功能
+
+```typescript
+function readSlotName(node: OxcNode): string | undefined;
+```
+
+读取 Oxc `<Slot>` 元素的静态 `name="…"`。
+
+#### 参数
+
+| 名称 | 类型    | 描述 |
+| ---- | ------- | ---- |
+| node | OxcNode |      |
+
+## `src/compiler/constants`
+
+### LOCAL_JSX_TYPES_FILE
+
+**种类：**常数
+
+```typescript
+export const LOCAL_JSX_TYPES_FILE;
+```
+
+用于生成的特定于框架的 JSX 类型模块的文件名。
+
+### LOCAL_JSX_TYPES_MODULE
+
+**种类：**常数
+
+```typescript
+export const LOCAL_JSX_TYPES_MODULE;
+```
+
+生成的特定于框架的 JSX 类型模块的相对说明符。
+
+### localJsxTypesModuleSource
+
+**种类：**功能
+
+```typescript
+function localJsxTypesModuleSource(framework: JsxFramework): string;
+```
+
+生成共置框架特定的 JSX 类型声明。
+
+#### 参数
+
+| 名称 | 类型    | 描述 |
+| ---- | ------- | ---- |
+| 框架 | Jsx框架 |      |
+
+### 中性模块
+
+**种类：**常数
+
+```typescript
+export const NEUTRAL_MODULE;
+```
+
+组件从中导入其原语的中性包。
+
+## `src/compiler/directives`
+
+### 模块目标框架
+
+**种类：**功能
+
+```typescript
+function moduleTargetsFramework(fileName: string, source: string, framework: string): boolean;
+```
+
+中性模块或特定于框架的模块是否属于目标构建。
+
+#### 参数
+
+| 名称   | 类型   | 描述 |
+| ------ | ------ | ---- |
+| 文件名 | 字符串 |      |
+| 来源   | 字符串 |      |
+| 框架   | 字符串 |      |
+
+### 阅读框架指令
+
+**种类：**功能
+
+```typescript
+function readFrameworkDirective(fileName: string, source: string): JsxFramework | undefined;
+```
+
+从 Oxc 模块读取主要的 `"use <framework>"` 指令。
+
+#### 参数
+
+| 名称   | 类型   | 描述 |
+| ------ | ------ | ---- |
+| 文件名 | 字符串 |      |
+| 来源   | 字符串 |      |
+
 ## `src/compiler/discover`
 
 ### 发现组件
@@ -1891,7 +562,11 @@ function discoverComponents(barrelSource: string, stripPrefix = 'Forge'): Discov
 **种类：**功能
 
 ```typescript
-function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix = 'Forge'): DiscoveredComponent[];
+function discoverComponentsFromGraph(
+  graph: ForgeFileGraph,
+  stripPrefix = 'Forge',
+  diagnostics?: CompilerDiagnostic[],
+): DiscoveredComponent[];
 ```
 
 从规范图中导出公共组件，同时保留遗留结果形状。
@@ -1902,6 +577,7 @@ function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix = 'Forge
 | -------- | -------------- | ---- |
 | 图表     | ForgeFileGraph |      |
 | 条带前缀 |                |      |
+| 诊断     | 编译器诊断[]   |      |
 
 ### 发现组件
 
@@ -1954,6 +630,7 @@ Vue 包的 `useToast` 可组合项）通过生成的条目，因此
 function discoverHelperExportsFromGraph(
   graph: ForgeFileGraph,
   componentFolders: ReadonlySet<string>,
+  discoveredComponents?: readonly DiscoveredComponent[],
 ): DiscoveredHelperExport[];
 ```
 
@@ -1961,10 +638,70 @@ function discoverHelperExportsFromGraph(
 
 #### 参数
 
-| 名称       | 类型             | 描述 |
-| ---------- | ---------------- | ---- |
-| 图表       | ForgeFileGraph   |      |
-| 组件文件夹 | 只读设置<string> |      |
+| 名称       | 类型                       | 描述 |
+| ---------- | -------------------------- | ---- |
+| 图表       | ForgeFileGraph             |      |
+| 组件文件夹 | 只读设置<string>           |      |
+| 发现组件   | 只读 DiscoveredComponent[] |      |
+
+## `src/compiler/facts`
+
+### 伪造出口事实
+
+**种类：**接口
+
+```typescript
+export interface ForgeExportFact
+```
+
+在 Forge 源模块中发现的声明或重新导出。
+
+### 伪造进口事实
+
+**种类：**接口
+
+```typescript
+export interface ForgeImportFact
+```
+
+在 Forge 源模块中发现的静态导入。
+
+### ForgeModule事实
+
+**种类：**接口
+
+```typescript
+export interface ForgeModuleFacts
+```
+
+构建规范的 Forge 文件图所需的所有静态模块事实。
+
+### ForgeSourceSpan
+
+**种类：**接口
+
+```typescript
+export interface ForgeSourceSpan
+```
+
+图形诊断和导入/导出事实使用的源位置。
+
+### 检查Forge模块
+
+**种类：**功能
+
+```typescript
+function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts;
+```
+
+从解析的模块中提取静态导入、导出、仅类型边缘和框架事实。
+
+#### 参数
+
+| 名称   | 类型   | 描述 |
+| ------ | ------ | ---- |
+| 文件名 | 字符串 |      |
+| 来源   | 字符串 |      |
 
 ## `src/compiler/frontends`
 
@@ -2170,6 +907,118 @@ function hoistStaticJsx(
 | 模块种类 | '组件'\| '可组合' |      |
 | 组件名称 | 字符串            |      |
 
+## `src/compiler/imports`
+
+### 中性进口
+
+**种类：**接口
+
+```typescript
+export interface NeutralImports
+```
+
+从中性包导入的模块的名称，按绑定类型划分。
+
+### 读取外部导入
+
+**种类：**功能
+
+```typescript
+function readExternalImports(fileName: string, source: string): string[];
+```
+
+将逐字携带的裸包导入收集到生成的框架源中。
+
+#### 参数
+
+| 名称   | 类型   | 描述 |
+| ------ | ------ | ---- |
+| 文件名 | 字符串 |      |
+| 来源   | 字符串 |      |
+
+### 阅读中性进口
+
+**种类：**功能
+
+```typescript
+function readNeutralImports(fileName: string, source: string): NeutralImports;
+```
+
+检查模块的中性包导入。
+
+#### 参数
+
+| 名称   | 类型   | 描述 |
+| ------ | ------ | ---- |
+| 文件名 | 字符串 |      |
+| 来源   | 字符串 |      |
+
+### 读取样式导入
+
+**种类：**功能
+
+```typescript
+function readStyleImports(fileName: string, source: string, sourceRoot?: string): StyleImport[];
+```
+
+从中性模块收集相关样式表导入。
+
+#### 参数
+
+| 名称   | 类型   | 描述 |
+| ------ | ------ | ---- |
+| 文件名 | 字符串 |      |
+| 来源   | 字符串 |      |
+| 源根   | 字符串 |      |
+
+### 解决工作空间本地导入
+
+**种类：**功能
+
+```typescript
+function resolveWorkspaceLocalImport(
+  specifier: string,
+  sourceFileName: string,
+  sourceRoot: string | undefined,
+): string | undefined;
+```
+
+解析相对于其源文件的工作区本地 `@/` 导入。
+
+#### 参数
+
+| 名称     | 类型           | 描述 |
+| -------- | -------------- | ---- |
+| 说明符   | 字符串         |      |
+| 源文件名 | 字符串         |      |
+| 源根     | 字符串\|未定义 |      |
+
+### 样式导入
+
+**种类：**接口
+
+```typescript
+export interface StyleImport
+```
+
+将样式表导入到平面生成的树中。
+
+### 使用I18nextT
+
+**种类：**功能
+
+```typescript
+function usesI18nextT(node: OxcNode): boolean;
+```
+
+Oxc 模块或 node 是否调用 `i18next.t(...)`。
+
+#### 参数
+
+| 名称 | 类型    | 描述 |
+| ---- | ------- | ---- |
+| node | OxcNode |      |
+
 ## `src/compiler/optimize`
 
 ### 优化Forge模块
@@ -2203,6 +1052,363 @@ export const optimizeSourceFile;
 ```
 
 使用旧名称保留编译器集成的兼容性别名。
+
+## `src/compiler/oxc`
+
+### 构建OxcParentMap
+
+**种类：**功能
+
+```typescript
+function buildOxcParentMap(root: OxcNode): Map<OxcNode, OxcNode>;
+```
+
+没有提供描述。
+
+#### 参数
+
+| 名称 | 类型    | 描述 |
+| ---- | ------- | ---- |
+| 根   | OxcNode |      |
+
+### isOxcJsxRoot
+
+**种类：**功能
+
+```typescript
+function isOxcJsxRoot(node: OxcNode): boolean;
+```
+
+当 node 是 JSX 元素、自关闭元素或片段时为 true。
+
+#### 参数
+
+| 名称 | 类型    | 描述 |
+| ---- | ------- | ---- |
+| node | OxcNode |      |
+
+### isOxc节点
+
+**种类：**功能
+
+```typescript
+function isOxcNode(value: unknown): value is OxcNode;
+```
+
+没有提供描述。
+
+#### 参数
+
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 价值 | 未知 |      |
+
+### oxcArray
+
+**种类：**功能
+
+```typescript
+function oxcArray(node: OxcNode, key: string): OxcNode[];
+```
+
+没有提供描述。
+
+#### 参数
+
+| 名称 | 类型    | 描述 |
+| ---- | ------- | ---- |
+| node | OxcNode |      |
+| key  | 字符串  |      |
+
+### oxc儿童
+
+**种类：**功能
+
+```typescript
+function oxcChildren(node: OxcNode): OxcNode[];
+```
+
+深度优先子进程遍历可枚举的 node 值属性。
+
+#### 参数
+
+| 名称 | 类型    | 描述 |
+| ---- | ------- | ---- |
+| node | OxcNode |      |
+
+### Oxc评论
+
+**种类：**接口
+
+```typescript
+export interface OxcComment
+```
+
+没有提供描述。
+
+### oxc标识符名称
+
+**种类：**功能
+
+```typescript
+function oxcIdentifierName(node: OxcNode | undefined): string | undefined;
+```
+
+没有提供描述。
+
+#### 参数
+
+| 名称 | 类型             | 描述 |
+| ---- | ---------------- | ---- |
+| node | OxcNode \|未定义 |      |
+
+### oxc文字值
+
+**种类：**功能
+
+```typescript
+function oxcLiteralValue(node: OxcNode | undefined): unknown;
+```
+
+没有提供描述。
+
+#### 参数
+
+| 名称 | 类型             | 描述 |
+| ---- | ---------------- | ---- |
+| node | OxcNode \|未定义 |      |
+
+### 牛津节点
+
+**种类：**接口
+
+```typescript
+export interface OxcNode
+```
+
+中立前端使用的 Oxc node 的可序列化子集。
+
+### oxcNodeText
+
+**种类：**功能
+
+```typescript
+function oxcNodeText(source: string, node: OxcNode | undefined): string;
+```
+
+没有提供描述。
+
+#### 参数
+
+| 名称 | 类型             | 描述 |
+| ---- | ---------------- | ---- |
+| 来源 | 字符串           |      |
+| node | OxcNode \|未定义 |      |
+
+### oxc对象
+
+**种类：**功能
+
+```typescript
+function oxcObject(node: OxcNode, key: string): OxcNode | undefined;
+```
+
+没有提供描述。
+
+#### 参数
+
+| 名称 | 类型    | 描述 |
+| ---- | ------- | ---- |
+| node | OxcNode |      |
+| 关键 | 字符串  |      |
+
+### Oxc父地图
+
+**种类：**类型
+
+```typescript
+export type OxcParentMap = ReadonlyMap<OxcNode, OxcNode>;
+```
+
+没有提供描述。
+
+### Oxc解析模块
+
+**种类：**接口
+
+```typescript
+export interface OxcParsedModule
+```
+
+没有提供描述。
+
+### Oxc解析错误
+
+**种类：**接口
+
+```typescript
+export interface OxcParseError
+```
+
+没有提供描述。
+
+### oxc程序体
+
+**种类：**功能
+
+```typescript
+function oxcProgramBody(program: OxcNode): OxcNode[];
+```
+
+没有提供描述。
+
+#### 参数
+
+| 名称 | 类型    | 描述 |
+| ---- | ------- | ---- |
+| 节目 | OxcNode |      |
+
+### oxc源表达式
+
+**种类：**功能
+
+```typescript
+function oxcSourceExpression(
+  source: string,
+  node: OxcNode,
+  syntax: SourceBackedExpression['syntax'] = 'expression',
+): SourceBackedExpression;
+```
+
+没有提供描述。
+
+#### 参数
+
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 来源 | 字符串                         |      |
+| node | OxcNode                        |      |
+| 语法 | SourceBackedExpression['语法'] |      |
+
+### oxc源跨度
+
+**种类：**功能
+
+```typescript
+function oxcSourceSpan(source: string, node: OxcNode): SourceSpan;
+```
+
+没有提供描述。
+
+#### 参数
+
+| 名称 | 类型    | 描述 |
+| ---- | ------- | ---- |
+| 来源 | 字符串  |      |
+| node | OxcNode |      |
+
+### oxc字符串
+
+**种类：**功能
+
+```typescript
+function oxcString(node: OxcNode | undefined, key: 'name' | 'value' | 'directive' = 'name'): string | undefined;
+```
+
+没有提供描述。
+
+#### 参数
+
+| 名称 | 类型             | 描述   |
+| ---- | ---------------- | ------ |
+| node | OxcNode \|未定义 |        |
+| 关键 | '名字'\| '值'    | '指令' |     |
+
+### oxc类型节点
+
+**种类：**功能
+
+```typescript
+function oxcTypeNode(node: OxcNode | undefined): OxcNode | undefined;
+```
+
+没有提供描述。
+
+#### 参数
+
+| 名称 | 类型             | 描述 |
+| ---- | ---------------- | ---- |
+| node | OxcNode \|未定义 |      |
+
+### oxcUnwrapModule语句
+
+**种类：**功能
+
+```typescript
+function oxcUnwrapModuleStatement(statement: OxcNode): {
+  readonly node: OxcNode;
+  readonly exported: boolean;
+  readonly exportStatement: OxcNode | undefined;
+};
+```
+
+展开 `export …` 包装器，以便调用者可以看到底层声明。
+
+#### 参数
+
+| 名称 | 类型    | 描述 |
+| ---- | ------- | ---- |
+| 声明 | OxcNode |      |
+
+### 解析Oxc模块
+
+**种类：**功能
+
+```typescript
+function parseOxcModule(fileName: string, source: string): OxcParsedModule;
+```
+
+没有提供描述。
+
+#### 参数
+
+| 名称   | 类型   | 描述 |
+| ------ | ------ | ---- |
+| 文件名 | 字符串 |      |
+| 来源   | 字符串 |      |
+
+### stripOxc框架指令
+
+**种类：**功能
+
+```typescript
+function stripOxcFrameworkDirective(module: OxcParsedModule): OxcParsedModule;
+```
+
+从已解析的模块中删除前导 `"use <framework>"` 序言指令。
+
+#### 参数
+
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 模块 | OxcParsed 模块 |      |
+
+### 访问Oxc
+
+**种类：**功能
+
+```typescript
+function visitOxc(node: OxcNode, visitor: (node: OxcNode) => void | boolean): void;
+```
+
+没有提供描述。
+
+#### 参数
+
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| node | OxcNode                        |      |
+| 访客 | (node: OxcNode) => void \|布尔 |      |
 
 ## `src/compiler/pipeline`
 
@@ -2277,8 +1483,6 @@ function createCompilerPipeline(service: ForgeCompilerService = createForgeCompi
 export interface ForgeCompilationReport
 ```
 
-在一个服务生命周期内收集的诊断和指标。
-
 ## `src/compiler/router`
 
 ### 分析路由器功能
@@ -2335,7 +1539,7 @@ Forge 编译器和独立目标装置使用的调度程序形式。
 export interface CompiledArtifact
 ```
 
-目标输出加上服务元数据，而不更改GeneratedModule本身。
+目标输出加上服务元数据，无需更改GenerateModule本身。
 
 ### 创建Forge编译器服务
 
@@ -2411,19 +1615,105 @@ export interface ForgeProjectSnapshot extends ForgeProjectInput
 export class PersistentForgeCompilerService implements ForgeCompilerService
 ```
 
-一个进程/构建会话的长期同步编译器状态。
+## `src/compiler/session`
 
-## `src/config`
-
-### 默认
+### 创建ForgeBuildSession
 
 **种类：**功能
 
 ```typescript
-function reactJsxPlugin(): Plugin;
+function createForgeBuildSession(options: CreateForgeBuildSessionOptions = {}): ForgeBuildSession;
+```
+
+创建 Vite 和 tsdown 适配器使用的显式生命周期所有者。
+构建仅记录服务所有权；图发现开始于
+`prepare`，适配器从捆绑器生命周期挂钩调用。
+
+#### 参数
+
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 选项 | 创建ForgeBuildSessionOptions |      |
+
+### CreateForgeBuildSessionOptions
+
+**种类：**接口
+
+```typescript
+export interface CreateForgeBuildSessionOptions
 ```
 
 没有提供描述。
+
+### 锻造建造种类
+
+**种类：**类型
+
+```typescript
+export type ForgeBuildKind = 'component' | 'hook' | 'neutral' | 'router' | 'cms-island';
+```
+
+构建共享 Forge 生命周期支持的策略。
+
+### 锻造建造计划
+
+**种类：**接口
+
+```typescript
+export interface ForgeBuildPlan
+```
+
+中立项目和选定的目标由一个生命周期协调。
+
+### ForgeBuildSession
+
+**种类：**接口
+
+```typescript
+export interface ForgeBuildSession
+```
+
+没有提供描述。
+
+### ForgeTargetGenerationContext
+
+**种类：**接口
+
+```typescript
+export interface ForgeTargetGenerationContext
+```
+
+项目准备后上下文传递给目标生成回调。
+
+### 锻造目标生成结果
+
+**种类：**接口
+
+```typescript
+export interface ForgeTargetGenerationResult
+```
+
+目标的惰性源生成阶段返回的结果。
+
+### 制定目标计划
+
+**种类：**接口
+
+```typescript
+export interface ForgeTargetPlan
+```
+
+### 伪造目标结果
+
+**种类：**接口
+
+```typescript
+export interface ForgeTargetResult
+```
+
+没有提供描述。
+
+## `src/config`
 
 ### 定义JsxHookLibraryConfig
 
@@ -2516,7 +1806,7 @@ function solidJsxTsdownPlugin(): Plugin;
 ```
 
 Rolldown/tsdown 兼容 Solid JSX 插件。 `vite-plugin-solid` 的委托
-仅 `transform` 挂钩（跳过仅 Vite `config`/`configResolved` 设置）和
+仅 `transform` 挂钩（仅跳过 Vite-`config`/`configResolved` 设置）和
 通过 `options` 挂钩设置 Rolldown `transform.jsx = 'preserve'`，以便 Oxc 执行
 不将 Solid JSX 重写为 React。
 
@@ -2557,7 +1847,7 @@ Vite 插件，用于编译生成的 Svelte 组件。
 function svelteTsdownPlugin(): Plugin;
 ```
 
-Rolldown/tsdown 兼容 Svelte 编译器插件。通过编译 `.svelte` SFC
+Rolldown/tsdown 兼容 Svelte 编译器插件。 Compiles `.svelte` SFCs via
 普通 `transform` 挂钩中的 `svelte/compiler` — 没有 Vite 解析配置 API。
 使用 tsdown 构建时更喜欢这个（或 {@link stagePluginsForTsdown}）。
 
@@ -2572,7 +1862,7 @@ function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions):
 ```
 
 将中性钩子库编译到其每个框架源代码树（第 1 阶段），
-返回生成的入口模块路径。
+returning the generated entry module path.
 
 #### 参数
 
@@ -2589,45 +1879,6 @@ export interface GenerateHookLibrarySourcesOptions
 ```
 
 {@linkgenerateHookLibrarySources} 的选项。
-
-### HookLibraryDts选项
-
-**种类：**接口
-
-```typescript
-export interface HookLibraryDtsOptions
-```
-
-{@link hookLibraryDtsPlugin} 的选项。
-
-### hookLibraryDts插件
-
-**种类：**功能
-
-```typescript
-function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin;
-```
-
-生成后的 Vite 插件，可发出 **真正的、每个框架** 声明
-对于钩子库生成的源代码树。
-
-每个框架构建（{@linkgenerateHookLibrarySources}+框架的
-Stage-2 捆绑器）生成 JS 但没有声明，因为生成的树是
-不是 `tsc` 可见的源文件。而不是重新导出单个 _common_
-每个框架的中立声明，该插件运行 TypeScript
-`closeBundle` 中生成的树上的编译器 API（构建后步骤）以及
-将生成的 `.d.ts` 文件（`index.d.ts` + 每个模块一个）写入
-构建自己的 `outDir`。因此 **React** 构建获取针对其键入的声明
-React 自己的挂钩和 **Vue** 构建获取其可组合项的声明
-返回 Vue `Ref`s — 每个框架都有自己的类型。类型诊断是
-出现为构建警告而不是失败，因此 `.d.ts` 始终是
-产生的。
-
-#### 参数
-
-| 名称 | 类型                  | 描述                  |
-| ---- | --------------------- | --------------------- |
-| 选项 | HookLibraryDtsOptions | HookLibraryDtsOptions |     |
 
 ## `src/generate`
 
@@ -2684,161 +1935,33 @@ export interface GenerateFrameworkSourcesOptions
 
 {@linkgenerateFrameworkSources} 的选项。
 
-### jsxComponentsCSSImportPlugin
-
-**种类：**功能
-
-```typescript
-function jsxComponentsCssImportPlugin(): Plugin;
-```
-
-将每个组件的 CSS 重新链接到它的 JS 块。
-
-使用 `cssCodeSplit` 构建的 Vite **库** 会为每个块提取一个 CSS 资源
-但与应用程序构建不同，不会注入匹配的 `import './x.css'`
-到 JS 块中，因此导入单个组件的消费者将获得其
-JS 没有它的样式。该插件恢复该链接：对于每个发出的
-它预先考虑与关联的每个 CSS 文件 Vite 的副作用导入
-它 (`chunk.viteMetadata.importedCss`)，因此导入一个组件会引入
-正是该组件的样式表（并且树摇动了库的其余部分，
-包括样式）。
-
-它与 `enforce: 'post'` 一起运行，因此其 `generateBundle` 挂钩在 **after** 后执行
-Vite 自己的 CSS 插件已填充 `importedCss` — 否则元数据为
-仍然是空的（这就是为什么 Vue 作用域样式资产在
-`preserveModules`，以前是孤立的，并且组件已呈现
-无样式）。
-
-仅重新链接实际发送到捆绑包中的 CSS 文件。下
-`preserveModules` Vite 删除重复字节相同的 CSS 资产 — 例如共享的
-由许多组件导入的 `size`/`spacing` 实用程序模块会崩溃为
-单个发出的样式表 - 并删除重复项，但仍然保留它们
-`importedCss` 中的临时每块名称。为 a 发出 `import './x.css'`
-删除的名称会产生一个悬空引用，该引用会破坏每个下游
-消费者的构建（未解析的导入），因此此类名称被过滤掉；的
-去重后的样式仍然通过保留它们的一个块（以及
-包的 `./vue` / `./react` 桶拉入该块）。
-
-最后，每个 CSS 模块样式表都以其 **source** 名称发出 -
-`foo.module.css` — 已应用类名哈希并且
-已解析的名称已烘焙到同级 `foo.module.js` 类映射中。运送它
-`.module.css` 后缀是一个陷阱：每个*下游*捆绑器（例如
-React Storybook 自己的 Vite) 将 `*.module.css` 识别为 CSS 模块，并且
-**第二次**对其运行 CSS 模块转换，重新散列
-选择器，因此它们不再匹配（已经散列的）类名
-JS — 然后组件呈现无样式。样式表必须经过处理
-一次，在这里，当框架代码被编译时——而不是在下游再次。所以
-每个发出的 `*.module.css` 资产都被重命名为普通 `*.css`（全局
-样式表消费者逐字发送），以及重新链接的导入点
-重命名的文件。
-
-### JsxComponentDts选项
-
-**种类：**接口
-
-```typescript
-export interface JsxComponentsDtsOptions
-```
-
-{@link jsxComponentsDtsPlugin} 的选项。
-
-### jsxComponentDts插件
-
-**种类：**功能
-
-```typescript
-function jsxComponentsDtsPlugin(options: JsxComponentsDtsOptions): Plugin;
-```
-
-生成后的 Vite 插件，可发出 **真正的、每个框架** 声明
-对于中性组件包生成的源代码树。
-
-每个框架构建（{@linkgenerateFrameworkSources}+框架的
-Stage-2 捆绑器）生成 JS 但没有声明，因为生成的树是
-不是 `tsc` 可见的源文件。而不是综合单个条目
-其 props 类型从 **共享中立** 重新导入的声明
-声明（因此每个框架的使用者都会看到相同的 `MpChild` /
-`MpRef`），该插件运行每个框架自己的声明工具链
-`closeBundle` 中生成的树并写入生成的 `.d.ts` 文件
-进入构建自己的 `outDir`：
-
-- **React** — `.tsx` 树上的 TypeScript 编译器 API，进程内。
-  因为 React 发射器已经将中性渲染/挂钩类型重写为
-  它们的 React 等效项（`MpChild` → `ReactNode`、`MpRef` → `RefObject`、
-  `MpDependencyList` → `DependencyList`)，发出的声明读取
-  React 的惯用语。
-- **Vue** — `.vue` 树上的 `vue-tsc` CLI，它发出每个 SFC
-  精确的 `DefineComponent`（道具、槽、发射）及其 `.vue.d.ts`
-  边车。
-- **Solid** — 与 React 相同的进程内 TypeScript 编译器 API
-  生成了 `.tsx` 树，但 JSX 命名空间指向 `solid-js`，因此
-  发射器渲染的 Solid 风格的 JSX 根据 Solid 自己的解析
-  `JSX.Element` 词汇。
-- **Web-Components** — 相同的进程内 TypeScript 编译器 API
-  生成 `LitElement` 子类的（无 JSX）`.ts` 树。
-- **Svelte** — 尝试 `svelte2tsx` 的异步 `emitDts` 覆盖生成的
-  `.svelte` + `.ts` 树优先（来自
-  Svelte 语言工具），但截至当前依赖的 `svelte2tsx`
-  版本其每个组件 `.svelte.d.ts` sidecar 都带有悬空
-  他们从不声明或导入 props 类型引用（请参阅{@link * svelteDtsOutputIsUsable}），因此目前总是回退到
-  有效 `index.d.ts` 的合成条目声明。
-
-类型诊断显示为构建警告而不是失败，因此
-始终生成 `.d.ts`（镜像 {@link hookLibraryDtsPlugin}）。
-
-#### 参数
-
-| 名称 | 类型                    | 描述                    |
-| ---- | ----------------------- | ----------------------- |
-| 选项 | JsxComponentsDtsOptions | JsxComponentsDtsOptions | JsxComponentsDtsOptions |
-
-### JsxComponentsEntryDtsOptions
-
-**种类：**接口
-
-```typescript
-export interface JsxComponentsEntryDtsOptions
-```
-
-{@link jsxComponentsEntryDtsPlugin} 的选项。
-
-### jsxComponentsEntryDtsPlugin
-
-**种类：**功能
-
-```typescript
-function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plugin;
-```
-
-发出综合声明 (`<declarationFileName>.d.ts`)
-生成的条目，因此包的 `./react` / `./vue` 类型甚至可以解析
-尽管条目本身已生成（因此 `tsc` 看不到）。
-
-#### 参数
-
-| 名称 | 类型                         | 描述                         |
-| ---- | ---------------------------- | ---------------------------- |
-| 选项 | JsxComponentsEntryDtsOptions | JsxComponentsEntryDtsOptions | JsxComponentsEntryDtsOptions |
-
 ## `src/tsdown`
 
-### 定义TsdownForgeComponents
+### CanonicalChunkCandidate
+
+**种类：**类型
+
+```typescript
+export type CanonicalChunkCandidate = | string |
+```
+
+没有提供描述。
+
+### 定义TsdownForgeComponentsAll
 
 **种类：**功能
 
 ```typescript
-function defineTsdownForgeComponents(options: TsdownForgeComponentsOptions): UserConfig[];
+function defineTsdownForgeComponentsAll(options: TsdownForgeComponentPluginsOptions): UserConfig[];
 ```
 
-在 tsdown 下重现一个 Archetype-C **组件** 框架构建：
-第 1 阶段 (`generateFrameworkSources`) + 第 2 阶段插件 + css 导入 + dts 插件，
-发送到 `dist/<framework>/`。
+为每个请求的 Forge 组件框架构建独立的 tsdown 配置。
 
 #### 参数
 
-| 名称 | 类型                         | 描述                         |
-| ---- | ---------------------------- | ---------------------------- |
-| 选项 | TsdownForgeComponentsOptions | TsdownForgeComponentsOptions | TsdownForgeComponentsOptions |
+| 名称 | 类型                               | 描述                               |
+| ---- | ---------------------------------- | ---------------------------------- |
+| 选项 | TsdownForgeComponentPluginsOptions | TsdownForgeComponentPluginsOptions | TsdownForgeComponentPluginsOptions |
 
 ### 定义TsdownForgeEmailComponents
 
@@ -2859,24 +1982,6 @@ function defineTsdownForgeEmailComponents(options: TsdownForgeEmailComponentsOpt
 | ---- | --------------------------------- | --------------------------------- |
 | 选项 | TsdownForgeEmailComponentsOptions | TsdownForgeEmailComponentsOptions | TsdownForgeEmailComponentsOptions |
 
-### 定义TsdownForgeHooks
-
-**种类：**功能
-
-```typescript
-function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig;
-```
-
-在 tsdown 下重现一个 Archetype-C **hook** 框架构建：
-第 1 阶段 (`generateHookLibrarySources`) + 第 2 阶段插件 + `hookLibraryDtsPlugin`，
-发送到 `dist/<framework>/`。
-
-#### 参数
-
-| 名称 | 类型                    | 描述                    |
-| ---- | ----------------------- | ----------------------- |
-| 选项 | TsdownForgeHooksOptions | TsdownForgeHooksOptions |
-
 ### 定义TsdownForgeHooksAll
 
 **种类：**功能
@@ -2887,7 +1992,7 @@ function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserCon
 
 为每个请求的 forge hooks 框架构建一系列 tsdown 配置
 （默认情况下加上中性根条目）。一个包的`tsdown.config.ts`可以
-`export default defineTsdownForgeHooksAll(...)`。
+`export default defineTsdownForgeHooksAll(...)`.
 
 #### 参数
 
@@ -2895,12 +2000,66 @@ function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserCon
 | ---- | -------------------------- | -------------------------- |
 | 选项 | TsdownForgeHooksAllOptions | TsdownForgeHooksAllOptions | TsdownForgeHooksAllOptions |
 
-### TsdownForgeComponents选项
+### 解析规范块名称
+
+**种类：**功能
+
+```typescript
+function resolveCanonicalChunkName(chunkInfo: CanonicalChunkCandidate): string;
+```
+
+确定块的规范发出的块文件名。
+保留规范的 `[name].js` 路径，没有碰撞和地图
+Vue 虚拟脚本模块到 `${component}.script.js`。
+
+#### 参数
+
+| 名称   | 类型               | 描述 |
+| ------ | ------------------ | ---- |
+| 块信息 | CanonicalChunk候选 |      |
+
+### 解析规范条目名称
+
+**种类：**功能
+
+```typescript
+function resolveCanonicalEntryName(chunkInfo: CanonicalChunkCandidate): string;
+```
+
+确定块的规范发出条目文件名。
+虚拟伪造条目映射到 `index.js`，同时保留
+模块委托给块名称解析。
+
+#### 参数
+
+| 名称   | 类型               | 描述 |
+| ------ | ------------------ | ---- |
+| 块信息 | CanonicalChunk候选 |      |
+
+### tsdownForgeComponent插件
+
+**种类：**功能
+
+```typescript
+function tsdownForgeComponentPlugins(options: TsdownForgeComponentPluginsOptions): TsdownPlugin[];
+```
+
+在 tsdown 下重现一个 Archetype-C **组件** 框架构建：
+第 1 阶段 (`generateFrameworkSources`) + 第 2 阶段插件 + css 导入 + dts 插件，
+发送到 `dist/<framework>/`。
+
+#### 参数
+
+| 名称 | 类型                               | 描述                               |
+| ---- | ---------------------------------- | ---------------------------------- |
+| 选项 | TsdownForgeComponentPluginsOptions | TsdownForgeComponentPluginsOptions | TsdownForgeComponentPluginsOptions |
+
+### TsdownForgeComponentPluginsOptions
 
 **种类：**接口
 
 ```typescript
-export interface TsdownForgeComponentsOptions
+export interface TsdownForgeComponentPluginsOptions
 ```
 
 没有提供描述。
@@ -2915,22 +2074,30 @@ export interface TsdownForgeEmailComponentsOptions
 
 没有提供描述。
 
+### tsdownForgeHook插件
+
+**种类：**功能
+
+```typescript
+function tsdownForgeHookPlugins(options: TsdownForgeHooksAllOptions): TsdownPlugin[];
+```
+
+钩子适配器的原生 tsdown-plugin 形式。返回的插件注入
+来自 `tsdownConfig` 的目标配置，允许组合钩子构建
+具有一个调用者拥有的 `defineTsdownLibrary` 配置。
+
+#### 参数
+
+| 名称 | 类型                       | 描述                       |
+| ---- | -------------------------- | -------------------------- |
+| 选项 | TsdownForgeHooksAllOptions | TsdownForgeHooksAllOptions | TsdownForgeHooksAllOptions |
+
 ### TsdownForgeHooksAllOptions
 
 **种类：**接口
 
 ```typescript
 export interface TsdownForgeHooksAllOptions
-```
-
-没有提供描述。
-
-### TsdownForgeHooksOptions
-
-**种类：**接口
-
-```typescript
-export interface TsdownForgeHooksOptions
 ```
 
 没有提供描述。

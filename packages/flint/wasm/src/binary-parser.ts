@@ -17,6 +17,7 @@ export interface WasmImport {
   readonly name: string;
   readonly kind: number;
   readonly typeIndex?: number;
+  readonly memory?: WasmMemory;
 }
 
 /** WebAssembly exported entity record. */
@@ -148,8 +149,8 @@ function parseImportEntry(payload: Cursor): WasmImport {
     return { module, name, kind };
   }
   if (kind === 2) {
-    parseLimits(payload);
-    return { module, name, kind };
+    const memory = parseLimits(payload);
+    return { module, name, kind, memory };
   }
   if (kind === 3) {
     payload.byte();
@@ -231,6 +232,10 @@ function parseStandardSection(id: number, payload: Cursor, builder: SectionBuild
     }
     case 2: {
       builder.imports = parseImportSection(payload);
+      const memoryImport = builder.imports.find((entry) => entry.kind === 2);
+      if (memoryImport?.memory !== undefined && builder.memory === undefined) {
+        builder.memory = memoryImport.memory;
+      }
       break;
     }
     case 3: {

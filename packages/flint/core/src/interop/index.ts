@@ -14,6 +14,23 @@ export { FlintBindingGenerator, generateFlintBindings } from './flint-generator.
 export { HostShimGenerator, generateHostShims } from './host-shim-generator.js';
 export { lexWebIdl, WebIdlLexer, type WebIdlToken, type WebIdlTokenKind } from './lexer.js';
 export { parseWebIdl, WebIdlParseError, WebIdlParser } from './parser.js';
+export {
+  compileCHeader,
+  cHeaderToFlintModule,
+  generateDtsFromC,
+  generateFfiHostShim,
+  generateFlintFromC,
+  mapCTypeToFlint,
+  parseCHeader,
+  type CConstantDefinition,
+  type CFunctionDefinition,
+  type CFunctionParameter,
+  type CHeaderAst,
+  type CStructDefinition,
+  type CStructField,
+  type FfiHostShimOptions,
+  type FfiShimTarget,
+} from './c-bindgen.js';
 
 export * from './types.js';
 

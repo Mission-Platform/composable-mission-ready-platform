@@ -125,7 +125,7 @@ Vite および tsdown ヘルパーは、ビルド セッションの存続期間
 - `TargetContext` には、モジュールの種類、コンポーネント名、検出されたコンポーネント フォルダーなどの一般的なビルド コンテキストが含まれます。
 - `TargetIntentions` は、診断を保持しながらターゲットを下げた後にセマンティック モジュールをラップします。
 - `GeneratedModule` は、生成されたソース、その出力言語、補助モジュール、および診断について説明します。
-- `FrameworkBuildAdapters` は、独立して型指定された Vite および tsdown アダプターを提供します。
+- `ForgeBuildAdapters` は、独立して型指定された Vite および tsdown アダプターを提供します。
 - `FrameworkSourceMetadata`、ランタイム外部、および表示名のメタデータにより、汎用オーケストレーションが出力の詳細を導き出すことができます
   target switch ステートメントなし。
 

@@ -596,6 +596,33 @@ export interface FlintCapabilityImport
 
 Capability import declaration binding a host capability to a local alias.
 
+### FlintCPrimitiveType
+
+**Kind:** type
+
+```typescript
+export type FlintCPrimitiveType =
+  | 'u8'
+  | 'i8'
+  | 'c_char'
+  | 'c_uchar'
+  | 'c_short'
+  | 'c_ushort'
+  | 'c_int'
+  | 'c_uint'
+  | 'c_long'
+  | 'c_ulong'
+  | 'c_longlong'
+  | 'c_ulonglong'
+  | 'c_size'
+  | 'c_ssize'
+  | 'c_float'
+  | 'c_double'
+  | 'c_void';
+```
+
+C scalar primitive types supported by Flint C interoperability layer.
+
 ### flintDefaultPassingMode
 
 **Kind:** function
@@ -713,6 +740,36 @@ export interface FlintExpressionStatement
 ```
 
 Solitary expression evaluated as a statement.
+
+### FlintForeignCapabilityDeclaration
+
+**Kind:** interface
+
+```typescript
+export interface FlintForeignCapabilityDeclaration
+```
+
+Foreign capability block binding an external native C or Rust library.
+
+### FlintForeignFunctionDeclaration
+
+**Kind:** interface
+
+```typescript
+export interface FlintForeignFunctionDeclaration
+```
+
+Function declaration within a foreign capability block.
+
+### FlintForeignFunctionParameter
+
+**Kind:** interface
+
+```typescript
+export interface FlintForeignFunctionParameter
+```
+
+Parameter for a foreign C function declaration.
 
 ### FlintForStatement
 
@@ -884,6 +941,16 @@ export type FlintMutability = 'immutable' | 'mutable';
 
 Source-level mutability of a binding. Bindings are immutable by default.
 
+### FlintOpaqueForeignTypeDeclaration
+
+**Kind:** interface
+
+```typescript
+export interface FlintOpaqueForeignTypeDeclaration
+```
+
+Opaque foreign type declaration (handle for opaque C pointers).
+
 ### FlintOwnership
 
 **Kind:** type
@@ -929,7 +996,8 @@ Pattern matching pattern: wildcard, literal value, or enum variant.
 **Kind:** type
 
 ```typescript
-export type FlintPrimitiveType = 'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
+export type FlintPrimitiveType =
+  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit' | FlintCPrimitiveType;
 ```
 
 Primitive scalar and carrier types supported by Flint.
@@ -1005,6 +1073,16 @@ export interface FlintStructField
 ```
 
 Individual field declaration within a struct.
+
+### FlintStructRepr
+
+**Kind:** type
+
+```typescript
+export type FlintStructRepr = |
+```
+
+Struct representation modes and layout directives.
 
 ### FlintStructValueExpression
 
@@ -2595,6 +2673,16 @@ Deterministically sorts a collection of generic specializations by their unique 
 
 ## `src/graph`
 
+### FlintForeignObjectReference
+
+**Kind:** interface
+
+```typescript
+export interface FlintForeignObjectReference
+```
+
+Foreign relocatable object reference supplied to the linker.
+
 ### FlintGraphResult
 
 **Kind:** interface
@@ -2678,6 +2766,16 @@ export interface FlintResolvedModule
 
 Resolved Flint source module containing parsed AST, source text,
 project root association, and content hash.
+
+### ForeignObjectFormat
+
+**Kind:** type
+
+```typescript
+export type ForeignObjectFormat = 'wasm-relocatable' | 'elf-object' | 'mach-o';
+```
+
+Relocatable foreign object format (compiled from C/C++ clang or Rust cargo).
 
 ### hashFlintModuleGraph
 
@@ -2779,6 +2877,236 @@ and collapses duplicate forward slashes.
 
 - **@param:** - Raw file name or path string.
 - **@returns:** Normalized POSIX-style file path identifier.
+
+## `src/interop/c-bindgen`
+
+### CConstantDefinition
+
+**Kind:** interface
+
+```typescript
+export interface CConstantDefinition
+```
+
+Parsed numeric or string #define constant definition.
+
+### CFunctionDefinition
+
+**Kind:** interface
+
+```typescript
+export interface CFunctionDefinition
+```
+
+Parsed C function prototype declaration.
+
+### CFunctionParameter
+
+**Kind:** interface
+
+```typescript
+export interface CFunctionParameter
+```
+
+Parameter definition within a parsed C function prototype.
+
+### CHeaderAst
+
+**Kind:** interface
+
+```typescript
+export interface CHeaderAst
+```
+
+Complete parsed C header AST.
+
+### cHeaderToFlintModule
+
+**Kind:** function
+
+```typescript
+function cHeaderToFlintModule(ast: CHeaderAst, library: string, moduleName = 'bindings'): FlintModule;
+```
+
+Converts a parsed CHeaderAst into an in-memory FlintModule AST structure.
+
+#### Parameters
+
+| Name       | Type       | Description                      |
+| ---------- | ---------- | -------------------------------- |
+| ast        | CHeaderAst | - Parsed C header AST.           |
+| library    | string     | - Foreign library identifier.    |
+| moduleName |            | - Canonical logical module name. |
+
+#### Contract
+
+- **@param:** - Parsed C header AST.
+- **@param:** - Foreign library identifier.
+- **@param:** - Canonical logical module name.
+- **@returns:** Fully constructed FlintModule.
+
+### compileCHeader
+
+**Kind:** function
+
+```typescript
+function compileCHeader(
+  source: string,
+  library: string,
+  libraryPath = `lib${library}.so`,
+  options?: FfiHostShimOptions,
+): {
+  readonly ast: CHeaderAst;
+  readonly flintBindings: string;
+  readonly flintModule: FlintModule;
+  readonly typeDeclarations: string;
+  readonly hostShim: string;
+};
+```
+
+End-to-end compilation of a C header string into Flint bindings, AST, .d.ts, and FFI shims.
+
+#### Parameters
+
+| Name        | Type               | Description |
+| ----------- | ------------------ | ----------- |
+| source      | string             |             |
+| library     | string             |             |
+| libraryPath |                    |             |
+| options     | FfiHostShimOptions |             |
+
+### CStructDefinition
+
+**Kind:** interface
+
+```typescript
+export interface CStructDefinition
+```
+
+Parsed C struct definition.
+
+### CStructField
+
+**Kind:** interface
+
+```typescript
+export interface CStructField
+```
+
+Field definition within a parsed C struct.
+
+### FfiHostShimOptions
+
+**Kind:** interface
+
+```typescript
+export interface FfiHostShimOptions
+```
+
+Options for generating FFI host shims.
+
+### FfiShimTarget
+
+**Kind:** type
+
+```typescript
+export type FfiShimTarget = 'bun' | 'node' | 'universal';
+```
+
+FFI target runtime environments for host shim generation.
+
+### generateDtsFromC
+
+**Kind:** function
+
+```typescript
+function generateDtsFromC(ast: CHeaderAst, moduleName: string): string;
+```
+
+Generates TypeScript declaration file (.d.ts) matching C header bindings.
+
+#### Parameters
+
+| Name       | Type       | Description                      |
+| ---------- | ---------- | -------------------------------- |
+| ast        | CHeaderAst | - Parsed C header AST.           |
+| moduleName | string     | - Target module or library name. |
+
+#### Contract
+
+- **@param:** - Parsed C header AST.
+- **@param:** - Target module or library name.
+- **@returns:** Rendered .d.ts content.
+
+### generateFfiHostShim
+
+**Kind:** function
+
+```typescript
+function generateFfiHostShim(ast: CHeaderAst, libraryPath: string, options: FfiHostShimOptions = {}): string;
+```
+
+Generates zero-copy Node-API / bun:ffi / universal host shims for dynamic or native foreign execution.
+
+#### Parameters
+
+| Name        | Type               | Description                                                             |
+| ----------- | ------------------ | ----------------------------------------------------------------------- |
+| ast         | CHeaderAst         | - Parsed C header AST.                                                  |
+| libraryPath | string             | - Native shared library path (.so, .dylib, .dll).                       |
+| options     | FfiHostShimOptions | - Configuration options specifying the target runtime (default: 'bun'). |
+
+#### Contract
+
+- **@param:** - Parsed C header AST.
+- **@param:** - Native shared library path (.so, .dylib, .dll).
+- **@param:** - Configuration options specifying the target runtime (default: 'bun').
+- **@returns:** Rendered host JavaScript shim.
+
+### generateFlintFromC
+
+**Kind:** function
+
+```typescript
+function generateFlintFromC(ast: CHeaderAst, library: string): string;
+```
+
+Generates Flint source code containing `#[repr(C)] struct`, `opaque foreign type`,
+and `foreign "C" capability` declarations from a CHeaderAst.
+
+#### Parameters
+
+| Name    | Type       | Description                                    |
+| ------- | ---------- | ---------------------------------------------- |
+| ast     | CHeaderAst | - Parsed C header AST.                         |
+| library | string     | - Foreign library name for capability binding. |
+
+#### Contract
+
+- **@param:** - Parsed C header AST.
+- **@param:** - Foreign library name for capability binding.
+- **@returns:** Formatted Flint source code string.
+
+### parseCHeader
+
+**Kind:** function
+
+```typescript
+function parseCHeader(source: string): CHeaderAst;
+```
+
+Parses C struct definitions and function prototypes from C header or cbindgen text.
+
+#### Parameters
+
+| Name   | Type   | Description             |
+| ------ | ------ | ----------------------- |
+| source | string | - C header source code. |
+
+#### Contract
+
+- **@param:** - C header source code.
+- **@returns:** Structured CHeaderAst.
 
 ## `src/interop/dts-generator`
 
@@ -3754,6 +4082,16 @@ export interface FlintLinkResult
 
 Result of validating and linking a Flint module dependency graph.
 
+### FlintResolvedForeignSymbol
+
+**Kind:** interface
+
+```typescript
+export interface FlintResolvedForeignSymbol
+```
+
+Foreign symbol resolution record produced by the linker.
+
 ### validateFlintLinks
 
 **Kind:** function
@@ -3931,6 +4269,26 @@ export interface FlintEnumMetadata
 ```
 
 Exported enum metadata describing variant names and integer tags.
+
+### FlintForeignCapability
+
+**Kind:** interface
+
+```typescript
+export interface FlintForeignCapability
+```
+
+Foreign capability descriptor recorded in the ABI manifest.
+
+### FlintForeignFunction
+
+**Kind:** interface
+
+```typescript
+export interface FlintForeignFunction
+```
+
+Individual foreign function descriptor within an ABI manifest foreign capability.
 
 ### FlintHostImport
 
@@ -5474,6 +5832,16 @@ adapter and is no longer the source of truth for the optimized output.
 
 ## `src/stdlib/memory`
 
+### DEFAULT_C_ALLOCATOR_BRIDGE
+
+**Kind:** constant
+
+```typescript
+export const DEFAULT_C_ALLOCATOR_BRIDGE: FlintAllocatorBridgeContract;
+```
+
+Default bridge mapping fws_alloc -> malloc, fws_dealloc -> free.
+
 ### FLINT_MEMORY_FUNCTION_MAP
 
 **Kind:** constant
@@ -5493,6 +5861,26 @@ export const FLINT_MEMORY_FUNCTIONS: readonly FlintMemoryFunction[];
 ```
 
 List of built-in guest linear memory intrinsics provided by the runtime.
+
+### FlintAllocatorBridgeContract
+
+**Kind:** interface
+
+```typescript
+export interface FlintAllocatorBridgeContract
+```
+
+Contract governing allocator unification across Flint and C/Rust memory.
+
+### FlintAllocatorBridgeMode
+
+**Kind:** type
+
+```typescript
+export type FlintAllocatorBridgeMode = 'internal' | 'c-malloc-free' | 'shared-arena';
+```
+
+Allocator bridging mode when statically linking foreign C or Rust libraries.
 
 ### FlintMemoryFunction
 
@@ -5515,6 +5903,8 @@ export type FlintMemoryOperation =
   | 'memory-realloc'
   | 'memory-load-u32'
   | 'memory-store-u32'
+  | 'memory-load-u8'
+  | 'memory-store-u8'
   | 'memory-load-f64'
   | 'memory-store-f64'
   | 'f64-from-u32';
@@ -5718,7 +6108,10 @@ Registered field-layout definition for a user-defined nominal aggregate (struct)
 **Kind:** function
 
 ```typescript
-function createMonomorphizationCache(module?: Pick<FlintModule, 'structs'>): {
+function createMonomorphizationCache(
+  module?: Pick<FlintModule, 'structs'>,
+  target?: TargetPlatform,
+): {
   readonly algebra: TypeAlgebra;
   readonly cache: MonomorphizationCache;
 };
@@ -5732,10 +6125,12 @@ aggregate definitions from a module's struct declarations.
 | Name   | Type                         | Description                                                                  |
 | ------ | ---------------------------- | ---------------------------------------------------------------------------- |
 | module | Pick<FlintModule, 'structs'> | - Optional module (or struct-only slice) to seed aggregate definitions from. |
+| target | TargetPlatform               | - Optional target platform profile.                                          |
 
 #### Contract
 
 - **@param:** - Optional module (or struct-only slice) to seed aggregate definitions from.
+- **@param:** - Optional target platform profile.
 - **@returns:** The paired `algebra` and `cache`.
 
 ### createTypeAlgebra
@@ -5743,16 +6138,40 @@ aggregate definitions from a module's struct declarations.
 **Kind:** function
 
 ```typescript
-function createTypeAlgebra(module?: Pick<FlintModule, 'structs'>): TypeAlgebra;
+function createTypeAlgebra(
+  moduleOrTarget?: Pick<FlintModule, 'structs'> | TargetPlatform,
+  maybeTarget?: TargetPlatform,
+): TypeAlgebra;
 ```
 
 Shared algebra instance helpers for call sites that do not need a private table.
 
 #### Parameters
 
-| Name   | Type                         | Description |
-| ------ | ---------------------------- | ----------- |
-| module | Pick<FlintModule, 'structs'> |             |
+| Name           | Type                                           | Description |
+| -------------- | ---------------------------------------------- | ----------- |
+| moduleOrTarget | Pick<FlintModule, 'structs'> \| TargetPlatform |             |
+| maybeTarget    | TargetPlatform                                 |             |
+
+### CStructFieldLayout
+
+**Kind:** interface
+
+```typescript
+export interface CStructFieldLayout
+```
+
+Detailed field layout offset and padding for C structs.
+
+### CStructLayout
+
+**Kind:** interface
+
+```typescript
+export interface CStructLayout extends TypeLayout
+```
+
+Computed ABI layout for C structs with explicit field offsets and tail padding.
 
 ### FlintGenericBoundary
 
@@ -5821,20 +6240,25 @@ Reads the ownership annotation carried by an AST type name.
 **Kind:** function
 
 ```typescript
-function primitiveLayout(name: FlintPrimitiveType): Omit<TypeLayout, 'layoutKey'>;
+function primitiveLayout(
+  name: FlintPrimitiveType,
+  target: TargetPlatform = 'wasm32-unknown-unknown',
+): Omit<TypeLayout, 'layoutKey'>;
 ```
 
-Looks up the fixed ABI layout for a primitive type name.
+Looks up the fixed ABI layout for a primitive type name on the specified target platform.
 
 #### Parameters
 
-| Name | Type               | Description            |
-| ---- | ------------------ | ---------------------- |
-| name | FlintPrimitiveType | - Primitive type name. |
+| Name   | Type               | Description                |
+| ------ | ------------------ | -------------------------- |
+| name   | FlintPrimitiveType | - Primitive type name.     |
+| target | TargetPlatform     | - Target platform profile. |
 
 #### Contract
 
 - **@param:** - Primitive type name.
+- **@param:** - Target platform profile.
 - **@returns:** The primitive's size and alignment (without a layout key).
 
 ### TypeAlgebra
