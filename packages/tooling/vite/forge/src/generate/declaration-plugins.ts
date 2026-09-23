@@ -862,6 +862,42 @@ function formatComponentExportSpecifiers(rawSpecifiers: readonly string[], frame
   return [...names].join(', ');
 }
 
+/** Formats or redirects an entry re-export line for framework declaration output. */
+function formatCachedEntryLine(trimmed: string, framework: JsxFramework): string | undefined {
+  const compMatch = trimmed.match(/^export\s+\{([^}]+)\}\s+from\s+['"]\.\/components\/([^'"]+)['"];?$/);
+  if (compMatch) {
+    const rawSpecifiers = compMatch[1].split(',').map((s) => s.trim());
+    const subPath = compMatch[2].replace(/\.(?:vue|svelte|tsx|ts)$/, '');
+    const isTypeExport = rawSpecifiers.every((s) => s.startsWith('type '));
+
+    if (isTypeExport) {
+      return `export { ${rawSpecifiers.join(', ')} } from "./components/${subPath}";`;
+    }
+    const specifiers = formatComponentExportSpecifiers(rawSpecifiers, framework);
+    return `export { ${specifiers} } from "./components/${subPath}";`;
+  }
+
+  const utilMatch = trimmed.match(
+    /^export\s+\{([^}]+)\}\s+from\s+['"](\.\/(?:utils|composables|styles)\/[^'"]+)['"];?$/,
+  );
+  if (utilMatch) {
+    return trimmed;
+  }
+
+  const relativeExportMatch = trimmed.match(/^export\s+(.+?)\s+from\s+['"]\.\/([^'"]+)['"];?$/);
+  if (relativeExportMatch) {
+    const clause = relativeExportMatch[1];
+    const specifier = relativeExportMatch[2];
+    return `export ${clause} from "../${specifier}";`;
+  }
+
+  if (trimmed.startsWith('export ')) {
+    return trimmed;
+  }
+
+  return undefined;
+}
+
 /** Synthesizes an index.d.ts entry declaration file from a cached framework source index. */
 // skipcq: JS-R1005
 function emitEntryDeclarationFromCache(
@@ -885,32 +921,9 @@ function emitEntryDeclarationFromCache(
     if (trimmed.length === 0 || trimmed.startsWith('//') || trimmed.startsWith('/*')) {
       continue;
     }
-
-    const compMatch = trimmed.match(/^export\s+\{([^}]+)\}\s+from\s+['"]\.\/components\/([^'"]+)['"];?$/);
-    if (compMatch) {
-      const rawSpecifiers = compMatch[1].split(',').map((s) => s.trim());
-      const subPath = compMatch[2].replace(/\.(?:vue|svelte|tsx|ts)$/, '');
-      const isTypeExport = rawSpecifiers.every((s) => s.startsWith('type '));
-
-      if (isTypeExport) {
-        outLines.push(`export { ${rawSpecifiers.join(', ')} } from "./components/${subPath}";`);
-      } else {
-        const specifiers = formatComponentExportSpecifiers(rawSpecifiers, framework);
-        outLines.push(`export { ${specifiers} } from "./components/${subPath}";`);
-      }
-      continue;
-    }
-
-    const utilMatch = trimmed.match(
-      /^export\s+\{([^}]+)\}\s+from\s+['"](\.\/(?:utils|composables|styles)\/[^'"]+)['"];?$/,
-    );
-    if (utilMatch) {
-      outLines.push(trimmed);
-      continue;
-    }
-
-    if (trimmed.startsWith('export ')) {
-      outLines.push(trimmed);
+    const formatted = formatCachedEntryLine(trimmed, framework);
+    if (formatted !== undefined) {
+      outLines.push(formatted);
     }
   }
 

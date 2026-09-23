@@ -9,6 +9,18 @@ export const DEFAULT_HSTS_OPTIONS: HstsOptions = Object.freeze({
 });
 
 /**
+ * Default security header name-value tuples applied when no custom configuration is provided.
+ */
+export const DEFAULT_SECURITY_HEADER_ENTRIES: readonly (readonly [string, string])[] = Object.freeze([
+  ['Content-Security-Policy', "default-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"],
+  ['Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload'],
+  ['X-Content-Type-Options', 'nosniff'],
+  ['X-Frame-Options', 'DENY'],
+  ['Referrer-Policy', 'strict-origin-when-cross-origin'],
+  ['X-XSS-Protection', '0'],
+]);
+
+/**
  * Formats Strict-Transport-Security header options into a standard HSTS header value.
  *
  * @param options - Configuration options for HSTS directives.
@@ -179,8 +191,14 @@ function applyStandardHeaders(headers: Headers, options?: SecurityHeaderOptions)
  */
 export function createSecurityHeaders(options?: SecurityHeaderOptions): Headers {
   const headers = new Headers();
-  applyCspHeader(headers, options?.csp);
-  applyHstsHeader(headers, options?.hsts);
+  if (options === undefined) {
+    for (const [key, value] of DEFAULT_SECURITY_HEADER_ENTRIES) {
+      headers.set(key, value);
+    }
+    return headers;
+  }
+  applyCspHeader(headers, options.csp);
+  applyHstsHeader(headers, options.hsts);
   applyStandardHeaders(headers, options);
   return headers;
 }
@@ -189,12 +207,12 @@ export function createSecurityHeaders(options?: SecurityHeaderOptions): Headers 
  * Reconstructs an HTTP Response with merged security headers when the original headers are immutable.
  *
  * @param response - Original immutable Response.
- * @param securityHeaders - Headers collection to merge.
+ * @param securityHeaders - Headers collection or entry list to merge.
  * @returns Reconstructed Response.
  */
-function cloneResponseWithHeaders(response: Response, securityHeaders: Headers): Response {
+function cloneResponseWithHeaders(response: Response, securityHeaders: Iterable<readonly [string, string]>): Response {
   const newHeaders = new Headers(response.headers);
-  for (const [key, value] of securityHeaders.entries()) {
+  for (const [key, value] of securityHeaders) {
     newHeaders.set(key, value);
   }
   const isBodyless = response.status === 204 || response.status === 304;
@@ -213,6 +231,17 @@ function cloneResponseWithHeaders(response: Response, securityHeaders: Headers):
  * @returns The response decorated with security headers.
  */
 export function applySecurityHeaders(response: Response, options?: SecurityHeaderOptions): Response {
+  if (options === undefined) {
+    try {
+      for (const [key, value] of DEFAULT_SECURITY_HEADER_ENTRIES) {
+        response.headers.set(key, value);
+      }
+      return response;
+    } catch {
+      return cloneResponseWithHeaders(response, DEFAULT_SECURITY_HEADER_ENTRIES);
+    }
+  }
+
   const securityHeaders = createSecurityHeaders(options);
 
   // Attempt in-place mutation first (zero allocations, supports existing reference assertions)
@@ -222,6 +251,6 @@ export function applySecurityHeaders(response: Response, options?: SecurityHeade
     }
     return response;
   } catch {
-    return cloneResponseWithHeaders(response, securityHeaders);
+    return cloneResponseWithHeaders(response, securityHeaders.entries());
   }
 }

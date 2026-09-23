@@ -10,7 +10,7 @@ export default [
   defineTsdownForgeTarget({
     rootDir: rootDirectory,
     entry: 'src/index.ts',
-    clean: true,
+    clean: false,
   }),
   defineTsdownForgeEmailComponents({
     rootDir: rootDirectory,

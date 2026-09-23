@@ -93,6 +93,16 @@ export const DEFAULT_HSTS_OPTIONS: HstsOptions;
 
 No description provided.
 
+### DEFAULT_SECURITY_HEADER_ENTRIES
+
+**Kind:** constant
+
+```typescript
+export const DEFAULT_SECURITY_HEADER_ENTRIES: readonly (readonly [string, string])[];
+```
+
+Default security header name-value tuples applied when no custom configuration is provided.
+
 ### formatHsts
 
 **Kind:** function
