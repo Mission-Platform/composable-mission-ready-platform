@@ -125,7 +125,7 @@ Vite 和 tsdown 帮助程序在构建会话的生命周期内使用一个进程�
 - `TargetContext` 携带通用构建上下文，例如模块类型、组件名称和发现的组件文件夹。
 - `TargetIntentions` 在目标降低后包装语义模块，同时保留诊断。
 - `GeneratedModule` 描述生成的源、其输出语言、辅助模块和诊断。
-- `FrameworkBuildAdapters` 提供独立类型的 Vite 和 tsdown 适配器。
+- `ForgeBuildAdapters` 提供独立类型的 Vite 和 tsdown 适配器。
 - `FrameworkSourceMetadata`、运行时外部和显示名称元数据让通用编排导出输出详细信息
   没有目标 switch 语句。
 

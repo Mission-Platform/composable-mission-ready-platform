@@ -574,14 +574,16 @@ export function renderNode(
     return htmlContentMarkup(node, context);
   }
   if (tag === SUSPENSE_TAG) {
-    const fallback = node.attributes.find(
-      (attribute) => attribute.name === "fallback",
-    )?.value;
+    const fallbackAttr = node.attributes.find(
+      (attribute): attribute is GenericAttribute & { kind: "jsx-attribute" } =>
+        attribute.kind === "jsx-attribute" && attribute.name === "fallback",
+    );
+    const fallback = fallbackAttr?.value;
     const fallbackMarkup =
       fallback?.kind === "expression"
         ? fallback.nested.length > 0
           ? fallback.nested
-              .map((child) => renderNode(child, context))
+              .map((child: GenericRenderNode) => renderNode(child, context))
               .join("\n")
           : fallback.expression === undefined
             ? ""

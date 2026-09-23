@@ -24,9 +24,11 @@
     "build": "tsdown",
     "test": "vitest run",
     "lint": "eslint .",
-    "format": "prettier --check ."
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
   },
   "dependencies": {
+    "@mission-platform/forge-cst": "workspace:*",
     "@mission-platform/forge-plugin-api": "workspace:*"
   },
   "devDependencies": {

@@ -90,49 +90,68 @@ describe('createForgeArtifactWriter', () => {
     });
   });
 
-  it('normalizes compiled Vue modules to JavaScript extensions', () => {
+  it('records pure staging directory into manifest without altering file names or contents', () => {
     const root = temporaryDirectory();
     const writer = createForgeArtifactWriter(root, 'vue');
     mkdirSync(path.join(writer.stageDirectory, 'components/example'), { recursive: true });
+    const componentCode = 'export default { name: "Example" };\n';
+    const scriptCode = 'export const setup = () => {};\n';
     writeFileSync(
       path.join(writer.stageDirectory, 'index.js'),
-      'import component from "./components/example/generated.js";\nexport { component };\n',
+      'export { default as Example } from "./components/example/example.js";\n',
       'utf8',
     );
-    writeFileSync(
-      path.join(writer.stageDirectory, 'components/example/generated.js'),
-      '//#region generated/components/example/example.vue\nexport default {};\n//#endregion\n',
-      'utf8',
-    );
+    writeFileSync(path.join(writer.stageDirectory, 'components/example/example.js'), componentCode, 'utf8');
+    writeFileSync(path.join(writer.stageDirectory, 'components/example/example.script.js'), scriptCode, 'utf8');
     writer.recordTree(['index.js']);
     writer.finalize(['index.js']);
 
+    // Pure staging: file names and contents are unchanged on disk
+    expect(existsSync(path.join(root, 'index.js'))).toBe(true);
     expect(existsSync(path.join(root, 'components/example/example.js'))).toBe(true);
-    expect(existsSync(path.join(root, 'components/example/generated.js'))).toBe(false);
-    expect(readFileSync(path.join(root, 'index.js'), 'utf8')).toContain('./components/example/example.js');
-    expect(JSON.parse(readFileSync(path.join(root, '.forge-artifact-manifest.json'), 'utf8')).artifacts).toEqual(
-      expect.arrayContaining([expect.objectContaining({ fileName: 'components/example/example.js', kind: 'module' })]),
+    expect(existsSync(path.join(root, 'components/example/example.script.js'))).toBe(true);
+    expect(readFileSync(path.join(root, 'components/example/example.js'), 'utf8')).toBe(componentCode);
+    expect(readFileSync(path.join(root, 'components/example/example.script.js'), 'utf8')).toBe(scriptCode);
+
+    const manifest = JSON.parse(
+      readFileSync(path.join(root, '.forge-artifact-manifest.json'), 'utf8'),
+    ) as ForgeArtifactManifest;
+    expect(manifest.entries).toEqual(['index.js']);
+    expect(manifest.artifacts).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fileName: 'index.js',
+          kind: 'entry',
+          size: expect.any(Number),
+          hash: expect.any(String),
+        }),
+        expect.objectContaining({
+          fileName: 'components/example/example.js',
+          kind: 'module',
+          size: componentCode.length,
+        }),
+        expect.objectContaining({
+          fileName: 'components/example/example.script.js',
+          kind: 'module',
+          size: scriptCode.length,
+        }),
+      ]),
     );
   });
 
-  it('publishes Vue script virtual modules under stable JavaScript names', () => {
+  it('detects tampered or corrupt staging artifacts during validation and aborts commit', () => {
     const root = temporaryDirectory();
-    const writer = createForgeArtifactWriter(root, 'vue');
-    const scriptModule = 'components/example/example.vue?vue&type=script&setup=true&lang.js';
-    mkdirSync(path.join(writer.stageDirectory, 'components/example'), { recursive: true });
-    writeFileSync(
-      path.join(writer.stageDirectory, 'components/example/example.js'),
-      `import script from './${scriptModule.slice(scriptModule.lastIndexOf('/') + 1)}';\nexport default script;\n`,
-      'utf8',
-    );
-    writeFileSync(path.join(writer.stageDirectory, scriptModule), 'export default {};\n', 'utf8');
+    const writer = createForgeArtifactWriter(root, 'test');
+    writer.writeText('entry.js', 'original entry content', 'entry');
+    writer.recordTree(['entry.js']);
 
-    writer.recordTree(['components/example/example.js']);
-    writer.finalize(['components/example/example.js']);
+    // Tamper with the file in the staging directory before validation
+    writeFileSync(path.join(writer.stageDirectory, 'entry.js'), 'corrupted entry content', 'utf8');
 
-    expect(existsSync(path.join(root, 'components/example/example.script.js'))).toBe(true);
-    expect(existsSync(path.join(root, scriptModule))).toBe(false);
-    expect(readFileSync(path.join(root, 'components/example/example.js'), 'utf8')).toContain('./example.script.js');
+    expect(() => writer.validate(['entry.js'])).toThrow(/failed validation: entry\.js/);
+    writer.abort();
+    expect(existsSync(writer.stageDirectory)).toBe(false);
+    expect(existsSync(path.join(root, 'entry.js'))).toBe(false);
   });
 
   it('preserves the last successful output when an attempt cannot be validated', () => {

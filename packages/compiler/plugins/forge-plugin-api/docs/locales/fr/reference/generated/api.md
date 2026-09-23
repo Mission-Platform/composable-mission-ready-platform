@@ -11,6 +11,16 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 
 ## `src/compiler/ast`
 
+### ADAPTATEURS_MODULE
+
+**Genre :** constante
+
+```typescript
+export const ADAPTERS_MODULE;
+```
+
+Aucune description fournie.
+
 ### appliquerSourceEdits
 
 **Genre :** fonction
@@ -38,16 +48,6 @@ export const CLASS_NAME_ATTRIBUTE;
 
 Aucune description fournie.
 
-### COMPONENTS_JSX_MODULES
-
-**Genre :** constante
-
-```typescript
-export const COMPONENTS_JSX_MODULES;
-```
-
-Aucune description fournie.
-
 ### eventNameForProperty
 
 **Genre :** fonction
@@ -64,15 +64,37 @@ Dérivez le nom de l'événement représenté par un accessoire `on<Event>` de s
 | ---------------- | ------ | ---------- |
 | nom de propriété | chaîne |            |
 
-### ICONS_JSX_MODULE
+### frameworkAdapterModule
 
-**Genre :** constante
+**Genre :** fonction
 
 ```typescript
-export const ICONS_JSX_MODULE;
+function frameworkAdapterModule(framework: JsxFramework): string;
 ```
 
-Aucune description fournie.
+Dérivez l'adaptateur/module d'exécution Forge pour n'importe quel framework cible intégré.
+
+#### Paramètres
+
+| Nom   | Tapez        | Descriptif |
+| ----- | ------------ | ---------- |
+| cadre | JsxFramework |            |
+
+### frameworkForDirective
+
+**Genre :** fonction
+
+```typescript
+function frameworkForDirective(directive: string): JsxFramework | undefined;
+```
+
+Résolvez une directive `use <framework>` principale pour toute cible intégrée.
+
+#### Paramètres
+
+| Nom       | Tapez  | Descriptif |
+| --------- | ------ | ---------- |
+| directive | chaîne |            |
 
 ### JSX_ATTRIBUTE_RENAMES
 
@@ -80,26 +102,6 @@ Aucune description fournie.
 
 ```typescript
 export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
-```
-
-Aucune description fournie.
-
-### LOCAL_EFFECT_FILE
-
-**Genre :** constante
-
-```typescript
-export const LOCAL_EFFECT_FILE;
-```
-
-Aucune description fournie.
-
-### LOCAL_EFFECT_MODULE
-
-**Genre :** constante
-
-```typescript
-export const LOCAL_EFFECT_MODULE;
 ```
 
 Aucune description fournie.
@@ -133,22 +135,6 @@ export const LOCAL_JSX_TYPES_MODULE;
 ```
 
 Aucune description fournie.
-
-### localEffectModuleSource
-
-**Genre :** fonction
-
-```typescript
-function localEffectModuleSource(framework: JsxFramework): string;
-```
-
-Émettez l'assistant d'effet Vue partagé ; les autres cibles n'ont pas besoin de ce fichier.
-
-#### Paramètres
-
-| Nom   | Tapez        | Descriptif |
-| ----- | ------------ | ---------- |
-| cadre | JsxFramework |            |
 
 ### localJsxTypesModuleSource
 
@@ -226,16 +212,6 @@ export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
 
 Aucune description fournie.
 
-### REACT_ADAPTER_MODULE
-
-**Genre :** constante
-
-```typescript
-export const REACT_ADAPTER_MODULE;
-```
-
-Aucune description fournie.
-
 ### REACT_TYPE_ALIASES
 
 **Genre :** constante
@@ -265,16 +241,6 @@ export interface StyleImport
 ```
 
 Une importation de feuille de style effectuée dans une arborescence plate générée.
-
-### VUE_ADAPTER_MODULE
-
-**Genre :** constante
-
-```typescript
-export const VUE_ADAPTER_MODULE;
-```
-
-Aucune description fournie.
 
 ### VUE_BUILTIN_COMPONENTS
 
@@ -617,15 +583,26 @@ Abandonnez un pipeline de compilateur lorsqu'une phase a signalé une ou plusieu
 
 ## `src/framework`
 
-### FrameworkBuildAdapters
+### ForgeBuildAdaptateurs
 
 **Genre :** interface
 
 ```typescript
-export interface FrameworkBuildAdapters
+export interface ForgeBuildAdapters
 ```
 
-Intégrations de build de framework typées indépendamment.
+Adaptateurs d'intégration de build unifiés pour les plugins Forge.
+
+### ID du cadre
+
+**Genre :** type
+
+```typescript
+export type FrameworkId = JsxFramework | (string &
+```
+
+Identificateur de framework ouvert pour les plugins cibles et les pipelines du compilateur.
+Conserve la saisie semi-automatique pour les frameworks intégrés connus tout en acceptant des cibles de plugin personnalisées arbitraires.
 
 ### FrameworkOutputPlugin
 
@@ -738,12 +715,23 @@ export interface TargetContext
 
 Contexte partagé par l’abaissement et l’optimisation des cibles.
 
+### TargetFrameworkId
+
+**Genre :** type
+
+```typescript
+export type TargetFrameworkId = FrameworkId;
+```
+
+Alias ​​d’identifiant de framework ouvert pour les plugins cibles.
+Équivalent à {@link FrameworkId}.
+
 ### Intentions cibles
 
 **Genre :** interface
 
 ```typescript
-export interface TargetIntentions
+export interface TargetIntentions< TLowered extends TargetLoweredModule = TargetLoweredModule, >
 ```
 
 Wrapper d’intention spécifique à la cible ; les faits neutres restent disponibles pour les passes ultérieures.
@@ -916,7 +904,7 @@ Lit la valeur de chaîne statique d'un attribut nommé, lorsqu'il en a une.
 export interface DynamicNodeIntention
 ```
 
-Une sélection dynamique de composant ou d'élément.
+Une sélection dynamique de composant ou d’élément.
 
 ### EffetIntention
 
@@ -1369,3 +1357,204 @@ Parcourez d'abord l'arbre de rendu en profondeur, y compris le balisage d'expres
 | ------ | ---------------------------------- | ---------- |
 | nœuds  | lecture seule GenericRenderNode[]  |            |
 | visite | (node : GenericRenderNode) => void |            |
+
+## `src/schema`
+
+### assertTargetIntentionsLowered
+
+**Genre :** fonction
+
+```typescript
+function assertTargetIntentionsLowered(
+  intentions: unknown,
+  expectedFramework?: FrameworkId,
+): asserts intentions is TargetIntentions<TLowered>;
+```
+
+Affirme que les intentions fournies sont valides et contiennent un plan cible abaissé.
+Lève une TargetIntentionsValidationError (sous-classe de TypeError) si les intentions sont incomplètes
+ou si le discriminateur du plan abaissé ne correspond pas au cadre attendu.
+
+#### Paramètres
+
+| Nom           | Tapez       | Descriptif |
+| ------------- | ----------- | ---------- |
+| intentions    | inconnu     |            |
+| cadre attendu | ID du cadre |            |
+
+### Schéma déclaratif
+
+**Genre :** interface
+
+```typescript
+export interface DeclarativeSchema
+```
+
+Définition de schéma déclaratif pour les représentations intermédiaires du compilateur.
+
+### findActionableSpan
+
+**Genre :** fonction
+
+```typescript
+function findActionableSpan(value: unknown): SourceSpan | undefined;
+```
+
+Recherchez de manière récursive une étendue de source exploitable dans les intentions ou leurs faits AST.
+
+#### Paramètres
+
+| Nom    | Tapez   | Descriptif |
+| ------ | ------- | ---------- |
+| valeur | inconnu |            |
+
+### Règle de champ de schéma
+
+**Genre :** interface
+
+```typescript
+export interface SchemaFieldRule
+```
+
+Règle déclarative appliquée à une propriété de schéma.
+
+### Type de champ de schéma
+
+**Genre :** type
+
+```typescript
+export type SchemaFieldType =
+  "string" | "non-empty-string" | "object" | "array" | "boolean";
+```
+
+Types de champs pris en charge pour la validation déclarative du schéma.
+
+### Problème de validation de schéma
+
+**Genre :** interface
+
+```typescript
+export interface SchemaValidationIssue
+```
+
+Un seul problème de validation de schéma identifié lors de la vérification des intentions.
+
+### Options de validation de schéma
+
+**Genre :** interface
+
+```typescript
+export interface SchemaValidationOptions
+```
+
+Options configurant la validation déclarative du schéma.
+
+### semanticModuleSchema
+
+**Genre :** constante
+
+```typescript
+export const semanticModuleSchema: DeclarativeSchema;
+```
+
+Schéma validant le module sémantique entrant IR.
+
+### schémaContextecible
+
+**Genre :** constante
+
+```typescript
+export const targetContextSchema: DeclarativeSchema;
+```
+
+Schéma validant le contexte cible de la compilation.
+
+### targetIntentionsSchéma
+
+**Genre :** constante
+
+```typescript
+export const targetIntentionsSchema: DeclarativeSchema;
+```
+
+Schéma validant les intentions de la cible.
+
+### TargetIntentionsValidationError
+
+**Genre :** classe
+
+```typescript
+export class TargetIntentionsValidationError extends TypeError
+```
+
+Erreur générée lorsque les intentions cibles échouent à la vérification déclarative du schéma.
+
+### TargetIntentionsValidationResult
+
+**Genre :** interface
+
+```typescript
+export interface TargetIntentionsValidationResult
+```
+
+Résultat structuré de la validation de l’intention cible.
+
+### targetLoweredModuleSchema
+
+**Genre :** constante
+
+```typescript
+export const targetLoweredModuleSchema: DeclarativeSchema;
+```
+
+Schéma validant la structure d'un plan cible abaissé.
+
+### valider contre le schéma
+
+**Genre :** fonction
+
+```typescript
+function validateAgainstSchema(
+  target: unknown,
+  schema: DeclarativeSchema,
+  options?: SchemaValidationOptions,
+): SchemaValidationIssue[];
+```
+
+Valide un objet cible par rapport à un schéma déclaratif, en collectant tous les problèmes structurels.
+
+#### Paramètres
+
+| Nom     | Tapez                           | Descriptif                                                |
+| ------- | ------------------------------- | --------------------------------------------------------- |
+| cible   | inconnu                         | - Objet ou enregistrement cible à valider.                |
+| schéma  | Schéma déclaratif               | - Schéma déclaratif définissant des règles structurelles. |
+| options | Options de validation de schéma | - Options de configuration de validation.                 |
+
+#### Contracter
+
+- **@param:** - Objet ou enregistrement cible à valider.
+- **@param:** - Schéma déclaratif définissant les règles structurelles.
+- **@param:** - Options de configuration de validation.
+- **@returns :** Tableau des problèmes de validation collectés.
+
+### validerTargetIntentions
+
+**Genre :** fonction
+
+```typescript
+function validateTargetIntentions(
+  intentions: unknown,
+  expectedFramework?: FrameworkId,
+): TargetIntentionsValidationResult;
+```
+
+Valide la structure et l'intégrité des intentions cibles par rapport au schéma déclaratif.
+Renvoie les erreurs de validation structurées et les objets CompilerDiagnostic correspondants avec les emplacements sources.
+
+#### Paramètres
+
+| Nom           | Tapez       | Descriptif |
+| ------------- | ----------- | ---------- |
+| intentions    | inconnu     |            |
+| cadre attendu | ID du cadre |            |

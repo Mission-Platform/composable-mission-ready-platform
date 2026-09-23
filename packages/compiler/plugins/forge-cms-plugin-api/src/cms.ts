@@ -17,7 +17,7 @@ import { validateForgeArtifactSegment } from "@mission-platform/vite-plugin-forg
 import type { ContentComponent } from "./content-model.js";
 import type {
   CompilerDiagnostic,
-  FrameworkBuildAdapters,
+  ForgeBuildAdapters,
   FrameworkOutputPlugin,
   SemanticModule,
 } from "@mission-platform/forge-plugin-api";
@@ -93,7 +93,7 @@ export interface CmsOutputPlugin {
     context: CmsTargetContext,
   ): readonly CmsArtifact[];
 
-  readonly build: FrameworkBuildAdapters;
+  readonly build: ForgeBuildAdapters;
 }
 
 /**

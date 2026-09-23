@@ -846,47 +846,203 @@ function domValue(
   return rewriteExpressionText(branch, context.scope);
 }
 
+/**
+ * Checks whether an attribute refers to a ref property.
+ *
+ * @param name - Raw attribute name.
+ * @param normalizedName - Normalized attribute name.
+ * @returns True if the attribute is ref.
+ */
+function isRefAttribute(name: string, normalizedName: string): boolean {
+  return name === "ref" || normalizedName === "ref";
+}
+
+/**
+ * Checks whether an attribute binds via dot property access.
+ *
+ * @param name - Raw attribute name.
+ * @param normalizedName - Normalized attribute name.
+ * @returns True if property bound.
+ */
+function isDotPropertyAttribute(name: string, normalizedName: string): boolean {
+  return (
+    PROPERTY_BOUND.has(normalizedName) ||
+    name === "className" ||
+    name === "htmlFor"
+  );
+}
+
+/**
+ * Resolves the property binding prefix symbol for an attribute.
+ *
+ * @param attributeName - Authored attribute name.
+ * @param normalizedName - Aliased attribute name.
+ * @returns Prefix character (`.`, `~`, or empty).
+ */
+function resolvePropertyPrefix(
+  attributeName: string,
+  normalizedName: string,
+): string {
+  if (isRefAttribute(attributeName, normalizedName)) {
+    return "";
+  }
+  if (isDotPropertyAttribute(attributeName, normalizedName)) {
+    return ".";
+  }
+  return "~";
+}
+
+/**
+ * Formats a JSX spread attribute into an object spread entry.
+ *
+ * @param attribute - Spread attribute.
+ * @param scope - Template scope for identifier remapping.
+ * @returns Formatted spread string or undefined.
+ */
+function formatSpreadAttributeEntry(
+  attribute: Extract<GenericAttribute, { kind: "jsx-spread-attribute" }>,
+  scope: TemplateContext["scope"],
+): string | undefined {
+  return attribute.expression !== undefined
+    ? `...${rewriteExpressionText(attribute.expression.text, scope)}`
+    : undefined;
+}
+
+/**
+ * Formats an event handler attribute into an event listener property entry.
+ *
+ * @param name - Attribute name.
+ * @param value - Attribute value.
+ * @param context - Template context.
+ * @returns Formatted event handler entry or undefined.
+ */
+function formatEventAttributeEntry(
+  name: string,
+  value: GenericAttribute["value"],
+  context: TemplateContext,
+): string | undefined {
+  if (
+    !/^on[A-Z]/u.test(name) ||
+    value?.kind !== "expression" ||
+    value.expression === undefined
+  ) {
+    return undefined;
+  }
+  return `${JSON.stringify(`@${eventNameOf(name)}`)}: ${domValue(value.expression.text, nestedOf(value), context)}`;
+}
+
+/**
+ * Formats a static or reactive attribute value into a DOM property dictionary entry.
+ *
+ * @param attributeName - Raw attribute name.
+ * @param name - Normalized attribute name.
+ * @param value - Attribute value.
+ * @param context - Template context.
+ * @returns Formatted property entry string or undefined.
+ */
+function formatValueAttributeEntry(
+  attributeName: string,
+  name: string,
+  value: GenericAttribute["value"],
+  context: TemplateContext,
+): string | undefined {
+  if (value === undefined) {
+    return `${JSON.stringify(`?${name}`)}: true`;
+  }
+  if (value.kind === "string") {
+    return `${JSON.stringify(`~${name}`)}: ${JSON.stringify(value.value)}`;
+  }
+  if (value.kind === "expression" && value.expression !== undefined) {
+    const prefix = resolvePropertyPrefix(attributeName, name);
+    return `${JSON.stringify(`${prefix}${name}`)}: ${domValue(value.expression.text, nestedOf(value), context)}`;
+  }
+  return undefined;
+}
+
+/**
+ * Resolves an aliased attribute name according to HTML/JSX convention mapping.
+ *
+ * @param name - Raw attribute name.
+ * @returns Aliased or canonical attribute name.
+ */
+function resolveAttributeAlias(name: string): string {
+  const aliased = ATTRIBUTE_ALIASES[name];
+  if (aliased !== undefined) {
+    return aliased;
+  }
+  return name;
+}
+
+/**
+ * Checks whether an attribute should be omitted from DOM property dictionary.
+ *
+ * @param attribute - The attribute to inspect.
+ * @returns True if attribute should be skipped.
+ */
+function isIgnoredDomPropertyAttribute(attribute: GenericAttribute): boolean {
+  if (attribute.kind !== "jsx-attribute") {
+    return true;
+  }
+  return attribute.name === MP_STATIC_ATTR;
+}
+
+/**
+ * Dispatches formatting for an event or standard value attribute entry.
+ *
+ * @param rawName - Raw attribute name.
+ * @param normalizedName - Aliased attribute name.
+ * @param value - Attribute value node.
+ * @param context - Template context.
+ * @returns Formatted dictionary entry or undefined.
+ */
+function formatResolvedPropertyEntry(
+  rawName: string,
+  normalizedName: string,
+  value: GenericAttribute["value"],
+  context: TemplateContext,
+): string | undefined {
+  const eventEntry = formatEventAttributeEntry(rawName, value, context);
+  if (eventEntry !== undefined) {
+    return eventEntry;
+  }
+  return formatValueAttributeEntry(rawName, normalizedName, value, context);
+}
+
+/**
+ * Formats a single JSX attribute into a DOM property dictionary entry.
+ *
+ * @param attribute - The attribute to process.
+ * @param context - Template compilation context.
+ * @returns The formatted property entry string, or undefined if skipped.
+ */
+function formatDomPropertyEntry(
+  attribute: GenericAttribute,
+  context: TemplateContext,
+): string | undefined {
+  if (attribute.kind === "jsx-spread-attribute") {
+    return formatSpreadAttributeEntry(attribute, context.scope);
+  }
+  if (isIgnoredDomPropertyAttribute(attribute)) {
+    return undefined;
+  }
+  const name = resolveAttributeAlias(attribute.name);
+  return formatResolvedPropertyEntry(
+    attribute.name,
+    name,
+    attribute.value,
+    context,
+  );
+}
+
 function domProperties(
   attributes: readonly GenericAttribute[],
   context: TemplateContext,
 ): string {
   const entries: string[] = [];
   for (const attribute of attributes) {
-    if (attribute.kind === "jsx-spread-attribute") {
-      if (attribute.expression !== undefined) {
-        entries.push(
-          `...${rewriteExpressionText(attribute.expression.text, context.scope)}`,
-        );
-      }
-      continue;
-    }
-    if (attribute.name === MP_STATIC_ATTR) {
-      continue;
-    }
-    const name = ATTRIBUTE_ALIASES[attribute.name] ?? attribute.name;
-    const value = attribute.value;
-    if (/^on[A-Z]/u.test(attribute.name) && value?.expression !== undefined) {
-      entries.push(
-        `${JSON.stringify(`@${eventNameOf(attribute.name)}`)}: ${domValue(value.expression.text, nestedOf(value), context)}`,
-      );
-    } else if (value === undefined) {
-      entries.push(`${JSON.stringify(`?${name}`)}: true`);
-    } else if (value.kind === "string") {
-      entries.push(
-        `${JSON.stringify(`~${name}`)}: ${JSON.stringify(value.value)}`,
-      );
-    } else if (value.expression !== undefined) {
-      const prefix =
-        attribute.name === "ref" || name === "ref"
-          ? ""
-          : PROPERTY_BOUND.has(name) ||
-              attribute.name === "className" ||
-              attribute.name === "htmlFor"
-            ? "."
-            : "~";
-      entries.push(
-        `${JSON.stringify(`${prefix}${name}`)}: ${domValue(value.expression.text, nestedOf(value), context)}`,
-      );
+    const entry = formatDomPropertyEntry(attribute, context);
+    if (entry !== undefined) {
+      entries.push(entry);
     }
   }
   return entries.length === 0 ? "{}" : `{ ${entries.join(", ")} }`;
@@ -938,157 +1094,712 @@ function domChildExpression(
   return domValue(child.expression.text, child.nested, context);
 }
 
-function domNodeExpression(
+/**
+ * Renders a suspense element expression.
+ *
+ * @param node - Suspense render node.
+ * @param childContext - Context for children.
+ * @returns Suspense JavaScript call expression.
+ */
+function domSuspenseExpression(
   node: GenericRenderNode,
+  childContext: TemplateContext,
+): string {
+  const fallback = node.attributes.find(
+    (entry): entry is Extract<GenericAttribute, { kind: "jsx-attribute" }> =>
+      entry.kind === "jsx-attribute" && entry.name === "fallback",
+  )?.value;
+  const fallbackExpression =
+    fallback?.kind === "string"
+      ? JSON.stringify(fallback.value)
+      : fallback?.kind === "expression" && fallback.expression !== undefined
+        ? domValue(fallback.expression.text, nestedOf(fallback), childContext)
+        : "nothing";
+  const children = node.children
+    .map((child) => domChildExpression(child, childContext))
+    .filter((value): value is string => value !== undefined)
+    .join(", ");
+  return `suspense(${fallbackExpression}, [${children}])`;
+}
+
+/**
+ * Extracts host element tag name from the "as" attribute of an HTML content node.
+ *
+ * @param attribute - Candidate attribute.
+ * @returns Host tag name or undefined.
+ */
+function extractHtmlContentHost(
+  attribute: GenericAttribute,
+): string | undefined {
+  if (
+    attribute.kind === "jsx-attribute" &&
+    attribute.name === "as" &&
+    attribute.value?.kind === "string"
+  ) {
+    return attribute.value.value;
+  }
+  return undefined;
+}
+
+/**
+ * Extracts the unsafe HTML expression from the "html" attribute.
+ *
+ * @param attribute - Candidate attribute.
+ * @param childContext - Template context for remapping.
+ * @returns unsafeHtml call expression or undefined.
+ */
+function extractHtmlContentExpression(
+  attribute: GenericAttribute,
+  childContext: TemplateContext,
+): string | undefined {
+  if (
+    attribute.kind === "jsx-attribute" &&
+    attribute.name === "html" &&
+    attribute.value?.kind === "expression" &&
+    attribute.value.expression !== undefined
+  ) {
+    return `unsafeHtml(${domValue(attribute.value.expression.text, nestedOf(attribute.value), childContext)})`;
+  }
+  return undefined;
+}
+
+/**
+ * Checks whether an attribute should be passed through on an HTML content node.
+ *
+ * @param attribute - Candidate attribute.
+ * @returns True if the attribute is passed through.
+ */
+function isHtmlContentPassthrough(attribute: GenericAttribute): boolean {
+  return (
+    attribute.kind !== "jsx-spread-attribute" &&
+    attribute.name !== "html" &&
+    attribute.name !== "as"
+  );
+}
+
+/**
+ * Renders an HTML content container expression.
+ *
+ * @param node - HTML content render node.
+ * @param childContext - Context for children.
+ * @returns dynamicElement call expression for raw HTML container.
+ */
+function domHtmlContentExpression(
+  node: GenericRenderNode,
+  childContext: TemplateContext,
+): string {
+  let host = "div";
+  let content = '""';
+  const attributes: GenericAttribute[] = [];
+  for (const attribute of node.attributes) {
+    const asHost = extractHtmlContentHost(attribute);
+    if (asHost !== undefined) {
+      host = asHost;
+      continue;
+    }
+    const htmlExpr = extractHtmlContentExpression(attribute, childContext);
+    if (htmlExpr !== undefined) {
+      content = htmlExpr;
+      continue;
+    }
+    if (isHtmlContentPassthrough(attribute)) {
+      attributes.push(attribute);
+    }
+  }
+  return `dynamicElement(${JSON.stringify(host)}, ${domProperties(attributes, childContext)}, ${content})`;
+}
+
+/**
+ * Prepares attributes for a slot element, filtering authored name and adding normalized name.
+ *
+ * @param node - Slot render node.
+ * @param name - Slot name if known.
+ * @returns Filtered attribute list.
+ */
+function prepareSlotAttributes(
+  node: GenericRenderNode,
+  name: string | undefined,
+): GenericAttribute[] {
+  if (name === undefined) {
+    return [...node.attributes];
+  }
+  const attributes = node.attributes.filter(
+    (attribute) =>
+      attribute.kind !== "jsx-spread-attribute" && attribute.name !== "name",
+  );
+  if (name !== "default") {
+    attributes.push({
+      kind: "jsx-attribute",
+      name: "name",
+      value: { kind: "string", value: name },
+    } as GenericAttribute);
+  }
+  return attributes;
+}
+
+/**
+ * Builds dynamicElement call for a custom forge-slot element.
+ *
+ * @param properties - Serialized properties dictionary.
+ * @param children - Serialized child elements.
+ * @param context - Template compilation context.
+ * @returns dynamicElement call expression.
+ */
+function buildForgeSlotExpression(
+  properties: string,
+  children: string,
   context: TemplateContext,
 ): string {
-  const childContext =
+  const props = context.scope.propsParameterName;
+  const content =
+    props === undefined
+      ? "undefined"
+      : rewriteExpressionText(`${props}.children`, context.scope);
+  const markerProperties =
+    properties === "{}"
+      ? `{ "?data-mp-forge-slot": true, "?data-mp-forge-nested": true, ".content": ${content} }`
+      : `{ "?data-mp-forge-slot": true, "?data-mp-forge-nested": true, ${properties.slice(1, -1)}, ".content": ${content} }`;
+  return `dynamicElement("forge-slot", ${markerProperties}, ${children})`;
+}
+
+/**
+ * Formats rendered child nodes into a comma-separated argument string.
+ *
+ * @param children - Array of render children.
+ * @param childContext - Context for child emission.
+ * @returns Comma-separated serialized child expressions.
+ */
+function renderChildrenExpressionList(
+  children: readonly GenericRenderChild[],
+  childContext: TemplateContext,
+): string {
+  return children
+    .map((child) => domChildExpression(child, childContext))
+    .filter((value): value is string => value !== undefined)
+    .join(", ");
+}
+
+/**
+ * Renders a slot element expression.
+ *
+ * @param node - Slot render node.
+ * @param context - Parent context.
+ * @param childContext - Child context.
+ * @returns dynamicElement call expression for slot or forge-slot.
+ */
+function domSlotExpression(
+  node: GenericRenderNode,
+  context: TemplateContext,
+  childContext: TemplateContext,
+): string {
+  const name = staticSlotName(node);
+  const attributes = prepareSlotAttributes(node, name);
+  const properties = domProperties(attributes, childContext);
+  const children = renderChildrenExpressionList(node.children, childContext);
+
+  if ((context.slotOwnerDepth ?? 0) > 0) {
+    return buildForgeSlotExpression(properties, children, context);
+  }
+  return `dynamicElement("slot", ${properties}, ${children})`;
+}
+
+/**
+ * Resolves the tag name expression for a dynamic tag node.
+ *
+ * @param tag - Tag specification from node.
+ * @param scope - Scope for expression remapping.
+ * @returns Serialized tag expression.
+ */
+function resolveDynamicTagExpression(
+  tag: GenericRenderNode["tag"],
+  scope: TemplateContext["scope"],
+): string {
+  return typeof tag === "string"
+    ? JSON.stringify(tag)
+    : rewriteExpressionText(tag.text, scope);
+}
+
+/**
+ * Resolves the element tag name for a standard element or custom element host.
+ *
+ * @param node - Render node.
+ * @param host - Component host descriptor.
+ * @returns Resolved tag name string.
+ */
+function resolveElementHostTag(
+  node: GenericRenderNode,
+  host: ReturnType<typeof componentHostOf>,
+): string {
+  return host?.invocation === "is-attribute"
+    ? (host.baseTag ?? tagNameOf(node))
+    : tagNameOf(node);
+}
+
+/**
+ * Renders a standard DOM element or custom web component expression.
+ *
+ * @param node - Render node.
+ * @param childContext - Child context.
+ * @returns dynamicElement call expression.
+ */
+function domStandardElementExpression(
+  node: GenericRenderNode,
+  childContext: TemplateContext,
+): string {
+  const children = renderChildrenExpressionList(node.children, childContext);
+
+  if (node.tagKind === "dynamic") {
+    const tag = resolveDynamicTagExpression(node.tag, childContext.scope);
+    return `dynamicElement(${tag}, ${domProperties(node.attributes, childContext)}, ${children})`;
+  }
+  const tagText = typeof node.tag === "string" ? node.tag : node.tag.text;
+  if (tagText === "IconSpriteProvider") {
+    return `dynamicElement(IconSpriteProvider, ${domProperties(node.attributes, childContext)}, ${children})`;
+  }
+  const host = componentHostOf(node, childContext);
+  const name = resolveElementHostTag(node, host);
+  return `dynamicElement(${JSON.stringify(name)}, ${domProperties(domAttributes(node, host), childContext)}, ${children})`;
+}
+
+/**
+ * Checks whether a render node owns child slots.
+ *
+ * @param node - Render node to inspect.
+ * @returns True if node increments slot depth.
+ */
+function isSlotOwnerNode(node: GenericRenderNode): boolean {
+  return (
     node.tagKind === "component" &&
     node.tag !== "Slot" &&
     node.tag !== HTML_CONTENT_TAG &&
     node.tag !== TELEPORT_TAG
-      ? { ...context, slotOwnerDepth: (context.slotOwnerDepth ?? 0) + 1 }
-      : context;
-  if (node.tagKind === "fragment" || node.tag === TELEPORT_TAG) {
-    return `[${node.children
-      .map((child) => domChildExpression(child, childContext))
-      .filter((value): value is string => value !== undefined)
-      .join(", ")}]`;
-  }
-  if (node.tag === SUSPENSE_TAG) {
-    const fallback = node.attributes.find(
-      (entry): entry is Extract<GenericAttribute, { kind: "jsx-attribute" }> =>
-        entry.kind === "jsx-attribute" && entry.name === "fallback",
-    )?.value;
-    const fallbackExpression =
-      fallback?.kind === "string"
-        ? JSON.stringify(fallback.value)
-        : fallback?.kind === "expression" && fallback.expression !== undefined
-          ? domValue(fallback.expression.text, nestedOf(fallback), childContext)
-          : "nothing";
-    const children = node.children
-      .map((child) => domChildExpression(child, childContext))
-      .filter((value): value is string => value !== undefined)
-      .join(", ");
-    return `suspense(${fallbackExpression}, [${children}])`;
-  }
-  if (node.tag === HTML_CONTENT_TAG) {
-    let host = "div";
-    let content = '""';
-    const attrs: GenericAttribute[] = [];
-    for (const attribute of node.attributes) {
-      if (attribute.name === "as" && attribute.value?.kind === "string") {
-        host = attribute.value.value;
-      } else if (
-        attribute.name === "html" &&
-        attribute.value?.expression !== undefined
-      ) {
-        content = `unsafeHtml(${domValue(attribute.value.expression.text, nestedOf(attribute.value), childContext)})`;
-      } else if (attribute.name !== "html" && attribute.name !== "as") {
-        attrs.push(attribute);
-      }
-    }
-    return `dynamicElement(${JSON.stringify(host)}, ${domProperties(attrs, childContext)}, ${content})`;
-  }
-  if (node.tag === "Slot") {
-    const name = staticSlotName(node);
-    const attrs: GenericAttribute[] =
-      name === undefined
-        ? [...node.attributes]
-        : node.attributes.filter((attribute) => attribute.name !== "name");
-    if (name !== undefined && name !== "default") {
-      attrs.push({
-        kind: "jsx-attribute",
-        name: "name",
-        value: { kind: "string", value: name },
-      } as GenericAttribute);
-    }
-    const properties = domProperties(attrs, childContext);
-    if ((context.slotOwnerDepth ?? 0) > 0) {
-      const props = context.scope.propsParameterName;
-      const content =
-        props === undefined
-          ? "undefined"
-          : rewriteExpressionText(`${props}.children`, context.scope);
-      const markerProperties =
-        properties === "{}"
-          ? `{ "?data-mp-forge-slot": true, "?data-mp-forge-nested": true, ".content": ${content} }`
-          : `{ "?data-mp-forge-slot": true, "?data-mp-forge-nested": true, ${properties.slice(1, -1)}, ".content": ${content} }`;
-      return `dynamicElement("forge-slot", ${markerProperties}, ${node.children
-        .map((child) => domChildExpression(child, childContext))
-        .filter((value): value is string => value !== undefined)
-        .join(", ")})`;
-    }
-    return `dynamicElement("slot", ${properties}, ${node.children
-      .map((child) => domChildExpression(child, childContext))
-      .filter((value): value is string => value !== undefined)
-      .join(", ")})`;
-  }
-  if (node.tagKind === "dynamic") {
-    const tag =
-      typeof node.tag === "string"
-        ? JSON.stringify(node.tag)
-        : rewriteExpressionText(node.tag.text, childContext.scope);
-    return `dynamicElement(${tag}, ${domProperties(node.attributes, childContext)}, ${node.children
-      .map((child) => domChildExpression(child, childContext))
-      .filter((value): value is string => value !== undefined)
-      .join(", ")})`;
-  }
-  const tagText = typeof node.tag === "string" ? node.tag : node.tag.text;
-  if (tagText === "IconSpriteProvider") {
-    return `dynamicElement(IconSpriteProvider, ${domProperties(node.attributes, childContext)}, ${node.children
-      .map((child) => domChildExpression(child, childContext))
-      .filter((value): value is string => value !== undefined)
-      .join(", ")})`;
-  }
-  const host = componentHostOf(node, childContext);
-  const name =
-    host?.invocation === "is-attribute"
-      ? (host.baseTag ?? tagNameOf(node))
-      : tagNameOf(node);
-  return `dynamicElement(${JSON.stringify(name)}, ${domProperties(domAttributes(node, host), childContext)}, ${node.children
-    .map((child) => domChildExpression(child, childContext))
-    .filter((value): value is string => value !== undefined)
-    .join(", ")})`;
+  );
 }
 
-function domStaticNode(
+/**
+ * Resolves the child context with updated slotOwnerDepth if applicable.
+ *
+ * @param node - Render node.
+ * @param context - Parent template context.
+ * @returns Child template context.
+ */
+function resolveNodeChildContext(
+  node: GenericRenderNode,
+  context: TemplateContext,
+): TemplateContext {
+  return isSlotOwnerNode(node)
+    ? { ...context, slotOwnerDepth: (context.slotOwnerDepth ?? 0) + 1 }
+    : context;
+}
+
+/**
+ * Checks whether a render node is a fragment or teleport element.
+ *
+ * @param node - Candidate render node.
+ * @returns True if fragment or teleport.
+ */
+function isFragmentOrTeleport(node: GenericRenderNode): boolean {
+  if (node.tagKind === "fragment") {
+    return true;
+  }
+  return node.tag === TELEPORT_TAG;
+}
+
+/**
+ * Dispatches special tagged control element rendering expressions.
+ *
+ * @param tag - Node tag string.
+ * @param node - Render node.
+ * @param context - Template context.
+ * @param childContext - Child template context.
+ * @returns Serialized expression if handled, or undefined.
+ */
+function domSpecialTaggedExpression(
+  tag: string,
+  node: GenericRenderNode,
+  context: TemplateContext,
+  childContext: TemplateContext,
+): string | undefined {
+  switch (tag) {
+    case SUSPENSE_TAG: {
+      return domSuspenseExpression(node, childContext);
+    }
+    case HTML_CONTENT_TAG: {
+      return domHtmlContentExpression(node, childContext);
+    }
+    case "Slot": {
+      return domSlotExpression(node, context, childContext);
+    }
+    default: {
+      return undefined;
+    }
+  }
+}
+
+/**
+ * Renders special control and container nodes (fragment, suspense, slot, html).
+ *
+ * @param node - Render node.
+ * @param context - Parent context.
+ * @param childContext - Child context.
+ * @returns Serialized expression if handled, or undefined.
+ */
+function domSpecialNodeExpression(
+  node: GenericRenderNode,
+  context: TemplateContext,
+  childContext: TemplateContext,
+): string | undefined {
+  if (isFragmentOrTeleport(node)) {
+    return `[${renderChildrenExpressionList(node.children, childContext)}]`;
+  }
+  if (typeof node.tag !== "string") {
+    return undefined;
+  }
+  return domSpecialTaggedExpression(node.tag, node, context, childContext);
+}
+
+/**
+ * Renders a generic render node to a DOM JavaScript expression.
+ *
+ * @param node - Render node.
+ * @param context - Template context.
+ * @returns DOM dynamic element expression string.
+ */
+function domNodeExpression(
+  node: GenericRenderNode,
+  context: TemplateContext,
+): string {
+  const childContext = resolveNodeChildContext(node, context);
+  return (
+    domSpecialNodeExpression(node, context, childContext) ??
+    domStandardElementExpression(node, childContext)
+  );
+}
+
+/**
+ * Emits an anchor comment and part registration for dynamic content nodes within a static template.
+ *
+ * @param node - Dynamic render node.
+ * @param context - Template context.
+ * @param builder - Static DOM builder.
+ * @param parent - Parent element variable name if nested.
+ * @returns Array of anchor identifiers for root elements.
+ */
+function domStaticDynamicAnchor(
   node: GenericRenderNode,
   context: TemplateContext,
   builder: DomTemplateBuilder,
   parent: string | undefined,
 ): string[] {
-  if (node.tagKind === "fragment" || node.tag === TELEPORT_TAG) {
-    return node.children.flatMap((child) =>
-      domStaticChild(child, context, builder, parent),
+  const value = builder.values.push(domNodeExpression(node, context)) - 1;
+  const id = builder.nodeId++;
+  const anchor = `__mpAnchor${id}`;
+  builder.statements.push(
+    `const ${anchor} = document.createComment("mp:${id}");`,
+  );
+  if (parent !== undefined) {
+    builder.statements.push(`${parent}.append(${anchor});`);
+  }
+  builder.parts.push(`{ kind: "node", id: ${value}, start: ${anchor} }`);
+  return parent === undefined ? [anchor] : [];
+}
+
+/**
+ * Checks whether a node is a custom element or has a property-bound attribute.
+ *
+ * @param node - Render node.
+ * @param tag - Tag name.
+ * @param normalizedName - Aliased attribute name.
+ * @returns True if attribute binds as property.
+ */
+function isCustomElementOrPropertyBound(
+  node: GenericRenderNode,
+  tag: string,
+  normalizedName: string,
+): boolean {
+  if (node.tagKind === "component") {
+    return true;
+  }
+  if (node.tagKind !== "element") {
+    return false;
+  }
+  return tag.includes("-") || PROPERTY_BOUND.has(normalizedName);
+}
+
+/**
+ * Resolves static attribute prefix for dynamic property/event/attribute parts.
+ *
+ * @param node - Render node.
+ * @param tag - Tag name.
+ * @param attributeName - Raw attribute name.
+ * @param normalizedName - Normalized attribute name.
+ * @returns Prefix string.
+ */
+function resolveStaticAttrPrefix(
+  node: GenericRenderNode,
+  tag: string,
+  attributeName: string,
+  normalizedName: string,
+): string {
+  if (/^on[A-Z]/u.test(attributeName)) {
+    return "@";
+  }
+  if (attributeName === "ref") {
+    return "";
+  }
+  if (isCustomElementOrPropertyBound(node, tag, normalizedName)) {
+    return ".";
+  }
+  return "";
+}
+
+/**
+ * Applies a static spread attribute to the template builder.
+ *
+ * @param attribute - Spread attribute.
+ * @param variable - Element variable identifier.
+ * @param scope - Template scope.
+ * @param builder - Template builder.
+ */
+function applyStaticSpreadAttribute(
+  attribute: Extract<GenericAttribute, { kind: "jsx-spread-attribute" }>,
+  variable: string,
+  scope: TemplateContext["scope"],
+  builder: DomTemplateBuilder,
+): void {
+  if (attribute.expression !== undefined) {
+    const valueId =
+      builder.values.push(
+        rewriteExpressionText(attribute.expression.text, scope),
+      ) - 1;
+    builder.parts.push(
+      `{ kind: "spread", id: ${valueId}, element: ${variable} }`,
     );
   }
-  if (
+}
+
+/**
+ * Resolves whether an attribute name corresponds to an event listener or a static attribute.
+ *
+ * @param rawName - Original authored attribute name.
+ * @param normalizedName - Aliased attribute name.
+ * @returns Event name without prefix or normalized attribute name.
+ */
+function resolveStaticEventOrAttributeName(
+  rawName: string,
+  normalizedName: string,
+): string {
+  if (/^on[A-Z]/u.test(rawName)) {
+    return eventNameOf(rawName);
+  }
+  return normalizedName;
+}
+
+/**
+ * Appends static literal or boolean attribute statements to the template builder.
+ *
+ * @param value - Attribute value.
+ * @param name - Normalized attribute name.
+ * @param variable - Element variable identifier.
+ * @param builder - Template builder.
+ * @returns True if handled as a literal attribute.
+ */
+function applyStaticLiteralAttribute(
+  value: GenericAttribute["value"],
+  name: string,
+  variable: string,
+  builder: DomTemplateBuilder,
+): boolean {
+  if (value === undefined) {
+    builder.statements.push(
+      `${variable}.setAttribute(${JSON.stringify(name)}, "");`,
+    );
+    return true;
+  }
+  if (value.kind === "string") {
+    builder.statements.push(
+      `${variable}.setAttribute(${JSON.stringify(name)}, ${JSON.stringify(value.value)});`,
+    );
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Checks whether an attribute value contains a valid AST expression.
+ *
+ * @param value - Attribute value.
+ * @returns True if expression is present.
+ */
+function hasExpressionPayload(
+  value: GenericAttribute["value"],
+): value is Extract<GenericAttribute["value"], { kind: "expression" }> & {
+  readonly expression: { readonly text: string };
+} {
+  if (value === undefined) {
+    return false;
+  }
+  if (value.kind !== "expression") {
+    return false;
+  }
+  return value.expression !== undefined;
+}
+
+/**
+ * Appends dynamic expression attribute parts to the template builder.
+ *
+ * @param attribute - JSX attribute.
+ * @param node - Render node.
+ * @param tag - Tag name.
+ * @param name - Normalized attribute name.
+ * @param variable - Element variable identifier.
+ * @param context - Template context.
+ * @param builder - Template builder.
+ */
+function applyStaticExpressionAttribute(
+  attribute: Extract<GenericAttribute, { kind: "jsx-attribute" }>,
+  node: GenericRenderNode,
+  tag: string,
+  name: string,
+  variable: string,
+  context: TemplateContext,
+  builder: DomTemplateBuilder,
+): void {
+  const value = attribute.value;
+  if (!hasExpressionPayload(value)) {
+    return;
+  }
+  const valueId =
+    builder.values.push(
+      domValue(value.expression.text, nestedOf(value), context),
+    ) - 1;
+  const prefix = resolveStaticAttrPrefix(node, tag, attribute.name, name);
+  const eventOrAttributeName = resolveStaticEventOrAttributeName(
+    attribute.name,
+    name,
+  );
+  builder.parts.push(
+    `{ kind: "attr", id: ${valueId}, element: ${variable}, prefix: ${JSON.stringify(prefix)}, name: ${JSON.stringify(eventOrAttributeName)} }`,
+  );
+}
+
+/**
+ * Applies a static JSX attribute to the template builder.
+ *
+ * @param attribute - JSX attribute.
+ * @param node - Render node.
+ * @param tag - Tag name.
+ * @param variable - Element variable.
+ * @param context - Template context.
+ * @param builder - Template builder.
+ */
+function applyStaticSingleAttribute(
+  attribute: Extract<GenericAttribute, { kind: "jsx-attribute" }>,
+  node: GenericRenderNode,
+  tag: string,
+  variable: string,
+  context: TemplateContext,
+  builder: DomTemplateBuilder,
+): void {
+  if (attribute.name === MP_STATIC_ATTR) {
+    return;
+  }
+  const name = resolveAttributeAlias(attribute.name);
+  if (applyStaticLiteralAttribute(attribute.value, name, variable, builder)) {
+    return;
+  }
+  applyStaticExpressionAttribute(
+    attribute,
+    node,
+    tag,
+    name,
+    variable,
+    context,
+    builder,
+  );
+}
+
+/**
+ * Applies attributes to a static element during template building.
+ *
+ * @param node - Render node.
+ * @param host - Component host descriptor.
+ * @param tag - Tag name.
+ * @param variable - Element variable identifier.
+ * @param context - Template context.
+ * @param builder - Template builder.
+ */
+function applyStaticNodeAttributes(
+  node: GenericRenderNode,
+  host:
+    | Readonly<{
+        readonly baseTag?: string;
+        readonly invocation: "is-attribute" | "custom-tag";
+        readonly tagName: string;
+      }>
+    | undefined,
+  tag: string,
+  variable: string,
+  context: TemplateContext,
+  builder: DomTemplateBuilder,
+): void {
+  for (const attribute of domAttributes(node, host)) {
+    if (attribute.kind === "jsx-spread-attribute") {
+      applyStaticSpreadAttribute(attribute, variable, context.scope, builder);
+    } else {
+      applyStaticSingleAttribute(
+        attribute,
+        node,
+        tag,
+        variable,
+        context,
+        builder,
+      );
+    }
+  }
+}
+
+/**
+ * Checks whether a render node is a static fragment or teleport.
+ *
+ * @param node - Candidate render node.
+ * @returns True if fragment or teleport.
+ */
+function isStaticFragmentOrTeleport(node: GenericRenderNode): boolean {
+  return isFragmentOrTeleport(node);
+}
+
+/**
+ * Checks whether a render node requires a dynamic anchor slot.
+ *
+ * @param node - Candidate render node.
+ * @returns True if dynamic anchor tag.
+ */
+function isStaticDynamicAnchorTag(node: GenericRenderNode): boolean {
+  return (
     node.tag === "Slot" ||
     node.tag === HTML_CONTENT_TAG ||
     node.tag === SUSPENSE_TAG ||
     node.tagKind === "dynamic"
-  ) {
-    const value = builder.values.push(domNodeExpression(node, context)) - 1;
-    const id = builder.nodeId++;
-    const anchor = `__mpAnchor${id}`;
-    builder.statements.push(
-      `const ${anchor} = document.createComment("mp:${id}");`,
-    );
-    if (parent !== undefined)
-      builder.statements.push(`${parent}.append(${anchor});`);
-    builder.parts.push(`{ kind: "node", id: ${value}, start: ${anchor} }`);
-    // Root-level dynamic child/content must be present in the returned blueprint
-    // nodes so the renderer can insert the `end` anchor and mount updates.
-    return parent === undefined ? [anchor] : [];
-  }
-  const host = componentHostOf(node, context);
-  const tag =
-    host?.invocation === "is-attribute"
-      ? (host.baseTag ?? tagNameOf(node))
-      : tagNameOf(node);
-  const id = builder.nodeId++;
-  const variable = `__mpNode${id}`;
+  );
+}
+
+/**
+ * Appends document.createElement and parent append statements.
+ *
+ * @param tag - Element tag name.
+ * @param host - Component host descriptor.
+ * @param variable - Element variable.
+ * @param parent - Parent variable if present.
+ * @param builder - Template builder.
+ */
+function appendElementCreationStatements(
+  tag: string,
+  host: ReturnType<typeof componentHostOf>,
+  variable: string,
+  parent: string | undefined,
+  builder: DomTemplateBuilder,
+): void {
   const creationOptions =
     host?.invocation === "is-attribute"
       ? `, { is: ${JSON.stringify(host.tagName)} }`
@@ -1096,61 +1807,45 @@ function domStaticNode(
   builder.statements.push(
     `const ${variable} = document.createElement(${JSON.stringify(tag)}${creationOptions});`,
   );
-  if (parent !== undefined)
+  if (parent !== undefined) {
     builder.statements.push(`${parent}.append(${variable});`);
-  for (const attribute of domAttributes(node, host)) {
-    if (attribute.kind === "jsx-spread-attribute") {
-      if (attribute.expression !== undefined) {
-        const valueId =
-          builder.values.push(
-            rewriteExpressionText(attribute.expression.text, context.scope),
-          ) - 1;
-        builder.parts.push(
-          `{ kind: "spread", id: ${valueId}, element: ${variable} }`,
-        );
-      }
-      continue;
-    }
-    if (attribute.name === MP_STATIC_ATTR) continue;
-    const name = ATTRIBUTE_ALIASES[attribute.name] ?? attribute.name;
-    const value = attribute.value;
-    if (value?.kind === "string") {
-      builder.statements.push(
-        `${variable}.setAttribute(${JSON.stringify(name)}, ${JSON.stringify(value.value)});`,
-      );
-      continue;
-    }
-    if (value === undefined) {
-      builder.statements.push(
-        `${variable}.setAttribute(${JSON.stringify(name)}, "");`,
-      );
-      continue;
-    }
-    if (value.expression !== undefined) {
-      const valueId =
-        builder.values.push(
-          domValue(value.expression.text, nestedOf(value), context),
-        ) - 1;
-      const prefix = /^on[A-Z]/u.test(attribute.name)
-        ? "@"
-        : attribute.name === "ref"
-          ? ""
-          : node.tagKind === "component" ||
-              (node.tagKind === "element" &&
-                (tag.includes("-") || PROPERTY_BOUND.has(name)))
-            ? "."
-            : "";
-      builder.parts.push(
-        `{ kind: "attr", id: ${valueId}, element: ${variable}, prefix: ${JSON.stringify(prefix)}, name: ${JSON.stringify(/^on[A-Z]/u.test(attribute.name) ? eventNameOf(attribute.name) : name)} }`,
-      );
-    }
   }
-  const childContext =
-    node.tagKind === "component" && node.tag !== "Slot"
-      ? { ...context, slotOwnerDepth: (context.slotOwnerDepth ?? 0) + 1 }
-      : context;
-  for (const child of node.children)
+}
+
+/**
+ * Emits direct DOM statements for a static or dynamic render node.
+ *
+ * @param node - Render node to process.
+ * @param context - Template compilation context.
+ * @param builder - DOM template builder accumulator.
+ * @param parent - Variable name of the parent element, if nested.
+ * @returns Array of emitted node variable names or anchor identifiers.
+ */
+function domStaticNode(
+  node: GenericRenderNode,
+  context: TemplateContext,
+  builder: DomTemplateBuilder,
+  parent: string | undefined,
+): string[] {
+  if (isStaticFragmentOrTeleport(node)) {
+    return node.children.flatMap((child) =>
+      domStaticChild(child, context, builder, parent),
+    );
+  }
+  if (isStaticDynamicAnchorTag(node)) {
+    return domStaticDynamicAnchor(node, context, builder, parent);
+  }
+  const host = componentHostOf(node, context);
+  const tag = resolveElementHostTag(node, host);
+  const variable = `__mpNode${builder.nodeId++}`;
+  appendElementCreationStatements(tag, host, variable, parent, builder);
+
+  applyStaticNodeAttributes(node, host, tag, variable, context, builder);
+
+  const childContext = resolveNodeChildContext(node, context);
+  for (const child of node.children) {
     domStaticChild(child, childContext, builder, variable);
+  }
   return [variable];
 }
 
@@ -1211,7 +1906,7 @@ export function renderNodeToDomTemplate(
             attributes: [],
             children: [],
             selfClosing: false,
-          } as GenericRenderNode,
+          } as unknown as GenericRenderNode,
           context,
           builder,
           undefined,

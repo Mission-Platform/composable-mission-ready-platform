@@ -116,7 +116,7 @@ generate: (intentions: TargetIntentions, context: GeneratorContext) =>
 Each framework plugin exposes build adapters integrating native framework compiler plugins into downstream toolchains:
 
 ```typescript
-export interface FrameworkBuildAdapters {
+export interface ForgeBuildAdapters {
   readonly vite?: (context: ViteBuildContext) => readonly Plugin[];
   readonly tsdown?: (context: TsdownBuildContext) => readonly TsdownPlugin[];
 }

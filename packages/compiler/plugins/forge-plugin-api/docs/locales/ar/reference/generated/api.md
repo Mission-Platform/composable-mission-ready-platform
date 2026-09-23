@@ -1,4 +1,4 @@
-# @mission-platform/forge-plugin-api مرجع واجهة برمجة التطبيقات
+# مرجع @mission-platform/forge-plugin-api API
 
 ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
 
@@ -10,6 +10,16 @@
 تم إنشاؤها من إعلانات المصدر العام في `@mission-platform/forge-plugin-api`.
 
 ## `src/compiler/ast`
+
+### ADAPTERS_MODULE
+
+**النوع:** ثابت
+
+```typescript
+export const ADAPTERS_MODULE;
+```
+
+لم يتم تقديم أي وصف.
 
 ### ApplySourceEdits
 
@@ -38,16 +48,6 @@ export const CLASS_NAME_ATTRIBUTE;
 
 لم يتم تقديم أي وصف.
 
-### COMPONENTS_JSX_MODULES
-
-**النوع:** ثابت
-
-```typescript
-export const COMPONENTS_JSX_MODULES;
-```
-
-لم يتم تقديم أي وصف.
-
 ### EventNameForProperty
 
 **النوع:** الوظيفة
@@ -56,7 +56,7 @@ export const COMPONENTS_JSX_MODULES;
 function eventNameForProperty(propertyName: string): string;
 ```
 
-اشتق اسم الحدث الذي يمثله أ Vue-أسلوب `on<Event>` دعم.
+اشتق اسم الحدث الذي يمثله خاصية Vue ذات النمط `on<Event>`.
 
 #### حدود
 
@@ -64,15 +64,37 @@ function eventNameForProperty(propertyName: string): string;
 | ---------- | ----- | ----- |
 | اسم العقار | سلسلة |       |
 
-### ICONS_JSX_MODULE
+### FrameworkAdapterModule
 
-**النوع:** ثابت
+**النوع:** الوظيفة
 
 ```typescript
-export const ICONS_JSX_MODULE;
+function frameworkAdapterModule(framework: JsxFramework): string;
 ```
 
-لم يتم تقديم أي وصف.
+اشتق وحدة المحول/وقت التشغيل Forge لأي إطار عمل مستهدف مدمج.
+
+#### حدود
+
+| الاسم  | اكتب         | الوصف |
+| ------ | ------------ | ----- |
+| الإطار | JsxFramework |       |
+
+### FrameworkForDirective
+
+**النوع:** الوظيفة
+
+```typescript
+function frameworkForDirective(directive: string): JsxFramework | undefined;
+```
+
+حل توجيه `use <framework>` الرائد لأي هدف مضمن.
+
+#### حدود
+
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| توجيه | سلسلة |       |
 
 ### JSX_ATTRIBUTE_RENAMES
 
@@ -80,26 +102,6 @@ export const ICONS_JSX_MODULE;
 
 ```typescript
 export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
-```
-
-لم يتم تقديم أي وصف.
-
-### LOCAL_EFFECT_FILE
-
-**النوع:** ثابت
-
-```typescript
-export const LOCAL_EFFECT_FILE;
-```
-
-لم يتم تقديم أي وصف.
-
-### LOCAL_EFFECT_MODULE
-
-**النوع:** ثابت
-
-```typescript
-export const LOCAL_EFFECT_MODULE;
 ```
 
 لم يتم تقديم أي وصف.
@@ -134,22 +136,6 @@ export const LOCAL_JSX_TYPES_MODULE;
 
 لم يتم تقديم أي وصف.
 
-### localEffectModuleSource
-
-**النوع:** الوظيفة
-
-```typescript
-function localEffectModuleSource(framework: JsxFramework): string;
-```
-
-تنبعث المشتركة Vue مساعد التأثير؛ الأهداف الأخرى لا تحتاج إلى هذا الملف.
-
-#### حدود
-
-| الاسم  | اكتب         | الوصف |
-| ------ | ------------ | ----- |
-| الإطار | JsxFramework |       |
-
 ### localJsxTypesModuleSource
 
 **النوع:** الوظيفة
@@ -158,7 +144,7 @@ function localEffectModuleSource(framework: JsxFramework): string;
 function localJsxTypesModuleSource(framework: JsxFramework): string;
 ```
 
-قم بإصدار إعلانات JSX البدائية لإطار العمل المحلي دون تبعيات المحلل اللغوي.
+قم بإصدار إعلانات JSX الأولية لإطار العمل المحلي دون تبعيات المحلل اللغوي.
 
 #### حدود
 
@@ -226,16 +212,6 @@ export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
 
 لم يتم تقديم أي وصف.
 
-### REACT_ADAPTER_MODULE
-
-**النوع:** ثابت
-
-```typescript
-export const REACT_ADAPTER_MODULE;
-```
-
-لم يتم تقديم أي وصف.
-
 ### REACT_TYPE_ALIASES
 
 **النوع:** ثابت
@@ -265,16 +241,6 @@ export interface StyleImport
 ```
 
 تم استيراد ورقة الأنماط إلى شجرة مسطحة تم إنشاؤها.
-
-### VUE_ADAPTER_MODULE
-
-**النوع:** ثابت
-
-```typescript
-export const VUE_ADAPTER_MODULE;
-```
-
-لم يتم تقديم أي وصف.
 
 ### VUE_BUILTIN_COMPONENTS
 
@@ -308,7 +274,7 @@ export interface GenericHoistResult
 
 لم يتم تقديم أي وصف.
 
-### هويستاتيكتري
+### هويستاتيكنتري
 
 **النوع:** الواجهة
 
@@ -416,7 +382,7 @@ function hasJsxKey(attributes: readonly GenericAttribute[]): boolean;
 function hasMpStaticMarker(node: GenericRenderNode): boolean;
 ```
 
-سواء كانت JSX عامة node لديه علامة ثابتة خاصة.
+ما إذا كان JSX node العام يحتوي على علامة ثابتة خاصة.
 
 #### حدود
 
@@ -506,7 +472,7 @@ function stripMpStaticAttributes(
 function stripMpStaticMarker(node: GenericRenderNode): GenericRenderNode;
 ```
 
-قم بإرجاع عرض عام خالٍ من العلامات node، الحفاظ بشكل متكرر على امتدادات المصدر.
+قم بإرجاع عرض عام خالٍ من العلامات node، مع الحفاظ بشكل متكرر على امتدادات المصدر.
 
 #### حدود
 
@@ -573,13 +539,13 @@ function createCompilerDiagnostic(
 ): CompilerDiagnostic;
 ```
 
-إنشاء تشخيص دون اقتران عقود المرحلة ل TypeScript العقد.
+قم بإنشاء تشخيص دون اقتران عقود المرحلة بعقد TypeScript.
 
 #### حدود
 
-| الاسم   | اكتب                                                        | الوصف |
-| ------- | ----------------------------------------------------------- | ----- |
-| التشخيص | حذف<CompilerDiagnostic, "fileName"> & { اسم الملف؟: سلسلة } |       |
+| الاسم   | اكتب                                                       | الوصف |
+| ------- | ---------------------------------------------------------- | ----- |
+| التشخيص | Omit<CompilerDiagnostic, "fileName"> & {اسم الملف؟: سلسلة} |       |
 
 ### formatCompilerDiagnostic
 
@@ -617,15 +583,26 @@ function throwOnCompilerErrors(
 
 ## `src/framework`
 
-### FrameworkBuildAdapters
+### ForgeBuildAdapters
 
 **النوع:** الواجهة
 
 ```typescript
-export interface FrameworkBuildAdapters
+export interface ForgeBuildAdapters
 ```
 
-إطار مكتوب بشكل مستقل بناء التكامل.
+محولات تكامل البناء الموحدة لمكونات Forge الإضافية.
+
+### معرف الإطار
+
+**النوع:** النوع
+
+```typescript
+export type FrameworkId = JsxFramework | (string &
+```
+
+فتح معرف الإطار للمكونات الإضافية المستهدفة وخطوط أنابيب المترجم.
+يحتفظ بالإكمال التلقائي للأطر المضمنة المعروفة مع قبول أهداف المكونات الإضافية المخصصة العشوائية.
 
 ### FrameworkOutputPlugin
 
@@ -738,12 +715,23 @@ export interface TargetContext
 
 السياق المشترك عن طريق خفض الهدف والتحسين.
 
+### معرف إطار العمل المستهدف
+
+**النوع:** النوع
+
+```typescript
+export type TargetFrameworkId = FrameworkId;
+```
+
+افتح الاسم المستعار لمعرف إطار العمل للمكونات الإضافية المستهدفة.
+يعادل {@link FrameworkId}.
+
 ### نوايا الهدف
 
 **النوع:** الواجهة
 
 ```typescript
-export interface TargetIntentions
+export interface TargetIntentions< TLowered extends TargetLoweredModule = TargetLoweredModule, >
 ```
 
 غلاف النية الخاص بالهدف؛ تظل الحقائق المحايدة متاحة للتمريرات اللاحقة.
@@ -756,8 +744,8 @@ export interface TargetIntentions
 export interface TargetLoweredModule
 ```
 
-الخطة المملوكة للهدف التي تنتجها المكونات الإضافية `lower` المرحلة والمكررة بها
-`optimize` مرحلة. يعلن كل هدف عن تمديده لهذا العقد و
+الخطة المملوكة للهدف التي تم إنتاجها بواسطة مرحلة `lower` الخاصة بالمكون الإضافي وتم تحسينها بواسطة
+المرحلة `optimize`. يعلن كل هدف تمديده الخاص لهذا العقد و
 يميزها على {@link TargetLoweredModule.framework}، لذلك يمكن أن تكون الخطة
 ضاقت دون الإرسال بينما لا يزال كل مكون إضافي يرضي نفسه
 شكل {@link TargetIntentions}.
@@ -790,7 +778,7 @@ export interface TsdownBuildContext
 export interface ViteBuildContext
 ```
 
-السياق المشترك للإطار المملوك Vite حزم البرنامج المساعد.
+سياق مشترك لحزم المكونات الإضافية Vite المملوكة للإطار.
 
 ## `src/index`
 
@@ -1038,7 +1026,7 @@ export interface GenericComponent
 export interface GenericExpressionNode
 ```
 
-A `{ … }` الاستيفاء في موضع الطفل JSX.
+استيفاء `{ … }` في موضع JSX الفرعي.
 
 ### استيراد عام
 
@@ -1058,7 +1046,7 @@ export interface GenericImport
 export interface GenericJsxAttribute
 ```
 
-سمة JSX المسماة (`name`, `name="v"`, `name={expr}`).
+سمة JSX مسماة (`name`، `name="v"`، `name={expr}`).
 
 ### GenericJsxSpreadAttribute
 
@@ -1109,7 +1097,7 @@ export type GenericRenderChild =
 export interface GenericRenderNode
 ```
 
-عرض محايد للإطار node; قد تقوم عارضات الهدف بخفض تعبير مصدرها أو الحفاظ عليه.
+عرض محايد للإطار node؛ قد تقوم عارضات الهدف بخفض تعبير مصدرها أو الحفاظ عليه.
 
 ### بيان عام
 
@@ -1150,7 +1138,7 @@ export type GenericStatementKind =
 export type GenericTagKind = "element" | "component" | "fragment" | "dynamic";
 ```
 
-كيف تقديم nodeيتم حل العلامة في المفردات المستهدفة.
+كيف يتم حل علامة العرض node في المفردات المستهدفة.
 
 ### GenericTextNode
 
@@ -1172,7 +1160,7 @@ function isExpressionNode(
 ): child is GenericExpressionNode;
 ```
 
-ما إذا كان الطفل المقدم هو a `{ … }` الاستيفاء.
+ما إذا كان فرع العرض عبارة عن استيفاء `{ … }`.
 
 #### حدود
 
@@ -1188,7 +1176,7 @@ function isExpressionNode(
 function isRenderNode(child: GenericRenderChild): child is GenericRenderNode;
 ```
 
-ما إذا كان الطفل الذي يتم تقديمه عبارة عن عنصر/جزء متداخل node.
+ما إذا كان فرع العرض عبارة عن عنصر/جزء متداخل node.
 
 #### حدود
 
@@ -1240,7 +1228,7 @@ export interface MemoIntention
 export interface PropIntention
 ```
 
-إعلان الخاصية المحايدة يُستنتج من توقيع المكون أو نوع الخاصيات.
+إعلان دعائي محايد يُستنتج من توقيع المكون أو نوع الخاصيات.
 
 ### RefIntention
 
@@ -1260,7 +1248,7 @@ export interface RefIntention
 function renderNodeTagName(node: GenericRenderNode): string | undefined;
 ```
 
-اسم العلامة العادي للعرض node، أو `undefined` للعلامة المحسوبة.
+اسم العلامة العادية للعرض node، أو `undefined` للعلامة المحسوبة.
 
 #### حدود
 
@@ -1276,7 +1264,7 @@ function renderNodeTagName(node: GenericRenderNode): string | undefined;
 export interface SemanticIntentions
 ```
 
-الحقائق الدلالية المشتركة تم استنتاجها مرة واحدة قبل خفض الهدف.
+تم استنتاج الحقائق الدلالية المشتركة مرة واحدة قبل خفض الهدف.
 
 ### SemanticModule
 
@@ -1361,7 +1349,7 @@ function walkRenderNodes(
 ): void;
 ```
 
-قم بالسير على عمق شجرة العرض أولاً، بما في ذلك علامات التعبير المتداخلة.
+انتقل إلى عمق شجرة العرض أولاً، بما في ذلك علامات التعبير المتداخلة.
 
 #### حدود
 
@@ -1369,3 +1357,204 @@ function walkRenderNodes(
 | ----- | --------------------------------- | ----- |
 | العقد | للقراءة فقط GenericRenderNode[]   |       |
 | زيارة | (node: GenericRenderNode) => باطل |       |
+
+## `src/schema`
+
+### AssurerTargetIntentionsLowered
+
+**النوع:** الوظيفة
+
+```typescript
+function assertTargetIntentionsLowered(
+  intentions: unknown,
+  expectedFramework?: FrameworkId,
+): asserts intentions is TargetIntentions<TLowered>;
+```
+
+التأكد من أن النوايا المقدمة صحيحة وتحتوي على خطة مستهدفة منخفضة.
+يلقي خطأ TargetIntentionsValidationError (فئة فرعية من TypeError) إذا كانت النوايا غير مكتملة
+أو إذا كان مُميِّز الخطة المنخفضة لا يتطابق مع إطار العمل المتوقع.
+
+#### حدود
+
+| الاسم          | اكتب        | الوصف |
+| -------------- | ----------- | ----- |
+| نوايا          | غير معروف   |       |
+| الإطار المتوقع | معرف الإطار |       |
+
+### DeclarativeSchema
+
+**النوع:** الواجهة
+
+```typescript
+export interface DeclarativeSchema
+```
+
+تعريف المخطط التعريفي للتمثيلات الوسيطة للمترجم.
+
+### findActionableSpan
+
+**النوع:** الوظيفة
+
+```typescript
+function findActionableSpan(value: unknown): SourceSpan | undefined;
+```
+
+ابحث بشكل متكرر عن مصدر قابل للتنفيذ ضمن النوايا أو حقائق AST الخاصة بها.
+
+#### حدود
+
+| الاسم  | اكتب      | الوصف |
+| ------ | --------- | ----- |
+| القيمة | غير معروف |       |
+
+### SchemaFieldRule
+
+**النوع:** الواجهة
+
+```typescript
+export interface SchemaFieldRule
+```
+
+يتم تطبيق القاعدة التعريفية على خاصية المخطط.
+
+### نوع حقل المخطط
+
+**النوع:** النوع
+
+```typescript
+export type SchemaFieldType =
+  "string" | "non-empty-string" | "object" | "array" | "boolean";
+```
+
+أنواع الحقول المدعومة للتحقق من صحة المخطط التعريفي.
+
+### مشكلة التحقق من صحة المخطط
+
+**النوع:** الواجهة
+
+```typescript
+export interface SchemaValidationIssue
+```
+
+تم تحديد مشكلة واحدة تتعلق بالتحقق من صحة المخطط أثناء التحقق من النية.
+
+### خيارات التحقق من صحة المخطط
+
+**النوع:** الواجهة
+
+```typescript
+export interface SchemaValidationOptions
+```
+
+خيارات تكوين التحقق من صحة المخطط التعريفي.
+
+### semanticModuleSchema
+
+**النوع:** ثابت
+
+```typescript
+export const semanticModuleSchema: DeclarativeSchema;
+```
+
+مخطط التحقق من صحة الوحدة الدلالية الواردة IR.
+
+### targetContextSchema
+
+**النوع:** ثابت
+
+```typescript
+export const targetContextSchema: DeclarativeSchema;
+```
+
+مخطط التحقق من صحة السياق المستهدف للتجميع.
+
+### targetIntentionsSchema
+
+**النوع:** ثابت
+
+```typescript
+export const targetIntentionsSchema: DeclarativeSchema;
+```
+
+مخطط التحقق من صحة نوايا الهدف.
+
+### TargetIntentionsValidationError
+
+**النوع:** فئة
+
+```typescript
+export class TargetIntentionsValidationError extends TypeError
+```
+
+حدث خطأ عندما تفشل نوايا الهدف في التحقق من المخطط التعريفي.
+
+### TargetIntentionsValidationResult
+
+**النوع:** الواجهة
+
+```typescript
+export interface TargetIntentionsValidationResult
+```
+
+نتيجة منظمة للتحقق من صحة النية المستهدفة.
+
+### targetLoweredModuleSchema
+
+**النوع:** ثابت
+
+```typescript
+export const targetLoweredModuleSchema: DeclarativeSchema;
+```
+
+مخطط التحقق من صحة هيكل خطة الهدف المنخفض.
+
+### validateAgainstSchema
+
+**النوع:** الوظيفة
+
+```typescript
+function validateAgainstSchema(
+  target: unknown,
+  schema: DeclarativeSchema,
+  options?: SchemaValidationOptions,
+): SchemaValidationIssue[];
+```
+
+التحقق من صحة الكائن المستهدف مقابل المخطط التعريفي، وجمع كل المشكلات الهيكلية.
+
+#### حدود
+
+| الاسم  | اكتب                        | الوصف                                      |
+| ------ | --------------------------- | ------------------------------------------ |
+| الهدف  | غير معروف                   | - الكائن المستهدف أو السجل للتحقق من صحته. |
+| المخطط | المخطط التعريفي             | - مخطط تعريفي يحدد القواعد الهيكلية.       |
+| خيارات | خيارات التحقق من صحة المخطط | - خيارات تكوين التحقق من الصحة.            |
+
+#### عقد
+
+- **@param:** - الكائن أو السجل المستهدف للتحقق من صحته.
+- **@param:** - مخطط تعريفي يحدد القواعد الهيكلية.
+- **@param:** - خيارات تكوين التحقق من الصحة.
+- **@returns:** مجموعة من مشكلات التحقق المجمعة.
+
+### validateTargetIntentions
+
+**النوع:** الوظيفة
+
+```typescript
+function validateTargetIntentions(
+  intentions: unknown,
+  expectedFramework?: FrameworkId,
+): TargetIntentionsValidationResult;
+```
+
+التحقق من صحة بنية وسلامة النوايا المستهدفة مقابل المخطط التعريفي.
+إرجاع أخطاء التحقق المنظمة وكائنات CompilerDiagnostic المقابلة مع مواقع المصدر.
+
+#### حدود
+
+| الاسم          | اكتب        | الوصف |
+| -------------- | ----------- | ----- |
+| نوايا          | غير معروف   |       |
+| الإطار المتوقع | معرف الإطار |       |

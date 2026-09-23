@@ -23,6 +23,8 @@ import {
   forgeArtifactPublishPlugin,
   forgeBuildLifecyclePlugin,
   forgeVirtualEntry,
+  resolveCanonicalChunkName,
+  resolveCanonicalEntryName,
   resolveForgeArtifactPath,
   validateForgeArtifactSegment,
 } from "@mission-platform/vite-plugin-forge";
@@ -402,8 +404,8 @@ function createTsdownForgeCmsConfig(
     overrides: {
       outputOptions: {
         preserveModulesRoot: cacheDirectory,
-        entryFileNames: "[name].js",
-        chunkFileNames: "[name].js",
+        entryFileNames: resolveCanonicalEntryName,
+        chunkFileNames: resolveCanonicalChunkName,
       },
       plugins: [
         forgeBuildLifecyclePlugin({

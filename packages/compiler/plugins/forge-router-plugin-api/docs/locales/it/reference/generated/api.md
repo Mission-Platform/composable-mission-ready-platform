@@ -29,7 +29,7 @@ Creare una diagnostica locale di origine per un errore del compilatore del route
 
 | Nome        | Digitare                                                                                 | Descrizione |
 | ----------- | ---------------------------------------------------------------------------------------- | ----------- |
-| diagnostico | Omit<CompilerDiagnostic, 'phase' \| 'fileName'> & { nomefile di sola lettura?: string; } |             |
+| diagnostico | Omit<CompilerDiagnostic, "phase" \| "fileName"> & { nomefile di sola lettura?: string; } |             |
 
 ### defineForgeRouterPlugin
 
@@ -145,16 +145,6 @@ export const MP_ROUTER_MODULE;
 ```
 
 Il pacchetto le cui importazioni sono comprese dal passaggio del compilatore del router.
-
-### RouterBuildAdapter
-
-**Tipo:** interfaccia
-
-```typescript
-export interface RouterBuildAdapters
-```
-
-Costruisci hook di proprietà di un router target; nessuna dipendenza del router viene caricata dal core.
 
 ### Capacità del router
 

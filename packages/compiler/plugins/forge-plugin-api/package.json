@@ -39,6 +39,14 @@
     "./compiler/optimize.js": {
       "types": "./dist/compiler/optimize.d.ts",
       "import": "./dist/compiler/optimize.js"
+    },
+    "./schema": {
+      "types": "./dist/schema.d.ts",
+      "import": "./dist/schema.js"
+    },
+    "./schema.js": {
+      "types": "./dist/schema.d.ts",
+      "import": "./dist/schema.js"
     }
   },
   "files": [
@@ -48,7 +56,8 @@
     "build": "tsdown",
     "test": "vitest run",
     "lint": "eslint .",
-    "format": "prettier --check ."
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
   },
   "dependencies": {},
   "devDependencies": {

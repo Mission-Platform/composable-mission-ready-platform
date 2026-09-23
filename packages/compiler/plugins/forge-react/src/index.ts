@@ -9,7 +9,7 @@ import { optimizeReactModule } from "./optimize.js";
 
 import type { ReactLoweredModule } from "./lower.js";
 import type {
-  FrameworkBuildAdapters,
+  ForgeBuildAdapters,
   FrameworkOutputPlugin,
   GeneratedModule,
   TargetContext,
@@ -40,7 +40,7 @@ function reactJsxPlugin(): Plugin {
   };
 }
 
-const BUILD: FrameworkBuildAdapters = {
+const BUILD: ForgeBuildAdapters = {
   vite: () => [reactJsxPlugin()],
   tsdown: () => [reactJsxPlugin() as TsdownPlugin],
 };

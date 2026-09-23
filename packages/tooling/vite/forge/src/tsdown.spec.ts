@@ -8,6 +8,9 @@ import {
   defineTsdownForgeComponentsAll,
   defineTsdownForgeEmailComponents,
   defineTsdownForgeHooksAll,
+  forgePathNormalizationPlugin,
+  resolveCanonicalChunkName,
+  resolveCanonicalEntryName,
   tsdownForgeComponentPlugins,
 } from './tsdown';
 
@@ -368,7 +371,7 @@ describe('Forge tsdown component helpers', () => {
   }, 30_000);
 
   it('resolves CSS owner and threads CSS imports into JS chunks cleanly', () => {
-    const tempDir = path.resolve(import.meta.dirname, '../../../.test-tmp-css-' + Date.now());
+    const tempDir = path.resolve(import.meta.dirname, `../../../.test-tmp-css-${Date.now()}`);
     fs.mkdirSync(path.join(tempDir, 'components'), { recursive: true });
     fs.mkdirSync(path.join(tempDir, 'styles'), { recursive: true });
 
@@ -404,4 +407,131 @@ describe('Forge tsdown component helpers', () => {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
   }, 30_000);
+});
+
+describe('Forge Tsdown build adapter path normalization and canonical naming', () => {
+  it('resolves canonical entry filenames correctly', () => {
+    // Virtual forge entries mapped to index.js
+    expect(
+      resolveCanonicalEntryName({
+        name: '_virtual/_virtual_forge-entry-vue',
+        facadeModuleId: '\0virtual:forge-entry-vue',
+      }),
+    ).toBe('index.js');
+    expect(
+      resolveCanonicalEntryName({
+        name: 'virtual:forge-entry-react',
+      }),
+    ).toBe('index.js');
+    expect(resolveCanonicalEntryName('entry:react')).toBe('index.js');
+    expect(resolveCanonicalEntryName('entry_vue')).toBe('index.js');
+
+    // Preserved modules delegate to chunk name resolution
+    expect(
+      resolveCanonicalEntryName({
+        name: 'components/button/button',
+      }),
+    ).toBe('[name].js');
+    expect(
+      resolveCanonicalEntryName({
+        name: 'composables/use-theme/use-theme',
+      }),
+    ).toBe('[name].js');
+  });
+
+  it('resolves canonical chunk filenames for Vue virtual script modules and standard chunks', () => {
+    // Vue virtual script modules mapped to .script.js
+    expect(
+      resolveCanonicalChunkName({
+        name: 'components/button/button.vue?vue&type=script&setup=true&lang.js',
+      }),
+    ).toBe('components/button/button.script.js');
+    expect(
+      resolveCanonicalChunkName({
+        name: 'components/button/button.vue_vue_type_script_setup_true_lang',
+      }),
+    ).toBe('components/button/button.script.js');
+    expect(
+      resolveCanonicalChunkName({
+        name: 'components/button/button',
+        facadeModuleId: '/root/components/button/button.vue?vue&type=script&setup=true',
+      }),
+    ).toBe('components/button/button.script.js');
+
+    // Standard chunks preserve [name].js without collisions
+    expect(
+      resolveCanonicalChunkName({
+        name: 'components/button/button',
+      }),
+    ).toBe('[name].js');
+    expect(
+      resolveCanonicalChunkName({
+        name: 'composables/use-theme/use-theme',
+      }),
+    ).toBe('[name].js');
+  });
+
+  it('normalizes chunk code specifiers via forgePathNormalizationPlugin', async () => {
+    const plugin = forgePathNormalizationPlugin();
+    const renderChunk =
+      typeof plugin.renderChunk === 'function'
+        ? plugin.renderChunk
+        : (plugin.renderChunk as unknown as { handler: Function }).handler;
+
+    // Normalizes Vue virtual script import specifiers
+    const vueChunkCode =
+      'import script from "./button.vue?vue&type=script&setup=true&lang.js";\nexport default script;\n';
+    const normalizedVue = await Reflect.apply(renderChunk, plugin, [
+      vueChunkCode,
+      { fileName: 'components/button/button.js' },
+      {},
+    ]);
+    expect(normalizedVue).toBe('import script from "./button.script.js";\nexport default script;\n');
+
+    // Normalizes CSS module relative import specifiers
+    const cssChunkCode = 'import "./alert.module.css";\nimport "./theme.module.scss";\nexport const x = 1;\n';
+    const normalizedCss = await Reflect.apply(renderChunk, plugin, [
+      cssChunkCode,
+      { fileName: 'components/alert/alert.js' },
+      {},
+    ]);
+    expect(normalizedCss).toBe('import "./alert.css";\nimport "./theme.css";\nexport const x = 1;\n');
+
+    // Returns null when no transformation is needed
+    const cleanCode = 'export const noop = () => {};\n';
+    const normalizedClean = await Reflect.apply(renderChunk, plugin, [cleanCode, { fileName: 'utils/noop.js' }, {}]);
+    expect(normalizedClean).toBeNull();
+  });
+
+  it('configures canonical entry and chunk naming in outputOptions for component plugins and hook configs', async () => {
+    const rootDir = path.resolve('/tmp', 'mission-platform-canonical-naming');
+    const componentsRootDir = path.resolve(import.meta.dirname, '../../../../ui/components');
+    const configs = tsdownForgeComponentPlugins({
+      rootDir,
+      componentsModule: path.resolve(componentsRootDir, 'src/components/index.ts'),
+      frameworks: [fixtureFramework('vue')],
+      rejectFixturePlaceholder: false,
+    });
+
+    const materialized = await Promise.all(configs.map((plugin) => materializeConfig(plugin)));
+    const vueConfig = materialized[0];
+    expect(vueConfig).toBeDefined();
+
+    const outputOptions = vueConfig.outputOptions;
+    expect(outputOptions).toBeDefined();
+    if (typeof outputOptions === 'object' && outputOptions !== null) {
+      expect(typeof outputOptions.entryFileNames).toBe('function');
+      expect(typeof outputOptions.chunkFileNames).toBe('function');
+      expect(
+        (outputOptions.entryFileNames as (chunk: { name: string }) => string)({
+          name: 'virtual:forge-entry-vue',
+        }),
+      ).toBe('index.js');
+      expect(
+        (outputOptions.chunkFileNames as (chunk: { name: string }) => string)({
+          name: 'components/card/card.vue?vue&type=script&setup=true&lang.js',
+        }),
+      ).toBe('components/card/card.script.js');
+    }
+  });
 });
