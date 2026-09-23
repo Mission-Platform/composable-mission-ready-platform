@@ -2323,7 +2323,6 @@ export fn sdf_init_atlas_data() -> u32 {
   let u_eight: u32 = 8;
   let u_twelve: u32 = 12;
   let u_16: u32 = 16;
-  let u_256: u32 = 256;
   let existing_ptr: u32 = memory_load_u32(196);
   if existing_ptr != 0 {
     return existing_ptr;
@@ -2332,6 +2331,16 @@ export fn sdf_init_atlas_data() -> u32 {
   let total_glyphs: u32 = 220;
   let atlas_dim: u32 = compute_best_atlas_dim(total_glyphs);
   memory_store_u32(192, atlas_dim);
+
+  // Allocate table ptr for glyph rects (220 glyphs * 16 bytes = 3520 bytes + padding)
+  let table_bytes: u32 = total_glyphs * u_16 + u_16;
+  let raw_table_ptr: u32 = memory_alloc(table_bytes);
+  let rem_t: u32 = raw_table_ptr % u_eight;
+  let mut table_ptr: u32 = raw_table_ptr;
+  if rem_t != 0 {
+    table_ptr = raw_table_ptr + (u_eight - rem_t);
+  }
+  memory_store_u32(224, table_ptr);
 
   // atlas_dim * atlas_dim * 4 bytes + 16 bytes alignment padding
   let atlas_bytes: u32 = atlas_dim * atlas_dim * 4 + 16;
@@ -2371,8 +2380,8 @@ export fn sdf_init_atlas_data() -> u32 {
     }
     shelf_x = shelf_x + cell_w;
 
-    // Store packed rect table at memory offset 256 + idx * 16
-    let table_entry: u32 = u_256 + idx * u_16;
+    // Store packed rect table at table_ptr + idx * 16
+    let table_entry: u32 = table_ptr + idx * u_16;
     memory_store_u32(table_entry, cell_x);
     memory_store_u32(table_entry + u_four, cell_y);
     memory_store_u32(table_entry + u_eight, cell_w);
@@ -2384,6 +2393,15 @@ export fn sdf_init_atlas_data() -> u32 {
   }
 
   return atlas_ptr;
+}
+
+export fn sdf_get_table_ptr() -> u32 {
+  let existing_ptr: u32 = memory_load_u32(224);
+  if existing_ptr == 0 {
+    sdf_init_atlas_data();
+    return memory_load_u32(224);
+  }
+  return existing_ptr;
 }
 
 export fn sdf_get_atlas_ptr() -> u32 {
@@ -3042,7 +3060,8 @@ export fn sdf_append_text_quads_styled(
         cursor_x = cursor_x + adv_f64 + char_spacing;
       } else {
         let idx: u32 = char_code_to_idx(ucode);
-        let table_entry: u32 = u_256 + idx * u_16;
+        let table_base: u32 = sdf_get_table_ptr();
+        let table_entry: u32 = table_base + idx * u_16;
         let cell_x: u32 = memory_load_u32(table_entry);
         let cell_y: u32 = memory_load_u32(table_entry + u_four);
         let cell_w: u32 = memory_load_u32(table_entry + u_eight);
@@ -3172,8 +3191,7 @@ export fn sdf_append_text_quads_mono(
   let u_twelve: u32 = 12;
   let u_16: u32 = 16;
   let u_48: u32 = 48;
-  let u_256: u32 = 256;
-  let u_max_floats: u32 = 64000;
+  let u_max_floats: u32 = 1048576;
   let len: i32 = string_length(text);
   if len == 0 {
     return 0;
@@ -3212,7 +3230,8 @@ export fn sdf_append_text_quads_mono(
       cursor_x = cursor_x + fixed_adv_f64;
     } else {
       let idx: u32 = char_code_to_idx(ucode);
-      let table_entry: u32 = u_256 + idx * u_16;
+      let table_base: u32 = sdf_get_table_ptr();
+      let table_entry: u32 = table_base + idx * u_16;
       let cell_x: u32 = memory_load_u32(table_entry);
       let cell_y: u32 = memory_load_u32(table_entry + u_four);
       let cell_w: u32 = memory_load_u32(table_entry + u_eight);

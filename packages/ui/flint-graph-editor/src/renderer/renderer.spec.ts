@@ -998,6 +998,18 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     expect(atlasPtr).toBeGreaterThan(0);
     expect(wasm.font_get_atlas_size()).toBe(1024);
 
+    wasm.font_clear_text_vertices();
+    const testCount = wasm.font_append_text_quads('Param α (Alpha)', 10, 20, 12, 1, 1, 1, 1, 0);
+    expect(testCount).toBe(13);
+    const testPtr = wasm.font_get_vertex_buffer_ptr();
+    const testFloats = new Float64Array(wasm.memory.buffer, testPtr, testCount * 48);
+    for (let i = 0; i < testCount; i++) {
+      const off = i * 48;
+      const u0 = testFloats[off + 2]!;
+      const u1 = testFloats[off + 10]!;
+      expect(u1).toBeGreaterThan(u0);
+    }
+
     // 2. Kerning verification
     const kernAV = wasm.font_get_kerning(65, 86); // 'A' and 'V'
     expect(kernAV).toBeLessThan(0);

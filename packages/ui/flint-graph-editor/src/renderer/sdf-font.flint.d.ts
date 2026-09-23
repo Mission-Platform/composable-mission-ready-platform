@@ -20,6 +20,7 @@ export interface FlintSdfFontWasmExports {
   readonly sdf_render_char_cell: (idx: number, atlasPtr: number, col: number, row: number, tempSegPtr: number) => void;
   readonly sdf_init_atlas_data: () => number;
   readonly sdf_get_atlas_ptr: () => number;
+  readonly sdf_get_table_ptr: () => number;
   readonly sdf_clear_text_vertices: () => void;
   readonly sdf_get_vertex_buffer_ptr: () => number;
   readonly sdf_get_vertex_float_count: () => number;

@@ -483,6 +483,10 @@ export fn font_get_atlas_ptr() -> u32 {
   return font.sdf_get_atlas_ptr();
 }
 
+export fn font_get_table_ptr() -> u32 {
+  return font.sdf_get_table_ptr();
+}
+
 export fn font_clear_text_vertices() -> unit {
   font.sdf_clear_text_vertices();
 }

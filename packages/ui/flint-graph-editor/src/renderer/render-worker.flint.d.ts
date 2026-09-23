@@ -217,6 +217,7 @@ export interface FlintRenderWorkerWasmExports {
   readonly font_measure_text: (text: string, fontSize: number) => number;
   readonly font_init_atlas_data: () => number;
   readonly font_get_atlas_ptr: () => number;
+  readonly font_get_table_ptr: () => number;
   readonly font_clear_text_vertices: () => void;
   readonly font_get_vertex_buffer_ptr: () => number;
   readonly font_get_vertex_float_count: () => number;
