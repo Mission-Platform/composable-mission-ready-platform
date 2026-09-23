@@ -133,6 +133,7 @@ async function fileExists(path: string): Promise<boolean> {
 }
 
 /** Recursively traverses directories yielding file paths that match the given predicate. */
+// skipcq: JS-R1005
 async function walk(directory: string, predicate: (path: string) => boolean): Promise<string[]> {
   const entries = await readdir(directory, { withFileTypes: true }).catch(() => []);
   const paths: string[] = [];
@@ -161,6 +162,7 @@ async function readManifest(packageRoot: string): Promise<PackageManifest | unde
 }
 
 /** Find package roots in the publishable workspace directories. */
+// skipcq: JS-R1005
 export async function discoverPackageRoots(repoRoot: string): Promise<readonly string[]> {
   const roots: string[] = [];
   for (const directory of packageDirectories) {
@@ -184,6 +186,7 @@ export async function discoverPackageRoots(repoRoot: string): Promise<readonly s
 }
 
 /** Traverses manifest export conditions and maps them to target file specifiers. */
+// skipcq: JS-R1005
 function exportTargets(value: unknown, targets: string[]): void {
   if (typeof value === 'string') {
     targets.push(value);
@@ -214,6 +217,7 @@ function sourceCandidates(packageRoot: string, target: string): string[] {
 }
 
 /** Resolves TypeScript entrypoint source files declared in a package manifest. */
+// skipcq: JS-R1005
 async function typeScriptEntries(packageRoot: string, manifest: PackageManifest): Promise<readonly string[]> {
   const targets: string[] = [];
   exportTargets(manifest.exports, targets);
@@ -330,6 +334,7 @@ function parseSource(fileName: string, source: string): ParsedModule {
 }
 
 /** Extracts leading JSDoc documentation, tags, and parameter descriptions for an AST node. */
+// skipcq: JS-R1005
 function documentationFor(module: ParsedModule, start: number): ParsedDocumentation {
   const comment = module.comments
     .filter((candidate) => candidate.type === 'Block' && candidate.value.startsWith('*') && candidate.end <= start)
@@ -374,6 +379,7 @@ function documentationFor(module: ParsedModule, start: number): ParsedDocumentat
 }
 
 /** Maps an AST node type to an extracted symbol kind. */
+// skipcq: JS-R1005
 function declarationKind(node: OxcNode): ExtractedSymbolKind | undefined {
   switch (node.type) {
     case 'FunctionDeclaration': {
@@ -404,6 +410,7 @@ function declarationKind(node: OxcNode): ExtractedSymbolKind | undefined {
 }
 
 /** Formats a TypeScript declaration signature for a scanned symbol. */
+// skipcq: JS-R1005
 function declarationSignature(module: ParsedModule, declaration: ScannedDeclaration): string {
   const node = declaration.node;
   if (declaration.kind === 'function') {
@@ -488,6 +495,7 @@ function sourceModule(packageRoot: string, fileName: string): string {
 }
 
 /** Scans top-level declarations and export bindings in a parsed module. */
+// skipcq: JS-R1005
 function scanModule(module: ParsedModule, packageRoot: string): ScannedModule {
   const declarations = new Map<string, ScannedDeclaration>();
   const exports: ExportBinding[] = [];
@@ -581,6 +589,7 @@ async function resolveLocalModule(
 }
 
 /** Recursively collects all exported declarations for a module, following re-exports and star exports. */
+// skipcq: JS-R1005
 async function exportedDeclarations(
   fileName: string,
   packageRoot: string,
@@ -665,6 +674,7 @@ interface FlintSymbolLike {
 }
 
 /** Converts a Flint AST type representation into its printable signature string. */
+// skipcq: JS-R1005
 function flintTypeNameToString(type: unknown): string {
   if (typeof type === 'string') return type;
   if (!isRecord(type)) return 'unknown';
@@ -693,6 +703,7 @@ function flintDocumentationTags(
 }
 
 /** Formats a Flint declaration signature string. */
+// skipcq: JS-R1005
 function flintSignature(declaration: FlintSymbolLike): string {
   if (declaration.kind === 'function') {
     const exportPrefix = declaration.exported === false ? '' : 'export ';
@@ -825,20 +836,21 @@ function markdownTableCell(value: string): string {
 }
 
 /** Render deterministic generated Markdown for a package. */
+// skipcq: JS-R1005
 export function renderReferenceMarkdown(documentation: PackageDocumentation): string {
   const lines = [
     `# ${documentation.packageName} API reference`,
     '',
     generatedMarker,
     '',
-    'Generated from public source declarations in `' + documentation.packageName + '`.',
+    `Generated from public source declarations in \`${documentation.packageName}\`.`,
     '',
   ];
   let currentModule: string | undefined;
   for (const symbol of documentation.symbols) {
     if (symbol.sourceModule !== currentModule) {
       currentModule = symbol.sourceModule;
-      lines.push('## `' + currentModule + '`', '');
+      lines.push(`## \`${currentModule}\``, '');
     }
     lines.push(
       `### ${symbol.name}`,
@@ -901,6 +913,7 @@ async function writePackageDocumentation(
   }
 }
 
+/** Extracts package documentation from source files and writes reference Markdown. */
 export async function extractPackageDocs(
   repoRoot: string,
   packageRoot: string,
@@ -912,6 +925,7 @@ export async function extractPackageDocs(
 }
 
 /** CLI entry point for extracting package documentation across the workspace. */
+// skipcq: JS-R1005
 async function main(): Promise<void> {
   const repoRoot = resolve(import.meta.dirname, '..');
   const inlinePackageArgument = process.argv

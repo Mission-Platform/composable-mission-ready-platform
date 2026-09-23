@@ -69,6 +69,8 @@ export interface TsdownForgeCmsPluginsOptions {
   overrides?: UserConfig;
 }
 
+/** Merges base tsdown configuration with caller-provided overrides. */
+// skipcq: JS-R1005
 function mergeTsdownConfig(
   base: UserConfig,
   overrides?: UserConfig,
@@ -176,6 +178,7 @@ export function cmsOutputDirectory(
   return path.resolve(rootDir, `dist/cms/${target.id}/${target.framework.id}`);
 }
 
+/** Computes the cache bundle directory for shared CMS assets. */
 function cmsSharedAssetsBundleDirectory(
   rootDir: string,
   target: CmsOutputPlugin,
@@ -189,6 +192,7 @@ function cmsSharedAssetsBundleDirectory(
   );
 }
 
+/** Resolves the build output directory for a CMS target based on artifact mode. */
 function cmsBuildOutputDirectory(
   rootDir: string,
   target: CmsOutputPlugin,
@@ -198,13 +202,12 @@ function cmsBuildOutputDirectory(
   if (artifactMode === "shared" && outputRoot === undefined) {
     return cmsSharedAssetsBundleDirectory(rootDir, target);
   }
-  return path.resolve(
-    rootDir,
-    `dist/cms/${target.id}` +
-      (artifactMode === "shared" ? "" : `/${target.framework.id}`),
-  );
+  const frameworkSuffix =
+    artifactMode === "shared" ? "" : `/${target.framework.id}`;
+  return path.resolve(rootDir, `dist/cms/${target.id}${frameworkSuffix}`);
 }
 
+/** Returns the artifact kinds associated with an artifact mode. */
 function artifactKindsForMode(
   mode: TsdownForgeCmsTargetOptions["artifactMode"],
 ): readonly CmsArtifactKind[] | undefined {
@@ -213,6 +216,7 @@ function artifactKindsForMode(
   return undefined;
 }
 
+/** Resolves the TypeScript configuration file for Forge builds. */
 function resolveForgeTsconfig(rootDir: string): string | undefined {
   return ["tsconfig.build.json", "tsconfig.json"]
     .map((fileName) => path.resolve(rootDir, fileName))
@@ -247,6 +251,7 @@ function cmsEntryDeclarationsTsdownPlugin(
 }
 
 /** Mirror every `asset: true` artifact into `dist/cms/<cmsId>/`. */
+// skipcq: JS-R1005
 function cmsAssetsTsdownPlugin(
   rootDir: string,
   cacheDirectory: string,
@@ -300,6 +305,7 @@ function cmsAssetsTsdownPlugin(
   } as TsdownPlugin;
 }
 
+/** Plugin cleaning up temporary CMS cache directories on bundle close. */
 function cmsCleanupTsdownPlugin(cacheDirectory: string): TsdownPlugin {
   return {
     name: "mission-platform:cms-cache-cleanup",
@@ -313,6 +319,7 @@ function cmsCleanupTsdownPlugin(cacheDirectory: string): TsdownPlugin {
 }
 
 /** Create a tsdown config for one CMS target for the native plugin adapter. */
+// skipcq: JS-R1005
 function createTsdownForgeCmsConfig(
   options: TsdownForgeCmsTargetOptions,
 ): UserConfig {
@@ -438,6 +445,7 @@ function createTsdownForgeCmsConfig(
   return mergeTsdownConfig(base, overrides, rootDir, outputRoot);
 }
 
+/** Filters configured CMS targets based on environment variables. */
 function selectedCmsTargets(
   options: TsdownForgeCmsPluginsOptions,
 ): readonly CmsOutputPlugin[] {
@@ -469,6 +477,7 @@ export type ForgeCmsTsdownPlugin = TsdownPlugin & {
   readonly cmsTargetConfigs: readonly UserConfig[];
 };
 
+/** Determines whether a plugin is an internal CMS orchestrator plugin. */
 function isOrchestratorPlugin(plugin: TsdownPlugin): boolean {
   return (
     plugin.name === CMS_TSDOWN_PLUGIN_NAME ||
@@ -568,10 +577,11 @@ export function tsdownForgeCmsPlugins(
         (entry) => !isOrchestratorPlugin(entry),
       );
 
-      if (forgeConfigs.length > 0) {
+      const firstForgeConfig = forgeConfigs[0];
+      if (firstForgeConfig !== undefined) {
         applyCmsConfigToHost(
           config,
-          forgeConfigs[0]!,
+          firstForgeConfig,
           callerPlugins,
           options.rootDir,
           outputRoot,

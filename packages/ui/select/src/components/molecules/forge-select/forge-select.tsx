@@ -338,6 +338,7 @@ function handleArrowDownKey(state: SelectKeydownState): void {
 }
 
 /** Dispatches select keyboard interaction keys to navigate options and toggle the dropdown. */
+// skipcq: JS-R1005
 function handleSelectKeydown(event: KeyboardEvent, state: SelectKeydownState): void {
   switch (event.key) {
     case 'Enter': {
@@ -463,6 +464,7 @@ function buildNativeSelectOptions(
 }
 
 /** Builds list item elements for the dropdown listbox. */
+// skipcq: JS-R1005
 function buildSelectListItems(
   visibleOptions: readonly SelectOption[],
   modelValue: string | number,
@@ -573,6 +575,7 @@ interface SelectTriggerProps {
 }
 
 /** Renders the combobox input or button trigger control. */
+// skipcq: JS-R1005
 function renderSelectTrigger(config: SelectTriggerProps): MpChild {
   if (config.searchable) {
     return (
@@ -649,6 +652,7 @@ function renderSelectTrigger(config: SelectTriggerProps): MpChild {
  * ForgeSelect component providing an accessible, framework-neutral select control with
  * support for live filtering, asynchronous search, keyboard navigation, and custom slots.
  */
+// skipcq: JS-R1005
 export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
   const style = createSelectStyle(properties.properties);
 

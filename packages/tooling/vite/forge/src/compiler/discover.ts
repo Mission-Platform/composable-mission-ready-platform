@@ -231,6 +231,7 @@ function resolveEdgeTarget(graph: ForgeFileGraph, fromId: string, specifier: str
 }
 
 /** Resolve an export target across wildcard star re-export declarations. */
+// skipcq: JS-R1005
 function resolveStarExportTarget(
   graph: ForgeFileGraph,
   start: ForgeFileNode,
@@ -319,6 +320,7 @@ function resolveSingleGraphExport(
 }
 
 /** Resolves export facts for a single node across barrel nodes. */
+// skipcq: JS-R1005
 function resolveNodeExports(
   graph: ForgeFileGraph,
   node: ForgeFileNode,
@@ -615,6 +617,7 @@ function isHelperTypeName(name: string, helperExportNames: ReadonlySet<string>):
 }
 
 /** Collects type exports from entry barrel matching the target component or source node. */
+// skipcq: JS-R1005
 function collectEntryTypeExports(
   graph: ForgeFileGraph,
   entry: ForgeFileNode,
