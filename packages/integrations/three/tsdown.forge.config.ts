@@ -4,5 +4,5 @@ const rootDirectory = import.meta.dirname;
 
 export default defineTsdownForgeTarget({
   rootDir: rootDirectory,
-  clean: true,
+  clean: false,
 });

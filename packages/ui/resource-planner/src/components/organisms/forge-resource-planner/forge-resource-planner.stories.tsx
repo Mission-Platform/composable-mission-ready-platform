@@ -1,5 +1,6 @@
-import { ForgeResourcePlanner } from "@mission-platform/resource-planner";
 import { useArgs } from "storybook/preview-api";
+
+import { ForgeResourcePlanner } from "@mission-platform/resource-planner";
 
 import type { ResourcePlannerProperties } from "./forge-resource-planner";
 import type { PlannerAssignment, PlannerResource } from "../../../types";

@@ -8,6 +8,6 @@ export default defineTsdownForgeTarget({
     index: 'src/index.ts',
   },
   unbundle: false,
-  clean: true,
+  clean: false,
   external: ['@mission-platform/code-scanner-wasm'],
 });

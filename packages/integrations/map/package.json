@@ -33,8 +33,8 @@
         "types": "./dist/web-components/index.d.ts",
         "import": "./dist/web-components/index.js"
       },
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js"
     },
     "./styles": "./node_modules/maplibre-gl/dist/maplibre-gl.css"
   },
