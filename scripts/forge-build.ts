@@ -48,7 +48,6 @@ export interface BuildPromotion {
 }
 
 const FRAMEWORK_DIRECTORIES = new Set<ForgeBuildTarget>(['react', 'vue', 'svelte', 'solid', 'web-components']);
-const CMS_TARGET_VARIABLES = ['FORGE_CMS_STORYBLOK_TARGET'] as const;
 
 /** Checks whether a candidate path is located inside the parent directory. */
 function isPathInside(parent: string, candidate: string): boolean {
@@ -418,7 +417,6 @@ async function executeCommand(context: ForgeBuildCommandContext): Promise<void> 
   await new Promise<void>((resolve, reject) => {
     let settled = false;
     let aborting = false;
-    let abortHandler: (() => void) | undefined;
     const child = spawn(executable, arguments_, {
       cwd: context.packageRoot,
       env: context.env,
@@ -429,9 +427,6 @@ async function executeCommand(context: ForgeBuildCommandContext): Promise<void> 
     const finish = (error?: Error): void => {
       if (settled) return;
       settled = true;
-      if (abortHandler !== undefined) {
-        context.signal.removeEventListener('abort', abortHandler);
-      }
       if (error === undefined) resolve();
       else reject(error);
     };
@@ -446,10 +441,13 @@ async function executeCommand(context: ForgeBuildCommandContext): Promise<void> 
         )
         .catch(noopCatch);
     };
-    abortHandler = abort;
-    child.once('error', (error) => finish(error));
+    child.once('error', (error) => {
+      context.signal.removeEventListener('abort', abort);
+      finish(error);
+    });
     child.once('exit', (code, signal) => {
       if (settled || aborting) return;
+      context.signal.removeEventListener('abort', abort);
       if (code === 0) {
         finish();
       } else {
