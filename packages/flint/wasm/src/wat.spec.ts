@@ -78,4 +78,82 @@ describe('WebAssembly WAT renderer and type mappings', () => {
     expect(wat32).toContain('(param $n i32)');
     expect(wat32).toContain('(result i32)');
   });
+
+  it('preserves generic pointer return types (CPtr<T>) instead of dropping them as void', () => {
+    const dummySpan = { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 };
+    const module: FlintWasmModule = {
+      name: 'pointer_return_module',
+      span: dummySpan,
+      functions: [],
+      imports: [],
+      foreignCapabilities: [
+        {
+          abi: 'C',
+          library: 'sqlite3',
+          callingConvention: 'wasm-c-abi',
+          functions: [
+            {
+              name: 'sqlite3_libversion',
+              parameters: [],
+              result: {
+                kind: 'type-name',
+                name: 'unit',
+                reference: 'CPtr',
+                arguments: [{ kind: 'type-name', name: 'c_char' }],
+              } as never,
+            },
+            {
+              name: 'sqlite3_mprintf',
+              parameters: [{ name: 'format', type: { name: 'CPtr<c_char>' } }],
+              result: {
+                name: 'unit',
+                reference: 'MutCPtr<c_char>',
+              } as never,
+            },
+            {
+              name: 'sqlite3_free',
+              parameters: [{ name: 'ptr', type: { name: 'CPtr' } }],
+              result: { name: 'c_void' } as never,
+            },
+          ],
+        },
+      ],
+    };
+
+    const wat = renderFlintWasmWat(module);
+    expect(wat).toContain('(import "sqlite3" "sqlite3_libversion" (func $sqlite3_libversion (result i32)))');
+    expect(wat).toContain(
+      '(import "sqlite3" "sqlite3_mprintf" (func $sqlite3_mprintf (param $format i32) (result i32)))',
+    );
+    expect(wat).toContain('(import "sqlite3" "sqlite3_free" (func $sqlite3_free (param $ptr i32)))');
+  });
+
+  it('renders imported memory with 64-bit and shared memory modifiers when configured', () => {
+    const dummySpan = { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 };
+    const module: FlintWasmModule = {
+      name: 'imported_memory_module',
+      span: dummySpan,
+      functions: [],
+      imports: [],
+    };
+
+    const watMem64 = renderFlintWasmWat(module, {
+      targetFeatures: { importMemory: true, memory64: true },
+    });
+    expect(watMem64).toContain('(import "env" "memory" (memory i64 1))');
+
+    const watShared = renderFlintWasmWat(module, {
+      targetFeatures: { importMemory: true, threads: true },
+    });
+    expect(watShared).toContain('(import "env" "memory" (memory 1 1 shared))');
+
+    const watCustom = renderFlintWasmWat(module, {
+      targetFeatures: {
+        importMemory: { module: 'host', name: 'linear_mem' },
+        memory64: true,
+        threads: true,
+      },
+    });
+    expect(watCustom).toContain('(import "host" "linear_mem" (memory i64 1 1 shared))');
+  });
 });

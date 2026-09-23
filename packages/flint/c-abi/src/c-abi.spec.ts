@@ -155,6 +155,8 @@ describe("@mission-platform/flint-c-abi", () => {
       expect(mapCTypeToWasmValueType("c_longlong", false)).toBe("i64");
       expect(mapCTypeToWasmValueType("c_void", false)).toBe("void");
       expect(mapCTypeToWasmValueType("unit", false)).toBe("void");
+      expect(mapCTypeToWasmValueType("void", false)).toBe("void");
+      expect(mapCTypeToWasmValueType("void", true)).toBe("void");
 
       // Pointers in 32-bit vs 64-bit
       expect(mapCTypeToWasmValueType("CPtr<c_char>", false)).toBe("i32");

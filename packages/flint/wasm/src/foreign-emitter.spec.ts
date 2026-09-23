@@ -267,4 +267,69 @@ describe('WebAssembly Foreign Capability Emitter', () => {
     // Directly following 'SELECT 1;' must be null terminator 0x00
     expect(wasmBytes[foundOffset + needle.length]).toBe(0x00);
   });
+
+  it('emits sub-word load opcodes (load8, load16) when dereferencing 8-bit and 16-bit pointers', () => {
+    const dummySpan = { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 };
+    const createDerefModule = (parameterType: string, returnType: string): FlintWasmModule => ({
+      name: `deref_${parameterType}`,
+      imports: [],
+      sourceImports: [],
+      functions: [
+        {
+          name: 'deref_func',
+          exported: true,
+          parameters: [{ name: 'ptr', type: { name: 'i32', reference: parameterType } }],
+          result: { name: returnType as never, span: dummySpan },
+          body: [
+            {
+              kind: 'return',
+              value: {
+                kind: 'unary',
+                operator: '*',
+                operand: { kind: 'identifier', name: 'ptr', span: dummySpan },
+                span: dummySpan,
+              },
+              span: dummySpan,
+            },
+          ],
+          span: dummySpan,
+        },
+      ],
+      span: dummySpan,
+    });
+
+    const compileDeref = (parameterType: string, returnType: string) => {
+      const module = createDerefModule(parameterType, returnType);
+      const result = compileFlintWasm({
+        ir: module,
+        optimizedIr: module,
+        abi: {},
+        links: {},
+        metadata: { compilerVersion: '1.0.0', optimization: 'debug', sourceFiles: [] },
+      });
+      expect(result.diagnostics).toEqual([]);
+      expect(result.wasm).toBeDefined();
+      return result.wasm!;
+    };
+
+    // CPtr<u8> -> i32.load8_u (0x2d 0x00 0x00)
+    const wasmU8 = compileDeref('CPtr<u8>', 'u32');
+    expect(findSubsequence(wasmU8, new Uint8Array([0x2d, 0x00, 0x00]))).toBeGreaterThan(0);
+
+    // CPtr<i8> -> i32.load8_s (0x2c 0x00 0x00)
+    const wasmI8 = compileDeref('CPtr<i8>', 'i32');
+    expect(findSubsequence(wasmI8, new Uint8Array([0x2c, 0x00, 0x00]))).toBeGreaterThan(0);
+
+    // CPtr<u16> -> i32.load16_u (0x2f 0x01 0x00)
+    const wasmU16 = compileDeref('CPtr<u16>', 'u32');
+    expect(findSubsequence(wasmU16, new Uint8Array([0x2f, 0x01, 0x00]))).toBeGreaterThan(0);
+
+    // CPtr<i16> -> i32.load16_s (0x2e 0x01 0x00)
+    const wasmI16 = compileDeref('CPtr<i16>', 'i32');
+    expect(findSubsequence(wasmI16, new Uint8Array([0x2e, 0x01, 0x00]))).toBeGreaterThan(0);
+
+    // CPtr<u32> -> i32.load (0x28 0x02 0x00)
+    const wasmU32 = compileDeref('CPtr<u32>', 'u32');
+    expect(findSubsequence(wasmU32, new Uint8Array([0x28, 0x02, 0x00]))).toBeGreaterThan(0);
+  });
 });

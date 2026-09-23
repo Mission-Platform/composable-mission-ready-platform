@@ -85,7 +85,10 @@ export function validateFlintAbiManifest(manifest: FlintAbiManifest): FlintAbiVa
   if (manifest.languageVersion !== FLINT_LANGUAGE_VERSION)
     errors.push(`Unsupported language version '${manifest.languageVersion}'.`);
   if (manifest.abiVersion !== FLINT_ABI_VERSION) errors.push(`Unsupported ABI version '${manifest.abiVersion}'.`);
-  if (manifest.memory.pageSize !== 65_536 || manifest.memory.addressType !== 'u32')
+  if (
+    manifest.memory.pageSize !== 65_536 ||
+    (manifest.memory.addressType !== 'u32' && manifest.memory.addressType !== 'u64')
+  )
     errors.push('Unsupported linear memory layout.');
   if (
     manifest.memory.allocatorExport !== 'fws_alloc' ||

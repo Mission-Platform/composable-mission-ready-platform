@@ -359,11 +359,18 @@ export interface FlintWasmWatMetadata {
 }
 
 /** Emits import and export memory declarations when external memory is configured. */
-function renderImportedMemory(importMemory: NonNullable<FlintTargetFeatures['importMemory']>): string {
+function renderImportedMemory(
+  importMemory: NonNullable<FlintTargetFeatures['importMemory']>,
+  targetFeatures?: FlintTargetFeatures,
+): string {
   const isCustom = typeof importMemory === 'object' && importMemory !== null;
   const importModule = isCustom ? importMemory.module : 'env';
   const name = isCustom ? importMemory.name : 'memory';
-  return `  (import "${importModule}" "${name}" (memory 1))\n  (export "memory" (memory 0))`;
+  const isMemory64 = targetFeatures?.memory64 === true;
+  const isShared = targetFeatures?.threads === true;
+  const memType = isMemory64 ? 'i64 1' : '1';
+  const sharedSuffix = isShared ? ' 1 shared' : '';
+  return `  (import "${importModule}" "${name}" (memory ${memType}${sharedSuffix}))\n  (export "memory" (memory 0))`;
 }
 
 /** Emits local linear memory definition for module-managed memory. */
@@ -385,7 +392,7 @@ function renderLocalMemory(targetFeatures: FlintTargetFeatures | undefined): str
 function renderMemory(targetFeatures: FlintTargetFeatures | undefined): string {
   const importMemory = targetFeatures?.importMemory;
   if (importMemory !== undefined && importMemory !== false) {
-    return renderImportedMemory(importMemory);
+    return renderImportedMemory(importMemory, targetFeatures);
   }
   return renderLocalMemory(targetFeatures);
 }
@@ -482,12 +489,9 @@ export function renderFlintWasmWat(module: FlintWasmModule, metadata: FlintWasmW
       const parameters = function_.parameters.map(
         ({ name, type }) => `(param $${name} ${toWatType(type as never, isMemory64)})`,
       );
-      const resultTypeString =
-        typeof function_.result === 'string'
-          ? function_.result
-          : ((function_.result as { readonly name?: string })?.name ?? 'unit');
+      const resultTypeString = resolveWatTypeString(function_.result as never);
       const results =
-        resultTypeString === 'unit' || resultTypeString === 'c_void'
+        resultTypeString === 'unit' || resultTypeString === 'c_void' || resultTypeString === 'void'
           ? []
           : [`(result ${toWatType(function_.result as never, isMemory64)})`];
       lines.push(

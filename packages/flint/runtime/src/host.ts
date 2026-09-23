@@ -205,11 +205,11 @@ export function createFlintHost(
       for (const [index, parameter] of function_.parameters.entries()) {
         const argument = arguments_[index];
         const parameterType =
-          ('wasmType' in parameter && typeof parameter.wasmType === 'string' ? parameter.wasmType : undefined) ??
-          ('type' in parameter && typeof parameter.type === 'string' ? parameter.type : undefined) ??
           ('cType' in parameter && typeof parameter.cType === 'string' ? parameter.cType : undefined) ??
+          ('type' in parameter && typeof parameter.type === 'string' ? parameter.type : undefined) ??
+          ('wasmType' in parameter && typeof parameter.wasmType === 'string' ? parameter.wasmType : undefined) ??
           'i32';
-        const expectedWasm = mapCTypeToWasmValType(parameterType);
+        const expectedWasm = mapCTypeToWasmValType(parameterType, manifest.memory?.addressType === 'u64');
         const actualType = typeof argument;
         let valid = false;
         if (expectedWasm === 'i32' || expectedWasm === 'f32' || expectedWasm === 'f64') {

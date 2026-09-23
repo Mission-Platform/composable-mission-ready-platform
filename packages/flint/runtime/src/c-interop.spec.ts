@@ -795,4 +795,55 @@ describe('End-to-End C & Rust Interoperability', () => {
       cause: expect.objectContaining({ message: 'Async foreign operation failed' }),
     });
   });
+
+  it('Scenario 8: validates pointer parameters as i64 in 64-bit address space foreign capability invocations', () => {
+    const source = `
+      foreign "C" capability "native64" {
+        fn process_ptr(buffer: CPtr<u8>, count: c_size) -> i32;
+      }
+
+      export fn entry() -> i32 {
+        return 0;
+      }
+    `;
+    const parsed = parseFlint(source, 'native64.flint');
+    if (!parsed.module) throw new Error('Expected parsed module to be defined');
+    const baseManifest = createFlintAbiManifest(parsed.module);
+
+    // Create 64-bit module manifest with addressType u64
+    const manifest64 = {
+      ...baseManifest,
+      memory: {
+        ...baseManifest.memory,
+        addressType: 'u64' as const,
+      },
+    };
+
+    let calledWith: unknown[] = [];
+    const host64 = createFlintHost(
+      manifest64,
+      {},
+      {
+        foreignRegistry: {
+          native64: {
+            library: 'native64',
+            call: (_symbol, invocationArguments) => {
+              calledWith = invocationArguments;
+              return 42;
+            },
+          },
+        },
+      },
+    );
+
+    // 64-bit pointer arguments passed as BigInt should succeed
+    const result = host64.invokeForeign?.('native64', 'process_ptr', [1024n, 4096n]);
+    expect(result).toBe(42);
+    expect(calledWith).toEqual([1024n, 4096n]);
+
+    // Invalid argument type should fail with HostError mentioning expected Wasm type 'i64'
+    expect(() => host64.invokeForeign?.('native64', 'process_ptr', ['invalid_ptr', 4096n])).toThrowError(
+      /expected Wasm type 'i64', got 'string'/,
+    );
+  });
 });

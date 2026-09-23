@@ -111,6 +111,7 @@ export const STATIC_WASM_TYPES: Readonly<
   c_ulonglong: "i64",
   unit: "void",
   c_void: "void",
+  void: "void",
 };
 
 /** Pointer-like types whose WebAssembly representation depends on 64-bit addressing. */

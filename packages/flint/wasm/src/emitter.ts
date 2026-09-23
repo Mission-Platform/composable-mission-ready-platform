@@ -1056,6 +1056,57 @@ function toWasmPrimitiveType(
   return STATIC_WASM_PRIMITIVE_TYPES[typeString] ?? 'i32';
 }
 
+const LOAD_OPCODE_BY_TYPE: Readonly<Record<string, readonly number[]>> = {
+  f32: [0x2a, 0x02, 0x00],
+  c_float: [0x2a, 0x02, 0x00],
+  f64: [0x2b, 0x03, 0x00],
+  c_double: [0x2b, 0x03, 0x00],
+  i64: [0x29, 0x03, 0x00],
+  u64: [0x29, 0x03, 0x00],
+  c_longlong: [0x29, 0x03, 0x00],
+  c_ulonglong: [0x29, 0x03, 0x00],
+  u8: [0x2d, 0x00, 0x00],
+  c_uchar: [0x2d, 0x00, 0x00],
+  bool: [0x2d, 0x00, 0x00],
+  i8: [0x2c, 0x00, 0x00],
+  c_char: [0x2c, 0x00, 0x00],
+  char: [0x2c, 0x00, 0x00],
+  u16: [0x2f, 0x01, 0x00],
+  c_ushort: [0x2f, 0x01, 0x00],
+  i16: [0x2e, 0x01, 0x00],
+  c_short: [0x2e, 0x01, 0x00],
+  short: [0x2e, 0x01, 0x00],
+};
+
+const LOAD_64_OPCODE: readonly number[] = [0x29, 0x03, 0x00];
+const DEFAULT_LOAD_32_OPCODE: readonly number[] = [0x28, 0x02, 0x00];
+
+/** Checks whether a pointee type resolves to a 64-bit load under 64-bit memory addressing. */
+function is64BitPointee(pointeeType: string): boolean {
+  return (
+    pointeeType === 'c_size' ||
+    pointeeType === 'c_ssize' ||
+    pointeeType === 'c_long' ||
+    pointeeType === 'c_ulong' ||
+    isPointerLikeType(pointeeType)
+  );
+}
+
+/** Resolves the WebAssembly load instruction bytes for a dereferenced pointer type. */
+function dereferenceLoadOpcode(pointeeType: string | undefined, isMemory64: boolean): readonly number[] {
+  if (pointeeType === undefined) {
+    return DEFAULT_LOAD_32_OPCODE;
+  }
+  const matched = LOAD_OPCODE_BY_TYPE[pointeeType];
+  if (matched !== undefined) {
+    return matched;
+  }
+  if (isMemory64 && is64BitPointee(pointeeType)) {
+    return LOAD_64_OPCODE;
+  }
+  return DEFAULT_LOAD_32_OPCODE;
+}
+
 /** Core emitter lowering module IR to binary WebAssembly bytecode. */
 // skipcq: JS-R1005
 function emitWasm(
@@ -2041,25 +2092,7 @@ function emitWasm(
           if (expression.operand.kind === 'identifier') {
             pointeeType = visible.get(expression.operand.name)?.pointeeType;
           }
-          if (pointeeType === 'f32' || pointeeType === 'c_float') {
-            body.push(0x2a, 0x02, 0x00);
-          } else if (pointeeType === 'f64' || pointeeType === 'c_double') {
-            body.push(0x2b, 0x03, 0x00);
-          } else if (
-            pointeeType === 'i64' ||
-            pointeeType === 'u64' ||
-            pointeeType === 'c_longlong' ||
-            pointeeType === 'c_ulonglong' ||
-            (isMemory64 &&
-              (pointeeType === 'c_size' ||
-                pointeeType === 'c_ssize' ||
-                pointeeType === 'c_long' ||
-                pointeeType === 'c_ulong'))
-          ) {
-            body.push(0x29, 0x03, 0x00);
-          } else {
-            body.push(0x28, 0x02, 0x00);
-          }
+          body.push(...dereferenceLoadOpcode(pointeeType, isMemory64));
         } else if (operandType === 'f32') {
           emitExpression(expression.operand, visible);
           body.push(0x8c);
