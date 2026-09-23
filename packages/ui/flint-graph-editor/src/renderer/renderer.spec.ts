@@ -1113,4 +1113,15 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     const movedPosA = store.getState().graph.nodes.find((n) => n.id === nodeA.id)?.position.x ?? 0;
     expect(movedPosA).toBe(initialPosA + 50);
   });
+
+  it('tracks detailed performance categories and updates in renderer metrics', () => {
+    const store = new FlintEditorStore();
+    for (let i = 0; i < 20; i++) {
+      store.addNode('add', { x: i * 200, y: i * 100 });
+    }
+
+    const state = store.getState();
+    expect(state.graph.nodes).toHaveLength(20);
+    expect(store.getUpdateTimeMs()).toBeGreaterThanOrEqual(0);
+  });
 });

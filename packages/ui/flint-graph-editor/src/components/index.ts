@@ -5,3 +5,7 @@ export {
   ForgePerformancePieChart,
   type ForgePerformancePieChartProperties,
 } from './molecules/forge-performance-pie-chart';
+export {
+  ForgePerformanceTimelineChart,
+  type ForgePerformanceTimelineChartProperties,
+} from './molecules/forge-performance-timeline-chart';

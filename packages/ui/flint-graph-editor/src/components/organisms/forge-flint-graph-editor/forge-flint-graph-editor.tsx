@@ -28,6 +28,7 @@ import {
 } from '../../../renderer/render-worker';
 import { ForgeDebugScrubber } from '../../molecules/forge-debug-scrubber';
 import { ForgePerformancePieChart } from '../../molecules/forge-performance-pie-chart';
+import { ForgePerformanceTimelineChart } from '../../molecules/forge-performance-timeline-chart';
 
 import styles from './forge-flint-graph-editor.module.scss';
 
@@ -907,17 +908,20 @@ function SpriteSheetDebugSection(properties: SpriteSheetSectionProperties): MpEl
 
 interface PerfProfilerModalProperties extends SpriteSheetSectionProperties {
   readonly perfMetrics: FlintPerformanceMetrics;
+  readonly perfHistory: readonly FlintPerformanceMetrics[];
   readonly onClose: () => void;
   readonly updateInterval: 'realtime' | '100ms' | '250ms' | '500ms' | '750ms' | '1500ms';
   readonly onSetUpdateInterval: (interval: 'realtime' | '100ms' | '250ms' | '500ms' | '750ms' | '1500ms') => void;
 }
 
 /**
- * Modal dialog for inspecting D3 rendering metrics and the SDF font atlas sprite sheet.
+ * Modal dialog for inspecting D3 rendering metrics, stacked latency timelines, and the SDF font atlas sprite sheet.
  */
 function PerfProfilerModal(properties: PerfProfilerModalProperties): MpElement {
   const fps = Math.round(1000 / Math.max(1, properties.perfMetrics.totalFrameTimeMs));
   const modalStyles = properties.styles ?? {};
+  const metrics = properties.perfMetrics;
+
   return (
     <div
       role="dialog"
@@ -940,6 +944,12 @@ function PerfProfilerModal(properties: PerfProfilerModalProperties): MpElement {
               size="xs"
             >
               {fps} FPS
+            </ForgeBadge>
+            <ForgeBadge
+              variant="neutral"
+              size="xs"
+            >
+              {metrics.backend?.toUpperCase() ?? (metrics.isFallback ? 'CANVAS2D' : 'WEBGPU')}
             </ForgeBadge>
           </div>
           <ForgeButton
@@ -1002,30 +1012,64 @@ function PerfProfilerModal(properties: PerfProfilerModalProperties): MpElement {
             </ForgeButtonGroup>
           </div>
 
+          <div style={{ marginBottom: '16px' }}>
+            <ForgePerformanceTimelineChart
+              history={properties.perfHistory}
+              currentMetrics={properties.perfMetrics}
+              width={660}
+              height={180}
+            />
+          </div>
+
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '16px' }}>
             <div style={{ background: '#161b22', padding: '8px', borderRadius: '6px', border: '1px solid #30363d' }}>
               <div style={{ fontSize: '10px', color: '#8b949e' }}>Total Frame Time</div>
               <div style={{ fontSize: '14px', fontWeight: 600, color: '#58a6ff' }}>
-                {properties.perfMetrics.totalFrameTimeMs.toFixed(2)} ms
+                {metrics.totalFrameTimeMs.toFixed(2)} ms
               </div>
             </div>
             <div style={{ background: '#161b22', padding: '8px', borderRadius: '6px', border: '1px solid #30363d' }}>
               <div style={{ fontSize: '10px', color: '#8b949e' }}>Render Duration</div>
               <div style={{ fontSize: '14px', fontWeight: 600, color: '#3fb950' }}>
-                {properties.perfMetrics.renderTimeMs.toFixed(2)} ms
+                {metrics.renderTimeMs.toFixed(2)} ms
               </div>
             </div>
             <div style={{ background: '#161b22', padding: '8px', borderRadius: '6px', border: '1px solid #30363d' }}>
               <div style={{ fontSize: '10px', color: '#8b949e' }}>Spatial Indexing</div>
               <div style={{ fontSize: '14px', fontWeight: 600, color: '#d29922' }}>
-                {properties.perfMetrics.spatialIndexTimeMs.toFixed(2)} ms
+                {metrics.spatialIndexTimeMs.toFixed(2)} ms
               </div>
             </div>
             <div style={{ background: '#161b22', padding: '8px', borderRadius: '6px', border: '1px solid #30363d' }}>
-              <div style={{ fontSize: '10px', color: '#8b949e' }}>Visible Primitives</div>
+              <div style={{ fontSize: '10px', color: '#8b949e' }}>Visible Nodes</div>
               <div style={{ fontSize: '14px', fontWeight: 600, color: '#f0883e' }}>
-                {properties.perfMetrics.visibleNodesCount}N / {properties.perfMetrics.visibleEdgesCount}E
+                {metrics.visibleNodesCount} / {metrics.totalNodesCount ?? metrics.visibleNodesCount}
               </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '16px' }}>
+            <div style={{ background: '#161b22', padding: '8px', borderRadius: '6px', border: '1px solid #30363d' }}>
+              <div style={{ fontSize: '10px', color: '#8b949e' }}>Updates & Layout</div>
+              <div style={{ fontSize: '14px', fontWeight: 600, color: '#f0883e' }}>
+                {((metrics.updateTimeMs ?? 0) + (metrics.layoutTimeMs ?? 0)).toFixed(2)} ms
+              </div>
+            </div>
+            <div style={{ background: '#161b22', padding: '8px', borderRadius: '6px', border: '1px solid #30363d' }}>
+              <div style={{ fontSize: '10px', color: '#8b949e' }}>Buffer Uploads</div>
+              <div style={{ fontSize: '14px', fontWeight: 600, color: '#a371f7' }}>
+                {(metrics.bufferUploadTimeMs ?? 0).toFixed(2)} ms
+              </div>
+            </div>
+            <div style={{ background: '#161b22', padding: '8px', borderRadius: '6px', border: '1px solid #30363d' }}>
+              <div style={{ fontSize: '10px', color: '#8b949e' }}>Visible Edges & Pins</div>
+              <div style={{ fontSize: '14px', fontWeight: 600, color: '#388bfd' }}>
+                {metrics.visibleEdgesCount}E / {metrics.visiblePinsCount}P
+              </div>
+            </div>
+            <div style={{ background: '#161b22', padding: '8px', borderRadius: '6px', border: '1px solid #30363d' }}>
+              <div style={{ fontSize: '10px', color: '#8b949e' }}>DPR / Scale</div>
+              <div style={{ fontSize: '14px', fontWeight: 600, color: '#39c5bb' }}>{metrics.dpr.toFixed(1)}x DPR</div>
             </div>
           </div>
 
@@ -1089,6 +1133,13 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
     dpr: 1,
     isFallback: false,
   });
+  const [perfHistory, setPerfHistory] = useState<readonly FlintPerformanceMetrics[]>([]);
+
+  const recordPerfMetrics = (nextMetrics: FlintPerformanceMetrics): void => {
+    setPerfMetrics(nextMetrics);
+    const updated = [...perfHistory, nextMetrics];
+    setPerfHistory(updated.length > 50 ? updated.slice(-50) : updated);
+  };
   const [isFallback, setIsFallback] = useState(false);
   const [selectionSquare, setSelectionSquare] = useState<{
     readonly active: boolean;
@@ -1336,7 +1387,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
 
     const timer = setInterval(() => {
       if (rendererReference.current) {
-        setPerfMetrics(rendererReference.current.getPerformanceStats());
+        recordPerfMetrics(rendererReference.current.getPerformanceStats());
       }
     }, intervalMs);
 
@@ -1410,7 +1461,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           switch (message.type) {
             case 'frame': {
               if (message.performance) {
-                setPerfMetrics(message.performance);
+                recordPerfMetrics(message.performance);
               }
               break;
             }
@@ -1419,7 +1470,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                 setIsFallback(true);
               }
               if (message.performance) {
-                setPerfMetrics(message.performance);
+                recordPerfMetrics(message.performance);
               }
               break;
             }
@@ -1447,7 +1498,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         store.getState().graph.groups ?? [],
       );
       renderer.renderFrame();
-      setPerfMetrics(renderer.getPerformanceStats());
+      recordPerfMetrics(renderer.getPerformanceStats());
 
       if (typeof ResizeObserver !== 'undefined') {
         resizeObserver = new ResizeObserver((entries) => {
@@ -1456,7 +1507,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
             if (contentRect.width > 0 && contentRect.height > 0) {
               const currentDpr = globalThis.window === undefined ? 1 : globalThis.window.devicePixelRatio || 1;
               renderer.resize(contentRect.width, contentRect.height, currentDpr);
-              setPerfMetrics(renderer.getPerformanceStats());
+              recordPerfMetrics(renderer.getPerformanceStats());
             }
           }
         });
@@ -1480,7 +1531,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         if (rendererReference.current) {
           const stats = rendererReference.current.getPerformanceStats();
           const storeUpdateTime = store.getUpdateTimeMs();
-          setPerfMetrics({
+          recordPerfMetrics({
             ...stats,
             updateTimeMs: storeUpdateTime,
           });
@@ -3211,6 +3262,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
       {showPerfModal && (
         <PerfProfilerModal
           perfMetrics={perfMetrics}
+          perfHistory={perfHistory}
           onClose={() => setShowPerfModal(false)}
           updateInterval={telemetryInterval}
           onSetUpdateInterval={(next) => setTelemetryInterval(next)}

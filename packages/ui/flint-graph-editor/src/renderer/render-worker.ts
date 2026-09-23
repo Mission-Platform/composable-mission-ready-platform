@@ -148,12 +148,20 @@ export interface FlintPerformanceMetrics {
   readonly spatialIndexTimeMs: number;
   readonly bufferUploadTimeMs: number;
   readonly drawPassTimeMs: number;
+  readonly textPassTimeMs?: number;
+  readonly layoutTimeMs?: number;
   readonly totalFrameTimeMs: number;
   readonly visibleNodesCount: number;
+  readonly totalNodesCount?: number;
   readonly visibleEdgesCount: number;
+  readonly totalEdgesCount?: number;
   readonly visiblePinsCount: number;
+  readonly totalPinsCount?: number;
+  readonly textQuadCount?: number;
   readonly dpr: number;
   readonly isFallback: boolean;
+  readonly fps?: number;
+  readonly backend?: 'webgpu' | 'webgl' | 'canvas2d';
 }
 
 export interface RenderWorkerOutputMessage {
@@ -445,7 +453,7 @@ if (
   let fontTexture: GPUTexture | undefined;
   let fontSampler: GPUSampler | undefined;
   let fontBindGroup: GPUBindGroup | undefined;
-  let webGpuTextVertices: number[] = [];
+  let webGpuTextVertices: Float32Array = new Float32Array(0);
 
   let glCtx: WebGLRenderingContext | WebGL2RenderingContext | undefined;
   let glProgram: WebGLProgram | undefined;
@@ -485,7 +493,7 @@ if (
 
   let lineVertices: number[] = [];
   let triVertices: number[] = [];
-  let textTriVertices: number[] = [];
+  let textTriVertices: Float32Array = new Float32Array(0);
 
   let currentTheme: 'light' | 'dark' = 'dark';
 
@@ -544,6 +552,44 @@ if (
     const key = typeof type === 'string' ? type : undefined;
     const table = isDark ? PORT_TYPE_RGBA_DARK : PORT_TYPE_RGBA_LIGHT;
     return (key ? table[key] : undefined) ?? (isDark ? [0.788, 0.82, 0.851, 1] : [0.141, 0.161, 0.184, 1]);
+  }
+
+  /**
+   * Parses arbitrary CSS color hex, rgb, or rgba strings to normalized 0..1 RGBA float tuples.
+   */
+  function parseColorToRgba(
+    colorStr?: string,
+    defaultRgba: [number, number, number, number] = [0.35, 0.65, 1, 1],
+  ): [number, number, number, number] {
+    if (!colorStr) return defaultRgba;
+    const str = colorStr.trim();
+    if (str.startsWith('#')) {
+      let hex = str.slice(1);
+      if (hex.length === 3) {
+        hex = [...hex].map((c) => c + c).join('') + 'ff';
+      } else if (hex.length === 6) {
+        hex += 'ff';
+      }
+      if (hex.length === 8) {
+        const r = Number.parseInt(hex.slice(0, 2), 16) / 255;
+        const g = Number.parseInt(hex.slice(2, 4), 16) / 255;
+        const b = Number.parseInt(hex.slice(4, 6), 16) / 255;
+        const a = Number.parseInt(hex.slice(6, 8), 16) / 255;
+        if (!Number.isNaN(r) && !Number.isNaN(g) && !Number.isNaN(b) && !Number.isNaN(a)) {
+          return [r, g, b, a];
+        }
+      }
+    } else if (str.startsWith('rgb')) {
+      const match = str.match(/rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)/);
+      if (match) {
+        const r = Number.parseInt(match[1] ?? '0', 10) / 255;
+        const g = Number.parseInt(match[2] ?? '0', 10) / 255;
+        const b = Number.parseInt(match[3] ?? '0', 10) / 255;
+        const a = match[4] === undefined ? 1 : Number.parseFloat(match[4]);
+        return [r, g, b, a];
+      }
+    }
+    return defaultRgba;
   }
 
   /**
@@ -768,10 +814,16 @@ if (
     nodeInstanceFloats = [];
     edgeInstanceFloats = [];
     pinInstanceFloats = [];
-    webGpuTextVertices = [];
+    webGpuTextVertices = new Float32Array(0);
 
     wasm.font_clear_text_vertices();
-    wasm.getViewportBounds(200);
+    wasm.getViewportBounds(150);
+    const minX = wasm.get_bounds_min_x();
+    const minY = wasm.get_bounds_min_y();
+    const maxX = wasm.get_bounds_max_x();
+    const maxY = wasm.get_bounds_max_y();
+
+    const isDark = currentTheme !== 'light';
 
     // 1. Groups
     for (const group of groups) {
@@ -795,16 +847,27 @@ if (
       const gw = gMaxX - gMinX + pad * 2;
       const gh = gMaxY - gMinY + pad * 2 + 22;
 
-      const isDark = currentTheme !== 'light';
+      // Viewport culling for group
+      if (gx + gw < minX || gx > maxX || gy + gh < minY || gy > maxY) {
+        continue;
+      }
+
       const isSelectedGroup = selectedGroupId === group.id;
 
-      // Group background
-      const groupBg: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 0.08] : [0.035, 0.412, 0.855, 0.06];
+      // Group background and border using parsed group color
+      const defaultBorder: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 1] : [0.035, 0.412, 0.855, 1];
+      const parsedColor = parseColorToRgba(group.color, defaultBorder);
+      const groupBg: [number, number, number, number] = group.backgroundColor
+        ? parseColorToRgba(group.backgroundColor, [
+            parsedColor[0],
+            parsedColor[1],
+            parsedColor[2],
+            isDark ? 0.12 : 0.08,
+          ])
+        : [parsedColor[0], parsedColor[1], parsedColor[2], isDark ? 0.12 : 0.08];
       const groupBorder: [number, number, number, number] = isSelectedGroup
-        ? [0.45, 0.75, 1, 1]
-        : isDark
-          ? [0.35, 0.65, 1, 0.5]
-          : [0.035, 0.412, 0.855, 0.6];
+        ? [1, 1, 1, 1]
+        : [parsedColor[0], parsedColor[1], parsedColor[2], isDark ? 0.7 : 0.6];
       pushGpuNodeInstance(gx + gw / 2, gy + gh / 2, gw, gh, 12, groupBg, groupBorder, isSelectedGroup ? 3.5 : 2);
 
       // Group title pill
@@ -816,7 +879,7 @@ if (
         pillW,
         20,
         4,
-        isDark ? [0.35, 0.65, 1, 0.9] : [0.035, 0.412, 0.855, 0.9],
+        [parsedColor[0], parsedColor[1], parsedColor[2], 0.9],
         isSelectedGroup ? [1, 1, 1, 1] : undefined,
         isSelectedGroup ? 1.5 : 0,
       );
@@ -824,13 +887,20 @@ if (
     }
 
     // 2. Nodes
-    const isDark = currentTheme !== 'light';
+    let visibleNodesCount = 0;
+    let visiblePinsCount = 0;
     for (const node of nodes) {
       const bounds = getNodeBounds(node);
       const nodeWidth = bounds.maxX - bounds.minX;
       const nodeHeight = bounds.maxY - bounds.minY;
       const x = bounds.minX;
       const y = bounds.minY;
+
+      // Strict viewport culling for high-performance rendering in stress tests
+      if (x + nodeWidth < minX || x > maxX || y + nodeHeight < minY || y > maxY) {
+        continue;
+      }
+      visibleNodesCount++;
 
       const isSelected = selectedNodeIds.has(node.id);
       const isActive = activeNodeIds.has(node.id);
@@ -968,6 +1038,7 @@ if (
         // Outer circle + inner dot
         pushGpuPinInstance(node.position.x, py, pinRadius, portColor, 1.5, pinInnerBg);
         pushGpuPinInstance(node.position.x, py, Math.max(1, pinRadius - 2), isHovered ? [1, 1, 1, 1] : portColor);
+        visiblePinsCount++;
 
         // Port label text
         const portTextColor = isDark ? [0.788, 0.82, 0.851, 1] : [0.141, 0.161, 0.184, 1];
@@ -1002,6 +1073,7 @@ if (
           Math.max(1, pinRadius - 2),
           isHovered ? [1, 1, 1, 1] : portColor,
         );
+        visiblePinsCount++;
 
         // Port label text
         const portTextColor = isDark ? [0.788, 0.82, 0.851, 1] : [0.141, 0.161, 0.184, 1];
@@ -1039,8 +1111,9 @@ if (
     const floatCount = wasm.font_get_vertex_float_count();
     const vbufPtr = wasm.font_get_vertex_buffer_ptr();
     const f64View = new Float64Array(wasm.memory.buffer, vbufPtr, floatCount);
-    webGpuTextVertices = [...f64View];
+    webGpuTextVertices = new Float32Array(f64View);
 
+    let visibleEdgesCount = 0;
     const nodeMap = new Map<string, FlintGraphNode>(nodes.map((n) => [n.id, n]));
     for (const edge of edges) {
       const fromNode = nodeMap.get(edge.fromNodeId);
@@ -1060,6 +1133,17 @@ if (
       const p0y = fromNode.position.y + NODE_HEADER_HEIGHT + fromPortIndex * PORT_ROW_HEIGHT + 14;
       const p3x = toNode.position.x;
       const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIndex * PORT_ROW_HEIGHT + 14;
+
+      // Viewport culling for edge
+      if (
+        Math.max(p0x, p3x) < minX ||
+        Math.min(p0x, p3x) > maxX ||
+        Math.max(p0y, p3y) < minY ||
+        Math.min(p0y, p3y) > maxY
+      ) {
+        continue;
+      }
+      visibleEdgesCount++;
 
       const isSelected = selectedEdgeIds.has(edge.id) ? 1 : 0;
       const isActive = edgePulses.has(edge.id) ? 1 : 0;
@@ -1122,6 +1206,18 @@ if (
         pushGpuPinInstance(p3x, p3y, 6, isDark ? [0.475, 0.753, 1, 1] : [0.035, 0.412, 0.855, 1]);
       }
     }
+
+    performanceStats = {
+      ...performanceStats,
+      visibleNodesCount,
+      totalNodesCount: nodes.length,
+      visibleEdgesCount,
+      totalEdgesCount: edges.length,
+      visiblePinsCount,
+      totalPinsCount: nodes.length * 4,
+      textQuadCount: floatCount / 8,
+      backend: 'webgpu',
+    };
   }
 
   /**
@@ -1630,12 +1726,21 @@ if (
       const gw = gMaxX - gMinX + padding * 2;
       const gh = gMaxY - gMinY + padding * 2 + 22;
 
+      // Viewport culling for 2D group
+      if (gx + gw < minX || gx > maxX || gy + gh < minY || gy > maxY) {
+        continue;
+      }
+
       const isSelectedGroup = selectedGroupId === group.id;
       ctx.save();
+      const defaultBorder: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 1] : [0.035, 0.412, 0.855, 1];
+      const parsedColor = parseColorToRgba(group.color, defaultBorder);
       const groupBg =
         group.backgroundColor ??
-        (group.color ? `${group.color}25` : isDark ? 'rgba(88, 166, 255, 0.12)' : 'rgba(9, 105, 218, 0.08)');
-      const groupBorder = group.color ?? (isDark ? '#58a6ff' : '#0969da');
+        `rgba(${Math.round(parsedColor[0] * 255)}, ${Math.round(parsedColor[1] * 255)}, ${Math.round(parsedColor[2] * 255)}, ${isDark ? 0.12 : 0.08})`;
+      const groupBorder =
+        group.color ??
+        `rgba(${Math.round(parsedColor[0] * 255)}, ${Math.round(parsedColor[1] * 255)}, ${Math.round(parsedColor[2] * 255)}, ${isDark ? 0.7 : 0.6})`;
       ctx.fillStyle = groupBg;
       ctx.strokeStyle = groupBorder;
       ctx.lineWidth = (isSelectedGroup ? 3.5 : 2) / zoom;
@@ -2150,10 +2255,10 @@ if (
 
     lineVertices = [];
     triVertices = [];
-    textTriVertices = [];
+    textTriVertices = new Float32Array(0);
 
     wasm.font_clear_text_vertices();
-    wasm.getViewportBounds(200);
+    wasm.getViewportBounds(150);
     const minX = wasm.get_bounds_min_x();
     const minY = wasm.get_bounds_min_y();
     const maxX = wasm.get_bounds_max_x();
@@ -2215,18 +2320,39 @@ if (
       const gw = gMaxX - gMinX + pad * 2;
       const gh = gMaxY - gMinY + pad * 2 + 22;
 
-      const groupBg: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 0.08] : [0.035, 0.412, 0.855, 0.06];
-      const groupBorder: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 0.5] : [0.035, 0.412, 0.855, 0.6];
+      // Viewport culling for WebGL group
+      if (gx + gw < minX || gx > maxX || gy + gh < minY || gy > maxY) {
+        continue;
+      }
+
+      const isSelectedGroup = selectedGroupId === group.id;
+      const defaultBorder: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 1] : [0.035, 0.412, 0.855, 1];
+      const parsedColor = parseColorToRgba(group.color, defaultBorder);
+      const groupBg: [number, number, number, number] = group.backgroundColor
+        ? parseColorToRgba(group.backgroundColor, [
+            parsedColor[0],
+            parsedColor[1],
+            parsedColor[2],
+            isDark ? 0.12 : 0.08,
+          ])
+        : [parsedColor[0], parsedColor[1], parsedColor[2], isDark ? 0.12 : 0.08];
+      const groupBorder: [number, number, number, number] = isSelectedGroup
+        ? [1, 1, 1, 1]
+        : [parsedColor[0], parsedColor[1], parsedColor[2], isDark ? 0.7 : 0.6];
       pushRect(gx, gy, gw, gh, groupBg[0], groupBg[1], groupBg[2], groupBg[3]);
       pushRectBorder(gx, gy, gw, gh, groupBorder[0], groupBorder[1], groupBorder[2], groupBorder[3]);
 
       const titleW = wasm.font_measure_text(group.title, 12);
       const pillW = titleW + 16;
-      pushRect(gx + 10, gy + 4, pillW, 20, isDark ? 0.35 : 0.035, isDark ? 0.65 : 0.412, isDark ? 1 : 0.855, 0.9);
+      pushRect(gx + 10, gy + 4, pillW, 20, parsedColor[0], parsedColor[1], parsedColor[2], 0.9);
+      if (isSelectedGroup) {
+        pushRectBorder(gx + 10, gy + 4, pillW, 20, 1, 1, 1, 1);
+      }
       wasm.font_append_text_quads(group.title, gx + 18, gy + 18, 12, 1, 1, 1, 1, 0);
     }
 
     // 3. Edges
+    let visibleEdgesCount = 0;
     const nodeMap = new Map<string, FlintGraphNode>(nodes.map((n) => [n.id, n]));
     for (const edge of edges) {
       const fromNode = nodeMap.get(edge.fromNodeId);
@@ -2246,6 +2372,17 @@ if (
       const p0y = fromNode.position.y + NODE_HEADER_HEIGHT + fromPortIndex * PORT_ROW_HEIGHT + 14;
       const p3x = toNode.position.x;
       const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIndex * PORT_ROW_HEIGHT + 14;
+
+      // Viewport culling for edge
+      if (
+        Math.max(p0x, p3x) < minX ||
+        Math.min(p0x, p3x) > maxX ||
+        Math.max(p0y, p3y) < minY ||
+        Math.min(p0y, p3y) > maxY
+      ) {
+        continue;
+      }
+      visibleEdgesCount++;
 
       const isSelected = selectedEdgeIds.has(edge.id);
       const pulseOffset = edgePulses.get(edge.id);
@@ -2375,6 +2512,8 @@ if (
     }
 
     // 5. Nodes
+    let visibleNodesCount = 0;
+    let visiblePinsCount = 0;
     for (const node of nodes) {
       const bounds = getNodeBounds(node);
       const nodeWidth = bounds.maxX - bounds.minX;
@@ -2383,6 +2522,7 @@ if (
       const y = bounds.minY;
 
       if (x + nodeWidth < minX || x > maxX || y + nodeHeight < minY || y > maxY) continue;
+      visibleNodesCount++;
 
       const isSelected = selectedNodeIds.has(node.id);
       const isActive = activeNodeIds.has(node.id);
@@ -2565,6 +2705,7 @@ if (
         if (isHovered) {
           pushCircle(x, portY, Math.max(1, pinRadius - 2), 1, 1, 1, 1);
         }
+        visiblePinsCount++;
 
         // Port label text
         const portTextColor = isDark ? [0.788, 0.82, 0.851] : [0.141, 0.161, 0.184];
@@ -2595,6 +2736,7 @@ if (
         if (isHovered) {
           pushCircle(x + nodeWidth, portY, Math.max(1, pinRadius - 2), 1, 1, 1, 1);
         }
+        visiblePinsCount++;
 
         // Port label text
         const portTextColor = isDark ? [0.788, 0.82, 0.851] : [0.141, 0.161, 0.184];
@@ -2632,7 +2774,7 @@ if (
     const glTextFloatCount = wasm.font_get_vertex_float_count();
     const glTextBufPtr = wasm.font_get_vertex_buffer_ptr();
     const glTextF64View = new Float64Array(wasm.memory.buffer, glTextBufPtr, glTextFloatCount);
-    textTriVertices = [...glTextF64View];
+    textTriVertices = new Float32Array(glTextF64View);
 
     // Draw triangles
     if (triVertices.length > 0 && glVertexBuffer) {
@@ -2675,7 +2817,7 @@ if (
       gl.uniform1i(glTextUniformLocations.u_fontTexture, 0);
 
       gl.bindBuffer(gl.ARRAY_BUFFER, glTexVertexBuffer);
-      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textTriVertices), gl.DYNAMIC_DRAW);
+      gl.bufferData(gl.ARRAY_BUFFER, textTriVertices, gl.DYNAMIC_DRAW);
       gl.enableVertexAttribArray(glTextAttribLocations.a_position);
       gl.vertexAttribPointer(glTextAttribLocations.a_position, 2, gl.FLOAT, false, 32, 0);
       gl.enableVertexAttribArray(glTextAttribLocations.a_uv);
@@ -2691,9 +2833,14 @@ if (
       ...performanceStats,
       renderTimeMs: Math.round(frameTime * 100) / 100,
       totalFrameTimeMs: Math.round((frameTime + 0.4) * 100) / 100,
-      visibleNodesCount: nodes.length,
-      visibleEdgesCount: edges.length,
-      visiblePinsCount: nodes.length * 4,
+      visibleNodesCount,
+      totalNodesCount: nodes.length,
+      visibleEdgesCount,
+      totalEdgesCount: edges.length,
+      visiblePinsCount,
+      totalPinsCount: nodes.length * 4,
+      textQuadCount: glTextFloatCount / 8,
+      backend: 'webgl',
       isFallback: false,
     };
   }
