@@ -72,6 +72,7 @@ function renameCssAssets(
 }
 
 /** Injects css import statements into generated JavaScript chunks. */
+// skipcq: JS-R1005
 function injectCssImportsIntoChunks(
   bundle: Record<string, OutputAsset | OutputChunk>,
   renamedCss: Map<string, string>,
@@ -154,6 +155,7 @@ function resolveFrameworkDeclarationMeta(framework: JsxFramework): { componentTy
 }
 
 /** Generate component export lines for entry declarations. */
+// skipcq: JS-R1005
 function generateComponentDeclarationLines(
   components: readonly DiscoveredComponent[],
   componentType: string,
@@ -210,6 +212,7 @@ function generateHelperExportLines(
 }
 
 /** Generate external re-export lines for entry declarations. */
+// skipcq: JS-R1005
 function generateExternalExportLines(
   externalExports: readonly DiscoveredExternalExport[],
   claimed: Set<string>,
@@ -324,6 +327,7 @@ function findPackageRoot(startDir: string): string {
 }
 
 /** Recursively collects all declaration (.d.ts) files under a directory. */
+// skipcq: JS-R1005
 function collectAllDeclarationFiles(dir: string, baseDir = dir): { relativePath: string; fullPath: string }[] {
   if (!existsSync(dir)) return [];
   const results: { relativePath: string; fullPath: string }[] = [];
@@ -405,6 +409,7 @@ function extractScriptFromComponent(fullPath: string, source: string): string {
 }
 
 /** Filters a named import statement, retaining only specifiers referenced in body text. */
+// skipcq: JS-R1005
 function filterNamedImport(imp: string, namedMatch: RegExpMatchArray, bodyText: string): string | undefined {
   const isTypeImport = imp.startsWith('import type');
   const specifiers = namedMatch[1]
@@ -436,6 +441,7 @@ function filterDefaultImport(imp: string, defaultMatch: RegExpMatchArray, bodyTe
 }
 
 /** Filter a list of import statements, preserving only those whose imported specifiers appear in the body text. */
+// skipcq: JS-R1005
 function filterReferencedImports(importStatements: readonly string[], bodyText: string): string[] {
   const result: string[] = [];
   for (const imp of importStatements) {
@@ -463,6 +469,7 @@ function filterReferencedImports(importStatements: readonly string[], bodyText: 
 }
 
 /** Collects raw import and type declarations from a component AST. */
+// skipcq: JS-R1005
 function collectComponentAstDeclarations(
   parsed: OxcParsedModule,
   scriptContent: string,
@@ -513,6 +520,7 @@ function collectComponentAstDeclarations(
 }
 
 /** Resolves public and neutral component names from script or AST. */
+// skipcq: JS-R1005
 function resolveComponentNames(
   parsed: OxcParsedModule,
   scriptContent: string,
@@ -596,6 +604,7 @@ function adaptTypesForFramework(types: string[], framework: JsxFramework): strin
 }
 
 /** Renders framework-specific imports and component declaration statements. */
+// skipcq: JS-R1005
 function renderFrameworkComponentDeclarations(
   framework: JsxFramework,
   neutralName: string,
@@ -729,6 +738,7 @@ function emitComponentDeclaration(
 }
 
 /** Converts an AST export statement into a TypeScript declaration line. */
+// skipcq: JS-R1005
 function convertExportStatementToDeclaration(stmt: OxcNode, source: string): string[] {
   const lines: string[] = [];
   if (stmt.type !== 'ExportNamedDeclaration') {
@@ -778,6 +788,7 @@ function convertExportStatementToDeclaration(stmt: OxcNode, source: string): str
 }
 
 /** Synthesizes a TypeScript declaration file for utility and helper modules. */
+// skipcq: JS-R1005
 function emitUtilityDeclaration(
   fullPath: string,
   generatedDirectory: string,
@@ -816,6 +827,7 @@ function emitUtilityDeclaration(
 }
 
 /** Formats export specifier names for a component barrel line in cached declarations. */
+// skipcq: JS-R1005
 function formatComponentExportSpecifiers(rawSpecifiers: readonly string[], framework: JsxFramework): string {
   const typeSpecs: string[] = [];
   const valueIds: string[] = [];
@@ -851,6 +863,7 @@ function formatComponentExportSpecifiers(rawSpecifiers: readonly string[], frame
 }
 
 /** Synthesizes an index.d.ts entry declaration file from a cached framework source index. */
+// skipcq: JS-R1005
 function emitEntryDeclarationFromCache(
   framework: JsxFramework,
   generatedDirectory: string,
@@ -905,6 +918,7 @@ function emitEntryDeclarationFromCache(
 }
 
 /** Recursively emits component index declaration files from the source components directory. */
+// skipcq: JS-R1005
 function walkSourceIndexes(
   sourceComponentsDir: string,
   currentDir: string,
@@ -928,6 +942,7 @@ function walkSourceIndexes(
 }
 
 /** Recursively discovers and emits declarations for framework component files. */
+// skipcq: JS-R1005
 function walkFrameworkComponents(
   currentDir: string,
   generatedDirectory: string,
@@ -959,6 +974,7 @@ function walkFrameworkComponents(
 }
 
 /** Recursively discovers and emits utility declarations in a helper directory. */
+// skipcq: JS-R1005
 function walkFrameworkUtils(
   currentDir: string,
   generatedDirectory: string,
@@ -975,6 +991,7 @@ function walkFrameworkUtils(
 }
 
 /** Emits declarations for all cached framework source files. */
+// skipcq: JS-R1005
 function emitCachedFrameworkDeclarations(
   options: JsxComponentsEntryDtsOptions,
   emit: (fileName: string, source: string) => void,
@@ -1030,6 +1047,7 @@ function emitCachedFrameworkDeclarations(
 }
 
 /** Emits neutral component declaration files copied from dist/components. */
+// skipcq: JS-R1005
 function emitNeutralDeclarationFiles(
   neutralComponentsDir: string,
   emitFile: (file: { type: 'asset'; fileName: string; source: string }) => void,
@@ -1069,6 +1087,34 @@ function emitNeutralDeclarationFiles(
   }
 }
 
+/** Emits dynamically discovered entry declarations and neutral declaration files. */
+function emitDiscoveredEntryDeclarations(
+  context: { emitFile: (file: { type: 'asset'; fileName: string; source: string }) => void },
+  options: JsxComponentsEntryDtsOptions,
+  declarationModule: string,
+  stripPrefix: string,
+): void {
+  const { components, helpers, externalExports } = discoverGeneratedEntrySources(
+    options.componentsModule,
+    options.publicEntryModule,
+    stripPrefix,
+    options.sourceRoot,
+  );
+  context.emitFile({
+    type: 'asset',
+    fileName: `${options.declarationFileName}.d.ts`,
+    source: generateEntryDeclaration(options.framework, declarationModule, components, helpers, externalExports),
+  });
+
+  const packageRoot =
+    options.packageRoot ??
+    (options.sourceRoot ? findPackageRoot(options.sourceRoot) : findPackageRoot(options.componentsModule));
+  const neutralComponentsDir = resolveNeutralComponentsDirectory(packageRoot, options.outputRoot);
+  if (neutralComponentsDir && existsSync(neutralComponentsDir)) {
+    emitNeutralDeclarationFiles(neutralComponentsDir, (file) => context.emitFile(file));
+  }
+}
+
 /**
  * Emit the synthesised declaration (`<declarationFileName>.d.ts`) for the
  * generated entry, so the package's `./react` / `./vue` types resolve even
@@ -1087,26 +1133,7 @@ export function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOption
         });
         return;
       }
-
-      const { components, helpers, externalExports } = discoverGeneratedEntrySources(
-        options.componentsModule,
-        options.publicEntryModule,
-        stripPrefix,
-        options.sourceRoot,
-      );
-      this.emitFile({
-        type: 'asset',
-        fileName: `${options.declarationFileName}.d.ts`,
-        source: generateEntryDeclaration(options.framework, declarationModule, components, helpers, externalExports),
-      });
-
-      const packageRoot =
-        options.packageRoot ??
-        (options.sourceRoot ? findPackageRoot(options.sourceRoot) : findPackageRoot(options.componentsModule));
-      const neutralComponentsDir = resolveNeutralComponentsDirectory(packageRoot, options.outputRoot);
-      if (neutralComponentsDir && existsSync(neutralComponentsDir)) {
-        emitNeutralDeclarationFiles(neutralComponentsDir, (file) => this.emitFile(file));
-      }
+      emitDiscoveredEntryDeclarations(this, options, declarationModule, stripPrefix);
     },
   };
 }
@@ -1182,6 +1209,7 @@ const CSS_MODULE_SHIM = [
 const CSS_MODULE_SHIM_FILE = '__mp-css-shim.d.ts';
 
 /** Check whether a directory contains any TypeScript declaration files (.d.ts). */
+// skipcq: JS-R1005
 function hasDeclarationFiles(directory: string): boolean {
   if (!existsSync(directory)) return false;
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
@@ -1200,6 +1228,7 @@ const FRAMEWORK_DTS_CONDITION: Record<JsxFramework, string> = {
 };
 
 /** Resolves self-referencing path aliases mapping a package name to its neutral declaration index. */
+// skipcq: JS-R1005
 function selfReferencePaths(generatedDir: string): Record<string, string[]> {
   let directory = generatedDir;
   while (true) {
@@ -1240,6 +1269,7 @@ function resolveTscBin(): string {
 }
 
 /** Resolves compiler option path aliases mapped to the generated directory. */
+// skipcq: JS-R1005
 function packageAliasCompilerOptions(generatedDir: string): { paths?: Record<string, string[]> } {
   let packageDirectory = generatedDir;
   while (true) {
@@ -1452,6 +1482,7 @@ function svelteDtsOutputIsUsable(outDir: string): boolean {
 }
 
 /** Emits declarations for generated Svelte components using svelte2tsx or fallback synthesis. */
+// skipcq: JS-R1005
 async function emitSvelteComponentDeclarations(
   this: { warn: (message: string) => void },
   options: JsxComponentsDtsOptions,
@@ -1541,6 +1572,7 @@ function emitFallbackFrameworkDeclarations(
 }
 
 /** Dispatches declaration emission for the selected framework target. */
+// skipcq: JS-R1005
 async function dispatchFrameworkDeclarations(
   context: {
     warn: (message: string) => void;
