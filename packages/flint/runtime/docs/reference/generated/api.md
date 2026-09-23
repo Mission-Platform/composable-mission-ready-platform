@@ -1879,6 +1879,36 @@ export interface FlintDefaultHostOptions
 
 Configuration options for default built-in capability providers.
 
+### FlintForeignCall
+
+**Kind:** type
+
+```typescript
+export type FlintForeignCall = (symbol: string, arguments_: readonly unknown[]) => unknown | Promise<unknown>;
+```
+
+Host foreign capability invocation handler.
+
+### FlintForeignCapabilityImplementation
+
+**Kind:** interface
+
+```typescript
+export interface FlintForeignCapabilityImplementation
+```
+
+Host foreign capability implementation descriptor.
+
+### FlintForeignCapabilityRegistry
+
+**Kind:** type
+
+```typescript
+export type FlintForeignCapabilityRegistry = Readonly<Record<string, FlintForeignCapabilityImplementation>>;
+```
+
+Registry of available foreign capability implementations.
+
 ### FlintHost
 
 **Kind:** interface
@@ -2065,20 +2095,25 @@ Consumer callback function receiving structured runtime log events.
 **Kind:** function
 
 ```typescript
-function createFlintMemory(options?: FlintMemoryOptions): FlintMemory;
+function createFlintMemory(
+  memoryOrOptions?: WebAssembly.Memory | FlintMemoryOptions,
+  options?: FlintMemoryOptions,
+): FlintMemory;
 ```
 
 Creates a configured FlintMemory instance.
 
 #### Parameters
 
-| Name    | Type               | Description                           |
-| ------- | ------------------ | ------------------------------------- |
-| options | FlintMemoryOptions | - Memory creation and sizing options. |
+| Name            | Type                                     | Description                                                       |
+| --------------- | ---------------------------------------- | ----------------------------------------------------------------- |
+| memoryOrOptions | WebAssembly.Memory \| FlintMemoryOptions | - Existing WebAssembly.Memory or memory creation options.         |
+| options         | FlintMemoryOptions                       | - Memory creation and sizing options if memory instance provided. |
 
 #### Contract
 
-- **@param:** - Memory creation and sizing options.
+- **@param:** - Existing WebAssembly.Memory or memory creation options.
+- **@param:** - Memory creation and sizing options if memory instance provided.
 - **@returns:** Initialized FlintMemory instance.
 
 ### createFlintMultiMemory
@@ -2142,7 +2177,7 @@ Configuration options for creating and sizing a Flint linear memory instance.
 **Kind:** type
 
 ```typescript
-export type FlintMemoryPartitionName = 'guestHeap' | 'hostInterop' | 'staticData';
+export type FlintMemoryPartitionName = 'guestHeap' | 'foreignHeap' | 'hostInterop' | 'staticData';
 ```
 
 Names of dedicated linear memory partitions for multi-memory modules.
@@ -2157,7 +2192,8 @@ export class FlintMultiMemory
 
 WebAssembly multi-memory segregation coordinator.
 Isolates memory into dedicated spaces for guest execution (Memory 0),
-host interop buffer (Memory 1), and static constants/tables (Memory 2).
+foreign untrusted C/Rust heap (Memory 1), host interop buffer (Memory 2),
+and static constants/tables (Memory 3).
 
 ### FlintMultiMemoryOptions
 
@@ -2168,6 +2204,17 @@ export interface FlintMultiMemoryOptions
 ```
 
 Options configuring multiple independent linear memory partitions.
+
+### FlintRegionalArena
+
+**Kind:** class
+
+```typescript
+export class FlintRegionalArena
+```
+
+Scoped regional bump allocator pool (Tier 1) providing O(1) allocation
+and deterministic bulk deallocation upon scope exit.
 
 ## `src/parallel`
 

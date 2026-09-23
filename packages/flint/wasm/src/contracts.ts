@@ -25,6 +25,8 @@ export type FlintWasmStandardLibraryOperation =
   | 'memory-realloc'
   | 'memory-load-u32'
   | 'memory-store-u32'
+  | 'memory-load-u8'
+  | 'memory-store-u8'
   | 'memory-load-f64'
   | 'memory-store-f64'
   | 'f64-from-u32'
@@ -70,6 +72,7 @@ export interface FlintTargetFeatures {
   readonly memory64?: boolean;
   readonly threads?: boolean;
   readonly atomics?: boolean;
+  readonly importMemory?: boolean | { readonly module: string; readonly name: string };
 }
 
 /** Optimization hints provided to the WebAssembly compiler backend. */
@@ -235,7 +238,7 @@ export type FlintWasmExpression =
     }
   | {
       readonly kind: 'unary';
-      readonly operator: '!' | '-';
+      readonly operator: '!' | '-' | '*' | '&' | '&mut';
       readonly operand: FlintWasmExpression;
       readonly span: FlintWasmSourceSpan;
     }
@@ -390,11 +393,28 @@ export interface FlintWasmIteratorExport {
   readonly ownership: 'borrowed' | 'owned' | 'shared';
 }
 
+/** Lowered foreign C function import contract for WebAssembly emission. */
+export interface FlintWasmForeignFunction {
+  readonly symbol?: string;
+  readonly name?: string;
+  readonly parameters: readonly { readonly name: string; readonly type: string | FlintWasmTypeName }[];
+  readonly result: string | FlintWasmTypeName;
+}
+
+/** Lowered foreign C capability module import contract for WebAssembly emission. */
+export interface FlintWasmForeignCapability {
+  readonly library: string;
+  readonly callingConvention: 'wasm-c-abi';
+  readonly memoryModel?: 'shared' | 'multi-memory-segregated';
+  readonly functions: readonly FlintWasmForeignFunction[];
+}
+
 /** Module intermediate representation containing functions, layouts, and imports for WebAssembly emission. */
 export interface FlintWasmModule {
   readonly name: string;
   readonly imports: readonly FlintWasmCapabilityImport[];
   readonly sourceImports: readonly FlintWasmSourceImport[];
+  readonly foreignCapabilities?: readonly FlintWasmForeignCapability[];
   readonly functions: readonly FlintWasmFunction[];
   readonly specializations?: readonly FlintWasmGenericSpecialization[];
   readonly iteratorDescriptors?: readonly FlintWasmIteratorBoundaryDescriptor[];

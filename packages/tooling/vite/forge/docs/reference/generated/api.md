@@ -210,7 +210,7 @@ function createForgeArtifactWriter(
 ): ForgeArtifactWriter;
 ```
 
-No description provided.
+Create an atomic artifact writer for staging and committing Forge artifacts.
 
 #### Parameters
 

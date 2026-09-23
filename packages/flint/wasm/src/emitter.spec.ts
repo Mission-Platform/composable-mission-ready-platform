@@ -1961,4 +1961,71 @@ describe('Forge Web Script WASM backend', () => {
     const testFunction = instance.exports.testSimd as () => number;
     expect(testFunction()).toBe(0xff_ff);
   });
+
+  it('emits type-accurate WebAssembly load opcodes for typed pointer dereference', () => {
+    const span = { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 };
+    const createDerefModule = (
+      name: string,
+      pointeeType: string,
+      resultType: FlintWasmPrimitiveType,
+    ): FlintWasmModule => ({
+      name: `deref_${name}`,
+      span,
+      functions: [
+        {
+          name: `deref_${name}`,
+          exported: true,
+          parameters: [
+            {
+              name: 'ptr',
+              type: {
+                name: 'i32',
+                reference: 'CPtr',
+                arguments: [{ name: pointeeType as FlintWasmPrimitiveType }],
+              },
+            },
+          ],
+          result: { name: resultType },
+          body: [
+            {
+              kind: 'return',
+              value: {
+                kind: 'unary',
+                operator: '*',
+                operand: { kind: 'identifier', name: 'ptr', span },
+                span,
+              },
+              span,
+            },
+          ],
+          span,
+        },
+      ],
+      imports: [],
+    });
+
+    // f32: should emit opcode 0x2a (f32.load)
+    const f32Module = createDerefModule('f32', 'f32', 'f32');
+    const f32Result = compileFlintWasm({ ir: f32Module, optimizedIr: f32Module, abi: {}, links: {}, metadata });
+    expect(f32Result.diagnostics).toEqual([]);
+    expect([...(f32Result.wasm ?? [])]).toContain(0x2a);
+
+    // f64: should emit opcode 0x2b (f64.load)
+    const f64Module = createDerefModule('f64', 'f64', 'f64');
+    const f64Result = compileFlintWasm({ ir: f64Module, optimizedIr: f64Module, abi: {}, links: {}, metadata });
+    expect(f64Result.diagnostics).toEqual([]);
+    expect([...(f64Result.wasm ?? [])]).toContain(0x2b);
+
+    // i64: should emit opcode 0x29 (i64.load)
+    const int64Module = createDerefModule('i64', 'i64', 'i64');
+    const int64Result = compileFlintWasm({ ir: int64Module, optimizedIr: int64Module, abi: {}, links: {}, metadata });
+    expect(int64Result.diagnostics).toEqual([]);
+    expect([...(int64Result.wasm ?? [])]).toContain(0x29);
+
+    // i32: should emit opcode 0x28 (i32.load)
+    const int32Module = createDerefModule('i32', 'i32', 'i32');
+    const int32Result = compileFlintWasm({ ir: int32Module, optimizedIr: int32Module, abi: {}, links: {}, metadata });
+    expect(int32Result.diagnostics).toEqual([]);
+    expect([...(int32Result.wasm ?? [])]).toContain(0x28);
+  });
 });

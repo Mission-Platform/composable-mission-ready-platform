@@ -1,7 +1,22 @@
 import { createDiagnostic, type FlintDiagnostic } from './diagnostics.js';
 
 import type { FlintExpression, FlintFunction, FlintModule, FlintStatement } from './ast.js';
-import type { FlintLinkConfiguration, FlintModuleEdge, FlintModuleGraph, FlintResolvedModule } from './graph.js';
+import type {
+  FlintForeignObjectReference,
+  FlintLinkConfiguration,
+  FlintModuleEdge,
+  FlintModuleGraph,
+  FlintResolvedModule,
+} from './graph.js';
+
+/** Foreign symbol resolution record produced by the linker. */
+export interface FlintResolvedForeignSymbol {
+  readonly symbol: string;
+  readonly library: string;
+  readonly objectPath?: string;
+  readonly callingConvention: 'wasm-c-abi';
+  readonly resolved: boolean;
+}
 
 /**
  * Result of validating and linking a Flint module dependency graph.
@@ -11,6 +26,7 @@ export interface FlintLinkResult {
   readonly diagnostics: readonly FlintDiagnostic[];
   readonly staticModules: readonly FlintModule[];
   readonly dynamicEdges: readonly FlintModuleEdge[];
+  readonly foreignSymbols?: readonly FlintResolvedForeignSymbol[];
 }
 
 const emptySpan = { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 } as const;
@@ -761,6 +777,136 @@ function detectStaticLinkingCycles(
   }
 }
 
+/** Registers an individual foreign symbol in the target index, detecting duplicate provider conflicts. */
+function registerForeignSymbol(
+  index: Map<string, FlintForeignObjectReference>,
+  key: string,
+  symbol: string,
+  object_: FlintForeignObjectReference,
+  diagnostics: FlintDiagnostic[],
+  library?: string,
+): void {
+  const existing = index.get(key);
+  if (existing !== undefined && existing.path !== object_.path) {
+    const message =
+      library === undefined
+        ? `Duplicate foreign symbol '${symbol}' provided by '${existing.path}' and '${object_.path}'.`
+        : `Duplicate foreign symbol '${symbol}' provided for library '${library}' by '${existing.path}' and '${object_.path}'.`;
+    diagnostics.push(
+      createDiagnostic(
+        object_.path,
+        'link',
+        'FLINT-LINK-007',
+        message,
+        emptySpan,
+        'error',
+        library === undefined
+          ? 'Ensure only one foreign object provides this symbol.'
+          : 'Ensure only one foreign object provides the symbol for this capability library.',
+      ),
+    );
+  } else {
+    index.set(key, object_);
+  }
+}
+
+/** Builds index mapping exported foreign symbols to their defining relocatable object. */
+// skipcq: JS-R1005
+function buildForeignSymbolIndex(
+  foreignObjects: readonly FlintForeignObjectReference[],
+  diagnostics: FlintDiagnostic[],
+): {
+  readonly scoped: Map<string, FlintForeignObjectReference>;
+  readonly unscoped: Map<string, FlintForeignObjectReference>;
+} {
+  const scoped = new Map<string, FlintForeignObjectReference>();
+  const unscoped = new Map<string, FlintForeignObjectReference>();
+
+  for (const object_ of foreignObjects) {
+    for (const symbol of object_.exportedSymbols) {
+      if (object_.library === undefined) {
+        registerForeignSymbol(unscoped, symbol, symbol, object_, diagnostics);
+      } else {
+        registerForeignSymbol(scoped, `${object_.library}:${symbol}`, symbol, object_, diagnostics, object_.library);
+      }
+    }
+  }
+
+  return { scoped, unscoped };
+}
+
+/** Resolves an individual foreign capability function against indexed foreign objects. */
+function resolveCapabilityFunction(
+  function_: NonNullable<NonNullable<FlintModule['foreignCapabilities']>[number]['functions']>[number],
+  capability: NonNullable<FlintModule['foreignCapabilities']>[number],
+  fileName: string,
+  scoped: ReadonlyMap<string, FlintForeignObjectReference>,
+  unscoped: ReadonlyMap<string, FlintForeignObjectReference>,
+  hasObjects: boolean,
+  diagnostics: FlintDiagnostic[],
+): FlintResolvedForeignSymbol {
+  const scopedKey = `${capability.library}:${function_.name}`;
+  const matchingObject = scoped.get(scopedKey) ?? unscoped.get(function_.name);
+  if (hasObjects && matchingObject === undefined) {
+    diagnostics.push(
+      createDiagnostic(
+        fileName,
+        'link',
+        'FLINT-LINK-006',
+        `Unresolved foreign symbol '${function_.name}' required by library '${capability.library}'.`,
+        function_.span,
+        'error',
+        'Supply a foreign object defining this symbol.',
+      ),
+    );
+  }
+  return {
+    symbol: function_.name,
+    library: capability.library,
+    callingConvention: capability.callingConvention,
+    ...(matchingObject === undefined ? {} : { objectPath: matchingObject.path }),
+    resolved: matchingObject !== undefined,
+  };
+}
+
+/**
+ * Resolves declared foreign capability symbols against provided foreign relocatable objects.
+ *
+ * @param graph - Module dependency graph containing ASTs.
+ * @param diagnostics - Diagnostic accumulator.
+ * @param foreignObjects - List of foreign relocatable object descriptors.
+ * @returns List of foreign symbol resolution records.
+ */
+// skipcq: JS-R1005
+function resolveForeignSymbols(
+  graph: FlintModuleGraph,
+  diagnostics: FlintDiagnostic[],
+  foreignObjects: readonly FlintForeignObjectReference[] = [],
+): FlintResolvedForeignSymbol[] {
+  const resolved: FlintResolvedForeignSymbol[] = [];
+  const { scoped, unscoped } = buildForeignSymbolIndex(foreignObjects, diagnostics);
+  const hasObjects = foreignObjects.length > 0;
+
+  for (const resolvedModule of graph.modules) {
+    for (const capability of resolvedModule.module.foreignCapabilities ?? []) {
+      for (const function_ of capability.functions) {
+        resolved.push(
+          resolveCapabilityFunction(
+            function_,
+            capability,
+            resolvedModule.fileName,
+            scoped,
+            unscoped,
+            hasObjects,
+            diagnostics,
+          ),
+        );
+      }
+    }
+  }
+  return resolved;
+}
+
 /**
  * Validates module graph linking constraints, detects static cycles, and merges static components.
  *
@@ -786,5 +932,13 @@ export function validateFlintLinks(
   }
   detectStaticLinkingCycles(graph.modules, adjacency, modulesByFile, diagnostics);
 
-  return { graph, diagnostics, staticModules: staticComponents(graph, diagnostics), dynamicEdges };
+  const foreignSymbols = resolveForeignSymbols(graph, diagnostics, configuration.foreignObjects);
+
+  return {
+    graph,
+    diagnostics,
+    staticModules: staticComponents(graph, diagnostics),
+    dynamicEdges,
+    ...(foreignSymbols.length === 0 ? {} : { foreignSymbols }),
+  };
 }

@@ -555,4 +555,126 @@ export fn add(left: i32, right: i32) -> i32 { return left + right; }`,
       true,
     );
   });
+
+  it('parses foreign capability blocks, opaque foreign types, and emits foreignCapabilities in manifest', () => {
+    const source = `
+      opaque foreign type ZstdContext;
+
+      foreign "C" capability "zstd" {
+        /** Returns library version number. */
+        fn ZSTD_versionNumber() -> c_uint;
+
+        fn ZSTD_compress(
+          dst: MutCPtr<u8>,
+          dstCapacity: c_size,
+          src: CPtr<u8>,
+          srcSize: c_size,
+          compressionLevel: c_int
+        ) -> c_size;
+      }
+
+      export fn compress(input: bytes) -> u32 {
+        let version: c_uint = ZSTD_versionNumber();
+        return 0;
+      }
+    `;
+
+    const parsed = parseFlint(source, 'foreign.flint');
+    expect(parsed.diagnostics).toEqual([]);
+    const module = requireModule(parsed);
+
+    expect(module.opaqueForeignTypes).toHaveLength(1);
+    expect(module.opaqueForeignTypes?.[0].name).toBe('ZstdContext');
+
+    expect(module.foreignCapabilities).toHaveLength(1);
+    const capability = module.foreignCapabilities?.[0];
+    expect(capability?.abi).toBe('C');
+    expect(capability?.library).toBe('zstd');
+    expect(capability?.callingConvention).toBe('wasm-c-abi');
+    expect(capability?.functions).toHaveLength(2);
+    expect(capability?.functions[0].name).toBe('ZSTD_versionNumber');
+    expect(capability?.functions[0].documentation?.description).toBe('Returns library version number.');
+    expect(capability?.functions[1].name).toBe('ZSTD_compress');
+    expect(capability?.functions[1].parameters).toHaveLength(5);
+
+    const checked = checkFlint(module, 'foreign.flint');
+    expect(checked.diagnostics).toEqual([]);
+
+    const manifest = createFlintAbiManifest(module);
+    expect(manifest.foreignCapabilities).toBeDefined();
+    expect(manifest.foreignCapabilities).toHaveLength(1);
+    expect(manifest.foreignCapabilities?.[0]).toEqual({
+      library: 'zstd',
+      callingConvention: 'wasm-c-abi',
+      memoryModel: 'shared',
+      functions: [
+        {
+          symbol: 'ZSTD_versionNumber',
+          parameters: [],
+          result: { cType: 'c_uint', wasmType: 'i32' },
+        },
+        {
+          symbol: 'ZSTD_compress',
+          parameters: [
+            { name: 'dst', cType: 'MutCPtr<u8>', wasmType: 'i32' },
+            { name: 'dstCapacity', cType: 'c_size', wasmType: 'i32' },
+            { name: 'src', cType: 'CPtr<u8>', wasmType: 'i32' },
+            { name: 'srcSize', cType: 'c_size', wasmType: 'i32' },
+            { name: 'compressionLevel', cType: 'c_int', wasmType: 'i32' },
+          ],
+          result: { cType: 'c_size', wasmType: 'i32' },
+        },
+      ],
+    });
+  });
+
+  it('validates packed and align repr attributes require positive power-of-two alignment', () => {
+    const invalidPacked = parseFlint('#[repr(packed(3))]\nstruct S { a: u32; }', 'test.flint');
+    expect(invalidPacked.diagnostics).toContainEqual(
+      expect.objectContaining({ code: 'FLINT-PARSE-073', message: expect.stringContaining('3') }),
+    );
+
+    const invalidAlignZero = parseFlint('#[repr(align(0))]\nstruct S { a: u32; }', 'test.flint');
+    expect(invalidAlignZero.diagnostics).toContainEqual(
+      expect.objectContaining({ code: 'FLINT-PARSE-073', message: expect.stringContaining('0') }),
+    );
+
+    const invalidAlignSeven = parseFlint('#[repr(align(7))]\nstruct S { a: u32; }', 'test.flint');
+    expect(invalidAlignSeven.diagnostics).toContainEqual(
+      expect.objectContaining({ code: 'FLINT-PARSE-073', message: expect.stringContaining('7') }),
+    );
+
+    const valid = parseFlint(
+      '#[repr(packed(4))]\nstruct P { a: u32; }\n#[repr(align(8))]\nstruct A { a: u32; }',
+      'valid.flint',
+    );
+    expect(valid.diagnostics).toEqual([]);
+    expect(valid.module?.structs[0].repr).toEqual({ kind: 'packed', alignment: 4 });
+    expect(valid.module?.structs[1].repr).toEqual({ kind: 'align', alignment: 8 });
+  });
+
+  it('rejects unsupported foreign ABI specifications with FLINT-PARSE-074', () => {
+    const rustAbi = parseFlint('foreign "Rust" capability "crypto" {}', 'rust-abi.flint');
+    expect(rustAbi.diagnostics).toContainEqual(
+      expect.objectContaining({
+        code: 'FLINT-PARSE-074',
+        message: expect.stringContaining("Unsupported foreign ABI 'Rust'"),
+      }),
+    );
+
+    const cAbi = parseFlint('foreign "C" capability "crypto" {}', 'c-abi.flint');
+    expect(cAbi.diagnostics).toEqual([]);
+  });
+
+  it('preserves receiver context on parenthesized identifier member chains', () => {
+    const result = parseFlint('export fn test(reader: Reader) -> i32 { return (reader).next(); }', 'receiver.flint');
+    expect(result.diagnostics).toEqual([]);
+    expect(result.module?.functions[0].body[0]).toMatchObject({
+      kind: 'return',
+      value: {
+        kind: 'call',
+        callee: 'reader.next',
+      },
+    });
+  });
 });

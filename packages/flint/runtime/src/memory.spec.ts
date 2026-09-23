@@ -105,9 +105,11 @@ describe('Forge Web Script memory capabilities', () => {
     });
 
     expect(multi.getPartition(0)).toBe(multi.guestHeap);
-    expect(multi.getPartition(1)).toBe(multi.hostInterop);
-    expect(multi.getPartition(2)).toBe(multi.staticData);
+    expect(multi.getPartition(1)).toBe(multi.foreignHeap);
+    expect(multi.getPartition(2)).toBe(multi.hostInterop);
+    expect(multi.getPartition(3)).toBe(multi.staticData);
     expect(multi.getPartition('guestHeap')).toBe(multi.guestHeap);
+    expect(multi.getPartition('foreignHeap')).toBe(multi.foreignHeap);
     expect(multi.getPartition('hostInterop')).toBe(multi.hostInterop);
     expect(multi.getPartition('staticData')).toBe(multi.staticData);
 
@@ -120,5 +122,19 @@ describe('Forge Web Script memory capabilities', () => {
     multi.hostInterop.writeBytes(interopPtr, new Uint8Array([99, 88, 77, 66]));
     const roundtripPtr = multi.transferFromInterop(interopPtr, 4);
     expect(multi.guestHeap.readBytes(roundtripPtr, 4)).toEqual(new Uint8Array([99, 88, 77, 66]));
+  });
+
+  it('protects wrapped external WebAssembly.Memory from bump allocator clobbering', () => {
+    const rawExternalMemory = new WebAssembly.Memory({ initial: 2 });
+    new Uint8Array(rawExternalMemory.buffer)[8] = 42;
+
+    const wrapped = createFlintMemory({ memory: rawExternalMemory });
+    expect(wrapped.wasmMemory).toBe(rawExternalMemory);
+    const allocated = wrapped.allocate(16);
+    expect(allocated).toBeGreaterThanOrEqual(131_072);
+    expect(new Uint8Array(rawExternalMemory.buffer)[8]).toBe(42);
+
+    const withExplicit = createFlintMemory({ memory: rawExternalMemory, initialPointer: 1024 });
+    expect(withExplicit.allocate(16)).toBe(1024);
   });
 });

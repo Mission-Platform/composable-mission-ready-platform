@@ -76,7 +76,7 @@ export interface FlintIrBinaryExpression {
  */
 export interface FlintIrUnaryExpression {
   readonly kind: 'unary';
-  readonly operator: '!' | '-';
+  readonly operator: '!' | '-' | '*' | '&' | '&mut';
   readonly operand: FlintIrExpression;
   readonly span: FlintSourceSpan;
 }
@@ -572,13 +572,16 @@ function lowerLinearStatement(
     }
     case 'return': {
       return {
-        ...statement,
+        kind: 'return',
+        span: statement.span,
         ...(statement.value === undefined ? {} : { value: lowerAstExpression(statement.value) }),
       };
     }
     case 'assignment': {
       return {
-        ...statement,
+        kind: 'assignment',
+        name: statement.name,
+        span: statement.span,
         ...(statement.index === undefined ? {} : { index: lowerAstExpression(statement.index) }),
         value: lowerAstExpression(statement.value),
       };

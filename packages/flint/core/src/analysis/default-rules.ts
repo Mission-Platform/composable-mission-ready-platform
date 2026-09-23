@@ -1170,8 +1170,10 @@ function checkMemoryDealloc(
 
 const MEMORY_ACCESS_OPERATIONS = new Set([
   'memory-load-u32',
+  'memory-load-u8',
   'memory-load-f64',
   'memory-store-u32',
+  'memory-store-u8',
   'memory-store-f64',
 ]);
 

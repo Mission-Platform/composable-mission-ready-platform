@@ -17,6 +17,7 @@ export interface FlintWasmSsaValue {
   readonly kind: FlintWasmSsaValueKind;
   readonly reference?: string;
   readonly length?: number;
+  readonly pointeeType?: string;
 }
 
 /**
@@ -405,6 +406,40 @@ function analyzeCfg(
 }
 
 /**
+ * Extracts the pointee type from a pointer, reference, or composite type descriptor.
+ *
+ * @param type - Type descriptor to inspect.
+ * @returns Resolved pointee type name, or undefined if not a pointer or reference.
+ */
+// skipcq: JS-R1005
+export function extractPointeeType(
+  type:
+    | {
+        readonly name: string;
+        readonly reference?: string;
+        readonly arguments?: readonly { readonly name?: string; readonly reference?: string }[];
+        readonly referenceMode?: 'ref' | 'mut-ref';
+      }
+    | undefined,
+): string | undefined {
+  if (type === undefined) return undefined;
+  if (type.reference === 'CPtr' || type.reference === 'MutCPtr') {
+    const argument = type.arguments?.[0];
+    return argument?.reference ?? argument?.name;
+  }
+  if (typeof type.reference === 'string') {
+    if (type.reference.startsWith('CPtr<') && type.reference.endsWith('>')) return type.reference.slice(5, -1);
+    if (type.reference.startsWith('MutCPtr<') && type.reference.endsWith('>')) return type.reference.slice(8, -1);
+    if (type.reference.startsWith('&mut ')) return type.reference.slice(5);
+    if (type.reference.startsWith('&')) return type.reference.slice(1);
+  }
+  if (type.referenceMode !== undefined) {
+    return type.reference ?? type.name;
+  }
+  return undefined;
+}
+
+/**
  * Lowers a WebAssembly function intermediate representation into an SSA plan with basic blocks and control flow graph.
  *
  * @param declaration - Function IR declaration to analyze.
@@ -428,6 +463,7 @@ export function lowerFlintWasmFunctionToSsa(declaration: FlintWasmFunction): Fli
     kind: FlintWasmSsaValueKind,
     reference?: string,
     length?: number,
+    pointeeType?: string,
   ): FlintWasmSsaValue => {
     const value = {
       id: nextValueId++,
@@ -436,6 +472,7 @@ export function lowerFlintWasmFunctionToSsa(declaration: FlintWasmFunction): Fli
       kind,
       ...(reference === undefined ? {} : { reference }),
       ...(length === undefined ? {} : { length }),
+      ...(pointeeType === undefined ? {} : { pointeeType }),
     };
     values.push(value);
     return value;
@@ -443,7 +480,14 @@ export function lowerFlintWasmFunctionToSsa(declaration: FlintWasmFunction): Fli
   for (const parameter of declaration.parameters)
     parameters.set(
       parameter.name,
-      createValue(parameter.name, parameter.type.name, 'parameter', parameter.type.reference, parameter.type.length),
+      createValue(
+        parameter.name,
+        parameter.type.name,
+        'parameter',
+        parameter.type.reference,
+        parameter.type.length,
+        extractPointeeType(parameter.type),
+      ),
     );
 
   // skipcq: JS-D1001, JS-R1005
@@ -539,13 +583,21 @@ export function lowerFlintWasmFunctionToSsa(declaration: FlintWasmFunction): Fli
         'definition',
         statement.type.reference,
         statement.type.length,
+        extractPointeeType(statement.type),
       );
       definitionValues.set(statement, value);
       bindings.set(statement.name, value);
     } else if (statement.index === undefined) {
       const previous = bindings.get(statement.name);
       if (previous !== undefined) {
-        const value = createValue(statement.name, previous.type, 'definition');
+        const value = createValue(
+          statement.name,
+          previous.type,
+          'definition',
+          previous.reference,
+          previous.length,
+          previous.pointeeType,
+        );
         definitionValues.set(statement, value);
         bindings.set(statement.name, value);
       }
