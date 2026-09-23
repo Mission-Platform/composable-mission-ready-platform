@@ -843,7 +843,7 @@ function SpriteSheetDebugSection(properties: SpriteSheetSectionProperties): MpEl
               variant="neutral"
               size="xs"
             >
-              2D Shelf Packed (4x4 to 32x32)
+              2D Shelf Packed (4x4 to 64x64)
             </ForgeBadge>
             <ForgeBadge
               variant="info"
