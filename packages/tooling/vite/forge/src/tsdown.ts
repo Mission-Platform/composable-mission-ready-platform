@@ -99,6 +99,7 @@ function resolveMergedPlugins(
   return [...flattenPlugins(basePlugins), ...flattenPlugins(overridePlugins)];
 }
 
+/** Deep-merge a base tsdown config with caller overrides (shallow for top-level, concat plugins). */
 function mergeTsdownConfig(
   base: UserConfig,
   overrides?: UserConfig,
@@ -247,6 +248,7 @@ export function forgePathNormalizationPlugin(): TsdownPlugin {
   };
 }
 
+/** Resolves destination and staging output directories for a framework target build. */
 function resolveTargetOutputDirs(
   rootDir: string,
   framework: string,
@@ -313,7 +315,7 @@ export interface TsdownForgeHooksOptions {
 
 /**
  * Build one tsdown config for a single Forge framework hooks build.
- * Emits code and types into `<rootDir>/dist/<framework>/`.
+ * Emits code and types into the target framework distribution directory.
  */
 export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig {
   const {
@@ -507,6 +509,7 @@ export function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): 
   return configs;
 }
 
+/** Creates tsdown hook plugins for all configured framework targets. */
 export function tsdownForgeHookPlugins(options: TsdownForgeHooksAllOptions): TsdownPlugin[] {
   return defineTsdownForgeHooksAll(options).map((forgeConfig, index) => ({
     name: `@mission-platform/vite-plugin-forge:tsdown-hooks-${index}`,
@@ -561,6 +564,7 @@ export interface TsdownForgeComponentPluginsOptions {
   rejectFixturePlaceholder?: boolean;
 }
 
+/** Resolves the declaration re-export module specifier for neutral component types. */
 function resolveDeclarationModule(declarationModule?: string): string {
   if (declarationModule === '..' || declarationModule === '../components' || !declarationModule) {
     return './components';
@@ -580,11 +584,13 @@ function ignoreDisposalRejection(): void {
   // Background fire-and-forget session disposal
 }
 
+/** Check whether component framework building is explicitly skipped in current environment. */
 function isComponentFrameworkBuildSkipped(requestedFramework?: string): boolean {
   if (requestedFramework === 'none') return true;
   return process.env.FORGE_CMS_STORYBLOK_TARGET !== undefined && requestedFramework === undefined;
 }
 
+/** Filter framework plugins by an explicit framework target identifier. */
 function filterFrameworksByTarget(
   selected: readonly FrameworkOutputPlugin[],
   target: string,
@@ -596,6 +602,12 @@ function filterFrameworksByTarget(
   return filtered;
 }
 
+/**
+ * Filter selected framework output plugins by environment target variables.
+ *
+ * @param selected - Validated framework output plugins.
+ * @returns Filtered plugins matching target environment, or empty array if skipped.
+ */
 function resolveSelectedComponentFrameworks(
   selected: readonly FrameworkOutputPlugin[],
 ): readonly FrameworkOutputPlugin[] {

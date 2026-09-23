@@ -1992,9 +1992,8 @@ It preserves the Forge tree so
 function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig;
 ```
 
-Reproduce one Archetype-C **hook** framework build under tsdown:
-Stage 1 (`generateHookLibrarySources`) + Stage 2 plugins + `hookLibraryDtsPlugin`,
-emitting into `dist/<framework>/`.
+Build one tsdown config for a single Forge framework hooks build.
+Emits code and types into the target framework distribution directory.
 
 #### Parameters
 
@@ -2102,9 +2101,7 @@ No description provided.
 function tsdownForgeHookPlugins(options: TsdownForgeHooksAllOptions): TsdownPlugin[];
 ```
 
-Native tsdown-plugin form of the hook adapter. The returned plugins inject
-their target config from `tsdownConfig`, allowing hook builds to be composed
-with one caller-owned `defineTsdownLibrary` configuration.
+Creates tsdown hook plugins for all configured framework targets.
 
 #### Parameters
 
