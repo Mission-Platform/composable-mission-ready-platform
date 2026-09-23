@@ -1,7 +1,9 @@
 import { mkdir, mkdtemp, rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
-import type { FlintArtifact, FlintSoNModule } from '@mission-platform/flint';
+import type { FlintArtifact, FlintDiagnostic, FlintSoNModule } from '@mission-platform/flint';
+
+export { formatFlintSarif } from '@mission-platform/flint';
 
 /**
  * Collection of artifact payloads to be written to disk.
@@ -91,6 +93,73 @@ export async function writeFlintArtifacts(
   } finally {
     await rm(temporaryDirectory, { recursive: true, force: true });
   }
+}
+
+/**
+ * Formats compiler diagnostics with multi-span carets, line gutters, and remediation notes.
+ *
+ * @param diagnostics Array of diagnostic records to format.
+ * @param sourceResolver Optional source resolver returning file contents by file name.
+ * @returns Human-readable multi-span caret diagnostic string.
+ */
+export function formatFlintCaretDiagnostics(
+  diagnostics: readonly FlintDiagnostic[],
+  sourceResolver?: (fileName: string) => string | undefined,
+): string {
+  return diagnostics
+    .map((diagnostic) => {
+      const { severity, code, message, fileName, span, hint, evidence } = diagnostic;
+      const header = `${severity}[${code}]: ${message}`;
+      const location = ` --> ${fileName}:${span.line}:${span.column}`;
+
+      const source = sourceResolver?.(fileName);
+      if (source === undefined || source.length === 0) {
+        const hintText = hint === undefined ? '' : `\n = note: ${hint}`;
+        return `${header}\n${location}${hintText}`;
+      }
+
+      const lines = source.split(/\r?\n/u);
+      const targetLine = lines[span.line - 1] ?? '';
+      const lineNumberString = String(span.line);
+      const gutterPadding = ' '.repeat(lineNumberString.length);
+
+      const colStart = Math.max(0, span.column - 1);
+      const colEnd = span.endLine === span.line ? Math.max(colStart + 1, span.endColumn - 1) : targetLine.length;
+      const underlineLength = Math.max(1, colEnd - colStart);
+      const caretLine = `${' '.repeat(colStart)}${'^'.repeat(underlineLength)}`;
+
+      const evidenceLines =
+        evidence === undefined || evidence.length === 0
+          ? []
+          : evidence.flatMap((item) => {
+              if (item.span === undefined) return [`${gutterPadding} = evidence: ${item.message}`];
+              const itemLine = lines[item.span.line - 1] ?? '';
+              const itemLineNumber = String(item.span.line);
+              const itemGutter = ' '.repeat(itemLineNumber.length);
+              const itemColStart = Math.max(0, item.span.column - 1);
+              const itemColEnd =
+                item.span.endLine === item.span.line
+                  ? Math.max(itemColStart + 1, item.span.endColumn - 1)
+                  : itemLine.length;
+              const itemUnderline = `${' '.repeat(itemColStart)}${'-'.repeat(Math.max(1, itemColEnd - itemColStart))}`;
+              return [
+                `${itemGutter} |`,
+                `${itemLineNumber} | ${itemLine}`,
+                `${itemGutter} | ${itemUnderline} ${item.message}`,
+              ];
+            });
+
+      const hintText = hint === undefined ? '' : `\n${gutterPadding} = note: ${hint}`;
+      const middleSection = [
+        `${gutterPadding} |`,
+        `${lineNumberString} | ${targetLine}`,
+        `${gutterPadding} | ${caretLine}`,
+        ...evidenceLines,
+      ].join('\n');
+
+      return `${header}\n${location}\n${middleSection}${hintText}`;
+    })
+    .join('\n\n');
 }
 
 /**

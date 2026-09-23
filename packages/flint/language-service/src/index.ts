@@ -5,6 +5,7 @@ export * from './features.js';
 export * from './hover.js';
 export * from './lsif.js';
 export * from './positions.js';
+export * from './query/query-engine.js';
 export * from './symbols.js';
 export * from './tokenization.js';
 export * from './types.js';

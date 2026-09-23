@@ -28,6 +28,7 @@ import {
 import { buildRegexRuntimeBodies, REGEX_RUNTIME_FUNCTION_COUNT } from './regex-runtime.js';
 import { buildStringRuntimeBodies, STRING_RUNTIME_FUNCTION_COUNT } from './string-runtime.js';
 import { renderFlintWasmWat } from './wat.js';
+import { encodeFlintAbiCustomSection } from './sections/custom.js';
 import {
   extractPointeeType,
   lowerFlintWasmFunctionToSsa,
@@ -1115,6 +1116,7 @@ function emitWasm(
   compilerHints: FlintWasmCompilerHints | undefined,
   metadata: FlintWasmBackendInput['metadata'],
   aggregateLayouts: readonly FlintWasmAggregateLayout[] = [],
+  abi?: unknown,
 ): Uint8Array {
   const isMemory64 = targetFeatures?.memory64 === true;
   const foreignImports: {
@@ -3139,6 +3141,9 @@ function emitWasm(
         ...metadata,
         sourceFiles: [...metadata.sourceFiles].toSorted(),
       }),
+      ...(abi !== undefined && typeof abi === 'object' && abi !== null && 'format' in abi
+        ? encodeFlintAbiCustomSection(abi as Parameters<typeof encodeFlintAbiCustomSection>[0])
+        : []),
       ...(encodedDataEntries.length === 0
         ? []
         : section(11, [...unsignedLeb(encodedDataEntries.length), ...encodedDataEntries.flat()])),
@@ -3191,6 +3196,7 @@ function emitVariant(
   targetFeatures: FlintTargetFeatures | undefined,
   compilerHints: FlintWasmCompilerHints | undefined,
   fileName: string,
+  abi?: unknown,
 ): EmittedVariant {
   const lowered = lowerIteratorModule(module);
   const stage = optimizeFlintWasmModule(lowered.module, metadata.optimization);
@@ -3206,7 +3212,7 @@ function emitVariant(
   ];
   if (diagnostics.length > 0) return { wat, diagnostics, iteratorExports: lowered.iteratorExports };
   try {
-    const wasm = emitWasm(stage.module, targetFeatures, compilerHints, metadata, stage.module.aggregateLayouts);
+    const wasm = emitWasm(stage.module, targetFeatures, compilerHints, metadata, stage.module.aggregateLayouts, abi);
     if (!WebAssembly.validate(wasm.buffer as ArrayBuffer)) {
       let validationDetail = '';
       try {
@@ -3252,11 +3258,11 @@ export function compileFlintWasm(input: FlintWasmBackendInput, fileName = '<inpu
   const optimizedStage = optimizeFlintWasmModule(input.optimizedIr, metadata.optimization);
   const wasmPasses = optimizedStage.report.passes.map(({ name, applied, skipped }) => `${name}:${applied}/${skipped}`);
   const backendMetadata = { ...metadata, wasmOptimizationPasses: wasmPasses };
-  const optimized = emitVariant(input.optimizedIr, backendMetadata, targetFeatures, compilerHints, fileName);
+  const optimized = emitVariant(input.optimizedIr, backendMetadata, targetFeatures, compilerHints, fileName, input.abi);
   const diagnostics = [...optimized.diagnostics];
   let unoptimized: EmittedVariant | undefined;
   if (metadata.optimization === 'debug' && diagnostics.length === 0) {
-    unoptimized = emitVariant(input.ir, backendMetadata, targetFeatures, compilerHints, fileName);
+    unoptimized = emitVariant(input.ir, backendMetadata, targetFeatures, compilerHints, fileName, input.abi);
     diagnostics.push(...unoptimized.diagnostics);
   }
   const wasm = optimized.wasm;

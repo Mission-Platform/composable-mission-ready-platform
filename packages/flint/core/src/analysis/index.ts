@@ -4,5 +4,6 @@ export * from './context.js';
 export * from './default-rules.js';
 export * from './facts.js';
 export * from './policy.js';
+export * from './query-engine.js';
 export * from './registry.js';
 export * from './report.js';

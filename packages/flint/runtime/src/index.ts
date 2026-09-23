@@ -14,3 +14,5 @@ export * from './threading.js';
 export * from './iterator.js';
 export * from './parallel.js';
 export * from './safe-heap.js';
+export * from './allocator/slab.js';
+export * from './async/fiber.js';

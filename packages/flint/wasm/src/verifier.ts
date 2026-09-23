@@ -1,3 +1,5 @@
+import { decodeCborAbiManifest } from '@mission-platform/flint-c-abi';
+
 import { parseWasm } from './binary-parser.js';
 import { sha256ArtifactHash } from './hash.js';
 
@@ -138,7 +140,7 @@ export interface FlintWasmArtifactVerificationResult {
 
 const DEFAULT_MAX_BYTES = 16 * 1024 * 1024;
 const DEFAULT_MAX_CUSTOM_SECTION_BYTES = 256 * 1024;
-const DEFAULT_CUSTOM_SECTIONS = ['fws.target-features', 'fws.metadata'];
+const DEFAULT_CUSTOM_SECTIONS = ['fws.target-features', 'fws.metadata', 'flint.abi.v2'];
 const EMPTY_SPAN = { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 } as const;
 
 /** Factory creating a verification diagnostic with standard codes and message. */
@@ -836,6 +838,30 @@ function verifyMetadataCustomSection(
   }
 }
 
+// skipcq: JS-D1001
+function verifyAbiV2CustomSection(
+  parsed: ParsedWasm,
+  fileName: string,
+  diagnostics: FlintWasmArtifactVerificationDiagnostic[],
+): void {
+  const abiSection = parsed.customSections.get('flint.abi.v2');
+  if (abiSection === undefined) return;
+  try {
+    const decoded = decodeCborAbiManifest(abiSection);
+    if (decoded.exports === undefined || !Array.isArray(decoded.exports)) {
+      diagnostics.push(diagnostic('FLINT-ARTIFACT-025', 'Invalid flint.abi.v2 custom section structure.', fileName));
+    }
+  } catch (error) {
+    diagnostics.push(
+      diagnostic(
+        'FLINT-ARTIFACT-025',
+        `Failed to decode flint.abi.v2 custom section: ${error instanceof Error ? error.message : String(error)}.`,
+        fileName,
+      ),
+    );
+  }
+}
+
 // skipcq: JS-D1001, JS-R1005
 function verifyHashes(
   bytes: Uint8Array,
@@ -892,6 +918,7 @@ function verifyVariant(
   verifyCustomSectionsList(parsed, input, fileName, diagnostics);
   verifyFeatureCustomSection(parsed, input, fileName, diagnostics);
   verifyMetadataCustomSection(parsed, input, fileName, diagnostics);
+  verifyAbiV2CustomSection(parsed, fileName, diagnostics);
   verifyHashes(bytes, input, fileName, variant, diagnostics);
 
   return { parsed, diagnostics };
