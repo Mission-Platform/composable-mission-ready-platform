@@ -69,16 +69,33 @@ function resolveOverrideOutDir(overrides: UserConfig, rootDir?: string, outputRo
 
 type BundlerOption = UserConfig['inputOptions'] | UserConfig['outputOptions'];
 
+/** Combine two defined bundler option objects or functions. */
+function combineBundlerOptions<T extends BundlerOption>(base: T, overrides: T): T {
+  if (typeof overrides === 'function' || typeof base === 'function') {
+    return overrides;
+  }
+  return { ...base, ...overrides };
+}
+
 /** Merge bundler options that can be either a function or an options object. */
 function mergeBundlerOptions<T extends BundlerOption>(base?: T, overrides?: T): T | undefined {
-  if (typeof overrides === 'function' || typeof base === 'function') {
-    return (overrides ?? base) as T;
-  }
-  if (base === undefined && overrides === undefined) return undefined;
-  return {
-    ...(typeof base === 'object' ? base : {}),
-    ...(typeof overrides === 'object' ? overrides : {}),
-  } as T;
+  if (overrides === undefined) return base;
+  if (base === undefined) return overrides;
+  return combineBundlerOptions(base, overrides);
+}
+
+/** Resolve effective dts configuration between base and overrides. */
+function resolveMergedDts(baseDts: UserConfig['dts'], overrideDts: UserConfig['dts']): UserConfig['dts'] {
+  return overrideDts === undefined ? baseDts : overrideDts;
+}
+
+/** Concatenate and normalize base and override plugins list. */
+function resolveMergedPlugins(
+  basePlugins: UserConfig['plugins'],
+  overridePlugins: UserConfig['plugins'],
+): UserConfig['plugins'] {
+  const merged = [...flattenPlugins(basePlugins), ...flattenPlugins(overridePlugins)];
+  return merged.length > 0 ? merged : undefined;
 }
 
 /** Deep-merge a base tsdown config with caller overrides (shallow for top-level, concat plugins). */
@@ -93,7 +110,6 @@ function mergeTsdownConfig(
   }
 
   const resolvedOverrides = resolveOverrideOutDir(overrides, rootDir, outputRoot);
-  const mergedPlugins = [...flattenPlugins(base.plugins), ...flattenPlugins(resolvedOverrides.plugins)];
 
   return {
     ...base,
@@ -102,11 +118,11 @@ function mergeTsdownConfig(
       ...base.deps,
       ...resolvedOverrides.deps,
     },
-    dts: resolvedOverrides.dts === undefined ? base.dts : resolvedOverrides.dts,
+    dts: resolveMergedDts(base.dts, resolvedOverrides.dts),
     hooks: resolvedOverrides.hooks ?? base.hooks,
     inputOptions: mergeBundlerOptions(base.inputOptions, resolvedOverrides.inputOptions),
     outputOptions: mergeBundlerOptions(base.outputOptions, resolvedOverrides.outputOptions),
-    plugins: mergedPlugins.length > 0 ? mergedPlugins : undefined,
+    plugins: resolveMergedPlugins(base.plugins, resolvedOverrides.plugins),
   };
 }
 
@@ -542,6 +558,24 @@ function ignoreDisposalRejection(): void {
   // Background fire-and-forget session disposal
 }
 
+/** Check whether component framework building is explicitly skipped in current environment. */
+function isComponentFrameworkBuildSkipped(requestedFramework?: string): boolean {
+  if (requestedFramework === 'none') return true;
+  return process.env.FORGE_CMS_STORYBLOK_TARGET !== undefined && requestedFramework === undefined;
+}
+
+/** Filter framework plugins by an explicit framework target identifier. */
+function filterFrameworksByTarget(
+  selected: readonly FrameworkOutputPlugin[],
+  target: string,
+): readonly FrameworkOutputPlugin[] {
+  const filtered = selected.filter((plugin) => plugin.id === target);
+  if (filtered.length === 0) {
+    throw new Error(`Forge build target "${target}" is not available in the selected framework plugins.`);
+  }
+  return filtered;
+}
+
 /**
  * Filter selected framework output plugins by environment target variables.
  *
@@ -552,19 +586,13 @@ function resolveSelectedComponentFrameworks(
   selected: readonly FrameworkOutputPlugin[],
 ): readonly FrameworkOutputPlugin[] {
   const requestedFramework = process.env.FORGE_FRAMEWORK_TARGET;
-  const cmsOnlyBuild = process.env.FORGE_CMS_STORYBLOK_TARGET !== undefined;
-
-  if (requestedFramework === 'none' || (cmsOnlyBuild && requestedFramework === undefined)) {
+  if (isComponentFrameworkBuildSkipped(requestedFramework)) {
     return [];
   }
   if (requestedFramework === undefined) {
     return selected;
   }
-  const filtered = selected.filter((plugin) => plugin.id === requestedFramework);
-  if (filtered.length === 0) {
-    throw new Error(`Forge build target "${requestedFramework}" is not available in the selected framework plugins.`);
-  }
-  return filtered;
+  return filterFrameworksByTarget(selected, requestedFramework);
 }
 
 /**

@@ -271,18 +271,37 @@ function assertEntriesRecorded(entries: readonly string[], artifacts: ReadonlySe
   }
 }
 
+/** Verify that an on-disk artifact file exists and is a regular file. */
+function assertArtifactFileExists(artifactPath: string, fileName: string): void {
+  if (!existsSync(artifactPath) || !lstatSync(artifactPath).isFile()) {
+    throw new Error(`Forge artifact is missing from the attempt: ${fileName}`);
+  }
+}
+
+/** Verify that artifact file contents match recorded digest and byte size. */
+function assertArtifactContentsMatch(contents: Buffer, artifact: ForgeArtifactRecord): void {
+  if (digest(contents) !== artifact.hash || contents.byteLength !== artifact.size) {
+    throw new Error(`Forge artifact failed validation: ${artifact.fileName}`);
+  }
+}
+
+/** Verify that a single staged artifact matches its recorded metadata on disk. */
+function assertSingleArtifactMatch(stageDirectory: string, artifact: ForgeArtifactRecord): void {
+  const artifactPath = resolveForgeArtifactPath(stageDirectory, artifact.fileName);
+  assertArtifactFileExists(artifactPath, artifact.fileName);
+  assertArtifactContentsMatch(readFileSync(artifactPath), artifact);
+}
+
 /** Verify that on-disk files match recorded sizes and digests in the stage directory. */
 function assertArtifactFilesMatch(stageDirectory: string, artifacts: readonly ForgeArtifactRecord[]): void {
   for (const artifact of artifacts) {
-    const artifactPath = resolveForgeArtifactPath(stageDirectory, artifact.fileName);
-    if (!existsSync(artifactPath) || !lstatSync(artifactPath).isFile()) {
-      throw new Error(`Forge artifact is missing from the attempt: ${artifact.fileName}`);
-    }
-    const contents = readFileSync(artifactPath);
-    if (digest(contents) !== artifact.hash || contents.byteLength !== artifact.size) {
-      throw new Error(`Forge artifact failed validation: ${artifact.fileName}`);
-    }
+    assertSingleArtifactMatch(stageDirectory, artifact);
   }
+}
+
+/** Check whether published artifact exists on disk and its content hash is unchanged. */
+function isArtifactContentUnchanged(filePath: string, expectedHash: string): boolean {
+  return existsSync(filePath) && digest(readFileSync(filePath)) === expectedHash;
 }
 
 /** Restore previous access and modification timestamps for unchanged artifacts. */
@@ -292,7 +311,7 @@ function restoreUnchangedArtifactTimes(
 ): void {
   for (const [fileName, previous] of previousTimes) {
     const currentPath = resolveForgeArtifactPath(safeOutDir, fileName);
-    if (existsSync(currentPath) && digest(readFileSync(currentPath)) === previous.hash) {
+    if (isArtifactContentUnchanged(currentPath, previous.hash)) {
       utimesSync(currentPath, previous.atimeMs / 1000, previous.mtimeMs / 1000);
     }
   }

@@ -33,15 +33,31 @@ function isNativeEntryFile(name: string): boolean {
   return NATIVE_ENTRY_PATTERN.test(name);
 }
 
+/** Recurse into a child directory during entry collection when it is not a symlink. */
+function collectFromChildDirectory(
+  rootDirectory: string,
+  currentDirectory: string,
+  name: string,
+  entries: string[],
+): void {
+  const absolute = path.join(currentDirectory, name);
+  if (!lstatSync(absolute).isSymbolicLink()) {
+    collectNativeEntries(rootDirectory, absolute, entries);
+  }
+}
+
+/** Check if a directory entry is a valid candidate native entry file. */
+function isCandidateEntryFile(entry: { isFile(): boolean; name: string }): boolean {
+  return entry.isFile() && isNativeEntryFile(entry.name);
+}
+
 /** Walk directory tree to find candidate native entry relative paths. */
 function collectNativeEntries(rootDirectory: string, currentDirectory: string, entries: string[]): void {
   for (const entry of readdirSync(currentDirectory, { withFileTypes: true })) {
-    const absolute = path.join(currentDirectory, entry.name);
     if (entry.isDirectory()) {
-      if (!lstatSync(absolute).isSymbolicLink()) {
-        collectNativeEntries(rootDirectory, absolute, entries);
-      }
-    } else if (entry.isFile() && isNativeEntryFile(entry.name)) {
+      collectFromChildDirectory(rootDirectory, currentDirectory, entry.name, entries);
+    } else if (isCandidateEntryFile(entry)) {
+      const absolute = path.join(currentDirectory, entry.name);
       entries.push(path.relative(rootDirectory, absolute).split(path.sep).join('/'));
     }
   }
@@ -60,14 +76,20 @@ function isJavaScriptEntry(entry: { isFile(): boolean; name: string }): boolean 
   return entry.isFile() && entry.name.endsWith('.js');
 }
 
+/** Check if a directory entry or its children contain compiled JavaScript. */
+function entryHasNativeJavaScript(
+  directory: string,
+  entry: { isDirectory(): boolean; isFile(): boolean; name: string },
+): boolean {
+  if (isJavaScriptEntry(entry)) return true;
+  if (!entry.isDirectory()) return false;
+  return hasNativeJavaScript(path.join(directory, entry.name));
+}
+
 /** Recursively check if a directory contains at least one compiled JavaScript file. */
 function hasNativeJavaScript(directory: string): boolean {
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
-    if (isJavaScriptEntry(entry)) return true;
-    if (entry.isDirectory()) {
-      const absolute = path.join(directory, entry.name);
-      if (hasNativeJavaScript(absolute)) return true;
-    }
+    if (entryHasNativeJavaScript(directory, entry)) return true;
   }
   return false;
 }
