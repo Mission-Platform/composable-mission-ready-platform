@@ -280,8 +280,21 @@ export fn is_narrow_glyph_idx(idx: u32) -> bool {
 
 export fn get_glyph_cell_w_u32(idx: u32) -> u32 {
   if idx == 0 { return 8; }
-  if is_narrow_glyph_idx(idx) { return 32; }
-  return 64;
+  let adv: u32 = get_glyph_advance_u32(idx);
+  let u_eight: u32 = 8;
+  let u_three: u32 = 3;
+  let u_two: u32 = 2;
+  let u_one: u32 = 1;
+  let u_twelve: u32 = 12;
+  let u_64: u32 = 64;
+  let mut w: u32 = ((adv * u_eight) / u_three) + u_eight;
+  let rem: u32 = w % u_two;
+  if rem != 0 {
+    w = w + u_one;
+  }
+  if w < u_twelve { w = u_twelve; }
+  if w > u_64 { w = u_64; }
+  return w;
 }
 
 export fn get_glyph_cell_h_u32(idx: u32) -> u32 {
@@ -1739,19 +1752,16 @@ export fn sdf_render_char_cell(
   let weight_bias: u32 = memory_load_u32(228);
   let total_bias: u32 = stroke_bias + weight_bias;
 
-  let step_x: u32 = u_256 / cell_w;
-  let step_y: u32 = u_256 / cell_h;
-  let half_x: u32 = step_x / u_two;
-  let half_y: u32 = step_y / u_two;
-  let mut radius: u32 = step_y * u_two;
+  let u_128: u32 = 128;
+  let mut radius: u32 = (u_256 * u_two) / cell_h;
   if radius < u_eight { radius = u_eight; }
 
   let mut ly: u32 = 0;
   while ly < cell_h {
-    let py: u32 = ly * step_y + half_y;
+    let py: u32 = (ly * u_256 + u_128) / cell_h;
     let mut lx: u32 = 0;
     while lx < cell_w {
-      let px: u32 = lx * step_x + half_x;
+      let px: u32 = (lx * u_256 + u_128) / cell_w;
 
       let mut val_r: u32 = 0;
       let mut val_g: u32 = 0;
@@ -2654,14 +2664,16 @@ export fn sdf_append_text_quads_styled(
         let cell_h_f64: f64 = f64_from_u32(cell_h);
 
         let em_dim_f64: f64 = f64_from_u32(32);
-        let min_x_raw: u32 = get_glyph_min_x_u32(idx);
-        let min_x_f64: f64 = f64_from_u32(min_x_raw) / f64_from_u32(8);
-        let lsb_f64: f64 = f64_from_u32(1);
+        let quad_w_f64: f64 = (cell_w_f64 * em_dim_f64) / f64_from_u32(64);
+        let quad_h_f64: f64 = (cell_h_f64 * em_dim_f64) / f64_from_u32(64);
 
-        let qx0: f64 = cursor_x + ((lsb_f64 - min_x_f64) * scale);
+        let font_design_w_f64: f64 = (cell_w_f64 * f64_from_u32(24)) / f64_from_u32(64);
+        let lsb_f64: f64 = (f64_from_u32(adv_u32) - font_design_w_f64) / f64_from_u32(2);
+
+        let qx0: f64 = cursor_x + (lsb_f64 * scale);
         let qy0: f64 = current_baseline_y - (top_f64 * scale);
-        let qx1: f64 = qx0 + (em_dim_f64 * scale);
-        let qy1: f64 = qy0 + (em_dim_f64 * scale);
+        let qx1: f64 = qx0 + (quad_w_f64 * scale);
+        let qy1: f64 = qy0 + (quad_h_f64 * scale);
 
         let u0: f64 = cell_x_f64 / atlas_size_f64;
         let v0: f64 = cell_y_f64 / atlas_size_f64;
@@ -2825,7 +2837,7 @@ export fn sdf_append_text_quads_mono(
 
       let em_dim_f64: f64 = f64_from_u32(32);
       let min_x_raw: u32 = get_glyph_min_x_u32(idx);
-      let min_x_f64: f64 = f64_from_u32(min_x_raw) / f64_from_u32(8);
+      let min_x_f64: f64 = f64_from_u32(min_x_raw) / f64_from_u32(16);
       let lsb_f64: f64 = f64_from_u32(1);
 
       let qx0: f64 = cursor_x + ((lsb_f64 - min_x_f64) * scale);
@@ -2976,7 +2988,7 @@ export fn sdf_append_text_quads_perspective(
 
       let em_dim_f64: f64 = f64_from_u32(32);
       let min_x_raw: u32 = get_glyph_min_x_u32(idx);
-      let min_x_f64: f64 = f64_from_u32(min_x_raw) / f64_from_u32(8);
+      let min_x_f64: f64 = f64_from_u32(min_x_raw) / f64_from_u32(16);
       let lsb_f64: f64 = f64_from_u32(1);
 
       let raw_qx0: f64 = cursor_x + ((lsb_f64 - min_x_f64) * scale);

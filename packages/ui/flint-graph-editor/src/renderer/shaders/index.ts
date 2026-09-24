@@ -295,18 +295,34 @@ fn median(r: f32, g: f32, b: f32) -> f32 {
 
 @fragment
 fn fs_main(input: VertexOutput) -> @location(0) vec4<f32> {
-  let sample = textureSample(fontTexture, fontSampler, input.uv);
-  let msdf = median(sample.r, sample.g, sample.b);
-  let dist = msdf;
+  let sampleCenter = textureSample(fontTexture, fontSampler, input.uv);
+  
+  let dUV = vec2<f32>(fwidth(input.uv.x), fwidth(input.uv.y)) * 0.35;
+  let s0 = textureSample(fontTexture, fontSampler, input.uv + vec2<f32>(-dUV.x, -dUV.y));
+  let s1 = textureSample(fontTexture, fontSampler, input.uv + vec2<f32>( dUV.x, -dUV.y));
+  let s2 = textureSample(fontTexture, fontSampler, input.uv + vec2<f32>(-dUV.x,  dUV.y));
+  let s3 = textureSample(fontTexture, fontSampler, input.uv + vec2<f32>( dUV.x,  dUV.y));
+
+  let d0 = median(s0.r, s0.g, s0.b);
+  let d1 = median(s1.r, s1.g, s1.b);
+  let d2 = median(s2.r, s2.g, s2.b);
+  let d3 = median(s3.r, s3.g, s3.b);
+  let avgDist = (d0 + d1 + d2 + d3) * 0.25;
+
   let edge = 0.5;
-  let smoothing = clamp(fwidth(dist) * 0.7071, 0.004, 0.12);
-  let alpha = smoothstep(edge - smoothing, edge + smoothing, dist);
+  let smoothing = clamp(fwidth(avgDist) * 0.7071, 0.002, 0.12);
+
+  let a0 = smoothstep(edge - smoothing, edge + smoothing, d0);
+  let a1 = smoothstep(edge - smoothing, edge + smoothing, d1);
+  let a2 = smoothstep(edge - smoothing, edge + smoothing, d2);
+  let a3 = smoothstep(edge - smoothing, edge + smoothing, d3);
+  let alpha = (a0 + a1 + a2 + a3) * 0.25;
 
   if (input.color.a < 0.0) {
-    if (sample.a < 0.01) {
+    if (sampleCenter.a < 0.01) {
       discard;
     }
-    return vec4<f32>(sample.rgb, sample.a * -input.color.a);
+    return vec4<f32>(sampleCenter.rgb, sampleCenter.a * -input.color.a);
   }
 
   if (alpha < 0.01) {

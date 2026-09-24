@@ -1542,21 +1542,33 @@ if (
           return max(min(r, g), min(max(r, g), b));
         }
         void main() {
-          vec4 sample = texture2D(u_fontTexture, v_uv);
+          vec4 sampleCenter = texture2D(u_fontTexture, v_uv);
           if (v_color.a < 0.0) {
-            if (sample.a < 0.01) discard;
-            gl_FragColor = vec4(sample.rgb, sample.a * -v_color.a);
+            if (sampleCenter.a < 0.01) discard;
+            gl_FragColor = vec4(sampleCenter.rgb, sampleCenter.a * -v_color.a);
             return;
           }
-          float msdf = median(sample.r, sample.g, sample.b);
-          float dist = msdf;
-          float edge = 0.5;
           #ifdef GL_OES_standard_derivatives
-            float smoothing = clamp(fwidth(dist) * 0.7071, 0.004, 0.12);
+            vec2 dUV = vec2(dFdx(v_uv.x), dFdy(v_uv.y)) * 0.35;
+            vec4 s0 = texture2D(u_fontTexture, v_uv + vec2(-dUV.x, -dUV.y));
+            vec4 s1 = texture2D(u_fontTexture, v_uv + vec2( dUV.x, -dUV.y));
+            vec4 s2 = texture2D(u_fontTexture, v_uv + vec2(-dUV.x,  dUV.y));
+            vec4 s3 = texture2D(u_fontTexture, v_uv + vec2( dUV.x,  dUV.y));
+            float d0 = median(s0.r, s0.g, s0.b);
+            float d1 = median(s1.r, s1.g, s1.b);
+            float d2 = median(s2.r, s2.g, s2.b);
+            float d3 = median(s3.r, s3.g, s3.b);
+            float avgDist = (d0 + d1 + d2 + d3) * 0.25;
+            float smoothing = clamp(fwidth(avgDist) * 0.7071, 0.002, 0.12);
+            float a0 = smoothstep(0.5 - smoothing, 0.5 + smoothing, d0);
+            float a1 = smoothstep(0.5 - smoothing, 0.5 + smoothing, d1);
+            float a2 = smoothstep(0.5 - smoothing, 0.5 + smoothing, d2);
+            float a3 = smoothstep(0.5 - smoothing, 0.5 + smoothing, d3);
+            float alpha = (a0 + a1 + a2 + a3) * 0.25;
           #else
-            float smoothing = 0.04;
+            float dist = median(sampleCenter.r, sampleCenter.g, sampleCenter.b);
+            float alpha = smoothstep(0.46, 0.54, dist);
           #endif
-          float alpha = smoothstep(edge - smoothing, edge + smoothing, dist);
           if (alpha < 0.01) discard;
           gl_FragColor = vec4(v_color.rgb, v_color.a * alpha);
         }
