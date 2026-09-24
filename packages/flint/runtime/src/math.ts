@@ -37,40 +37,40 @@ export function flintLerp(start: number, end: number, factor: number): number {
 }
 
 /** Step function returning 0 if x < edge, 1 otherwise. */
-export function flintStep(edge: number, x: number): number {
-  return x < edge ? 0 : 1;
+export function flintStep(edge: number, value: number): number {
+  return value < edge ? 0 : 1;
 }
 
 /** Smooth Hermite interpolation between edge0 and edge1. */
-export function flintSmoothstep(edge0: number, edge1: number, x: number): number {
+export function flintSmoothstep(edge0: number, edge1: number, value: number): number {
   if (edge0 === edge1) {
-    return x < edge0 ? 0 : 1;
+    return value < edge0 ? 0 : 1;
   }
-  const factor = flintClamp((x - edge0) / (edge1 - edge0), 0, 1);
+  const factor = flintClamp((value - edge0) / (edge1 - edge0), 0, 1);
   return factor * factor * (3 - 2 * factor);
 }
 
 /** Compute the largest integer less than or equal to x. */
-export function flintFloor(x: number): number {
-  return Math.floor(x);
+export function flintFloor(value: number): number {
+  return Math.floor(value);
 }
 
 /** Compute the smallest integer greater than or equal to x. */
-export function flintCeil(x: number): number {
-  return Math.ceil(x);
+export function flintCeil(value: number): number {
+  return Math.ceil(value);
 }
 
 /** Compute fractional part: x - floor(x). */
-export function flintFract(x: number): number {
-  return x - Math.floor(x);
+export function flintFract(value: number): number {
+  return value - Math.floor(value);
 }
 
 /** Return sign of x (1, -1, 0, or NaN). */
-export function flintSign(x: number): number {
-  if (x === 0 || Number.isNaN(x)) {
-    return x;
+export function flintSign(value: number): number {
+  if (value === 0 || Number.isNaN(value)) {
+    return value;
   }
-  return x > 0 ? 1 : -1;
+  return value > 0 ? 1 : -1;
 }
 
 /** Convert degrees to radians. */
@@ -84,12 +84,12 @@ export function flintDegrees(radians: number): number {
 }
 
 /** Test approximate equality within specified epsilon. */
-export function flintApproxEqual(a: number, b: number, epsilon = FLINT_MATH_EPSILON): boolean {
-  if (a === b) {
+export function flintApproxEqual(first: number, second: number, epsilon = FLINT_MATH_EPSILON): boolean {
+  if (first === second) {
     return true;
   }
-  const difference = Math.abs(a - b);
-  return difference <= epsilon || difference <= Math.max(Math.abs(a), Math.abs(b)) * epsilon;
+  const difference = Math.abs(first - second);
+  return difference <= epsilon || difference <= Math.max(Math.abs(first), Math.abs(second)) * epsilon;
 }
 
 // ==========================================
@@ -131,129 +131,129 @@ export interface FlintIVec3 {
 }
 
 /** Perform create flint vec 2 operation. */
-export function createFlintVec2(x = 0, y = 0): FlintVec2 {
-  return { x, y };
+export function createFlintVec2(coordX = 0, coordY = 0): FlintVec2 {
+  return { x: coordX, y: coordY };
 }
 
 /** Perform vec 2 add operation. */
-export function flintVec2Add(a: FlintVec2, b: FlintVec2): FlintVec2 {
-  return { x: a.x + b.x, y: a.y + b.y };
+export function flintVec2Add(first: FlintVec2, second: FlintVec2): FlintVec2 {
+  return { x: first.x + second.x, y: first.y + second.y };
 }
 
 /** Perform vec 2 sub operation. */
-export function flintVec2Sub(a: FlintVec2, b: FlintVec2): FlintVec2 {
-  return { x: a.x - b.x, y: a.y - b.y };
+export function flintVec2Sub(first: FlintVec2, second: FlintVec2): FlintVec2 {
+  return { x: first.x - second.x, y: first.y - second.y };
 }
 
 /** Perform vec 2 mul operation. */
-export function flintVec2Mul(a: FlintVec2, b: FlintVec2): FlintVec2 {
-  return { x: a.x * b.x, y: a.y * b.y };
+export function flintVec2Mul(first: FlintVec2, second: FlintVec2): FlintVec2 {
+  return { x: first.x * second.x, y: first.y * second.y };
 }
 
 /** Perform vec 2 scale operation. */
-export function flintVec2Scale(v: FlintVec2, scalar: number): FlintVec2 {
-  return { x: v.x * scalar, y: v.y * scalar };
+export function flintVec2Scale(vector: FlintVec2, scalar: number): FlintVec2 {
+  return { x: vector.x * scalar, y: vector.y * scalar };
 }
 
 /** Perform vec 2 div operation. */
-export function flintVec2Div(v: FlintVec2, scalar: number): FlintVec2 {
+export function flintVec2Div(vector: FlintVec2, scalar: number): FlintVec2 {
   const inv = 1 / scalar;
-  return { x: v.x * inv, y: v.y * inv };
+  return { x: vector.x * inv, y: vector.y * inv };
 }
 
 /** Perform vec 2 neg operation. */
-export function flintVec2Neg(v: FlintVec2): FlintVec2 {
-  return { x: -v.x, y: -v.y };
+export function flintVec2Neg(vector: FlintVec2): FlintVec2 {
+  return { x: -vector.x, y: -vector.y };
 }
 
 /** Perform vec 2 dot operation. */
-export function flintVec2Dot(a: FlintVec2, b: FlintVec2): number {
-  return a.x * b.x + a.y * b.y;
+export function flintVec2Dot(first: FlintVec2, second: FlintVec2): number {
+  return first.x * second.x + first.y * second.y;
 }
 
 /** Perform vec 2 perp dot operation. */
-export function flintVec2PerpDot(a: FlintVec2, b: FlintVec2): number {
-  return a.x * b.y - a.y * b.x;
+export function flintVec2PerpDot(first: FlintVec2, second: FlintVec2): number {
+  return first.x * second.y - first.y * second.x;
 }
 
 /** Perform vec 2 length sq operation. */
-export function flintVec2LengthSq(v: FlintVec2): number {
-  return v.x * v.x + v.y * v.y;
+export function flintVec2LengthSq(vector: FlintVec2): number {
+  return vector.x * vector.x + vector.y * vector.y;
 }
 
 /** Perform vec 2 length operation. */
-export function flintVec2Length(v: FlintVec2): number {
-  return Math.hypot(v.x, v.y);
+export function flintVec2Length(vector: FlintVec2): number {
+  return Math.hypot(vector.x, vector.y);
 }
 
 /** Perform vec 2 distance operation. */
-export function flintVec2Distance(a: FlintVec2, b: FlintVec2): number {
-  const dx = a.x - b.x;
-  const dy = a.y - b.y;
+export function flintVec2Distance(first: FlintVec2, second: FlintVec2): number {
+  const dx = first.x - second.x;
+  const dy = first.y - second.y;
   return Math.hypot(dx, dy);
 }
 
 /** Perform vec 2 distance squared operation. */
-export function flintVec2DistanceSquared(a: FlintVec2, b: FlintVec2): number {
-  const dx = a.x - b.x;
-  const dy = a.y - b.y;
+export function flintVec2DistanceSquared(first: FlintVec2, second: FlintVec2): number {
+  const dx = first.x - second.x;
+  const dy = first.y - second.y;
   return dx * dx + dy * dy;
 }
 
 /** Perform vec 2 normalize operation. */
-export function flintVec2Normalize(v: FlintVec2): FlintVec2 {
-  const lengthSq = v.x * v.x + v.y * v.y;
+export function flintVec2Normalize(vector: FlintVec2): FlintVec2 {
+  const lengthSq = vector.x * vector.x + vector.y * vector.y;
   if (lengthSq <= FLINT_MATH_EPSILON) {
     return { x: 0, y: 0 };
   }
   const length = Math.sqrt(lengthSq);
-  return { x: v.x / length, y: v.y / length };
+  return { x: vector.x / length, y: vector.y / length };
 }
 
 /** Perform vec 2 lerp operation. */
-export function flintVec2Lerp(a: FlintVec2, b: FlintVec2, t: number): FlintVec2 {
+export function flintVec2Lerp(first: FlintVec2, second: FlintVec2, factor: number): FlintVec2 {
   return {
-    x: flintLerp(a.x, b.x, t),
-    y: flintLerp(a.y, b.y, t),
+    x: flintLerp(first.x, second.x, factor),
+    y: flintLerp(first.y, second.y, factor),
   };
 }
 
 /** Perform vec 2 reflect operation. */
-export function flintVec2Reflect(v: FlintVec2, normal: FlintVec2): FlintVec2 {
-  const dotFactor = 2 * flintVec2Dot(v, normal);
+export function flintVec2Reflect(vector: FlintVec2, normal: FlintVec2): FlintVec2 {
+  const dotFactor = 2 * flintVec2Dot(vector, normal);
   return {
-    x: v.x - dotFactor * normal.x,
-    y: v.y - dotFactor * normal.y,
+    x: vector.x - dotFactor * normal.x,
+    y: vector.y - dotFactor * normal.y,
   };
 }
 
 /** Perform vec 2 project operation. */
-export function flintVec2Project(v: FlintVec2, onto: FlintVec2): FlintVec2 {
-  const lengthSq = flintVec2LengthSq(onto);
+export function flintVec2Project(vector: FlintVec2, target: FlintVec2): FlintVec2 {
+  const lengthSq = flintVec2LengthSq(target);
   if (lengthSq <= FLINT_MATH_EPSILON) {
     return { x: 0, y: 0 };
   }
-  const factor = flintVec2Dot(v, onto) / lengthSq;
+  const factor = flintVec2Dot(vector, target) / lengthSq;
   return {
-    x: onto.x * factor,
-    y: onto.y * factor,
+    x: target.x * factor,
+    y: target.y * factor,
   };
 }
 
 /** Perform vec 2 rotate operation. */
-export function flintVec2Rotate(v: FlintVec2, angleRad: number): FlintVec2 {
+export function flintVec2Rotate(vector: FlintVec2, angleRad: number): FlintVec2 {
   const cos = Math.cos(angleRad);
   const sin = Math.sin(angleRad);
   return {
-    x: v.x * cos - v.y * sin,
-    y: v.x * sin + v.y * cos,
+    x: vector.x * cos - vector.y * sin,
+    y: vector.x * sin + vector.y * cos,
   };
 }
 
 /** Perform vec 2 angle operation. */
-export function flintVec2Angle(a: FlintVec2, b: FlintVec2): number {
-  const dot = flintVec2Dot(a, b);
-  const lengthProduct = flintVec2Length(a) * flintVec2Length(b);
+export function flintVec2Angle(first: FlintVec2, second: FlintVec2): number {
+  const dot = flintVec2Dot(first, second);
+  const lengthProduct = flintVec2Length(first) * flintVec2Length(second);
   if (lengthProduct <= FLINT_MATH_EPSILON) {
     return 0;
   }
@@ -261,97 +261,97 @@ export function flintVec2Angle(a: FlintVec2, b: FlintVec2): number {
 }
 
 /** Perform create flint vec 3 operation. */
-export function createFlintVec3(x = 0, y = 0, z = 0): FlintVec3 {
-  return { x, y, z };
+export function createFlintVec3(coordX = 0, coordY = 0, coordZ = 0): FlintVec3 {
+  return { x: coordX, y: coordY, z: coordZ };
 }
 
 /** Perform vec 3 add operation. */
-export function flintVec3Add(a: FlintVec3, b: FlintVec3): FlintVec3 {
-  return { x: a.x + b.x, y: a.y + b.y, z: a.z + b.z };
+export function flintVec3Add(first: FlintVec3, second: FlintVec3): FlintVec3 {
+  return { x: first.x + second.x, y: first.y + second.y, z: first.z + second.z };
 }
 
 /** Perform vec 3 sub operation. */
-export function flintVec3Sub(a: FlintVec3, b: FlintVec3): FlintVec3 {
-  return { x: a.x - b.x, y: a.y - b.y, z: a.z - b.z };
+export function flintVec3Sub(first: FlintVec3, second: FlintVec3): FlintVec3 {
+  return { x: first.x - second.x, y: first.y - second.y, z: first.z - second.z };
 }
 
 /** Perform vec 3 mul operation. */
-export function flintVec3Mul(a: FlintVec3, b: FlintVec3): FlintVec3 {
-  return { x: a.x * b.x, y: a.y * b.y, z: a.z * b.z };
+export function flintVec3Mul(first: FlintVec3, second: FlintVec3): FlintVec3 {
+  return { x: first.x * second.x, y: first.y * second.y, z: first.z * second.z };
 }
 
 /** Perform vec 3 scale operation. */
-export function flintVec3Scale(v: FlintVec3, scalar: number): FlintVec3 {
-  return { x: v.x * scalar, y: v.y * scalar, z: v.z * scalar };
+export function flintVec3Scale(vector: FlintVec3, scalar: number): FlintVec3 {
+  return { x: vector.x * scalar, y: vector.y * scalar, z: vector.z * scalar };
 }
 
 /** Perform vec 3 div operation. */
-export function flintVec3Div(v: FlintVec3, scalar: number): FlintVec3 {
+export function flintVec3Div(vector: FlintVec3, scalar: number): FlintVec3 {
   const inv = 1 / scalar;
-  return { x: v.x * inv, y: v.y * inv, z: v.z * inv };
+  return { x: vector.x * inv, y: vector.y * inv, z: vector.z * inv };
 }
 
 /** Perform vec 3 neg operation. */
-export function flintVec3Neg(v: FlintVec3): FlintVec3 {
-  return { x: -v.x, y: -v.y, z: -v.z };
+export function flintVec3Neg(vector: FlintVec3): FlintVec3 {
+  return { x: -vector.x, y: -vector.y, z: -vector.z };
 }
 
 /** Perform vec 3 dot operation. */
-export function flintVec3Dot(a: FlintVec3, b: FlintVec3): number {
-  return a.x * b.x + a.y * b.y + a.z * b.z;
+export function flintVec3Dot(first: FlintVec3, second: FlintVec3): number {
+  return first.x * second.x + first.y * second.y + first.z * second.z;
 }
 
 /** Perform vec 3 cross operation. */
-export function flintVec3Cross(a: FlintVec3, b: FlintVec3): FlintVec3 {
+export function flintVec3Cross(first: FlintVec3, second: FlintVec3): FlintVec3 {
   return {
-    x: a.y * b.z - a.z * b.y,
-    y: a.z * b.x - a.x * b.z,
-    z: a.x * b.y - a.y * b.x,
+    x: first.y * second.z - first.z * second.y,
+    y: first.z * second.x - first.x * second.z,
+    z: first.x * second.y - first.y * second.x,
   };
 }
 
 /** Perform vec 3 length sq operation. */
-export function flintVec3LengthSq(v: FlintVec3): number {
-  return v.x * v.x + v.y * v.y + v.z * v.z;
+export function flintVec3LengthSq(vector: FlintVec3): number {
+  return vector.x * vector.x + vector.y * vector.y + vector.z * vector.z;
 }
 
 /** Perform vec 3 length operation. */
-export function flintVec3Length(v: FlintVec3): number {
-  return Math.hypot(v.x, v.y, v.z);
+export function flintVec3Length(vector: FlintVec3): number {
+  return Math.hypot(vector.x, vector.y, vector.z);
 }
 
 /** Perform vec 3 distance operation. */
-export function flintVec3Distance(a: FlintVec3, b: FlintVec3): number {
-  const dx = a.x - b.x;
-  const dy = a.y - b.y;
-  const dz = a.z - b.z;
+export function flintVec3Distance(first: FlintVec3, second: FlintVec3): number {
+  const dx = first.x - second.x;
+  const dy = first.y - second.y;
+  const dz = first.z - second.z;
   return Math.hypot(dx, dy, dz);
 }
 
 /** Perform vec 3 distance squared operation. */
-export function flintVec3DistanceSquared(a: FlintVec3, b: FlintVec3): number {
-  const dx = a.x - b.x;
-  const dy = a.y - b.y;
-  const dz = a.z - b.z;
+export function flintVec3DistanceSquared(first: FlintVec3, second: FlintVec3): number {
+  const dx = first.x - second.x;
+  const dy = first.y - second.y;
+  const dz = first.z - second.z;
   return dx * dx + dy * dy + dz * dz;
 }
 
 /** Perform vec 3 normalize operation. */
-export function flintVec3Normalize(v: FlintVec3): FlintVec3 {
-  const lengthSq = v.x * v.x + v.y * v.y + v.z * v.z;
+export function flintVec3Normalize(vector: FlintVec3): FlintVec3 {
+  const lengthSq = vector.x * vector.x + vector.y * vector.y + vector.z * vector.z;
   if (lengthSq <= FLINT_MATH_EPSILON) {
     return { x: 0, y: 0, z: 0 };
   }
   const length = Math.sqrt(lengthSq);
-  return { x: v.x / length, y: v.y / length, z: v.z / length };
+  return { x: vector.x / length, y: vector.y / length, z: vector.z / length };
 }
 
 /** Perform vec 3 lerp operation. */
-export function flintVec3Lerp(a: FlintVec3, b: FlintVec3, t: number): FlintVec3 {
+export function flintVec3Lerp(first: FlintVec3, second: FlintVec3, factor: number): FlintVec3 {
   return {
-    x: flintLerp(a.x, b.x, t),
-    y: flintLerp(a.y, b.y, t),
-    z: flintLerp(a.z, b.z, t),
+    x: flintLerp(first.x, second.x, factor),
+    y: flintLerp(first.y, second.y, factor),
+    z: flintLerp(first.z, second.z, factor),
   };
 }
 
@@ -375,49 +375,49 @@ export function flintVec3Slerp(a: FlintVec3, b: FlintVec3, t: number): FlintVec3
 }
 
 /** Perform vec 3 reflect operation. */
-export function flintVec3Reflect(v: FlintVec3, normal: FlintVec3): FlintVec3 {
-  const dotFactor = 2 * flintVec3Dot(v, normal);
+export function flintVec3Reflect(vector: FlintVec3, normal: FlintVec3): FlintVec3 {
+  const dotFactor = 2 * flintVec3Dot(vector, normal);
   return {
-    x: v.x - dotFactor * normal.x,
-    y: v.y - dotFactor * normal.y,
-    z: v.z - dotFactor * normal.z,
+    x: vector.x - dotFactor * normal.x,
+    y: vector.y - dotFactor * normal.y,
+    z: vector.z - dotFactor * normal.z,
   };
 }
 
 /** Perform vec 3 refract operation. */
-export function flintVec3Refract(v: FlintVec3, normal: FlintVec3, eta: number): FlintVec3 {
-  const dot = flintVec3Dot(v, normal);
+export function flintVec3Refract(vector: FlintVec3, normal: FlintVec3, eta: number): FlintVec3 {
+  const dot = flintVec3Dot(vector, normal);
   const discriminant = 1 - eta * eta * (1 - dot * dot);
   if (discriminant < 0) {
     return { x: 0, y: 0, z: 0 };
   }
-  return flintVec3Sub(flintVec3Scale(v, eta), flintVec3Scale(normal, eta * dot + Math.sqrt(discriminant)));
+  return flintVec3Sub(flintVec3Scale(vector, eta), flintVec3Scale(normal, eta * dot + Math.sqrt(discriminant)));
 }
 
 /** Perform vec 3 project operation. */
-export function flintVec3Project(v: FlintVec3, onto: FlintVec3): FlintVec3 {
-  const lengthSq = flintVec3LengthSq(onto);
+export function flintVec3Project(vector: FlintVec3, target: FlintVec3): FlintVec3 {
+  const lengthSq = flintVec3LengthSq(target);
   if (lengthSq <= FLINT_MATH_EPSILON) {
     return { x: 0, y: 0, z: 0 };
   }
-  const factor = flintVec3Dot(v, onto) / lengthSq;
+  const factor = flintVec3Dot(vector, target) / lengthSq;
   return {
-    x: onto.x * factor,
-    y: onto.y * factor,
-    z: onto.z * factor,
+    x: target.x * factor,
+    y: target.y * factor,
+    z: target.z * factor,
   };
 }
 
 /** Perform vec 3 reject operation. */
-export function flintVec3Reject(v: FlintVec3, from: FlintVec3): FlintVec3 {
-  const proj = flintVec3Project(v, from);
-  return flintVec3Sub(v, proj);
+export function flintVec3Reject(vector: FlintVec3, from: FlintVec3): FlintVec3 {
+  const proj = flintVec3Project(vector, from);
+  return flintVec3Sub(vector, proj);
 }
 
 /** Perform vec 3 angle operation. */
-export function flintVec3Angle(a: FlintVec3, b: FlintVec3): number {
-  const dot = flintVec3Dot(a, b);
-  const lengthProduct = flintVec3Length(a) * flintVec3Length(b);
+export function flintVec3Angle(first: FlintVec3, second: FlintVec3): number {
+  const dot = flintVec3Dot(first, second);
+  const lengthProduct = flintVec3Length(first) * flintVec3Length(second);
   if (lengthProduct <= FLINT_MATH_EPSILON) {
     return 0;
   }
@@ -425,74 +425,74 @@ export function flintVec3Angle(a: FlintVec3, b: FlintVec3): number {
 }
 
 /** Perform create flint vec 4 operation. */
-export function createFlintVec4(x = 0, y = 0, z = 0, w = 0): FlintVec4 {
-  return { x, y, z, w };
+export function createFlintVec4(coordX = 0, coordY = 0, coordZ = 0, coordW = 0): FlintVec4 {
+  return { x: coordX, y: coordY, z: coordZ, w: coordW };
 }
 
 /** Perform vec 4 add operation. */
-export function flintVec4Add(a: FlintVec4, b: FlintVec4): FlintVec4 {
-  return { x: a.x + b.x, y: a.y + b.y, z: a.z + b.z, w: a.w + b.w };
+export function flintVec4Add(first: FlintVec4, second: FlintVec4): FlintVec4 {
+  return { x: first.x + second.x, y: first.y + second.y, z: first.z + second.z, w: first.w + second.w };
 }
 
 /** Perform vec 4 sub operation. */
-export function flintVec4Sub(a: FlintVec4, b: FlintVec4): FlintVec4 {
-  return { x: a.x - b.x, y: a.y - b.y, z: a.z - b.z, w: a.w - b.w };
+export function flintVec4Sub(first: FlintVec4, second: FlintVec4): FlintVec4 {
+  return { x: first.x - second.x, y: first.y - second.y, z: first.z - second.z, w: first.w - second.w };
 }
 
 /** Perform vec 4 scale operation. */
-export function flintVec4Scale(v: FlintVec4, scalar: number): FlintVec4 {
-  return { x: v.x * scalar, y: v.y * scalar, z: v.z * scalar, w: v.w * scalar };
+export function flintVec4Scale(vector: FlintVec4, scalar: number): FlintVec4 {
+  return { x: vector.x * scalar, y: vector.y * scalar, z: vector.z * scalar, w: vector.w * scalar };
 }
 
 /** Perform vec 4 div operation. */
-export function flintVec4Div(v: FlintVec4, scalar: number): FlintVec4 {
+export function flintVec4Div(vector: FlintVec4, scalar: number): FlintVec4 {
   const inv = 1 / scalar;
-  return { x: v.x * inv, y: v.y * inv, z: v.z * inv, w: v.w * inv };
+  return { x: vector.x * inv, y: vector.y * inv, z: vector.z * inv, w: vector.w * inv };
 }
 
 /** Perform vec 4 neg operation. */
-export function flintVec4Neg(v: FlintVec4): FlintVec4 {
-  return { x: -v.x, y: -v.y, z: -v.z, w: -v.w };
+export function flintVec4Neg(vector: FlintVec4): FlintVec4 {
+  return { x: -vector.x, y: -vector.y, z: -vector.z, w: -vector.w };
 }
 
 /** Perform vec 4 dot operation. */
-export function flintVec4Dot(a: FlintVec4, b: FlintVec4): number {
-  return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+export function flintVec4Dot(first: FlintVec4, second: FlintVec4): number {
+  return first.x * second.x + first.y * second.y + first.z * second.z + first.w * second.w;
 }
 
 /** Perform vec 4 length operation. */
-export function flintVec4Length(v: FlintVec4): number {
-  return Math.hypot(v.x, v.y, v.z, v.w);
+export function flintVec4Length(vector: FlintVec4): number {
+  return Math.hypot(vector.x, vector.y, vector.z, vector.w);
 }
 
 /** Perform vec 4 normalize operation. */
-export function flintVec4Normalize(v: FlintVec4): FlintVec4 {
-  const lengthSq = v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w;
+export function flintVec4Normalize(vector: FlintVec4): FlintVec4 {
+  const lengthSq = vector.x * vector.x + vector.y * vector.y + vector.z * vector.z + vector.w * vector.w;
   if (lengthSq <= FLINT_MATH_EPSILON) {
     return { x: 0, y: 0, z: 0, w: 0 };
   }
   const length = Math.sqrt(lengthSq);
-  return { x: v.x / length, y: v.y / length, z: v.z / length, w: v.w / length };
+  return { x: vector.x / length, y: vector.y / length, z: vector.z / length, w: vector.w / length };
 }
 
 /** Perform vec 4 lerp operation. */
-export function flintVec4Lerp(a: FlintVec4, b: FlintVec4, t: number): FlintVec4 {
+export function flintVec4Lerp(first: FlintVec4, second: FlintVec4, factor: number): FlintVec4 {
   return {
-    x: flintLerp(a.x, b.x, t),
-    y: flintLerp(a.y, b.y, t),
-    z: flintLerp(a.z, b.z, t),
-    w: flintLerp(a.w, b.w, t),
+    x: flintLerp(first.x, second.x, factor),
+    y: flintLerp(first.y, second.y, factor),
+    z: flintLerp(first.z, second.z, factor),
+    w: flintLerp(first.w, second.w, factor),
   };
 }
 
 /** Perform create flint i vec 2 operation. */
-export function createFlintIVec2(x = 0, y = 0): FlintIVec2 {
-  return { x: Math.trunc(x), y: Math.trunc(y) };
+export function createFlintIVec2(coordX = 0, coordY = 0): FlintIVec2 {
+  return { x: Math.trunc(coordX), y: Math.trunc(coordY) };
 }
 
 /** Perform create flint i vec 3 operation. */
-export function createFlintIVec3(x = 0, y = 0, z = 0): FlintIVec3 {
-  return { x: Math.trunc(x), y: Math.trunc(y), z: Math.trunc(z) };
+export function createFlintIVec3(coordX = 0, coordY = 0, coordZ = 0): FlintIVec3 {
+  return { x: Math.trunc(coordX), y: Math.trunc(coordY), z: Math.trunc(coordZ) };
 }
 
 // ==========================================
@@ -541,9 +541,9 @@ export interface FlintMat4 {
 }
 
 /** Perform create flint mat 2 operation. */
-export function createFlintMat2(c0OrElements?: FlintVec2 | readonly number[], c1?: FlintVec2): FlintMat2 {
-  if (Array.isArray(c0OrElements)) {
-    const element = c0OrElements;
+export function createFlintMat2(column0OrElements?: FlintVec2 | readonly number[], column1?: FlintVec2): FlintMat2 {
+  if (Array.isArray(column0OrElements)) {
+    const element = column0OrElements;
     const col0 = { x: element[0] ?? 0, y: element[1] ?? 0 };
     const col1 = { x: element[2] ?? 0, y: element[3] ?? 0 };
     return {
@@ -553,10 +553,10 @@ export function createFlintMat2(c0OrElements?: FlintVec2 | readonly number[], c1
     };
   }
   let col0: FlintVec2 = { x: 0, y: 0 };
-  if (c0OrElements && typeof c0OrElements === 'object' && 'x' in c0OrElements) {
-    col0 = c0OrElements;
+  if (column0OrElements && typeof column0OrElements === 'object' && 'x' in column0OrElements) {
+    col0 = column0OrElements;
   }
-  const col1 = c1 ?? { x: 0, y: 0 };
+  const col1 = column1 ?? { x: 0, y: 0 };
   return {
     c0: col0,
     c1: col1,
@@ -570,66 +570,69 @@ export function flintMat2Identity(): FlintMat2 {
 }
 
 /** Perform mat 2 from cols operation. */
-export function flintMat2FromCols(c0: FlintVec2, c1: FlintVec2): FlintMat2 {
-  return createFlintMat2(c0, c1);
+export function flintMat2FromCols(column0: FlintVec2, column1: FlintVec2): FlintMat2 {
+  return createFlintMat2(column0, column1);
 }
 
 /** Perform mat 2 add operation. */
-export function flintMat2Add(a: FlintMat2, b: FlintMat2): FlintMat2 {
-  return createFlintMat2(flintVec2Add(a.c0, b.c0), flintVec2Add(a.c1, b.c1));
+export function flintMat2Add(first: FlintMat2, second: FlintMat2): FlintMat2 {
+  return createFlintMat2(flintVec2Add(first.c0, second.c0), flintVec2Add(first.c1, second.c1));
 }
 
 /** Perform mat 2 sub operation. */
-export function flintMat2Sub(a: FlintMat2, b: FlintMat2): FlintMat2 {
-  return createFlintMat2(flintVec2Sub(a.c0, b.c0), flintVec2Sub(a.c1, b.c1));
+export function flintMat2Sub(first: FlintMat2, second: FlintMat2): FlintMat2 {
+  return createFlintMat2(flintVec2Sub(first.c0, second.c0), flintVec2Sub(first.c1, second.c1));
 }
 
 /** Perform mat 2 scale operation. */
-export function flintMat2Scale(m: FlintMat2, scalar: number): FlintMat2 {
-  return createFlintMat2(flintVec2Scale(m.c0, scalar), flintVec2Scale(m.c1, scalar));
+export function flintMat2Scale(matrix: FlintMat2, scalar: number): FlintMat2 {
+  return createFlintMat2(flintVec2Scale(matrix.c0, scalar), flintVec2Scale(matrix.c1, scalar));
 }
 
 /** Perform mat 2 mul operation. */
-export function flintMat2Mul(a: FlintMat2, b: FlintMat2): FlintMat2 {
+export function flintMat2Mul(first: FlintMat2, second: FlintMat2): FlintMat2 {
   return createFlintMat2(
     {
-      x: a.c0.x * b.c0.x + a.c1.x * b.c0.y,
-      y: a.c0.y * b.c0.x + a.c1.y * b.c0.y,
+      x: first.c0.x * second.c0.x + first.c1.x * second.c0.y,
+      y: first.c0.y * second.c0.x + first.c1.y * second.c0.y,
     },
     {
-      x: a.c0.x * b.c1.x + a.c1.x * b.c1.y,
-      y: a.c0.y * b.c1.x + a.c1.y * b.c1.y,
+      x: first.c0.x * second.c1.x + first.c1.x * second.c1.y,
+      y: first.c0.y * second.c1.x + first.c1.y * second.c1.y,
     },
   );
 }
 
 /** Perform mat 2 transform vec 2 operation. */
-export function flintMat2TransformVec2(m: FlintMat2, v: FlintVec2): FlintVec2 {
+export function flintMat2TransformVec2(matrix: FlintMat2, vector: FlintVec2): FlintVec2 {
   return {
-    x: m.c0.x * v.x + m.c1.x * v.y,
-    y: m.c0.y * v.x + m.c1.y * v.y,
+    x: matrix.c0.x * vector.x + matrix.c1.x * vector.y,
+    y: matrix.c0.y * vector.x + matrix.c1.y * vector.y,
   };
 }
 
 /** Perform mat 2 transpose operation. */
-export function flintMat2Transpose(m: FlintMat2): FlintMat2 {
-  return createFlintMat2({ x: m.c0.x, y: m.c1.x }, { x: m.c0.y, y: m.c1.y });
+export function flintMat2Transpose(matrix: FlintMat2): FlintMat2 {
+  return createFlintMat2({ x: matrix.c0.x, y: matrix.c1.x }, { x: matrix.c0.y, y: matrix.c1.y });
 }
 
 /** Perform mat 2 determinant operation. */
-export function flintMat2Determinant(m: FlintMat2): number {
-  return m.c0.x * m.c1.y - m.c1.x * m.c0.y;
+export function flintMat2Determinant(matrix: FlintMat2): number {
+  return matrix.c0.x * matrix.c1.y - matrix.c1.x * matrix.c0.y;
 }
 
 /** Perform mat 2 inverse operation. */
-export function flintMat2Inverse(m: FlintMat2): FlintOption<FlintMat2> {
-  const det = flintMat2Determinant(m);
+export function flintMat2Inverse(matrix: FlintMat2): FlintOption<FlintMat2> {
+  const det = flintMat2Determinant(matrix);
   if (Math.abs(det) <= FLINT_MATH_EPSILON) {
     return flintNone();
   }
   const invDet = 1 / det;
   return flintSome(
-    createFlintMat2({ x: m.c1.y * invDet, y: -m.c0.y * invDet }, { x: -m.c1.x * invDet, y: m.c0.x * invDet }),
+    createFlintMat2(
+      { x: matrix.c1.y * invDet, y: -matrix.c0.y * invDet },
+      { x: -matrix.c1.x * invDet, y: matrix.c0.x * invDet },
+    ),
   );
 }
 
@@ -641,18 +644,18 @@ export function flintMat2Rotation(angleRad: number): FlintMat2 {
 }
 
 /** Perform mat 2 scaling operation. */
-export function flintMat2Scaling(s: FlintVec2): FlintMat2 {
-  return createFlintMat2({ x: s.x, y: 0 }, { x: 0, y: s.y });
+export function flintMat2Scaling(scaleVector: FlintVec2): FlintMat2 {
+  return createFlintMat2({ x: scaleVector.x, y: 0 }, { x: 0, y: scaleVector.y });
 }
 
 /** Perform create flint mat 3 operation. */
 export function createFlintMat3(
-  c0OrElements?: FlintVec3 | readonly number[],
-  c1?: FlintVec3,
-  c2?: FlintVec3,
+  column0OrElements?: FlintVec3 | readonly number[],
+  column1?: FlintVec3,
+  column2?: FlintVec3,
 ): FlintMat3 {
-  if (Array.isArray(c0OrElements)) {
-    const element = c0OrElements;
+  if (Array.isArray(column0OrElements)) {
+    const element = column0OrElements;
     const col0 = { x: element[0] ?? 0, y: element[1] ?? 0, z: element[2] ?? 0 };
     const col1 = { x: element[3] ?? 0, y: element[4] ?? 0, z: element[5] ?? 0 };
     const col2 = { x: element[6] ?? 0, y: element[7] ?? 0, z: element[8] ?? 0 };
@@ -664,11 +667,11 @@ export function createFlintMat3(
     };
   }
   let col0: FlintVec3 = { x: 0, y: 0, z: 0 };
-  if (c0OrElements && typeof c0OrElements === 'object' && 'x' in c0OrElements) {
-    col0 = c0OrElements;
+  if (column0OrElements && typeof column0OrElements === 'object' && 'x' in column0OrElements) {
+    col0 = column0OrElements;
   }
-  const col1 = c1 ?? { x: 0, y: 0, z: 0 };
-  const col2 = c2 ?? { x: 0, y: 0, z: 0 };
+  const col1 = column1 ?? { x: 0, y: 0, z: 0 };
+  const col2 = column2 ?? { x: 0, y: 0, z: 0 };
   return {
     c0: col0,
     c1: col1,
@@ -683,84 +686,96 @@ export function flintMat3Identity(): FlintMat3 {
 }
 
 /** Perform mat 3 from cols operation. */
-export function flintMat3FromCols(c0: FlintVec3, c1: FlintVec3, c2: FlintVec3): FlintMat3 {
-  return createFlintMat3(c0, c1, c2);
+export function flintMat3FromCols(column0: FlintVec3, column1: FlintVec3, column2: FlintVec3): FlintMat3 {
+  return createFlintMat3(column0, column1, column2);
 }
 
 /** Perform mat 3 add operation. */
-export function flintMat3Add(a: FlintMat3, b: FlintMat3): FlintMat3 {
-  return createFlintMat3(flintVec3Add(a.c0, b.c0), flintVec3Add(a.c1, b.c1), flintVec3Add(a.c2, b.c2));
+export function flintMat3Add(first: FlintMat3, second: FlintMat3): FlintMat3 {
+  return createFlintMat3(
+    flintVec3Add(first.c0, second.c0),
+    flintVec3Add(first.c1, second.c1),
+    flintVec3Add(first.c2, second.c2),
+  );
 }
 
 /** Perform mat 3 sub operation. */
-export function flintMat3Sub(a: FlintMat3, b: FlintMat3): FlintMat3 {
-  return createFlintMat3(flintVec3Sub(a.c0, b.c0), flintVec3Sub(a.c1, b.c1), flintVec3Sub(a.c2, b.c2));
+export function flintMat3Sub(first: FlintMat3, second: FlintMat3): FlintMat3 {
+  return createFlintMat3(
+    flintVec3Sub(first.c0, second.c0),
+    flintVec3Sub(first.c1, second.c1),
+    flintVec3Sub(first.c2, second.c2),
+  );
 }
 
 /** Perform mat 3 scale operation. */
-export function flintMat3Scale(m: FlintMat3, scalar: number): FlintMat3 {
-  return createFlintMat3(flintVec3Scale(m.c0, scalar), flintVec3Scale(m.c1, scalar), flintVec3Scale(m.c2, scalar));
+export function flintMat3Scale(matrix: FlintMat3, scalar: number): FlintMat3 {
+  return createFlintMat3(
+    flintVec3Scale(matrix.c0, scalar),
+    flintVec3Scale(matrix.c1, scalar),
+    flintVec3Scale(matrix.c2, scalar),
+  );
 }
 
 /** Perform mat 3 mul operation. */
-export function flintMat3Mul(a: FlintMat3, b: FlintMat3): FlintMat3 {
+export function flintMat3Mul(first: FlintMat3, second: FlintMat3): FlintMat3 {
   return createFlintMat3(
     {
-      x: a.c0.x * b.c0.x + a.c1.x * b.c0.y + a.c2.x * b.c0.z,
-      y: a.c0.y * b.c0.x + a.c1.y * b.c0.y + a.c2.y * b.c0.z,
-      z: a.c0.z * b.c0.x + a.c1.z * b.c0.y + a.c2.z * b.c0.z,
+      x: first.c0.x * second.c0.x + first.c1.x * second.c0.y + first.c2.x * second.c0.z,
+      y: first.c0.y * second.c0.x + first.c1.y * second.c0.y + first.c2.y * second.c0.z,
+      z: first.c0.z * second.c0.x + first.c1.z * second.c0.y + first.c2.z * second.c0.z,
     },
     {
-      x: a.c0.x * b.c1.x + a.c1.x * b.c1.y + a.c2.x * b.c1.z,
-      y: a.c0.y * b.c1.x + a.c1.y * b.c1.y + a.c2.y * b.c1.z,
-      z: a.c0.z * b.c1.x + a.c1.z * b.c1.y + a.c2.z * b.c1.z,
+      x: first.c0.x * second.c1.x + first.c1.x * second.c1.y + first.c2.x * second.c1.z,
+      y: first.c0.y * second.c1.x + first.c1.y * second.c1.y + first.c2.y * second.c1.z,
+      z: first.c0.z * second.c1.x + first.c1.z * second.c1.y + first.c2.z * second.c1.z,
     },
     {
-      x: a.c0.x * b.c2.x + a.c1.x * b.c2.y + a.c2.x * b.c2.z,
-      y: a.c0.y * b.c2.x + a.c1.y * b.c2.y + a.c2.y * b.c2.z,
-      z: a.c0.z * b.c2.x + a.c1.z * b.c2.y + a.c2.z * b.c2.z,
+      x: first.c0.x * second.c2.x + first.c1.x * second.c2.y + first.c2.x * second.c2.z,
+      y: first.c0.y * second.c2.x + first.c1.y * second.c2.y + first.c2.y * second.c2.z,
+      z: first.c0.z * second.c2.x + first.c1.z * second.c2.y + first.c2.z * second.c2.z,
     },
   );
 }
 
 /** Perform mat 3 transform vec 3 operation. */
-export function flintMat3TransformVec3(m: FlintMat3, v: FlintVec3): FlintVec3 {
+export function flintMat3TransformVec3(matrix: FlintMat3, vector: FlintVec3): FlintVec3 {
   return {
-    x: m.c0.x * v.x + m.c1.x * v.y + m.c2.x * v.z,
-    y: m.c0.y * v.x + m.c1.y * v.y + m.c2.y * v.z,
-    z: m.c0.z * v.x + m.c1.z * v.y + m.c2.z * v.z,
+    x: matrix.c0.x * vector.x + matrix.c1.x * vector.y + matrix.c2.x * vector.z,
+    y: matrix.c0.y * vector.x + matrix.c1.y * vector.y + matrix.c2.y * vector.z,
+    z: matrix.c0.z * vector.x + matrix.c1.z * vector.y + matrix.c2.z * vector.z,
   };
 }
 
 /** Perform mat 3 transform vec 2 operation. */
-export function flintMat3TransformVec2(m: FlintMat3, v: FlintVec2): FlintVec2 {
+export function flintMat3TransformVec2(matrix: FlintMat3, vector: FlintVec2): FlintVec2 {
   return {
-    x: m.c0.x * v.x + m.c1.x * v.y + m.c2.x,
-    y: m.c0.y * v.x + m.c1.y * v.y + m.c2.y,
+    x: matrix.c0.x * vector.x + matrix.c1.x * vector.y + matrix.c2.x,
+    y: matrix.c0.y * vector.x + matrix.c1.y * vector.y + matrix.c2.y,
   };
 }
 
 /** Perform mat 3 transpose operation. */
-export function flintMat3Transpose(m: FlintMat3): FlintMat3 {
+export function flintMat3Transpose(matrix: FlintMat3): FlintMat3 {
   return createFlintMat3(
-    { x: m.c0.x, y: m.c1.x, z: m.c2.x },
-    { x: m.c0.y, y: m.c1.y, z: m.c2.y },
-    { x: m.c0.z, y: m.c1.z, z: m.c2.z },
+    { x: matrix.c0.x, y: matrix.c1.x, z: matrix.c2.x },
+    { x: matrix.c0.y, y: matrix.c1.y, z: matrix.c2.y },
+    { x: matrix.c0.z, y: matrix.c1.z, z: matrix.c2.z },
   );
 }
 
 /** Perform mat 3 determinant operation. */
-export function flintMat3Determinant(m: FlintMat3): number {
+export function flintMat3Determinant(matrix: FlintMat3): number {
   return (
-    m.c0.x * (m.c1.y * m.c2.z - m.c2.y * m.c1.z) -
-    m.c1.x * (m.c0.y * m.c2.z - m.c2.y * m.c0.z) +
-    m.c2.x * (m.c0.y * m.c1.z - m.c1.y * m.c0.z)
+    matrix.c0.x * (matrix.c1.y * matrix.c2.z - matrix.c2.y * matrix.c1.z) -
+    matrix.c1.x * (matrix.c0.y * matrix.c2.z - matrix.c2.y * matrix.c0.z) +
+    matrix.c2.x * (matrix.c0.y * matrix.c1.z - matrix.c1.y * matrix.c0.z)
   );
 }
 
 /** Perform mat 3 inverse operation. */
-export function flintMat3Inverse(m: FlintMat3): FlintOption<FlintMat3> {
-  const det = flintMat3Determinant(m);
+export function flintMat3Inverse(matrix: FlintMat3): FlintOption<FlintMat3> {
+  const det = flintMat3Determinant(matrix);
   if (Math.abs(det) <= FLINT_MATH_EPSILON) {
     return flintNone();
   }
@@ -768,19 +783,19 @@ export function flintMat3Inverse(m: FlintMat3): FlintOption<FlintMat3> {
   return flintSome(
     createFlintMat3(
       {
-        x: (m.c1.y * m.c2.z - m.c2.y * m.c1.z) * invDet,
-        y: (m.c2.y * m.c0.z - m.c0.y * m.c2.z) * invDet,
-        z: (m.c0.y * m.c1.z - m.c1.y * m.c0.z) * invDet,
+        x: (matrix.c1.y * matrix.c2.z - matrix.c2.y * matrix.c1.z) * invDet,
+        y: (matrix.c2.y * matrix.c0.z - matrix.c0.y * matrix.c2.z) * invDet,
+        z: (matrix.c0.y * matrix.c1.z - matrix.c1.y * matrix.c0.z) * invDet,
       },
       {
-        x: (m.c2.x * m.c1.z - m.c1.x * m.c2.z) * invDet,
-        y: (m.c0.x * m.c2.z - m.c2.x * m.c0.z) * invDet,
-        z: (m.c1.x * m.c0.z - m.c0.x * m.c1.z) * invDet,
+        x: (matrix.c2.x * matrix.c1.z - matrix.c1.x * matrix.c2.z) * invDet,
+        y: (matrix.c0.x * matrix.c2.z - matrix.c2.x * matrix.c0.z) * invDet,
+        z: (matrix.c1.x * matrix.c0.z - matrix.c0.x * matrix.c1.z) * invDet,
       },
       {
-        x: (m.c1.x * m.c2.y - m.c2.x * m.c1.y) * invDet,
-        y: (m.c2.x * m.c0.y - m.c0.x * m.c2.y) * invDet,
-        z: (m.c0.x * m.c1.y - m.c1.x * m.c0.y) * invDet,
+        x: (matrix.c1.x * matrix.c2.y - matrix.c2.x * matrix.c1.y) * invDet,
+        y: (matrix.c2.x * matrix.c0.y - matrix.c0.x * matrix.c2.y) * invDet,
+        z: (matrix.c0.x * matrix.c1.y - matrix.c1.x * matrix.c0.y) * invDet,
       },
     ),
   );
@@ -805,13 +820,13 @@ export function flintMat3Scale2D(scale: FlintVec2): FlintMat3 {
 
 /** Perform create flint mat 4 operation. */
 export function createFlintMat4(
-  c0OrElements?: FlintVec4 | readonly number[],
-  c1?: FlintVec4,
-  c2?: FlintVec4,
-  c3?: FlintVec4,
+  column0OrElements?: FlintVec4 | readonly number[],
+  column1?: FlintVec4,
+  column2?: FlintVec4,
+  column3?: FlintVec4,
 ): FlintMat4 {
-  if (Array.isArray(c0OrElements)) {
-    const element = c0OrElements;
+  if (Array.isArray(column0OrElements)) {
+    const element = column0OrElements;
     const col0 = { x: element[0] ?? 0, y: element[1] ?? 0, z: element[2] ?? 0, w: element[3] ?? 0 };
     const col1 = { x: element[4] ?? 0, y: element[5] ?? 0, z: element[6] ?? 0, w: element[7] ?? 0 };
     const col2 = { x: element[8] ?? 0, y: element[9] ?? 0, z: element[10] ?? 0, w: element[11] ?? 0 };
@@ -842,12 +857,12 @@ export function createFlintMat4(
     };
   }
   let col0: FlintVec4 = { x: 0, y: 0, z: 0, w: 0 };
-  if (c0OrElements && typeof c0OrElements === 'object' && 'x' in c0OrElements) {
-    col0 = c0OrElements;
+  if (column0OrElements && typeof column0OrElements === 'object' && 'x' in column0OrElements) {
+    col0 = column0OrElements;
   }
-  const col1 = c1 ?? { x: 0, y: 0, z: 0, w: 0 };
-  const col2 = c2 ?? { x: 0, y: 0, z: 0, w: 0 };
-  const col3 = c3 ?? { x: 0, y: 0, z: 0, w: 0 };
+  const col1 = column1 ?? { x: 0, y: 0, z: 0, w: 0 };
+  const col2 = column2 ?? { x: 0, y: 0, z: 0, w: 0 };
+  const col3 = column3 ?? { x: 0, y: 0, z: 0, w: 0 };
   return {
     c0: col0,
     c1: col1,
@@ -885,77 +900,82 @@ export function flintMat4Identity(): FlintMat4 {
 }
 
 /** Perform mat 4 from cols operation. */
-export function flintMat4FromCols(c0: FlintVec4, c1: FlintVec4, c2: FlintVec4, c3: FlintVec4): FlintMat4 {
-  return createFlintMat4(c0, c1, c2, c3);
+export function flintMat4FromCols(
+  column0: FlintVec4,
+  column1: FlintVec4,
+  column2: FlintVec4,
+  column3: FlintVec4,
+): FlintMat4 {
+  return createFlintMat4(column0, column1, column2, column3);
 }
 
 /** Perform mat 4 add operation. */
-export function flintMat4Add(a: FlintMat4, b: FlintMat4): FlintMat4 {
+export function flintMat4Add(first: FlintMat4, second: FlintMat4): FlintMat4 {
   return createFlintMat4(
-    flintVec4Add(a.c0, b.c0),
-    flintVec4Add(a.c1, b.c1),
-    flintVec4Add(a.c2, b.c2),
-    flintVec4Add(a.c3, b.c3),
+    flintVec4Add(first.c0, second.c0),
+    flintVec4Add(first.c1, second.c1),
+    flintVec4Add(first.c2, second.c2),
+    flintVec4Add(first.c3, second.c3),
   );
 }
 
 /** Perform mat 4 sub operation. */
-export function flintMat4Sub(a: FlintMat4, b: FlintMat4): FlintMat4 {
+export function flintMat4Sub(first: FlintMat4, second: FlintMat4): FlintMat4 {
   return createFlintMat4(
-    flintVec4Sub(a.c0, b.c0),
-    flintVec4Sub(a.c1, b.c1),
-    flintVec4Sub(a.c2, b.c2),
-    flintVec4Sub(a.c3, b.c3),
+    flintVec4Sub(first.c0, second.c0),
+    flintVec4Sub(first.c1, second.c1),
+    flintVec4Sub(first.c2, second.c2),
+    flintVec4Sub(first.c3, second.c3),
   );
 }
 
 /** Perform mat 4 scale operation. */
-export function flintMat4Scale(m: FlintMat4, scalar: number): FlintMat4 {
+export function flintMat4Scale(matrix: FlintMat4, scalar: number): FlintMat4 {
   return createFlintMat4(
-    flintVec4Scale(m.c0, scalar),
-    flintVec4Scale(m.c1, scalar),
-    flintVec4Scale(m.c2, scalar),
-    flintVec4Scale(m.c3, scalar),
+    flintVec4Scale(matrix.c0, scalar),
+    flintVec4Scale(matrix.c1, scalar),
+    flintVec4Scale(matrix.c2, scalar),
+    flintVec4Scale(matrix.c3, scalar),
   );
 }
 
 /** Perform mat 4 mul operation. */
-export function flintMat4Mul(a: FlintMat4, b: FlintMat4): FlintMat4 {
+export function flintMat4Mul(first: FlintMat4, second: FlintMat4): FlintMat4 {
   return createFlintMat4(
     {
-      x: a.c0.x * b.c0.x + a.c1.x * b.c0.y + a.c2.x * b.c0.z + a.c3.x * b.c0.w,
-      y: a.c0.y * b.c0.x + a.c1.y * b.c0.y + a.c2.y * b.c0.z + a.c3.y * b.c0.w,
-      z: a.c0.z * b.c0.x + a.c1.z * b.c0.y + a.c2.z * b.c0.z + a.c3.z * b.c0.w,
-      w: a.c0.w * b.c0.x + a.c1.w * b.c0.y + a.c2.w * b.c0.z + a.c3.w * b.c0.w,
+      x: first.c0.x * second.c0.x + first.c1.x * second.c0.y + first.c2.x * second.c0.z + first.c3.x * second.c0.w,
+      y: first.c0.y * second.c0.x + first.c1.y * second.c0.y + first.c2.y * second.c0.z + first.c3.y * second.c0.w,
+      z: first.c0.z * second.c0.x + first.c1.z * second.c0.y + first.c2.z * second.c0.z + first.c3.z * second.c0.w,
+      w: first.c0.w * second.c0.x + first.c1.w * second.c0.y + first.c2.w * second.c0.z + first.c3.w * second.c0.w,
     },
     {
-      x: a.c0.x * b.c1.x + a.c1.x * b.c1.y + a.c2.x * b.c1.z + a.c3.x * b.c1.w,
-      y: a.c0.y * b.c1.x + a.c1.y * b.c1.y + a.c2.y * b.c1.z + a.c3.y * b.c1.w,
-      z: a.c0.z * b.c1.x + a.c1.z * b.c1.y + a.c2.z * b.c1.z + a.c3.z * b.c1.w,
-      w: a.c0.w * b.c1.x + a.c1.w * b.c1.y + a.c2.w * b.c1.z + a.c3.w * b.c1.w,
+      x: first.c0.x * second.c1.x + first.c1.x * second.c1.y + first.c2.x * second.c1.z + first.c3.x * second.c1.w,
+      y: first.c0.y * second.c1.x + first.c1.y * second.c1.y + first.c2.y * second.c1.z + first.c3.y * second.c1.w,
+      z: first.c0.z * second.c1.x + first.c1.z * second.c1.y + first.c2.z * second.c1.z + first.c3.z * second.c1.w,
+      w: first.c0.w * second.c1.x + first.c1.w * second.c1.y + first.c2.w * second.c1.z + first.c3.w * second.c1.w,
     },
     {
-      x: a.c0.x * b.c2.x + a.c1.x * b.c2.y + a.c2.x * b.c2.z + a.c3.x * b.c2.w,
-      y: a.c0.y * b.c2.x + a.c1.y * b.c2.y + a.c2.y * b.c2.z + a.c3.y * b.c2.w,
-      z: a.c0.z * b.c2.x + a.c1.z * b.c2.y + a.c2.z * b.c2.z + a.c3.z * b.c2.w,
-      w: a.c0.w * b.c2.x + a.c1.w * b.c2.y + a.c2.w * b.c2.z + a.c3.w * b.c2.w,
+      x: first.c0.x * second.c2.x + first.c1.x * second.c2.y + first.c2.x * second.c2.z + first.c3.x * second.c2.w,
+      y: first.c0.y * second.c2.x + first.c1.y * second.c2.y + first.c2.y * second.c2.z + first.c3.y * second.c2.w,
+      z: first.c0.z * second.c2.x + first.c1.z * second.c2.y + first.c2.z * second.c2.z + first.c3.z * second.c2.w,
+      w: first.c0.w * second.c2.x + first.c1.w * second.c2.y + first.c2.w * second.c2.z + first.c3.w * second.c2.w,
     },
     {
-      x: a.c0.x * b.c3.x + a.c1.x * b.c3.y + a.c2.x * b.c3.z + a.c3.x * b.c3.w,
-      y: a.c0.y * b.c3.x + a.c1.y * b.c3.y + a.c2.y * b.c3.z + a.c3.y * b.c3.w,
-      z: a.c0.z * b.c3.x + a.c1.z * b.c3.y + a.c2.z * b.c3.z + a.c3.z * b.c3.w,
-      w: a.c0.w * b.c3.x + a.c1.w * b.c3.y + a.c2.w * b.c3.z + a.c3.w * b.c3.w,
+      x: first.c0.x * second.c3.x + first.c1.x * second.c3.y + first.c2.x * second.c3.z + first.c3.x * second.c3.w,
+      y: first.c0.y * second.c3.x + first.c1.y * second.c3.y + first.c2.y * second.c3.z + first.c3.y * second.c3.w,
+      z: first.c0.z * second.c3.x + first.c1.z * second.c3.y + first.c2.z * second.c3.z + first.c3.z * second.c3.w,
+      w: first.c0.w * second.c3.x + first.c1.w * second.c3.y + first.c2.w * second.c3.z + first.c3.w * second.c3.w,
     },
   );
 }
 
 /** Perform mat 4 transform vec 4 operation. */
-export function flintMat4TransformVec4(m: FlintMat4, v: FlintVec4): FlintVec4 {
+export function flintMat4TransformVec4(matrix: FlintMat4, vector: FlintVec4): FlintVec4 {
   return {
-    x: m.c0.x * v.x + m.c1.x * v.y + m.c2.x * v.z + m.c3.x * v.w,
-    y: m.c0.y * v.x + m.c1.y * v.y + m.c2.y * v.z + m.c3.y * v.w,
-    z: m.c0.z * v.x + m.c1.z * v.y + m.c2.z * v.z + m.c3.z * v.w,
-    w: m.c0.w * v.x + m.c1.w * v.y + m.c2.w * v.z + m.c3.w * v.w,
+    x: matrix.c0.x * vector.x + matrix.c1.x * vector.y + matrix.c2.x * vector.z + matrix.c3.x * vector.w,
+    y: matrix.c0.y * vector.x + matrix.c1.y * vector.y + matrix.c2.y * vector.z + matrix.c3.y * vector.w,
+    z: matrix.c0.z * vector.x + matrix.c1.z * vector.y + matrix.c2.z * vector.z + matrix.c3.z * vector.w,
+    w: matrix.c0.w * vector.x + matrix.c1.w * vector.y + matrix.c2.w * vector.z + matrix.c3.w * vector.w,
   };
 }
 
@@ -973,33 +993,33 @@ export function flintMat4TransformVector3(m: FlintMat4, v: FlintVec3): FlintVec3
 }
 
 /** Perform mat 4 transpose operation. */
-export function flintMat4Transpose(m: FlintMat4): FlintMat4 {
+export function flintMat4Transpose(matrix: FlintMat4): FlintMat4 {
   return createFlintMat4(
-    { x: m.c0.x, y: m.c1.x, z: m.c2.x, w: m.c3.x },
-    { x: m.c0.y, y: m.c1.y, z: m.c2.y, w: m.c3.y },
-    { x: m.c0.z, y: m.c1.z, z: m.c2.z, w: m.c3.z },
-    { x: m.c0.w, y: m.c1.w, z: m.c2.w, w: m.c3.w },
+    { x: matrix.c0.x, y: matrix.c1.x, z: matrix.c2.x, w: matrix.c3.x },
+    { x: matrix.c0.y, y: matrix.c1.y, z: matrix.c2.y, w: matrix.c3.y },
+    { x: matrix.c0.z, y: matrix.c1.z, z: matrix.c2.z, w: matrix.c3.z },
+    { x: matrix.c0.w, y: matrix.c1.w, z: matrix.c2.w, w: matrix.c3.w },
   );
 }
 
 /** Perform mat 4 determinant operation. */
-export function flintMat4Determinant(m: FlintMat4): number {
-  const a00 = m.c0.x;
-  const a01 = m.c0.y;
-  const a02 = m.c0.z;
-  const a03 = m.c0.w;
-  const a10 = m.c1.x;
-  const a11 = m.c1.y;
-  const a12 = m.c1.z;
-  const a13 = m.c1.w;
-  const a20 = m.c2.x;
-  const a21 = m.c2.y;
-  const a22 = m.c2.z;
-  const a23 = m.c2.w;
-  const a30 = m.c3.x;
-  const a31 = m.c3.y;
-  const a32 = m.c3.z;
-  const a33 = m.c3.w;
+export function flintMat4Determinant(matrix: FlintMat4): number {
+  const a00 = matrix.c0.x;
+  const a01 = matrix.c0.y;
+  const a02 = matrix.c0.z;
+  const a03 = matrix.c0.w;
+  const a10 = matrix.c1.x;
+  const a11 = matrix.c1.y;
+  const a12 = matrix.c1.z;
+  const a13 = matrix.c1.w;
+  const a20 = matrix.c2.x;
+  const a21 = matrix.c2.y;
+  const a22 = matrix.c2.z;
+  const a23 = matrix.c2.w;
+  const a30 = matrix.c3.x;
+  const a31 = matrix.c3.y;
+  const a32 = matrix.c3.z;
+  const a33 = matrix.c3.w;
 
   const b00 = a00 * a11 - a01 * a10;
   const b01 = a00 * a12 - a02 * a10;
@@ -1246,8 +1266,8 @@ export interface FlintQuat {
 }
 
 /** Perform create flint quat operation. */
-export function createFlintQuat(x = 0, y = 0, z = 0, w = 1): FlintQuat {
-  return { x, y, z, w };
+export function createFlintQuat(coordX = 0, coordY = 0, coordZ = 0, coordW = 1): FlintQuat {
+  return { x: coordX, y: coordY, z: coordZ, w: coordW };
 }
 
 /** Perform quat identity operation. */
@@ -1293,84 +1313,89 @@ export function flintQuatFromEuler(pitchX: number, yawY: number, rollZ: number):
 }
 
 /** Perform quat mul operation. */
-export function flintQuatMul(a: FlintQuat, b: FlintQuat): FlintQuat {
+export function flintQuatMul(first: FlintQuat, second: FlintQuat): FlintQuat {
   return {
-    x: a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y,
-    y: a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x,
-    z: a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w,
-    w: a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z,
+    x: first.w * second.x + first.x * second.w + first.y * second.z - first.z * second.y,
+    y: first.w * second.y - first.x * second.z + first.y * second.w + first.z * second.x,
+    z: first.w * second.z + first.x * second.y - first.y * second.x + first.z * second.w,
+    w: first.w * second.w - first.x * second.x - first.y * second.y - first.z * second.z,
   };
 }
 
 /** Perform quat conjugate operation. */
-export function flintQuatConjugate(q: FlintQuat): FlintQuat {
-  return { x: -q.x, y: -q.y, z: -q.z, w: q.w };
+export function flintQuatConjugate(quaternion: FlintQuat): FlintQuat {
+  return { x: -quaternion.x, y: -quaternion.y, z: -quaternion.z, w: quaternion.w };
 }
 
 /** Perform quat norm sq operation. */
-export function flintQuatNormSq(q: FlintQuat): number {
-  return q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w;
+export function flintQuatNormSq(quaternion: FlintQuat): number {
+  return (
+    quaternion.x * quaternion.x +
+    quaternion.y * quaternion.y +
+    quaternion.z * quaternion.z +
+    quaternion.w * quaternion.w
+  );
 }
 
 /** Perform quat norm operation. */
-export function flintQuatNorm(q: FlintQuat): number {
-  return Math.hypot(q.x, q.y, q.z, q.w);
+export function flintQuatNorm(quaternion: FlintQuat): number {
+  return Math.hypot(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
 }
 
 /** Perform quat normalize operation. */
-export function flintQuatNormalize(q: FlintQuat): FlintQuat {
-  const normSq = flintQuatNormSq(q);
+export function flintQuatNormalize(quaternion: FlintQuat): FlintQuat {
+  const normSq = flintQuatNormSq(quaternion);
   if (normSq <= FLINT_MATH_EPSILON) {
     return flintQuatIdentity();
   }
   const invNorm = 1 / Math.sqrt(normSq);
   return {
-    x: q.x * invNorm,
-    y: q.y * invNorm,
-    z: q.z * invNorm,
-    w: q.w * invNorm,
+    x: quaternion.x * invNorm,
+    y: quaternion.y * invNorm,
+    z: quaternion.z * invNorm,
+    w: quaternion.w * invNorm,
   };
 }
 
 /** Perform quat inverse operation. */
-export function flintQuatInverse(q: FlintQuat): FlintOption<FlintQuat> {
-  const normSq = flintQuatNormSq(q);
+export function flintQuatInverse(quaternion: FlintQuat): FlintOption<FlintQuat> {
+  const normSq = flintQuatNormSq(quaternion);
   if (normSq <= FLINT_MATH_EPSILON) {
     return flintNone();
   }
   const invNormSq = 1 / normSq;
   return flintSome({
-    x: -q.x * invNormSq,
-    y: -q.y * invNormSq,
-    z: -q.z * invNormSq,
-    w: q.w * invNormSq,
+    x: -quaternion.x * invNormSq,
+    y: -quaternion.y * invNormSq,
+    z: -quaternion.z * invNormSq,
+    w: quaternion.w * invNormSq,
   });
 }
 
 /** Perform quat rotate vec 3 operation. */
-export function flintQuatRotateVec3(q: FlintQuat, v: FlintVec3): FlintVec3 {
-  const qv = { x: q.x, y: q.y, z: q.z };
-  const uv = flintVec3Cross(qv, v);
+export function flintQuatRotateVec3(quaternion: FlintQuat, vector: FlintVec3): FlintVec3 {
+  const qv = { x: quaternion.x, y: quaternion.y, z: quaternion.z };
+  const uv = flintVec3Cross(qv, vector);
   const uuv = flintVec3Cross(qv, uv);
-  const uvW = flintVec3Scale(uv, q.w * 2);
+  const uvW = flintVec3Scale(uv, quaternion.w * 2);
   const uuv2 = flintVec3Scale(uuv, 2);
-  return flintVec3Add(v, flintVec3Add(uvW, uuv2));
+  return flintVec3Add(vector, flintVec3Add(uvW, uuv2));
 }
 
 /** Perform quat to mat 4 operation. */
-export function flintQuatToMat4(q: FlintQuat): FlintMat4 {
-  const x2 = q.x + q.x;
-  const y2 = q.y + q.y;
-  const z2 = q.z + q.z;
-  const xx = q.x * x2;
-  const xy = q.x * y2;
-  const xz = q.x * z2;
-  const yy = q.y * y2;
-  const yz = q.y * z2;
-  const zz = q.z * z2;
-  const wx = q.w * x2;
-  const wy = q.w * y2;
-  const wz = q.w * z2;
+export function flintQuatToMat4(quaternion: FlintQuat): FlintMat4 {
+  const x2 = quaternion.x + quaternion.x;
+  const y2 = quaternion.y + quaternion.y;
+  const z2 = quaternion.z + quaternion.z;
+  const xx = quaternion.x * x2;
+  const xy = quaternion.x * y2;
+  const xz = quaternion.x * z2;
+  const yy = quaternion.y * y2;
+  const yz = quaternion.y * z2;
+  const zz = quaternion.z * z2;
+  const wx = quaternion.w * x2;
+  const wy = quaternion.w * y2;
+  const wz = quaternion.w * z2;
 
   return createFlintMat4(
     { x: 1 - (yy + zz), y: xy + wz, z: xz - wy, w: 0 },
@@ -1381,19 +1406,19 @@ export function flintQuatToMat4(q: FlintQuat): FlintMat4 {
 }
 
 /** Perform quat to mat 3 operation. */
-export function flintQuatToMat3(q: FlintQuat): FlintMat3 {
-  const x2 = q.x + q.x;
-  const y2 = q.y + q.y;
-  const z2 = q.z + q.z;
-  const xx = q.x * x2;
-  const xy = q.x * y2;
-  const xz = q.x * z2;
-  const yy = q.y * y2;
-  const yz = q.y * z2;
-  const zz = q.z * z2;
-  const wx = q.w * x2;
-  const wy = q.w * y2;
-  const wz = q.w * z2;
+export function flintQuatToMat3(quaternion: FlintQuat): FlintMat3 {
+  const x2 = quaternion.x + quaternion.x;
+  const y2 = quaternion.y + quaternion.y;
+  const z2 = quaternion.z + quaternion.z;
+  const xx = quaternion.x * x2;
+  const xy = quaternion.x * y2;
+  const xz = quaternion.x * z2;
+  const yy = quaternion.y * y2;
+  const yz = quaternion.y * z2;
+  const zz = quaternion.z * z2;
+  const wx = quaternion.w * x2;
+  const wy = quaternion.w * y2;
+  const wz = quaternion.w * z2;
 
   return createFlintMat3(
     { x: 1 - (yy + zz), y: xy + wz, z: xz - wy },
@@ -1403,40 +1428,40 @@ export function flintQuatToMat3(q: FlintQuat): FlintMat3 {
 }
 
 /** Perform quat slerp operation. */
-export function flintQuatSlerp(a: FlintQuat, b: FlintQuat, t: number): FlintQuat {
-  let cosHalfTheta = a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
-  let targetB = b;
+export function flintQuatSlerp(first: FlintQuat, second: FlintQuat, factor: number): FlintQuat {
+  let cosHalfTheta = first.x * second.x + first.y * second.y + first.z * second.z + first.w * second.w;
+  let targetSecond = second;
 
   if (cosHalfTheta < 0) {
-    targetB = { x: -b.x, y: -b.y, z: -b.z, w: -b.w };
+    targetSecond = { x: -second.x, y: -second.y, z: -second.z, w: -second.w };
     cosHalfTheta = -cosHalfTheta;
   }
 
   if (cosHalfTheta >= 1 - FLINT_MATH_EPSILON) {
     return flintQuatNormalize({
-      x: flintLerp(a.x, targetB.x, t),
-      y: flintLerp(a.y, targetB.y, t),
-      z: flintLerp(a.z, targetB.z, t),
-      w: flintLerp(a.w, targetB.w, t),
+      x: flintLerp(first.x, targetSecond.x, factor),
+      y: flintLerp(first.y, targetSecond.y, factor),
+      z: flintLerp(first.z, targetSecond.z, factor),
+      w: flintLerp(first.w, targetSecond.w, factor),
     });
   }
 
   const halfTheta = Math.acos(cosHalfTheta);
   const sinHalfTheta = Math.sin(halfTheta);
-  const ratioA = Math.sin((1 - t) * halfTheta) / sinHalfTheta;
-  const ratioB = Math.sin(t * halfTheta) / sinHalfTheta;
+  const ratioA = Math.sin((1 - factor) * halfTheta) / sinHalfTheta;
+  const ratioB = Math.sin(factor * halfTheta) / sinHalfTheta;
 
   return {
-    x: a.x * ratioA + targetB.x * ratioB,
-    y: a.y * ratioA + targetB.y * ratioB,
-    z: a.z * ratioA + targetB.z * ratioB,
-    w: a.w * ratioA + targetB.w * ratioB,
+    x: first.x * ratioA + targetSecond.x * ratioB,
+    y: first.y * ratioA + targetSecond.y * ratioB,
+    z: first.z * ratioA + targetSecond.z * ratioB,
+    w: first.w * ratioA + targetSecond.w * ratioB,
   };
 }
 
 /** Perform quat dot operation. */
-export function flintQuatDot(a: FlintQuat, b: FlintQuat): number {
-  return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+export function flintQuatDot(first: FlintQuat, second: FlintQuat): number {
+  return first.x * second.x + first.y * second.y + first.z * second.z + first.w * second.w;
 }
 
 // ==========================================
@@ -1483,20 +1508,6 @@ export interface FlintAABB2 {
 export interface FlintAABB3 {
   readonly min: FlintVec3;
   readonly max: FlintVec3;
-}
-
-/** O B B 2 representation. */
-export interface FlintOBB2 {
-  readonly center: FlintVec2;
-  readonly halfExtents: FlintVec2;
-  readonly angleRad: number;
-}
-
-/** O B B 3 representation. */
-export interface FlintOBB3 {
-  readonly center: FlintVec3;
-  readonly halfExtents: FlintVec3;
-  readonly orientation: FlintQuat;
 }
 
 /** Frustum representation. */
@@ -1625,13 +1636,13 @@ export function createFlintRay3(origin: FlintVec3, direction: FlintVec3): FlintR
 }
 
 /** Perform create flint segment 2 operation. */
-export function createFlintSegment2(start: FlintVec2, end: FlintVec2): FlintSegment2 {
-  return { start, end };
+export function createFlintSegment2(startPoint: FlintVec2, endPoint: FlintVec2): FlintSegment2 {
+  return { start: startPoint, end: endPoint };
 }
 
 /** Perform create flint segment 3 operation. */
-export function createFlintSegment3(start: FlintVec3, end: FlintVec3): FlintSegment3 {
-  return { start, end };
+export function createFlintSegment3(startPoint: FlintVec3, endPoint: FlintVec3): FlintSegment3 {
+  return { start: startPoint, end: endPoint };
 }
 
 /** Perform create flint plane 3 operation. */
@@ -1640,25 +1651,25 @@ export function createFlintPlane3(normal: FlintVec3, distance: number): FlintPla
 }
 
 /** Perform create flint a a b b 2 operation. */
-export function createFlintAABB2(min: FlintVec2, max: FlintVec2): FlintAABB2 {
+export function createFlintAABB2(minPoint: FlintVec2, maxPoint: FlintVec2): FlintAABB2 {
   return {
-    min: { x: Math.min(min.x, max.x), y: Math.min(min.y, max.y) },
-    max: { x: Math.max(min.x, max.x), y: Math.max(min.y, max.y) },
+    min: { x: Math.min(minPoint.x, maxPoint.x), y: Math.min(minPoint.y, maxPoint.y) },
+    max: { x: Math.max(minPoint.x, maxPoint.x), y: Math.max(minPoint.y, maxPoint.y) },
   };
 }
 
 /** Perform create flint a a b b 3 operation. */
-export function createFlintAABB3(min: FlintVec3, max: FlintVec3): FlintAABB3 {
+export function createFlintAABB3(minPoint: FlintVec3, maxPoint: FlintVec3): FlintAABB3 {
   return {
     min: {
-      x: Math.min(min.x, max.x),
-      y: Math.min(min.y, max.y),
-      z: Math.min(min.z, max.z),
+      x: Math.min(minPoint.x, maxPoint.x),
+      y: Math.min(minPoint.y, maxPoint.y),
+      z: Math.min(minPoint.z, maxPoint.z),
     },
     max: {
-      x: Math.max(min.x, max.x),
-      y: Math.max(min.y, max.y),
-      z: Math.max(min.z, max.z),
+      x: Math.max(minPoint.x, maxPoint.x),
+      y: Math.max(minPoint.y, maxPoint.y),
+      z: Math.max(minPoint.z, maxPoint.z),
     },
   };
 }
@@ -1688,13 +1699,13 @@ export function createFlintSphere(center: FlintVec3, radius: number): FlintSpher
 }
 
 /** Perform create flint triangle 2 operation. */
-export function createFlintTriangle2(a: FlintVec2, b: FlintVec2, c: FlintVec2): FlintTriangle2 {
-  return { a, b, c };
+export function createFlintTriangle2(pointA: FlintVec2, pointB: FlintVec2, pointC: FlintVec2): FlintTriangle2 {
+  return { a: pointA, b: pointB, c: pointC };
 }
 
 /** Perform create flint triangle 3 operation. */
-export function createFlintTriangle3(a: FlintVec3, b: FlintVec3, c: FlintVec3): FlintTriangle3 {
-  return { a, b, c };
+export function createFlintTriangle3(pointA: FlintVec3, pointB: FlintVec3, pointC: FlintVec3): FlintTriangle3 {
+  return { a: pointA, b: pointB, c: pointC };
 }
 
 /** Perform a a b b 2 contains point operation. */
@@ -1703,15 +1714,20 @@ export function flintAABB2ContainsPoint(box: FlintAABB2, point: FlintVec2): bool
 }
 
 /** Perform a a b b 2 intersects a a b b 2 operation. */
-export function flintAABB2IntersectsAABB2(a: FlintAABB2, b: FlintAABB2): boolean {
-  return a.min.x <= b.max.x && a.max.x >= b.min.x && a.min.y <= b.max.y && a.max.y >= b.min.y;
+export function flintAABB2IntersectsAABB2(first: FlintAABB2, second: FlintAABB2): boolean {
+  return (
+    first.min.x <= second.max.x &&
+    first.max.x >= second.min.x &&
+    first.min.y <= second.max.y &&
+    first.max.y >= second.min.y
+  );
 }
 
 /** Perform a a b b 2 union operation. */
-export function flintAABB2Union(a: FlintAABB2, b: FlintAABB2): FlintAABB2 {
+export function flintAABB2Union(first: FlintAABB2, second: FlintAABB2): FlintAABB2 {
   return {
-    min: { x: Math.min(a.min.x, b.min.x), y: Math.min(a.min.y, b.min.y) },
-    max: { x: Math.max(a.max.x, b.max.x), y: Math.max(a.max.y, b.max.y) },
+    min: { x: Math.min(first.min.x, second.min.x), y: Math.min(first.min.y, second.min.y) },
+    max: { x: Math.max(first.max.x, second.max.x), y: Math.max(first.max.y, second.max.y) },
   };
 }
 
@@ -1723,19 +1739,25 @@ export function flintAABB2Area(box: FlintAABB2): number {
 }
 
 /** Perform circle contains point operation. */
-export function flintCircleContainsPoint(c: FlintCircle, p: FlintVec2): boolean {
-  return flintVec2DistanceSquared(c.center, p) <= c.radius * c.radius;
+export function flintCircleContainsPoint(circle: FlintCircle, point: FlintVec2): boolean {
+  return flintVec2DistanceSquared(circle.center, point) <= circle.radius * circle.radius;
 }
 
 /** Perform circle intersects circle operation. */
-export function flintCircleIntersectsCircle(a: FlintCircle, b: FlintCircle): boolean {
-  const totalRadius = a.radius + b.radius;
-  return flintVec2DistanceSquared(a.center, b.center) <= totalRadius * totalRadius;
+export function flintCircleIntersectsCircle(first: FlintCircle, second: FlintCircle): boolean {
+  const totalRadius = first.radius + second.radius;
+  return flintVec2DistanceSquared(first.center, second.center) <= totalRadius * totalRadius;
 }
 
 /** Perform triangle 2 area operation. */
-export function flintTriangle2Area(tri: FlintTriangle2): number {
-  return Math.abs(tri.a.x * (tri.b.y - tri.c.y) + tri.b.x * (tri.c.y - tri.a.y) + tri.c.x * (tri.a.y - tri.b.y)) * 0.5;
+export function flintTriangle2Area(triangle: FlintTriangle2): number {
+  return (
+    Math.abs(
+      triangle.a.x * (triangle.b.y - triangle.c.y) +
+        triangle.b.x * (triangle.c.y - triangle.a.y) +
+        triangle.c.x * (triangle.a.y - triangle.b.y),
+    ) * 0.5
+  );
 }
 
 /** Perform a a b b 3 contains point operation. */
@@ -1751,14 +1773,14 @@ export function flintAABB3ContainsPoint(box: FlintAABB3, point: FlintVec3): bool
 }
 
 /** Perform a a b b 3 intersects a a b b 3 operation. */
-export function flintAABB3IntersectsAABB3(a: FlintAABB3, b: FlintAABB3): boolean {
+export function flintAABB3IntersectsAABB3(first: FlintAABB3, second: FlintAABB3): boolean {
   return (
-    a.min.x <= b.max.x &&
-    a.max.x >= b.min.x &&
-    a.min.y <= b.max.y &&
-    a.max.y >= b.min.y &&
-    a.min.z <= b.max.z &&
-    a.max.z >= b.min.z
+    first.min.x <= second.max.x &&
+    first.max.x >= second.min.x &&
+    first.min.y <= second.max.y &&
+    first.max.y >= second.min.y &&
+    first.min.z <= second.max.z &&
+    first.max.z >= second.min.z
   );
 }
 
@@ -1771,14 +1793,14 @@ export function flintAABB3Volume(box: FlintAABB3): number {
 }
 
 /** Perform sphere contains point operation. */
-export function flintSphereContainsPoint(s: FlintSphere, p: FlintVec3): boolean {
-  return flintVec3DistanceSquared(s.center, p) <= s.radius * s.radius;
+export function flintSphereContainsPoint(sphere: FlintSphere, point: FlintVec3): boolean {
+  return flintVec3DistanceSquared(sphere.center, point) <= sphere.radius * sphere.radius;
 }
 
 /** Perform sphere intersects sphere operation. */
-export function flintSphereIntersectsSphere(a: FlintSphere, b: FlintSphere): boolean {
-  const totalRadius = a.radius + b.radius;
-  return flintVec3DistanceSquared(a.center, b.center) <= totalRadius * totalRadius;
+export function flintSphereIntersectsSphere(first: FlintSphere, second: FlintSphere): boolean {
+  const totalRadius = first.radius + second.radius;
+  return flintVec3DistanceSquared(first.center, second.center) <= totalRadius * totalRadius;
 }
 
 /** Perform plane 3 distance to point operation. */
@@ -1787,31 +1809,31 @@ export function flintPlane3DistanceToPoint(plane: FlintPlane3, point: FlintVec3)
 }
 
 /** Perform triangle 3 normal operation. */
-export function flintTriangle3Normal(tri: FlintTriangle3): FlintVec3 {
-  const ab = flintVec3Sub(tri.b, tri.a);
-  const ac = flintVec3Sub(tri.c, tri.a);
+export function flintTriangle3Normal(triangle: FlintTriangle3): FlintVec3 {
+  const ab = flintVec3Sub(triangle.b, triangle.a);
+  const ac = flintVec3Sub(triangle.c, triangle.a);
   return flintVec3Normalize(flintVec3Cross(ab, ac));
 }
 
 /** Perform frustum from view proj operation. */
-export function flintFrustumFromViewProj(vp: FlintMat4): FlintFrustum {
+export function flintFrustumFromViewProj(viewProj: FlintMat4): FlintFrustum {
   const matrixElements = [
-    vp.c0.x,
-    vp.c0.y,
-    vp.c0.z,
-    vp.c0.w,
-    vp.c1.x,
-    vp.c1.y,
-    vp.c1.z,
-    vp.c1.w,
-    vp.c2.x,
-    vp.c2.y,
-    vp.c2.z,
-    vp.c2.w,
-    vp.c3.x,
-    vp.c3.y,
-    vp.c3.z,
-    vp.c3.w,
+    viewProj.c0.x,
+    viewProj.c0.y,
+    viewProj.c0.z,
+    viewProj.c0.w,
+    viewProj.c1.x,
+    viewProj.c1.y,
+    viewProj.c1.z,
+    viewProj.c1.w,
+    viewProj.c2.x,
+    viewProj.c2.y,
+    viewProj.c2.z,
+    viewProj.c2.w,
+    viewProj.c3.x,
+    viewProj.c3.y,
+    viewProj.c3.z,
+    viewProj.c3.w,
   ];
   // Left: row 3 + row 0
   const leftNormal = flintVec3Normalize({
@@ -2001,9 +2023,9 @@ export function flintRay3IntersectsPlane3(ray: FlintRay3, plane: FlintPlane3): F
 }
 
 /** Perform ray 3 intersects triangle 3 operation. */
-export function flintRay3IntersectsTriangle3(ray: FlintRay3, tri: FlintTriangle3): FlintOption<number> {
-  const edge1 = flintVec3Sub(tri.b, tri.a);
-  const edge2 = flintVec3Sub(tri.c, tri.a);
+export function flintRay3IntersectsTriangle3(ray: FlintRay3, triangle: FlintTriangle3): FlintOption<number> {
+  const edge1 = flintVec3Sub(triangle.b, triangle.a);
+  const edge2 = flintVec3Sub(triangle.c, triangle.a);
   const pvec = flintVec3Cross(ray.direction, edge2);
   const det = flintVec3Dot(edge1, pvec);
 
@@ -2012,7 +2034,7 @@ export function flintRay3IntersectsTriangle3(ray: FlintRay3, tri: FlintTriangle3
   }
   const invDet = 1 / det;
 
-  const tvec = flintVec3Sub(ray.origin, tri.a);
+  const tvec = flintVec3Sub(ray.origin, triangle.a);
   const baryU = flintVec3Dot(tvec, pvec) * invDet;
   if (baryU < 0 || baryU > 1) {
     return flintNone();
@@ -2338,70 +2360,99 @@ export function flintBVHRayIntersect(tree: FlintBVHTree3, ray: FlintRay3): Flint
 // ==========================================
 
 /** Perform bezier 2 quadratic operation. */
-export function flintBezier2Quadratic(p0: FlintVec2, p1: FlintVec2, p2: FlintVec2, t: number): FlintVec2 {
-  const oneMinusT = 1 - t;
-  const tt = t * t;
+export function flintBezier2Quadratic(
+  point0: FlintVec2,
+  point1: FlintVec2,
+  point2: FlintVec2,
+  factor: number,
+): FlintVec2 {
+  const oneMinusT = 1 - factor;
+  const tt = factor * factor;
   const uu = oneMinusT * oneMinusT;
-  const u2t = 2 * oneMinusT * t;
+  const u2t = 2 * oneMinusT * factor;
   return {
-    x: uu * p0.x + u2t * p1.x + tt * p2.x,
-    y: uu * p0.y + u2t * p1.y + tt * p2.y,
+    x: uu * point0.x + u2t * point1.x + tt * point2.x,
+    y: uu * point0.y + u2t * point1.y + tt * point2.y,
   };
 }
 
 /** Perform bezier 2 cubic operation. */
-export function flintBezier2Cubic(p0: FlintVec2, p1: FlintVec2, p2: FlintVec2, p3: FlintVec2, t: number): FlintVec2 {
-  const oneMinusT = 1 - t;
-  const tt = t * t;
+export function flintBezier2Cubic(
+  point0: FlintVec2,
+  point1: FlintVec2,
+  point2: FlintVec2,
+  point3: FlintVec2,
+  factor: number,
+): FlintVec2 {
+  const oneMinusT = 1 - factor;
+  const tt = factor * factor;
   const uu = oneMinusT * oneMinusT;
   const uuu = uu * oneMinusT;
-  const ttt = tt * t;
+  const ttt = tt * factor;
   return {
-    x: uuu * p0.x + 3 * uu * t * p1.x + 3 * oneMinusT * tt * p2.x + ttt * p3.x,
-    y: uuu * p0.y + 3 * uu * t * p1.y + 3 * oneMinusT * tt * p2.y + ttt * p3.y,
+    x: uuu * point0.x + 3 * uu * factor * point1.x + 3 * oneMinusT * tt * point2.x + ttt * point3.x,
+    y: uuu * point0.y + 3 * uu * factor * point1.y + 3 * oneMinusT * tt * point2.y + ttt * point3.y,
   };
 }
 
 /** Perform bezier 3 cubic operation. */
-export function flintBezier3Cubic(p0: FlintVec3, p1: FlintVec3, p2: FlintVec3, p3: FlintVec3, t: number): FlintVec3 {
-  const oneMinusT = 1 - t;
-  const tt = t * t;
+export function flintBezier3Cubic(
+  point0: FlintVec3,
+  point1: FlintVec3,
+  point2: FlintVec3,
+  point3: FlintVec3,
+  factor: number,
+): FlintVec3 {
+  const oneMinusT = 1 - factor;
+  const tt = factor * factor;
   const uu = oneMinusT * oneMinusT;
   const uuu = uu * oneMinusT;
-  const ttt = tt * t;
+  const ttt = tt * factor;
   return {
-    x: uuu * p0.x + 3 * uu * t * p1.x + 3 * oneMinusT * tt * p2.x + ttt * p3.x,
-    y: uuu * p0.y + 3 * uu * t * p1.y + 3 * oneMinusT * tt * p2.y + ttt * p3.y,
-    z: uuu * p0.z + 3 * uu * t * p1.z + 3 * oneMinusT * tt * p2.z + ttt * p3.z,
+    x: uuu * point0.x + 3 * uu * factor * point1.x + 3 * oneMinusT * tt * point2.x + ttt * point3.x,
+    y: uuu * point0.y + 3 * uu * factor * point1.y + 3 * oneMinusT * tt * point2.y + ttt * point3.y,
+    z: uuu * point0.z + 3 * uu * factor * point1.z + 3 * oneMinusT * tt * point2.z + ttt * point3.z,
   };
 }
 
 /** Perform catmull rom 2 operation. */
-export function flintCatmullRom2(p0: FlintVec2, p1: FlintVec2, p2: FlintVec2, p3: FlintVec2, t: number): FlintVec2 {
-  const t2 = t * t;
-  const t3 = t2 * t;
-  const f0 = -0.5 * t3 + t2 - 0.5 * t;
+export function flintCatmullRom2(
+  point0: FlintVec2,
+  point1: FlintVec2,
+  point2: FlintVec2,
+  point3: FlintVec2,
+  factor: number,
+): FlintVec2 {
+  const t2 = factor * factor;
+  const t3 = t2 * factor;
+  const f0 = -0.5 * t3 + t2 - 0.5 * factor;
   const f1 = 1.5 * t3 - 2.5 * t2 + 1;
-  const f2 = -1.5 * t3 + 2 * t2 + 0.5 * t;
+  const f2 = -1.5 * t3 + 2 * t2 + 0.5 * factor;
   const f3 = 0.5 * t3 - 0.5 * t2;
   return {
-    x: p0.x * f0 + p1.x * f1 + p2.x * f2 + p3.x * f3,
-    y: p0.y * f0 + p1.y * f1 + p2.y * f2 + p3.y * f3,
+    x: point0.x * f0 + point1.x * f1 + point2.x * f2 + point3.x * f3,
+    y: point0.y * f0 + point1.y * f1 + point2.y * f2 + point3.y * f3,
   };
 }
 
 /** Perform catmull rom 3 operation. */
-export function flintCatmullRom3(p0: FlintVec3, p1: FlintVec3, p2: FlintVec3, p3: FlintVec3, t: number): FlintVec3 {
-  const t2 = t * t;
-  const t3 = t2 * t;
-  const f0 = -0.5 * t3 + t2 - 0.5 * t;
+export function flintCatmullRom3(
+  point0: FlintVec3,
+  point1: FlintVec3,
+  point2: FlintVec3,
+  point3: FlintVec3,
+  factor: number,
+): FlintVec3 {
+  const t2 = factor * factor;
+  const t3 = t2 * factor;
+  const f0 = -0.5 * t3 + t2 - 0.5 * factor;
   const f1 = 1.5 * t3 - 2.5 * t2 + 1;
-  const f2 = -1.5 * t3 + 2 * t2 + 0.5 * t;
+  const f2 = -1.5 * t3 + 2 * t2 + 0.5 * factor;
   const f3 = 0.5 * t3 - 0.5 * t2;
   return {
-    x: p0.x * f0 + p1.x * f1 + p2.x * f2 + p3.x * f3,
-    y: p0.y * f0 + p1.y * f1 + p2.y * f2 + p3.y * f3,
-    z: p0.z * f0 + p1.z * f1 + p2.z * f2 + p3.z * f3,
+    x: point0.x * f0 + point1.x * f1 + point2.x * f2 + point3.x * f3,
+    y: point0.y * f0 + point1.y * f1 + point2.y * f2 + point3.y * f3,
+    z: point0.z * f0 + point1.z * f1 + point2.z * f2 + point3.z * f3,
   };
 }
 
@@ -2434,42 +2485,42 @@ export interface FlintColorOklab {
 }
 
 /** Perform create flint color rgba operation. */
-export function createFlintColorRgba(r = 0, g = 0, b = 0, a = 1): FlintColorRgba {
+export function createFlintColorRgba(red = 0, green = 0, blue = 0, alpha = 1): FlintColorRgba {
   return {
-    r: flintClamp(r, 0, 1),
-    g: flintClamp(g, 0, 1),
-    b: flintClamp(b, 0, 1),
-    a: flintClamp(a, 0, 1),
+    r: flintClamp(red, 0, 1),
+    g: flintClamp(green, 0, 1),
+    b: flintClamp(blue, 0, 1),
+    a: flintClamp(alpha, 0, 1),
   };
 }
 
 /** Convert a single sRGB color channel component to linear space. */
-function srgbToLinearChannel(c: number): number {
-  return c <= 0.040_45 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+function srgbToLinearChannel(channel: number): number {
+  return channel <= 0.040_45 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
 }
 
 /** Convert a single linear color channel component to sRGB space. */
-function linearToSrgbChannel(c: number): number {
-  return c <= 0.003_130_8 ? c * 12.92 : 1.055 * c ** (1 / 2.4) - 0.055;
+function linearToSrgbChannel(channel: number): number {
+  return channel <= 0.003_130_8 ? channel * 12.92 : 1.055 * channel ** (1 / 2.4) - 0.055;
 }
 
 /** Perform color srgb to linear operation. */
-export function flintColorSrgbToLinear(c: FlintColorRgba): FlintColorRgba {
+export function flintColorSrgbToLinear(color: FlintColorRgba): FlintColorRgba {
   return {
-    r: srgbToLinearChannel(c.r),
-    g: srgbToLinearChannel(c.g),
-    b: srgbToLinearChannel(c.b),
-    a: c.a,
+    r: srgbToLinearChannel(color.r),
+    g: srgbToLinearChannel(color.g),
+    b: srgbToLinearChannel(color.b),
+    a: color.a,
   };
 }
 
 /** Perform color linear to srgb operation. */
-export function flintColorLinearToSrgb(c: FlintColorRgba): FlintColorRgba {
+export function flintColorLinearToSrgb(color: FlintColorRgba): FlintColorRgba {
   return {
-    r: linearToSrgbChannel(c.r),
-    g: linearToSrgbChannel(c.g),
-    b: linearToSrgbChannel(c.b),
-    a: c.a,
+    r: linearToSrgbChannel(color.r),
+    g: linearToSrgbChannel(color.g),
+    b: linearToSrgbChannel(color.b),
+    a: color.a,
   };
 }
 
@@ -2574,14 +2625,14 @@ export function flintColorOklabToSrgb(lab: FlintColorOklab): FlintColorRgba {
 }
 
 /** Perform color lerp oklab operation. */
-export function flintColorLerpOklab(c1: FlintColorRgba, c2: FlintColorRgba, t: number): FlintColorRgba {
-  const lab1 = flintColorSrgbToOklab(c1);
-  const lab2 = flintColorSrgbToOklab(c2);
+export function flintColorLerpOklab(first: FlintColorRgba, second: FlintColorRgba, factor: number): FlintColorRgba {
+  const lab1 = flintColorSrgbToOklab(first);
+  const lab2 = flintColorSrgbToOklab(second);
   const mixedLab: FlintColorOklab = {
-    l: flintLerp(lab1.l, lab2.l, t),
-    a: flintLerp(lab1.a, lab2.a, t),
-    b: flintLerp(lab1.b, lab2.b, t),
-    alpha: flintLerp(lab1.alpha, lab2.alpha, t),
+    l: flintLerp(lab1.l, lab2.l, factor),
+    a: flintLerp(lab1.a, lab2.a, factor),
+    b: flintLerp(lab1.b, lab2.b, factor),
+    alpha: flintLerp(lab1.alpha, lab2.alpha, factor),
   };
   return flintColorOklabToSrgb(mixedLab);
 }
@@ -2661,30 +2712,44 @@ export function flintDMatrixIdentity(size: number): FlintDMatrix {
 }
 
 /** Perform d matrix get operation. */
-export function flintDMatrixGet(m: FlintDMatrix, row: number, col: number): FlintOption<number> {
-  if (row < 0 || row >= m.rows || col < 0 || col >= m.cols || !Number.isInteger(row) || !Number.isInteger(col)) {
+export function flintDMatrixGet(matrix: FlintDMatrix, row: number, col: number): FlintOption<number> {
+  if (
+    row < 0 ||
+    row >= matrix.rows ||
+    col < 0 ||
+    col >= matrix.cols ||
+    !Number.isInteger(row) ||
+    !Number.isInteger(col)
+  ) {
     return flintNone();
   }
-  return flintSome(m.data[row * m.cols + col] ?? 0);
+  return flintSome(matrix.data[row * matrix.cols + col] ?? 0);
 }
 
 /** Perform d matrix set operation. */
-export function flintDMatrixSet(m: FlintDMatrix, row: number, col: number, value: number): boolean {
-  if (row < 0 || row >= m.rows || col < 0 || col >= m.cols || !Number.isInteger(row) || !Number.isInteger(col)) {
+export function flintDMatrixSet(matrix: FlintDMatrix, row: number, col: number, value: number): boolean {
+  if (
+    row < 0 ||
+    row >= matrix.rows ||
+    col < 0 ||
+    col >= matrix.cols ||
+    !Number.isInteger(row) ||
+    !Number.isInteger(col)
+  ) {
     return false;
   }
-  m.data[row * m.cols + col] = value;
+  matrix.data[row * matrix.cols + col] = value;
   return true;
 }
 
 /** Perform d matrix add inplace operation. */
-export function flintDMatrixAddInplace(a: FlintDMatrix, b: FlintDMatrix): boolean {
-  if (a.rows !== b.rows || a.cols !== b.cols) {
+export function flintDMatrixAddInplace(matrixA: FlintDMatrix, matrixB: FlintDMatrix): boolean {
+  if (matrixA.rows !== matrixB.rows || matrixA.cols !== matrixB.cols) {
     return false;
   }
-  const total = a.rows * a.cols;
-  const aData = a.data;
-  const bData = b.data;
+  const total = matrixA.rows * matrixA.cols;
+  const aData = matrixA.data;
+  const bData = matrixB.data;
   for (let index = 0; index < total; index += 1) {
     aData[index] = (aData[index] ?? 0) + (bData[index] ?? 0);
   }
@@ -2692,13 +2757,13 @@ export function flintDMatrixAddInplace(a: FlintDMatrix, b: FlintDMatrix): boolea
 }
 
 /** Perform d matrix sub inplace operation. */
-export function flintDMatrixSubInplace(a: FlintDMatrix, b: FlintDMatrix): boolean {
-  if (a.rows !== b.rows || a.cols !== b.cols) {
+export function flintDMatrixSubInplace(matrixA: FlintDMatrix, matrixB: FlintDMatrix): boolean {
+  if (matrixA.rows !== matrixB.rows || matrixA.cols !== matrixB.cols) {
     return false;
   }
-  const total = a.rows * a.cols;
-  const aData = a.data;
-  const bData = b.data;
+  const total = matrixA.rows * matrixA.cols;
+  const aData = matrixA.data;
+  const bData = matrixB.data;
   for (let index = 0; index < total; index += 1) {
     aData[index] = (aData[index] ?? 0) - (bData[index] ?? 0);
   }
@@ -2706,30 +2771,35 @@ export function flintDMatrixSubInplace(a: FlintDMatrix, b: FlintDMatrix): boolea
 }
 
 /** Perform d matrix scale inplace operation. */
-export function flintDMatrixScaleInplace(m: FlintDMatrix, factor: number): void {
-  const total = m.rows * m.cols;
-  const mData = m.data;
+export function flintDMatrixScaleInplace(matrix: FlintDMatrix, factor: number): void {
+  const total = matrix.rows * matrix.cols;
+  const mData = matrix.data;
   for (let index = 0; index < total; index += 1) {
     mData[index] = (mData[index] ?? 0) * factor;
   }
 }
 
 /** Perform d matrix mul accumulate operation. */
-export function flintDMatrixMulAccumulate(out: FlintDMatrix, a: FlintDMatrix, b: FlintDMatrix, alpha = 1): boolean {
-  if (out.rows !== a.rows || out.cols !== b.cols || a.cols !== b.rows) {
+export function flintDMatrixMulAccumulate(
+  outMatrix: FlintDMatrix,
+  matrixA: FlintDMatrix,
+  matrixB: FlintDMatrix,
+  alpha = 1,
+): boolean {
+  if (outMatrix.rows !== matrixA.rows || outMatrix.cols !== matrixB.cols || matrixA.cols !== matrixB.rows) {
     return false;
   }
-  const outData = out.data;
-  for (let r = 0; r < a.rows; r += 1) {
-    for (let k = 0; k < a.cols; k += 1) {
-      const aValue = a.data[r * a.cols + k] ?? 0;
+  const outData = outMatrix.data;
+  for (let row = 0; row < matrixA.rows; row += 1) {
+    for (let kIndex = 0; kIndex < matrixA.cols; kIndex += 1) {
+      const aValue = matrixA.data[row * matrixA.cols + kIndex] ?? 0;
       if (aValue === 0) {
         continue;
       }
       const scaledA = aValue * alpha;
-      for (let c = 0; c < b.cols; c += 1) {
-        const bValue = b.data[k * b.cols + c] ?? 0;
-        outData[r * out.cols + c] = (outData[r * out.cols + c] ?? 0) + scaledA * bValue;
+      for (let col = 0; col < matrixB.cols; col += 1) {
+        const bValue = matrixB.data[kIndex * matrixB.cols + col] ?? 0;
+        outData[row * outMatrix.cols + col] = (outData[row * outMatrix.cols + col] ?? 0) + scaledA * bValue;
       }
     }
   }
@@ -2737,44 +2807,44 @@ export function flintDMatrixMulAccumulate(out: FlintDMatrix, a: FlintDMatrix, b:
 }
 
 /** Perform d matrix transpose operation. */
-export function flintDMatrixTranspose(m: FlintDMatrix): FlintDMatrix {
-  const resultData = new Float64Array(m.rows * m.cols);
-  for (let r = 0; r < m.rows; r += 1) {
-    for (let c = 0; c < m.cols; c += 1) {
-      resultData[c * m.rows + r] = m.data[r * m.cols + c] ?? 0;
+export function flintDMatrixTranspose(matrix: FlintDMatrix): FlintDMatrix {
+  const resultData = new Float64Array(matrix.rows * matrix.cols);
+  for (let row = 0; row < matrix.rows; row += 1) {
+    for (let col = 0; col < matrix.cols; col += 1) {
+      resultData[col * matrix.rows + row] = matrix.data[row * matrix.cols + col] ?? 0;
     }
   }
-  return { rows: m.cols, cols: m.rows, data: [...resultData] };
+  return { rows: matrix.cols, cols: matrix.rows, data: [...resultData] };
 }
 
 /** Perform d matrix mul operation. */
-export function flintDMatrixMul(a: FlintDMatrix, b: FlintDMatrix): FlintOption<FlintDMatrix> {
-  if (a.cols !== b.rows) {
+export function flintDMatrixMul(matrixA: FlintDMatrix, matrixB: FlintDMatrix): FlintOption<FlintDMatrix> {
+  if (matrixA.cols !== matrixB.rows) {
     return flintNone();
   }
-  const result = new Float64Array(a.rows * b.cols);
-  for (let index = 0; index < a.rows; index += 1) {
-    for (let k = 0; k < a.cols; k += 1) {
-      const aValue = a.data[index * a.cols + k] ?? 0;
+  const result = new Float64Array(matrixA.rows * matrixB.cols);
+  for (let row = 0; row < matrixA.rows; row += 1) {
+    for (let kIndex = 0; kIndex < matrixA.cols; kIndex += 1) {
+      const aValue = matrixA.data[row * matrixA.cols + kIndex] ?? 0;
       if (aValue === 0) {
         continue;
       }
-      for (let index_ = 0; index_ < b.cols; index_ += 1) {
-        result[index * b.cols + index_] =
-          (result[index * b.cols + index_] ?? 0) + aValue * (b.data[k * b.cols + index_] ?? 0);
+      for (let col = 0; col < matrixB.cols; col += 1) {
+        result[row * matrixB.cols + col] =
+          (result[row * matrixB.cols + col] ?? 0) + aValue * (matrixB.data[kIndex * matrixB.cols + col] ?? 0);
       }
     }
   }
-  return flintSome({ rows: a.rows, cols: b.cols, data: [...result] });
+  return flintSome({ rows: matrixA.rows, cols: matrixB.cols, data: [...result] });
 }
 
 /** Perform d matrix l u operation. */
-export function flintDMatrixLU(m: FlintDMatrix): FlintOption<FlintLUDecomposition> {
-  if (m.rows !== m.cols) {
+export function flintDMatrixLU(matrix: FlintDMatrix): FlintOption<FlintLUDecomposition> {
+  if (matrix.rows !== matrix.cols) {
     return flintNone();
   }
-  const n = m.rows;
-  const lu = [...m.data];
+  const n = matrix.rows;
+  const lu = [...matrix.data];
   const pivot = Array.from({ length: n }, (_, index) => index);
   let parity = 1;
 
@@ -2782,11 +2852,11 @@ export function flintDMatrixLU(m: FlintDMatrix): FlintOption<FlintLUDecompositio
     let maxRow = index;
     let maxValue = Math.abs(lu[index * n + index] ?? 0);
 
-    for (let k = index + 1; k < n; k += 1) {
-      const value = Math.abs(lu[k * n + index] ?? 0);
+    for (let kIndex = index + 1; kIndex < n; kIndex += 1) {
+      const value = Math.abs(lu[kIndex * n + index] ?? 0);
       if (value > maxValue) {
         maxValue = value;
-        maxRow = k;
+        maxRow = kIndex;
       }
     }
 
@@ -2800,10 +2870,10 @@ export function flintDMatrixLU(m: FlintDMatrix): FlintOption<FlintLUDecompositio
       pivot[maxRow] = temporaryP;
       parity = -parity;
 
-      for (let k = 0; k < n; k += 1) {
-        const temporary = lu[index * n + k] ?? 0;
-        lu[index * n + k] = lu[maxRow * n + k] ?? 0;
-        lu[maxRow * n + k] = temporary;
+      for (let kIndex = 0; kIndex < n; kIndex += 1) {
+        const temporary = lu[index * n + kIndex] ?? 0;
+        lu[index * n + kIndex] = lu[maxRow * n + kIndex] ?? 0;
+        lu[maxRow * n + kIndex] = temporary;
       }
     }
 
@@ -2811,8 +2881,8 @@ export function flintDMatrixLU(m: FlintDMatrix): FlintOption<FlintLUDecompositio
     for (let index_ = index + 1; index_ < n; index_ += 1) {
       lu[index_ * n + index] = (lu[index_ * n + index] ?? 0) / diag;
       const factor = lu[index_ * n + index] ?? 0;
-      for (let k = index + 1; k < n; k += 1) {
-        lu[index_ * n + k] = (lu[index_ * n + k] ?? 0) - factor * (lu[index * n + k] ?? 0);
+      for (let kIndex = index + 1; kIndex < n; kIndex += 1) {
+        lu[index_ * n + kIndex] = (lu[index_ * n + kIndex] ?? 0) - factor * (lu[index * n + kIndex] ?? 0);
       }
     }
   }
@@ -2825,9 +2895,9 @@ export function flintDMatrixLU(m: FlintDMatrix): FlintOption<FlintLUDecompositio
 }
 
 /** Perform d matrix q r operation. */
-export function flintDMatrixQR(m: FlintDMatrix): FlintOption<FlintQRDecomposition> {
-  const rows = m.rows;
-  const cols = m.cols;
+export function flintDMatrixQR(matrix: FlintDMatrix): FlintOption<FlintQRDecomposition> {
+  const rows = matrix.rows;
+  const cols = matrix.cols;
   if (rows < cols) {
     return flintNone();
   }
@@ -2837,17 +2907,17 @@ export function flintDMatrixQR(m: FlintDMatrix): FlintOption<FlintQRDecompositio
 
   for (let index = 0; index < cols; index += 1) {
     for (let index_ = 0; index_ < rows; index_ += 1) {
-      qData[index_ * cols + index] = m.data[index_ * cols + index] ?? 0;
+      qData[index_ * cols + index] = matrix.data[index_ * cols + index] ?? 0;
     }
 
-    for (let k = 0; k < index; k += 1) {
+    for (let kIndex = 0; kIndex < index; kIndex += 1) {
       let dot = 0;
       for (let index_ = 0; index_ < rows; index_ += 1) {
-        dot += (qData[index_ * cols + k] ?? 0) * (m.data[index_ * cols + index] ?? 0);
+        dot += (qData[index_ * cols + kIndex] ?? 0) * (matrix.data[index_ * cols + index] ?? 0);
       }
-      rData[k * cols + index] = dot;
+      rData[kIndex * cols + index] = dot;
       for (let index_ = 0; index_ < rows; index_ += 1) {
-        qData[index_ * cols + index] = (qData[index_ * cols + index] ?? 0) - dot * (qData[index_ * cols + k] ?? 0);
+        qData[index_ * cols + index] = (qData[index_ * cols + index] ?? 0) - dot * (qData[index_ * cols + kIndex] ?? 0);
       }
     }
 
@@ -2876,16 +2946,16 @@ export function flintDMatrixQR(m: FlintDMatrix): FlintOption<FlintQRDecompositio
 }
 
 /** Perform d matrix cholesky operation. */
-export function flintDMatrixCholesky(m: FlintDMatrix): FlintOption<FlintCholeskyDecomposition> {
-  if (m.rows !== m.cols) {
+export function flintDMatrixCholesky(matrix: FlintDMatrix): FlintOption<FlintCholeskyDecomposition> {
+  if (matrix.rows !== matrix.cols) {
     return flintNone();
   }
-  const n = m.rows;
+  const n = matrix.rows;
 
-  for (let r = 0; r < n; r += 1) {
-    for (let c = r + 1; c < n; c += 1) {
-      const a = m.data[r * n + c] ?? 0;
-      const b = m.data[c * n + r] ?? 0;
+  for (let row = 0; row < n; row += 1) {
+    for (let col = row + 1; col < n; col += 1) {
+      const a = matrix.data[row * n + col] ?? 0;
+      const b = matrix.data[col * n + row] ?? 0;
       if (Math.abs(a - b) > 1e-7 * Math.max(Math.abs(a), Math.abs(b), 1)) {
         return flintNone(); // Not symmetric
       }
@@ -2897,12 +2967,12 @@ export function flintDMatrixCholesky(m: FlintDMatrix): FlintOption<FlintCholesky
   for (let index = 0; index < n; index += 1) {
     for (let index_ = 0; index_ <= index; index_ += 1) {
       let sum = 0;
-      for (let k = 0; k < index_; k += 1) {
-        sum += (l[index * n + k] ?? 0) * (l[index_ * n + k] ?? 0);
+      for (let kIndex = 0; kIndex < index_; kIndex += 1) {
+        sum += (l[index * n + kIndex] ?? 0) * (l[index_ * n + kIndex] ?? 0);
       }
 
       if (index === index_) {
-        const value = (m.data[index * n + index] ?? 0) - sum;
+        const value = (matrix.data[index * n + index] ?? 0) - sum;
         if (value <= FLINT_MATH_EPSILON) {
           return flintNone(); // Not positive definite
         }
@@ -2912,7 +2982,7 @@ export function flintDMatrixCholesky(m: FlintDMatrix): FlintOption<FlintCholesky
         if (diag <= FLINT_MATH_EPSILON) {
           return flintNone();
         }
-        l[index * n + index_] = ((m.data[index * n + index_] ?? 0) - sum) / diag;
+        l[index * n + index_] = ((matrix.data[index * n + index_] ?? 0) - sum) / diag;
       }
     }
   }
@@ -2925,15 +2995,15 @@ export function flintDMatrixCholesky(m: FlintDMatrix): FlintOption<FlintCholesky
 /** Perform d matrix cholesky solve operation. */
 export function flintDMatrixCholeskySolve(
   chol: FlintCholeskyDecomposition,
-  b: FlintDMatrix,
+  rhsVector: FlintDMatrix,
 ): FlintOption<FlintDMatrix> {
   const n = chol.l.rows;
-  if (b.rows !== n) {
+  if (rhsVector.rows !== n) {
     return flintNone();
   }
 
   const l = chol.l.data;
-  const bCols = b.cols;
+  const bCols = rhsVector.cols;
   const y = new Float64Array(n * bCols);
   const x = new Float64Array(n * bCols);
 
@@ -2943,24 +3013,24 @@ export function flintDMatrixCholeskySolve(
     if (Math.abs(diag) <= FLINT_MATH_EPSILON) {
       return flintNone();
     }
-    for (let c = 0; c < bCols; c += 1) {
+    for (let col = 0; col < bCols; col += 1) {
       let sum = 0;
-      for (let k = 0; k < index; k += 1) {
-        sum += (l[index * n + k] ?? 0) * (y[k * bCols + c] ?? 0);
+      for (let kIndex = 0; kIndex < index; kIndex += 1) {
+        sum += (l[index * n + kIndex] ?? 0) * (y[kIndex * bCols + col] ?? 0);
       }
-      y[index * bCols + c] = ((b.data[index * bCols + c] ?? 0) - sum) / diag;
+      y[index * bCols + col] = ((rhsVector.data[index * bCols + col] ?? 0) - sum) / diag;
     }
   }
 
   // Back substitution L^T * x = y
   for (let index = n - 1; index >= 0; index -= 1) {
     const diag = l[index * n + index] ?? 1;
-    for (let c = 0; c < bCols; c += 1) {
+    for (let col = 0; col < bCols; col += 1) {
       let sum = 0;
-      for (let k = index + 1; k < n; k += 1) {
-        sum += (l[k * n + index] ?? 0) * (x[k * bCols + c] ?? 0);
+      for (let kIndex = index + 1; kIndex < n; kIndex += 1) {
+        sum += (l[kIndex * n + index] ?? 0) * (x[kIndex * bCols + col] ?? 0);
       }
-      x[index * bCols + c] = ((y[index * bCols + c] ?? 0) - sum) / diag;
+      x[index * bCols + col] = ((y[index * bCols + col] ?? 0) - sum) / diag;
     }
   }
 
@@ -2968,32 +3038,34 @@ export function flintDMatrixCholeskySolve(
 }
 
 /** Perform d matrix solve operation. */
-export function flintDMatrixSolve(a: FlintDMatrix, b: FlintDMatrix): FlintOption<FlintDMatrix> {
-  if (a.rows !== a.cols || b.rows !== a.rows) {
+export function flintDMatrixSolve(matrixA: FlintDMatrix, rhsVector: FlintDMatrix): FlintOption<FlintDMatrix> {
+  if (matrixA.rows !== matrixA.cols || rhsVector.rows !== matrixA.rows) {
     return flintNone();
   }
-  const luOpt = flintDMatrixLU(a);
+  const luOpt = flintDMatrixLU(matrixA);
   if (luOpt.kind === 'none' || luOpt.value === undefined) {
     return flintNone();
   }
   const { lu, pivot } = luOpt.value;
-  const n = a.rows;
-  const bCols = b.cols;
+  const n = matrixA.rows;
+  const bCols = rhsVector.cols;
 
   const x = new Float64Array(n * bCols);
-  for (let c = 0; c < bCols; c += 1) {
+  for (let col = 0; col < bCols; col += 1) {
     for (let index = 0; index < n; index += 1) {
-      x[index * bCols + c] = b.data[(pivot[index] ?? index) * bCols + c] ?? 0;
-      for (let k = 0; k < index; k += 1) {
-        x[index * bCols + c] = (x[index * bCols + c] ?? 0) - (lu.data[index * n + k] ?? 0) * (x[k * bCols + c] ?? 0);
+      x[index * bCols + col] = rhsVector.data[(pivot[index] ?? index) * bCols + col] ?? 0;
+      for (let kIndex = 0; kIndex < index; kIndex += 1) {
+        x[index * bCols + col] =
+          (x[index * bCols + col] ?? 0) - (lu.data[index * n + kIndex] ?? 0) * (x[kIndex * bCols + col] ?? 0);
       }
     }
 
     for (let index = n - 1; index >= 0; index -= 1) {
-      for (let k = index + 1; k < n; k += 1) {
-        x[index * bCols + c] = (x[index * bCols + c] ?? 0) - (lu.data[index * n + k] ?? 0) * (x[k * bCols + c] ?? 0);
+      for (let kIndex = index + 1; kIndex < n; kIndex += 1) {
+        x[index * bCols + col] =
+          (x[index * bCols + col] ?? 0) - (lu.data[index * n + kIndex] ?? 0) * (x[kIndex * bCols + col] ?? 0);
       }
-      x[index * bCols + c] = (x[index * bCols + c] ?? 0) / (lu.data[index * n + index] ?? 1);
+      x[index * bCols + col] = (x[index * bCols + col] ?? 0) / (lu.data[index * n + index] ?? 1);
     }
   }
 
@@ -3001,47 +3073,47 @@ export function flintDMatrixSolve(a: FlintDMatrix, b: FlintDMatrix): FlintOption
 }
 
 /** Perform d matrix determinant operation. */
-export function flintDMatrixDeterminant(m: FlintDMatrix): FlintOption<number> {
-  if (m.rows !== m.cols) {
+export function flintDMatrixDeterminant(matrix: FlintDMatrix): FlintOption<number> {
+  if (matrix.rows !== matrix.cols) {
     return flintNone();
   }
-  const luOpt = flintDMatrixLU(m);
+  const luOpt = flintDMatrixLU(matrix);
   if (luOpt.kind === 'none' || luOpt.value === undefined) {
     return flintSome(0);
   }
   const { lu, parity } = luOpt.value;
   let det = parity;
-  for (let index = 0; index < m.rows; index += 1) {
-    det *= lu.data[index * m.rows + index] ?? 1;
+  for (let index = 0; index < matrix.rows; index += 1) {
+    det *= lu.data[index * matrix.rows + index] ?? 1;
   }
   return flintSome(det);
 }
 
 /** Perform d matrix inverse operation. */
-export function flintDMatrixInverse(m: FlintDMatrix): FlintOption<FlintDMatrix> {
-  if (m.rows !== m.cols) {
+export function flintDMatrixInverse(matrix: FlintDMatrix): FlintOption<FlintDMatrix> {
+  if (matrix.rows !== matrix.cols) {
     return flintNone();
   }
-  const identity = flintDMatrixIdentity(m.rows);
-  return flintDMatrixSolve(m, identity);
+  const identity = flintDMatrixIdentity(matrix.rows);
+  return flintDMatrixSolve(matrix, identity);
 }
 
 /** Perform d matrix eigen symmetric operation. */
 export function flintDMatrixEigenSymmetric(
-  m: FlintDMatrix,
+  matrix: FlintDMatrix,
   maxIterations = 100,
   epsilon = FLINT_MATH_EPSILON,
 ): FlintOption<FlintEigenDecomposition> {
-  if (m.rows !== m.cols || m.rows === 0) {
+  if (matrix.rows !== matrix.cols || matrix.rows === 0) {
     return flintNone();
   }
-  const n = m.rows;
+  const n = matrix.rows;
 
   // Verify symmetry
-  for (let r = 0; r < n; r += 1) {
-    for (let c = r + 1; c < n; c += 1) {
-      const a = m.data[r * n + c] ?? 0;
-      const b = m.data[c * n + r] ?? 0;
+  for (let row = 0; row < n; row += 1) {
+    for (let col = row + 1; col < n; col += 1) {
+      const a = matrix.data[row * n + col] ?? 0;
+      const b = matrix.data[col * n + row] ?? 0;
       if (Math.abs(a - b) > 1e-7 * Math.max(Math.abs(a), Math.abs(b), 1)) {
         return flintNone(); // Not symmetric
       }
@@ -3049,17 +3121,17 @@ export function flintDMatrixEigenSymmetric(
   }
 
   // Copy matrix data
-  const a = new Float64Array(m.data);
+  const a = new Float64Array(matrix.data);
   const v = new Float64Array(n * n);
   for (let index = 0; index < n; index += 1) {
     v[index * n + index] = 1;
   }
 
-  for (let iter = 0; iter < maxIterations; iter += 1) {
+  for (let iteration = 0; iteration < maxIterations; iteration += 1) {
     let offDiagNormSq = 0;
-    for (let p = 0; p < n; p += 1) {
-      for (let q = p + 1; q < n; q += 1) {
-        const value = a[p * n + q] ?? 0;
+    for (let pivotP = 0; pivotP < n; pivotP += 1) {
+      for (let pivotQ = pivotP + 1; pivotQ < n; pivotQ += 1) {
+        const value = a[pivotP * n + pivotQ] ?? 0;
         offDiagNormSq += value * value;
       }
     }
@@ -3068,44 +3140,44 @@ export function flintDMatrixEigenSymmetric(
       break;
     }
 
-    for (let p = 0; p < n; p += 1) {
-      for (let q = p + 1; q < n; q += 1) {
-        const apq = a[p * n + q] ?? 0;
+    for (let pivotP = 0; pivotP < n; pivotP += 1) {
+      for (let pivotQ = pivotP + 1; pivotQ < n; pivotQ += 1) {
+        const apq = a[pivotP * n + pivotQ] ?? 0;
         if (Math.abs(apq) <= epsilon) {
           continue;
         }
 
-        const app = a[p * n + p] ?? 0;
-        const aqq = a[q * n + q] ?? 0;
-        const theta = (aqq - app) / (2 * apq);
-        const t = (theta >= 0 ? 1 : -1) / (Math.abs(theta) + Math.sqrt(1 + theta * theta));
-        const c = 1 / Math.sqrt(1 + t * t);
-        const s = t * c;
-        const tau = s / (1 + c);
+        const app = a[pivotP * n + pivotP] ?? 0;
+        const aqq = a[pivotQ * n + pivotQ] ?? 0;
+        const thetaValue = (aqq - app) / (2 * apq);
+        const tanValue = (thetaValue >= 0 ? 1 : -1) / (Math.abs(thetaValue) + Math.sqrt(1 + thetaValue * thetaValue));
+        const cosValue = 1 / Math.sqrt(1 + tanValue * tanValue);
+        const sinValue = tanValue * cosValue;
+        const tauValue = sinValue / (1 + cosValue);
 
-        a[p * n + p] = app - t * apq;
-        a[q * n + q] = aqq + t * apq;
-        a[p * n + q] = 0;
-        a[q * n + p] = 0;
+        a[pivotP * n + pivotP] = app - tanValue * apq;
+        a[pivotQ * n + pivotQ] = aqq + tanValue * apq;
+        a[pivotP * n + pivotQ] = 0;
+        a[pivotQ * n + pivotP] = 0;
 
-        for (let k = 0; k < n; k += 1) {
-          if (k !== p && k !== q) {
-            const akp = a[k * n + p] ?? 0;
-            const akq = a[k * n + q] ?? 0;
-            const nextAkp = akp - s * (akq + tau * akp);
-            const nextAkq = akq + s * (akp - tau * akq);
-            a[k * n + p] = nextAkp;
-            a[p * n + k] = nextAkp;
-            a[k * n + q] = nextAkq;
-            a[q * n + k] = nextAkq;
+        for (let kIndex = 0; kIndex < n; kIndex += 1) {
+          if (kIndex !== pivotP && kIndex !== pivotQ) {
+            const akp = a[kIndex * n + pivotP] ?? 0;
+            const akq = a[kIndex * n + pivotQ] ?? 0;
+            const nextAkp = akp - sinValue * (akq + tauValue * akp);
+            const nextAkq = akq + sinValue * (akp - tauValue * akq);
+            a[kIndex * n + pivotP] = nextAkp;
+            a[pivotP * n + kIndex] = nextAkp;
+            a[kIndex * n + pivotQ] = nextAkq;
+            a[pivotQ * n + kIndex] = nextAkq;
           }
         }
 
-        for (let k = 0; k < n; k += 1) {
-          const vkp = v[k * n + p] ?? 0;
-          const vkq = v[k * n + q] ?? 0;
-          v[k * n + p] = c * vkp - s * vkq;
-          v[k * n + q] = s * vkp + c * vkq;
+        for (let kIndex = 0; kIndex < n; kIndex += 1) {
+          const vkp = v[kIndex * n + pivotP] ?? 0;
+          const vkq = v[kIndex * n + pivotQ] ?? 0;
+          v[kIndex * n + pivotP] = cosValue * vkp - sinValue * vkq;
+          v[kIndex * n + pivotQ] = sinValue * vkp + cosValue * vkq;
         }
       }
     }
@@ -3139,16 +3211,16 @@ export function flintDMatrixEigenSymmetric(
 
 /** Perform d matrix s v d operation. */
 export function flintDMatrixSVD(
-  m: FlintDMatrix,
+  matrix: FlintDMatrix,
   maxIterations = 100,
   epsilon = FLINT_MATH_EPSILON,
 ): FlintOption<FlintSVDDecomposition> {
-  if (m.rows === 0 || m.cols === 0) {
+  if (matrix.rows === 0 || matrix.cols === 0) {
     return flintNone();
   }
 
-  if (m.rows < m.cols) {
-    const transposed = flintDMatrixTranspose(m);
+  if (matrix.rows < matrix.cols) {
+    const transposed = flintDMatrixTranspose(matrix);
     const svdOpt = flintDMatrixSVD(transposed, maxIterations, epsilon);
     if (svdOpt.kind === 'none' || svdOpt.value === undefined) {
       return flintNone();
@@ -3159,26 +3231,26 @@ export function flintDMatrixSVD(
     return flintSome({ u: uMat, s, vt: vtMat });
   }
 
-  const rows = m.rows;
-  const cols = m.cols;
-  const b = new Float64Array(m.data);
+  const rows = matrix.rows;
+  const cols = matrix.cols;
+  const b = new Float64Array(matrix.data);
   const v = new Float64Array(cols * cols);
   for (let index = 0; index < cols; index += 1) {
     v[index * cols + index] = 1;
   }
 
-  for (let iter = 0; iter < maxIterations; iter += 1) {
+  for (let iteration = 0; iteration < maxIterations; iteration += 1) {
     let converged = true;
 
     for (let index = 0; index < cols; index += 1) {
-      for (let k = index + 1; k < cols; k += 1) {
+      for (let kIndex = index + 1; kIndex < cols; kIndex += 1) {
         let alpha = 0;
         let beta = 0;
         let gamma = 0;
 
         for (let index_ = 0; index_ < rows; index_ += 1) {
           const bj = b[index_ * cols + index] ?? 0;
-          const bk = b[index_ * cols + k] ?? 0;
+          const bk = b[index_ * cols + kIndex] ?? 0;
           alpha += bj * bj;
           beta += bk * bk;
           gamma += bj * bk;
@@ -3189,22 +3261,22 @@ export function flintDMatrixSVD(
           converged = false;
 
           const zeta = (beta - alpha) / (2 * gamma);
-          const t = (zeta >= 0 ? 1 : -1) / (Math.abs(zeta) + Math.sqrt(1 + zeta * zeta));
-          const c = 1 / Math.sqrt(1 + t * t);
-          const s = t * c;
+          const tanValue = (zeta >= 0 ? 1 : -1) / (Math.abs(zeta) + Math.sqrt(1 + zeta * zeta));
+          const cosValue = 1 / Math.sqrt(1 + tanValue * tanValue);
+          const sinValue = tanValue * cosValue;
 
           for (let index_ = 0; index_ < rows; index_ += 1) {
             const bj = b[index_ * cols + index] ?? 0;
-            const bk = b[index_ * cols + k] ?? 0;
-            b[index_ * cols + index] = c * bj - s * bk;
-            b[index_ * cols + k] = s * bj + c * bk;
+            const bk = b[index_ * cols + kIndex] ?? 0;
+            b[index_ * cols + index] = cosValue * bj - sinValue * bk;
+            b[index_ * cols + kIndex] = sinValue * bj + cosValue * bk;
           }
 
           for (let index_ = 0; index_ < cols; index_ += 1) {
             const vj = v[index_ * cols + index] ?? 0;
-            const vk = v[index_ * cols + k] ?? 0;
-            v[index_ * cols + index] = c * vj - s * vk;
-            v[index_ * cols + k] = s * vj + c * vk;
+            const vk = v[index_ * cols + kIndex] ?? 0;
+            v[index_ * cols + index] = cosValue * vj - sinValue * vk;
+            v[index_ * cols + kIndex] = sinValue * vj + cosValue * vk;
           }
         }
       }
@@ -3302,7 +3374,7 @@ export function flintDMatrixSVD(
 
   triplets.sort((tripA, tripB) => tripB.s - tripA.s);
 
-  const sortedS = triplets.map((t) => t.s);
+  const sortedS = triplets.map((item) => item.s);
   for (let index = 0; index < cols; index += 1) {
     const uCol = triplets[index]?.uCol ?? [];
     for (let index_ = 0; index_ < rows; index_ += 1) {
@@ -3326,31 +3398,34 @@ export function flintDMatrixSVD(
 }
 
 /** Perform d matrix pseudoinverse operation. */
-export function flintDMatrixPseudoinverse(m: FlintDMatrix, epsilon = FLINT_MATH_EPSILON): FlintOption<FlintDMatrix> {
-  const svdOpt = flintDMatrixSVD(m, 100, epsilon);
+export function flintDMatrixPseudoinverse(
+  matrix: FlintDMatrix,
+  epsilon = FLINT_MATH_EPSILON,
+): FlintOption<FlintDMatrix> {
+  const svdOpt = flintDMatrixSVD(matrix, 100, epsilon);
   if (svdOpt.kind === 'none' || svdOpt.value === undefined) {
     return flintNone();
   }
   const { u, s, vt } = svdOpt.value;
 
-  const rows = m.cols;
-  const cols = m.rows;
+  const rows = matrix.cols;
+  const cols = matrix.rows;
   const kLength = s.length;
   const result = new Float64Array(rows * cols);
 
-  for (let r = 0; r < rows; r += 1) {
-    for (let c = 0; c < cols; c += 1) {
+  for (let row = 0; row < rows; row += 1) {
+    for (let col = 0; col < cols; col += 1) {
       let sum = 0;
-      for (let k = 0; k < kLength; k += 1) {
-        const singularValue = s[k] ?? 0;
+      for (let kIndex = 0; kIndex < kLength; kIndex += 1) {
+        const singularValue = s[kIndex] ?? 0;
         if (singularValue > epsilon) {
           const invS = 1 / singularValue;
-          const vValue = vt.data[k * rows + r] ?? 0;
-          const uValue = u.data[c * cols + k] ?? 0;
+          const vValue = vt.data[kIndex * rows + row] ?? 0;
+          const uValue = u.data[col * cols + kIndex] ?? 0;
           sum += vValue * invS * uValue;
         }
       }
-      result[r * cols + c] = sum;
+      result[row * cols + col] = sum;
     }
   }
 
@@ -3533,21 +3608,24 @@ export function flintTensorViewSet<TValue extends object | number | string | boo
 }
 
 /** Perform tensor matmul operation. */
-export function flintTensorMatmul(a: FlintTensor<number>, b: FlintTensor<number>): FlintOption<FlintTensor<number>> {
-  if (a.shape.rank !== 2 || b.shape.rank !== 2) {
+export function flintTensorMatmul(
+  tensorA: FlintTensor<number>,
+  tensorB: FlintTensor<number>,
+): FlintOption<FlintTensor<number>> {
+  if (tensorA.shape.rank !== 2 || tensorB.shape.rank !== 2) {
     return flintNone();
   }
-  const aRows = a.shape.dimensions[0] ?? 0;
-  const aCols = a.shape.dimensions[1] ?? 0;
-  const bRows = b.shape.dimensions[0] ?? 0;
-  const bCols = b.shape.dimensions[1] ?? 0;
+  const aRows = tensorA.shape.dimensions[0] ?? 0;
+  const aCols = tensorA.shape.dimensions[1] ?? 0;
+  const bRows = tensorB.shape.dimensions[0] ?? 0;
+  const bCols = tensorB.shape.dimensions[1] ?? 0;
 
   if (aCols !== bRows) {
     return flintNone();
   }
 
-  const dmatA = createFlintDMatrix(aRows, aCols, a.data);
-  const dmatB = createFlintDMatrix(bRows, bCols, b.data);
+  const dmatA = createFlintDMatrix(aRows, aCols, tensorA.data);
+  const dmatB = createFlintDMatrix(bRows, bCols, tensorB.data);
   const resultMatOpt = flintDMatrixMul(dmatA, dmatB);
 
   if (resultMatOpt.kind === 'none' || resultMatOpt.value === undefined) {
