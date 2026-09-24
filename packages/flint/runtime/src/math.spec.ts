@@ -527,12 +527,11 @@ describe('Flint Standard Math Library', () => {
       expect(flintDMatrixMulAccumulate(outMatrix, matA, mismatch)).toBe(false);
     });
 
-    it('computes symmetric eigenvalue decomposition eigenvalues and eigenvectors', () => {
+    it('computes symmetric eigenvalue decomposition for 2x2 matrix', () => {
       // 2x2 symmetric matrix:
       // [ 2  1 ]
       // [ 1  2 ]
       // Eigenvalues are 3 and 1.
-      // Eigenvectors: for 3 is [1/sqrt(2), 1/sqrt(2)], for 1 is [-1/sqrt(2), 1/sqrt(2)]
       const sym = createFlintDMatrix(2, 2, [2, 1, 1, 2]);
       const eigenOpt = flintDMatrixEigenSymmetric(sym);
       expect(eigenOpt.kind).toBe('some');
@@ -552,10 +551,20 @@ describe('Flint Standard Math Library', () => {
         expect(av0.value.data[0]).toBeCloseTo(3 * (v0.data[0] ?? 0), 8);
         expect(av0.value.data[1]).toBeCloseTo(3 * (v0.data[1] ?? 0), 8);
       }
+    });
 
-      // Orthogonality of eigenvectors: v0 . v1 = 0
+    it('verifies eigenvector orthogonality for symmetric matrix', () => {
+      const sym = createFlintDMatrix(2, 2, [2, 1, 1, 2]);
+      const eigenOpt = flintDMatrixEigenSymmetric(sym);
+      expect(eigenOpt.kind).toBe('some');
+      if (eigenOpt.kind !== 'some') {
+        return;
+      }
+
+      const { vectors } = eigenOpt.value;
+      const v0 = [vectors.data[0] ?? 0, vectors.data[2] ?? 0];
       const v1 = [vectors.data[1] ?? 0, vectors.data[3] ?? 0];
-      const dot = (v0.data[0] ?? 0) * (v1[0] ?? 0) + (v0.data[1] ?? 0) * (v1[1] ?? 0);
+      const dot = (v0[0] ?? 0) * (v1[0] ?? 0) + (v0[1] ?? 0) * (v1[1] ?? 0);
       expect(dot).toBeCloseTo(0, 8);
     });
 
@@ -564,103 +573,104 @@ describe('Flint Standard Math Library', () => {
       expect(flintDMatrixEigenSymmetric(nonSym).kind).toBe('none');
     });
 
-    it('computes SVD and Moore-Penrose pseudo-inverse for square and rectangular matrices', () => {
-      // Test 1: 3x2 matrix
-      // A = [ 1  2 ]
-      //     [ 3  4 ]
-      //     [ 5  6 ]
+    it('computes SVD for 3x2 rectangular matrix', () => {
       const matrixA = createFlintDMatrix(3, 2, [1, 2, 3, 4, 5, 6]);
       const svdOpt = flintDMatrixSVD(matrixA);
       expect(svdOpt.kind).toBe('some');
-      if (svdOpt.kind === 'some') {
-        const { u, s, vt } = svdOpt.value;
-        expect(u.rows).toBe(3);
-        expect(u.cols).toBe(3);
-        expect(s.length).toBe(2);
-        expect(vt.rows).toBe(2);
-        expect(vt.cols).toBe(2);
+      if (svdOpt.kind !== 'some') {
+        return;
+      }
+      const { u, s, vt } = svdOpt.value;
+      expect(u.rows).toBe(3);
+      expect(u.cols).toBe(3);
+      expect(s.length).toBe(2);
+      expect(vt.rows).toBe(2);
+      expect(vt.cols).toBe(2);
+      expect(s[0]).toBeGreaterThan(s[1] ?? 0);
+      expect(s[1]).toBeGreaterThan(0);
 
-        // Singular values are positive and descending
-        expect(s[0]).toBeGreaterThan(s[1] ?? 0);
-        expect(s[1]).toBeGreaterThan(0);
-
-        // Verify reconstruction A ≈ U * diag(S) * V^T
-        // u is 3x3, sigma is 3x2 with diagonal S
-        for (let row = 0; row < 3; row += 1) {
-          for (let col = 0; col < 2; col += 1) {
-            let recon = 0;
-            for (let kIndex = 0; kIndex < 2; kIndex += 1) {
-              recon += (u.data[row * 3 + kIndex] ?? 0) * (s[kIndex] ?? 0) * (vt.data[kIndex * 2 + col] ?? 0);
-            }
-            expect(recon).toBeCloseTo(matrixA.data[row * 2 + col] ?? 0, 7);
+      // Verify reconstruction A ≈ U * diag(S) * V^T
+      for (let row = 0; row < 3; row += 1) {
+        for (let col = 0; col < 2; col += 1) {
+          let recon = 0;
+          for (let kIndex = 0; kIndex < 2; kIndex += 1) {
+            recon += (u.data[row * 3 + kIndex] ?? 0) * (s[kIndex] ?? 0) * (vt.data[kIndex * 2 + col] ?? 0);
           }
+          expect(recon).toBeCloseTo(matrixA.data[row * 2 + col] ?? 0, 7);
         }
       }
+    });
 
-      // Test 2: 2x3 matrix (m < n)
+    it('computes SVD for 2x3 wide rectangular matrix', () => {
       const aWide = createFlintDMatrix(2, 3, [1, 3, 5, 2, 4, 6]);
       const svdWideOpt = flintDMatrixSVD(aWide);
       expect(svdWideOpt.kind).toBe('some');
-      if (svdWideOpt.kind === 'some') {
-        const { u, s, vt } = svdWideOpt.value;
-        expect(u.rows).toBe(2);
-        expect(u.cols).toBe(2);
-        expect(s.length).toBe(2);
-        expect(vt.rows).toBe(3);
-        expect(vt.cols).toBe(3);
+      if (svdWideOpt.kind !== 'some') {
+        return;
+      }
+      const { u, s, vt } = svdWideOpt.value;
+      expect(u.rows).toBe(2);
+      expect(u.cols).toBe(2);
+      expect(s.length).toBe(2);
+      expect(vt.rows).toBe(3);
+      expect(vt.cols).toBe(3);
 
-        // Verify reconstruction
-        for (let row = 0; row < 2; row += 1) {
-          for (let col = 0; col < 3; col += 1) {
-            let recon = 0;
-            for (let kIndex = 0; kIndex < 2; kIndex += 1) {
-              recon += (u.data[row * 2 + kIndex] ?? 0) * (s[kIndex] ?? 0) * (vt.data[kIndex * 3 + col] ?? 0);
-            }
-            expect(recon).toBeCloseTo(aWide.data[row * 3 + col] ?? 0, 7);
+      for (let row = 0; row < 2; row += 1) {
+        for (let col = 0; col < 3; col += 1) {
+          let recon = 0;
+          for (let kIndex = 0; kIndex < 2; kIndex += 1) {
+            recon += (u.data[row * 2 + kIndex] ?? 0) * (s[kIndex] ?? 0) * (vt.data[kIndex * 3 + col] ?? 0);
           }
+          expect(recon).toBeCloseTo(aWide.data[row * 3 + col] ?? 0, 7);
         }
       }
+    });
 
-      // Test 3: Moore-Penrose pseudo-inverse property: A * A^+ * A ≈ A
+    it('computes Moore-Penrose pseudo-inverse satisfying A * A^+ * A ≈ A', () => {
+      const matrixA = createFlintDMatrix(3, 2, [1, 2, 3, 4, 5, 6]);
       const pinvOpt = flintDMatrixPseudoinverse(matrixA);
       expect(pinvOpt.kind).toBe('some');
-      if (pinvOpt.kind === 'some') {
-        const pinv = pinvOpt.value;
-        expect(pinv.rows).toBe(2);
-        expect(pinv.cols).toBe(3);
-
-        // matrixA is 3x2, pinv is 2x3 => matrixA * pinv is 3x3
-        const aPinvOpt = flintDMatrixMul(matrixA, pinv);
-        expect(aPinvOpt.kind).toBe('some');
-        if (aPinvOpt.kind === 'some') {
-          const aPinvAOpt = flintDMatrixMul(aPinvOpt.value, matrixA);
-          expect(aPinvAOpt.kind).toBe('some');
-          if (aPinvAOpt.kind === 'some') {
-            for (let index = 0; index < 6; index += 1) {
-              expect(aPinvAOpt.value.data[index]).toBeCloseTo(matrixA.data[index] ?? 0, 7);
-            }
-          }
-        }
+      if (pinvOpt.kind !== 'some') {
+        return;
       }
+      const pinv = pinvOpt.value;
+      expect(pinv.rows).toBe(2);
+      expect(pinv.cols).toBe(3);
 
-      // Test 4: Rank deficient matrix (3x3 with rank 1)
+      const aPinvOpt = flintDMatrixMul(matrixA, pinv);
+      expect(aPinvOpt.kind).toBe('some');
+      if (aPinvOpt.kind !== 'some') {
+        return;
+      }
+      const aPinvAOpt = flintDMatrixMul(aPinvOpt.value, matrixA);
+      expect(aPinvAOpt.kind).toBe('some');
+      if (aPinvAOpt.kind !== 'some') {
+        return;
+      }
+      for (let index = 0; index < 6; index += 1) {
+        expect(aPinvAOpt.value.data[index]).toBeCloseTo(matrixA.data[index] ?? 0, 7);
+      }
+    });
+
+    it('computes SVD and orthogonal basis for rank-deficient matrix', () => {
       const rank1 = createFlintDMatrix(3, 3, [1, 0, 0, 0, 0, 0, 0, 0, 0]);
       const svdRank1 = flintDMatrixSVD(rank1);
       expect(svdRank1.kind).toBe('some');
-      if (svdRank1.kind === 'some') {
-        const { u, s } = svdRank1.value;
-        expect(s[0]).toBeCloseTo(1, 7);
-        expect(s[1]).toBeCloseTo(0, 7);
-        expect(s[2]).toBeCloseTo(0, 7);
-        // Verify U is orthogonal: U * U^T = I
-        for (let row = 0; row < 3; row += 1) {
-          for (let col = 0; col < 3; col += 1) {
-            let dot = 0;
-            for (let kIndex = 0; kIndex < 3; kIndex += 1) {
-              dot += (u.data[row * 3 + kIndex] ?? 0) * (u.data[col * 3 + kIndex] ?? 0);
-            }
-            expect(dot).toBeCloseTo(row === col ? 1 : 0, 6);
+      if (svdRank1.kind !== 'some') {
+        return;
+      }
+      const { u, s } = svdRank1.value;
+      expect(s[0]).toBeCloseTo(1, 7);
+      expect(s[1]).toBeCloseTo(0, 7);
+      expect(s[2]).toBeCloseTo(0, 7);
+
+      for (let row = 0; row < 3; row += 1) {
+        for (let col = 0; col < 3; col += 1) {
+          let dot = 0;
+          for (let kIndex = 0; kIndex < 3; kIndex += 1) {
+            dot += (u.data[row * 3 + kIndex] ?? 0) * (u.data[col * 3 + kIndex] ?? 0);
           }
+          expect(dot).toBeCloseTo(row === col ? 1 : 0, 6);
         }
       }
     });

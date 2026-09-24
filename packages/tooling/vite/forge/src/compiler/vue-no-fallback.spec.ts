@@ -85,31 +85,33 @@ function pascalCase(name: string): string {
     .join('');
 }
 
+/** Read a component file source if it exists. */
+function tryReadComponentSource(group: string, name: string): { name: string; source: string } | undefined {
+  const componentDirectory = path.join(COMPONENTS_ROOT, group, name);
+  try {
+    if (!statSync(componentDirectory).isDirectory()) {
+      return undefined;
+    }
+    const file = path.join(componentDirectory, `${name}.tsx`);
+    return { name, source: readFileSync(file, 'utf8') };
+  } catch {
+    return undefined;
+  }
+}
+
 /** Every `{atoms,molecules,organisms,templates}/<name>/<name>.tsx` neutral component source. */
 function discoverComponents(): { name: string; source: string }[] {
-  const found: { name: string; source: string }[] = [];
-  for (const group of ['atoms', 'molecules', 'organisms', 'templates']) {
-    const groupDirectory = path.join(COMPONENTS_ROOT, group);
-    let entries: string[];
+  const groups = ['atoms', 'molecules', 'organisms', 'templates'];
+  return groups.flatMap((group) => {
     try {
-      entries = readdirSync(groupDirectory);
+      const entries = readdirSync(path.join(COMPONENTS_ROOT, group));
+      return entries
+        .map((name) => tryReadComponentSource(group, name))
+        .filter((item): item is { name: string; source: string } => item !== undefined);
     } catch {
-      continue;
+      return [];
     }
-    for (const name of entries) {
-      const componentDirectory = path.join(groupDirectory, name);
-      if (!statSync(componentDirectory).isDirectory()) {
-        continue;
-      }
-      const file = path.join(componentDirectory, `${name}.tsx`);
-      try {
-        found.push({ name, source: readFileSync(file, 'utf8') });
-      } catch {
-        // Not a `<name>/<name>.tsx` component folder — skip.
-      }
-    }
-  }
-  return found;
+  });
 }
 
 /** Whether a compiled Vue module took the render-closure fallback. */
