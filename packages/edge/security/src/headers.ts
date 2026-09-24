@@ -224,6 +224,24 @@ function cloneResponseWithHeaders(response: Response, securityHeaders: Iterable<
 }
 
 /**
+ * Applies security header entries to an HTTP Response, attempting in-place mutation first.
+ *
+ * @param response - The outgoing HTTP Response object.
+ * @param entries - Header entries to apply.
+ * @returns The response decorated with security headers.
+ */
+function applyHeaderEntries(response: Response, entries: Iterable<readonly [string, string]>): Response {
+  try {
+    for (const [key, value] of entries) {
+      response.headers.set(key, value);
+    }
+    return response;
+  } catch {
+    return cloneResponseWithHeaders(response, entries);
+  }
+}
+
+/**
  * Applies security headers to an HTTP Response, attempting in-place mutation first.
  *
  * @param response - The outgoing HTTP Response object.
@@ -231,26 +249,6 @@ function cloneResponseWithHeaders(response: Response, securityHeaders: Iterable<
  * @returns The response decorated with security headers.
  */
 export function applySecurityHeaders(response: Response, options?: SecurityHeaderOptions): Response {
-  if (options === undefined) {
-    try {
-      for (const [key, value] of DEFAULT_SECURITY_HEADER_ENTRIES) {
-        response.headers.set(key, value);
-      }
-      return response;
-    } catch {
-      return cloneResponseWithHeaders(response, DEFAULT_SECURITY_HEADER_ENTRIES);
-    }
-  }
-
-  const securityHeaders = createSecurityHeaders(options);
-
-  // Attempt in-place mutation first (zero allocations, supports existing reference assertions)
-  try {
-    for (const [key, value] of securityHeaders.entries()) {
-      response.headers.set(key, value);
-    }
-    return response;
-  } catch {
-    return cloneResponseWithHeaders(response, securityHeaders.entries());
-  }
+  const entries = options === undefined ? DEFAULT_SECURITY_HEADER_ENTRIES : createSecurityHeaders(options).entries();
+  return applyHeaderEntries(response, entries);
 }

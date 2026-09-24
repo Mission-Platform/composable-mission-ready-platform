@@ -862,40 +862,46 @@ function formatComponentExportSpecifiers(rawSpecifiers: readonly string[], frame
   return [...names].join(', ');
 }
 
+/** Matches utility and style re-export statements within declaration files. */
+const CACHED_UTIL_RE_EXPORT_PATTERN =
+  /^export\s+\{([^}]+)\}\s+from\s+['"](\.\/(?:utils|composables|styles)\/[^'"]+)['"];?$/;
+
+/** Formats a component re-export declaration for the target framework. */
+function formatCachedComponentReExport(
+  rawSpecifiersText: string,
+  subPathWithExt: string,
+  framework: JsxFramework,
+): string {
+  const rawSpecifiers = rawSpecifiersText.split(',').map((s) => s.trim());
+  const subPath = subPathWithExt.replace(/\.(?:vue|svelte|tsx|ts)$/, '');
+  const isTypeExport = rawSpecifiers.every((s) => s.startsWith('type '));
+  if (isTypeExport) {
+    return `export { ${rawSpecifiers.join(', ')} } from "./components/${subPath}";`;
+  }
+  const specifiers = formatComponentExportSpecifiers(rawSpecifiers, framework);
+  return `export { ${specifiers} } from "./components/${subPath}";`;
+}
+
+/** Formats relative non-component re-exports to reference the parent directory. */
+function formatCachedRelativeReExport(trimmed: string): string | undefined {
+  const relativeExportMatch = trimmed.match(/^export\s+(.+?)\s+from\s+['"]\.\/([^'"]+)['"];?$/);
+  if (relativeExportMatch) {
+    return `export ${relativeExportMatch[1]} from "../${relativeExportMatch[2]}";`;
+  }
+  return trimmed.startsWith('export ') ? trimmed : undefined;
+}
+
 /** Formats or redirects an entry re-export line for framework declaration output. */
+// skipcq: JS-R1005
 function formatCachedEntryLine(trimmed: string, framework: JsxFramework): string | undefined {
   const compMatch = trimmed.match(/^export\s+\{([^}]+)\}\s+from\s+['"]\.\/components\/([^'"]+)['"];?$/);
   if (compMatch) {
-    const rawSpecifiers = compMatch[1].split(',').map((s) => s.trim());
-    const subPath = compMatch[2].replace(/\.(?:vue|svelte|tsx|ts)$/, '');
-    const isTypeExport = rawSpecifiers.every((s) => s.startsWith('type '));
-
-    if (isTypeExport) {
-      return `export { ${rawSpecifiers.join(', ')} } from "./components/${subPath}";`;
-    }
-    const specifiers = formatComponentExportSpecifiers(rawSpecifiers, framework);
-    return `export { ${specifiers} } from "./components/${subPath}";`;
+    return formatCachedComponentReExport(compMatch[1], compMatch[2], framework);
   }
-
-  const utilMatch = trimmed.match(
-    /^export\s+\{([^}]+)\}\s+from\s+['"](\.\/(?:utils|composables|styles)\/[^'"]+)['"];?$/,
-  );
-  if (utilMatch) {
+  if (CACHED_UTIL_RE_EXPORT_PATTERN.test(trimmed)) {
     return trimmed;
   }
-
-  const relativeExportMatch = trimmed.match(/^export\s+(.+?)\s+from\s+['"]\.\/([^'"]+)['"];?$/);
-  if (relativeExportMatch) {
-    const clause = relativeExportMatch[1];
-    const specifier = relativeExportMatch[2];
-    return `export ${clause} from "../${specifier}";`;
-  }
-
-  if (trimmed.startsWith('export ')) {
-    return trimmed;
-  }
-
-  return undefined;
+  return formatCachedRelativeReExport(trimmed);
 }
 
 /** Synthesizes an index.d.ts entry declaration file from a cached framework source index. */
