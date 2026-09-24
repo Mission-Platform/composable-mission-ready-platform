@@ -639,6 +639,27 @@ describe('Flint Standard Math Library', () => {
           }
         }
       }
+
+      // Test 4: Rank deficient matrix (3x3 with rank 1)
+      const rank1 = createFlintDMatrix(3, 3, [1, 0, 0, 0, 0, 0, 0, 0, 0]);
+      const svdRank1 = flintDMatrixSVD(rank1);
+      expect(svdRank1.kind).toBe('some');
+      if (svdRank1.kind === 'some') {
+        const { u, s } = svdRank1.value;
+        expect(s[0]).toBeCloseTo(1, 7);
+        expect(s[1]).toBeCloseTo(0, 7);
+        expect(s[2]).toBeCloseTo(0, 7);
+        // Verify U is orthogonal: U * U^T = I
+        for (let r = 0; r < 3; r += 1) {
+          for (let c = 0; c < 3; c += 1) {
+            let dot = 0;
+            for (let k = 0; k < 3; k += 1) {
+              dot += (u.data[r * 3 + k] ?? 0) * (u.data[c * 3 + k] ?? 0);
+            }
+            expect(dot).toBeCloseTo(r === c ? 1 : 0, 6);
+          }
+        }
+      }
     });
   });
 

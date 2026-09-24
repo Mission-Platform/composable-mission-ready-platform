@@ -3194,13 +3194,23 @@ export function flintDMatrixSVD(
         const vec = new Float64Array(rows);
         vec[basisIndex] = 1;
 
-        for (let previous = 0; previous < index; previous += 1) {
-          let dot = 0;
-          for (let index_ = 0; index_ < rows; index_ += 1) {
-            dot += (u[index_ * rows + previous] ?? 0) * (vec[index_] ?? 0);
+        for (let other = 0; other < rows; other += 1) {
+          if (other === index) {
+            continue;
           }
+          let otherNormSq = 0;
           for (let index_ = 0; index_ < rows; index_ += 1) {
-            vec[index_] = (vec[index_] ?? 0) - dot * (u[index_ * rows + previous] ?? 0);
+            const value = u[index_ * rows + other] ?? 0;
+            otherNormSq += value * value;
+          }
+          if (otherNormSq >= 0.5) {
+            let dot = 0;
+            for (let index_ = 0; index_ < rows; index_ += 1) {
+              dot += (u[index_ * rows + other] ?? 0) * (vec[index_] ?? 0);
+            }
+            for (let index_ = 0; index_ < rows; index_ += 1) {
+              vec[index_] = (vec[index_] ?? 0) - dot * (u[index_ * rows + other] ?? 0);
+            }
           }
         }
 
