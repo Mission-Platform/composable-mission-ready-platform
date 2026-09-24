@@ -2088,6 +2088,4087 @@ export type FlintLogSink = (event: FlintLogEvent) => void;
 
 Consumer callback function receiving structured runtime log events.
 
+## `src/math`
+
+### createFlintAABB2
+
+**Kind:** function
+
+```typescript
+function createFlintAABB2(min: FlintVec2, max: FlintVec2): FlintAABB2;
+```
+
+Perform create flint a a b b 2 operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| min  | FlintVec2 |             |
+| max  | FlintVec2 |             |
+
+### createFlintAABB3
+
+**Kind:** function
+
+```typescript
+function createFlintAABB3(min: FlintVec3, max: FlintVec3): FlintAABB3;
+```
+
+Perform create flint a a b b 3 operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| min  | FlintVec3 |             |
+| max  | FlintVec3 |             |
+
+### createFlintBVHNode3
+
+**Kind:** function
+
+```typescript
+function createFlintBVHNode3(
+  bounds: FlintAABB3,
+  leftChild: number,
+  rightChild: number,
+  primitiveIndex: number,
+): FlintBVHNode3;
+```
+
+Perform create flint b v h node 3 operation.
+
+#### Parameters
+
+| Name           | Type       | Description |
+| -------------- | ---------- | ----------- |
+| bounds         | FlintAABB3 |             |
+| leftChild      | number     |             |
+| rightChild     | number     |             |
+| primitiveIndex | number     |             |
+
+### createFlintBVHTree3
+
+**Kind:** function
+
+```typescript
+function createFlintBVHTree3(nodes: readonly FlintBVHNode3[], rootIndex = 0): FlintBVHTree3;
+```
+
+Perform create flint b v h tree 3 operation.
+
+#### Parameters
+
+| Name      | Type                     | Description |
+| --------- | ------------------------ | ----------- |
+| nodes     | readonly FlintBVHNode3[] |             |
+| rootIndex |                          |             |
+
+### createFlintCircle
+
+**Kind:** function
+
+```typescript
+function createFlintCircle(center: FlintVec2, radius: number): FlintCircle;
+```
+
+Perform create flint circle operation.
+
+#### Parameters
+
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| center | FlintVec2 |             |
+| radius | number    |             |
+
+### createFlintColorRgba
+
+**Kind:** function
+
+```typescript
+function createFlintColorRgba(r = 0, g = 0, b = 0, a = 1): FlintColorRgba;
+```
+
+Perform create flint color rgba operation.
+
+#### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| r    |      |             |
+| g    |      |             |
+| b    |      |             |
+| a    |      |             |
+
+### createFlintDMatrix
+
+**Kind:** function
+
+```typescript
+function createFlintDMatrix(rows: number, cols: number, data?: readonly number[]): FlintDMatrix;
+```
+
+Perform create flint d matrix operation.
+
+#### Parameters
+
+| Name | Type              | Description |
+| ---- | ----------------- | ----------- |
+| rows | number            |             |
+| cols | number            |             |
+| data | readonly number[] |             |
+
+### createFlintIVec2
+
+**Kind:** function
+
+```typescript
+function createFlintIVec2(x = 0, y = 0): FlintIVec2;
+```
+
+Perform create flint i vec 2 operation.
+
+#### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| x    |      |             |
+| y    |      |             |
+
+### createFlintIVec3
+
+**Kind:** function
+
+```typescript
+function createFlintIVec3(x = 0, y = 0, z = 0): FlintIVec3;
+```
+
+Perform create flint i vec 3 operation.
+
+#### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| x    |      |             |
+| y    |      |             |
+| z    |      |             |
+
+### createFlintMat2
+
+**Kind:** function
+
+```typescript
+function createFlintMat2(c0OrElements?: FlintVec2 | readonly number[], c1?: FlintVec2): FlintMat2;
+```
+
+Perform create flint mat 2 operation.
+
+#### Parameters
+
+| Name         | Type                           | Description |
+| ------------ | ------------------------------ | ----------- |
+| c0OrElements | FlintVec2 \| readonly number[] |             |
+| c1           | FlintVec2                      |             |
+
+### createFlintMat3
+
+**Kind:** function
+
+```typescript
+function createFlintMat3(c0OrElements?: FlintVec3 | readonly number[], c1?: FlintVec3, c2?: FlintVec3): FlintMat3;
+```
+
+Perform create flint mat 3 operation.
+
+#### Parameters
+
+| Name         | Type                           | Description |
+| ------------ | ------------------------------ | ----------- |
+| c0OrElements | FlintVec3 \| readonly number[] |             |
+| c1           | FlintVec3                      |             |
+| c2           | FlintVec3                      |             |
+
+### createFlintMat4
+
+**Kind:** function
+
+```typescript
+function createFlintMat4(
+  c0OrElements?: FlintVec4 | readonly number[],
+  c1?: FlintVec4,
+  c2?: FlintVec4,
+  c3?: FlintVec4,
+): FlintMat4;
+```
+
+Perform create flint mat 4 operation.
+
+#### Parameters
+
+| Name         | Type                           | Description |
+| ------------ | ------------------------------ | ----------- |
+| c0OrElements | FlintVec4 \| readonly number[] |             |
+| c1           | FlintVec4                      |             |
+| c2           | FlintVec4                      |             |
+| c3           | FlintVec4                      |             |
+
+### createFlintOBB2
+
+**Kind:** function
+
+```typescript
+function createFlintOBB2(center: FlintVec2, halfExtents: FlintVec2, angleRad = 0): FlintOBB2;
+```
+
+Perform create flint o b b 2 operation.
+
+#### Parameters
+
+| Name        | Type      | Description |
+| ----------- | --------- | ----------- |
+| center      | FlintVec2 |             |
+| halfExtents | FlintVec2 |             |
+| angleRad    |           |             |
+
+### createFlintOBB3
+
+**Kind:** function
+
+```typescript
+function createFlintOBB3(
+  center: FlintVec3,
+  halfExtents: FlintVec3,
+  orientation: FlintQuat = flintQuatIdentity(),
+): FlintOBB3;
+```
+
+Perform create flint o b b 3 operation.
+
+#### Parameters
+
+| Name        | Type      | Description |
+| ----------- | --------- | ----------- |
+| center      | FlintVec3 |             |
+| halfExtents | FlintVec3 |             |
+| orientation | FlintQuat |             |
+
+### createFlintPlane3
+
+**Kind:** function
+
+```typescript
+function createFlintPlane3(normal: FlintVec3, distance: number): FlintPlane3;
+```
+
+Perform create flint plane 3 operation.
+
+#### Parameters
+
+| Name     | Type      | Description |
+| -------- | --------- | ----------- |
+| normal   | FlintVec3 |             |
+| distance | number    |             |
+
+### createFlintQuat
+
+**Kind:** function
+
+```typescript
+function createFlintQuat(x = 0, y = 0, z = 0, w = 1): FlintQuat;
+```
+
+Perform create flint quat operation.
+
+#### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| x    |      |             |
+| y    |      |             |
+| z    |      |             |
+| w    |      |             |
+
+### createFlintRay2
+
+**Kind:** function
+
+```typescript
+function createFlintRay2(origin: FlintVec2, direction: FlintVec2): FlintRay2;
+```
+
+Perform create flint ray 2 operation.
+
+#### Parameters
+
+| Name      | Type      | Description |
+| --------- | --------- | ----------- |
+| origin    | FlintVec2 |             |
+| direction | FlintVec2 |             |
+
+### createFlintRay3
+
+**Kind:** function
+
+```typescript
+function createFlintRay3(origin: FlintVec3, direction: FlintVec3): FlintRay3;
+```
+
+Perform create flint ray 3 operation.
+
+#### Parameters
+
+| Name      | Type      | Description |
+| --------- | --------- | ----------- |
+| origin    | FlintVec3 |             |
+| direction | FlintVec3 |             |
+
+### createFlintRayHit3
+
+**Kind:** function
+
+```typescript
+function createFlintRayHit3(
+  hit: boolean,
+  t: number,
+  point: FlintVec3,
+  normal: FlintVec3,
+  primitiveId: number,
+): FlintRayHit3;
+```
+
+Perform create flint ray hit 3 operation.
+
+#### Parameters
+
+| Name        | Type      | Description |
+| ----------- | --------- | ----------- |
+| hit         | boolean   |             |
+| t           | number    |             |
+| point       | FlintVec3 |             |
+| normal      | FlintVec3 |             |
+| primitiveId | number    |             |
+
+### createFlintSegment2
+
+**Kind:** function
+
+```typescript
+function createFlintSegment2(start: FlintVec2, end: FlintVec2): FlintSegment2;
+```
+
+Perform create flint segment 2 operation.
+
+#### Parameters
+
+| Name  | Type      | Description |
+| ----- | --------- | ----------- |
+| start | FlintVec2 |             |
+| end   | FlintVec2 |             |
+
+### createFlintSegment3
+
+**Kind:** function
+
+```typescript
+function createFlintSegment3(start: FlintVec3, end: FlintVec3): FlintSegment3;
+```
+
+Perform create flint segment 3 operation.
+
+#### Parameters
+
+| Name  | Type      | Description |
+| ----- | --------- | ----------- |
+| start | FlintVec3 |             |
+| end   | FlintVec3 |             |
+
+### createFlintSphere
+
+**Kind:** function
+
+```typescript
+function createFlintSphere(center: FlintVec3, radius: number): FlintSphere;
+```
+
+Perform create flint sphere operation.
+
+#### Parameters
+
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| center | FlintVec3 |             |
+| radius | number    |             |
+
+### createFlintTensor
+
+**Kind:** function
+
+```typescript
+function createFlintTensor(shape: FlintTensorShape, data: readonly TValue[]): FlintTensor<TValue>;
+```
+
+Perform create flint tensor operation.
+
+#### Parameters
+
+| Name  | Type              | Description |
+| ----- | ----------------- | ----------- |
+| shape | FlintTensorShape  |             |
+| data  | readonly TValue[] |             |
+
+### createFlintTensorShape
+
+**Kind:** function
+
+```typescript
+function createFlintTensorShape(dimensions: readonly number[]): FlintTensorShape;
+```
+
+Perform create flint tensor shape operation.
+
+#### Parameters
+
+| Name       | Type              | Description |
+| ---------- | ----------------- | ----------- |
+| dimensions | readonly number[] |             |
+
+### createFlintTensorView
+
+**Kind:** function
+
+```typescript
+function createFlintTensorView(shape: FlintTensorShape, data: readonly TValue[], offset = 0): FlintTensorView<TValue>;
+```
+
+Perform create flint tensor view operation.
+
+#### Parameters
+
+| Name   | Type              | Description |
+| ------ | ----------------- | ----------- |
+| shape  | FlintTensorShape  |             |
+| data   | readonly TValue[] |             |
+| offset |                   |             |
+
+### createFlintTriangle2
+
+**Kind:** function
+
+```typescript
+function createFlintTriangle2(a: FlintVec2, b: FlintVec2, c: FlintVec2): FlintTriangle2;
+```
+
+Perform create flint triangle 2 operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec2 |             |
+| b    | FlintVec2 |             |
+| c    | FlintVec2 |             |
+
+### createFlintTriangle3
+
+**Kind:** function
+
+```typescript
+function createFlintTriangle3(a: FlintVec3, b: FlintVec3, c: FlintVec3): FlintTriangle3;
+```
+
+Perform create flint triangle 3 operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec3 |             |
+| b    | FlintVec3 |             |
+| c    | FlintVec3 |             |
+
+### createFlintVec2
+
+**Kind:** function
+
+```typescript
+function createFlintVec2(x = 0, y = 0): FlintVec2;
+```
+
+Perform create flint vec 2 operation.
+
+#### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| x    |      |             |
+| y    |      |             |
+
+### createFlintVec3
+
+**Kind:** function
+
+```typescript
+function createFlintVec3(x = 0, y = 0, z = 0): FlintVec3;
+```
+
+Perform create flint vec 3 operation.
+
+#### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| x    |      |             |
+| y    |      |             |
+| z    |      |             |
+
+### createFlintVec4
+
+**Kind:** function
+
+```typescript
+function createFlintVec4(x = 0, y = 0, z = 0, w = 0): FlintVec4;
+```
+
+Perform create flint vec 4 operation.
+
+#### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| x    |      |             |
+| y    |      |             |
+| z    |      |             |
+| w    |      |             |
+
+### FLINT_MATH_DEG_TO_RAD
+
+**Kind:** constant
+
+```typescript
+export const FLINT_MATH_DEG_TO_RAD;
+```
+
+Conversion factor from degrees to radians.
+
+### FLINT_MATH_E
+
+**Kind:** constant
+
+```typescript
+export const FLINT_MATH_E;
+```
+
+Euler constant (e).
+
+### FLINT_MATH_EPSILON
+
+**Kind:** constant
+
+```typescript
+export const FLINT_MATH_EPSILON;
+```
+
+Euler constant (e).
+
+### FLINT_MATH_F32_EPSILON
+
+**Kind:** constant
+
+```typescript
+export const FLINT_MATH_F32_EPSILON;
+```
+
+Machine epsilon for 32-bit floating point operations.
+
+### FLINT_MATH_PI
+
+**Kind:** constant
+
+```typescript
+export const FLINT_MATH_PI;
+```
+
+Standard mathematical constants for Flint runtime.
+
+### FLINT_MATH_RAD_TO_DEG
+
+**Kind:** constant
+
+```typescript
+export const FLINT_MATH_RAD_TO_DEG;
+```
+
+Conversion factor from radians to degrees.
+
+### FLINT_MATH_SQRT2
+
+**Kind:** constant
+
+```typescript
+export const FLINT_MATH_SQRT2;
+```
+
+Square root of 2 constant.
+
+### FLINT_MATH_TAU
+
+**Kind:** constant
+
+```typescript
+export const FLINT_MATH_TAU;
+```
+
+2 * PI (tau) circle constant.
+
+### FlintAABB2
+
+**Kind:** interface
+
+```typescript
+export interface FlintAABB2
+```
+
+A A B B 2 representation.
+
+### flintAABB2Area
+
+**Kind:** function
+
+```typescript
+function flintAABB2Area(box: FlintAABB2): number;
+```
+
+Perform a a b b 2 area operation.
+
+#### Parameters
+
+| Name | Type       | Description |
+| ---- | ---------- | ----------- |
+| box  | FlintAABB2 |             |
+
+### flintAABB2ContainsPoint
+
+**Kind:** function
+
+```typescript
+function flintAABB2ContainsPoint(box: FlintAABB2, point: FlintVec2): boolean;
+```
+
+Perform a a b b 2 contains point operation.
+
+#### Parameters
+
+| Name  | Type       | Description |
+| ----- | ---------- | ----------- |
+| box   | FlintAABB2 |             |
+| point | FlintVec2  |             |
+
+### flintAABB2IntersectsAABB2
+
+**Kind:** function
+
+```typescript
+function flintAABB2IntersectsAABB2(a: FlintAABB2, b: FlintAABB2): boolean;
+```
+
+Perform a a b b 2 intersects a a b b 2 operation.
+
+#### Parameters
+
+| Name | Type       | Description |
+| ---- | ---------- | ----------- |
+| a    | FlintAABB2 |             |
+| b    | FlintAABB2 |             |
+
+### flintAABB2Union
+
+**Kind:** function
+
+```typescript
+function flintAABB2Union(a: FlintAABB2, b: FlintAABB2): FlintAABB2;
+```
+
+Perform a a b b 2 union operation.
+
+#### Parameters
+
+| Name | Type       | Description |
+| ---- | ---------- | ----------- |
+| a    | FlintAABB2 |             |
+| b    | FlintAABB2 |             |
+
+### FlintAABB3
+
+**Kind:** interface
+
+```typescript
+export interface FlintAABB3
+```
+
+A A B B 3 representation.
+
+### flintAABB3ContainsPoint
+
+**Kind:** function
+
+```typescript
+function flintAABB3ContainsPoint(box: FlintAABB3, point: FlintVec3): boolean;
+```
+
+Perform a a b b 3 contains point operation.
+
+#### Parameters
+
+| Name  | Type       | Description |
+| ----- | ---------- | ----------- |
+| box   | FlintAABB3 |             |
+| point | FlintVec3  |             |
+
+### flintAABB3IntersectsAABB3
+
+**Kind:** function
+
+```typescript
+function flintAABB3IntersectsAABB3(a: FlintAABB3, b: FlintAABB3): boolean;
+```
+
+Perform a a b b 3 intersects a a b b 3 operation.
+
+#### Parameters
+
+| Name | Type       | Description |
+| ---- | ---------- | ----------- |
+| a    | FlintAABB3 |             |
+| b    | FlintAABB3 |             |
+
+### flintAABB3Volume
+
+**Kind:** function
+
+```typescript
+function flintAABB3Volume(box: FlintAABB3): number;
+```
+
+Perform a a b b 3 volume operation.
+
+#### Parameters
+
+| Name | Type       | Description |
+| ---- | ---------- | ----------- |
+| box  | FlintAABB3 |             |
+
+### flintApproxEqual
+
+**Kind:** function
+
+```typescript
+function flintApproxEqual(a: number, b: number, epsilon = FLINT_MATH_EPSILON): boolean;
+```
+
+Test approximate equality within specified epsilon.
+
+#### Parameters
+
+| Name    | Type   | Description |
+| ------- | ------ | ----------- |
+| a       | number |             |
+| b       | number |             |
+| epsilon |        |             |
+
+### flintBezier2Cubic
+
+**Kind:** function
+
+```typescript
+function flintBezier2Cubic(p0: FlintVec2, p1: FlintVec2, p2: FlintVec2, p3: FlintVec2, t: number): FlintVec2;
+```
+
+Perform bezier 2 cubic operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| p0   | FlintVec2 |             |
+| p1   | FlintVec2 |             |
+| p2   | FlintVec2 |             |
+| p3   | FlintVec2 |             |
+| t    | number    |             |
+
+### flintBezier2Quadratic
+
+**Kind:** function
+
+```typescript
+function flintBezier2Quadratic(p0: FlintVec2, p1: FlintVec2, p2: FlintVec2, t: number): FlintVec2;
+```
+
+Perform bezier 2 quadratic operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| p0   | FlintVec2 |             |
+| p1   | FlintVec2 |             |
+| p2   | FlintVec2 |             |
+| t    | number    |             |
+
+### flintBezier3Cubic
+
+**Kind:** function
+
+```typescript
+function flintBezier3Cubic(p0: FlintVec3, p1: FlintVec3, p2: FlintVec3, p3: FlintVec3, t: number): FlintVec3;
+```
+
+Perform bezier 3 cubic operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| p0   | FlintVec3 |             |
+| p1   | FlintVec3 |             |
+| p2   | FlintVec3 |             |
+| p3   | FlintVec3 |             |
+| t    | number    |             |
+
+### flintBVHBuildFromAABBs
+
+**Kind:** function
+
+```typescript
+function flintBVHBuildFromAABBs(boxes: readonly FlintAABB3[]): FlintBVHTree3;
+```
+
+Perform b v h build from a a b bs operation.
+
+#### Parameters
+
+| Name  | Type                  | Description |
+| ----- | --------------------- | ----------- |
+| boxes | readonly FlintAABB3[] |             |
+
+### FlintBVHNode3
+
+**Kind:** interface
+
+```typescript
+export interface FlintBVHNode3
+```
+
+B V H Node 3 representation.
+
+### flintBVHRayIntersect
+
+**Kind:** function
+
+```typescript
+function flintBVHRayIntersect(tree: FlintBVHTree3, ray: FlintRay3): FlintOption<FlintRayHit3>;
+```
+
+Perform b v h ray intersect operation.
+
+#### Parameters
+
+| Name | Type          | Description |
+| ---- | ------------- | ----------- |
+| tree | FlintBVHTree3 |             |
+| ray  | FlintRay3     |             |
+
+### FlintBVHTree3
+
+**Kind:** interface
+
+```typescript
+export interface FlintBVHTree3
+```
+
+B V H Tree 3 representation.
+
+### flintCatmullRom2
+
+**Kind:** function
+
+```typescript
+function flintCatmullRom2(p0: FlintVec2, p1: FlintVec2, p2: FlintVec2, p3: FlintVec2, t: number): FlintVec2;
+```
+
+Perform catmull rom 2 operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| p0   | FlintVec2 |             |
+| p1   | FlintVec2 |             |
+| p2   | FlintVec2 |             |
+| p3   | FlintVec2 |             |
+| t    | number    |             |
+
+### flintCatmullRom3
+
+**Kind:** function
+
+```typescript
+function flintCatmullRom3(p0: FlintVec3, p1: FlintVec3, p2: FlintVec3, p3: FlintVec3, t: number): FlintVec3;
+```
+
+Perform catmull rom 3 operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| p0   | FlintVec3 |             |
+| p1   | FlintVec3 |             |
+| p2   | FlintVec3 |             |
+| p3   | FlintVec3 |             |
+| t    | number    |             |
+
+### flintCeil
+
+**Kind:** function
+
+```typescript
+function flintCeil(x: number): number;
+```
+
+Compute the smallest integer greater than or equal to x.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| x    | number |             |
+
+### FlintCholeskyDecomposition
+
+**Kind:** interface
+
+```typescript
+export interface FlintCholeskyDecomposition
+```
+
+Cholesky Decomposition representation.
+
+### FlintCircle
+
+**Kind:** interface
+
+```typescript
+export interface FlintCircle
+```
+
+Circle representation.
+
+### flintCircleContainsPoint
+
+**Kind:** function
+
+```typescript
+function flintCircleContainsPoint(c: FlintCircle, p: FlintVec2): boolean;
+```
+
+Perform circle contains point operation.
+
+#### Parameters
+
+| Name | Type        | Description |
+| ---- | ----------- | ----------- |
+| c    | FlintCircle |             |
+| p    | FlintVec2   |             |
+
+### flintCircleIntersectsCircle
+
+**Kind:** function
+
+```typescript
+function flintCircleIntersectsCircle(a: FlintCircle, b: FlintCircle): boolean;
+```
+
+Perform circle intersects circle operation.
+
+#### Parameters
+
+| Name | Type        | Description |
+| ---- | ----------- | ----------- |
+| a    | FlintCircle |             |
+| b    | FlintCircle |             |
+
+### flintClamp
+
+**Kind:** function
+
+```typescript
+function flintClamp(value: number, minimum: number, maximum: number): number;
+```
+
+Clamp a numeric value between minimum and maximum bounds.
+
+#### Parameters
+
+| Name    | Type   | Description |
+| ------- | ------ | ----------- |
+| value   | number |             |
+| minimum | number |             |
+| maximum | number |             |
+
+### FlintColorHsv
+
+**Kind:** interface
+
+```typescript
+export interface FlintColorHsv
+```
+
+Color Hsv representation.
+
+### flintColorHsvToRgb
+
+**Kind:** function
+
+```typescript
+function flintColorHsvToRgb(hsv: FlintColorHsv): FlintColorRgba;
+```
+
+Perform color hsv to rgb operation.
+
+#### Parameters
+
+| Name | Type          | Description |
+| ---- | ------------- | ----------- |
+| hsv  | FlintColorHsv |             |
+
+### flintColorLerpOklab
+
+**Kind:** function
+
+```typescript
+function flintColorLerpOklab(c1: FlintColorRgba, c2: FlintColorRgba, t: number): FlintColorRgba;
+```
+
+Perform color lerp oklab operation.
+
+#### Parameters
+
+| Name | Type           | Description |
+| ---- | -------------- | ----------- |
+| c1   | FlintColorRgba |             |
+| c2   | FlintColorRgba |             |
+| t    | number         |             |
+
+### flintColorLinearToSrgb
+
+**Kind:** function
+
+```typescript
+function flintColorLinearToSrgb(c: FlintColorRgba): FlintColorRgba;
+```
+
+Perform color linear to srgb operation.
+
+#### Parameters
+
+| Name | Type           | Description |
+| ---- | -------------- | ----------- |
+| c    | FlintColorRgba |             |
+
+### FlintColorOklab
+
+**Kind:** interface
+
+```typescript
+export interface FlintColorOklab
+```
+
+Color Oklab representation.
+
+### flintColorOklabToSrgb
+
+**Kind:** function
+
+```typescript
+function flintColorOklabToSrgb(lab: FlintColorOklab): FlintColorRgba;
+```
+
+Perform color oklab to srgb operation.
+
+#### Parameters
+
+| Name | Type            | Description |
+| ---- | --------------- | ----------- |
+| lab  | FlintColorOklab |             |
+
+### FlintColorRgba
+
+**Kind:** interface
+
+```typescript
+export interface FlintColorRgba
+```
+
+Color Rgba representation.
+
+### flintColorRgbToHsv
+
+**Kind:** function
+
+```typescript
+function flintColorRgbToHsv(c: FlintColorRgba): FlintColorHsv;
+```
+
+Perform color rgb to hsv operation.
+
+#### Parameters
+
+| Name | Type           | Description |
+| ---- | -------------- | ----------- |
+| c    | FlintColorRgba |             |
+
+### flintColorSrgbToLinear
+
+**Kind:** function
+
+```typescript
+function flintColorSrgbToLinear(c: FlintColorRgba): FlintColorRgba;
+```
+
+Perform color srgb to linear operation.
+
+#### Parameters
+
+| Name | Type           | Description |
+| ---- | -------------- | ----------- |
+| c    | FlintColorRgba |             |
+
+### flintColorSrgbToOklab
+
+**Kind:** function
+
+```typescript
+function flintColorSrgbToOklab(c: FlintColorRgba): FlintColorOklab;
+```
+
+Perform color srgb to oklab operation.
+
+#### Parameters
+
+| Name | Type           | Description |
+| ---- | -------------- | ----------- |
+| c    | FlintColorRgba |             |
+
+### flintDegrees
+
+**Kind:** function
+
+```typescript
+function flintDegrees(radians: number): number;
+```
+
+Convert radians to degrees.
+
+#### Parameters
+
+| Name    | Type   | Description |
+| ------- | ------ | ----------- |
+| radians | number |             |
+
+### FlintDMatrix
+
+**Kind:** interface
+
+```typescript
+export interface FlintDMatrix
+```
+
+D Matrix representation.
+
+### flintDMatrixAddInplace
+
+**Kind:** function
+
+```typescript
+function flintDMatrixAddInplace(a: FlintDMatrix, b: FlintDMatrix): boolean;
+```
+
+Perform d matrix add inplace operation.
+
+#### Parameters
+
+| Name | Type         | Description |
+| ---- | ------------ | ----------- |
+| a    | FlintDMatrix |             |
+| b    | FlintDMatrix |             |
+
+### flintDMatrixCholesky
+
+**Kind:** function
+
+```typescript
+function flintDMatrixCholesky(m: FlintDMatrix): FlintOption<FlintCholeskyDecomposition>;
+```
+
+Perform d matrix cholesky operation.
+
+#### Parameters
+
+| Name | Type         | Description |
+| ---- | ------------ | ----------- |
+| m    | FlintDMatrix |             |
+
+### flintDMatrixCholeskySolve
+
+**Kind:** function
+
+```typescript
+function flintDMatrixCholeskySolve(chol: FlintCholeskyDecomposition, b: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+Perform d matrix cholesky solve operation.
+
+#### Parameters
+
+| Name | Type                       | Description |
+| ---- | -------------------------- | ----------- |
+| chol | FlintCholeskyDecomposition |             |
+| b    | FlintDMatrix               |             |
+
+### flintDMatrixDeterminant
+
+**Kind:** function
+
+```typescript
+function flintDMatrixDeterminant(m: FlintDMatrix): FlintOption<number>;
+```
+
+Perform d matrix determinant operation.
+
+#### Parameters
+
+| Name | Type         | Description |
+| ---- | ------------ | ----------- |
+| m    | FlintDMatrix |             |
+
+### flintDMatrixEigenSymmetric
+
+**Kind:** function
+
+```typescript
+function flintDMatrixEigenSymmetric(
+  m: FlintDMatrix,
+  maxIterations = 100,
+  epsilon = FLINT_MATH_EPSILON,
+): FlintOption<FlintEigenDecomposition>;
+```
+
+Perform d matrix eigen symmetric operation.
+
+#### Parameters
+
+| Name          | Type         | Description |
+| ------------- | ------------ | ----------- |
+| m             | FlintDMatrix |             |
+| maxIterations |              |             |
+| epsilon       |              |             |
+
+### flintDMatrixGet
+
+**Kind:** function
+
+```typescript
+function flintDMatrixGet(m: FlintDMatrix, row: number, col: number): FlintOption<number>;
+```
+
+Perform d matrix get operation.
+
+#### Parameters
+
+| Name | Type         | Description |
+| ---- | ------------ | ----------- |
+| m    | FlintDMatrix |             |
+| row  | number       |             |
+| col  | number       |             |
+
+### flintDMatrixIdentity
+
+**Kind:** function
+
+```typescript
+function flintDMatrixIdentity(size: number): FlintDMatrix;
+```
+
+Perform d matrix identity operation.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| size | number |             |
+
+### flintDMatrixInverse
+
+**Kind:** function
+
+```typescript
+function flintDMatrixInverse(m: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+Perform d matrix inverse operation.
+
+#### Parameters
+
+| Name | Type         | Description |
+| ---- | ------------ | ----------- |
+| m    | FlintDMatrix |             |
+
+### flintDMatrixLU
+
+**Kind:** function
+
+```typescript
+function flintDMatrixLU(m: FlintDMatrix): FlintOption<FlintLUDecomposition>;
+```
+
+Perform d matrix l u operation.
+
+#### Parameters
+
+| Name | Type         | Description |
+| ---- | ------------ | ----------- |
+| m    | FlintDMatrix |             |
+
+### flintDMatrixMul
+
+**Kind:** function
+
+```typescript
+function flintDMatrixMul(a: FlintDMatrix, b: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+Perform d matrix mul operation.
+
+#### Parameters
+
+| Name | Type         | Description |
+| ---- | ------------ | ----------- |
+| a    | FlintDMatrix |             |
+| b    | FlintDMatrix |             |
+
+### flintDMatrixMulAccumulate
+
+**Kind:** function
+
+```typescript
+function flintDMatrixMulAccumulate(out: FlintDMatrix, a: FlintDMatrix, b: FlintDMatrix, alpha = 1): boolean;
+```
+
+Perform d matrix mul accumulate operation.
+
+#### Parameters
+
+| Name  | Type         | Description |
+| ----- | ------------ | ----------- |
+| out   | FlintDMatrix |             |
+| a     | FlintDMatrix |             |
+| b     | FlintDMatrix |             |
+| alpha |              |             |
+
+### flintDMatrixPseudoinverse
+
+**Kind:** function
+
+```typescript
+function flintDMatrixPseudoinverse(m: FlintDMatrix, epsilon = FLINT_MATH_EPSILON): FlintOption<FlintDMatrix>;
+```
+
+Perform d matrix pseudoinverse operation.
+
+#### Parameters
+
+| Name    | Type         | Description |
+| ------- | ------------ | ----------- |
+| m       | FlintDMatrix |             |
+| epsilon |              |             |
+
+### flintDMatrixQR
+
+**Kind:** function
+
+```typescript
+function flintDMatrixQR(m: FlintDMatrix): FlintOption<FlintQRDecomposition>;
+```
+
+Perform d matrix q r operation.
+
+#### Parameters
+
+| Name | Type         | Description |
+| ---- | ------------ | ----------- |
+| m    | FlintDMatrix |             |
+
+### flintDMatrixScaleInplace
+
+**Kind:** function
+
+```typescript
+function flintDMatrixScaleInplace(m: FlintDMatrix, factor: number): void;
+```
+
+Perform d matrix scale inplace operation.
+
+#### Parameters
+
+| Name   | Type         | Description |
+| ------ | ------------ | ----------- |
+| m      | FlintDMatrix |             |
+| factor | number       |             |
+
+### flintDMatrixSet
+
+**Kind:** function
+
+```typescript
+function flintDMatrixSet(m: FlintDMatrix, row: number, col: number, value: number): boolean;
+```
+
+Perform d matrix set operation.
+
+#### Parameters
+
+| Name  | Type         | Description |
+| ----- | ------------ | ----------- |
+| m     | FlintDMatrix |             |
+| row   | number       |             |
+| col   | number       |             |
+| value | number       |             |
+
+### flintDMatrixSolve
+
+**Kind:** function
+
+```typescript
+function flintDMatrixSolve(a: FlintDMatrix, b: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+Perform d matrix solve operation.
+
+#### Parameters
+
+| Name | Type         | Description |
+| ---- | ------------ | ----------- |
+| a    | FlintDMatrix |             |
+| b    | FlintDMatrix |             |
+
+### flintDMatrixSubInplace
+
+**Kind:** function
+
+```typescript
+function flintDMatrixSubInplace(a: FlintDMatrix, b: FlintDMatrix): boolean;
+```
+
+Perform d matrix sub inplace operation.
+
+#### Parameters
+
+| Name | Type         | Description |
+| ---- | ------------ | ----------- |
+| a    | FlintDMatrix |             |
+| b    | FlintDMatrix |             |
+
+### flintDMatrixSVD
+
+**Kind:** function
+
+```typescript
+function flintDMatrixSVD(
+  m: FlintDMatrix,
+  maxIterations = 100,
+  epsilon = FLINT_MATH_EPSILON,
+): FlintOption<FlintSVDDecomposition>;
+```
+
+Perform d matrix s v d operation.
+
+#### Parameters
+
+| Name          | Type         | Description |
+| ------------- | ------------ | ----------- |
+| m             | FlintDMatrix |             |
+| maxIterations |              |             |
+| epsilon       |              |             |
+
+### flintDMatrixTranspose
+
+**Kind:** function
+
+```typescript
+function flintDMatrixTranspose(m: FlintDMatrix): FlintDMatrix;
+```
+
+Perform d matrix transpose operation.
+
+#### Parameters
+
+| Name | Type         | Description |
+| ---- | ------------ | ----------- |
+| m    | FlintDMatrix |             |
+
+### flintDMatrixZeros
+
+**Kind:** function
+
+```typescript
+function flintDMatrixZeros(rows: number, cols: number): FlintDMatrix;
+```
+
+Perform d matrix zeros operation.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| rows | number |             |
+| cols | number |             |
+
+### FlintEigenDecomposition
+
+**Kind:** interface
+
+```typescript
+export interface FlintEigenDecomposition
+```
+
+Eigen Decomposition representation.
+
+### flintFloor
+
+**Kind:** function
+
+```typescript
+function flintFloor(x: number): number;
+```
+
+Compute the largest integer less than or equal to x.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| x    | number |             |
+
+### flintFract
+
+**Kind:** function
+
+```typescript
+function flintFract(x: number): number;
+```
+
+Compute fractional part: x - floor(x).
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| x    | number |             |
+
+### FlintFrustum
+
+**Kind:** interface
+
+```typescript
+export interface FlintFrustum
+```
+
+Frustum representation.
+
+### flintFrustumFromViewProj
+
+**Kind:** function
+
+```typescript
+function flintFrustumFromViewProj(vp: FlintMat4): FlintFrustum;
+```
+
+Perform frustum from view proj operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| vp   | FlintMat4 |             |
+
+### flintFrustumIntersectsSphere
+
+**Kind:** function
+
+```typescript
+function flintFrustumIntersectsSphere(f: FlintFrustum, s: FlintSphere): boolean;
+```
+
+Perform frustum intersects sphere operation.
+
+#### Parameters
+
+| Name | Type         | Description |
+| ---- | ------------ | ----------- |
+| f    | FlintFrustum |             |
+| s    | FlintSphere  |             |
+
+### FlintIVec2
+
+**Kind:** interface
+
+```typescript
+export interface FlintIVec2
+```
+
+2D integer vector.
+
+### FlintIVec3
+
+**Kind:** interface
+
+```typescript
+export interface FlintIVec3
+```
+
+3D integer vector.
+
+### flintLerp
+
+**Kind:** function
+
+```typescript
+function flintLerp(start: number, end: number, factor: number): number;
+```
+
+Linearly interpolate between start and end by factor.
+
+#### Parameters
+
+| Name   | Type   | Description |
+| ------ | ------ | ----------- |
+| start  | number |             |
+| end    | number |             |
+| factor | number |             |
+
+### FlintLUDecomposition
+
+**Kind:** interface
+
+```typescript
+export interface FlintLUDecomposition
+```
+
+L U Decomposition representation.
+
+### FlintMat2
+
+**Kind:** interface
+
+```typescript
+export interface FlintMat2
+```
+
+Mat 2 representation.
+
+### flintMat2Add
+
+**Kind:** function
+
+```typescript
+function flintMat2Add(a: FlintMat2, b: FlintMat2): FlintMat2;
+```
+
+Perform mat 2 add operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintMat2 |             |
+| b    | FlintMat2 |             |
+
+### flintMat2Determinant
+
+**Kind:** function
+
+```typescript
+function flintMat2Determinant(m: FlintMat2): number;
+```
+
+Perform mat 2 determinant operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| m    | FlintMat2 |             |
+
+### flintMat2FromCols
+
+**Kind:** function
+
+```typescript
+function flintMat2FromCols(c0: FlintVec2, c1: FlintVec2): FlintMat2;
+```
+
+Perform mat 2 from cols operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| c0   | FlintVec2 |             |
+| c1   | FlintVec2 |             |
+
+### flintMat2Identity
+
+**Kind:** function
+
+```typescript
+function flintMat2Identity(): FlintMat2;
+```
+
+Perform mat 2 identity operation.
+
+### flintMat2Inverse
+
+**Kind:** function
+
+```typescript
+function flintMat2Inverse(m: FlintMat2): FlintOption<FlintMat2>;
+```
+
+Perform mat 2 inverse operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| m    | FlintMat2 |             |
+
+### flintMat2Mul
+
+**Kind:** function
+
+```typescript
+function flintMat2Mul(a: FlintMat2, b: FlintMat2): FlintMat2;
+```
+
+Perform mat 2 mul operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintMat2 |             |
+| b    | FlintMat2 |             |
+
+### flintMat2Rotation
+
+**Kind:** function
+
+```typescript
+function flintMat2Rotation(angleRad: number): FlintMat2;
+```
+
+Perform mat 2 rotation operation.
+
+#### Parameters
+
+| Name     | Type   | Description |
+| -------- | ------ | ----------- |
+| angleRad | number |             |
+
+### flintMat2Scale
+
+**Kind:** function
+
+```typescript
+function flintMat2Scale(m: FlintMat2, scalar: number): FlintMat2;
+```
+
+Perform mat 2 scale operation.
+
+#### Parameters
+
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| m      | FlintMat2 |             |
+| scalar | number    |             |
+
+### flintMat2Scaling
+
+**Kind:** function
+
+```typescript
+function flintMat2Scaling(s: FlintVec2): FlintMat2;
+```
+
+Perform mat 2 scaling operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| s    | FlintVec2 |             |
+
+### flintMat2Sub
+
+**Kind:** function
+
+```typescript
+function flintMat2Sub(a: FlintMat2, b: FlintMat2): FlintMat2;
+```
+
+Perform mat 2 sub operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintMat2 |             |
+| b    | FlintMat2 |             |
+
+### flintMat2TransformVec2
+
+**Kind:** function
+
+```typescript
+function flintMat2TransformVec2(m: FlintMat2, v: FlintVec2): FlintVec2;
+```
+
+Perform mat 2 transform vec 2 operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| m    | FlintMat2 |             |
+| v    | FlintVec2 |             |
+
+### flintMat2Transpose
+
+**Kind:** function
+
+```typescript
+function flintMat2Transpose(m: FlintMat2): FlintMat2;
+```
+
+Perform mat 2 transpose operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| m    | FlintMat2 |             |
+
+### FlintMat3
+
+**Kind:** interface
+
+```typescript
+export interface FlintMat3
+```
+
+Mat 3 representation.
+
+### flintMat3Add
+
+**Kind:** function
+
+```typescript
+function flintMat3Add(a: FlintMat3, b: FlintMat3): FlintMat3;
+```
+
+Perform mat 3 add operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintMat3 |             |
+| b    | FlintMat3 |             |
+
+### flintMat3Determinant
+
+**Kind:** function
+
+```typescript
+function flintMat3Determinant(m: FlintMat3): number;
+```
+
+Perform mat 3 determinant operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| m    | FlintMat3 |             |
+
+### flintMat3FromCols
+
+**Kind:** function
+
+```typescript
+function flintMat3FromCols(c0: FlintVec3, c1: FlintVec3, c2: FlintVec3): FlintMat3;
+```
+
+Perform mat 3 from cols operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| c0   | FlintVec3 |             |
+| c1   | FlintVec3 |             |
+| c2   | FlintVec3 |             |
+
+### flintMat3Identity
+
+**Kind:** function
+
+```typescript
+function flintMat3Identity(): FlintMat3;
+```
+
+Perform mat 3 identity operation.
+
+### flintMat3Inverse
+
+**Kind:** function
+
+```typescript
+function flintMat3Inverse(m: FlintMat3): FlintOption<FlintMat3>;
+```
+
+Perform mat 3 inverse operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| m    | FlintMat3 |             |
+
+### flintMat3Mul
+
+**Kind:** function
+
+```typescript
+function flintMat3Mul(a: FlintMat3, b: FlintMat3): FlintMat3;
+```
+
+Perform mat 3 mul operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintMat3 |             |
+| b    | FlintMat3 |             |
+
+### flintMat3Rotate2D
+
+**Kind:** function
+
+```typescript
+function flintMat3Rotate2D(angleRad: number): FlintMat3;
+```
+
+Perform mat 3 rotate 2 d operation.
+
+#### Parameters
+
+| Name     | Type   | Description |
+| -------- | ------ | ----------- |
+| angleRad | number |             |
+
+### flintMat3Scale
+
+**Kind:** function
+
+```typescript
+function flintMat3Scale(m: FlintMat3, scalar: number): FlintMat3;
+```
+
+Perform mat 3 scale operation.
+
+#### Parameters
+
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| m      | FlintMat3 |             |
+| scalar | number    |             |
+
+### flintMat3Scale2D
+
+**Kind:** function
+
+```typescript
+function flintMat3Scale2D(scale: FlintVec2): FlintMat3;
+```
+
+Perform mat 3 scale 2 d operation.
+
+#### Parameters
+
+| Name  | Type      | Description |
+| ----- | --------- | ----------- |
+| scale | FlintVec2 |             |
+
+### flintMat3Sub
+
+**Kind:** function
+
+```typescript
+function flintMat3Sub(a: FlintMat3, b: FlintMat3): FlintMat3;
+```
+
+Perform mat 3 sub operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintMat3 |             |
+| b    | FlintMat3 |             |
+
+### flintMat3TransformVec2
+
+**Kind:** function
+
+```typescript
+function flintMat3TransformVec2(m: FlintMat3, v: FlintVec2): FlintVec2;
+```
+
+Perform mat 3 transform vec 2 operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| m    | FlintMat3 |             |
+| v    | FlintVec2 |             |
+
+### flintMat3TransformVec3
+
+**Kind:** function
+
+```typescript
+function flintMat3TransformVec3(m: FlintMat3, v: FlintVec3): FlintVec3;
+```
+
+Perform mat 3 transform vec 3 operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| m    | FlintMat3 |             |
+| v    | FlintVec3 |             |
+
+### flintMat3Translate2D
+
+**Kind:** function
+
+```typescript
+function flintMat3Translate2D(translation: FlintVec2): FlintMat3;
+```
+
+Perform mat 3 translate 2 d operation.
+
+#### Parameters
+
+| Name        | Type      | Description |
+| ----------- | --------- | ----------- |
+| translation | FlintVec2 |             |
+
+### flintMat3Transpose
+
+**Kind:** function
+
+```typescript
+function flintMat3Transpose(m: FlintMat3): FlintMat3;
+```
+
+Perform mat 3 transpose operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| m    | FlintMat3 |             |
+
+### FlintMat4
+
+**Kind:** interface
+
+```typescript
+export interface FlintMat4
+```
+
+Mat 4 representation.
+
+### flintMat4Add
+
+**Kind:** function
+
+```typescript
+function flintMat4Add(a: FlintMat4, b: FlintMat4): FlintMat4;
+```
+
+Perform mat 4 add operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintMat4 |             |
+| b    | FlintMat4 |             |
+
+### flintMat4Determinant
+
+**Kind:** function
+
+```typescript
+function flintMat4Determinant(m: FlintMat4): number;
+```
+
+Perform mat 4 determinant operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| m    | FlintMat4 |             |
+
+### flintMat4FromCols
+
+**Kind:** function
+
+```typescript
+function flintMat4FromCols(c0: FlintVec4, c1: FlintVec4, c2: FlintVec4, c3: FlintVec4): FlintMat4;
+```
+
+Perform mat 4 from cols operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| c0   | FlintVec4 |             |
+| c1   | FlintVec4 |             |
+| c2   | FlintVec4 |             |
+| c3   | FlintVec4 |             |
+
+### flintMat4Identity
+
+**Kind:** function
+
+```typescript
+function flintMat4Identity(): FlintMat4;
+```
+
+Perform mat 4 identity operation.
+
+### flintMat4Inverse
+
+**Kind:** function
+
+```typescript
+function flintMat4Inverse(m: FlintMat4): FlintOption<FlintMat4>;
+```
+
+Perform mat 4 inverse operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| m    | FlintMat4 |             |
+
+### flintMat4LookAt
+
+**Kind:** function
+
+```typescript
+function flintMat4LookAt(eye: FlintVec3, target: FlintVec3, up: FlintVec3): FlintMat4;
+```
+
+Perform mat 4 look at operation.
+
+#### Parameters
+
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| eye    | FlintVec3 |             |
+| target | FlintVec3 |             |
+| up     | FlintVec3 |             |
+
+### flintMat4Mul
+
+**Kind:** function
+
+```typescript
+function flintMat4Mul(a: FlintMat4, b: FlintMat4): FlintMat4;
+```
+
+Perform mat 4 mul operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintMat4 |             |
+| b    | FlintMat4 |             |
+
+### flintMat4Orthographic
+
+**Kind:** function
+
+```typescript
+function flintMat4Orthographic(
+  left: number,
+  right: number,
+  bottom: number,
+  top: number,
+  zNear: number,
+  zFar: number,
+): FlintMat4;
+```
+
+Perform mat 4 orthographic operation.
+
+#### Parameters
+
+| Name   | Type   | Description |
+| ------ | ------ | ----------- |
+| left   | number |             |
+| right  | number |             |
+| bottom | number |             |
+| top    | number |             |
+| zNear  | number |             |
+| zFar   | number |             |
+
+### flintMat4Perspective
+
+**Kind:** function
+
+```typescript
+function flintMat4Perspective(fovYRad: number, aspect: number, zNear: number, zFar: number): FlintMat4;
+```
+
+Perform mat 4 perspective operation.
+
+#### Parameters
+
+| Name    | Type   | Description |
+| ------- | ------ | ----------- |
+| fovYRad | number |             |
+| aspect  | number |             |
+| zNear   | number |             |
+| zFar    | number |             |
+
+### flintMat4RotationAxisAngle
+
+**Kind:** function
+
+```typescript
+function flintMat4RotationAxisAngle(axis: FlintVec3, angleRad: number): FlintMat4;
+```
+
+Perform mat 4 rotation axis angle operation.
+
+#### Parameters
+
+| Name     | Type      | Description |
+| -------- | --------- | ----------- |
+| axis     | FlintVec3 |             |
+| angleRad | number    |             |
+
+### flintMat4RotationX
+
+**Kind:** function
+
+```typescript
+function flintMat4RotationX(angleRad: number): FlintMat4;
+```
+
+Perform mat 4 rotation x operation.
+
+#### Parameters
+
+| Name     | Type   | Description |
+| -------- | ------ | ----------- |
+| angleRad | number |             |
+
+### flintMat4RotationY
+
+**Kind:** function
+
+```typescript
+function flintMat4RotationY(angleRad: number): FlintMat4;
+```
+
+Perform mat 4 rotation y operation.
+
+#### Parameters
+
+| Name     | Type   | Description |
+| -------- | ------ | ----------- |
+| angleRad | number |             |
+
+### flintMat4RotationZ
+
+**Kind:** function
+
+```typescript
+function flintMat4RotationZ(angleRad: number): FlintMat4;
+```
+
+Perform mat 4 rotation z operation.
+
+#### Parameters
+
+| Name     | Type   | Description |
+| -------- | ------ | ----------- |
+| angleRad | number |             |
+
+### flintMat4Scale
+
+**Kind:** function
+
+```typescript
+function flintMat4Scale(m: FlintMat4, scalar: number): FlintMat4;
+```
+
+Perform mat 4 scale operation.
+
+#### Parameters
+
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| m      | FlintMat4 |             |
+| scalar | number    |             |
+
+### flintMat4Scaling
+
+**Kind:** function
+
+```typescript
+function flintMat4Scaling(scale: FlintVec3): FlintMat4;
+```
+
+Perform mat 4 scaling operation.
+
+#### Parameters
+
+| Name  | Type      | Description |
+| ----- | --------- | ----------- |
+| scale | FlintVec3 |             |
+
+### flintMat4Sub
+
+**Kind:** function
+
+```typescript
+function flintMat4Sub(a: FlintMat4, b: FlintMat4): FlintMat4;
+```
+
+Perform mat 4 sub operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintMat4 |             |
+| b    | FlintMat4 |             |
+
+### flintMat4TransformPoint3
+
+**Kind:** function
+
+```typescript
+function flintMat4TransformPoint3(m: FlintMat4, p: FlintVec3): FlintVec3;
+```
+
+Perform mat 4 transform point 3 operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| m    | FlintMat4 |             |
+| p    | FlintVec3 |             |
+
+### flintMat4TransformVec4
+
+**Kind:** function
+
+```typescript
+function flintMat4TransformVec4(m: FlintMat4, v: FlintVec4): FlintVec4;
+```
+
+Perform mat 4 transform vec 4 operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| m    | FlintMat4 |             |
+| v    | FlintVec4 |             |
+
+### flintMat4TransformVector3
+
+**Kind:** function
+
+```typescript
+function flintMat4TransformVector3(m: FlintMat4, v: FlintVec3): FlintVec3;
+```
+
+Perform mat 4 transform vector 3 operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| m    | FlintMat4 |             |
+| v    | FlintVec3 |             |
+
+### flintMat4Translation
+
+**Kind:** function
+
+```typescript
+function flintMat4Translation(offset: FlintVec3): FlintMat4;
+```
+
+Perform mat 4 translation operation.
+
+#### Parameters
+
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| offset | FlintVec3 |             |
+
+### flintMat4Transpose
+
+**Kind:** function
+
+```typescript
+function flintMat4Transpose(m: FlintMat4): FlintMat4;
+```
+
+Perform mat 4 transpose operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| m    | FlintMat4 |             |
+
+### FlintOBB2
+
+**Kind:** interface
+
+```typescript
+export interface FlintOBB2
+```
+
+O B B 2 representation.
+
+### FlintOBB3
+
+**Kind:** interface
+
+```typescript
+export interface FlintOBB3
+```
+
+O B B 3 representation.
+
+### FlintPlane3
+
+**Kind:** interface
+
+```typescript
+export interface FlintPlane3
+```
+
+Plane 3 representation.
+
+### flintPlane3DistanceToPoint
+
+**Kind:** function
+
+```typescript
+function flintPlane3DistanceToPoint(plane: FlintPlane3, point: FlintVec3): number;
+```
+
+Perform plane 3 distance to point operation.
+
+#### Parameters
+
+| Name  | Type        | Description |
+| ----- | ----------- | ----------- |
+| plane | FlintPlane3 |             |
+| point | FlintVec3   |             |
+
+### FlintQRDecomposition
+
+**Kind:** interface
+
+```typescript
+export interface FlintQRDecomposition
+```
+
+Q R Decomposition representation.
+
+### FlintQuat
+
+**Kind:** interface
+
+```typescript
+export interface FlintQuat
+```
+
+Quat representation.
+
+### flintQuatConjugate
+
+**Kind:** function
+
+```typescript
+function flintQuatConjugate(q: FlintQuat): FlintQuat;
+```
+
+Perform quat conjugate operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| q    | FlintQuat |             |
+
+### flintQuatDot
+
+**Kind:** function
+
+```typescript
+function flintQuatDot(a: FlintQuat, b: FlintQuat): number;
+```
+
+Perform quat dot operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintQuat |             |
+| b    | FlintQuat |             |
+
+### flintQuatFromAxisAngle
+
+**Kind:** function
+
+```typescript
+function flintQuatFromAxisAngle(axis: FlintVec3, angleRad: number): FlintQuat;
+```
+
+Perform quat from axis angle operation.
+
+#### Parameters
+
+| Name     | Type      | Description |
+| -------- | --------- | ----------- |
+| axis     | FlintVec3 |             |
+| angleRad | number    |             |
+
+### flintQuatFromEuler
+
+**Kind:** function
+
+```typescript
+function flintQuatFromEuler(pitchX: number, yawY: number, rollZ: number): FlintQuat;
+```
+
+Perform quat from euler operation.
+
+#### Parameters
+
+| Name   | Type   | Description |
+| ------ | ------ | ----------- |
+| pitchX | number |             |
+| yawY   | number |             |
+| rollZ  | number |             |
+
+### flintQuatIdentity
+
+**Kind:** function
+
+```typescript
+function flintQuatIdentity(): FlintQuat;
+```
+
+Perform quat identity operation.
+
+### flintQuatInverse
+
+**Kind:** function
+
+```typescript
+function flintQuatInverse(q: FlintQuat): FlintOption<FlintQuat>;
+```
+
+Perform quat inverse operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| q    | FlintQuat |             |
+
+### flintQuatMul
+
+**Kind:** function
+
+```typescript
+function flintQuatMul(a: FlintQuat, b: FlintQuat): FlintQuat;
+```
+
+Perform quat mul operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintQuat |             |
+| b    | FlintQuat |             |
+
+### flintQuatNorm
+
+**Kind:** function
+
+```typescript
+function flintQuatNorm(q: FlintQuat): number;
+```
+
+Perform quat norm operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| q    | FlintQuat |             |
+
+### flintQuatNormalize
+
+**Kind:** function
+
+```typescript
+function flintQuatNormalize(q: FlintQuat): FlintQuat;
+```
+
+Perform quat normalize operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| q    | FlintQuat |             |
+
+### flintQuatNormSq
+
+**Kind:** function
+
+```typescript
+function flintQuatNormSq(q: FlintQuat): number;
+```
+
+Perform quat norm sq operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| q    | FlintQuat |             |
+
+### flintQuatRotateVec3
+
+**Kind:** function
+
+```typescript
+function flintQuatRotateVec3(q: FlintQuat, v: FlintVec3): FlintVec3;
+```
+
+Perform quat rotate vec 3 operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| q    | FlintQuat |             |
+| v    | FlintVec3 |             |
+
+### flintQuatSlerp
+
+**Kind:** function
+
+```typescript
+function flintQuatSlerp(a: FlintQuat, b: FlintQuat, t: number): FlintQuat;
+```
+
+Perform quat slerp operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintQuat |             |
+| b    | FlintQuat |             |
+| t    | number    |             |
+
+### flintQuatToMat3
+
+**Kind:** function
+
+```typescript
+function flintQuatToMat3(q: FlintQuat): FlintMat3;
+```
+
+Perform quat to mat 3 operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| q    | FlintQuat |             |
+
+### flintQuatToMat4
+
+**Kind:** function
+
+```typescript
+function flintQuatToMat4(q: FlintQuat): FlintMat4;
+```
+
+Perform quat to mat 4 operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| q    | FlintQuat |             |
+
+### flintRadians
+
+**Kind:** function
+
+```typescript
+function flintRadians(degrees: number): number;
+```
+
+Convert degrees to radians.
+
+#### Parameters
+
+| Name    | Type   | Description |
+| ------- | ------ | ----------- |
+| degrees | number |             |
+
+### FlintRay2
+
+**Kind:** interface
+
+```typescript
+export interface FlintRay2
+```
+
+Ray 2 representation.
+
+### FlintRay3
+
+**Kind:** interface
+
+```typescript
+export interface FlintRay3
+```
+
+Ray 3 representation.
+
+### flintRay3IntersectOBB
+
+**Kind:** function
+
+```typescript
+function flintRay3IntersectOBB(ray: FlintRay3, obb: FlintOBB3): FlintOption<number>;
+```
+
+Perform ray 3 intersect o b b operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| ray  | FlintRay3 |             |
+| obb  | FlintOBB3 |             |
+
+### flintRay3IntersectsAABB3
+
+**Kind:** function
+
+```typescript
+function flintRay3IntersectsAABB3(ray: FlintRay3, box: FlintAABB3): FlintOption<number>;
+```
+
+Perform ray 3 intersects a a b b 3 operation.
+
+#### Parameters
+
+| Name | Type       | Description |
+| ---- | ---------- | ----------- |
+| ray  | FlintRay3  |             |
+| box  | FlintAABB3 |             |
+
+### flintRay3IntersectsPlane3
+
+**Kind:** function
+
+```typescript
+function flintRay3IntersectsPlane3(ray: FlintRay3, plane: FlintPlane3): FlintOption<number>;
+```
+
+Perform ray 3 intersects plane 3 operation.
+
+#### Parameters
+
+| Name  | Type        | Description |
+| ----- | ----------- | ----------- |
+| ray   | FlintRay3   |             |
+| plane | FlintPlane3 |             |
+
+### flintRay3IntersectsSphere
+
+**Kind:** function
+
+```typescript
+function flintRay3IntersectsSphere(ray: FlintRay3, sphere: FlintSphere): FlintOption<number>;
+```
+
+Perform ray 3 intersects sphere operation.
+
+#### Parameters
+
+| Name   | Type        | Description |
+| ------ | ----------- | ----------- |
+| ray    | FlintRay3   |             |
+| sphere | FlintSphere |             |
+
+### flintRay3IntersectsTriangle3
+
+**Kind:** function
+
+```typescript
+function flintRay3IntersectsTriangle3(ray: FlintRay3, tri: FlintTriangle3): FlintOption<number>;
+```
+
+Perform ray 3 intersects triangle 3 operation.
+
+#### Parameters
+
+| Name | Type           | Description |
+| ---- | -------------- | ----------- |
+| ray  | FlintRay3      |             |
+| tri  | FlintTriangle3 |             |
+
+### FlintRayHit3
+
+**Kind:** interface
+
+```typescript
+export interface FlintRayHit3
+```
+
+Ray Hit 3 representation.
+
+### FlintSegment2
+
+**Kind:** interface
+
+```typescript
+export interface FlintSegment2
+```
+
+Segment 2 representation.
+
+### FlintSegment3
+
+**Kind:** interface
+
+```typescript
+export interface FlintSegment3
+```
+
+Segment 3 representation.
+
+### flintSign
+
+**Kind:** function
+
+```typescript
+function flintSign(x: number): number;
+```
+
+Return sign of x (1, -1, 0, or NaN).
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| x    | number |             |
+
+### flintSmoothstep
+
+**Kind:** function
+
+```typescript
+function flintSmoothstep(edge0: number, edge1: number, x: number): number;
+```
+
+Smooth Hermite interpolation between edge0 and edge1.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| edge0 | number |             |
+| edge1 | number |             |
+| x     | number |             |
+
+### FlintSphere
+
+**Kind:** interface
+
+```typescript
+export interface FlintSphere
+```
+
+Sphere representation.
+
+### flintSphereContainsPoint
+
+**Kind:** function
+
+```typescript
+function flintSphereContainsPoint(s: FlintSphere, p: FlintVec3): boolean;
+```
+
+Perform sphere contains point operation.
+
+#### Parameters
+
+| Name | Type        | Description |
+| ---- | ----------- | ----------- |
+| s    | FlintSphere |             |
+| p    | FlintVec3   |             |
+
+### flintSphereIntersectsSphere
+
+**Kind:** function
+
+```typescript
+function flintSphereIntersectsSphere(a: FlintSphere, b: FlintSphere): boolean;
+```
+
+Perform sphere intersects sphere operation.
+
+#### Parameters
+
+| Name | Type        | Description |
+| ---- | ----------- | ----------- |
+| a    | FlintSphere |             |
+| b    | FlintSphere |             |
+
+### flintStep
+
+**Kind:** function
+
+```typescript
+function flintStep(edge: number, x: number): number;
+```
+
+Step function returning 0 if x < edge, 1 otherwise.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| edge | number |             |
+| x    | number |             |
+
+### FlintSVDDecomposition
+
+**Kind:** interface
+
+```typescript
+export interface FlintSVDDecomposition
+```
+
+S V D Decomposition representation.
+
+### FlintTensor
+
+**Kind:** interface
+
+```typescript
+export interface FlintTensor<TValue extends object | number | string | boolean | symbol | bigint>
+```
+
+Tensor representation.
+
+### flintTensorFill
+
+**Kind:** function
+
+```typescript
+function flintTensorFill(shape: FlintTensorShape, value: TValue): FlintTensor<TValue>;
+```
+
+Perform tensor fill operation.
+
+#### Parameters
+
+| Name  | Type             | Description |
+| ----- | ---------------- | ----------- |
+| shape | FlintTensorShape |             |
+| value | TValue           |             |
+
+### flintTensorMatmul
+
+**Kind:** function
+
+```typescript
+function flintTensorMatmul(a: FlintTensor<number>, b: FlintTensor<number>): FlintOption<FlintTensor<number>>;
+```
+
+Perform tensor matmul operation.
+
+#### Parameters
+
+| Name | Type                | Description |
+| ---- | ------------------- | ----------- |
+| a    | FlintTensor<number> |             |
+| b    | FlintTensor<number> |             |
+
+### flintTensorReshape
+
+**Kind:** function
+
+```typescript
+function flintTensorReshape(tensor: FlintTensor<TValue>, newShape: FlintTensorShape): FlintOption<FlintTensor<TValue>>;
+```
+
+Perform tensor reshape operation.
+
+#### Parameters
+
+| Name     | Type                | Description |
+| -------- | ------------------- | ----------- |
+| tensor   | FlintTensor<TValue> |             |
+| newShape | FlintTensorShape    |             |
+
+### FlintTensorShape
+
+**Kind:** interface
+
+```typescript
+export interface FlintTensorShape
+```
+
+Tensor Shape representation.
+
+### flintTensorShapeSize
+
+**Kind:** function
+
+```typescript
+function flintTensorShapeSize(shape: FlintTensorShape): number;
+```
+
+Perform tensor shape size operation.
+
+#### Parameters
+
+| Name  | Type             | Description |
+| ----- | ---------------- | ----------- |
+| shape | FlintTensorShape |             |
+
+### flintTensorSlice
+
+**Kind:** function
+
+```typescript
+function flintTensorSlice(
+  view: FlintTensorView<TValue>,
+  axis: number,
+  start: number,
+  length: number,
+): FlintOption<FlintTensorView<TValue>>;
+```
+
+Perform tensor slice operation.
+
+#### Parameters
+
+| Name   | Type                    | Description |
+| ------ | ----------------------- | ----------- |
+| view   | FlintTensorView<TValue> |             |
+| axis   | number                  |             |
+| start  | number                  |             |
+| length | number                  |             |
+
+### flintTensorView
+
+**Kind:** function
+
+```typescript
+function flintTensorView(tensor: FlintTensor<TValue>): FlintTensorView<TValue>;
+```
+
+Perform tensor view operation.
+
+#### Parameters
+
+| Name   | Type                | Description |
+| ------ | ------------------- | ----------- |
+| tensor | FlintTensor<TValue> |             |
+
+### FlintTensorView
+
+**Kind:** interface
+
+```typescript
+export interface FlintTensorView<TValue extends object | number | string | boolean | symbol | bigint>
+```
+
+Tensor View representation.
+
+### flintTensorViewGet
+
+**Kind:** function
+
+```typescript
+function flintTensorViewGet(view: FlintTensorView<TValue>, indices: readonly number[]): FlintOption<TValue>;
+```
+
+Perform tensor view get operation.
+
+#### Parameters
+
+| Name    | Type                    | Description |
+| ------- | ----------------------- | ----------- |
+| view    | FlintTensorView<TValue> |             |
+| indices | readonly number[]       |             |
+
+### flintTensorViewSet
+
+**Kind:** function
+
+```typescript
+function flintTensorViewSet(view: FlintTensorView<TValue>, indices: readonly number[], value: TValue): boolean;
+```
+
+Perform tensor view set operation.
+
+#### Parameters
+
+| Name    | Type                    | Description |
+| ------- | ----------------------- | ----------- |
+| view    | FlintTensorView<TValue> |             |
+| indices | readonly number[]       |             |
+| value   | TValue                  |             |
+
+### FlintTriangle2
+
+**Kind:** interface
+
+```typescript
+export interface FlintTriangle2
+```
+
+Triangle 2 representation.
+
+### flintTriangle2Area
+
+**Kind:** function
+
+```typescript
+function flintTriangle2Area(tri: FlintTriangle2): number;
+```
+
+Perform triangle 2 area operation.
+
+#### Parameters
+
+| Name | Type           | Description |
+| ---- | -------------- | ----------- |
+| tri  | FlintTriangle2 |             |
+
+### FlintTriangle3
+
+**Kind:** interface
+
+```typescript
+export interface FlintTriangle3
+```
+
+Triangle 3 representation.
+
+### flintTriangle3Normal
+
+**Kind:** function
+
+```typescript
+function flintTriangle3Normal(tri: FlintTriangle3): FlintVec3;
+```
+
+Perform triangle 3 normal operation.
+
+#### Parameters
+
+| Name | Type           | Description |
+| ---- | -------------- | ----------- |
+| tri  | FlintTriangle3 |             |
+
+### FlintVec2
+
+**Kind:** interface
+
+```typescript
+export interface FlintVec2
+```
+
+2D floating-point vector.
+
+### flintVec2Add
+
+**Kind:** function
+
+```typescript
+function flintVec2Add(a: FlintVec2, b: FlintVec2): FlintVec2;
+```
+
+Perform vec 2 add operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec2 |             |
+| b    | FlintVec2 |             |
+
+### flintVec2Angle
+
+**Kind:** function
+
+```typescript
+function flintVec2Angle(a: FlintVec2, b: FlintVec2): number;
+```
+
+Perform vec 2 angle operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec2 |             |
+| b    | FlintVec2 |             |
+
+### flintVec2Distance
+
+**Kind:** function
+
+```typescript
+function flintVec2Distance(a: FlintVec2, b: FlintVec2): number;
+```
+
+Perform vec 2 distance operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec2 |             |
+| b    | FlintVec2 |             |
+
+### flintVec2DistanceSquared
+
+**Kind:** function
+
+```typescript
+function flintVec2DistanceSquared(a: FlintVec2, b: FlintVec2): number;
+```
+
+Perform vec 2 distance squared operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec2 |             |
+| b    | FlintVec2 |             |
+
+### flintVec2Div
+
+**Kind:** function
+
+```typescript
+function flintVec2Div(v: FlintVec2, scalar: number): FlintVec2;
+```
+
+Perform vec 2 div operation.
+
+#### Parameters
+
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| v      | FlintVec2 |             |
+| scalar | number    |             |
+
+### flintVec2Dot
+
+**Kind:** function
+
+```typescript
+function flintVec2Dot(a: FlintVec2, b: FlintVec2): number;
+```
+
+Perform vec 2 dot operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec2 |             |
+| b    | FlintVec2 |             |
+
+### flintVec2Length
+
+**Kind:** function
+
+```typescript
+function flintVec2Length(v: FlintVec2): number;
+```
+
+Perform vec 2 length operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| v    | FlintVec2 |             |
+
+### flintVec2LengthSq
+
+**Kind:** function
+
+```typescript
+function flintVec2LengthSq(v: FlintVec2): number;
+```
+
+Perform vec 2 length sq operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| v    | FlintVec2 |             |
+
+### flintVec2Lerp
+
+**Kind:** function
+
+```typescript
+function flintVec2Lerp(a: FlintVec2, b: FlintVec2, t: number): FlintVec2;
+```
+
+Perform vec 2 lerp operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec2 |             |
+| b    | FlintVec2 |             |
+| t    | number    |             |
+
+### flintVec2Mul
+
+**Kind:** function
+
+```typescript
+function flintVec2Mul(a: FlintVec2, b: FlintVec2): FlintVec2;
+```
+
+Perform vec 2 mul operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec2 |             |
+| b    | FlintVec2 |             |
+
+### flintVec2Neg
+
+**Kind:** function
+
+```typescript
+function flintVec2Neg(v: FlintVec2): FlintVec2;
+```
+
+Perform vec 2 neg operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| v    | FlintVec2 |             |
+
+### flintVec2Normalize
+
+**Kind:** function
+
+```typescript
+function flintVec2Normalize(v: FlintVec2): FlintVec2;
+```
+
+Perform vec 2 normalize operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| v    | FlintVec2 |             |
+
+### flintVec2PerpDot
+
+**Kind:** function
+
+```typescript
+function flintVec2PerpDot(a: FlintVec2, b: FlintVec2): number;
+```
+
+Perform vec 2 perp dot operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec2 |             |
+| b    | FlintVec2 |             |
+
+### flintVec2Project
+
+**Kind:** function
+
+```typescript
+function flintVec2Project(v: FlintVec2, onto: FlintVec2): FlintVec2;
+```
+
+Perform vec 2 project operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| v    | FlintVec2 |             |
+| onto | FlintVec2 |             |
+
+### flintVec2Reflect
+
+**Kind:** function
+
+```typescript
+function flintVec2Reflect(v: FlintVec2, normal: FlintVec2): FlintVec2;
+```
+
+Perform vec 2 reflect operation.
+
+#### Parameters
+
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| v      | FlintVec2 |             |
+| normal | FlintVec2 |             |
+
+### flintVec2Rotate
+
+**Kind:** function
+
+```typescript
+function flintVec2Rotate(v: FlintVec2, angleRad: number): FlintVec2;
+```
+
+Perform vec 2 rotate operation.
+
+#### Parameters
+
+| Name     | Type      | Description |
+| -------- | --------- | ----------- |
+| v        | FlintVec2 |             |
+| angleRad | number    |             |
+
+### flintVec2Scale
+
+**Kind:** function
+
+```typescript
+function flintVec2Scale(v: FlintVec2, scalar: number): FlintVec2;
+```
+
+Perform vec 2 scale operation.
+
+#### Parameters
+
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| v      | FlintVec2 |             |
+| scalar | number    |             |
+
+### flintVec2Sub
+
+**Kind:** function
+
+```typescript
+function flintVec2Sub(a: FlintVec2, b: FlintVec2): FlintVec2;
+```
+
+Perform vec 2 sub operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec2 |             |
+| b    | FlintVec2 |             |
+
+### FlintVec3
+
+**Kind:** interface
+
+```typescript
+export interface FlintVec3
+```
+
+3D floating-point vector.
+
+### flintVec3Add
+
+**Kind:** function
+
+```typescript
+function flintVec3Add(a: FlintVec3, b: FlintVec3): FlintVec3;
+```
+
+Perform vec 3 add operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec3 |             |
+| b    | FlintVec3 |             |
+
+### flintVec3Angle
+
+**Kind:** function
+
+```typescript
+function flintVec3Angle(a: FlintVec3, b: FlintVec3): number;
+```
+
+Perform vec 3 angle operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec3 |             |
+| b    | FlintVec3 |             |
+
+### flintVec3Cross
+
+**Kind:** function
+
+```typescript
+function flintVec3Cross(a: FlintVec3, b: FlintVec3): FlintVec3;
+```
+
+Perform vec 3 cross operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec3 |             |
+| b    | FlintVec3 |             |
+
+### flintVec3Distance
+
+**Kind:** function
+
+```typescript
+function flintVec3Distance(a: FlintVec3, b: FlintVec3): number;
+```
+
+Perform vec 3 distance operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec3 |             |
+| b    | FlintVec3 |             |
+
+### flintVec3DistanceSquared
+
+**Kind:** function
+
+```typescript
+function flintVec3DistanceSquared(a: FlintVec3, b: FlintVec3): number;
+```
+
+Perform vec 3 distance squared operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec3 |             |
+| b    | FlintVec3 |             |
+
+### flintVec3Div
+
+**Kind:** function
+
+```typescript
+function flintVec3Div(v: FlintVec3, scalar: number): FlintVec3;
+```
+
+Perform vec 3 div operation.
+
+#### Parameters
+
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| v      | FlintVec3 |             |
+| scalar | number    |             |
+
+### flintVec3Dot
+
+**Kind:** function
+
+```typescript
+function flintVec3Dot(a: FlintVec3, b: FlintVec3): number;
+```
+
+Perform vec 3 dot operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec3 |             |
+| b    | FlintVec3 |             |
+
+### flintVec3Length
+
+**Kind:** function
+
+```typescript
+function flintVec3Length(v: FlintVec3): number;
+```
+
+Perform vec 3 length operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| v    | FlintVec3 |             |
+
+### flintVec3LengthSq
+
+**Kind:** function
+
+```typescript
+function flintVec3LengthSq(v: FlintVec3): number;
+```
+
+Perform vec 3 length sq operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| v    | FlintVec3 |             |
+
+### flintVec3Lerp
+
+**Kind:** function
+
+```typescript
+function flintVec3Lerp(a: FlintVec3, b: FlintVec3, t: number): FlintVec3;
+```
+
+Perform vec 3 lerp operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec3 |             |
+| b    | FlintVec3 |             |
+| t    | number    |             |
+
+### flintVec3Mul
+
+**Kind:** function
+
+```typescript
+function flintVec3Mul(a: FlintVec3, b: FlintVec3): FlintVec3;
+```
+
+Perform vec 3 mul operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec3 |             |
+| b    | FlintVec3 |             |
+
+### flintVec3Neg
+
+**Kind:** function
+
+```typescript
+function flintVec3Neg(v: FlintVec3): FlintVec3;
+```
+
+Perform vec 3 neg operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| v    | FlintVec3 |             |
+
+### flintVec3Normalize
+
+**Kind:** function
+
+```typescript
+function flintVec3Normalize(v: FlintVec3): FlintVec3;
+```
+
+Perform vec 3 normalize operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| v    | FlintVec3 |             |
+
+### flintVec3Project
+
+**Kind:** function
+
+```typescript
+function flintVec3Project(v: FlintVec3, onto: FlintVec3): FlintVec3;
+```
+
+Perform vec 3 project operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| v    | FlintVec3 |             |
+| onto | FlintVec3 |             |
+
+### flintVec3Reflect
+
+**Kind:** function
+
+```typescript
+function flintVec3Reflect(v: FlintVec3, normal: FlintVec3): FlintVec3;
+```
+
+Perform vec 3 reflect operation.
+
+#### Parameters
+
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| v      | FlintVec3 |             |
+| normal | FlintVec3 |             |
+
+### flintVec3Refract
+
+**Kind:** function
+
+```typescript
+function flintVec3Refract(v: FlintVec3, normal: FlintVec3, eta: number): FlintVec3;
+```
+
+Perform vec 3 refract operation.
+
+#### Parameters
+
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| v      | FlintVec3 |             |
+| normal | FlintVec3 |             |
+| eta    | number    |             |
+
+### flintVec3Reject
+
+**Kind:** function
+
+```typescript
+function flintVec3Reject(v: FlintVec3, from: FlintVec3): FlintVec3;
+```
+
+Perform vec 3 reject operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| v    | FlintVec3 |             |
+| from | FlintVec3 |             |
+
+### flintVec3Scale
+
+**Kind:** function
+
+```typescript
+function flintVec3Scale(v: FlintVec3, scalar: number): FlintVec3;
+```
+
+Perform vec 3 scale operation.
+
+#### Parameters
+
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| v      | FlintVec3 |             |
+| scalar | number    |             |
+
+### flintVec3Slerp
+
+**Kind:** function
+
+```typescript
+function flintVec3Slerp(a: FlintVec3, b: FlintVec3, t: number): FlintVec3;
+```
+
+Perform vec 3 slerp operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec3 |             |
+| b    | FlintVec3 |             |
+| t    | number    |             |
+
+### flintVec3Sub
+
+**Kind:** function
+
+```typescript
+function flintVec3Sub(a: FlintVec3, b: FlintVec3): FlintVec3;
+```
+
+Perform vec 3 sub operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec3 |             |
+| b    | FlintVec3 |             |
+
+### FlintVec4
+
+**Kind:** interface
+
+```typescript
+export interface FlintVec4
+```
+
+4D floating-point vector.
+
+### flintVec4Add
+
+**Kind:** function
+
+```typescript
+function flintVec4Add(a: FlintVec4, b: FlintVec4): FlintVec4;
+```
+
+Perform vec 4 add operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec4 |             |
+| b    | FlintVec4 |             |
+
+### flintVec4Div
+
+**Kind:** function
+
+```typescript
+function flintVec4Div(v: FlintVec4, scalar: number): FlintVec4;
+```
+
+Perform vec 4 div operation.
+
+#### Parameters
+
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| v      | FlintVec4 |             |
+| scalar | number    |             |
+
+### flintVec4Dot
+
+**Kind:** function
+
+```typescript
+function flintVec4Dot(a: FlintVec4, b: FlintVec4): number;
+```
+
+Perform vec 4 dot operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec4 |             |
+| b    | FlintVec4 |             |
+
+### flintVec4Length
+
+**Kind:** function
+
+```typescript
+function flintVec4Length(v: FlintVec4): number;
+```
+
+Perform vec 4 length operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| v    | FlintVec4 |             |
+
+### flintVec4Lerp
+
+**Kind:** function
+
+```typescript
+function flintVec4Lerp(a: FlintVec4, b: FlintVec4, t: number): FlintVec4;
+```
+
+Perform vec 4 lerp operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec4 |             |
+| b    | FlintVec4 |             |
+| t    | number    |             |
+
+### flintVec4Neg
+
+**Kind:** function
+
+```typescript
+function flintVec4Neg(v: FlintVec4): FlintVec4;
+```
+
+Perform vec 4 neg operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| v    | FlintVec4 |             |
+
+### flintVec4Normalize
+
+**Kind:** function
+
+```typescript
+function flintVec4Normalize(v: FlintVec4): FlintVec4;
+```
+
+Perform vec 4 normalize operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| v    | FlintVec4 |             |
+
+### flintVec4Scale
+
+**Kind:** function
+
+```typescript
+function flintVec4Scale(v: FlintVec4, scalar: number): FlintVec4;
+```
+
+Perform vec 4 scale operation.
+
+#### Parameters
+
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| v      | FlintVec4 |             |
+| scalar | number    |             |
+
+### flintVec4Sub
+
+**Kind:** function
+
+```typescript
+function flintVec4Sub(a: FlintVec4, b: FlintVec4): FlintVec4;
+```
+
+Perform vec 4 sub operation.
+
+#### Parameters
+
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| a    | FlintVec4 |             |
+| b    | FlintVec4 |             |
+
 ## `src/memory`
 
 ### createFlintMemory
