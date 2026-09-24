@@ -297,9 +297,9 @@ fn median(r: f32, g: f32, b: f32) -> f32 {
 fn fs_main(input: VertexOutput) -> @location(0) vec4<f32> {
   let sample = textureSample(fontTexture, fontSampler, input.uv);
   let msdf = median(sample.r, sample.g, sample.b);
-  let dist = min(msdf, sample.a);
+  let dist = msdf;
   let edge = 0.5;
-  let smoothing = clamp(fwidth(dist) * 0.65, 0.005, 0.15);
+  let smoothing = clamp(fwidth(dist) * 0.7071, 0.004, 0.12);
   let alpha = smoothstep(edge - smoothing, edge + smoothing, dist);
 
   if (input.color.a < 0.0) {

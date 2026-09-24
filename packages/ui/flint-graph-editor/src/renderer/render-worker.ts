@@ -1549,12 +1549,12 @@ if (
             return;
           }
           float msdf = median(sample.r, sample.g, sample.b);
-          float dist = min(msdf, sample.a);
+          float dist = msdf;
           float edge = 0.5;
           #ifdef GL_OES_standard_derivatives
-            float smoothing = clamp(fwidth(dist) * 0.65, 0.005, 0.15);
+            float smoothing = clamp(fwidth(dist) * 0.7071, 0.004, 0.12);
           #else
-            float smoothing = 0.05;
+            float smoothing = 0.04;
           #endif
           float alpha = smoothstep(edge - smoothing, edge + smoothing, dist);
           if (alpha < 0.01) discard;

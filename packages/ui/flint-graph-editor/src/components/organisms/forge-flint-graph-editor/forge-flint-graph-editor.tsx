@@ -796,28 +796,45 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
   const inspectCanvasReference = useRef<HTMLCanvasElement | undefined>();
 
   /**
-   * Renders a magnified glyph cell to the hover inspection canvas based on its 2D shelf packed bounding box.
+   * Paints a single magnified cell into the inspect canvas preview.
+   *
+   * @param cellX - Atlas X coordinate.
+   * @param cellY - Atlas Y coordinate.
+   * @param cellW - Cell width in pixels.
+   * @param cellH - Cell height in pixels.
    */
-  const paintInspectCell = (glyphIndex: number): void => {
+  const paintInspectCell = (cellX: number, cellY: number, cellW: number, cellH: number): void => {
     const inspectCanvas = inspectCanvasReference.current;
     const mainCanvas = spriteSheetCanvasReference.current;
-    if (!inspectCanvas || !mainCanvas) return;
+    if (!inspectCanvas || !mainCanvas) {
+      return;
+    }
     const inspectContext = inspectCanvas.getContext('2d');
     if (!inspectContext) return;
     try {
-      const wasm = getFlintRenderWorkerWasm();
-      const tableBase = wasm.font_get_table_ptr ? wasm.font_get_table_ptr() : 256;
-      const u32Memory = new Uint32Array(wasm.memory.buffer);
-      const cellX = u32Memory[(tableBase + glyphIndex * 16) >> 2] ?? 0;
-      const cellY = u32Memory[(tableBase + glyphIndex * 16 + 4) >> 2] ?? 0;
-      const cellW = u32Memory[(tableBase + glyphIndex * 16 + 8) >> 2] ?? 24;
-      const cellH = u32Memory[(tableBase + glyphIndex * 16 + 12) >> 2] ?? 32;
-
       inspectContext.imageSmoothingEnabled = false;
-      inspectContext.clearRect(0, 0, inspectCanvas.width, inspectCanvas.height);
-      inspectContext.drawImage(mainCanvas, cellX, cellY, cellW, cellH, 0, 0, inspectCanvas.width, inspectCanvas.height);
-    } catch {
-      // Fallback
+      inspectContext.fillStyle = '#0d1117';
+      inspectContext.fillRect(0, 0, inspectCanvas.width, inspectCanvas.height);
+      const safeW = Math.max(cellW, 1);
+      const safeH = Math.max(cellH, 1);
+      const scale = Math.min((inspectCanvas.width - 8) / safeW, (inspectCanvas.height - 8) / safeH);
+      const destinationWidth = safeW * scale;
+      const destinationHeight = safeH * scale;
+      const destinationX = (inspectCanvas.width - destinationWidth) / 2;
+      const destinationY = (inspectCanvas.height - destinationHeight) / 2;
+      inspectContext.drawImage(
+        mainCanvas,
+        cellX,
+        cellY,
+        safeW,
+        safeH,
+        destinationX,
+        destinationY,
+        destinationWidth,
+        destinationHeight,
+      );
+    } catch (error) {
+      console.error('paintInspectCell error:', error);
     }
   };
 
@@ -844,30 +861,19 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
 
         if (mode === 'crisp') {
           for (let pixelIndex = 0; pixelIndex < atlasSize * atlasSize; pixelIndex++) {
-            const r = rawBytes[pixelIndex * 4] ?? 0;
-            const g = rawBytes[pixelIndex * 4 + 1] ?? 0;
-            const b = rawBytes[pixelIndex * 4 + 2] ?? 0;
-            const a = rawBytes[pixelIndex * 4 + 3] ?? 0;
+            const r = (rawBytes[pixelIndex * 4] ?? 0) / 255;
+            const g = (rawBytes[pixelIndex * 4 + 1] ?? 0) / 255;
+            const b = (rawBytes[pixelIndex * 4 + 2] ?? 0) / 255;
             const msdf = Math.max(Math.min(r, g), Math.min(Math.max(r, g), b));
-            const distanceValue = Math.min(msdf, a);
+            const edge = 0.5;
+            const smoothing = 0.045;
+            const t = Math.max(0, Math.min(1, (msdf - (edge - smoothing)) / (2 * smoothing)));
+            const alpha = t * t * (3 - 2 * t);
             const outputIndex = pixelIndex * 4;
-            if (distanceValue <= 112) {
-              outBytes[outputIndex] = 13;
-              outBytes[outputIndex + 1] = 17;
-              outBytes[outputIndex + 2] = 23;
-              outBytes[outputIndex + 3] = 255;
-            } else if (distanceValue >= 144) {
-              outBytes[outputIndex] = 255;
-              outBytes[outputIndex + 1] = 255;
-              outBytes[outputIndex + 2] = 255;
-              outBytes[outputIndex + 3] = 255;
-            } else {
-              const factor = (distanceValue - 112) / 32;
-              outBytes[outputIndex] = Math.round(13 + (255 - 13) * factor);
-              outBytes[outputIndex + 1] = Math.round(17 + (255 - 17) * factor);
-              outBytes[outputIndex + 2] = Math.round(23 + (255 - 23) * factor);
-              outBytes[outputIndex + 3] = 255;
-            }
+            outBytes[outputIndex] = Math.round(13 + (255 - 13) * alpha);
+            outBytes[outputIndex + 1] = Math.round(17 + (255 - 17) * alpha);
+            outBytes[outputIndex + 2] = Math.round(23 + (255 - 23) * alpha);
+            outBytes[outputIndex + 3] = 255;
           }
         } else {
           for (let pixelIndex = 0; pixelIndex < atlasSize * atlasSize; pixelIndex++) {
@@ -974,7 +980,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           cellH: foundH,
         });
         paintSpriteSheet(spriteSheetMode, spriteSheetGrid, foundIndex);
-        paintInspectCell(foundIndex);
+        paintInspectCell(foundX, foundY, foundW, foundH);
       }
     } catch {
       // Ignore if wasm not ready yet
@@ -988,6 +994,14 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
     setHoveredGlyph();
     paintSpriteSheet(spriteSheetMode, spriteSheetGrid);
   };
+
+  useEffect(() => {
+    if (hoveredGlyph) {
+      requestAnimationFrame(() => {
+        paintInspectCell(hoveredGlyph.cellX, hoveredGlyph.cellY, hoveredGlyph.cellW, hoveredGlyph.cellH);
+      });
+    }
+  }, [hoveredGlyph?.index, spriteSheetMode]);
 
   useEffect(() => {
     if (showPerfModal) {

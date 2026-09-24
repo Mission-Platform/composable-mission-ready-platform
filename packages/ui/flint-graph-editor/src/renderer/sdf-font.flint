@@ -322,7 +322,7 @@ export fn write_seg(seg_ptr: u32, seg_idx: u32, x1: u32, y1: u32, x2: u32, y2: u
 export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
   if idx == 0 { return 0; }
   if idx == 1 {
-    write_seg(seg_ptr, 0, 80, 64, 80, 144);
+    write_seg(seg_ptr, 0, 80, 56, 80, 132);
     write_seg(seg_ptr, 1, 80, 172, 80, 180);
     return 2;
   }
@@ -560,8 +560,8 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
     return 2;
   }
   if idx == 29 {
-    write_seg(seg_ptr, 0, 64, 112, 128, 112);
-    write_seg(seg_ptr, 1, 64, 144, 128, 144);
+    write_seg(seg_ptr, 0, 64, 108, 128, 108);
+    write_seg(seg_ptr, 1, 64, 148, 128, 148);
     return 2;
   }
   if idx == 30 {
@@ -575,8 +575,8 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
     write_seg(seg_ptr, 2, 96, 56, 116, 68);
     write_seg(seg_ptr, 3, 116, 68, 124, 88);
     write_seg(seg_ptr, 4, 124, 88, 116, 108);
-    write_seg(seg_ptr, 5, 116, 108, 96, 124);
-    write_seg(seg_ptr, 6, 96, 124, 96, 148);
+    write_seg(seg_ptr, 5, 116, 108, 96, 120);
+    write_seg(seg_ptr, 6, 96, 120, 96, 132);
     write_seg(seg_ptr, 7, 96, 172, 96, 180);
     return 8;
   }
@@ -937,16 +937,16 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
     return 6;
   }
   if idx == 73 {
-    write_seg(seg_ptr, 0, 76, 108, 76, 180);
-    write_seg(seg_ptr, 1, 76, 76, 76, 84);
+    write_seg(seg_ptr, 0, 76, 116, 76, 180);
+    write_seg(seg_ptr, 1, 76, 72, 76, 80);
     return 2;
   }
   if idx == 74 {
-    write_seg(seg_ptr, 0, 76, 108, 76, 200);
+    write_seg(seg_ptr, 0, 76, 116, 76, 200);
     write_seg(seg_ptr, 1, 76, 200, 68, 214);
     write_seg(seg_ptr, 2, 68, 214, 52, 214);
     write_seg(seg_ptr, 3, 52, 214, 44, 200);
-    write_seg(seg_ptr, 4, 76, 76, 76, 84);
+    write_seg(seg_ptr, 4, 76, 72, 76, 80);
     return 5;
   }
   if idx == 75 {
@@ -1754,8 +1754,8 @@ export fn sdf_render_char_cell(
   let step_y: u32 = u_256 / cell_h;
   let half_x: u32 = step_x / u_two;
   let half_y: u32 = step_y / u_two;
-  let mut radius: u32 = step_x * u_four;
-  if radius < u_four { radius = u_four; }
+  let mut radius: u32 = step_y * u_four;
+  if radius < u_16 { radius = u_16; }
 
   let mut ly: u32 = 0;
   while ly < cell_h {
@@ -1817,10 +1817,6 @@ export fn sdf_render_char_cell(
 
           s = s + 1;
         }
-
-        if min_d_r == u_9999 { min_d_r = min_d_a; }
-        if min_d_g == u_9999 { min_d_g = min_d_a; }
-        if min_d_b == u_9999 { min_d_b = min_d_a; }
 
         val_r = dist_to_val_u32(min_d_r, radius);
         val_g = dist_to_val_u32(min_d_g, radius);
