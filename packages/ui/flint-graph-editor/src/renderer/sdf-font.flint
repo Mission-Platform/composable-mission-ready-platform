@@ -290,19 +290,7 @@ export fn get_glyph_cell_h_u32(idx: u32) -> u32 {
 }
 
 export fn get_glyph_stroke_bias_u32(idx: u32) -> u32 {
-  if idx == 1 || idx == 2 || idx == 7 || idx == 8 || idx == 9 || idx == 10 || idx == 11 || idx == 12 || idx == 13 || idx == 14 || idx == 15 {
-    return 5;
-  }
-  if idx == 26 || idx == 27 || idx == 28 || idx == 29 || idx == 30 || idx == 31 || idx == 59 || idx == 60 || idx == 61 || idx == 62 || idx == 63 || idx == 64 {
-    return 4;
-  }
-  if idx == 91 || idx == 92 || idx == 93 || idx == 94 || idx == 95 {
-    return 5;
-  }
-  if idx >= 96 && idx <= 150 {
-    return 3;
-  }
-  return 2;
+  return 0;
 }
 
 export fn write_seg(seg_ptr: u32, seg_idx: u32, x1: u32, y1: u32, x2: u32, y2: u32) -> unit {
@@ -1145,18 +1133,18 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
     return 3;
   }
   if idx == 100 {
-    write_seg(seg_ptr, 0, 110, 128, 97, 150);
-    write_seg(seg_ptr, 1, 97, 150, 71, 150);
-    write_seg(seg_ptr, 2, 71, 150, 58, 128);
-    write_seg(seg_ptr, 3, 58, 128, 71, 106);
-    write_seg(seg_ptr, 4, 71, 106, 97, 106);
-    write_seg(seg_ptr, 5, 97, 106, 110, 128);
-    write_seg(seg_ptr, 6, 158, 128, 145, 150);
-    write_seg(seg_ptr, 7, 145, 150, 119, 150);
-    write_seg(seg_ptr, 8, 119, 150, 106, 128);
-    write_seg(seg_ptr, 9, 106, 128, 119, 106);
-    write_seg(seg_ptr, 10, 119, 106, 145, 106);
-    write_seg(seg_ptr, 11, 145, 106, 158, 128);
+    write_seg(seg_ptr, 0, 128, 144, 104, 116);
+    write_seg(seg_ptr, 1, 104, 116, 76, 116);
+    write_seg(seg_ptr, 2, 76, 116, 52, 144);
+    write_seg(seg_ptr, 3, 52, 144, 76, 172);
+    write_seg(seg_ptr, 4, 76, 172, 104, 172);
+    write_seg(seg_ptr, 5, 104, 172, 128, 144);
+    write_seg(seg_ptr, 6, 128, 144, 152, 116);
+    write_seg(seg_ptr, 7, 152, 116, 180, 116);
+    write_seg(seg_ptr, 8, 180, 116, 204, 144);
+    write_seg(seg_ptr, 9, 204, 144, 180, 172);
+    write_seg(seg_ptr, 10, 180, 172, 152, 172);
+    write_seg(seg_ptr, 11, 152, 172, 128, 144);
     return 12;
   }
   if idx == 101 {
@@ -1475,10 +1463,11 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
     return 6;
   }
   if idx == 138 {
-    write_seg(seg_ptr, 0, 56, 108, 152, 108);
-    write_seg(seg_ptr, 1, 80, 108, 80, 180);
-    write_seg(seg_ptr, 2, 128, 108, 128, 180);
-    return 3;
+    write_seg(seg_ptr, 0, 52, 108, 156, 108);
+    write_seg(seg_ptr, 1, 76, 108, 76, 180);
+    write_seg(seg_ptr, 2, 128, 108, 128, 172);
+    write_seg(seg_ptr, 3, 128, 172, 144, 180);
+    return 4;
   }
   if idx == 139 {
     write_seg(seg_ptr, 0, 126, 140, 116, 164);
@@ -1493,16 +1482,16 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
     return 9;
   }
   if idx == 140 {
-    write_seg(seg_ptr, 0, 59, 159, 69, 167);
-    write_seg(seg_ptr, 1, 69, 167, 82, 170);
-    write_seg(seg_ptr, 2, 82, 170, 94, 166);
-    write_seg(seg_ptr, 3, 94, 166, 102, 156);
-    write_seg(seg_ptr, 4, 102, 156, 106, 144);
-    write_seg(seg_ptr, 5, 94, 144, 98, 156);
-    write_seg(seg_ptr, 6, 98, 156, 106, 166);
-    write_seg(seg_ptr, 7, 106, 166, 118, 170);
-    write_seg(seg_ptr, 8, 118, 170, 131, 167);
-    write_seg(seg_ptr, 9, 131, 167, 141, 159);
+    write_seg(seg_ptr, 0, 52, 124, 68, 124);
+    write_seg(seg_ptr, 1, 68, 124, 60, 156);
+    write_seg(seg_ptr, 2, 60, 156, 76, 180);
+    write_seg(seg_ptr, 3, 76, 180, 104, 180);
+    write_seg(seg_ptr, 4, 104, 180, 128, 144);
+    write_seg(seg_ptr, 5, 128, 144, 152, 180);
+    write_seg(seg_ptr, 6, 152, 180, 180, 180);
+    write_seg(seg_ptr, 7, 180, 180, 196, 156);
+    write_seg(seg_ptr, 8, 196, 156, 188, 124);
+    write_seg(seg_ptr, 9, 188, 124, 204, 124);
     return 10;
   }
   if idx == 141 {
@@ -1754,8 +1743,8 @@ export fn sdf_render_char_cell(
   let step_y: u32 = u_256 / cell_h;
   let half_x: u32 = step_x / u_two;
   let half_y: u32 = step_y / u_two;
-  let mut radius: u32 = step_y * u_four;
-  if radius < u_16 { radius = u_16; }
+  let mut radius: u32 = step_y * u_two;
+  if radius < u_eight { radius = u_eight; }
 
   let mut ly: u32 = 0;
   while ly < cell_h {
@@ -1826,7 +1815,7 @@ export fn sdf_render_char_cell(
         let emoji_inner: u32 = radius;
         let emoji_outer: u32 = (radius * u_three) / u_two;
 
-        if idx == 155 {
+        if idx == 126 { // ⚡
           if min_d_a < emoji_inner {
             val_r = u_255;
             val_g = u_220;
@@ -1841,7 +1830,7 @@ export fn sdf_render_char_cell(
             }
           }
         } else {
-          if idx == 156 {
+          if idx == 125 { // ★
             if min_d_a < emoji_inner {
               val_r = u_255;
               val_g = u_204;
@@ -1853,15 +1842,6 @@ export fn sdf_render_char_cell(
                 val_g = u_153;
                 val_b = u_zero;
                 val_a = u_240;
-              }
-            }
-          } else {
-            if idx == 138 {
-              if min_d_a < emoji_inner {
-                val_r = u_46;
-                val_g = u_204;
-                val_b = u_113;
-                val_a = u_255;
               }
             }
           }
@@ -2222,167 +2202,167 @@ fn get_glyph_min_x_u32(idx: u32) -> u32 {
   return 64;
 }
 
-fn get_glyph_advance_u32(idx: u32) -> u32 {
-  if idx == 0 { return 6; }
-  if idx == 1 { return 4; }
-  if idx == 2 { return 6; }
-  if idx == 3 { return 10; }
-  if idx == 4 { return 8; }
-  if idx == 5 { return 12; }
-  if idx == 6 { return 11; }
-  if idx == 7 { return 5; }
-  if idx == 8 { return 5; }
-  if idx == 9 { return 5; }
-  if idx == 10 { return 10; }
-  if idx == 11 { return 12; }
-  if idx == 12 { return 4; }
-  if idx == 13 { return 8; }
-  if idx == 14 { return 4; }
-  if idx == 15 { return 8; }
-  if idx == 16 { return 13; }
-  if idx == 17 { return 6; }
-  if idx == 18 { return 9; }
-  if idx == 19 { return 10; }
-  if idx == 20 { return 10; }
-  if idx == 21 { return 10; }
-  if idx == 22 { return 10; }
-  if idx == 23 { return 9; }
-  if idx == 24 { return 10; }
-  if idx == 25 { return 10; }
-  if idx == 26 { return 4; }
-  if idx == 27 { return 4; }
-  if idx == 28 { return 9; }
-  if idx == 29 { return 10; }
-  if idx == 30 { return 9; }
-  if idx == 31 { return 9; }
-  if idx == 32 { return 16; }
-  if idx == 33 { return 14; }
-  if idx == 34 { return 10; }
-  if idx == 35 { return 14; }
-  if idx == 36 { return 10; }
-  if idx == 37 { return 10; }
-  if idx == 38 { return 10; }
-  if idx == 39 { return 14; }
-  if idx == 40 { return 12; }
-  if idx == 41 { return 5; }
-  if idx == 42 { return 8; }
-  if idx == 43 { return 11; }
-  if idx == 44 { return 10; }
-  if idx == 45 { return 16; }
-  if idx == 46 { return 12; }
-  if idx == 47 { return 17; }
-  if idx == 48 { return 9; }
-  if idx == 49 { return 17; }
-  if idx == 50 { return 11; }
-  if idx == 51 { return 9; }
-  if idx == 52 { return 15; }
-  if idx == 53 { return 12; }
-  if idx == 54 { return 15; }
-  if idx == 55 { return 16; }
-  if idx == 56 { return 12; }
-  if idx == 57 { return 15; }
-  if idx == 58 { return 11; }
-  if idx == 59 { return 5; }
-  if idx == 60 { return 8; }
-  if idx == 61 { return 5; }
-  if idx == 62 { return 10; }
-  if idx == 63 { return 14; }
-  if idx == 64 { return 5; }
-  if idx == 65 { return 9; }
-  if idx == 66 { return 9; }
-  if idx == 67 { return 10; }
-  if idx == 68 { return 9; }
-  if idx == 69 { return 10; }
-  if idx == 70 { return 9; }
-  if idx == 71 { return 9; }
-  if idx == 72 { return 8; }
-  if idx == 73 { return 4; }
-  if idx == 74 { return 6; }
-  if idx == 75 { return 9; }
-  if idx == 76 { return 5; }
-  if idx == 77 { return 13; }
-  if idx == 78 { return 8; }
-  if idx == 79 { return 11; }
-  if idx == 80 { return 9; }
-  if idx == 81 { return 9; }
-  if idx == 82 { return 7; }
-  if idx == 83 { return 8; }
-  if idx == 84 { return 7; }
-  if idx == 85 { return 8; }
-  if idx == 86 { return 10; }
-  if idx == 87 { return 12; }
-  if idx == 88 { return 10; }
-  if idx == 89 { return 10; }
-  if idx == 90 { return 9; }
-  if idx == 91 { return 7; }
-  if idx == 92 { return 5; }
-  if idx == 93 { return 7; }
-  if idx == 94 { return 12; }
-  if idx == 95 { return 10; }
-  if idx == 96 { return 12; }
-  if idx == 97 { return 10; }
-  if idx == 98 { return 12; }
-  if idx == 99 { return 13; }
-  if idx == 100 { return 15; }
-  if idx == 101 { return 12; }
-  if idx == 102 { return 12; }
-  if idx == 103 { return 9; }
-  if idx == 104 { return 9; }
-  if idx == 105 { return 13; }
-  if idx == 106 { return 16; }
-  if idx == 107 { return 11; }
-  if idx == 108 { return 12; }
-  if idx == 109 { return 10; }
-  if idx == 110 { return 14; }
-  if idx == 111 { return 11; }
-  if idx == 112 { return 18; }
-  if idx == 113 { return 12; }
-  if idx == 114 { return 18; }
-  if idx == 115 { return 12; }
-  if idx == 116 { return 18; }
-  if idx == 117 { return 18; }
-  if idx == 118 { return 7; }
-  if idx == 119 { return 7; }
-  if idx == 120 { return 10; }
-  if idx == 121 { return 20; }
-  if idx == 122 { return 12; }
-  if idx == 123 { return 16; }
-  if idx == 124 { return 12; }
-  if idx == 125 { return 20; }
-  if idx == 126 { return 13; }
-  if idx == 127 { return 15; }
-  if idx == 128 { return 15; }
-  if idx == 129 { return 8; }
-  if idx == 130 { return 7; }
-  if idx == 131 { return 7; }
-  if idx == 132 { return 11; }
-  if idx == 133 { return 6; }
-  if idx == 134 { return 10; }
-  if idx == 135 { return 10; }
-  if idx == 136 { return 11; }
-  if idx == 137 { return 8; }
-  if idx == 138 { return 14; }
-  if idx == 139 { return 12; }
-  if idx == 140 { return 12; }
-  if idx == 141 { return 14; }
-  if idx == 142 { return 16; }
-  if idx == 143 { return 15; }
-  if idx == 144 { return 9; }
-  if idx == 145 { return 11; }
-  if idx == 146 { return 8; }
-  if idx == 147 { return 10; }
-  if idx == 148 { return 10; }
-  if idx == 149 { return 10; }
-  if idx == 150 { return 9; }
-  if idx == 151 { return 5; }
-  if idx == 152 { return 11; }
-  if idx == 153 { return 8; }
-  if idx == 154 { return 8; }
-  if idx == 155 { return 10; }
-  if idx == 156 { return 6; }
-  return 10;
-}
 
+export fn get_glyph_advance_u32(idx: u32) -> u32 {
+  if idx == 0 { return 7; }
+  if idx == 1 { return 6; }
+  if idx == 2 { return 7; }
+  if idx == 3 { return 17; }
+  if idx == 4 { return 14; }
+  if idx == 5 { return 21; }
+  if idx == 6 { return 17; }
+  if idx == 7 { return 4; }
+  if idx == 8 { return 6; }
+  if idx == 9 { return 6; }
+  if idx == 10 { return 9; }
+  if idx == 11 { return 13; }
+  if idx == 12 { return 5; }
+  if idx == 13 { return 9; }
+  if idx == 14 { return 5; }
+  if idx == 15 { return 11; }
+  if idx == 16 { return 14; }
+  if idx == 17 { return 9; }
+  if idx == 18 { return 14; }
+  if idx == 19 { return 14; }
+  if idx == 20 { return 16; }
+  if idx == 21 { return 15; }
+  if idx == 22 { return 14; }
+  if idx == 23 { return 14; }
+  if idx == 24 { return 14; }
+  if idx == 25 { return 14; }
+  if idx == 26 { return 5; }
+  if idx == 27 { return 5; }
+  if idx == 28 { return 13; }
+  if idx == 29 { return 12; }
+  if idx == 30 { return 13; }
+  if idx == 31 { return 13; }
+  if idx == 32 { return 26; }
+  if idx == 33 { return 17; }
+  if idx == 34 { return 17; }
+  if idx == 35 { return 18; }
+  if idx == 36 { return 18; }
+  if idx == 37 { return 17; }
+  if idx == 38 { return 15; }
+  if idx == 39 { return 18; }
+  if idx == 40 { return 20; }
+  if idx == 41 { return 7; }
+  if idx == 42 { return 15; }
+  if idx == 43 { return 16; }
+  if idx == 44 { return 15; }
+  if idx == 45 { return 24; }
+  if idx == 46 { return 20; }
+  if idx == 47 { return 22; }
+  if idx == 48 { return 15; }
+  if idx == 49 { return 22; }
+  if idx == 50 { return 15; }
+  if idx == 51 { return 16; }
+  if idx == 52 { return 16; }
+  if idx == 53 { return 20; }
+  if idx == 54 { return 17; }
+  if idx == 55 { return 23; }
+  if idx == 56 { return 17; }
+  if idx == 57 { return 16; }
+  if idx == 58 { return 17; }
+  if idx == 59 { return 7; }
+  if idx == 60 { return 11; }
+  if idx == 61 { return 7; }
+  if idx == 62 { return 11; }
+  if idx == 63 { return 11; }
+  if idx == 64 { return 7; }
+  if idx == 65 { return 16; }
+  if idx == 66 { return 17; }
+  if idx == 67 { return 14; }
+  if idx == 68 { return 17; }
+  if idx == 69 { return 15; }
+  if idx == 70 { return 9; }
+  if idx == 71 { return 16; }
+  if idx == 72 { return 16; }
+  if idx == 73 { return 7; }
+  if idx == 74 { return 7; }
+  if idx == 75 { return 14; }
+  if idx == 76 { return 7; }
+  if idx == 77 { return 23; }
+  if idx == 78 { return 16; }
+  if idx == 79 { return 16; }
+  if idx == 80 { return 17; }
+  if idx == 81 { return 17; }
+  if idx == 82 { return 11; }
+  if idx == 83 { return 13; }
+  if idx == 84 { return 10; }
+  if idx == 85 { return 16; }
+  if idx == 86 { return 13; }
+  if idx == 87 { return 18; }
+  if idx == 88 { return 13; }
+  if idx == 89 { return 13; }
+  if idx == 90 { return 13; }
+  if idx == 91 { return 9; }
+  if idx == 92 { return 9; }
+  if idx == 93 { return 9; }
+  if idx == 94 { return 11; }
+  if idx == 95 { return 14; }
+  if idx == 96 { return 13; }
+  if idx == 97 { return 11; }
+  if idx == 98 { return 11; }
+  if idx == 99 { return 19; }
+  if idx == 100 { return 19; }
+  if idx == 101 { return 11; }
+  if idx == 102 { return 12; }
+  if idx == 103 { return 13; }
+  if idx == 104 { return 13; }
+  if idx == 105 { return 17; }
+  if idx == 106 { return 17; }
+  if idx == 107 { return 13; }
+  if idx == 108 { return 13; }
+  if idx == 109 { return 15; }
+  if idx == 110 { return 15; }
+  if idx == 111 { return 14; }
+  if idx == 112 { return 23; }
+  if idx == 113 { return 11; }
+  if idx == 114 { return 23; }
+  if idx == 115 { return 11; }
+  if idx == 116 { return 23; }
+  if idx == 117 { return 22; }
+  if idx == 118 { return 11; }
+  if idx == 119 { return 9; }
+  if idx == 120 { return 17; }
+  if idx == 121 { return 23; }
+  if idx == 122 { return 9; }
+  if idx == 123 { return 18; }
+  if idx == 124 { return 14; }
+  if idx == 125 { return 24; }
+  if idx == 126 { return 24; }
+  if idx == 127 { return 21; }
+  if idx == 128 { return 21; }
+  if idx == 129 { return 16; }
+  if idx == 130 { return 9; }
+  if idx == 131 { return 9; }
+  if idx == 132 { return 19; }
+  if idx == 133 { return 17; }
+  if idx == 134 { return 13; }
+  if idx == 135 { return 16; }
+  if idx == 136 { return 13; }
+  if idx == 137 { return 16; }
+  if idx == 138 { return 19; }
+  if idx == 139 { return 18; }
+  if idx == 140 { return 22; }
+  if idx == 141 { return 17; }
+  if idx == 142 { return 21; }
+  if idx == 143 { return 16; }
+  if idx == 144 { return 16; }
+  if idx == 145 { return 16; }
+  if idx == 146 { return 16; }
+  if idx == 147 { return 15; }
+  if idx == 148 { return 15; }
+  if idx == 149 { return 15; }
+  if idx == 150 { return 16; }
+  if idx == 151 { return 7; }
+  if idx == 152 { return 16; }
+  if idx == 153 { return 16; }
+  if idx == 154 { return 16; }
+  if idx == 155 { return 14; }
+  if idx == 156 { return 13; }
+  return 12;
+}
 
 export fn sdf_get_char_advance_u32(code: i32) -> u32 {
   if code == 32 { return 6; }
