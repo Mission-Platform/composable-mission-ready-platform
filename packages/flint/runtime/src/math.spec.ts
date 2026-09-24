@@ -156,6 +156,33 @@ function expectOrthogonalColumns(matrix: FlintDMatrix): void {
   }
 }
 
+function extract2DColumn(matrix: FlintDMatrix, col: number): FlintDMatrix {
+  return createFlintDMatrix(2, 1, [matrix.data[col] ?? 0, matrix.data[2 + col] ?? 0]);
+}
+
+function expectEigenvectorScaled(sym: FlintDMatrix, vectors: FlintDMatrix, col: number, expectedLambda: number): void {
+  const vector = extract2DColumn(vectors, col);
+  const avOpt = flintDMatrixMul(sym, vector);
+  expect(avOpt.kind).toBe('some');
+  const avData = avOpt.value?.data ?? [];
+  const firstCoord = vector.data[0] ?? 0;
+  const secondCoord = vector.data[1] ?? 0;
+  expect(avData[0]).toBeCloseTo(expectedLambda * firstCoord, 8);
+  expect(avData[1]).toBeCloseTo(expectedLambda * secondCoord, 8);
+}
+
+function expectMoorePenroseCondition(matrixA: FlintDMatrix, pinv: FlintDMatrix): void {
+  const aPinvOpt = flintDMatrixMul(matrixA, pinv);
+  expect(aPinvOpt.kind).toBe('some');
+  const aPinvMat = aPinvOpt.value ?? createFlintDMatrix(0, 0);
+  const aPinvAOpt = flintDMatrixMul(aPinvMat, matrixA);
+  expect(aPinvAOpt.kind).toBe('some');
+  const aPinvAMat = aPinvAOpt.value ?? createFlintDMatrix(0, 0);
+  for (const [index, matrixValue] of matrixA.data.entries()) {
+    expect(aPinvAMat.data[index]).toBeCloseTo(matrixValue, 7);
+  }
+}
+
 describe('Flint Standard Math Library', () => {
   describe('Constants and Scalar Functions', () => {
     it('provides standard mathematical constants', () => {
@@ -585,13 +612,7 @@ describe('Flint Standard Math Library', () => {
       expect(decomp.values[0]).toBeCloseTo(3, 8);
       expect(decomp.values[1]).toBeCloseTo(1, 8);
 
-      // Check A * v_0 = lambda_0 * v_0
-      const v0 = createFlintDMatrix(2, 1, [decomp.vectors.data[0] ?? 0, decomp.vectors.data[2] ?? 0]);
-      const av0 = flintDMatrixMul(sym, v0);
-      expect(av0.kind).toBe('some');
-      const av0Data = av0.value?.data ?? [];
-      expect(av0Data[0]).toBeCloseTo(3 * (v0.data[0] ?? 0), 8);
-      expect(av0Data[1]).toBeCloseTo(3 * (v0.data[1] ?? 0), 8);
+      expectEigenvectorScaled(sym, decomp.vectors, 0, 3);
     });
 
     it('verifies eigenvector orthogonality for symmetric matrix', () => {
@@ -655,15 +676,7 @@ describe('Flint Standard Math Library', () => {
       expect(pinv.rows).toBe(2);
       expect(pinv.cols).toBe(3);
 
-      const aPinvOpt = flintDMatrixMul(matrixA, pinv);
-      expect(aPinvOpt.kind).toBe('some');
-      const aPinvMat = aPinvOpt.value ?? createFlintDMatrix(0, 0);
-      const aPinvAOpt = flintDMatrixMul(aPinvMat, matrixA);
-      expect(aPinvAOpt.kind).toBe('some');
-      const aPinvAData = aPinvAOpt.value?.data ?? [];
-      for (let index = 0; index < 6; index += 1) {
-        expect(aPinvAData[index]).toBeCloseTo(matrixA.data[index] ?? 0, 7);
-      }
+      expectMoorePenroseCondition(matrixA, pinv);
     });
 
     it('computes SVD and orthogonal basis for rank-deficient matrix', () => {
