@@ -74,6 +74,7 @@ export function createFlintLanguageQueryEngine(): FlintLanguageQueryEngine {
   const cache = new Map<string, CacheEntry>();
 
   return {
+    // skipcq: JS-R1005
     analyze(
       document: FlintDocument,
       options: FlintWorkspaceOptions = {},

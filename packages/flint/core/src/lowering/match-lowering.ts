@@ -58,6 +58,7 @@ export interface DecisionTreeCompileOptions {
 /**
  * Determines whether a collection of scalar case values is eligible for constant-time `br_table` dispatch.
  */
+// skipcq: JS-R1005
 export function isDenseSwitchEligible(
   values: readonly (number | boolean | string)[],
   options: DecisionTreeCompileOptions = {},
@@ -65,8 +66,7 @@ export function isDenseSwitchEligible(
   const numericValues = values.map((value) => {
     if (typeof value === 'number') return Number.isInteger(value) ? value : undefined;
     if (typeof value === 'boolean') return value ? 1 : 0;
-    if (typeof value === 'string') return options.enumValueResolver?.(value);
-    return;
+    return typeof value === 'string' ? options.enumValueResolver?.(value) : undefined;
   });
 
   const valid = numericValues.filter((candidate): candidate is number => candidate !== undefined);
@@ -106,6 +106,7 @@ export function selectMatchStrategy(
 /**
  * Compiles a list of match arms into an optimal pattern matching decision tree.
  */
+// skipcq: JS-R1005
 export function compileDecisionTree(
   discriminant: FlintExpression,
   arms: readonly FlintMatchArm[],

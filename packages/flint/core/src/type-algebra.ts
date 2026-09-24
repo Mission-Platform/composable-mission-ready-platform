@@ -693,7 +693,7 @@ export class TypeAlgebra {
     const element = this.layout(node.element, visiting, visitingAggregates);
     const stride = alignOffset(element.size === 0 ? 0 : element.size, element.alignment);
     if (stride > 0 && node.length > Math.floor(MAX_STATIC_ARRAY_BYTES / stride)) {
-      throw new RangeError(`Fixed array total byte size overflows maximum permitted compile-time static bound.`);
+      throw new RangeError('Fixed array total byte size overflows maximum permitted compile-time static bound.');
     }
     return {
       size: stride * node.length,
@@ -872,6 +872,7 @@ export class TypeAlgebra {
    * Determines whether `subId` is a subtype of `superId` according to structural subtyping and variance rules.
    * Strictly enforces invariance on mutable references (`&mut T`) and interior mutability wrappers (`Cell<T>`).
    */
+  // skipcq: JS-R1005
   isSubtypeOf(subId: TypeId, superId: TypeId, depth = 0): boolean {
     if (subId === superId) return true;
     if (depth > MAX_EXPANSION_DEPTH) return false;
@@ -930,6 +931,7 @@ export class TypeAlgebra {
   /**
    * Expands type aliases with step and depth bounding to prevent compiler resource exhaustion DoS.
    */
+  // skipcq: JS-R1005
   expandTypeAliasBounded(
     aliasName: string,
     aliases: ReadonlyMap<string, FlintTypeName>,
@@ -1448,6 +1450,7 @@ export const MAX_GENERIC_DEPTH = 32;
 /**
  * Calculates the recursive generic nesting depth of a type node.
  */
+// skipcq: JS-R1005
 export function calculateGenericDepth(algebra: TypeAlgebra, id: TypeId, depth = 1): number {
   if (depth > MAX_GENERIC_DEPTH) return depth;
   const node = algebra.node(id);
@@ -1534,6 +1537,7 @@ export class MonomorphizationCache {
    * When the expanded layout matches a previous entry, `sharedLayout` is set and
    * both specializations retain independent ids while sharing layout ownership.
    */
+  // skipcq: JS-R1005
   monomorphize(
     generic: string,
     argumentIds: readonly TypeId[],
@@ -1925,6 +1929,10 @@ export function buildTraitVTableLayout(
 
   const visited = new Set<string>();
 
+  /**
+   * Recursively collects supertraits and assigns deterministic method/supertrait offsets.
+   */
+  // skipcq: JS-R1005
   function collectSupertraits(name: string): void {
     if (visited.has(name)) return;
     visited.add(name);

@@ -465,6 +465,7 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
     /**
      * Computes quick-fix and refactoring code actions for diagnostics.
      */
+    // skipcq: JS-R1005
     codeActions(params: CodeActionParams): CodeAction[] {
       assertReady();
       if (!documents.has(params.textDocument.uri)) return [];

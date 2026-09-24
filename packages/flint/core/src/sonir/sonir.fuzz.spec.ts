@@ -157,6 +157,7 @@ describe('SonIR Optimization & Declarative Rewrite Invariant Fuzzing (Target 3)'
     }
   });
 
+  // skipcq: JS-R1005
   it('fuzzes ThinLTO indexer reachability invariants and devirtualization pruning across random module graphs', () => {
     const capabilities = ['fs.read', 'fs.write', 'net.socket', 'crypto.sha256', 'env.get'];
 

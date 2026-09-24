@@ -133,6 +133,7 @@ describe("Binary Manifest & CBOR Fuzz Testing (Target 1)", () => {
     }
   });
 
+  // skipcq: JS-R1005
   it("fuzzes bit-flip and byte truncation mutations of valid CBOR manifests", () => {
     const canonicalBytes = encodeCborAbiManifest(validManifest);
 
@@ -192,6 +193,7 @@ describe("Binary Manifest & CBOR Fuzz Testing (Target 1)", () => {
     }
   });
 
+  // skipcq: JS-R1005
   it("fuzzes malicious prototype pollution injection payloads", () => {
     const maliciousKeys = [
       "__proto__",

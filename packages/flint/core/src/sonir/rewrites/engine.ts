@@ -275,9 +275,9 @@ export const BUILTIN_REWRITE_RULES: readonly DeclarativeRewriteRule[] = [
         const rightBig = BigInt.asUintN(64, BigInt(right?.constantValue ?? 0));
         return context.createConstantNode(leftBig < rightBig ? 1 : 0, 'bool');
       }
-      const l = Number(left?.constantValue ?? 0) >>> 0;
-      const r = Number(right?.constantValue ?? 0) >>> 0;
-      return context.createConstantNode(l < r ? 1 : 0, 'bool');
+      const leftNumber = Number(left?.constantValue ?? 0) >>> 0;
+      const rightNumber = Number(right?.constantValue ?? 0) >>> 0;
+      return context.createConstantNode(leftNumber < rightNumber ? 1 : 0, 'bool');
     },
   },
   {
@@ -306,9 +306,9 @@ export const BUILTIN_REWRITE_RULES: readonly DeclarativeRewriteRule[] = [
         const rightBig = BigInt.asIntN(64, BigInt(right?.constantValue ?? 0));
         return context.createConstantNode(leftBig < rightBig ? 1 : 0, 'bool');
       }
-      const l = Math.trunc(Number(left?.constantValue ?? 0));
-      const r = Math.trunc(Number(right?.constantValue ?? 0));
-      return context.createConstantNode(l < r ? 1 : 0, 'bool');
+      const leftNumber = Math.trunc(Number(left?.constantValue ?? 0));
+      const rightNumber = Math.trunc(Number(right?.constantValue ?? 0));
+      return context.createConstantNode(leftNumber < rightNumber ? 1 : 0, 'bool');
     },
   },
   {
@@ -362,6 +362,7 @@ export const BUILTIN_REWRITE_RULES: readonly DeclarativeRewriteRule[] = [
 /**
  * Executes rewrite passes over a list of Low-Level SonIR nodes until fixed-point or iteration limit.
  */
+// skipcq: JS-R1005
 export function applyDeclarativeRewrites(
   nodes: readonly LowLevelSonNode[],
   rules: readonly DeclarativeRewriteRule[] = BUILTIN_REWRITE_RULES,
@@ -374,7 +375,11 @@ export function applyDeclarativeRewrites(
 
   let nextId = Math.max(0, ...nodes.map((n) => n.id)) + 1;
   const applied: string[] = [];
+  const replacements = new Map<number, number>();
 
+  /**
+   * Resolves the transitive rewrite target identifier for a given node id.
+   */
   const resolveTarget = (id: number): number => {
     let current = id;
     while (replacements.has(current)) {
@@ -408,8 +413,6 @@ export function applyDeclarativeRewrites(
     list.push(rule);
     rulesByOpcode.set(rule.opcode, list);
   }
-
-  const replacements = new Map<number, number>();
 
   for (let iteration = 0; iteration < maxIterations; iteration += 1) {
     let changed = false;

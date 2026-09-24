@@ -52,6 +52,7 @@ const resources: PlannerResource[] = [
   { id: "lee", label: "Lee Chen", subtitle: "Product", capacity: 1 },
 ];
 
+/** Helper to create a mock calendar event for stories. */
 function event(
   uid: string,
   summary: string,

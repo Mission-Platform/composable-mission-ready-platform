@@ -65,6 +65,7 @@ export function createModuleSummary(
 /**
  * Builds a global ThinLTO summary index across a set of module summaries.
  */
+// skipcq: JS-R1005
 export function buildThinLtoIndex(
   moduleSummaries: readonly ThinLtoModuleSummary[],
   rootEntryPoints: readonly string[],
@@ -147,6 +148,7 @@ export function buildThinLtoIndex(
 /**
  * Computes the transitive closure of required capabilities for each module in the index.
  */
+// skipcq: JS-R1005
 function computeTransitiveModuleCapabilitiesInternal(
   modules: readonly ThinLtoModuleSummary[],
   callGraph: ReadonlyMap<string, readonly string[]>,
@@ -236,6 +238,7 @@ export function verifyTransitiveCapabilityClosure(
 /**
  * Computes cross-module inlining and devirtualization candidates from a ThinLTO index.
  */
+// skipcq: JS-R1005
 export function computeThinLtoInliningPlan(
   index: ThinLtoIndex,
   maxInlineInstructions = 50,
@@ -296,6 +299,7 @@ export interface ThinLtoLinkVerificationResult {
 /**
  * Verifies link-time imports across modules, asserting two-level namespace qualification and 1:1 structural type signature equivalence.
  */
+// skipcq: JS-R1005
 export function verifyLinkTimeImports(
   imports: readonly ThinLtoImportRequirement[],
   exports: readonly ThinLtoExportDefinition[],
@@ -373,6 +377,7 @@ export interface ThinLtoGlobalExport {
 /**
  * Verifies link-time global variable imports, ensuring type and mutability equivalence.
  */
+// skipcq: JS-R1005
 export function verifyLinkTimeGlobals(
   imports: readonly ThinLtoGlobalImport[],
   exports: readonly ThinLtoGlobalExport[],

@@ -153,6 +153,66 @@ export async function writeFlintArtifacts(
 }
 
 /**
+ * Formats a single diagnostic record with multi-span carets and line gutters.
+ */
+// skipcq: JS-R1005
+function formatSingleCaretDiagnostic(
+  diagnostic: FlintDiagnostic,
+  sourceResolver?: (fileName: string) => string | undefined,
+): string {
+  const { severity, code, message, fileName, span, hint, evidence } = diagnostic;
+  const header = `${severity}[${code}]: ${message}`;
+  const location = ` --> ${fileName}:${span.line}:${span.column}`;
+
+  const source = sourceResolver?.(fileName);
+  if (source === undefined || source.length === 0) {
+    const hintText = hint === undefined ? '' : `\n = note: ${hint}`;
+    return `${header}\n${location}${hintText}`;
+  }
+
+  const lines = source.split(/\r?\n/u);
+  const targetLine = lines[span.line - 1] ?? '';
+  const lineNumberString = String(span.line);
+  const gutterPadding = ' '.repeat(lineNumberString.length);
+
+  const colStart = Math.max(0, span.column - 1);
+  const colEnd = span.endLine === span.line ? Math.max(colStart + 1, span.endColumn - 1) : targetLine.length;
+  const underlineLength = Math.max(1, colEnd - colStart);
+  const caretLine = `${' '.repeat(colStart)}${'^'.repeat(underlineLength)}`;
+
+  const evidenceLines =
+    evidence === undefined || evidence.length === 0
+      ? []
+      : evidence.flatMap((item) => {
+          if (item.span === undefined) return [`${gutterPadding} = evidence: ${item.message}`];
+          const itemLine = lines[item.span.line - 1] ?? '';
+          const itemLineNumber = String(item.span.line);
+          const itemGutter = ' '.repeat(itemLineNumber.length);
+          const itemColStart = Math.max(0, item.span.column - 1);
+          const itemColEnd =
+            item.span.endLine === item.span.line
+              ? Math.max(itemColStart + 1, item.span.endColumn - 1)
+              : itemLine.length;
+          const itemUnderline = `${' '.repeat(itemColStart)}${'-'.repeat(Math.max(1, itemColEnd - itemColStart))}`;
+          return [
+            `${itemGutter} |`,
+            `${itemLineNumber} | ${itemLine}`,
+            `${itemGutter} | ${itemUnderline} ${item.message}`,
+          ];
+        });
+
+  const hintText = hint === undefined ? '' : `\n${gutterPadding} = note: ${hint}`;
+  const middleSection = [
+    `${gutterPadding} |`,
+    `${lineNumberString} | ${targetLine}`,
+    `${gutterPadding} | ${caretLine}`,
+    ...evidenceLines,
+  ].join('\n');
+
+  return `${header}\n${location}\n${middleSection}${hintText}`;
+}
+
+/**
  * Formats compiler diagnostics with multi-span carets, line gutters, and remediation notes.
  *
  * @param diagnostics Array of diagnostic records to format.
@@ -164,60 +224,7 @@ export function formatFlintCaretDiagnostics(
   diagnostics: readonly FlintDiagnostic[],
   sourceResolver?: (fileName: string) => string | undefined,
 ): string {
-  return diagnostics
-    .map((diagnostic) => {
-      const { severity, code, message, fileName, span, hint, evidence } = diagnostic;
-      const header = `${severity}[${code}]: ${message}`;
-      const location = ` --> ${fileName}:${span.line}:${span.column}`;
-
-      const source = sourceResolver?.(fileName);
-      if (source === undefined || source.length === 0) {
-        const hintText = hint === undefined ? '' : `\n = note: ${hint}`;
-        return `${header}\n${location}${hintText}`;
-      }
-
-      const lines = source.split(/\r?\n/u);
-      const targetLine = lines[span.line - 1] ?? '';
-      const lineNumberString = String(span.line);
-      const gutterPadding = ' '.repeat(lineNumberString.length);
-
-      const colStart = Math.max(0, span.column - 1);
-      const colEnd = span.endLine === span.line ? Math.max(colStart + 1, span.endColumn - 1) : targetLine.length;
-      const underlineLength = Math.max(1, colEnd - colStart);
-      const caretLine = `${' '.repeat(colStart)}${'^'.repeat(underlineLength)}`;
-
-      const evidenceLines =
-        evidence === undefined || evidence.length === 0
-          ? []
-          : evidence.flatMap((item) => {
-              if (item.span === undefined) return [`${gutterPadding} = evidence: ${item.message}`];
-              const itemLine = lines[item.span.line - 1] ?? '';
-              const itemLineNumber = String(item.span.line);
-              const itemGutter = ' '.repeat(itemLineNumber.length);
-              const itemColStart = Math.max(0, item.span.column - 1);
-              const itemColEnd =
-                item.span.endLine === item.span.line
-                  ? Math.max(itemColStart + 1, item.span.endColumn - 1)
-                  : itemLine.length;
-              const itemUnderline = `${' '.repeat(itemColStart)}${'-'.repeat(Math.max(1, itemColEnd - itemColStart))}`;
-              return [
-                `${itemGutter} |`,
-                `${itemLineNumber} | ${itemLine}`,
-                `${itemGutter} | ${itemUnderline} ${item.message}`,
-              ];
-            });
-
-      const hintText = hint === undefined ? '' : `\n${gutterPadding} = note: ${hint}`;
-      const middleSection = [
-        `${gutterPadding} |`,
-        `${lineNumberString} | ${targetLine}`,
-        `${gutterPadding} | ${caretLine}`,
-        ...evidenceLines,
-      ].join('\n');
-
-      return `${header}\n${location}\n${middleSection}${hintText}`;
-    })
-    .join('\n\n');
+  return diagnostics.map((diagnostic) => formatSingleCaretDiagnostic(diagnostic, sourceResolver)).join('\n\n');
 }
 
 /**

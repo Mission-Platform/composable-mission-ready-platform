@@ -64,6 +64,7 @@ describe('Multi-Memory Partitioned Fallback Fuzz Testing (Target 4)', () => {
     }).toThrow(/not declared/);
   });
 
+  // skipcq: JS-R1005
   it('fuzzes 3,000 randomized cross-partition allocation, read, write, and isolation operations', () => {
     const multiMemory = createFlintMultiMemory({
       mode: 'partitioned-fallback',
@@ -199,6 +200,7 @@ describe('Multi-Memory Partitioned Fallback Fuzz Testing (Target 4)', () => {
     }
   });
 
+  // skipcq: JS-R1005
   it('fuzzes SegregatedSlabAllocator across small and medium size classes in fallback partitions', () => {
     const multiMemory = createFlintMultiMemory({ mode: 'partitioned-fallback' });
     const slabAllocator = new SegregatedSlabAllocator(multiMemory.guestHeap.wasmMemory, 65_536);

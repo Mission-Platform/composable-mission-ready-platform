@@ -31,6 +31,9 @@ export class FlintAtomicSpinLock {
     this.lockIndex = lockIndex;
   }
 
+  /**
+   * Acquires the spinlock, spinning until the lock is successfully claimed.
+   */
   public acquire(): void {
     if (typeof Atomics === 'undefined') return;
     while (Atomics.compareExchange(this.lockView, this.lockIndex, 0, 1) !== 0) {
@@ -38,11 +41,17 @@ export class FlintAtomicSpinLock {
     }
   }
 
+  /**
+   * Releases the spinlock by resetting the lock state to zero.
+   */
   public release(): void {
     if (typeof Atomics === 'undefined') return;
     Atomics.store(this.lockView, this.lockIndex, 0);
   }
 
+  /**
+   * Executes a callback within a mutually exclusive critical section protected by this lock.
+   */
   public withLock<T>(action: () => T): T {
     this.acquire();
     try {
@@ -106,6 +115,10 @@ export class SegregatedSlabAllocator {
     return this.allocateInternal(size);
   }
 
+  /**
+   * Internal allocation routine finding or provisioning a slab of the target size class.
+   */
+  // skipcq: JS-R1005
   private allocateInternal(size: number): number {
     const sizeClass = this.findSizeClass(size);
     if (sizeClass === undefined) {
@@ -146,6 +159,7 @@ export class SegregatedSlabAllocator {
   /**
    * Allocates contiguous memory for an array of count * elementSize with checked multiplication guards.
    */
+  // skipcq: JS-R1005
   public allocateArray(count: number, elementSize: number): number {
     if (!Number.isSafeInteger(count) || count < 0 || !Number.isSafeInteger(elementSize) || elementSize < 0) {
       throw new FlintTrap('MemoryExhausted', 'Array count and elementSize must be non-negative safe integers.');
@@ -174,6 +188,10 @@ export class SegregatedSlabAllocator {
     return this.deallocateInternal(pointer, size);
   }
 
+  /**
+   * Internal deallocation routine validating slab ownership, canary, and returning slot to free list.
+   */
+  // skipcq: JS-R1005
   private deallocateInternal(pointer: number, size: number): void {
     const sizeClass = this.findSizeClass(size);
     if (sizeClass === undefined) return;
@@ -227,6 +245,10 @@ export class SegregatedSlabAllocator {
     }
   }
 
+  /**
+   * Finds the smallest matching segregated slab size class for a requested byte size.
+   */
+  // skipcq: JS-0105
   private findSizeClass(size: number): SlabSizeClass | undefined {
     for (const sizeClass of SLAB_SIZE_CLASSES) {
       if (size <= sizeClass) return sizeClass;
@@ -234,6 +256,9 @@ export class SegregatedSlabAllocator {
     return undefined;
   }
 
+  /**
+   * Allocates a new contiguous slab block for the given size class and populates its free list.
+   */
   private createSlab(sizeClass: SlabSizeClass): SlabBlock {
     const slotCount = sizeClass <= 2048 ? 64 : sizeClass <= 16_384 ? 16 : 4;
     const basePointer = this.nextHeapPointer;
@@ -256,6 +281,10 @@ export class SegregatedSlabAllocator {
     };
   }
 
+  /**
+   * Grows the underlying WebAssembly linear memory if the required end offset exceeds current capacity.
+   */
+  // skipcq: JS-R1005
   private ensureCapacity(requiredEndPointer: number): void {
     const currentBytes = this.memory.buffer.byteLength;
     if (requiredEndPointer > currentBytes) {

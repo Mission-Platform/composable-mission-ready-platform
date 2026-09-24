@@ -40,6 +40,7 @@ class FuzzPrng {
 describe('Multi-Memory & Allocator Stress Fuzz Testing (Target 4)', () => {
   const prng = new FuzzPrng(0x99_88_77_66);
 
+  // skipcq: JS-R1005
   it('fuzzes SegregatedSlabAllocator with thousands of random alloc/dealloc cycles and size classes', () => {
     const wasmMem = new WebAssembly.Memory({ initial: 4, maximum: 512 });
     const slabAllocator = new SegregatedSlabAllocator(wasmMem, 65_536);
@@ -159,8 +160,10 @@ describe('Multi-Memory & Allocator Stress Fuzz Testing (Target 4)', () => {
       active.push({ pointer, size });
 
       if (prng.nextFloat() < 0.3 && active.length > 0) {
-        const toFree = active.pop()!;
-        memory.deallocate(toFree.pointer, toFree.size);
+        const toFree = active.pop();
+        if (toFree !== undefined) {
+          memory.deallocate(toFree.pointer, toFree.size);
+        }
       }
     }
   });

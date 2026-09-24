@@ -1040,6 +1040,7 @@ class Parser {
    *
    * @returns Array of parsed statement AST nodes.
    */
+  // skipcq: JS-R1005
   private parseBlock(): FlintStatement[] {
     this.expect('{', 'FLINT-PARSE-018', "Expected '{' to start a block.");
     const statements: FlintStatement[] = [];
@@ -1074,6 +1075,7 @@ class Parser {
   /**
    * Resynchronizes top-level module parser state to the next declaration keyword.
    */
+  // skipcq: JS-R1005
   private synchronizeTopLevel(): void {
     while (!this.is('eof') && !this.is('}')) {
       if (

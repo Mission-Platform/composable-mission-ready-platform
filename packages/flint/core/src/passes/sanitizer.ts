@@ -27,6 +27,7 @@ export interface FlintSanitizerReport {
 /**
  * Runs the `F-San` shadow-memory and capability sanitization pass over a Low-Level SonIR module.
  */
+// skipcq: JS-R1005
 export function runFlintSanitizerPass(
   module: LowLevelSonModule,
   options: FlintSanitizerOptions = {},

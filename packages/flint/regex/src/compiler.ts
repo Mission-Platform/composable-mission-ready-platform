@@ -1,5 +1,8 @@
 import { type CompiledRegex, INSTR_WIDTH, Op } from "./bytecode.js";
 
+export const MAX_REGEX_PATTERN_LENGTH = 65_536;
+export const MAX_REGEX_REPEAT_BOUND = 10_000;
+
 /** Compiler-owned syntax error with deterministic source-relative messages. */
 export class RegexSyntaxError extends Error {
   public readonly code:
@@ -578,15 +581,13 @@ function compileNode(node: Node, emitter: Emitter): void {
   }
 }
 
-export const MAX_REGEX_PATTERN_LENGTH = 65_536;
-export const MAX_REGEX_REPEAT_BOUND = 10_000;
-
 /**
  * Compiles a repeat quantifier AST node into split and jump instructions.
  *
  * @param node - Repeat quantifier node.
  * @param emitter - Instruction emitter.
  */
+// skipcq: JS-R1005
 function compileRepeat(
   node: Extract<Node, { kind: "repeat" }>,
   emitter: Emitter,

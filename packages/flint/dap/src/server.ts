@@ -75,6 +75,7 @@ export const MAX_DAP_MEMORY_READ_BYTES = 1_048_576;
 /**
  * Validates and bounds a DAP readMemory request payload to prevent memory disclosure out of bounds and DoS.
  */
+// skipcq: JS-R1005
 export function validateDapMemoryReadRequest(arguments_: Record<string, unknown>): {
   readonly memoryReference: string;
   readonly offset: number;

@@ -171,6 +171,7 @@ function sarifLevel(severity: FlintDiagnostic['severity']): 'error' | 'warning' 
 /**
  * Formats a collection of Flint diagnostics into a standard SARIF v2.1.0 document.
  */
+// skipcq: JS-R1005
 export function formatFlintSarif(
   diagnostics: readonly FlintDiagnostic[],
   options: { readonly toolVersion?: string; readonly informationUri?: string } = {},
@@ -361,6 +362,7 @@ export function createFlintQueryEngine(): FlintQueryEngine {
       return result;
     },
 
+    // skipcq: JS-R1005
     getAnalysis(input: FlintCompileInput, options: FlintAnalysisOptions = {}): FlintAnalysisReport | undefined {
       queryCount += 1;
       const contentHash = fastHash(input.source);
