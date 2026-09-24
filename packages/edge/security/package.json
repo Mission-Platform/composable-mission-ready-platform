@@ -16,6 +16,7 @@
   ],
   "scripts": {
     "build": "tsdown",
+    "type-check": "tsc --project tsconfig.build.json --noEmit",
     "test": "vitest run",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",

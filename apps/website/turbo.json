@@ -15,6 +15,11 @@
       "env": ["VITE_*"],
       "outputs": ["dist/**", ".output/**", "public/sitemap.xml", "public/robots.txt"]
     },
+    "dev": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
     "deploy": {
       "dependsOn": ["build", "@mission-platform/forge-spa#build"],
       "cache": false

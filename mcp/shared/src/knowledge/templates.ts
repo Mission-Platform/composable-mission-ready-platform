@@ -152,8 +152,8 @@ export function packageFiles(options: PackageScaffoldOptions): Record<string, st
     types: './dist/index.d.ts',
     files: ['dist'],
     scripts: {
-      'build:check': vue ? 'vue-tsc -b' : 'tsc --project tsconfig.build.json --noEmit',
-      'build:bundle': 'vite build',
+      'type-check': vue ? 'vue-tsc -b' : 'tsc --project tsconfig.build.json --noEmit',
+      build: 'vite build',
       'build:types': vue
         ? 'vue-tsc --project tsconfig.build.json --emitDeclarationOnly'
         : 'tsc --project tsconfig.build.json --emitDeclarationOnly',
@@ -267,18 +267,7 @@ export default defineVitestConfig({
 `,
     'turbo.json': `{
   "$schema": "https://turborepo.com/schema.json",
-  "extends": ["//"],
-  "tasks": {
-    "build": {
-      "dependsOn": ["build:check", "build:bundle", "build:types"]
-    },
-    "build:bundle": {
-      "dependsOn": ["^build", "build:check"]
-    },
-    "build:types": {
-      "dependsOn": ["^build", "build:bundle"]
-    }
-  }
+  "extends": ["//"]
 }
 `,
     'src/index.ts': `export * from './components/index.ts';

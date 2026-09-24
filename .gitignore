@@ -19,6 +19,7 @@ dist/
 dist-node/
 .turbo/
 target/
+build/
 
 # Junie (JetBrains AI agent) local & runtime artifacts.
 # Shared config (guidelines.md, skills/, extensions.json) stays tracked;
@@ -32,3 +33,6 @@ packages/tokens/.*-size-verification.css.map
 .artifacts/
 
 test-results/
+
+.gradle/
+.intellijPlatform/

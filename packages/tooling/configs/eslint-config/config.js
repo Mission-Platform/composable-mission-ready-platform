@@ -93,17 +93,17 @@ function isFunctionNode(node) {
  * Find the enclosing TSTypeAnnotation for a nested type node.
  */
 function findEnclosingTypeAnnotation(node) {
-  let matched;
   for (let current = node?.parent; current; current = current.parent) {
     if (current.type === 'TSTypeAnnotation') {
-      matched = current;
-      break;
+      return current;
     }
     if (BOUNDARY_NODE_TYPES.has(current.type)) {
-      break;
+      // eslint-disable-next-line unicorn/no-useless-undefined
+      return undefined;
     }
   }
-  return matched;
+  // eslint-disable-next-line unicorn/no-useless-undefined
+  return undefined;
 }
 
 /**
@@ -600,7 +600,7 @@ const config = [
       'sonarjs/different-types-comparison': 'off',
       // Heuristic type-inference rule with frequent false positives on generic
       // calls and `Array#includes`/`Set#has` with union types (e.g. narrowed
-      // `string | number | boolean`). TypeScript's own type-checker (build:check)
+      // `string | number | boolean`). TypeScript's own type-checker (type-check)
       // already covers genuine argument-type mismatches.
       'sonarjs/argument-type': 'off',
       // Same heuristic family as `argument-type`: false-positives on `key in x`

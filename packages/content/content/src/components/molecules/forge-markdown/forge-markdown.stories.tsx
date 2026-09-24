@@ -39,7 +39,7 @@ const SAMPLE = [
   '| Task | Description |',
   '| :--- | :--- |',
   '| `build` | Compile the full multi-framework output. |',
-  '| `build:check` | Validate types without emitting output. |',
+  '| `type-check` | Validate types without emitting output. |',
   '',
   '> Blockquotes are styled too.',
 ].join('\n');
