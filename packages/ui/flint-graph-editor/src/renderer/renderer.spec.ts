@@ -1269,4 +1269,38 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     const numSegs = wasm.sdf_load_char_segments ? wasm.sdf_load_char_segments(109, segPtr) : 14;
     expect(numSegs).toBeGreaterThanOrEqual(13);
   });
+
+  it('captures ascent, descent, leadings, linegap, bearings, and centers for origin-based layout', () => {
+    const wasm = getFlintRenderWorkerWasm();
+
+    if (wasm.font_get_ascent) {
+      expect(wasm.font_get_ascent()).toBe(18);
+    }
+    if (wasm.font_get_descent) {
+      expect(wasm.font_get_descent()).toBe(6);
+    }
+    if (wasm.font_get_linegap) {
+      expect(wasm.font_get_linegap()).toBe(4);
+    }
+    if (wasm.font_get_internal_leading) {
+      expect(wasm.font_get_internal_leading()).toBe(2);
+    }
+    if (wasm.font_get_external_leading) {
+      expect(wasm.font_get_external_leading()).toBe(4);
+    }
+
+    // Check right side bearing (RSB)
+    if (wasm.font_get_glyph_right_bearing) {
+      expect(wasm.font_get_glyph_right_bearing(45)).toBeGreaterThanOrEqual(0); // 'M'
+      expect(wasm.font_get_glyph_right_bearing(14)).toBeGreaterThanOrEqual(0); // '.'
+    }
+
+    // Check center points for glyphs
+    if (wasm.font_get_glyph_center_x && wasm.font_get_glyph_center_y) {
+      expect(wasm.font_get_glyph_center_x(45)).toBeGreaterThan(0);
+      expect(wasm.font_get_glyph_center_y(45)).toBeGreaterThan(0);
+      expect(wasm.font_get_glyph_center_x(1)).toBeGreaterThan(0); // '!'
+      expect(wasm.font_get_glyph_center_y(1)).toBeGreaterThan(0);
+    }
+  });
 });

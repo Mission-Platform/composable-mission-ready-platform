@@ -731,6 +731,86 @@ if (
   };
 
   /**
+   * Appends a quadrilateral as two triangles to the batch triangle buffer.
+   */
+  const pushQuad = (
+    x0: number,
+    y0: number,
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number,
+    x3: number,
+    y3: number,
+    red: number,
+    green: number,
+    blue: number,
+    alpha: number,
+  ): void => {
+    triVertices.push(
+      x0,
+      y0,
+      red,
+      green,
+      blue,
+      alpha,
+      x1,
+      y1,
+      red,
+      green,
+      blue,
+      alpha,
+      x2,
+      y2,
+      red,
+      green,
+      blue,
+      alpha,
+      x0,
+      y0,
+      red,
+      green,
+      blue,
+      alpha,
+      x2,
+      y2,
+      red,
+      green,
+      blue,
+      alpha,
+      x3,
+      y3,
+      red,
+      green,
+      blue,
+      alpha,
+    );
+  };
+
+  /**
+   * Appends a thick line segment as two triangles (quad ribbon) to the batch triangle buffer.
+   */
+  const pushThickLine = (
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number,
+    thickness: number,
+    red: number,
+    green: number,
+    blue: number,
+    alpha: number,
+  ): void => {
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const len = Math.hypot(dx, dy);
+    if (len < 0.0001) return;
+    const nx = (-dy / len) * (thickness / 2);
+    const ny = (dx / len) * (thickness / 2);
+    pushQuad(x1 - nx, y1 - ny, x1 + nx, y1 + ny, x2 + nx, y2 + ny, x2 - nx, y2 - ny, red, green, blue, alpha);
+  };
+
+  /**
    * Appends outline line segments for a rectangle to the batch line buffer.
    */
   const pushRectBorder = (
@@ -742,11 +822,12 @@ if (
     green: number,
     blue: number,
     alpha: number,
+    thickness = 1.5,
   ): void => {
-    pushLine(x, y, x + width, y, red, green, blue, alpha);
-    pushLine(x + width, y, x + width, y + height, red, green, blue, alpha);
-    pushLine(x + width, y + height, x, y + height, red, green, blue, alpha);
-    pushLine(x, y + height, x, y, red, green, blue, alpha);
+    pushThickLine(x, y, x + width, y, thickness, red, green, blue, alpha);
+    pushThickLine(x + width, y, x + width, y + height, thickness, red, green, blue, alpha);
+    pushThickLine(x + width, y + height, x, y + height, thickness, red, green, blue, alpha);
+    pushThickLine(x, y + height, x, y, thickness, red, green, blue, alpha);
   };
 
   /**
@@ -2425,23 +2506,24 @@ if (
       const colorB = isDark ? (isSelected ? 1 : isActive ? 0.31 : 1) : isSelected ? 0.855 : isActive ? 0.22 : 0.855;
       const colorA = isSelected || isActive ? 1 : isDark ? 0.85 : 0.8;
 
+      const edgeThickness = isSelected ? 3.5 : 2.5;
       const hasWaypoints = edge.points && edge.points.length > 0;
       if (hasWaypoints && edge.points) {
         let prevX = p0x;
         let prevY = p0y;
         for (const pt of edge.points) {
-          pushLine(prevX, prevY, pt.x, pt.y, colorR, colorG, colorB, colorA);
+          pushThickLine(prevX, prevY, pt.x, pt.y, edgeThickness, colorR, colorG, colorB, colorA);
           pushRect(pt.x - 3, pt.y - 3, 6, 6, isSelected ? 0.35 : 1, isSelected ? 0.65 : 1, 1, 1);
           prevX = pt.x;
           prevY = pt.y;
         }
-        pushLine(prevX, prevY, p3x, p3y, colorR, colorG, colorB, colorA);
+        pushThickLine(prevX, prevY, p3x, p3y, edgeThickness, colorR, colorG, colorB, colorA);
       } else {
         const p1x = p0x + wasm.bezier_control_dx(Math.round(p0x), Math.round(p3x));
         const p1y = p0y;
         const p2x = p3x - wasm.bezier_control_dx(Math.round(p0x), Math.round(p3x));
         const p2y = p3y;
-        const steps = 16;
+        const steps = 24;
         for (let s = 0; s < steps; s++) {
           const t1Permille = Math.round((s / steps) * 1000);
           const t2Permille = Math.round(((s + 1) / steps) * 1000);
@@ -2473,7 +2555,7 @@ if (
             Math.round(p3y),
             t2Permille,
           );
-          pushLine(sx1, sy1, sx2, sy2, colorR, colorG, colorB, colorA);
+          pushThickLine(sx1, sy1, sx2, sy2, edgeThickness, colorR, colorG, colorB, colorA);
         }
       }
     }
@@ -2518,8 +2600,9 @@ if (
         const connR = isSnapped ? 0.247 : isDark ? 0.35 : 0.035;
         const connG = isSnapped ? 0.725 : isDark ? 0.65 : 0.412;
         const connB = isSnapped ? 0.314 : isDark ? 1 : 0.855;
-        pushLine(p0x, p0y, p3x, p3y, connR, connG, connB, 1);
-        pushRect(p3x - 4, p3y - 4, 8, 8, connR, connG, connB, 1);
+        pushThickLine(p0x, p0y, p3x, p3y, isSnapped ? 4 : 3, connR, connG, connB, 1);
+        pushCircle(p3x, p3y, isSnapped ? 8 : 6, connR, connG, connB, 1);
+        pushCircle(p3x, p3y, isSnapped ? 5 : 4, isDark ? 1 : 0, isDark ? 1 : 0, isDark ? 1 : 0, 1);
       }
     }
 

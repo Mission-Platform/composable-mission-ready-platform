@@ -219,6 +219,14 @@ export interface FlintRenderWorkerWasmExports {
   readonly font_get_atlas_ptr: () => number;
   readonly font_get_table_ptr: () => number;
   readonly font_get_metrics_table_ptr?: () => number;
+  readonly font_get_ascent?: () => number;
+  readonly font_get_descent?: () => number;
+  readonly font_get_linegap?: () => number;
+  readonly font_get_internal_leading?: () => number;
+  readonly font_get_external_leading?: () => number;
+  readonly font_get_glyph_right_bearing?: (idx: number) => number;
+  readonly font_get_glyph_center_x?: (idx: number) => number;
+  readonly font_get_glyph_center_y?: (idx: number) => number;
   readonly font_get_glyph_hori_advance?: (idx: number) => number;
   readonly font_get_glyph_width?: (idx: number) => number;
   readonly font_get_glyph_height?: (idx: number) => number;

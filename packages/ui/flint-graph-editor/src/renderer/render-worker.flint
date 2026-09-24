@@ -678,3 +678,35 @@ export fn font_get_glyph_metrics(idx: u32, out_ptr: u32) -> unit {
 export fn font_get_metrics_table_ptr() -> u32 {
   return font.sdf_get_metrics_table_ptr();
 }
+
+export fn font_get_ascent() -> u32 {
+  return font.sdf_get_font_ascent();
+}
+
+export fn font_get_descent() -> u32 {
+  return font.sdf_get_font_descent();
+}
+
+export fn font_get_linegap() -> u32 {
+  return font.sdf_get_font_linegap();
+}
+
+export fn font_get_internal_leading() -> u32 {
+  return font.sdf_get_font_internal_leading();
+}
+
+export fn font_get_external_leading() -> u32 {
+  return font.sdf_get_font_external_leading();
+}
+
+export fn font_get_glyph_right_bearing(idx: u32) -> i32 {
+  return font.get_glyph_right_bearing_i32(idx);
+}
+
+export fn font_get_glyph_center_x(idx: u32) -> u32 {
+  return font.get_glyph_center_x_u32(idx);
+}
+
+export fn font_get_glyph_center_y(idx: u32) -> u32 {
+  return font.get_glyph_center_y_u32(idx);
+}

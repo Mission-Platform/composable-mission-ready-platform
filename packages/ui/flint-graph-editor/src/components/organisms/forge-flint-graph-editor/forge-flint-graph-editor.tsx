@@ -230,10 +230,17 @@ interface HoveredGlyphInfo {
   readonly codeHex: string;
   readonly codeDec: number;
   readonly advance: number;
+  readonly vertAdvance: number;
   readonly width: number;
   readonly height: number;
   readonly horiBearingX: number;
   readonly horiBearingY: number;
+  readonly rightBearing: number;
+  readonly ascent: number;
+  readonly descent: number;
+  readonly linegap: number;
+  readonly internalLeading: number;
+  readonly externalLeading: number;
   readonly bboxMinX: number;
   readonly bboxMaxX: number;
   readonly bboxMinY: number;
@@ -1008,16 +1015,33 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         } catch {
           // fallback
         }
+        const rightBearing = wasm.font_get_glyph_right_bearing
+          ? wasm.font_get_glyph_right_bearing(foundIndex)
+          : Math.max(0, advance - horiBearingX - width);
+        const vertAdvance = wasm.font_get_glyph_vert_advance ? wasm.font_get_glyph_vert_advance(foundIndex) : 24;
+        const ascent = wasm.font_get_ascent ? wasm.font_get_ascent() : 18;
+        const descent = wasm.font_get_descent ? wasm.font_get_descent() : 6;
+        const linegap = wasm.font_get_linegap ? wasm.font_get_linegap() : 4;
+        const internalLeading = wasm.font_get_internal_leading ? wasm.font_get_internal_leading() : 2;
+        const externalLeading = wasm.font_get_external_leading ? wasm.font_get_external_leading() : 4;
+
         setHoveredGlyph({
           index: foundIndex,
           char,
           codeHex: `U+${code.toString(16).toUpperCase().padStart(4, '0')}`,
           codeDec: code,
           advance,
+          vertAdvance,
           width,
           height,
           horiBearingX,
           horiBearingY,
+          rightBearing,
+          ascent,
+          descent,
+          linegap,
+          internalLeading,
+          externalLeading,
           bboxMinX,
           bboxMaxX,
           bboxMinY,
@@ -3285,12 +3309,26 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                                 Idx {hoveredGlyph.index}
                               </ForgeBadge>
                             </div>
-                            <div>
-                              FreeType Metrics: {hoveredGlyph.width}×{hoveredGlyph.height}px | Bearing: (
-                              {hoveredGlyph.horiBearingX}, {hoveredGlyph.horiBearingY}) | BBox: [{hoveredGlyph.bboxMinX}
-                              , {hoveredGlyph.bboxMinY}, {hoveredGlyph.bboxMaxX}, {hoveredGlyph.bboxMaxY}] | Advance:{' '}
-                              {hoveredGlyph.advance}px | Packed Cell: {hoveredGlyph.cellW}×{hoveredGlyph.cellH} at (
-                              {hoveredGlyph.cellX}, {hoveredGlyph.cellY})
+                            <div style={{ fontSize: '11px', lineHeight: '1.5', color: '#c9d1d9' }}>
+                              <div>
+                                <strong>Dimensions & Advance:</strong> {hoveredGlyph.width}×{hoveredGlyph.height}px |
+                                Advance H: {hoveredGlyph.advance}px | Advance V: {hoveredGlyph.vertAdvance}px
+                              </div>
+                              <div>
+                                <strong>Bearings:</strong> Left (LSB): {hoveredGlyph.horiBearingX}px | Right (RSB):{' '}
+                                {hoveredGlyph.rightBearing}px | Top: {hoveredGlyph.horiBearingY}px
+                              </div>
+                              <div>
+                                <strong>Font Metrics:</strong> Ascent: {hoveredGlyph.ascent}px | Descent:{' '}
+                                {hoveredGlyph.descent}px | LineGap: {hoveredGlyph.linegap}px | Int Leading:{' '}
+                                {hoveredGlyph.internalLeading}px | Ext Leading: {hoveredGlyph.externalLeading}px
+                              </div>
+                              <div>
+                                <strong>BBox & Origin:</strong> [{hoveredGlyph.bboxMinX}, {hoveredGlyph.bboxMinY},{' '}
+                                {hoveredGlyph.bboxMaxX}, {hoveredGlyph.bboxMaxY}] | Origin: (0, 0) on baseline | Packed
+                                Cell: {hoveredGlyph.cellW}×{hoveredGlyph.cellH} at ({hoveredGlyph.cellX},{' '}
+                                {hoveredGlyph.cellY})
+                              </div>
                             </div>
                           </div>
                         </div>

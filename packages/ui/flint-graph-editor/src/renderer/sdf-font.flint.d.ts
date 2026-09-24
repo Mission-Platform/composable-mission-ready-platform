@@ -22,6 +22,14 @@ export interface FlintSdfFontWasmExports {
   readonly sdf_get_atlas_ptr: () => number;
   readonly sdf_get_table_ptr: () => number;
   readonly sdf_get_metrics_table_ptr: () => number;
+  readonly sdf_get_font_ascent?: () => number;
+  readonly sdf_get_font_descent?: () => number;
+  readonly sdf_get_font_linegap?: () => number;
+  readonly sdf_get_font_internal_leading?: () => number;
+  readonly sdf_get_font_external_leading?: () => number;
+  readonly get_glyph_right_bearing_i32?: (idx: number) => number;
+  readonly get_glyph_center_x_u32?: (idx: number) => number;
+  readonly get_glyph_center_y_u32?: (idx: number) => number;
   readonly get_glyph_hori_advance_u32?: (idx: number) => number;
   readonly get_glyph_width_u32?: (idx: number) => number;
   readonly get_glyph_height_u32?: (idx: number) => number;
