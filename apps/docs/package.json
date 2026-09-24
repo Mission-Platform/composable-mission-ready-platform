@@ -6,12 +6,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node --input-type=module -e \"import { existsSync } from 'node:fs'; import { execSync } from 'node:child_process'; if (!existsSync('dist')) { execSync('pnpm run build:bundle && pnpm run build:prerender', { stdio: 'inherit' }); } if (!existsSync('dist')) throw new Error('Turbo build tasks did not produce dist/.');\"",
     "build:bundle": "vite build",
     "build:prerender": "node --experimental-strip-types scripts/prerender.ts",
     "build:verify": "node --experimental-strip-types scripts/check-build.ts",
     "build:spa": "tsc -b && vite build",
-    "build:check": "tsc -b",
+    "type-check": "tsc -b",
     "preview": "vite preview",
     "test": "vitest run --passWithNoTests",
     "test:e2e": "playwright test",

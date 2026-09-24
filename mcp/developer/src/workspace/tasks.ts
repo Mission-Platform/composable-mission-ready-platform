@@ -397,7 +397,7 @@ export function primeUpstreamDependencies(request: {
  */
 function validateTurboTaskInput(task: string, filter?: string): void {
   if (!SAFE_TASK_PATTERN.test(task)) {
-    throw new Error(`Invalid task name "${task}". Use alphanumeric names like "build:check", "lint", "test".`);
+    throw new Error(`Invalid task name "${task}". Use alphanumeric names like "type-check", "lint", "test".`);
   }
   if (filter && !SAFE_FILTER_PATTERN.test(filter)) {
     throw new Error(`Invalid filter pattern "${filter}".`);

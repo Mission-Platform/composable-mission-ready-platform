@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from "vitest";
 import { stubFramework } from "./__fixtures__/framework.js";
 import { cmsCacheDirectory } from "./tsdown.js";
 
-import { tsdownForgeCmsPlugins } from ".";
+import { defineTsdownForgeCmsTargetConfigs, tsdownForgeCmsPlugins } from ".";
 
 import type { CmsOutputPlugin } from "./cms.js";
 import type { ForgeCmsTsdownPlugin } from "./tsdown.js";
@@ -38,9 +38,10 @@ function fixtureTarget(
 }
 
 describe("Forge CMS tsdown helper", () => {
-  it("exposes only the plugin-based CMS tsdown adapter", async () => {
+  it("exposes the CMS tsdown helpers", async () => {
     const publicApi = await import(".");
 
+    expect(publicApi.defineTsdownForgeCmsTargetConfigs).toBeTypeOf("function");
     expect(publicApi.tsdownForgeCmsPlugins).toBeTypeOf("function");
     expect(publicApi).not.toHaveProperty("defineTsdownForgeCms");
     expect(publicApi).not.toHaveProperty("defineTsdownForgeCmsAll");
@@ -125,13 +126,13 @@ describe("Forge CMS tsdown helper", () => {
     }
   }, 30_000);
 
-  it("materializes a separate output directory for every selected framework on one shared config", async () => {
+  it("materializes native separate target configs for every selected framework via defineTsdownForgeCmsTargetConfigs", () => {
     const rootDirectory = path.resolve(
       "/tmp/mission-platform-cms-multi-framework",
     );
     const outputRoot = path.join(rootDirectory, "stage");
     const outputDirectories: string[] = [];
-    const plugins = tsdownForgeCmsPlugins({
+    const configs = defineTsdownForgeCmsTargetConfigs({
       rootDir: rootDirectory,
       outputRoot,
       targets: [
@@ -140,15 +141,12 @@ describe("Forge CMS tsdown helper", () => {
       ],
     });
 
-    // One orchestrator plugin owns every selected target — mirrors real package
-    // usage: defineTsdownLibrary({ plugins: tsdownForgeCmsPlugins(...) }).
-    expect(plugins).toHaveLength(1);
-    const plugin = plugins[0] as ForgeCmsTsdownPlugin;
-    expect(plugin.cmsTargetConfigs.map((config) => config.entry)).toEqual([
+    expect(configs).toHaveLength(2);
+    expect(configs.map((config) => config.entry)).toEqual([
       expect.stringContaining("@mission-platform/forge/entry:storyblok-react"),
       expect.stringContaining("@mission-platform/forge/entry:storyblok-vue"),
     ]);
-    expect(plugin.cmsTargetConfigs.map((config) => config.outDir)).toEqual([
+    expect(configs.map((config) => config.outDir)).toEqual([
       expect.stringMatching(
         new RegExp(
           String.raw`^${path.join(outputRoot, "dist/cms/storyblok")}/\.forge-attempt-react-storyblok-react-`,
@@ -160,26 +158,7 @@ describe("Forge CMS tsdown helper", () => {
         ),
       ),
     ]);
-    expect(outputDirectories).toEqual([
-      plugin.cmsTargetConfigs[0]?.outDir,
-      plugin.cmsTargetConfigs[1]?.outDir,
-    ]);
-
-    const host = defineTsdownLibrary({
-      rootDir: rootDirectory,
-      entry: path.join(rootDirectory, "src/components/index.ts"),
-      plugins,
-    });
-    await plugin.tsdownConfig?.(host);
-
-    // Shared-host composition must not last-wins collapse to one framework while
-    // leaving every framework's publish/lifecycle plugins attached.
-    expect(pluginNames(host)).toEqual([
-      "@mission-platform/forge-cms-plugin-api:tsdown-nested",
-    ]);
-    expect(String(host.entry)).not.toContain("storyblok-react");
-    expect(String(host.entry)).not.toContain("storyblok-vue");
-    expect(host.write).toBe(false);
+    expect(outputDirectories).toEqual([configs[0]?.outDir, configs[1]?.outDir]);
   });
 
   it("skips CMS plugins for an explicit neutral-only build", () => {

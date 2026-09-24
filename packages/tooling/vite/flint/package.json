@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "build": "tsdown",
-    "build:check": "tsc --project tsconfig.build.json --noEmit",
+    "type-check": "tsc --project tsconfig.build.json --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",

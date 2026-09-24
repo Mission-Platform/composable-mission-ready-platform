@@ -12,6 +12,11 @@
       "env": ["VITE_*"],
       "outputs": ["dist/**", ".output/**", ".vite/**", "public/sitemap.xml", "public/robots.txt"]
     },
+    "dev": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
     "test:e2e": {
       "env": ["PLAYWRIGHT_BASE_URL"]
     },

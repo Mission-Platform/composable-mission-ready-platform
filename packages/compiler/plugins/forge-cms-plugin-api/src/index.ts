@@ -79,6 +79,7 @@ export {
 } from "./driver.js";
 
 export {
+  defineTsdownForgeCmsTargetConfigs,
   tsdownForgeCmsPlugins,
   type ForgeCmsTsdownPlugin,
   type TsdownForgeCmsPluginsOptions,

@@ -132,6 +132,7 @@ export type SelectStyle = CSSStyleProperties & {
   readonly '--forge-select-text-secondary'?: string | undefined;
 };
 
+/** Resolves visual custom-property style overrides for the select component. */
 function createSelectStyle(properties: Readonly<SelectStyleProperties> | undefined): SelectStyle | undefined {
   return createForgeStyle({
     '--forge-select-border-default': properties?.['border-default'],
@@ -231,7 +232,7 @@ export interface SelectProperties {
    * Callback fired when search query changes in searchable mode.
    * Can return a Promise of options to asynchronously populate the dropdown list.
    */
-  onSearch?: (query: string) => Promise<SelectOption[] | undefined> | Promise<void> | void;
+  onSearch?: (query: string) => Promise<SelectOption[] | undefined> | Promise<void> | undefined;
   /** Whether the control is currently loading data. Displays a loading indicator. */
   loading?: boolean;
   /**
@@ -292,263 +293,144 @@ export type ForgeComboboxProps = SelectProperties;
  * the `v-model` + emits become callback props. The `start`/`end` named slots are
  * preserved as neutral named slots.
  */
-export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
-  const style = createSelectStyle(properties.properties);
+/** State and handler callbacks for dispatching select keyboard interaction. */
+interface SelectKeydownState {
+  isDropdownOpen: boolean;
+  searchable: boolean;
+  openDropdown: () => void;
+  closeDropdown: () => void;
+  selectAdjacentOption: (direction: 1 | -1) => void;
+  selectFirstVisibleOption: () => void;
+}
 
-  const {
-    modelValue = '',
-    options = [],
-    size = 'md',
-    label,
-    labelHidden = false,
-    hint,
-    error,
-    placeholder,
-    searchable = true,
-    disabled = false,
-    required = false,
-    name,
-    autocomplete,
-    onSearch,
-    loading = false,
-    searchDebounceMs = 250,
-    open: controlledOpen,
-    onUpdateOpen,
-  } = properties;
+/** Handles Enter key press for select control. */
+function handleEnterKey(state: SelectKeydownState): void {
+  if (!state.isDropdownOpen) {
+    state.openDropdown();
+    return;
+  }
+  if (state.searchable) {
+    state.selectFirstVisibleOption();
+  } else {
+    state.closeDropdown();
+  }
+}
 
-  const generatedId = useId();
-  const resolvedId = properties.id ?? generatedId;
-  const triggerReference = useRef<HTMLButtonElement | null>(null);
-  const searchReference = useRef<HTMLInputElement | null>(null);
-  const debounceTimerReference = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const searchRequestId = useRef<number>(0);
+/** Handles Space key press for select control. */
+function handleSpaceKey(state: SelectKeydownState): void {
+  if (state.searchable) {
+    return;
+  }
+  if (state.isDropdownOpen) {
+    state.closeDropdown();
+  } else {
+    state.openDropdown();
+  }
+}
 
-  const [isOpen, setIsOpen] = useState<boolean>(controlledOpen ?? false);
-  const isDropdownOpen = controlledOpen ?? isOpen;
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  // eslint-disable-next-line unicorn/no-useless-undefined -- the neutral `useState` requires an explicit initial value
-  const [asyncOptions, setAsyncOptions] = useState<SelectOption[] | undefined>(undefined);
-  const [isSearching, setIsSearching] = useState<boolean>(false);
-  // eslint-disable-next-line unicorn/no-useless-undefined -- the neutral `useState` requires an explicit initial value
-  const [selectedAsyncOption, setSelectedAsyncOption] = useState<SelectOption | undefined>(undefined);
+/** Handles ArrowDown key press for select control. */
+function handleArrowDownKey(state: SelectKeydownState): void {
+  if (state.isDropdownOpen) {
+    state.selectAdjacentOption(1);
+  } else {
+    state.openDropdown();
+  }
+}
 
-  const isLoading = Boolean(loading || isSearching);
-
-  const currentOptions = asyncOptions ?? options;
-  const selectedOption =
-    currentOptions.find((option) => option.value === modelValue) ??
-    (selectedAsyncOption?.value === modelValue ? selectedAsyncOption : undefined);
-  const displayLabel = selectedOption ? selectedOption.label : (placeholder ?? '');
-  const hasPlaceholder = selectedOption === undefined;
-
-  // When searchable and open, the trigger becomes a filtering text field.
-  const visibleOptions =
-    searchable && searchQuery && !asyncOptions
-      ? currentOptions.filter((option) => option.label.toLowerCase().includes(searchQuery.toLowerCase()))
-      : currentOptions;
-
-  /** Cancels any active search debounce timer. */
-  const cancelDebounce = (): void => {
-    if (debounceTimerReference.current) {
-      clearTimeout(debounceTimerReference.current);
-      debounceTimerReference.current = undefined;
+/** Dispatches select keyboard interaction keys to navigate options and toggle the dropdown. */
+// skipcq: JS-R1005
+function handleSelectKeydown(event: KeyboardEvent, state: SelectKeydownState): void {
+  switch (event.key) {
+    case 'Enter': {
+      event.preventDefault();
+      handleEnterKey(state);
+      break;
     }
-  };
-
-  useEffect(() => {
-    return () => {
-      cancelDebounce();
-      searchRequestId.current += 1;
-    };
-  }, []);
-
-  /**
-   * Executes the asynchronous search callback, sequencing requests via an
-   * incrementing request ID so stale or out-of-order responses are discarded.
-   */
-  const executeSearch = (query: string): void => {
-    if (!onSearch) {
-      return;
+    case ' ': {
+      if (!state.searchable) {
+        event.preventDefault();
+        handleSpaceKey(state);
+      }
+      break;
     }
-    const currentRequestId = ++searchRequestId.current;
-    try {
-      const result = onSearch(query);
-      if (result && typeof (result as Promise<SelectOption[] | undefined>).then === 'function') {
-        setIsSearching(true);
-        (result as Promise<SelectOption[] | undefined>).then(
-          (resolvedOptions) => {
-            if (searchRequestId.current === currentRequestId) {
-              if (Array.isArray(resolvedOptions)) {
-                setAsyncOptions(resolvedOptions);
-              }
-              setIsSearching(false);
+    case 'Escape': {
+      state.closeDropdown();
+      break;
+    }
+    case 'ArrowDown': {
+      event.preventDefault();
+      handleArrowDownKey(state);
+      break;
+    }
+    case 'ArrowUp': {
+      event.preventDefault();
+      state.selectAdjacentOption(-1);
+      break;
+    }
+    default: {
+      break;
+    }
+  }
+}
+
+/** Executes asynchronous option searching and sets options if request is still current. */
+function handleAsyncSearch(
+  query: string,
+  onSearch: (query: string) => unknown,
+  requestIdReference: { current: number },
+  setIsSearching: (searching: boolean) => void,
+  setAsyncOptions: (options?: SelectOption[]) => void,
+): void {
+  const currentRequestId = ++requestIdReference.current;
+  try {
+    const result = onSearch(query);
+    if (result && typeof (result as Promise<SelectOption[] | undefined>).then === 'function') {
+      setIsSearching(true);
+      (result as Promise<SelectOption[] | undefined>).then(
+        (resolvedOptions) => {
+          if (requestIdReference.current === currentRequestId) {
+            if (Array.isArray(resolvedOptions)) {
+              setAsyncOptions(resolvedOptions);
             }
-          },
-          () => {
-            if (searchRequestId.current === currentRequestId) {
-              setIsSearching(false);
-            }
-          },
-        );
-      }
-    } catch {
-      if (searchRequestId.current === currentRequestId) {
-        setIsSearching(false);
-      }
-    }
-  };
-
-  const openDropdown = (): void => {
-    if (disabled) {
-      return;
-    }
-    cancelDebounce();
-    searchRequestId.current += 1;
-    setSearchQuery('');
-    setAsyncOptions(undefined);
-    setIsSearching(false);
-    setIsOpen(true);
-    onUpdateOpen?.(true);
-    properties.onFocus?.(new FocusEvent('focus'));
-  };
-
-  const closeDropdown = (): void => {
-    cancelDebounce();
-    searchRequestId.current += 1;
-    setIsOpen(false);
-    onUpdateOpen?.(false);
-    setSearchQuery('');
-    setAsyncOptions(undefined);
-    setIsSearching(false);
-  };
-
-  const commit = (value: string | number): void => {
-    properties.onUpdateModelValue?.(value);
-    properties.onChange?.(value);
-  };
-
-  const focusTrigger = (): void => {
-    if (searchable) {
-      searchReference.current?.focus();
-    } else {
-      triggerReference.current?.focus();
-    }
-  };
-
-  const selectOption = (option: SelectOption): void => {
-    if (option.disabled) {
-      return;
-    }
-    setSelectedAsyncOption(option);
-    commit(option.value);
-    closeDropdown();
-    focusTrigger();
-  };
-
-  const selectAdjacentOption = (direction: 1 | -1): void => {
-    const enabled = visibleOptions.filter((option) => !option.disabled);
-    if (enabled.length === 0) {
-      return;
-    }
-    const currentIndex = enabled.findIndex((option) => option.value === modelValue);
-    // Default to the first option when the selection is not part of the filtered set.
-    const baseIndex = currentIndex === -1 ? (direction === 1 ? -1 : 0) : currentIndex;
-    const nextIndex = Math.max(0, Math.min(enabled.length - 1, baseIndex + direction));
-    const next = enabled[nextIndex];
-    if (next) {
-      commit(next.value);
-    }
-  };
-
-  const selectFirstVisibleOption = (): void => {
-    const first = visibleOptions.find((option) => !option.disabled);
-    if (first) {
-      selectOption(first);
-    }
-  };
-
-  const handleKeydown = (event: KeyboardEvent): void => {
-    switch (event.key) {
-      case 'Enter': {
-        event.preventDefault();
-        if (isDropdownOpen) {
-          if (searchable) {
-            selectFirstVisibleOption();
-          } else {
-            closeDropdown();
+            setIsSearching(false);
           }
-        } else {
-          openDropdown();
-        }
-
-        break;
-      }
-      case ' ': {
-        // In searchable mode a space is a literal query character; only the
-        // button trigger toggles the dropdown on Space.
-        if (!searchable) {
-          event.preventDefault();
-          if (isDropdownOpen) {
-            closeDropdown();
-          } else {
-            openDropdown();
+        },
+        () => {
+          if (requestIdReference.current === currentRequestId) {
+            setIsSearching(false);
           }
-        }
-
-        break;
-      }
-      case 'Escape': {
-        closeDropdown();
-
-        break;
-      }
-      case 'ArrowDown': {
-        event.preventDefault();
-        if (isDropdownOpen) {
-          selectAdjacentOption(1);
-        } else {
-          openDropdown();
-        }
-
-        break;
-      }
-      case 'ArrowUp': {
-        event.preventDefault();
-        selectAdjacentOption(-1);
-
-        break;
-      }
-      // No default
+        },
+      );
     }
-  };
-
-  const handleSearchInput = (event: Event): void => {
-    const query = (event.target as HTMLInputElement).value;
-    setSearchQuery(query);
-    if (!isDropdownOpen) {
-      setIsOpen(true);
-      onUpdateOpen?.(true);
+  } catch {
+    if (requestIdReference.current === currentRequestId) {
+      setIsSearching(false);
     }
-    if (onSearch) {
-      cancelDebounce();
-      if (searchDebounceMs > 0) {
-        debounceTimerReference.current = setTimeout(() => {
-          executeSearch(query);
-        }, searchDebounceMs);
-      } else {
-        executeSearch(query);
-      }
-    }
-  };
+  }
+}
 
-  const handleNativeChange = (event: Event): void => {
-    const target = event.target as HTMLSelectElement;
-    const matched = currentOptions.find((option) => String(option.value) === target.value);
-    commit(matched ? matched.value : '');
-  };
+/** Computes the adjacent option value based on direction and current model value. */
+function getAdjacentOptionValue(
+  visibleOptions: readonly SelectOption[],
+  modelValue: string | number,
+  direction: 1 | -1,
+): string | number | undefined {
+  const enabled = visibleOptions.filter((option) => !option.disabled);
+  if (enabled.length === 0) {
+    return undefined;
+  }
+  const currentIndex = enabled.findIndex((option) => option.value === modelValue);
+  const baseIndex = currentIndex === -1 ? (direction === 1 ? -1 : 0) : currentIndex;
+  const nextIndex = Math.max(0, Math.min(enabled.length - 1, baseIndex + direction));
+  return enabled[nextIndex]?.value;
+}
 
-  const describedBy = error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined;
-
+/** Builds option elements for hidden native select element. */
+function buildNativeSelectOptions(
+  options: readonly SelectOption[],
+  placeholder: string | undefined,
+  selectedOption: SelectOption | undefined,
+): MpChild[] {
   const nativeOptions: MpChild[] = [
     <option
       key="__placeholder__"
@@ -578,7 +460,18 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
       </option>,
     );
   }
+  return nativeOptions;
+}
 
+/** Builds list item elements for the dropdown listbox. */
+// skipcq: JS-R1005
+function buildSelectListItems(
+  visibleOptions: readonly SelectOption[],
+  modelValue: string | number,
+  isLoading: boolean,
+  searchQuery: string,
+  selectOption: (option: SelectOption) => void,
+): MpChild[] {
   const listItems: MpChild[] = [];
 
   if (isLoading) {
@@ -642,77 +535,338 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
     );
   }
 
+  return listItems;
+}
+
+/** Filters the visible options based on search query when local filtering is active. */
+function filterVisibleOptions(
+  currentOptions: readonly SelectOption[],
+  searchQuery: string,
+  isAsync: boolean,
+  searchable: boolean,
+): readonly SelectOption[] {
+  if (searchable && searchQuery && !isAsync) {
+    return currentOptions.filter((option) => option.label.toLowerCase().includes(searchQuery.toLowerCase()));
+  }
+  return currentOptions;
+}
+
+interface SelectTriggerProps {
+  searchable: boolean;
+  searchReference: { current: HTMLInputElement | null };
+  triggerReference: { current: HTMLButtonElement | null };
+  resolvedId: string;
+  isLoading: boolean;
+  isDropdownOpen: boolean;
+  describedBy?: string;
+  error?: string | boolean;
+  label?: string;
+  required?: boolean;
+  disabled: boolean;
+  hasPlaceholder: boolean;
+  searchValue: string;
+  searchPlaceholder: string;
+  displayLabel: string;
+  onBlur?: (event: FocusEvent) => void;
+  openDropdown: () => void;
+  closeDropdown: () => void;
+  handleSearchInput: (event: Event) => void;
+  handleKeydown: (event: KeyboardEvent) => void;
+}
+
+/** Renders the combobox input or button trigger control. */
+// skipcq: JS-R1005
+function renderSelectTrigger(config: SelectTriggerProps): MpChild {
+  if (config.searchable) {
+    return (
+      <input
+        ref={config.searchReference}
+        id={config.resolvedId}
+        aria-autocomplete="list"
+        aria-busy={config.isLoading || undefined}
+        aria-controls={config.isDropdownOpen ? `${config.resolvedId}-listbox` : undefined}
+        aria-describedby={config.describedBy}
+        aria-expanded={config.isDropdownOpen}
+        aria-haspopup="listbox"
+        aria-invalid={config.error ? 'true' : undefined}
+        aria-labelledby={config.label ? `${config.resolvedId}-label` : undefined}
+        aria-required={config.required || undefined}
+        autocomplete="off"
+        className={[
+          styles['forge-select__field'],
+          {
+            [styles['forge-select__field--placeholder']]: config.hasPlaceholder && !config.searchValue,
+          },
+        ]}
+        disabled={config.disabled}
+        placeholder={config.searchPlaceholder}
+        required={config.required}
+        role="combobox"
+        type="text"
+        value={config.searchValue}
+        onBlur={config.onBlur}
+        onFocus={config.openDropdown}
+        onInput={config.handleSearchInput}
+        onKeydown={config.handleKeydown}
+      />
+    );
+  }
+
+  return (
+    <button
+      ref={config.triggerReference}
+      id={config.resolvedId}
+      aria-busy={config.isLoading || undefined}
+      aria-controls={config.isDropdownOpen ? `${config.resolvedId}-listbox` : undefined}
+      aria-describedby={config.describedBy}
+      aria-expanded={config.isDropdownOpen}
+      aria-haspopup="listbox"
+      aria-invalid={config.error ? 'true' : undefined}
+      aria-labelledby={config.label ? `${config.resolvedId}-label` : undefined}
+      aria-required={config.required || undefined}
+      className={[
+        styles['forge-select__field'],
+        {
+          [styles['forge-select__field--placeholder']]: config.hasPlaceholder,
+        },
+      ]}
+      disabled={config.disabled}
+      role="combobox"
+      type="button"
+      onBlur={config.onBlur}
+      onClick={() => {
+        if (config.isDropdownOpen) {
+          config.closeDropdown();
+        } else {
+          config.openDropdown();
+        }
+      }}
+      onKeydown={config.handleKeydown}
+    >
+      {config.displayLabel || '\u00A0'}
+    </button>
+  );
+}
+
+/**
+ * ForgeSelect component providing an accessible, framework-neutral select control with
+ * support for live filtering, asynchronous search, keyboard navigation, and custom slots.
+ */
+// skipcq: JS-R1005
+export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
+  const style = createSelectStyle(properties.properties);
+
+  const {
+    modelValue = '',
+    options = [],
+    size = 'md',
+    label,
+    labelHidden = false,
+    hint,
+    error,
+    placeholder,
+    searchable = true,
+    disabled = false,
+    required = false,
+    name,
+    autocomplete,
+    onSearch,
+    loading = false,
+    searchDebounceMs = 250,
+    open: controlledOpen,
+    onUpdateOpen,
+  } = properties;
+
+  const generatedId = useId();
+  const resolvedId = properties.id ?? generatedId;
+  const triggerReference = useRef<HTMLButtonElement | null>(null);
+  const searchReference = useRef<HTMLInputElement | null>(null);
+  const debounceTimerReference = useRef<ReturnType<typeof setTimeout> | undefined>();
+  const searchRequestId = useRef<number>(0);
+
+  const [isOpen, setIsOpen] = useState<boolean>(controlledOpen ?? false);
+  const isDropdownOpen = controlledOpen ?? isOpen;
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [asyncOptions, setAsyncOptions] = useState<SelectOption[] | undefined>();
+  const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [selectedAsyncOption, setSelectedAsyncOption] = useState<SelectOption | undefined>();
+
+  const isLoading = Boolean(loading || isSearching);
+
+  const currentOptions = asyncOptions ?? options;
+  const selectedOption =
+    currentOptions.find((option) => option.value === modelValue) ??
+    (selectedAsyncOption?.value === modelValue ? selectedAsyncOption : undefined);
+  const displayLabel = selectedOption ? selectedOption.label : (placeholder ?? '');
+  const hasPlaceholder = selectedOption === undefined;
+
+  const visibleOptions = filterVisibleOptions(currentOptions, searchQuery, Boolean(asyncOptions), searchable);
+
+  /** Cancels any active search debounce timer. */
+  const cancelDebounce = (): void => {
+    if (debounceTimerReference.current) {
+      clearTimeout(debounceTimerReference.current);
+      debounceTimerReference.current = undefined;
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      cancelDebounce();
+      searchRequestId.current += 1;
+    };
+  }, []);
+
+  /**
+   * Executes the asynchronous search callback, sequencing requests via an
+   * incrementing request ID so stale or out-of-order responses are discarded.
+   */
+  const executeSearch = (query: string): void => {
+    if (onSearch) {
+      handleAsyncSearch(query, onSearch, searchRequestId, setIsSearching, setAsyncOptions);
+    }
+  };
+
+  /** Opens the select dropdown and triggers focus event. */
+  const openDropdown = (): void => {
+    if (disabled) {
+      return;
+    }
+    cancelDebounce();
+    searchRequestId.current += 1;
+    setSearchQuery('');
+    setAsyncOptions();
+    setIsSearching(false);
+    setIsOpen(true);
+    onUpdateOpen?.(true);
+    properties.onFocus?.(new FocusEvent('focus'));
+  };
+
+  /** Closes the select dropdown and clears search query. */
+  const closeDropdown = (): void => {
+    cancelDebounce();
+    searchRequestId.current += 1;
+    setIsOpen(false);
+    onUpdateOpen?.(false);
+    setSearchQuery('');
+    setAsyncOptions();
+    setIsSearching(false);
+  };
+
+  /** Commits the chosen option value to parent handlers. */
+  const commit = (value: string | number): void => {
+    properties.onUpdateModelValue?.(value);
+    properties.onChange?.(value);
+  };
+
+  /** Focuses the appropriate trigger element depending on searchable mode. */
+  const focusTrigger = (): void => {
+    if (searchable) {
+      searchReference.current?.focus();
+    } else {
+      triggerReference.current?.focus();
+    }
+  };
+
+  /** Selects an option and updates component state. */
+  const selectOption = (option: SelectOption): void => {
+    if (option.disabled) {
+      return;
+    }
+    setSelectedAsyncOption(option);
+    commit(option.value);
+    closeDropdown();
+    focusTrigger();
+  };
+
+  /** Selects the adjacent option in listbox navigation. */
+  const selectAdjacentOption = (direction: 1 | -1): void => {
+    const nextValue = getAdjacentOptionValue(visibleOptions, modelValue, direction);
+    if (nextValue !== undefined) {
+      commit(nextValue);
+    }
+  };
+
+  /** Selects the first enabled visible option in listbox. */
+  const selectFirstVisibleOption = (): void => {
+    const first = visibleOptions.find((option) => !option.disabled);
+    if (first) {
+      selectOption(first);
+    }
+  };
+
+  /** Dispatches keyboard navigation events for the select control. */
+  const handleKeydown = (event: KeyboardEvent): void => {
+    handleSelectKeydown(event, {
+      isDropdownOpen,
+      searchable,
+      openDropdown,
+      closeDropdown,
+      selectAdjacentOption,
+      selectFirstVisibleOption,
+    });
+  };
+
+  /** Handles text input changes in the searchable trigger. */
+  const handleSearchInput = (event: Event): void => {
+    const query = (event.target as HTMLInputElement).value;
+    setSearchQuery(query);
+    if (!isDropdownOpen) {
+      setIsOpen(true);
+      onUpdateOpen?.(true);
+    }
+    if (onSearch) {
+      cancelDebounce();
+      if (searchDebounceMs > 0) {
+        debounceTimerReference.current = setTimeout(() => {
+          executeSearch(query);
+        }, searchDebounceMs);
+      } else {
+        executeSearch(query);
+      }
+    }
+  };
+
+  /** Handles change events emitted from hidden native select. */
+  const handleNativeChange = (event: Event): void => {
+    const target = event.target as HTMLSelectElement;
+    const matched = currentOptions.find((option) => String(option.value) === target.value);
+    commit(matched ? matched.value : '');
+  };
+
+  const describedBy = error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined;
+
+  const nativeOptions = buildNativeSelectOptions(options, placeholder, selectedOption);
+  const listItems = buildSelectListItems(visibleOptions, modelValue, isLoading, searchQuery, selectOption);
+
   // Text shown/typed in the search trigger: the live query while open,
   // otherwise the selected option's label (never the placeholder text).
   const searchValue = isDropdownOpen ? searchQuery : selectedOption ? selectedOption.label : '';
   // While open, keep the current selection visible as the input placeholder.
   const searchPlaceholder = isDropdownOpen && selectedOption ? selectedOption.label : (placeholder ?? '');
 
-  const triggerControl: MpChild = searchable ? (
-    <input
-      ref={searchReference}
-      id={resolvedId}
-      aria-autocomplete="list"
-      aria-busy={isLoading || undefined}
-      aria-controls={isDropdownOpen ? `${resolvedId}-listbox` : undefined}
-      aria-describedby={describedBy}
-      aria-expanded={isDropdownOpen}
-      aria-haspopup="listbox"
-      aria-invalid={error ? 'true' : undefined}
-      aria-labelledby={label ? `${resolvedId}-label` : undefined}
-      aria-required={required || undefined}
-      autocomplete="off"
-      className={[
-        styles['forge-select__field'],
-        {
-          [styles['forge-select__field--placeholder']]: hasPlaceholder && !searchValue,
-        },
-      ]}
-      disabled={disabled}
-      placeholder={searchPlaceholder}
-      required={required}
-      role="combobox"
-      type="text"
-      value={searchValue}
-      onBlur={(event: FocusEvent) => properties.onBlur?.(event)}
-      onFocus={openDropdown}
-      onInput={handleSearchInput}
-      onKeydown={handleKeydown}
-    />
-  ) : (
-    <button
-      ref={triggerReference}
-      id={resolvedId}
-      aria-busy={isLoading || undefined}
-      aria-controls={isDropdownOpen ? `${resolvedId}-listbox` : undefined}
-      aria-describedby={describedBy}
-      aria-expanded={isDropdownOpen}
-      aria-haspopup="listbox"
-      aria-invalid={error ? 'true' : undefined}
-      aria-labelledby={label ? `${resolvedId}-label` : undefined}
-      aria-required={required || undefined}
-      className={[
-        styles['forge-select__field'],
-        {
-          [styles['forge-select__field--placeholder']]: hasPlaceholder,
-        },
-      ]}
-      disabled={disabled}
-      role="combobox"
-      type="button"
-      onBlur={(event: FocusEvent) => properties.onBlur?.(event)}
-      onClick={() => {
-        if (isDropdownOpen) {
-          closeDropdown();
-        } else {
-          openDropdown();
-        }
-      }}
-      onKeydown={handleKeydown}
-    >
-      {displayLabel || '\u00A0'}
-    </button>
-  );
+  const triggerControl = renderSelectTrigger({
+    searchable,
+    searchReference,
+    triggerReference,
+    resolvedId,
+    isLoading,
+    isDropdownOpen,
+    describedBy,
+    error,
+    label,
+    required,
+    disabled,
+    hasPlaceholder,
+    searchValue,
+    searchPlaceholder,
+    displayLabel,
+    onBlur: (event: FocusEvent) => properties.onBlur?.(event),
+    openDropdown,
+    closeDropdown,
+    handleSearchInput,
+    handleKeydown,
+  });
 
   return (
     <div
@@ -720,7 +874,7 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
         styles['forge-select'],
         styles[`forge-select--${size}`],
         {
-          [styles['forge-select--error']]: !!error,
+          [styles['forge-select--error']]: Boolean(error),
           [styles['forge-select--disabled']]: disabled,
           [styles['forge-select--loading']]: isLoading,
           [styles['forge-select--open']]: isDropdownOpen,
@@ -859,4 +1013,4 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
   );
 }
 
-export const ForgeCombobox = ForgeSelect;
+export const ForgeCombobox: typeof ForgeSelect = ForgeSelect;

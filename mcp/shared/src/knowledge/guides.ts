@@ -393,7 +393,7 @@ packages/<name>/
 ## Workflow
 - Keep the public surface in \`src/index.ts\`; export explicit types for every public API.
 - Build: \`pnpm exec turbo run build --filter @mission-platform/<name>\`
-  (packages typically split into \`build:check\`, \`build:bundle\`, \`build:types\`).
+  (packages typically split into \`type-check\`, \`build\`, \`build:types\`).
 - Test: \`pnpm exec turbo run test --filter @mission-platform/<name>\` (Vitest; Playwright for browser-level).
 - Lint/format: \`pnpm exec turbo run lint lint:style format --filter @mission-platform/<name>\`.
 - Framework-agnostic components: author with \`@mission-platform/forge-jsx\` so they compile to Vue and React.
