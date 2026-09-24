@@ -297,33 +297,30 @@ fn median(r: f32, g: f32, b: f32) -> f32 {
 fn fs_main(input: VertexOutput) -> @location(0) vec4<f32> {
   let sampleCenter = textureSample(fontTexture, fontSampler, input.uv);
   
-  let dUV = vec2<f32>(fwidth(input.uv.x), fwidth(input.uv.y)) * 0.35;
-  let s0 = textureSample(fontTexture, fontSampler, input.uv + vec2<f32>(-dUV.x, -dUV.y));
-  let s1 = textureSample(fontTexture, fontSampler, input.uv + vec2<f32>( dUV.x, -dUV.y));
-  let s2 = textureSample(fontTexture, fontSampler, input.uv + vec2<f32>(-dUV.x,  dUV.y));
-  let s3 = textureSample(fontTexture, fontSampler, input.uv + vec2<f32>( dUV.x,  dUV.y));
-
-  let d0 = median(s0.r, s0.g, s0.b);
-  let d1 = median(s1.r, s1.g, s1.b);
-  let d2 = median(s2.r, s2.g, s2.b);
-  let d3 = median(s3.r, s3.g, s3.b);
-  let avgDist = (d0 + d1 + d2 + d3) * 0.25;
-
-  let edge = 0.5;
-  let smoothing = clamp(fwidth(avgDist) * 0.7071, 0.002, 0.12);
-
-  let a0 = smoothstep(edge - smoothing, edge + smoothing, d0);
-  let a1 = smoothstep(edge - smoothing, edge + smoothing, d1);
-  let a2 = smoothstep(edge - smoothing, edge + smoothing, d2);
-  let a3 = smoothstep(edge - smoothing, edge + smoothing, d3);
-  let alpha = (a0 + a1 + a2 + a3) * 0.25;
-
   if (input.color.a < 0.0) {
     if (sampleCenter.a < 0.01) {
       discard;
     }
     return vec4<f32>(sampleCenter.rgb, sampleCenter.a * -input.color.a);
   }
+
+  let pxRange = 4.0;
+  let unitRange = vec2<f32>(pxRange) / 1024.0;
+  let dUV = fwidth(input.uv);
+  let screenTexSize = vec2<f32>(1.0) / max(dUV, vec2<f32>(0.00001));
+  let screenPxRange = max(0.5 * dot(unitRange, screenTexSize), 1.0);
+
+  let sub = dUV * 0.25;
+  let s0 = textureSample(fontTexture, fontSampler, input.uv + vec2<f32>(-sub.x, -sub.y));
+  let s1 = textureSample(fontTexture, fontSampler, input.uv + vec2<f32>( sub.x, -sub.y));
+  let s2 = textureSample(fontTexture, fontSampler, input.uv + vec2<f32>(-sub.x,  sub.y));
+  let s3 = textureSample(fontTexture, fontSampler, input.uv + vec2<f32>( sub.x,  sub.y));
+
+  let a0 = clamp(screenPxRange * (median(s0.r, s0.g, s0.b) - 0.5) + 0.5, 0.0, 1.0);
+  let a1 = clamp(screenPxRange * (median(s1.r, s1.g, s1.b) - 0.5) + 0.5, 0.0, 1.0);
+  let a2 = clamp(screenPxRange * (median(s2.r, s2.g, s2.b) - 0.5) + 0.5, 0.0, 1.0);
+  let a3 = clamp(screenPxRange * (median(s3.r, s3.g, s3.b) - 0.5) + 0.5, 0.0, 1.0);
+  let alpha = (a0 + a1 + a2 + a3) * 0.25;
 
   if (alpha < 0.01) {
     discard;

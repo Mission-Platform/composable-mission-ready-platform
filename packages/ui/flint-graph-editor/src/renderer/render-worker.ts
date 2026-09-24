@@ -1549,21 +1549,21 @@ if (
             return;
           }
           #ifdef GL_OES_standard_derivatives
-            vec2 dUV = vec2(dFdx(v_uv.x), dFdy(v_uv.y)) * 0.35;
-            vec4 s0 = texture2D(u_fontTexture, v_uv + vec2(-dUV.x, -dUV.y));
-            vec4 s1 = texture2D(u_fontTexture, v_uv + vec2( dUV.x, -dUV.y));
-            vec4 s2 = texture2D(u_fontTexture, v_uv + vec2(-dUV.x,  dUV.y));
-            vec4 s3 = texture2D(u_fontTexture, v_uv + vec2( dUV.x,  dUV.y));
-            float d0 = median(s0.r, s0.g, s0.b);
-            float d1 = median(s1.r, s1.g, s1.b);
-            float d2 = median(s2.r, s2.g, s2.b);
-            float d3 = median(s3.r, s3.g, s3.b);
-            float avgDist = (d0 + d1 + d2 + d3) * 0.25;
-            float smoothing = clamp(fwidth(avgDist) * 0.7071, 0.002, 0.12);
-            float a0 = smoothstep(0.5 - smoothing, 0.5 + smoothing, d0);
-            float a1 = smoothstep(0.5 - smoothing, 0.5 + smoothing, d1);
-            float a2 = smoothstep(0.5 - smoothing, 0.5 + smoothing, d2);
-            float a3 = smoothstep(0.5 - smoothing, 0.5 + smoothing, d3);
+            vec2 unitRange = vec2(4.0) / 1024.0;
+            vec2 dUV = fwidth(v_uv);
+            vec2 screenTexSize = vec2(1.0) / max(dUV, vec2(0.00001));
+            float screenPxRange = max(0.5 * dot(unitRange, screenTexSize), 1.0);
+            
+            vec2 sub = dUV * 0.25;
+            vec4 s0 = texture2D(u_fontTexture, v_uv + vec2(-sub.x, -sub.y));
+            vec4 s1 = texture2D(u_fontTexture, v_uv + vec2( sub.x, -sub.y));
+            vec4 s2 = texture2D(u_fontTexture, v_uv + vec2(-sub.x,  sub.y));
+            vec4 s3 = texture2D(u_fontTexture, v_uv + vec2( sub.x,  sub.y));
+            
+            float a0 = clamp(screenPxRange * (median(s0.r, s0.g, s0.b) - 0.5) + 0.5, 0.0, 1.0);
+            float a1 = clamp(screenPxRange * (median(s1.r, s1.g, s1.b) - 0.5) + 0.5, 0.0, 1.0);
+            float a2 = clamp(screenPxRange * (median(s2.r, s2.g, s2.b) - 0.5) + 0.5, 0.0, 1.0);
+            float a3 = clamp(screenPxRange * (median(s3.r, s3.g, s3.b) - 0.5) + 0.5, 0.0, 1.0);
             float alpha = (a0 + a1 + a2 + a3) * 0.25;
           #else
             float dist = median(sampleCenter.r, sampleCenter.g, sampleCenter.b);
