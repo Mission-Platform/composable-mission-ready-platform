@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "description": "Baseline technical debt for documentation locale validation. New errors outside this set will fail CI.",
-  "generatedAt": "2026-09-24T03:11:50.050Z",
+  "generatedAt": "2026-09-24T03:19:57.840Z",
   "count": 6434,
   "issues": [
     "ar/api-reference: heading count mismatch (en=43, locale=40)",
