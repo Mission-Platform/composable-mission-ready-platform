@@ -1777,22 +1777,15 @@ export fn sdf_render_char_cell(
   let half_h: u32 = cell_h / u_two;
   let span_x: u32 = half_w * scale_units;
   let span_y: u32 = half_h * scale_units;
+  let base_x: u32 = u_128 - span_x;
+  let base_y: u32 = u_128 - span_y;
 
   let mut ly: u32 = 0;
   while ly < cell_h {
-    let mut py: u32 = 0;
-    let py_offset: u32 = ly * scale_units + u_two;
-    if py_offset + span_y >= u_128 {
-      py = (u_128 + py_offset) - span_y;
-    }
-
+    let py: u32 = base_y + ly * scale_units + u_two;
     let mut lx: u32 = 0;
     while lx < cell_w {
-      let mut px: u32 = 0;
-      let px_offset: u32 = lx * scale_units + u_two;
-      if px_offset + span_x >= u_128 {
-        px = (u_128 + px_offset) - span_x;
-      }
+      let px: u32 = base_x + lx * scale_units + u_two;
 
       let mut val_r: u32 = 0;
       let mut val_g: u32 = 0;
@@ -2209,8 +2202,16 @@ export fn get_glyph_height_u32(idx: u32) -> u32 {
   if (idx >= 16 && idx <= 25) || (idx >= 33 && idx <= 58) || idx == 66 || idx == 68 || idx == 70 || idx == 72 || idx == 75 || idx == 76 {
     h = u_18;
   } else {
-    if idx == 71 || idx == 80 || idx == 81 || idx == 89 {
-      h = u_18;
+    if idx == 71 || idx == 80 || idx == 81 || idx == 89 || (idx >= 96 && idx <= 156) {
+      if idx == 107 {
+        h = u_24;
+      } else {
+        if idx == 118 || idx == 119 || idx == 121 || idx == 122 || idx == 130 || idx == 131 {
+          h = u_12;
+        } else {
+          h = u_18;
+        }
+      }
     } else {
       if idx == 74 {
         h = u_24;
@@ -2262,17 +2263,13 @@ export fn get_glyph_hori_bearing_x_i32(idx: u32) -> i32 {
 
 export fn get_glyph_hori_bearing_y_i32(idx: u32) -> i32 {
   if idx == 0 { return 0; }
-  if (idx >= 16 && idx <= 25) || (idx >= 33 && idx <= 58) || idx == 66 || idx == 68 || idx == 70 || idx == 72 || idx == 75 || idx == 76 {
-    return 18;
-  }
-  if idx == 73 || idx == 84 {
-    return 16;
-  }
-  if (idx >= 65 && idx <= 90) || (idx >= 143 && idx <= 156) {
-    return 12;
-  }
-  if idx == 14 { return 4; }
-  if idx == 12 { return 2; }
+  let h: u32 = get_glyph_height_u32(idx);
+  if h == 24 { return 24; }
+  if h == 18 { return 18; }
+  if h == 16 { return 16; }
+  if h == 12 { return 12; }
+  if h == 4 { return 4; }
+  if h == 2 { return 2; }
   return 12;
 }
 
@@ -2412,6 +2409,7 @@ export fn sdf_get_glyph_metrics(idx: u32, out_ptr: u32) -> unit {
 
   let by: i32 = get_glyph_hori_bearing_y_i32(idx);
   let mut by_u32: u32 = u_zero;
+  if by == 24 { by_u32 = u_24; }
   if by == 18 { by_u32 = u_18; }
   if by == 16 { by_u32 = u_16; }
   if by == 12 { by_u32 = u_twelve; }

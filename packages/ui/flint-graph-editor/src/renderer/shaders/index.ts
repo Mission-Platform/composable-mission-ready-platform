@@ -295,7 +295,13 @@ fn median(r: f32, g: f32, b: f32) -> f32 {
 
 @fragment
 fn fs_main(input: VertexOutput) -> @location(0) vec4<f32> {
-  let sampleCenter = textureSample(fontTexture, fontSampler, input.uv);
+  let pxRange = 4.0;
+  let unitRange = vec2<f32>(pxRange) / 1024.0;
+  let dUV = fwidth(input.uv);
+  let screenTexSize = vec2<f32>(1.0) / max(dUV, vec2<f32>(0.00001));
+  let screenPxRange = max(0.5 * dot(unitRange, screenTexSize), 1.0);
+
+  let sampleCenter = textureSampleLevel(fontTexture, fontSampler, input.uv, 0.0);
   
   if (input.color.a < 0.0) {
     if (sampleCenter.a < 0.01) {
@@ -304,17 +310,11 @@ fn fs_main(input: VertexOutput) -> @location(0) vec4<f32> {
     return vec4<f32>(sampleCenter.rgb, sampleCenter.a * -input.color.a);
   }
 
-  let pxRange = 4.0;
-  let unitRange = vec2<f32>(pxRange) / 1024.0;
-  let dUV = fwidth(input.uv);
-  let screenTexSize = vec2<f32>(1.0) / max(dUV, vec2<f32>(0.00001));
-  let screenPxRange = max(0.5 * dot(unitRange, screenTexSize), 1.0);
-
   let sub = dUV * 0.25;
-  let s0 = textureSample(fontTexture, fontSampler, input.uv + vec2<f32>(-sub.x, -sub.y));
-  let s1 = textureSample(fontTexture, fontSampler, input.uv + vec2<f32>( sub.x, -sub.y));
-  let s2 = textureSample(fontTexture, fontSampler, input.uv + vec2<f32>(-sub.x,  sub.y));
-  let s3 = textureSample(fontTexture, fontSampler, input.uv + vec2<f32>( sub.x,  sub.y));
+  let s0 = textureSampleLevel(fontTexture, fontSampler, input.uv + vec2<f32>(-sub.x, -sub.y), 0.0);
+  let s1 = textureSampleLevel(fontTexture, fontSampler, input.uv + vec2<f32>( sub.x, -sub.y), 0.0);
+  let s2 = textureSampleLevel(fontTexture, fontSampler, input.uv + vec2<f32>(-sub.x,  sub.y), 0.0);
+  let s3 = textureSampleLevel(fontTexture, fontSampler, input.uv + vec2<f32>( sub.x,  sub.y), 0.0);
 
   let a0 = clamp(screenPxRange * (median(s0.r, s0.g, s0.b) - 0.5) + 0.5, 0.0, 1.0);
   let a1 = clamp(screenPxRange * (median(s1.r, s1.g, s1.b) - 0.5) + 0.5, 0.0, 1.0);

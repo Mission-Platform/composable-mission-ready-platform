@@ -3707,10 +3707,23 @@ if (
    */
   const postReply = (reply: RenderWorkerOutputMessage): void => {
     const messageWithId: RenderWorkerOutputMessage = { id: 'flint_render_worker', ...reply };
-    if (globalThis.window !== undefined && globalThis.self === globalThis.window) {
-      globalThis.window.postMessage(messageWithId, '*');
-    } else if (globalThis.self !== undefined && 'postMessage' in globalThis.self) {
-      globalThis.self.postMessage(messageWithId);
+    if (globalThis.self !== undefined) {
+      if (globalThis.window === undefined || globalThis.self !== globalThis.window) {
+        if (typeof globalThis.self.postMessage === 'function') {
+          globalThis.self.postMessage(messageWithId);
+        }
+      } else {
+        try {
+          if (typeof globalThis.self.postMessage === 'function' && globalThis.self.postMessage.length <= 1) {
+            globalThis.self.postMessage(messageWithId);
+          }
+        } catch {
+          // Ignore JSDOM window.postMessage arity requirements
+        }
+      }
+      if ('dispatchEvent' in globalThis.self && typeof MessageEvent !== 'undefined') {
+        globalThis.self.dispatchEvent(new MessageEvent('message', { data: messageWithId }));
+      }
     }
   };
 
