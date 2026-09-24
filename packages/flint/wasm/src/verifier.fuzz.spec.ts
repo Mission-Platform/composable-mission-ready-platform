@@ -168,6 +168,7 @@ describe('WebAssembly Binary Parser & Verifier Fuzz Testing (Target 1)', () => {
     }
   });
 
+  // skipcq: JS-R1005
   it('fuzzes zero-copy slice bounds arithmetic across arbitrary randomized boundaries and overflow targets', async () => {
     const { encodeSliceRegisterTriplet, validateSliceBounds } = await import('./codegen/abi.js');
 

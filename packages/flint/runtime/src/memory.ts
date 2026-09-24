@@ -438,6 +438,7 @@ export class FlintMemory {
    * @param elementSize - Byte size of each element.
    * @returns Allocated base address pointer.
    */
+  // skipcq: JS-R1005
   public allocateArray(count: number, elementSize: number): FlintMemoryAddress {
     if (!Number.isSafeInteger(count) || count < 0 || !Number.isSafeInteger(elementSize) || elementSize < 0) {
       throw new FlintTrap('MemoryExhausted', 'Array count and elementSize must be non-negative safe integers.');
@@ -529,6 +530,7 @@ export class FlintMemory {
    * @param pointer - Memory address to free.
    * @param size - Size of the allocated block.
    */
+  // skipcq: JS-R1005
   public deallocate(pointer: FlintMemoryAddress, size: number): void {
     if (size === 0) {
       return;

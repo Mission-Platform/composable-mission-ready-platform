@@ -69,6 +69,7 @@ export class Cursor {
   }
 
   /** Decodes an unsigned LEB128 integer from the buffer with strict canonical encoding checks. */
+  // skipcq: JS-R1005
   public leb(maxBytes = 5, strictCanonical = true): number {
     let value = 0;
     let shift = 0;
@@ -94,6 +95,7 @@ export class Cursor {
   }
 
   /** Decodes an unsigned 64-bit LEB128 integer from the buffer using BigInt with strict canonical encoding checks. */
+  // skipcq: JS-R1005
   public leb64(maxBytes = 10, strictCanonical = true): bigint {
     let value = 0n;
     let shift = 0n;
@@ -163,6 +165,7 @@ function readWasmType(payload: Cursor): WasmType {
 }
 
 /** Parses the type section of a WebAssembly module. */
+// skipcq: JS-R1005
 function parseTypeSection(payload: Cursor): FunctionType[] {
   const count = payload.leb();
   if (count > 100_000 || count > payload.remaining()) {

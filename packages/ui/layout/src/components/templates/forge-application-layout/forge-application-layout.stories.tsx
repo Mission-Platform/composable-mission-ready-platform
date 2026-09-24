@@ -106,7 +106,7 @@ export const ErrorStatus: Story = {
         content: (
           <div style={{ padding: 'var(--mp-spacing-6)', color: 'var(--mp-color-text-primary)' }}>
             <p>
-              The status banner uses <code>role="alert"</code> for the error level.
+              The status banner uses <code>{'role="alert"'}</code> for the error level.
             </p>
           </div>
         ),

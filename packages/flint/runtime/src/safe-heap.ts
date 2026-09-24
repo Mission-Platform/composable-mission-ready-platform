@@ -639,15 +639,17 @@ export class FlintDynamicTableManager {
   /**
    * Allocates a table slot for a dynamic function/closure index with a fresh generation token.
    */
+  // skipcq: JS-R1005
   public allocateSlot(functionReference: Function | number): FlintTableSlotHandle {
     let slotIndex: number;
-    if (this.freeList.length > 0) {
-      slotIndex = this.freeList.pop()!;
-    } else {
+    const poppedSlot = this.freeList.pop();
+    if (poppedSlot === undefined) {
       slotIndex = this.nextSlot++;
       if (slotIndex >= this.table.length) {
         this.table.grow(Math.max(16, slotIndex - this.table.length + 1));
       }
+    } else {
+      slotIndex = poppedSlot;
     }
 
     const currentGen = (this.generations.get(slotIndex) ?? 0) + 1;

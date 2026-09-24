@@ -8,6 +8,7 @@ export const MAX_ARRAY_ALLOCATION_BYTES = 0x7f_ff_ff_ff;
  * Computes the total byte size required for an array allocation of count * elementSize.
  * Enforces checked multiplication and throws a RangeError on integer overflow or bounds violation.
  */
+// skipcq: JS-R1005
 export function computeArrayAllocationSize(
   count: number,
   elementSize: number,
@@ -34,6 +35,7 @@ export function computeArrayAllocationSize(
  * Computes capacity for a slice descriptor given total buffer byte size and element byte size.
  * Safely handles zero-sized types (elementSize === 0) by returning infinite/unbounded capacity without division by zero.
  */
+// skipcq: JS-R1005
 export function computeSliceCapacity(bufferBytes: number, elementSize: number): number {
   if (!Number.isFinite(bufferBytes) || bufferBytes < 0) return 0;
   if (!Number.isFinite(elementSize) || elementSize < 0) return 0;
@@ -55,20 +57,12 @@ export interface SliceRegisterTriplet {
 /**
  * Validates that slice register triplets satisfy spatial bounds and unsigned arithmetic non-wrapping invariants.
  */
+// skipcq: JS-R1005
 export function validateSliceBounds(pointer: number, length: number, capacity: number): boolean {
   if (!Number.isFinite(pointer) || !Number.isFinite(length) || !Number.isFinite(capacity)) {
     return false;
   }
-  if (pointer < 0 || length < 0 || capacity < 0) {
-    return false;
-  }
-  if (length > capacity) {
-    return false;
-  }
-  if (pointer + capacity > MAX_SLICE_ADDRESS) {
-    return false;
-  }
-  return true;
+  return pointer >= 0 && length >= 0 && capacity >= 0 && length <= capacity && pointer + capacity <= MAX_SLICE_ADDRESS;
 }
 
 /**
@@ -80,20 +74,20 @@ export function encodeSliceRegisterTriplet(
   length: number,
   capacity: number = length,
 ): SliceRegisterTriplet {
-  const p = Math.trunc(pointer);
-  const l = Math.trunc(length);
-  const c = Math.trunc(capacity);
+  const pointerValue = Math.trunc(pointer);
+  const lengthValue = Math.trunc(length);
+  const capacityValue = Math.trunc(capacity);
 
-  if (!validateSliceBounds(p, l, c)) {
+  if (!validateSliceBounds(pointerValue, lengthValue, capacityValue)) {
     throw new RangeError(
-      `Invalid slice bounds: pointer=0x${p.toString(16)}, length=${l}, capacity=${c} exceeds memory bounds or violates len <= cap invariant.`,
+      `Invalid slice bounds: pointer=0x${pointerValue.toString(16)}, length=${lengthValue}, capacity=${capacityValue} exceeds memory bounds or violates len <= cap invariant.`,
     );
   }
 
   return {
-    pointer: p,
-    length: l,
-    capacity: c,
+    pointer: pointerValue,
+    length: lengthValue,
+    capacity: capacityValue,
   };
 }
 
@@ -145,6 +139,7 @@ export interface AggregateLayoutDescriptor {
  * @param baseOffset - Starting offset within the buffer (defaults to 0).
  * @returns Cleaned buffer with zeroed padding.
  */
+// skipcq: JS-R1005
 export function sanitizeAggregatePadding(
   buffer: Uint8Array,
   layout: AggregateLayoutDescriptor,

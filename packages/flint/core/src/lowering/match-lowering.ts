@@ -56,6 +56,18 @@ export interface DecisionTreeCompileOptions {
 }
 
 /**
+ * Helper to resolve scalar case values to their canonical numeric representation.
+ */
+function resolveNumericCaseValue(
+  value: number | boolean | string,
+  resolver?: (variantName: string) => number | undefined,
+): number | undefined {
+  if (typeof value === 'number') return Number.isInteger(value) ? value : undefined;
+  if (typeof value === 'boolean') return value ? 1 : 0;
+  return typeof value === 'string' ? resolver?.(value) : undefined;
+}
+
+/**
  * Determines whether a collection of scalar case values is eligible for constant-time `br_table` dispatch.
  */
 // skipcq: JS-R1005
@@ -63,11 +75,7 @@ export function isDenseSwitchEligible(
   values: readonly (number | boolean | string)[],
   options: DecisionTreeCompileOptions = {},
 ): boolean {
-  const numericValues = values.map((value) => {
-    if (typeof value === 'number') return Number.isInteger(value) ? value : undefined;
-    if (typeof value === 'boolean') return value ? 1 : 0;
-    return typeof value === 'string' ? options.enumValueResolver?.(value) : undefined;
-  });
+  const numericValues = values.map((value) => resolveNumericCaseValue(value, options.enumValueResolver));
 
   const valid = numericValues.filter((candidate): candidate is number => candidate !== undefined);
   if (valid.length === 0 || valid.length !== values.length) return false;

@@ -842,7 +842,7 @@ function verifyMetadataCustomSection(
   }
 }
 
-// skipcq: JS-D1001
+// skipcq: JS-D1001, JS-R1005
 function verifyAbiV2CustomSection(
   parsed: ParsedWasm,
   input: FlintWasmArtifactVerificationInput,

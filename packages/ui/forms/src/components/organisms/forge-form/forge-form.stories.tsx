@@ -20,6 +20,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/**
+ * Helper component rendering sample input fields connected to the active form context.
+ */
 function FormFields() {
   const context = useFormContext();
   return (

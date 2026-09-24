@@ -19,6 +19,127 @@ export interface DeclarativeRewriteRule {
 }
 
 /**
+ * Helper to match two node inputs that are identical.
+ */
+function matchSelfInput(node: LowLevelSonNode, context: RewriteContext): boolean {
+  return (
+    node.valueInputs.length >= 2 &&
+    context.getNode(node.valueInputs[0] ?? -1) !== undefined &&
+    context.getNode(node.valueInputs[0] ?? -1) === context.getNode(node.valueInputs[1] ?? -1)
+  );
+}
+
+/**
+ * Helper to match two node inputs that are numeric constants.
+ */
+function matchNumericConstants(node: LowLevelSonNode, context: RewriteContext): boolean {
+  const left = context.getNode(node.valueInputs[0] ?? -1);
+  const right = context.getNode(node.valueInputs[1] ?? -1);
+  return (
+    left?.opcode === 'val.const' &&
+    typeof left.constantValue === 'number' &&
+    right?.opcode === 'val.const' &&
+    typeof right.constantValue === 'number'
+  );
+}
+
+/**
+ * Helper to match two node inputs that are numbers or bigints.
+ */
+function matchNumericOrBigIntConstants(node: LowLevelSonNode, context: RewriteContext): boolean {
+  const left = context.getNode(node.valueInputs[0] ?? -1);
+  const right = context.getNode(node.valueInputs[1] ?? -1);
+  return (
+    left?.opcode === 'val.const' &&
+    right?.opcode === 'val.const' &&
+    (typeof left.constantValue === 'number' || typeof left.constantValue === 'bigint') &&
+    (typeof right.constantValue === 'number' || typeof right.constantValue === 'bigint')
+  );
+}
+
+/**
+ * Helper checking if either operand is 64-bit.
+ */
+function is64BitNode(left?: LowLevelSonNode, right?: LowLevelSonNode, nodeType?: string): boolean {
+  return (
+    typeof left?.constantValue === 'bigint' ||
+    typeof right?.constantValue === 'bigint' ||
+    nodeType === 'i64' ||
+    nodeType === 'u64'
+  );
+}
+
+// skipcq: JS-R1005
+function transformShl(node: LowLevelSonNode, context: RewriteContext): LowLevelSonNode {
+  const left = context.getNode(node.valueInputs[0] ?? -1);
+  const right = context.getNode(node.valueInputs[1] ?? -1);
+  if (is64BitNode(left, right, node.type)) {
+    const leftBig = BigInt(left?.constantValue ?? 0);
+    const shiftMask64 = BigInt(Number(BigInt(right?.constantValue ?? 0) & 63n));
+    return context.createConstantNode(BigInt.asIntN(64, leftBig << shiftMask64), node.type ?? 'i64');
+  }
+  const shiftMask32 = Number(right?.constantValue ?? 0) & 31;
+  return context.createConstantNode(Math.trunc(Number(left?.constantValue ?? 0) << shiftMask32), node.type ?? 'i32');
+}
+
+// skipcq: JS-R1005
+function transformShrU(node: LowLevelSonNode, context: RewriteContext): LowLevelSonNode {
+  const left = context.getNode(node.valueInputs[0] ?? -1);
+  const right = context.getNode(node.valueInputs[1] ?? -1);
+  if (is64BitNode(left, right, node.type)) {
+    const leftBig = BigInt(left?.constantValue ?? 0);
+    const shiftMask64 = BigInt(Number(BigInt(right?.constantValue ?? 0) & 63n));
+    return context.createConstantNode(
+      BigInt.asUintN(64, BigInt.asUintN(64, leftBig) >> shiftMask64),
+      node.type ?? 'u64',
+    );
+  }
+  const shiftMask32 = Number(right?.constantValue ?? 0) & 31;
+  return context.createConstantNode(Math.trunc(Number(left?.constantValue ?? 0) >>> shiftMask32), node.type ?? 'u32');
+}
+
+// skipcq: JS-R1005
+function transformShrS(node: LowLevelSonNode, context: RewriteContext): LowLevelSonNode {
+  const left = context.getNode(node.valueInputs[0] ?? -1);
+  const right = context.getNode(node.valueInputs[1] ?? -1);
+  if (is64BitNode(left, right, node.type)) {
+    const leftBig = BigInt(left?.constantValue ?? 0);
+    const shiftMask64 = BigInt(Number(BigInt(right?.constantValue ?? 0) & 63n));
+    return context.createConstantNode(BigInt.asIntN(64, BigInt.asIntN(64, leftBig) >> shiftMask64), node.type ?? 'i64');
+  }
+  const shiftMask32 = Number(right?.constantValue ?? 0) & 31;
+  return context.createConstantNode(Math.trunc(Number(left?.constantValue ?? 0) >> shiftMask32), node.type ?? 'i32');
+}
+
+// skipcq: JS-R1005
+function transformCmpLtU(node: LowLevelSonNode, context: RewriteContext): LowLevelSonNode {
+  const left = context.getNode(node.valueInputs[0] ?? -1);
+  const right = context.getNode(node.valueInputs[1] ?? -1);
+  if (is64BitNode(left, right, node.type)) {
+    const leftBig = BigInt.asUintN(64, BigInt(left?.constantValue ?? 0));
+    const rightBig = BigInt.asUintN(64, BigInt(right?.constantValue ?? 0));
+    return context.createConstantNode(leftBig < rightBig ? 1 : 0, 'bool');
+  }
+  const leftNumber = Number(left?.constantValue ?? 0) >>> 0;
+  const rightNumber = Number(right?.constantValue ?? 0) >>> 0;
+  return context.createConstantNode(leftNumber < rightNumber ? 1 : 0, 'bool');
+}
+
+// skipcq: JS-R1005
+function transformCmpLtS(node: LowLevelSonNode, context: RewriteContext): LowLevelSonNode {
+  const left = context.getNode(node.valueInputs[0] ?? -1);
+  const right = context.getNode(node.valueInputs[1] ?? -1);
+  if (is64BitNode(left, right, node.type)) {
+    const leftBig = BigInt.asIntN(64, BigInt(left?.constantValue ?? 0));
+    const rightBig = BigInt.asIntN(64, BigInt(right?.constantValue ?? 0));
+    return context.createConstantNode(leftBig < rightBig ? 1 : 0, 'bool');
+  }
+  const leftNumber = Math.trunc(Number(left?.constantValue ?? 0));
+  const rightNumber = Math.trunc(Number(right?.constantValue ?? 0));
+  return context.createConstantNode(leftNumber < rightNumber ? 1 : 0, 'bool');
+}
+
+/**
  * Built-in algebraic and constant-folding rewrite rules (TableGen / match.pd style).
  */
 export const BUILTIN_REWRITE_RULES: readonly DeclarativeRewriteRule[] = [
@@ -45,36 +166,22 @@ export const BUILTIN_REWRITE_RULES: readonly DeclarativeRewriteRule[] = [
     opcode: 'val.mul',
     match: (node, context) => {
       const right = context.getNode(node.valueInputs[1] ?? -1);
+      if (right?.opcode === 'val.const' && right.constantValue === 0) return true;
       const left = context.getNode(node.valueInputs[0] ?? -1);
-      return (
-        (right?.opcode === 'val.const' && right.constantValue === 0) ||
-        (left?.opcode === 'val.const' && left.constantValue === 0)
-      );
+      return left?.opcode === 'val.const' && left.constantValue === 0;
     },
     transform: (node, context) => context.createConstantNode(0, node.type),
   },
   {
     name: 'algebraic.sub.self',
     opcode: 'val.sub',
-    match: (node, context) =>
-      node.valueInputs.length >= 2 &&
-      context.getNode(node.valueInputs[0] ?? -1) !== undefined &&
-      context.getNode(node.valueInputs[0] ?? -1) === context.getNode(node.valueInputs[1] ?? -1),
+    match: matchSelfInput,
     transform: (node, context) => context.createConstantNode(0, node.type),
   },
   {
     name: 'constant.fold.add',
     opcode: 'val.add',
-    match: (node, context) => {
-      const left = context.getNode(node.valueInputs[0] ?? -1);
-      const right = context.getNode(node.valueInputs[1] ?? -1);
-      return (
-        left?.opcode === 'val.const' &&
-        typeof left.constantValue === 'number' &&
-        right?.opcode === 'val.const' &&
-        typeof right.constantValue === 'number'
-      );
-    },
+    match: matchNumericConstants,
     transform: (node, context) => {
       const left = context.getNode(node.valueInputs[0] ?? -1);
       const right = context.getNode(node.valueInputs[1] ?? -1);
@@ -85,16 +192,7 @@ export const BUILTIN_REWRITE_RULES: readonly DeclarativeRewriteRule[] = [
   {
     name: 'constant.fold.sub',
     opcode: 'val.sub',
-    match: (node, context) => {
-      const left = context.getNode(node.valueInputs[0] ?? -1);
-      const right = context.getNode(node.valueInputs[1] ?? -1);
-      return (
-        left?.opcode === 'val.const' &&
-        typeof left.constantValue === 'number' &&
-        right?.opcode === 'val.const' &&
-        typeof right.constantValue === 'number'
-      );
-    },
+    match: matchNumericConstants,
     transform: (node, context) => {
       const left = context.getNode(node.valueInputs[0] ?? -1);
       const right = context.getNode(node.valueInputs[1] ?? -1);
@@ -105,16 +203,7 @@ export const BUILTIN_REWRITE_RULES: readonly DeclarativeRewriteRule[] = [
   {
     name: 'constant.fold.mul',
     opcode: 'val.mul',
-    match: (node, context) => {
-      const left = context.getNode(node.valueInputs[0] ?? -1);
-      const right = context.getNode(node.valueInputs[1] ?? -1);
-      return (
-        left?.opcode === 'val.const' &&
-        typeof left.constantValue === 'number' &&
-        right?.opcode === 'val.const' &&
-        typeof right.constantValue === 'number'
-      );
-    },
+    match: matchNumericConstants,
     transform: (node, context) => {
       const left = context.getNode(node.valueInputs[0] ?? -1);
       const right = context.getNode(node.valueInputs[1] ?? -1);
@@ -129,12 +218,9 @@ export const BUILTIN_REWRITE_RULES: readonly DeclarativeRewriteRule[] = [
       const left = context.getNode(node.valueInputs[0] ?? -1);
       const right = context.getNode(node.valueInputs[1] ?? -1);
       return (
-        left?.opcode === 'val.const' &&
-        typeof left.constantValue === 'number' &&
-        right?.opcode === 'val.const' &&
-        typeof right.constantValue === 'number' &&
-        right.constantValue !== 0 &&
-        !(left.constantValue === -2_147_483_648 && right.constantValue === -1)
+        matchNumericConstants(node, context) &&
+        right?.constantValue !== 0 &&
+        !(left?.constantValue === -2_147_483_648 && right?.constantValue === -1)
       );
     },
     transform: (node, context) => {
@@ -147,169 +233,32 @@ export const BUILTIN_REWRITE_RULES: readonly DeclarativeRewriteRule[] = [
   {
     name: 'constant.fold.shl',
     opcode: 'val.shl',
-    match: (node, context) => {
-      const left = context.getNode(node.valueInputs[0] ?? -1);
-      const right = context.getNode(node.valueInputs[1] ?? -1);
-      return (
-        left?.opcode === 'val.const' &&
-        right?.opcode === 'val.const' &&
-        (typeof left.constantValue === 'number' || typeof left.constantValue === 'bigint') &&
-        (typeof right.constantValue === 'number' || typeof right.constantValue === 'bigint')
-      );
-    },
-    transform: (node, context) => {
-      const left = context.getNode(node.valueInputs[0] ?? -1);
-      const right = context.getNode(node.valueInputs[1] ?? -1);
-      const is64Bit =
-        typeof left?.constantValue === 'bigint' ||
-        typeof right?.constantValue === 'bigint' ||
-        node.type === 'i64' ||
-        node.type === 'u64';
-      if (is64Bit) {
-        const leftBig = BigInt(left?.constantValue ?? 0);
-        const shiftMask64 = BigInt(Number(BigInt(right?.constantValue ?? 0) & 63n));
-        return context.createConstantNode(BigInt.asIntN(64, leftBig << shiftMask64), node.type ?? 'i64');
-      }
-      const shiftMask32 = Number(right?.constantValue ?? 0) & 31;
-      return context.createConstantNode(
-        Math.trunc(Number(left?.constantValue ?? 0) << shiftMask32),
-        node.type ?? 'i32',
-      );
-    },
+    match: matchNumericOrBigIntConstants,
+    transform: transformShl,
   },
   {
     name: 'constant.fold.shr_u',
     opcode: 'val.shr_u',
-    match: (node, context) => {
-      const left = context.getNode(node.valueInputs[0] ?? -1);
-      const right = context.getNode(node.valueInputs[1] ?? -1);
-      return (
-        left?.opcode === 'val.const' &&
-        right?.opcode === 'val.const' &&
-        (typeof left.constantValue === 'number' || typeof left.constantValue === 'bigint') &&
-        (typeof right.constantValue === 'number' || typeof right.constantValue === 'bigint')
-      );
-    },
-    transform: (node, context) => {
-      const left = context.getNode(node.valueInputs[0] ?? -1);
-      const right = context.getNode(node.valueInputs[1] ?? -1);
-      const is64Bit =
-        typeof left?.constantValue === 'bigint' ||
-        typeof right?.constantValue === 'bigint' ||
-        node.type === 'i64' ||
-        node.type === 'u64';
-      if (is64Bit) {
-        const leftBig = BigInt(left?.constantValue ?? 0);
-        const shiftMask64 = BigInt(Number(BigInt(right?.constantValue ?? 0) & 63n));
-        return context.createConstantNode(
-          BigInt.asUintN(64, BigInt.asUintN(64, leftBig) >> shiftMask64),
-          node.type ?? 'u64',
-        );
-      }
-      const shiftMask32 = Number(right?.constantValue ?? 0) & 31;
-      return context.createConstantNode(
-        Math.trunc(Number(left?.constantValue ?? 0) >>> shiftMask32),
-        node.type ?? 'u32',
-      );
-    },
+    match: matchNumericOrBigIntConstants,
+    transform: transformShrU,
   },
   {
     name: 'constant.fold.shr_s',
     opcode: 'val.shr_s',
-    match: (node, context) => {
-      const left = context.getNode(node.valueInputs[0] ?? -1);
-      const right = context.getNode(node.valueInputs[1] ?? -1);
-      return (
-        left?.opcode === 'val.const' &&
-        right?.opcode === 'val.const' &&
-        (typeof left.constantValue === 'number' || typeof left.constantValue === 'bigint') &&
-        (typeof right.constantValue === 'number' || typeof right.constantValue === 'bigint')
-      );
-    },
-    transform: (node, context) => {
-      const left = context.getNode(node.valueInputs[0] ?? -1);
-      const right = context.getNode(node.valueInputs[1] ?? -1);
-      const is64Bit =
-        typeof left?.constantValue === 'bigint' ||
-        typeof right?.constantValue === 'bigint' ||
-        node.type === 'i64' ||
-        node.type === 'u64';
-      if (is64Bit) {
-        const leftBig = BigInt(left?.constantValue ?? 0);
-        const shiftMask64 = BigInt(Number(BigInt(right?.constantValue ?? 0) & 63n));
-        return context.createConstantNode(
-          BigInt.asIntN(64, BigInt.asIntN(64, leftBig) >> shiftMask64),
-          node.type ?? 'i64',
-        );
-      }
-      const shiftMask32 = Number(right?.constantValue ?? 0) & 31;
-      return context.createConstantNode(
-        Math.trunc(Number(left?.constantValue ?? 0) >> shiftMask32),
-        node.type ?? 'i32',
-      );
-    },
+    match: matchNumericOrBigIntConstants,
+    transform: transformShrS,
   },
   {
     name: 'constant.fold.cmp_lt_u',
     opcode: 'val.cmp_lt_u',
-    match: (node, context) => {
-      const left = context.getNode(node.valueInputs[0] ?? -1);
-      const right = context.getNode(node.valueInputs[1] ?? -1);
-      return (
-        left?.opcode === 'val.const' &&
-        right?.opcode === 'val.const' &&
-        (typeof left.constantValue === 'number' || typeof left.constantValue === 'bigint') &&
-        (typeof right.constantValue === 'number' || typeof right.constantValue === 'bigint')
-      );
-    },
-    transform: (node, context) => {
-      const left = context.getNode(node.valueInputs[0] ?? -1);
-      const right = context.getNode(node.valueInputs[1] ?? -1);
-      const is64Bit =
-        typeof left?.constantValue === 'bigint' ||
-        typeof right?.constantValue === 'bigint' ||
-        node.type === 'i64' ||
-        node.type === 'u64';
-      if (is64Bit) {
-        const leftBig = BigInt.asUintN(64, BigInt(left?.constantValue ?? 0));
-        const rightBig = BigInt.asUintN(64, BigInt(right?.constantValue ?? 0));
-        return context.createConstantNode(leftBig < rightBig ? 1 : 0, 'bool');
-      }
-      const leftNumber = Number(left?.constantValue ?? 0) >>> 0;
-      const rightNumber = Number(right?.constantValue ?? 0) >>> 0;
-      return context.createConstantNode(leftNumber < rightNumber ? 1 : 0, 'bool');
-    },
+    match: matchNumericOrBigIntConstants,
+    transform: transformCmpLtU,
   },
   {
     name: 'constant.fold.cmp_lt_s',
     opcode: 'val.cmp_lt_s',
-    match: (node, context) => {
-      const left = context.getNode(node.valueInputs[0] ?? -1);
-      const right = context.getNode(node.valueInputs[1] ?? -1);
-      return (
-        left?.opcode === 'val.const' &&
-        right?.opcode === 'val.const' &&
-        (typeof left.constantValue === 'number' || typeof left.constantValue === 'bigint') &&
-        (typeof right.constantValue === 'number' || typeof right.constantValue === 'bigint')
-      );
-    },
-    transform: (node, context) => {
-      const left = context.getNode(node.valueInputs[0] ?? -1);
-      const right = context.getNode(node.valueInputs[1] ?? -1);
-      const is64Bit =
-        typeof left?.constantValue === 'bigint' ||
-        typeof right?.constantValue === 'bigint' ||
-        node.type === 'i64' ||
-        node.type === 'u64';
-      if (is64Bit) {
-        const leftBig = BigInt.asIntN(64, BigInt(left?.constantValue ?? 0));
-        const rightBig = BigInt.asIntN(64, BigInt(right?.constantValue ?? 0));
-        return context.createConstantNode(leftBig < rightBig ? 1 : 0, 'bool');
-      }
-      const leftNumber = Math.trunc(Number(left?.constantValue ?? 0));
-      const rightNumber = Math.trunc(Number(right?.constantValue ?? 0));
-      return context.createConstantNode(leftNumber < rightNumber ? 1 : 0, 'bool');
-    },
+    match: matchNumericOrBigIntConstants,
+    transform: transformCmpLtS,
   },
   {
     name: 'constant.fold.cmp_eq',
@@ -333,28 +282,19 @@ export const BUILTIN_REWRITE_RULES: readonly DeclarativeRewriteRule[] = [
   {
     name: 'simd.and.self',
     opcode: 'val.simd.and',
-    match: (node, context) =>
-      node.valueInputs.length >= 2 &&
-      context.getNode(node.valueInputs[0] ?? -1) !== undefined &&
-      context.getNode(node.valueInputs[0] ?? -1) === context.getNode(node.valueInputs[1] ?? -1),
+    match: matchSelfInput,
     transform: (node) => node.valueInputs[0],
   },
   {
     name: 'simd.or.self',
     opcode: 'val.simd.or',
-    match: (node, context) =>
-      node.valueInputs.length >= 2 &&
-      context.getNode(node.valueInputs[0] ?? -1) !== undefined &&
-      context.getNode(node.valueInputs[0] ?? -1) === context.getNode(node.valueInputs[1] ?? -1),
+    match: matchSelfInput,
     transform: (node) => node.valueInputs[0],
   },
   {
     name: 'simd.xor.self',
     opcode: 'val.simd.xor',
-    match: (node, context) =>
-      node.valueInputs.length >= 2 &&
-      context.getNode(node.valueInputs[0] ?? -1) !== undefined &&
-      context.getNode(node.valueInputs[0] ?? -1) === context.getNode(node.valueInputs[1] ?? -1),
+    match: matchSelfInput,
     transform: (node, context) => context.createConstantNode(0, node.type ?? 'v128'),
   },
 ];

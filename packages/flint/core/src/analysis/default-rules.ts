@@ -220,6 +220,7 @@ function evaluateBinary(
  * @param depth - Current recursion depth.
  * @returns Known constant value, or undefined if the expression is non-constant or exceeds budget.
  */
+// skipcq: JS-R1005
 export function evaluate(
   expression: FlintIrExpression,
   environment: ReadonlyMap<string, Constant>,

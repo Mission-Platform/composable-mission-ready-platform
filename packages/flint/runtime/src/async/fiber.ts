@@ -71,62 +71,49 @@ export class FlintFiberScheduler {
     const id = this.nextFiberId++;
     const stackContext = new Map<string, unknown>();
     const stackLimit = this.maxStackBytes;
-    let stackPointer = 0;
 
-    const pushStackFrame = (bytes: number): number => {
-      const alignedBytes = Math.trunc((bytes + 15) / 16) * 16;
-      if (stackPointer + alignedBytes > stackLimit) {
-        throw new FlintTrap(
-          'StackOverflow',
-          `Fiber ${id} stack overflow: allocated frame exceeds boundary of ${stackLimit} bytes.`,
-        );
-      }
-      stackPointer += alignedBytes;
-      if (fiberRecord) fiberRecord.stackPointer = stackPointer;
-      return stackPointer;
-    };
-
-    const popStackFrame = (bytes: number): number => {
-      const alignedBytes = Math.trunc((bytes + 15) / 16) * 16;
-      stackPointer = Math.max(0, stackPointer - alignedBytes);
-      if (fiberRecord) fiberRecord.stackPointer = stackPointer;
-      return stackPointer;
-    };
-
-    const unwind = (): void => {
-      stackPointer = 0;
-      stackContext.clear();
-      if (fiberRecord) {
+    const fiberRecord = {
+      id,
+      stackContext,
+      stackLimit,
+      stackPointer: 0,
+      state: 'ready' as FlintFiberState,
+      result: undefined as unknown,
+      error: undefined as Error | undefined,
+      onUnwind: undefined as ((fiber: FlintFiber<T>) => void) | undefined,
+      /**
+       * Allocates bytes on the fiber's isolated stack frame.
+       */
+      pushStackFrame(bytes: number): number {
+        const alignedBytes = Math.trunc((bytes + 15) / 16) * 16;
+        if (fiberRecord.stackPointer + alignedBytes > fiberRecord.stackLimit) {
+          throw new FlintTrap(
+            'StackOverflow',
+            `Fiber ${fiberRecord.id} stack overflow: allocated frame exceeds boundary of ${fiberRecord.stackLimit} bytes.`,
+          );
+        }
+        fiberRecord.stackPointer += alignedBytes;
+        return fiberRecord.stackPointer;
+      },
+      /**
+       * Pops bytes from the fiber's isolated stack frame.
+       */
+      popStackFrame(bytes: number): number {
+        const alignedBytes = Math.trunc((bytes + 15) / 16) * 16;
+        fiberRecord.stackPointer = Math.max(0, fiberRecord.stackPointer - alignedBytes);
+        return fiberRecord.stackPointer;
+      },
+      /**
+       * Unwinds the fiber's stack frame context on abort or reset.
+       */
+      unwind(): void {
         fiberRecord.stackPointer = 0;
+        fiberRecord.stackContext.clear();
         fiberRecord.state = 'cancelled';
         if (fiberRecord.onUnwind) {
           fiberRecord.onUnwind(fiberRecord as unknown as FlintFiber<T>);
         }
-      }
-    };
-
-    const fiberRecord: {
-      readonly id: number;
-      readonly executionFunction: () => Promise<unknown>;
-      readonly stackContext: Map<string, unknown>;
-      readonly stackLimit: number;
-      stackPointer: number;
-      pushStackFrame: (bytes: number) => number;
-      popStackFrame: (bytes: number) => number;
-      onUnwind?: (fiber: FlintFiber<T>) => void;
-      unwind: () => void;
-      state: FlintFiberState;
-      result?: unknown;
-      error?: Error;
-    } = {
-      id,
-      stackContext,
-      stackLimit,
-      stackPointer,
-      pushStackFrame,
-      popStackFrame,
-      unwind,
-      state: 'ready' as FlintFiberState,
+      },
       executionFunction: async (): Promise<T> => {
         return await task(fiberRecord as unknown as FlintFiber<T>);
       },
@@ -155,6 +142,7 @@ export class FlintFiberScheduler {
    * Executes all pending fibers cooperatively until all completed.
    * Defends against reentrant execution.
    */
+  // skipcq: JS-R1005
   public async runAll(): Promise<readonly FlintFiber[]> {
     if (this.isExecuting) {
       throw new FlintTrap('CapabilityDenied', 'Fiber scheduler cannot be reentered while executing.');
@@ -188,6 +176,7 @@ export class FlintFiberScheduler {
   /**
    * Suspends current execution and yields to the next scheduled fiber.
    */
+  // skipcq: JS-0105
   public async yield(): Promise<void> {
     await new Promise<void>((resolve) => {
       setTimeout(resolve, 0);

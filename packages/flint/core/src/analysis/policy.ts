@@ -65,6 +65,7 @@ export type FlintAnalysisOptionsLike = Omit<Partial<FlintAnalysisPolicy>, 'limit
 /**
  * Constant-time string comparison to prevent timing side-channel attacks on security tokens and capability names.
  */
+// skipcq: JS-R1005
 export function timingSafeEqualString(stringA: string, stringB: string): boolean {
   if (typeof stringA !== 'string' || typeof stringB !== 'string') return false;
   const lengthA = stringA.length;

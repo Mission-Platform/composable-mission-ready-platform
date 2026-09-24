@@ -84,6 +84,7 @@ export class SegregatedSlabAllocator {
   private readonly lock?: FlintAtomicSpinLock;
   private nextHeapPointer: number;
 
+  // skipcq: JS-R1005
   public constructor(
     memory: WebAssembly.Memory,
     optionsOrBaseOffset: SegregatedSlabAllocatorOptions | number = 65_536,
@@ -313,7 +314,7 @@ export class RegionalBumpArena {
   private currentOffset = 0;
   private readonly capacity: number;
 
-  public constructor(memory: WebAssembly.Memory, basePointer: number, capacity: number = 65_536) {
+  public constructor(memory: WebAssembly.Memory, basePointer: number, capacity = 65_536) {
     this.memory = memory;
     this.basePointer = basePointer;
     this.capacity = capacity;

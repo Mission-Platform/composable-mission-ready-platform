@@ -16,7 +16,7 @@ describe('WebAssembly JSPI & Cooperative Fiber Runtime', () => {
       return 100;
     });
 
-    scheduler.spawn(async () => {
+    scheduler.spawn(() => {
       executionOrder.push(2);
       return 200;
     });

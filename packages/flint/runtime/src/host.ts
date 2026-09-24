@@ -81,6 +81,7 @@ export const MAX_FFI_CALL_DEPTH = 512;
 /**
  * Performs a constant-time comparison of two strings to prevent timing side-channel attacks on security-critical identifiers.
  */
+// skipcq: JS-R1005
 export function timingSafeEqualString(stringA: string, stringB: string): boolean {
   if (typeof stringA !== 'string' || typeof stringB !== 'string') return false;
   const lengthA = stringA.length;
@@ -98,11 +99,15 @@ export function timingSafeEqualString(stringA: string, stringB: string): boolean
 /**
  * Validates that a host pointer offset and length satisfy spatial bounds invariants.
  */
+// skipcq: JS-R1005
 export function validateHostPointerBounds(pointer: number, length: number, memoryLimit = 0xff_ff_ff_ff): boolean {
-  if (!Number.isFinite(pointer) || !Number.isFinite(length)) return false;
-  if (pointer < 0 || length < 0) return false;
-  if (pointer + length > memoryLimit) return false;
-  return true;
+  return (
+    Number.isFinite(pointer) &&
+    Number.isFinite(length) &&
+    pointer >= 0 &&
+    length >= 0 &&
+    pointer + length <= memoryLimit
+  );
 }
 
 /**
