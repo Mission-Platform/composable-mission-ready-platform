@@ -220,10 +220,10 @@ export function flintVec2Lerp(a: FlintVec2, b: FlintVec2, t: number): FlintVec2 
 
 /** Perform vec 2 reflect operation. */
 export function flintVec2Reflect(v: FlintVec2, normal: FlintVec2): FlintVec2 {
-  const d = 2 * flintVec2Dot(v, normal);
+  const dotFactor = 2 * flintVec2Dot(v, normal);
   return {
-    x: v.x - d * normal.x,
-    y: v.y - d * normal.y,
+    x: v.x - dotFactor * normal.x,
+    y: v.y - dotFactor * normal.y,
   };
 }
 
@@ -376,22 +376,22 @@ export function flintVec3Slerp(a: FlintVec3, b: FlintVec3, t: number): FlintVec3
 
 /** Perform vec 3 reflect operation. */
 export function flintVec3Reflect(v: FlintVec3, normal: FlintVec3): FlintVec3 {
-  const d = 2 * flintVec3Dot(v, normal);
+  const dotFactor = 2 * flintVec3Dot(v, normal);
   return {
-    x: v.x - d * normal.x,
-    y: v.y - d * normal.y,
-    z: v.z - d * normal.z,
+    x: v.x - dotFactor * normal.x,
+    y: v.y - dotFactor * normal.y,
+    z: v.z - dotFactor * normal.z,
   };
 }
 
 /** Perform vec 3 refract operation. */
 export function flintVec3Refract(v: FlintVec3, normal: FlintVec3, eta: number): FlintVec3 {
   const dot = flintVec3Dot(v, normal);
-  const k = 1 - eta * eta * (1 - dot * dot);
-  if (k < 0) {
+  const discriminant = 1 - eta * eta * (1 - dot * dot);
+  if (discriminant < 0) {
     return { x: 0, y: 0, z: 0 };
   }
-  return flintVec3Sub(flintVec3Scale(v, eta), flintVec3Scale(normal, eta * dot + Math.sqrt(k)));
+  return flintVec3Sub(flintVec3Scale(v, eta), flintVec3Scale(normal, eta * dot + Math.sqrt(discriminant)));
 }
 
 /** Perform vec 3 project operation. */
@@ -1149,26 +1149,26 @@ export function flintMat4RotationAxisAngle(axis: FlintVec3, angleRad: number): F
   const norm = flintVec3Normalize(axis);
   const cos = Math.cos(angleRad);
   const sin = Math.sin(angleRad);
-  const t = 1 - cos;
+  const oneMinusCos = 1 - cos;
   const { x, y, z } = norm;
 
   return createFlintMat4(
     {
-      x: t * x * x + cos,
-      y: t * x * y + sin * z,
-      z: t * x * z - sin * y,
+      x: oneMinusCos * x * x + cos,
+      y: oneMinusCos * x * y + sin * z,
+      z: oneMinusCos * x * z - sin * y,
       w: 0,
     },
     {
-      x: t * x * y - sin * z,
-      y: t * y * y + cos,
-      z: t * y * z + sin * x,
+      x: oneMinusCos * x * y - sin * z,
+      y: oneMinusCos * y * y + cos,
+      z: oneMinusCos * y * z + sin * x,
       w: 0,
     },
     {
-      x: t * x * z + sin * y,
-      y: t * y * z - sin * x,
-      z: t * z * z + cos,
+      x: oneMinusCos * x * z + sin * y,
+      y: oneMinusCos * y * z - sin * x,
+      z: oneMinusCos * z * z + cos,
       w: 0,
     },
     { x: 0, y: 0, z: 0, w: 1 },
@@ -1196,12 +1196,12 @@ export function flintMat4LookAt(eye: FlintVec3, target: FlintVec3, up: FlintVec3
 
 /** Perform mat 4 perspective operation. */
 export function flintMat4Perspective(fovYRad: number, aspect: number, zNear: number, zFar: number): FlintMat4 {
-  const f = 1 / Math.tan(fovYRad * 0.5);
+  const focalLength = 1 / Math.tan(fovYRad * 0.5);
   const rangeInv = 1 / (zNear - zFar);
 
   return createFlintMat4(
-    { x: f / aspect, y: 0, z: 0, w: 0 },
-    { x: 0, y: f, z: 0, w: 0 },
+    { x: focalLength / aspect, y: 0, z: 0, w: 0 },
+    { x: 0, y: focalLength, z: 0, w: 0 },
     { x: 0, y: 0, z: (zFar + zNear) * rangeInv, w: -1 },
     { x: 0, y: 0, z: 2 * zFar * zNear * rangeInv, w: 0 },
   );
@@ -1273,16 +1273,16 @@ export function flintQuatFromAxisAngle(axis: FlintVec3, angleRad: number): Flint
 
 /** Perform quat from euler operation. */
 export function flintQuatFromEuler(pitchX: number, yawY: number, rollZ: number): FlintQuat {
-  const p = pitchX * 0.5;
-  const y = yawY * 0.5;
-  const r = rollZ * 0.5;
+  const halfPitch = pitchX * 0.5;
+  const halfYaw = yawY * 0.5;
+  const halfRoll = rollZ * 0.5;
 
-  const cp = Math.cos(p);
-  const sp = Math.sin(p);
-  const cy = Math.cos(y);
-  const sy = Math.sin(y);
-  const cr = Math.cos(r);
-  const sr = Math.sin(r);
+  const cp = Math.cos(halfPitch);
+  const sp = Math.sin(halfPitch);
+  const cy = Math.cos(halfYaw);
+  const sy = Math.sin(halfYaw);
+  const cr = Math.cos(halfRoll);
+  const sr = Math.sin(halfRoll);
 
   return {
     x: sp * cy * cr - cp * sy * sr,
@@ -1717,9 +1717,9 @@ export function flintAABB2Union(a: FlintAABB2, b: FlintAABB2): FlintAABB2 {
 
 /** Perform a a b b 2 area operation. */
 export function flintAABB2Area(box: FlintAABB2): number {
-  const w = box.max.x - box.min.x;
-  const h = box.max.y - box.min.y;
-  return w > 0 && h > 0 ? w * h : 0;
+  const boxWidth = box.max.x - box.min.x;
+  const boxHeight = box.max.y - box.min.y;
+  return boxWidth > 0 && boxHeight > 0 ? boxWidth * boxHeight : 0;
 }
 
 /** Perform circle contains point operation. */
@@ -1729,8 +1729,8 @@ export function flintCircleContainsPoint(c: FlintCircle, p: FlintVec2): boolean 
 
 /** Perform circle intersects circle operation. */
 export function flintCircleIntersectsCircle(a: FlintCircle, b: FlintCircle): boolean {
-  const r = a.radius + b.radius;
-  return flintVec2DistanceSquared(a.center, b.center) <= r * r;
+  const totalRadius = a.radius + b.radius;
+  return flintVec2DistanceSquared(a.center, b.center) <= totalRadius * totalRadius;
 }
 
 /** Perform triangle 2 area operation. */
@@ -1777,8 +1777,8 @@ export function flintSphereContainsPoint(s: FlintSphere, p: FlintVec3): boolean 
 
 /** Perform sphere intersects sphere operation. */
 export function flintSphereIntersectsSphere(a: FlintSphere, b: FlintSphere): boolean {
-  const r = a.radius + b.radius;
-  return flintVec3DistanceSquared(a.center, b.center) <= r * r;
+  const totalRadius = a.radius + b.radius;
+  return flintVec3DistanceSquared(a.center, b.center) <= totalRadius * totalRadius;
 }
 
 /** Perform plane 3 distance to point operation. */
@@ -1795,7 +1795,7 @@ export function flintTriangle3Normal(tri: FlintTriangle3): FlintVec3 {
 
 /** Perform frustum from view proj operation. */
 export function flintFrustumFromViewProj(vp: FlintMat4): FlintFrustum {
-  const m = [
+  const matrixElements = [
     vp.c0.x,
     vp.c0.y,
     vp.c0.z,
@@ -1814,33 +1814,88 @@ export function flintFrustumFromViewProj(vp: FlintMat4): FlintFrustum {
     vp.c3.w,
   ];
   // Left: row 3 + row 0
-  const leftNormal = flintVec3Normalize({ x: m[3] + m[0], y: m[7] + m[4], z: m[11] + m[8] });
+  const leftNormal = flintVec3Normalize({
+    x: matrixElements[3] + matrixElements[0],
+    y: matrixElements[7] + matrixElements[4],
+    z: matrixElements[11] + matrixElements[8],
+  });
   const leftDistribution =
-    (m[15] + m[12]) / (flintVec3Length({ x: m[3] + m[0], y: m[7] + m[4], z: m[11] + m[8] }) || 1);
+    (matrixElements[15] + matrixElements[12]) /
+    (flintVec3Length({
+      x: matrixElements[3] + matrixElements[0],
+      y: matrixElements[7] + matrixElements[4],
+      z: matrixElements[11] + matrixElements[8],
+    }) || 1);
 
   // Right: row 3 - row 0
-  const rightNormal = flintVec3Normalize({ x: m[3] - m[0], y: m[7] - m[4], z: m[11] - m[8] });
+  const rightNormal = flintVec3Normalize({
+    x: matrixElements[3] - matrixElements[0],
+    y: matrixElements[7] - matrixElements[4],
+    z: matrixElements[11] - matrixElements[8],
+  });
   const rightDistribution =
-    (m[15] - m[12]) / (flintVec3Length({ x: m[3] - m[0], y: m[7] - m[4], z: m[11] - m[8] }) || 1);
+    (matrixElements[15] - matrixElements[12]) /
+    (flintVec3Length({
+      x: matrixElements[3] - matrixElements[0],
+      y: matrixElements[7] - matrixElements[4],
+      z: matrixElements[11] - matrixElements[8],
+    }) || 1);
 
   // Bottom: row 3 + row 1
-  const bottomNormal = flintVec3Normalize({ x: m[3] + m[1], y: m[7] + m[5], z: m[11] + m[9] });
+  const bottomNormal = flintVec3Normalize({
+    x: matrixElements[3] + matrixElements[1],
+    y: matrixElements[7] + matrixElements[5],
+    z: matrixElements[11] + matrixElements[9],
+  });
   const bottomDistribution =
-    (m[15] + m[13]) / (flintVec3Length({ x: m[3] + m[1], y: m[7] + m[5], z: m[11] + m[9] }) || 1);
+    (matrixElements[15] + matrixElements[13]) /
+    (flintVec3Length({
+      x: matrixElements[3] + matrixElements[1],
+      y: matrixElements[7] + matrixElements[5],
+      z: matrixElements[11] + matrixElements[9],
+    }) || 1);
 
   // Top: row 3 - row 1
-  const topNormal = flintVec3Normalize({ x: m[3] - m[1], y: m[7] - m[5], z: m[11] - m[9] });
-  const topDistribution = (m[15] - m[13]) / (flintVec3Length({ x: m[3] - m[1], y: m[7] - m[5], z: m[11] - m[9] }) || 1);
+  const topNormal = flintVec3Normalize({
+    x: matrixElements[3] - matrixElements[1],
+    y: matrixElements[7] - matrixElements[5],
+    z: matrixElements[11] - matrixElements[9],
+  });
+  const topDistribution =
+    (matrixElements[15] - matrixElements[13]) /
+    (flintVec3Length({
+      x: matrixElements[3] - matrixElements[1],
+      y: matrixElements[7] - matrixElements[5],
+      z: matrixElements[11] - matrixElements[9],
+    }) || 1);
 
   // Near: row 3 + row 2
-  const nearNormal = flintVec3Normalize({ x: m[3] + m[2], y: m[7] + m[6], z: m[11] + m[10] });
+  const nearNormal = flintVec3Normalize({
+    x: matrixElements[3] + matrixElements[2],
+    y: matrixElements[7] + matrixElements[6],
+    z: matrixElements[11] + matrixElements[10],
+  });
   const nearDistribution =
-    (m[15] + m[14]) / (flintVec3Length({ x: m[3] + m[2], y: m[7] + m[6], z: m[11] + m[10] }) || 1);
+    (matrixElements[15] + matrixElements[14]) /
+    (flintVec3Length({
+      x: matrixElements[3] + matrixElements[2],
+      y: matrixElements[7] + matrixElements[6],
+      z: matrixElements[11] + matrixElements[10],
+    }) || 1);
 
   // Far: row 3 - row 2
-  const farNormal = flintVec3Normalize({ x: m[3] - m[2], y: m[7] - m[6], z: m[11] - m[10] });
+  const farNormal = flintVec3Normalize({
+    x: matrixElements[3] - matrixElements[2],
+    y: matrixElements[7] - matrixElements[6],
+    z: matrixElements[11] - matrixElements[10],
+  });
   const farDistribution =
-    (m[15] - m[14]) / (flintVec3Length({ x: m[3] - m[2], y: m[7] - m[6], z: m[11] - m[10] }) || 1);
+    (matrixElements[15] - matrixElements[14]) /
+    (flintVec3Length({
+      x: matrixElements[3] - matrixElements[2],
+      y: matrixElements[7] - matrixElements[6],
+      z: matrixElements[11] - matrixElements[10],
+    }) || 1);
 
   return {
     left: { normal: leftNormal, distance: leftDistribution },
@@ -1853,23 +1908,23 @@ export function flintFrustumFromViewProj(vp: FlintMat4): FlintFrustum {
 }
 
 /** Perform frustum intersects sphere operation. */
-export function flintFrustumIntersectsSphere(f: FlintFrustum, s: FlintSphere): boolean {
-  if (flintPlane3DistanceToPoint(f.left, s.center) < -s.radius) {
+export function flintFrustumIntersectsSphere(frustum: FlintFrustum, sphere: FlintSphere): boolean {
+  if (flintPlane3DistanceToPoint(frustum.left, sphere.center) < -sphere.radius) {
     return false;
   }
-  if (flintPlane3DistanceToPoint(f.right, s.center) < -s.radius) {
+  if (flintPlane3DistanceToPoint(frustum.right, sphere.center) < -sphere.radius) {
     return false;
   }
-  if (flintPlane3DistanceToPoint(f.bottom, s.center) < -s.radius) {
+  if (flintPlane3DistanceToPoint(frustum.bottom, sphere.center) < -sphere.radius) {
     return false;
   }
-  if (flintPlane3DistanceToPoint(f.top, s.center) < -s.radius) {
+  if (flintPlane3DistanceToPoint(frustum.top, sphere.center) < -sphere.radius) {
     return false;
   }
-  if (flintPlane3DistanceToPoint(f.near, s.center) < -s.radius) {
+  if (flintPlane3DistanceToPoint(frustum.near, sphere.center) < -sphere.radius) {
     return false;
   }
-  if (flintPlane3DistanceToPoint(f.far, s.center) < -s.radius) {
+  if (flintPlane3DistanceToPoint(frustum.far, sphere.center) < -sphere.radius) {
     return false;
   }
   return true;
@@ -1878,18 +1933,18 @@ export function flintFrustumIntersectsSphere(f: FlintFrustum, s: FlintSphere): b
 /** Perform ray 3 intersects sphere operation. */
 export function flintRay3IntersectsSphere(ray: FlintRay3, sphere: FlintSphere): FlintOption<number> {
   const oc = flintVec3Sub(ray.origin, sphere.center);
-  const a = flintVec3Dot(ray.direction, ray.direction);
-  const b = 2 * flintVec3Dot(oc, ray.direction);
-  const c = flintVec3Dot(oc, oc) - sphere.radius * sphere.radius;
-  const discriminant = b * b - 4 * a * c;
+  const quadA = flintVec3Dot(ray.direction, ray.direction);
+  const quadB = 2 * flintVec3Dot(oc, ray.direction);
+  const quadC = flintVec3Dot(oc, oc) - sphere.radius * sphere.radius;
+  const discriminant = quadB * quadB - 4 * quadA * quadC;
 
   if (discriminant < 0) {
     return flintNone();
   }
 
   const sqrtDisc = Math.sqrt(discriminant);
-  const t0 = (-b - sqrtDisc) / (2 * a);
-  const t1 = (-b + sqrtDisc) / (2 * a);
+  const t0 = (-quadB - sqrtDisc) / (2 * quadA);
+  const t1 = (-quadB + sqrtDisc) / (2 * quadA);
 
   if (t0 >= 0) {
     return flintSome(t0);
@@ -1941,8 +1996,8 @@ export function flintRay3IntersectsPlane3(ray: FlintRay3, plane: FlintPlane3): F
   if (Math.abs(denom) <= FLINT_MATH_EPSILON) {
     return flintNone();
   }
-  const t = -(flintVec3Dot(plane.normal, ray.origin) + plane.distance) / denom;
-  return t >= 0 ? flintSome(t) : flintNone();
+  const hitT = -(flintVec3Dot(plane.normal, ray.origin) + plane.distance) / denom;
+  return hitT >= 0 ? flintSome(hitT) : flintNone();
 }
 
 /** Perform ray 3 intersects triangle 3 operation. */
@@ -1958,19 +2013,19 @@ export function flintRay3IntersectsTriangle3(ray: FlintRay3, tri: FlintTriangle3
   const invDet = 1 / det;
 
   const tvec = flintVec3Sub(ray.origin, tri.a);
-  const u = flintVec3Dot(tvec, pvec) * invDet;
-  if (u < 0 || u > 1) {
+  const baryU = flintVec3Dot(tvec, pvec) * invDet;
+  if (baryU < 0 || baryU > 1) {
     return flintNone();
   }
 
   const qvec = flintVec3Cross(tvec, edge1);
-  const v = flintVec3Dot(ray.direction, qvec) * invDet;
-  if (v < 0 || u + v > 1) {
+  const baryV = flintVec3Dot(ray.direction, qvec) * invDet;
+  if (baryV < 0 || baryU + baryV > 1) {
     return flintNone();
   }
 
-  const t = flintVec3Dot(edge2, qvec) * invDet;
-  return t >= 0 ? flintSome(t) : flintNone();
+  const hitT = flintVec3Dot(edge2, qvec) * invDet;
+  return hitT >= 0 ? flintSome(hitT) : flintNone();
 }
 
 /** Perform ray 3 intersect o b b operation. */
@@ -1979,7 +2034,7 @@ export function flintRay3IntersectOBB(ray: FlintRay3, obb: FlintOBB3): FlintOpti
   const u1 = flintQuatRotateVec3(obb.orientation, { x: 0, y: 1, z: 0 });
   const u2 = flintQuatRotateVec3(obb.orientation, { x: 0, y: 0, z: 1 });
 
-  const p = flintVec3Sub(obb.center, ray.origin);
+  const centerOffset = flintVec3Sub(obb.center, ray.origin);
   const axes = [u0, u1, u2];
   const halfExtension = obb.halfExtents ?? obb.half_extents ?? { x: 0, y: 0, z: 0 };
   const halfExtents = [halfExtension.x, halfExtension.y, halfExtension.z];
@@ -1990,12 +2045,12 @@ export function flintRay3IntersectOBB(ray: FlintRay3, obb: FlintOBB3): FlintOpti
   for (let index = 0; index < 3; index += 1) {
     const axis = axes[index] ?? { x: 0, y: 0, z: 0 };
     const hi = halfExtents[index] ?? 0;
-    const centerOffsetDistance = flintVec3Dot(axis, p);
-    const f = flintVec3Dot(axis, ray.direction);
+    const centerOffsetDistance = flintVec3Dot(axis, centerOffset);
+    const directionDotAxis = flintVec3Dot(axis, ray.direction);
 
-    if (Math.abs(f) > FLINT_MATH_EPSILON) {
-      let t1 = (centerOffsetDistance - hi) / f;
-      let t2 = (centerOffsetDistance + hi) / f;
+    if (Math.abs(directionDotAxis) > FLINT_MATH_EPSILON) {
+      let t1 = (centerOffsetDistance - hi) / directionDotAxis;
+      let t2 = (centerOffsetDistance + hi) / directionDotAxis;
       if (t1 > t2) {
         const temporary = t1;
         t1 = t2;
@@ -2183,7 +2238,7 @@ export function flintBVHRayIntersect(tree: FlintBVHTree3, ray: FlintRay3): Flint
       continue;
     }
 
-    const b = node.bounds;
+    const bounds = node.bounds;
     let tmin = -Infinity;
     let tmax = Infinity;
     let intersectsBox = true;
@@ -2192,8 +2247,8 @@ export function flintBVHRayIntersect(tree: FlintBVHTree3, ray: FlintRay3): Flint
     for (const axis of dims) {
       const origin = ray.origin[axis];
       const direction = ray.direction[axis];
-      const minValue = b.min[axis];
-      const maxValue = b.max[axis];
+      const minValue = bounds.min[axis];
+      const maxValue = bounds.max[axis];
 
       if (Math.abs(direction) <= FLINT_MATH_EPSILON) {
         if (origin < minValue || origin > maxValue) {
@@ -2236,17 +2291,17 @@ export function flintBVHRayIntersect(tree: FlintBVHTree3, ray: FlintRay3): Flint
         closestPoint = pt;
 
         const eps = 1e-5;
-        if (Math.abs(pt.x - b.min.x) < eps) {
+        if (Math.abs(pt.x - bounds.min.x) < eps) {
           closestNormal = { x: -1, y: 0, z: 0 };
-        } else if (Math.abs(pt.x - b.max.x) < eps) {
+        } else if (Math.abs(pt.x - bounds.max.x) < eps) {
           closestNormal = { x: 1, y: 0, z: 0 };
-        } else if (Math.abs(pt.y - b.min.y) < eps) {
+        } else if (Math.abs(pt.y - bounds.min.y) < eps) {
           closestNormal = { x: 0, y: -1, z: 0 };
-        } else if (Math.abs(pt.y - b.max.y) < eps) {
+        } else if (Math.abs(pt.y - bounds.max.y) < eps) {
           closestNormal = { x: 0, y: 1, z: 0 };
-        } else if (Math.abs(pt.z - b.min.z) < eps) {
+        } else if (Math.abs(pt.z - bounds.min.z) < eps) {
           closestNormal = { x: 0, y: 0, z: -1 };
-        } else if (Math.abs(pt.z - b.max.z) < eps) {
+        } else if (Math.abs(pt.z - bounds.max.z) < eps) {
           closestNormal = { x: 0, y: 0, z: 1 };
         } else {
           closestNormal = flintVec3Scale(ray.direction, -1);
@@ -2284,10 +2339,10 @@ export function flintBVHRayIntersect(tree: FlintBVHTree3, ray: FlintRay3): Flint
 
 /** Perform bezier 2 quadratic operation. */
 export function flintBezier2Quadratic(p0: FlintVec2, p1: FlintVec2, p2: FlintVec2, t: number): FlintVec2 {
-  const u = 1 - t;
+  const oneMinusT = 1 - t;
   const tt = t * t;
-  const uu = u * u;
-  const u2t = 2 * u * t;
+  const uu = oneMinusT * oneMinusT;
+  const u2t = 2 * oneMinusT * t;
   return {
     x: uu * p0.x + u2t * p1.x + tt * p2.x,
     y: uu * p0.y + u2t * p1.y + tt * p2.y,
@@ -2296,28 +2351,28 @@ export function flintBezier2Quadratic(p0: FlintVec2, p1: FlintVec2, p2: FlintVec
 
 /** Perform bezier 2 cubic operation. */
 export function flintBezier2Cubic(p0: FlintVec2, p1: FlintVec2, p2: FlintVec2, p3: FlintVec2, t: number): FlintVec2 {
-  const u = 1 - t;
+  const oneMinusT = 1 - t;
   const tt = t * t;
-  const uu = u * u;
-  const uuu = uu * u;
+  const uu = oneMinusT * oneMinusT;
+  const uuu = uu * oneMinusT;
   const ttt = tt * t;
   return {
-    x: uuu * p0.x + 3 * uu * t * p1.x + 3 * u * tt * p2.x + ttt * p3.x,
-    y: uuu * p0.y + 3 * uu * t * p1.y + 3 * u * tt * p2.y + ttt * p3.y,
+    x: uuu * p0.x + 3 * uu * t * p1.x + 3 * oneMinusT * tt * p2.x + ttt * p3.x,
+    y: uuu * p0.y + 3 * uu * t * p1.y + 3 * oneMinusT * tt * p2.y + ttt * p3.y,
   };
 }
 
 /** Perform bezier 3 cubic operation. */
 export function flintBezier3Cubic(p0: FlintVec3, p1: FlintVec3, p2: FlintVec3, p3: FlintVec3, t: number): FlintVec3 {
-  const u = 1 - t;
+  const oneMinusT = 1 - t;
   const tt = t * t;
-  const uu = u * u;
-  const uuu = uu * u;
+  const uu = oneMinusT * oneMinusT;
+  const uuu = uu * oneMinusT;
   const ttt = tt * t;
   return {
-    x: uuu * p0.x + 3 * uu * t * p1.x + 3 * u * tt * p2.x + ttt * p3.x,
-    y: uuu * p0.y + 3 * uu * t * p1.y + 3 * u * tt * p2.y + ttt * p3.y,
-    z: uuu * p0.z + 3 * uu * t * p1.z + 3 * u * tt * p2.z + ttt * p3.z,
+    x: uuu * p0.x + 3 * uu * t * p1.x + 3 * oneMinusT * tt * p2.x + ttt * p3.x,
+    y: uuu * p0.y + 3 * uu * t * p1.y + 3 * oneMinusT * tt * p2.y + ttt * p3.y,
+    z: uuu * p0.z + 3 * uu * t * p1.z + 3 * oneMinusT * tt * p2.z + ttt * p3.z,
   };
 }
 
@@ -2419,96 +2474,96 @@ export function flintColorLinearToSrgb(c: FlintColorRgba): FlintColorRgba {
 }
 
 /** Perform color rgb to hsv operation. */
-export function flintColorRgbToHsv(c: FlintColorRgba): FlintColorHsv {
-  const max = Math.max(c.r, c.g, c.b);
-  const min = Math.min(c.r, c.g, c.b);
-  const d = max - min;
-  let h = 0;
-  const s = max === 0 ? 0 : d / max;
-  const v = max;
+export function flintColorRgbToHsv(color: FlintColorRgba): FlintColorHsv {
+  const max = Math.max(color.r, color.g, color.b);
+  const min = Math.min(color.r, color.g, color.b);
+  const diff = max - min;
+  let hue = 0;
+  const saturation = max === 0 ? 0 : diff / max;
+  const value = max;
 
-  if (d > 0) {
-    if (max === c.r) {
-      h = (c.g - c.b) / d + (c.g < c.b ? 6 : 0);
-    } else if (max === c.g) {
-      h = (c.b - c.r) / d + 2;
+  if (diff > 0) {
+    if (max === color.r) {
+      hue = (color.g - color.b) / diff + (color.g < color.b ? 6 : 0);
+    } else if (max === color.g) {
+      hue = (color.b - color.r) / diff + 2;
     } else {
-      h = (c.r - c.g) / d + 4;
+      hue = (color.r - color.g) / diff + 4;
     }
-    h *= 60;
+    hue *= 60;
   }
 
-  return { h, s, v, a: c.a };
+  return { h: hue, s: saturation, v: value, a: color.a };
 }
 
 /** Perform color hsv to rgb operation. */
 export function flintColorHsvToRgb(hsv: FlintColorHsv): FlintColorRgba {
-  const h = ((hsv.h % 360) + 360) % 360;
-  const s = flintClamp(hsv.s, 0, 1);
-  const v = flintClamp(hsv.v, 0, 1);
+  const hue = ((hsv.h % 360) + 360) % 360;
+  const saturation = flintClamp(hsv.s, 0, 1);
+  const value = flintClamp(hsv.v, 0, 1);
 
-  const c = v * s;
-  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
-  const m = v - c;
+  const chroma = value * saturation;
+  const intermediateX = chroma * (1 - Math.abs(((hue / 60) % 2) - 1));
+  const matchValue = value - chroma;
 
-  let r = 0;
-  let g = 0;
-  let b = 0;
-  if (h < 60) {
-    r = c;
-    g = x;
-  } else if (h < 120) {
-    r = x;
-    g = c;
-  } else if (h < 180) {
-    g = c;
-    b = x;
-  } else if (h < 240) {
-    g = x;
-    b = c;
-  } else if (h < 300) {
-    r = x;
-    b = c;
+  let rawR = 0;
+  let rawG = 0;
+  let rawB = 0;
+  if (hue < 60) {
+    rawR = chroma;
+    rawG = intermediateX;
+  } else if (hue < 120) {
+    rawR = intermediateX;
+    rawG = chroma;
+  } else if (hue < 180) {
+    rawG = chroma;
+    rawB = intermediateX;
+  } else if (hue < 240) {
+    rawG = intermediateX;
+    rawB = chroma;
+  } else if (hue < 300) {
+    rawR = intermediateX;
+    rawB = chroma;
   } else {
-    r = c;
-    b = x;
+    rawR = chroma;
+    rawB = intermediateX;
   }
 
-  return createFlintColorRgba(r + m, g + m, b + m, hsv.a);
+  return createFlintColorRgba(rawR + matchValue, rawG + matchValue, rawB + matchValue, hsv.a);
 }
 
 /** Perform color srgb to oklab operation. */
-export function flintColorSrgbToOklab(c: FlintColorRgba): FlintColorOklab {
-  const lin = flintColorSrgbToLinear(c);
-  const l = 0.412_221_470_8 * lin.r + 0.536_332_536_3 * lin.g + 0.051_445_992_9 * lin.b;
-  const m = 0.211_903_498_2 * lin.r + 0.680_699_545_1 * lin.g + 0.107_396_956_6 * lin.b;
-  const s = 0.088_302_461_9 * lin.r + 0.281_718_837_6 * lin.g + 0.629_978_700_5 * lin.b;
+export function flintColorSrgbToOklab(color: FlintColorRgba): FlintColorOklab {
+  const lin = flintColorSrgbToLinear(color);
+  const coneL = 0.412_221_470_8 * lin.r + 0.536_332_536_3 * lin.g + 0.051_445_992_9 * lin.b;
+  const coneM = 0.211_903_498_2 * lin.r + 0.680_699_545_1 * lin.g + 0.107_396_956_6 * lin.b;
+  const coneS = 0.088_302_461_9 * lin.r + 0.281_718_837_6 * lin.g + 0.629_978_700_5 * lin.b;
 
-  const l_ = Math.cbrt(l);
-  const m_ = Math.cbrt(m);
-  const s_ = Math.cbrt(s);
+  const cubeRootL = Math.cbrt(coneL);
+  const cubeRootM = Math.cbrt(coneM);
+  const cubeRootS = Math.cbrt(coneS);
 
   return {
-    l: 0.210_454_255_3 * l_ + 0.793_617_785 * m_ - 0.004_072_046_8 * s_,
-    a: 1.977_998_495_1 * l_ - 2.428_592_205 * m_ + 0.450_593_709_9 * s_,
-    b: 0.025_904_037_1 * l_ + 0.782_771_766_2 * m_ - 0.808_675_766 * s_,
-    alpha: c.a,
+    l: 0.210_454_255_3 * cubeRootL + 0.793_617_785 * cubeRootM - 0.004_072_046_8 * cubeRootS,
+    a: 1.977_998_495_1 * cubeRootL - 2.428_592_205 * cubeRootM + 0.450_593_709_9 * cubeRootS,
+    b: 0.025_904_037_1 * cubeRootL + 0.782_771_766_2 * cubeRootM - 0.808_675_766 * cubeRootS,
+    alpha: color.a,
   };
 }
 
 /** Perform color oklab to srgb operation. */
 export function flintColorOklabToSrgb(lab: FlintColorOklab): FlintColorRgba {
-  const l_ = lab.l + 0.396_337_777_4 * lab.a + 0.215_803_757_3 * lab.b;
-  const m_ = lab.l - 0.105_561_345_8 * lab.a - 0.063_854_172_8 * lab.b;
-  const s_ = lab.l - 0.089_484_177_5 * lab.a - 1.291_485_548 * lab.b;
+  const cubeRootL = lab.l + 0.396_337_777_4 * lab.a + 0.215_803_757_3 * lab.b;
+  const cubeRootM = lab.l - 0.105_561_345_8 * lab.a - 0.063_854_172_8 * lab.b;
+  const cubeRootS = lab.l - 0.089_484_177_5 * lab.a - 1.291_485_548 * lab.b;
 
-  const l = l_ * l_ * l_;
-  const m = m_ * m_ * m_;
-  const s = s_ * s_ * s_;
+  const linearL = cubeRootL * cubeRootL * cubeRootL;
+  const linearM = cubeRootM * cubeRootM * cubeRootM;
+  const linearS = cubeRootS * cubeRootS * cubeRootS;
 
-  const rLin = +4.076_741_662_1 * l - 3.307_711_591_3 * m + 0.230_969_929_2 * s;
-  const gLin = -1.268_438_004_6 * l + 2.609_757_401_1 * m - 0.341_319_396_5 * s;
-  const bLin = -0.004_196_086_3 * l - 0.703_418_614_7 * m + 1.707_614_701 * s;
+  const rLin = +4.076_741_662_1 * linearL - 3.307_711_591_3 * linearM + 0.230_969_929_2 * linearS;
+  const gLin = -1.268_438_004_6 * linearL + 2.609_757_401_1 * linearM - 0.341_319_396_5 * linearS;
+  const bLin = -0.004_196_086_3 * linearL - 0.703_418_614_7 * linearM + 1.707_614_701 * linearS;
 
   return createFlintColorRgba(
     linearToSrgbChannel(rLin),
