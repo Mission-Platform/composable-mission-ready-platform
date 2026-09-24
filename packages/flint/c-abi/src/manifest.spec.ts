@@ -82,9 +82,7 @@ describe("Binary CBOR encoder and decoder", () => {
     ]);
 
     expect(() => decodeCbor(maliciousPayload)).toThrow(TypeError);
-    expect(({} as Record<string, unknown>).__proto__).not.toHaveProperty(
-      "polluted",
-    );
+    expect(Object.prototype).not.toHaveProperty("polluted");
   });
 
   it("prevents unbounded recursion and deserialization bombs", () => {

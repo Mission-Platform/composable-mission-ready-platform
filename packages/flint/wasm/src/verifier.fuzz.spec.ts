@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { Cursor, parseLimits, parseWasmModule } from './binary-parser.js';
+import { Cursor, parseLimits, parseWasm } from './binary-parser.js';
 import { compileFlintWasm } from './emitter.js';
 import { verifyFlintWasmArtifact } from './verifier.js';
 
@@ -82,14 +82,14 @@ describe('WebAssembly Binary Parser & Verifier Fuzz Testing (Target 1)', () => {
     }
   });
 
-  it('fuzzes parseWasmModule with arbitrary random byte buffers', () => {
+  it('fuzzes parseWasm with arbitrary random byte buffers', () => {
     for (let index = 0; index < 1000; index += 1) {
       const length = prng.nextInt(0, 1024);
       const randomWasm = prng.nextBytes(length);
 
       try {
-        const module = parseWasmModule(randomWasm);
-        expect(module).toBeDefined();
+        const wasmModule = parseWasm(randomWasm, 1024 * 1024);
+        expect(wasmModule).toBeDefined();
       } catch (error) {
         expect(error).toBeInstanceOf(Error);
       }

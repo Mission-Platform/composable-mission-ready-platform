@@ -245,6 +245,7 @@ export function evaluate(
 /**
  * Public bounded constant evaluation wrapper with fresh step budget.
  */
+// skipcq: JS-R1005
 export function evaluateConstantBounded(
   expression: FlintIrExpression,
   environment: ReadonlyMap<string, Constant> = new Map(),

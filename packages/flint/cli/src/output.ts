@@ -63,6 +63,7 @@ export function sanitizeSourceMapPath(filePath: string, workspaceRoot?: string):
 /**
  * Sanitizes a v3 source map JSON string, virtualizing all source paths to prevent traversal and leakage.
  */
+// skipcq: JS-R1005
 export function sanitizeSourceMap(sourceMap: string, workspaceRoot?: string): string {
   if (sourceMap.trim().length === 0) return sourceMap;
   try {
@@ -158,6 +159,7 @@ export async function writeFlintArtifacts(
  * @param sourceResolver Optional source resolver returning file contents by file name.
  * @returns Human-readable multi-span caret diagnostic string.
  */
+// skipcq: JS-R1005
 export function formatFlintCaretDiagnostics(
   diagnostics: readonly FlintDiagnostic[],
   sourceResolver?: (fileName: string) => string | undefined,

@@ -296,7 +296,7 @@ export function createFlintQueryEngine(): FlintQueryEngine {
   const frontendCache = new Map<string, { hash: string; optionsKey: string; result: FlintFrontendResult }>();
   const analysisCache = new Map<string, { hash: string; optionsKey: string; result: FlintAnalysisReport }>();
 
-  return {
+  const engine: FlintQueryEngine = {
     getTokens(fileName: string, source: string): readonly FlintToken[] {
       queryCount += 1;
       const contentHash = fastHash(source);
@@ -371,7 +371,7 @@ export function createFlintQueryEngine(): FlintQueryEngine {
         return cached.result;
       }
       misses += 1;
-      const frontend = this.getFrontend(input);
+      const frontend = engine.getFrontend(input);
       if (frontend.diagnostics.length > 0 || frontend.module === undefined) {
         return undefined;
       }
@@ -416,4 +416,6 @@ export function createFlintQueryEngine(): FlintQueryEngine {
       queryCount = 0;
     },
   };
+
+  return engine;
 }

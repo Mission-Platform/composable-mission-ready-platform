@@ -16,6 +16,8 @@ export interface FlintCAbiManifest {
 export function encodeCbor(value: unknown): Uint8Array {
   const chunks: number[] = [];
 
+  // skipcq: JS-R1005
+  /** Recursively encodes a single CBOR data item. */
   function encodeItem(item: unknown): void {
     if (item === null || item === undefined) {
       chunks.push(0xf6); // null
@@ -93,6 +95,7 @@ export function encodeCbor(value: unknown): Uint8Array {
     throw new TypeError(`Unsupported CBOR type: ${typeof item}`);
   }
 
+  /** Encodes a CBOR major type with an unsigned integer argument. */
   function encodeUnsigned(major: number, value: number): void {
     const majorBits = major << 5;
     if (value < 24) {
@@ -114,6 +117,7 @@ export function encodeCbor(value: unknown): Uint8Array {
     }
   }
 
+  /** Encodes a CBOR major type with an unsigned 64-bit integer argument. */
   function encodeUnsignedBigInt(major: number, value: bigint): void {
     const majorBits = major << 5;
     chunks.push(
@@ -158,6 +162,8 @@ export function decodeCbor<T = unknown>(
   let offset = 0;
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
 
+  // skipcq: JS-R1005
+  /** Recursively decodes a single CBOR data item. */
   function decodeItem(depth = 0): unknown {
     if (depth > MAX_CBOR_DEPTH) {
       throw new RangeError(

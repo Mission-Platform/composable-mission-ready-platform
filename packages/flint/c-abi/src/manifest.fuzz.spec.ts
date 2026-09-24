@@ -44,6 +44,7 @@ class FuzzPrng {
   }
 }
 
+// skipcq: JS-R1005
 function generateRandomCborValue(
   currentDepth: number,
   prng: FuzzPrng,
@@ -223,7 +224,7 @@ describe("Binary Manifest & CBOR Fuzz Testing (Target 1)", () => {
       }
 
       // Assert host prototype remains unpolluted
-      expect(({} as Record<string, unknown>)[key]).not.toBe(1);
+      expect((Object.prototype as Record<string, unknown>)[key]).not.toBe(1);
     }
   });
 

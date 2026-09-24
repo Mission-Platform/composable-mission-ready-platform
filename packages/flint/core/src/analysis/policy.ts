@@ -82,6 +82,7 @@ export function timingSafeEqualString(stringA: string, stringB: string): boolean
 /**
  * Checks whether a requested capability is authorized under the active policy using constant-time comparison.
  */
+// skipcq: JS-R1005
 export function isCapabilityAuthorized(capability: string, allowedCapabilities: readonly string[]): boolean {
   let authorized = false;
   for (const allowed of allowedCapabilities) {
