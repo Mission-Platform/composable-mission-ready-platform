@@ -112,29 +112,46 @@ import {
   flintTensorMatmul,
 } from './math.js';
 
+function computeReconstructedSvdEntry(
+  u: FlintDMatrix,
+  s: readonly number[],
+  vt: FlintDMatrix,
+  row: number,
+  col: number,
+): number {
+  let reconstructedValue = 0;
+  for (const [kIndex, sValue] of s.entries()) {
+    const uValue = u.data[row * u.cols + kIndex] ?? 0;
+    const vtValue = vt.data[kIndex * vt.cols + col] ?? 0;
+    reconstructedValue += uValue * sValue * vtValue;
+  }
+  return reconstructedValue;
+}
+
 function expectSvdReconstruction(matrix: FlintDMatrix, u: FlintDMatrix, s: readonly number[], vt: FlintDMatrix): void {
-  const rank = s.length;
   for (let row = 0; row < matrix.rows; row += 1) {
     for (let col = 0; col < matrix.cols; col += 1) {
-      let reconstructedValue = 0;
-      for (let kIndex = 0; kIndex < rank; kIndex += 1) {
-        reconstructedValue +=
-          (u.data[row * u.cols + kIndex] ?? 0) * (s[kIndex] ?? 0) * (vt.data[kIndex * vt.cols + col] ?? 0);
-      }
-      expect(reconstructedValue).toBeCloseTo(matrix.data[row * matrix.cols + col] ?? 0, 7);
+      const reconstructed = computeReconstructedSvdEntry(u, s, vt, row, col);
+      expect(reconstructed).toBeCloseTo(matrix.data[row * matrix.cols + col] ?? 0, 7);
     }
   }
 }
 
+function computeColumnDotProduct(matrix: FlintDMatrix, colA: number, colB: number): number {
+  let dotProduct = 0;
+  for (let row = 0; row < matrix.rows; row += 1) {
+    const valueA = matrix.data[row * matrix.cols + colA] ?? 0;
+    const valueB = matrix.data[row * matrix.cols + colB] ?? 0;
+    dotProduct += valueA * valueB;
+  }
+  return dotProduct;
+}
+
 function expectOrthogonalColumns(matrix: FlintDMatrix): void {
-  const dimension = matrix.cols;
-  for (let row = 0; row < dimension; row += 1) {
-    for (let col = 0; col < dimension; col += 1) {
-      let dotProduct = 0;
-      for (let kIndex = 0; kIndex < matrix.rows; kIndex += 1) {
-        dotProduct += (matrix.data[kIndex * dimension + row] ?? 0) * (matrix.data[kIndex * dimension + col] ?? 0);
-      }
-      expect(dotProduct).toBeCloseTo(row === col ? 1 : 0, 6);
+  for (let colA = 0; colA < matrix.cols; colA += 1) {
+    for (let colB = 0; colB < matrix.cols; colB += 1) {
+      const dot = computeColumnDotProduct(matrix, colA, colB);
+      expect(dot).toBeCloseTo(colA === colB ? 1 : 0, 6);
     }
   }
 }
@@ -563,16 +580,13 @@ describe('Flint Standard Math Library', () => {
       const sym = createFlintDMatrix(2, 2, [2, 1, 1, 2]);
       const eigenOpt = flintDMatrixEigenSymmetric(sym);
       expect(eigenOpt.kind).toBe('some');
-      if (eigenOpt.kind !== 'some') {
-        return;
-      }
 
-      const { values, vectors } = eigenOpt.value;
-      expect(values[0]).toBeCloseTo(3, 8);
-      expect(values[1]).toBeCloseTo(1, 8);
+      const decomp = eigenOpt.value ?? { values: [], vectors: createFlintDMatrix(0, 0) };
+      expect(decomp.values[0]).toBeCloseTo(3, 8);
+      expect(decomp.values[1]).toBeCloseTo(1, 8);
 
       // Check A * v_0 = lambda_0 * v_0
-      const v0 = createFlintDMatrix(2, 1, [vectors.data[0] ?? 0, vectors.data[2] ?? 0]);
+      const v0 = createFlintDMatrix(2, 1, [decomp.vectors.data[0] ?? 0, decomp.vectors.data[2] ?? 0]);
       const av0 = flintDMatrixMul(sym, v0);
       expect(av0.kind).toBe('some');
       const av0Data = av0.value?.data ?? [];
@@ -584,14 +598,9 @@ describe('Flint Standard Math Library', () => {
       const sym = createFlintDMatrix(2, 2, [2, 1, 1, 2]);
       const eigenOpt = flintDMatrixEigenSymmetric(sym);
       expect(eigenOpt.kind).toBe('some');
-      if (eigenOpt.kind !== 'some') {
-        return;
-      }
 
-      const { vectors } = eigenOpt.value;
-      const v0 = [vectors.data[0] ?? 0, vectors.data[2] ?? 0];
-      const v1 = [vectors.data[1] ?? 0, vectors.data[3] ?? 0];
-      const dot = (v0[0] ?? 0) * (v1[0] ?? 0) + (v0[1] ?? 0) * (v1[1] ?? 0);
+      const vectors = eigenOpt.value?.vectors ?? createFlintDMatrix(0, 0);
+      const dot = computeColumnDotProduct(vectors, 0, 1);
       expect(dot).toBeCloseTo(0, 8);
     });
 
@@ -604,46 +613,45 @@ describe('Flint Standard Math Library', () => {
       const matrixA = createFlintDMatrix(3, 2, [1, 2, 3, 4, 5, 6]);
       const svdOpt = flintDMatrixSVD(matrixA);
       expect(svdOpt.kind).toBe('some');
-      if (svdOpt.kind !== 'some') {
-        return;
-      }
-      const { u, s, vt } = svdOpt.value;
-      expect(u.rows).toBe(3);
-      expect(u.cols).toBe(3);
-      expect(s.length).toBe(2);
-      expect(vt.rows).toBe(2);
-      expect(vt.cols).toBe(2);
-      expect(s[0]).toBeGreaterThan(s[1] ?? 0);
-      expect(s[1]).toBeGreaterThan(0);
+      const svd = svdOpt.value ?? {
+        u: createFlintDMatrix(0, 0),
+        s: [],
+        vt: createFlintDMatrix(0, 0),
+      };
+      expect(svd.u.rows).toBe(3);
+      expect(svd.u.cols).toBe(3);
+      expect(svd.s.length).toBe(2);
+      expect(svd.vt.rows).toBe(2);
+      expect(svd.vt.cols).toBe(2);
+      expect(svd.s[0]).toBeGreaterThan(svd.s[1] ?? 0);
+      expect(svd.s[1]).toBeGreaterThan(0);
 
-      expectSvdReconstruction(matrixA, u, s, vt);
+      expectSvdReconstruction(matrixA, svd.u, svd.s, svd.vt);
     });
 
     it('computes SVD for 2x3 wide rectangular matrix', () => {
       const aWide = createFlintDMatrix(2, 3, [1, 3, 5, 2, 4, 6]);
       const svdWideOpt = flintDMatrixSVD(aWide);
       expect(svdWideOpt.kind).toBe('some');
-      if (svdWideOpt.kind !== 'some') {
-        return;
-      }
-      const { u, s, vt } = svdWideOpt.value;
-      expect(u.rows).toBe(2);
-      expect(u.cols).toBe(2);
-      expect(s.length).toBe(2);
-      expect(vt.rows).toBe(3);
-      expect(vt.cols).toBe(3);
+      const svd = svdWideOpt.value ?? {
+        u: createFlintDMatrix(0, 0),
+        s: [],
+        vt: createFlintDMatrix(0, 0),
+      };
+      expect(svd.u.rows).toBe(2);
+      expect(svd.u.cols).toBe(2);
+      expect(svd.s.length).toBe(2);
+      expect(svd.vt.rows).toBe(3);
+      expect(svd.vt.cols).toBe(3);
 
-      expectSvdReconstruction(aWide, u, s, vt);
+      expectSvdReconstruction(aWide, svd.u, svd.s, svd.vt);
     });
 
     it('computes Moore-Penrose pseudo-inverse satisfying A * A^+ * A ≈ A', () => {
       const matrixA = createFlintDMatrix(3, 2, [1, 2, 3, 4, 5, 6]);
       const pinvOpt = flintDMatrixPseudoinverse(matrixA);
       expect(pinvOpt.kind).toBe('some');
-      if (pinvOpt.kind !== 'some') {
-        return;
-      }
-      const pinv = pinvOpt.value;
+      const pinv = pinvOpt.value ?? createFlintDMatrix(0, 0);
       expect(pinv.rows).toBe(2);
       expect(pinv.cols).toBe(3);
 
@@ -662,15 +670,16 @@ describe('Flint Standard Math Library', () => {
       const rank1 = createFlintDMatrix(3, 3, [1, 0, 0, 0, 0, 0, 0, 0, 0]);
       const svdRank1 = flintDMatrixSVD(rank1);
       expect(svdRank1.kind).toBe('some');
-      if (svdRank1.kind !== 'some') {
-        return;
-      }
-      const { u, s } = svdRank1.value;
-      expect(s[0]).toBeCloseTo(1, 7);
-      expect(s[1]).toBeCloseTo(0, 7);
-      expect(s[2]).toBeCloseTo(0, 7);
+      const svd = svdRank1.value ?? {
+        u: createFlintDMatrix(0, 0),
+        s: [],
+        vt: createFlintDMatrix(0, 0),
+      };
+      expect(svd.s[0]).toBeCloseTo(1, 7);
+      expect(svd.s[1]).toBeCloseTo(0, 7);
+      expect(svd.s[2]).toBeCloseTo(0, 7);
 
-      expectOrthogonalColumns(u);
+      expectOrthogonalColumns(svd.u);
     });
   });
 

@@ -540,13 +540,15 @@ export interface FlintMat4 {
   ];
 }
 
+/** Create a FlintMat2 matrix from a flat array of numbers. */
 function createMat2FromElements(elements: readonly number[]): FlintMat2 {
   const col0 = { x: elements[0] ?? 0, y: elements[1] ?? 0 };
   const col1 = { x: elements[2] ?? 0, y: elements[3] ?? 0 };
+  const flatElements: FlintMat2['elements'] = [col0.x, col0.y, col1.x, col1.y];
   return {
     c0: col0,
     c1: col1,
-    elements: [col0.x, col0.y, col1.x, col1.y],
+    elements: flatElements,
   };
 }
 
@@ -555,12 +557,13 @@ export function createFlintMat2(column0OrElements?: FlintVec2 | readonly number[
   if (Array.isArray(column0OrElements)) {
     return createMat2FromElements(column0OrElements);
   }
-  const columnZero = (column0OrElements as FlintVec2 | undefined) ?? { x: 0, y: 0 };
+  const columnZero = column0OrElements && 'x' in column0OrElements ? column0OrElements : { x: 0, y: 0 };
   const columnOne = column1 ?? { x: 0, y: 0 };
+  const flatElements: FlintMat2['elements'] = [columnZero.x, columnZero.y, columnOne.x, columnOne.y];
   return {
     c0: columnZero,
     c1: columnOne,
-    elements: [columnZero.x, columnZero.y, columnOne.x, columnOne.y],
+    elements: flatElements,
   };
 }
 
@@ -648,15 +651,26 @@ export function flintMat2Scaling(scaleVector: FlintVec2): FlintMat2 {
   return createFlintMat2({ x: scaleVector.x, y: 0 }, { x: 0, y: scaleVector.y });
 }
 
+/** Extract a 3D vector from a flat array at a given offset. */
+function readVec3AtOffset(elements: readonly number[], offset: number): FlintVec3 {
+  return {
+    x: elements[offset] ?? 0,
+    y: elements[offset + 1] ?? 0,
+    z: elements[offset + 2] ?? 0,
+  };
+}
+
+/** Create a FlintMat3 matrix from a flat array of numbers. */
 function createMat3FromElements(elements: readonly number[]): FlintMat3 {
-  const col0 = { x: elements[0] ?? 0, y: elements[1] ?? 0, z: elements[2] ?? 0 };
-  const col1 = { x: elements[3] ?? 0, y: elements[4] ?? 0, z: elements[5] ?? 0 };
-  const col2 = { x: elements[6] ?? 0, y: elements[7] ?? 0, z: elements[8] ?? 0 };
+  const col0 = readVec3AtOffset(elements, 0);
+  const col1 = readVec3AtOffset(elements, 3);
+  const col2 = readVec3AtOffset(elements, 6);
+  const flatElements: FlintMat3['elements'] = [col0.x, col0.y, col0.z, col1.x, col1.y, col1.z, col2.x, col2.y, col2.z];
   return {
     c0: col0,
     c1: col1,
     c2: col2,
-    elements: [col0.x, col0.y, col0.z, col1.x, col1.y, col1.z, col2.x, col2.y, col2.z],
+    elements: flatElements,
   };
 }
 
@@ -669,24 +683,25 @@ export function createFlintMat3(
   if (Array.isArray(column0OrElements)) {
     return createMat3FromElements(column0OrElements);
   }
-  const columnZero = (column0OrElements as FlintVec3 | undefined) ?? { x: 0, y: 0, z: 0 };
+  const columnZero = column0OrElements && 'x' in column0OrElements ? column0OrElements : { x: 0, y: 0, z: 0 };
   const columnOne = column1 ?? { x: 0, y: 0, z: 0 };
   const columnTwo = column2 ?? { x: 0, y: 0, z: 0 };
+  const flatElements: FlintMat3['elements'] = [
+    columnZero.x,
+    columnZero.y,
+    columnZero.z,
+    columnOne.x,
+    columnOne.y,
+    columnOne.z,
+    columnTwo.x,
+    columnTwo.y,
+    columnTwo.z,
+  ];
   return {
     c0: columnZero,
     c1: columnOne,
     c2: columnTwo,
-    elements: [
-      columnZero.x,
-      columnZero.y,
-      columnZero.z,
-      columnOne.x,
-      columnOne.y,
-      columnOne.z,
-      columnTwo.x,
-      columnTwo.y,
-      columnTwo.z,
-    ],
+    elements: flatElements,
   };
 }
 
@@ -828,34 +843,46 @@ export function flintMat3Scale2D(scale: FlintVec2): FlintMat3 {
   return createFlintMat3({ x: scale.x, y: 0, z: 0 }, { x: 0, y: scale.y, z: 0 }, { x: 0, y: 0, z: 1 });
 }
 
+/** Extract a 4D vector from a flat array at a given offset. */
+function readVec4AtOffset(elements: readonly number[], offset: number): FlintVec4 {
+  return {
+    x: elements[offset] ?? 0,
+    y: elements[offset + 1] ?? 0,
+    z: elements[offset + 2] ?? 0,
+    w: elements[offset + 3] ?? 0,
+  };
+}
+
+/** Create a FlintMat4 matrix from a flat array of numbers. */
 function createMat4FromElements(elements: readonly number[]): FlintMat4 {
-  const col0 = { x: elements[0] ?? 0, y: elements[1] ?? 0, z: elements[2] ?? 0, w: elements[3] ?? 0 };
-  const col1 = { x: elements[4] ?? 0, y: elements[5] ?? 0, z: elements[6] ?? 0, w: elements[7] ?? 0 };
-  const col2 = { x: elements[8] ?? 0, y: elements[9] ?? 0, z: elements[10] ?? 0, w: elements[11] ?? 0 };
-  const col3 = { x: elements[12] ?? 0, y: elements[13] ?? 0, z: elements[14] ?? 0, w: elements[15] ?? 0 };
+  const col0 = readVec4AtOffset(elements, 0);
+  const col1 = readVec4AtOffset(elements, 4);
+  const col2 = readVec4AtOffset(elements, 8);
+  const col3 = readVec4AtOffset(elements, 12);
+  const flatElements: FlintMat4['elements'] = [
+    col0.x,
+    col0.y,
+    col0.z,
+    col0.w,
+    col1.x,
+    col1.y,
+    col1.z,
+    col1.w,
+    col2.x,
+    col2.y,
+    col2.z,
+    col2.w,
+    col3.x,
+    col3.y,
+    col3.z,
+    col3.w,
+  ];
   return {
     c0: col0,
     c1: col1,
     c2: col2,
     c3: col3,
-    elements: [
-      col0.x,
-      col0.y,
-      col0.z,
-      col0.w,
-      col1.x,
-      col1.y,
-      col1.z,
-      col1.w,
-      col2.x,
-      col2.y,
-      col2.z,
-      col2.w,
-      col3.x,
-      col3.y,
-      col3.z,
-      col3.w,
-    ],
+    elements: flatElements,
   };
 }
 
@@ -869,33 +896,34 @@ export function createFlintMat4(
   if (Array.isArray(column0OrElements)) {
     return createMat4FromElements(column0OrElements);
   }
-  const columnZero = (column0OrElements as FlintVec4 | undefined) ?? { x: 0, y: 0, z: 0, w: 0 };
+  const columnZero = column0OrElements && 'x' in column0OrElements ? column0OrElements : { x: 0, y: 0, z: 0, w: 0 };
   const columnOne = column1 ?? { x: 0, y: 0, z: 0, w: 0 };
   const columnTwo = column2 ?? { x: 0, y: 0, z: 0, w: 0 };
   const columnThree = column3 ?? { x: 0, y: 0, z: 0, w: 0 };
+  const flatElements: FlintMat4['elements'] = [
+    columnZero.x,
+    columnZero.y,
+    columnZero.z,
+    columnZero.w,
+    columnOne.x,
+    columnOne.y,
+    columnOne.z,
+    columnOne.w,
+    columnTwo.x,
+    columnTwo.y,
+    columnTwo.z,
+    columnTwo.w,
+    columnThree.x,
+    columnThree.y,
+    columnThree.z,
+    columnThree.w,
+  ];
   return {
     c0: columnZero,
     c1: columnOne,
     c2: columnTwo,
     c3: columnThree,
-    elements: [
-      columnZero.x,
-      columnZero.y,
-      columnZero.z,
-      columnZero.w,
-      columnOne.x,
-      columnOne.y,
-      columnOne.z,
-      columnOne.w,
-      columnTwo.x,
-      columnTwo.y,
-      columnTwo.z,
-      columnTwo.w,
-      columnThree.x,
-      columnThree.y,
-      columnThree.z,
-      columnThree.w,
-    ],
+    elements: flatElements,
   };
 }
 
@@ -1770,10 +1798,12 @@ export function flintTriangle2Area(triangle: FlintTriangle2): number {
   );
 }
 
+/** Check whether a value falls within the inclusive interval [minimum, maximum]. */
 function isValueInRange(value: number, minimum: number, maximum: number): boolean {
   return value >= minimum && value <= maximum;
 }
 
+/** Check whether two 1D intervals [minA, maxA] and [minB, maxB] overlap. */
 function areIntervalsOverlapping(minA: number, maxA: number, minB: number, maxB: number): boolean {
   return minA <= maxB && maxA >= minB;
 }
@@ -1921,6 +1951,7 @@ interface SlabInterval {
   readonly tmax: number;
 }
 
+/** Compute 1D ray slab clipping interval along a single coordinate axis. */
 function computeAxisSlabInterval(
   origin: number,
   axisDirection: number,
@@ -1939,6 +1970,7 @@ function computeAxisSlabInterval(
   };
 }
 
+/** Intersect a 3D ray with an Axis-Aligned Bounding Box (AABB) using slab clipping. */
 function intersectRayAABBInterval(
   ray: FlintRay3,
   box: FlintAABB3,
@@ -1994,20 +2026,15 @@ export function flintRay3IntersectsTriangle3(ray: FlintRay3, triangle: FlintTria
 
   const tvec = flintVec3Sub(ray.origin, triangle.a);
   const baryU = flintVec3Dot(tvec, pvec) * invDet;
-  if (baryU < 0 || baryU > 1) {
-    return flintNone();
-  }
-
   const qvec = flintVec3Cross(tvec, edge1);
   const baryV = flintVec3Dot(ray.direction, qvec) * invDet;
-  if (baryV < 0 || baryU + baryV > 1) {
-    return flintNone();
-  }
 
+  const isValidBarycentric = baryU >= 0 && baryV >= 0 && baryU + baryV <= 1;
   const hitT = flintVec3Dot(edge2, qvec) * invDet;
-  return hitT >= 0 ? flintSome(hitT) : flintNone();
+  return isValidBarycentric && hitT >= 0 ? flintSome(hitT) : flintNone();
 }
 
+/** Compute 1D ray clipping interval against an Oriented Bounding Box axis. */
 function computeOBBSlabInterval(
   centerOffsetDistance: number,
   directionDotAxis: number,
@@ -2025,35 +2052,44 @@ function computeOBBSlabInterval(
   };
 }
 
+/** Test ray against a single OBB local coordinate axis. */
+function testOBBAxis(
+  axis: FlintVec3,
+  halfExtent: number,
+  centerOffset: FlintVec3,
+  rayDirection: FlintVec3,
+): SlabInterval {
+  const centerOffsetDistance = flintVec3Dot(axis, centerOffset);
+  const directionDotAxis = flintVec3Dot(axis, rayDirection);
+  return computeOBBSlabInterval(centerOffsetDistance, directionDotAxis, halfExtent);
+}
+
 /** Perform ray 3 intersect o b b operation. */
 export function flintRay3IntersectOBB(ray: FlintRay3, obb: FlintOBB3): FlintOption<number> {
-  const axisX = flintQuatRotateVec3(obb.orientation, { x: 1, y: 0, z: 0 });
-  const axisY = flintQuatRotateVec3(obb.orientation, { x: 0, y: 1, z: 0 });
-  const axisZ = flintQuatRotateVec3(obb.orientation, { x: 0, y: 0, z: 1 });
+  const axes: readonly FlintVec3[] = [
+    flintQuatRotateVec3(obb.orientation, { x: 1, y: 0, z: 0 }),
+    flintQuatRotateVec3(obb.orientation, { x: 0, y: 1, z: 0 }),
+    flintQuatRotateVec3(obb.orientation, { x: 0, y: 0, z: 1 }),
+  ];
 
   const centerOffset = flintVec3Sub(obb.center, ray.origin);
-  const axes = [axisX, axisY, axisZ];
   const halfExtension = obb.halfExtents ?? obb.half_extents ?? { x: 0, y: 0, z: 0 };
-  const halfExtents = [halfExtension.x, halfExtension.y, halfExtension.z];
+  const extents = [halfExtension.x, halfExtension.y, halfExtension.z];
 
   let currentTmin = -Infinity;
   let currentTmax = Infinity;
 
-  for (let index = 0; index < 3; index += 1) {
-    const axis = axes[index] ?? { x: 0, y: 0, z: 0 };
-    const hi = halfExtents[index] ?? 0;
-    const centerOffsetDistance = flintVec3Dot(axis, centerOffset);
-    const directionDotAxis = flintVec3Dot(axis, ray.direction);
-
-    const slab = computeOBBSlabInterval(centerOffsetDistance, directionDotAxis, hi);
-    if (!slab.valid) {
+  for (const [index, axis] of axes.entries()) {
+    const slab = testOBBAxis(axis, extents[index] || 0, centerOffset, ray.direction);
+    if (!slab.valid || Math.max(currentTmin, slab.tmin) > Math.min(currentTmax, slab.tmax)) {
       return flintNone();
     }
     currentTmin = Math.max(currentTmin, slab.tmin);
     currentTmax = Math.min(currentTmax, slab.tmax);
-    if (currentTmin > currentTmax || currentTmax < 0) {
-      return flintNone();
-    }
+  }
+
+  if (currentTmax < 0) {
+    return flintNone();
   }
 
   const resultT = currentTmin >= 0 ? currentTmin : currentTmax;
@@ -2091,6 +2127,7 @@ function computeBVHBounds(list: readonly FlintBVHPrim[]): FlintAABB3 {
   };
 }
 
+/** Determine the axis with the largest spatial extent across primitives. */
 function findLongestCenterAxis(list: readonly FlintBVHPrim[]): 'x' | 'y' | 'z' {
   let minX = Infinity;
   let minY = Infinity;
@@ -2108,16 +2145,13 @@ function findLongestCenterAxis(list: readonly FlintBVHPrim[]): 'x' | 'y' | 'z' {
     maxZ = Math.max(maxZ, item.center.z);
   }
 
-  const extentX = maxX - minX;
-  const extentY = maxY - minY;
-  const extentZ = maxZ - minZ;
-  if (extentY >= extentX && extentY >= extentZ) {
-    return 'y';
-  }
-  if (extentZ >= extentX && extentZ >= extentY) {
-    return 'z';
-  }
-  return 'x';
+  const extents = [
+    { axis: 'x' as const, extent: maxX - minX },
+    { axis: 'y' as const, extent: maxY - minY },
+    { axis: 'z' as const, extent: maxZ - minZ },
+  ];
+  extents.sort((first, second) => second.extent - first.extent);
+  return extents[0]?.axis ?? 'x';
 }
 
 /** Perform b v h build from a a b bs operation. */
@@ -2184,27 +2218,56 @@ export function flintBVHBuildFromAABBs(boxes: readonly FlintAABB3[]): FlintBVHTr
   return { nodes, rootIndex };
 }
 
+/** Compute surface normal of an AABB bounding box at a given hit point. */
 function computeAABBSurfaceNormal(hitPoint: FlintVec3, bounds: FlintAABB3, rayDirection: FlintVec3): FlintVec3 {
   const epsilon = 1e-5;
-  if (Math.abs(hitPoint.x - bounds.min.x) < epsilon) {
-    return { x: -1, y: 0, z: 0 };
+  const faces: readonly { readonly diff: number; readonly normal: FlintVec3 }[] = [
+    { diff: Math.abs(hitPoint.x - bounds.min.x), normal: { x: -1, y: 0, z: 0 } },
+    { diff: Math.abs(hitPoint.x - bounds.max.x), normal: { x: 1, y: 0, z: 0 } },
+    { diff: Math.abs(hitPoint.y - bounds.min.y), normal: { x: 0, y: -1, z: 0 } },
+    { diff: Math.abs(hitPoint.y - bounds.max.y), normal: { x: 0, y: 1, z: 0 } },
+    { diff: Math.abs(hitPoint.z - bounds.min.z), normal: { x: 0, y: 0, z: -1 } },
+    { diff: Math.abs(hitPoint.z - bounds.max.z), normal: { x: 0, y: 0, z: 1 } },
+  ];
+  const matched = faces.find((face) => face.diff < epsilon);
+  return matched ? matched.normal : flintVec3Scale(rayDirection, -1);
+}
+
+interface BVHHitCandidate {
+  readonly primitiveIndex: number;
+  readonly distance: number;
+}
+
+/** Push valid BVH child indices onto the traversal stack. */
+function pushBVHChildren(node: FlintBVHNode3, stack: number[]): void {
+  const rightChild = node.rightChild ?? node.right_child ?? -1;
+  const leftChild = node.leftChild ?? node.left_child ?? -1;
+  if (rightChild >= 0) {
+    stack.push(rightChild);
   }
-  if (Math.abs(hitPoint.x - bounds.max.x) < epsilon) {
-    return { x: 1, y: 0, z: 0 };
+  if (leftChild >= 0) {
+    stack.push(leftChild);
   }
-  if (Math.abs(hitPoint.y - bounds.min.y) < epsilon) {
-    return { x: 0, y: -1, z: 0 };
+}
+
+/** Test ray intersection against a single BVH node and update traversal stack. */
+function processBVHNode(
+  node: FlintBVHNode3,
+  ray: FlintRay3,
+  closestT: number,
+  stack: number[],
+): BVHHitCandidate | undefined {
+  const intersection = intersectRayAABBInterval(ray, node.bounds);
+  const entryDistribution = Math.max(0, intersection.tmin);
+  if (!intersection.hit || entryDistribution >= closestT) {
+    return undefined;
   }
-  if (Math.abs(hitPoint.y - bounds.max.y) < epsilon) {
-    return { x: 0, y: 1, z: 0 };
+  const primitiveIndex = node.primitiveIndex ?? node.primitive_index ?? -1;
+  if (primitiveIndex >= 0) {
+    return { primitiveIndex, distance: entryDistribution };
   }
-  if (Math.abs(hitPoint.z - bounds.min.z) < epsilon) {
-    return { x: 0, y: 0, z: -1 };
-  }
-  if (Math.abs(hitPoint.z - bounds.max.z) < epsilon) {
-    return { x: 0, y: 0, z: 1 };
-  }
-  return flintVec3Scale(rayDirection, -1);
+  pushBVHChildren(node, stack);
+  return undefined;
 }
 
 /** Perform b v h ray intersect operation. */
@@ -2215,8 +2278,7 @@ export function flintBVHRayIntersect(tree: FlintBVHTree3, ray: FlintRay3): Flint
 
   let closestT = Infinity;
   let closestPrim = -1;
-  let closestPoint: FlintVec3 = { x: 0, y: 0, z: 0 };
-  let closestNormal: FlintVec3 = { x: 0, y: 0, z: 0 };
+  let closestBounds: FlintAABB3 | undefined;
 
   const rootIndex = tree.rootIndex ?? tree.root_index ?? 0;
   const stack: number[] = [rootIndex];
@@ -2231,35 +2293,17 @@ export function flintBVHRayIntersect(tree: FlintBVHTree3, ray: FlintRay3): Flint
       continue;
     }
 
-    const intersection = intersectRayAABBInterval(ray, node.bounds);
-    if (!intersection.hit) {
-      continue;
-    }
-
-    const entryDistribution = Math.max(0, intersection.tmin);
-    if (entryDistribution >= closestT) {
-      continue;
-    }
-
-    const primitiveIndex = node.primitiveIndex ?? node.primitive_index ?? -1;
-    if (primitiveIndex >= 0) {
-      closestT = entryDistribution;
-      closestPrim = primitiveIndex;
-      closestPoint = flintVec3Add(ray.origin, flintVec3Scale(ray.direction, closestT));
-      closestNormal = computeAABBSurfaceNormal(closestPoint, node.bounds, ray.direction);
-    } else {
-      const rightChild = node.rightChild ?? node.right_child ?? -1;
-      const leftChild = node.leftChild ?? node.left_child ?? -1;
-      if (rightChild >= 0) {
-        stack.push(rightChild);
-      }
-      if (leftChild >= 0) {
-        stack.push(leftChild);
-      }
+    const hit = processBVHNode(node, ray, closestT, stack);
+    if (hit) {
+      closestT = hit.distance;
+      closestPrim = hit.primitiveIndex;
+      closestBounds = node.bounds;
     }
   }
 
-  if (closestPrim >= 0) {
+  if (closestPrim >= 0 && closestBounds) {
+    const closestPoint = flintVec3Add(ray.origin, flintVec3Scale(ray.direction, closestT));
+    const closestNormal = computeAABBSurfaceNormal(closestPoint, closestBounds, ray.direction);
     return flintSome({
       hit: true,
       t: closestT,
@@ -2625,6 +2669,7 @@ export function flintDMatrixIdentity(size: number): FlintDMatrix {
   return { rows: size, cols: size, data };
 }
 
+/** Check whether a coordinate index is valid within integer bounds [0, limit). */
 function isValidCoordinate(coordinate: number, limit: number): boolean {
   return Number.isInteger(coordinate) && coordinate >= 0 && coordinate < limit;
 }
@@ -2639,6 +2684,14 @@ function haveMatchingDimensions(matrixA: FlintDMatrix, matrixB: FlintDMatrix): b
   return matrixA.rows === matrixB.rows && matrixA.cols === matrixB.cols;
 }
 
+/** Check whether two matrix elements at symmetric positions are equal within tolerance. */
+function areSymmetricElementsClose(matrix: FlintDMatrix, row: number, col: number, dimension: number): boolean {
+  const valueA = matrix.data[row * dimension + col] ?? 0;
+  const valueB = matrix.data[col * dimension + row] ?? 0;
+  const tolerance = 1e-7 * Math.max(Math.abs(valueA), Math.abs(valueB), 1);
+  return Math.abs(valueA - valueB) <= tolerance;
+}
+
 /** Check whether a square matrix is symmetric within numerical tolerance. */
 function isMatrixSymmetric(matrix: FlintDMatrix): boolean {
   if (matrix.rows !== matrix.cols) {
@@ -2647,9 +2700,7 @@ function isMatrixSymmetric(matrix: FlintDMatrix): boolean {
   const dimension = matrix.rows;
   for (let row = 0; row < dimension; row += 1) {
     for (let col = row + 1; col < dimension; col += 1) {
-      const valueA = matrix.data[row * dimension + col] ?? 0;
-      const valueB = matrix.data[col * dimension + row] ?? 0;
-      if (Math.abs(valueA - valueB) > 1e-7 * Math.max(Math.abs(valueA), Math.abs(valueB), 1)) {
+      if (!areSymmetricElementsClose(matrix, row, col, dimension)) {
         return false;
       }
     }
@@ -2711,6 +2762,27 @@ export function flintDMatrixScaleInplace(matrix: FlintDMatrix, factor: number): 
   }
 }
 
+/** Accumulate row-column dot product into output matrix. */
+function accumulateRowProduct(
+  outData: number[],
+  row: number,
+  matrixA: FlintDMatrix,
+  matrixB: FlintDMatrix,
+  alpha: number,
+): void {
+  for (let kIndex = 0; kIndex < matrixA.cols; kIndex += 1) {
+    const aValue = matrixA.data[row * matrixA.cols + kIndex] ?? 0;
+    if (aValue === 0) {
+      continue;
+    }
+    const scaledA = aValue * alpha;
+    for (let col = 0; col < matrixB.cols; col += 1) {
+      const bValue = matrixB.data[kIndex * matrixB.cols + col] ?? 0;
+      outData[row * matrixB.cols + col] = (outData[row * matrixB.cols + col] ?? 0) + scaledA * bValue;
+    }
+  }
+}
+
 /** Perform d matrix mul accumulate operation. */
 export function flintDMatrixMulAccumulate(
   outMatrix: FlintDMatrix,
@@ -2718,22 +2790,13 @@ export function flintDMatrixMulAccumulate(
   matrixB: FlintDMatrix,
   alpha = 1,
 ): boolean {
-  if (outMatrix.rows !== matrixA.rows || outMatrix.cols !== matrixB.cols || matrixA.cols !== matrixB.rows) {
+  const isCompatible =
+    outMatrix.rows === matrixA.rows && outMatrix.cols === matrixB.cols && matrixA.cols === matrixB.rows;
+  if (!isCompatible) {
     return false;
   }
-  const outData = outMatrix.data;
   for (let row = 0; row < matrixA.rows; row += 1) {
-    for (let kIndex = 0; kIndex < matrixA.cols; kIndex += 1) {
-      const aValue = matrixA.data[row * matrixA.cols + kIndex] ?? 0;
-      if (aValue === 0) {
-        continue;
-      }
-      const scaledA = aValue * alpha;
-      for (let col = 0; col < matrixB.cols; col += 1) {
-        const bValue = matrixB.data[kIndex * matrixB.cols + col] ?? 0;
-        outData[row * outMatrix.cols + col] = (outData[row * outMatrix.cols + col] ?? 0) + scaledA * bValue;
-      }
-    }
+    accumulateRowProduct(outMatrix.data, row, matrixA, matrixB, alpha);
   }
   return true;
 }
@@ -2754,22 +2817,12 @@ export function flintDMatrixMul(matrixA: FlintDMatrix, matrixB: FlintDMatrix): F
   if (matrixA.cols !== matrixB.rows) {
     return flintNone();
   }
-  const result = new Float64Array(matrixA.rows * matrixB.cols);
-  for (let row = 0; row < matrixA.rows; row += 1) {
-    for (let kIndex = 0; kIndex < matrixA.cols; kIndex += 1) {
-      const aValue = matrixA.data[row * matrixA.cols + kIndex] ?? 0;
-      if (aValue === 0) {
-        continue;
-      }
-      for (let col = 0; col < matrixB.cols; col += 1) {
-        result[row * matrixB.cols + col] =
-          (result[row * matrixB.cols + col] ?? 0) + aValue * (matrixB.data[kIndex * matrixB.cols + col] ?? 0);
-      }
-    }
-  }
-  return flintSome({ rows: matrixA.rows, cols: matrixB.cols, data: [...result] });
+  const result = flintDMatrixZeros(matrixA.rows, matrixB.cols);
+  flintDMatrixMulAccumulate(result, matrixA, matrixB, 1);
+  return flintSome(result);
 }
 
+/** Find pivot row with maximum absolute value in current column for LU factorization. */
 function findLUPivotRow(
   luData: readonly number[],
   dimension: number,
@@ -2787,6 +2840,7 @@ function findLUPivotRow(
   return { maxRow, maxValue };
 }
 
+/** Swap two rows in LU decomposition matrix and permutation vector. */
 function swapLURows(luData: number[], pivot: number[], dimension: number, rowA: number, rowB: number): void {
   const temporaryPivot = pivot[rowA] ?? 0;
   pivot[rowA] = pivot[rowB] ?? 0;
@@ -2798,15 +2852,21 @@ function swapLURows(luData: number[], pivot: number[], dimension: number, rowA: 
   }
 }
 
+/** Subtract scaled pivot row from a target row during LU column elimination. */
+function updateLURow(luData: number[], dimension: number, row: number, currentIndex: number, factor: number): void {
+  for (let col = currentIndex + 1; col < dimension; col += 1) {
+    luData[row * dimension + col] =
+      (luData[row * dimension + col] ?? 0) - factor * (luData[currentIndex * dimension + col] ?? 0);
+  }
+}
+
+/** Eliminate lower triangular column entries during LU factorization. */
 function eliminateLUColumn(luData: number[], dimension: number, currentIndex: number): void {
   const diag = luData[currentIndex * dimension + currentIndex] ?? 1;
   for (let row = currentIndex + 1; row < dimension; row += 1) {
-    luData[row * dimension + currentIndex] = (luData[row * dimension + currentIndex] ?? 0) / diag;
-    const factor = luData[row * dimension + currentIndex] ?? 0;
-    for (let col = currentIndex + 1; col < dimension; col += 1) {
-      luData[row * dimension + col] =
-        (luData[row * dimension + col] ?? 0) - factor * (luData[currentIndex * dimension + col] ?? 0);
-    }
+    const factor = (luData[row * dimension + currentIndex] ?? 0) / diag;
+    luData[row * dimension + currentIndex] = factor;
+    updateLURow(luData, dimension, row, currentIndex, factor);
   }
 }
 
@@ -2839,6 +2899,38 @@ export function flintDMatrixLU(matrix: FlintDMatrix): FlintOption<FlintLUDecompo
   });
 }
 
+/** Project and subtract previous orthogonal column during Gram-Schmidt process. */
+function projectGramSchmidtColumn(
+  qData: Float64Array,
+  rData: Float64Array,
+  matrixData: readonly number[],
+  rows: number,
+  cols: number,
+  currentCol: number,
+  previousColumn: number,
+): void {
+  let dotProduct = 0;
+  for (let row = 0; row < rows; row += 1) {
+    dotProduct += (qData[row * cols + previousColumn] ?? 0) * (matrixData[row * cols + currentCol] ?? 0);
+  }
+  rData[previousColumn * cols + currentCol] = dotProduct;
+  for (let row = 0; row < rows; row += 1) {
+    qData[row * cols + currentCol] =
+      (qData[row * cols + currentCol] ?? 0) - dotProduct * (qData[row * cols + previousColumn] ?? 0);
+  }
+}
+
+/** Compute Euclidean norm of a column in a matrix buffer. */
+function computeColumnNorm(data: Float64Array, rows: number, cols: number, col: number): number {
+  let normSq = 0;
+  for (let row = 0; row < rows; row += 1) {
+    const value = data[row * cols + col] ?? 0;
+    normSq += value * value;
+  }
+  return Math.sqrt(normSq);
+}
+
+/** Compute orthogonalized Gram-Schmidt column and update Q and R matrices. */
 function computeGramSchmidtColumn(
   qData: Float64Array,
   rData: Float64Array,
@@ -2850,30 +2942,13 @@ function computeGramSchmidtColumn(
   for (let row = 0; row < rows; row += 1) {
     qData[row * cols + columnIndex] = matrixData[row * cols + columnIndex] ?? 0;
   }
-
   for (let previousIndex = 0; previousIndex < columnIndex; previousIndex += 1) {
-    let dotProduct = 0;
-    for (let row = 0; row < rows; row += 1) {
-      dotProduct += (qData[row * cols + previousIndex] ?? 0) * (matrixData[row * cols + columnIndex] ?? 0);
-    }
-    rData[previousIndex * cols + columnIndex] = dotProduct;
-    for (let row = 0; row < rows; row += 1) {
-      qData[row * cols + columnIndex] =
-        (qData[row * cols + columnIndex] ?? 0) - dotProduct * (qData[row * cols + previousIndex] ?? 0);
-    }
+    projectGramSchmidtColumn(qData, rData, matrixData, rows, cols, columnIndex, previousIndex);
   }
-
-  let normSq = 0;
-  for (let row = 0; row < rows; row += 1) {
-    const value = qData[row * cols + columnIndex] ?? 0;
-    normSq += value * value;
-  }
-
-  const norm = Math.sqrt(normSq);
+  const norm = computeColumnNorm(qData, rows, cols, columnIndex);
   if (norm <= FLINT_MATH_EPSILON) {
     return false;
   }
-
   rData[columnIndex * cols + columnIndex] = norm;
   const invNorm = 1 / norm;
   for (let row = 0; row < rows; row += 1) {
@@ -2905,6 +2980,41 @@ export function flintDMatrixQR(matrix: FlintDMatrix): FlintOption<FlintQRDecompo
   });
 }
 
+/** Compute inner dot product of previously solved lower triangular rows. */
+function computeCholeskyDot(lowerData: Float64Array, dimension: number, row: number, col: number): number {
+  let sum = 0;
+  for (let kIndex = 0; kIndex < col; kIndex += 1) {
+    sum += (lowerData[row * dimension + kIndex] ?? 0) * (lowerData[col * dimension + kIndex] ?? 0);
+  }
+  return sum;
+}
+
+/** Compute a single cell of Cholesky lower triangular factor. */
+function computeCholeskyCell(
+  lowerData: Float64Array,
+  matrixData: readonly number[],
+  dimension: number,
+  row: number,
+  col: number,
+): boolean {
+  const sum = computeCholeskyDot(lowerData, dimension, row, col);
+  if (row === col) {
+    const diagonalValue = (matrixData[row * dimension + row] ?? 0) - sum;
+    if (diagonalValue <= FLINT_MATH_EPSILON) {
+      return false;
+    }
+    lowerData[row * dimension + col] = Math.sqrt(diagonalValue);
+    return true;
+  }
+  const diag = lowerData[col * dimension + col] ?? 1;
+  if (diag <= FLINT_MATH_EPSILON) {
+    return false;
+  }
+  lowerData[row * dimension + col] = ((matrixData[row * dimension + col] ?? 0) - sum) / diag;
+  return true;
+}
+
+/** Compute all column entries for a single row of the Cholesky factor. */
 function computeCholeskyRow(
   lowerData: Float64Array,
   matrixData: readonly number[],
@@ -2912,23 +3022,8 @@ function computeCholeskyRow(
   row: number,
 ): boolean {
   for (let col = 0; col <= row; col += 1) {
-    let sum = 0;
-    for (let kIndex = 0; kIndex < col; kIndex += 1) {
-      sum += (lowerData[row * dimension + kIndex] ?? 0) * (lowerData[col * dimension + kIndex] ?? 0);
-    }
-
-    if (row === col) {
-      const diagonalValue = (matrixData[row * dimension + row] ?? 0) - sum;
-      if (diagonalValue <= FLINT_MATH_EPSILON) {
-        return false;
-      }
-      lowerData[row * dimension + col] = Math.sqrt(diagonalValue);
-    } else {
-      const diag = lowerData[col * dimension + col] ?? 1;
-      if (diag <= FLINT_MATH_EPSILON) {
-        return false;
-      }
-      lowerData[row * dimension + col] = ((matrixData[row * dimension + col] ?? 0) - sum) / diag;
+    if (!computeCholeskyCell(lowerData, matrixData, dimension, row, col)) {
+      return false;
     }
   }
   return true;
@@ -2953,6 +3048,25 @@ export function flintDMatrixCholesky(matrix: FlintDMatrix): FlintOption<FlintCho
   });
 }
 
+/** Solve lower triangular forward substitution for a single column. */
+function solveForwardRowCol(
+  lowerData: readonly number[],
+  solution: Float64Array,
+  rhsData: readonly number[],
+  dimension: number,
+  rhsCols: number,
+  row: number,
+  col: number,
+  diag: number,
+): void {
+  let sum = 0;
+  for (let kIndex = 0; kIndex < row; kIndex += 1) {
+    sum += (lowerData[row * dimension + kIndex] ?? 0) * (solution[kIndex * rhsCols + col] ?? 0);
+  }
+  solution[row * rhsCols + col] = ((rhsData[row * rhsCols + col] ?? 0) - sum) / diag;
+}
+
+/** Perform forward substitution to solve L * y = B for Cholesky decomposition. */
 function solveCholeskyForward(
   lowerData: readonly number[],
   rhsData: readonly number[],
@@ -2966,16 +3080,31 @@ function solveCholeskyForward(
       return undefined;
     }
     for (let col = 0; col < rhsCols; col += 1) {
-      let sum = 0;
-      for (let kIndex = 0; kIndex < row; kIndex += 1) {
-        sum += (lowerData[row * dimension + kIndex] ?? 0) * (solution[kIndex * rhsCols + col] ?? 0);
-      }
-      solution[row * rhsCols + col] = ((rhsData[row * rhsCols + col] ?? 0) - sum) / diag;
+      solveForwardRowCol(lowerData, solution, rhsData, dimension, rhsCols, row, col, diag);
     }
   }
   return solution;
 }
 
+/** Solve upper triangular backward substitution for a single column. */
+function solveBackwardRowCol(
+  lowerData: readonly number[],
+  solution: Float64Array,
+  intermediateData: Float64Array,
+  dimension: number,
+  rhsCols: number,
+  row: number,
+  col: number,
+  diag: number,
+): void {
+  let sum = 0;
+  for (let kIndex = row + 1; kIndex < dimension; kIndex += 1) {
+    sum += (lowerData[kIndex * dimension + row] ?? 0) * (solution[kIndex * rhsCols + col] ?? 0);
+  }
+  solution[row * rhsCols + col] = ((intermediateData[row * rhsCols + col] ?? 0) - sum) / diag;
+}
+
+/** Perform backward substitution to solve L^T * x = y for Cholesky decomposition. */
 function solveCholeskyBackward(
   lowerData: readonly number[],
   intermediateData: Float64Array,
@@ -2986,11 +3115,7 @@ function solveCholeskyBackward(
   for (let row = dimension - 1; row >= 0; row -= 1) {
     const diag = lowerData[row * dimension + row] ?? 1;
     for (let col = 0; col < rhsCols; col += 1) {
-      let sum = 0;
-      for (let kIndex = row + 1; kIndex < dimension; kIndex += 1) {
-        sum += (lowerData[kIndex * dimension + row] ?? 0) * (solution[kIndex * rhsCols + col] ?? 0);
-      }
-      solution[row * rhsCols + col] = ((intermediateData[row * rhsCols + col] ?? 0) - sum) / diag;
+      solveBackwardRowCol(lowerData, solution, intermediateData, dimension, rhsCols, row, col, diag);
     }
   }
   return solution;
@@ -3015,6 +3140,40 @@ export function flintDMatrixCholeskySolve(
   return flintSome({ rows: dimension, cols: rhsVector.cols, data: [...backwardSolution] });
 }
 
+/** Solve forward substitution for a single row during LU solve. */
+function solveForwardSubstitutionRow(
+  luData: readonly number[],
+  solution: Float64Array,
+  dimension: number,
+  rhsCols: number,
+  row: number,
+  col: number,
+): void {
+  for (let kIndex = 0; kIndex < row; kIndex += 1) {
+    solution[row * rhsCols + col] =
+      (solution[row * rhsCols + col] ?? 0) -
+      (luData[row * dimension + kIndex] ?? 0) * (solution[kIndex * rhsCols + col] ?? 0);
+  }
+}
+
+/** Solve backward substitution for a single row during LU solve. */
+function solveBackwardSubstitutionRow(
+  luData: readonly number[],
+  solution: Float64Array,
+  dimension: number,
+  rhsCols: number,
+  row: number,
+  col: number,
+): void {
+  for (let kIndex = row + 1; kIndex < dimension; kIndex += 1) {
+    solution[row * rhsCols + col] =
+      (solution[row * rhsCols + col] ?? 0) -
+      (luData[row * dimension + kIndex] ?? 0) * (solution[kIndex * rhsCols + col] ?? 0);
+  }
+  solution[row * rhsCols + col] = (solution[row * rhsCols + col] ?? 0) / (luData[row * dimension + row] ?? 1);
+}
+
+/** Perform forward and back substitution using LU decomposition. */
 function solveLUSubstitution(
   luData: readonly number[],
   pivot: readonly number[],
@@ -3026,20 +3185,10 @@ function solveLUSubstitution(
   for (let col = 0; col < rhsCols; col += 1) {
     for (let row = 0; row < dimension; row += 1) {
       solution[row * rhsCols + col] = rhsData[(pivot[row] ?? row) * rhsCols + col] ?? 0;
-      for (let kIndex = 0; kIndex < row; kIndex += 1) {
-        solution[row * rhsCols + col] =
-          (solution[row * rhsCols + col] ?? 0) -
-          (luData[row * dimension + kIndex] ?? 0) * (solution[kIndex * rhsCols + col] ?? 0);
-      }
+      solveForwardSubstitutionRow(luData, solution, dimension, rhsCols, row, col);
     }
-
     for (let row = dimension - 1; row >= 0; row -= 1) {
-      for (let kIndex = row + 1; kIndex < dimension; kIndex += 1) {
-        solution[row * rhsCols + col] =
-          (solution[row * rhsCols + col] ?? 0) -
-          (luData[row * dimension + kIndex] ?? 0) * (solution[kIndex * rhsCols + col] ?? 0);
-      }
-      solution[row * rhsCols + col] = (solution[row * rhsCols + col] ?? 0) / (luData[row * dimension + row] ?? 1);
+      solveBackwardSubstitutionRow(luData, solution, dimension, rhsCols, row, col);
     }
   }
   return solution;
@@ -3085,6 +3234,47 @@ export function flintDMatrixInverse(matrix: FlintDMatrix): FlintOption<FlintDMat
   return flintDMatrixSolve(matrix, identity);
 }
 
+/** Rotate off-diagonal matrix elements during Jacobi eigenvalue sweep. */
+function rotateOffDiagonal(
+  matrixData: Float64Array,
+  dimension: number,
+  pivotP: number,
+  pivotQ: number,
+  sinValue: number,
+  tauValue: number,
+): void {
+  for (let kIndex = 0; kIndex < dimension; kIndex += 1) {
+    if (kIndex !== pivotP && kIndex !== pivotQ) {
+      const akp = matrixData[kIndex * dimension + pivotP] ?? 0;
+      const akq = matrixData[kIndex * dimension + pivotQ] ?? 0;
+      const nextAkp = akp - sinValue * (akq + tauValue * akp);
+      const nextAkq = akq + sinValue * (akp - tauValue * akq);
+      matrixData[kIndex * dimension + pivotP] = nextAkp;
+      matrixData[pivotP * dimension + kIndex] = nextAkp;
+      matrixData[kIndex * dimension + pivotQ] = nextAkq;
+      matrixData[pivotQ * dimension + kIndex] = nextAkq;
+    }
+  }
+}
+
+/** Rotate eigenvector basis columns during Jacobi rotation. */
+function rotateBasisVectors(
+  eigenvectorsData: Float64Array,
+  dimension: number,
+  pivotP: number,
+  pivotQ: number,
+  cosValue: number,
+  sinValue: number,
+): void {
+  for (let kIndex = 0; kIndex < dimension; kIndex += 1) {
+    const vkp = eigenvectorsData[kIndex * dimension + pivotP] ?? 0;
+    const vkq = eigenvectorsData[kIndex * dimension + pivotQ] ?? 0;
+    eigenvectorsData[kIndex * dimension + pivotP] = cosValue * vkp - sinValue * vkq;
+    eigenvectorsData[kIndex * dimension + pivotQ] = sinValue * vkp + cosValue * vkq;
+  }
+}
+
+/** Perform a single 2x2 plane Jacobi rotation on symmetric matrix elements and eigenvectors. */
 function performJacobiEigenRotation(
   matrixData: Float64Array,
   eigenvectorsData: Float64Array,
@@ -3106,33 +3296,12 @@ function performJacobiEigenRotation(
   matrixData[pivotP * dimension + pivotQ] = 0;
   matrixData[pivotQ * dimension + pivotP] = 0;
 
-  for (let kIndex = 0; kIndex < dimension; kIndex += 1) {
-    if (kIndex !== pivotP && kIndex !== pivotQ) {
-      const akp = matrixData[kIndex * dimension + pivotP] ?? 0;
-      const akq = matrixData[kIndex * dimension + pivotQ] ?? 0;
-      const nextAkp = akp - sinValue * (akq + tauValue * akp);
-      const nextAkq = akq + sinValue * (akp - tauValue * akq);
-      matrixData[kIndex * dimension + pivotP] = nextAkp;
-      matrixData[pivotP * dimension + kIndex] = nextAkp;
-      matrixData[kIndex * dimension + pivotQ] = nextAkq;
-      matrixData[pivotQ * dimension + kIndex] = nextAkq;
-    }
-  }
-
-  for (let kIndex = 0; kIndex < dimension; kIndex += 1) {
-    const vkp = eigenvectorsData[kIndex * dimension + pivotP] ?? 0;
-    const vkq = eigenvectorsData[kIndex * dimension + pivotQ] ?? 0;
-    eigenvectorsData[kIndex * dimension + pivotP] = cosValue * vkp - sinValue * vkq;
-    eigenvectorsData[kIndex * dimension + pivotQ] = sinValue * vkp + cosValue * vkq;
-  }
+  rotateOffDiagonal(matrixData, dimension, pivotP, pivotQ, sinValue, tauValue);
+  rotateBasisVectors(eigenvectorsData, dimension, pivotP, pivotQ, cosValue, sinValue);
 }
 
-function performJacobiEigenSweep(
-  matrixData: Float64Array,
-  eigenvectorsData: Float64Array,
-  dimension: number,
-  epsilon: number,
-): boolean {
+/** Compute Euclidean norm of off-diagonal elements in symmetric matrix. */
+function computeOffDiagNorm(matrixData: Float64Array, dimension: number): number {
   let offDiagNormSq = 0;
   for (let pivotP = 0; pivotP < dimension; pivotP += 1) {
     for (let pivotQ = pivotP + 1; pivotQ < dimension; pivotQ += 1) {
@@ -3140,11 +3309,19 @@ function performJacobiEigenSweep(
       offDiagNormSq += value * value;
     }
   }
+  return Math.sqrt(offDiagNormSq);
+}
 
-  if (Math.sqrt(offDiagNormSq) <= epsilon) {
+/** Perform a complete Jacobi sweep over all off-diagonal pairs. */
+function performJacobiEigenSweep(
+  matrixData: Float64Array,
+  eigenvectorsData: Float64Array,
+  dimension: number,
+  epsilon: number,
+): boolean {
+  if (computeOffDiagNorm(matrixData, dimension) <= epsilon) {
     return true;
   }
-
   for (let pivotP = 0; pivotP < dimension; pivotP += 1) {
     for (let pivotQ = pivotP + 1; pivotQ < dimension; pivotQ += 1) {
       const apq = matrixData[pivotP * dimension + pivotQ] ?? 0;
@@ -3156,17 +3333,16 @@ function performJacobiEigenSweep(
   return false;
 }
 
+/** Sort symmetric eigenvalues in descending order and align eigenvector columns. */
 function sortEigenComponents(
   matrixData: Float64Array,
   eigenvectorsData: Float64Array,
   dimension: number,
 ): FlintEigenDecomposition {
-  const eigenPairs: Array<{ value: number; vector: number[] }> = [];
-  for (let col = 0; col < dimension; col += 1) {
-    const value = matrixData[col * dimension + col] ?? 0;
-    const vector = Array.from({ length: dimension }, (_, row) => eigenvectorsData[row * dimension + col] ?? 0);
-    eigenPairs.push({ value, vector });
-  }
+  const eigenPairs = Array.from({ length: dimension }, (_, col) => ({
+    value: matrixData[col * dimension + col] ?? 0,
+    vector: Array.from({ length: dimension }, (_, row) => eigenvectorsData[row * dimension + col] ?? 0),
+  }));
 
   eigenPairs.sort((pairA, pairB) => pairB.value - pairA.value);
 
@@ -3210,6 +3386,42 @@ export function flintDMatrixEigenSymmetric(
   return flintSome(sortEigenComponents(matrixData, eigenvectorsData, dimension));
 }
 
+/** Compute Jacobi rotation parameter zeta and trigonometric coefficients. */
+function computeSvdZeta(alpha: number, beta: number, gamma: number): { cosValue: number; sinValue: number } {
+  const zeta = (beta - alpha) / (2 * gamma);
+  const tanValue = (zeta >= 0 ? 1 : -1) / (Math.abs(zeta) + Math.sqrt(1 + zeta * zeta));
+  const cosValue = 1 / Math.sqrt(1 + tanValue * tanValue);
+  const sinValue = tanValue * cosValue;
+  return { cosValue, sinValue };
+}
+
+/** Apply Jacobi plane rotation to transformed matrix columns and right singular vectors. */
+function applySvdPlaneRotation(
+  transformedData: Float64Array,
+  rightVectorsData: Float64Array,
+  rows: number,
+  cols: number,
+  colJ: number,
+  colK: number,
+  cosValue: number,
+  sinValue: number,
+): void {
+  for (let row = 0; row < rows; row += 1) {
+    const bj = transformedData[row * cols + colJ] ?? 0;
+    const bk = transformedData[row * cols + colK] ?? 0;
+    transformedData[row * cols + colJ] = cosValue * bj - sinValue * bk;
+    transformedData[row * cols + colK] = sinValue * bj + cosValue * bk;
+  }
+
+  for (let row = 0; row < cols; row += 1) {
+    const vj = rightVectorsData[row * cols + colJ] ?? 0;
+    const vk = rightVectorsData[row * cols + colK] ?? 0;
+    rightVectorsData[row * cols + colJ] = cosValue * vj - sinValue * vk;
+    rightVectorsData[row * cols + colK] = sinValue * vj + cosValue * vk;
+  }
+}
+
+/** Perform one-sided Jacobi rotation on a pair of columns for SVD. */
 function performSvdPairRotation(
   transformedData: Float64Array,
   rightVectorsData: Float64Array,
@@ -3236,27 +3448,12 @@ function performSvdPairRotation(
     return false;
   }
 
-  const zeta = (beta - alpha) / (2 * gamma);
-  const tanValue = (zeta >= 0 ? 1 : -1) / (Math.abs(zeta) + Math.sqrt(1 + zeta * zeta));
-  const cosValue = 1 / Math.sqrt(1 + tanValue * tanValue);
-  const sinValue = tanValue * cosValue;
-
-  for (let row = 0; row < rows; row += 1) {
-    const bj = transformedData[row * cols + colJ] ?? 0;
-    const bk = transformedData[row * cols + colK] ?? 0;
-    transformedData[row * cols + colJ] = cosValue * bj - sinValue * bk;
-    transformedData[row * cols + colK] = sinValue * bj + cosValue * bk;
-  }
-
-  for (let row = 0; row < cols; row += 1) {
-    const vj = rightVectorsData[row * cols + colJ] ?? 0;
-    const vk = rightVectorsData[row * cols + colK] ?? 0;
-    rightVectorsData[row * cols + colJ] = cosValue * vj - sinValue * vk;
-    rightVectorsData[row * cols + colK] = sinValue * vj + cosValue * vk;
-  }
+  const { cosValue, sinValue } = computeSvdZeta(alpha, beta, gamma);
+  applySvdPlaneRotation(transformedData, rightVectorsData, rows, cols, colJ, colK, cosValue, sinValue);
   return true;
 }
 
+/** Perform a complete Jacobi sweep over all column pairs for SVD. */
 function performSvdJacobiSweep(
   transformedData: Float64Array,
   rightVectorsData: Float64Array,
@@ -3275,6 +3472,7 @@ function performSvdJacobiSweep(
   return !rotated;
 }
 
+/** Compute singular values and left singular vectors from transformed matrix columns. */
 function computeSingularVectorsAndValues(
   transformedData: Float64Array,
   rows: number,
@@ -3303,59 +3501,99 @@ function computeSingularVectorsAndValues(
   return { singularValues, leftVectors };
 }
 
-function completeOrthonormalBasis(leftVectors: Float64Array, rows: number): void {
-  for (let col = 0; col < rows; col += 1) {
-    let colNormSq = 0;
-    for (let row = 0; row < rows; row += 1) {
-      const value = leftVectors[row * rows + col] ?? 0;
-      colNormSq += value * value;
-    }
+/** Subtract projection of other base from candidate vector. */
+function subtractBaseProjection(candidate: Float64Array, leftVectors: Float64Array, rows: number, other: number): void {
+  let dotProduct = 0;
+  for (let row = 0; row < rows; row += 1) {
+    dotProduct += (leftVectors[row * rows + other] ?? 0) * (candidate[row] ?? 0);
+  }
+  for (let row = 0; row < rows; row += 1) {
+    candidate[row] = (candidate[row] ?? 0) - dotProduct * (leftVectors[row * rows + other] ?? 0);
+  }
+}
 
-    if (colNormSq >= 0.5) {
-      continue;
-    }
-
-    for (let basisIndex = 0; basisIndex < rows; basisIndex += 1) {
-      const candidate = new Float64Array(rows);
-      candidate[basisIndex] = 1;
-
-      for (let other = 0; other < rows; other += 1) {
-        if (other === col) {
-          continue;
-        }
-        let otherNormSq = 0;
-        for (let row = 0; row < rows; row += 1) {
-          const value = leftVectors[row * rows + other] ?? 0;
-          otherNormSq += value * value;
-        }
-        if (otherNormSq >= 0.5) {
-          let dotProduct = 0;
-          for (let row = 0; row < rows; row += 1) {
-            dotProduct += (leftVectors[row * rows + other] ?? 0) * (candidate[row] ?? 0);
-          }
-          for (let row = 0; row < rows; row += 1) {
-            candidate[row] = (candidate[row] ?? 0) - dotProduct * (leftVectors[row * rows + other] ?? 0);
-          }
-        }
-      }
-
-      let candidateNormSq = 0;
-      for (let row = 0; row < rows; row += 1) {
-        const value = candidate[row] ?? 0;
-        candidateNormSq += value * value;
-      }
-
-      if (candidateNormSq > 1e-4) {
-        const norm = Math.sqrt(candidateNormSq);
-        for (let row = 0; row < rows; row += 1) {
-          leftVectors[row * rows + col] = (candidate[row] ?? 0) / norm;
-        }
-        break;
-      }
+/** Project a candidate vector against existing orthogonal left basis vectors. */
+function projectAgainstActiveBases(
+  candidate: Float64Array,
+  leftVectors: Float64Array,
+  rows: number,
+  currentCol: number,
+): void {
+  for (let other = 0; other < rows; other += 1) {
+    if (other !== currentCol && computeColumnNorm(leftVectors, rows, rows, other) >= 0.5) {
+      subtractBaseProjection(candidate, leftVectors, rows, other);
     }
   }
 }
 
+/** Construct an orthonormal basis vector for an incomplete column in left singular vectors. */
+function findOrthonormalBasisVector(leftVectors: Float64Array, rows: number, col: number): boolean {
+  for (let basisIndex = 0; basisIndex < rows; basisIndex += 1) {
+    const candidate = new Float64Array(rows);
+    candidate[basisIndex] = 1;
+    projectAgainstActiveBases(candidate, leftVectors, rows, col);
+
+    let candidateNormSq = 0;
+    for (let row = 0; row < rows; row += 1) {
+      const value = candidate[row] ?? 0;
+      candidateNormSq += value * value;
+    }
+    if (candidateNormSq > 1e-4) {
+      const norm = Math.sqrt(candidateNormSq);
+      for (let row = 0; row < rows; row += 1) {
+        leftVectors[row * rows + col] = (candidate[row] ?? 0) / norm;
+      }
+      return true;
+    }
+  }
+  return false;
+}
+
+/** Complete deficient orthogonal basis columns in left singular vector matrix U. */
+function completeOrthonormalBasis(leftVectors: Float64Array, rows: number): void {
+  for (let col = 0; col < rows; col += 1) {
+    const colNorm = computeColumnNorm(leftVectors, rows, rows, col);
+    if (colNorm < 0.5) {
+      findOrthonormalBasisVector(leftVectors, rows, col);
+    }
+  }
+}
+
+/** Extract a single column from left singular vectors matrix. */
+function extractLeftVectorColumn(leftVectors: Float64Array, rows: number, col: number): number[] {
+  return Array.from({ length: rows }, (_, row) => leftVectors[row * rows + col] ?? 0);
+}
+
+/** Build sorted U and Vt matrices from SVD decomposition components. */
+function buildSortedSvdMatrices(
+  triplets: readonly { readonly singularValue: number; readonly uColumn: number[]; readonly vColumn: number[] }[],
+  leftVectors: Float64Array,
+  rows: number,
+  cols: number,
+): { u: FlintDMatrix; vt: FlintDMatrix } {
+  const sortedU = new Float64Array(rows * rows);
+  for (let col = 0; col < rows; col += 1) {
+    const sourceCol = col < cols ? (triplets[col]?.uColumn ?? []) : extractLeftVectorColumn(leftVectors, rows, col);
+    for (const [row, value] of sourceCol.entries()) {
+      sortedU[row * rows + col] = value;
+    }
+  }
+
+  const sortedVt = new Float64Array(cols * cols);
+  for (let row = 0; row < cols; row += 1) {
+    const vCol = triplets[row]?.vColumn ?? [];
+    for (const [col, value] of vCol.entries()) {
+      sortedVt[row * cols + col] = value;
+    }
+  }
+
+  return {
+    u: { rows, cols: rows, data: [...sortedU] },
+    vt: { rows: cols, cols, data: [...sortedVt] },
+  };
+}
+
+/** Sort SVD singular values in descending order and align orthogonal basis matrices. */
 function sortSvdComponents(
   singularValues: Float64Array,
   leftVectors: Float64Array,
@@ -3363,47 +3601,39 @@ function sortSvdComponents(
   rows: number,
   cols: number,
 ): FlintSVDDecomposition {
-  interface SvdTriplet {
-    readonly singularValue: number;
-    readonly uColumn: number[];
-    readonly vColumn: number[];
-  }
-
-  const triplets: SvdTriplet[] = [];
-  for (let col = 0; col < cols; col += 1) {
-    const singularValue = singularValues[col] ?? 0;
-    const uColumn = Array.from({ length: rows }, (_, row) => leftVectors[row * rows + col] ?? 0);
-    const vColumn = Array.from({ length: cols }, (_, row) => rightVectorsData[row * cols + col] ?? 0);
-    triplets.push({ singularValue, uColumn, vColumn });
-  }
+  const triplets = Array.from({ length: cols }, (_, col) => ({
+    singularValue: singularValues[col] ?? 0,
+    uColumn: Array.from({ length: rows }, (_, row) => leftVectors[row * rows + col] ?? 0),
+    vColumn: Array.from({ length: cols }, (_, row) => rightVectorsData[row * cols + col] ?? 0),
+  }));
 
   triplets.sort((tripA, tripB) => tripB.singularValue - tripA.singularValue);
 
-  const sortedSingularValues = triplets.map((item) => item.singularValue);
-  const sortedU = new Float64Array(rows * rows);
-  for (let col = 0; col < rows; col += 1) {
-    const sourceCol =
-      col < cols
-        ? (triplets[col]?.uColumn ?? [])
-        : Array.from({ length: rows }, (_, row) => leftVectors[row * rows + col] ?? 0);
-    for (let row = 0; row < rows; row += 1) {
-      sortedU[row * rows + col] = sourceCol[row] ?? 0;
-    }
-  }
-
-  const sortedVt = new Float64Array(cols * cols);
-  for (let row = 0; row < cols; row += 1) {
-    const vCol = triplets[row]?.vColumn ?? [];
-    for (let col = 0; col < cols; col += 1) {
-      sortedVt[row * cols + col] = vCol[col] ?? 0;
-    }
-  }
-
+  const { u, vt } = buildSortedSvdMatrices(triplets, leftVectors, rows, cols);
   return {
-    u: { rows, cols: rows, data: [...sortedU] },
-    s: sortedSingularValues,
-    vt: { rows: cols, cols, data: [...sortedVt] },
+    u,
+    s: triplets.map((item) => item.singularValue),
+    vt,
   };
+}
+
+/** Handle SVD calculation for wide rectangular matrices via transposition. */
+function computeWideMatrixSVD(
+  matrix: FlintDMatrix,
+  maxIterations: number,
+  epsilon: number,
+): FlintOption<FlintSVDDecomposition> {
+  const transposed = flintDMatrixTranspose(matrix);
+  const svdOpt = flintDMatrixSVD(transposed, maxIterations, epsilon);
+  if (svdOpt.kind === 'none' || svdOpt.value === undefined) {
+    return flintNone();
+  }
+  const { u: uTrans, s, vt: vtTrans } = svdOpt.value;
+  return flintSome({
+    u: flintDMatrixTranspose(vtTrans),
+    s,
+    vt: flintDMatrixTranspose(uTrans),
+  });
 }
 
 /** Perform d matrix s v d operation. */
@@ -3417,17 +3647,7 @@ export function flintDMatrixSVD(
   }
 
   if (matrix.rows < matrix.cols) {
-    const transposed = flintDMatrixTranspose(matrix);
-    const svdOpt = flintDMatrixSVD(transposed, maxIterations, epsilon);
-    if (svdOpt.kind === 'none' || svdOpt.value === undefined) {
-      return flintNone();
-    }
-    const { u: uTrans, s, vt: vtTrans } = svdOpt.value;
-    return flintSome({
-      u: flintDMatrixTranspose(vtTrans),
-      s,
-      vt: flintDMatrixTranspose(uTrans),
-    });
+    return computeWideMatrixSVD(matrix, maxIterations, epsilon);
   }
 
   const rows = matrix.rows;
@@ -3449,6 +3669,26 @@ export function flintDMatrixSVD(
   return flintSome(sortSvdComponents(singularValues, leftVectors, rightVectorsData, rows, cols));
 }
 
+/** Accumulate a rank-1 singular component into pseudo-inverse result buffer. */
+function accumulatePinvComponent(
+  result: Float64Array,
+  rows: number,
+  cols: number,
+  u: FlintDMatrix,
+  vt: FlintDMatrix,
+  kIndex: number,
+  invS: number,
+): void {
+  for (let row = 0; row < rows; row += 1) {
+    const vValue = vt.data[kIndex * rows + row] ?? 0;
+    const scaledV = vValue * invS;
+    for (let col = 0; col < cols; col += 1) {
+      const uValue = u.data[col * cols + kIndex] ?? 0;
+      result[row * cols + col] = (result[row * cols + col] ?? 0) + scaledV * uValue;
+    }
+  }
+}
+
 /** Perform d matrix pseudoinverse operation. */
 export function flintDMatrixPseudoinverse(
   matrix: FlintDMatrix,
@@ -3462,20 +3702,11 @@ export function flintDMatrixPseudoinverse(
 
   const rows = matrix.cols;
   const cols = matrix.rows;
-  const kLength = s.length;
   const result = new Float64Array(rows * cols);
 
-  for (let kIndex = 0; kIndex < kLength; kIndex += 1) {
-    const singularValue = s[kIndex] ?? 0;
+  for (const [kIndex, singularValue] of s.entries()) {
     if (singularValue > epsilon) {
-      const invS = 1 / singularValue;
-      for (let row = 0; row < rows; row += 1) {
-        const vValue = vt.data[kIndex * rows + row] ?? 0;
-        for (let col = 0; col < cols; col += 1) {
-          const uValue = u.data[col * cols + kIndex] ?? 0;
-          result[row * cols + col] = (result[row * cols + col] ?? 0) + vValue * invS * uValue;
-        }
-      }
+      accumulatePinvComponent(result, rows, cols, u, vt, kIndex, 1 / singularValue);
     }
   }
 
@@ -3568,6 +3799,7 @@ export function flintTensorView<TValue extends object | number | string | boolea
   return { shape: tensor.shape, offset: 0, data: tensor.data };
 }
 
+/** Check whether a slice range [start, start + length] is valid for a given dimension size. */
 function isValidSliceRange(start: number, length: number, dimension: number): boolean {
   return Number.isInteger(start) && Number.isInteger(length) && start >= 0 && length > 0 && start + length <= dimension;
 }
@@ -3603,6 +3835,15 @@ export function flintTensorSlice<TValue extends object | number | string | boole
   });
 }
 
+/** Compute single-axis offset contribution to flat tensor index. */
+function computeAxisOffset(coord: number, dim: number, stride: number): number | undefined {
+  if (!isValidCoordinate(coord, dim)) {
+    return undefined;
+  }
+  return coord * stride;
+}
+
+/** Compute flat 1D array index from multi-dimensional coordinates in a strided tensor view. */
 function computeFlatTensorIndex<TValue extends object | number | string | boolean | symbol | bigint>(
   view: FlintTensorView<TValue>,
   indices: readonly number[],
@@ -3614,10 +3855,12 @@ function computeFlatTensorIndex<TValue extends object | number | string | boolea
   for (let index = 0; index < view.shape.rank; index += 1) {
     const coord = indices[index] ?? 0;
     const dim = view.shape.dimensions[index] ?? 0;
-    if (!isValidCoordinate(coord, dim)) {
+    const stride = view.shape.strides[index] ?? 1;
+    const axisOffset = computeAxisOffset(coord, dim, stride);
+    if (axisOffset === undefined) {
       return undefined;
     }
-    flatIndex += coord * (view.shape.strides[index] ?? 1);
+    flatIndex += axisOffset;
   }
   return isValidCoordinate(flatIndex, view.data.length) ? flatIndex : undefined;
 }
@@ -3652,6 +3895,14 @@ export function flintTensorViewSet<TValue extends object | number | string | boo
   return true;
 }
 
+/** Extract 2D matrix rows and columns from 2D tensor shape. */
+function getTensor2DDimensions(shape: FlintTensorShape): { rows: number; cols: number } {
+  return {
+    rows: shape.dimensions[0] || 0,
+    cols: shape.dimensions[1] || 0,
+  };
+}
+
 /** Perform tensor matmul operation. */
 export function flintTensorMatmul(
   tensorA: FlintTensor<number>,
@@ -3660,10 +3911,8 @@ export function flintTensorMatmul(
   if (tensorA.shape.rank !== 2 || tensorB.shape.rank !== 2) {
     return flintNone();
   }
-  const aRows = tensorA.shape.dimensions[0] ?? 0;
-  const aCols = tensorA.shape.dimensions[1] ?? 0;
-  const bRows = tensorB.shape.dimensions[0] ?? 0;
-  const bCols = tensorB.shape.dimensions[1] ?? 0;
+  const { rows: aRows, cols: aCols } = getTensor2DDimensions(tensorA.shape);
+  const { rows: bRows, cols: bCols } = getTensor2DDimensions(tensorB.shape);
 
   if (aCols !== bRows) {
     return flintNone();

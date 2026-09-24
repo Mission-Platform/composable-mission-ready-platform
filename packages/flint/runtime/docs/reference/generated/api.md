@@ -2095,34 +2095,34 @@ Consumer callback function receiving structured runtime log events.
 **Kind:** function
 
 ```typescript
-function createFlintAABB2(min: FlintVec2, max: FlintVec2): FlintAABB2;
+function createFlintAABB2(minPoint: FlintVec2, maxPoint: FlintVec2): FlintAABB2;
 ```
 
 Perform create flint a a b b 2 operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| min  | FlintVec2 |             |
-| max  | FlintVec2 |             |
+| Name     | Type      | Description |
+| -------- | --------- | ----------- |
+| minPoint | FlintVec2 |             |
+| maxPoint | FlintVec2 |             |
 
 ### createFlintAABB3
 
 **Kind:** function
 
 ```typescript
-function createFlintAABB3(min: FlintVec3, max: FlintVec3): FlintAABB3;
+function createFlintAABB3(minPoint: FlintVec3, maxPoint: FlintVec3): FlintAABB3;
 ```
 
 Perform create flint a a b b 3 operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| min  | FlintVec3 |             |
-| max  | FlintVec3 |             |
+| Name     | Type      | Description |
+| -------- | --------- | ----------- |
+| minPoint | FlintVec3 |             |
+| maxPoint | FlintVec3 |             |
 
 ### createFlintBVHNode3
 
@@ -2187,19 +2187,19 @@ Perform create flint circle operation.
 **Kind:** function
 
 ```typescript
-function createFlintColorRgba(r = 0, g = 0, b = 0, a = 1): FlintColorRgba;
+function createFlintColorRgba(red = 0, green = 0, blue = 0, alpha = 1): FlintColorRgba;
 ```
 
 Perform create flint color rgba operation.
 
 #### Parameters
 
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| r    |      |             |
-| g    |      |             |
-| b    |      |             |
-| a    |      |             |
+| Name  | Type | Description |
+| ----- | ---- | ----------- |
+| red   |      |             |
+| green |      |             |
+| blue  |      |             |
+| alpha |      |             |
 
 ### createFlintDMatrix
 
@@ -2224,70 +2224,74 @@ Perform create flint d matrix operation.
 **Kind:** function
 
 ```typescript
-function createFlintIVec2(x = 0, y = 0): FlintIVec2;
+function createFlintIVec2(coordX = 0, coordY = 0): FlintIVec2;
 ```
 
 Perform create flint i vec 2 operation.
 
 #### Parameters
 
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| x    |      |             |
-| y    |      |             |
+| Name   | Type | Description |
+| ------ | ---- | ----------- |
+| coordX |      |             |
+| coordY |      |             |
 
 ### createFlintIVec3
 
 **Kind:** function
 
 ```typescript
-function createFlintIVec3(x = 0, y = 0, z = 0): FlintIVec3;
+function createFlintIVec3(coordX = 0, coordY = 0, coordZ = 0): FlintIVec3;
 ```
 
 Perform create flint i vec 3 operation.
 
 #### Parameters
 
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| x    |      |             |
-| y    |      |             |
-| z    |      |             |
+| Name   | Type | Description |
+| ------ | ---- | ----------- |
+| coordX |      |             |
+| coordY |      |             |
+| coordZ |      |             |
 
 ### createFlintMat2
 
 **Kind:** function
 
 ```typescript
-function createFlintMat2(c0OrElements?: FlintVec2 | readonly number[], c1?: FlintVec2): FlintMat2;
+function createFlintMat2(column0OrElements?: FlintVec2 | readonly number[], column1?: FlintVec2): FlintMat2;
 ```
 
 Perform create flint mat 2 operation.
 
 #### Parameters
 
-| Name         | Type                           | Description |
-| ------------ | ------------------------------ | ----------- |
-| c0OrElements | FlintVec2 \| readonly number[] |             |
-| c1           | FlintVec2                      |             |
+| Name              | Type                           | Description |
+| ----------------- | ------------------------------ | ----------- |
+| column0OrElements | FlintVec2 \| readonly number[] |             |
+| column1           | FlintVec2                      |             |
 
 ### createFlintMat3
 
 **Kind:** function
 
 ```typescript
-function createFlintMat3(c0OrElements?: FlintVec3 | readonly number[], c1?: FlintVec3, c2?: FlintVec3): FlintMat3;
+function createFlintMat3(
+  column0OrElements?: FlintVec3 | readonly number[],
+  column1?: FlintVec3,
+  column2?: FlintVec3,
+): FlintMat3;
 ```
 
 Perform create flint mat 3 operation.
 
 #### Parameters
 
-| Name         | Type                           | Description |
-| ------------ | ------------------------------ | ----------- |
-| c0OrElements | FlintVec3 \| readonly number[] |             |
-| c1           | FlintVec3                      |             |
-| c2           | FlintVec3                      |             |
+| Name              | Type                           | Description |
+| ----------------- | ------------------------------ | ----------- |
+| column0OrElements | FlintVec3 \| readonly number[] |             |
+| column1           | FlintVec3                      |             |
+| column2           | FlintVec3                      |             |
 
 ### createFlintMat4
 
@@ -2295,10 +2299,10 @@ Perform create flint mat 3 operation.
 
 ```typescript
 function createFlintMat4(
-  c0OrElements?: FlintVec4 | readonly number[],
-  c1?: FlintVec4,
-  c2?: FlintVec4,
-  c3?: FlintVec4,
+  column0OrElements?: FlintVec4 | readonly number[],
+  column1?: FlintVec4,
+  column2?: FlintVec4,
+  column3?: FlintVec4,
 ): FlintMat4;
 ```
 
@@ -2306,12 +2310,12 @@ Perform create flint mat 4 operation.
 
 #### Parameters
 
-| Name         | Type                           | Description |
-| ------------ | ------------------------------ | ----------- |
-| c0OrElements | FlintVec4 \| readonly number[] |             |
-| c1           | FlintVec4                      |             |
-| c2           | FlintVec4                      |             |
-| c3           | FlintVec4                      |             |
+| Name              | Type                           | Description |
+| ----------------- | ------------------------------ | ----------- |
+| column0OrElements | FlintVec4 \| readonly number[] |             |
+| column1           | FlintVec4                      |             |
+| column2           | FlintVec4                      |             |
+| column3           | FlintVec4                      |             |
 
 ### createFlintOBB2
 
@@ -2375,19 +2379,19 @@ Perform create flint plane 3 operation.
 **Kind:** function
 
 ```typescript
-function createFlintQuat(x = 0, y = 0, z = 0, w = 1): FlintQuat;
+function createFlintQuat(coordX = 0, coordY = 0, coordZ = 0, coordW = 1): FlintQuat;
 ```
 
 Perform create flint quat operation.
 
 #### Parameters
 
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| x    |      |             |
-| y    |      |             |
-| z    |      |             |
-| w    |      |             |
+| Name   | Type | Description |
+| ------ | ---- | ----------- |
+| coordX |      |             |
+| coordY |      |             |
+| coordZ |      |             |
+| coordW |      |             |
 
 ### createFlintRay2
 
@@ -2454,34 +2458,34 @@ Perform create flint ray hit 3 operation.
 **Kind:** function
 
 ```typescript
-function createFlintSegment2(start: FlintVec2, end: FlintVec2): FlintSegment2;
+function createFlintSegment2(startPoint: FlintVec2, endPoint: FlintVec2): FlintSegment2;
 ```
 
 Perform create flint segment 2 operation.
 
 #### Parameters
 
-| Name  | Type      | Description |
-| ----- | --------- | ----------- |
-| start | FlintVec2 |             |
-| end   | FlintVec2 |             |
+| Name       | Type      | Description |
+| ---------- | --------- | ----------- |
+| startPoint | FlintVec2 |             |
+| endPoint   | FlintVec2 |             |
 
 ### createFlintSegment3
 
 **Kind:** function
 
 ```typescript
-function createFlintSegment3(start: FlintVec3, end: FlintVec3): FlintSegment3;
+function createFlintSegment3(startPoint: FlintVec3, endPoint: FlintVec3): FlintSegment3;
 ```
 
 Perform create flint segment 3 operation.
 
 #### Parameters
 
-| Name  | Type      | Description |
-| ----- | --------- | ----------- |
-| start | FlintVec3 |             |
-| end   | FlintVec3 |             |
+| Name       | Type      | Description |
+| ---------- | --------- | ----------- |
+| startPoint | FlintVec3 |             |
+| endPoint   | FlintVec3 |             |
 
 ### createFlintSphere
 
@@ -2556,90 +2560,90 @@ Perform create flint tensor view operation.
 **Kind:** function
 
 ```typescript
-function createFlintTriangle2(a: FlintVec2, b: FlintVec2, c: FlintVec2): FlintTriangle2;
+function createFlintTriangle2(pointA: FlintVec2, pointB: FlintVec2, pointC: FlintVec2): FlintTriangle2;
 ```
 
 Perform create flint triangle 2 operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec2 |             |
-| b    | FlintVec2 |             |
-| c    | FlintVec2 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| pointA | FlintVec2 |             |
+| pointB | FlintVec2 |             |
+| pointC | FlintVec2 |             |
 
 ### createFlintTriangle3
 
 **Kind:** function
 
 ```typescript
-function createFlintTriangle3(a: FlintVec3, b: FlintVec3, c: FlintVec3): FlintTriangle3;
+function createFlintTriangle3(pointA: FlintVec3, pointB: FlintVec3, pointC: FlintVec3): FlintTriangle3;
 ```
 
 Perform create flint triangle 3 operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec3 |             |
-| b    | FlintVec3 |             |
-| c    | FlintVec3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| pointA | FlintVec3 |             |
+| pointB | FlintVec3 |             |
+| pointC | FlintVec3 |             |
 
 ### createFlintVec2
 
 **Kind:** function
 
 ```typescript
-function createFlintVec2(x = 0, y = 0): FlintVec2;
+function createFlintVec2(coordX = 0, coordY = 0): FlintVec2;
 ```
 
 Perform create flint vec 2 operation.
 
 #### Parameters
 
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| x    |      |             |
-| y    |      |             |
+| Name   | Type | Description |
+| ------ | ---- | ----------- |
+| coordX |      |             |
+| coordY |      |             |
 
 ### createFlintVec3
 
 **Kind:** function
 
 ```typescript
-function createFlintVec3(x = 0, y = 0, z = 0): FlintVec3;
+function createFlintVec3(coordX = 0, coordY = 0, coordZ = 0): FlintVec3;
 ```
 
 Perform create flint vec 3 operation.
 
 #### Parameters
 
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| x    |      |             |
-| y    |      |             |
-| z    |      |             |
+| Name   | Type | Description |
+| ------ | ---- | ----------- |
+| coordX |      |             |
+| coordY |      |             |
+| coordZ |      |             |
 
 ### createFlintVec4
 
 **Kind:** function
 
 ```typescript
-function createFlintVec4(x = 0, y = 0, z = 0, w = 0): FlintVec4;
+function createFlintVec4(coordX = 0, coordY = 0, coordZ = 0, coordW = 0): FlintVec4;
 ```
 
 Perform create flint vec 4 operation.
 
 #### Parameters
 
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| x    |      |             |
-| y    |      |             |
-| z    |      |             |
-| w    |      |             |
+| Name   | Type | Description |
+| ------ | ---- | ----------- |
+| coordX |      |             |
+| coordY |      |             |
+| coordZ |      |             |
+| coordW |      |             |
 
 ### FLINT_MATH_DEG_TO_RAD
 
@@ -2769,34 +2773,34 @@ Perform a a b b 2 contains point operation.
 **Kind:** function
 
 ```typescript
-function flintAABB2IntersectsAABB2(a: FlintAABB2, b: FlintAABB2): boolean;
+function flintAABB2IntersectsAABB2(first: FlintAABB2, second: FlintAABB2): boolean;
 ```
 
 Perform a a b b 2 intersects a a b b 2 operation.
 
 #### Parameters
 
-| Name | Type       | Description |
-| ---- | ---------- | ----------- |
-| a    | FlintAABB2 |             |
-| b    | FlintAABB2 |             |
+| Name   | Type       | Description |
+| ------ | ---------- | ----------- |
+| first  | FlintAABB2 |             |
+| second | FlintAABB2 |             |
 
 ### flintAABB2Union
 
 **Kind:** function
 
 ```typescript
-function flintAABB2Union(a: FlintAABB2, b: FlintAABB2): FlintAABB2;
+function flintAABB2Union(first: FlintAABB2, second: FlintAABB2): FlintAABB2;
 ```
 
 Perform a a b b 2 union operation.
 
 #### Parameters
 
-| Name | Type       | Description |
-| ---- | ---------- | ----------- |
-| a    | FlintAABB2 |             |
-| b    | FlintAABB2 |             |
+| Name   | Type       | Description |
+| ------ | ---------- | ----------- |
+| first  | FlintAABB2 |             |
+| second | FlintAABB2 |             |
 
 ### FlintAABB3
 
@@ -2830,17 +2834,17 @@ Perform a a b b 3 contains point operation.
 **Kind:** function
 
 ```typescript
-function flintAABB3IntersectsAABB3(a: FlintAABB3, b: FlintAABB3): boolean;
+function flintAABB3IntersectsAABB3(first: FlintAABB3, second: FlintAABB3): boolean;
 ```
 
 Perform a a b b 3 intersects a a b b 3 operation.
 
 #### Parameters
 
-| Name | Type       | Description |
-| ---- | ---------- | ----------- |
-| a    | FlintAABB3 |             |
-| b    | FlintAABB3 |             |
+| Name   | Type       | Description |
+| ------ | ---------- | ----------- |
+| first  | FlintAABB3 |             |
+| second | FlintAABB3 |             |
 
 ### flintAABB3Volume
 
@@ -2863,7 +2867,7 @@ Perform a a b b 3 volume operation.
 **Kind:** function
 
 ```typescript
-function flintApproxEqual(a: number, b: number, epsilon = FLINT_MATH_EPSILON): boolean;
+function flintApproxEqual(first: number, second: number, epsilon = FLINT_MATH_EPSILON): boolean;
 ```
 
 Test approximate equality within specified epsilon.
@@ -2872,8 +2876,8 @@ Test approximate equality within specified epsilon.
 
 | Name    | Type   | Description |
 | ------- | ------ | ----------- |
-| a       | number |             |
-| b       | number |             |
+| first   | number |             |
+| second  | number |             |
 | epsilon |        |             |
 
 ### flintBezier2Cubic
@@ -2881,59 +2885,71 @@ Test approximate equality within specified epsilon.
 **Kind:** function
 
 ```typescript
-function flintBezier2Cubic(p0: FlintVec2, p1: FlintVec2, p2: FlintVec2, p3: FlintVec2, t: number): FlintVec2;
+function flintBezier2Cubic(
+  point0: FlintVec2,
+  point1: FlintVec2,
+  point2: FlintVec2,
+  point3: FlintVec2,
+  factor: number,
+): FlintVec2;
 ```
 
 Perform bezier 2 cubic operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| p0   | FlintVec2 |             |
-| p1   | FlintVec2 |             |
-| p2   | FlintVec2 |             |
-| p3   | FlintVec2 |             |
-| t    | number    |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| point0 | FlintVec2 |             |
+| point1 | FlintVec2 |             |
+| point2 | FlintVec2 |             |
+| point3 | FlintVec2 |             |
+| factor | number    |             |
 
 ### flintBezier2Quadratic
 
 **Kind:** function
 
 ```typescript
-function flintBezier2Quadratic(p0: FlintVec2, p1: FlintVec2, p2: FlintVec2, t: number): FlintVec2;
+function flintBezier2Quadratic(point0: FlintVec2, point1: FlintVec2, point2: FlintVec2, factor: number): FlintVec2;
 ```
 
 Perform bezier 2 quadratic operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| p0   | FlintVec2 |             |
-| p1   | FlintVec2 |             |
-| p2   | FlintVec2 |             |
-| t    | number    |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| point0 | FlintVec2 |             |
+| point1 | FlintVec2 |             |
+| point2 | FlintVec2 |             |
+| factor | number    |             |
 
 ### flintBezier3Cubic
 
 **Kind:** function
 
 ```typescript
-function flintBezier3Cubic(p0: FlintVec3, p1: FlintVec3, p2: FlintVec3, p3: FlintVec3, t: number): FlintVec3;
+function flintBezier3Cubic(
+  point0: FlintVec3,
+  point1: FlintVec3,
+  point2: FlintVec3,
+  point3: FlintVec3,
+  factor: number,
+): FlintVec3;
 ```
 
 Perform bezier 3 cubic operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| p0   | FlintVec3 |             |
-| p1   | FlintVec3 |             |
-| p2   | FlintVec3 |             |
-| p3   | FlintVec3 |             |
-| t    | number    |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| point0 | FlintVec3 |             |
+| point1 | FlintVec3 |             |
+| point2 | FlintVec3 |             |
+| point3 | FlintVec3 |             |
+| factor | number    |             |
 
 ### flintBVHBuildFromAABBs
 
@@ -2993,56 +3009,68 @@ B V H Tree 3 representation.
 **Kind:** function
 
 ```typescript
-function flintCatmullRom2(p0: FlintVec2, p1: FlintVec2, p2: FlintVec2, p3: FlintVec2, t: number): FlintVec2;
+function flintCatmullRom2(
+  point0: FlintVec2,
+  point1: FlintVec2,
+  point2: FlintVec2,
+  point3: FlintVec2,
+  factor: number,
+): FlintVec2;
 ```
 
 Perform catmull rom 2 operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| p0   | FlintVec2 |             |
-| p1   | FlintVec2 |             |
-| p2   | FlintVec2 |             |
-| p3   | FlintVec2 |             |
-| t    | number    |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| point0 | FlintVec2 |             |
+| point1 | FlintVec2 |             |
+| point2 | FlintVec2 |             |
+| point3 | FlintVec2 |             |
+| factor | number    |             |
 
 ### flintCatmullRom3
 
 **Kind:** function
 
 ```typescript
-function flintCatmullRom3(p0: FlintVec3, p1: FlintVec3, p2: FlintVec3, p3: FlintVec3, t: number): FlintVec3;
+function flintCatmullRom3(
+  point0: FlintVec3,
+  point1: FlintVec3,
+  point2: FlintVec3,
+  point3: FlintVec3,
+  factor: number,
+): FlintVec3;
 ```
 
 Perform catmull rom 3 operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| p0   | FlintVec3 |             |
-| p1   | FlintVec3 |             |
-| p2   | FlintVec3 |             |
-| p3   | FlintVec3 |             |
-| t    | number    |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| point0 | FlintVec3 |             |
+| point1 | FlintVec3 |             |
+| point2 | FlintVec3 |             |
+| point3 | FlintVec3 |             |
+| factor | number    |             |
 
 ### flintCeil
 
 **Kind:** function
 
 ```typescript
-function flintCeil(x: number): number;
+function flintCeil(value: number): number;
 ```
 
 Compute the smallest integer greater than or equal to x.
 
 #### Parameters
 
-| Name | Type   | Description |
-| ---- | ------ | ----------- |
-| x    | number |             |
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | number |             |
 
 ### FlintCholeskyDecomposition
 
@@ -3069,34 +3097,34 @@ Circle representation.
 **Kind:** function
 
 ```typescript
-function flintCircleContainsPoint(c: FlintCircle, p: FlintVec2): boolean;
+function flintCircleContainsPoint(circle: FlintCircle, point: FlintVec2): boolean;
 ```
 
 Perform circle contains point operation.
 
 #### Parameters
 
-| Name | Type        | Description |
-| ---- | ----------- | ----------- |
-| c    | FlintCircle |             |
-| p    | FlintVec2   |             |
+| Name   | Type        | Description |
+| ------ | ----------- | ----------- |
+| circle | FlintCircle |             |
+| point  | FlintVec2   |             |
 
 ### flintCircleIntersectsCircle
 
 **Kind:** function
 
 ```typescript
-function flintCircleIntersectsCircle(a: FlintCircle, b: FlintCircle): boolean;
+function flintCircleIntersectsCircle(first: FlintCircle, second: FlintCircle): boolean;
 ```
 
 Perform circle intersects circle operation.
 
 #### Parameters
 
-| Name | Type        | Description |
-| ---- | ----------- | ----------- |
-| a    | FlintCircle |             |
-| b    | FlintCircle |             |
+| Name   | Type        | Description |
+| ------ | ----------- | ----------- |
+| first  | FlintCircle |             |
+| second | FlintCircle |             |
 
 ### flintClamp
 
@@ -3147,34 +3175,34 @@ Perform color hsv to rgb operation.
 **Kind:** function
 
 ```typescript
-function flintColorLerpOklab(c1: FlintColorRgba, c2: FlintColorRgba, t: number): FlintColorRgba;
+function flintColorLerpOklab(first: FlintColorRgba, second: FlintColorRgba, factor: number): FlintColorRgba;
 ```
 
 Perform color lerp oklab operation.
 
 #### Parameters
 
-| Name | Type           | Description |
-| ---- | -------------- | ----------- |
-| c1   | FlintColorRgba |             |
-| c2   | FlintColorRgba |             |
-| t    | number         |             |
+| Name   | Type           | Description |
+| ------ | -------------- | ----------- |
+| first  | FlintColorRgba |             |
+| second | FlintColorRgba |             |
+| factor | number         |             |
 
 ### flintColorLinearToSrgb
 
 **Kind:** function
 
 ```typescript
-function flintColorLinearToSrgb(c: FlintColorRgba): FlintColorRgba;
+function flintColorLinearToSrgb(color: FlintColorRgba): FlintColorRgba;
 ```
 
 Perform color linear to srgb operation.
 
 #### Parameters
 
-| Name | Type           | Description |
-| ---- | -------------- | ----------- |
-| c    | FlintColorRgba |             |
+| Name  | Type           | Description |
+| ----- | -------------- | ----------- |
+| color | FlintColorRgba |             |
 
 ### FlintColorOklab
 
@@ -3217,48 +3245,48 @@ Color Rgba representation.
 **Kind:** function
 
 ```typescript
-function flintColorRgbToHsv(c: FlintColorRgba): FlintColorHsv;
+function flintColorRgbToHsv(color: FlintColorRgba): FlintColorHsv;
 ```
 
 Perform color rgb to hsv operation.
 
 #### Parameters
 
-| Name | Type           | Description |
-| ---- | -------------- | ----------- |
-| c    | FlintColorRgba |             |
+| Name  | Type           | Description |
+| ----- | -------------- | ----------- |
+| color | FlintColorRgba |             |
 
 ### flintColorSrgbToLinear
 
 **Kind:** function
 
 ```typescript
-function flintColorSrgbToLinear(c: FlintColorRgba): FlintColorRgba;
+function flintColorSrgbToLinear(color: FlintColorRgba): FlintColorRgba;
 ```
 
 Perform color srgb to linear operation.
 
 #### Parameters
 
-| Name | Type           | Description |
-| ---- | -------------- | ----------- |
-| c    | FlintColorRgba |             |
+| Name  | Type           | Description |
+| ----- | -------------- | ----------- |
+| color | FlintColorRgba |             |
 
 ### flintColorSrgbToOklab
 
 **Kind:** function
 
 ```typescript
-function flintColorSrgbToOklab(c: FlintColorRgba): FlintColorOklab;
+function flintColorSrgbToOklab(color: FlintColorRgba): FlintColorOklab;
 ```
 
 Perform color srgb to oklab operation.
 
 #### Parameters
 
-| Name | Type           | Description |
-| ---- | -------------- | ----------- |
-| c    | FlintColorRgba |             |
+| Name  | Type           | Description |
+| ----- | -------------- | ----------- |
+| color | FlintColorRgba |             |
 
 ### flintDegrees
 
@@ -3291,66 +3319,69 @@ D Matrix representation.
 **Kind:** function
 
 ```typescript
-function flintDMatrixAddInplace(a: FlintDMatrix, b: FlintDMatrix): boolean;
+function flintDMatrixAddInplace(matrixA: FlintDMatrix, matrixB: FlintDMatrix): boolean;
 ```
 
 Perform d matrix add inplace operation.
 
 #### Parameters
 
-| Name | Type         | Description |
-| ---- | ------------ | ----------- |
-| a    | FlintDMatrix |             |
-| b    | FlintDMatrix |             |
+| Name    | Type         | Description |
+| ------- | ------------ | ----------- |
+| matrixA | FlintDMatrix |             |
+| matrixB | FlintDMatrix |             |
 
 ### flintDMatrixCholesky
 
 **Kind:** function
 
 ```typescript
-function flintDMatrixCholesky(m: FlintDMatrix): FlintOption<FlintCholeskyDecomposition>;
+function flintDMatrixCholesky(matrix: FlintDMatrix): FlintOption<FlintCholeskyDecomposition>;
 ```
 
 Perform d matrix cholesky operation.
 
 #### Parameters
 
-| Name | Type         | Description |
-| ---- | ------------ | ----------- |
-| m    | FlintDMatrix |             |
+| Name   | Type         | Description |
+| ------ | ------------ | ----------- |
+| matrix | FlintDMatrix |             |
 
 ### flintDMatrixCholeskySolve
 
 **Kind:** function
 
 ```typescript
-function flintDMatrixCholeskySolve(chol: FlintCholeskyDecomposition, b: FlintDMatrix): FlintOption<FlintDMatrix>;
+function flintDMatrixCholeskySolve(
+  chol: FlintCholeskyDecomposition,
+  rhsVector: FlintDMatrix,
+): FlintOption<FlintDMatrix>;
 ```
 
 Perform d matrix cholesky solve operation.
 
 #### Parameters
 
-| Name | Type                       | Description |
-| ---- | -------------------------- | ----------- |
-| chol | FlintCholeskyDecomposition |             |
-| b    | FlintDMatrix               |             |
+| Name      | Type                       | Description |
+| --------- | -------------------------- | ----------- |
+| chol      | FlintCholeskyDecomposition |             |
+| rhsVector | FlintDMatrix               |             |
 
 ### flintDMatrixDeterminant
 
 **Kind:** function
 
 ```typescript
-function flintDMatrixDeterminant(m: FlintDMatrix): FlintOption<number>;
+function flintDMatrixDeterminant(matrix: FlintDMatrix): FlintOption<number>;
 ```
 
 Perform d matrix determinant operation.
 
 #### Parameters
 
-| Name | Type         | Description |
-| ---- | ------------ | ----------- |
-| m    | FlintDMatrix |             |
+| Name   | Type         | Description |
+| ------ | ------------ | ----------- |
+| matrix | FlintDMatrix |             |
 
 ### flintDMatrixEigenSymmetric
 
@@ -3358,7 +3389,7 @@ Perform d matrix determinant operation.
 
 ```typescript
 function flintDMatrixEigenSymmetric(
-  m: FlintDMatrix,
+  matrix: FlintDMatrix,
   maxIterations = 100,
   epsilon = FLINT_MATH_EPSILON,
 ): FlintOption<FlintEigenDecomposition>;
@@ -3370,7 +3401,7 @@ Perform d matrix eigen symmetric operation.
 
 | Name          | Type         | Description |
 | ------------- | ------------ | ----------- |
-| m             | FlintDMatrix |             |
+| matrix        | FlintDMatrix |             |
 | maxIterations |              |             |
 | epsilon       |              |             |
 
@@ -3379,18 +3410,18 @@ Perform d matrix eigen symmetric operation.
 **Kind:** function
 
 ```typescript
-function flintDMatrixGet(m: FlintDMatrix, row: number, col: number): FlintOption<number>;
+function flintDMatrixGet(matrix: FlintDMatrix, row: number, col: number): FlintOption<number>;
 ```
 
 Perform d matrix get operation.
 
 #### Parameters
 
-| Name | Type         | Description |
-| ---- | ------------ | ----------- |
-| m    | FlintDMatrix |             |
-| row  | number       |             |
-| col  | number       |             |
+| Name   | Type         | Description |
+| ------ | ------------ | ----------- |
+| matrix | FlintDMatrix |             |
+| row    | number       |             |
+| col    | number       |             |
 
 ### flintDMatrixIdentity
 
@@ -3413,75 +3444,80 @@ Perform d matrix identity operation.
 **Kind:** function
 
 ```typescript
-function flintDMatrixInverse(m: FlintDMatrix): FlintOption<FlintDMatrix>;
+function flintDMatrixInverse(matrix: FlintDMatrix): FlintOption<FlintDMatrix>;
 ```
 
 Perform d matrix inverse operation.
 
 #### Parameters
 
-| Name | Type         | Description |
-| ---- | ------------ | ----------- |
-| m    | FlintDMatrix |             |
+| Name   | Type         | Description |
+| ------ | ------------ | ----------- |
+| matrix | FlintDMatrix |             |
 
 ### flintDMatrixLU
 
 **Kind:** function
 
 ```typescript
-function flintDMatrixLU(m: FlintDMatrix): FlintOption<FlintLUDecomposition>;
+function flintDMatrixLU(matrix: FlintDMatrix): FlintOption<FlintLUDecomposition>;
 ```
 
 Perform d matrix l u operation.
 
 #### Parameters
 
-| Name | Type         | Description |
-| ---- | ------------ | ----------- |
-| m    | FlintDMatrix |             |
+| Name   | Type         | Description |
+| ------ | ------------ | ----------- |
+| matrix | FlintDMatrix |             |
 
 ### flintDMatrixMul
 
 **Kind:** function
 
 ```typescript
-function flintDMatrixMul(a: FlintDMatrix, b: FlintDMatrix): FlintOption<FlintDMatrix>;
+function flintDMatrixMul(matrixA: FlintDMatrix, matrixB: FlintDMatrix): FlintOption<FlintDMatrix>;
 ```
 
 Perform d matrix mul operation.
 
 #### Parameters
 
-| Name | Type         | Description |
-| ---- | ------------ | ----------- |
-| a    | FlintDMatrix |             |
-| b    | FlintDMatrix |             |
+| Name    | Type         | Description |
+| ------- | ------------ | ----------- |
+| matrixA | FlintDMatrix |             |
+| matrixB | FlintDMatrix |             |
 
 ### flintDMatrixMulAccumulate
 
 **Kind:** function
 
 ```typescript
-function flintDMatrixMulAccumulate(out: FlintDMatrix, a: FlintDMatrix, b: FlintDMatrix, alpha = 1): boolean;
+function flintDMatrixMulAccumulate(
+  outMatrix: FlintDMatrix,
+  matrixA: FlintDMatrix,
+  matrixB: FlintDMatrix,
+  alpha = 1,
+): boolean;
 ```
 
 Perform d matrix mul accumulate operation.
 
 #### Parameters
 
-| Name  | Type         | Description |
-| ----- | ------------ | ----------- |
-| out   | FlintDMatrix |             |
-| a     | FlintDMatrix |             |
-| b     | FlintDMatrix |             |
-| alpha |              |             |
+| Name      | Type         | Description |
+| --------- | ------------ | ----------- |
+| outMatrix | FlintDMatrix |             |
+| matrixA   | FlintDMatrix |             |
+| matrixB   | FlintDMatrix |             |
+| alpha     |              |             |
 
 ### flintDMatrixPseudoinverse
 
 **Kind:** function
 
 ```typescript
-function flintDMatrixPseudoinverse(m: FlintDMatrix, epsilon = FLINT_MATH_EPSILON): FlintOption<FlintDMatrix>;
+function flintDMatrixPseudoinverse(matrix: FlintDMatrix, epsilon = FLINT_MATH_EPSILON): FlintOption<FlintDMatrix>;
 ```
 
 Perform d matrix pseudoinverse operation.
@@ -3490,7 +3526,7 @@ Perform d matrix pseudoinverse operation.
 
 | Name    | Type         | Description |
 | ------- | ------------ | ----------- |
-| m       | FlintDMatrix |             |
+| matrix  | FlintDMatrix |             |
 | epsilon |              |             |
 
 ### flintDMatrixQR
@@ -3498,23 +3534,23 @@ Perform d matrix pseudoinverse operation.
 **Kind:** function
 
 ```typescript
-function flintDMatrixQR(m: FlintDMatrix): FlintOption<FlintQRDecomposition>;
+function flintDMatrixQR(matrix: FlintDMatrix): FlintOption<FlintQRDecomposition>;
 ```
 
 Perform d matrix q r operation.
 
 #### Parameters
 
-| Name | Type         | Description |
-| ---- | ------------ | ----------- |
-| m    | FlintDMatrix |             |
+| Name   | Type         | Description |
+| ------ | ------------ | ----------- |
+| matrix | FlintDMatrix |             |
 
 ### flintDMatrixScaleInplace
 
 **Kind:** function
 
 ```typescript
-function flintDMatrixScaleInplace(m: FlintDMatrix, factor: number): void;
+function flintDMatrixScaleInplace(matrix: FlintDMatrix, factor: number): void;
 ```
 
 Perform d matrix scale inplace operation.
@@ -3523,7 +3559,7 @@ Perform d matrix scale inplace operation.
 
 | Name   | Type         | Description |
 | ------ | ------------ | ----------- |
-| m      | FlintDMatrix |             |
+| matrix | FlintDMatrix |             |
 | factor | number       |             |
 
 ### flintDMatrixSet
@@ -3531,53 +3567,53 @@ Perform d matrix scale inplace operation.
 **Kind:** function
 
 ```typescript
-function flintDMatrixSet(m: FlintDMatrix, row: number, col: number, value: number): boolean;
+function flintDMatrixSet(matrix: FlintDMatrix, row: number, col: number, value: number): boolean;
 ```
 
 Perform d matrix set operation.
 
 #### Parameters
 
-| Name  | Type         | Description |
-| ----- | ------------ | ----------- |
-| m     | FlintDMatrix |             |
-| row   | number       |             |
-| col   | number       |             |
-| value | number       |             |
+| Name   | Type         | Description |
+| ------ | ------------ | ----------- |
+| matrix | FlintDMatrix |             |
+| row    | number       |             |
+| col    | number       |             |
+| value  | number       |             |
 
 ### flintDMatrixSolve
 
 **Kind:** function
 
 ```typescript
-function flintDMatrixSolve(a: FlintDMatrix, b: FlintDMatrix): FlintOption<FlintDMatrix>;
+function flintDMatrixSolve(matrixA: FlintDMatrix, rhsVector: FlintDMatrix): FlintOption<FlintDMatrix>;
 ```
 
 Perform d matrix solve operation.
 
 #### Parameters
 
-| Name | Type         | Description |
-| ---- | ------------ | ----------- |
-| a    | FlintDMatrix |             |
-| b    | FlintDMatrix |             |
+| Name      | Type         | Description |
+| --------- | ------------ | ----------- |
+| matrixA   | FlintDMatrix |             |
+| rhsVector | FlintDMatrix |             |
 
 ### flintDMatrixSubInplace
 
 **Kind:** function
 
 ```typescript
-function flintDMatrixSubInplace(a: FlintDMatrix, b: FlintDMatrix): boolean;
+function flintDMatrixSubInplace(matrixA: FlintDMatrix, matrixB: FlintDMatrix): boolean;
 ```
 
 Perform d matrix sub inplace operation.
 
 #### Parameters
 
-| Name | Type         | Description |
-| ---- | ------------ | ----------- |
-| a    | FlintDMatrix |             |
-| b    | FlintDMatrix |             |
+| Name    | Type         | Description |
+| ------- | ------------ | ----------- |
+| matrixA | FlintDMatrix |             |
+| matrixB | FlintDMatrix |             |
 
 ### flintDMatrixSVD
 
@@ -3585,7 +3621,7 @@ Perform d matrix sub inplace operation.
 
 ```typescript
 function flintDMatrixSVD(
-  m: FlintDMatrix,
+  matrix: FlintDMatrix,
   maxIterations = 100,
   epsilon = FLINT_MATH_EPSILON,
 ): FlintOption<FlintSVDDecomposition>;
@@ -3597,7 +3633,7 @@ Perform d matrix s v d operation.
 
 | Name          | Type         | Description |
 | ------------- | ------------ | ----------- |
-| m             | FlintDMatrix |             |
+| matrix        | FlintDMatrix |             |
 | maxIterations |              |             |
 | epsilon       |              |             |
 
@@ -3606,16 +3642,16 @@ Perform d matrix s v d operation.
 **Kind:** function
 
 ```typescript
-function flintDMatrixTranspose(m: FlintDMatrix): FlintDMatrix;
+function flintDMatrixTranspose(matrix: FlintDMatrix): FlintDMatrix;
 ```
 
 Perform d matrix transpose operation.
 
 #### Parameters
 
-| Name | Type         | Description |
-| ---- | ------------ | ----------- |
-| m    | FlintDMatrix |             |
+| Name   | Type         | Description |
+| ------ | ------------ | ----------- |
+| matrix | FlintDMatrix |             |
 
 ### flintDMatrixZeros
 
@@ -3649,32 +3685,32 @@ Eigen Decomposition representation.
 **Kind:** function
 
 ```typescript
-function flintFloor(x: number): number;
+function flintFloor(value: number): number;
 ```
 
 Compute the largest integer less than or equal to x.
 
 #### Parameters
 
-| Name | Type   | Description |
-| ---- | ------ | ----------- |
-| x    | number |             |
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | number |             |
 
 ### flintFract
 
 **Kind:** function
 
 ```typescript
-function flintFract(x: number): number;
+function flintFract(value: number): number;
 ```
 
 Compute fractional part: x - floor(x).
 
 #### Parameters
 
-| Name | Type   | Description |
-| ---- | ------ | ----------- |
-| x    | number |             |
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | number |             |
 
 ### FlintFrustum
 
@@ -3691,33 +3727,33 @@ Frustum representation.
 **Kind:** function
 
 ```typescript
-function flintFrustumFromViewProj(vp: FlintMat4): FlintFrustum;
+function flintFrustumFromViewProj(viewProj: FlintMat4): FlintFrustum;
 ```
 
 Perform frustum from view proj operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| vp   | FlintMat4 |             |
+| Name     | Type      | Description |
+| -------- | --------- | ----------- |
+| viewProj | FlintMat4 |             |
 
 ### flintFrustumIntersectsSphere
 
 **Kind:** function
 
 ```typescript
-function flintFrustumIntersectsSphere(f: FlintFrustum, s: FlintSphere): boolean;
+function flintFrustumIntersectsSphere(frustum: FlintFrustum, sphere: FlintSphere): boolean;
 ```
 
 Perform frustum intersects sphere operation.
 
 #### Parameters
 
-| Name | Type         | Description |
-| ---- | ------------ | ----------- |
-| f    | FlintFrustum |             |
-| s    | FlintSphere  |             |
+| Name    | Type         | Description |
+| ------- | ------------ | ----------- |
+| frustum | FlintFrustum |             |
+| sphere  | FlintSphere  |             |
 
 ### FlintIVec2
 
@@ -3782,50 +3818,50 @@ Mat 2 representation.
 **Kind:** function
 
 ```typescript
-function flintMat2Add(a: FlintMat2, b: FlintMat2): FlintMat2;
+function flintMat2Add(first: FlintMat2, second: FlintMat2): FlintMat2;
 ```
 
 Perform mat 2 add operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintMat2 |             |
-| b    | FlintMat2 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintMat2 |             |
+| second | FlintMat2 |             |
 
 ### flintMat2Determinant
 
 **Kind:** function
 
 ```typescript
-function flintMat2Determinant(m: FlintMat2): number;
+function flintMat2Determinant(matrix: FlintMat2): number;
 ```
 
 Perform mat 2 determinant operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| m    | FlintMat2 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| matrix | FlintMat2 |             |
 
 ### flintMat2FromCols
 
 **Kind:** function
 
 ```typescript
-function flintMat2FromCols(c0: FlintVec2, c1: FlintVec2): FlintMat2;
+function flintMat2FromCols(column0: FlintVec2, column1: FlintVec2): FlintMat2;
 ```
 
 Perform mat 2 from cols operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| c0   | FlintVec2 |             |
-| c1   | FlintVec2 |             |
+| Name    | Type      | Description |
+| ------- | --------- | ----------- |
+| column0 | FlintVec2 |             |
+| column1 | FlintVec2 |             |
 
 ### flintMat2Identity
 
@@ -3842,33 +3878,33 @@ Perform mat 2 identity operation.
 **Kind:** function
 
 ```typescript
-function flintMat2Inverse(m: FlintMat2): FlintOption<FlintMat2>;
+function flintMat2Inverse(matrix: FlintMat2): FlintOption<FlintMat2>;
 ```
 
 Perform mat 2 inverse operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| m    | FlintMat2 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| matrix | FlintMat2 |             |
 
 ### flintMat2Mul
 
 **Kind:** function
 
 ```typescript
-function flintMat2Mul(a: FlintMat2, b: FlintMat2): FlintMat2;
+function flintMat2Mul(first: FlintMat2, second: FlintMat2): FlintMat2;
 ```
 
 Perform mat 2 mul operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintMat2 |             |
-| b    | FlintMat2 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintMat2 |             |
+| second | FlintMat2 |             |
 
 ### flintMat2Rotation
 
@@ -3891,7 +3927,7 @@ Perform mat 2 rotation operation.
 **Kind:** function
 
 ```typescript
-function flintMat2Scale(m: FlintMat2, scalar: number): FlintMat2;
+function flintMat2Scale(matrix: FlintMat2, scalar: number): FlintMat2;
 ```
 
 Perform mat 2 scale operation.
@@ -3900,7 +3936,7 @@ Perform mat 2 scale operation.
 
 | Name   | Type      | Description |
 | ------ | --------- | ----------- |
-| m      | FlintMat2 |             |
+| matrix | FlintMat2 |             |
 | scalar | number    |             |
 
 ### flintMat2Scaling
@@ -3908,66 +3944,66 @@ Perform mat 2 scale operation.
 **Kind:** function
 
 ```typescript
-function flintMat2Scaling(s: FlintVec2): FlintMat2;
+function flintMat2Scaling(scaleVector: FlintVec2): FlintMat2;
 ```
 
 Perform mat 2 scaling operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| s    | FlintVec2 |             |
+| Name        | Type      | Description |
+| ----------- | --------- | ----------- |
+| scaleVector | FlintVec2 |             |
 
 ### flintMat2Sub
 
 **Kind:** function
 
 ```typescript
-function flintMat2Sub(a: FlintMat2, b: FlintMat2): FlintMat2;
+function flintMat2Sub(first: FlintMat2, second: FlintMat2): FlintMat2;
 ```
 
 Perform mat 2 sub operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintMat2 |             |
-| b    | FlintMat2 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintMat2 |             |
+| second | FlintMat2 |             |
 
 ### flintMat2TransformVec2
 
 **Kind:** function
 
 ```typescript
-function flintMat2TransformVec2(m: FlintMat2, v: FlintVec2): FlintVec2;
+function flintMat2TransformVec2(matrix: FlintMat2, vector: FlintVec2): FlintVec2;
 ```
 
 Perform mat 2 transform vec 2 operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| m    | FlintMat2 |             |
-| v    | FlintVec2 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| matrix | FlintMat2 |             |
+| vector | FlintVec2 |             |
 
 ### flintMat2Transpose
 
 **Kind:** function
 
 ```typescript
-function flintMat2Transpose(m: FlintMat2): FlintMat2;
+function flintMat2Transpose(matrix: FlintMat2): FlintMat2;
 ```
 
 Perform mat 2 transpose operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| m    | FlintMat2 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| matrix | FlintMat2 |             |
 
 ### FlintMat3
 
@@ -3984,51 +4020,51 @@ Mat 3 representation.
 **Kind:** function
 
 ```typescript
-function flintMat3Add(a: FlintMat3, b: FlintMat3): FlintMat3;
+function flintMat3Add(first: FlintMat3, second: FlintMat3): FlintMat3;
 ```
 
 Perform mat 3 add operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintMat3 |             |
-| b    | FlintMat3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintMat3 |             |
+| second | FlintMat3 |             |
 
 ### flintMat3Determinant
 
 **Kind:** function
 
 ```typescript
-function flintMat3Determinant(m: FlintMat3): number;
+function flintMat3Determinant(matrix: FlintMat3): number;
 ```
 
 Perform mat 3 determinant operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| m    | FlintMat3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| matrix | FlintMat3 |             |
 
 ### flintMat3FromCols
 
 **Kind:** function
 
 ```typescript
-function flintMat3FromCols(c0: FlintVec3, c1: FlintVec3, c2: FlintVec3): FlintMat3;
+function flintMat3FromCols(column0: FlintVec3, column1: FlintVec3, column2: FlintVec3): FlintMat3;
 ```
 
 Perform mat 3 from cols operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| c0   | FlintVec3 |             |
-| c1   | FlintVec3 |             |
-| c2   | FlintVec3 |             |
+| Name    | Type      | Description |
+| ------- | --------- | ----------- |
+| column0 | FlintVec3 |             |
+| column1 | FlintVec3 |             |
+| column2 | FlintVec3 |             |
 
 ### flintMat3Identity
 
@@ -4045,33 +4081,33 @@ Perform mat 3 identity operation.
 **Kind:** function
 
 ```typescript
-function flintMat3Inverse(m: FlintMat3): FlintOption<FlintMat3>;
+function flintMat3Inverse(matrix: FlintMat3): FlintOption<FlintMat3>;
 ```
 
 Perform mat 3 inverse operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| m    | FlintMat3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| matrix | FlintMat3 |             |
 
 ### flintMat3Mul
 
 **Kind:** function
 
 ```typescript
-function flintMat3Mul(a: FlintMat3, b: FlintMat3): FlintMat3;
+function flintMat3Mul(first: FlintMat3, second: FlintMat3): FlintMat3;
 ```
 
 Perform mat 3 mul operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintMat3 |             |
-| b    | FlintMat3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintMat3 |             |
+| second | FlintMat3 |             |
 
 ### flintMat3Rotate2D
 
@@ -4094,7 +4130,7 @@ Perform mat 3 rotate 2 d operation.
 **Kind:** function
 
 ```typescript
-function flintMat3Scale(m: FlintMat3, scalar: number): FlintMat3;
+function flintMat3Scale(matrix: FlintMat3, scalar: number): FlintMat3;
 ```
 
 Perform mat 3 scale operation.
@@ -4103,7 +4139,7 @@ Perform mat 3 scale operation.
 
 | Name   | Type      | Description |
 | ------ | --------- | ----------- |
-| m      | FlintMat3 |             |
+| matrix | FlintMat3 |             |
 | scalar | number    |             |
 
 ### flintMat3Scale2D
@@ -4127,51 +4163,51 @@ Perform mat 3 scale 2 d operation.
 **Kind:** function
 
 ```typescript
-function flintMat3Sub(a: FlintMat3, b: FlintMat3): FlintMat3;
+function flintMat3Sub(first: FlintMat3, second: FlintMat3): FlintMat3;
 ```
 
 Perform mat 3 sub operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintMat3 |             |
-| b    | FlintMat3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintMat3 |             |
+| second | FlintMat3 |             |
 
 ### flintMat3TransformVec2
 
 **Kind:** function
 
 ```typescript
-function flintMat3TransformVec2(m: FlintMat3, v: FlintVec2): FlintVec2;
+function flintMat3TransformVec2(matrix: FlintMat3, vector: FlintVec2): FlintVec2;
 ```
 
 Perform mat 3 transform vec 2 operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| m    | FlintMat3 |             |
-| v    | FlintVec2 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| matrix | FlintMat3 |             |
+| vector | FlintVec2 |             |
 
 ### flintMat3TransformVec3
 
 **Kind:** function
 
 ```typescript
-function flintMat3TransformVec3(m: FlintMat3, v: FlintVec3): FlintVec3;
+function flintMat3TransformVec3(matrix: FlintMat3, vector: FlintVec3): FlintVec3;
 ```
 
 Perform mat 3 transform vec 3 operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| m    | FlintMat3 |             |
-| v    | FlintVec3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| matrix | FlintMat3 |             |
+| vector | FlintVec3 |             |
 
 ### flintMat3Translate2D
 
@@ -4194,16 +4230,16 @@ Perform mat 3 translate 2 d operation.
 **Kind:** function
 
 ```typescript
-function flintMat3Transpose(m: FlintMat3): FlintMat3;
+function flintMat3Transpose(matrix: FlintMat3): FlintMat3;
 ```
 
 Perform mat 3 transpose operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| m    | FlintMat3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| matrix | FlintMat3 |             |
 
 ### FlintMat4
 
@@ -4220,52 +4256,52 @@ Mat 4 representation.
 **Kind:** function
 
 ```typescript
-function flintMat4Add(a: FlintMat4, b: FlintMat4): FlintMat4;
+function flintMat4Add(first: FlintMat4, second: FlintMat4): FlintMat4;
 ```
 
 Perform mat 4 add operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintMat4 |             |
-| b    | FlintMat4 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintMat4 |             |
+| second | FlintMat4 |             |
 
 ### flintMat4Determinant
 
 **Kind:** function
 
 ```typescript
-function flintMat4Determinant(m: FlintMat4): number;
+function flintMat4Determinant(matrix: FlintMat4): number;
 ```
 
 Perform mat 4 determinant operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| m    | FlintMat4 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| matrix | FlintMat4 |             |
 
 ### flintMat4FromCols
 
 **Kind:** function
 
 ```typescript
-function flintMat4FromCols(c0: FlintVec4, c1: FlintVec4, c2: FlintVec4, c3: FlintVec4): FlintMat4;
+function flintMat4FromCols(column0: FlintVec4, column1: FlintVec4, column2: FlintVec4, column3: FlintVec4): FlintMat4;
 ```
 
 Perform mat 4 from cols operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| c0   | FlintVec4 |             |
-| c1   | FlintVec4 |             |
-| c2   | FlintVec4 |             |
-| c3   | FlintVec4 |             |
+| Name    | Type      | Description |
+| ------- | --------- | ----------- |
+| column0 | FlintVec4 |             |
+| column1 | FlintVec4 |             |
+| column2 | FlintVec4 |             |
+| column3 | FlintVec4 |             |
 
 ### flintMat4Identity
 
@@ -4282,16 +4318,16 @@ Perform mat 4 identity operation.
 **Kind:** function
 
 ```typescript
-function flintMat4Inverse(m: FlintMat4): FlintOption<FlintMat4>;
+function flintMat4Inverse(matrix: FlintMat4): FlintOption<FlintMat4>;
 ```
 
 Perform mat 4 inverse operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| m    | FlintMat4 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| matrix | FlintMat4 |             |
 
 ### flintMat4LookAt
 
@@ -4316,17 +4352,17 @@ Perform mat 4 look at operation.
 **Kind:** function
 
 ```typescript
-function flintMat4Mul(a: FlintMat4, b: FlintMat4): FlintMat4;
+function flintMat4Mul(first: FlintMat4, second: FlintMat4): FlintMat4;
 ```
 
 Perform mat 4 mul operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintMat4 |             |
-| b    | FlintMat4 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintMat4 |             |
+| second | FlintMat4 |             |
 
 ### flintMat4Orthographic
 
@@ -4445,7 +4481,7 @@ Perform mat 4 rotation z operation.
 **Kind:** function
 
 ```typescript
-function flintMat4Scale(m: FlintMat4, scalar: number): FlintMat4;
+function flintMat4Scale(matrix: FlintMat4, scalar: number): FlintMat4;
 ```
 
 Perform mat 4 scale operation.
@@ -4454,7 +4490,7 @@ Perform mat 4 scale operation.
 
 | Name   | Type      | Description |
 | ------ | --------- | ----------- |
-| m      | FlintMat4 |             |
+| matrix | FlintMat4 |             |
 | scalar | number    |             |
 
 ### flintMat4Scaling
@@ -4478,68 +4514,68 @@ Perform mat 4 scaling operation.
 **Kind:** function
 
 ```typescript
-function flintMat4Sub(a: FlintMat4, b: FlintMat4): FlintMat4;
+function flintMat4Sub(first: FlintMat4, second: FlintMat4): FlintMat4;
 ```
 
 Perform mat 4 sub operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintMat4 |             |
-| b    | FlintMat4 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintMat4 |             |
+| second | FlintMat4 |             |
 
 ### flintMat4TransformPoint3
 
 **Kind:** function
 
 ```typescript
-function flintMat4TransformPoint3(m: FlintMat4, p: FlintVec3): FlintVec3;
+function flintMat4TransformPoint3(matrix: FlintMat4, point: FlintVec3): FlintVec3;
 ```
 
 Perform mat 4 transform point 3 operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| m    | FlintMat4 |             |
-| p    | FlintVec3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| matrix | FlintMat4 |             |
+| point  | FlintVec3 |             |
 
 ### flintMat4TransformVec4
 
 **Kind:** function
 
 ```typescript
-function flintMat4TransformVec4(m: FlintMat4, v: FlintVec4): FlintVec4;
+function flintMat4TransformVec4(matrix: FlintMat4, vector: FlintVec4): FlintVec4;
 ```
 
 Perform mat 4 transform vec 4 operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| m    | FlintMat4 |             |
-| v    | FlintVec4 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| matrix | FlintMat4 |             |
+| vector | FlintVec4 |             |
 
 ### flintMat4TransformVector3
 
 **Kind:** function
 
 ```typescript
-function flintMat4TransformVector3(m: FlintMat4, v: FlintVec3): FlintVec3;
+function flintMat4TransformVector3(matrix: FlintMat4, vector: FlintVec3): FlintVec3;
 ```
 
 Perform mat 4 transform vector 3 operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| m    | FlintMat4 |             |
-| v    | FlintVec3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| matrix | FlintMat4 |             |
+| vector | FlintVec3 |             |
 
 ### flintMat4Translation
 
@@ -4562,16 +4598,16 @@ Perform mat 4 translation operation.
 **Kind:** function
 
 ```typescript
-function flintMat4Transpose(m: FlintMat4): FlintMat4;
+function flintMat4Transpose(matrix: FlintMat4): FlintMat4;
 ```
 
 Perform mat 4 transpose operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| m    | FlintMat4 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| matrix | FlintMat4 |             |
 
 ### FlintOBB2
 
@@ -4645,33 +4681,33 @@ Quat representation.
 **Kind:** function
 
 ```typescript
-function flintQuatConjugate(q: FlintQuat): FlintQuat;
+function flintQuatConjugate(quaternion: FlintQuat): FlintQuat;
 ```
 
 Perform quat conjugate operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| q    | FlintQuat |             |
+| Name       | Type      | Description |
+| ---------- | --------- | ----------- |
+| quaternion | FlintQuat |             |
 
 ### flintQuatDot
 
 **Kind:** function
 
 ```typescript
-function flintQuatDot(a: FlintQuat, b: FlintQuat): number;
+function flintQuatDot(first: FlintQuat, second: FlintQuat): number;
 ```
 
 Perform quat dot operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintQuat |             |
-| b    | FlintQuat |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintQuat |             |
+| second | FlintQuat |             |
 
 ### flintQuatFromAxisAngle
 
@@ -4723,148 +4759,148 @@ Perform quat identity operation.
 **Kind:** function
 
 ```typescript
-function flintQuatInverse(q: FlintQuat): FlintOption<FlintQuat>;
+function flintQuatInverse(quaternion: FlintQuat): FlintOption<FlintQuat>;
 ```
 
 Perform quat inverse operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| q    | FlintQuat |             |
+| Name       | Type      | Description |
+| ---------- | --------- | ----------- |
+| quaternion | FlintQuat |             |
 
 ### flintQuatMul
 
 **Kind:** function
 
 ```typescript
-function flintQuatMul(a: FlintQuat, b: FlintQuat): FlintQuat;
+function flintQuatMul(first: FlintQuat, second: FlintQuat): FlintQuat;
 ```
 
 Perform quat mul operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintQuat |             |
-| b    | FlintQuat |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintQuat |             |
+| second | FlintQuat |             |
 
 ### flintQuatNorm
 
 **Kind:** function
 
 ```typescript
-function flintQuatNorm(q: FlintQuat): number;
+function flintQuatNorm(quaternion: FlintQuat): number;
 ```
 
 Perform quat norm operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| q    | FlintQuat |             |
+| Name       | Type      | Description |
+| ---------- | --------- | ----------- |
+| quaternion | FlintQuat |             |
 
 ### flintQuatNormalize
 
 **Kind:** function
 
 ```typescript
-function flintQuatNormalize(q: FlintQuat): FlintQuat;
+function flintQuatNormalize(quaternion: FlintQuat): FlintQuat;
 ```
 
 Perform quat normalize operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| q    | FlintQuat |             |
+| Name       | Type      | Description |
+| ---------- | --------- | ----------- |
+| quaternion | FlintQuat |             |
 
 ### flintQuatNormSq
 
 **Kind:** function
 
 ```typescript
-function flintQuatNormSq(q: FlintQuat): number;
+function flintQuatNormSq(quaternion: FlintQuat): number;
 ```
 
 Perform quat norm sq operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| q    | FlintQuat |             |
+| Name       | Type      | Description |
+| ---------- | --------- | ----------- |
+| quaternion | FlintQuat |             |
 
 ### flintQuatRotateVec3
 
 **Kind:** function
 
 ```typescript
-function flintQuatRotateVec3(q: FlintQuat, v: FlintVec3): FlintVec3;
+function flintQuatRotateVec3(quaternion: FlintQuat, vector: FlintVec3): FlintVec3;
 ```
 
 Perform quat rotate vec 3 operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| q    | FlintQuat |             |
-| v    | FlintVec3 |             |
+| Name       | Type      | Description |
+| ---------- | --------- | ----------- |
+| quaternion | FlintQuat |             |
+| vector     | FlintVec3 |             |
 
 ### flintQuatSlerp
 
 **Kind:** function
 
 ```typescript
-function flintQuatSlerp(a: FlintQuat, b: FlintQuat, t: number): FlintQuat;
+function flintQuatSlerp(first: FlintQuat, second: FlintQuat, factor: number): FlintQuat;
 ```
 
 Perform quat slerp operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintQuat |             |
-| b    | FlintQuat |             |
-| t    | number    |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintQuat |             |
+| second | FlintQuat |             |
+| factor | number    |             |
 
 ### flintQuatToMat3
 
 **Kind:** function
 
 ```typescript
-function flintQuatToMat3(q: FlintQuat): FlintMat3;
+function flintQuatToMat3(quaternion: FlintQuat): FlintMat3;
 ```
 
 Perform quat to mat 3 operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| q    | FlintQuat |             |
+| Name       | Type      | Description |
+| ---------- | --------- | ----------- |
+| quaternion | FlintQuat |             |
 
 ### flintQuatToMat4
 
 **Kind:** function
 
 ```typescript
-function flintQuatToMat4(q: FlintQuat): FlintMat4;
+function flintQuatToMat4(quaternion: FlintQuat): FlintMat4;
 ```
 
 Perform quat to mat 4 operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| q    | FlintQuat |             |
+| Name       | Type      | Description |
+| ---------- | --------- | ----------- |
+| quaternion | FlintQuat |             |
 
 ### flintRadians
 
@@ -4975,17 +5011,17 @@ Perform ray 3 intersects sphere operation.
 **Kind:** function
 
 ```typescript
-function flintRay3IntersectsTriangle3(ray: FlintRay3, tri: FlintTriangle3): FlintOption<number>;
+function flintRay3IntersectsTriangle3(ray: FlintRay3, triangle: FlintTriangle3): FlintOption<number>;
 ```
 
 Perform ray 3 intersects triangle 3 operation.
 
 #### Parameters
 
-| Name | Type           | Description |
-| ---- | -------------- | ----------- |
-| ray  | FlintRay3      |             |
-| tri  | FlintTriangle3 |             |
+| Name     | Type           | Description |
+| -------- | -------------- | ----------- |
+| ray      | FlintRay3      |             |
+| triangle | FlintTriangle3 |             |
 
 ### FlintRayHit3
 
@@ -5022,23 +5058,23 @@ Segment 3 representation.
 **Kind:** function
 
 ```typescript
-function flintSign(x: number): number;
+function flintSign(value: number): number;
 ```
 
 Return sign of x (1, -1, 0, or NaN).
 
 #### Parameters
 
-| Name | Type   | Description |
-| ---- | ------ | ----------- |
-| x    | number |             |
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | number |             |
 
 ### flintSmoothstep
 
 **Kind:** function
 
 ```typescript
-function flintSmoothstep(edge0: number, edge1: number, x: number): number;
+function flintSmoothstep(edge0: number, edge1: number, value: number): number;
 ```
 
 Smooth Hermite interpolation between edge0 and edge1.
@@ -5049,7 +5085,7 @@ Smooth Hermite interpolation between edge0 and edge1.
 | ----- | ------ | ----------- |
 | edge0 | number |             |
 | edge1 | number |             |
-| x     | number |             |
+| value | number |             |
 
 ### FlintSphere
 
@@ -5066,51 +5102,51 @@ Sphere representation.
 **Kind:** function
 
 ```typescript
-function flintSphereContainsPoint(s: FlintSphere, p: FlintVec3): boolean;
+function flintSphereContainsPoint(sphere: FlintSphere, point: FlintVec3): boolean;
 ```
 
 Perform sphere contains point operation.
 
 #### Parameters
 
-| Name | Type        | Description |
-| ---- | ----------- | ----------- |
-| s    | FlintSphere |             |
-| p    | FlintVec3   |             |
+| Name   | Type        | Description |
+| ------ | ----------- | ----------- |
+| sphere | FlintSphere |             |
+| point  | FlintVec3   |             |
 
 ### flintSphereIntersectsSphere
 
 **Kind:** function
 
 ```typescript
-function flintSphereIntersectsSphere(a: FlintSphere, b: FlintSphere): boolean;
+function flintSphereIntersectsSphere(first: FlintSphere, second: FlintSphere): boolean;
 ```
 
 Perform sphere intersects sphere operation.
 
 #### Parameters
 
-| Name | Type        | Description |
-| ---- | ----------- | ----------- |
-| a    | FlintSphere |             |
-| b    | FlintSphere |             |
+| Name   | Type        | Description |
+| ------ | ----------- | ----------- |
+| first  | FlintSphere |             |
+| second | FlintSphere |             |
 
 ### flintStep
 
 **Kind:** function
 
 ```typescript
-function flintStep(edge: number, x: number): number;
+function flintStep(edge: number, value: number): number;
 ```
 
 Step function returning 0 if x < edge, 1 otherwise.
 
 #### Parameters
 
-| Name | Type   | Description |
-| ---- | ------ | ----------- |
-| edge | number |             |
-| x    | number |             |
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| edge  | number |             |
+| value | number |             |
 
 ### FlintSVDDecomposition
 
@@ -5154,17 +5190,20 @@ Perform tensor fill operation.
 **Kind:** function
 
 ```typescript
-function flintTensorMatmul(a: FlintTensor<number>, b: FlintTensor<number>): FlintOption<FlintTensor<number>>;
+function flintTensorMatmul(
+  tensorA: FlintTensor<number>,
+  tensorB: FlintTensor<number>,
+): FlintOption<FlintTensor<number>>;
 ```
 
 Perform tensor matmul operation.
 
 #### Parameters
 
-| Name | Type                | Description |
-| ---- | ------------------- | ----------- |
-| a    | FlintTensor<number> |             |
-| b    | FlintTensor<number> |             |
+| Name    | Type                | Description |
+| ------- | ------------------- | ----------- |
+| tensorA | FlintTensor<number> |             |
+| tensorB | FlintTensor<number> |             |
 
 ### flintTensorReshape
 
@@ -5309,16 +5348,16 @@ Triangle 2 representation.
 **Kind:** function
 
 ```typescript
-function flintTriangle2Area(tri: FlintTriangle2): number;
+function flintTriangle2Area(triangle: FlintTriangle2): number;
 ```
 
 Perform triangle 2 area operation.
 
 #### Parameters
 
-| Name | Type           | Description |
-| ---- | -------------- | ----------- |
-| tri  | FlintTriangle2 |             |
+| Name     | Type           | Description |
+| -------- | -------------- | ----------- |
+| triangle | FlintTriangle2 |             |
 
 ### FlintTriangle3
 
@@ -5335,16 +5374,16 @@ Triangle 3 representation.
 **Kind:** function
 
 ```typescript
-function flintTriangle3Normal(tri: FlintTriangle3): FlintVec3;
+function flintTriangle3Normal(triangle: FlintTriangle3): FlintVec3;
 ```
 
 Perform triangle 3 normal operation.
 
 #### Parameters
 
-| Name | Type           | Description |
-| ---- | -------------- | ----------- |
-| tri  | FlintTriangle3 |             |
+| Name     | Type           | Description |
+| -------- | -------------- | ----------- |
+| triangle | FlintTriangle3 |             |
 
 ### FlintVec2
 
@@ -5361,75 +5400,75 @@ export interface FlintVec2
 **Kind:** function
 
 ```typescript
-function flintVec2Add(a: FlintVec2, b: FlintVec2): FlintVec2;
+function flintVec2Add(first: FlintVec2, second: FlintVec2): FlintVec2;
 ```
 
 Perform vec 2 add operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec2 |             |
-| b    | FlintVec2 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintVec2 |             |
+| second | FlintVec2 |             |
 
 ### flintVec2Angle
 
 **Kind:** function
 
 ```typescript
-function flintVec2Angle(a: FlintVec2, b: FlintVec2): number;
+function flintVec2Angle(first: FlintVec2, second: FlintVec2): number;
 ```
 
 Perform vec 2 angle operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec2 |             |
-| b    | FlintVec2 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintVec2 |             |
+| second | FlintVec2 |             |
 
 ### flintVec2Distance
 
 **Kind:** function
 
 ```typescript
-function flintVec2Distance(a: FlintVec2, b: FlintVec2): number;
+function flintVec2Distance(first: FlintVec2, second: FlintVec2): number;
 ```
 
 Perform vec 2 distance operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec2 |             |
-| b    | FlintVec2 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintVec2 |             |
+| second | FlintVec2 |             |
 
 ### flintVec2DistanceSquared
 
 **Kind:** function
 
 ```typescript
-function flintVec2DistanceSquared(a: FlintVec2, b: FlintVec2): number;
+function flintVec2DistanceSquared(first: FlintVec2, second: FlintVec2): number;
 ```
 
 Perform vec 2 distance squared operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec2 |             |
-| b    | FlintVec2 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintVec2 |             |
+| second | FlintVec2 |             |
 
 ### flintVec2Div
 
 **Kind:** function
 
 ```typescript
-function flintVec2Div(v: FlintVec2, scalar: number): FlintVec2;
+function flintVec2Div(vector: FlintVec2, scalar: number): FlintVec2;
 ```
 
 Perform vec 2 div operation.
@@ -5438,7 +5477,7 @@ Perform vec 2 div operation.
 
 | Name   | Type      | Description |
 | ------ | --------- | ----------- |
-| v      | FlintVec2 |             |
+| vector | FlintVec2 |             |
 | scalar | number    |             |
 
 ### flintVec2Dot
@@ -5446,157 +5485,157 @@ Perform vec 2 div operation.
 **Kind:** function
 
 ```typescript
-function flintVec2Dot(a: FlintVec2, b: FlintVec2): number;
+function flintVec2Dot(first: FlintVec2, second: FlintVec2): number;
 ```
 
 Perform vec 2 dot operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec2 |             |
-| b    | FlintVec2 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintVec2 |             |
+| second | FlintVec2 |             |
 
 ### flintVec2Length
 
 **Kind:** function
 
 ```typescript
-function flintVec2Length(v: FlintVec2): number;
+function flintVec2Length(vector: FlintVec2): number;
 ```
 
 Perform vec 2 length operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| v    | FlintVec2 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| vector | FlintVec2 |             |
 
 ### flintVec2LengthSq
 
 **Kind:** function
 
 ```typescript
-function flintVec2LengthSq(v: FlintVec2): number;
+function flintVec2LengthSq(vector: FlintVec2): number;
 ```
 
 Perform vec 2 length sq operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| v    | FlintVec2 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| vector | FlintVec2 |             |
 
 ### flintVec2Lerp
 
 **Kind:** function
 
 ```typescript
-function flintVec2Lerp(a: FlintVec2, b: FlintVec2, t: number): FlintVec2;
+function flintVec2Lerp(first: FlintVec2, second: FlintVec2, factor: number): FlintVec2;
 ```
 
 Perform vec 2 lerp operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec2 |             |
-| b    | FlintVec2 |             |
-| t    | number    |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintVec2 |             |
+| second | FlintVec2 |             |
+| factor | number    |             |
 
 ### flintVec2Mul
 
 **Kind:** function
 
 ```typescript
-function flintVec2Mul(a: FlintVec2, b: FlintVec2): FlintVec2;
+function flintVec2Mul(first: FlintVec2, second: FlintVec2): FlintVec2;
 ```
 
 Perform vec 2 mul operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec2 |             |
-| b    | FlintVec2 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintVec2 |             |
+| second | FlintVec2 |             |
 
 ### flintVec2Neg
 
 **Kind:** function
 
 ```typescript
-function flintVec2Neg(v: FlintVec2): FlintVec2;
+function flintVec2Neg(vector: FlintVec2): FlintVec2;
 ```
 
 Perform vec 2 neg operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| v    | FlintVec2 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| vector | FlintVec2 |             |
 
 ### flintVec2Normalize
 
 **Kind:** function
 
 ```typescript
-function flintVec2Normalize(v: FlintVec2): FlintVec2;
+function flintVec2Normalize(vector: FlintVec2): FlintVec2;
 ```
 
 Perform vec 2 normalize operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| v    | FlintVec2 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| vector | FlintVec2 |             |
 
 ### flintVec2PerpDot
 
 **Kind:** function
 
 ```typescript
-function flintVec2PerpDot(a: FlintVec2, b: FlintVec2): number;
+function flintVec2PerpDot(first: FlintVec2, second: FlintVec2): number;
 ```
 
 Perform vec 2 perp dot operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec2 |             |
-| b    | FlintVec2 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintVec2 |             |
+| second | FlintVec2 |             |
 
 ### flintVec2Project
 
 **Kind:** function
 
 ```typescript
-function flintVec2Project(v: FlintVec2, onto: FlintVec2): FlintVec2;
+function flintVec2Project(vector: FlintVec2, target: FlintVec2): FlintVec2;
 ```
 
 Perform vec 2 project operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| v    | FlintVec2 |             |
-| onto | FlintVec2 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| vector | FlintVec2 |             |
+| target | FlintVec2 |             |
 
 ### flintVec2Reflect
 
 **Kind:** function
 
 ```typescript
-function flintVec2Reflect(v: FlintVec2, normal: FlintVec2): FlintVec2;
+function flintVec2Reflect(vector: FlintVec2, normal: FlintVec2): FlintVec2;
 ```
 
 Perform vec 2 reflect operation.
@@ -5605,7 +5644,7 @@ Perform vec 2 reflect operation.
 
 | Name   | Type      | Description |
 | ------ | --------- | ----------- |
-| v      | FlintVec2 |             |
+| vector | FlintVec2 |             |
 | normal | FlintVec2 |             |
 
 ### flintVec2Rotate
@@ -5613,7 +5652,7 @@ Perform vec 2 reflect operation.
 **Kind:** function
 
 ```typescript
-function flintVec2Rotate(v: FlintVec2, angleRad: number): FlintVec2;
+function flintVec2Rotate(vector: FlintVec2, angleRad: number): FlintVec2;
 ```
 
 Perform vec 2 rotate operation.
@@ -5622,7 +5661,7 @@ Perform vec 2 rotate operation.
 
 | Name     | Type      | Description |
 | -------- | --------- | ----------- |
-| v        | FlintVec2 |             |
+| vector   | FlintVec2 |             |
 | angleRad | number    |             |
 
 ### flintVec2Scale
@@ -5630,7 +5669,7 @@ Perform vec 2 rotate operation.
 **Kind:** function
 
 ```typescript
-function flintVec2Scale(v: FlintVec2, scalar: number): FlintVec2;
+function flintVec2Scale(vector: FlintVec2, scalar: number): FlintVec2;
 ```
 
 Perform vec 2 scale operation.
@@ -5639,7 +5678,7 @@ Perform vec 2 scale operation.
 
 | Name   | Type      | Description |
 | ------ | --------- | ----------- |
-| v      | FlintVec2 |             |
+| vector | FlintVec2 |             |
 | scalar | number    |             |
 
 ### flintVec2Sub
@@ -5647,17 +5686,17 @@ Perform vec 2 scale operation.
 **Kind:** function
 
 ```typescript
-function flintVec2Sub(a: FlintVec2, b: FlintVec2): FlintVec2;
+function flintVec2Sub(first: FlintVec2, second: FlintVec2): FlintVec2;
 ```
 
 Perform vec 2 sub operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec2 |             |
-| b    | FlintVec2 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintVec2 |             |
+| second | FlintVec2 |             |
 
 ### FlintVec3
 
@@ -5674,92 +5713,92 @@ export interface FlintVec3
 **Kind:** function
 
 ```typescript
-function flintVec3Add(a: FlintVec3, b: FlintVec3): FlintVec3;
+function flintVec3Add(first: FlintVec3, second: FlintVec3): FlintVec3;
 ```
 
 Perform vec 3 add operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec3 |             |
-| b    | FlintVec3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintVec3 |             |
+| second | FlintVec3 |             |
 
 ### flintVec3Angle
 
 **Kind:** function
 
 ```typescript
-function flintVec3Angle(a: FlintVec3, b: FlintVec3): number;
+function flintVec3Angle(first: FlintVec3, second: FlintVec3): number;
 ```
 
 Perform vec 3 angle operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec3 |             |
-| b    | FlintVec3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintVec3 |             |
+| second | FlintVec3 |             |
 
 ### flintVec3Cross
 
 **Kind:** function
 
 ```typescript
-function flintVec3Cross(a: FlintVec3, b: FlintVec3): FlintVec3;
+function flintVec3Cross(first: FlintVec3, second: FlintVec3): FlintVec3;
 ```
 
 Perform vec 3 cross operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec3 |             |
-| b    | FlintVec3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintVec3 |             |
+| second | FlintVec3 |             |
 
 ### flintVec3Distance
 
 **Kind:** function
 
 ```typescript
-function flintVec3Distance(a: FlintVec3, b: FlintVec3): number;
+function flintVec3Distance(first: FlintVec3, second: FlintVec3): number;
 ```
 
 Perform vec 3 distance operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec3 |             |
-| b    | FlintVec3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintVec3 |             |
+| second | FlintVec3 |             |
 
 ### flintVec3DistanceSquared
 
 **Kind:** function
 
 ```typescript
-function flintVec3DistanceSquared(a: FlintVec3, b: FlintVec3): number;
+function flintVec3DistanceSquared(first: FlintVec3, second: FlintVec3): number;
 ```
 
 Perform vec 3 distance squared operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec3 |             |
-| b    | FlintVec3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintVec3 |             |
+| second | FlintVec3 |             |
 
 ### flintVec3Div
 
 **Kind:** function
 
 ```typescript
-function flintVec3Div(v: FlintVec3, scalar: number): FlintVec3;
+function flintVec3Div(vector: FlintVec3, scalar: number): FlintVec3;
 ```
 
 Perform vec 3 div operation.
@@ -5768,7 +5807,7 @@ Perform vec 3 div operation.
 
 | Name   | Type      | Description |
 | ------ | --------- | ----------- |
-| v      | FlintVec3 |             |
+| vector | FlintVec3 |             |
 | scalar | number    |             |
 
 ### flintVec3Dot
@@ -5776,140 +5815,140 @@ Perform vec 3 div operation.
 **Kind:** function
 
 ```typescript
-function flintVec3Dot(a: FlintVec3, b: FlintVec3): number;
+function flintVec3Dot(first: FlintVec3, second: FlintVec3): number;
 ```
 
 Perform vec 3 dot operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec3 |             |
-| b    | FlintVec3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintVec3 |             |
+| second | FlintVec3 |             |
 
 ### flintVec3Length
 
 **Kind:** function
 
 ```typescript
-function flintVec3Length(v: FlintVec3): number;
+function flintVec3Length(vector: FlintVec3): number;
 ```
 
 Perform vec 3 length operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| v    | FlintVec3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| vector | FlintVec3 |             |
 
 ### flintVec3LengthSq
 
 **Kind:** function
 
 ```typescript
-function flintVec3LengthSq(v: FlintVec3): number;
+function flintVec3LengthSq(vector: FlintVec3): number;
 ```
 
 Perform vec 3 length sq operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| v    | FlintVec3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| vector | FlintVec3 |             |
 
 ### flintVec3Lerp
 
 **Kind:** function
 
 ```typescript
-function flintVec3Lerp(a: FlintVec3, b: FlintVec3, t: number): FlintVec3;
+function flintVec3Lerp(first: FlintVec3, second: FlintVec3, factor: number): FlintVec3;
 ```
 
 Perform vec 3 lerp operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec3 |             |
-| b    | FlintVec3 |             |
-| t    | number    |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintVec3 |             |
+| second | FlintVec3 |             |
+| factor | number    |             |
 
 ### flintVec3Mul
 
 **Kind:** function
 
 ```typescript
-function flintVec3Mul(a: FlintVec3, b: FlintVec3): FlintVec3;
+function flintVec3Mul(first: FlintVec3, second: FlintVec3): FlintVec3;
 ```
 
 Perform vec 3 mul operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec3 |             |
-| b    | FlintVec3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintVec3 |             |
+| second | FlintVec3 |             |
 
 ### flintVec3Neg
 
 **Kind:** function
 
 ```typescript
-function flintVec3Neg(v: FlintVec3): FlintVec3;
+function flintVec3Neg(vector: FlintVec3): FlintVec3;
 ```
 
 Perform vec 3 neg operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| v    | FlintVec3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| vector | FlintVec3 |             |
 
 ### flintVec3Normalize
 
 **Kind:** function
 
 ```typescript
-function flintVec3Normalize(v: FlintVec3): FlintVec3;
+function flintVec3Normalize(vector: FlintVec3): FlintVec3;
 ```
 
 Perform vec 3 normalize operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| v    | FlintVec3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| vector | FlintVec3 |             |
 
 ### flintVec3Project
 
 **Kind:** function
 
 ```typescript
-function flintVec3Project(v: FlintVec3, onto: FlintVec3): FlintVec3;
+function flintVec3Project(vector: FlintVec3, target: FlintVec3): FlintVec3;
 ```
 
 Perform vec 3 project operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| v    | FlintVec3 |             |
-| onto | FlintVec3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| vector | FlintVec3 |             |
+| target | FlintVec3 |             |
 
 ### flintVec3Reflect
 
 **Kind:** function
 
 ```typescript
-function flintVec3Reflect(v: FlintVec3, normal: FlintVec3): FlintVec3;
+function flintVec3Reflect(vector: FlintVec3, normal: FlintVec3): FlintVec3;
 ```
 
 Perform vec 3 reflect operation.
@@ -5918,7 +5957,7 @@ Perform vec 3 reflect operation.
 
 | Name   | Type      | Description |
 | ------ | --------- | ----------- |
-| v      | FlintVec3 |             |
+| vector | FlintVec3 |             |
 | normal | FlintVec3 |             |
 
 ### flintVec3Refract
@@ -5926,7 +5965,7 @@ Perform vec 3 reflect operation.
 **Kind:** function
 
 ```typescript
-function flintVec3Refract(v: FlintVec3, normal: FlintVec3, eta: number): FlintVec3;
+function flintVec3Refract(vector: FlintVec3, normal: FlintVec3, eta: number): FlintVec3;
 ```
 
 Perform vec 3 refract operation.
@@ -5935,7 +5974,7 @@ Perform vec 3 refract operation.
 
 | Name   | Type      | Description |
 | ------ | --------- | ----------- |
-| v      | FlintVec3 |             |
+| vector | FlintVec3 |             |
 | normal | FlintVec3 |             |
 | eta    | number    |             |
 
@@ -5944,24 +5983,24 @@ Perform vec 3 refract operation.
 **Kind:** function
 
 ```typescript
-function flintVec3Reject(v: FlintVec3, from: FlintVec3): FlintVec3;
+function flintVec3Reject(vector: FlintVec3, from: FlintVec3): FlintVec3;
 ```
 
 Perform vec 3 reject operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| v    | FlintVec3 |             |
-| from | FlintVec3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| vector | FlintVec3 |             |
+| from   | FlintVec3 |             |
 
 ### flintVec3Scale
 
 **Kind:** function
 
 ```typescript
-function flintVec3Scale(v: FlintVec3, scalar: number): FlintVec3;
+function flintVec3Scale(vector: FlintVec3, scalar: number): FlintVec3;
 ```
 
 Perform vec 3 scale operation.
@@ -5970,7 +6009,7 @@ Perform vec 3 scale operation.
 
 | Name   | Type      | Description |
 | ------ | --------- | ----------- |
-| v      | FlintVec3 |             |
+| vector | FlintVec3 |             |
 | scalar | number    |             |
 
 ### flintVec3Slerp
@@ -5978,35 +6017,35 @@ Perform vec 3 scale operation.
 **Kind:** function
 
 ```typescript
-function flintVec3Slerp(a: FlintVec3, b: FlintVec3, t: number): FlintVec3;
+function flintVec3Slerp(first: FlintVec3, second: FlintVec3, factor: number): FlintVec3;
 ```
 
 Perform vec 3 slerp operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec3 |             |
-| b    | FlintVec3 |             |
-| t    | number    |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintVec3 |             |
+| second | FlintVec3 |             |
+| factor | number    |             |
 
 ### flintVec3Sub
 
 **Kind:** function
 
 ```typescript
-function flintVec3Sub(a: FlintVec3, b: FlintVec3): FlintVec3;
+function flintVec3Sub(first: FlintVec3, second: FlintVec3): FlintVec3;
 ```
 
 Perform vec 3 sub operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec3 |             |
-| b    | FlintVec3 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintVec3 |             |
+| second | FlintVec3 |             |
 
 ### FlintVec4
 
@@ -6023,24 +6062,24 @@ export interface FlintVec4
 **Kind:** function
 
 ```typescript
-function flintVec4Add(a: FlintVec4, b: FlintVec4): FlintVec4;
+function flintVec4Add(first: FlintVec4, second: FlintVec4): FlintVec4;
 ```
 
 Perform vec 4 add operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec4 |             |
-| b    | FlintVec4 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintVec4 |             |
+| second | FlintVec4 |             |
 
 ### flintVec4Div
 
 **Kind:** function
 
 ```typescript
-function flintVec4Div(v: FlintVec4, scalar: number): FlintVec4;
+function flintVec4Div(vector: FlintVec4, scalar: number): FlintVec4;
 ```
 
 Perform vec 4 div operation.
@@ -6049,7 +6088,7 @@ Perform vec 4 div operation.
 
 | Name   | Type      | Description |
 | ------ | --------- | ----------- |
-| v      | FlintVec4 |             |
+| vector | FlintVec4 |             |
 | scalar | number    |             |
 
 ### flintVec4Dot
@@ -6057,90 +6096,90 @@ Perform vec 4 div operation.
 **Kind:** function
 
 ```typescript
-function flintVec4Dot(a: FlintVec4, b: FlintVec4): number;
+function flintVec4Dot(first: FlintVec4, second: FlintVec4): number;
 ```
 
 Perform vec 4 dot operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec4 |             |
-| b    | FlintVec4 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintVec4 |             |
+| second | FlintVec4 |             |
 
 ### flintVec4Length
 
 **Kind:** function
 
 ```typescript
-function flintVec4Length(v: FlintVec4): number;
+function flintVec4Length(vector: FlintVec4): number;
 ```
 
 Perform vec 4 length operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| v    | FlintVec4 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| vector | FlintVec4 |             |
 
 ### flintVec4Lerp
 
 **Kind:** function
 
 ```typescript
-function flintVec4Lerp(a: FlintVec4, b: FlintVec4, t: number): FlintVec4;
+function flintVec4Lerp(first: FlintVec4, second: FlintVec4, factor: number): FlintVec4;
 ```
 
 Perform vec 4 lerp operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec4 |             |
-| b    | FlintVec4 |             |
-| t    | number    |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintVec4 |             |
+| second | FlintVec4 |             |
+| factor | number    |             |
 
 ### flintVec4Neg
 
 **Kind:** function
 
 ```typescript
-function flintVec4Neg(v: FlintVec4): FlintVec4;
+function flintVec4Neg(vector: FlintVec4): FlintVec4;
 ```
 
 Perform vec 4 neg operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| v    | FlintVec4 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| vector | FlintVec4 |             |
 
 ### flintVec4Normalize
 
 **Kind:** function
 
 ```typescript
-function flintVec4Normalize(v: FlintVec4): FlintVec4;
+function flintVec4Normalize(vector: FlintVec4): FlintVec4;
 ```
 
 Perform vec 4 normalize operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| v    | FlintVec4 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| vector | FlintVec4 |             |
 
 ### flintVec4Scale
 
 **Kind:** function
 
 ```typescript
-function flintVec4Scale(v: FlintVec4, scalar: number): FlintVec4;
+function flintVec4Scale(vector: FlintVec4, scalar: number): FlintVec4;
 ```
 
 Perform vec 4 scale operation.
@@ -6149,7 +6188,7 @@ Perform vec 4 scale operation.
 
 | Name   | Type      | Description |
 | ------ | --------- | ----------- |
-| v      | FlintVec4 |             |
+| vector | FlintVec4 |             |
 | scalar | number    |             |
 
 ### flintVec4Sub
@@ -6157,17 +6196,17 @@ Perform vec 4 scale operation.
 **Kind:** function
 
 ```typescript
-function flintVec4Sub(a: FlintVec4, b: FlintVec4): FlintVec4;
+function flintVec4Sub(first: FlintVec4, second: FlintVec4): FlintVec4;
 ```
 
 Perform vec 4 sub operation.
 
 #### Parameters
 
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| a    | FlintVec4 |             |
-| b    | FlintVec4 |             |
+| Name   | Type      | Description |
+| ------ | --------- | ----------- |
+| first  | FlintVec4 |             |
+| second | FlintVec4 |             |
 
 ## `src/memory`
 
