@@ -1090,7 +1090,7 @@ if (
         : isDark
           ? [0.545, 0.58, 0.62, 1]
           : [0.341, 0.376, 0.416, 1];
-      wasm.font_append_text_quads_mono(
+      wasm.font_append_text_quads(
         catText,
         x + nodeWidth - 10,
         y + 17,
@@ -2766,7 +2766,7 @@ if (
         : isDark
           ? [0.545, 0.58, 0.62, 1]
           : [0.341, 0.376, 0.416, 1];
-      wasm.font_append_text_quads_mono(
+      wasm.font_append_text_quads(
         catText,
         x + nodeWidth - 10,
         y + 17,
