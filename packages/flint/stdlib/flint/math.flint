@@ -1,0 +1,1623 @@
+// Flint Standard Math Library
+// Provides basic, scalar, vector, matrix, quaternion, geometry, dynamic linear algebra, and tensor operations.
+// All high-throughput mathematical functions are declared as inline to execute entirely within guest Wasm
+// avoiding costly JavaScript/Wasm boundary crossing overhead.
+
+// ==========================================
+// 1. Mathematical Constants
+// ==========================================
+
+// Archimedes' constant pi (ratio of circumference to diameter).
+inline fn math_pi() -> f64 {
+  return 3.141592653589793;
+}
+
+// Circle constant tau (2 * pi, ratio of circumference to radius).
+inline fn math_tau() -> f64 {
+  return 6.283185307179586;
+}
+
+// Euler's number e (base of the natural logarithm).
+inline fn math_e() -> f64 {
+  return 2.718281828459045;
+}
+
+// Square root of 2.
+inline fn math_sqrt2() -> f64 {
+  return 1.4142135623730951;
+}
+
+// Standard floating-point machine epsilon for numerical stability.
+inline fn math_epsilon() -> f64 {
+  return 0.0000000000000002220446049250313;
+}
+
+// Conversion factor from degrees to radians.
+inline fn math_deg_to_rad() -> f64 {
+  return 0.017453292519943295;
+}
+
+// Conversion factor from radians to degrees.
+inline fn math_rad_to_deg() -> f64 {
+  return 57.29577951308232;
+}
+
+// ==========================================
+// 2. Basic & Advanced Scalar Math
+// ==========================================
+
+// Clamp value between min and max bounds.
+inline fn clamp(val: f64, min: f64, max: f64) -> f64 {
+  if val < min {
+    return min;
+  }
+  if val > max {
+    return max;
+  }
+  return val;
+}
+
+// Linear interpolation between a and b by factor t.
+inline fn lerp(a: f64, b: f64, t: f64) -> f64 {
+  return a + (b - a) * t;
+}
+
+// Generate a step function returning 0.0 when x < edge and 1.0 otherwise.
+inline fn step(edge: f64, x: f64) -> f64 {
+  if x < edge {
+    return 0.0;
+  }
+  return 1.0;
+}
+
+// Smooth Hermite interpolation between edge0 and edge1.
+inline fn smoothstep(edge0: f64, edge1: f64, x: f64) -> f64 {
+  if approx_eq(edge0, edge1, math_epsilon()) {
+    return if x < edge0 { 0.0 } else { 1.0 };
+  }
+  let t: f64 = clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
+  return t * t * (3.0 - 2.0 * t);
+}
+
+// Floor function: greatest integer less than or equal to x.
+inline fn floor(x: f64) -> f64 {
+  let i: i64 = x as i64;
+  let fi: f64 = i as f64;
+  if x < fi {
+    return fi - 1.0;
+  }
+  return fi;
+}
+
+// Ceil function: least integer greater than or equal to x.
+inline fn ceil(x: f64) -> f64 {
+  let i: i64 = x as i64;
+  let fi: f64 = i as f64;
+  if x > fi {
+    return fi + 1.0;
+  }
+  return fi;
+}
+
+// Return the fractional part of x, defined as x - floor(x).
+inline fn fract(x: f64) -> f64 {
+  return x - floor(x);
+}
+
+// Return the sign of x (-1.0, 0.0, or 1.0).
+inline fn sign(x: f64) -> f64 {
+  if x > 0.0 {
+    return 1.0;
+  }
+  if x < 0.0 {
+    return -1.0;
+  }
+  return 0.0;
+}
+
+// Convert degrees to radians.
+inline fn radians(degrees: f64) -> f64 {
+  return degrees * 0.017453292519943295;
+}
+
+// Convert radians to degrees.
+inline fn degrees(radians: f64) -> f64 {
+  return radians * 57.29577951308232;
+}
+
+// Compare two floats for approximate equality within epsilon tolerance.
+inline fn approx_eq(a: f64, b: f64, epsilon: f64) -> bool {
+  let diff: f64 = a - b;
+  let abs_diff: f64 = if diff < 0.0 { 0.0 - diff } else { diff };
+  return abs_diff <= epsilon;
+}
+
+// ==========================================
+// 3. Vector Math (Vec2, Vec3, Vec4, IVec2, IVec3)
+// ==========================================
+
+// 2D floating-point geometric vector.
+struct Vec2 {
+  x: f64,
+  y: f64,
+}
+
+// 3D floating-point geometric vector.
+struct Vec3 {
+  x: f64,
+  y: f64,
+  z: f64,
+}
+
+// 4D floating-point geometric vector / homogeneous coordinate.
+struct Vec4 {
+  x: f64,
+  y: f64,
+  z: f64,
+  w: f64,
+}
+
+// 2D integer coordinate vector.
+struct IVec2 {
+  x: i32,
+  y: i32,
+}
+
+// 3D integer coordinate vector.
+struct IVec3 {
+  x: i32,
+  y: i32,
+  z: i32,
+}
+
+// Construct a 2D vector.
+inline fn vec2(x: f64, y: f64) -> Vec2 {
+  return Vec2 { x: x, y: y };
+}
+
+// Add two 2D vectors.
+inline fn vec2_add(a: Vec2, b: Vec2) -> Vec2 {
+  return Vec2 { x: a.x + b.x, y: a.y + b.y };
+}
+
+// Subtract vector b from a.
+inline fn vec2_sub(a: Vec2, b: Vec2) -> Vec2 {
+  return Vec2 { x: a.x - b.x, y: a.y - b.y };
+}
+
+// Component-wise multiplication of two 2D vectors.
+inline fn vec2_mul(a: Vec2, b: Vec2) -> Vec2 {
+  return Vec2 { x: a.x * b.x, y: a.y * b.y };
+}
+
+// Multiply 2D vector by scalar.
+inline fn vec2_scale(v: Vec2, s: f64) -> Vec2 {
+  return Vec2 { x: v.x * s, y: v.y * s };
+}
+
+// Divide 2D vector by scalar.
+inline fn vec2_div(v: Vec2, s: f64) -> Vec2 {
+  return Vec2 { x: v.x / s, y: v.y / s };
+}
+
+// Negate 2D vector.
+inline fn vec2_neg(v: Vec2) -> Vec2 {
+  return Vec2 { x: 0.0 - v.x, y: 0.0 - v.y };
+}
+
+// Dot product of two 2D vectors.
+inline fn vec2_dot(a: Vec2, b: Vec2) -> f64 {
+  return a.x * b.x + a.y * b.y;
+}
+
+// 2D perpendicular dot product (cross product scalar in 2D).
+inline fn vec2_perp_dot(a: Vec2, b: Vec2) -> f64 {
+  return a.x * b.y - a.y * b.x;
+}
+
+// Square of the Euclidean length of a 2D vector.
+inline fn vec2_length_sq(v: Vec2) -> f64 {
+  return v.x * v.x + v.y * v.y;
+}
+
+// Square of Euclidean distance between two 2D points.
+inline fn vec2_dist_sq(a: Vec2, b: Vec2) -> f64 {
+  let dx: f64 = a.x - b.x;
+  let dy: f64 = a.y - b.y;
+  return dx * dx + dy * dy;
+}
+
+// Linearly interpolate between two 2D vectors.
+inline fn vec2_lerp(a: Vec2, b: Vec2, t: f64) -> Vec2 {
+  return Vec2 {
+    x: lerp(a.x, b.x, t),
+    y: lerp(a.y, b.y, t),
+  };
+}
+
+// Normalize 2D vector to unit length with degenerate guard.
+fn vec2_normalize(v: Vec2) -> Vec2;
+
+// Reflect vector across a normal vector.
+inline fn vec2_reflect(v: Vec2, normal: Vec2) -> Vec2 {
+  let d: f64 = 2.0 * vec2_dot(v, normal);
+  return Vec2 {
+    x: v.x - d * normal.x,
+    y: v.y - d * normal.y,
+  };
+}
+
+// Project vector v onto another vector onto with degenerate guard.
+inline fn vec2_project(v: Vec2, onto: Vec2) -> Vec2 {
+  let len_sq: f64 = vec2_length_sq(onto);
+  if len_sq <= math_epsilon() {
+    return Vec2 { x: 0.0, y: 0.0 };
+  }
+  let d: f64 = vec2_dot(v, onto) / len_sq;
+  return Vec2 {
+    x: onto.x * d,
+    y: onto.y * d,
+  };
+}
+
+// Construct a 3D vector.
+inline fn vec3(x: f64, y: f64, z: f64) -> Vec3 {
+  return Vec3 { x: x, y: y, z: z };
+}
+
+// Add two 3D vectors.
+inline fn vec3_add(a: Vec3, b: Vec3) -> Vec3 {
+  return Vec3 { x: a.x + b.x, y: a.y + b.y, z: a.z + b.z };
+}
+
+// Subtract vector b from a.
+inline fn vec3_sub(a: Vec3, b: Vec3) -> Vec3 {
+  return Vec3 { x: a.x - b.x, y: a.y - b.y, z: a.z - b.z };
+}
+
+// Component-wise multiplication of two 3D vectors.
+inline fn vec3_mul(a: Vec3, b: Vec3) -> Vec3 {
+  return Vec3 { x: a.x * b.x, y: a.y * b.y, z: a.z * b.z };
+}
+
+// Multiply 3D vector by scalar.
+inline fn vec3_scale(v: Vec3, s: f64) -> Vec3 {
+  return Vec3 { x: v.x * s, y: v.y * s, z: v.z * s };
+}
+
+// Divide 3D vector by scalar.
+inline fn vec3_div(v: Vec3, s: f64) -> Vec3 {
+  return Vec3 { x: v.x / s, y: v.y / s, z: v.z / s };
+}
+
+// Negate 3D vector.
+inline fn vec3_neg(v: Vec3) -> Vec3 {
+  return Vec3 { x: 0.0 - v.x, y: 0.0 - v.y, z: 0.0 - v.z };
+}
+
+// Dot product of two 3D vectors.
+inline fn vec3_dot(a: Vec3, b: Vec3) -> f64 {
+  return a.x * b.x + a.y * b.y + a.z * b.z;
+}
+
+// 3D Cross product of two 3D vectors.
+inline fn vec3_cross(a: Vec3, b: Vec3) -> Vec3 {
+  return Vec3 {
+    x: a.y * b.z - a.z * b.y,
+    y: a.z * b.x - a.x * b.z,
+    z: a.x * b.y - a.y * b.x,
+  };
+}
+
+// Square of the Euclidean length of a 3D vector.
+inline fn vec3_length_sq(v: Vec3) -> f64 {
+  return v.x * v.x + v.y * v.y + v.z * v.z;
+}
+
+// Square of Euclidean distance between two 3D points.
+inline fn vec3_dist_sq(a: Vec3, b: Vec3) -> f64 {
+  let dx: f64 = a.x - b.x;
+  let dy: f64 = a.y - b.y;
+  let dz: f64 = a.z - b.z;
+  return dx * dx + dy * dy + dz * dz;
+}
+
+// Linearly interpolate between two 3D vectors.
+inline fn vec3_lerp(a: Vec3, b: Vec3, t: f64) -> Vec3 {
+  return Vec3 {
+    x: lerp(a.x, b.x, t),
+    y: lerp(a.y, b.y, t),
+    z: lerp(a.z, b.z, t),
+  };
+}
+
+// Normalize 3D vector to unit length with degenerate guard.
+fn vec3_normalize(v: Vec3) -> Vec3;
+
+// Reflect vector across a normal vector.
+inline fn vec3_reflect(v: Vec3, normal: Vec3) -> Vec3 {
+  let d: f64 = 2.0 * vec3_dot(v, normal);
+  return Vec3 {
+    x: v.x - d * normal.x,
+    y: v.y - d * normal.y,
+    z: v.z - d * normal.z,
+  };
+}
+
+// Project vector v onto another vector onto with degenerate guard.
+inline fn vec3_project(v: Vec3, onto: Vec3) -> Vec3 {
+  let len_sq: f64 = vec3_length_sq(onto);
+  if len_sq <= math_epsilon() {
+    return Vec3 { x: 0.0, y: 0.0, z: 0.0 };
+  }
+  let d: f64 = vec3_dot(v, onto) / len_sq;
+  return Vec3 {
+    x: onto.x * d,
+    y: onto.y * d,
+    z: onto.z * d,
+  };
+}
+
+// Vector rejection of v from from.
+inline fn vec3_reject(v: Vec3, from: Vec3) -> Vec3 {
+  let proj: Vec3 = vec3_project(v, from);
+  return vec3_sub(v, proj);
+}
+
+// Construct a 4D vector.
+inline fn vec4(x: f64, y: f64, z: f64, w: f64) -> Vec4 {
+  return Vec4 { x: x, y: y, z: z, w: w };
+}
+
+// Add two 4D vectors.
+inline fn vec4_add(a: Vec4, b: Vec4) -> Vec4 {
+  return Vec4 { x: a.x + b.x, y: a.y + b.y, z: a.z + b.z, w: a.w + b.w };
+}
+
+// Subtract vector b from a.
+inline fn vec4_sub(a: Vec4, b: Vec4) -> Vec4 {
+  return Vec4 { x: a.x - b.x, y: a.y - b.y, z: a.z - b.z, w: a.w - b.w };
+}
+
+// Multiply 4D vector by scalar.
+inline fn vec4_scale(v: Vec4, s: f64) -> Vec4 {
+  return Vec4 { x: v.x * s, y: v.y * s, z: v.z * s, w: v.w * s };
+}
+
+// Divide 4D vector by scalar.
+inline fn vec4_div(v: Vec4, s: f64) -> Vec4 {
+  return Vec4 { x: v.x / s, y: v.y / s, z: v.z / s, w: v.w / s };
+}
+
+// Negate 4D vector.
+inline fn vec4_neg(v: Vec4) -> Vec4 {
+  return Vec4 { x: 0.0 - v.x, y: 0.0 - v.y, z: 0.0 - v.z, w: 0.0 - v.w };
+}
+
+// Dot product of two 4D vectors.
+inline fn vec4_dot(a: Vec4, b: Vec4) -> f64 {
+  return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+}
+
+// Square of Euclidean length of 4D vector.
+inline fn vec4_length_sq(v: Vec4) -> f64 {
+  return v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w;
+}
+
+// Normalize 4D vector with degenerate guard.
+fn vec4_normalize(v: Vec4) -> Vec4;
+
+// Linearly interpolate between two 4D vectors.
+inline fn vec4_lerp(a: Vec4, b: Vec4, t: f64) -> Vec4 {
+  return Vec4 {
+    x: lerp(a.x, b.x, t),
+    y: lerp(a.y, b.y, t),
+    z: lerp(a.z, b.z, t),
+    w: lerp(a.w, b.w, t),
+  };
+}
+
+// Construct a 2D integer vector.
+inline fn ivec2(x: i32, y: i32) -> IVec2 {
+  return IVec2 { x: x, y: y };
+}
+
+// Construct a 3D integer vector.
+inline fn ivec3(x: i32, y: i32, z: i32) -> IVec3 {
+  return IVec3 { x: x, y: y, z: z };
+}
+
+// ==========================================
+// 4. Matrix Math (Mat2, Mat3, Mat4) - Vector-Composed Column-Major
+// ==========================================
+
+// 2x2 column-major transformation matrix with zero heap allocation.
+struct Mat2 {
+  c0: Vec2,
+  c1: Vec2,
+}
+
+// 3x3 column-major transformation matrix with zero heap allocation.
+struct Mat3 {
+  c0: Vec3,
+  c1: Vec3,
+  c2: Vec3,
+}
+
+// 4x4 column-major transformation matrix with zero heap allocation.
+struct Mat4 {
+  c0: Vec4,
+  c1: Vec4,
+  c2: Vec4,
+  c3: Vec4,
+}
+
+// Construct 2x2 identity matrix.
+inline fn mat2_identity() -> Mat2 {
+  return Mat2 {
+    c0: Vec2 { x: 1.0, y: 0.0 },
+    c1: Vec2 { x: 0.0, y: 1.0 },
+  };
+}
+
+// Construct 2x2 matrix from column vectors.
+inline fn mat2_from_cols(c0: Vec2, c1: Vec2) -> Mat2 {
+  return Mat2 { c0: c0, c1: c1 };
+}
+
+// Add two 2x2 matrices.
+inline fn mat2_add(a: Mat2, b: Mat2) -> Mat2 {
+  return Mat2 {
+    c0: vec2_add(a.c0, b.c0),
+    c1: vec2_add(a.c1, b.c1),
+  };
+}
+
+// Subtract 2x2 matrix b from a.
+inline fn mat2_sub(a: Mat2, b: Mat2) -> Mat2 {
+  return Mat2 {
+    c0: vec2_sub(a.c0, b.c0),
+    c1: vec2_sub(a.c1, b.c1),
+  };
+}
+
+// Multiply 2x2 matrix by scalar.
+inline fn mat2_scale(m: Mat2, s: f64) -> Mat2 {
+  return Mat2 {
+    c0: vec2_scale(m.c0, s),
+    c1: vec2_scale(m.c1, s),
+  };
+}
+
+// Multiply two 2x2 matrices.
+inline fn mat2_mul(a: Mat2, b: Mat2) -> Mat2 {
+  return Mat2 {
+    c0: Vec2 {
+      x: a.c0.x * b.c0.x + a.c1.x * b.c0.y,
+      y: a.c0.y * b.c0.x + a.c1.y * b.c0.y,
+    },
+    c1: Vec2 {
+      x: a.c0.x * b.c1.x + a.c1.x * b.c1.y,
+      y: a.c0.y * b.c1.x + a.c1.y * b.c1.y,
+    },
+  };
+}
+
+// Transform 2D vector by 2x2 matrix.
+inline fn mat2_transform_vec2(m: Mat2, v: Vec2) -> Vec2 {
+  return Vec2 {
+    x: m.c0.x * v.x + m.c1.x * v.y,
+    y: m.c0.y * v.x + m.c1.y * v.y,
+  };
+}
+
+// Transpose 2x2 matrix.
+inline fn mat2_transpose(m: Mat2) -> Mat2 {
+  return Mat2 {
+    c0: Vec2 { x: m.c0.x, y: m.c1.x },
+    c1: Vec2 { x: m.c0.y, y: m.c1.y },
+  };
+}
+
+// Compute determinant of 2x2 matrix.
+inline fn mat2_det(m: Mat2) -> f64 {
+  return m.c0.x * m.c1.y - m.c1.x * m.c0.y;
+}
+
+// Compute inverse of 2x2 matrix, or Option.none when singular.
+inline fn mat2_inv(m: Mat2) -> Option<Mat2> {
+  let det: f64 = mat2_det(m);
+  let abs_det: f64 = if det < 0.0 { 0.0 - det } else { det };
+  if abs_det <= math_epsilon() {
+    return Option::None;
+  }
+  let inv_det: f64 = 1.0 / det;
+  return Option::Some(Mat2 {
+    c0: Vec2 { x: m.c1.y * inv_det, y: (0.0 - m.c0.y) * inv_det },
+    c1: Vec2 { x: (0.0 - m.c1.x) * inv_det, y: m.c0.x * inv_det },
+  });
+}
+
+// Construct 2x2 rotation matrix by angle in radians.
+fn mat2_rotation(angle_rad: f64) -> Mat2;
+
+// Construct 2x2 scaling matrix from vector scale factors.
+inline fn mat2_scaling(s: Vec2) -> Mat2 {
+  return Mat2 {
+    c0: Vec2 { x: s.x, y: 0.0 },
+    c1: Vec2 { x: 0.0, y: s.y },
+  };
+}
+
+// Construct 3x3 identity matrix.
+inline fn mat3_identity() -> Mat3 {
+  return Mat3 {
+    c0: Vec3 { x: 1.0, y: 0.0, z: 0.0 },
+    c1: Vec3 { x: 0.0, y: 1.0, z: 0.0 },
+    c2: Vec3 { x: 0.0, y: 0.0, z: 1.0 },
+  };
+}
+
+// Construct 3x3 matrix from column vectors.
+inline fn mat3_from_cols(c0: Vec3, c1: Vec3, c2: Vec3) -> Mat3 {
+  return Mat3 { c0: c0, c1: c1, c2: c2 };
+}
+
+// Add two 3x3 matrices.
+inline fn mat3_add(a: Mat3, b: Mat3) -> Mat3 {
+  return Mat3 {
+    c0: vec3_add(a.c0, b.c0),
+    c1: vec3_add(a.c1, b.c1),
+    c2: vec3_add(a.c2, b.c2),
+  };
+}
+
+// Subtract 3x3 matrix b from a.
+inline fn mat3_sub(a: Mat3, b: Mat3) -> Mat3 {
+  return Mat3 {
+    c0: vec3_sub(a.c0, b.c0),
+    c1: vec3_sub(a.c1, b.c1),
+    c2: vec3_sub(a.c2, b.c2),
+  };
+}
+
+// Multiply 3x3 matrix by scalar.
+inline fn mat3_scale(m: Mat3, s: f64) -> Mat3 {
+  return Mat3 {
+    c0: vec3_scale(m.c0, s),
+    c1: vec3_scale(m.c1, s),
+    c2: vec3_scale(m.c2, s),
+  };
+}
+
+// Multiply two 3x3 matrices.
+inline fn mat3_mul(a: Mat3, b: Mat3) -> Mat3 {
+  return Mat3 {
+    c0: Vec3 {
+      x: a.c0.x * b.c0.x + a.c1.x * b.c0.y + a.c2.x * b.c0.z,
+      y: a.c0.y * b.c0.x + a.c1.y * b.c0.y + a.c2.y * b.c0.z,
+      z: a.c0.z * b.c0.x + a.c1.z * b.c0.y + a.c2.z * b.c0.z,
+    },
+    c1: Vec3 {
+      x: a.c0.x * b.c1.x + a.c1.x * b.c1.y + a.c2.x * b.c1.z,
+      y: a.c0.y * b.c1.x + a.c1.y * b.c1.y + a.c2.y * b.c1.z,
+      z: a.c0.z * b.c1.x + a.c1.z * b.c1.y + a.c2.z * b.c1.z,
+    },
+    c2: Vec3 {
+      x: a.c0.x * b.c2.x + a.c1.x * b.c2.y + a.c2.x * b.c2.z,
+      y: a.c0.y * b.c2.x + a.c1.y * b.c2.y + a.c2.y * b.c2.z,
+      z: a.c0.z * b.c2.x + a.c1.z * b.c2.y + a.c2.z * b.c2.z,
+    },
+  };
+}
+
+// Transform 3D vector by 3x3 matrix.
+inline fn mat3_transform_vec3(m: Mat3, v: Vec3) -> Vec3 {
+  return Vec3 {
+    x: m.c0.x * v.x + m.c1.x * v.y + m.c2.x * v.z,
+    y: m.c0.y * v.x + m.c1.y * v.y + m.c2.y * v.z,
+    z: m.c0.z * v.x + m.c1.z * v.y + m.c2.z * v.z,
+  };
+}
+
+// Transform 2D point by 3x3 affine matrix.
+inline fn mat3_transform_vec2(m: Mat3, v: Vec2) -> Vec2 {
+  return Vec2 {
+    x: m.c0.x * v.x + m.c1.x * v.y + m.c2.x,
+    y: m.c0.y * v.x + m.c1.y * v.y + m.c2.y,
+  };
+}
+
+// Transpose 3x3 matrix.
+inline fn mat3_transpose(m: Mat3) -> Mat3 {
+  return Mat3 {
+    c0: Vec3 { x: m.c0.x, y: m.c1.x, z: m.c2.x },
+    c1: Vec3 { x: m.c0.y, y: m.c1.y, z: m.c2.y },
+    c2: Vec3 { x: m.c0.z, y: m.c1.z, z: m.c2.z },
+  };
+}
+
+// Compute determinant of 3x3 matrix.
+inline fn mat3_det(m: Mat3) -> f64 {
+  return m.c0.x * (m.c1.y * m.c2.z - m.c2.y * m.c1.z) -
+         m.c1.x * (m.c0.y * m.c2.z - m.c2.y * m.c0.z) +
+         m.c2.x * (m.c0.y * m.c1.z - m.c1.y * m.c0.z);
+}
+
+// Compute inverse of 3x3 matrix, or Option.none when singular.
+inline fn mat3_inv(m: Mat3) -> Option<Mat3> {
+  let det: f64 = mat3_det(m);
+  let abs_det: f64 = if det < 0.0 { 0.0 - det } else { det };
+  if abs_det <= math_epsilon() {
+    return Option::None;
+  }
+  let inv_det: f64 = 1.0 / det;
+  let c00: f64 = (m.c1.y * m.c2.z - m.c2.y * m.c1.z) * inv_det;
+  let c01: f64 = (m.c2.x * m.c1.z - m.c1.x * m.c2.z) * inv_det;
+  let c02: f64 = (m.c1.x * m.c2.y - m.c2.x * m.c1.y) * inv_det;
+
+  let c10: f64 = (m.c2.y * m.c0.z - m.c0.y * m.c2.z) * inv_det;
+  let c11: f64 = (m.c0.x * m.c2.z - m.c2.x * m.c0.z) * inv_det;
+  let c12: f64 = (m.c2.x * m.c0.y - m.c0.x * m.c2.y) * inv_det;
+
+  let c20: f64 = (m.c0.y * m.c1.z - m.c1.y * m.c0.z) * inv_det;
+  let c21: f64 = (m.c1.x * m.c0.z - m.c0.x * m.c1.z) * inv_det;
+  let c22: f64 = (m.c0.x * m.c1.y - m.c1.x * m.c0.y) * inv_det;
+
+  return Option::Some(Mat3 {
+    c0: Vec3 { x: c00, y: c10, z: c20 },
+    c1: Vec3 { x: c01, y: c11, z: c21 },
+    c2: Vec3 { x: c02, y: c12, z: c22 },
+  });
+}
+
+// Construct 2D affine translation matrix.
+inline fn mat3_translate2d(translation: Vec2) -> Mat3 {
+  return Mat3 {
+    c0: Vec3 { x: 1.0, y: 0.0, z: 0.0 },
+    c1: Vec3 { x: 0.0, y: 1.0, z: 0.0 },
+    c2: Vec3 { x: translation.x, y: translation.y, z: 1.0 },
+  };
+}
+
+// Construct 2D affine rotation matrix.
+fn mat3_rotate2d(angle_rad: f64) -> Mat3;
+
+// Construct 2D affine scaling matrix.
+inline fn mat3_scale2d(scale: Vec2) -> Mat3 {
+  return Mat3 {
+    c0: Vec3 { x: scale.x, y: 0.0, z: 0.0 },
+    c1: Vec3 { x: 0.0, y: scale.y, z: 0.0 },
+    c2: Vec3 { x: 0.0, y: 0.0, z: 1.0 },
+  };
+}
+
+// Construct 4x4 identity matrix.
+inline fn mat4_identity() -> Mat4 {
+  return Mat4 {
+    c0: Vec4 { x: 1.0, y: 0.0, z: 0.0, w: 0.0 },
+    c1: Vec4 { x: 0.0, y: 1.0, z: 0.0, w: 0.0 },
+    c2: Vec4 { x: 0.0, y: 0.0, z: 1.0, w: 0.0 },
+    c3: Vec4 { x: 0.0, y: 0.0, z: 0.0, w: 1.0 },
+  };
+}
+
+// Construct 4x4 matrix from column vectors.
+inline fn mat4_from_cols(c0: Vec4, c1: Vec4, c2: Vec4, c3: Vec4) -> Mat4 {
+  return Mat4 { c0: c0, c1: c1, c2: c2, c3: c3 };
+}
+
+// Add two 4x4 matrices.
+inline fn mat4_add(a: Mat4, b: Mat4) -> Mat4 {
+  return Mat4 {
+    c0: vec4_add(a.c0, b.c0),
+    c1: vec4_add(a.c1, b.c1),
+    c2: vec4_add(a.c2, b.c2),
+    c3: vec4_add(a.c3, b.c3),
+  };
+}
+
+// Subtract 4x4 matrix b from a.
+inline fn mat4_sub(a: Mat4, b: Mat4) -> Mat4 {
+  return Mat4 {
+    c0: vec4_sub(a.c0, b.c0),
+    c1: vec4_sub(a.c1, b.c1),
+    c2: vec4_sub(a.c2, b.c2),
+    c3: vec4_sub(a.c3, b.c3),
+  };
+}
+
+// Multiply 4x4 matrix by scalar.
+inline fn mat4_scale(m: Mat4, s: f64) -> Mat4 {
+  return Mat4 {
+    c0: vec4_scale(m.c0, s),
+    c1: vec4_scale(m.c1, s),
+    c2: vec4_scale(m.c2, s),
+    c3: vec4_scale(m.c3, s),
+  };
+}
+
+// Multiply two 4x4 matrices.
+inline fn mat4_mul(a: Mat4, b: Mat4) -> Mat4 {
+  return Mat4 {
+    c0: Vec4 {
+      x: a.c0.x * b.c0.x + a.c1.x * b.c0.y + a.c2.x * b.c0.z + a.c3.x * b.c0.w,
+      y: a.c0.y * b.c0.x + a.c1.y * b.c0.y + a.c2.y * b.c0.z + a.c3.y * b.c0.w,
+      z: a.c0.z * b.c0.x + a.c1.z * b.c0.y + a.c2.z * b.c0.z + a.c3.z * b.c0.w,
+      w: a.c0.w * b.c0.x + a.c1.w * b.c0.y + a.c2.w * b.c0.z + a.c3.w * b.c0.w,
+    },
+    c1: Vec4 {
+      x: a.c0.x * b.c1.x + a.c1.x * b.c1.y + a.c2.x * b.c1.z + a.c3.x * b.c1.w,
+      y: a.c0.y * b.c1.x + a.c1.y * b.c1.y + a.c2.y * b.c1.z + a.c3.y * b.c1.w,
+      z: a.c0.z * b.c1.x + a.c1.z * b.c1.y + a.c2.z * b.c1.z + a.c3.z * b.c1.w,
+      w: a.c0.w * b.c1.x + a.c1.w * b.c1.y + a.c2.w * b.c1.z + a.c3.w * b.c1.w,
+    },
+    c2: Vec4 {
+      x: a.c0.x * b.c2.x + a.c1.x * b.c2.y + a.c2.x * b.c2.z + a.c3.x * b.c2.w,
+      y: a.c0.y * b.c2.x + a.c1.y * b.c2.y + a.c2.y * b.c2.z + a.c3.y * b.c2.w,
+      z: a.c0.z * b.c2.x + a.c1.z * b.c2.y + a.c2.z * b.c2.z + a.c3.z * b.c2.w,
+      w: a.c0.w * b.c2.x + a.c1.w * b.c2.y + a.c2.w * b.c2.z + a.c3.w * b.c2.w,
+    },
+    c3: Vec4 {
+      x: a.c0.x * b.c3.x + a.c1.x * b.c3.y + a.c2.x * b.c3.z + a.c3.x * b.c3.w,
+      y: a.c0.y * b.c3.x + a.c1.y * b.c3.y + a.c2.y * b.c3.z + a.c3.y * b.c3.w,
+      z: a.c0.z * b.c3.x + a.c1.z * b.c3.y + a.c2.z * b.c3.z + a.c3.z * b.c3.w,
+      w: a.c0.w * b.c3.x + a.c1.w * b.c3.y + a.c2.w * b.c3.z + a.c3.w * b.c3.w,
+    },
+  };
+}
+
+// Transform 4D homogeneous vector by 4x4 matrix.
+inline fn mat4_transform_vec4(m: Mat4, v: Vec4) -> Vec4 {
+  return Vec4 {
+    x: m.c0.x * v.x + m.c1.x * v.y + m.c2.x * v.z + m.c3.x * v.w,
+    y: m.c0.y * v.x + m.c1.y * v.y + m.c2.y * v.z + m.c3.y * v.w,
+    z: m.c0.z * v.x + m.c1.z * v.y + m.c2.z * v.z + m.c3.z * v.w,
+    w: m.c0.w * v.x + m.c1.w * v.y + m.c2.w * v.z + m.c3.w * v.w,
+  };
+}
+
+// Transform 3D point with perspective division.
+inline fn mat4_transform_point3(m: Mat4, p: Vec3) -> Vec3 {
+  let v4: Vec4 = mat4_transform_vec4(m, Vec4 { x: p.x, y: p.y, z: p.z, w: 1.0 });
+  let inv_w: f64 = if approx_eq(v4.w, 0.0, math_epsilon()) { 1.0 } else { 1.0 / v4.w };
+  return Vec3 {
+    x: v4.x * inv_w,
+    y: v4.y * inv_w,
+    z: v4.z * inv_w,
+  };
+}
+
+// Transform 3D direction vector without translation.
+inline fn mat4_transform_vector3(m: Mat4, v: Vec3) -> Vec3 {
+  return Vec3 {
+    x: m.c0.x * v.x + m.c1.x * v.y + m.c2.x * v.z,
+    y: m.c0.y * v.x + m.c1.y * v.y + m.c2.y * v.z,
+    z: m.c0.z * v.x + m.c1.z * v.y + m.c2.z * v.z,
+  };
+}
+
+// Transpose 4x4 matrix.
+inline fn mat4_transpose(m: Mat4) -> Mat4 {
+  return Mat4 {
+    c0: Vec4 { x: m.c0.x, y: m.c1.x, z: m.c2.x, w: m.c3.x },
+    c1: Vec4 { x: m.c0.y, y: m.c1.y, z: m.c2.y, w: m.c3.y },
+    c2: Vec4 { x: m.c0.z, y: m.c1.z, z: m.c2.z, w: m.c3.z },
+    c3: Vec4 { x: m.c0.w, y: m.c1.w, z: m.c2.w, w: m.c3.w },
+  };
+}
+
+// Compute determinant of 4x4 matrix.
+fn mat4_det(m: Mat4) -> f64;
+
+// Compute inverse of 4x4 matrix, or Option.none when singular.
+fn mat4_inv(m: Mat4) -> Option<Mat4>;
+
+// Construct 3D translation matrix.
+inline fn mat4_translation(offset: Vec3) -> Mat4 {
+  return Mat4 {
+    c0: Vec4 { x: 1.0, y: 0.0, z: 0.0, w: 0.0 },
+    c1: Vec4 { x: 0.0, y: 1.0, z: 0.0, w: 0.0 },
+    c2: Vec4 { x: 0.0, y: 0.0, z: 1.0, w: 0.0 },
+    c3: Vec4 { x: offset.x, y: offset.y, z: offset.z, w: 1.0 },
+  };
+}
+
+// Construct 3D scaling matrix.
+inline fn mat4_scaling(scale: Vec3) -> Mat4 {
+  return Mat4 {
+    c0: Vec4 { x: scale.x, y: 0.0, z: 0.0, w: 0.0 },
+    c1: Vec4 { x: 0.0, y: scale.y, z: 0.0, w: 0.0 },
+    c2: Vec4 { x: 0.0, y: 0.0, z: scale.z, w: 0.0 },
+    c3: Vec4 { x: 0.0, y: 0.0, z: 0.0, w: 1.0 },
+  };
+}
+
+// Construct 3D rotation matrix around X axis.
+fn mat4_rotation_x(angle_rad: f64) -> Mat4;
+
+// Construct 3D rotation matrix around Y axis.
+fn mat4_rotation_y(angle_rad: f64) -> Mat4;
+
+// Construct 3D rotation matrix around Z axis.
+fn mat4_rotation_z(angle_rad: f64) -> Mat4;
+
+// Construct 3D rotation matrix around arbitrary axis.
+fn mat4_rotation_axis_angle(axis: Vec3, angle_rad: f64) -> Mat4;
+
+// Construct view matrix looking from eye towards target with up orientation.
+fn mat4_look_at(eye: Vec3, target: Vec3, up: Vec3) -> Mat4;
+
+// Construct perspective projection matrix.
+fn mat4_perspective(fov_y_rad: f64, aspect: f64, z_near: f64, z_far: f64) -> Mat4;
+
+// Construct orthographic projection matrix.
+fn mat4_orthographic(left: f64, right: f64, bottom: f64, top: f64, z_near: f64, z_far: f64) -> Mat4;
+
+// ==========================================
+// 5. Quaternions (Quat)
+// ==========================================
+
+// Unit quaternion representing 3D orientation and rotation.
+struct Quat {
+  x: f64,
+  y: f64,
+  z: f64,
+  w: f64,
+}
+
+// Construct a quaternion with explicit components.
+inline fn quat(x: f64, y: f64, z: f64, w: f64) -> Quat {
+  return Quat { x: x, y: y, z: z, w: w };
+}
+
+// Return identity quaternion.
+inline fn quat_identity() -> Quat {
+  return Quat { x: 0.0, y: 0.0, z: 0.0, w: 1.0 };
+}
+
+// Construct quaternion from axis and rotation angle in radians.
+fn quat_from_axis_angle(axis: Vec3, angle_rad: f64) -> Quat;
+
+// Construct quaternion from Euler angles (pitch, yaw, roll) in radians.
+fn quat_from_euler(pitch_x: f64, yaw_y: f64, roll_z: f64) -> Quat;
+
+// Multiply two quaternions (composite rotation: first b, then a).
+inline fn quat_mul(a: Quat, b: Quat) -> Quat {
+  return Quat {
+    x: a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y,
+    y: a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x,
+    z: a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w,
+    w: a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z,
+  };
+}
+
+// Return conjugate of quaternion.
+inline fn quat_conjugate(q: Quat) -> Quat {
+  return Quat { x: 0.0 - q.x, y: 0.0 - q.y, z: 0.0 - q.z, w: q.w };
+}
+
+// Square of Euclidean norm of quaternion.
+inline fn quat_norm_sq(q: Quat) -> f64 {
+  return q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w;
+}
+
+// Euclidean norm of quaternion.
+fn quat_norm(q: Quat) -> f64;
+
+// Normalize quaternion to unit length with degenerate guard.
+fn quat_normalize(q: Quat) -> Quat;
+
+// Invert quaternion, or Option.none when degenerate.
+fn quat_inv(q: Quat) -> Option<Quat>;
+
+// Rotate 3D vector by quaternion using Rodrigues' formula.
+inline fn quat_rotate_vec3(q: Quat, v: Vec3) -> Vec3 {
+  let qv: Vec3 = Vec3 { x: q.x, y: q.y, z: q.z };
+  let uv: Vec3 = vec3_cross(qv, v);
+  let uuv: Vec3 = vec3_cross(qv, uv);
+  let uv_w: Vec3 = vec3_scale(uv, q.w * 2.0);
+  let uuv_2: Vec3 = vec3_scale(uuv, 2.0);
+  return vec3_add(v, vec3_add(uv_w, uuv_2));
+}
+
+// Convert quaternion to 4x4 rotation matrix.
+inline fn quat_to_mat4(q: Quat) -> Mat4 {
+  let x2: f64 = q.x + q.x;
+  let y2: f64 = q.y + q.y;
+  let z2: f64 = q.z + q.z;
+  let xx: f64 = q.x * x2;
+  let xy: f64 = q.x * y2;
+  let xz: f64 = q.x * z2;
+  let yy: f64 = q.y * y2;
+  let yz: f64 = q.y * z2;
+  let zz: f64 = q.z * z2;
+  let wx: f64 = q.w * x2;
+  let wy: f64 = q.w * y2;
+  let wz: f64 = q.w * z2;
+
+  return Mat4 {
+    c0: Vec4 { x: 1.0 - (yy + zz), y: xy + wz, z: xz - wy, w: 0.0 },
+    c1: Vec4 { x: xy - wz, y: 1.0 - (xx + zz), z: yz + wx, w: 0.0 },
+    c2: Vec4 { x: xz + wy, y: yz - wx, z: 1.0 - (xx + yy), w: 0.0 },
+    c3: Vec4 { x: 0.0, y: 0.0, z: 0.0, w: 1.0 },
+  };
+}
+
+// Convert quaternion to 3x3 rotation matrix.
+inline fn quat_to_mat3(q: Quat) -> Mat3 {
+  let x2: f64 = q.x + q.x;
+  let y2: f64 = q.y + q.y;
+  let z2: f64 = q.z + q.z;
+  let xx: f64 = q.x * x2;
+  let xy: f64 = q.x * y2;
+  let xz: f64 = q.x * z2;
+  let yy: f64 = q.y * y2;
+  let yz: f64 = q.y * z2;
+  let zz: f64 = q.z * z2;
+  let wx: f64 = q.w * x2;
+  let wy: f64 = q.w * y2;
+  let wz: f64 = q.w * z2;
+
+  return Mat3 {
+    c0: Vec3 { x: 1.0 - (yy + zz), y: xy + wz, z: xz - wy },
+    c1: Vec3 { x: xy - wz, y: 1.0 - (xx + zz), z: yz + wx },
+    c2: Vec3 { x: xz + wy, y: yz - wx, z: 1.0 - (xx + yy) },
+  };
+}
+
+// Spherical linear interpolation between two quaternions.
+fn quat_slerp(a: Quat, b: Quat, t: f64) -> Quat;
+
+// Dot product of two quaternions.
+inline fn quat_dot(a: Quat, b: Quat) -> f64 {
+  return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+}
+
+// ==========================================
+// 6. Geometry, Spatial Acceleration & Frustum
+// ==========================================
+
+// 2D Ray starting from origin in a direction.
+struct Ray2 {
+  origin: Vec2,
+  direction: Vec2,
+}
+
+// 3D Ray starting from origin in a direction.
+struct Ray3 {
+  origin: Vec3,
+  direction: Vec3,
+}
+
+// 2D Line segment between start and end.
+struct Segment2 {
+  start: Vec2,
+  end: Vec2,
+}
+
+// 3D Line segment between start and end.
+struct Segment3 {
+  start: Vec3,
+  end: Vec3,
+}
+
+// 3D Infinite plane defined by unit normal and signed distance from origin.
+struct Plane3 {
+  normal: Vec3,
+  distance: f64,
+}
+
+// 2D Axis-Aligned Bounding Box (AABB / Rectangle).
+struct AABB2 {
+  min: Vec2,
+  max: Vec2,
+}
+
+// 3D Axis-Aligned Bounding Box.
+struct AABB3 {
+  min: Vec3,
+  max: Vec3,
+}
+
+// 2D Oriented Bounding Box.
+struct OBB2 {
+  center: Vec2,
+  half_extents: Vec2,
+  angle_rad: f64,
+}
+
+// 3D Oriented Bounding Box.
+struct OBB3 {
+  center: Vec3,
+  half_extents: Vec3,
+  orientation: Quat,
+}
+
+// 3D Viewing Frustum composed of 6 bounding planes (left, right, bottom, top, near, far).
+struct Frustum {
+  left: Plane3,
+  right: Plane3,
+  bottom: Plane3,
+  top: Plane3,
+  near: Plane3,
+  far: Plane3,
+}
+
+// 2D Circle.
+struct Circle {
+  center: Vec2,
+  radius: f64,
+}
+
+// 3D Sphere.
+struct Sphere {
+  center: Vec3,
+  radius: f64,
+}
+
+// 2D Triangle.
+struct Triangle2 {
+  a: Vec2,
+  b: Vec2,
+  c: Vec2,
+}
+
+// 3D Triangle.
+struct Triangle3 {
+  a: Vec3,
+  b: Vec3,
+  c: Vec3,
+}
+
+// Spatial Ray Hit structure containing distance, intersection point, surface normal, and primitive identifier.
+struct RayHit3 {
+  hit: bool,
+  t: f64,
+  point: Vec3,
+  normal: Vec3,
+  primitive_id: u32,
+}
+
+// Flat BVH node structure storing bounding box, child indices (-1 if leaf), and primitive index.
+struct BVHNode3 {
+  bounds: AABB3,
+  left_child: i32,
+  right_child: i32,
+  primitive_index: i32,
+}
+
+// Contiguous Bounding Volume Hierarchy tree.
+struct BVHTree3 {
+  nodes: Vector<BVHNode3>,
+  root_index: u32,
+}
+
+// Construct 2D ray.
+inline fn ray2(origin: Vec2, direction: Vec2) -> Ray2 {
+  return Ray2 { origin: origin, direction: direction };
+}
+
+// Construct 3D ray.
+inline fn ray3(origin: Vec3, direction: Vec3) -> Ray3 {
+  return Ray3 { origin: origin, direction: direction };
+}
+
+// Construct 2D segment.
+inline fn segment2(start: Vec2, end: Vec2) -> Segment2 {
+  return Segment2 { start: start, end: end };
+}
+
+// Construct 3D segment.
+inline fn segment3(start: Vec3, end: Vec3) -> Segment3 {
+  return Segment3 { start: start, end: end };
+}
+
+// Construct 3D plane.
+inline fn plane3(normal: Vec3, distance: f64) -> Plane3 {
+  return Plane3 { normal: normal, distance: distance };
+}
+
+// Construct 2D AABB.
+inline fn aabb2(min: Vec2, max: Vec2) -> AABB2 {
+  return AABB2 { min: min, max: max };
+}
+
+// Construct 3D AABB.
+inline fn aabb3(min: Vec3, max: Vec3) -> AABB3 {
+  return AABB3 { min: min, max: max };
+}
+
+// Construct 2D OBB.
+inline fn obb2(center: Vec2, half_extents: Vec2, angle_rad: f64) -> OBB2 {
+  return OBB2 { center: center, half_extents: half_extents, angle_rad: angle_rad };
+}
+
+// Construct 3D OBB.
+inline fn obb3(center: Vec3, half_extents: Vec3, orientation: Quat) -> OBB3 {
+  return OBB3 { center: center, half_extents: half_extents, orientation: orientation };
+}
+
+// Construct Circle.
+inline fn circle(center: Vec2, radius: f64) -> Circle {
+  return Circle { center: center, radius: radius };
+}
+
+// Construct Sphere.
+inline fn sphere(center: Vec3, radius: f64) -> Sphere {
+  return Sphere { center: center, radius: radius };
+}
+
+// Construct 2D Triangle.
+inline fn triangle2(a: Vec2, b: Vec2, c: Vec2) -> Triangle2 {
+  return Triangle2 { a: a, b: b, c: c };
+}
+
+// Construct 3D Triangle.
+inline fn triangle3(a: Vec3, b: Vec3, c: Vec3) -> Triangle3 {
+  return Triangle3 { a: a, b: b, c: c };
+}
+
+// Test whether 2D AABB contains point.
+inline fn aabb2_contains_point(box: AABB2, p: Vec2) -> bool {
+  return p.x >= box.min.x && p.x <= box.max.x && p.y >= box.min.y && p.y <= box.max.y;
+}
+
+// Test whether two 2D AABBs intersect.
+inline fn aabb2_intersects_aabb2(a: AABB2, b: AABB2) -> bool {
+  return a.min.x <= b.max.x && a.max.x >= b.min.x && a.min.y <= b.max.y && a.max.y >= b.min.y;
+}
+
+// Compute bounding union of two 2D AABBs.
+inline fn aabb2_union(a: AABB2, b: AABB2) -> AABB2 {
+  let min_x: f64 = if a.min.x < b.min.x { a.min.x } else { b.min.x };
+  let min_y: f64 = if a.min.y < b.min.y { a.min.y } else { b.min.y };
+  let max_x: f64 = if a.max.x > b.max.x { a.max.x } else { b.max.x };
+  let max_y: f64 = if a.max.y > b.max.y { a.max.y } else { b.max.y };
+  return AABB2 {
+    min: Vec2 { x: min_x, y: min_y },
+    max: Vec2 { x: max_x, y: max_y },
+  };
+}
+
+// Compute surface area of 2D AABB.
+inline fn aabb2_area(box: AABB2) -> f64 {
+  let w: f64 = box.max.x - box.min.x;
+  let h: f64 = box.max.y - box.min.y;
+  return if w > 0.0 && h > 0.0 { w * h } else { 0.0 };
+}
+
+// Test whether Circle contains point.
+inline fn circle_contains_point(c: Circle, p: Vec2) -> bool {
+  return vec2_dist_sq(c.center, p) <= c.radius * c.radius;
+}
+
+// Test whether two circles intersect.
+inline fn circle_intersects_circle(a: Circle, b: Circle) -> bool {
+  let r: f64 = a.radius + b.radius;
+  return vec2_dist_sq(a.center, b.center) <= r * r;
+}
+
+// Compute area of 2D triangle.
+inline fn triangle2_area(tri: Triangle2) -> f64 {
+  let val: f64 = (tri.a.x * (tri.b.y - tri.c.y) + tri.b.x * (tri.c.y - tri.a.y) + tri.c.x * (tri.a.y - tri.b.y)) * 0.5;
+  return if val < 0.0 { 0.0 - val } else { val };
+}
+
+// Test whether 3D AABB contains point.
+inline fn aabb3_contains_point(box: AABB3, p: Vec3) -> bool {
+  return p.x >= box.min.x && p.x <= box.max.x &&
+         p.y >= box.min.y && p.y <= box.max.y &&
+         p.z >= box.min.z && p.z <= box.max.z;
+}
+
+// Test whether two 3D AABBs intersect.
+inline fn aabb3_intersects_aabb3(a: AABB3, b: AABB3) -> bool {
+  return a.min.x <= b.max.x && a.max.x >= b.min.x &&
+         a.min.y <= b.max.y && a.max.y >= b.min.y &&
+         a.min.z <= b.max.z && a.max.z >= b.min.z;
+}
+
+// Compute volume of 3D AABB.
+inline fn aabb3_volume(box: AABB3) -> f64 {
+  let dx: f64 = box.max.x - box.min.x;
+  let dy: f64 = box.max.y - box.min.y;
+  let dz: f64 = box.max.z - box.min.z;
+  return if dx > 0.0 && dy > 0.0 && dz > 0.0 { dx * dy * dz } else { 0.0 };
+}
+
+// Test whether Sphere contains point.
+inline fn sphere_contains_point(s: Sphere, p: Vec3) -> bool {
+  return vec3_dist_sq(s.center, p) <= s.radius * s.radius;
+}
+
+// Test whether two Spheres intersect.
+inline fn sphere_intersects_sphere(a: Sphere, b: Sphere) -> bool {
+  let r: f64 = a.radius + b.radius;
+  return vec3_dist_sq(a.center, b.center) <= r * r;
+}
+
+// Signed distance from point to plane.
+inline fn plane3_distance_to_point(plane: Plane3, p: Vec3) -> f64 {
+  return vec3_dot(plane.normal, p) + plane.distance;
+}
+
+// Compute unit normal vector of 3D triangle.
+inline fn triangle3_cross_normal(tri: Triangle3) -> Vec3 {
+  let ab: Vec3 = vec3_sub(tri.b, tri.a);
+  let ac: Vec3 = vec3_sub(tri.c, tri.a);
+  return vec3_cross(ab, ac);
+}
+
+// Extract viewing frustum from combined view-projection matrix.
+fn frustum_from_view_proj(vp: Mat4) -> Frustum;
+
+// Test whether frustum contains or intersects a 3D sphere.
+inline fn frustum_intersects_sphere(f: Frustum, s: Sphere) -> bool {
+  if plane3_distance_to_point(f.left, s.center) < (0.0 - s.radius) { return false; }
+  if plane3_distance_to_point(f.right, s.center) < (0.0 - s.radius) { return false; }
+  if plane3_distance_to_point(f.bottom, s.center) < (0.0 - s.radius) { return false; }
+  if plane3_distance_to_point(f.top, s.center) < (0.0 - s.radius) { return false; }
+  if plane3_distance_to_point(f.near, s.center) < (0.0 - s.radius) { return false; }
+  if plane3_distance_to_point(f.far, s.center) < (0.0 - s.radius) { return false; }
+  return true;
+}
+
+// Ray-Sphere intersection distance along ray (or Option.none).
+fn ray3_intersects_sphere(ray: Ray3, sphere: Sphere) -> Option<f64>;
+
+// Ray-AABB intersection distance along ray (or Option.none).
+fn ray3_intersects_aabb3(ray: Ray3, box: AABB3) -> Option<f64>;
+
+// Ray-OBB intersection distance along ray (or Option.none).
+fn ray3_intersect_obb(ray: Ray3, obb: OBB3) -> Option<f64>;
+
+// Construct a linear BVH tree from a vector of 3D AABBs using spatial midpoint partitioning.
+fn bvh_build_from_aabbs(boxes: Vector<AABB3>) -> BVHTree3;
+
+// Traverse a BVH tree to find the closest ray-box intersection.
+fn bvh_ray_intersect(tree: BVHTree3, ray: Ray3) -> Option<RayHit3>;
+
+// Ray-Plane intersection distance along ray (or Option.none).
+inline fn ray3_intersects_plane3(ray: Ray3, plane: Plane3) -> Option<f64> {
+  let denom: f64 = vec3_dot(plane.normal, ray.direction);
+  let abs_denom: f64 = if denom < 0.0 { 0.0 - denom } else { denom };
+  if abs_denom <= math_epsilon() {
+    return Option::None;
+  }
+  let t: f64 = (0.0 - (vec3_dot(plane.normal, ray.origin) + plane.distance)) / denom;
+  if t < 0.0 {
+    return Option::None;
+  }
+  return Option::Some(t);
+}
+
+// ==========================================
+// 7. Splines & Curve Interpolation
+// ==========================================
+
+// Quadratic 2D Bézier curve interpolation.
+inline fn bezier2_quadratic(p0: Vec2, p1: Vec2, p2: Vec2, t: f64) -> Vec2 {
+  let u: f64 = 1.0 - t;
+  let tt: f64 = t * t;
+  let uu: f64 = u * u;
+  let u2t: f64 = 2.0 * u * t;
+  return Vec2 {
+    x: uu * p0.x + u2t * p1.x + tt * p2.x,
+    y: uu * p0.y + u2t * p1.y + tt * p2.y,
+  };
+}
+
+// Cubic 2D Bézier curve interpolation.
+inline fn bezier2_cubic(p0: Vec2, p1: Vec2, p2: Vec2, p3: Vec2, t: f64) -> Vec2 {
+  let u: f64 = 1.0 - t;
+  let tt: f64 = t * t;
+  let uu: f64 = u * u;
+  let uuu: f64 = uu * u;
+  let ttt: f64 = tt * t;
+  return Vec2 {
+    x: uuu * p0.x + 3.0 * uu * t * p1.x + 3.0 * u * tt * p2.x + ttt * p3.x,
+    y: uuu * p0.y + 3.0 * uu * t * p1.y + 3.0 * u * tt * p2.y + ttt * p3.y,
+  };
+}
+
+// Cubic 3D Bézier curve interpolation.
+inline fn bezier3_cubic(p0: Vec3, p1: Vec3, p2: Vec3, p3: Vec3, t: f64) -> Vec3 {
+  let u: f64 = 1.0 - t;
+  let tt: f64 = t * t;
+  let uu: f64 = u * u;
+  let uuu: f64 = uu * u;
+  let ttt: f64 = tt * t;
+  return Vec3 {
+    x: uuu * p0.x + 3.0 * uu * t * p1.x + 3.0 * u * tt * p2.x + ttt * p3.x,
+    y: uuu * p0.y + 3.0 * uu * t * p1.y + 3.0 * u * tt * p2.y + ttt * p3.y,
+    z: uuu * p0.z + 3.0 * uu * t * p1.z + 3.0 * u * tt * p2.z + ttt * p3.z,
+  };
+}
+
+// 2D Catmull-Rom spline interpolation through 4 control points.
+inline fn catmull_rom2(p0: Vec2, p1: Vec2, p2: Vec2, p3: Vec2, t: f64) -> Vec2 {
+  let t2: f64 = t * t;
+  let t3: f64 = t2 * t;
+  let f0: f64 = -0.5 * t3 + t2 - 0.5 * t;
+  let f1: f64 = 1.5 * t3 - 2.5 * t2 + 1.0;
+  let f2: f64 = -1.5 * t3 + 2.0 * t2 + 0.5 * t;
+  let f3: f64 = 0.5 * t3 - 0.5 * t2;
+  return Vec2 {
+    x: p0.x * f0 + p1.x * f1 + p2.x * f2 + p3.x * f3,
+    y: p0.y * f0 + p1.y * f1 + p2.y * f2 + p3.y * f3,
+  };
+}
+
+// 3D Catmull-Rom spline interpolation through 4 control points.
+inline fn catmull_rom3(p0: Vec3, p1: Vec3, p2: Vec3, p3: Vec3, t: f64) -> Vec3 {
+  let t2: f64 = t * t;
+  let t3: f64 = t2 * t;
+  let f0: f64 = -0.5 * t3 + t2 - 0.5 * t;
+  let f1: f64 = 1.5 * t3 - 2.5 * t2 + 1.0;
+  let f2: f64 = -1.5 * t3 + 2.0 * t2 + 0.5 * t;
+  let f3: f64 = 0.5 * t3 - 0.5 * t2;
+  return Vec3 {
+    x: p0.x * f0 + p1.x * f1 + p2.x * f2 + p3.x * f3,
+    y: p0.y * f0 + p1.y * f1 + p2.y * f2 + p3.y * f3,
+    z: p0.z * f0 + p1.z * f1 + p2.z * f2 + p3.z * f3,
+  };
+}
+
+// ==========================================
+// 8. Colorimetry & Perceptual Color Spaces
+// ==========================================
+
+// RGBA color in [0.0, 1.0] range.
+struct ColorRgba {
+  r: f64,
+  g: f64,
+  b: f64,
+  a: f64,
+}
+
+// HSV color (hue: 0..360, saturation: 0..1, value: 0..1, alpha: 0..1).
+struct ColorHsv {
+  h: f64,
+  s: f64,
+  v: f64,
+  a: f64,
+}
+
+// Perceptual Oklab color (L: 0..1, a: green/red, b: blue/yellow, alpha: 0..1).
+struct ColorOklab {
+  l: f64,
+  a: f64,
+  b: f64,
+  alpha: f64,
+}
+
+// Construct ColorRgba.
+inline fn color_rgba(r: f64, g: f64, b: f64, a: f64) -> ColorRgba {
+  return ColorRgba { r: r, g: g, b: b, a: a };
+}
+
+// Convert sRGB channel value to linear sRGB.
+fn color_srgb_to_linear(c: ColorRgba) -> ColorRgba;
+
+// Convert linear sRGB channel value to sRGB.
+fn color_linear_to_srgb(c: ColorRgba) -> ColorRgba;
+
+// Convert sRGB to HSV color.
+fn color_rgb_to_hsv(c: ColorRgba) -> ColorHsv;
+
+// Convert HSV to sRGB color.
+fn color_hsv_to_rgb(hsv: ColorHsv) -> ColorRgba;
+
+// Convert sRGB color to perceptual Oklab color space.
+fn color_srgb_to_oklab(c: ColorRgba) -> ColorOklab;
+
+// Convert perceptual Oklab color space to sRGB.
+fn color_oklab_to_srgb(lab: ColorOklab) -> ColorRgba;
+
+// Interpolate two colors smoothly in perceptual Oklab space.
+fn color_lerp_oklab(c1: ColorRgba, c2: ColorRgba, t: f64) -> ColorRgba;
+
+// ==========================================
+// 9. General Linear Algebra & Dynamic Matrix
+// ==========================================
+
+// Dynamic dense matrix with owned contiguous buffer storage.
+struct DMatrix {
+  rows: u32,
+  cols: u32,
+  data: Vector<f64>,
+}
+
+// Result of LU matrix decomposition with row pivoting.
+struct LUDecomposition {
+  lu: DMatrix,
+  pivot: Vector<u32>,
+  parity: i32,
+}
+
+// Result of QR matrix decomposition.
+struct QRDecomposition {
+  q: DMatrix,
+  r: DMatrix,
+}
+
+// Result of Cholesky matrix decomposition (A = L * L^T).
+struct CholeskyDecomposition {
+  l: DMatrix,
+}
+
+// Result of Singular Value Decomposition (A = U * diag(S) * V^T).
+struct SVDDecomposition {
+  u: DMatrix,
+  s: Vector<f64>,
+  vt: DMatrix,
+}
+
+// Result of symmetric Eigenvalue decomposition (A * V = V * diag(values)).
+struct EigenDecomposition {
+  values: Vector<f64>,
+  vectors: DMatrix,
+}
+
+// Dense dynamic matrix factory: zeros.
+fn dmat_zeros(rows: u32, cols: u32) -> DMatrix;
+
+// Dense dynamic matrix factory: identity.
+fn dmat_identity(size: u32) -> DMatrix;
+
+// Read dynamic matrix element at row r, col c.
+inline fn dmat_get(m: DMatrix, r: u32, c: u32) -> Option<f64> {
+  if r >= m.rows || c >= m.cols {
+    return Option::None;
+  }
+  let index: u32 = r * m.cols + c;
+  return get(m.data, index);
+}
+
+// Set dynamic matrix element at row r, col c in-place.
+inline fn dmat_set(m: DMatrix, r: u32, c: u32, val: f64) -> bool {
+  if r >= m.rows || c >= m.cols {
+    return false;
+  }
+  let index: u32 = r * m.cols + c;
+  set(m.data, index, val);
+  return true;
+}
+
+// Add matrix b to matrix a in-place: a += b. Returns true on dimension match, false otherwise.
+inline fn dmat_add_inplace(a: DMatrix, b: DMatrix) -> bool {
+  if a.rows != b.rows || a.cols != b.cols {
+    return false;
+  }
+  let total: u32 = a.rows * a.cols;
+  let mut i: u32 = 0;
+  while i < total {
+    let a_val: f64 = match get(a.data, i) { Option::Some(v) => v, Option::None => 0.0 };
+    let b_val: f64 = match get(b.data, i) { Option::Some(v) => v, Option::None => 0.0 };
+    set(a.data, i, a_val + b_val);
+    i = i + 1;
+  }
+  return true;
+}
+
+// Subtract matrix b from matrix a in-place: a -= b. Returns true on dimension match, false otherwise.
+inline fn dmat_sub_inplace(a: DMatrix, b: DMatrix) -> bool {
+  if a.rows != b.rows || a.cols != b.cols {
+    return false;
+  }
+  let total: u32 = a.rows * a.cols;
+  let mut i: u32 = 0;
+  while i < total {
+    let a_val: f64 = match get(a.data, i) { Option::Some(v) => v, Option::None => 0.0 };
+    let b_val: f64 = match get(b.data, i) { Option::Some(v) => v, Option::None => 0.0 };
+    set(a.data, i, a_val - b_val);
+    i = i + 1;
+  }
+  return true;
+}
+
+// Scale matrix m in-place: m *= factor.
+inline fn dmat_scale_inplace(m: DMatrix, factor: f64) {
+  let total: u32 = m.rows * m.cols;
+  let mut i: u32 = 0;
+  while i < total {
+    let val: f64 = match get(m.data, i) { Option::Some(v) => v, Option::None => 0.0 };
+    set(m.data, i, val * factor);
+    i = i + 1;
+  }
+}
+
+// Multiply-accumulate in-place: out += alpha * (a * b). Returns true on dimension match, false otherwise.
+fn dmat_mul_accumulate(out: DMatrix, a: DMatrix, b: DMatrix, alpha: f64) -> bool;
+
+// Transpose dynamic matrix.
+fn dmat_transpose(m: DMatrix) -> DMatrix;
+
+// Multiply two dynamic matrices.
+fn dmat_mul(a: DMatrix, b: DMatrix) -> Option<DMatrix>;
+
+// Compute LU decomposition with partial pivoting.
+fn dmat_lu(m: DMatrix) -> Option<LUDecomposition>;
+
+// Compute QR decomposition with Gram-Schmidt orthogonalization.
+fn dmat_qr(m: DMatrix) -> Option<QRDecomposition>;
+
+// Compute Cholesky decomposition for symmetric positive-definite matrix (A = L * L^T).
+fn dmat_cholesky(m: DMatrix) -> Option<CholeskyDecomposition>;
+
+// Compute Singular Value Decomposition (SVD) for dynamic matrix (A = U * diag(S) * V^T).
+fn dmat_svd(m: DMatrix) -> Option<SVDDecomposition>;
+
+// Compute symmetric Eigenvalue decomposition for symmetric dynamic matrix using Jacobi rotations.
+fn dmat_eigen_symmetric(m: DMatrix) -> Option<EigenDecomposition>;
+
+// Compute Moore-Penrose pseudo-inverse using SVD.
+fn dmat_pseudoinverse(m: DMatrix) -> Option<DMatrix>;
+
+// Solve linear system A * x = b using LU decomposition.
+fn dmat_solve(a: DMatrix, b: DMatrix) -> Option<DMatrix>;
+
+// Solve linear system A * x = b using Cholesky decomposition.
+fn dmat_cholesky_solve(chol: CholeskyDecomposition, b: DMatrix) -> Option<DMatrix>;
+
+// Compute matrix determinant using LU decomposition.
+fn dmat_det(m: DMatrix) -> Option<f64>;
+
+// Invert dynamic matrix using LU solver.
+fn dmat_inv(m: DMatrix) -> Option<DMatrix>;
+
+// ==========================================
+// 10. N-Dimensional Arrays / Tensors
+// ==========================================
+
+// Dimensional shape descriptor for N-dimensional tensors.
+struct TensorShape {
+  rank: u32,
+  dimensions: Vector<u32>,
+  strides: Vector<u32>,
+}
+
+// Generic N-dimensional tensor with flat contiguous backing storage.
+struct Tensor<T> {
+  shape: TensorShape,
+  data: Vector<T>,
+}
+
+// Compute total number of elements in a tensor shape.
+inline fn tensor_shape_size(shape: TensorShape) -> u32 {
+  let mut total: u32 = 1;
+  let mut i: u32 = 0;
+  while i < shape.rank {
+    let dim_opt: Option<u32> = get(shape.dimensions, i);
+    let d: u32 = match dim_opt { Option::Some(val) => val, Option::None => 1 };
+    total = total * d;
+    i = i + 1;
+  }
+  return total;
+}
+
+// Create a tensor filled with a constant scalar value.
+fn tensor_fill<T>(shape: TensorShape, val: T) -> Tensor<T>;
+
+// Reshape a tensor to a new compatible shape with the same total element count.
+fn tensor_reshape<T>(tensor: Tensor<T>, new_shape: TensorShape) -> Option<Tensor<T>>;
+
+// Strided zero-copy sub-tensor view referencing underlying buffer with custom offset and strides.
+struct TensorView<T> {
+  shape: TensorShape,
+  offset: u32,
+  data: Vector<T>,
+}
+
+// Create a full zero-copy TensorView over a Tensor.
+fn tensor_view<T>(tensor: Tensor<T>) -> TensorView<T>;
+
+// Slice a TensorView along a specified axis from start for length elements (zero-copy).
+fn tensor_slice<T>(view: TensorView<T>, axis: u32, start: u32, length: u32) -> Option<TensorView<T>>;
+
+// Read an element from a TensorView given multi-dimensional coordinate indices.
+fn tensor_view_get<T>(view: TensorView<T>, indices: Vector<u32>) -> Option<T>;
+
+// Compute 2D matrix multiplication between two rank-2 tensors.
+fn tensor_matmul(a: Tensor<f64>, b: Tensor<f64>) -> Option<Tensor<f64>>;

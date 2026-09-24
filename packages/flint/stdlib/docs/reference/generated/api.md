@@ -98,6 +98,16 @@ Stable identity and representation contract for the standard library.
 Aggregate values use monomorphized layouts where possible and descriptor
 boundaries for values that cross the host/Wasm ABI.
 
+### FLINT_STDLIB_MATH_SOURCE
+
+**Kind:** constant
+
+```typescript
+export const FLINT_STDLIB_MATH_SOURCE;
+```
+
+Relative path to the math standard library module with inlined Wasm implementations.
+
 ### FLINT_STDLIB_SOURCE_ROOT
 
 **Kind:** constant
