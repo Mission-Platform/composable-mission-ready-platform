@@ -1116,9 +1116,9 @@ if (
           ? [0.086, 0.106, 0.133, 1]
           : [0.941, 0.949, 0.961, 1];
 
-        // Outer circle + inner dot
-        pushGpuPinInstance(node.position.x, py, pinRadius, portColor, 1.5, pinInnerBg);
-        pushGpuPinInstance(node.position.x, py, Math.max(1, pinRadius - 2), isHovered ? [1, 1, 1, 1] : portColor);
+        // Outer circle (border) + inner dot
+        pushGpuPinInstance(node.position.x, py, pinRadius, pinInnerBg, 1.5, portColor);
+        pushGpuPinInstance(node.position.x, py, 2.5, isHovered ? [1, 1, 1, 1] : portColor);
         visiblePinsCount++;
 
         // Port label text
@@ -1146,14 +1146,9 @@ if (
           ? [0.086, 0.106, 0.133, 1]
           : [0.941, 0.949, 0.961, 1];
 
-        // Outer circle + inner dot
-        pushGpuPinInstance(node.position.x + NODE_WIDTH, py, pinRadius, portColor, 1.5, pinInnerBg);
-        pushGpuPinInstance(
-          node.position.x + NODE_WIDTH,
-          py,
-          Math.max(1, pinRadius - 2),
-          isHovered ? [1, 1, 1, 1] : portColor,
-        );
+        // Outer circle (border) + inner dot
+        pushGpuPinInstance(node.position.x + NODE_WIDTH, py, pinRadius, pinInnerBg, 1.5, portColor);
+        pushGpuPinInstance(node.position.x + NODE_WIDTH, py, 2.5, isHovered ? [1, 1, 1, 1] : portColor);
         visiblePinsCount++;
 
         // Port label text
@@ -2364,17 +2359,18 @@ if (
     const endX = Math.ceil(maxX / minorSpacing) * minorSpacing;
     const startY = Math.floor(minY / minorSpacing) * minorSpacing;
     const endY = Math.ceil(maxY / minorSpacing) * minorSpacing;
+    const lineThick = 1 / wasm.get_camera_zoom();
 
     if (wasm.get_camera_zoom() > 0.4) {
-      const minorColor = isDark ? [0.22, 0.25, 0.32, 0.18] : [0.55, 0.61, 0.69, 0.25];
+      const minorColor = isDark ? [0.22, 0.25, 0.32, 0.25] : [0.55, 0.61, 0.69, 0.25];
       for (let x = startX; x <= endX; x += minorSpacing) {
         if (x % majorSpacing !== 0) {
-          pushLine(x, minY, x, maxY, minorColor[0], minorColor[1], minorColor[2], minorColor[3]);
+          pushThickLine(x, minY, x, maxY, lineThick, minorColor[0], minorColor[1], minorColor[2], minorColor[3]);
         }
       }
       for (let y = startY; y <= endY; y += minorSpacing) {
         if (y % majorSpacing !== 0) {
-          pushLine(minX, y, maxX, y, minorColor[0], minorColor[1], minorColor[2], minorColor[3]);
+          pushThickLine(minX, y, maxX, y, lineThick, minorColor[0], minorColor[1], minorColor[2], minorColor[3]);
         }
       }
     }
@@ -2385,10 +2381,10 @@ if (
     const majorStartY = Math.floor(minY / majorSpacing) * majorSpacing;
     const majorEndY = Math.ceil(maxY / majorSpacing) * majorSpacing;
     for (let x = majorStartX; x <= majorEndX; x += majorSpacing) {
-      pushLine(x, minY, x, maxY, majorColor[0], majorColor[1], majorColor[2], majorColor[3]);
+      pushThickLine(x, minY, x, maxY, lineThick, majorColor[0], majorColor[1], majorColor[2], majorColor[3]);
     }
     for (let y = majorStartY; y <= majorEndY; y += majorSpacing) {
-      pushLine(minX, y, maxX, y, majorColor[0], majorColor[1], majorColor[2], majorColor[3]);
+      pushThickLine(minX, y, maxX, y, lineThick, majorColor[0], majorColor[1], majorColor[2], majorColor[3]);
     }
 
     // 2. Groups
@@ -2794,12 +2790,18 @@ if (
         const portColor = getPortTypeRgba(port.type, isDark);
         const pinInner = isDark ? [0.086, 0.106, 0.133] : [0.941, 0.949, 0.961];
 
-        // Outer ring + inner dot
+        // Outer ring + inner background + inner dot
         pushCircle(x, portY, pinRadius, portColor[0], portColor[1], portColor[2], 1);
-        pushCircle(x, portY, Math.max(1, pinRadius - 2), pinInner[0], pinInner[1], pinInner[2], 1);
-        if (isHovered) {
-          pushCircle(x, portY, Math.max(1, pinRadius - 2), 1, 1, 1, 1);
-        }
+        pushCircle(x, portY, Math.max(1, pinRadius - 1.5), pinInner[0], pinInner[1], pinInner[2], 1);
+        pushCircle(
+          x,
+          portY,
+          2.5,
+          isHovered ? 1 : portColor[0],
+          isHovered ? 1 : portColor[1],
+          isHovered ? 1 : portColor[2],
+          1,
+        );
         visiblePinsCount++;
 
         // Port label text
@@ -2825,12 +2827,18 @@ if (
         const portColor = getPortTypeRgba(port.type, isDark);
         const pinInner = isDark ? [0.086, 0.106, 0.133] : [0.941, 0.949, 0.961];
 
-        // Outer ring + inner dot
+        // Outer ring + inner background + inner dot
         pushCircle(x + nodeWidth, portY, pinRadius, portColor[0], portColor[1], portColor[2], 1);
-        pushCircle(x + nodeWidth, portY, Math.max(1, pinRadius - 2), pinInner[0], pinInner[1], pinInner[2], 1);
-        if (isHovered) {
-          pushCircle(x + nodeWidth, portY, Math.max(1, pinRadius - 2), 1, 1, 1, 1);
-        }
+        pushCircle(x + nodeWidth, portY, Math.max(1, pinRadius - 1.5), pinInner[0], pinInner[1], pinInner[2], 1);
+        pushCircle(
+          x + nodeWidth,
+          portY,
+          2.5,
+          isHovered ? 1 : portColor[0],
+          isHovered ? 1 : portColor[1],
+          isHovered ? 1 : portColor[2],
+          1,
+        );
         visiblePinsCount++;
 
         // Port label text
