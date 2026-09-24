@@ -1,6 +1,5 @@
-import { useArgs } from 'storybook/preview-api';
-
 import { ForgeSegmentControl } from '@mission-platform/forms';
+import { useArgs } from 'storybook/preview-api';
 
 import type { SegmentOption } from './forge-segment-control';
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';

@@ -1,6 +1,5 @@
-import { useArgs } from 'storybook/preview-api';
-
 import { ForgeVirtualTabs } from '@mission-platform/components';
+import { useArgs } from 'storybook/preview-api';
 
 import type { TabItem } from '@/components/molecules/forge-tabs';
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';

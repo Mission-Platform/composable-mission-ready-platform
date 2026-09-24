@@ -1,6 +1,5 @@
-import { useArgs } from 'storybook/preview-api';
-
 import { ForgeMapLayer, ForgeMapLibre, ForgeMapMarker, ForgeMapPopup, ForgeMapSource } from '@mission-platform/map';
+import { useArgs } from 'storybook/preview-api';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 import type { FeatureCollection } from 'geojson';

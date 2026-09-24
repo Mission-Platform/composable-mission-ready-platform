@@ -29,6 +29,62 @@ export function flintArtifactBaseName(entryFileName: string): string {
 }
 
 /**
+ * Sanitizes and virtualizes a source file path to prevent host path traversal (e.g. `../`) and host filesystem disclosure.
+ *
+ * @param filePath Raw source path from AST or source map.
+ * @param workspaceRoot Optional root directory to calculate relative paths against.
+ * @returns Sanitized virtual or relative path string.
+ */
+export function sanitizeSourceMapPath(filePath: string, workspaceRoot?: string): string {
+  if (filePath.length === 0) return 'source.flint';
+  let normalized = filePath.replaceAll('\\', '/');
+
+  // Strip workspace root prefix if present
+  if (workspaceRoot !== undefined) {
+    const normalizedRoot = workspaceRoot.replaceAll('\\', '/').replace(/\/+$/, '');
+    if (normalized.startsWith(normalizedRoot)) {
+      normalized = normalized.slice(normalizedRoot.length).replace(/^\/+/, '');
+    }
+  }
+
+  // Strip drive letter if present (e.g. C:)
+  normalized = normalized.replace(/^[a-z]:/i, '');
+  // Strip host user and private system directories
+  normalized = normalized.replace(/^(\/private|\/Users\/[^/]+|\/home\/[^/]+)/i, '');
+  normalized = normalized.replace(/^\/+/, '');
+
+  // Strip path traversal sequences (`../`, `..`)
+  const segments = normalized.split('/').filter((seg) => seg.length > 0 && seg !== '.' && seg !== '..');
+  const safePath = segments.length > 0 ? segments.join('/') : path.basename(filePath);
+
+  return `flint://workspace/${safePath}`;
+}
+
+/**
+ * Sanitizes a v3 source map JSON string, virtualizing all source paths to prevent traversal and leakage.
+ */
+export function sanitizeSourceMap(sourceMap: string, workspaceRoot?: string): string {
+  if (sourceMap.trim().length === 0) return sourceMap;
+  try {
+    const parsed = JSON.parse(sourceMap) as Record<string, unknown>;
+    if (Array.isArray(parsed.sources)) {
+      parsed.sources = parsed.sources.map((source: unknown) =>
+        typeof source === 'string' ? sanitizeSourceMapPath(source, workspaceRoot) : source,
+      );
+    }
+    if (typeof parsed.file === 'string') {
+      parsed.file = path.basename(parsed.file);
+    }
+    if (typeof parsed.sourceRoot === 'string') {
+      parsed.sourceRoot = '';
+    }
+    return JSON.stringify(parsed);
+  } catch {
+    return sourceMap;
+  }
+}
+
+/**
  * Extracts and prepares the binary and textual file payloads from a compiled Flint artifact.
  *
  * @param artifact Compiled Flint artifact containing WASM, WAT, and metadata.
@@ -45,7 +101,7 @@ export function artifactFilesFor(artifact: FlintArtifact): FlintCliArtifactFiles
     manifest: `${JSON.stringify(manifest, undefined, 2)}\n`,
     declarations,
     esm: esmSource,
-    sourceMap,
+    sourceMap: sanitizeSourceMap(sourceMap),
   };
 }
 

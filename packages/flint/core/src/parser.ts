@@ -137,16 +137,24 @@ class Parser {
       const documentation = pendingDocumentation ?? this.consumeTopLevelTrivia();
       pendingDocumentation = undefined;
       if (this.is('}') || this.is('eof')) break;
-      this.parseTopLevelDeclaration(documentation, {
-        imports,
-        sourceImports,
-        structs,
-        enums,
-        interfaces,
-        functions,
-        foreignCapabilities,
-        opaqueForeignTypes,
-      });
+      const startIndex = this.index;
+      try {
+        this.parseTopLevelDeclaration(documentation, {
+          imports,
+          sourceImports,
+          structs,
+          enums,
+          interfaces,
+          functions,
+          foreignCapabilities,
+          opaqueForeignTypes,
+        });
+      } catch {
+        this.synchronizeTopLevel();
+      }
+      if (this.index === startIndex && !this.is('}') && !this.is('eof')) {
+        this.consume();
+      }
     }
     const end = this.is('}')
       ? this.expect('}', 'FLINT-PARSE-004', "Expected '}' to close the legacy module.").span
@@ -1028,16 +1036,62 @@ class Parser {
   }
 
   /**
-   * Parses a block of statements enclosed in curly braces.
+   * Parses a block of statements enclosed in curly braces with statement-level error recovery.
    *
    * @returns Array of parsed statement AST nodes.
    */
   private parseBlock(): FlintStatement[] {
     this.expect('{', 'FLINT-PARSE-018', "Expected '{' to start a block.");
     const statements: FlintStatement[] = [];
-    while (!this.is('}') && !this.is('eof')) statements.push(this.parseStatement());
+    while (!this.is('}') && !this.is('eof')) {
+      const startIndex = this.index;
+      try {
+        statements.push(this.parseStatement());
+      } catch {
+        this.synchronizeStatement();
+      }
+      if (this.index === startIndex && !this.is('}') && !this.is('eof')) {
+        this.consume();
+      }
+    }
     this.expect('}', 'FLINT-PARSE-019', "Expected '}' to close a block.");
     return statements;
+  }
+
+  /**
+   * Resynchronizes statement parser state upon encountering syntax errors.
+   */
+  private synchronizeStatement(): void {
+    while (!this.is('eof') && !this.is('}')) {
+      if (this.is(';')) {
+        this.consume();
+        return;
+      }
+      this.consume();
+    }
+  }
+
+  /**
+   * Resynchronizes top-level module parser state to the next declaration keyword.
+   */
+  private synchronizeTopLevel(): void {
+    while (!this.is('eof') && !this.is('}')) {
+      if (
+        this.is('fn') ||
+        this.is('export') ||
+        this.is('struct') ||
+        this.is('record') ||
+        this.is('enum') ||
+        this.is('interface') ||
+        this.is('import') ||
+        this.is('foreign') ||
+        this.is('opaque') ||
+        this.is('#')
+      ) {
+        return;
+      }
+      this.consume();
+    }
   }
 
   /**

@@ -592,17 +592,21 @@ function verifyMemoryPages(
   fileName: string,
   diagnostics: FlintWasmArtifactVerificationDiagnostic[],
 ): void {
-  if (layout.minimumPages !== undefined && memory.minimum !== layout.minimumPages) {
+  if (layout.minimumPages !== undefined && BigInt(memory.minimum) !== BigInt(layout.minimumPages)) {
     diagnostics.push(
       diagnostic('FLINT-ARTIFACT-015', 'Artifact memory minimum does not match the manifest.', fileName),
     );
   }
-  if (layout.maximumPages !== undefined && memory.maximum !== layout.maximumPages) {
+  if (
+    layout.maximumPages !== undefined &&
+    memory.maximum !== undefined &&
+    BigInt(memory.maximum) !== BigInt(layout.maximumPages)
+  ) {
     diagnostics.push(
       diagnostic('FLINT-ARTIFACT-016', 'Artifact memory maximum does not match the manifest.', fileName),
     );
   }
-  if (memory.maximum !== undefined && memory.maximum < memory.minimum) {
+  if (memory.maximum !== undefined && BigInt(memory.maximum) < BigInt(memory.minimum)) {
     diagnostics.push(
       diagnostic('FLINT-ARTIFACT-017', 'Artifact memory maximum is smaller than its minimum.', fileName),
     );
@@ -841,7 +845,9 @@ function verifyMetadataCustomSection(
 // skipcq: JS-D1001
 function verifyAbiV2CustomSection(
   parsed: ParsedWasm,
+  input: FlintWasmArtifactVerificationInput,
   fileName: string,
+  functionIndexes: Map<number, FunctionType>,
   diagnostics: FlintWasmArtifactVerificationDiagnostic[],
 ): void {
   const abiSection = parsed.customSections.get('flint.abi.v2');
@@ -850,6 +856,34 @@ function verifyAbiV2CustomSection(
     const decoded = decodeCborAbiManifest(abiSection);
     if (decoded.exports === undefined || !Array.isArray(decoded.exports)) {
       diagnostics.push(diagnostic('FLINT-ARTIFACT-025', 'Invalid flint.abi.v2 custom section structure.', fileName));
+      return;
+    }
+    const addressType = input.manifest.memory.addressType ?? 'u32';
+    for (const manifestExport of decoded.exports) {
+      if (typeof manifestExport.name !== 'string') {
+        diagnostics.push(diagnostic('FLINT-ARTIFACT-025', 'ABI manifest export has invalid name.', fileName));
+        continue;
+      }
+      const wasmExport = parsed.exports.find((entry) => entry.name === manifestExport.name && entry.kind === 0);
+      if (wasmExport !== undefined) {
+        const type = resolveFunctionType(wasmExport.index, parsed, functionIndexes);
+        if (type !== undefined) {
+          const expectedParameters = (manifestExport.parameters ?? []).flatMap(
+            (parameter: { type: string; reference?: string }) =>
+              lowLevelTypes(parameter.type, parameter.reference, addressType),
+          );
+          const expectedResult = lowLevelTypes(manifestExport.result, manifestExport.resultReference, addressType);
+          if (!sameTypes(type.parameters, expectedParameters) || !sameTypes(type.results, expectedResult)) {
+            diagnostics.push(
+              diagnostic(
+                'FLINT-ARTIFACT-025',
+                `Export "${manifestExport.name}" signature in flint.abi.v2 does not match WebAssembly Type section.`,
+                fileName,
+              ),
+            );
+          }
+        }
+      }
     }
   } catch (error) {
     diagnostics.push(
@@ -918,7 +952,7 @@ function verifyVariant(
   verifyCustomSectionsList(parsed, input, fileName, diagnostics);
   verifyFeatureCustomSection(parsed, input, fileName, diagnostics);
   verifyMetadataCustomSection(parsed, input, fileName, diagnostics);
-  verifyAbiV2CustomSection(parsed, fileName, diagnostics);
+  verifyAbiV2CustomSection(parsed, input, fileName, functionIndexes, diagnostics);
   verifyHashes(bytes, input, fileName, variant, diagnostics);
 
   return { parsed, diagnostics };

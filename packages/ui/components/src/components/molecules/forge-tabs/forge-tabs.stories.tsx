@@ -1,6 +1,5 @@
-import { useArgs } from 'storybook/preview-api';
-
 import { ForgeTabs } from '@mission-platform/components';
+import { useArgs } from 'storybook/preview-api';
 
 import type { TabItem } from './forge-tabs';
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';

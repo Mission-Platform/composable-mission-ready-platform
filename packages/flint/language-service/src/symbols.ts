@@ -384,51 +384,67 @@ function addStatementSymbols(
   }
 }
 
-/** Traverses expressions indexing referenced variables, calls, and member access. */
+/** Traverses expressions indexing referenced variables, calls, and member access using a stack-safe iterative walker. */
 // skipcq: JS-R1005
 function addExpressionSymbols(
   source: string,
   declaration: FlintFunction,
-  expression: FlintExpression,
+  initialExpression: FlintExpression,
   tokens: readonly FlintToken[],
   symbols: FlintSymbol[],
-  scope: FlintSourceSpan,
+  initialScope: FlintSourceSpan,
 ): void {
-  switch (expression.kind) {
-    case 'binary': {
-      addExpressionSymbols(source, declaration, expression.left, tokens, symbols, scope);
-      addExpressionSymbols(source, declaration, expression.right, tokens, symbols, scope);
-      break;
-    }
-    case 'unary': {
-      addExpressionSymbols(source, declaration, expression.operand, tokens, symbols, scope);
-      break;
-    }
-    case 'call': {
-      for (const argument of expression.arguments)
-        addExpressionSymbols(source, declaration, argument, tokens, symbols, scope);
-      break;
-    }
-    case 'struct-value': {
-      for (const value of Object.values(expression.fields))
-        addExpressionSymbols(source, declaration, value, tokens, symbols, scope);
-      break;
-    }
-    case 'enum-value': {
-      for (const argument of expression.arguments)
-        addExpressionSymbols(source, declaration, argument, tokens, symbols, scope);
-      break;
-    }
-    case 'match': {
-      addExpressionSymbols(source, declaration, expression.value, tokens, symbols, scope);
-      for (const arm of expression.arms) {
-        addPatternSymbols(source, declaration, arm.pattern, arm.span, tokens, symbols);
-        addExpressionSymbols(source, declaration, arm.value, tokens, symbols, arm.span);
+  const stack: { expression: FlintExpression; scope: FlintSourceSpan }[] = [
+    { expression: initialExpression, scope: initialScope },
+  ];
+
+  while (stack.length > 0) {
+    const item = stack.pop();
+    if (item === undefined) break;
+    const { expression, scope } = item;
+
+    switch (expression.kind) {
+      case 'binary': {
+        stack.push({ expression: expression.right, scope }, { expression: expression.left, scope });
+        break;
       }
-      break;
-    }
-    default: {
-      break;
+      case 'unary': {
+        stack.push({ expression: expression.operand, scope });
+        break;
+      }
+      case 'call': {
+        for (let index = expression.arguments.length - 1; index >= 0; index -= 1) {
+          const argument = expression.arguments[index];
+          if (argument !== undefined) stack.push({ expression: argument, scope });
+        }
+        break;
+      }
+      case 'struct-value': {
+        const values = Object.values(expression.fields);
+        for (let index = values.length - 1; index >= 0; index -= 1) {
+          const value = values[index];
+          if (value !== undefined) stack.push({ expression: value, scope });
+        }
+        break;
+      }
+      case 'enum-value': {
+        for (let index = expression.arguments.length - 1; index >= 0; index -= 1) {
+          const argument = expression.arguments[index];
+          if (argument !== undefined) stack.push({ expression: argument, scope });
+        }
+        break;
+      }
+      case 'match': {
+        stack.push({ expression: expression.value, scope });
+        for (const arm of expression.arms) {
+          addPatternSymbols(source, declaration, arm.pattern, arm.span, tokens, symbols);
+          stack.push({ expression: arm.value, scope: arm.span });
+        }
+        break;
+      }
+      default: {
+        break;
+      }
     }
   }
 }

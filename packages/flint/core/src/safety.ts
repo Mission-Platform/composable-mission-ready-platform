@@ -594,6 +594,80 @@ function isNonOwningEscapeResult(result: FlintTypeName, context: SafetyContext):
 }
 
 /**
+ * Regional lifetime lattice hierarchy: Local < Function < Arena < GlobalHeap.
+ */
+export type RegionLifetime = 'local' | 'function' | 'arena' | 'global' | 'Local' | 'Function' | 'Arena' | 'GlobalHeap';
+
+export const REGION_LIFETIMES = ['Local', 'Function', 'Arena', 'GlobalHeap'] as const;
+
+export const REGION_LIFETIME_ORDER: Readonly<Record<RegionLifetime, number>> = {
+  local: 0,
+  function: 1,
+  arena: 2,
+  global: 3,
+  Local: 0,
+  Function: 1,
+  Arena: 2,
+  GlobalHeap: 3,
+};
+
+/**
+ * Validates that an assignment or return from source lifetime to target lifetime does not violate region safety.
+ * Storing a shorter-lived reference into a longer-lived target without explicit promotion/cloning is disallowed.
+ */
+export function canLifetimeEscape(source: RegionLifetime, target: RegionLifetime): boolean {
+  return REGION_LIFETIME_ORDER[source] >= REGION_LIFETIME_ORDER[target];
+}
+
+/**
+ * Descriptor of a variable captured by a closure.
+ */
+export interface ClosureCaptureInfo {
+  readonly variableName: string;
+  readonly captureMode: 'by-ref' | 'by-val' | 'by-mut-ref';
+  readonly sourceLifetime: RegionLifetime;
+  readonly closureLifetime: RegionLifetime;
+  readonly isPromotedToHeap?: boolean;
+}
+
+/**
+ * Validates closure capture safety and determines if stack variable heap promotion is mandatory.
+ * Prevents Use-After-Scope memory corruption when closures outlive captured stack frames.
+ *
+ * @param capture - Closure capture metadata descriptor.
+ * @returns Validation outcome, whether heap promotion is required, and error message if unsafe.
+ */
+export function validateClosureCaptureSafety(capture: ClosureCaptureInfo): {
+  readonly safe: boolean;
+  readonly requiresHeapPromotion: boolean;
+  readonly reason?: string;
+} {
+  // Captures by value are self-contained copies; always safe across lifetime boundaries
+  if (capture.captureMode === 'by-val') {
+    return { safe: true, requiresHeapPromotion: false };
+  }
+
+  // If already promoted to a heap box, it's safe for any lifetime
+  if (capture.isPromotedToHeap === true) {
+    return { safe: true, requiresHeapPromotion: false };
+  }
+
+  // Reference captures: closure lifetime must not exceed the source variable's lifetime
+  const sourceRank = REGION_LIFETIME_ORDER[capture.sourceLifetime];
+  const closureRank = REGION_LIFETIME_ORDER[capture.closureLifetime];
+
+  if (closureRank > sourceRank) {
+    return {
+      safe: false,
+      requiresHeapPromotion: true,
+      reason: `Captured variable '${capture.variableName}' has lifetime ${capture.sourceLifetime} but enclosing closure escapes with lifetime ${capture.closureLifetime}. Capture must be promoted to a heap-allocated box.`,
+    };
+  }
+
+  return { safe: true, requiresHeapPromotion: false };
+}
+
+/**
  * Result classification indicating whether a returned value is permitted to cross scope boundaries.
  */
 type EscapeClassification = { readonly allowed: true } | { readonly allowed: false; readonly message: string };
@@ -825,4 +899,30 @@ function addDiagnostic(
   hint?: string,
 ): void {
   context.diagnostics.push(createDiagnostic(context.fileName, 'type-check', code, message, span, 'error', hint));
+}
+
+/**
+ * Struct move safety info descriptor.
+ */
+export interface MoveSafetyInfo {
+  readonly typeName: string;
+  readonly isPinned: boolean;
+  readonly isSelfReferential?: boolean;
+}
+
+/**
+ * Validates whether an aggregate or struct value can be safely moved by value.
+ * Prohibits moving pinned or self-referential structures to eliminate stack frame smashing and Use-After-Move hazards.
+ */
+export function validateMoveSafety(info: MoveSafetyInfo): {
+  readonly safe: boolean;
+  readonly reason?: string;
+} {
+  if (info.isPinned || info.isSelfReferential) {
+    return {
+      safe: false,
+      reason: `Pinned or self-referential type '${info.typeName}' cannot be moved by value; use a pinned reference '&Pin<${info.typeName}>'.`,
+    };
+  }
+  return { safe: true };
 }

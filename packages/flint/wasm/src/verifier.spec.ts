@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { Cursor, parseLimits } from './binary-parser.js';
 import { compileFlintWasm } from './emitter.js';
 import { sha256ArtifactHash } from './hash.js';
 import { verifyFlintWasmArtifact } from './verifier.js';
@@ -317,5 +318,27 @@ describe('Forge Web Script Wasm artifact verifier', () => {
     });
     expect(verification.verified).toBe(true);
     expect(verification.diagnostics).toEqual([]);
+  });
+
+  it('safely decodes 64-bit LEB128 integers without floating point precision truncation', () => {
+    // 64-bit integer exceeding 2^53 - 1 ((1n << 56n) | 1n) encoded in LEB128:
+    // In 7-bit chunks:
+    // byte 0: 0x01 | 0x80 = 0x81
+    // bytes 1..7: 0x80
+    // byte 8: 0x01
+    const expectedValue = (1n << 56n) | 1n;
+    const lebBytes = new Uint8Array([0x81, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x01]);
+    const cursor = new Cursor(lebBytes);
+    const value = cursor.leb64(10);
+    expect(value).toBe(expectedValue);
+
+    // Test parseLimits with memory64 flag (flags = 0x04)
+    const memory64Bytes = new Uint8Array([
+      0x04, // memory64 = true, hasMaximum = false
+      ...lebBytes,
+    ]);
+    const parsed = parseLimits(new Cursor(memory64Bytes));
+    expect(parsed.memory64).toBe(true);
+    expect(parsed.minimum).toBe(expectedValue);
   });
 });

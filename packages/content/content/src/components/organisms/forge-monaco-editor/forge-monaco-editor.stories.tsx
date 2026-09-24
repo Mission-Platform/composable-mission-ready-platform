@@ -1,6 +1,5 @@
-import { useArgs } from 'storybook/preview-api';
-
 import { ForgeMonacoEditor } from '@mission-platform/content';
+import { useArgs } from 'storybook/preview-api';
 
 import type { FlintWorkspaceHost } from '@mission-platform/flint-language-service';
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';

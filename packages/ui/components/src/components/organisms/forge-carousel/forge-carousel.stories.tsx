@@ -1,6 +1,5 @@
-import { useArgs } from 'storybook/preview-api';
-
 import { ForgeCarousel } from '@mission-platform/components';
+import { useArgs } from 'storybook/preview-api';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 

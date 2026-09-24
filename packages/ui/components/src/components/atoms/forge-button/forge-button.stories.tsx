@@ -1,6 +1,5 @@
-import { expect, userEvent, within } from 'storybook/test';
-
 import { ForgeButton } from '@mission-platform/components';
+import { expect, userEvent, within } from 'storybook/test';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 

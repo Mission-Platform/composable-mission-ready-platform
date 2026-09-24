@@ -70,4 +70,30 @@ describe("Binary CBOR encoder and decoder", () => {
     expect(decoded.exports[0]?.name).toBe("add");
     expect(decoded.memory.allocatorExport).toBe("fws_alloc");
   });
+
+  it("prevents prototype pollution via __proto__, constructor, and prototype keys", () => {
+    // Manually construct CBOR map with __proto__ key: Major type 5 (map), 1 pair
+    const maliciousPayload = new Uint8Array([
+      0xa1, // Map with 1 pair
+      0x69, // Text string of 9 bytes
+      ...new TextEncoder().encode("__proto__"),
+      0x65, // Text string of 5 bytes
+      ...new TextEncoder().encode("owned"),
+    ]);
+
+    expect(() => decodeCbor(maliciousPayload)).toThrow(TypeError);
+    expect(({} as Record<string, unknown>).__proto__).not.toHaveProperty(
+      "polluted",
+    );
+  });
+
+  it("prevents unbounded recursion and deserialization bombs", () => {
+    // Deeply nested array exceeding MAX_CBOR_DEPTH (64)
+    const nested = new Uint8Array(70).fill(0x81); // Array of 1 element repeated 70 times
+    expect(() => decodeCbor(nested)).toThrow(RangeError);
+
+    // Truncated string length payload
+    const truncatedPayload = new Uint8Array([0x7a, 0x00, 0x01, 0x00, 0x00]); // String claiming 65536 bytes with 0 trailing
+    expect(() => decodeCbor(truncatedPayload)).toThrow(RangeError);
+  });
 });

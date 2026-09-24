@@ -31,6 +31,15 @@ export interface FlintSharedHandle {
 }
 
 /**
+ * Weak reference handle referencing a shared memory allocation without incrementing strong reference counts.
+ * Mitigates monotonic memory leaks caused by cyclic data structures.
+ */
+export interface FlintWeakHandle {
+  readonly id: number;
+  readonly sharedId: number;
+}
+
+/**
  * Internal tracking state for an active lifetime region.
  */
 interface RegionState {
@@ -47,6 +56,7 @@ interface SharedState {
   readonly pointer: FlintMemoryAddress;
   readonly length: number;
   references: number;
+  weakReferences: number;
   released: boolean;
 }
 
@@ -337,8 +347,10 @@ export class FlintSafeHeap {
   public readonly memory: FlintMemory;
   private nextRegion = 1;
   private nextHandle = 1;
+  private nextWeakHandle = 1;
   private readonly regions = new Map<number, RegionState>();
   private readonly shared = new Map<number, SharedState>();
+  private readonly weakHandles = new Map<number, number>();
 
   /**
    * Initializes a new FlintSafeHeap manager bound to linear memory.
@@ -451,7 +463,7 @@ export class FlintSafeHeap {
     if (this.memory.allocationSize(pointer) !== length)
       throw new FlintTrap('InvalidOwnership', 'Shared handles may only wrap an exact runtime-owned allocation.');
     const id = this.nextHandle++;
-    this.shared.set(id, { id, pointer, length, references: 1, released: false });
+    this.shared.set(id, { id, pointer, length, references: 1, weakReferences: 0, released: false });
     return { id, pointer, length };
   }
 
@@ -463,6 +475,57 @@ export class FlintSafeHeap {
   public retain(handle: FlintSharedHandle): void {
     const state = this.requireShared(handle);
     state.references += 1;
+  }
+
+  /**
+   * Creates a non-owning weak reference handle to a shared allocation.
+   *
+   * @param handle - Shared handle to reference weakly.
+   * @returns New weak reference handle.
+   */
+  public createWeak(handle: FlintSharedHandle): FlintWeakHandle {
+    const state = this.requireShared(handle);
+    state.weakReferences += 1;
+    const weakId = this.nextWeakHandle++;
+    this.weakHandles.set(weakId, handle.id);
+    return { id: weakId, sharedId: handle.id };
+  }
+
+  /**
+   * Attempts to upgrade a weak reference handle to an active shared handle.
+   * Returns undefined if the underlying shared allocation was already released.
+   *
+   * @param weak - Weak reference handle to upgrade.
+   * @returns Active shared handle or undefined if dead.
+   */
+  public upgradeWeak(weak: FlintWeakHandle): FlintSharedHandle | undefined {
+    const sharedId = this.weakHandles.get(weak.id);
+    if (sharedId === undefined) return undefined;
+    const state = this.shared.get(sharedId);
+    if (state === undefined || state.released || state.references <= 0) {
+      return undefined;
+    }
+    state.references += 1;
+    return { id: state.id, pointer: state.pointer, length: state.length };
+  }
+
+  /**
+   * Decrements the weak reference count and cleans up weak handle tracking state.
+   *
+   * @param weak - Weak reference handle to release.
+   */
+  public releaseWeak(weak: FlintWeakHandle): void {
+    const sharedId = this.weakHandles.get(weak.id);
+    if (sharedId !== undefined) {
+      this.weakHandles.delete(weak.id);
+      const state = this.shared.get(sharedId);
+      if (state !== undefined) {
+        state.weakReferences = Math.max(0, state.weakReferences - 1);
+        if (state.released && state.weakReferences === 0) {
+          this.shared.delete(sharedId);
+        }
+      }
+    }
   }
 
   /**
@@ -481,6 +544,9 @@ export class FlintSafeHeap {
     if (state.references === 0) {
       state.released = true;
       this.memory.deallocate(state.pointer, state.length);
+      if (state.weakReferences === 0) {
+        this.shared.delete(handle.id);
+      }
     }
   }
 
@@ -543,4 +609,87 @@ export class FlintSafeHeap {
  */
 export function createFlintSafeHeap(memory: FlintMemory): FlintSafeHeap {
   return new FlintSafeHeap(memory);
+}
+
+/**
+ * Dynamic function table slot handle tracking table index and generational token.
+ */
+export interface FlintTableSlotHandle {
+  readonly slotIndex: number;
+  readonly generation: number;
+  readonly functionIndex: number;
+}
+
+/**
+ * Dynamic WebAssembly function table manager providing slot allocation, generation tracking,
+ * and immediate nullification upon closure release to prevent stale function dispatch.
+ */
+export class FlintDynamicTableManager {
+  private readonly table: WebAssembly.Table;
+  private readonly generations = new Map<number, number>();
+  private readonly activeSlots = new Set<number>();
+  private readonly freeList: number[] = [];
+  private nextSlot: number;
+
+  public constructor(table: WebAssembly.Table, initialOffset = 1) {
+    this.table = table;
+    this.nextSlot = initialOffset;
+  }
+
+  /**
+   * Allocates a table slot for a dynamic function/closure index with a fresh generation token.
+   */
+  public allocateSlot(functionReference: Function | number): FlintTableSlotHandle {
+    let slotIndex: number;
+    if (this.freeList.length > 0) {
+      slotIndex = this.freeList.pop()!;
+    } else {
+      slotIndex = this.nextSlot++;
+      if (slotIndex >= this.table.length) {
+        this.table.grow(Math.max(16, slotIndex - this.table.length + 1));
+      }
+    }
+
+    const currentGen = (this.generations.get(slotIndex) ?? 0) + 1;
+    this.generations.set(slotIndex, currentGen);
+    this.activeSlots.add(slotIndex);
+
+    try {
+      // eslint-disable-next-line unicorn/no-null
+      this.table.set(slotIndex, typeof functionReference === 'function' ? functionReference : null);
+    } catch {
+      // Best-effort table slot initialization
+    }
+
+    const functionIndex = typeof functionReference === 'number' ? functionReference : slotIndex;
+    return { slotIndex, generation: currentGen, functionIndex };
+  }
+
+  /**
+   * Validates if a table slot handle matches the active generation.
+   */
+  public isValid(handle: FlintTableSlotHandle): boolean {
+    if (!this.activeSlots.has(handle.slotIndex)) return false;
+    return this.generations.get(handle.slotIndex) === handle.generation;
+  }
+
+  /**
+   * Nullifies and frees a table slot, preventing stale calls from reaching recycled closures.
+   */
+  public freeSlot(handle: FlintTableSlotHandle): void {
+    if (!this.isValid(handle)) {
+      throw new FlintTrap(
+        'InvalidOwnership',
+        `Table slot ${handle.slotIndex} generation ${handle.generation} is not active.`,
+      );
+    }
+    this.activeSlots.delete(handle.slotIndex);
+    try {
+      // eslint-disable-next-line unicorn/no-null
+      this.table.set(handle.slotIndex, null);
+    } catch {
+      // Nullify table slot
+    }
+    this.freeList.push(handle.slotIndex);
+  }
 }

@@ -69,6 +69,41 @@ interface RuntimeVariablesResult {
 
 const DEFAULT_RESPONSE_TIMEOUT_MS = 10_000;
 
+/** Maximum allowed memory read bytes in a single DAP readMemory request. */
+export const MAX_DAP_MEMORY_READ_BYTES = 1_048_576;
+
+/**
+ * Validates and bounds a DAP readMemory request payload to prevent memory disclosure out of bounds and DoS.
+ */
+export function validateDapMemoryReadRequest(arguments_: Record<string, unknown>): {
+  readonly memoryReference: string;
+  readonly offset: number;
+  readonly count: number;
+} {
+  const memoryReference =
+    typeof arguments_.memoryReference === 'string'
+      ? arguments_.memoryReference
+      : typeof arguments_.memoryReference === 'number'
+        ? `0x${arguments_.memoryReference.toString(16)}`
+        : undefined;
+
+  if (memoryReference === undefined || !/^(0x[\da-f]+|\d+)$/i.test(memoryReference.trim())) {
+    throw new Error('readMemory requires a valid non-empty memoryReference string or integer.');
+  }
+
+  const offset = typeof arguments_.offset === 'number' ? arguments_.offset : 0;
+  if (!Number.isSafeInteger(offset) || offset < 0) {
+    throw new Error('readMemory offset must be a non-negative integer.');
+  }
+
+  const count = typeof arguments_.count === 'number' ? arguments_.count : 0;
+  if (!Number.isSafeInteger(count) || count < 0 || count > MAX_DAP_MEMORY_READ_BYTES) {
+    throw new Error(`readMemory count must be between 0 and ${MAX_DAP_MEMORY_READ_BYTES} bytes.`);
+  }
+
+  return { memoryReference, offset, count };
+}
+
 /** Instantiates a new Flint DAP server attached to the specified input and output streams. */
 export function createFlintDapServer(options: FlintDapServerOptions): FlintDapServer {
   let sequence = 1;
@@ -240,6 +275,8 @@ export function createFlintDapServer(options: FlintDapServerOptions): FlintDapSe
           supportsTerminateRequest: true,
           supportsSteppingGranularity: false,
           supportsSetVariable: false,
+          supportsReadMemoryRequest: true,
+          supportsEvaluateForHovers: true,
         });
         event('initialized');
         return;
@@ -337,6 +374,25 @@ export function createFlintDapServer(options: FlintDapServerOptions): FlintDapSe
         const result = await sendRuntimeRequest(request.command, isRecord(request.arguments) ? request.arguments : {});
         if (!result.success) throw new Error(result.message ?? `The runtime rejected ${request.command}.`);
         respond(request, true, result.body);
+        return;
+      }
+      if (request.command === 'readMemory') {
+        const arguments_ = isRecord(request.arguments) ? request.arguments : {};
+        const validated = validateDapMemoryReadRequest(arguments_);
+        const result = await sendRuntimeRequest('readMemory', validated);
+        if (!result.success) throw new Error(result.message ?? 'The runtime rejected readMemory.');
+        respond(request, true, result.body ?? { address: validated.memoryReference, data: '', unreadableBytes: 0 });
+        return;
+      }
+      if (request.command === 'evaluate') {
+        const arguments_ = isRecord(request.arguments) ? request.arguments : {};
+        const expression = typeof arguments_.expression === 'string' ? arguments_.expression : '';
+        if (expression.length > 4096) {
+          throw new Error('DAP evaluate expression exceeds maximum length of 4096 characters.');
+        }
+        const result = await sendRuntimeRequest('evaluate', arguments_);
+        if (!result.success) throw new Error(result.message ?? 'The runtime rejected evaluate.');
+        respond(request, true, result.body ?? { result: '', variablesReference: 0 });
         return;
       }
       if (

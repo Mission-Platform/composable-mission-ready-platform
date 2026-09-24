@@ -1,6 +1,5 @@
-import { useArgs } from 'storybook/preview-api';
-
 import { ForgeOnboardingTour } from '@mission-platform/components';
+import { useArgs } from 'storybook/preview-api';
 
 import type { OnboardingTourProperties } from '@mission-platform/components';
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';

@@ -82,6 +82,28 @@ export function isDenseSwitchEligible(
 }
 
 /**
+ * Selects the optimal match dispatch strategy based on density and value distribution.
+ */
+export function selectMatchStrategy(
+  values: readonly (number | boolean | string)[],
+  options: DecisionTreeCompileOptions = {},
+): 'br-table' | 'binary-search' | 'sparse' {
+  if (isDenseSwitchEligible(values, options)) {
+    return 'br-table';
+  }
+  const numericCount = values.filter(
+    (value) =>
+      typeof value === 'number' ||
+      typeof value === 'boolean' ||
+      options.enumValueResolver?.(String(value)) !== undefined,
+  ).length;
+  if (numericCount >= 4) {
+    return 'binary-search';
+  }
+  return 'sparse';
+}
+
+/**
  * Compiles a list of match arms into an optimal pattern matching decision tree.
  */
 export function compileDecisionTree(
@@ -142,7 +164,7 @@ export function compileDecisionTree(
   }
 
   const caseValues = cases.map((item) => item.value);
-  const strategy = isDenseSwitchEligible(caseValues, options) ? 'br-table' : 'sparse';
+  const strategy = selectMatchStrategy(caseValues, options);
 
   return {
     kind: 'switch',

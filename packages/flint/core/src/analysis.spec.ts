@@ -91,6 +91,25 @@ export fn unsafe(input: string) -> string {
     expect(artifact.diagnostics.some(({ code }) => code === 'FLINT-ABI-002')).toBe(false);
   });
 
+  it('enforces deny-by-default capability security when allowedCapabilities is empty in strict mode', () => {
+    const artifact = compileFlint({
+      source: `
+import capability "filesystem.read" as read(value: string) -> string;
+export fn unsafe(input: string) -> string {
+  return read(input);
+}`,
+      fileName: 'deny-default.flint',
+      compilerVersion: '0.1.0',
+      analysisPolicy: {
+        profile: 'strict',
+        allowedCapabilities: [],
+      },
+    });
+
+    expect(artifact.wasm).toBeUndefined();
+    expect(artifact.analysis?.blockingFindings.some(({ code }) => code === 'FLINT-ANALYSIS-SECURITY-001')).toBe(true);
+  });
+
   it('preserves valid bounded collection and allocator flows', () => {
     const artifact = compileFlint({
       source: `

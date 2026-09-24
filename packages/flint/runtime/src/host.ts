@@ -76,15 +76,93 @@ export interface FlintHostOptions {
  */
 export type FlintCapabilityRegistry = Readonly<Record<string, FlintCapabilityImplementation>>;
 
+export const MAX_FFI_CALL_DEPTH = 512;
+
 /**
- * Resolves an import entry from the ABI manifest by its alias identifier.
+ * Performs a constant-time comparison of two strings to prevent timing side-channel attacks on security-critical identifiers.
+ */
+export function timingSafeEqualString(stringA: string, stringB: string): boolean {
+  if (typeof stringA !== 'string' || typeof stringB !== 'string') return false;
+  const lengthA = stringA.length;
+  const lengthB = stringB.length;
+  let mismatch = lengthA ^ lengthB;
+  const maxLength = Math.max(lengthA, lengthB);
+  for (let index = 0; index < maxLength; index += 1) {
+    const codePointA = index < lengthA ? (stringA.codePointAt(index) ?? 0) : 0;
+    const codePointB = index < lengthB ? (stringB.codePointAt(index) ?? 0) : 0;
+    mismatch |= codePointA ^ codePointB;
+  }
+  return mismatch === 0;
+}
+
+/**
+ * Validates that a host pointer offset and length satisfy spatial bounds invariants.
+ */
+export function validateHostPointerBounds(pointer: number, length: number, memoryLimit = 0xff_ff_ff_ff): boolean {
+  if (!Number.isFinite(pointer) || !Number.isFinite(length)) return false;
+  if (pointer < 0 || length < 0) return false;
+  if (pointer + length > memoryLimit) return false;
+  return true;
+}
+
+/**
+ * Synchronizes atomic head/tail pointer updates on shared host interop ring buffer memory.
+ * Uses WebAssembly-compatible atomic store/load operations with memory ordering guarantees to prevent race conditions.
+ */
+export class AtomicRingBufferChannel {
+  private readonly int32View: Int32Array;
+
+  public constructor(memory: Uint8Array | WebAssembly.Memory, byteOffset = 0, capacity = 1024) {
+    const buffer = memory instanceof Uint8Array ? memory.buffer : memory.buffer;
+    this.int32View = new Int32Array(buffer, byteOffset, Math.max(4, Math.trunc(capacity / 4)));
+  }
+
+  /** Atomically loads head index from the ring buffer metadata slot with sequentially consistent ordering. */
+  public atomicLoadHead(): number {
+    if (typeof Atomics !== 'undefined' && this.int32View.buffer instanceof SharedArrayBuffer) {
+      return Atomics.load(this.int32View, 0);
+    }
+    return this.int32View[0] ?? 0;
+  }
+
+  /** Atomically stores head index to the ring buffer metadata slot and releases memory writes. */
+  public atomicStoreHead(value: number): void {
+    if (typeof Atomics !== 'undefined' && this.int32View.buffer instanceof SharedArrayBuffer) {
+      Atomics.store(this.int32View, 0, value);
+      Atomics.notify(this.int32View, 0, 1);
+    } else {
+      this.int32View[0] = value;
+    }
+  }
+
+  /** Atomically loads tail index with memory barrier. */
+  public atomicLoadTail(): number {
+    if (typeof Atomics !== 'undefined' && this.int32View.buffer instanceof SharedArrayBuffer) {
+      return Atomics.load(this.int32View, 1);
+    }
+    return this.int32View[1] ?? 0;
+  }
+
+  /** Atomically stores tail index with memory release barrier. */
+  public atomicStoreTail(value: number): void {
+    if (typeof Atomics !== 'undefined' && this.int32View.buffer instanceof SharedArrayBuffer) {
+      Atomics.store(this.int32View, 1, value);
+      Atomics.notify(this.int32View, 1, 1);
+    } else {
+      this.int32View[1] = value;
+    }
+  }
+}
+
+/**
+ * Resolves an import entry from the ABI manifest by its alias identifier using constant-time comparison.
  *
  * @param manifest - ABI manifest to search.
  * @param alias - Import alias identifier.
  * @returns Found import entry or undefined.
  */
 function findImport(manifest: FlintAbiManifest, alias: string) {
-  return manifest.imports.find((entry) => entry.alias === alias);
+  return manifest.imports.find((entry) => timingSafeEqualString(entry.alias, alias));
 }
 
 /**
@@ -128,6 +206,7 @@ export function createFlintHost(
     }
   }
   let disposed = false;
+  let currentCallDepth = 0;
   return {
     capabilities: manifest.requiredCapabilities,
     foreignCapabilities: manifest.foreignCapabilities?.map((c) => c.library) ?? [],
@@ -141,6 +220,14 @@ export function createFlintHost(
     // skipcq: JS-R1005
     invoke(alias, arguments_): unknown | Promise<unknown> {
       if (disposed) throw new FlintTrap('GuestTrap', 'Flint host has been disposed.', undefined, { logger });
+      if (currentCallDepth >= MAX_FFI_CALL_DEPTH) {
+        throw new FlintTrap(
+          'CallDepthExhausted',
+          `Maximum foreign function call depth (${MAX_FFI_CALL_DEPTH}) exceeded during reentrant host invocation.`,
+          undefined,
+          { logger },
+        );
+      }
       const imported = findImport(manifest, alias);
       const implementation = implementations.get(alias);
       if (imported === undefined || implementation === undefined)
@@ -154,17 +241,24 @@ export function createFlintHost(
           imported.capability,
           { logger },
         );
+      currentCallDepth += 1;
       try {
         logger.debug('capability.invoke', { alias, capability: imported.capability, argumentCount: arguments_.length });
         const result = implementation.call(arguments_);
         if (result instanceof Promise)
-          return result.catch((error: unknown) => {
-            const hostError = toFlintHostError(error, imported.capability, logger);
-            logger.error('capability.reject', { alias, capability: imported.capability, code: hostError.code });
-            throw hostError;
-          });
+          return result
+            .catch((error: unknown) => {
+              const hostError = toFlintHostError(error, imported.capability, logger);
+              logger.error('capability.reject', { alias, capability: imported.capability, code: hostError.code });
+              throw hostError;
+            })
+            .finally(() => {
+              currentCallDepth -= 1;
+            });
+        currentCallDepth -= 1;
         return result;
       } catch (error) {
+        currentCallDepth -= 1;
         const hostError = toFlintHostError(error, imported.capability, logger);
         logger.error('capability.throw', { alias, capability: imported.capability, code: hostError.code });
         throw hostError;
@@ -176,7 +270,15 @@ export function createFlintHost(
     // skipcq: JS-R1005
     invokeForeign(library, symbol, arguments_): unknown | Promise<unknown> {
       if (disposed) throw new FlintTrap('GuestTrap', 'Flint host has been disposed.', undefined, { logger });
-      const declared = manifest.foreignCapabilities?.find((c) => c.library === library);
+      if (currentCallDepth >= MAX_FFI_CALL_DEPTH) {
+        throw new FlintTrap(
+          'CallDepthExhausted',
+          `Maximum foreign function call depth (${MAX_FFI_CALL_DEPTH}) exceeded during reentrant foreign invocation.`,
+          library,
+          { logger },
+        );
+      }
+      const declared = manifest.foreignCapabilities?.find((c) => timingSafeEqualString(c.library, library));
       if (declared === undefined) {
         throw new FlintTrap(
           'CapabilityDenied',
@@ -185,7 +287,7 @@ export function createFlintHost(
           { logger },
         );
       }
-      const function_ = declared.functions.find((f) => f.symbol === symbol);
+      const function_ = declared.functions.find((f) => timingSafeEqualString(f.symbol, symbol));
       if (function_ === undefined) {
         throw new FlintTrap(
           'CapabilityDenied',
@@ -213,9 +315,9 @@ export function createFlintHost(
         const actualType = typeof argument;
         let valid = false;
         if (expectedWasm === 'i32' || expectedWasm === 'f32' || expectedWasm === 'f64') {
-          valid = actualType === 'number';
+          valid = actualType === 'number' && Number.isFinite(argument as number);
         } else if (expectedWasm === 'i64') {
-          valid = actualType === 'bigint' || actualType === 'number';
+          valid = actualType === 'bigint' || (actualType === 'number' && Number.isFinite(argument as number));
         } else {
           valid = true;
         }
@@ -223,6 +325,18 @@ export function createFlintHost(
           throw new FlintTrap(
             'HostError',
             `Foreign function '${symbol}' parameter '${parameter.name}' expected Wasm type '${expectedWasm}', got '${actualType}'.`,
+            library,
+            { logger },
+          );
+        }
+        if (
+          typeof argument === 'number' &&
+          (parameter.name.includes('ptr') || parameter.name.includes('offset')) &&
+          (argument < 0 || argument > 0xff_ff_ff_ff)
+        ) {
+          throw new FlintTrap(
+            'HostError',
+            `Foreign function '${symbol}' pointer parameter '${parameter.name}' value 0x${argument.toString(16)} is out of valid address space bounds.`,
             library,
             { logger },
           );
@@ -237,18 +351,25 @@ export function createFlintHost(
           { logger },
         );
       }
+      currentCallDepth += 1;
       try {
         logger.debug('foreign.invoke', { library, symbol, argumentCount: arguments_.length });
         const result = implementation.call(symbol, arguments_);
         if (result instanceof Promise) {
-          return result.catch((error: unknown) => {
-            const hostError = toFlintHostError(error, library, logger);
-            logger.error('foreign.reject', { library, symbol, code: hostError.code });
-            throw hostError;
-          });
+          return result
+            .catch((error: unknown) => {
+              const hostError = toFlintHostError(error, library, logger);
+              logger.error('foreign.reject', { library, symbol, code: hostError.code });
+              throw hostError;
+            })
+            .finally(() => {
+              currentCallDepth -= 1;
+            });
         }
+        currentCallDepth -= 1;
         return result;
       } catch (error) {
+        currentCallDepth -= 1;
         const hostError = toFlintHostError(error, library, logger);
         logger.error('foreign.throw', { library, symbol, code: hostError.code });
         throw hostError;

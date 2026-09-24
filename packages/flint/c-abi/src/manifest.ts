@@ -133,15 +133,38 @@ export function encodeCbor(value: unknown): Uint8Array {
   return new Uint8Array(chunks);
 }
 
+const FORBIDDEN_OBJECT_KEYS = new Set([
+  "__proto__",
+  "constructor",
+  "prototype",
+]);
+const MAX_CBOR_DEPTH = 64;
+
+/**
+ * Options configuring CBOR decoding behavior and validation checks.
+ */
+export interface CborDecodeOptions {
+  readonly strictCanonical?: boolean;
+}
+
 /**
  * Decodes canonical binary CBOR bytes into a JavaScript object structure.
  */
 // eslint-disable-next-line @typescript-eslint/no-unconstrained-generics
-export function decodeCbor<T = unknown>(bytes: Uint8Array): T {
+export function decodeCbor<T = unknown>(
+  bytes: Uint8Array,
+  options: CborDecodeOptions = {},
+): T {
   let offset = 0;
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
 
-  function decodeItem(): unknown {
+  function decodeItem(depth = 0): unknown {
+    if (depth > MAX_CBOR_DEPTH) {
+      throw new RangeError(
+        `CBOR structure exceeds maximum nesting depth of ${MAX_CBOR_DEPTH}.`,
+      );
+    }
+
     if (offset >= bytes.length) {
       throw new RangeError("Unexpected end of CBOR payload.");
     }
@@ -156,20 +179,28 @@ export function decodeCbor<T = unknown>(bytes: Uint8Array): T {
     let lengthOrValue: number | bigint = additional;
     switch (additional) {
       case 24: {
+        if (offset >= bytes.length)
+          throw new RangeError("Unexpected end of CBOR payload.");
         lengthOrValue = bytes[offset++] ?? 0;
         break;
       }
       case 25: {
+        if (offset + 2 > bytes.length)
+          throw new RangeError("Unexpected end of CBOR payload.");
         lengthOrValue = view.getUint16(offset, false);
         offset += 2;
         break;
       }
       case 26: {
+        if (offset + 4 > bytes.length)
+          throw new RangeError("Unexpected end of CBOR payload.");
         lengthOrValue = view.getUint32(offset, false);
         offset += 4;
         break;
       }
       case 27: {
+        if (offset + 8 > bytes.length)
+          throw new RangeError("Unexpected end of CBOR payload.");
         lengthOrValue = view.getBigUint64(offset, false);
         offset += 8;
         break;
@@ -192,30 +223,76 @@ export function decodeCbor<T = unknown>(bytes: Uint8Array): T {
       }
       case 2: {
         const length = Number(lengthOrValue);
+        if (
+          !Number.isSafeInteger(length) ||
+          length < 0 ||
+          length > bytes.length - offset
+        ) {
+          throw new RangeError(`Invalid CBOR byte string length: ${length}.`);
+        }
         const slice = bytes.subarray(offset, offset + length);
         offset += length;
         return slice;
       }
       case 3: {
         const length = Number(lengthOrValue);
+        if (
+          !Number.isSafeInteger(length) ||
+          length < 0 ||
+          length > bytes.length - offset
+        ) {
+          throw new RangeError(`Invalid CBOR text string length: ${length}.`);
+        }
         const slice = bytes.subarray(offset, offset + length);
         offset += length;
         return new TextDecoder().decode(slice);
       }
       case 4: {
         const count = Number(lengthOrValue);
+        if (
+          !Number.isSafeInteger(count) ||
+          count < 0 ||
+          count > bytes.length - offset
+        ) {
+          throw new RangeError(`Invalid CBOR array length: ${count}.`);
+        }
         const array: unknown[] = [];
         for (let index = 0; index < count; index += 1) {
-          array.push(decodeItem());
+          array.push(decodeItem(depth + 1));
         }
         return array;
       }
       case 5: {
         const count = Number(lengthOrValue);
-        const record: Record<string, unknown> = {};
+        if (
+          !Number.isSafeInteger(count) ||
+          count < 0 ||
+          count > (bytes.length - offset) / 2
+        ) {
+          throw new RangeError(`Invalid CBOR map length: ${count}.`);
+        }
+        const record = Object.create(null) as Record<string, unknown>;
+        let lastKey: string | undefined;
         for (let index = 0; index < count; index += 1) {
-          const key = String(decodeItem());
-          const itemValue = decodeItem();
+          const rawKey = decodeItem(depth + 1);
+          const key = String(rawKey);
+          if (FORBIDDEN_OBJECT_KEYS.has(key)) {
+            throw new TypeError(`Forbidden CBOR object key: ${key}`);
+          }
+          if (options.strictCanonical) {
+            if (lastKey !== undefined) {
+              if (key === lastKey) {
+                throw new TypeError(`Duplicate CBOR map key: ${key}`);
+              }
+              if (key < lastKey) {
+                throw new TypeError(
+                  `Non-canonical CBOR key ordering: ${key} appeared after ${lastKey}`,
+                );
+              }
+            }
+            lastKey = key;
+          }
+          const itemValue = decodeItem(depth + 1);
           record[key] = itemValue;
         }
         return record;
@@ -262,6 +339,7 @@ export function encodeCborAbiManifest<T extends object = FlintCAbiManifest>(
  */
 export function decodeCborAbiManifest<T extends object = FlintCAbiManifest>(
   bytes: Uint8Array,
+  options?: CborDecodeOptions,
 ): T {
-  return decodeCbor<T>(bytes);
+  return decodeCbor<T>(bytes, options);
 }

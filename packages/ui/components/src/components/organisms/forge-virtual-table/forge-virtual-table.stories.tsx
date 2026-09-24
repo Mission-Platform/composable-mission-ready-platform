@@ -1,6 +1,5 @@
-import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
-
 import { ForgeVirtualTable } from '@mission-platform/components';
+import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
 
 import styles from './forge-virtual-table.module.scss';
 

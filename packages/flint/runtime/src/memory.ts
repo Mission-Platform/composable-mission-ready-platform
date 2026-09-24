@@ -7,6 +7,38 @@ const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder('utf-8', { fatal: true });
 
 /**
+ * Detects whether the host JavaScript environment natively supports WebAssembly multi-memory.
+ */
+export function isMultiMemorySupported(): boolean {
+  if (typeof WebAssembly === 'undefined' || WebAssembly.Module === undefined) return false;
+  try {
+    return Boolean(
+      new WebAssembly.Module(
+        new Uint8Array([
+          0x00,
+          0x61,
+          0x73,
+          0x6d,
+          0x01,
+          0x00,
+          0x00,
+          0x00, // magic + version
+          0x05,
+          0x05,
+          0x02,
+          0x00,
+          0x01,
+          0x00,
+          0x01, // 2 memories: (memory 1) (memory 1)
+        ]),
+      ),
+    );
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Configuration options for creating and sizing a Flint linear memory instance.
  */
 export interface FlintMemoryOptions {
@@ -20,6 +52,8 @@ export interface FlintMemoryOptions {
   readonly trace?: FlintTraceRecorder;
   readonly memory?: WebAssembly.Memory;
   readonly initialPointer?: number;
+  readonly partitionOffset?: number;
+  readonly partitionSize?: number;
 }
 
 /**
@@ -34,6 +68,8 @@ export const FLINT_MEMORY_CAPABILITIES = {
   multiMemory: 'wasm.multi-memory',
 } as const;
 
+export const FALLBACK_GUARD_PAGE_SIZE = 65_536;
+
 /**
  * Manages WebAssembly linear memory allocations, bounds checking, and binary I/O.
  */
@@ -43,6 +79,8 @@ export class FlintMemory {
   private nextPointer: FlintMemoryAddress;
   public readonly addressBits: 32 | 64;
   public readonly shared: boolean;
+  public readonly partitionOffset: number;
+  public readonly partitionSize?: number;
   private readonly logger: FlintLogger;
   private readonly trace?: FlintTraceRecorder;
 
@@ -58,6 +96,8 @@ export class FlintMemory {
     this.addressBits = options.addressBits ?? 32;
     this.shared =
       options.shared ?? (typeof SharedArrayBuffer !== 'undefined' && targetMemory?.buffer instanceof SharedArrayBuffer);
+    this.partitionOffset = options.partitionOffset ?? 0;
+    this.partitionSize = options.partitionSize;
     this.logger = (options.logger ?? createFlintLogger({ scope: 'fws' })).child('memory');
     this.trace = options.trace;
     const capabilities = options.capabilities;
@@ -114,6 +154,13 @@ export class FlintMemory {
    * Returns a live byte array view over the underlying WebAssembly linear memory buffer.
    */
   public get bytes(): Uint8Array {
+    if (this.partitionOffset > 0 || this.partitionSize !== undefined) {
+      const buffer = this.wasmMemory.buffer;
+      const size = this.partitionSize ?? Math.max(0, buffer.byteLength - this.partitionOffset);
+      const start = Math.min(this.partitionOffset, buffer.byteLength);
+      const end = Math.min(this.partitionOffset + size, buffer.byteLength);
+      return new Uint8Array(buffer, start, Math.max(0, end - start));
+    }
     return new Uint8Array(this.wasmMemory.buffer);
   }
 
@@ -154,11 +201,13 @@ export class FlintMemory {
     } catch {
       // Trace collection is observational and must never affect guest behavior.
     }
+    const maxBound = this.partitionSize ?? this.wasmMemory.buffer.byteLength;
     if (
       !Number.isSafeInteger(length) ||
       length < 0 ||
-      offset > this.bytes.byteLength ||
-      length > this.bytes.byteLength - offset
+      offset > maxBound ||
+      length > maxBound - offset ||
+      this.partitionOffset + offset + length > this.wasmMemory.buffer.byteLength
     )
       throw new FlintTrap(
         'MemoryOutOfBounds',
@@ -178,7 +227,9 @@ export class FlintMemory {
   public readBytes(pointer: FlintMemoryAddress, length: number): Uint8Array {
     this.checkRange(pointer, length);
     const offset = this.normalizeAddress(pointer);
-    return this.bytes.slice(offset, offset + length);
+    const rawBuffer = new Uint8Array(this.wasmMemory.buffer);
+    const absOffset = this.partitionOffset + offset;
+    return rawBuffer.slice(absOffset, absOffset + length);
   }
 
   /**
@@ -189,7 +240,10 @@ export class FlintMemory {
    */
   public writeBytes(pointer: FlintMemoryAddress, value: Uint8Array): void {
     this.checkRange(pointer, value.byteLength);
-    this.bytes.set(value, this.normalizeAddress(pointer));
+    const offset = this.normalizeAddress(pointer);
+    const rawBuffer = new Uint8Array(this.wasmMemory.buffer);
+    const absOffset = this.partitionOffset + offset;
+    rawBuffer.set(value, absOffset);
   }
 
   /**
@@ -271,8 +325,10 @@ export class FlintMemory {
     const totalBytes = encoded.byteLength + 1;
     this.checkRange(pointer, totalBytes);
     const offset = this.normalizeAddress(pointer);
-    this.bytes.set(encoded, offset);
-    this.bytes[offset + encoded.byteLength] = 0x00;
+    const rawBuffer = new Uint8Array(this.wasmMemory.buffer);
+    const absOffset = this.partitionOffset + offset;
+    rawBuffer.set(encoded, absOffset);
+    rawBuffer[absOffset + encoded.byteLength] = 0x00;
     return totalBytes;
   }
 
@@ -284,7 +340,8 @@ export class FlintMemory {
    */
   public readBigUint64(pointer: FlintMemoryAddress): bigint {
     this.checkRange(pointer, 8);
-    return new DataView(this.wasmMemory.buffer).getBigUint64(this.normalizeAddress(pointer), true);
+    const absOffset = this.partitionOffset + this.normalizeAddress(pointer);
+    return new DataView(this.wasmMemory.buffer).getBigUint64(absOffset, true);
   }
 
   /**
@@ -295,7 +352,8 @@ export class FlintMemory {
    */
   public writeBigUint64(pointer: FlintMemoryAddress, value: bigint): void {
     this.checkRange(pointer, 8);
-    new DataView(this.wasmMemory.buffer).setBigUint64(this.normalizeAddress(pointer), value, true);
+    const absOffset = this.partitionOffset + this.normalizeAddress(pointer);
+    new DataView(this.wasmMemory.buffer).setBigUint64(absOffset, value, true);
   }
 
   /**
@@ -306,8 +364,15 @@ export class FlintMemory {
    */
   public grow(pages: number): number {
     try {
-      return this.wasmMemory.grow(pages);
+      const previous = this.wasmMemory.grow(pages);
+      if (previous === -1 || previous < 0) {
+        throw new FlintTrap('MemoryExhausted', 'Linear memory could not grow (returned -1).', undefined, {
+          logger: this.logger,
+        });
+      }
+      return previous;
     } catch (error) {
+      if (error instanceof FlintTrap) throw error;
       throw new FlintTrap('MemoryExhausted', 'Linear memory could not grow.', undefined, {
         cause: error,
         logger: this.logger,
@@ -325,17 +390,30 @@ export class FlintMemory {
   public allocate(size: number): FlintMemoryAddress {
     if (!Number.isSafeInteger(size) || size < 0)
       throw new FlintTrap('MemoryExhausted', 'Allocation size must be a non-negative integer.');
+    if (size === 0) {
+      const sentinel = this.addressBits === 64 ? 8n : 8;
+      this.allocations.set(8, 0);
+      return sentinel;
+    }
     const pointer = this.nextPointer;
     const offset = this.normalizeAddress(pointer);
-    if (size > Number.MAX_SAFE_INTEGER - offset)
+    const maxBound = this.partitionSize ?? Number.MAX_SAFE_INTEGER;
+    if (size > maxBound - offset)
       throw new FlintTrap('MemoryExhausted', 'Allocation range exceeds the supported address range.', undefined, {
         logger: this.logger,
       });
-    if (size > this.bytes.byteLength - offset) {
-      const pages = Math.ceil((offset + size - this.bytes.byteLength) / 65_536);
+    const absoluteEnd = this.partitionOffset + offset + size;
+    if (absoluteEnd > this.wasmMemory.buffer.byteLength) {
+      const pages = Math.ceil((absoluteEnd - this.wasmMemory.buffer.byteLength) / 65_536);
       try {
-        this.wasmMemory.grow(pages);
+        const previous = this.wasmMemory.grow(pages);
+        if (previous === -1 || previous < 0) {
+          throw new FlintTrap('MemoryExhausted', 'Linear memory could not grow for this allocation.', undefined, {
+            logger: this.logger,
+          });
+        }
       } catch (error) {
+        if (error instanceof FlintTrap) throw error;
         throw new FlintTrap('MemoryExhausted', 'Linear memory could not grow for this allocation.', undefined, {
           cause: error,
           logger: this.logger,
@@ -351,6 +429,30 @@ export class FlintMemory {
       // Trace collection is observational and must never affect guest behavior.
     }
     return pointer;
+  }
+
+  /**
+   * Allocates contiguous memory for an array of count * elementSize elements with checked multiplication guards.
+   *
+   * @param count - Number of array elements.
+   * @param elementSize - Byte size of each element.
+   * @returns Allocated base address pointer.
+   */
+  public allocateArray(count: number, elementSize: number): FlintMemoryAddress {
+    if (!Number.isSafeInteger(count) || count < 0 || !Number.isSafeInteger(elementSize) || elementSize < 0) {
+      throw new FlintTrap('MemoryExhausted', 'Array count and elementSize must be non-negative safe integers.');
+    }
+    if (count === 0 || elementSize === 0) {
+      return this.addressBits === 64 ? 8n : 8;
+    }
+    const maxBytes = 0x7f_ff_ff_ff;
+    if (count > Math.floor(maxBytes / elementSize)) {
+      throw new FlintTrap(
+        'MemoryExhausted',
+        `Array allocation size overflows bounds: count=${count} * elementSize=${elementSize} exceeds max capacity.`,
+      );
+    }
+    return this.allocate(count * elementSize);
   }
 
   /**
@@ -376,7 +478,8 @@ export class FlintMemory {
       throw new FlintTrap('MemoryExhausted', 'Reallocation size must be a non-negative integer.', undefined, {
         logger: this.logger,
       });
-    if (newSize > Number.MAX_SAFE_INTEGER - offset)
+    const maxBound = this.partitionSize ?? Number.MAX_SAFE_INTEGER;
+    if (newSize > maxBound - offset)
       throw new FlintTrap('MemoryExhausted', 'Reallocation range exceeds the supported address range.', undefined, {
         logger: this.logger,
       });
@@ -384,11 +487,18 @@ export class FlintMemory {
     const end = offset + oldSize;
     const highWater = this.normalizeAddress(this.nextPointer);
     if (end === highWater) {
-      if (newSize > this.bytes.byteLength - offset) {
-        const pages = Math.ceil((offset + newSize - this.bytes.byteLength) / 65_536);
+      const absoluteEnd = this.partitionOffset + offset + newSize;
+      if (absoluteEnd > this.wasmMemory.buffer.byteLength) {
+        const pages = Math.ceil((absoluteEnd - this.wasmMemory.buffer.byteLength) / 65_536);
         try {
-          this.wasmMemory.grow(pages);
+          const previous = this.wasmMemory.grow(pages);
+          if (previous === -1 || previous < 0) {
+            throw new FlintTrap('MemoryExhausted', 'Linear memory could not grow for this reallocation.', undefined, {
+              logger: this.logger,
+            });
+          }
         } catch (error) {
+          if (error instanceof FlintTrap) throw error;
           throw new FlintTrap('MemoryExhausted', 'Linear memory could not grow for this reallocation.', undefined, {
             cause: error,
             logger: this.logger,
@@ -420,6 +530,9 @@ export class FlintMemory {
    * @param size - Size of the allocated block.
    */
   public deallocate(pointer: FlintMemoryAddress, size: number): void {
+    if (size === 0) {
+      return;
+    }
     const offset = this.normalizeAddress(pointer);
     if (this.allocations.get(offset) !== size)
       throw new FlintTrap(
@@ -429,6 +542,10 @@ export class FlintMemory {
         { logger: this.logger },
       );
     this.allocations.delete(offset);
+    const highWater = this.normalizeAddress(this.nextPointer);
+    if (offset + size === highWater) {
+      this.nextPointer = this.addressBits === 64 ? BigInt(offset) : offset;
+    }
     try {
       this.trace?.noteAllocation('deallocate', size);
       this.trace?.recordMemory('deallocate', offset, size, 0, 'owned');
@@ -451,10 +568,11 @@ export class FlintMemory {
    */
   public validatePointerRange(pointer: FlintMemoryAddress, length: number): boolean {
     const offset = this.normalizeAddress(pointer);
-    if (length < 0 || offset < 0 || offset + length > this.bytes.byteLength) {
+    const maxBound = this.partitionSize ?? this.bytes.byteLength;
+    if (length < 0 || offset < 0 || offset + length > maxBound) {
       throw new FlintTrap(
         'MemoryOutOfBounds',
-        `Memory range [${offset}, ${offset + length}) exceeds buffer boundary of ${this.bytes.byteLength} bytes.`,
+        `Memory range [${offset}, ${offset + length}) exceeds buffer boundary of ${maxBound} bytes.`,
         undefined,
         { logger: this.logger },
       );
@@ -519,6 +637,9 @@ export interface FlintMultiMemoryOptions {
   readonly capabilities?: readonly string[];
   readonly logger?: FlintLogger;
   readonly trace?: FlintTraceRecorder;
+  readonly mode?: 'auto' | 'multi-memory' | 'partitioned-fallback';
+  readonly fallback?: boolean;
+  readonly allowFallback?: boolean;
 }
 
 /**
@@ -526,6 +647,9 @@ export interface FlintMultiMemoryOptions {
  * Isolates memory into dedicated spaces for guest execution (Memory 0),
  * foreign untrusted C/Rust heap (Memory 1), host interop buffer (Memory 2),
  * and static constants/tables (Memory 3).
+ *
+ * Supports native multi-memory hardware isolation as well as zero-allocation
+ * partitioned single-memory fallback emulation for runtimes without multi-memory (e.g. Safari / WebKit).
  */
 export class FlintMultiMemory {
   public readonly guestHeap: FlintMemory;
@@ -533,6 +657,8 @@ export class FlintMultiMemory {
   public readonly hostInterop: FlintMemory;
   public readonly staticData: FlintMemory;
   public readonly capabilities: readonly string[];
+  public readonly mode: 'multi-memory' | 'partitioned-fallback';
+  public readonly isFallback: boolean;
   private readonly logger: FlintLogger;
 
   /**
@@ -549,7 +675,16 @@ export class FlintMultiMemory {
     const has = (capability: string): boolean =>
       options.capabilities === undefined || options.capabilities.includes(capability);
 
-    if (!has(FLINT_MEMORY_CAPABILITIES.multiMemory)) {
+    const isCapabilityDeclared = has(FLINT_MEMORY_CAPABILITIES.multiMemory);
+    const isHostSupported = isMultiMemorySupported();
+
+    const wantsFallback =
+      options.fallback === true ||
+      options.mode === 'partitioned-fallback' ||
+      (options.allowFallback === true && !isCapabilityDeclared) ||
+      (!isHostSupported && options.allowFallback !== false);
+
+    if (!wantsFallback && !isCapabilityDeclared) {
       throw new FlintTrap(
         'CapabilityDenied',
         `Capability '${FLINT_MEMORY_CAPABILITIES.multiMemory}' is not declared.`,
@@ -558,31 +693,90 @@ export class FlintMultiMemory {
       );
     }
 
-    const baseCaps = options.capabilities;
-    this.guestHeap = new FlintMemory(options.guestHeap?.memory, {
-      ...options.guestHeap,
-      capabilities: options.guestHeap?.capabilities ?? baseCaps,
-      logger: this.logger.child('guestHeap'),
-      trace: options.trace,
-    });
-    this.foreignHeap = new FlintMemory(options.foreignHeap?.memory, {
-      ...options.foreignHeap,
-      capabilities: options.foreignHeap?.capabilities ?? baseCaps,
-      logger: this.logger.child('foreignHeap'),
-      trace: options.trace,
-    });
-    this.hostInterop = new FlintMemory(options.hostInterop?.memory, {
-      ...options.hostInterop,
-      capabilities: options.hostInterop?.capabilities ?? baseCaps,
-      logger: this.logger.child('hostInterop'),
-      trace: options.trace,
-    });
-    this.staticData = new FlintMemory(options.staticData?.memory, {
-      ...options.staticData,
-      capabilities: options.staticData?.capabilities ?? baseCaps,
-      logger: this.logger.child('staticData'),
-      trace: options.trace,
-    });
+    if (wantsFallback) {
+      this.mode = 'partitioned-fallback';
+      this.isFallback = true;
+      const baseCaps = options.capabilities;
+      const partitionWindowSize = 67_108_864; // 64 MiB per partition window
+      const usablePartitionSize = partitionWindowSize - FALLBACK_GUARD_PAGE_SIZE;
+
+      const initialPages = Math.max(
+        64,
+        (options.guestHeap?.initialPages ?? 1) +
+          (options.foreignHeap?.initialPages ?? 1) +
+          (options.hostInterop?.initialPages ?? 1) +
+          (options.staticData?.initialPages ?? 1),
+      );
+      const sharedWasmMemory = new WebAssembly.Memory({ initial: initialPages });
+
+      this.guestHeap = new FlintMemory(sharedWasmMemory, {
+        ...options.guestHeap,
+        capabilities: options.guestHeap?.capabilities ?? baseCaps,
+        logger: this.logger.child('guestHeap'),
+        trace: options.trace,
+        partitionOffset: 0,
+        partitionSize: usablePartitionSize,
+        initialPointer: options.guestHeap?.initialPointer ?? 65_536,
+      });
+
+      this.foreignHeap = new FlintMemory(sharedWasmMemory, {
+        ...options.foreignHeap,
+        capabilities: options.foreignHeap?.capabilities ?? baseCaps,
+        logger: this.logger.child('foreignHeap'),
+        trace: options.trace,
+        partitionOffset: partitionWindowSize,
+        partitionSize: usablePartitionSize,
+        initialPointer: options.foreignHeap?.initialPointer ?? 8,
+      });
+
+      this.hostInterop = new FlintMemory(sharedWasmMemory, {
+        ...options.hostInterop,
+        capabilities: options.hostInterop?.capabilities ?? baseCaps,
+        logger: this.logger.child('hostInterop'),
+        trace: options.trace,
+        partitionOffset: partitionWindowSize * 2,
+        partitionSize: usablePartitionSize,
+        initialPointer: options.hostInterop?.initialPointer ?? 8,
+      });
+
+      this.staticData = new FlintMemory(sharedWasmMemory, {
+        ...options.staticData,
+        capabilities: options.staticData?.capabilities ?? baseCaps,
+        logger: this.logger.child('staticData'),
+        trace: options.trace,
+        partitionOffset: partitionWindowSize * 3,
+        partitionSize: usablePartitionSize,
+        initialPointer: options.staticData?.initialPointer ?? 8,
+      });
+    } else {
+      this.mode = 'multi-memory';
+      this.isFallback = false;
+      const baseCaps = options.capabilities;
+      this.guestHeap = new FlintMemory(options.guestHeap?.memory, {
+        ...options.guestHeap,
+        capabilities: options.guestHeap?.capabilities ?? baseCaps,
+        logger: this.logger.child('guestHeap'),
+        trace: options.trace,
+      });
+      this.foreignHeap = new FlintMemory(options.foreignHeap?.memory, {
+        ...options.foreignHeap,
+        capabilities: options.foreignHeap?.capabilities ?? baseCaps,
+        logger: this.logger.child('foreignHeap'),
+        trace: options.trace,
+      });
+      this.hostInterop = new FlintMemory(options.hostInterop?.memory, {
+        ...options.hostInterop,
+        capabilities: options.hostInterop?.capabilities ?? baseCaps,
+        logger: this.logger.child('hostInterop'),
+        trace: options.trace,
+      });
+      this.staticData = new FlintMemory(options.staticData?.memory, {
+        ...options.staticData,
+        capabilities: options.staticData?.capabilities ?? baseCaps,
+        logger: this.logger.child('staticData'),
+        trace: options.trace,
+      });
+    }
   }
 
   /**
