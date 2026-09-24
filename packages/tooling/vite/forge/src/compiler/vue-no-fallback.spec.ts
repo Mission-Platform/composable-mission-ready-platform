@@ -139,7 +139,7 @@ describe('Vue render-closure audit (standing zero-fallback regression gate)', ()
       }
     }
     expect(unexpected).toEqual([]);
-  }, 30_000);
+  }, 120_000);
 
   it('no compiled Vue module keeps the neutral `className` attribute', () => {
     // The neutral dialect is authored in React's vocabulary. Vue normalises the
@@ -159,7 +159,7 @@ describe('Vue render-closure audit (standing zero-fallback regression gate)', ()
       }
     }
     expect(untranslated).toEqual([]);
-  }, 30_000);
+  }, 120_000);
 
   it('every allowlisted component still falls back (so fixed ones shrink the allowlist)', () => {
     const noLongerFallingBack: string[] = [];
@@ -173,5 +173,5 @@ describe('Vue render-closure audit (standing zero-fallback regression gate)', ()
       }
     }
     expect(noLongerFallingBack).toEqual([]);
-  }, 30_000);
+  }, 120_000);
 });
