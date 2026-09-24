@@ -126,7 +126,7 @@ Die zentralen Verträge leben in `packages/compiler/plugins/forge-plugin-api/src
 – `TargetIntentions` umschließt das semantische Modul nach dem Absenken des Ziels und behält dabei die Diagnose bei.
 
 - `GeneratedModule` beschreibt die generierte Quelle, ihre Ausgabesprache, Hilfsmodule und Diagnosen.
-- `FrameworkBuildAdapters` bietet unabhängig typisierte Vite- und tsdown-Adapter.
+- `ForgeBuildAdapters` bietet unabhängig typisierte Vite- und tsdown-Adapter.
   – `FrameworkSourceMetadata`, Laufzeit-Externals und Anzeigenamen-Metadaten ermöglichen es der generischen Orchestrierung, Ausgabedetails abzuleiten
   ohne eine Ziel-Switch-Anweisung.
 

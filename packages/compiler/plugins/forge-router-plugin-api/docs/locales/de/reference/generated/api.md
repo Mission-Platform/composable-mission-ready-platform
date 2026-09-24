@@ -29,7 +29,7 @@ Erstellen Sie eine quelllokale Diagnose für einen Router-Compiler-Fehler.
 
 | Name     | Geben Sie                                                                                | ein Beschreibung |
 | -------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| Diagnose | Lassen Sie <CompilerDiagnostic, 'phase' \| 'fileName'> & { readonly fileName?: string; } |                  |
+| Diagnose | Lassen Sie <CompilerDiagnostic, "phase" \| "fileName"> & { readonly fileName?: string; } |                  |
 
 ### defineForgeRouterPlugin
 
@@ -145,16 +145,6 @@ export const MP_ROUTER_MODULE;
 ```
 
 Das Paket, dessen Importe vom Router-Compiler-Durchlauf verstanden werden.
-
-### RouterBuildAdapters
-
-**Art:** Schnittstelle
-
-```typescript
-export interface RouterBuildAdapters
-```
-
-Erstellen Sie Hooks, die einem Router-Ziel gehören. Es wird keine Router-Abhängigkeit vom Kern geladen.
 
 ### RouterCapability
 

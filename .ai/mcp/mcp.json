@@ -1,5 +1,68 @@
 {
   "mcpServers": {
+    "mission-platform": {
+      "command": "node",
+      "args": [
+        "scripts/launch-mcp.mjs"
+      ],
+      "type": "stdio"
+    },
+    "mission-core": {
+      "command": "node",
+      "args": [
+        "scripts/launch-mcp.mjs",
+        "--profile=core"
+      ],
+      "type": "stdio"
+    },
+    "mission-security": {
+      "command": "node",
+      "args": [
+        "scripts/launch-mcp.mjs",
+        "--profile=security"
+      ],
+      "type": "stdio"
+    },
+    "mission-frontend": {
+      "command": "node",
+      "args": [
+        "scripts/launch-mcp.mjs",
+        "--profile=frontend"
+      ],
+      "type": "stdio"
+    },
+    "mission-coding": {
+      "command": "node",
+      "args": [
+        "scripts/launch-mcp.mjs",
+        "--profile=coding"
+      ],
+      "type": "stdio"
+    },
+    "mission-git": {
+      "command": "node",
+      "args": [
+        "scripts/launch-mcp.mjs",
+        "--profile=git"
+      ],
+      "type": "stdio"
+    },
+    "mission-flint": {
+      "command": "node",
+      "args": [
+        "scripts/launch-mcp.mjs",
+        "--profile=flint"
+      ],
+      "type": "stdio"
+    },
+    "playwright-test": {
+      "command": "npx",
+      "args": [
+        "playwright",
+        "run-test-mcp-server"
+      ],
+      "type": "stdio"
+    },
     "github": {
       "type": "http",
       "url": "https://api.githubcopilot.com/mcp/"
@@ -7,154 +70,9 @@
     "figma-desktop-mcp": {
       "url": "http://127.0.0.1:3845/mcp"
     },
-    "mission-platform": {
-      "type": "stdio",
-      "command": "node",
-      "args": [
-        "scripts/launch-mcp.mjs"
-      ],
-      "tools": [
-        "*"
-      ]
-    },
-    "mission-core": {
-      "type": "stdio",
-      "command": "node",
-      "args": [
-        "scripts/launch-mcp.mjs",
-        "--profile=core"
-      ],
-      "tools": [
-        "review_changes",
-        "list_components",
-        "get_component_usage",
-        "security_scan_secrets",
-        "lsp_get_diagnostics",
-        "git_status",
-        "git_changed_files",
-        "git_diff",
-        "get_guide",
-        "repo_affected_packages"
-      ]
-    },
-    "mission-security": {
-      "type": "stdio",
-      "command": "node",
-      "args": [
-        "scripts/launch-mcp.mjs",
-        "--profile=security"
-      ],
-      "tools": [
-        "security_scan_secrets",
-        "security_analyze_code",
-        "security_audit_dependencies",
-        "security_audit_supply_chain",
-        "security_collect_compliance_evidence",
-        "security_audit_compliance",
-        "review_changes"
-      ]
-    },
-    "mission-frontend": {
-      "type": "stdio",
-      "command": "node",
-      "args": [
-        "scripts/launch-mcp.mjs",
-        "--profile=frontend"
-      ],
-      "tools": [
-        "list_components",
-        "get_component_usage",
-        "get_tokens",
-        "scaffold",
-        "test_accessibility",
-        "i18n",
-        "list_stories",
-        "get_guide",
-        "read_doc",
-        "list_docs",
-        "repo_affected_packages",
-        "repo_prime_dependencies"
-      ]
-    },
-    "mission-coding": {
-      "type": "stdio",
-      "command": "node",
-      "args": [
-        "scripts/launch-mcp.mjs",
-        "--profile=coding"
-      ],
-      "tools": [
-        "lsp_get_diagnostics",
-        "lsp_inspect_symbol",
-        "lsp_go_to_definition",
-        "lsp_find_references",
-        "lsp_find_callers",
-        "lsp_preview_edit",
-        "lsp_apply_edit",
-        "lsp_suggest_fixes",
-        "lsp_format_document",
-        "lsp_run_build",
-        "lsp_run_tests",
-        "run_test_file",
-        "turbo_run",
-        "repo_affected_packages",
-        "repo_prime_dependencies",
-        "review_changes"
-      ]
-    },
-    "mission-git": {
-      "type": "stdio",
-      "command": "node",
-      "args": [
-        "scripts/launch-mcp.mjs",
-        "--profile=git"
-      ],
-      "tools": [
-        "git_status",
-        "git_changed_files",
-        "git_diff",
-        "git_log",
-        "git_show",
-        "git_blame",
-        "git_grep",
-        "git_metadata",
-        "git_commit_plan",
-        "git_commit_apply"
-      ]
-    },
-    "mission-flint": {
-      "type": "stdio",
-      "command": "node",
-      "args": [
-        "scripts/launch-mcp.mjs",
-        "--profile=flint"
-      ],
-      "tools": [
-        "flint_analyze_source",
-        "flint_analyze_workspace",
-        "flint_inspect_manifest",
-        "flint_inspect_sonir",
-        "flint_verify_artifact",
-        "flint_run_trace"
-      ]
-    },
     "DeepWiki": {
       "type": "http",
-      "url": "https://mcp.deepwiki.com/mcp",
-      "tools": [
-        "*"
-      ]
-    },
-    "playwright-test": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "playwright",
-        "run-test-mcp-server"
-      ],
-      "tools": [
-        "*"
-      ]
+      "url": "https://mcp.deepwiki.com/mcp"
     }
   }
 }

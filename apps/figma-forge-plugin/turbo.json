@@ -3,12 +3,12 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": ["^build", "build:check", "build:ui", "build:main"],
+      "dependsOn": ["^build", "type-check", "build:ui", "build:main"],
       "env": ["VITE_*"],
       "outputs": ["dist/**", ".vite/**"]
     },
     "build:ui": {
-      "dependsOn": ["build:check"],
+      "dependsOn": ["type-check"],
       "env": ["VITE_*"]
     },
     "build:main": {

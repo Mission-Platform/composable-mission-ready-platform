@@ -210,7 +210,7 @@ function createForgeArtifactWriter(
 ): ForgeArtifactWriter;
 ```
 
-No description provided.
+Create an atomic artifact writer for staging and committing Forge artifacts.
 
 #### Parameters
 
@@ -1939,6 +1939,16 @@ Options for {@link generateFrameworkSources}.
 
 ## `src/tsdown`
 
+### CanonicalChunkCandidate
+
+**Kind:** type
+
+```typescript
+export type CanonicalChunkCandidate = | string |
+```
+
+No description provided.
+
 ### defineTsdownForgeComponentsAll
 
 **Kind:** function
@@ -1974,6 +1984,23 @@ It preserves the Forge tree so
 | ------- | --------------------------------- | ----------- |
 | options | TsdownForgeEmailComponentsOptions |             |
 
+### defineTsdownForgeHooks
+
+**Kind:** function
+
+```typescript
+function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig;
+```
+
+Build one tsdown config for a single Forge framework hooks build.
+Emits code and types into the target framework distribution directory.
+
+#### Parameters
+
+| Name    | Type                    | Description |
+| ------- | ----------------------- | ----------- |
+| options | TsdownForgeHooksOptions |             |
+
 ### defineTsdownForgeHooksAll
 
 **Kind:** function
@@ -1991,6 +2018,42 @@ Build an array of tsdown configs for every requested forge hooks framework
 | Name    | Type                       | Description |
 | ------- | -------------------------- | ----------- |
 | options | TsdownForgeHooksAllOptions |             |
+
+### resolveCanonicalChunkName
+
+**Kind:** function
+
+```typescript
+function resolveCanonicalChunkName(chunkInfo: CanonicalChunkCandidate): string;
+```
+
+Determine the canonical emitted chunk filename for a chunk.
+Preserves canonical `[name].js` paths without collisions and maps
+Vue virtual script modules to `${component}.script.js`.
+
+#### Parameters
+
+| Name      | Type                    | Description |
+| --------- | ----------------------- | ----------- |
+| chunkInfo | CanonicalChunkCandidate |             |
+
+### resolveCanonicalEntryName
+
+**Kind:** function
+
+```typescript
+function resolveCanonicalEntryName(chunkInfo: CanonicalChunkCandidate): string;
+```
+
+Determine the canonical emitted entry filename for a chunk.
+Virtual forge entries are mapped to `index.js`, while preserved
+modules delegate to chunk name resolution.
+
+#### Parameters
+
+| Name      | Type                    | Description |
+| --------- | ----------------------- | ----------- |
+| chunkInfo | CanonicalChunkCandidate |             |
 
 ### tsdownForgeComponentPlugins
 
@@ -2038,9 +2101,7 @@ No description provided.
 function tsdownForgeHookPlugins(options: TsdownForgeHooksAllOptions): TsdownPlugin[];
 ```
 
-Native tsdown-plugin form of the hook adapter. The returned plugins inject
-their target config from `tsdownConfig`, allowing hook builds to be composed
-with one caller-owned `defineTsdownLibrary` configuration.
+Creates tsdown hook plugins for all configured framework targets.
 
 #### Parameters
 
@@ -2054,6 +2115,16 @@ with one caller-owned `defineTsdownLibrary` configuration.
 
 ```typescript
 export interface TsdownForgeHooksAllOptions
+```
+
+No description provided.
+
+### TsdownForgeHooksOptions
+
+**Kind:** interface
+
+```typescript
+export interface TsdownForgeHooksOptions
 ```
 
 No description provided.

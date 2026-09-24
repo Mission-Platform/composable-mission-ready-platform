@@ -64,6 +64,23 @@ export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 Default package names every shared library should treat as peer-provided.
 Mirrors `@mission-platform/vite-config`'s {@link DEFAULT_LIBRARY_EXTERNALS}.
 
+### defineTsdownForgeTarget
+
+**Kind:** function
+
+```typescript
+function defineTsdownForgeTarget(options: TsdownForgeTargetOptions): UserConfig;
+```
+
+Build a tsdown config for the neutral Forge component target (`dist/components/**`).
+Defaults `outDir` to `'dist/components'` while preserving all {@link defineTsdownLibrary} features.
+
+#### Parameters
+
+| Name    | Type                     | Description |
+| ------- | ------------------------ | ----------- |
+| options | TsdownForgeTargetOptions |             |
+
 ### defineTsdownLibrary
 
 **Kind:** function
@@ -164,6 +181,16 @@ independently promotable without allowing tsdown to clean a sibling tree.
 | rootDirectory   | string |             |
 | outputDirectory | string |             |
 | outputRoot      | string |             |
+
+### TsdownForgeTargetOptions
+
+**Kind:** interface
+
+```typescript
+export interface TsdownForgeTargetOptions extends TsdownLibraryOptions
+```
+
+No description provided.
 
 ### TsdownLibraryOptions
 

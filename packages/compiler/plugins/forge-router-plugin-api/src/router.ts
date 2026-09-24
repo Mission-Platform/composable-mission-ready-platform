@@ -1,13 +1,16 @@
+import {
+  rewriteImportsWithCst,
+  type ImportRewriteSpec,
+} from "@mission-platform/forge-cst";
+
 import type {
   CompilerDiagnostic,
   GeneratedExtraModule,
   OutputLanguage,
   SourceSpan,
-  TsdownBuildContext,
-  ViteBuildContext,
 } from "@mission-platform/forge-plugin-api";
-import type { TsdownPlugin } from "tsdown";
-import type { Plugin as VitePlugin } from "vite";
+
+export type { ForgeBuildAdapters } from "@mission-platform/forge-plugin-api";
 
 /** The package whose imports are understood by the router compiler pass. */
 export const MP_ROUTER_MODULE = "@mission-platform/router" as const;
@@ -89,12 +92,6 @@ export interface GeneratedRouterModule {
   readonly diagnostics?: readonly CompilerDiagnostic[];
 }
 
-/** Build hooks owned by a router target; no router dependency is loaded by core. */
-export interface RouterBuildAdapters {
-  readonly vite?: (context: ViteBuildContext) => readonly VitePlugin[];
-  readonly tsdown?: (context: TsdownBuildContext) => readonly TsdownPlugin[];
-}
-
 /** Forge-style compiler plugin for a native router target. */
 export interface RouterOutputPlugin {
   readonly id: string;
@@ -109,7 +106,7 @@ export interface RouterOutputPlugin {
     options: RouterOptimizeOptions,
   ) => RouterTargetPlan;
   readonly generate: (plan: RouterTargetPlan) => GeneratedRouterModule;
-  readonly build: RouterBuildAdapters;
+  readonly build: ForgeBuildAdapters;
 }
 
 /** A native import used to replace one neutral router marker. */
@@ -148,9 +145,18 @@ export interface ForgeRouterTargetOptions {
   readonly runtimeModule?: string;
   /** Optional per-symbol overrides merged on top of {@link runtimeModule} defaults. */
   readonly imports?: Readonly<Record<string, RouterNativeImport>>;
-  readonly build?: RouterBuildAdapters;
+  readonly build?: ForgeBuildAdapters;
 }
 
+/**
+ * Create a deterministic target that rewrites neutral router imports.
+ *
+ * Prefer {@link ForgeRouterTargetOptions.runtimeModule}: it keeps call sites
+ * (`useMpRouter().navigate`, `useMpRoute().query`, …) shape-compatible by
+ * importing target runtime helpers rather than bare native hooks with different
+ * signatures. Targets may still supply custom lower/generate phases for
+ * file-based or server-only routers.
+ */
 function resolveTargetImports(
   options: ForgeRouterTargetOptions,
 ): Readonly<Record<string, RouterNativeImport>> {
@@ -163,32 +169,76 @@ function resolveTargetImports(
   return { ...imports, ...options.imports };
 }
 
-function nativeImportCode(
-  imports: readonly {
-    readonly localName: string;
-    readonly native: RouterNativeImport;
-  }[],
-): string {
+/**
+ * Creates rewrite specifications grouping target native imports by destination module.
+ *
+ * @param targetImports - Map of neutral router symbols to native import locations.
+ * @returns Array of rewrite specifications.
+ */
+function createSpecifierRewrites(
+  targetImports: Record<string, { module: string; name: string }>,
+): ImportRewriteSpec[] {
   const byModule = new Map<
     string,
-    { localName: string; nativeName: string }[]
+    { sourceName: string; importedName: string; localName?: string }[]
   >();
-  for (const entry of imports) {
-    const moduleImports = byModule.get(entry.native.module) ?? [];
-    moduleImports.push({
-      localName: entry.localName,
-      nativeName: entry.native.name,
+  for (const [neutralName, nativeImport] of Object.entries(targetImports)) {
+    const list = byModule.get(nativeImport.module) ?? [];
+    list.push({
+      sourceName: neutralName,
+      importedName: nativeImport.name,
+      localName: neutralName,
     });
-    byModule.set(entry.native.module, moduleImports);
+    byModule.set(nativeImport.module, list);
   }
-  return [...byModule.entries()]
-    .map(([module, entries]) => {
-      const specifiers = entries.map(({ localName, nativeName }) =>
-        localName === nativeName ? nativeName : `${nativeName} as ${localName}`,
-      );
-      return `import { ${specifiers.join(", ")} } from '${module}';`;
-    })
-    .join("\n");
+
+  return [...byModule.entries()].map(([targetModule, specifiers]) => ({
+    targetModule: MP_ROUTER_MODULE,
+    replacementModule: targetModule,
+    specifiers,
+  }));
+}
+
+/**
+ * Rewrites router imports for a generated module plan.
+ *
+ * @param source - Original module source code.
+ * @param fileName - File name of the module.
+ * @param options - Target options.
+ * @param targetImports - Resolved target imports.
+ * @returns Result of CST import rewriting.
+ */
+function rewriteRouterPlanImports(
+  source: string,
+  fileName: string,
+  options: ForgeRouterTargetOptions,
+  targetImports: Record<string, { module: string; name: string }>,
+): RewriteResult {
+  const hasCustomImports =
+    options.imports !== undefined && Object.keys(options.imports).length > 0;
+  const targetImportCount = Object.keys(targetImports).length;
+
+  if (targetImportCount === 0) {
+    return rewriteImportsWithCst(source, {
+      targetModule: MP_ROUTER_MODULE,
+      replacementModule: undefined,
+      sourceFileName: fileName,
+    });
+  }
+
+  if (!hasCustomImports && options.runtimeModule !== undefined) {
+    return rewriteImportsWithCst(source, {
+      targetModule: MP_ROUTER_MODULE,
+      replacementModule: options.runtimeModule,
+      preserveNamedSpecifiers: true,
+      sourceFileName: fileName,
+    });
+  }
+
+  return rewriteImportsWithCst(source, {
+    rewrites: createSpecifierRewrites(targetImports),
+    sourceFileName: fileName,
+  });
 }
 
 /**
@@ -203,7 +253,8 @@ function nativeImportCode(
 export function defineForgeRouterTarget(
   options: ForgeRouterTargetOptions,
 ): RouterOutputPlugin {
-  const imports = resolveTargetImports(options);
+  const targetImports = resolveTargetImports(options);
+
   return defineForgeRouterPlugin({
     id: options.id,
     routerPackage: options.routerPackage,
@@ -214,27 +265,22 @@ export function defineForgeRouterTarget(
     }),
     optimize: (plan) => plan,
     generate: (plan) => {
-      const native = plan.module.imports.flatMap((entry) => {
-        const mapping = imports[entry.importedName];
-        return mapping === undefined || entry.typeOnly
-          ? []
-          : [{ localName: entry.localName, native: mapping }];
-      });
-      const importText = nativeImportCode(native);
-      const neutralImport =
-        /import\s+(?:type\s+)?\{[^}]*\}\s+from\s+['"]@mission-platform\/router['"];?/gu;
-      let insertedNativeImports = false;
-      const code = plan.module.source.replaceAll(neutralImport, () => {
-        if (importText.length === 0) {
-          return "";
-        }
-        if (insertedNativeImports) {
-          return "";
-        }
-        insertedNativeImports = true;
-        return importText;
-      });
-      return { code, lang: plan.module.fileName.split(".").pop() ?? "ts" };
+      const rewritten = rewriteRouterPlanImports(
+        plan.module.source,
+        plan.module.fileName,
+        options,
+        targetImports,
+      );
+      const fileParts = plan.module.fileName.split(".");
+      const extension = fileParts.pop();
+
+      return {
+        code: rewritten.code,
+        lang: extension ?? "ts",
+        ...(rewritten.map !== undefined && {
+          map: JSON.stringify(rewritten.map),
+        }),
+      };
     },
     build: options.build ?? {},
   });
@@ -294,16 +340,24 @@ export function createRouterDiagnostic(
   };
 }
 
-/** Validate router plugin metadata before it enters a compiler pipeline. */
-export function defineForgeRouterPlugin<T extends RouterOutputPlugin>(
-  plugin: T,
-): T {
-  if (typeof plugin !== "object" || plugin === null) {
-    throw new TypeError("A Forge router plugin must be an object.");
-  }
-  if (typeof plugin.id !== "string" || plugin.id.length === 0) {
+/**
+ * Asserts that the plugin id is a non-empty string.
+ *
+ * @param id - Candidate plugin id.
+ */
+function assertPluginId(id: unknown): asserts id is string {
+  if (typeof id !== "string" || id.length === 0) {
     throw new TypeError("A Forge router plugin must define a non-empty id.");
   }
+}
+
+/**
+ * Asserts that the plugin has a valid id and package metadata.
+ *
+ * @param plugin - Plugin object to validate.
+ */
+function assertPluginMetadata(plugin: Record<string, unknown>): void {
+  assertPluginId(plugin.id);
   if (
     typeof plugin.routerPackage !== "string" ||
     plugin.routerPackage.length === 0
@@ -317,18 +371,62 @@ export function defineForgeRouterPlugin<T extends RouterOutputPlugin>(
       `Forge router plugin "${plugin.id}" must define capabilities.`,
     );
   }
+}
+
+/**
+ * Asserts that the required plugin lifecycle methods exist.
+ *
+ * @param plugin - Plugin object.
+ * @param id - Plugin identifier for error messaging.
+ */
+function assertPluginMethods(
+  plugin: Record<string, unknown>,
+  id: string,
+): void {
   for (const method of ["lower", "optimize", "generate"] as const) {
     if (typeof plugin[method] !== "function") {
       throw new TypeError(
-        `Forge router plugin "${plugin.id}" must define ${method}().`,
+        `Forge router plugin "${id}" must define ${method}().`,
       );
     }
   }
-  if (typeof plugin.build !== "object" || plugin.build === null) {
+}
+
+/**
+ * Asserts that the plugin build adapters are properly formed.
+ *
+ * @param build - Build configuration object.
+ * @param id - Plugin identifier for error messaging.
+ */
+function assertPluginBuildAdapters(build: unknown, id: string): void {
+  if (typeof build !== "object" || build === null) {
     throw new TypeError(
-      `Forge router plugin "${plugin.id}" must define build adapters.`,
+      `Forge router plugin "${id}" must define build adapters.`,
     );
   }
+  const buildRecord = build as Record<string, unknown>;
+  const adapters = [buildRecord.vite, buildRecord.tsdown];
+  const hasInvalidAdapter = adapters.some(
+    (adapter) => adapter !== undefined && typeof adapter !== "function",
+  );
+  if (hasInvalidAdapter) {
+    throw new TypeError(
+      `Forge router plugin "${id}" must define valid Vite or tsdown adapters.`,
+    );
+  }
+}
+
+/** Validate router plugin metadata before it enters a compiler pipeline. */
+export function defineForgeRouterPlugin<T extends RouterOutputPlugin>(
+  plugin: T,
+): T {
+  if (typeof plugin !== "object" || plugin === null) {
+    throw new TypeError("A Forge router plugin must be an object.");
+  }
+  const rawPlugin = plugin as unknown as Record<string, unknown>;
+  assertPluginMetadata(rawPlugin);
+  assertPluginMethods(rawPlugin, plugin.id);
+  assertPluginBuildAdapters(plugin.build, plugin.id);
   return plugin;
 }
 

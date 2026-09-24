@@ -209,7 +209,7 @@ A dependency list controlling when an effect / memo re-runs.
 **Kind:** component
 
 ```typescript
-export type MpEffectCallback = () => void | MpEffectCleanup;
+export type MpEffectCallback = (() => void) | (() => MpEffectCleanup);
 ```
 
 The effect callback run by {@link useEffect}.

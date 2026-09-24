@@ -9,6 +9,59 @@
 
 `@mission-platform/vite-plugin-forge`의 공개 소스 선언에서 생성됩니다.
 
+## `src/build-integration`
+
+### forgeArtifactPublish플러그인
+
+**종류:** 기능
+
+```typescript
+function forgeArtifactPublishPlugin(options: ForgeArtifactPublishOptions): Plugin;
+```
+
+Forge와 동일한 매니페스트 트랜잭션을 통해 모든 기본 출력을 게시합니다.
+생성된 소스. 네이티브 번들러 및 선언 도구는 자유롭게 작성할 수 있습니다.
+`attemptDirectory` 내부; 해당 디렉토리는 게시된 대상이 아닙니다.
+
+#### 매개변수
+
+| 이름 | 유형                        | 설명 |
+| ---- | --------------------------- | ---- |
+| 옵션 | ForgeArtifactPublishOptions |      |
+
+### forgeBuildLifecycle플러그인
+
+**종류:** 기능
+
+```typescript
+function forgeBuildLifecyclePlugin(options: ForgeBuildLifecycleOptions): Plugin;
+```
+
+하나의 대상 계획을 Vite 또는 Rolldown/tsdown에 연결합니다. 세대는
+구성이 생성되는 동안에는 의도적으로 수명 주기 후크에서 기다리지 않습니다.
+
+#### 매개변수
+
+| 이름 | 유형                    | 설명 |
+| ---- | ----------------------- | ---- |
+| 옵션 | ForgeBuildLifecycle옵션 |      |
+
+### forgeVirtualEntry
+
+**종류:** 기능
+
+```typescript
+function forgeVirtualEntry(targetId: string): string;
+```
+
+buildStart에 의해 대상이 준비될 때까지 사용되는 안정적인 가상 항목입니다.
+
+#### 매개변수
+
+| 이름   | 유형   | 설명 |
+| ------ | ------ | ---- |
+| 타겟ID | 문자열 |      |
+
 ## `src/compiler/artifact-manifest`
 
 ### createForgeArtifact매니페스트
@@ -63,6 +116,91 @@ export interface ForgeArtifactRecord
 
 대상 범위 아티팩트 매니페스트에 의해 기록된 하나의 결정적 출력입니다.
 
+## `src/compiler/artifact-path`
+
+### 주장ForgeArtifactRoot
+
+**종류:** 기능
+
+```typescript
+function assertForgeArtifactRoot(root: string): string;
+```
+
+출력 루트를 검증하고 기존 심볼릭 링크나 디렉토리가 아닌 것을 거부합니다.
+하위 구성 요소는 사용하기 전에 아티팩트 확인자에 의해 확인됩니다.
+
+#### 매개변수
+
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 루트 | 문자열 |      |
+
+### verifyForgeArtifact디렉터리
+
+**종류:** 기능
+
+```typescript
+function ensureForgeArtifactDirectory(root: string, directory: string): string;
+```
+
+링크를 따르지 않고 한 번에 하나의 구성 요소씩 출력 디렉터리를 만듭니다.
+
+#### 매개변수
+
+| 이름     | 유형   | 설명 |
+| -------- | ------ | ---- |
+| 루트     | 문자열 |      |
+| 디렉토리 | 문자열 |      |
+
+### 해결ForgeArtifact경로
+
+**종류:** 기능
+
+```typescript
+function resolveForgeArtifactPath(root: string, relativeName: string): string;
+```
+
+아티팩트 이름을 확인하고 기존 경로 구성 요소가 안전한지 확인하세요.
+
+#### 매개변수
+
+| 이름     | 유형   | 설명 |
+| -------- | ------ | ---- |
+| 루트     | 문자열 |      |
+| 상대이름 | 문자열 |      |
+
+### verifyForgeArtifactName
+
+**종류:** 기능
+
+```typescript
+function validateForgeArtifactName(relativeName: string): string;
+```
+
+안전하지 않은 경로 세그먼트를 정규화하지 않고 아티팩트 이름을 검증합니다.
+
+#### 매개변수
+
+| 이름     | 유형   | 설명 |
+| -------- | ------ | ---- |
+| 상대이름 | 문자열 |      |
+
+### verifyForgeArtifactSegment
+
+**종류:** 기능
+
+```typescript
+function validateForgeArtifactSegment(segment: string): string;
+```
+
+아티팩트 루트를 구성하는 데 사용되는 단일 경로 구성 요소의 유효성을 검사합니다.
+
+#### 매개변수
+
+| 이름     | 유형   | 설명 |
+| -------- | ------ | ---- |
+| 세그먼트 | 문자열 |      |
+
 ## `src/compiler/artifact-writer`
 
 ### createForgeArtifactWriter
@@ -70,10 +208,32 @@ export interface ForgeArtifactRecord
 **종류:** 기능
 
 ```typescript
-function createForgeArtifactWriter(outDir: string, targetId: string): ForgeArtifactWriter;
+function createForgeArtifactWriter(
+  outDir: string,
+  targetId: string,
+  options: ForgeArtifactWriterOptions = {},
+): ForgeArtifactWriter;
 ```
 
 설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름       | 유형                    | 설명 |
+| ---------- | ----------------------- | ---- |
+| 아웃디렉터 | 문자열                  |      |
+| 타겟ID     | 문자열                  |      |
+| 옵션       | ForgeArtifactWriter옵션 |      |
+
+### forgeArtifactAtempt디렉토리
+
+**종류:** 기능
+
+```typescript
+function forgeArtifactAttemptDirectory(outDir: string, targetId: string): string;
+```
+
+네이티브 대상 빌드 시도를 위해 소유된 형제 디렉터리를 할당합니다.
 
 #### 매개변수
 
@@ -91,1631 +251,6 @@ export interface ForgeArtifactWriter
 ```
 
 설명이 제공되지 않았습니다.
-
-## `src/compiler/ast`
-
-### CLASS_NAME_ATTRIBUTE
-
-**종류:** 상수
-
-```typescript
-export const CLASS_NAME_ATTRIBUTE;
-```
-
-클래스 이름 관리를 구동하는 중립 JSX 속성입니다. 저자는 쓴다
-`className={…}`(`class` 속성은 정적 문자열용으로 예약되어 있음)
-`classNames` 런타임 도우미가 허용하는 것과 동일한 인수 전달 — 대부분
-일반적으로 클래스 값의 **배열**(`className={['base', { active }]}`),
-그러나 단일 {@link import ('@mission-platform/forge-jsx').ClassValue}도 작동합니다.
-속성의 철자는 React의 자체 `className`와 동일합니다(
-`classNames`로 유지되는 런타임 도우미) 구성 요소가 자체 병합할 수 있음
-이름 지정 없이 전달된 `properties.className`을 사용하여 계산된 클래스
-불일치: `className={[classNames('base', …), properties.className]}`. 는
-React 이미터는 배열 형식을 `className={classNames(…)}` 문자열로 축소합니다.
-호출(중립 `classNames` 가져오기 다시 주입), Vue 이미터
-이미 이해하고 있는 Vue의 기본 `class` 바인딩에 바로 매핑합니다.
-배열/객체 형태.
-
-### 슬롯 이름 수집
-
-**종류:** 기능
-
-```typescript
-function collectSlotNames(sourceFile: ts.SourceFile): Set<string>;
-```
-
-모듈의 `<Slot name="…" />` 요소에 의해 선언된 모든 정적 슬롯 이름을 수집합니다.
-
-#### 매개변수
-
-| 이름     | 유형        | 설명 |
-| -------- | ----------- | ---- |
-| 소스파일 | ts.소스파일 |      |
-
-### 구성요소가져오기
-
-**종류:** 인터페이스
-
-```typescript
-export interface ComponentImport
-```
-
-형제 구성 요소의 상대적 가져오기(예: `import { ForgeBadge } from '../forge-badge'`.
-
-### COMPONENTS_JSX_MODULES
-
-**종류:** 상수
-
-```typescript
-export const COMPONENTS_JSX_MODULES;
-```
-
-한 번만 쓸 수 있는 **컴포넌트 라이브러리** 작업 공간 패키지:
-`@mission-platform/icons`, 중립 작성자는 다음에서 구성 요소를 가져옵니다.
-패키지(예: `@mission-platform/components/forge-drawer`의 `ForgeDrawer` 또는
-`@mission-platform/layouts`의 `ForgeVerticalLayout`), 유형 확인
-중립 소스에 대해 `@mission-platform/forge-jsx`를 통해 렌더링합니다.
-단위 테스트의 어댑터. 생성된 프레임워크별 소스는 다음으로 가져옵니다.
-매우 동일한 지정자 - 프레임워크 선택은 각각을 통해 발생합니다.
-하위 경로를 통하지 않고 패키지의 `mp:<framework>` 내보내기 조건입니다.
-
-### createReactHasSlotExpression
-
-**종류:** 기능
-
-```typescript
-function createReactHasSlotExpression(
-  factory: ts.NodeFactory,
-  propsParamName: string,
-  name: string | undefined,
-): ts.Expression;
-```
-
-`<props>.<name> != null` — `hasSlot('name')`에 대한 React의 존재를 읽었습니다.
-
-#### 매개변수
-
-| 이름           | 유형                    | 설명 |
-| -------------- | ----------------------- | ---- |
-| 공장           | ts.NodeFactory          |      |
-| propsParamName | 문자열                  |      |
-| 이름           | 문자열 \| 정의되지 않음 |      |
-
-### createReactSlotCallExpression
-
-**종류:** 기능
-
-```typescript
-function createReactSlotCallExpression(
-  factory: ts.NodeFactory,
-  propsParamName: string,
-  name: string | undefined,
-  fallback: readonly ts.Expression[],
-  scope?: ts.Expression,
-): ts.Expression;
-```
-
-`typeof <props>.<name> === 'function' ? <props>.<name>(scope) : <props>.<name>`
-(`?? <fallback>` 포함) — `h(Slot, …)` 호출 양식의 React 번역
-({@link createReactSlotExpression}의 `h()` 대응)
-
-#### 매개변수
-
-| 이름           | 유형                      | 설명 |
-| -------------- | ------------------------- | ---- |
-| 공장           | ts.NodeFactory            |      |
-| propsParamName | 문자열                    |      |
-| 이름           | 문자열 \| 정의되지 않음   |      |
-| 대체           | 읽기 전용 ts.Expression[] |      |
-| 범위           | ts.표현식                 |      |
-
-### createReactSlotExpression
-
-**종류:** 기능
-
-```typescript
-function createReactSlotExpression(
-  factory: ts.NodeFactory,
-  propsParamName: string,
-  name: string | undefined,
-  fallback: readonly ts.JsxChild[],
-  scope?: ts.Expression,
-): ts.Expression;
-```
-
-`<props>.<name>`(슬롯이 폴백을 선언하는 경우 `?? <fallback>` 포함)
-내용). `scope`가 제공되면 슬롯 소품이 호출됩니다.
-render-prop 함수이거나 React node인 경우 직접 평가됩니다.
-(`typeof <props>.<name> === 'function' ? <props>.<name>(scope) : <props>.<name>`).
-
-#### 매개변수
-
-| 이름           | 유형                    | 설명 |
-| -------------- | ----------------------- | ---- |
-| 공장           | ts.NodeFactory          |      |
-| propsParamName | 문자열                  |      |
-| 이름           | 문자열 \| 정의되지 않음 |      |
-| 대체           | 읽기 전용 ts.JsxChild[] |      |
-| 범위           | ts.표현식               |      |
-
-### createReferenceRewriter
-
-**종류:** 기능
-
-```typescript
-function createReferenceRewriter(scope: RewriteScope): ts.TransformerFactory<ts.Node>;
-```
-
-구성요소 본체 내부의 참조를 다시 작성하는 TS 변환기를 구축합니다.
-Vue 대상: `properties.children` → `slots.default?.()`, 구조화되지 않은 소품
-지역 주민 → 실시간 `properties.<name>` 액세스, `useState` 읽기 → `.value`, setter
-통화 → 할당, `useRef`의 `.current` → `.value`.
-
-#### 매개변수
-
-| 이름 | 유형       | 설명 |
-| ---- | ---------- | ---- |
-| 범위 | 재작성범위 |      |
-
-### createStateSnapshot호이스터
-
-**종류:** 기능
-
-```typescript
-function createStateSnapshotHoister(scope: RewriteScope): ts.TransformerFactory<ts.Node>;
-```
-
-`useState` / `useMemo` 값의 TypeScript 제어 흐름 축소를 유지합니다.
-`<name>` → `<name>.value`이 그렇지 않으면 다시 작성하는 중첩된 클로저 전반에 걸쳐
-휴식.
-
-중립 JSX에서 상태 값은 `const` 로컬이므로 범위를 좁히는 가드
-그것(`if (sortKey === undefined) return; … rows.toSorted((a) => a[sortKey])`)
-중첩된 콜백 내부의 축소를 유지합니다. `const`은 절대 재할당되지 않습니다.
-따라서 TypeScript은 기능 경계를 통한 축소를 신뢰합니다. Vue 이후
-읽기를 다시 작성하면 **변경 가능한 속성 액세스**인 `sortKey.value`이 됩니다.
-TypeScript 축소는 중첩된 함수를 입력할 때 삭제됩니다. 따라서 보호된
-`a[sortKey.value]` / `draft.value.uid`가 유형 검사에 실패했습니다.
-
-각 블록 본문 함수에 대해 이 패스는 읽은 값마다 스냅샷을 찍습니다.
-_중첩 클로저 내부_ 내부에 있는 `const <name>$ = <name>.value;` 및
-내에서 **읽기**(`<name>.value = …` 쓰기 대상 아님) 값을 다시 씁니다.
-해당 `const` 별칭에 대한 함수입니다. 스냅샷은 원본 `const`을 복원합니다.
-의미론 - 다시 중첩된 클로저로 흐름을 좁히는 것 - `.value`
-상단의 액세스는 읽기 반응성을 유지합니다(`computed`는 여전히 이를 다시 추적합니다).
-
-#### 매개변수
-
-| 이름 | 유형        | 설명 |
-| ---- | ----------- | ---- |
-| 범위 | 재작성 범위 |      |
-
-### createVueHasSlotExpression
-
-**종류:** 기능
-
-```typescript
-function createVueHasSlotExpression(factory: ts.NodeFactory, name: string | undefined): ts.Expression;
-```
-
-`slots.<name>` — `hasSlot('name')`(`!!slots.x`)에 대한 Vue의 `useSlots()` 존재를 읽었습니다.
-
-#### 매개변수
-
-| 이름 | 유형                    | 설명 |
-| ---- | ----------------------- | ---- |
-| 공장 | ts.NodeFactory          |      |
-| 이름 | 문자열 \| 정의되지 않음 |      |
-
-### createVueSlotCallExpression
-
-**종류:** 기능
-
-```typescript
-function createVueSlotCallExpression(
-  factory: ts.NodeFactory,
-  name: string | undefined,
-  fallback: readonly ts.Expression[],
-  scope?: ts.Expression,
-): ts.Expression;
-```
-
-`slots.<name>?.(scope) ?? <fallback>` — `h(Slot, …)`의 Vue 번역
-호출 양식({@link createVueSlotExpression}의 `h()` 대응) 는
-여기서 폴백은 JSX 자식이 아닌 호출의 자식 **표현식**입니다.
-
-#### 매개변수
-
-| 이름 | 유형                      | 설명 |
-| ---- | ------------------------- | ---- |
-| 공장 | ts.NodeFactory            |      |
-| 이름 | 문자열 \| 정의되지 않음   |      |
-| 대체 | 읽기 전용 ts.Expression[] |      |
-| 범위 | ts.표현식                 |      |
-
-### createVueSlotExpression
-
-**종류:** 기능
-
-```typescript
-function createVueSlotExpression(
-  factory: ts.NodeFactory,
-  name: string | undefined,
-  fallback: readonly ts.JsxChild[],
-  scope?: ts.Expression,
-): ts.Expression;
-```
-
-`slots.<name>?.(scope)`(슬롯이 폴백을 선언하는 경우 `?? <fallback>` 포함)
-내용). `scope`가 제공되면 슬롯이 호출되어
-Vue **범위** 슬롯 호출.
-
-#### 매개변수
-
-| 이름 | 유형                    | 설명 |
-| ---- | ----------------------- | ---- |
-| 공장 | ts.NodeFactory          |      |
-| 이름 | 문자열 \| 정의되지 않음 |      |
-| 대체 | 읽기 전용 ts.JsxChild[] |      |
-| 범위 | ts.표현식               |      |
-
-### 구조화되지 않은 속성
-
-**종류:** 인터페이스
-
-```typescript
-export interface DestructuredProperty
-```
-
-`const { … } = properties` 구조 분해에서 가져온 바인딩입니다.
-
-### 동적ToHCall
-
-**종류:** 기능
-
-```typescript
-function dynamicToHCall(
-  factory: ts.NodeFactory,
-  node: ts.JsxSelfClosingElement | ts.JsxElement,
-  visitExpression: (expression: ts.Expression) => ts.Expression,
-  aliasAttribute: (name: string) => string = (name) => name,
-  variadicChildren = false,
-): ts.CallExpression;
-```
-
-`<Dynamic is={X} a={…} …>children</Dynamic>` 요소를
-`h(X, { a: …, … }, ...children)` 호출 — 동적 구성 요소 형식
-대상은 기본적으로 컴파일됩니다(React의 클래식-`h` JSX 변환/Vue의
-`<component :is>`). `is` 속성은 요소 유형이 됩니다.
-속성(및 스프레드)은 props 객체가 되고 자식은
-후행 인수. 속성 값 표현식과 하위 항목이 전달됩니다.
-`visitExpression`를 통해(그래서 prop/state/slot은 다시 작성되고 React은
-`class`→`className` 앨리어싱은 여전히 적용됨), `aliasAttribute`은 이름을 바꿉니다.
-대상에 대한 소품 키(Vue의 ID, React의 DOM 별칭)
-
-#### 매개변수
-
-| 이름           | 유형                                     | 설명 |
-| -------------- | ---------------------------------------- | ---- |
-| 공장           | ts.NodeFactory                           |      |
-| node           | ts.JsxSelfClosingElement \| ts.Jsx요소   |      |
-| 방문표현       | (표현식: ts.Expression) => ts.Expression |      |
-| 별칭속성       | (이름: 문자열) => 문자열                 |      |
-| variadic어린이 |                                          |      |
-
-### I18nHookInComponent 보장
-
-**종류:** 기능
-
-```typescript
-function ensureI18nHookInComponent(factory: ts.NodeFactory, sourceFile: ts.SourceFile): ts.SourceFile;
-```
-
-`i18next.t(...)`을 호출하는 구성요소 함수에 최상위 레벨 `const { t } = useI18n();` 문이 있는지 확인하십시오.
-
-#### 매개변수
-
-| 이름     | 유형           | 설명 |
-| -------- | -------------- | ---- |
-| 공장     | ts.NodeFactory |      |
-| 소스파일 | ts.소스파일    |      |
-
-### eventNameForProperty
-
-**종류:** 기능
-
-```typescript
-function eventNameForProperty(propName: string): string;
-```
-
-`on<Event>` prop에 대한 Vue 이벤트 이름 파생: `on` 접두사를 제거하고
-첫 번째 남은 문자는 소문자(`onChange` → `change`,
-`onUpdateModelValue` → `updateModelValue`).
-
-#### 매개변수
-
-| 이름      | 유형   | 설명 |
-| --------- | ------ | ---- |
-| 소품 이름 | 문자열 |      |
-
-### 이벤트서명
-
-**종류:** 인터페이스
-
-```typescript
-export interface EventSignature
-```
-
-구성요소 **이벤트** — `on<Event>`이라는 소품 인터페이스 멤버
-선언된 유형은 인라인 함수 유형입니다(예: `onChange?: (openIds: string[])
-=> void`). The Vue emitter turns these into `defineEmits` 선언 및
-런타임 소품 대신 `emit('<event>', …)`를 호출합니다.
-
-### extractEventSignatures
-
-**종류:** 기능
-
-```typescript
-function extractEventSignatures(sourceFile: ts.SourceFile, interfaceName: string): EventSignature[];
-```
-
-props 인터페이스(멤버)에 의해 선언된 (자체) **이벤트** 시그니처를 추출합니다.
-형식이 인라인인 `on<Event>`(`on` 뒤에 대문자)이라는 이름이 지정되었습니다.
-기능 유형. 다음은 구성요소의 이벤트입니다. Vue 이미터가 이를 선언합니다.
-`defineEmits`를 사용하고 `emit(...)`에 대한 호출/참조를 다시 작성합니다.
-런타임 소품으로 들고 다니는 것보다. 명명된 별칭을 통해 입력된 콜백 소품
-(인라인 함수 유형이 아닌 유형 참조)는 일반 소품으로 남습니다.
-
-#### 매개변수
-
-| 이름           | 유형        | 설명 |
-| -------------- | ----------- | ---- |
-| 소스파일       | ts.소스파일 |      |
-| 인터페이스이름 | 문자열      |      |
-
-### extractModelSignatures
-
-**종류:** 기능
-
-```typescript
-function extractModelSignatures(sourceFile: ts.SourceFile, interfaceName: string): ModelSignature[];
-```
-
-`@model <onEvent>`으로 표시된 props 인터페이스 멤버를 추출합니다.
-Vue 이미터가 단일 `defineModel`로 융합되는 쌍 변경 이벤트
-양방향 바인딩. 모델명은 표준을 제외한 소품 이름입니다.
-`modelValue` - Vue의 기본(이름 없음) 모델이 됩니다.
-
-#### 매개변수
-
-| 이름           | 유형        | 설명 |
-| -------------- | ----------- | ---- |
-| 소스파일       | ts.소스파일 |      |
-| 인터페이스이름 | 문자열      |      |
-
-### extractPropertyNames
-
-**종류:** 기능
-
-```typescript
-function extractPropertyNames(sourceFile: ts.SourceFile, interfaceName: string): string[];
-```
-
-`children`을 제외하고 props 인터페이스에 의해 선언된 (자체) 속성 이름을 추출합니다.
-
-#### 매개변수
-
-| 이름           | 유형        | 설명 |
-| -------------- | ----------- | ---- |
-| 소스파일       | ts.소스파일 |      |
-| 인터페이스이름 | 문자열      |      |
-
-### extractPropertySignatures
-
-**종류:** 기능
-
-```typescript
-function extractPropertySignatures(sourceFile: ts.SourceFile, interfaceName: string): PropertySignature[];
-```
-
-props 인터페이스에 의해 선언된 (자신의) 속성 서명을 추출합니다.
-`children`. 각 항목에는 속성의 선언된 유형 텍스트와
-옵션이므로 Vue 이미터는 **유형 기반** `defineProps<{ … }>()`을 렌더링할 수 있습니다.
-인터페이스의 정확한 유형을 유지합니다(유형이 지정되지 않은 런타임 `defineProps`).
-`{}` / `never[]`로 축소됩니다. 유형을 읽을 수 없는 속성
-`unknown`로 돌아갑니다.
-
-#### 매개변수
-
-| 이름           | 유형        | 설명 |
-| -------------- | ----------- | ---- |
-| 소스파일       | ts.소스파일 |      |
-| 인터페이스이름 | 문자열      |      |
-
-### findComponent함수
-
-**종류:** 기능
-
-```typescript
-function findComponentFunction(sourceFile: ts.SourceFile, name: string): ts.FunctionDeclaration | undefined;
-```
-
-이름으로 중립 구성 요소에 대해 내보낸 함수 선언을 찾습니다.
-
-#### 매개변수
-
-| 이름     | 유형        | 설명 |
-| -------- | ----------- | ---- |
-| 소스파일 | ts.소스파일 |      |
-| 이름     | 문자열      |      |
-
-### ForgeExportFact
-
-**종류:** 인터페이스
-
-```typescript
-export interface ForgeExportFact
-```
-
-Forge 소스 모듈에서 발견된 선언 또는 다시 내보내기입니다.
-
-### ForgeImport사실
-
-**종류:** 인터페이스
-
-```typescript
-export interface ForgeImportFact
-```
-
-Forge 소스 모듈에서 발견된 정적 가져오기.
-
-### Forge모듈사실
-
-**종류:** 인터페이스
-
-```typescript
-export interface ForgeModuleFacts
-```
-
-정식 Forge 파일 그래프를 구축하는 데 필요한 모든 정적 모듈 정보입니다.
-
-### ForgeSourceSpan
-
-**종류:** 인터페이스
-
-```typescript
-export interface ForgeSourceSpan
-```
-
-그래프 진단 및 팩트 가져오기/내보내기에 사용되는 소스 위치입니다.
-
-### hasSlottedChildren
-
-**종류:** 기능
-
-```typescript
-function hasSlottedChildren(children: readonly ts.JsxChild[]): boolean;
-```
-
-부모의 자녀가 `slot="…"` 마커를 가지고 있는지 여부.
-
-#### 매개변수
-
-| 이름   | 유형                    | 설명 |
-| ------ | ----------------------- | ---- |
-| 어린이 | 읽기 전용 ts.JsxChild[] |      |
-
-### ICONS_JSX_MODULE
-
-**종류:** 상수
-
-```typescript
-export const ICONS_JSX_MODULE;
-```
-
-한 번 쓰기 아이콘 라이브러리 `@mission-platform/icons`의 기본 지정자입니다.
-중립 작성자는 이 루트에서 아이콘을 가져오고 생성된
-프레임워크별 소스는 정확한 지정자를 유지합니다. 모든 프레임워크 분할
-`@mission-platform/*` 패키지는 `mp:vue` / `mp:react` / `mp:solid` /를 선언합니다.
-기본 `.` 항목에 대한 `mp:web-component` 사용자 정의 내보내기 조건이므로
-_소비자_ `resolve.conditions`(및 매칭
-`customConditions` tsconfig 사전 설정) 올바른 빌드를 선택합니다. 없다
-다시 매핑할 프레임워크별 하위 경로입니다.
-
-### 검사Forge모듈
-
-**종류:** 기능
-
-```typescript
-function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts;
-```
-
-구문 분석된 모듈에서 정적 가져오기, 내보내기, 유형 전용 에지 및 프레임워크 사실을 추출합니다.
-
-#### 매개변수
-
-| 이름      | 유형   | 설명 |
-| --------- | ------ | ---- |
-| 파일 이름 | 문자열 |      |
-| 출처      | 문자열 |      |
-
-### isComponent태그 이름
-
-**종류:** 기능
-
-```typescript
-function isComponentTagName(tagName: ts.JsxTagNameExpression): boolean;
-```
-
-JSX 태그 이름이 **구성요소**(대문자로 표시된 식별자)를 참조하는지 여부
-`ForgeDropdown` 또는 `Ctx.Provider`와 같은 멤버/`this` 표현식)
-본질적인 요소(`div`, `button`)보다. 명명된 슬롯 **통과**
-(`slot="…"`)는 구성 요소에만 의미가 있으므로 아래 슬롯 라우팅은 다음과 같습니다.
-이것에 대해 게이트 — 슬롯형 접힌 런타임 어댑터를 정확하게 미러링합니다.
-구성요소를 확장할 때만 하위 항목입니다(`typeof type === 'function'`).
-
-#### 매개변수
-
-| 이름     | 유형                    | 설명 |
-| -------- | ----------------------- | ---- |
-| 태그이름 | ts.JsxTagNameExpression |      |
-
-### isDynamicElement
-
-**종류:** 기능
-
-```typescript
-function isDynamicElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
-```
-
-node이 중립 동적 구성 요소인지 여부 - `<Dynamic is={…} />`
-또는 `<Dynamic is={…}>…</Dynamic>` — `Dynamic` 마커에서 생성됩니다.
-
-#### 매개변수
-
-| 이름 | 유형    | 설명 |
-| ---- | ------- | ---- |
-| node | ts.Node |      |
-
-### isFragmentElement
-
-**종류:** 기능
-
-```typescript
-function isFragmentElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
-```
-
-node이 중립 `<Fragment>` 요소인지 여부 — 자체 폐쇄형 요소 또는
-`<Fragment />`(비어 있음) 또는 `<Fragment>…</Fragment>`(자녀 포함) 양식입니다.
-
-#### 매개변수
-
-| 이름 | 유형    | 설명 |
-| ---- | ------- | ---- |
-| node | ts.Node |      |
-
-### isHasSlotCall
-
-**종류:** 기능
-
-```typescript
-function isHasSlotCall(node: ts.Node): node is ts.CallExpression;
-```
-
-node가 `hasSlot('name')` / `hasSlot()` 호출인지 여부 — 중립
-슬롯 존재 마커. 컴파일러는 이를 각 프레임워크의 네이티브로 다시 작성합니다.
-존재 여부를 확인하므로 런타임 호출로 내보내지지 않습니다.
-
-#### 매개변수
-
-| 이름 | 유형    | 설명 |
-| ---- | ------- | ---- |
-| node | ts.Node |      |
-
-### isSlot요소
-
-**종류:** 기능
-
-```typescript
-function isSlotElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
-```
-
-node이 중립 명명된 슬롯 요소인지 여부 - `<Slot … />` 또는
-`<Slot …>fallback</Slot>` — `Slot` 마커에서 생성됩니다.
-
-#### 매개변수
-
-| 이름 | 유형    | 설명 |
-| ---- | ------- | ---- |
-| node | ts.Node |      |
-
-### isSlotHCall
-
-**종류:** 기능
-
-```typescript
-function isSlotHCall(node: ts.Node): node is ts.CallExpression;
-```
-
-node가 명명된 슬롯 마커(`h(Slot, …)`)의 **호출 형식**인지 여부
-`<Slot … />` JSX 요소의 `h()` 팩토리 대응물입니다. 일부 중립
-구성요소는 `h(Slot, { name: 'x' }, …fallback)`으로 슬롯을 구성합니다(예: 내부
-`const column = … ? h(ForgeDrawer, …, h(Slot, { name: 'start' })) : undefined`)
-JSX보다는; 두 형식 모두 각 프레임워크의 기본 슬롯 읽기에 다시 작성해야 합니다.
-
-#### 매개변수
-
-| 이름 | 유형    | 설명 |
-| ---- | ------- | ---- |
-| node | ts.Node |      |
-
-### JSX_ATTRIBUTE_RENAMES
-
-**종류:** 상수
-
-```typescript
-export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
-```
-
-작성자에게 표시되는 camelCase 철자를 낮춰야 하는 기본 JSX 속성
-HTML 철자 Vue의 JSX 내장 요소 유형이 필요합니다. Vue 유형
-`<td>`/`<th>` 범위 속성은 `colspan`/`rowspan`(React의 `colSpan`/가 아님)
-`rowSpan`), 그렇지 않으면 렌더링 클로저 JSX가 유형 검사에 실패하게 됩니다.
-
-### LOCAL_EFFECT_FILE
-
-**종류:** 상수
-
-```typescript
-export const LOCAL_EFFECT_FILE;
-```
-
-로컬 효과 도우미 모듈의 파일 이름(확장자 포함)은 플랫 생성 트리에 기록됩니다.
-
-### LOCAL_EFFECT_MODULE
-
-**종류:** 상수
-
-```typescript
-export const LOCAL_EFFECT_MODULE;
-```
-
-생성된 Vue {@link LOCAL_EFFECT_MODULE}을 가져오는 상대 지정자입니다.
-
-### LOCAL_JSX_TYPE_NAMES
-
-**종류:** 상수
-
-```typescript
-export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
-```
-
-상응하는 단일 최고급 프레임워크가 없는 중립 **유형** 가져오기
-({@link REACT_TYPE_ALIASES}와는 달리) 별칭을 지정하지만 사소하게 표현할 수 있습니다.
-각 프레임워크 고유의 어휘 — 렌더 프리미티브
-`MpRenderProperty<S>`, 범위가 지정된 슬롯/렌더링 소품 함수
-특정 범위에 대한 슬롯의 콘텐츠입니다.
-
-생성된 파일에서 `@mission-platform/forge-jsx` 가져오기로 유지하는 대신
-코드를 사용하면 각 프레임워크 빌드는 함께 배치된 작은 모듈을 내보냅니다.
-**프레임워크별 변형**을 정의하는 ({@link LOCAL_JSX_TYPES_MODULE})
-그 중 — React은 `ReactNode` 위에 있고, Vue은 `VNodeChild` 위에 있고 — 그리고 모든 이미터
-유형 가져오기를 그곳으로 리디렉션합니다(React 및 Vue `imports` 빌더 참조).
-따라서 생성된 소스에는 중립 `@mission-platform/forge-jsx`가 없습니다.
-render-prop **type** 가져오기를 전혀 수행하지 않습니다.
-
-### LOCAL_JSX_TYPES_FILE
-
-**종류:** 상수
-
-```typescript
-export const LOCAL_JSX_TYPES_FILE;
-```
-
-로컬 JSX 유형 모듈의 파일 이름(확장자 포함)은 플랫 생성 트리에 작성됩니다.
-
-### LOCAL_JSX_TYPES_MODULE
-
-**종류:** 상수
-
-```typescript
-export const LOCAL_JSX_TYPES_MODULE;
-```
-
-생성된 프레임워크별 {@link LOCAL_JSX_TYPES_MODULE}을 가져오는 상대 지정자입니다.
-
-### localEffectModuleSource
-
-**종류:** 기능
-
-```typescript
-function localEffectModuleSource(framework: JsxFramework): string;
-```
-
-대상에 대해 함께 배치된 {@link LOCAL_EFFECT_MODULE}의 소스
-로컬 JSX 유형과 정확히 동일하게 출력 트리당 한 번씩 생성되는 프레임워크
-모듈({@link localJsxTypesModuleSource} 참조).
-
-Vue 이미터의 `useEffect` → 라이프사이클 변환을 중앙 집중화합니다.
-Vue의 기본 기반으로 구축된 단일 일반화 감시자(`mpEffect`)
-`watch`/`onMounted`/`onUpdated`/`onUnmounted`, 따라서 각 구성 요소의 `setup`
-대신 단일 `mpEffect(callback, () => [deps])` 호출로 축소됩니다.
-인라인된 효과별 수명 주기 블록. React의 의미론적 거울
-`useEffect(callback, deps?)`: 마운트 후 한 번 실행, 종속성이 있을 때 다시 실행
-변경하고(또는 deps가 생략된 경우 모든 업데이트 후에) 반환된 항목을 실행합니다.
-매번 다시 실행하기 전과 마운트 해제할 때 정리합니다.
-
-도우미는 **Vue 전용**입니다. React 이미터는 `useEffect(…)`를 계속 방출합니다.
-그대로(React의 기본 형식) `framework === 'react'`의 경우 이는 다음을 반환합니다.
-빈 문자열이며 작성자는 이를 건너뜁니다.
-
-#### 매개변수
-
-| 이름       | 유형          | 설명 |
-| ---------- | ------------- | ---- |
-| 프레임워크 | Jsx프레임워크 |      |
-
-### localJsxTypesModuleSource
-
-**종류:** 기능
-
-```typescript
-function localJsxTypesModuleSource(framework: JsxFramework): string;
-```
-
-대상에 대해 함께 배치된 {@link LOCAL_JSX_TYPES_MODULE}의 소스
-프레임워크: 명명된 중립 렌더 프리미티브의 프레임워크별 변형
-{@link LOCAL_JSX_TYPE_NAMES}에서 생성된 구성요소를 가져옵니다.
-중립 대신 이 로컬 모듈의 `MpRenderProperty`
-`@mission-platform/forge-jsx` 패키지. 정의는 프레임워크마다 다릅니다.
-"렌더링 가능한 콘텐츠" 위치는 React의 `ReactNode` 및 Vue의 `VNodeChild`입니다.
-따라서 각 빌드의 선언은 런타임에 대해 관용적으로 읽혀집니다.
-
-고의적으로 `MpProperties` 변형이 **없음**: 구성 요소가 선언합니다.
-허용되는 속성과 정확히 일치하므로 props 기반에 대해서는 아무것도 생성되지 않습니다.
-중립 방언에는 더 이상 존재하지 않습니다.
-
-#### 매개변수
-
-| 이름       | 유형          | 설명 |
-| ---------- | ------------- | ---- |
-| 프레임워크 | Jsx프레임워크 |      |
-
-### 모델서명
-
-**종류:** 인터페이스
-
-```typescript
-export interface ModelSignature
-```
-
-`@model <onEvent>` JSDoc 태그가 표시된 소품: 양방향(v-모델) 바인딩
-**입력** 소품을 **변경 이벤트**와 페어링합니다. Vue 이미터가 붕괴됨
-쌍을 단일 `defineModel` 선언으로 만듭니다(런타임과
-prop 및 `defineEmits` 항목) - prop 읽기는 `<local>.value`이 됩니다.
-페어링된 이벤트의 호출은 `<local>.value = …`가 됩니다.
-
-### 모듈대상프레임워크
-
-**종류:** 기능
-
-```typescript
-function moduleTargetsFramework(fileName: string, source: string, framework: string): boolean;
-```
-
-`framework`에 대해 모듈을 내보내야 하는지 여부입니다. 프레임워크 중립적인 모듈
-(`"use <framework>"` 지시문 없음)은 모든 대상에 대해 내보내집니다. 게이트 모듈
-지시문 이름이 지정된 프레임워크에 대해서만 **방출됩니다**.
-
-#### 매개변수
-
-| 이름       | 유형   | 설명 |
-| ---------- | ------ | ---- |
-| 파일 이름  | 문자열 |      |
-| 출처       | 문자열 |      |
-| 프레임워크 | 문자열 |      |
-
-### NEUTRAL_COMPILE_TIME_MARKERS
-
-**종류:** 상수
-
-```typescript
-export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>;
-```
-
-순수한 컴파일 시간 표시자인 중립 **값** 가져오기 — 이는 오직 존재합니다.
-따라서 작성된 JSX는 유형 검사를 수행하고 이미터(JSX)에 의해 *소비*됩니다.
-사용법은 각 프레임워크의 자체 메커니즘으로 다시 작성되므로 절대 사용해서는 안 됩니다.
-생성된 React 또는 Vue 소스에 실제 가져오기로 전달됩니다. `Slot`
-(`<Slot name="…" />`)은 명명된 슬롯 마커 `Dynamic`입니다.
-(`<Dynamic is={…} />`)은 동적 구성 요소 마커입니다(다음으로 다시 작성됨).
-`h(is, …)` 호출, 각 프레임워크의 JSX 변환/`<component :is>`
-기본적으로 컴파일됨) `hasSlot`(`hasSlot('x')`)은 슬롯 존재 마커입니다.
-(Vue의 `!!slots.x` / `$slots.x` 및 React의 `properties.x != null`으로 다시 작성됨)
-
-### NEUTRAL_CONTEXT_VALUES
-
-**종류:** 상수
-
-```typescript
-export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
-```
-
-컨텍스트 프리미티브인 중립 **값** 가져오기입니다. React에서는 _그렇습니다_
-React 자신의 것(`createContext`/`useContext`)이므로
-`react` 값 가져오기; Vue에서 해당 가져오기는
-`@mission-platform/forge-adapters/vue` 어댑터(`provide`/`inject` 지원
-`createContext`/`useContext`).
-
-### NEUTRAL_FRAMEWORK_COMPONENTS
-
-**종류:** 상수
-
-```typescript
-export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>;
-```
-
-실제 프레임워크별 **구성 요소**인 중립 **값** 가져오기
-마커, 런타임 유틸리티 또는 React 자체 기본 요소보다 JSX 사용법
-그대로 유지되지만(구성요소 태그로 유지됨)
-`import { … } from '@mission-platform/forge-jsx'`이 대상에 다시 매핑됩니다.
-프레임워크의 기본 구현: `Teleport`(포털 기본 요소)은
-`import { Teleport } from '@mission-platform/forge-adapters/react'`(`createPortal`
-React의 경우 래퍼) 및 Vue의 경우 `import { Teleport } from 'vue'`(내장);
-`Transition`(입력/나가기 기본 요소)는
-`@mission-platform/forge-adapters/react` React용 CSS 클래스 드라이버 및 내장
-Vue에 대한 `import { Transition } from 'vue'`; `TransitionGroup`(목록
-입력/나가기/이동 기본 요소)는 같은 방식으로 다시 매핑됩니다(
-`@mission-platform/forge-adapters/react` React용 그룹 드라이버 내장
-Vue에 대한 `import { TransitionGroup } from 'vue'`).
-
-### 중립_모듈
-
-**종류:** 상수
-
-```typescript
-export const NEUTRAL_MODULE;
-```
-
-구성 요소가 기본 요소를 가져오는 중립 패키지입니다.
-
-### NEUTRAL_RUNTIME_VALUES
-
-**종류:** 상수
-
-```typescript
-export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
-```
-
-프레임워크에 구애받지 않는 런타임 유틸리티인 중립 **값** 가져오기 —
-모든 대상에서 동일하게 동작하므로(`h` 및 후크와 달리
-프레임워크별로 번역/별명 지정됨) 해당 `import { … } from '@mission-platform/forge-jsx'`
-생성된 React 및 Vue 소스에서 그대로 보존되어야 합니다.
-
-### NEUTRAL_VUE_RUNTIME_HOOKS
-
-**종류:** 상수
-
-```typescript
-export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
-```
-
-동일한 이름의 네이티브 대응 항목이 있는 중립 **값** 후크
-각 프레임워크의 런타임이므로 번역되지 않습니다(예: `useState`/
-`useEffect`) 중립 수입품으로 보관되지 않습니다. `useId`는 React의 자체 후크입니다(
-`react` 값 가져오기가 자동으로 진행되고) Vue는
-런타임에서 동일한 `useId` — 따라서 Vue 이미터는 이를 런타임에서 직접 가져옵니다.
-`vue` 및 `setup`에서 `const id = useId()` 호출을 그대로 둡니다.
-
-### 중립수입
-
-**종류:** 인터페이스
-
-```typescript
-export interface NeutralImports
-```
-
-모듈이 중립 패키지에서 가져오는 이름은 바인딩 종류별로 구분됩니다.
-
-### 파싱Tsx
-
-**종류:** 기능
-
-```typescript
-function parseTsx(fileName: string, source: string): ts.SourceFile;
-```
-
-`.tsx` 소스 문자열을 TypeScript SourceFile 브리지로 구문 분석합니다.
-최적화 프로그램 및 레거시 변환 도우미. 중립 프런트엔드 AST/추론 사용
-대신 {@link parseForgeSource} / Oxc를 사용하세요.
-
-#### 매개변수
-
-| 이름      | 유형   | 설명 |
-| --------- | ------ | ---- |
-| 파일 이름 | 문자열 |      |
-| 출처      | 문자열 |      |
-
-### 분할된 슬롯
-
-**종류:** 인터페이스
-
-```typescript
-export interface PartitionedSlots
-```
-
-`slot="…"` 마커로 분할된 구성요소 요소의 하위 항목입니다.
-
-### 파티션슬롯 어린이
-
-**종류:** 기능
-
-```typescript
-function partitionSlottedChildren(children: readonly ts.JsxChild[]): PartitionedSlots;
-```
-
-구성요소 요소의 하위 항목을 명명된 슬롯 그룹 + 기본 하위 항목으로 분할합니다.
-
-#### 매개변수
-
-| 이름   | 유형                    | 설명 |
-| ------ | ----------------------- | ---- |
-| 어린이 | 읽기 전용 ts.JsxChild[] |      |
-
-### printNode
-
-**종류:** 기능
-
-```typescript
-function printNode(node: ts.Node, sourceFile: ts.SourceFile): string;
-```
-
-단일 node을 소스 파일에 고정된 소스 텍스트로 다시 인쇄합니다.
-
-#### 매개변수
-
-| 이름     | 유형        | 설명 |
-| -------- | ----------- | ---- |
-| node     | ts.Node     |      |
-| 소스파일 | ts.소스파일 |      |
-
-### 인쇄 소스 파일
-
-**종류:** 기능
-
-```typescript
-function printSourceFile(sourceFile: ts.SourceFile): string;
-```
-
-전체(변환 가능) 소스 파일을 다시 소스 텍스트로 인쇄합니다.
-
-#### 매개변수
-
-| 이름     | 유형        | 설명 |
-| -------- | ----------- | ---- |
-| 소스파일 | ts.소스파일 |      |
-
-### 재산서명
-
-**종류:** 인터페이스
-
-```typescript
-export interface PropertySignature
-```
-
-props 인터페이스의 단일(자체) 속성 — 이름, 선언된 유형 텍스트 및 선택성.
-
-### REACT_ADAPTER_MODULE
-
-**종류:** 상수
-
-```typescript
-export const REACT_ADAPTER_MODULE;
-```
-
-React 프레임워크 구성 요소를 가져오는 `@mission-platform/forge-adapters/react` 하위 경로입니다.
-
-### REACT_TYPE_ALIASES
-
-**종류:** 상수
-
-```typescript
-export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>;
-```
-
-일류 React와 동등한 중립 **유형** 수입품이 배송됩니다.
-`react` 자체. React 대상에서는 React 이름으로 다시 작성됩니다.
-(`import type { … } from 'react'` 가져옴) 중립으로 유지되지 않음
-`@mission-platform/forge-jsx` 유형이므로 React 작성자는 관용적 유형을 참조합니다. 매
-방출된 소스의 중립 이름에 대한 참조는 매핑된 이름으로 변경됩니다.
-React 이름(React 이미터 참조) 중립 후크/렌더 프리미티브는 각각
-정확한 React 대응 항목이 있습니다.
-
-- `MpChild`("자식으로 렌더링할 수 있는 모든 것" 조합) ⇒ React's
-  `ReactNode`.
-- `MpElement`(중립 가상 트리의 node, 반환 유형은
-  중립 구성 요소) ⇒ React의 `ReactElement`이므로 컴파일된 구성 요소는 다음을 읽습니다.
-  정품 `(props) => ReactElement` — 유효한 React 기능 구성 요소,
-  중립 `MpElement` 반환 유형이 아닙니다.
-- `MpRef<T>`(`useRef`이 반환한 `{ current: T }` 컨테이너) ⇒ React의
-  `RefObject<T>`.
-- `MpDependencyList`(효과/메모 종속성 배열) ⇒ React's
-  `DependencyList`.
-
-### 반응클래스이름값
-
-**종류:** 기능
-
-```typescript
-function reactClassNameValue(factory: ts.NodeFactory, value: ts.Expression): ts.Expression;
-```
-
-`className={…}` 속성 값을 **React** `className`로 축소합니다.
-가치. React의 `className`는 문자열만 허용하므로 조건부/배열/
-객체 형태는 요소에 도달하기 _전에_ 축소되어야 합니다. **배열
-리터럴**(표준 형식 — `className={['base', { active }]}`)은
-`classNames(…)` 런타임 호출(`classNames('base', { active })`)로 확산됩니다.
-가변 도우미 서명과 일치합니다. 다른 표현식은 이미
-단일 클래스 값(CSS 모듈 읽기, 미리 계산된 문자열, `… .join(' ')`,
-삼항) `className` 값으로 바로 전달됩니다.
-
-#### 매개변수
-
-| 이름 | 유형           | 설명 |
-| ---- | -------------- | ---- |
-| 공장 | ts.NodeFactory |      |
-| 가치 | ts.표현식      |      |
-
-### readChildSlotName
-
-**종류:** 기능
-
-```typescript
-function readChildSlotName(child: ts.JsxChild): string | undefined;
-```
-
-JSX **자식** 요소의 정적 `slot="…"` 마커 읽기 - 속성
-자식을 부모 구성 요소의 명명된 슬롯으로 라우팅합니다. 슬롯을 반환합니다.
-이름(`"default"` 이외의 비어 있지 않은 문자열) 또는 `undefined`
-하위에는 사용 가능한 `slot` 마커가 없습니다(따라서 기본 슬롯에 속함).
-
-#### 매개변수
-
-| 이름 | 유형        | 설명 |
-| ---- | ----------- | ---- |
-| 아이 | ts.JsxChild |      |
-
-### readComponentImports
-
-**종류:** 기능
-
-```typescript
-function readComponentImports(sourceFile: ts.SourceFile, sourceRoot?: string): ComponentImport[];
-```
-
-모듈에서 상대(형제 구성 요소) 값 + 유형 가져오기를 수집합니다.
-
-#### 매개변수
-
-| 이름     | 유형        | 설명 |
-| -------- | ----------- | ---- |
-| 소스파일 | ts.소스파일 |      |
-| 소스루트 | 문자열      |      |
-
-### readExternalImports
-
-**종류:** 기능
-
-```typescript
-function readExternalImports(fileName: string, source: string): string[];
-```
-
-모듈의 **외부**(베어 패키지) 가져오기를 수집합니다.
-지정자가 상대적이지 않은 `import … from '<pkg>'`(`.`/`..`, 처리됨)
-형제 구성 요소 또는 도우미 가져오기로), 중립 패키지(에서 처리됨)
-{@link readNeutralImports}) 또는 스타일시트(에서 처리)
-{@link readStyleImports}). 이는 구성 요소가 가져오는 런타임 종속성입니다.
-다른 작업 공간/타사 패키지(예: `@mission-platform/forms-core`,
-`luxon`), 생성된 프레임워크별로 **축어**로 전달됩니다.
-소스는 본문, 이월된 도우미 또는 소품에서 참조하는 값입니다.
-기본값은 런타임에 해결됩니다. 각 항목은 인쇄된 `import` 문입니다.
-
-한 번만 쓸 수 있는 아이콘 라이브러리와 같은 프레임워크 분할 작업 공간 패키지
-{@link ICONS_JSX_MODULE}도 그대로 전달됩니다. 각각은
-기본 `.` 항목의 `mp:<framework>` 내보내기 조건이므로 소비 앱은
-(또는 Storybook/Vitest 구성)은
-프레임워크 하위 경로의 이름을 지정하는 생성된 소스입니다.
-
-#### 매개변수
-
-| 이름      | 유형   | 설명 |
-| --------- | ------ | ---- |
-| 파일 이름 | 문자열 |      |
-| 출처      | 문자열 |      |
-
-### readFramework 지시어
-
-**종류:** 기능
-
-```typescript
-function readFrameworkDirective(fileName: string, source: string): 'react' | 'vue' | undefined;
-```
-
-모듈의 `"use <framework>";` 지시문을 읽으십시오(있는 경우).
-
-모듈은 다음과 같이 열어 **프레임워크별** 구현을 선택할 수 있습니다.
-`"use react";` 또는 `"use vue";` 지시어(`"use strict"` 미러링 /
-`"use client"`). 이는 지시문이 모듈을 고정하는 프레임워크를 반환합니다.
-또는 모듈이 프레임워크 중립적인 경우(해당 지시문 없음) `undefined`입니다.
-
-주요 **지시 프롤로그**만 — 연속 실행
-모듈 맨 위에 있는 문자열 리터럴 표현식 문 —
-검사되어 JavaScript의 지시어 의미와 일치합니다. 다른 프롤로그
-지시어(예: `"use strict"`)는 무시됩니다.
-
-#### 매개변수
-
-| 이름      | 유형   | 설명 |
-| --------- | ------ | ---- |
-| 파일 이름 | 문자열 |      |
-| 출처      | 문자열 |      |
-
-### readHasSlotName
-
-**종류:** 기능
-
-```typescript
-function readHasSlotName(call: ts.CallExpression): string | undefined;
-```
-
-`hasSlot('name')` 호출의 정적 슬롯 이름을 읽습니다(`undefined` → 기본 슬롯).
-
-#### 매개변수
-
-| 이름 | 유형              | 설명 |
-| ---- | ----------------- | ---- |
-| 전화 | ts.CallExpression |      |
-
-### 읽기NeutralImports
-
-**종류:** 기능
-
-```typescript
-function readNeutralImports(fileName: string, source: string): NeutralImports;
-```
-
-모듈의 `import … from '@mission-platform/forge-jsx'` 바인딩을 검사합니다.
-
-#### 매개변수
-
-| 이름      | 유형   | 설명 |
-| --------- | ------ | ---- |
-| 파일 이름 | 문자열 |      |
-| 출처      | 문자열 |      |
-
-### readSlotHCallName
-
-**종류:** 기능
-
-```typescript
-function readSlotHCallName(call: ts.CallExpression): string | undefined;
-```
-
-`h(Slot, { name: 'x' }, …)` 호출에서 정적 `name`을 읽습니다(`undefined` → 기본 슬롯).
-
-#### 매개변수
-
-| 이름 | 유형              | 설명 |
-| ---- | ----------------- | ---- |
-| 전화 | ts.CallExpression |      |
-
-### readSlotHCallScope
-
-**종류:** 기능
-
-```typescript
-function readSlotHCallScope(
-  factory: ts.NodeFactory,
-  call: ts.CallExpression,
-  visit: ts.Visitor,
-): ts.ObjectLiteralExpression | undefined;
-```
-
-`h(Slot, props, …)`의 **범위**(`name`을 제외한 모든 소품)를 읽습니다.
-범위가 없을 때 객체 리터럴 표현식 또는 `undefined`를 호출합니다.
-통과했다. JSX 양식의 {@link readSlotScope}를 미러링합니다. 소품 값
-표현식은 제공된 `visit`으로 다시 작성되므로 읽기는
-타겟 프레임워크.
-
-#### 매개변수
-
-| 이름 | 유형              | 설명 |
-| ---- | ----------------- | ---- |
-| 공장 | ts.NodeFactory    |      |
-| 전화 | ts.CallExpression |      |
-| 방문 | ts.방문자         |      |
-
-### 읽기슬롯 이름
-
-**종류:** 기능
-
-```typescript
-function readSlotName(node: ts.JsxSelfClosingElement | ts.JsxElement): string | undefined;
-```
-
-`<Slot>` 요소의 정적 `name="…"`을 읽습니다(`undefined` → 기본 슬롯).
-
-#### 매개변수
-
-| 이름 | 유형                                   | 설명 |
-| ---- | -------------------------------------- | ---- |
-| node | ts.JsxSelfClosingElement \| ts.Jsx요소 |      |
-
-### readSlotScope
-
-**종류:** 기능
-
-```typescript
-function readSlotScope(
-  factory: ts.NodeFactory,
-  node: ts.JsxSelfClosingElement | ts.JsxElement,
-  visit: ts.Visitor,
-): ts.ObjectLiteralExpression | undefined;
-```
-
-`<Slot>` 요소의 **범위** 읽기 - `name`을 제외한 모든 속성
-— 객체 리터럴 표현식으로(`<Slot name="row" item={item} index={i}/>`
-→ `{ item: item, index: i }`) 또는 슬롯이 범위를 통과하지 못하는 경우 `undefined`입니다.
-속성 값 표현식은 제공된 `visit`로 다시 작성됩니다.
-(예를 들어 Destructured-prop 또는 상태 읽기는 Vue에서 올바르게 해결됩니다.
-대상). 이것이 바로 한 번 쓰기 구성 요소가 **범위가 지정된 슬롯**을 구동할 수 있게 하는 것입니다.
-컴파일러는 Vue `slots.x?.(scope)` 및 React `properties.x?.(scope)`을 내보냅니다.
-
-#### 매개변수
-
-| 이름 | 유형                                   | 설명 |
-| ---- | -------------------------------------- | ---- |
-| 공장 | ts.NodeFactory                         |      |
-| node | ts.JsxSelfClosingElement \| ts.Jsx요소 |      |
-| 방문 | ts.방문자                              |      |
-
-### readStyleImports
-
-**종류:** 기능
-
-```typescript
-function readStyleImports(fileName: string, source: string, sourceRoot?: string): StyleImport[];
-```
-
-모듈(CSS 모듈 및 기본 CSS)의 관련 스타일시트 가져오기를 수집합니다.
-부작용 수입). 2단계 컴파일러는 이를 다음과 함께 복사합니다.
-프레임워크별 소스를 생성하고 플랫 복사본에서 각 가져오기를 다시 지정하므로
-구성 요소는 자체 `.module.scss`을 소유(및 배송)할 수 있습니다.
-
-#### 매개변수
-
-| 이름      | 유형   | 설명 |
-| --------- | ------ | ---- |
-| 파일 이름 | 문자열 |      |
-| 출처      | 문자열 |      |
-| 소스루트  | 문자열 |      |
-
-### 해결WorkspaceLocalImport
-
-**종류:** 기능
-
-```typescript
-function resolveWorkspaceLocalImport(
-  specifier: string,
-  sourceFileName: string,
-  sourceRoot: string | undefined,
-): string | undefined;
-```
-
-작업공간-로컬 `@/` 가져오기를 소유 소스에 상대적인 경로로 확인합니다.
-파일. 베어 패키지 가져오기는 의도적으로 여기에서 처리되지 않습니다. 파일만 가져옵니다.
-제공된 작업공간 소스 루트 내에서 `@/` 별칭을 소유합니다.
-
-#### 매개변수
-
-| 이름         | 유형                    | 설명 |
-| ------------ | ----------------------- | ---- |
-| 지정자       | 문자열                  |      |
-| 소스파일이름 | 문자열                  |      |
-| 소스루트     | 문자열 \| 정의되지 않음 |      |
-
-### RewriteScope
-
-**종류:** 인터페이스
-
-```typescript
-export interface RewriteScope
-```
-
-구성 요소 본문 내부의 식별자를 다시 작성해야 하는 방법을 설명하는 범위
-Vue 대상의 경우.
-
-### rewriteWorkspaceLocalImports
-
-**종류:** 기능
-
-```typescript
-function rewriteWorkspaceLocalImports(sourceFile: ts.SourceFile, sourceRoot?: string): ts.SourceFile;
-```
-
-프레임워크별 내보내기 전에 작업공간-로컬 `@/` 가져오기를 다시 작성합니다.
-
-#### 매개변수
-
-| 이름     | 유형        | 설명 |
-| -------- | ----------- | ---- |
-| 소스파일 | ts.소스파일 |      |
-| 소스루트 | 문자열      |      |
-
-### SlotFallbackChildren
-
-**종류:** 기능
-
-```typescript
-function slotFallbackChildren(node: ts.JsxSelfClosingElement | ts.JsxElement): ts.JsxChild[];
-```
-
-`<Slot>…</Slot>`의 대체 하위 항목(자체 닫힘 슬롯의 경우 비어 있음)
-
-#### 매개변수
-
-| 이름 | 유형                                   | 설명 |
-| ---- | -------------------------------------- | ---- |
-| node | ts.JsxSelfClosingElement \| ts.Jsx요소 |      |
-
-### SlotHCall대체
-
-**종류:** 기능
-
-```typescript
-function slotHCallFallback(call: ts.CallExpression): ts.Expression[];
-```
-
-`h(Slot, props, …fallback)` 호출의 대체 하위 요소(props 뒤의 인수)입니다.
-
-#### 매개변수
-
-| 이름 | 유형              | 설명 |
-| ---- | ----------------- | ---- |
-| 전화 | ts.CallExpression |      |
-
-### 스트립프레임워크 지시어
-
-**종류:** 기능
-
-```typescript
-function stripFrameworkDirective(sourceFile: ts.SourceFile): ts.SourceFile;
-```
-
-선행 `"use react"` / `"use vue"` 지시문을 사용하여 소스 파일을 반환합니다.
-제거되므로 컴파일 시간 게이팅 마커가 방출된 항목으로 누출되지 않습니다.
-프레임워크별 소스. 다른 프롤로그 지시문은 유지됩니다.
-
-#### 매개변수
-
-| 이름     | 유형        | 설명 |
-| -------- | ----------- | ---- |
-| 소스파일 | ts.소스파일 |      |
-
-### 스트립슬롯속성
-
-**종류:** 기능
-
-```typescript
-function stripSlotAttribute(factory: ts.NodeFactory, element: T): T;
-```
-
-`slot="…"` 마커 속성이 제거된 JSX 요소/자체 닫힘 요소의 복사본입니다.
-
-#### 매개변수
-
-| 이름 | 유형           | 설명 |
-| ---- | -------------- | ---- |
-| 공장 | ts.NodeFactory |      |
-| 요소 | 티             |      |
-
-### 스타일가져오기
-
-**종류:** 인터페이스
-
-```typescript
-export interface StyleImport
-```
-
-중립 구성요소에서 스타일시트 가져오기. `import styles from './x.module.scss'`.
-
-### 변환I18next통화
-
-**종류:** 기능
-
-```typescript
-function transformI18nextCalls(factory: ts.NodeFactory, node: ts.Node): ts.Node;
-```
-
-`i18next.t(...)` 호출 표현식을 `t(...)`로 다시 작성합니다.
-
-#### 매개변수
-
-| 이름 | 유형           | 설명 |
-| ---- | -------------- | ---- |
-| 공장 | ts.NodeFactory |      |
-| node | ts.Node        |      |
-
-### 사용ClassNamesArrayAttribute
-
-**종류:** 기능
-
-```typescript
-function usesClassNamesArrayAttribute(sourceFile: ts.SourceFile): boolean;
-```
-
-모듈이 값이 다음과 같은 `className={[…]}` 속성을 전달하는지 여부
-**배열 리터럴** — `classNames(…)` 런타임으로 컴파일되는 유일한 형식
-React 타겟을 호출하므로 이미터는 중립을 (재)주입해야 합니다.
-`classNames` 가져오기(저자는 도우미 자체를 가져오지 않습니다).
-
-#### 매개변수
-
-| 이름     | 유형        | 설명 |
-| -------- | ----------- | ---- |
-| 소스파일 | ts.소스파일 |      |
-
-### ComponentSelfReference를 사용합니다.
-
-**종류:** 기능
-
-```typescript
-function usesComponentSelfReference(sourceFile: ts.SourceFile, componentName: string): boolean;
-```
-
-구성 요소가 **자체**를 JSX 태그(`<ForgeTreeView …>`)로 참조하는지 여부
-내부 `ForgeTreeView`) — 즉, 재귀적입니다. Vue 이미터는 이를 사용하여
-렌더링에서 자체 참조(`resolveComponent('<name>')`)를 해결합니다.
-클로저이므로 재귀 구성 요소는 두 프레임워크 모두에서 기본적으로 컴파일됩니다.
-
-#### 매개변수
-
-| 이름           | 유형        | 설명 |
-| -------------- | ----------- | ---- |
-| 소스파일       | ts.소스파일 |      |
-| 구성 요소 이름 | 문자열      |      |
-
-### HFactoryCall을 사용합니다.
-
-**종류:** 기능
-
-```typescript
-function usesHFactoryCall(sourceFile: ts.SourceFile): boolean;
-```
-
-모듈이 `h`을 호출 표현식(명시적 `h(...)`)으로 참조하는지 여부입니다.
-
-#### 매개변수
-
-| 이름     | 유형        | 설명 |
-| -------- | ----------- | ---- |
-| 소스파일 | ts.소스파일 |      |
-
-### I18nextT를 사용합니다.
-
-**종류:** 기능
-
-```typescript
-function usesI18nextT(node: OxcNode): boolean;
-```
-
-Oxc 모듈 또는 node이 `i18next.t(...)`을 호출하는지 여부.
-
-#### 매개변수
-
-| 이름 | 유형    | 설명 |
-| ---- | ------- | ---- |
-| node | Oxc노드 |      |
-
-### VUE_ADAPTER_MODULE
-
-**종류:** 상수
-
-```typescript
-export const VUE_ADAPTER_MODULE;
-```
-
-Vue 컨텍스트 프리미티브를 가져오는 `@mission-platform/forge-adapters/vue` 하위 경로입니다.
-
-### VUE_BUILTIN_COMPONENTS
-
-**종류:** 상수
-
-```typescript
-export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>;
-```
-
-중립 프레임워크 구성 요소 가져오기 Vue은 `vue` 런타임에서 바로 확인됩니다.
-
-### VUE_LOCAL_JSX_TYPE_NAMES
-
-**종류:** 상수
-
-```typescript
-export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
-```
-
-중립 렌더링/속성 유형은 **Vue** 빌드의 이름을 해당 빌드로 리디렉션합니다.
-같은 위치에 있는 {@link LOCAL_JSX_TYPES_MODULE}. 이는 다음의 슈퍼세트입니다.
-{@link LOCAL_JSX_TYPE_NAMES}: `MpRenderProperty` 외에도 Vue 변형도 있습니다.
-중립 **요소** 프리미티브 `MpChild` 및 `MpElement`를 다음과 같이 다시 선언합니다.
-Vue의 `VNodeChild` / `VNode`. `jsxImportSource: 'vue'`에서
-생성된 SFC의 JSX 표현식에는 `JSX.Element` 유형(예: Vue의 `VNode`)이 있습니다.
-중립적인 `@mission-platform/forge-jsx` 정의를 유지합니다(브랜드
-`__mpElement`)는 모든 `const x: MpElement = <div/>` /
-`MpChild[] = items.map(() => <li/>)`이 `vue-tsc`에서 유형 확인에 실패했습니다. React
-대신 `ReactNode`/`ReactElement`로 이름을 바꿉니다(참조:
-{@link REACT_TYPE_ALIASES}); Vue은 `Mp*` 이름을 유지하지만 다음으로 확인합니다.
-로컬 모듈을 통해 Vue 네이티브 유형을 사용하므로 참조 재작성이 필요하지 않습니다.
-
-### vueComponentModelListenerTransformer
-
-**종류:** 기능
-
-```typescript
-function vueComponentModelListenerTransformer(): ts.TransformerFactory<ts.Node>;
-```
-
-Vue의 `v-model` 업데이트 이벤트 이름은 `update:<model>`로 지정됩니다. 하위 컴파일됨
-`@model`와 쌍을 이루는 `onUpdate<Name>` 콜백 prop에서 선언합니다.
-`defineModel('<name>')`이므로 **`update:<name>`**를 방출합니다.
-리스너 소품은 문자열 키 `onUpdate:<name>`입니다 — camelCase가 아닙니다.
-`onUpdate<Name>`. 중립 `onUpdate<Name>`을 전달하는 **상위**
-해당 하위 항목에 대한 콜백은 `onUpdate:<name>`를 바인딩해야 합니다. 그렇지 않으면 Vue이 연결되지 않습니다.
-양방향 업데이트(`vue-tsc`은 소품을 알 수 없는 것으로 보고하므로
-`"onUpdate:<name>"`). 이 변환기는 `onUpdate<Name>`마다 다시 작성합니다.
-**컴포넌트** 요소의 리스너 — JSX 속성(`<Child onUpdateOpen=…>`
-→ `<Child onUpdate:open=…>`) 또는 `h(Component, { onUpdateOpen: … })` 소품
-(→ `'onUpdate:open'` 문자열 키) - `onUpdate:<name>` 형식으로 변환합니다.
-기본 요소의 리스너와 `onUpdate`이 아닌 리스너는 그대로 유지됩니다.
-따라서 렌더 클로저 경로에 보편적으로 적용하는 것은 멱등성이 있고 안전합니다.
-
-### vueJsxSlotTransformer
-
-**종류:** 기능
-
-```typescript
-function vueJsxSlotTransformer(): ts.TransformerFactory<ts.Node>;
-```
-
-명명된 슬롯 **통과** 형식을 다시 작성하는 Vue-대상 변환기 —
-하위 항목에 `slot="…"` 마커가 있는 구성 요소 요소 —
-`@vitejs/plugin-vue-jsx` 객체-하위 구문. 예를 들어
-`<ForgeDropdown><button slot="trigger">…</button><ul>…</ul></ForgeDropdown>`
-`<ForgeDropdown>{{ trigger: () => <><button>…</button></>, default: () => <><ul>…</ul></> }}</ForgeDropdown>`이 됩니다.
-`@vue/babel-plugin-jsx`는 기본 명명된 슬롯으로 컴파일됩니다. 구성요소
-슬롯이 있는 자식이 없으면 그대로 유지됩니다(자식은 기본값으로 유지됩니다).
-슬롯). 이는 참조 리라이터 **이전에** 작성되었습니다.
-렌더링 클로저 경로이므로 생성된 슬롯 함수 내부의 식별자는
-여전히 Vue 반응성(`.value` 등)으로 다시 작성되었습니다.
-
-### vueNativeEventTransformer
-
-**종류:** 기능
-
-```typescript
-function vueNativeEventTransformer(): ts.TransformerFactory<ts.Node>;
-```
-
-React 스타일 다중 단어 DOM의 케이싱을 수정하는 Vue 대상 변환기
-이벤트 리스너(`onDragOver`, `onMouseEnter`, `onPointerDown`, …)
-**네이티브**(내장, 소문자 태그) 요소 — JSX 속성과
-`h('tag', { … })` 소품 — {@link lowercaseNativeEventName}을 사용하므로
-`@vitejs/plugin-vue-jsx`로 컴파일된 렌더 클로저는 실제 네이티브를 바인딩합니다.
-이벤트. **구성요소** 요소의 리스너(대문자 태그/동적)
-구성 요소)는 그대로 유지되므로 하위의 camelCase와 계속 일치합니다.
-이름을 내보냅니다. 구성 요소에 대한 멱등성이 있고 작동하지 않으므로 적용해도 안전합니다.
-보편적으로 렌더 클로저 경로에 있습니다.
 
 ## `src/compiler/cache`
 
@@ -1739,7 +274,7 @@ export const DEFAULT_FORGE_CACHE_LIMITS: Required<ForgeCacheLimits>;
 
 설명이 제공되지 않았습니다.
 
-### Forge캐시 한도
+### Forge캐시 제한
 
 **종류:** 인터페이스
 
@@ -1772,7 +307,7 @@ function compileComponentModule(source: string, options: CompileOptions): Compil
 하나의 중립(또는 프레임워크 게이트) 구성 요소 모듈을 프레임워크별로 컴파일합니다.
 소스(1단계).
 
-주요 `"use react";` / `"use vue";` 지시문은 방출하기 전에 제거됩니다.
+주요 `"use <framework>";` 지시문은 방출하기 전에 제거됩니다.
 따라서 마커는 출력으로 누출되지 않습니다. 모듈을 밖으로 게이팅
 일치하지 않는 프레임워크의 빌드는 검색 단계에서 업스트림으로 처리됩니다.
 ({@link moduleTargetsFramework} 참조)
@@ -1803,7 +338,7 @@ function compileHookModule(source: string, options: CompileHookOptions): Compile
 ```
 
 하나의 중립 **후크 모듈**(1회 쓰기 컴포저블)을 컴파일합니다.
-`@mission-platform/forge-jsx`의 React 스타일 후크(UI 구성 요소 _아님_)를 해당 항목에 연결합니다.
+`@mission-platform/forge-jsx`의 React 스타일 후크는 UI 구성요소가 _아님_)
 프레임워크별 소스(1단계)
 
 #### 매개변수
@@ -1864,6 +399,142 @@ export interface CompileOptions
 
 {@link compileComponentModule}에 대한 옵션입니다.
 
+## `src/compiler/components`
+
+### findComponent함수
+
+**종류:** 기능
+
+```typescript
+function findComponentFunction(sourceFile: OxcParsedModule, name: string): OxcNode | undefined;
+```
+
+이름으로 중립 구성 요소에 대해 내보낸 Oxc 함수 선언을 찾습니다.
+
+#### 매개변수
+
+| 이름     | 유형          | 설명 |
+| -------- | ------------- | ---- |
+| 소스파일 | OxcParsed모듈 |      |
+| 이름     | 문자열        |      |
+
+### isSlot요소
+
+**종류:** 기능
+
+```typescript
+function isSlotElement(node: OxcNode): boolean;
+```
+
+Oxc node이 중립 명명된 슬롯 요소인지 여부입니다.
+
+#### 매개변수
+
+| 이름 | 유형    | 설명 |
+| ---- | ------- | ---- |
+| node | Oxc노드 |      |
+
+### 읽기슬롯 이름
+
+**종류:** 기능
+
+```typescript
+function readSlotName(node: OxcNode): string | undefined;
+```
+
+Oxc `<Slot>` 요소의 정적 `name="…"`을 읽습니다.
+
+#### 매개변수
+
+| 이름 | 유형    | 설명 |
+| ---- | ------- | ---- |
+| node | Oxc노드 |      |
+
+## `src/compiler/constants`
+
+### LOCAL_JSX_TYPES_FILE
+
+**종류:** 상수
+
+```typescript
+export const LOCAL_JSX_TYPES_FILE;
+```
+
+생성된 프레임워크별 JSX 유형 모듈에 사용되는 파일 이름입니다.
+
+### LOCAL_JSX_TYPES_MODULE
+
+**종류:** 상수
+
+```typescript
+export const LOCAL_JSX_TYPES_MODULE;
+```
+
+생성된 프레임워크별 JSX 유형 모듈에 대한 상대 지정자입니다.
+
+### localJsxTypesModuleSource
+
+**종류:** 기능
+
+```typescript
+function localJsxTypesModuleSource(framework: JsxFramework): string;
+```
+
+함께 배치된 프레임워크별 JSX 유형 선언을 생성합니다.
+
+#### 매개변수
+
+| 이름       | 유형          | 설명 |
+| ---------- | ------------- | ---- |
+| 프레임워크 | Jsx프레임워크 |      |
+
+### 중립_모듈
+
+**종류:** 상수
+
+```typescript
+export const NEUTRAL_MODULE;
+```
+
+구성 요소가 기본 요소를 가져오는 중립 패키지입니다.
+
+## `src/compiler/directives`
+
+### 모듈대상프레임워크
+
+**종류:** 기능
+
+```typescript
+function moduleTargetsFramework(fileName: string, source: string, framework: string): boolean;
+```
+
+중립 또는 프레임워크 특정 모듈이 대상 빌드에 속하는지 여부입니다.
+
+#### 매개변수
+
+| 이름       | 유형   | 설명 |
+| ---------- | ------ | ---- |
+| 파일이름   | 문자열 |      |
+| 출처       | 문자열 |      |
+| 프레임워크 | 문자열 |      |
+
+### readFramework 지시어
+
+**종류:** 기능
+
+```typescript
+function readFrameworkDirective(fileName: string, source: string): JsxFramework | undefined;
+```
+
+Oxc 모듈에서 주요 `"use <framework>"` 지시문을 읽습니다.
+
+#### 매개변수
+
+| 이름     | 유형   | 설명 |
+| -------- | ------ | ---- |
+| 파일이름 | 문자열 |      |
+| 출처     | 문자열 |      |
+
 ## `src/compiler/discover`
 
 ### 발견구성요소
@@ -1891,7 +562,11 @@ in(재내보내기의 모듈 기본 이름).
 **종류:** 기능
 
 ```typescript
-function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix = 'Forge'): DiscoveredComponent[];
+function discoverComponentsFromGraph(
+  graph: ForgeFileGraph,
+  stripPrefix = 'Forge',
+  diagnostics?: CompilerDiagnostic[],
+): DiscoveredComponent[];
 ```
 
 레거시 결과 형태를 유지하면서 프로젝트 공개 구성 요소를 표준 그래프에서 내보냅니다.
@@ -1901,7 +576,8 @@ function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix = 'Forge
 | 이름         | 유형             | 설명 |
 | ------------ | ---------------- | ---- |
 | 그래프       | Forge파일 그래프 |      |
-| 스트립접두사 |                  |      |
+| 스트립접두어 |                  |      |
+| 진단         | 컴파일러진단[]   |      |
 
 ### 발견된 구성요소
 
@@ -1922,7 +598,7 @@ export interface DiscoveredHelperExport
 ```
 
 배럴에서 다시 내보낸 비구성 요소 **헬퍼 모듈**(예:
-`toast-store`), 따라서 공개 API는 생성된 `./react`/
+`toast-store`), 따라서 공개 API는 생성된 `./react` /
 구성 요소와 함께 `./vue` 항목입니다.
 
 ### discoverHelperExports
@@ -1955,6 +631,7 @@ Vue 패키지의 `useToast` 컴포저블)을 생성된 항목을 통해
 function discoverHelperExportsFromGraph(
   graph: ForgeFileGraph,
   componentFolders: ReadonlySet<string>,
+  discoveredComponents?: readonly DiscoveredComponent[],
 ): DiscoveredHelperExport[];
 ```
 
@@ -1962,10 +639,70 @@ function discoverHelperExportsFromGraph(
 
 #### 매개변수
 
-| 이름         | 유형                | 설명 |
-| ------------ | ------------------- | ---- |
-| 그래프       | Forge파일 그래프    |      |
-| 구성요소폴더 | 읽기전용Set<string> |      |
+| 이름             | 유형                            | 설명 |
+| ---------------- | ------------------------------- | ---- |
+| 그래프           | Forge파일그래프                 |      |
+| 구성요소폴더     | 읽기전용Set<string>             |      |
+| 발견된 구성 요소 | 읽기 전용 DiscoveredComponent[] |      |
+
+## `src/compiler/facts`
+
+### ForgeExportFact
+
+**종류:** 인터페이스
+
+```typescript
+export interface ForgeExportFact
+```
+
+Forge 소스 모듈에서 발견된 선언 또는 다시 내보내기입니다.
+
+### ForgeImport사실
+
+**종류:** 인터페이스
+
+```typescript
+export interface ForgeImportFact
+```
+
+Forge 소스 모듈에서 발견된 정적 가져오기.
+
+### Forge모듈사실
+
+**종류:** 인터페이스
+
+```typescript
+export interface ForgeModuleFacts
+```
+
+정식 Forge 파일 그래프를 구축하는 데 필요한 모든 정적 모듈 정보입니다.
+
+### ForgeSourceSpan
+
+**종류:** 인터페이스
+
+```typescript
+export interface ForgeSourceSpan
+```
+
+그래프 진단 및 팩트 가져오기/내보내기에 사용되는 소스 위치입니다.
+
+### 검사Forge모듈
+
+**종류:** 기능
+
+```typescript
+function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts;
+```
+
+구문 분석된 모듈에서 정적 가져오기, 내보내기, 유형 전용 에지 및 프레임워크 사실을 추출합니다.
+
+#### 매개변수
+
+| 이름     | 유형   | 설명 |
+| -------- | ------ | ---- |
+| 파일이름 | 문자열 |      |
+| 출처     | 문자열 |      |
 
 ## `src/compiler/frontends`
 
@@ -1983,10 +720,10 @@ Oxc를 통해 Forge 소스를 중립 모듈로 구문 분석합니다.
 
 #### 매개변수
 
-| 이름      | 유형   | 설명 |
-| --------- | ------ | ---- |
-| 파일 이름 | 문자열 |      |
-| 출처      | 문자열 |      |
+| 이름     | 유형   | 설명 |
+| -------- | ------ | ---- |
+| 파일이름 | 문자열 |      |
+| 출처     | 문자열 |      |
 
 ### 파싱프런트엔드모듈
 
@@ -2171,6 +908,118 @@ function hoistStaticJsx(
 | 모듈 종류      | '구성요소' \| '구성 가능' |      |
 | 구성 요소 이름 | 문자열                    |      |
 
+## `src/compiler/imports`
+
+### 중립수입
+
+**종류:** 인터페이스
+
+```typescript
+export interface NeutralImports
+```
+
+모듈이 중립 패키지에서 가져오는 이름은 바인딩 종류별로 구분됩니다.
+
+### readExternalImports
+
+**종류:** 기능
+
+```typescript
+function readExternalImports(fileName: string, source: string): string[];
+```
+
+생성된 프레임워크 소스에 그대로 전달된 베어 패키지 가져오기를 수집합니다.
+
+#### 매개변수
+
+| 이름     | 유형   | 설명 |
+| -------- | ------ | ---- |
+| 파일이름 | 문자열 |      |
+| 출처     | 문자열 |      |
+
+### 읽기NeutralImports
+
+**종류:** 기능
+
+```typescript
+function readNeutralImports(fileName: string, source: string): NeutralImports;
+```
+
+모듈의 중립 패키지 가져오기를 검사합니다.
+
+#### 매개변수
+
+| 이름     | 유형   | 설명 |
+| -------- | ------ | ---- |
+| 파일이름 | 문자열 |      |
+| 출처     | 문자열 |      |
+
+### readStyleImports
+
+**종류:** 기능
+
+```typescript
+function readStyleImports(fileName: string, source: string, sourceRoot?: string): StyleImport[];
+```
+
+중립 모듈에서 상대 스타일시트 가져오기를 수집합니다.
+
+#### 매개변수
+
+| 이름      | 유형   | 설명 |
+| --------- | ------ | ---- |
+| 파일 이름 | 문자열 |      |
+| 출처      | 문자열 |      |
+| 소스루트  | 문자열 |      |
+
+### 해결WorkspaceLocalImport
+
+**종류:** 기능
+
+```typescript
+function resolveWorkspaceLocalImport(
+  specifier: string,
+  sourceFileName: string,
+  sourceRoot: string | undefined,
+): string | undefined;
+```
+
+소스 파일을 기준으로 작업공간-로컬 `@/` 가져오기를 해결합니다.
+
+#### 매개변수
+
+| 이름         | 유형                    | 설명 |
+| ------------ | ----------------------- | ---- |
+| 지정자       | 문자열                  |      |
+| 소스파일이름 | 문자열                  |      |
+| 소스루트     | 문자열 \| 정의되지 않음 |      |
+
+### 스타일가져오기
+
+**종류:** 인터페이스
+
+```typescript
+export interface StyleImport
+```
+
+플랫 생성 트리로 스타일시트 가져오기가 수행됩니다.
+
+### I18nextT를 사용합니다.
+
+**종류:** 기능
+
+```typescript
+function usesI18nextT(node: OxcNode): boolean;
+```
+
+Oxc 모듈 또는 node이 `i18next.t(...)`을 호출하는지 여부.
+
+#### 매개변수
+
+| 이름 | 유형    | 설명 |
+| ---- | ------- | ---- |
+| node | Oxc노드 |      |
+
 ## `src/compiler/optimize`
 
 ### 최적화Forge모듈
@@ -2184,7 +1033,7 @@ function optimizeForgeModule(module: OxcParsedModule, options: OptimizeOptions =
 소스 수준의 1단계 최적화 패스(죽은 가지 가지치기 및
 Oxc 구문 분석 모듈에 대한 안정적인 키 추론), 다시 구문 분석된 모듈 반환
 그 소스는 적용된 편집 내용을 반영합니다. Static-node 마킹은 순수
-{@link OptimizeGenericModule}에 의해 처리되는 레코드 수준 변환입니다.
+{@linkoptimGenericModule}에 의해 처리되는 레코드 수준 변환입니다.
 
 모든 패스가 기본값으로 설정됩니다. 비활성화하려면 `{ deadBranchPruning: false, … }`을 전달하세요.
 
@@ -2204,6 +1053,363 @@ export const optimizeSourceFile;
 ```
 
 이전 이름을 사용하는 컴파일러 통합을 위해 호환성 별칭이 유지됩니다.
+
+## `src/compiler/oxc`
+
+### buildOxcParentMap
+
+**종류:** 기능
+
+```typescript
+function buildOxcParentMap(root: OxcNode): Map<OxcNode, OxcNode>;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형    | 설명 |
+| ---- | ------- | ---- |
+| 루트 | Oxc노드 |      |
+
+### isOxcJsxRoot
+
+**종류:** 기능
+
+```typescript
+function isOxcJsxRoot(node: OxcNode): boolean;
+```
+
+node이 JSX 요소, 자체 닫는 요소 또는 단편인 경우 참입니다.
+
+#### 매개변수
+
+| 이름 | 유형    | 설명 |
+| ---- | ------- | ---- |
+| node | Oxc노드 |      |
+
+### isOxcNode
+
+**종류:** 기능
+
+```typescript
+function isOxcNode(value: unknown): value is OxcNode;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| 가치 | 알 수 없음 |      |
+
+### oxcArray
+
+**종류:** 기능
+
+```typescript
+function oxcArray(node: OxcNode, key: string): OxcNode[];
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형    | 설명 |
+| ---- | ------- | ---- |
+| node | Oxc노드 |      |
+| 키   | 문자열  |      |
+
+### oxc아이들
+
+**종류:** 기능
+
+```typescript
+function oxcChildren(node: OxcNode): OxcNode[];
+```
+
+열거 가능한 node 값 속성에 대한 깊이 우선 자식 워크입니다.
+
+#### 매개변수
+
+| 이름 | 유형    | 설명 |
+| ---- | ------- | ---- |
+| node | Oxc노드 |      |
+
+### Oxc댓글
+
+**종류:** 인터페이스
+
+```typescript
+export interface OxcComment
+```
+
+설명이 제공되지 않았습니다.
+
+### oxc식별자 이름
+
+**종류:** 기능
+
+```typescript
+function oxcIdentifierName(node: OxcNode | undefined): string | undefined;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형                     | 설명 |
+| ---- | ------------------------ | ---- |
+| node | Oxc노드 \| 정의되지 않음 |      |
+
+### oxcLiteral값
+
+**종류:** 기능
+
+```typescript
+function oxcLiteralValue(node: OxcNode | undefined): unknown;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형                     | 설명 |
+| ---- | ------------------------ | ---- |
+| node | Oxc노드 \| 정의되지 않음 |      |
+
+### Oxc노드
+
+**종류:** 인터페이스
+
+```typescript
+export interface OxcNode
+```
+
+중립 프런트엔드에서 사용되는 Oxc node의 직렬화 가능한 하위 집합입니다.
+
+### oxcNodeText
+
+**종류:** 기능
+
+```typescript
+function oxcNodeText(source: string, node: OxcNode | undefined): string;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형                     | 설명 |
+| ---- | ------------------------ | ---- |
+| 출처 | 문자열                   |      |
+| node | Oxc노드 \| 정의되지 않음 |      |
+
+### oxcObject
+
+**종류:** 기능
+
+```typescript
+function oxcObject(node: OxcNode, key: string): OxcNode | undefined;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형    | 설명 |
+| ---- | ------- | ---- |
+| node | Oxc노드 |      |
+| 키   | 문자열  |      |
+
+### OxcParentMap
+
+**종류:** 유형
+
+```typescript
+export type OxcParentMap = ReadonlyMap<OxcNode, OxcNode>;
+```
+
+설명이 제공되지 않았습니다.
+
+### OxcParsed모듈
+
+**종류:** 인터페이스
+
+```typescript
+export interface OxcParsedModule
+```
+
+설명이 제공되지 않았습니다.
+
+### OxcParseError
+
+**종류:** 인터페이스
+
+```typescript
+export interface OxcParseError
+```
+
+설명이 제공되지 않았습니다.
+
+### oxcProgramBody
+
+**종류:** 기능
+
+```typescript
+function oxcProgramBody(program: OxcNode): OxcNode[];
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름     | 유형    | 설명 |
+| -------- | ------- | ---- |
+| 프로그램 | Oxc노드 |      |
+
+### oxcSourceExpression
+
+**종류:** 기능
+
+```typescript
+function oxcSourceExpression(
+  source: string,
+  node: OxcNode,
+  syntax: SourceBackedExpression['syntax'] = 'expression',
+): SourceBackedExpression;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 출처 | 문자열                         |      |
+| node | Oxc노드                        |      |
+| 구문 | SourceBackedExpression['구문'] |      |
+
+### oxcSourceSpan
+
+**종류:** 기능
+
+```typescript
+function oxcSourceSpan(source: string, node: OxcNode): SourceSpan;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형    | 설명 |
+| ---- | ------- | ---- |
+| 출처 | 문자열  |      |
+| node | Oxc노드 |      |
+
+### oxcString
+
+**종류:** 기능
+
+```typescript
+function oxcString(node: OxcNode | undefined, key: 'name' | 'value' | 'directive' = 'name'): string | undefined;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형                       | 설명 |
+| ---- | -------------------------- | ---- |
+| node | Oxc노드 \| 정의되지 않음   |      |
+| 키   | '이름' \| '값' \| '지시문' |      |
+
+### oxcTypeNode
+
+**종류:** 기능
+
+```typescript
+function oxcTypeNode(node: OxcNode | undefined): OxcNode | undefined;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형                     | 설명 |
+| ---- | ------------------------ | ---- |
+| node | Oxc노드 \| 정의되지 않음 |      |
+
+### oxcUnwrapModuleStatement
+
+**종류:** 기능
+
+```typescript
+function oxcUnwrapModuleStatement(statement: OxcNode): {
+  readonly node: OxcNode;
+  readonly exported: boolean;
+  readonly exportStatement: OxcNode | undefined;
+};
+```
+
+`export …` 래퍼를 풀어 호출자가 기본 선언을 볼 수 있도록 합니다.
+
+#### 매개변수
+
+| 이름   | 유형    | 설명 |
+| ------ | ------- | ---- |
+| 성명서 | Oxc노드 |      |
+
+### 파싱Oxc모듈
+
+**종류:** 기능
+
+```typescript
+function parseOxcModule(fileName: string, source: string): OxcParsedModule;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름     | 유형   | 설명 |
+| -------- | ------ | ---- |
+| 파일이름 | 문자열 |      |
+| 출처     | 문자열 |      |
+
+### StripOxcFramework 지시어
+
+**종류:** 기능
+
+```typescript
+function stripOxcFrameworkDirective(module: OxcParsedModule): OxcParsedModule;
+```
+
+구문 분석된 모듈에서 선행 `"use <framework>"` 프롤로그 지시문을 삭제합니다.
+
+#### 매개변수
+
+| 이름 | 유형          | 설명 |
+| ---- | ------------- | ---- |
+| 모듈 | OxcParsed모듈 |      |
+
+### 방문Oxc
+
+**종류:** 기능
+
+```typescript
+function visitOxc(node: OxcNode, visitor: (node: OxcNode) => void | boolean): void;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름   | 유형                            | 설명 |
+| ------ | ------------------------------- | ---- |
+| node   | Oxc노드                         |      |
+| 방문객 | (node: OxcNode) => 무효 \| 부울 |      |
 
 ## `src/compiler/pipeline`
 
@@ -2414,17 +1620,107 @@ export class PersistentForgeCompilerService implements ForgeCompilerService
 
 하나의 프로세스/빌드 세션에 대한 수명이 긴 동기식 컴파일러 상태입니다.
 
-## `src/config`
+## `src/compiler/session`
 
-### 기본
+### createForgeBuildSession
 
 **종류:** 기능
 
 ```typescript
-function reactJsxPlugin(): Plugin;
+function createForgeBuildSession(options: CreateForgeBuildSessionOptions = {}): ForgeBuildSession;
+```
+
+Vite 및 tsdown 어댑터에서 사용하는 명시적인 수명 주기 소유자를 만듭니다.
+건설은 서비스 소유권만 기록합니다. 그래프 검색은 다음에서 시작됩니다.
+어댑터가 번들러 수명 주기 후크에서 호출하는 `prepare`.
+
+#### 매개변수
+
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 옵션 | CreateForgeBuildSessionOptions |      |
+
+### CreateForgeBuildSession옵션
+
+**종류:** 인터페이스
+
+```typescript
+export interface CreateForgeBuildSessionOptions
 ```
 
 설명이 제공되지 않았습니다.
+
+### ForgeBuildKind
+
+**종류:** 유형
+
+```typescript
+export type ForgeBuildKind = 'component' | 'hook' | 'neutral' | 'router' | 'cms-island';
+```
+
+공유 Forge 수명주기에서 지원되는 정책을 구축하세요.
+
+### ForgeBuildPlan
+
+**종류:** 인터페이스
+
+```typescript
+export interface ForgeBuildPlan
+```
+
+하나의 라이프사이클로 조정되는 중립 프로젝트와 선택된 대상.
+
+### ForgeBuildSession
+
+**종류:** 인터페이스
+
+```typescript
+export interface ForgeBuildSession
+```
+
+설명이 제공되지 않았습니다.
+
+### ForgeTargetGenerationContext
+
+**종류:** 인터페이스
+
+```typescript
+export interface ForgeTargetGenerationContext
+```
+
+프로젝트 준비 후 대상 생성 콜백에 전달된 컨텍스트입니다.
+
+### ForgeTargetGenerationResult
+
+**종류:** 인터페이스
+
+```typescript
+export interface ForgeTargetGenerationResult
+```
+
+대상의 지연 소스 생성 단계에서 반환된 결과입니다.
+
+### ForgeTargetPlan
+
+**종류:** 인터페이스
+
+```typescript
+export interface ForgeTargetPlan
+```
+
+Forge 빌드 세션에서 하나의 호출자 소유 대상.
+
+### ForgeTargetResult
+
+**종류:** 인터페이스
+
+```typescript
+export interface ForgeTargetResult
+```
+
+설명이 제공되지 않았습니다.
+
+## `src/config`
 
 ### 정의JsxHookLibraryConfig
 
@@ -2499,7 +1795,7 @@ function solidJsxPlugin(): Plugin[];
 생성된 Solid `.tsx`을 컴파일하는 `vite-plugin-solid` 플러그인
 기본적으로 소스(Babel `babel-preset-solid`)를 사용하여 중립 JSX를
 SolidJS의 세분화된 DOM 작업. 손으로 말아서 재수출함
-`vite.config.ts` — `stagePlugins` 대신 자체 `stagePlugins`를 조립하는 것입니다.
+`vite.config.ts` - 대신 자체 `stagePlugins`를 조립하는 것입니다.
 {@link DefineJsxLibraryConfig} 호출 — Solid 변환을 연결할 수 있습니다.
 같은 방식으로 {@link ReactJsxPlugin}/{@link sveltePlugin} React/Svelte을 연결하도록 합니다.
 새로운 직접 종속성을 가져오지 않고. **`solid`의 경우 필수**
@@ -2559,7 +1855,7 @@ function svelteTsdownPlugin(): Plugin;
 ```
 
 롤다운/tsdown 호환 Svelte 컴파일러 플러그인. 다음을 통해 `.svelte` SFC를 컴파일합니다.
-일반 `transform` 후크의 `svelte/compiler` — Vite 확인 구성 API가 없습니다.
+일반 `transform` 후크의 `svelte/compiler` - Vite 확인 구성 API가 없습니다.
 tsdown으로 빌드할 때 이 방법(또는 {@link stagePluginsForTsdown})을 선호하세요.
 
 ## `src/generate-hooks`
@@ -2590,45 +1886,6 @@ export interface GenerateHookLibrarySourcesOptions
 ```
 
 {@link generateHookLibrarySources}에 대한 옵션입니다.
-
-### HookLibraryDts옵션
-
-**종류:** 인터페이스
-
-```typescript
-export interface HookLibraryDtsOptions
-```
-
-{@link HookLibraryDtsPlugin}에 대한 옵션입니다.
-
-### 후크라이브러리Dts플러그인
-
-**종류:** 기능
-
-```typescript
-function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin;
-```
-
-**진짜, 프레임워크별** 선언을 내보내는 빌드 후 Vite 플러그인
-후크 라이브러리에서 생성된 소스 트리의 경우.
-
-각 프레임워크 빌드({@link generateHookLibrarySources} + 프레임워크의
-Stage-2 번들러)는 JS를 생성하지만 생성된 트리는 다음과 같으므로 선언은 없습니다.
-`tsc`에 표시되는 소스 파일이 아닙니다. 단일 *공통*을 다시 내보내는 대신
-모든 프레임워크에 대해 중립 선언을 사용하는 이 플러그인은 TypeScript을 실행합니다.
-`closeBundle`(빌드 후 단계)에서 생성된 트리에 대한 컴파일러 API
-결과 `.d.ts` 파일(`index.d.ts` + 모듈당 하나)을
-자체 `outDir`를 빌드합니다. 따라서 **React** 빌드는 입력된 선언을 가져옵니다.
-React의 자체 후크와 **Vue** 빌드는 컴포저블이 포함된 선언을 가져옵니다.
-Vue `Ref`s를 반환합니다. 각 프레임워크에는 고유한 유형이 있습니다. 유형 진단은
-실패가 아닌 빌드 경고로 표시되므로 `.d.ts`은 항상
-생산.
-
-#### 매개변수
-
-| 이름 | 유형               | 설명 |
-| ---- | ------------------ | ---- |
-| 옵션 | HookLibraryDts옵션 |      |
 
 ## `src/generate`
 
@@ -2685,161 +1942,33 @@ export interface GenerateFrameworkSourcesOptions
 
 {@link generateFrameworkSources}에 대한 옵션입니다.
 
-### jsxComponentsCssImport플러그인
-
-**종류:** 기능
-
-```typescript
-function jsxComponentsCssImportPlugin(): Plugin;
-```
-
-구성 요소별 CSS를 JS 청크에 다시 연결합니다.
-
-`cssCodeSplit`을 사용한 Vite **라이브러리** 빌드는 청크당 하나의 CSS 자산을 추출합니다.
-하지만 — 앱 빌드와 달리 — 일치하는 `import './x.css'`을 삽입하지 않습니다.
-JS 청크로 통합하므로 단일 구성 요소를 가져오는 소비자는
-스타일이 없는 JS. 이 플러그인은 해당 링크를 복원합니다.
-청크는 연결된 각 CSS 파일 Vite의 부작용 가져오기 앞에 추가됩니다.
-(`chunk.viteMetadata.importedCss`)이므로 하나의 구성요소를 가져오면
-정확히 해당 구성 요소의 스타일시트(라이브러리의 나머지 부분을 트리 셰이크합니다.
-스타일이 포함되어 있습니다).
-
-`enforce: 'post'`과 함께 실행되므로 `generateBundle` 후크가 **이후** 실행됩니다.
-Vite의 자체 CSS 플러그인이 `importedCss`를 채웠습니다. 그렇지 않으면 메타데이터가
-여전히 비어 있습니다(이것이 Vue 범위 스타일 자산이
-`preserveModules`은 이전에 분리된 상태로 남아 있었고 구성 요소가 렌더링되었습니다.
-스타일이 지정되지 않음).
-
-실제로 번들로 내보낸 CSS 파일만 다시 연결됩니다. 아래
-`preserveModules` Vite는 바이트와 동일한 CSS 자산을 중복 제거합니다. 공유된
-많은 구성 요소에서 가져온 `size`/`spacing` 유틸리티 모듈이
-단일 방출된 스타일시트 - 중복 항목을 삭제하지만 여전히
-`importedCss`의 임시 청크별 이름입니다. `import './x.css'`을 방출하는 중
-삭제된 이름은 모든 다운스트림을 중단시키는 매달린 참조를 생성합니다.
-소비자의 빌드(해결되지 않은 가져오기)이므로 이러한 이름은 필터링됩니다. 는
-중복 제거된 스타일은 여전히 해당 스타일을 유지한 하나의 청크를 통해 제공됩니다(그리고
-패키지의 `./vue` / `./react` 배럴이 해당 청크를 가져옵니다.
-
-마지막으로 각 CSS 모듈 스타일시트는 해당 **소스** 이름으로 내보내집니다.
-`foo.module.css` — 클래스 이름 해싱이 이미 적용되어 있고
-형제 `foo.module.js` 클래스 맵에 구워진 확인된 이름입니다. 배송
-`.module.css` 접미사를 사용하는 것은 함정입니다. 모든 _다운스트림_ 번들러(예:
-React Storybook 자체 Vite)은 `*.module.css`를 CSS 모듈로 인식하고
-CSS 모듈 변환을 **두 번째로** 실행하여
-선택기로 구운 (이미 해시된) 클래스 이름과 더 이상 일치하지 않습니다.
-JS — 구성 요소는 스타일이 지정되지 않은 상태로 렌더링됩니다. 스타일시트를 처리해야 합니다.
-프레임워크 코드가 컴파일될 때 여기에서 한 번 — 다시는 다운스트림이 아닙니다. 그래서
-방출된 모든 `*.module.css` 자산은 일반 `*.css`(글로벌 자산)로 이름이 변경됩니다.
-스타일시트 소비자는 그대로 배송됨), 다시 연결된 가져오기 지점은
-이름이 바뀐 파일.
-
-### JsxComponentsDts옵션
-
-**종류:** 인터페이스
-
-```typescript
-export interface JsxComponentsDtsOptions
-```
-
-{@link jsxComponentsDtsPlugin}에 대한 옵션입니다.
-
-### jsxComponentsDts플러그인
-
-**종류:** 기능
-
-```typescript
-function jsxComponentsDtsPlugin(options: JsxComponentsDtsOptions): Plugin;
-```
-
-**진짜, 프레임워크별** 선언을 내보내는 빌드 후 Vite 플러그인
-중립 구성 요소 패키지의 생성된 소스 트리의 경우.
-
-각 프레임워크 빌드({@link generateFrameworkSources} + 프레임워크의
-Stage-2 번들러)는 JS를 생성하지만 생성된 트리는 다음과 같으므로 선언은 없습니다.
-`tsc`에 표시되는 소스 파일이 아닙니다. 단일 항목을 종합하는 것보다
-**공유 중립**에서 props 유형을 다시 가져오는 선언
-선언(따라서 모든 프레임워크의 소비자는 동일한 `MpChild` /
-`MpRef`), 이 플러그인은 각 프레임워크의 자체 선언 도구 체인을 실행합니다.
-`closeBundle`에 생성된 트리를 작성하고 결과 `.d.ts` 파일을 씁니다.
-빌드 자체 `outDir`에:
-
-- **React** — 프로세스 내 `.tsx` 트리를 통한 TypeScript 컴파일러 API입니다.
-  React 이미터는 이미 중립 렌더/후크 유형을 다시 작성했기 때문에
-  해당 React 해당 항목(`MpChild` → `ReactNode`, `MpRef` → `RefObject`,
-  `MpDependencyList` → `DependencyList`), 방출된 선언은 다음과 같습니다.
-  React에 대한 관용적 표현입니다.
-- **Vue** — 각 SFC를 내보내는 `.vue` 트리를 통한 `vue-tsc` CLI
-  정확한 `DefineComponent`(소품, 슬롯, 방출) 및 해당 `.vue.d.ts`
-  사이드카.
-- **Solid** — React과 동일한 프로세스 내 TypeScript 컴파일러 API
-  `.tsx` 트리가 생성되었지만 JSX 네임스페이스가 `solid-js`을 가리키므로
-  이미터가 렌더링하는 Solid 기반 JSX는 Solid 자체에 대해 해결됩니다.
-  `JSX.Element` 어휘.
-- **웹 구성 요소** — 동일한 프로세스 내 TypeScript 컴파일러 API
-  생성된(JSX 프리) `LitElement` 서브클래스의 `.ts` 트리.
-- **Svelte** — 생성된 파일에 대해 `svelte2tsx`의 비동기 `emitDts`을 시도합니다.
-  `.svelte` + `.ts` 트리 첫 번째(SFC 인식 선언 이미터는
-  Svelte 언어 도구), 현재 종속된 `svelte2tsx`부터
-  구성 요소별 `.svelte.d.ts` 사이드카 버전이 매달려 있습니다.
-  props-type 참조는 선언하거나 가져오지 않으므로({@link * svelteDtsOutputIsUsable} 참조) 현재는 항상
-  유효한 `index.d.ts`에 대한 합성된 항목 선언입니다.
-
-유형 진단은 실패가 아닌 빌드 경고로 표시되므로
-`.d.ts`는 항상 생성됩니다({@link HookLibraryDtsPlugin} 미러링).
-
-#### 매개변수
-
-| 이름 | 유형                 | 설명 |
-| ---- | -------------------- | ---- |
-| 옵션 | JsxComponentsDts옵션 |      |
-
-### JsxComponentsEntryDts옵션
-
-**종류:** 인터페이스
-
-```typescript
-export interface JsxComponentsEntryDtsOptions
-```
-
-{@link jsxComponentsEntryDtsPlugin}에 대한 옵션입니다.
-
-### jsxComponentsEntryDts플러그인
-
-**종류:** 기능
-
-```typescript
-function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plugin;
-```
-
-다음에 대한 합성 선언(`<declarationFileName>.d.ts`)을 내보냅니다.
-생성된 항목이므로 패키지의 `./react` / `./vue` 유형은
-하지만 항목 자체는 생성되므로 `tsc`에서는 볼 수 없습니다.
-
-#### 매개변수
-
-| 이름 | 유형                         | 설명 |
-| ---- | ---------------------------- | ---- |
-| 옵션 | JsxComponentsEntryDtsOptions |      |
-
 ## `src/tsdown`
 
-### 정의TsdownForgeComponents
+### CanonicalChunkCandidate
+
+**종류:** 유형
+
+```typescript
+export type CanonicalChunkCandidate = | string |
+```
+
+설명이 제공되지 않았습니다.
+
+### 정의TsdownForgeComponents모두
 
 **종류:** 기능
 
 ```typescript
-function defineTsdownForgeComponents(options: TsdownForgeComponentsOptions): UserConfig[];
+function defineTsdownForgeComponentsAll(options: TsdownForgeComponentPluginsOptions): UserConfig[];
 ```
 
-tsdown에서 하나의 Archetype-C **컴포넌트** 프레임워크 빌드를 재현합니다.
-1단계(`generateFrameworkSources`) + 2단계 플러그인 + CSS 가져오기 + dts 플러그인,
-`dist/<framework>/`로 방출됩니다.
+요청된 모든 Forge 구성 요소 프레임워크에 대해 독립적인 tsdown 구성을 구축합니다.
 
 #### 매개변수
 
-| 이름 | 유형                      | 설명 |
-| ---- | ------------------------- | ---- |
-| 옵션 | TsdownForgeComponents옵션 |      |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 옵션 | TsdownForgeComponentPlugins옵션 |      |
 
 ### 정의TsdownForgeEmailComponents
 
@@ -2860,24 +1989,6 @@ function defineTsdownForgeEmailComponents(options: TsdownForgeEmailComponentsOpt
 | ---- | ------------------------------ | ---- |
 | 옵션 | TsdownForgeEmailComponents옵션 |      |
 
-### 정의TsdownForgeHooks
-
-**종류:** 기능
-
-```typescript
-function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig;
-```
-
-tsdown에서 하나의 Archetype-C **hook** 프레임워크 빌드를 재현합니다.
-1단계(`generateHookLibrarySources`) + 2단계 플러그인 + `hookLibraryDtsPlugin`,
-`dist/<framework>/`로 방출됩니다.
-
-#### 매개변수
-
-| 이름 | 유형                 | 설명 |
-| ---- | -------------------- | ---- |
-| 옵션 | TsdownForgeHooks옵션 |      |
-
 ### 정의TsdownForgeHooks모두
 
 **종류:** 기능
@@ -2896,12 +2007,66 @@ function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserCon
 | ---- | -------------------------- | ---- |
 | 옵션 | TsdownForgeHooksAllOptions |      |
 
-### TsdownForgeComponents옵션
+### 해결표준청크이름
+
+**종류:** 기능
+
+```typescript
+function resolveCanonicalChunkName(chunkInfo: CanonicalChunkCandidate): string;
+```
+
+청크에 대한 표준 방출 청크 파일 이름을 결정합니다.
+충돌 및 맵 없이 표준 `[name].js` 경로를 보존합니다.
+Vue 가상 스크립트 모듈을 `${component}.script.js`로 변환합니다.
+
+#### 매개변수
+
+| 이름     | 유형                    | 설명 |
+| -------- | ----------------------- | ---- |
+| 청크정보 | CanonicalChunkCandidate |      |
+
+### 해결CanonicalEntryName
+
+**종류:** 기능
+
+```typescript
+function resolveCanonicalEntryName(chunkInfo: CanonicalChunkCandidate): string;
+```
+
+청크에 대한 표준 방출 항목 파일 이름을 결정합니다.
+가상 포지 항목은 보존되는 동안 `index.js`에 매핑됩니다.
+모듈은 청크 이름 확인을 위임합니다.
+
+#### 매개변수
+
+| 이름     | 유형                    | 설명 |
+| -------- | ----------------------- | ---- |
+| 청크정보 | CanonicalChunkCandidate |      |
+
+### tsdownForgeComponent플러그인
+
+**종류:** 기능
+
+```typescript
+function tsdownForgeComponentPlugins(options: TsdownForgeComponentPluginsOptions): TsdownPlugin[];
+```
+
+tsdown에서 하나의 Archetype-C **컴포넌트** 프레임워크 빌드를 재현합니다.
+1단계(`generateFrameworkSources`) + 2단계 플러그인 + CSS 가져오기 + dts 플러그인,
+`dist/<framework>/`로 방출됩니다.
+
+#### 매개변수
+
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 옵션 | TsdownForgeComponentPlugins옵션 |      |
+
+### TsdownForgeComponentPlugins옵션
 
 **종류:** 인터페이스
 
 ```typescript
-export interface TsdownForgeComponentsOptions
+export interface TsdownForgeComponentPluginsOptions
 ```
 
 설명이 제공되지 않았습니다.
@@ -2916,22 +2081,30 @@ export interface TsdownForgeEmailComponentsOptions
 
 설명이 제공되지 않았습니다.
 
+### tsdownForgeHook플러그인
+
+**종류:** 기능
+
+```typescript
+function tsdownForgeHookPlugins(options: TsdownForgeHooksAllOptions): TsdownPlugin[];
+```
+
+후크 어댑터의 기본 tsdown-플러그인 형식입니다. 반환된 플러그인은 주입됩니다.
+`tsdownConfig`의 대상 구성을 사용하여 후크 빌드를 구성할 수 있습니다.
+하나의 호출자가 소유한 `defineTsdownLibrary` 구성을 사용합니다.
+
+#### 매개변수
+
+| 이름 | 유형                       | 설명 |
+| ---- | -------------------------- | ---- |
+| 옵션 | TsdownForgeHooksAllOptions |      |
+
 ### TsdownForgeHooksAllOptions
 
 **종류:** 인터페이스
 
 ```typescript
 export interface TsdownForgeHooksAllOptions
-```
-
-설명이 제공되지 않았습니다.
-
-### TsdownForgeHooks옵션
-
-**종류:** 인터페이스
-
-```typescript
-export interface TsdownForgeHooksOptions
 ```
 
 설명이 제공되지 않았습니다.

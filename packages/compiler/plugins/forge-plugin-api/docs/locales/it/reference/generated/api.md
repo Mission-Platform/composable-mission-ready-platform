@@ -11,6 +11,16 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/forge-plugin-a
 
 ## `src/compiler/ast`
 
+### ADATTATORI_MODULO
+
+**Genere:** costante
+
+```typescript
+export const ADAPTERS_MODULE;
+```
+
+Nessuna descrizione fornita.
+
 ### applySourceEdits
 
 **Tipo:** funzione
@@ -38,16 +48,6 @@ export const CLASS_NAME_ATTRIBUTE;
 
 Nessuna descrizione fornita.
 
-### COMPONENTI_JSX_MODULI
-
-**Genere:** costante
-
-```typescript
-export const COMPONENTS_JSX_MODULES;
-```
-
-Nessuna descrizione fornita.
-
 ### nomeeventoPerProperty
 
 **Tipo:** funzione
@@ -56,7 +56,7 @@ Nessuna descrizione fornita.
 function eventNameForProperty(propertyName: string): string;
 ```
 
-Deriva il nome dell'evento rappresentato da una prop Vue in stile `on<Event>`.
+Deriva il nome dell'evento rappresentato da una prop `on<Event>` in stile Vue.
 
 #### Parametri
 
@@ -64,15 +64,37 @@ Deriva il nome dell'evento rappresentato da una prop Vue in stile `on<Event>`.
 | ------------- | -------- | ----------- |
 | nomeproprietà | stringa  |             |
 
-### ICONS_JSX_MODULE
+### frameworkAdapterModule
 
-**Genere:** costante
+**Tipo:** funzione
 
 ```typescript
-export const ICONS_JSX_MODULE;
+function frameworkAdapterModule(framework: JsxFramework): string;
 ```
 
-Nessuna descrizione fornita.
+Deriva l'adattatore/modulo runtime Forge per qualsiasi framework di destinazione integrato.
+
+#### Parametri
+
+| Nome   | Digitare     | Descrizione |
+| ------ | ------------ | ----------- |
+| quadro | JsxFramework |             |
+
+### frameworkForDirective
+
+**Tipo:** funzione
+
+```typescript
+function frameworkForDirective(directive: string): JsxFramework | undefined;
+```
+
+Risolvere una direttiva `use <framework>` principale per qualsiasi destinazione integrata.
+
+#### Parametri
+
+| Nome      | Digitare | Descrizione |
+| --------- | -------- | ----------- |
+| direttiva | stringa  |             |
 
 ### JSX_ATTRIBUTE_RENAMES
 
@@ -80,26 +102,6 @@ Nessuna descrizione fornita.
 
 ```typescript
 export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
-```
-
-Nessuna descrizione fornita.
-
-### LOCAL_EFFECT_FILE
-
-**Genere:** costante
-
-```typescript
-export const LOCAL_EFFECT_FILE;
-```
-
-Nessuna descrizione fornita.
-
-### LOCAL_EFFECT_MODULE
-
-**Genere:** costante
-
-```typescript
-export const LOCAL_EFFECT_MODULE;
 ```
 
 Nessuna descrizione fornita.
@@ -133,22 +135,6 @@ export const LOCAL_JSX_TYPES_MODULE;
 ```
 
 Nessuna descrizione fornita.
-
-### localEffectModuleSource
-
-**Tipo:** funzione
-
-```typescript
-function localEffectModuleSource(framework: JsxFramework): string;
-```
-
-Emette l'helper dell'effetto Vue condiviso; altri target non necessitano di questo file.
-
-#### Parametri
-
-| Nome   | Digitare     | Descrizione |
-| ------ | ------------ | ----------- |
-| quadro | JsxFramework |             |
 
 ### localJsxTypesModuleSource
 
@@ -226,16 +212,6 @@ export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
 
 Nessuna descrizione fornita.
 
-### REACT_ADAPTER_MODULE
-
-**Genere:** costante
-
-```typescript
-export const REACT_ADAPTER_MODULE;
-```
-
-Nessuna descrizione fornita.
-
 ### REACT_TYPE_ALIASES
 
 **Genere:** costante
@@ -265,16 +241,6 @@ export interface StyleImport
 ```
 
 Un'importazione di fogli di stile trasportata in un albero piatto generato.
-
-### VUE_ADAPTER_MODULE
-
-**Genere:** costante
-
-```typescript
-export const VUE_ADAPTER_MODULE;
-```
-
-Nessuna descrizione fornita.
 
 ### VUE_BUILTIN_COMPONENTS
 
@@ -617,15 +583,26 @@ Interrompe una pipeline del compilatore quando una fase ha segnalato uno o più 
 
 ## `src/framework`
 
-### FrameworkBuildAdapters
+### ForgeBuildAdapters
 
 **Tipo:** interfaccia
 
 ```typescript
-export interface FrameworkBuildAdapters
+export interface ForgeBuildAdapters
 ```
 
-Integrazioni di creazione di framework tipizzati in modo indipendente.
+Adattatori di integrazione build unificati per i plugin Forge.
+
+### FrameworkId
+
+**Genere:** tipo
+
+```typescript
+export type FrameworkId = JsxFramework | (string &
+```
+
+Identificatore del framework aperto per plug-in di destinazione e pipeline del compilatore.
+Mantiene il completamento automatico per i framework integrati noti accettando target di plug-in personalizzati arbitrari.
 
 ### FrameworkOutputPlugin
 
@@ -738,12 +715,23 @@ export interface TargetContext
 
 Contesto condiviso dall'abbassamento e dall'ottimizzazione del target.
 
+### TargetFrameworkId
+
+**Genere:** tipo
+
+```typescript
+export type TargetFrameworkId = FrameworkId;
+```
+
+Alias ​​di identificatore del framework aperto per i plugin di destinazione.
+Equivalente a {@link FrameworkId}.
+
 ### Intenzioni target
 
 **Tipo:** interfaccia
 
 ```typescript
-export interface TargetIntentions
+export interface TargetIntentions< TLowered extends TargetLoweredModule = TargetLoweredModule, >
 ```
 
 Involucro dell'intenzione specifica per il target; i fatti neutrali rimangono disponibili per i passaggi successivi.
@@ -759,7 +747,7 @@ export interface TargetLoweredModule
 Il piano di proprietà del target prodotto dalla fase `lower` di un plugin e perfezionato dal suo
 `optimize` fase. Ciascun target dichiara la propria estensione del presente contratto e
 lo discrimina su {@link TargetLoweredModule.framework}, quindi un piano può essere
-ristretto senza casting mentre ogni plugin soddisfa ancora lo stesso
+ristretto senza casting mentre ogni plugin soddisfa comunque lo stesso
 Forma {@link TargetIntentions}.
 
 ### TargetOptimizeOptions
@@ -1150,7 +1138,7 @@ Classificazione grossolana di un'istruzione mantenuta a livello di modulo.
 export type GenericTagKind = "element" | "component" | "fragment" | "dynamic";
 ```
 
-Come si risolve il tag node di un rendering nel vocabolario di destinazione.
+Come il tag node di rendering si risolve nel vocabolario di destinazione.
 
 ### GenericTextNode
 
@@ -1369,3 +1357,204 @@ Percorri un albero di rendering in profondità, incluso il markup delle espressi
 | -------- | --------------------------------- | ----------- |
 | nodi     | sola lettura GenericRenderNode[]  |             |
 | visitare | (node: GenericRenderNode) => void |             |
+
+## `src/schema`
+
+### assertTargetIntentionsLowered
+
+**Tipo:** funzione
+
+```typescript
+function assertTargetIntentionsLowered(
+  intentions: unknown,
+  expectedFramework?: FrameworkId,
+): asserts intentions is TargetIntentions<TLowered>;
+```
+
+Afferma che le intenzioni fornite sono valide e contengono un piano target abbassato.
+Genera un TargetIntentionsValidationError (sottoclasse di TypeError) se le intenzioni sono incomplete
+o se il discriminatore del piano abbassato non corrisponde al quadro previsto.
+
+#### Parametri
+
+| Nome            | Digitare    | Descrizione |
+| --------------- | ----------- | ----------- |
+| intenzioni      | sconosciuto |             |
+| quadro previsto | ID quadro   |             |
+
+### Schema dichiarativo
+
+**Tipo:** interfaccia
+
+```typescript
+export interface DeclarativeSchema
+```
+
+Definizione dello schema dichiarativo per le rappresentazioni intermedie del compilatore.
+
+### findActionableSpan
+
+**Tipo:** funzione
+
+```typescript
+function findActionableSpan(value: unknown): SourceSpan | undefined;
+```
+
+Cerca ricorsivamente un intervallo di fonti utilizzabili all'interno delle intenzioni o dei fatti AST.
+
+#### Parametri
+
+| Nome   | Digitare    | Descrizione |
+| ------ | ----------- | ----------- |
+| valore | sconosciuto |             |
+
+### SchemaFieldRule
+
+**Tipo:** interfaccia
+
+```typescript
+export interface SchemaFieldRule
+```
+
+Regola dichiarativa applicata a una proprietà dello schema.
+
+### SchemaFieldType
+
+**Genere:** tipo
+
+```typescript
+export type SchemaFieldType =
+  "string" | "non-empty-string" | "object" | "array" | "boolean";
+```
+
+Tipi di campo supportati per la convalida dello schema dichiarativo.
+
+### SchemaValidationIssue
+
+**Tipo:** interfaccia
+
+```typescript
+export interface SchemaValidationIssue
+```
+
+Un singolo problema di convalida dello schema identificato durante il controllo delle intenzioni.
+
+### SchemaValidationOptions
+
+**Tipo:** interfaccia
+
+```typescript
+export interface SchemaValidationOptions
+```
+
+Opzioni di configurazione della convalida dello schema dichiarativo.
+
+### semanticModuleSchema
+
+**Genere:** costante
+
+```typescript
+export const semanticModuleSchema: DeclarativeSchema;
+```
+
+Schema di validazione del modulo semantico in entrata IR.
+
+### targetContextSchema
+
+**Genere:** costante
+
+```typescript
+export const targetContextSchema: DeclarativeSchema;
+```
+
+Schema di convalida del contesto di destinazione della compilazione.
+
+### targetIntentionsSchema
+
+**Genere:** costante
+
+```typescript
+export const targetIntentionsSchema: DeclarativeSchema;
+```
+
+Schema di convalida delle intenzioni del target.
+
+### TargetIntentionsValidationError
+
+**Gentile:** lezione
+
+```typescript
+export class TargetIntentionsValidationError extends TypeError
+```
+
+Errore generato quando le intenzioni di destinazione non superano la verifica dello schema dichiarativo.
+
+### TargetIntentionsValidationResult
+
+**Tipo:** interfaccia
+
+```typescript
+export interface TargetIntentionsValidationResult
+```
+
+Risultato strutturato della convalida dell'intenzione target.
+
+### targetLoweredModuleSchema
+
+**Genere:** costante
+
+```typescript
+export const targetLoweredModuleSchema: DeclarativeSchema;
+```
+
+Schema di validazione della struttura di un piano target ribassato.
+
+### validateAgainstSchema
+
+**Tipo:** funzione
+
+```typescript
+function validateAgainstSchema(
+  target: unknown,
+  schema: DeclarativeSchema,
+  options?: SchemaValidationOptions,
+): SchemaValidationIssue[];
+```
+
+Convalida un oggetto di destinazione rispetto a uno schema dichiarativo, raccogliendo tutti i problemi strutturali.
+
+#### Parametri
+
+| Nome      | Digitare                 | Descrizione                                             |
+| --------- | ------------------------ | ------------------------------------------------------- |
+| obiettivo | sconosciuto              | - Oggetto o record di destinazione da convalidare.      |
+| schema    | Schema dichiarativo      | - Schema dichiarativo che definisce regole strutturali. |
+| opzioni   | OpzioniValidazioneSchema | - Opzioni di configurazione della convalida.            |
+
+#### Contrarre
+
+- **@param:** - Oggetto o record di destinazione da convalidare.
+- **@param:** - Schema dichiarativo che definisce le regole strutturali.
+- **@param:** - Opzioni di configurazione della convalida.
+- **@returns:** Array di problemi di convalida raccolti.
+
+### validateTargetIntentions
+
+**Tipo:** funzione
+
+```typescript
+function validateTargetIntentions(
+  intentions: unknown,
+  expectedFramework?: FrameworkId,
+): TargetIntentionsValidationResult;
+```
+
+Convalida la struttura e l'integrità delle intenzioni target rispetto allo schema dichiarativo.
+Restituisce errori di convalida strutturata e oggetti CompilerDiagnostic corrispondenti con percorsi di origine.
+
+#### Parametri
+
+| Nome            | Digitare    | Descrizione |
+| --------------- | ----------- | ----------- |
+| intenzioni      | sconosciuto |             |
+| quadro previsto | ID quadro   |             |

@@ -3,7 +3,7 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": ["^build", "build:check"]
+      "dependsOn": ["^build", "type-check"]
     },
     "build:wasm": {
       "cache": false,

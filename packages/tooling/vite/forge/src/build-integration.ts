@@ -1,4 +1,4 @@
-import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, renameSync, writeFileSync } from 'node:fs';
+import { existsSync, lstatSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
 import { validateForgeOutputPlugin, validateForgeOutputPluginSelection } from '@mission-platform/forge-plugin-api';
@@ -26,6 +26,114 @@ export interface ForgeArtifactPublishOptions {
   readonly targetId: string;
 }
 
+const NATIVE_ENTRY_PATTERN = /^(?:index\.(?:js|mjs|cjs|ts|tsx|d\.ts)|entry(?:[:_]).+\.(?:js|mjs|cjs|ts|tsx))$/;
+
+/** Check if a file name matches standard Forge entry naming conventions. */
+function isNativeEntryFile(name: string): boolean {
+  return NATIVE_ENTRY_PATTERN.test(name);
+}
+
+/** Recurse into a child directory during entry collection when it is not a symlink. */
+function collectFromChildDirectory(
+  rootDirectory: string,
+  currentDirectory: string,
+  name: string,
+  entries: string[],
+): void {
+  const absolute = path.join(currentDirectory, name);
+  if (!lstatSync(absolute).isSymbolicLink()) {
+    collectNativeEntries(rootDirectory, absolute, entries);
+  }
+}
+
+/** Check if a directory entry is a valid candidate native entry file. */
+function isCandidateEntryFile(entry: { isFile(): boolean; name: string }): boolean {
+  return entry.isFile() && isNativeEntryFile(entry.name);
+}
+
+/** Walk directory tree to find candidate native entry relative paths. */
+function collectNativeEntries(rootDirectory: string, currentDirectory: string, entries: string[]): void {
+  for (const entry of readdirSync(currentDirectory, { withFileTypes: true })) {
+    if (entry.isDirectory()) {
+      collectFromChildDirectory(rootDirectory, currentDirectory, entry.name, entries);
+    } else if (isCandidateEntryFile(entry)) {
+      const absolute = path.join(currentDirectory, entry.name);
+      entries.push(path.relative(rootDirectory, absolute).split(path.sep).join('/'));
+    }
+  }
+}
+
+/** Find all candidate native entry file names relative to the directory root. */
+function findNativeEntryNames(directory: string): string[] {
+  const entries: string[] = [];
+  collectNativeEntries(directory, directory, entries);
+  const runtimeEntries = entries.filter((entry) => !entry.endsWith('.d.ts'));
+  return runtimeEntries.length > 0 ? runtimeEntries : entries;
+}
+
+/** Check if a directory entry represents a native JavaScript file. */
+function isJavaScriptEntry(entry: { isFile(): boolean; name: string }): boolean {
+  return entry.isFile() && entry.name.endsWith('.js');
+}
+
+/** Check if a directory entry or its children contain compiled JavaScript. */
+function entryHasNativeJavaScript(
+  directory: string,
+  entry: { isDirectory(): boolean; isFile(): boolean; name: string },
+): boolean {
+  if (isJavaScriptEntry(entry)) return true;
+  if (!entry.isDirectory()) return false;
+  return hasNativeJavaScript(path.join(directory, entry.name));
+}
+
+/** Recursively check if a directory contains at least one compiled JavaScript file. */
+function hasNativeJavaScript(directory: string): boolean {
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    if (entryHasNativeJavaScript(directory, entry)) return true;
+  }
+  return false;
+}
+
+/** Wait for native JavaScript artifacts to appear in the staging directory. */
+async function waitForNativeJavaScript(stageDirectory: string, maxAttempts = 1500, intervalMs = 20): Promise<boolean> {
+  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+    if (hasNativeJavaScript(stageDirectory)) return true;
+    await new Promise((resolve) => setTimeout(resolve, intervalMs));
+  }
+  return hasNativeJavaScript(stageDirectory);
+}
+
+/** Resolve effective entry point names from bundle entries or native files. */
+function resolveNativeEntries(stageDirectory: string, entryNames: readonly string[]): string[] {
+  if (entryNames.length > 0) return [...entryNames];
+  if (!existsSync(stageDirectory)) return [];
+  return findNativeEntryNames(stageDirectory);
+}
+
+/** Record and commit published artifacts from the stage directory. */
+async function commitPublishedArtifacts(
+  writer: ForgeArtifactWriter,
+  targetId: string,
+  entryNames: readonly string[],
+): Promise<void> {
+  if (!existsSync(writer.stageDirectory)) {
+    writer.recordTree();
+    return;
+  }
+  const hasJs = await waitForNativeJavaScript(writer.stageDirectory);
+  if (!hasJs) {
+    throw new Error(
+      `Forge artifact target "${targetId}" produced no native JavaScript artifacts in ${writer.stageDirectory} after build completion.`,
+    );
+  }
+  const resolvedEntries = resolveNativeEntries(writer.stageDirectory, entryNames);
+  if (resolvedEntries.length === 0) {
+    throw new Error(`Forge artifact target "${targetId}" produced no entry points in ${writer.stageDirectory}.`);
+  }
+  writer.recordTree(resolvedEntries);
+  writer.commit();
+}
+
 /**
  * Publish all native output through the same manifest transaction as Forge
  * generated sources. Native bundlers and declaration tools may write freely
@@ -37,122 +145,11 @@ export function forgeArtifactPublishPlugin(options: ForgeArtifactPublishOptions)
   let finalized = false;
   let aborted = false;
 
-  function findNativeEntryNames(directory: string): string[] {
-    const entries: string[] = [];
-    const visit = (currentDirectory: string): void => {
-      for (const entry of readdirSync(currentDirectory, { withFileTypes: true })) {
-        const absolute = path.join(currentDirectory, entry.name);
-        if (entry.isDirectory()) {
-          if (!lstatSync(absolute).isSymbolicLink()) visit(absolute);
-        } else if (
-          entry.isFile() &&
-          (/^index\.(?:js|mjs|cjs|ts|tsx|d\.ts)$/.test(entry.name) ||
-            /^entry(?:[:_]).+\.(?:js|mjs|cjs|ts|tsx)$/.test(entry.name))
-        ) {
-          entries.push(path.relative(directory, absolute).split(path.sep).join('/'));
-        }
-      }
-    };
-    visit(directory);
-    const runtimeEntries = entries.filter((entry) => !entry.endsWith('.d.ts'));
-    return runtimeEntries.length > 0 ? runtimeEntries : entries;
-  }
-
-  function hasNativeJavaScript(directory: string): boolean {
-    for (const entry of readdirSync(directory, { withFileTypes: true })) {
-      const absolute = path.join(directory, entry.name);
-      if (entry.isDirectory() && hasNativeJavaScript(absolute)) return true;
-      if (entry.isFile() && entry.name.endsWith('.js')) return true;
-    }
-    return false;
-  }
-
-  function normalizeNativePaths(directory: string): void {
-    if (options.generatedDirectory === undefined) return;
-    const allFiles: string[] = [];
-    const visit = (currentDirectory: string): void => {
-      for (const entry of readdirSync(currentDirectory, { withFileTypes: true })) {
-        const absolute = path.join(currentDirectory, entry.name);
-        if (entry.isDirectory()) visit(absolute);
-        else if (entry.isFile()) allFiles.push(path.relative(directory, absolute).split(path.sep).join('/'));
-      }
-    };
-    visit(directory);
-    const renames = new Map<string, string>();
-
-    for (const relativeFile of allFiles.filter((file) => file.endsWith('.js'))) {
-      const source = readFileSync(path.join(directory, relativeFile), 'utf8');
-      const vueScriptModule = relativeFile.match(/^(.*)\.vue\?vue&type=script&setup=true&lang\.js$/);
-      if (vueScriptModule !== null) {
-        renames.set(relativeFile, `${vueScriptModule[1]}.script.js`);
-        continue;
-      }
-      const region = source.match(/\/\/#region .*?\/((?:components|composables|styles|utils)\/[^\n]+)/)?.[1];
-      if (region === undefined) continue;
-      const desired = region
-        .replace(/\.(?:tsx?|jsx?|vue|svelte)$/, '.js')
-        .replace(/\.module\.(?:scss|css)$/, '.module.js');
-      if (desired !== relativeFile) renames.set(relativeFile, desired);
-      if (/\.module\.(?:scss|css)$/.test(region)) {
-        const desiredCss = region.replace(/\.module\.(?:scss|css)$/, '.css');
-        for (const importedCss of source.matchAll(/import ["']\.\/([^"']+\.css)["'];/g)) {
-          renames.set(path.posix.join(path.posix.dirname(relativeFile), importedCss[1]), desiredCss);
-        }
-      }
-    }
-
-    for (const [oldName, newName] of renames) {
-      if (
-        oldName === newName ||
-        !existsSync(path.join(directory, oldName)) ||
-        existsSync(path.join(directory, newName))
-      )
-        continue;
-      mkdirSync(path.dirname(path.join(directory, newName)), { recursive: true });
-      renameSync(path.join(directory, oldName), path.join(directory, newName));
-    }
-
-    for (const relativeFile of allFiles.filter((file) => file.endsWith('.js'))) {
-      const absoluteFile = path.join(directory, renames.get(relativeFile) ?? relativeFile);
-      if (!existsSync(absoluteFile)) continue;
-      let source = readFileSync(absoluteFile, 'utf8');
-      for (const [oldName, newName] of renames) {
-        const oldSpecifier = path.posix.relative(path.posix.dirname(relativeFile), oldName);
-        const newSpecifier = path.posix.relative(
-          path.posix.dirname(renames.get(relativeFile) ?? relativeFile),
-          newName,
-        );
-        source = source.replaceAll(`./${oldSpecifier}`, `./${newSpecifier}`);
-      }
-      writeFileSync(absoluteFile, source, 'utf8');
-    }
-  }
-
+  /** Finalize the artifact publication by committing staged artifacts. */
   async function finalize(): Promise<void> {
     if (writer === undefined || finalized) return;
     try {
-      if (!existsSync(writer.stageDirectory)) {
-        writer.recordTree();
-        return;
-      }
-      for (let attempt = 0; attempt < 1500 && !hasNativeJavaScript(writer.stageDirectory); attempt += 1) {
-        await new Promise((resolve) => setTimeout(resolve, 20));
-      }
-      if (!hasNativeJavaScript(writer.stageDirectory)) {
-        throw new Error(
-          `Forge artifact target "${options.targetId}" produced no native JavaScript artifacts in ${writer.stageDirectory} after build completion.`,
-        );
-      }
-      normalizeNativePaths(writer.stageDirectory);
-      const nativeEntryNames = existsSync(writer.stageDirectory) ? findNativeEntryNames(writer.stageDirectory) : [];
-      const resolvedEntries = entryNames.length > 0 ? entryNames : nativeEntryNames;
-      if (resolvedEntries.length === 0) {
-        throw new Error(
-          `Forge artifact target "${options.targetId}" produced no entry points in ${writer.stageDirectory}.`,
-        );
-      }
-      writer.recordTree(resolvedEntries);
-      writer.commit();
+      await commitPublishedArtifacts(writer, options.targetId, entryNames);
       finalized = true;
     } catch (error) {
       writer.abort();
@@ -215,10 +212,12 @@ export function forgeBuildLifecyclePlugin(options: ForgeBuildLifecycleOptions): 
   let watchMode = false;
   let disposed = false;
 
+  /** Ensure the target has been prepared and return cached target result. */
   const ensureTarget = async (): Promise<ForgeTargetResult> => {
     targetResult ??= await options.session.ensureTarget(options.target);
     return targetResult;
   };
+  /** Dispose of the owned build session unless in watch mode. */
   const dispose = (): void => {
     if (disposed) return;
     disposed = true;

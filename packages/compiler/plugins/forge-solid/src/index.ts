@@ -10,7 +10,7 @@ import { optimizeSolidModule } from "./optimize.js";
 
 import type { SolidLoweredModule } from "./lower.js";
 import type {
-  FrameworkBuildAdapters,
+  ForgeBuildAdapters,
   FrameworkOutputPlugin,
   TargetContext,
   TargetIntentions,
@@ -65,7 +65,7 @@ function solidJsxTsdownPlugin(): Plugin {
   } as unknown as Plugin;
 }
 
-const BUILD: FrameworkBuildAdapters = {
+const BUILD: ForgeBuildAdapters = {
   vite: () => [solidPlugin() as unknown as Plugin],
   tsdown: () => [solidJsxTsdownPlugin() as TsdownPlugin],
 };

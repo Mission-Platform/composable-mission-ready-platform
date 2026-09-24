@@ -9,14 +9,19 @@ import { createForgeArtifactWriter } from './compiler/artifact-writer';
 
 import type { ForgeBuildSession } from './compiler/session';
 
-function invokeHook(hook: unknown, receiver: object, ...args: unknown[]): void | Promise<unknown> {
-  const handler =
-    typeof hook === 'function'
-      ? hook
-      : hook !== null && typeof hook === 'object' && 'handler' in hook
-        ? hook.handler
-        : undefined;
-  if (typeof handler !== 'function') return;
+/** Resolves a callable handler from a hook function or object. */
+function resolveHookHandler(hook: unknown): unknown {
+  if (typeof hook === 'function') return hook;
+  if (hook !== null && typeof hook === 'object' && 'handler' in hook) {
+    return Reflect.get(hook, 'handler');
+  }
+  return undefined;
+}
+
+/** Invokes a hook or hook object if a valid handler is present. */
+function invokeHook(hook: unknown, receiver: object, ...args: unknown[]): Promise<unknown> | undefined {
+  const handler = resolveHookHandler(hook);
+  if (typeof handler !== 'function') return undefined;
   return Reflect.apply(handler, receiver, args);
 }
 
@@ -81,22 +86,24 @@ describe('Forge Vite compiler service lifecycle', () => {
 
   it('invalidates changed files and disposes an owned one-shot session', async () => {
     const session = {
-      prepare: vi.fn(async () => ({ fingerprint: 'fixture' })),
-      ensureTarget: vi.fn(async () => ({
-        targetId: 'react',
-        entry: '/workspace/.forge/react.ts',
-        manifest: { targetId: 'react', artifacts: [], complete: true },
-        cache: { hit: false, affectedFiles: [] },
-      })),
+      prepare: vi.fn(() => Promise.resolve({ fingerprint: 'fixture' })),
+      ensureTarget: vi.fn(() =>
+        Promise.resolve({
+          targetId: 'react',
+          entry: '/workspace/.forge/react.ts',
+          manifest: { targetId: 'react', artifacts: [], complete: true },
+          cache: { hit: false, affectedFiles: [] },
+        }),
+      ),
       invalidate: vi.fn(() => ({ changedFiles: [], invalidatedFiles: [], invalidatedEntries: 0 })),
       report: vi.fn(),
-      dispose: vi.fn(async () => undefined),
+      dispose: vi.fn(() => Promise.resolve()),
     } as unknown as ForgeBuildSession;
     const target = {
       targetId: 'react',
       kind: 'component' as const,
       entryModule: '/workspace/src/index.ts',
-      generate: vi.fn(async () => '/workspace/.forge/react.ts'),
+      generate: vi.fn(() => Promise.resolve('/workspace/.forge/react.ts')),
     };
     const plugin = forgeBuildLifecyclePlugin({
       session,
@@ -119,13 +126,13 @@ describe('Forge Vite compiler service lifecycle', () => {
       ensureTarget: vi.fn(),
       invalidate: vi.fn(),
       report: vi.fn(),
-      dispose: vi.fn(async () => undefined),
+      dispose: vi.fn(() => Promise.resolve()),
     } as unknown as ForgeBuildSession;
     const target = {
       targetId: 'vue',
       kind: 'component' as const,
       entryModule: '/workspace/src/index.ts',
-      generate: vi.fn(async () => '/workspace/.forge/vue.ts'),
+      generate: vi.fn(() => Promise.resolve('/workspace/.forge/vue.ts')),
     };
     const plugin = forgeBuildLifecyclePlugin({
       session,
@@ -139,5 +146,58 @@ describe('Forge Vite compiler service lifecycle', () => {
     await invokeHook(plugin.closeBundle, plugin);
 
     expect(session.dispose).not.toHaveBeenCalled();
+  });
+
+  it('publishes staged artifacts purely without altering filenames or mutating source chunks', async () => {
+    const packageDir = fs.mkdtempSync(path.join(os.tmpdir(), 'forge-pure-staging-'));
+    const publishedDirectory = path.join(packageDir, 'dist', 'vue');
+    const attemptDirectory = path.join(packageDir, 'attempt');
+    try {
+      const plugin = forgeArtifactPublishPlugin({
+        publishedDirectory,
+        attemptDirectory,
+        targetId: 'vue',
+      });
+      await invokeHook(plugin.buildStart, plugin);
+
+      const componentDir = path.join(attemptDirectory, 'components', 'card');
+      fs.mkdirSync(componentDir, { recursive: true });
+      const entrySource = 'export { Card } from "./components/card/card.js";\n';
+      const cardSource = 'export const Card = () => "card";\n';
+      const scriptSource = 'export const setup = () => {};\n';
+      fs.writeFileSync(path.join(attemptDirectory, 'index.js'), entrySource);
+      fs.writeFileSync(path.join(componentDir, 'card.js'), cardSource);
+      fs.writeFileSync(path.join(componentDir, 'card.script.js'), scriptSource);
+
+      await invokeHook(
+        plugin.generateBundle,
+        plugin,
+        {},
+        {
+          'index.js': { type: 'chunk', isEntry: true, fileName: 'index.js' },
+        },
+      );
+      await invokeHook(plugin.closeBundle, plugin);
+
+      expect(fs.existsSync(path.join(publishedDirectory, 'index.js'))).toBe(true);
+      expect(fs.existsSync(path.join(publishedDirectory, 'components/card/card.js'))).toBe(true);
+      expect(fs.existsSync(path.join(publishedDirectory, 'components/card/card.script.js'))).toBe(true);
+      expect(fs.readFileSync(path.join(publishedDirectory, 'index.js'), 'utf8')).toBe(entrySource);
+      expect(fs.readFileSync(path.join(publishedDirectory, 'components/card/card.js'), 'utf8')).toBe(cardSource);
+      expect(fs.readFileSync(path.join(publishedDirectory, 'components/card/card.script.js'), 'utf8')).toBe(
+        scriptSource,
+      );
+
+      const manifest = JSON.parse(
+        fs.readFileSync(path.join(publishedDirectory, '.forge-artifact-manifest.json'), 'utf8'),
+      ) as {
+        entries: string[];
+        artifacts: Array<{ fileName: string; kind: string }>;
+      };
+      expect(manifest.entries).toEqual(['index.js']);
+      expect(manifest.artifacts).toHaveLength(3);
+    } finally {
+      fs.rmSync(packageDir, { recursive: true, force: true });
+    }
   });
 });

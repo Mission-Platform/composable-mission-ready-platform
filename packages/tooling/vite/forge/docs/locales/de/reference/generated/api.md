@@ -9,6 +9,59 @@ Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei B
 
 Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/vite-plugin-forge`.
 
+## `src/build-integration`
+
+### forgeArtifactPublishPlugin
+
+**Art:** Funktion
+
+```typescript
+function forgeArtifactPublishPlugin(options: ForgeArtifactPublishOptions): Plugin;
+```
+
+Veröffentlichen Sie alle nativen Ausgaben über dieselbe Manifesttransaktion wie Forge
+generierte Quellen. Native Bundler und Deklarationstools können frei schreiben
+innen `attemptDirectory`; Dieses Verzeichnis ist niemals das veröffentlichte Ziel.
+
+#### Parameter
+
+| Name     | Geben Sie                   | ein Beschreibung |
+| -------- | --------------------------- | ---------------- |
+| Optionen | ForgeArtifactPublishOptions |                  |
+
+### forgeBuildLifecyclePlugin
+
+**Art:** Funktion
+
+```typescript
+function forgeBuildLifecyclePlugin(options: ForgeBuildLifecycleOptions): Plugin;
+```
+
+Verbinden Sie einen Zielplan entweder mit Vite oder Rolldown/tsdown. Generation ist
+Wird absichtlich von Lebenszyklus-Hooks erwartet, niemals während der Erstellung einer Konfiguration.
+
+#### Parameter
+
+| Name     | Geben Sie                  | ein Beschreibung |
+| -------- | -------------------------- | ---------------- |
+| Optionen | ForgeBuildLifecycleOptions |                  |
+
+### forgeVirtualEntry
+
+**Art:** Funktion
+
+```typescript
+function forgeVirtualEntry(targetId: string): string;
+```
+
+Stabiler virtueller Eintrag, der verwendet wird, bis das Ziel von buildStart vorbereitet wurde.
+
+#### Parameter
+
+| Name    | Geben Sie    | ein Beschreibung |
+| ------- | ------------ | ---------------- |
+| Ziel-ID | Zeichenfolge |                  |
+
 ## `src/compiler/artifact-manifest`
 
 ### createForgeArtifactManifest
@@ -63,6 +116,91 @@ export interface ForgeArtifactRecord
 
 Eine deterministische Ausgabe, die von einem zielbezogenen Artefaktmanifest aufgezeichnet wird.
 
+## `src/compiler/artifact-path`
+
+### behauptenForgeArtifactRoot
+
+**Art:** Funktion
+
+```typescript
+function assertForgeArtifactRoot(root: string): string;
+```
+
+Validieren Sie ein Ausgabestammverzeichnis und lehnen Sie einen vorhandenen Symlink oder ein Nichtverzeichnis ab.
+Nachkommenkomponenten werden vor der Verwendung vom Artefakt-Resolver überprüft.
+
+#### Parameter
+
+| Name   | Geben Sie    | ein Beschreibung |
+| ------ | ------------ | ---------------- |
+| Wurzel | Zeichenfolge |                  |
+
+### secureForgeArtifactDirectory
+
+**Art:** Funktion
+
+```typescript
+function ensureForgeArtifactDirectory(root: string, directory: string): string;
+```
+
+Erstellen Sie ein Ausgabeverzeichnis für jede Komponente, ohne den Links zu folgen.
+
+#### Parameter
+
+| Name        | Geben Sie    | ein Beschreibung |
+| ----------- | ------------ | ---------------- |
+| Wurzel      | Zeichenfolge |                  |
+| Verzeichnis | Zeichenfolge |                  |
+
+### „resolveForgeArtifactPath“.
+
+**Art:** Funktion
+
+```typescript
+function resolveForgeArtifactPath(root: string, relativeName: string): string;
+```
+
+Lösen Sie einen Artefaktnamen auf und überprüfen Sie, ob vorhandene Pfadkomponenten sicher sind.
+
+#### Parameter
+
+| Name          | Geben Sie    | ein Beschreibung |
+| ------------- | ------------ | ---------------- |
+| Wurzel        | Zeichenfolge |                  |
+| relativerName | Zeichenfolge |                  |
+
+### validierenForgeArtifactName
+
+**Art:** Funktion
+
+```typescript
+function validateForgeArtifactName(relativeName: string): string;
+```
+
+Validieren Sie einen Artefaktnamen, ohne unsichere Pfadsegmente zu normalisieren.
+
+#### Parameter
+
+| Name          | Geben Sie    | ein Beschreibung |
+| ------------- | ------------ | ---------------- |
+| relativerName | Zeichenfolge |                  |
+
+### validierenForgeArtifactSegment
+
+**Art:** Funktion
+
+```typescript
+function validateForgeArtifactSegment(segment: string): string;
+```
+
+Validieren Sie eine einzelne Pfadkomponente, die zum Erstellen eines Artefaktstamms verwendet wird.
+
+#### Parameter
+
+| Name    | Geben Sie    | ein Beschreibung |
+| ------- | ------------ | ---------------- |
+| Segment | Zeichenfolge |                  |
+
 ## `src/compiler/artifact-writer`
 
 ### createForgeArtifactWriter
@@ -70,10 +208,32 @@ Eine deterministische Ausgabe, die von einem zielbezogenen Artefaktmanifest aufg
 **Art:** Funktion
 
 ```typescript
-function createForgeArtifactWriter(outDir: string, targetId: string): ForgeArtifactWriter;
+function createForgeArtifactWriter(
+  outDir: string,
+  targetId: string,
+  options: ForgeArtifactWriterOptions = {},
+): ForgeArtifactWriter;
 ```
 
 Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name     | Geben Sie                  | ein Beschreibung |
+| -------- | -------------------------- | ---------------- |
+| outDir   | Zeichenfolge               |                  |
+| Ziel-ID  | Zeichenfolge               |                  |
+| Optionen | ForgeArtifactWriterOptions |                  |
+
+### forgeArtifactAttemptDirectory
+
+**Art:** Funktion
+
+```typescript
+function forgeArtifactAttemptDirectory(outDir: string, targetId: string): string;
+```
+
+Ordnen Sie ein eigenes Geschwisterverzeichnis für einen nativen Ziel-Build-Versuch zu.
 
 #### Parameter
 
@@ -91,1630 +251,6 @@ export interface ForgeArtifactWriter
 ```
 
 Keine Beschreibung angegeben.
-
-## `src/compiler/ast`
-
-### CLASS_NAME_ATTRIBUTE
-
-**Art:** konstant
-
-```typescript
-export const CLASS_NAME_ATTRIBUTE;
-```
-
-Das neutrale JSX-Attribut, das die Klassennamenverwaltung steuert. Autoren schreiben
-`className={…}` (das Attribut `class` ist für statische Zeichenfolgen reserviert),
-Übergabe der gleichen Argumente, die der `classNames`-Laufzeithelfer akzeptiert – die meisten
-üblicherweise ein **Array** von Klassenwerten (`className={['base', { active }]}`),
-aber jeder einzelne {@link import ('@mission-platform/forge-jsx').ClassValue} funktioniert auch.
-Das Attribut wird genauso geschrieben wie das eigene `className` von React (im Gegensatz zu
-Laufzeithelfer, der `classNames` bleibt), damit eine Komponente ihre eigene zusammenführen kann
-berechnete Klassen mit einem weitergeleiteten `properties.className` ohne Benennung
-Nichtübereinstimmung: `className={[classNames('base', …), properties.className]}`. Die
-Der React-Emitter reduziert ein Array in eine `className={classNames(…)}`-Zeichenfolge
-Aufruf (erneute Injektion des neutralen `classNames`-Imports), während der Vue-Emitter
-ordnet es direkt der nativen `class`-Bindung von Vue zu, die es bereits versteht
-die Array-/Objektformen.
-
-### sammelnSlotNames
-
-**Art:** Funktion
-
-```typescript
-function collectSlotNames(sourceFile: ts.SourceFile): Set<string>;
-```
-
-Sammeln Sie jeden statischen Slotnamen, der durch `<Slot name="…" />`-Elemente im Modul deklariert wird.
-
-#### Parameter
-
-| Name       | Geben Sie     | ein Beschreibung |
-| ---------- | ------------- | ---------------- |
-| Quelldatei | ts.SourceFile |                  |
-
-### Komponentenimport
-
-**Art:** Schnittstelle
-
-```typescript
-export interface ComponentImport
-```
-
-Ein relativer Import einer Geschwisterkomponente, z.B. `import { ForgeBadge } from '../forge-badge'`.
-
-### COMPONENTS_JSX_MODULES
-
-**Art:** konstant
-
-```typescript
-export const COMPONENTS_JSX_MODULES;
-```
-
-Die einmal beschreibbaren **Komponentenbibliothek**-Arbeitsbereichspakete: wie
-`@mission-platform/icons`, neutrale Autoren importieren daraus ihre Komponenten
-Pakete (z. B. `ForgeDrawer` aus `@mission-platform/components/forge-drawer`, oder
-`ForgeVerticalLayout` von `@mission-platform/layouts`), die eine Typprüfung durchführen
-gegen die neutrale Quelle und rendern über `@mission-platform/forge-jsx`
-Adapter in Unit-Tests. Die generierten Pro-Framework-Quellen importieren sie unter
-Derselbe bloße Spezifikator – die Rahmenauswahl erfolgt durch jeden
-Exportbedingung `mp:<framework>` des Pakets, nicht über einen Unterpfad.
-
-### createReactHasSlotExpression
-
-**Art:** Funktion
-
-```typescript
-function createReactHasSlotExpression(
-  factory: ts.NodeFactory,
-  propsParamName: string,
-  name: string | undefined,
-): ts.Expression;
-```
-
-`<props>.<name> != null` – Anwesenheitslesung von React für `hasSlot('name')`.
-
-#### Parameter
-
-| Name           | Geben Sie                   | ein Beschreibung |
-| -------------- | --------------------------- | ---------------- |
-| Fabrik         | ts.NodeFactory              |                  |
-| propsParamName | Zeichenfolge                |                  |
-| Name           | Zeichenfolge \| undefiniert |                  |
-
-### createReactSlotCallExpression
-
-**Art:** Funktion
-
-```typescript
-function createReactSlotCallExpression(
-  factory: ts.NodeFactory,
-  propsParamName: string,
-  name: string | undefined,
-  fallback: readonly ts.Expression[],
-  scope?: ts.Expression,
-): ts.Expression;
-```
-
-`typeof <props>.<name> === 'function' ? <props>.<name>(scope) : <props>.<name>`
-(mit `?? <fallback>`) – die React-Übersetzung des `h(Slot, …)`-Aufrufformulars
-(das `h()`-Gegenstück von {@link createReactSlotExpression}).
-
-#### Parameter
-
-| Name           | Geben Sie                   | ein Beschreibung |
-| -------------- | --------------------------- | ---------------- |
-| Fabrik         | ts.NodeFactory              |                  |
-| propsParamName | Zeichenfolge                |                  |
-| Name           | Zeichenfolge \| undefiniert |                  |
-| Rückfall       | readonly ts.Expression[]    |                  |
-| Umfang         | ts.Ausdruck                 |                  |
-
-### createReactSlotExpression
-
-**Art:** Funktion
-
-```typescript
-function createReactSlotExpression(
-  factory: ts.NodeFactory,
-  propsParamName: string,
-  name: string | undefined,
-  fallback: readonly ts.JsxChild[],
-  scope?: ts.Expression,
-): ts.Expression;
-```
-
-`<props>.<name>` (mit `?? <fallback>`, wenn der Steckplatz Fallback deklariert
-Inhalt). Wenn `scope` angegeben wird, wird die Slot-Requisite aufgerufen, wenn es sich um eine handelt
-render-prop-Funktion oder direkt ausgewertet, wenn es sich um einen React node handelt
-(`typeof <props>.<name> === 'function' ? <props>.<name>(scope) : <props>.<name>`).
-
-#### Parameter
-
-| Name           | Geben Sie                      | ein Beschreibung |
-| -------------- | ------------------------------ | ---------------- |
-| Fabrik         | ts.NodeFactory                 |                  |
-| propsParamName | Zeichenfolge                   |                  |
-| Name           | Zeichenfolge \| undefiniert    |                  |
-| Rückfall       | schreibgeschützt ts.JsxChild[] |                  |
-| Umfang         | ts.Ausdruck                    |                  |
-
-### createReferenceRewriter
-
-**Art:** Funktion
-
-```typescript
-function createReferenceRewriter(scope: RewriteScope): ts.TransformerFactory<ts.Node>;
-```
-
-Erstellen Sie einen TS-Transformer, der Referenzen innerhalb eines Komponentenkörpers neu schreibt
-das Vue-Ziel: `properties.children` → `slots.default?.()`, destrukturierte Stütze
-Einheimische → Live-`properties.<name>`-Zugriff, `useState` liest → `.value`, Setter
-Aufrufe → Zuweisungen und `useRef`s `.current` → `.value`.
-
-#### Parameter
-
-| Name   | Geben Sie    | ein Beschreibung |
-| ------ | ------------ | ---------------- |
-| Umfang | RewriteScope |                  |
-
-### createStateSnapshotHoister
-
-**Art:** Funktion
-
-```typescript
-function createStateSnapshotHoister(scope: RewriteScope): ts.TransformerFactory<ts.Node>;
-```
-
-Behalten Sie die TypeScript-Kontrollflusseinschränkung der `useState`-/`useMemo`-Werte bei
-über verschachtelte Abschlüsse hinweg, die ansonsten von `<name>` → `<name>.value` umgeschrieben werden
-bricht.
-
-Im neutralen JSX ist ein Statuswert ein lokaler `const`, also ein Schutz, der einengt
-es (`if (sortKey === undefined) return; … rows.toSorted((a) => a[sortKey])`)
-behält die Eingrenzung innerhalb verschachtelter Rückrufe bei – `const`s werden nie neu zugewiesen,
-Daher vertraut TypeScript auf die Eingrenzung durch Funktionsgrenzen. Nach dem Vue
-Das Umschreiben des Lesevorgangs wird zu `sortKey.value`, einem **veränderbaren Eigenschaftszugriff**, dessen
-Durch die Eingrenzung wird TypeScript bei der Eingabe einer verschachtelten Funktion verworfen – also der geschützten
-`a[sortKey.value]` / `draft.value.uid` schlägt bei der Typprüfung fehl.
-
-Für jede Funktion mit Blockkörper erstellt dieser Durchgang einen Snapshot jedes dieser gelesenen Werte
-_innerhalb eines verschachtelten Abschlusses_ in ein führendes `const <name>$ = <name>.value;` und
-schreibt den darin enthaltenen Wert **reads** (nicht die `<name>.value = …`-Schreibziele) neu
-die Funktion diesem `const`-Alias zuordnen. Der Snapshot stellt den ursprünglichen `const` wieder her
-Semantik – Verengung fließt wieder in die verschachtelten Verschlüsse – während der `.value`
-Der Zugriff an der Spitze hält den Lesevorgang reaktiv (ein `computed` verfolgt ihn immer noch neu).
-
-#### Parameter
-
-| Name   | Geben Sie    | ein Beschreibung |
-| ------ | ------------ | ---------------- |
-| Umfang | RewriteScope |                  |
-
-### createVueHasSlotExpression
-
-**Art:** Funktion
-
-```typescript
-function createVueHasSlotExpression(factory: ts.NodeFactory, name: string | undefined): ts.Expression;
-```
-
-`slots.<name>` – `useSlots()`-Präsenzlesung von Vue für `hasSlot('name')` (`!!slots.x`).
-
-#### Parameter
-
-| Name   | Geben Sie                   | ein Beschreibung |
-| ------ | --------------------------- | ---------------- |
-| Fabrik | ts.NodeFactory              |                  |
-| Name   | Zeichenfolge \| undefiniert |                  |
-
-### createVueSlotCallExpression
-
-**Art:** Funktion
-
-```typescript
-function createVueSlotCallExpression(
-  factory: ts.NodeFactory,
-  name: string | undefined,
-  fallback: readonly ts.Expression[],
-  scope?: ts.Expression,
-): ts.Expression;
-```
-
-`slots.<name>?.(scope) ?? <fallback>` – die Vue-Übersetzung von `h(Slot, …)`
-Aufrufformular (das `h()`-Gegenstück von {@link createVueSlotExpression}). Die
-Als Ausweichmöglichkeit dienen hier die untergeordneten **Ausdrücke** des Aufrufs und nicht die untergeordneten JSX-Elemente.
-
-#### Parameter
-
-| Name     | Geben Sie                   | ein Beschreibung |
-| -------- | --------------------------- | ---------------- |
-| Fabrik   | ts.NodeFactory              |                  |
-| Name     | Zeichenfolge \| undefiniert |                  |
-| Rückfall | readonly ts.Expression[]    |                  |
-| Umfang   | ts.Ausdruck                 |                  |
-
-### createVueSlotExpression
-
-**Art:** Funktion
-
-```typescript
-function createVueSlotExpression(
-  factory: ts.NodeFactory,
-  name: string | undefined,
-  fallback: readonly ts.JsxChild[],
-  scope?: ts.Expression,
-): ts.Expression;
-```
-
-`slots.<name>?.(scope)` (mit `?? <fallback>`, wenn der Steckplatz Fallback deklariert
-Inhalt). Wenn `scope` angegeben wird, wird der Slot damit aufgerufen und ein ausgegeben
-Vue **bereichsbezogener** Slot-Aufruf.
-
-#### Parameter
-
-| Name     | Geben Sie                      | ein Beschreibung |
-| -------- | ------------------------------ | ---------------- |
-| Fabrik   | ts.NodeFactory                 |                  |
-| Name     | Zeichenfolge \| undefiniert    |                  |
-| Rückfall | schreibgeschützt ts.JsxChild[] |                  |
-| Umfang   | ts.Ausdruck                    |                  |
-
-### Destrukturierte Eigenschaft
-
-**Art:** Schnittstelle
-
-```typescript
-export interface DestructuredProperty
-```
-
-Eine Bindung wurde aus einer `const { … } = properties`-Destrukturierung entfernt.
-
-### DynamicToHCall
-
-**Art:** Funktion
-
-```typescript
-function dynamicToHCall(
-  factory: ts.NodeFactory,
-  node: ts.JsxSelfClosingElement | ts.JsxElement,
-  visitExpression: (expression: ts.Expression) => ts.Expression,
-  aliasAttribute: (name: string) => string = (name) => name,
-  variadicChildren = false,
-): ts.CallExpression;
-```
-
-Schreiben Sie ein `<Dynamic is={X} a={…} …>children</Dynamic>`-Element in ein um
-`h(X, { a: …, … }, ...children)`-Aufruf – die dynamische Komponente von beiden
-Ziele werden nativ kompiliert (React's classic-`h` JSX-Transformation / Vue's
-`<component :is>`). Das Attribut `is` wird zum Elementtyp, alle anderen
-Das Attribut (und die Ausbreitung) wird zum Requisitenobjekt, und die untergeordneten Elemente werden zum Objekt
-nachgestellte Argumente. Attributwertausdrücke und untergeordnete Elemente werden übergeben
-über `visitExpression` (also Prop/State/Slot-Umschreibungen und React).
-`class`→`className` Aliasing gilt weiterhin), und `aliasAttribute` benennt das um
-Requisitenschlüssel für das Ziel (Identität auf Vue, die DOM-Aliase auf React).
-
-#### Parameter
-
-| Name             | Geben Sie                                  | ein Beschreibung |
-| ---------------- | ------------------------------------------ | ---------------- |
-| Fabrik           | ts.NodeFactory                             |                  |
-| node             | ts.JsxSelfClosingElement \| ts.JsxElement  |                  |
-| VisitExpression  | (Ausdruck: ts.Expression) => ts.Expression |                  |
-| aliasAttribute   | (Name: Zeichenfolge) => Zeichenfolge       |                  |
-| variadicChildren |                                            |                  |
-
-### stellen Sie sicher, dass I18nHookInComponent vorhanden ist
-
-**Art:** Funktion
-
-```typescript
-function ensureI18nHookInComponent(factory: ts.NodeFactory, sourceFile: ts.SourceFile): ts.SourceFile;
-```
-
-Stellen Sie sicher, dass Komponentenfunktionen, die `i18next.t(...)` aufrufen, über eine `const { t } = useI18n();`-Anweisung der obersten Ebene verfügen.
-
-#### Parameter
-
-| Name       | Geben Sie      | ein Beschreibung |
-| ---------- | -------------- | ---------------- |
-| Fabrik     | ts.NodeFactory |                  |
-| Quelldatei | ts.SourceFile  |                  |
-
-### eventNameForProperty
-
-**Art:** Funktion
-
-```typescript
-function eventNameForProperty(propName: string): string;
-```
-
-Leiten Sie den Vue-Ereignisnamen für eine `on<Event>`-Requisite ab: Entfernen Sie das Präfix `on` und
-Kleinbuchstaben des ersten verbleibenden Buchstabens (`onChange` → `change`,
-`onUpdateModelValue` → `updateModelValue`).
-
-#### Parameter
-
-| Name     | Geben Sie    | ein Beschreibung |
-| -------- | ------------ | ---------------- |
-| propName | Zeichenfolge |                  |
-
-### EventSignatur
-
-**Art:** Schnittstelle
-
-```typescript
-export interface EventSignature
-```
-
-Eine Komponente **Ereignis** – ein Props-Interface-Mitglied namens `on<Event>`, dessen
-Der deklarierte Typ ist ein Inline-Funktionstyp (z. B. „onChange?: (openIds: string[])“
-=> void`). The Vue emitter turns these into `defineEmits`Deklarationen und`emit('<event>', …)`-Aufrufe anstelle von Laufzeit-Requisiten.
-
-### extractEventSignatures
-
-**Art:** Funktion
-
-```typescript
-function extractEventSignatures(sourceFile: ts.SourceFile, interfaceName: string): EventSignature[];
-```
-
-Extrahieren Sie die (eigenen) **Ereignissignaturen**, die von einem Props-Schnittstellenmitglied deklariert wurden
-mit dem Namen `on<Event>` (ein Großbuchstabe nach `on`), dessen Typ ein Inline-Typ ist
-Funktionstyp. Dies sind die Ereignisse der Komponente: Der Vue-Emitter deklariert sie
-mit `defineEmits` und schreibt ihre Aufrufe/Referenzen stattdessen in `emit(...)` um
-als sie als Laufzeit-Requisiten zu tragen. Eine Rückruf-Requisite, die über einen benannten Alias eingegeben wird
-(eine Typreferenz statt eines Inline-Funktionstyps) bleibt als einfache Requisite übrig.
-
-#### Parameter
-
-| Name               | Geben Sie     | ein Beschreibung |
-| ------------------ | ------------- | ---------------- |
-| Quelldatei         | ts.SourceFile |                  |
-| Schnittstellenname | Zeichenfolge  |                  |
-
-### extractModelSignatures
-
-**Art:** Funktion
-
-```typescript
-function extractModelSignatures(sourceFile: ts.SourceFile, interfaceName: string): ModelSignature[];
-```
-
-Extrahieren Sie die mit `@model <onEvent>` gekennzeichneten Props-Interface-Mitglieder – eine Requisite und ihre
-gepaartes Änderungsereignis, bei dem der Vue-Emitter zu einem einzelnen `defineModel` verschmilzt
-Zwei-Wege-Bindung. Der Modellname ist der Requisitenname, mit Ausnahme des kanonischen
-`modelValue`, das zum standardmäßigen (namenlosen) Modell von Vue wird.
-
-#### Parameter
-
-| Name               | Geben Sie     | ein Beschreibung |
-| ------------------ | ------------- | ---------------- |
-| Quelldatei         | ts.SourceFile |                  |
-| Schnittstellenname | Zeichenfolge  |                  |
-
-### extractPropertyNames
-
-**Art:** Funktion
-
-```typescript
-function extractPropertyNames(sourceFile: ts.SourceFile, interfaceName: string): string[];
-```
-
-Extrahieren Sie die (eigenen) Eigenschaftsnamen, die von einer Props-Schnittstelle deklariert wurden, mit Ausnahme von `children`.
-
-#### Parameter
-
-| Name               | Geben Sie     | ein Beschreibung |
-| ------------------ | ------------- | ---------------- |
-| Quelldatei         | ts.SourceFile |                  |
-| Schnittstellenname | Zeichenfolge  |                  |
-
-### extractPropertySignatures
-
-**Art:** Funktion
-
-```typescript
-function extractPropertySignatures(sourceFile: ts.SourceFile, interfaceName: string): PropertySignature[];
-```
-
-Extrahieren Sie die (eigenen) Eigenschaftssignaturen, die von einer Props-Schnittstelle deklariert wurden, ausgenommen
-`children`. Jeder Eintrag enthält den deklarierten Typtext der Eigenschaft und
-Optionalität, damit der Vue-Emitter ein **typbasiertes** `defineProps<{ … }>()` rendern kann
-Dadurch bleiben die genauen Typen der Schnittstelle erhalten (eine untypisierte Laufzeit `defineProps`).
-würde sie auf `{}` / `never[]` reduzieren). Eigenschaften, deren Typ nicht gelesen werden kann
-auf `unknown` zurückgreifen.
-
-#### Parameter
-
-| Name               | Geben Sie     | ein Beschreibung |
-| ------------------ | ------------- | ---------------- |
-| Quelldatei         | ts.SourceFile |                  |
-| Schnittstellenname | Zeichenfolge  |                  |
-
-### findComponentFunction
-
-**Art:** Funktion
-
-```typescript
-function findComponentFunction(sourceFile: ts.SourceFile, name: string): ts.FunctionDeclaration | undefined;
-```
-
-Suchen Sie die exportierte Funktionsdeklaration für eine neutrale Komponente anhand des Namens.
-
-#### Parameter
-
-| Name       | Geben Sie     | ein Beschreibung |
-| ---------- | ------------- | ---------------- |
-| Quelldatei | ts.SourceFile |                  |
-| Name       | Zeichenfolge  |                  |
-
-### ForgeExportFact
-
-**Art:** Schnittstelle
-
-```typescript
-export interface ForgeExportFact
-```
-
-Eine Deklaration oder ein erneuter Export, die in einem Forge-Quellmodul entdeckt wurde.
-
-### ForgeImportFact
-
-**Art:** Schnittstelle
-
-```typescript
-export interface ForgeImportFact
-```
-
-Ein statischer Import, der in einem Forge-Quellmodul entdeckt wurde.
-
-### ForgeModuleFacts
-
-**Art:** Schnittstelle
-
-```typescript
-export interface ForgeModuleFacts
-```
-
-Alle Fakten zum statischen Modul, die zum Erstellen des kanonischen Forge-Dateidiagramms erforderlich sind.
-
-### ForgeSourceSpan
-
-**Art:** Schnittstelle
-
-```typescript
-export interface ForgeSourceSpan
-```
-
-Ein Quellspeicherort, der von Diagrammdiagnosen und Import-/Exportfakten verwendet wird.
-
-### hasSlottedChildren
-
-**Art:** Funktion
-
-```typescript
-function hasSlottedChildren(children: readonly ts.JsxChild[]): boolean;
-```
-
-Ob eines der Kinder eines Elternteils einen `slot="…"`-Marker trägt.
-
-#### Parameter
-
-| Name   | Geben Sie                      | ein Beschreibung |
-| ------ | ------------------------------ | ---------------- |
-| Kinder | schreibgeschützt ts.JsxChild[] |                  |
-
-### ICONS_JSX_MODULE
-
-**Art:** konstant
-
-```typescript
-export const ICONS_JSX_MODULE;
-```
-
-Der bloße Spezifizierer der einmal beschreibbaren Symbolbibliothek `@mission-platform/icons`.
-Neutrale Autoren importieren ihre Icons aus diesem Root und generieren sie
-Pro-Framework-Quellen behalten genau diesen Spezifizierer bei: jede Framework-Aufteilung
-Das Paket `@mission-platform/*` deklariert `mp:vue` / `mp:react` / `mp:solid` /
-Benutzerdefinierte `mp:web-component`-Exportbedingungen für den bloßen `.`-Eintrag, also die
-_Verbraucher_ `resolve.conditions` (und das passende
-`customConditions` tsconfig-Voreinstellung) Wählen Sie den richtigen Build aus. Es gibt keine
-Unterpfad pro Framework, dem neu zugeordnet werden soll.
-
-### inspectForgeModule
-
-**Art:** Funktion
-
-```typescript
-function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts;
-```
-
-Extrahieren Sie statische Importe, Exporte, Nur-Typ-Kanten und Framework-Fakten aus einem analysierten Modul.
-
-#### Parameter
-
-| Name      | Geben Sie    | ein Beschreibung |
-| --------- | ------------ | ---------------- |
-| Dateiname | Zeichenfolge |                  |
-| Quelle    | Zeichenfolge |                  |
-
-### isComponentTagName
-
-**Art:** Funktion
-
-```typescript
-function isComponentTagName(tagName: ts.JsxTagNameExpression): boolean;
-```
-
-Ob sich ein JSX-Tag-Name auf eine **Komponente** bezieht (eine großgeschriebene Kennung wie z
-als `ForgeDropdown` oder ein Member/`this`-Ausdruck wie `Ctx.Provider`).
-als ein intrinsisches Element (`div`, `button`). Benannter Slot **passiert**
-(`slot="…"`) ist nur für eine Komponente von Bedeutung, daher ist die Steckplatzführung unten sinnvoll
-Dies ist eine exakte Spiegelung der Laufzeitadapter, die mit Schlitzen versehen sind
-Kinder nur beim Erweitern einer Komponente (`typeof type === 'function'`).
-
-#### Parameter
-
-| Name    | Geben Sie               | ein Beschreibung |
-| ------- | ----------------------- | ---------------- |
-| tagName | ts.JsxTagNameExpression |                  |
-
-### isDynamicElement
-
-**Art:** Funktion
-
-```typescript
-function isDynamicElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
-```
-
-Ob ein node ein neutrales dynamisches Komponentenelement ist – `<Dynamic is={…} />`
-oder `<Dynamic is={…}>…</Dynamic>` – erstellt aus der Markierung `Dynamic`.
-
-#### Parameter
-
-| Name | Geben Sie | ein Beschreibung |
-| ---- | --------- | ---------------- |
-| node | ts.Node   |                  |
-
-### isFragmentElement
-
-**Art:** Funktion
-
-```typescript
-function isFragmentElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
-```
-
-Ob ein node ein neutrales `<Fragment>`-Element ist – entweder das selbstschließende
-Formular `<Fragment />` (leer) oder `<Fragment>…</Fragment>` (mit untergeordneten Elementen).
-
-#### Parameter
-
-| Name | Geben Sie | ein Beschreibung |
-| ---- | --------- | ---------------- |
-| node | ts.Node   |                  |
-
-### isHasSlotCall
-
-**Art:** Funktion
-
-```typescript
-function isHasSlotCall(node: ts.Node): node is ts.CallExpression;
-```
-
-Ob ein node ein `hasSlot('name')` / `hasSlot()`-Aufruf ist – die Neutralität
-Slot-Präsenzmarkierung. Der Compiler schreibt es in das native Format jedes Frameworks um
-Anwesenheitsprüfung, daher wird sie nie als Laufzeitaufruf ausgegeben.
-
-#### Parameter
-
-| Name | Geben Sie | ein Beschreibung |
-| ---- | --------- | ---------------- |
-| node | ts.Node   |                  |
-
-### isSlotElement
-
-**Art:** Funktion
-
-```typescript
-function isSlotElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
-```
-
-Ob ein node ein neutrales benanntes Slot-Element ist – `<Slot … />` oder
-`<Slot …>fallback</Slot>` – wird aus der Markierung `Slot` erstellt.
-
-#### Parameter
-
-| Name | Geben Sie | ein Beschreibung |
-| ---- | --------- | ---------------- |
-| node | ts.Node   |                  |
-
-### isSlotHCall
-
-**Art:** Funktion
-
-```typescript
-function isSlotHCall(node: ts.Node): node is ts.CallExpression;
-```
-
-Ob ein node die **Aufrufform** des Named-Slot-Markers ist – `h(Slot, …)` –
-das werkseitige `h()`-Gegenstück des JSX-Elements `<Slot … />`. Einige neutral
-Komponenten bilden Steckplätze mit `h(Slot, { name: 'x' }, …fallback)` (z. B. im Inneren).
-`const column = … ? h(ForgeDrawer, …, h(Slot, { name: 'start' })) : undefined`)
-statt JSX; Beide Formen müssen in den nativen Leseslot jedes Frameworks umgeschrieben werden.
-
-#### Parameter
-
-| Name | Geben Sie | ein Beschreibung |
-| ---- | --------- | ---------------- |
-| node | ts.Node   |                  |
-
-### JSX_ATTRIBUTE_RENAMES
-
-**Art:** konstant
-
-```typescript
-export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
-```
-
-Native JSX-Attribute, deren dem Autor zugewandte CamelCase-Schreibweise verringert werden muss
-auf die HTML-Schreibweise Vue, die JSX-Intrinsic-Element-Typen erwarten. Vue gibt das ein
-`<td>`/`<th>` umfassen Attribute wie `colspan`/`rowspan` (nicht React's `colSpan`/
-`rowSpan`), sodass die Render-Closure-JSX andernfalls die Typprüfung nicht durchführen würde.
-
-### LOCAL_EFFECT_FILE
-
-**Art:** konstant
-
-```typescript
-export const LOCAL_EFFECT_FILE;
-```
-
-Der Dateiname (mit Erweiterung) des lokalen Effekt-Hilfsmoduls wird wie im flach generierten Baum geschrieben.
-
-### LOCAL_EFFECT_MODULE
-
-**Art:** konstant
-
-```typescript
-export const LOCAL_EFFECT_MODULE;
-```
-
-Der relative Spezifizierer, unter dem das generierte Vue {@link LOCAL_EFFECT_MODULE} importiert wird.
-
-### LOCAL_JSX_TYPE_NAMES
-
-**Art:** konstant
-
-```typescript
-export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
-```
-
-Neutrale **Typ**-Importe, die kein einziges erstklassiges Framework-Äquivalent haben
-zu aliasen (im Gegensatz zu {@link REACT_TYPE_ALIASES}), sind jedoch trivial ausdrückbar
-im eigenen Vokabular jedes Frameworks – das Render-Primitiv
-`MpRenderProperty<S>`, eine Scoped-Slot/Render-Prop-Funktion, die a zurückgibt
-Der Inhalt des Slots für einen bestimmten Bereich.
-
-Anstatt es als `@mission-platform/forge-jsx`-Import in der generierten Datei zu behalten
-Code gibt jeder Framework-Build ein winziges, am selben Ort befindliches Modul aus
-({@link LOCAL_JSX_TYPES_MODULE}), das eine **Framework-spezifische Variante** definiert
-davon – React über `ReactNode`, Vue über `VNodeChild` – und jeden Emitter
-leitet den Typimport dorthin um (siehe die Builder React und Vue `imports`).
-Die generierten Quellen tragen also kein neutrales `@mission-platform/forge-jsx`
-render-prop **type** import überhaupt.
-
-### LOCAL_JSX_TYPES_FILE
-
-**Art:** konstant
-
-```typescript
-export const LOCAL_JSX_TYPES_FILE;
-```
-
-Der Dateiname (mit Erweiterung) des lokalen JSX-Typenmoduls wird wie im flach generierten Baum geschrieben.
-
-### LOCAL_JSX_TYPES_MODULE
-
-**Art:** konstant
-
-```typescript
-export const LOCAL_JSX_TYPES_MODULE;
-```
-
-Der relative Spezifizierer, unter dem das pro Framework generierte {@link LOCAL_JSX_TYPES_MODULE} importiert wird.
-
-### localEffectModuleSource
-
-**Art:** Funktion
-
-```typescript
-function localEffectModuleSource(framework: JsxFramework): string;
-```
-
-Die Quelle des am selben Ort befindlichen {@link LOCAL_EFFECT_MODULE} für ein Ziel
-Framework, das genau wie die lokalen JSX-Typen einmal pro Ausgabebaum generiert wird
-Modul (siehe {@link localJsxTypesModuleSource}).
-
-Es zentralisiert die `useEffect` → Lebenszyklusübersetzung des Vue-Emitters in einem
-einzelner generalisierter Watcher (`mpEffect`), der auf dem nativen von Vue basiert
-`watch`/`onMounted`/`onUpdated`/`onUnmounted`, also `setup` jeder Komponente
-schrumpft auf einen einzelnen `mpEffect(callback, () => [deps])`-Aufruf statt auf
-Inline-Lebenszyklusblock pro Effekt. Die Semantik spiegelt die von React wider
-`useEffect(callback, deps?)`: Einmal nach dem Mounten ausführen, erneut ausführen, wenn eine Abhängigkeit besteht
-Änderungen (oder nach jedem Update, wenn Deps weggelassen werden) und führen Sie die zurückgegebenen aus
-Bereinigung vor jeder erneuten Ausführung und beim Unmounten.
-
-Der Helfer ist **nur Vue**: Der React-Emitter gibt weiterhin `useEffect(…)` aus
-wörtlich (die native Form von React), sodass für `framework === 'react'` ein zurückgegeben wird
-leere Zeichenfolge und der Autor überspringt sie.
-
-#### Parameter
-
-| Name   | Geben Sie    | ein Beschreibung |
-| ------ | ------------ | ---------------- |
-| Rahmen | JsxFramework |                  |
-
-### localJsxTypesModuleSource
-
-**Art:** Funktion
-
-```typescript
-function localJsxTypesModuleSource(framework: JsxFramework): string;
-```
-
-Die Quelle des am selben Ort befindlichen {@link LOCAL_JSX_TYPES_MODULE} für ein Ziel
-Framework: Framework-spezifische Varianten der genannten neutralen Renderprimitive
-in {@link LOCAL_JSX_TYPE_NAMES}, damit die generierten Komponenten importiert werden
-`MpRenderProperty` von diesem lokalen Modul anstelle des neutralen
-`@mission-platform/forge-jsx`-Paket. Die Definitionen unterscheiden sich je nach Framework: die
-Die Position „renderbarer Inhalt“ ist Reacts `ReactNode` und Vues `VNodeChild`.
-Daher lesen sich die Deklarationen jedes Builds für seine Laufzeit idiomatisch.
-
-Es gibt bewusst **keine** Variante `MpProperties`: eine Komponente deklariert
-genau die Eigenschaften, die es akzeptiert, sodass nichts für eine Requisitenbasis generiert wird
-das gibt es im neutralen Dialekt nicht mehr.
-
-#### Parameter
-
-| Name   | Geben Sie    | ein Beschreibung |
-| ------ | ------------ | ---------------- |
-| Rahmen | JsxFramework |                  |
-
-### ModellSignatur
-
-**Art:** Schnittstelle
-
-```typescript
-export interface ModelSignature
-```
-
-Eine Requisite, die mit dem JSDoc-Tag `@model <onEvent>` gekennzeichnet ist: eine bidirektionale Bindung (V-Modell).
-Koppeln einer **Eingabe**-Requisite mit ihrem **Änderungsereignis**. Der Vue-Emitter bricht zusammen
-das Paar in eine einzige `defineModel`-Deklaration (wodurch sowohl die Laufzeit gelöscht wird).
-prop und der `defineEmits`-Eintrag) – ein Lesevorgang der Prop wird zu `<local>.value`
-und ein Aufruf des gepaarten Ereignisses wird zu `<local>.value = …`.
-
-### moduleTargetsFramework
-
-**Art:** Funktion
-
-```typescript
-function moduleTargetsFramework(fileName: string, source: string, framework: string): boolean;
-```
-
-Ob ein Modul für `framework` ausgegeben werden soll. Ein Framework-neutrales Modul
-(keine `"use <framework>"`-Direktive) wird für jedes Ziel ausgegeben; ein geschlossenes Modul
-wird **nur** für das Framework mit seinen Direktivennamen ausgegeben.
-
-#### Parameter
-
-| Name      | Geben Sie    | ein Beschreibung |
-| --------- | ------------ | ---------------- |
-| Dateiname | Zeichenfolge |                  |
-| Quelle    | Zeichenfolge |                  |
-| Rahmen    | Zeichenfolge |                  |
-
-### NEUTRAL_COMPILE_TIME_MARKERS
-
-**Art:** konstant
-
-```typescript
-export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>;
-```
-
-Neutrale **Wert**-Importe, die reine Markierungen zur Kompilierungszeit sind – sie existieren nur
-Daher wird der erstellte JSX-Typ überprüft und von den Emittern (ihrem JSX) _konsumiert_
-Verwendungen werden in den eigenen Mechanismus jedes Frameworks umgeschrieben), daher darf dies niemals der Fall sein
-als echter Import in die generierte React- oder Vue-Quelle übernommen. `Slot`
-(`<Slot name="…" />`) ist die benannte Slot-Markierung, `Dynamic`
-(`<Dynamic is={…} />`) ist die dynamische Komponentenmarkierung (umgeschrieben in eine
-Rufen Sie `h(is, …)` auf, um die JSX-Transformation jedes Frameworks durchzuführen / `<component :is>`
-wird nativ kompiliert) und `hasSlot` (`hasSlot('x')`) ist der Slot-Präsenzmarker
-(umgeschrieben in `!!slots.x` / `$slots.x` von Vue und `properties.x != null` von React).
-
-### NEUTRAL_CONTEXT_VALUES
-
-**Art:** konstant
-
-```typescript
-export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
-```
-
-Neutrale **Wert**-Importe, die die Kontextprimitive sind. Auf React _sind_ sie
-Reacts eigene (`createContext`/`useContext`), sodass sie zum durchfallen
-`react` Wertimport; Bei Vue wird ihr Import dem neu zugeordnet
-`@mission-platform/forge-adapters/vue`-Adapter (ein von `provide`/`inject` unterstützter Adapter).
-`createContext`/`useContext`).
-
-### NEUTRAL_FRAMEWORK_COMPONENTS
-
-**Art:** konstant
-
-```typescript
-export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>;
-```
-
-Neutrale **Wertimporte**, bei denen es sich vielmehr um reale **Komponenten** pro Framework handelt
-als Markierungen, Laufzeit-Dienstprogramme oder die eigenen Grundelemente von React. Ihre JSX-Nutzung
-bleibt unberührt (sie bleiben ein Komponenten-Tag), aber ihre
-`import { … } from '@mission-platform/forge-jsx'` wird dem Ziel neu zugeordnet
-Die native Implementierung des Frameworks: `Teleport` (das Portal-Grundelement) wird
-`import { Teleport } from '@mission-platform/forge-adapters/react'` (ein `createPortal`
-Wrapper) für React und `import { Teleport } from 'vue'` (das integrierte) für Vue;
-`Transition` (das Enter/Leave-Grundelement) wird zum
-`@mission-platform/forge-adapters/react` CSS-Klassentreiber für React und den integrierten
-`import { Transition } from 'vue'` für Vue; `TransitionGroup` (die Liste
-Grundelement betreten/verlassen/verschieben) wird auf die gleiche Weise neu zugeordnet (das
-`@mission-platform/forge-adapters/react` Gruppentreiber für React, der integrierte
-`import { TransitionGroup } from 'vue'` für Vue).
-
-### NEUTRAL_MODULE
-
-**Art:** konstant
-
-```typescript
-export const NEUTRAL_MODULE;
-```
-
-Das neutrale Paket, aus dem die Komponenten ihre Grundelemente importieren.
-
-### NEUTRAL_RUNTIME_VALUES
-
-**Art:** konstant
-
-```typescript
-export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
-```
-
-Neutrale **Wertimporte**, bei denen es sich um Framework-unabhängige Laufzeitdienstprogramme handelt – sie
-verhalten sich auf jedem Ziel identisch, also (im Gegensatz zu `h` und den Hooks, die es sind
-pro Framework übersetzt/aliasiert) ihr `import { … } from '@mission-platform/forge-jsx'`
-muss wörtlich in den generierten React- und Vue-Quellen beibehalten werden.
-
-### NEUTRAL_VUE_RUNTIME_HOOKS
-
-**Art:** konstant
-
-```typescript
-export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
-```
-
-Neutrale **Wert**-Hooks, die ein gleichnamiges natives Gegenstück haben
-Laufzeit jedes Frameworks, daher werden sie weder übersetzt (wie `useState`/
-`useEffect`) noch als neutraler Import beibehalten. `useId` ist der eigene Hook von React (it
-fällt automatisch zum `react`-Wertimport durch) und Vue macht den verfügbar
-dasselbe `useId` aus seiner Laufzeit – der Vue-Emitter importiert es also direkt daraus
-`vue` und lässt den `const id = useId()`-Aufruf in `setup` unberührt.
-
-### NeutralImporte
-
-**Art:** Schnittstelle
-
-```typescript
-export interface NeutralImports
-```
-
-Die Namen, die ein Modul aus dem neutralen Paket importiert, aufgeteilt nach Bindungsart.
-
-### parseTsx
-
-**Art:** Funktion
-
-```typescript
-function parseTsx(fileName: string, source: string): ts.SourceFile;
-```
-
-Analysieren Sie eine `.tsx`-Quellzeichenfolge in der TypeScript SourceFile-Brücke, die von verwendet wird
-Optimierer und Legacy-Transformationshelfer. Neutrale Frontend-AST/Inferenz-Nutzung
-{@link parseForgeSource} / Oxc stattdessen.
-
-#### Parameter
-
-| Name      | Geben Sie    | ein Beschreibung |
-| --------- | ------------ | ---------------- |
-| Dateiname | Zeichenfolge |                  |
-| Quelle    | Zeichenfolge |                  |
-
-### Partitionierte Slots
-
-**Art:** Schnittstelle
-
-```typescript
-export interface PartitionedSlots
-```
-
-Die untergeordneten Elemente eines Komponentenelements, partitioniert durch ihre `slot="…"`-Markierung.
-
-### partitionSlottedChildren
-
-**Art:** Funktion
-
-```typescript
-function partitionSlottedChildren(children: readonly ts.JsxChild[]): PartitionedSlots;
-```
-
-Partitionieren Sie die untergeordneten Elemente eines Komponentenelements in benannte Slot-Gruppen + die standardmäßigen untergeordneten Elemente.
-
-#### Parameter
-
-| Name   | Geben Sie                      | ein Beschreibung |
-| ------ | ------------------------------ | ---------------- |
-| Kinder | schreibgeschützt ts.JsxChild[] |                  |
-
-### printNode
-
-**Art:** Funktion
-
-```typescript
-function printNode(node: ts.Node, sourceFile: ts.SourceFile): string;
-```
-
-Drucken Sie ein einzelnes node zurück in den Quelltext, verankert in der Quelldatei.
-
-#### Parameter
-
-| Name       | Geben Sie     | ein Beschreibung |
-| ---------- | ------------- | ---------------- |
-| node       | ts.Node       |                  |
-| Quelldatei | ts.SourceFile |                  |
-
-### printSourceFile
-
-**Art:** Funktion
-
-```typescript
-function printSourceFile(sourceFile: ts.SourceFile): string;
-```
-
-Drucken Sie eine gesamte (möglicherweise transformierte) Quelldatei zurück in den Quelltext.
-
-#### Parameter
-
-| Name       | Geben Sie     | ein Beschreibung |
-| ---------- | ------------- | ---------------- |
-| Quelldatei | ts.SourceFile |                  |
-
-### PropertySignatur
-
-**Art:** Schnittstelle
-
-```typescript
-export interface PropertySignature
-```
-
-Eine einzelne (eigene) Eigenschaft einer Props-Schnittstelle – ihr Name, der deklarierte Typtext und die Optionalität.
-
-### REACT_ADAPTER_MODULE
-
-**Art:** konstant
-
-```typescript
-export const REACT_ADAPTER_MODULE;
-```
-
-Der `@mission-platform/forge-adapters/react`-Unterpfad, aus dem die React-Framework-Komponenten importiert werden.
-
-### REACT_TYPE_ALIASES
-
-**Art:** konstant
-
-```typescript
-export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>;
-```
-
-Neutrale **Typ**-Importe, die über ein erstklassiges React-Äquivalent verfügen, das von versendet wird
-`react` selbst. Auf dem React-Ziel werden diese in ihren React-Namen umgeschrieben
-(importiert `import type { … } from 'react'`) und nicht als Neutralwert beibehalten
-`@mission-platform/forge-jsx`-Typ, daher sehen React-Autoren den idiomatischen Typ. Jeder
-Der Verweis auf den neutralen Namen in der ausgegebenen Quelle wird in den zugeordneten Namen umbenannt
-React-Name (siehe den React-Emitter). Jeweils die neutralen Hook-/Render-Primitive
-haben ein genaues React-Gegenstück:
-
-- `MpChild` (die Vereinigung „alles, was als Kind rendern kann“) ⇒ React
-  `ReactNode`.
-- `MpElement` (ein node im neutralen virtuellen Baum, der Rückgabetyp von a
-  neutrale Komponente) ⇒ React's `ReactElement`, also liest eine kompilierte Komponente
-  als echter `(props) => ReactElement` – eine gültige React-Funktionskomponente,
-  was der neutrale Rückgabetyp `MpElement` nicht ist.
-- `MpRef<T>` (der von `useRef` zurückgegebene `{ current: T }`-Container) ⇒ React
-  `RefObject<T>`.
-- `MpDependencyList` (ein Effekt-/Memo-Abhängigkeitsarray) ⇒ React
-  `DependencyList`.
-
-### ReactClassNameValue
-
-**Art:** Funktion
-
-```typescript
-function reactClassNameValue(factory: ts.NodeFactory, value: ts.Expression): ts.Expression;
-```
-
-Reduzieren Sie einen `className={…}`-Attributwert in **React** `className`
-Wert. `className` von React akzeptiert nur eine Zeichenfolge, daher ist die Bedingung/array/
-Objektformen müssen reduziert werden, _bevor_ sie das Element erreichen. Ein **Array
-Literal** (die kanonische Form – `className={['base', { active }]}`) ist
-in einen `classNames(…)`-Laufzeitaufruf (`classNames('base', { active })`) verteilen,
-Übereinstimmung mit der Variadic-Helper-Signatur; Jeder andere Ausdruck ist bereits ein
-einzelner Klassenwert (ein gelesenes CSS-Modul, ein vorberechneter String, ein `… .join(' ')`,
-ein Ternär) und wird direkt als `className`-Wert weitergeleitet.
-
-#### Parameter
-
-| Name   | Geben Sie      | ein Beschreibung |
-| ------ | -------------- | ---------------- |
-| Fabrik | ts.NodeFactory |                  |
-| Wert   | ts.Ausdruck    |                  |
-
-### readChildSlotName
-
-**Art:** Funktion
-
-```typescript
-function readChildSlotName(child: ts.JsxChild): string | undefined;
-```
-
-Lesen Sie den statischen `slot="…"`-Marker eines JSX-**untergeordneten**-Elements – das Attribut
-Dadurch wird das untergeordnete Element in den benannten Steckplatz einer übergeordneten Komponente weitergeleitet. Gibt den Slot zurück
-name (eine nicht leere Zeichenfolge außer `"default"`) oder `undefined`, wenn der
-Das Kind trägt keinen verwendbaren `slot`-Marker (gehört also zum Standardsteckplatz).
-
-#### Parameter
-
-| Name | Geben Sie   | ein Beschreibung |
-| ---- | ----------- | ---------------- |
-| Kind | ts.JsxChild |                  |
-
-### readComponentImports
-
-**Art:** Funktion
-
-```typescript
-function readComponentImports(sourceFile: ts.SourceFile, sourceRoot?: string): ComponentImport[];
-```
-
-Sammeln Sie relative (Geschwisterkomponenten-)Wert- und Typimporte aus einem Modul.
-
-#### Parameter
-
-| Name       | Geben Sie     | ein Beschreibung |
-| ---------- | ------------- | ---------------- |
-| Quelldatei | ts.SourceFile |                  |
-| sourceRoot | Zeichenfolge  |                  |
-
-### readExternalImports
-
-**Art:** Funktion
-
-```typescript
-function readExternalImports(fileName: string, source: string): string[];
-```
-
-Sammeln Sie die **externen** (Bare-Package-)Importe eines Moduls – alle
-`import … from '<pkg>'`, dessen Bezeichner weder relativ ist (`.`/`..`, behandelt
-als Geschwisterkomponente oder Hilfsimport), das neutrale Paket (verwaltet von
-{@link readNeutralImports}), noch ein Stylesheet (verwaltet von
-{@link readStyleImports}). Dabei handelt es sich um Laufzeitabhängigkeiten, die von der Komponente gezogen werden
-aus anderen Workspace-/Drittanbieter-Paketen (z. B. `@mission-platform/forms-core`,
-`luxon`) und sie werden **wörtlich** in das generierte Pro-Framework übernommen
-Quelle also Werte, auf die durch den Körper, übertragene Helfer oder Prop verwiesen wird
-Standardwerte werden zur Laufzeit aufgelöst. Jeder Eintrag ist die gedruckte `import`-Anweisung.
-
-Framework-geteilte Arbeitsbereichspakete wie die einmal beschreibbare Symbolbibliothek
-{@link ICONS_JSX_MODULE} werden auch wörtlich übertragen: Jeder deklariert ein
-`mp:<framework>`-Exportbedingung für den bloßen `.`-Eintrag, also die konsumierende App
-(oder Storybook/Vitest-Konfiguration) löst den passenden nativen Build ohne auf
-generierte Quelle, die einen Framework-Unterpfad benennt.
-
-#### Parameter
-
-| Name      | Geben Sie    | ein Beschreibung |
-| --------- | ------------ | ---------------- |
-| Dateiname | Zeichenfolge |                  |
-| Quelle    | Zeichenfolge |                  |
-
-### readFrameworkDirective
-
-**Art:** Funktion
-
-```typescript
-function readFrameworkDirective(fileName: string, source: string): 'react' | 'vue' | undefined;
-```
-
-Lesen Sie die `"use <framework>";`-Direktive eines Moduls, falls vorhanden.
-
-Ein Modul kann sich für eine **Framework-spezifische** Implementierung entscheiden, indem es mit geöffnet wird
-eine `"use react";`- oder `"use vue";`-Direktive (Spiegelung von `"use strict"` /
-`"use client"`). Dadurch wird das Framework zurückgegeben, an das die Direktive das Modul anheftet.
-oder `undefined`, wenn das Modul Framework-neutral ist (keine solche Direktive).
-
-Nur der führende **Anweisungsprolog** – der Lauf der aufeinanderfolgenden
-String-Literal-Ausdrucksanweisungen ganz oben im Modul – is
-geprüft, entspricht der Semantik der JavaScript-Anweisung; anderer Prolog
-Direktiven (z. B. `"use strict"`) werden ignoriert.
-
-#### Parameter
-
-| Name      | Geben Sie    | ein Beschreibung |
-| --------- | ------------ | ---------------- |
-| Dateiname | Zeichenfolge |                  |
-| Quelle    | Zeichenfolge |                  |
-
-### readHasSlotName
-
-**Art:** Funktion
-
-```typescript
-function readHasSlotName(call: ts.CallExpression): string | undefined;
-```
-
-Lesen Sie den statischen Slot-Namen eines `hasSlot('name')`-Aufrufs (`undefined` → der Standard-Slot).
-
-#### Parameter
-
-| Name  | Geben Sie         | ein Beschreibung |
-| ----- | ----------------- | ---------------- |
-| Anruf | ts.CallExpression |                  |
-
-### readNeutralImports
-
-**Art:** Funktion
-
-```typescript
-function readNeutralImports(fileName: string, source: string): NeutralImports;
-```
-
-Überprüfen Sie die `import … from '@mission-platform/forge-jsx'`-Bindungen eines Moduls.
-
-#### Parameter
-
-| Name      | Geben Sie    | ein Beschreibung |
-| --------- | ------------ | ---------------- |
-| Dateiname | Zeichenfolge |                  |
-| Quelle    | Zeichenfolge |                  |
-
-### readSlotHCallName
-
-**Art:** Funktion
-
-```typescript
-function readSlotHCallName(call: ts.CallExpression): string | undefined;
-```
-
-Lesen Sie den statischen `name` aus einem `h(Slot, { name: 'x' }, …)`-Aufruf (`undefined` → der Standard-Slot).
-
-#### Parameter
-
-| Name  | Geben Sie         | ein Beschreibung |
-| ----- | ----------------- | ---------------- |
-| Anruf | ts.CallExpression |                  |
-
-### readSlotHCallScope
-
-**Art:** Funktion
-
-```typescript
-function readSlotHCallScope(
-  factory: ts.NodeFactory,
-  call: ts.CallExpression,
-  visit: ts.Visitor,
-): ts.ObjectLiteralExpression | undefined;
-```
-
-Lesen Sie den **Bereich** (jede Requisite außer `name`) eines `h(Slot, props, …)`
-Aufruf in einen Objektliteralausdruck oder `undefined`, wenn kein Bereich vorhanden ist
-bestanden. Spiegelt {@link readSlotScope} für das JSX-Formular. Der Prop-Wert
-Ausdrücke werden mit dem bereitgestellten `visit` neu geschrieben, sodass die Auflösung im gelesen wird
-Zielrahmen.
-
-#### Parameter
-
-| Name     | Geben Sie         | ein Beschreibung |
-| -------- | ----------------- | ---------------- |
-| Fabrik   | ts.NodeFactory    |                  |
-| Anruf    | ts.CallExpression |                  |
-| besuchen | ts.Besucher       |                  |
-
-### readSlotName
-
-**Art:** Funktion
-
-```typescript
-function readSlotName(node: ts.JsxSelfClosingElement | ts.JsxElement): string | undefined;
-```
-
-Lesen Sie den statischen `name="…"` eines `<Slot>`-Elements (`undefined` → der Standard-Slot).
-
-#### Parameter
-
-| Name | Geben Sie                                 | ein Beschreibung |
-| ---- | ----------------------------------------- | ---------------- |
-| node | ts.JsxSelfClosingElement \| ts.JsxElement |                  |
-
-### readSlotScope
-
-**Art:** Funktion
-
-```typescript
-function readSlotScope(
-  factory: ts.NodeFactory,
-  node: ts.JsxSelfClosingElement | ts.JsxElement,
-  visit: ts.Visitor,
-): ts.ObjectLiteralExpression | undefined;
-```
-
-Lesen Sie den **Umfang** eines `<Slot>`-Elements – jedes Attribut außer `name`
-— in einen objektliteralen Ausdruck (`<Slot name="row" item={item} index={i}/>`
-→ `{ item: item, index: i }`) oder `undefined`, wenn der Steckplatz keinen Gültigkeitsbereich überschreitet.
-Die Attributwertausdrücke werden mit dem bereitgestellten `visit` neu geschrieben
-(So wird beispielsweise ein Destructured-Prop- oder State-Read korrekt im Vue aufgelöst
-Ziel). Dadurch kann eine einmal beschreibbare Komponente einen **begrenzten Steckplatz** steuern:
-Der Compiler gibt Vue `slots.x?.(scope)` und React `properties.x?.(scope)` aus.
-
-#### Parameter
-
-| Name     | Geben Sie                                 | ein Beschreibung |
-| -------- | ----------------------------------------- | ---------------- |
-| Fabrik   | ts.NodeFactory                            |                  |
-| node     | ts.JsxSelfClosingElement \| ts.JsxElement |                  |
-| besuchen | ts.Besucher                               |                  |
-
-### readStyleImports
-
-**Art:** Funktion
-
-```typescript
-function readStyleImports(fileName: string, source: string, sourceRoot?: string): StyleImport[];
-```
-
-Sammeln Sie die relativen Stylesheet-Importe eines Moduls (CSS-Module und reines CSS).
-Nebenwirkungsimporte). Der zweistufige Compiler kopiert diese neben
-generiert eine Pro-Framework-Quelle und verweist jeden Import erneut auf die flache Kopie, also
-Eine Komponente kann ihr eigenes `.module.scss` besitzen (und versenden).
-
-#### Parameter
-
-| Name       | Geben Sie    | ein Beschreibung |
-| ---------- | ------------ | ---------------- |
-| Dateiname  | Zeichenfolge |                  |
-| Quelle     | Zeichenfolge |                  |
-| sourceRoot | Zeichenfolge |                  |
-
-### „resolveWorkspaceLocalImport“.
-
-**Art:** Funktion
-
-```typescript
-function resolveWorkspaceLocalImport(
-  specifier: string,
-  sourceFileName: string,
-  sourceRoot: string | undefined,
-): string | undefined;
-```
-
-Lösen Sie einen arbeitsbereichslokalen `@/`-Import in einen Pfad relativ zu seiner besitzenden Quelle auf
-Datei. Bloße Paketimporte werden hier absichtlich nicht behandelt, sondern nur Dateien
-innerhalb des angegebenen Workspace-Quellstammverzeichnisses den Alias `@/` besitzen.
-
-#### Parameter
-
-| Name           | Geben Sie                   | ein Beschreibung |
-| -------------- | --------------------------- | ---------------- |
-| Spezifizierer  | Zeichenfolge                |                  |
-| Quelldateiname | Zeichenfolge                |                  |
-| sourceRoot     | Zeichenfolge \| undefiniert |                  |
-
-### RewriteScope
-
-**Art:** Schnittstelle
-
-```typescript
-export interface RewriteScope
-```
-
-Der Bereich, der beschreibt, wie Bezeichner innerhalb eines Komponentenkörpers neu geschrieben werden müssen
-für das Vue-Ziel.
-
-### rewriteWorkspaceLocalImports
-
-**Art:** Funktion
-
-```typescript
-function rewriteWorkspaceLocalImports(sourceFile: ts.SourceFile, sourceRoot?: string): ts.SourceFile;
-```
-
-Schreiben Sie arbeitsbereichslokale `@/`-Importe vor der Framework-spezifischen Emission neu.
-
-#### Parameter
-
-| Name       | Geben Sie     | ein Beschreibung |
-| ---------- | ------------- | ---------------- |
-| Quelldatei | ts.SourceFile |                  |
-| sourceRoot | Zeichenfolge  |                  |
-
-### SlotFallbackChildren
-
-**Art:** Funktion
-
-```typescript
-function slotFallbackChildren(node: ts.JsxSelfClosingElement | ts.JsxElement): ts.JsxChild[];
-```
-
-Die Fallback-Kinder eines `<Slot>…</Slot>` (leer für einen selbstschließenden Slot).
-
-#### Parameter
-
-| Name | Geben Sie                                 | ein Beschreibung |
-| ---- | ----------------------------------------- | ---------------- |
-| node | ts.JsxSelfClosingElement \| ts.JsxElement |                  |
-
-### SlotHCallFallback
-
-**Art:** Funktion
-
-```typescript
-function slotHCallFallback(call: ts.CallExpression): ts.Expression[];
-```
-
-Die Fallback-Kinder (Argumente nach den Requisiten) eines `h(Slot, props, …fallback)`-Aufrufs.
-
-#### Parameter
-
-| Name  | Geben Sie         | ein Beschreibung |
-| ----- | ----------------- | ---------------- |
-| Anruf | ts.CallExpression |                  |
-
-### stripFrameworkDirective
-
-**Art:** Funktion
-
-```typescript
-function stripFrameworkDirective(sourceFile: ts.SourceFile): ts.SourceFile;
-```
-
-Geben Sie die Quelldatei mit einer beliebigen führenden `"use react"`-/`"use vue"`-Direktive zurück
-entfernt, sodass der Gating-Marker zur Kompilierungszeit nie in die ausgegebene Datei gelangt
-Pro-Framework-Quelle. Andere Prologanweisungen bleiben erhalten.
-
-#### Parameter
-
-| Name       | Geben Sie     | ein Beschreibung |
-| ---------- | ------------- | ---------------- |
-| Quelldatei | ts.SourceFile |                  |
-
-### stripSlotAttribute
-
-**Art:** Funktion
-
-```typescript
-function stripSlotAttribute(factory: ts.NodeFactory, element: T): T;
-```
-
-Eine Kopie eines JSX-Elements/selbstschließenden Elements, dessen Markierungsattribut `slot="…"` entfernt wurde.
-
-#### Parameter
-
-| Name    | Geben Sie      | ein Beschreibung |
-| ------- | -------------- | ---------------- |
-| Fabrik  | ts.NodeFactory |                  |
-| Element | T              |                  |
-
-### StyleImport
-
-**Art:** Schnittstelle
-
-```typescript
-export interface StyleImport
-```
-
-Ein Stylesheet-Import in einer neutralen Komponente, z.B. `import styles from './x.module.scss'`.
-
-### transformI18nextCalls
-
-**Art:** Funktion
-
-```typescript
-function transformI18nextCalls(factory: ts.NodeFactory, node: ts.Node): ts.Node;
-```
-
-Schreiben Sie `i18next.t(...)`-Aufrufausdrücke in `t(...)` um.
-
-#### Parameter
-
-| Name   | Geben Sie      | ein Beschreibung |
-| ------ | -------------- | ---------------- |
-| Fabrik | ts.NodeFactory |                  |
-| node   | ts.Node        |                  |
-
-### verwendet ClassNamesArrayAttribute
-
-**Art:** Funktion
-
-```typescript
-function usesClassNamesArrayAttribute(sourceFile: ts.SourceFile): boolean;
-```
-
-Ob das Modul ein `className={[…]}`-Attribut trägt, dessen Wert ein ist
-**Array-Literal** – das einzige Formular, das zu einer `classNames(…)`-Laufzeit kompiliert wird
-Rufen Sie das React-Ziel auf, sodass der Emitter den Neutralleiter (erneut) injizieren muss
-`classNames`-Import dafür (der Autor importiert den Helfer nie selbst).
-
-#### Parameter
-
-| Name       | Geben Sie     | ein Beschreibung |
-| ---------- | ------------- | ---------------- |
-| Quelldatei | ts.SourceFile |                  |
-
-### verwendetComponentSelfReference
-
-**Art:** Funktion
-
-```typescript
-function usesComponentSelfReference(sourceFile: ts.SourceFile, componentName: string): boolean;
-```
-
-Ob eine Komponente **sich selbst** als JSX-Tag referenziert (`<ForgeTreeView …>`
-innerhalb `ForgeTreeView`) – d. h. es ist rekursiv. Der Vue-Emitter nutzt dies, um
-Lösen Sie die Selbstreferenz (`resolveComponent('<name>')`) in ihrem Rendering auf
-Schließung, sodass eine rekursive Komponente nativ auf beiden Frameworks kompiliert wird.
-
-#### Parameter
-
-| Name            | Geben Sie     | ein Beschreibung |
-| --------------- | ------------- | ---------------- |
-| Quelldatei      | ts.SourceFile |                  |
-| Komponentenname | Zeichenfolge  |                  |
-
-### verwendetHFactoryCall
-
-**Art:** Funktion
-
-```typescript
-function usesHFactoryCall(sourceFile: ts.SourceFile): boolean;
-```
-
-Ob das Modul als Aufrufausdruck auf `h` verweist (ein explizites `h(...)`).
-
-#### Parameter
-
-| Name       | Geben Sie     | ein Beschreibung |
-| ---------- | ------------- | ---------------- |
-| Quelldatei | ts.SourceFile |                  |
-
-### verwendetI18nextT
-
-**Art:** Funktion
-
-```typescript
-function usesI18nextT(node: OxcNode): boolean;
-```
-
-Ob ein Oxc-Modul oder node `i18next.t(...)` aufruft.
-
-#### Parameter
-
-| Name | Geben Sie | ein Beschreibung |
-| ---- | --------- | ---------------- |
-| node | OxcNode   |                  |
-
-### VUE_ADAPTER_MODULE
-
-**Art:** konstant
-
-```typescript
-export const VUE_ADAPTER_MODULE;
-```
-
-Der `@mission-platform/forge-adapters/vue`-Unterpfad, aus dem die Vue-Kontextprimitive importiert werden.
-
-### VUE_BUILTIN_COMPONENTS
-
-**Art:** konstant
-
-```typescript
-export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>;
-```
-
-Die neutrale Framework-Komponente importiert Vue und löst diese direkt aus der `vue`-Laufzeit auf.
-
-### VUE_LOCAL_JSX_TYPE_NAMES
-
-**Art:** konstant
-
-```typescript
-export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
-```
-
-Der neutrale Render-/Props-Typ benennt die Build-Weiterleitungen **Vue**
-am gleichen Standort {@link LOCAL_JSX_TYPES_MODULE}. Es ist eine Obermenge von
-{@link LOCAL_JSX_TYPE_NAMES}: neben `MpRenderProperty` auch die Variante Vue
-deklariert die neutralen **Element**-Grundelemente `MpChild` und `MpElement` erneut als
-Vue ist `VNodeChild` / `VNode`. Unter `jsxImportSource: 'vue'` a
-Der JSX-Ausdruck in einem generierten SFC hat den Typ `JSX.Element` (d. h. `VNode` von Vue);
-Beibehaltung der neutralen `@mission-platform/forge-jsx`-Definitionen (gekennzeichnet mit
-`__mpElement`) würde jedes `const x: MpElement = <div/>` /
-`MpChild[] = items.map(() => <li/>)` schlägt bei der Typprüfung unter `vue-tsc` fehl. React
-benennt diese stattdessen in `ReactNode`/`ReactElement` um (siehe
-{@link REACT_TYPE_ALIASES}); Vue behält die `Mp*`-Namen bei, löst sie jedoch auf
-Die Vue-native-Typen über das lokale Modul, sodass kein Umschreiben der Referenz erforderlich ist.
-
-### vueComponentModelListenerTransformer
-
-**Art:** Funktion
-
-```typescript
-function vueComponentModelListenerTransformer(): ts.TransformerFactory<ts.Node>;
-```
-
-Die `v-model`-Aktualisierungsereignisse von Vue heißen `update:<model>`: ein untergeordnetes kompiliertes Ereignis
-von einer `@model`-gepaarten `onUpdate<Name>`-Callback-Prop deklariert
-`defineModel('<name>')` und gibt daher `update:<name>` aus**, dessen
-Die Listener-Requisite ist das mit einer Zeichenfolge versehene `onUpdate:<name>` – nicht das camelCase
-`onUpdate<Name>`. Ein **übergeordnetes Element**, das den neutralen `onUpdate<Name>` weiterleitet
-Der Rückruf zu diesem untergeordneten Element muss `onUpdate:<name>` binden, sonst wird Vue niemals verbunden
-das bidirektionale Update (und `vue-tsc` meldet die Requisite als unbekannt, was darauf hindeutet
-`"onUpdate:<name>"`). Dieser Transformator schreibt jedes `onUpdate<Name>` neu
-Listener für ein **Komponenten**-Element – ein JSX-Attribut (`<Child onUpdateOpen=…>`
-→ `<Child onUpdate:open=…>`) oder eine `h(Component, { onUpdateOpen: … })`-Requisite
-(→ der Zeichenfolgenschlüssel `'onUpdate:open'`) – in das Formular `onUpdate:<name>`.
-Listener für native Elemente und Nicht-`onUpdate`-Listener bleiben unberührt.
-Daher ist die universelle Anwendung auf dem Render-Closure-Pfad idempotent und sicher.
-
-### vueJsxSlotTransformer
-
-**Art:** Funktion
-
-```typescript
-function vueJsxSlotTransformer(): ts.TransformerFactory<ts.Node>;
-```
-
-Vue-target-Transformer, der die **Übergabe**-Form des benannten Slots neu schreibt – a
-Komponentenelement, dessen untergeordnete Elemente `slot="…"`-Marker tragen – in das
-`@vitejs/plugin-vue-jsx` Objekt-Kinder-Syntax. Zum Beispiel
-`<ForgeDropdown><button slot="trigger">…</button><ul>…</ul></ForgeDropdown>`
-wird zu `<ForgeDropdown>{{ trigger: () => <><button>…</button></>, default: () => <><ul>…</ul></> }}</ForgeDropdown>`,
-welches `@vue/babel-plugin-jsx` in native benannte Slots kompiliert. Eine Komponente
-ohne geslotte untergeordnete Elemente bleibt unberührt (ihre untergeordneten Elemente bleiben die Standardeinstellung).
-Steckplatz). Dies wird **vor** dem Referenz-Rewriter auf dem verfasst
-Render-Closure-Pfad, also Bezeichner innerhalb der generierten Slot-Funktionen
-immer noch auf Vue-Reaktivität umgeschrieben (`.value` usw.).
-
-### vueNativeEventTransformer
-
-**Art:** Funktion
-
-```typescript
-function vueNativeEventTransformer(): ts.TransformerFactory<ts.Node>;
-```
-
-Vue-Zieltransformator, der die Groß-/Kleinschreibung von Mehrwort-DOMs im React-Stil korrigiert
-Ereignis-Listener (`onDragOver`, `onMouseEnter`, `onPointerDown`, …) ein
-**native** (intrinsische, mit Kleinbuchstaben versehene) Elemente – sowohl JSX-Attribute als auch
-`h('tag', { … })` Requisiten – unter Verwendung von {@link LowercaseNativeEventName}, also
-Der von `@vitejs/plugin-vue-jsx` kompilierte Render-Closure bindet den echten Native
-Ereignis. Listener für **Komponenten**-Elemente (großgeschriebene Tags / dynamisch
-Komponenten) bleiben unberührt, sodass sie weiterhin mit dem camelCase des Kindes übereinstimmen
-Namen aussenden. Idempotent und ein No-Op für Komponenten, daher ist die Anwendung sicher
-universell auf dem Render-Closure-Pfad.
 
 ## `src/compiler/cache`
 
@@ -1771,7 +307,7 @@ function compileComponentModule(source: string, options: CompileOptions): Compil
 Kompilieren Sie ein neutrales (oder Framework-gesteuertes) Komponentenmodul zu seinem jeweiligen Framework
 Quelle (Stufe 1).
 
-Eine führende `"use react";`/`"use vue";`-Direktive wird vor der Ausgabe entfernt
+Eine führende `"use <framework>";`-Direktive wird vor der Ausgabe entfernt
 sodass der Marker niemals in die Ausgabe gelangt; Ein Modul aus dem herausschleusen
 Der Build des nicht passenden Frameworks wird vorgelagert durch den Erkennungsschritt behandelt
 (siehe {@link moduleTargetsFramework}).
@@ -1802,7 +338,7 @@ function compileHookModule(source: string, options: CompileHookOptions): Compile
 ```
 
 Kompilieren Sie ein neutrales **Hook-Modul** (ein einmal beschreibbares Composable, für das erstellt wurde).
-Die Hooks im React-Stil von `@mission-platform/forge-jsx`, _keine_ UI-Komponente) zu seinem
+`@mission-platform/forge-jsx`s React-Hooks, _keine_ UI-Komponente) zu seinem
 Pro-Framework-Quelle (Stufe 1).
 
 #### Parameter
@@ -1834,7 +370,7 @@ Kompilieren Sie ein neutrales Modul über ein vom Aufrufer bereitgestelltes Ausg
 
 Im Gegensatz zu den historischen JSX-Convenience-Wrappern bleibt dieser Einstiegspunkt erhalten
 die offene Ausgabesprache und die Hilfsmodulsprachen des Plugins. Es ist das
-Gemeinsame Naht, die von eigenständigen Zielpaketen wie Astro verwendet wird.
+Gemeinsamer Seam, der von eigenständigen Zielpaketen wie Astro verwendet wird.
 
 #### Parameter
 
@@ -1863,6 +399,142 @@ export interface CompileOptions
 
 Optionen für {@link compileComponentModule}.
 
+## `src/compiler/components`
+
+### findComponentFunction
+
+**Art:** Funktion
+
+```typescript
+function findComponentFunction(sourceFile: OxcParsedModule, name: string): OxcNode | undefined;
+```
+
+Suchen Sie eine exportierte Oxc-Funktionsdeklaration für eine neutrale Komponente anhand des Namens.
+
+#### Parameter
+
+| Name       | Geben Sie       | ein Beschreibung |
+| ---------- | --------------- | ---------------- |
+| Quelldatei | OxcParsedModule |                  |
+| Name       | Zeichenfolge    |                  |
+
+### isSlotElement
+
+**Art:** Funktion
+
+```typescript
+function isSlotElement(node: OxcNode): boolean;
+```
+
+Ob ein Oxc node ein neutrales benanntes Slot-Element ist.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | --------- | ---------------- |
+| node | OxcNode   |                  |
+
+### readSlotName
+
+**Art:** Funktion
+
+```typescript
+function readSlotName(node: OxcNode): string | undefined;
+```
+
+Lesen Sie den statischen `name="…"` eines Oxc `<Slot>`-Elements.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | --------- | ---------------- |
+| node | OxcNode   |                  |
+
+## `src/compiler/constants`
+
+### LOCAL_JSX_TYPES_FILE
+
+**Art:** konstant
+
+```typescript
+export const LOCAL_JSX_TYPES_FILE;
+```
+
+Der Dateiname, der für das generierte Framework-spezifische JSX-Typenmodul verwendet wird.
+
+### LOCAL_JSX_TYPES_MODULE
+
+**Art:** konstant
+
+```typescript
+export const LOCAL_JSX_TYPES_MODULE;
+```
+
+Der relative Spezifizierer für das generierte Framework-spezifische JSX-Typenmodul.
+
+### localJsxTypesModuleSource
+
+**Art:** Funktion
+
+```typescript
+function localJsxTypesModuleSource(framework: JsxFramework): string;
+```
+
+Generieren Sie die am selben Ort befindlichen Framework-spezifischen JSX-Typdeklarationen.
+
+#### Parameter
+
+| Name   | Geben Sie    | ein Beschreibung |
+| ------ | ------------ | ---------------- |
+| Rahmen | JsxFramework |                  |
+
+### NEUTRAL_MODULE
+
+**Art:** konstant
+
+```typescript
+export const NEUTRAL_MODULE;
+```
+
+Das neutrale Paket, aus dem die Komponenten ihre Grundelemente importieren.
+
+## `src/compiler/directives`
+
+### moduleTargetsFramework
+
+**Art:** Funktion
+
+```typescript
+function moduleTargetsFramework(fileName: string, source: string, framework: string): boolean;
+```
+
+Ob ein neutrales oder Framework-spezifisches Modul in einen Ziel-Build gehört.
+
+#### Parameter
+
+| Name      | Geben Sie    | ein Beschreibung |
+| --------- | ------------ | ---------------- |
+| Dateiname | Zeichenfolge |                  |
+| Quelle    | Zeichenfolge |                  |
+| Rahmen    | Zeichenfolge |                  |
+
+### readFrameworkDirective
+
+**Art:** Funktion
+
+```typescript
+function readFrameworkDirective(fileName: string, source: string): JsxFramework | undefined;
+```
+
+Lesen Sie die führende `"use <framework>"`-Direktive aus einem Oxc-Modul.
+
+#### Parameter
+
+| Name      | Geben Sie    | ein Beschreibung |
+| --------- | ------------ | ---------------- |
+| Dateiname | Zeichenfolge |                  |
+| Quelle    | Zeichenfolge |                  |
+
 ## `src/compiler/discover`
 
 ### discoverComponents
@@ -1890,17 +562,22 @@ in (der Modulbasisname des erneuten Exports).
 **Art:** Funktion
 
 ```typescript
-function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix = 'Forge'): DiscoveredComponent[];
+function discoverComponentsFromGraph(
+  graph: ForgeFileGraph,
+  stripPrefix = 'Forge',
+  diagnostics?: CompilerDiagnostic[],
+): DiscoveredComponent[];
 ```
 
 Öffentliche Projektkomponenten werden aus dem kanonischen Diagramm exportiert, wobei die alte Ergebnisform beibehalten wird.
 
 #### Parameter
 
-| Name        | Geben Sie      | ein Beschreibung |
-| ----------- | -------------- | ---------------- |
-| Diagramm    | ForgeFileGraph |                  |
-| StripPrefix |                |                  |
+| Name        | Geben Sie            | ein Beschreibung |
+| ----------- | -------------------- | ---------------- |
+| Diagramm    | ForgeFileGraph       |                  |
+| StripPrefix |                      |                  |
+| Diagnose    | CompilerDiagnostic[] |                  |
 
 ### DiscoveredComponent
 
@@ -1932,12 +609,12 @@ Eintrag `./vue` neben den Komponenten.
 function discoverHelperExports(barrelSource: string, componentFolders: ReadonlySet<string>): DiscoveredHelperExport[];
 ```
 
-Entdecken Sie die **Hilfsmodule**, die ein Fass erneut exportiert – bei jedem Export { … }
+Entdecken Sie die **Hilfsmodule**, die ein Fass erneut exportiert – bei jedem „Export { … }“
 aus der „./…“-Anweisung, deren Modulbasisname **nicht** einer der erkannten ist
 Komponentenordner. Wird verwendet, um gemeinsam genutzte Framework-unabhängige APIs (z. B. die) weiterzuleiten
 `toast-store`s Imperativ `useToast`/`showToast`/… Helfer, das Gegenstück
-des `useToast` Composable des Vue-Pakets) durch den generierten Eintrag, also
-Benutzer steuern pro Framework denselben Singleton, den die Komponenten verwenden.
+des `useToast`-Composables des Vue-Pakets) durch den generierten Eintrag, also
+Benutzer steuern denselben Singleton pro Framework, den die Komponenten verwenden.
 
 #### Parameter
 
@@ -1954,6 +631,7 @@ Benutzer steuern pro Framework denselben Singleton, den die Komponenten verwende
 function discoverHelperExportsFromGraph(
   graph: ForgeFileGraph,
   componentFolders: ReadonlySet<string>,
+  discoveredComponents?: readonly DiscoveredComponent[],
 ): DiscoveredHelperExport[];
 ```
 
@@ -1961,10 +639,70 @@ Projizieren Sie öffentliche Nichtkomponentenexporte aus dem kanonischen Diagram
 
 #### Parameter
 
-| Name              | Geben Sie           | ein Beschreibung |
-| ----------------- | ------------------- | ---------------- |
-| Diagramm          | ForgeFileGraph      |                  |
-| Komponentenordner | ReadonlySet<string> |                  |
+| Name               | Geben Sie                      | ein Beschreibung |
+| ------------------ | ------------------------------ | ---------------- |
+| Diagramm           | ForgeFileGraph                 |                  |
+| Komponentenordner  | ReadonlySet<string>            |                  |
+| discoverComponents | readonly DiscoveredComponent[] |                  |
+
+## `src/compiler/facts`
+
+### ForgeExportFact
+
+**Art:** Schnittstelle
+
+```typescript
+export interface ForgeExportFact
+```
+
+Eine Deklaration oder ein erneuter Export, die in einem Forge-Quellmodul entdeckt wurde.
+
+### ForgeImportFact
+
+**Art:** Schnittstelle
+
+```typescript
+export interface ForgeImportFact
+```
+
+Ein statischer Import, der in einem Forge-Quellmodul entdeckt wurde.
+
+### ForgeModuleFacts
+
+**Art:** Schnittstelle
+
+```typescript
+export interface ForgeModuleFacts
+```
+
+Alle Fakten zum statischen Modul, die zum Erstellen des kanonischen Forge-Dateidiagramms erforderlich sind.
+
+### ForgeSourceSpan
+
+**Art:** Schnittstelle
+
+```typescript
+export interface ForgeSourceSpan
+```
+
+Ein Quellspeicherort, der von Diagrammdiagnosen und Import-/Exportfakten verwendet wird.
+
+### inspectForgeModule
+
+**Art:** Funktion
+
+```typescript
+function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts;
+```
+
+Extrahieren Sie statische Importe, Exporte, Nur-Typ-Kanten und Framework-Fakten aus einem analysierten Modul.
+
+#### Parameter
+
+| Name      | Geben Sie    | ein Beschreibung |
+| --------- | ------------ | ---------------- |
+| Dateiname | Zeichenfolge |                  |
+| Quelle    | Zeichenfolge |                  |
 
 ## `src/compiler/frontends`
 
@@ -2170,6 +908,118 @@ Statischer Markierungsdurchgang der Stufe 1, gefolgt von allgemeinem Heben.
 | moduleKind      | 'Komponente' \| 'zusammensetzbar' |                  |
 | Komponentenname | Zeichenfolge                      |                  |
 
+## `src/compiler/imports`
+
+### NeutralImporte
+
+**Art:** Schnittstelle
+
+```typescript
+export interface NeutralImports
+```
+
+Die Namen, die ein Modul aus dem neutralen Paket importiert, aufgeteilt nach Bindungsart.
+
+### readExternalImports
+
+**Art:** Funktion
+
+```typescript
+function readExternalImports(fileName: string, source: string): string[];
+```
+
+Sammeln Sie reine Paketimporte, die wörtlich in generierte Framework-Quellen übertragen werden.
+
+#### Parameter
+
+| Name      | Geben Sie    | ein Beschreibung |
+| --------- | ------------ | ---------------- |
+| Dateiname | Zeichenfolge |                  |
+| Quelle    | Zeichenfolge |                  |
+
+### readNeutralImports
+
+**Art:** Funktion
+
+```typescript
+function readNeutralImports(fileName: string, source: string): NeutralImports;
+```
+
+Überprüfen Sie die neutralen Paketimporte eines Moduls.
+
+#### Parameter
+
+| Name      | Geben Sie    | ein Beschreibung |
+| --------- | ------------ | ---------------- |
+| Dateiname | Zeichenfolge |                  |
+| Quelle    | Zeichenfolge |                  |
+
+### readStyleImports
+
+**Art:** Funktion
+
+```typescript
+function readStyleImports(fileName: string, source: string, sourceRoot?: string): StyleImport[];
+```
+
+Sammeln Sie relative Stylesheet-Importe von einem neutralen Modul.
+
+#### Parameter
+
+| Name       | Geben Sie    | ein Beschreibung |
+| ---------- | ------------ | ---------------- |
+| Dateiname  | Zeichenfolge |                  |
+| Quelle     | Zeichenfolge |                  |
+| sourceRoot | Zeichenfolge |                  |
+
+### „resolveWorkspaceLocalImport“.
+
+**Art:** Funktion
+
+```typescript
+function resolveWorkspaceLocalImport(
+  specifier: string,
+  sourceFileName: string,
+  sourceRoot: string | undefined,
+): string | undefined;
+```
+
+Lösen Sie einen arbeitsbereichslokalen `@/`-Import relativ zu seiner Quelldatei auf.
+
+#### Parameter
+
+| Name           | Geben Sie                   | ein Beschreibung |
+| -------------- | --------------------------- | ---------------- |
+| Spezifizierer  | Zeichenfolge                |                  |
+| Quelldateiname | Zeichenfolge                |                  |
+| sourceRoot     | Zeichenfolge \| undefiniert |                  |
+
+### StyleImport
+
+**Art:** Schnittstelle
+
+```typescript
+export interface StyleImport
+```
+
+Ein Stylesheet-Import, der in den flach generierten Baum übernommen wird.
+
+### verwendetI18nextT
+
+**Art:** Funktion
+
+```typescript
+function usesI18nextT(node: OxcNode): boolean;
+```
+
+Ob ein Oxc-Modul oder node `i18next.t(...)` aufruft.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | --------- | ---------------- |
+| node | OxcNode   |                  |
+
 ## `src/compiler/optimize`
 
 ### optimierenForgeModule
@@ -2203,6 +1053,363 @@ export const optimizeSourceFile;
 ```
 
 Der Kompatibilitätsalias wird für Compiler-Integrationen mit dem alten Namen beibehalten.
+
+## `src/compiler/oxc`
+
+### buildOxcParentMap
+
+**Art:** Funktion
+
+```typescript
+function buildOxcParentMap(root: OxcNode): Map<OxcNode, OxcNode>;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name   | Geben Sie | ein Beschreibung |
+| ------ | --------- | ---------------- |
+| Wurzel | OxcNode   |                  |
+
+### isOxcJsxRoot
+
+**Art:** Funktion
+
+```typescript
+function isOxcJsxRoot(node: OxcNode): boolean;
+```
+
+True, wenn node ein JSX-Element, ein selbstschließendes Element oder ein Fragment ist.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | --------- | ---------------- |
+| node | OxcNode   |                  |
+
+### isOxcNode
+
+**Art:** Funktion
+
+```typescript
+function isOxcNode(value: unknown): value is OxcNode;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | --------- | ---------------- |
+| Wert | unbekannt |                  |
+
+### oxcArray
+
+**Art:** Funktion
+
+```typescript
+function oxcArray(node: OxcNode, key: string): OxcNode[];
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name      | Geben Sie    | ein Beschreibung |
+| --------- | ------------ | ---------------- |
+| node      | OxcNode      |                  |
+| Schlüssel | Zeichenfolge |                  |
+
+### oxcChildren
+
+**Art:** Funktion
+
+```typescript
+function oxcChildren(node: OxcNode): OxcNode[];
+```
+
+Untergeordnete Schritte mit der Tiefe zuerst über aufzählbare Eigenschaften mit dem Wert node.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | --------- | ---------------- |
+| node | OxcNode   |                  |
+
+### OxcComment
+
+**Art:** Schnittstelle
+
+```typescript
+export interface OxcComment
+```
+
+Keine Beschreibung angegeben.
+
+### oxcIdentifierName
+
+**Art:** Funktion
+
+```typescript
+function oxcIdentifierName(node: OxcNode | undefined): string | undefined;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie              | ein Beschreibung |
+| ---- | ---------------------- | ---------------- |
+| node | OxcNode \| undefiniert |                  |
+
+### oxcLiteralValue
+
+**Art:** Funktion
+
+```typescript
+function oxcLiteralValue(node: OxcNode | undefined): unknown;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie              | ein Beschreibung |
+| ---- | ---------------------- | ---------------- |
+| node | OxcNode \| undefiniert |                  |
+
+### OxcNode
+
+**Art:** Schnittstelle
+
+```typescript
+export interface OxcNode
+```
+
+Die serialisierbare Teilmenge eines Oxc node, das vom neutralen Frontend verwendet wird.
+
+### oxcNodeText
+
+**Art:** Funktion
+
+```typescript
+function oxcNodeText(source: string, node: OxcNode | undefined): string;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name   | Geben Sie              | ein Beschreibung |
+| ------ | ---------------------- | ---------------- |
+| Quelle | Zeichenfolge           |                  |
+| node   | OxcNode \| undefiniert |                  |
+
+### oxcObject
+
+**Art:** Funktion
+
+```typescript
+function oxcObject(node: OxcNode, key: string): OxcNode | undefined;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name      | Geben Sie    | ein Beschreibung |
+| --------- | ------------ | ---------------- |
+| node      | OxcNode      |                  |
+| Schlüssel | Zeichenfolge |                  |
+
+### OxcParentMap
+
+**Art:** Typ
+
+```typescript
+export type OxcParentMap = ReadonlyMap<OxcNode, OxcNode>;
+```
+
+Keine Beschreibung angegeben.
+
+### OxcParsedModule
+
+**Art:** Schnittstelle
+
+```typescript
+export interface OxcParsedModule
+```
+
+Keine Beschreibung angegeben.
+
+### OxcParseError
+
+**Art:** Schnittstelle
+
+```typescript
+export interface OxcParseError
+```
+
+Keine Beschreibung angegeben.
+
+### oxcProgramBody
+
+**Art:** Funktion
+
+```typescript
+function oxcProgramBody(program: OxcNode): OxcNode[];
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name     | Geben Sie | ein Beschreibung |
+| -------- | --------- | ---------------- |
+| Programm | OxcNode   |                  |
+
+### oxcSourceExpression
+
+**Art:** Funktion
+
+```typescript
+function oxcSourceExpression(
+  source: string,
+  node: OxcNode,
+  syntax: SourceBackedExpression['syntax'] = 'expression',
+): SourceBackedExpression;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name   | Geben Sie                        | ein Beschreibung |
+| ------ | -------------------------------- | ---------------- |
+| Quelle | Zeichenfolge                     |                  |
+| node   | OxcNode                          |                  |
+| Syntax | SourceBackedExpression['syntax'] |                  |
+
+### oxcSourceSpan
+
+**Art:** Funktion
+
+```typescript
+function oxcSourceSpan(source: string, node: OxcNode): SourceSpan;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name   | Geben Sie    | ein Beschreibung |
+| ------ | ------------ | ---------------- |
+| Quelle | Zeichenfolge |                  |
+| node   | OxcNode      |                  |
+
+### oxcString
+
+**Art:** Funktion
+
+```typescript
+function oxcString(node: OxcNode | undefined, key: 'name' | 'value' | 'directive' = 'name'): string | undefined;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name      | Geben Sie                        | ein Beschreibung |
+| --------- | -------------------------------- | ---------------- |
+| node      | OxcNode \| undefiniert           |                  |
+| Schlüssel | 'Name' \| 'Wert' \| 'Richtlinie' |                  |
+
+### oxcTypeNode
+
+**Art:** Funktion
+
+```typescript
+function oxcTypeNode(node: OxcNode | undefined): OxcNode | undefined;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie              | ein Beschreibung |
+| ---- | ---------------------- | ---------------- |
+| node | OxcNode \| undefiniert |                  |
+
+### oxcUnwrapModuleStatement
+
+**Art:** Funktion
+
+```typescript
+function oxcUnwrapModuleStatement(statement: OxcNode): {
+  readonly node: OxcNode;
+  readonly exported: boolean;
+  readonly exportStatement: OxcNode | undefined;
+};
+```
+
+Entpacken Sie `export …`-Wrapper, damit Aufrufer die zugrunde liegende Deklaration sehen können.
+
+#### Parameter
+
+| Name    | Geben Sie | ein Beschreibung |
+| ------- | --------- | ---------------- |
+| Aussage | OxcNode   |                  |
+
+### parseOxcModule
+
+**Art:** Funktion
+
+```typescript
+function parseOxcModule(fileName: string, source: string): OxcParsedModule;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name      | Geben Sie    | ein Beschreibung |
+| --------- | ------------ | ---------------- |
+| Dateiname | Zeichenfolge |                  |
+| Quelle    | Zeichenfolge |                  |
+
+### stripOxcFrameworkDirective
+
+**Art:** Funktion
+
+```typescript
+function stripOxcFrameworkDirective(module: OxcParsedModule): OxcParsedModule;
+```
+
+Löschen Sie führende `"use <framework>"`-Prologanweisungen aus einem analysierten Modul.
+
+#### Parameter
+
+| Name  | Geben Sie       | ein Beschreibung |
+| ----- | --------------- | ---------------- |
+| Modul | OxcParsedModule |                  |
+
+### VisitOxc
+
+**Art:** Funktion
+
+```typescript
+function visitOxc(node: OxcNode, visitor: (node: OxcNode) => void | boolean): void;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name     | Geben Sie                                  | ein Beschreibung |
+| -------- | ------------------------------------------ | ---------------- |
+| node     | OxcNode                                    |                  |
+| Besucher | (node: OxcNode) => void \| boolescher Wert |                  |
 
 ## `src/compiler/pipeline`
 
@@ -2413,17 +1620,107 @@ export class PersistentForgeCompilerService implements ForgeCompilerService
 
 Langlebiger, synchroner Compilerstatus für einen Prozess/eine Buildsitzung.
 
-## `src/config`
+## `src/compiler/session`
 
-### Standard
+### createForgeBuildSession
 
 **Art:** Funktion
 
 ```typescript
-function reactJsxPlugin(): Plugin;
+function createForgeBuildSession(options: CreateForgeBuildSessionOptions = {}): ForgeBuildSession;
+```
+
+Erstellen Sie den expliziten Lebenszyklusbesitzer, der von Vite- und tsdown-Adaptern verwendet wird.
+Im Bauwesen wird nur das Dienstleistungseigentum erfasst; Die Grapherkennung beginnt in
+`prepare`, den Adapter von einem Bundler-Lebenszyklus-Hook aufrufen.
+
+#### Parameter
+
+| Name     | Geben Sie                      | ein Beschreibung |
+| -------- | ------------------------------ | ---------------- |
+| Optionen | CreateForgeBuildSessionOptions |                  |
+
+### CreateForgeBuildSessionOptions
+
+**Art:** Schnittstelle
+
+```typescript
+export interface CreateForgeBuildSessionOptions
 ```
 
 Keine Beschreibung angegeben.
+
+### ForgeBuildKind
+
+**Art:** Typ
+
+```typescript
+export type ForgeBuildKind = 'component' | 'hook' | 'neutral' | 'router' | 'cms-island';
+```
+
+Erstellen Sie Richtlinien, die vom gemeinsamen Forge-Lebenszyklus unterstützt werden.
+
+### ForgeBuildPlan
+
+**Art:** Schnittstelle
+
+```typescript
+export interface ForgeBuildPlan
+```
+
+Das neutrale Projekt und ausgewählte Ziele werden durch einen Lebenszyklus koordiniert.
+
+### ForgeBuildSession
+
+**Art:** Schnittstelle
+
+```typescript
+export interface ForgeBuildSession
+```
+
+Keine Beschreibung angegeben.
+
+### ForgeTargetGenerationContext
+
+**Art:** Schnittstelle
+
+```typescript
+export interface ForgeTargetGenerationContext
+```
+
+Der Kontext wird nach der Projektvorbereitung an einen Zielgenerierungsrückruf übergeben.
+
+### ForgeTargetGenerationResult
+
+**Art:** Schnittstelle
+
+```typescript
+export interface ForgeTargetGenerationResult
+```
+
+Das von der Lazy-Source-Generierungsphase eines Ziels zurückgegebene Ergebnis.
+
+### ForgeTargetPlan
+
+**Art:** Schnittstelle
+
+```typescript
+export interface ForgeTargetPlan
+```
+
+Ein Ziel im Besitz des Anrufers in einer Forge-Build-Sitzung.
+
+### ForgeTargetResult
+
+**Art:** Schnittstelle
+
+```typescript
+export interface ForgeTargetResult
+```
+
+Keine Beschreibung angegeben.
+
+## `src/config`
 
 ### defineJsxHookLibraryConfig
 
@@ -2500,7 +1797,7 @@ Quellen nativ (Babel `babel-preset-solid`), wodurch das neutrale JSX in umgewand
 Feinkörnige DOM-Operationen von SolidJS. Wiederexportiert, also handgerollt
 `vite.config.ts` – eines, das stattdessen sein eigenes `stagePlugins` zusammenstellt
 Aufruf von {@link defineJsxLibraryConfig} – kann die Solid-Transformation verbinden
-Auf die gleiche Weise {@link reagierenJsxPlugin}/{@link sveltePlugin} lass es React/Svelte verdrahten,
+Auf die gleiche Weise {@link reagierenJsxPlugin}/{@link sveltePlugin} lassen Sie es React/Svelte verkabeln,
 ohne eine neue direkte Abhängigkeit einzuführen. **Erforderlich** für `solid`
 Ziel: Ohne es kompiliert die standardmäßige Oxc JSX-Transformation von Vite das Solid
 Quellen gegen `react/jsx-runtime`, was zu einer nicht funktionsfähigen Ausgabe führt.
@@ -2590,45 +1887,6 @@ export interface GenerateHookLibrarySourcesOptions
 
 Optionen für {@link genericHookLibrarySources}.
 
-### HookLibraryDtsOptions
-
-**Art:** Schnittstelle
-
-```typescript
-export interface HookLibraryDtsOptions
-```
-
-Optionen für {@link HookLibraryDtsPlugin}.
-
-### HookLibraryDtsPlugin
-
-**Art:** Funktion
-
-```typescript
-function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin;
-```
-
-Ein Post-Build-Vite-Plugin, das **echte, Framework-spezifische**-Deklarationen ausgibt
-für den generierten Quellbaum einer Hook-Bibliothek.
-
-Jeder Framework-Build ({@link genericHookLibrarySources} + die des Frameworks
-Stage-2-Bundler) erzeugt JS, aber keine Deklarationen, da der generierte Baum vorhanden ist
-keine `tsc`-sichtbare Quelldatei. Anstatt ein einzelnes _gemeinsames_ erneut zu exportieren
-Neutrale Deklaration für jedes Framework. Dieses Plugin führt TypeScript aus
-Compiler-API über den generierten Baum in `closeBundle` (ein Post-Build-Schritt) und
-schreibt die resultierenden `.d.ts`-Dateien (`index.d.ts` + eine pro Modul) in die
-Builds eigenes `outDir`. Für den Build **React** werden also Deklarationen typisiert
-Die eigenen Hooks von React und der Build **Vue** erhalten Deklarationen, deren Composables
-Geben Sie Vue `Ref`s zurück – jedes Framework hat seine eigenen Typen. Typdiagnosen sind
-tauchten als Build-Warnungen und nicht als Fehler auf, daher ist immer ein `.d.ts` vorhanden
-produziert.
-
-#### Parameter
-
-| Name     | Geben Sie             | ein Beschreibung |
-| -------- | --------------------- | ---------------- |
-| Optionen | HookLibraryDtsOptions |                  |
-
 ## `src/generate`
 
 ### createFrameworkSourceTarget
@@ -2684,161 +1942,33 @@ export interface GenerateFrameworkSourcesOptions
 
 Optionen für {@link genericFrameworkSources}.
 
-### jsxComponentsCssImportPlugin
-
-**Art:** Funktion
-
-```typescript
-function jsxComponentsCssImportPlugin(): Plugin;
-```
-
-Verknüpfen Sie CSS pro Komponente erneut mit seinem JS-Block.
-
-Ein Vite **Bibliothek**-Build mit `cssCodeSplit` extrahiert ein CSS-Asset pro Block
-aber – im Gegensatz zu einem App-Build – fügt nicht den passenden `import './x.css'` ein
-in den JS-Block, sodass ein Verbraucher, der eine einzelne Komponente importiert, diese erhält
-JS ohne seine Stile. Dieses Plugin stellt diesen Link wieder her: für jede Ausgabe
-Bei diesem Chunk wird ein Nebeneffekt-Import jeder mit Vite verknüpften CSS-Datei vorangestellt
-es (`chunk.viteMetadata.importedCss`), sodass der Import einer Komponente eingezogen wird
-genau das Stylesheet dieser Komponente (und bringt den Rest der Bibliothek durcheinander,
-Stile enthalten).
-
-Es läuft mit `enforce: 'post'`, sodass sein `generateBundle`-Hook **nach** ausgeführt wird.
-Das eigene CSS-Plugin von Vite hat `importedCss` ausgefüllt – ansonsten sind es die Metadaten
-immer noch leer (weshalb die Assets im Scoped-Stil Vue unter ausgegeben werden).
-`preserveModules`, waren zuvor verwaist und die Komponenten wurden gerendert
-ungestylt).
-
-Nur CSS-Dateien, die tatsächlich in das Bundle ausgegeben wurden, werden erneut verknüpft. Unter
-`preserveModules` Vite dedupliziert byteidentische CSS-Assets – z. das Geteilte
-Von vielen Komponenten importierte `size`/`spacing`-Dienstprogrammmodule werden zu einem reduziert
-einzelnes ausgegebenes Stylesheet – und verwirft die Duplikate, behält aber dennoch deren bei
-vorläufige Pro-Chunk-Namen in `importedCss`. Ausgeben von `import './x.css'` für a
-Der gelöschte Name erzeugt eine hängende Referenz, die jeden Downstream unterbricht
-Build des Verbrauchers (unaufgelöster Import), daher werden solche Namen herausgefiltert; die
-Deduplizierte Stile werden weiterhin über den einen Block versendet, der sie beibehalten hat (und den
-Die `./vue` / `./react` Fässer des Pakets ziehen diesen Teil ein.
-
-Schließlich wird jedes CSS-Modul-Stylesheet unter seinem **Quellennamen** ausgegeben –
-`foo.module.css` – mit bereits angewendetem Klassennamen-Hashing und dem
-Aufgelöste Namen, die in die Geschwister-Klassenzuordnung `foo.module.js` integriert wurden. Versand
-mit dem Suffix `.module.css` ist eine Falle: Jeder _nachgeschaltete_ Bundler (z. B. der
-React (Vite) von Storybook erkennt `*.module.css` als CSS-Modul und
-führt die CSS-Modules-Transformation **ein zweites Mal** darüber aus und hasht sie erneut
-Selektoren, sodass sie nicht mehr mit den (bereits gehashten) Klassennamen übereinstimmen, in die sie integriert sind
-das JS – die Komponente wird dann ohne Stil gerendert. Das Stylesheet muss verarbeitet werden
-einmal, hier, wenn der Framework-Code kompiliert wird – nicht noch einmal nachgelagert. Also
-Jedes ausgegebene `*.module.css`-Asset wird in ein einfaches `*.css` (ein globales Asset) umbenannt
-Stylesheet-Konsumenten versenden wörtlich) und die neu verknüpften Importpunkte am
-Datei umbenannt.
-
-### JsxComponentsDtsOptions
-
-**Art:** Schnittstelle
-
-```typescript
-export interface JsxComponentsDtsOptions
-```
-
-Optionen für {@link jsxComponentsDtsPlugin}.
-
-### jsxComponentsDtsPlugin
-
-**Art:** Funktion
-
-```typescript
-function jsxComponentsDtsPlugin(options: JsxComponentsDtsOptions): Plugin;
-```
-
-Ein Post-Build-Vite-Plugin, das **echte, Framework-spezifische**-Deklarationen ausgibt
-für den generierten Quellbaum eines neutralen Komponentenpakets.
-
-Jeder Framework-Build ({@link genericFrameworkSources} + die des Frameworks
-Stage-2-Bundler) erzeugt JS, aber keine Deklarationen, da der generierte Baum vorhanden ist
-keine `tsc`-sichtbare Quelldatei. Anstatt einen einzelnen Eintrag zusammenzufassen
-Deklaration, deren Requisitentypen aus dem **gemeinsam genutzten Neutral** erneut importiert werden
-Deklarationen (damit die Verbraucher jedes Frameworks dasselbe `MpChild` / sehen würden)
-`MpRef`) führt dieses Plugin die eigene Deklarations-Toolchain jedes Frameworks aus
-den generierten Baum in `closeBundle` und schreibt die resultierenden `.d.ts`-Dateien
-in das eigene `outDir` des Builds:
-
-- **React** – die TypeScript-Compiler-API über den `.tsx`-Baum, in Bearbeitung.
-  Weil der React-Emitter die neutralen Render-/Hook-Typen bereits umschreibt
-  ihre React-Äquivalente (`MpChild` → `ReactNode`, `MpRef` → `RefObject`,
-  `MpDependencyList` → `DependencyList`), die ausgegebenen Deklarationen werden gelesen
-  idiomatisch für React.
-- **Vue** – die `vue-tsc`-CLI über den `.vue`-Baum, der jeden SFC ausgibt
-  Präzise `DefineComponent` (Requisiten, Slots, Emits) plus `.vue.d.ts`
-  Beiwagen.
-- **Solid** – die gleiche In-Process-TypeScript-Compiler-API wie React, über
-  Der `.tsx`-Baum wurde generiert, der JSX-Namespace zeigte jedoch auf `solid-js`
-  Der JSX mit Solid-Geschmack, den der Emitter rendert, wird gegen den eigenen von Solid aufgelöst
-  `JSX.Element` Vokabular.
-- **Web-Komponenten** – die gleiche In-Process-TypeScript-Compiler-API über die
-  generierter (JSX-freier) `.ts`-Baum von `LitElement`-Unterklassen.
-- **Svelte** – versucht, das asynchrone `emitDts` von `svelte2tsx` über das generierte zu übertragen
-  `.svelte` + `.ts` Baum zuerst (der SFC-fähige Deklarationsemitter aus dem
-  Svelte-Sprachtools), jedoch ab dem derzeit abhängigen `svelte2tsx`
-  Version seine pro Komponente `.svelte.d.ts` Beiwagen liefern einen baumelnden
-  props-Typ-Referenzen, die sie niemals deklarieren oder importieren (siehe {@link * svelteDtsOutputIsUsable}), daher fällt dies derzeit immer auf die zurück
-  synthetisierte Eintragsdeklaration für einen gültigen `index.d.ts`.
-
-Typdiagnosen werden als Build-Warnungen und nicht als Fehler angezeigt
-`.d.ts` wird immer erzeugt (Spiegelung von {@linkhookLibraryDtsPlugin}).
-
-#### Parameter
-
-| Name     | Geben Sie               | ein Beschreibung |
-| -------- | ----------------------- | ---------------- |
-| Optionen | JsxComponentsDtsOptions |                  |
-
-### JsxComponentsEntryDtsOptions
-
-**Art:** Schnittstelle
-
-```typescript
-export interface JsxComponentsEntryDtsOptions
-```
-
-Optionen für {@link jsxComponentsEntryDtsPlugin}.
-
-### jsxComponentsEntryDtsPlugin
-
-**Art:** Funktion
-
-```typescript
-function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plugin;
-```
-
-Geben Sie die synthetisierte Deklaration (`<declarationFileName>.d.ts`) für aus
-generierter Eintrag, sodass die Typen `./react`/`./vue` des Pakets gleichmäßig aufgelöst werden
-obwohl der Eintrag selbst generiert wird (und daher von `tsc` nicht gesehen wird).
-
-#### Parameter
-
-| Name     | Geben Sie                    | ein Beschreibung |
-| -------- | ---------------------------- | ---------------- |
-| Optionen | JsxComponentsEntryDtsOptions |                  |
-
 ## `src/tsdown`
 
-### defineTsdownForgeComponents
+### CanonicalChunkCandidate
+
+**Art:** Typ
+
+```typescript
+export type CanonicalChunkCandidate = | string |
+```
+
+Keine Beschreibung angegeben.
+
+### defineTsdownForgeComponentsAll
 
 **Art:** Funktion
 
 ```typescript
-function defineTsdownForgeComponents(options: TsdownForgeComponentsOptions): UserConfig[];
+function defineTsdownForgeComponentsAll(options: TsdownForgeComponentPluginsOptions): UserConfig[];
 ```
 
-Reproduzieren Sie einen Archetype-C-**Komponenten**-Framework-Build unter tsdown:
-Stufe 1 (`generateFrameworkSources`) + Stufe 2-Plugins + CSS-Import + DTS-Plugins,
-Aussenden in `dist/<framework>/`.
+Erstellen Sie unabhängige Tsdown-Konfigurationen für jedes angeforderte Forge-Komponenten-Framework.
 
 #### Parameter
 
-| Name     | Geben Sie                    | ein Beschreibung |
-| -------- | ---------------------------- | ---------------- |
-| Optionen | TsdownForgeComponentsOptions |                  |
+| Name     | Geben Sie                          | ein Beschreibung |
+| -------- | ---------------------------------- | ---------------- |
+| Optionen | TsdownForgeComponentPluginsOptions |                  |
 
 ### defineTsdownForgeEmailComponents
 
@@ -2859,24 +1989,6 @@ Dadurch bleibt der Forge-Baum erhalten
 | -------- | --------------------------------- | ---------------- |
 | Optionen | TsdownForgeEmailComponentsOptions |                  |
 
-### defineTsdownForgeHooks
-
-**Art:** Funktion
-
-```typescript
-function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig;
-```
-
-Reproduzieren Sie einen Archetype-C-**Hook**-Framework-Build unter tsdown:
-Stufe 1 (`generateHookLibrarySources`) + Stufe 2 Plugins + `hookLibraryDtsPlugin`,
-Aussenden in `dist/<framework>/`.
-
-#### Parameter
-
-| Name     | Geben Sie               | ein Beschreibung |
-| -------- | ----------------------- | ---------------- |
-| Optionen | TsdownForgeHooksOptions |                  |
-
 ### defineTsdownForgeHooksAll
 
 **Art:** Funktion
@@ -2895,12 +2007,66 @@ Erstellen Sie ein Array von Tsdown-Konfigurationen für jedes angeforderte Forge
 | -------- | -------------------------- | ---------------- |
 | Optionen | TsdownForgeHooksAllOptions |                  |
 
-### TsdownForgeComponentsOptions
+### AuflösungCanonicalChunkName
+
+**Art:** Funktion
+
+```typescript
+function resolveCanonicalChunkName(chunkInfo: CanonicalChunkCandidate): string;
+```
+
+Bestimmen Sie den kanonisch ausgegebenen Chunk-Dateinamen für einen Chunk.
+Behält kanonische `[name].js`-Pfade ohne Kollisionen und Karten bei
+Vue virtuelle Skriptmodule zu `${component}.script.js`.
+
+#### Parameter
+
+| Name      | Geben Sie               | ein Beschreibung |
+| --------- | ----------------------- | ---------------- |
+| chunkInfo | CanonicalChunkCandidate |                  |
+
+### AuflösungCanonicalEntryName
+
+**Art:** Funktion
+
+```typescript
+function resolveCanonicalEntryName(chunkInfo: CanonicalChunkCandidate): string;
+```
+
+Bestimmen Sie den kanonisch ausgegebenen Eintragsdateinamen für einen Block.
+Virtuelle Forge-Einträge werden `index.js` zugeordnet und bleiben erhalten
+Module delegieren an die Chunk-Namensauflösung.
+
+#### Parameter
+
+| Name      | Geben Sie               | ein Beschreibung |
+| --------- | ----------------------- | ---------------- |
+| chunkInfo | CanonicalChunkCandidate |                  |
+
+### tsdownForgeComponentPlugins
+
+**Art:** Funktion
+
+```typescript
+function tsdownForgeComponentPlugins(options: TsdownForgeComponentPluginsOptions): TsdownPlugin[];
+```
+
+Reproduzieren Sie einen Archetype-C-**Komponenten**-Framework-Build unter tsdown:
+Stufe 1 (`generateFrameworkSources`) + Stufe 2-Plugins + CSS-Import + DTS-Plugins,
+Aussenden in `dist/<framework>/`.
+
+#### Parameter
+
+| Name     | Geben Sie                          | ein Beschreibung |
+| -------- | ---------------------------------- | ---------------- |
+| Optionen | TsdownForgeComponentPluginsOptions |                  |
+
+### TsdownForgeComponentPluginsOptions
 
 **Art:** Schnittstelle
 
 ```typescript
-export interface TsdownForgeComponentsOptions
+export interface TsdownForgeComponentPluginsOptions
 ```
 
 Keine Beschreibung angegeben.
@@ -2915,22 +2081,30 @@ export interface TsdownForgeEmailComponentsOptions
 
 Keine Beschreibung angegeben.
 
+### tsdownForgeHookPlugins
+
+**Art:** Funktion
+
+```typescript
+function tsdownForgeHookPlugins(options: TsdownForgeHooksAllOptions): TsdownPlugin[];
+```
+
+Native Tsdown-Plugin-Form des Hook-Adapters. Die zurückgegebenen Plugins injizieren
+ihre Zielkonfiguration aus `tsdownConfig`, sodass Hook-Builds zusammengestellt werden können
+mit einer anrufereigenen `defineTsdownLibrary`-Konfiguration.
+
+#### Parameter
+
+| Name     | Geben Sie                  | ein Beschreibung |
+| -------- | -------------------------- | ---------------- |
+| Optionen | TsdownForgeHooksAllOptions |                  |
+
 ### TsdownForgeHooksAllOptions
 
 **Art:** Schnittstelle
 
 ```typescript
 export interface TsdownForgeHooksAllOptions
-```
-
-Keine Beschreibung angegeben.
-
-### TsdownForgeHooksOptions
-
-**Art:** Schnittstelle
-
-```typescript
-export interface TsdownForgeHooksOptions
 ```
 
 Keine Beschreibung angegeben.

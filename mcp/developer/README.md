@@ -64,7 +64,7 @@ Individual legacy tools (e.g. `scaffold_component`, `list_locales`, `git_branche
 
 - **`repo_affected_packages`**: Analyzes git changes or diff revisions to determine which workspace packages are affected and detects root configuration changes (e.g. `turbo.json`, `package.json`) that impact the entire monorepo.
 - **`repo_prime_dependencies`**: Builds upstream workspace dependencies for a target package (`turbo run build --filter <pkg>^...`), essential in APFS-linked worktrees before running package tests.
-- **`turbo_run`**: Executes Turborepo tasks (`build:check`, `lint`, `test`, `build`) with bounded execution times and structured JSON/output capture.
+- **`turbo_run`**: Executes Turborepo tasks (`type-check`, `lint`, `test`, `build`) with bounded execution times and structured JSON/output capture.
 - **`run_test_file`**: Executes a single test file using `vitest` or `node:test` with optional test title filtering (`-t`).
 - **`list_stories`**: Discovers and inspects Storybook story files (`*.stories.tsx`) across packages.
 

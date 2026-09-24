@@ -9,6 +9,59 @@
 
 נוצר מהצהרות מקור ציבורי ב-`@mission-platform/vite-plugin-forge`.
 
+## `src/build-integration`
+
+### forgeArtifactPublishPlugin
+
+פונקציה **סוג:**
+
+```typescript
+function forgeArtifactPublishPlugin(options: ForgeArtifactPublishOptions): Plugin;
+```
+
+פרסם את כל הפלט המקורי דרך אותה עסקת מניפסט כמו Forge
+מקורות שנוצרו. חבילות מקוריות וכלי הצהרה עשויים לכתוב בחופשיות
+בתוך `attemptDirectory`; ספריה זו לעולם אינה היעד שפורסם.
+
+#### פרמטרים
+
+| שם       | הקלד                        | תיאור |
+| -------- | --------------------------- | ----- |
+| אפשרויות | ForgeArtifactPublishOptions |       |
+
+### forgeBuildLifecyclePlugin
+
+פונקציה **סוג:**
+
+```typescript
+function forgeBuildLifecyclePlugin(options: ForgeBuildLifecycleOptions): Plugin;
+```
+
+חבר תוכנית יעד אחת ל-Vite או ל-Rolldown/tsdown. הדור הוא
+ממתין בכוונה מהווים של מחזור החיים, לעולם לא בזמן שנוצרת תצורה.
+
+#### פרמטרים
+
+| שם       | הקלד                       | תיאור |
+| -------- | -------------------------- | ----- |
+| אפשרויות | ForgeBuildLifecycleOptions |       |
+
+### forgeVirtualEntry
+
+פונקציה **סוג:**
+
+```typescript
+function forgeVirtualEntry(targetId: string): string;
+```
+
+שימוש בכניסה וירטואלית יציבה עד שהיעד הוכן על ידי buildStart.
+
+#### פרמטרים
+
+| שם       | הקלד   | תיאור |
+| -------- | ------ | ----- |
+| targetId | מחרוזת |       |
+
 ## `src/compiler/artifact-manifest`
 
 ### createForgeArtifactManifest
@@ -51,7 +104,7 @@ export type ForgeArtifactKind = 'entry' | 'module' | 'declaration' | 'map' | 'as
 export interface ForgeArtifactManifest
 ```
 
-מלאי פלט מלא עבור יעד מפורש אחד.
+מלאי מלאי פלט עבור יעד מפורש אחד.
 
 ### ForgeArtifactRecord
 
@@ -63,6 +116,91 @@ export interface ForgeArtifactRecord
 
 פלט דטרמיניסטי אחד מתועד על ידי מניפסט חפץ בהיקף מטרה.
 
+## `src/compiler/artifact-path`
+
+### assertForgeArtifactRoot
+
+פונקציה **סוג:**
+
+```typescript
+function assertForgeArtifactRoot(root: string): string;
+```
+
+אמת שורש פלט ודחה קישור סימלי קיים או לא ספרייה.
+רכיבים צאצאים נבדקים על ידי פותר החפצים לפני השימוש.
+
+#### פרמטרים
+
+| שם   | הקלד   | תיאור |
+| ---- | ------ | ----- |
+| שורש | מחרוזת |       |
+
+### secureForgeArtifactDirectory
+
+פונקציה **סוג:**
+
+```typescript
+function ensureForgeArtifactDirectory(root: string, directory: string): string;
+```
+
+צור ספריית פלט רכיב אחד בכל פעם ללא קישורים הבאים.
+
+#### פרמטרים
+
+| שם    | הקלד   | תיאור |
+| ----- | ------ | ----- |
+| שורש  | מחרוזת |       |
+| מדריך | מחרוזת |       |
+
+### resolveForgeArtifactPath
+
+פונקציה **סוג:**
+
+```typescript
+function resolveForgeArtifactPath(root: string, relativeName: string): string;
+```
+
+פתור שם חפץ וודא שרכיבי נתיב קיימים בטוחים.
+
+#### פרמטרים
+
+| שם       | הקלד   | תיאור |
+| -------- | ------ | ----- |
+| שורש     | מחרוזת |       |
+| שם משפחה | מחרוזת |       |
+
+### validateForgeArtifactName
+
+פונקציה **סוג:**
+
+```typescript
+function validateForgeArtifactName(relativeName: string): string;
+```
+
+אמת שם חפץ מבלי לנרמל מקטעי נתיב לא בטוחים.
+
+#### פרמטרים
+
+| שם       | הקלד   | תיאור |
+| -------- | ------ | ----- |
+| שם משפחה | מחרוזת |       |
+
+### validateForgeArtifactSegment
+
+פונקציה **סוג:**
+
+```typescript
+function validateForgeArtifactSegment(segment: string): string;
+```
+
+אמת רכיב נתיב בודד המשמש לבניית שורש חפץ.
+
+#### פרמטרים
+
+| שם  | הקלד   | תיאור |
+| --- | ------ | ----- |
+| קטע | מחרוזת |       |
+
 ## `src/compiler/artifact-writer`
 
 ### createForgeArtifactWriter
@@ -70,10 +208,32 @@ export interface ForgeArtifactRecord
 פונקציה **סוג:**
 
 ```typescript
-function createForgeArtifactWriter(outDir: string, targetId: string): ForgeArtifactWriter;
+function createForgeArtifactWriter(
+  outDir: string,
+  targetId: string,
+  options: ForgeArtifactWriterOptions = {},
+): ForgeArtifactWriter;
 ```
 
 לא סופק תיאור.
+
+#### פרמטרים
+
+| שם       | הקלד                       | תיאור |
+| -------- | -------------------------- | ----- |
+| outDir   | מחרוזת                     |       |
+| targetId | מחרוזת                     |       |
+| אפשרויות | ForgeArtifactWriterOptions |       |
+
+### forgeArtifactAttemptDirectory
+
+פונקציה **סוג:**
+
+```typescript
+function forgeArtifactAttemptDirectory(outDir: string, targetId: string): string;
+```
+
+הקצה ספריית אחים בבעלות לניסיון בניית יעד מקורי.
 
 #### פרמטרים
 
@@ -91,1632 +251,6 @@ export interface ForgeArtifactWriter
 ```
 
 לא סופק תיאור.
-
-## `src/compiler/ast`
-
-### CLASS_NAME_ATTRIBUTE
-
-**סוג:** קבוע
-
-```typescript
-export const CLASS_NAME_ATTRIBUTE;
-```
-
-תכונת JSX הנייטרלית שמניעה את ניהול שמות המחלקה. כותבים כותבים
-`className={…}` (התכונה `class` שמורה למחרוזות סטטיות),
-מעביר את אותם ארגומנטים שעוזר זמן הריצה `classNames` מקבל - רובם
-בדרך כלל **מערך** של ערכי מחלקה (`className={['base', { active }]}`),
-אבל כל {@link ייבוא בודד ('@mission-platform/forge-jsx').ClassValue} עובד גם כן.
-התכונה מאויתת זהה ל-React של `className` עצמו (בניגוד ל-
-עוזר זמן ריצה, שנשאר `classNames`) כך שרכיב יכול למזג את שלו
-מחלקות מחושבות עם `properties.className` מועבר ללא שם
-אי התאמה: `className={[classNames('base', …), properties.className]}`. ה
-פולט React מכווץ צורת מערך למחרוזת `className={classNames(…)}`
-שיחה (הזרקה מחדש של היבוא הנייטרלי `classNames`), בעוד שפולט Vue
-ממפה אותו ישר אל הכריכה המקורית `class` של Vue, שכבר מבינה
-צורות המערך/האובייקט.
-
-### collectSlotNames
-
-פונקציה **סוג:**
-
-```typescript
-function collectSlotNames(sourceFile: ts.SourceFile): Set<string>;
-```
-
-אסוף כל שם חריץ סטטי המוצהר על ידי רכיבי `<Slot name="…" />` במודול.
-
-#### פרמטרים
-
-| שם         | הקלד          | תיאור |
-| ---------- | ------------- | ----- |
-| sourceFile | ts.SourceFile |       |
-
-### רכיבייבוא
-
-**סוג:** ממשק
-
-```typescript
-export interface ComponentImport
-```
-
-יבוא יחסי של רכיב אח, למשל. `import { ForgeBadge } from '../forge-badge'`.
-
-### COMPONENTS_JSX_MODULES
-
-**סוג:** קבוע
-
-```typescript
-export const COMPONENTS_JSX_MODULES;
-```
-
-חבילות סביבת העבודה **component-library** הכתובה פעם אחת: כמו
-`@mission-platform/icons`, מחברים ניטרליים מייבאים את הרכיבים שלהם מהם
-חבילות (למשל `ForgeDrawer` מ-`@mission-platform/components/forge-drawer`, או
-`ForgeVerticalLayout` מ-`@mission-platform/layouts`), אשר בודקת סוג
-נגד המקור הנייטרלי ועיבוד דרך `@mission-platform/forge-jsx`
-מתאמים בבדיקות יחידה. המקורות שנוצרו לפי מסגרת מייבאים אותם תחת
-אותו מפרט חשוף ממש - בחירת מסגרת מתרחשת דרך כל אחד מהם
-מצב הייצוא `mp:<framework>` של החבילה, לא דרך נתיב משנה.
-
-### createReactHasSlotExpression
-
-פונקציה **סוג:**
-
-```typescript
-function createReactHasSlotExpression(
-  factory: ts.NodeFactory,
-  propsParamName: string,
-  name: string | undefined,
-): ts.Expression;
-```
-
-`<props>.<name> != null` — הנוכחות של React נקראת עבור `hasSlot('name')`.
-
-#### פרמטרים
-
-| שם             | הקלד               | תיאור |
-| -------------- | ------------------ | ----- |
-| מפעל           | ts.NodeFactory     |       |
-| propsParamName | מחרוזת             |       |
-| שם             | מחרוזת \| לא מוגדר |       |
-
-### createReactSlotCallExpression
-
-פונקציה **סוג:**
-
-```typescript
-function createReactSlotCallExpression(
-  factory: ts.NodeFactory,
-  propsParamName: string,
-  name: string | undefined,
-  fallback: readonly ts.Expression[],
-  scope?: ts.Expression,
-): ts.Expression;
-```
-
-`typeof <props>.<name> === 'function' ? <props>.<name>(scope) : <props>.<name>`
-(עם `?? <fallback>`) - התרגום React של טופס הקריאה `h(Slot, …)`
-(המקביל של `h()` של {@link createReactSlotExpression}).
-
-#### פרמטרים
-
-| שם             | הקלד                        | תיאור |
-| -------------- | --------------------------- | ----- |
-| מפעל           | ts.NodeFactory              |       |
-| propsParamName | מחרוזת                      |       |
-| שם             | מחרוזת \| לא מוגדר          |       |
-| חזרה           | ts.Expression[] לקריאה בלבד |       |
-| היקף           | ts.ביטוי                    |       |
-
-### createReactSlotExpression
-
-פונקציה **סוג:**
-
-```typescript
-function createReactSlotExpression(
-  factory: ts.NodeFactory,
-  propsParamName: string,
-  name: string | undefined,
-  fallback: readonly ts.JsxChild[],
-  scope?: ts.Expression,
-): ts.Expression;
-```
-
-`<props>.<name>` (עם `?? <fallback>` כאשר המשבצת מצהירה על fallback
-תוכן). כאשר `scope` מסופק, משענת החריץ מופעלת אם היא א
-פונקציית render-prop, או מוערכת ישירות אם היא React node
-(`typeof <props>.<name> === 'function' ? <props>.<name>(scope) : <props>.<name>`).
-
-#### פרמטרים
-
-| שם             | הקלד                      | תיאור |
-| -------------- | ------------------------- | ----- |
-| מפעל           | ts.NodeFactory            |       |
-| propsParamName | מחרוזת                    |       |
-| שם             | מחרוזת \| לא מוגדר        |       |
-| חזרה           | לקריאה בלבד ts.JsxChild[] |       |
-| היקף           | ts.ביטוי                  |       |
-
-### createReferenceRewriter
-
-פונקציה **סוג:**
-
-```typescript
-function createReferenceRewriter(scope: RewriteScope): ts.TransformerFactory<ts.Node>;
-```
-
-בנה שנאי TS המשכתב הפניות בתוך גוף רכיב עבור
-היעד של Vue: `properties.children` → `slots.default?.()`, אבזר מפורק
-מקומיים → גישה חיה `properties.<name>`, `useState` קריאות → `.value`, קובע
-שיחות → מטלות, ו-`useRef` של `.current` → `.value`.
-
-#### פרמטרים
-
-| שם   | הקלד         | תיאור |
-| ---- | ------------ | ----- |
-| היקף | RewriteScope |       |
-
-### createStateSnapshotHoister
-
-פונקציה **סוג:**
-
-```typescript
-function createStateSnapshotHoister(scope: RewriteScope): ts.TransformerFactory<ts.Node>;
-```
-
-שמור על צמצום זרימת בקרה של TypeScript של ערכי `useState` / `useMemo`
-על פני סגירות מקוננות, שה-`<name>` → `<name>.value` משכתבים אחרת
-הפסקות.
-
-ב-JSX הנייטרלי ערך מצב הוא `const` מקומי, אז שומר שמצטמצם
-זה (`if (sortKey === undefined) return; … rows.toSorted((a) => a[sortKey])`)
-שומר על הצמצום בתוך התקשרויות מקוננות - `const` לא מוקצים מחדש,
-כך TypeScript סומך על הצמצום דרך גבולות הפונקציות. אחרי Vue
-שכתוב את הקריאה הופך ל-`sortKey.value`, **גישה ניתנת לשינוי**, אשר
-צמצום ההשלכה של TypeScript בכניסה לכל פונקציה מקוננת - כך שהשמור
-`a[sortKey.value]` / `draft.value.uid` נכשל בבדיקת הקלדה.
-
-עבור כל פונקציה בעלת גוף בלוק, המעבר הזה מצלם כל ערך כזה שנקרא
-_בתוך סגירה מקוננת_ לתוך `const <name>$ = <name>.value;` מוביל, ו
-משכתב את הערך **קורא** (לא את יעדי הכתיבה `<name>.value = …`) בתוך
-הפונקציה לכינוי `const` הזה. תמונת המצב משחזרת את ה-`const` המקורי
-סמנטיקה - צמצום זורם שוב לסגירות המקוננות - בעוד ה-`.value`
-הגישה בחלק העליון שומרת על הקריאה תגובתית (`computed` עדיין עוקב אחריו מחדש).
-
-#### פרמטרים
-
-| שם   | הקלד         | תיאור |
-| ---- | ------------ | ----- |
-| היקף | RewriteScope |       |
-
-### createVueHasSlotExpression
-
-פונקציה **סוג:**
-
-```typescript
-function createVueHasSlotExpression(factory: ts.NodeFactory, name: string | undefined): ts.Expression;
-```
-
-`slots.<name>` — נוכחות `useSlots()` של Vue נקראה עבור `hasSlot('name')` (`!!slots.x`).
-
-#### פרמטרים
-
-| שם   | הקלד               | תיאור |
-| ---- | ------------------ | ----- |
-| מפעל | ts.NodeFactory     |       |
-| שם   | מחרוזת \| לא מוגדר |       |
-
-### createVueSlotCallExpression
-
-פונקציה **סוג:**
-
-```typescript
-function createVueSlotCallExpression(
-  factory: ts.NodeFactory,
-  name: string | undefined,
-  fallback: readonly ts.Expression[],
-  scope?: ts.Expression,
-): ts.Expression;
-```
-
-`slots.<name>?.(scope) ?? <fallback>` - התרגום Vue של `h(Slot, …)`
-טופס קריאה (המקביל של `h()` של {@link createVueSlotExpression}). ה
-החזרה כאן היא הילד **ביטויים** של השיחה ולא ילדי JSX.
-
-#### פרמטרים
-
-| שם   | הקלד                        | תיאור |
-| ---- | --------------------------- | ----- |
-| מפעל | ts.NodeFactory              |       |
-| שם   | מחרוזת \| לא מוגדר          |       |
-| חזרה | ts.Expression[] לקריאה בלבד |       |
-| היקף | ts.ביטוי                    |       |
-
-### createVueSlotExpression
-
-פונקציה **סוג:**
-
-```typescript
-function createVueSlotExpression(
-  factory: ts.NodeFactory,
-  name: string | undefined,
-  fallback: readonly ts.JsxChild[],
-  scope?: ts.Expression,
-): ts.Expression;
-```
-
-`slots.<name>?.(scope)` (עם `?? <fallback>` כאשר המשבצת מצהירה על fallback
-תוכן). כאשר `scope` מסופק, החריץ מופעל איתו, פולט
-Vue שיחת משבצת **בהיקף**.
-
-#### פרמטרים
-
-| שם   | הקלד                      | תיאור |
-| ---- | ------------------------- | ----- |
-| מפעל | ts.NodeFactory            |       |
-| שם   | מחרוזת \| לא מוגדר        |       |
-| חזרה | לקריאה בלבד ts.JsxChild[] |       |
-| היקף | ts.ביטוי                  |       |
-
-### נכס מפורק
-
-**סוג:** ממשק
-
-```typescript
-export interface DestructuredProperty
-```
-
-כריכה שנשלפה מתוך הרס `const { … } = properties`.
-
-### dynamicToHCall
-
-פונקציה **סוג:**
-
-```typescript
-function dynamicToHCall(
-  factory: ts.NodeFactory,
-  node: ts.JsxSelfClosingElement | ts.JsxElement,
-  visitExpression: (expression: ts.Expression) => ts.Expression,
-  aliasAttribute: (name: string) => string = (name) => name,
-  variadicChildren = false,
-): ts.CallExpression;
-```
-
-כתוב מחדש אלמנט `<Dynamic is={X} a={…} …>children</Dynamic>` ל- an
-קריאה `h(X, { a: …, … }, ...children)` - הרכיב הדינמי יוצר את שניהם
-מטרות קומפילציה מקורית (המרה קלאסית של React של `h` JSX / של Vue
-`<component :is>`). התכונה `is` הופכת לסוג האלמנט, כל אחד אחר
-תכונה (והתפשטות) הופכת לאובייקט האביזרים, והילדים הופכים להיות
-טיעונים נגררים. ביטויי ערך תכונה וילדים עוברים
-דרך `visitExpression` (לכן שכתובים של אביזר/מצב/חריץ ושל React
-`class` → כינוי `className` עדיין חל), ו-`aliasAttribute` משנה את השם של
-מפתחות תמיכה עבור היעד (זהות ב-Vue, כינויי ה-DOM ב-React).
-
-#### פרמטרים
-
-| שם               | הקלד                                      | תיאור |
-| ---------------- | ----------------------------------------- | ----- |
-| מפעל             | ts.NodeFactory                            |       |
-| node             | ts.JsxSelfClosingElement \| ts.JsxElement |       |
-| visitExpression  | (ביטוי: ts.Expression) => ts.Expression   |       |
-| aliasAttribute   | (שם: מחרוזת) => מחרוזת                    |       |
-| variadicChildren |                                           |       |
-
-### sureI18nHookInComponent
-
-פונקציה **סוג:**
-
-```typescript
-function ensureI18nHookInComponent(factory: ts.NodeFactory, sourceFile: ts.SourceFile): ts.SourceFile;
-```
-
-ודא שלפונקציות רכיבים הקוראות `i18next.t(...)` יש הצהרה `const { t } = useI18n();` ברמה העליונה.
-
-#### פרמטרים
-
-| שם         | הקלד           | תיאור |
-| ---------- | -------------- | ----- |
-| מפעל       | ts.NodeFactory |       |
-| sourceFile | ts.SourceFile  |       |
-
-### eventNameForProperty
-
-פונקציה **סוג:**
-
-```typescript
-function eventNameForProperty(propName: string): string;
-```
-
-גזר את שם האירוע Vue עבור אבזר `on<Event>`: הסר את הקידומת `on` ו
-באות קטנה את האות הראשונה שנותרה (`onChange` → `change`,
-`onUpdateModelValue` → `updateModelValue`).
-
-#### פרמטרים
-
-| שם       | הקלד   | תיאור |
-| -------- | ------ | ----- |
-| propName | מחרוזת |       |
-
-### חתימת אירוע
-
-**סוג:** ממשק
-
-```typescript
-export interface EventSignature
-```
-
-רכיב **אירוע** - חבר ממשק אביזרים בשם `on<Event>` שלו
-הסוג המוצהר הוא סוג פונקציה מוטבע (לדוגמה, `onChange?: (openIds: string[])
-=> void`). The Vue emitter turns these into `להגדיר הצהרות פליטות ו
-`emit('<event>', …)` שיחות במקום אביזרי זמן ריצה.
-
-### extractEventSignatures
-
-פונקציה **סוג:**
-
-```typescript
-function extractEventSignatures(sourceFile: ts.SourceFile, interfaceName: string): EventSignature[];
-```
-
-חלץ את חתימות **האירוע** (שלכם) שהוכרזו על ידי ממשק אביזרים - חברים
-בשם `on<Event>` (אות גדולה אחרי `on`) שהסוג שלה הוא מוטבע
-סוג פונקציה. אלו הם האירועים של הרכיב: פולט Vue מכריז עליהם
-עם `defineEmits` ומשכתב את השיחות/הפניות שלהם ל-`emit(...)` במקום זאת
-מאשר לשאת אותם כאביזרי זמן ריצה. אביזר התקשרות חוזר שהוקלד באמצעות כינוי בעל שם
-(הפניה לסוג ולא סוג של פונקציה מוטבעת) נשארת כעזר רגיל.
-
-#### פרמטרים
-
-| שם         | הקלד          | תיאור |
-| ---------- | ------------- | ----- |
-| sourceFile | ts.SourceFile |       |
-| שם ממשק    | מחרוזת        |       |
-
-### extractModelSignatures
-
-פונקציה **סוג:**
-
-```typescript
-function extractModelSignatures(sourceFile: ts.SourceFile, interfaceName: string): ModelSignature[];
-```
-
-חלץ את חברי ממשק האביזרים המסומנים `@model <onEvent>` - אביזר ושלו
-אירוע שינוי מצמד שבו פולט Vue מתמזג לתוך `defineModel` יחיד
-כריכה דו כיוונית. שם הדגם הוא שם האביזר, מלבד הקנוני
-`modelValue`, שהופך לדגם ברירת המחדל (ללא שם) של Vue.
-
-#### פרמטרים
-
-| שם         | הקלד          | תיאור |
-| ---------- | ------------- | ----- |
-| sourceFile | ts.SourceFile |       |
-| שם ממשק    | מחרוזת        |       |
-
-### extractPropertyNames
-
-פונקציה **סוג:**
-
-```typescript
-function extractPropertyNames(sourceFile: ts.SourceFile, interfaceName: string): string[];
-```
-
-חלץ את שמות המאפיינים (של עצמו) שהוכרזו על ידי ממשק אביזרים, למעט `children`.
-
-#### פרמטרים
-
-| שם         | הקלד          | תיאור |
-| ---------- | ------------- | ----- |
-| sourceFile | ts.SourceFile |       |
-| שם ממשק    | מחרוזת        |       |
-
-### extractPropertySignatures
-
-פונקציה **סוג:**
-
-```typescript
-function extractPropertySignatures(sourceFile: ts.SourceFile, interfaceName: string): PropertySignature[];
-```
-
-חלץ את חתימות הנכס (של עצמו) המוצהרות על ידי ממשק אביזרים, למעט
-`children`. כל ערך נושא את טקסט הסוג המוצהר של הנכס ו
-אופציונליות כך שפולט Vue יכול להציג `defineProps<{ … }>()` **מבוסס סוג**
-ששומר על הסוגים המדויקים של הממשק (זמן ריצה לא מודפס `defineProps`
-ימוטט אותם ל-`{}` / `never[]`). מאפיינים שלא ניתן לקרוא את הסוג שלהם
-לחזור ל-`unknown`.
-
-#### פרמטרים
-
-| שם         | הקלד          | תיאור |
-| ---------- | ------------- | ----- |
-| sourceFile | ts.SourceFile |       |
-| שם ממשק    | מחרוזת        |       |
-
-### findComponentFunction
-
-פונקציה **סוג:**
-
-```typescript
-function findComponentFunction(sourceFile: ts.SourceFile, name: string): ts.FunctionDeclaration | undefined;
-```
-
-מצא את הצהרת הפונקציה המיוצאת עבור רכיב ניטרלי לפי שם.
-
-#### פרמטרים
-
-| שם         | הקלד          | תיאור |
-| ---------- | ------------- | ----- |
-| sourceFile | ts.SourceFile |       |
-| שם         | מחרוזת        |       |
-
-### ForgeExportFact
-
-**סוג:** ממשק
-
-```typescript
-export interface ForgeExportFact
-```
-
-הצהרה או ייצוא מחדש שהתגלו במודול מקור Forge.
-
-### ForgeImportFact
-
-**סוג:** ממשק
-
-```typescript
-export interface ForgeImportFact
-```
-
-ייבוא ​​סטטי שהתגלה במודול מקור Forge.
-
-### ForgeModuleFacts
-
-**סוג:** ממשק
-
-```typescript
-export interface ForgeModuleFacts
-```
-
-כל עובדות המודול הסטטי הדרושות לבניית גרף קובץ Forge הקנוני.
-
-### ForgeSourceSpan
-
-**סוג:** ממשק
-
-```typescript
-export interface ForgeSourceSpan
-```
-
-מיקום מקור המשמש לאבחון גרפים ועובדות ייבוא/ייצוא.
-
-### hasSlottedChildren
-
-פונקציה **סוג:**
-
-```typescript
-function hasSlottedChildren(children: readonly ts.JsxChild[]): boolean;
-```
-
-האם מישהו מילדי הורים נושא סמן `slot="…"`.
-
-#### פרמטרים
-
-| שם    | הקלד                      | תיאור |
-| ----- | ------------------------- | ----- |
-| ילדים | לקריאה בלבד ts.JsxChild[] |       |
-
-### ICONS_JSX_MODULE
-
-**סוג:** קבוע
-
-```typescript
-export const ICONS_JSX_MODULE;
-```
-
-המפרט החשוף של ספריית הסמלים של כתוב פעם אחת `@mission-platform/icons`.
-מחברים ניטרליים מייבאים את הסמלים שלהם מהשורש הזה, ומהנוצר
-מקורות פר-מסגרת שומרים על המפרט המדויק הזה: כל פיצול מסגרת
-חבילת `@mission-platform/*` מכריזה על `mp:vue` / `mp:react` / `mp:solid` /
-תנאי ייצוא מותאמים אישית של `mp:web-component` על הערך החשוף של `.`, כך שה
-_של הצרכן_ `resolve.conditions` (וההתאמה
-`customConditions` tsconfig מוגדר מראש) בחר את המבנה הנכון. אין
-נתיב משנה לכל מסגרת למיפוי מחדש.
-
-### inspectForgeModule
-
-פונקציה **סוג:**
-
-```typescript
-function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts;
-```
-
-חלץ יבוא סטטי, ייצוא, קצוות מסוגים בלבד ועובדות מסגרת ממודול מנתח.
-
-#### פרמטרים
-
-| שם      | הקלד   | תיאור |
-| ------- | ------ | ----- |
-| שם קובץ | מחרוזת |       |
-| מקור    | מחרוזת |       |
-
-### isComponentTagName
-
-פונקציה **סוג:**
-
-```typescript
-function isComponentTagName(tagName: ts.JsxTagNameExpression): boolean;
-```
-
-האם שם תג JSX מתייחס ל-**רכיב** (מזהה באותיות רישיות כגון
-בתור `ForgeDropdown`, או ביטוי חבר/`this` כמו `Ctx.Provider`) במקום זאת
-מאשר אלמנט מהותי (`div`, `button`). משבצת בשם **עובר**
-(`slot="…"`) הוא בעל משמעות רק על רכיב, ולכן ניתוב החריץ למטה הוא
-מסודר על זה - משקף בדיוק את מתאמי זמן הריצה, שמתקפלים מחורצים
-ילדים רק בעת הרחבת רכיב (`typeof type === 'function'`).
-
-#### פרמטרים
-
-| שם    | הקלד                    | תיאור |
-| ----- | ----------------------- | ----- |
-| שם תג | ts.JsxTagNameExpression |       |
-
-### isDynamicElement
-
-פונקציה **סוג:**
-
-```typescript
-function isDynamicElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
-```
-
-האם node הוא רכיב דינמי ניטרלי - `<Dynamic is={…} />`
-או `<Dynamic is={…}>…</Dynamic>` - מיוצר מסמן `Dynamic`.
-
-#### פרמטרים
-
-| שם   | הקלד    | תיאור |
-| ---- | ------- | ----- |
-| node | ts.Node |       |
-
-### isFragmentElement
-
-פונקציה **סוג:**
-
-```typescript
-function isFragmentElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
-```
-
-בין אם node הוא אלמנט `<Fragment>` ניטרלי - או הסגירה העצמית
-טופס `<Fragment />` (ריק) או `<Fragment>…</Fragment>` (עם ילדים).
-
-#### פרמטרים
-
-| שם   | הקלד    | תיאור |
-| ---- | ------- | ----- |
-| node | ts.Node |       |
-
-### isHasSlotCall
-
-פונקציה **סוג:**
-
-```typescript
-function isHasSlotCall(node: ts.Node): node is ts.CallExpression;
-```
-
-אם node היא שיחת `hasSlot('name')` / `hasSlot()` - הנייטרלי
-סמן נוכחות חריץ. המהדר משכתב אותו למקור של כל מסגרת
-בדיקת נוכחות, כך שהיא לעולם לא נשלחת כשיחת זמן ריצה.
-
-#### פרמטרים
-
-| שם   | הקלד    | תיאור |
-| ---- | ------- | ----- |
-| node | ts.Node |       |
-
-### isSlotElement
-
-פונקציה **סוג:**
-
-```typescript
-function isSlotElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
-```
-
-בין אם node הוא אלמנט נייטרלי בשם-חריץ - `<Slot … />` או
-`<Slot …>fallback</Slot>` - מיוצר מסמן `Slot`.
-
-#### פרמטרים
-
-| שם   | הקלד    | תיאור |
-| ---- | ------- | ----- |
-| node | ts.Node |       |
-
-### isSlotHCall
-
-פונקציה **סוג:**
-
-```typescript
-function isSlotHCall(node: ts.Node): node is ts.CallExpression;
-```
-
-אם node הוא **טופס הקריאה** של סמן המשבצת בשם - `h(Slot, …)` -
-המקבילה במפעל `h()` של אלמנט `<Slot … />` JSX. חלק ניטרלי
-רכיבים יוצרים חריצים עם `h(Slot, { name: 'x' }, …fallback)` (למשל בפנים
-`const column = … ? h(ForgeDrawer, …, h(Slot, { name: 'start' })) : undefined`)
-במקום JSX; יש לשכתב את שני הטפסים לקריאת המשבצת המקורית של כל מסגרת.
-
-#### פרמטרים
-
-| שם   | הקלד    | תיאור |
-| ---- | ------- | ----- |
-| node | ts.Node |       |
-
-### JSX_ATTRIBUTE_RENAMES
-
-**סוג:** קבוע
-
-```typescript
-export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
-```
-
-מאפייני JSX מקוריים שיש להנמיך את האיות של camelCase הפונה למחבר
-לאות HTML Vue של JSX אלמנטים מהותיים מצפים. Vue מקליד את
-תכונות `<td>`/`<th>` כ-`colspan`/`rowspan` (לא `colSpan`/ של React
-`rowSpan`), כך שה-JSX לעיבוד סגירה לא יצליח בבדיקת הקלדה.
-
-### LOCAL_EFFECT_FILE
-
-**סוג:** קבוע
-
-```typescript
-export const LOCAL_EFFECT_FILE;
-```
-
-שם הקובץ (עם סיומת) מודול עוזר האפקט המקומי כתוב כמו בעץ שנוצר בשטוח.
-
-### LOCAL_EFFECT_MODULE
-
-**סוג:** קבוע
-
-```typescript
-export const LOCAL_EFFECT_MODULE;
-```
-
-המפרט היחסי שתחתיו מיובא Vue {@link LOCAL_EFFECT_MODULE}.
-
-### LOCAL_JSX_TYPE_NAMES
-
-**סוג:** קבוע
-
-```typescript
-export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
-```
-
-יבוא **סוג** ניטרלי שאין לו מקבילה יחידה למסגרת ממדרגה ראשונה
-לכינוי ל (בניגוד ל-{@link REACT_TYPE_ALIASES}), אך ניתנים לביטוי טריוויאלי
-באוצר המילים של כל מסגרת - העיבוד הפרימיטיבי
-`MpRenderProperty<S>`, פונקציית scoped-slot / render-prop המחזירה א
-התוכן של משבצת עבור היקף נתון.
-
-במקום לשמור אותו בתור ייבוא `@mission-platform/forge-jsx` בקובץ שנוצר
-קוד, כל בניית מסגרת פולטת מודול זעיר במיקום משותף
-({@link LOCAL_JSX_TYPES_MODULE}) המגדיר **גרסה ספציפית למסגרת**
-ממנו - של React על `ReactNode`, של Vue על `VNodeChild` - וכל פולט
-מפנה את ייבוא הסוג לשם (ראה בוני React ו-Vue `imports`).
-אז המקורות שנוצרו אינם נושאים `@mission-platform/forge-jsx` ניטרלי
-render-prop **סוג** ייבוא בכלל.
-
-### LOCAL_JSX_TYPES_FILE
-
-**סוג:** קבוע
-
-```typescript
-export const LOCAL_JSX_TYPES_FILE;
-```
-
-שם הקובץ (עם סיומת) מודול סוגי ה-JSX המקומי נכתב כמו בעץ השטוח שנוצר.
-
-### LOCAL_JSX_TYPES_MODULE
-
-**סוג:** קבוע
-
-```typescript
-export const LOCAL_JSX_TYPES_MODULE;
-```
-
-המפרט היחסי שתחתיו מיובא לכל מסגרת {@link LOCAL_JSX_TYPES_MODULE}.
-
-### localEffectModuleSource
-
-פונקציה **סוג:**
-
-```typescript
-function localEffectModuleSource(framework: JsxFramework): string;
-```
-
-המקור של ה-{@link LOCAL_EFFECT_MODULE} המשותף למטרה
-framework, שנוצר פעם אחת לכל עץ פלט בדיוק כמו סוגי ה-JSX המקומיים
-מודול (ראה {@link localJsxTypesModuleSource}).
-
-הוא מרכז את `useEffect` של פולט Vue → תרגום מחזור החיים ב-
-צופה כללי יחיד (`mpEffect`) בנוי על המקור של Vue
-`watch`/`onMounted`/`onUpdated`/`onUnmounted`, כך שה-`setup` של כל רכיב
-מתכווץ לשיחה `mpEffect(callback, () => [deps])` בודדת במקום ל-
-בלוק מחזור חיים משולב לכל אפקט. מראה הסמנטיקה של React
-`useEffect(callback, deps?)`: הפעל פעם אחת לאחר הטעינה, הפעל מחדש כאשר יש תלות
-משתנה (או לאחר כל עדכון כאשר ה-deps מושמטים), והפעל את הקובץ המוחזר
-ניקוי לפני כל הפעלה חוזרת ובביטול.
-
-העוזר הוא **Vue בלבד**: פולט React ממשיך לפלוט `useEffect(…)`
-מילולית (הצורה המקורית של React), אז עבור `framework === 'react'` זה מחזיר
-מחרוזת ריקה והכותב מדלג עליה.
-
-#### פרמטרים
-
-| שם    | הקלד         | תיאור |
-| ----- | ------------ | ----- |
-| מסגרת | JsxFramework |       |
-
-### localJsxTypesModuleSource
-
-פונקציה **סוג:**
-
-```typescript
-function localJsxTypesModuleSource(framework: JsxFramework): string;
-```
-
-המקור של ה-{@link LOCAL_JSX_TYPES_MODULE} המשותף למטרה
-מסגרת: גרסאות ספציפיות למסגרת של הפרימיטיבים הניטרלים הנקראים
-ב-{@link LOCAL_JSX_TYPE_NAMES}, כך שהרכיבים שנוצרו מייבאים
-`MpRenderProperty` מהמודול המקומי הזה במקום הנייטרלי
-חבילת `@mission-platform/forge-jsx`. ההגדרות שונות לפי מסגרת: ה
-מיקום "תוכן שניתן לעיבוד" הוא `ReactNode` של React וה-`VNodeChild` של Vue,
-כך שההצהרות של כל build נקראות באופן אידיומטי עבור זמן הריצה שלה.
-
-יש בכוונה **אין** וריאנט `MpProperties`: רכיב מצהיר
-בדיוק המאפיינים שהוא מקבל, כך ששום דבר לא נוצר עבור בסיס אביזרים
-שלא קיים יותר בניב הנייטרלי.
-
-#### פרמטרים
-
-| שם    | הקלד         | תיאור |
-| ----- | ------------ | ----- |
-| מסגרת | JsxFramework |       |
-
-### דגם חתימה
-
-**סוג:** ממשק
-
-```typescript
-export interface ModelSignature
-```
-
-אביזר המסומן בתג `@model <onEvent>` JSDoc: כריכה דו-כיוונית (דגם V)
-צימוד אבזר **קלט** עם **אירוע השינוי** שלו. פולט Vue קורס
-הצמד להצהרת `defineModel` יחידה (הורדת הן את זמן הריצה
-prop והערך `defineEmits`) - קריאה של האביזר הופכת ל-`<local>.value`
-וקריאה של האירוע המזווג הופכת ל-`<local>.value = …`.
-
-### moduleTargetsFramework
-
-פונקציה **סוג:**
-
-```typescript
-function moduleTargetsFramework(fileName: string, source: string, framework: string): boolean;
-```
-
-האם יש לפלוט מודול עבור `framework`. מודול ניטרלי במסגרת
-(ללא הנחיית `"use <framework>"`) נפלטת עבור כל יעד; מודול סגור
-נפלט **רק** עבור המסגרת שמות ההנחיות שלה.
-
-#### פרמטרים
-
-| שם      | הקלד   | תיאור |
-| ------- | ------ | ----- |
-| שם קובץ | מחרוזת |       |
-| מקור    | מחרוזת |       |
-| מסגרת   | מחרוזת |       |
-
-### NEUTRAL_COMPILE_TIME_MARKERS
-
-**סוג:** קבוע
-
-```typescript
-export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>;
-```
-
-יבוא **ערך** ניטרלי שהם סמנים טהורים של זמן הידור - הם קיימים בלבד
-אז ה-JSX המחבר בודק ו*נצרך* על ידי הפולטים (JSX שלהם
-השימושים נכתבים מחדש למנגנון של כל מסגרת משלו), אז אסור שהם יהיו
-מועברים למקור React או Vue שנוצר כייבוא אמיתי. `Slot`
-(`<Slot name="…" />`) הוא סמן המשבצות בשם, `Dynamic`
-(`<Dynamic is={…} />`) הוא סמן הרכיבים הדינמיים (נכתב מחדש ל-an
-`h(is, …)` קורא, אשר כל מסגרת ממיר JSX / `<component :is>` אז
-קומפילציה מקורית), ו-`hasSlot` (`hasSlot('x')`) הוא סמן הנוכחות של משבצות
-(נכתב מחדש ל-`!!slots.x` / `$slots.x` של Vue ול-`properties.x != null` של React).
-
-### NEUTRAL_CONTEXT_VALUES
-
-**סוג:** קבוע
-
-```typescript
-export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
-```
-
-ייבוא ​​**ערך** ניטרלי שהם פרימיטיביות ההקשר. ב-React הם _הם_
-React משלו (`createContext`/`useContext`), כך שהם נופלים ל-
-`react` ייבוא ערך; ב-Vue היבוא שלהם מותאם מחדש ל-
-מתאם `@mission-platform/forge-adapters/vue` (מגובה `provide`/`inject`
-`createContext`/`useContext`).
-
-### NEUTRAL_FRAMEWORK_COMPONENTS
-
-**סוג:** קבוע
-
-```typescript
-export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>;
-```
-
-ייבוא **ערך** ניטרלי שהם **רכיבים** אמיתיים לכל מסגרת
-מאשר סמנים, כלי זמן ריצה או הפרימיטיבים של React עצמו. השימוש ב-JSX שלהם
-נותר ללא נגיעה (הם נשארים תג רכיב), אבל שלהם
-`import { … } from '@mission-platform/forge-jsx'` מוקצה מחדש למטרה
-היישום המקורי של המסגרת: `Teleport` (פרימיטיבי הפורטל) הופך
-`import { Teleport } from '@mission-platform/forge-adapters/react'` (א `createPortal`
-עטיפה) עבור React ו-`import { Teleport } from 'vue'` (המובנית) עבור Vue;
-`Transition` (הפרימיטיבי של כניסה/צא) הופך ל-
-מנהל התקן `@mission-platform/forge-adapters/react` בדרגת CSS עבור React והתקן המובנה
-`import { Transition } from 'vue'` עבור Vue; `TransitionGroup` (הרשימה
-enter/leave/move פרימיטיבי) מותאם מחדש באותו אופן (ה
-מנהל ההתקן של קבוצת `@mission-platform/forge-adapters/react` עבור React, המובנה
-`import { TransitionGroup } from 'vue'` עבור Vue).
-
-### NEUTRAL_MODULE
-
-**סוג:** קבוע
-
-```typescript
-export const NEUTRAL_MODULE;
-```
-
-החבילה הנייטרלית שממנה הרכיבים מייבאים את הפרימיטיבים שלהם.
-
-### NEUTRAL_RUNTIME_VALUES
-
-**סוג:** קבוע
-
-```typescript
-export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
-```
-
-ייבוא **ערך** ניטרלי שהם כלי עזר לזמן ריצה אגנוסטיים למסגרת - הם
-להתנהג באופן זהה בכל מטרה, אז (בניגוד ל-`h` והווים, שהם
-תורגם/משנה לפי מסגרת) `import { … } from '@mission-platform/forge-jsx'` שלהם
-חייב להישמר מילה במילה במקורות React ו-Vue שנוצרו.
-
-### NEUTRAL_VUE_RUNTIME_HOOKS
-
-**סוג:** קבוע
-
-```typescript
-export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
-```
-
-ווים **ערך** ניטרליים שיש להם מקביל יליד בעל שם זהה
-זמן הריצה של כל מסגרת, כך שהם לא מתורגמים (כמו `useState`/
-`useEffect`) ולא נשמר כייבוא ניטרלי. `useId` הוא הוו של React עצמו (זה
-נופל לייבוא ערך `react` באופן אוטומטי), ו-Vue חושף את
-אותו `useId` מזמן הריצה שלו - אז פולט Vue מייבא אותו ישר מ
-`vue` ומשאיר את הקריאה `const id = useId()` ללא נגיעה ב-`setup`.
-
-### יבוא ניטרלי
-
-**סוג:** ממשק
-
-```typescript
-export interface NeutralImports
-```
-
-השמות שמודול מייבא מהחבילה הנייטרלית, מפוצלים לפי סוג מחייב.
-
-### parseTsx
-
-פונקציה **סוג:**
-
-```typescript
-function parseTsx(fileName: string, source: string): ts.SourceFile;
-```
-
-נתח מחרוזת מקור `.tsx` לתוך גשר TypeScript SourceFile המשמש את
-עוזרי אופטימיזציה ושינויים מדור קודם. שימוש ב-AST/הסקת חזית נייטרלי
-{@link parseForgeSource} / Oxc במקום זאת.
-
-#### פרמטרים
-
-| שם      | הקלד   | תיאור |
-| ------- | ------ | ----- |
-| שם קובץ | מחרוזת |       |
-| מקור    | מחרוזת |       |
-
-### חריצים מחולקים
-
-**סוג:** ממשק
-
-```typescript
-export interface PartitionedSlots
-```
-
-ילדים של רכיב רכיב מחולקים על ידי סמן `slot="…"` שלהם.
-
-### partitionSlottedChildren
-
-פונקציה **סוג:**
-
-```typescript
-function partitionSlottedChildren(children: readonly ts.JsxChild[]): PartitionedSlots;
-```
-
-חלק את הילדים של רכיב רכיב לקבוצות עם שמות חריצים + ילדי ברירת המחדל.
-
-#### פרמטרים
-
-| שם    | הקלד                      | תיאור |
-| ----- | ------------------------- | ----- |
-| ילדים | לקריאה בלבד ts.JsxChild[] |       |
-
-### printNode
-
-פונקציה **סוג:**
-
-```typescript
-function printNode(node: ts.Node, sourceFile: ts.SourceFile): string;
-```
-
-הדפס node יחיד בחזרה לטקסט המקור, מעוגן לקובץ המקור שלו.
-
-#### פרמטרים
-
-| שם         | הקלד          | תיאור |
-| ---------- | ------------- | ----- |
-| node       | ts.Node       |       |
-| sourceFile | ts.SourceFile |       |
-
-### printSourceFile
-
-פונקציה **סוג:**
-
-```typescript
-function printSourceFile(sourceFile: ts.SourceFile): string;
-```
-
-הדפס קובץ מקור שלם (ייתכן שהשתנה) בחזרה לטקסט המקור.
-
-#### פרמטרים
-
-| שם         | הקלד          | תיאור |
-| ---------- | ------------- | ----- |
-| sourceFile | ts.SourceFile |       |
-
-### PropertySignature
-
-**סוג:** ממשק
-
-```typescript
-export interface PropertySignature
-```
-
-מאפיין יחיד (של עצמו) של ממשק אביזרים - שמו, טקסט הסוג המוצהר והאופציונליות שלו.
-
-### REACT_ADAPTER_MODULE
-
-**סוג:** קבוע
-
-```typescript
-export const REACT_ADAPTER_MODULE;
-```
-
-נתיב המשנה `@mission-platform/forge-adapters/react` שממנו מיובאים רכיבי המסגרת React.
-
-### REACT_TYPE_ALIASES
-
-**סוג:** קבוע
-
-```typescript
-export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>;
-```
-
-יבוא **סוג** ניטרלי שיש לו מקבילה React ממדרגה ראשונה נשלח על ידי
-`react` עצמו. ביעד React אלה נכתבים מחדש לשם React שלהם
-(מיובא `import type { … } from 'react'`) במקום נשמר כנייטרלי
-סוג `@mission-platform/forge-jsx`, אז מחברי React רואים את הסוג האידיומטי. כל
-הפניה לשם הנייטרלי במקור הנפלט משתנה לשם המופה
-שם React (ראה את פולט React). הקרס הנייטרלי / עיבוד פרימיטיביים כל אחד
-יש מקביל React מדויק:
-
-- `MpChild` (האיחוד של "כל מה שעשוי להמציא כילד") ⇒ של React
-  `ReactNode`.
-- `MpElement` (node בעץ הווירטואלי הנייטרלי, סוג ההחזרה של
-  רכיב ניטרלי) ⇒ `ReactElement` של React, כך שרכיב הידור קורא
-  בתור `(props) => ReactElement` מקורי - רכיב פונקציה React חוקי,
-  שסוג ההחזר הנייטרלי `MpElement` אינו.
-- `MpRef<T>` (המכל `{ current: T }` שהוחזר על ידי `useRef`) ⇒ של React
-  `RefObject<T>`.
-- `MpDependencyList` (מערך תלות אפקט/תזכיר) ⇒ של React
-  `DependencyList`.
-
-### reactClassNameValue
-
-פונקציה **סוג:**
-
-```typescript
-function reactClassNameValue(factory: ts.NodeFactory, value: ts.Expression): ts.Expression;
-```
-
-כווץ ערך תכונה `className={…}` לתוך **React** `className`
-ערך. `className` של React מקבל רק מחרוזת, אז המערך המותנה/
-יש לצמצם את צורות האובייקט _לפני_ שהם מגיעים לאלמנט. מערך **
-מילולי** (הצורה הקנונית - `className={['base', { active }]}`) הוא
-התפשט לתוך שיחת זמן ריצה `classNames(…)` (`classNames('base', { active })`),
-התאמת חתימת העוזר הווריאדי; כל ביטוי אחר הוא כבר א
-ערך מחלקה יחיד (קריאה של מודול CSS, מחרוזת מחושבת מראש, `… .join(' ')`,
-שליש) ומועבר ישר כערך `className`.
-
-#### פרמטרים
-
-| שם   | הקלד           | תיאור |
-| ---- | -------------- | ----- |
-| מפעל | ts.NodeFactory |       |
-| ערך  | ts.ביטוי       |       |
-
-### readChildSlotName
-
-פונקציה **סוג:**
-
-```typescript
-function readChildSlotName(child: ts.JsxChild): string | undefined;
-```
-
-קרא את הסמן הסטטי `slot="…"` של אלמנט JSX **ילד** - התכונה
-שמנתב את הילד למשבצת בשם של רכיב הורה. מחזיר את החריץ
-name (מחרוזת לא ריקה מלבד `"default"`), או `undefined` כאשר
-הילד אינו נושא סמן `slot` שמיש (לכן הוא שייך לחריץ ברירת המחדל).
-
-#### פרמטרים
-
-| שם  | הקלד        | תיאור |
-| --- | ----------- | ----- |
-| ילד | ts.JsxChild |       |
-
-### readComponentImports
-
-פונקציה **סוג:**
-
-```typescript
-function readComponentImports(sourceFile: ts.SourceFile, sourceRoot?: string): ComponentImport[];
-```
-
-אסוף ייבוא ​​של ערך יחסי (רכיב אח-אחי) ממודול.
-
-#### פרמטרים
-
-| שם         | הקלד          | תיאור |
-| ---------- | ------------- | ----- |
-| sourceFile | ts.SourceFile |       |
-| sourceRoot | מחרוזת        |       |
-
-### קראייבוא ​​חיצוני
-
-פונקציה **סוג:**
-
-```typescript
-function readExternalImports(fileName: string, source: string): string[];
-```
-
-אסוף את היבוא **חיצוני** (חבילה חשופה) של מודול - כל
-`import … from '<pkg>'` שהמפרט שלו אינו יחסי (`.`/`..`, מטופל
-כרכיב אחים או ייבוא עוזר), החבילה הנייטרלית (מטופלת על ידי
-{@link readNeutralImports}), וגם לא גיליון סגנונות (מטופל על ידי
-{@link readStyleImports}). אלו הן תלות בזמן ריצה שהרכיב מושך
-מסביבת עבודה אחרת/חבילות של צד שלישי (למשל `@mission-platform/forms-core`,
-`luxon`), והם מועברים **מילה במילה** לתוך המסגרת שנוצרת לכל מסגרת
-מקור כך ערכים שהגוף, עוזרים מועברים או אביזר מתייחס אליהם
-ברירת המחדל נפתרת בזמן ריצה. כל ערך הוא הצהרת `import` המודפסת.
-
-חבילות סביבת עבודה בפיצול מסגרת, כגון ספריית הסמלים לכתיבה פעם אחת
-{@link ICONS_JSX_MODULE} מועברים גם מילה במילה: כל אחד מהם מצהיר על an
-מצב ייצוא `mp:<framework>` על הערך החשוף של `.`, כך שהאפליקציה הצורכת
-(או תצורה של Storybook/Vitest) פותרת את המבנה המקורי התואם ללא
-מקור שנוצר נותן שם תת-נתיב למסגרת.
-
-#### פרמטרים
-
-| שם      | הקלד   | תיאור |
-| ------- | ------ | ----- |
-| שם קובץ | מחרוזת |       |
-| מקור    | מחרוזת |       |
-
-### readFrameworkDirective
-
-פונקציה **סוג:**
-
-```typescript
-function readFrameworkDirective(fileName: string, source: string): 'react' | 'vue' | undefined;
-```
-
-קרא את הוראת `"use <framework>";` של מודול, אם יש.
-
-מודול עשוי להצטרף למימוש **ספציפי למסגרת** על ידי פתיחה עם
-הוראת `"use react";` או `"use vue";` (משקף `"use strict"` /
-`"use client"`). זה מחזיר את המסגרת שאליה ההנחיה מצמידה את המודול,
-או `undefined` כאשר המודול הוא ניטרלי במסגרת (אין הנחיה כזו).
-
-רק **פרולוג ההנחיה** המוביל - ריצה רצופה
-הצהרות ביטוי של מחרוזת מילולית בחלק העליון של המודול - הוא
-נבדק, תואם את הסמנטיקה של ההנחיה של JavaScript; פרולוג אחר
-מתעלמים מהנחיות (למשל `"use strict"`).
-
-#### פרמטרים
-
-| שם      | הקלד   | תיאור |
-| ------- | ------ | ----- |
-| שם קובץ | מחרוזת |       |
-| מקור    | מחרוזת |       |
-
-### readHasSlotName
-
-פונקציה **סוג:**
-
-```typescript
-function readHasSlotName(call: ts.CallExpression): string | undefined;
-```
-
-קרא את שם המשבצת הסטטי של שיחת `hasSlot('name')` (`undefined` → חריץ ברירת המחדל).
-
-#### פרמטרים
-
-| שם     | הקלד              | תיאור |
-| ------ | ----------------- | ----- |
-| להתקשר | ts.CallExpression |       |
-
-### readNeutralImports
-
-פונקציה **סוג:**
-
-```typescript
-function readNeutralImports(fileName: string, source: string): NeutralImports;
-```
-
-בדוק את כריכות `import … from '@mission-platform/forge-jsx'` של מודול.
-
-#### פרמטרים
-
-| שם      | הקלד   | תיאור |
-| ------- | ------ | ----- |
-| שם קובץ | מחרוזת |       |
-| מקור    | מחרוזת |       |
-
-### readSlotHCallName
-
-פונקציה **סוג:**
-
-```typescript
-function readSlotHCallName(call: ts.CallExpression): string | undefined;
-```
-
-קרא את ה-`name` הסטטי משיחת `h(Slot, { name: 'x' }, …)` (`undefined` → חריץ ברירת המחדל).
-
-#### פרמטרים
-
-| שם     | הקלד              | תיאור |
-| ------ | ----------------- | ----- |
-| להתקשר | ts.CallExpression |       |
-
-### readSlotHCallScope
-
-פונקציה **סוג:**
-
-```typescript
-function readSlotHCallScope(
-  factory: ts.NodeFactory,
-  call: ts.CallExpression,
-  visit: ts.Visitor,
-): ts.ObjectLiteralExpression | undefined;
-```
-
-קרא את **היקף** (כל אביזר מלבד `name`) של `h(Slot, props, …)`
-קריאה לביטוי מילולי-אובייקט, או `undefined` כאשר אין היקף
-עבר. מראות {@link readSlotScope} עבור טופס JSX. ערך האביזר
-הביטויים נכתבים מחדש עם ה-`visit` שסופק, כך שהקריאת פתרון ב-
-מסגרת יעד.
-
-#### פרמטרים
-
-| שם     | הקלד              | תיאור |
-| ------ | ----------------- | ----- |
-| מפעל   | ts.NodeFactory    |       |
-| להתקשר | ts.CallExpression |       |
-| בקר    | ts.מבקר           |       |
-
-### readSlotName
-
-פונקציה **סוג:**
-
-```typescript
-function readSlotName(node: ts.JsxSelfClosingElement | ts.JsxElement): string | undefined;
-```
-
-קרא את ה-`name="…"` הסטטי של רכיב `<Slot>` (`undefined` → חריץ ברירת המחדל).
-
-#### פרמטרים
-
-| שם   | הקלד                                      | תיאור |
-| ---- | ----------------------------------------- | ----- |
-| node | ts.JsxSelfClosingElement \| ts.JsxElement |       |
-
-### readSlotScope
-
-פונקציה **סוג:**
-
-```typescript
-function readSlotScope(
-  factory: ts.NodeFactory,
-  node: ts.JsxSelfClosingElement | ts.JsxElement,
-  visit: ts.Visitor,
-): ts.ObjectLiteralExpression | undefined;
-```
-
-קרא את **ההיקף** של אלמנט `<Slot>` - כל תכונה מלבד `name`
-
-- לביטוי מילולי-אובייקט (`<Slot name="row" item={item} index={i}/>`
-  → `{ item: item, index: i }`), או `undefined` כאשר החריץ לא עובר שום טווח.
-  ביטויי ערכי התכונה נכתבים מחדש עם ה-`visit` שסופק
-  (לדוגמה, קריאה מפורקת או מצב נפתרת כהלכה ב-Vue
-  יעד). זה מה שמאפשר לרכיב של כתיבה חד פעמית להניע **חריץ בהיקף**:
-  המהדר פולט Vue `slots.x?.(scope)` ו-React `properties.x?.(scope)`.
-
-#### פרמטרים
-
-| שם   | הקלד                                      | תיאור |
-| ---- | ----------------------------------------- | ----- |
-| מפעל | ts.NodeFactory                            |       |
-| node | ts.JsxSelfClosingElement \| ts.JsxElement |       |
-| בקר  | ts.מבקר                                   |       |
-
-### readStyleImports
-
-פונקציה **סוג:**
-
-```typescript
-function readStyleImports(fileName: string, source: string, sourceRoot?: string): StyleImport[];
-```
-
-אסוף את ייבוא גיליונות הסגנונות היחסיים של מודול (מודולי CSS ו-CSS חשוף
-יבוא תופעות לוואי). המהדר הדו-שלבי מעתיק את אלה לצד
-נוצר מקור פר-מסגרת ומצביע מחדש כל ייבוא על העותק השטוח, אז
-רכיב יכול להחזיק (ולשלח) `.module.scss` משלו.
-
-#### פרמטרים
-
-| שם         | הקלד   | תיאור |
-| ---------- | ------ | ----- |
-| שם קובץ    | מחרוזת |       |
-| מקור       | מחרוזת |       |
-| sourceRoot | מחרוזת |       |
-
-### resolveWorkspaceLocalImport
-
-פונקציה **סוג:**
-
-```typescript
-function resolveWorkspaceLocalImport(
-  specifier: string,
-  sourceFileName: string,
-  sourceRoot: string | undefined,
-): string | undefined;
-```
-
-פתרון ייבוא `@/` מקומי של סביבת עבודה לנתיב ביחס למקור שבבעלותו
-קובץ. ייבוא חבילות חשוף אינו מטופל כאן בכוונה: רק קבצים
-בתוך שורש סביבת העבודה שסופק המקור הבעלים של הכינוי `@/`.
-
-#### פרמטרים
-
-| שם             | הקלד               | תיאור |
-| -------------- | ------------------ | ----- |
-| מפרט           | מחרוזת             |       |
-| sourceFileName | מחרוזת             |       |
-| sourceRoot     | מחרוזת \| לא מוגדר |       |
-
-### RewriteScope
-
-**סוג:** ממשק
-
-```typescript
-export interface RewriteScope
-```
-
-ההיקף המתאר כיצד יש לכתוב מחדש מזהים בתוך גוף רכיב
-עבור היעד Vue.
-
-### rewriteWorkspaceLocalImports
-
-פונקציה **סוג:**
-
-```typescript
-function rewriteWorkspaceLocalImports(sourceFile: ts.SourceFile, sourceRoot?: string): ts.SourceFile;
-```
-
-שכתוב סביבת עבודה מקומית של ייבוא ​​`@/` לפני פליטה ספציפית למסגרת.
-
-#### פרמטרים
-
-| שם         | הקלד          | תיאור |
-| ---------- | ------------- | ----- |
-| sourceFile | ts.SourceFile |       |
-| sourceRoot | מחרוזת        |       |
-
-### slotFallbackChildren
-
-פונקציה **סוג:**
-
-```typescript
-function slotFallbackChildren(node: ts.JsxSelfClosingElement | ts.JsxElement): ts.JsxChild[];
-```
-
-הילדים החלופיים של `<Slot>…</Slot>` (ריק עבור חריץ סגירה עצמית).
-
-#### פרמטרים
-
-| שם   | הקלד                                      | תיאור |
-| ---- | ----------------------------------------- | ----- |
-| node | ts.JsxSelfClosingElement \| ts.JsxElement |       |
-
-### slotHCallFallback
-
-פונקציה **סוג:**
-
-```typescript
-function slotHCallFallback(call: ts.CallExpression): ts.Expression[];
-```
-
-ילדי ה-fallback (ויכוחים אחרי האביזרים) של שיחת `h(Slot, props, …fallback)`.
-
-#### פרמטרים
-
-| שם     | הקלד              | תיאור |
-| ------ | ----------------- | ----- |
-| להתקשר | ts.CallExpression |       |
-
-### stripFrameworkDirective
-
-פונקציה **סוג:**
-
-```typescript
-function stripFrameworkDirective(sourceFile: ts.SourceFile): ts.SourceFile;
-```
-
-החזר את קובץ המקור עם כל הוראת `"use react"` / `"use vue"` מובילה
-הוסר, כך שסמן השער של זמן ההידור לעולם אינו דולף לתוך הנפלט
-מקור לכל מסגרת. הנחיות פרולוג אחרות נשמרות.
-
-#### פרמטרים
-
-| שם         | הקלד          | תיאור |
-| ---------- | ------------- | ----- |
-| sourceFile | ts.SourceFile |       |
-
-### stripSlotAttribute
-
-פונקציה **סוג:**
-
-```typescript
-function stripSlotAttribute(factory: ts.NodeFactory, element: T): T;
-```
-
-עותק של אלמנט JSX / אלמנט סגירה עצמית עם תכונת הסמן `slot="…"` שלו הוסרה.
-
-#### פרמטרים
-
-| שם    | הקלד           | תיאור |
-| ----- | -------------- | ----- |
-| מפעל  | ts.NodeFactory |       |
-| אלמנט | ט              |       |
-
-### StyleIport
-
-**סוג:** ממשק
-
-```typescript
-export interface StyleImport
-```
-
-ייבוא ​​גיליון סגנונות ברכיב ניטרלי, למשל. `import styles from './x.module.scss'`.
-
-### transformI18nextCalls
-
-פונקציה **סוג:**
-
-```typescript
-function transformI18nextCalls(factory: ts.NodeFactory, node: ts.Node): ts.Node;
-```
-
-כתוב מחדש את ביטויי הקריאה `i18next.t(...)` ל-`t(...)`.
-
-#### פרמטרים
-
-| שם   | הקלד           | תיאור |
-| ---- | -------------- | ----- |
-| מפעל | ts.NodeFactory |       |
-| node | ts.Node        |       |
-
-### משתמש ב-ClassNamesArrayAttribute
-
-פונקציה **סוג:**
-
-```typescript
-function usesClassNamesArrayAttribute(sourceFile: ts.SourceFile): boolean;
-```
-
-האם המודול נושא תכונה `className={[…]}` שהערך שלה הוא an
-**מערך מילולי** - הטופס היחיד שמתחבר לזמן ריצה של `classNames(…)`
-לקרוא למטרה React, כך שהפולט חייב (מחדש) להזריק את הנייטרלי
-`classNames` ייבוא עבורו (המחבר אף פעם לא מייבא את העוזר בעצמו).
-
-#### פרמטרים
-
-| שם         | הקלד          | תיאור |
-| ---------- | ------------- | ----- |
-| sourceFile | ts.SourceFile |       |
-
-### משתמש בComponentSelfReference
-
-פונקציה **סוג:**
-
-```typescript
-function usesComponentSelfReference(sourceFile: ts.SourceFile, componentName: string): boolean;
-```
-
-האם רכיב מתייחס ל**עצמו** כתג JSX (`<ForgeTreeView …>`
-בתוך `ForgeTreeView`) - כלומר זה רקורסיבי. פולט Vue משתמש בזה כדי
-לפתור את ההפניה העצמית (`resolveComponent('<name>')`) בעיבוד שלה
-סגירה, כך שרכיב רקורסיבי מתחבר באופן טבעי בשתי המסגרות.
-
-#### פרמטרים
-
-| שם         | הקלד          | תיאור |
-| ---------- | ------------- | ----- |
-| sourceFile | ts.SourceFile |       |
-| שם רכיב    | מחרוזת        |       |
-
-### משתמש בHFactoryCall
-
-פונקציה **סוג:**
-
-```typescript
-function usesHFactoryCall(sourceFile: ts.SourceFile): boolean;
-```
-
-האם המודול מתייחס ל-`h` כביטוי קריאה (`h(...)` מפורש).
-
-#### פרמטרים
-
-| שם         | הקלד          | תיאור |
-| ---------- | ------------- | ----- |
-| sourceFile | ts.SourceFile |       |
-
-### usesI18nextT
-
-פונקציה **סוג:**
-
-```typescript
-function usesI18nextT(node: OxcNode): boolean;
-```
-
-בין אם מודול Oxc או node קורא `i18next.t(...)`.
-
-#### פרמטרים
-
-| שם   | הקלד    | תיאור |
-| ---- | ------- | ----- |
-| node | OxcNode |       |
-
-### VUE_ADAPTER_MODULE
-
-**סוג:** קבוע
-
-```typescript
-export const VUE_ADAPTER_MODULE;
-```
-
-נתיב המשנה `@mission-platform/forge-adapters/vue` שממנו מיובאים פרימיטיביות ההקשר Vue.
-
-### VUE_BUILTIN_COMPONENTS
-
-**סוג:** קבוע
-
-```typescript
-export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>;
-```
-
-יבוא רכיבי המסגרת הנייטרלי Vue פותר ישר מזמן הריצה של `vue`.
-
-### VUE_LOCAL_JSX_TYPE_NAMES
-
-**סוג:** קבוע
-
-```typescript
-export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
-```
-
-סוג הרינדור/אביזרים הנייטרלי נותן שם ל-**Vue** ה-build מפנה מחדש אל
-משותף {@link LOCAL_JSX_TYPES_MODULE}. זה קבוצה של
-{@link LOCAL_JSX_TYPE_NAMES}: מלבד `MpRenderProperty`, גם גרסת Vue
-מכריז מחדש על **האלמנט** הפרימיטיביים הנייטרליים `MpChild` ו-`MpElement` בתור
-`VNodeChild` / `VNode` של Vue. תחת `jsxImportSource: 'vue'` א
-לביטוי JSX ב-SFC שנוצר יש סוג `JSX.Element` (כלומר `VNode` של Vue);
-שמירה על הגדרות `@mission-platform/forge-jsx` הנייטרליות (ממותגות עם
-`__mpElement`) יעשה כל `const x: MpElement = <div/>` /
-`MpChild[] = items.map(() => <li/>)` נכשל בבדיקת הקלדה תחת `vue-tsc`. React
-במקום זאת משנה את שמות אלה ל-`ReactNode`/`ReactElement` (ראה
-{@link REACT_TYPE_ALIASES}); Vue שומר על שמות `Mp*` אך פותר אותם
-הטיפוסים המקוריים של Vue דרך המודול המקומי, כך שאין צורך בשכתוב הפניות.
-
-### vueComponentModelListenerTransformer
-
-פונקציה **סוג:**
-
-```typescript
-function vueComponentModelListenerTransformer(): ts.TransformerFactory<ts.Node>;
-```
-
-אירועי עדכון `v-model` של Vue נקראים `update:<model>`: ילד הידור
-מ-`@model` מצמד `onUpdate<Name>` התקשרות חוזרת מכריזה
-`defineModel('<name>')` ולכן **פולט `update:<name>`**, אשר
-אביזר המאזין הוא `onUpdate:<name>` בעל המקשים - לא ה-camelCase
-`onUpdate<Name>`. **הורה** שמעביר את ה-`onUpdate<Name>` הנייטרלי
-התקשרות חזרה לילד הזה חייבת לאגד את `onUpdate:<name>`, או Vue לעולם לא מתחבר
-העדכון הדו-כיווני (ו-`vue-tsc` מדווח על האביזר כלא ידוע, מה שמרמז
-`"onUpdate:<name>"`). שנאי זה משכתב כל `onUpdate<Name>`
-מאזין על אלמנט **component** - תכונת JSX (`<Child onUpdateOpen=…>`
-← `<Child onUpdate:open=…>`) או אבזר `h(Component, { onUpdateOpen: … })`
-(→ מקש המחרוזת `'onUpdate:open'`) - לתוך הטופס `onUpdate:<name>` הזה.
-מאזינים על אלמנטים מקומיים ומאזינים שאינם `onUpdate` נשארים ללא נגיעה,
-אז זה אימפוטנטי ובטוח ליישם באופן אוניברסלי על נתיב העיבוד-סגירה.
-
-### vueJsxSlotTransformer
-
-פונקציה **סוג:**
-
-```typescript
-function vueJsxSlotTransformer(): ts.TransformerFactory<ts.Node>;
-```
-
-שנאי Vue המשכתב מחדש את הטופס **עובר** בעל השם - א
-רכיב רכיב שילדיו נושאים סמני `slot="…"` - לתוך ה-
-`@vitejs/plugin-vue-jsx` תחביר אובייקט-ילדים. למשל
-`<ForgeDropdown><button slot="trigger">…</button><ul>…</ul></ForgeDropdown>`
-הופך ל-`<ForgeDropdown>{{ trigger: () => <><button>…</button></>, default: () => <><ul>…</ul></> }}</ForgeDropdown>`,
-אשר `@vue/babel-plugin-jsx` מרכיב למשבצות עם שם מקורי. רכיב
-ללא ילדים מחורצים נותר ללא נגיעה (ילדיו נשארים ברירת המחדל
-חריץ). זה מורכב **לפני** כותב ההתייחסות ב-
-נתיב render-closure, כך שמזהים בתוך פונקציות המשבצות שנוצרו
-עדיין משוכתב לתגובתיות Vue (`.value` וכו').
-
-### vueNativeEventTransformer
-
-פונקציה **סוג:**
-
-```typescript
-function vueNativeEventTransformer(): ts.TransformerFactory<ts.Node>;
-```
-
-שנאי Vue-מטרה שמתקן את המעטפת של DOM מרובה מילים בסגנון React
-מאזיני אירועים (`onDragOver`, `onMouseEnter`, `onPointerDown`, ...) ב
-אלמנטים **מקוריים** (מקוריים, מתויגים באותיות קטנות) - גם תכונות JSX וגם
-אביזרי `h('tag', { … })` - באמצעות {@link lowercaseNativeEventName}, כך שה
-render-closure שנערך על ידי `@vitejs/plugin-vue-jsx` מחייב את היליד האמיתי
-אירוע. מאזינים על אלמנטים **רכיבים** (תגים בעלי רישיות / דינמי
-רכיבים) נותרים ללא נגיעה כך שהם ממשיכים להתאים לתיק הגמל של הילד
-פולטים שמות. Idempotent ו-No-op עבור רכיבים, אז זה בטוח ליישום
-באופן אוניברסלי בנתיב העיבוד-סגירה.
 
 ## `src/compiler/cache`
 
@@ -1773,7 +307,7 @@ function compileComponentModule(source: string, options: CompileOptions): Compil
 הרכיב מודול רכיב נייטרלי (או מוגבל למסגרת) אחד לכל מסגרת שלו
 מקור (שלב 1).
 
-הוראת `"use react";` / `"use vue";` מובילה נמחקת לפני פליטת
+הוראת `"use <framework>";` מובילה נמחקת לפני הפליטה
 כך שהמרקר לעולם אינו דולף לתוך הפלט; שער מודול מתוך
 בניית מסגרת שאינה תואמת מטופלת במעלה הזרם על ידי שלב הגילוי
 (ראה {@link moduleTargetsFramework}).
@@ -1793,7 +327,7 @@ function compileComponentModule(source: string, options: CompileOptions): Compil
 export interface CompiledModule
 ```
 
-תוצאת שלב 1: מקור שנפלט והסיומת שהיא צריכה להיכתב תחתיה.
+תוצאת שלב 1: מקור שנפלט והסיומת שהוא צריך להיכתב תחתיו.
 
 ### compileHookModule
 
@@ -1803,8 +337,8 @@ export interface CompiledModule
 function compileHookModule(source: string, options: CompileHookOptions): CompiledModule;
 ```
 
-קומפלו **מודול הוק** ניטרלי אחד (ניתן לכתיבה פעם אחת שנכתב נגד
-ווים בסגנון React של `@mission-platform/forge-jsx`, _לא_ רכיב ממשק משתמש)
+קומפלו **מודול הוק** ניטרלי אחד (ניתן לכתיבה של פעם שנכתב נגד
+הווים בסגנון React של `@mission-platform/forge-jsx`, _לא_ רכיב ממשק משתמש)
 מקור לכל מסגרת (שלב 1).
 
 #### פרמטרים
@@ -1865,6 +399,142 @@ export interface CompileOptions
 
 אפשרויות עבור {@link compileComponentModule}.
 
+## `src/compiler/components`
+
+### findComponentFunction
+
+פונקציה **סוג:**
+
+```typescript
+function findComponentFunction(sourceFile: OxcParsedModule, name: string): OxcNode | undefined;
+```
+
+מצא הצהרת פונקציית Oxc מיוצאת עבור רכיב ניטרלי לפי שם.
+
+#### פרמטרים
+
+| שם         | הקלד            | תיאור |
+| ---------- | --------------- | ----- |
+| sourceFile | OxcParsedModule |       |
+| שם         | מחרוזת          |       |
+
+### isSlotElement
+
+פונקציה **סוג:**
+
+```typescript
+function isSlotElement(node: OxcNode): boolean;
+```
+
+האם Oxc node הוא אלמנט נייטרלי בשם חריץ.
+
+#### פרמטרים
+
+| שם   | הקלד    | תיאור |
+| ---- | ------- | ----- |
+| node | OxcNode |       |
+
+### readSlotName
+
+פונקציה **סוג:**
+
+```typescript
+function readSlotName(node: OxcNode): string | undefined;
+```
+
+קרא את ה-`name="…"` הסטטי של אלמנט Oxc `<Slot>`.
+
+#### פרמטרים
+
+| שם   | הקלד    | תיאור |
+| ---- | ------- | ----- |
+| node | OxcNode |       |
+
+## `src/compiler/constants`
+
+### LOCAL_JSX_TYPES_FILE
+
+**סוג:** קבוע
+
+```typescript
+export const LOCAL_JSX_TYPES_FILE;
+```
+
+שם הקובץ המשמש למודול סוגי JSX הספציפי למסגרת שנוצר.
+
+### LOCAL_JSX_TYPES_MODULE
+
+**סוג:** קבוע
+
+```typescript
+export const LOCAL_JSX_TYPES_MODULE;
+```
+
+המפרט היחסי למודול סוגי JSX הספציפיים למסגרת שנוצר.
+
+### localJsxTypesModuleSource
+
+פונקציה **סוג:**
+
+```typescript
+function localJsxTypesModuleSource(framework: JsxFramework): string;
+```
+
+צור הצהרות מסוג JSX הממוקמות במשותף ספציפית למסגרת.
+
+#### פרמטרים
+
+| שם    | הקלד         | תיאור |
+| ----- | ------------ | ----- |
+| מסגרת | JsxFramework |       |
+
+### NEUTRAL_MODULE
+
+**סוג:** קבוע
+
+```typescript
+export const NEUTRAL_MODULE;
+```
+
+החבילה הנייטרלית שממנה הרכיבים מייבאים את הפרימיטיבים שלהם.
+
+## `src/compiler/directives`
+
+### moduleTargetsFramework
+
+פונקציה **סוג:**
+
+```typescript
+function moduleTargetsFramework(fileName: string, source: string, framework: string): boolean;
+```
+
+האם מודול ניטרלי או ספציפי למסגרת שייך לבניית יעד.
+
+#### פרמטרים
+
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| שם קובץ | מחרוזת |       |
+| מקור    | מחרוזת |       |
+| מסגרת   | מחרוזת |       |
+
+### readFrameworkDirective
+
+פונקציה **סוג:**
+
+```typescript
+function readFrameworkDirective(fileName: string, source: string): JsxFramework | undefined;
+```
+
+קרא את ההנחיה המובילה `"use <framework>"` ממודול Oxc.
+
+#### פרמטרים
+
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| שם קובץ | מחרוזת |       |
+| מקור    | מחרוזת |       |
+
 ## `src/compiler/discover`
 
 ### DiscoverComponents
@@ -1877,7 +547,7 @@ function discoverComponents(barrelSource: string, stripPrefix = 'Forge'): Discov
 
 גלה את הרכיבים שחבית מייצאת וקבל את צורתם הציבורית. כל אחד
 ייצוא ערך מותאם לממשק האביזרים המיוצא מחדש מאותו
-הצהרה (על ידי ועידת `<PublicName>Properties`) והתיקיה שהיא חיה
+הצהרה (על פי ועידת `<PublicName>Properties`) והתיקיה שבה היא חיה
 in (שם בסיס המודול של הייצוא מחדש).
 
 #### פרמטרים
@@ -1892,17 +562,22 @@ in (שם בסיס המודול של הייצוא מחדש).
 פונקציה **סוג:**
 
 ```typescript
-function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix = 'Forge'): DiscoveredComponent[];
+function discoverComponentsFromGraph(
+  graph: ForgeFileGraph,
+  stripPrefix = 'Forge',
+  diagnostics?: CompilerDiagnostic[],
+): DiscoveredComponent[];
 ```
 
 פרויקט ייצוא של רכיבים ציבוריים מהגרף הקנוני תוך שמירה על צורת התוצאה מדור קודם.
 
 #### פרמטרים
 
-| שם          | הקלד           | תיאור |
-| ----------- | -------------- | ----- |
-| גרף         | ForgeFileGraph |       |
-| stripPrefix |                |       |
+| שם          | הקלד                 | תיאור |
+| ----------- | -------------------- | ----- |
+| גרף         | ForgeFileGraph       |       |
+| stripPrefix |                      |       |
+| אבחון       | CompilerDiagnostic[] |       |
 
 ### DiscoveredComponent
 
@@ -1936,10 +611,10 @@ function discoverHelperExports(barrelSource: string, componentFolders: ReadonlyS
 
 גלה את **מודולי העזר** שהחבית מייצאת מחדש - כל `ייצוא { … }
 מהמשפט './…'` ששם בסיס המודול שלו הוא **לא** אחד מהשמות שהתגלו
-תיקיות רכיבים. משמש להעברה של ממשקי API משותפים של מסגרת אגנוסטית (כגון
+תיקיות רכיבים. משמש להעברה של ממשקי API משותפים למסגרת אגנוסטית (כגון
 עוזרי `useToast`/`showToast`/... ההכרחיים של `toast-store`, המקבילה
-של `useToast` composable של החבילה Vue) דרך הערך שנוצר, כך
-הצרכנים נוהגים בדיוק באותו יחיד לפי מסגרת שבו משתמשים הרכיבים.
+של `useToast` composable של החבילה Vue) דרך הערך שנוצר, אז
+צרכנים נוהגים בדיוק באותו יחיד לפי מסגרת שבו משתמשים הרכיבים.
 
 #### פרמטרים
 
@@ -1956,6 +631,7 @@ function discoverHelperExports(barrelSource: string, componentFolders: ReadonlyS
 function discoverHelperExportsFromGraph(
   graph: ForgeFileGraph,
   componentFolders: ReadonlySet<string>,
+  discoveredComponents?: readonly DiscoveredComponent[],
 ): DiscoveredHelperExport[];
 ```
 
@@ -1963,10 +639,70 @@ function discoverHelperExportsFromGraph(
 
 #### פרמטרים
 
-| שם               | הקלד                | תיאור |
-| ---------------- | ------------------- | ----- |
-| גרף              | ForgeFileGraph      |       |
-| componentFolders | ReadonlySet<string> |       |
+| שם                   | הקלד                           | תיאור |
+| -------------------- | ------------------------------ | ----- |
+| גרף                  | ForgeFileGraph                 |       |
+| componentFolders     | ReadonlySet<string>            |       |
+| discoveredComponents | Readonly DiscoveredComponent[] |       |
+
+## `src/compiler/facts`
+
+### ForgeExportFact
+
+**סוג:** ממשק
+
+```typescript
+export interface ForgeExportFact
+```
+
+הצהרה או ייצוא מחדש שהתגלו במודול מקור Forge.
+
+### ForgeImportFact
+
+**סוג:** ממשק
+
+```typescript
+export interface ForgeImportFact
+```
+
+ייבוא ​​סטטי שהתגלה במודול מקור Forge.
+
+### ForgeModuleFacts
+
+**סוג:** ממשק
+
+```typescript
+export interface ForgeModuleFacts
+```
+
+כל עובדות המודול הסטטי הדרושות לבניית גרף קובץ Forge הקנוני.
+
+### ForgeSourceSpan
+
+**סוג:** ממשק
+
+```typescript
+export interface ForgeSourceSpan
+```
+
+מיקום מקור המשמש לאבחון גרפים ועובדות ייבוא/ייצוא.
+
+### inspectForgeModule
+
+פונקציה **סוג:**
+
+```typescript
+function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts;
+```
+
+חילוץ יבוא סטטי, ייצוא, קצוות מסוגים בלבד ועובדות מסגרת ממודול מנותח.
+
+#### פרמטרים
+
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| שם קובץ | מחרוזת |       |
+| מקור    | מחרוזת |       |
 
 ## `src/compiler/frontends`
 
@@ -2172,6 +908,118 @@ function hoistStaticJsx(
 | moduleKind | 'רכיב' \| 'ניתן להרכיב' |       |
 | שם רכיב    | מחרוזת                  |       |
 
+## `src/compiler/imports`
+
+### יבוא ניטרלי
+
+**סוג:** ממשק
+
+```typescript
+export interface NeutralImports
+```
+
+השמות שמודול מייבא מהחבילה הנייטרלית, מפוצלים לפי סוג מחייב.
+
+### קראייבוא ​​חיצוני
+
+פונקציה **סוג:**
+
+```typescript
+function readExternalImports(fileName: string, source: string): string[];
+```
+
+אסוף יבוא חבילות חשוף המבוצע מילה במילה אל מקורות מסגרת שנוצרו.
+
+#### פרמטרים
+
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| שם קובץ | מחרוזת |       |
+| מקור    | מחרוזת |       |
+
+### readNeutralImports
+
+פונקציה **סוג:**
+
+```typescript
+function readNeutralImports(fileName: string, source: string): NeutralImports;
+```
+
+בדוק את ייבוא ​​החבילות הנייטרליות של מודול.
+
+#### פרמטרים
+
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| שם קובץ | מחרוזת |       |
+| מקור    | מחרוזת |       |
+
+### readStyleImports
+
+פונקציה **סוג:**
+
+```typescript
+function readStyleImports(fileName: string, source: string, sourceRoot?: string): StyleImport[];
+```
+
+אסוף גיליונות סגנונות יחסיים ממודול ניטרלי.
+
+#### פרמטרים
+
+| שם         | הקלד   | תיאור |
+| ---------- | ------ | ----- |
+| שם קובץ    | מחרוזת |       |
+| מקור       | מחרוזת |       |
+| sourceRoot | מחרוזת |       |
+
+### resolveWorkspaceLocalImport
+
+פונקציה **סוג:**
+
+```typescript
+function resolveWorkspaceLocalImport(
+  specifier: string,
+  sourceFileName: string,
+  sourceRoot: string | undefined,
+): string | undefined;
+```
+
+פתור ייבוא ​​`@/` מקומי של סביבת עבודה ביחס לקובץ המקור שלו.
+
+#### פרמטרים
+
+| שם             | הקלד               | תיאור |
+| -------------- | ------------------ | ----- |
+| מפרט           | מחרוזת             |       |
+| sourceFileName | מחרוזת             |       |
+| sourceRoot     | מחרוזת \| לא מוגדר |       |
+
+### StyleIport
+
+**סוג:** ממשק
+
+```typescript
+export interface StyleImport
+```
+
+ייבוא ​​גיליון סגנונות בוצע לתוך העץ השטוח שנוצר.
+
+### usesI18nextT
+
+פונקציה **סוג:**
+
+```typescript
+function usesI18nextT(node: OxcNode): boolean;
+```
+
+בין אם מודול Oxc או node קורא `i18next.t(...)`.
+
+#### פרמטרים
+
+| שם   | הקלד    | תיאור |
+| ---- | ------- | ----- |
+| node | OxcNode |       |
+
 ## `src/compiler/optimize`
 
 ### optimizeForgeModule
@@ -2206,9 +1054,366 @@ export const optimizeSourceFile;
 
 כינוי תאימות נשמר עבור אינטגרציות מהדר באמצעות השם הישן.
 
+## `src/compiler/oxc`
+
+### buildOxcParentMap
+
+פונקציה **סוג:**
+
+```typescript
+function buildOxcParentMap(root: OxcNode): Map<OxcNode, OxcNode>;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם   | הקלד    | תיאור |
+| ---- | ------- | ----- |
+| שורש | OxcNode |       |
+
+### isOxcJsxRoot
+
+פונקציה **סוג:**
+
+```typescript
+function isOxcJsxRoot(node: OxcNode): boolean;
+```
+
+נכון כאשר node הוא אלמנט JSX, אלמנט סגירה עצמית או fragment.
+
+#### פרמטרים
+
+| שם   | הקלד    | תיאור |
+| ---- | ------- | ----- |
+| node | OxcNode |       |
+
+### isOxcNode
+
+פונקציה **סוג:**
+
+```typescript
+function isOxcNode(value: unknown): value is OxcNode;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם  | הקלד    | תיאור |
+| --- | ------- | ----- |
+| ערך | לא ידוע |       |
+
+### oxcArray
+
+פונקציה **סוג:**
+
+```typescript
+function oxcArray(node: OxcNode, key: string): OxcNode[];
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם   | הקלד    | תיאור |
+| ---- | ------- | ----- |
+| node | OxcNode |       |
+| מפתח | מחרוזת  |       |
+
+### oxcילדים
+
+פונקציה **סוג:**
+
+```typescript
+function oxcChildren(node: OxcNode): OxcNode[];
+```
+
+ילד עומק ראשון הליכה על אינספור נכסים בשווי node.
+
+#### פרמטרים
+
+| שם   | הקלד    | תיאור |
+| ---- | ------- | ----- |
+| node | OxcNode |       |
+
+### OxcComment
+
+**סוג:** ממשק
+
+```typescript
+export interface OxcComment
+```
+
+לא סופק תיאור.
+
+### oxcIdentifierName
+
+פונקציה **סוג:**
+
+```typescript
+function oxcIdentifierName(node: OxcNode | undefined): string | undefined;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם   | הקלד                | תיאור |
+| ---- | ------------------- | ----- |
+| node | OxcNode \| לא מוגדר |       |
+
+### oxcLiteralValue
+
+פונקציה **סוג:**
+
+```typescript
+function oxcLiteralValue(node: OxcNode | undefined): unknown;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם   | הקלד                | תיאור |
+| ---- | ------------------- | ----- |
+| node | OxcNode \| לא מוגדר |       |
+
+### OxcNode
+
+**סוג:** ממשק
+
+```typescript
+export interface OxcNode
+```
+
+קבוצת המשנה הניתנת לסידרה של Oxc node המשמשת את החזית הנייטרלית.
+
+### oxcNodeText
+
+פונקציה **סוג:**
+
+```typescript
+function oxcNodeText(source: string, node: OxcNode | undefined): string;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם   | הקלד                | תיאור |
+| ---- | ------------------- | ----- |
+| מקור | מחרוזת              |       |
+| node | OxcNode \| לא מוגדר |       |
+
+### oxcObject
+
+פונקציה **סוג:**
+
+```typescript
+function oxcObject(node: OxcNode, key: string): OxcNode | undefined;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם   | הקלד    | תיאור |
+| ---- | ------- | ----- |
+| node | OxcNode |       |
+| מפתח | מחרוזת  |       |
+
+### OxcParentMap
+
+**סוג:** סוג
+
+```typescript
+export type OxcParentMap = ReadonlyMap<OxcNode, OxcNode>;
+```
+
+לא סופק תיאור.
+
+### OxcParsedModule
+
+**סוג:** ממשק
+
+```typescript
+export interface OxcParsedModule
+```
+
+לא סופק תיאור.
+
+### OxcParseError
+
+**סוג:** ממשק
+
+```typescript
+export interface OxcParseError
+```
+
+לא סופק תיאור.
+
+### oxcProgramBody
+
+פונקציה **סוג:**
+
+```typescript
+function oxcProgramBody(program: OxcNode): OxcNode[];
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם     | הקלד    | תיאור |
+| ------ | ------- | ----- |
+| תוכנית | OxcNode |       |
+
+### oxcSourceExpression
+
+פונקציה **סוג:**
+
+```typescript
+function oxcSourceExpression(
+  source: string,
+  node: OxcNode,
+  syntax: SourceBackedExpression['syntax'] = 'expression',
+): SourceBackedExpression;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| מקור  | מחרוזת                          |       |
+| node  | OxcNode                         |       |
+| תחביר | SourceBackedExpression['תחביר'] |       |
+
+### oxcSourceSpan
+
+פונקציה **סוג:**
+
+```typescript
+function oxcSourceSpan(source: string, node: OxcNode): SourceSpan;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם   | הקלד    | תיאור |
+| ---- | ------- | ----- |
+| מקור | מחרוזת  |       |
+| node | OxcNode |       |
+
+### oxcString
+
+פונקציה **סוג:**
+
+```typescript
+function oxcString(node: OxcNode | undefined, key: 'name' | 'value' | 'directive' = 'name'): string | undefined;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם   | הקלד                     | תיאור |
+| ---- | ------------------------ | ----- |
+| node | OxcNode \| לא מוגדר      |       |
+| מפתח | 'שם' \| 'ערך' \| 'הנחיה' |       |
+
+### oxcTypeNode
+
+פונקציה **סוג:**
+
+```typescript
+function oxcTypeNode(node: OxcNode | undefined): OxcNode | undefined;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם   | הקלד                | תיאור |
+| ---- | ------------------- | ----- |
+| node | OxcNode \| לא מוגדר |       |
+
+### oxcUnwrapModuleStatement
+
+פונקציה **סוג:**
+
+```typescript
+function oxcUnwrapModuleStatement(statement: OxcNode): {
+  readonly node: OxcNode;
+  readonly exported: boolean;
+  readonly exportStatement: OxcNode | undefined;
+};
+```
+
+פתח את עטיפות `export …` כדי שהמתקשרים יראו את ההצהרה הבסיסית.
+
+#### פרמטרים
+
+| שם    | הקלד    | תיאור |
+| ----- | ------- | ----- |
+| הצהרה | OxcNode |       |
+
+### parseOxcModule
+
+פונקציה **סוג:**
+
+```typescript
+function parseOxcModule(fileName: string, source: string): OxcParsedModule;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| שם קובץ | מחרוזת |       |
+| מקור    | מחרוזת |       |
+
+### stripOxcFrameworkDirective
+
+פונקציה **סוג:**
+
+```typescript
+function stripOxcFrameworkDirective(module: OxcParsedModule): OxcParsedModule;
+```
+
+שחרר את הנחיות הפרולוג `"use <framework>"` מובילות ממודול מנותח.
+
+#### פרמטרים
+
+| שם    | הקלד            | תיאור |
+| ----- | --------------- | ----- |
+| מודול | OxcParsedModule |       |
+
+### visitOxc
+
+פונקציה **סוג:**
+
+```typescript
+function visitOxc(node: OxcNode, visitor: (node: OxcNode) => void | boolean): void;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם   | הקלד                              | תיאור |
+| ---- | --------------------------------- | ----- |
+| node | OxcNode                           |       |
+| מבקר | (node: OxcNode) => ריק \| בוליאני |       |
+
 ## `src/compiler/pipeline`
 
-### analysForgeModule
+### analyzeForgeModule
 
 פונקציה **סוג:**
 
@@ -2223,7 +1428,7 @@ function analyzeForgeModule(
 
 זהו התפר הנייטרלי של כל צרכן שאינו מסגרת (בעיקר ה-CMS
 מנהל ההקרנה) משתמש כדי להשיג את ה-IR מבלי לבחור תוסף יעד.
-תוצאות משותפות דרך אותו מטמון שבו משתמש צינור המסגרת, אז א
+התוצאות משותפות דרך אותו מטמון שבו משתמש צינור המסגרת, אז א
 רכיב המנותח עבור מספר יעדים בבנייה אחת מוסק רק פעם אחת.
 
 #### פרמטרים
@@ -2415,17 +1620,107 @@ export class PersistentForgeCompilerService implements ForgeCompilerService
 
 מצב מהדר סינכרוני ארוך טווח עבור הפעלה אחת של תהליך/בנייה.
 
-## `src/config`
+## `src/compiler/session`
 
-### בְּרִירַת מֶחדָל
+### createForgeBuildSession
 
 פונקציה **סוג:**
 
 ```typescript
-function reactJsxPlugin(): Plugin;
+function createForgeBuildSession(options: CreateForgeBuildSessionOptions = {}): ForgeBuildSession;
+```
+
+צור את הבעלים המפורש של מחזור החיים המשמש את מתאמי Vite ומתאמי tsdown.
+בנייה רושמת רק בעלות על שירות; גילוי הגרפים מתחיל ב
+`prepare`, שאליו מתאמים קוראים מהוק למחזור חיים של צרור.
+
+#### פרמטרים
+
+| שם       | הקלד                           | תיאור |
+| -------- | ------------------------------ | ----- |
+| אפשרויות | CreateForgeBuildSessionOptions |       |
+
+### CreateForgeBuildSessionOptions
+
+**סוג:** ממשק
+
+```typescript
+export interface CreateForgeBuildSessionOptions
 ```
 
 לא סופק תיאור.
+
+### ForgeBuildKind
+
+**סוג:** סוג
+
+```typescript
+export type ForgeBuildKind = 'component' | 'hook' | 'neutral' | 'router' | 'cms-island';
+```
+
+בניית מדיניות הנתמכת על ידי מחזור החיים המשותף של Forge.
+
+### ForgeBuildPlan
+
+**סוג:** ממשק
+
+```typescript
+export interface ForgeBuildPlan
+```
+
+הפרויקט הנייטרלי ויעדים נבחרים מתואמים לפי מחזור חיים אחד.
+
+### ForgeBuildSession
+
+**סוג:** ממשק
+
+```typescript
+export interface ForgeBuildSession
+```
+
+לא סופק תיאור.
+
+### ForgeTargetGenerationContext
+
+**סוג:** ממשק
+
+```typescript
+export interface ForgeTargetGenerationContext
+```
+
+ההקשר הועבר להתקשרות חוזרת של דור יעד לאחר הכנת הפרויקט.
+
+### ForgeTargetGenerationResult
+
+**סוג:** ממשק
+
+```typescript
+export interface ForgeTargetGenerationResult
+```
+
+התוצאה הוחזרה על ידי שלב יצירת מקור עצל של יעד.
+
+### ForgeTargetPlan
+
+**סוג:** ממשק
+
+```typescript
+export interface ForgeTargetPlan
+```
+
+יעד אחד בבעלות מתקשר בסשן בניית Forge.
+
+### ForgeTargetResult
+
+**סוג:** ממשק
+
+```typescript
+export interface ForgeTargetResult
+```
+
+לא סופק תיאור.
+
+## `src/config`
 
 ### defineJsxHookLibraryConfig
 
@@ -2501,13 +1796,13 @@ function solidJsxPlugin(): Plugin[];
 מקורות מקוריים (Babel `babel-preset-solid`), מה שהופך את ה-JSX הנייטרלי ל
 פעולות DOM עדינות של SolidJS. ייצוא מחדש כך מגולגל ביד
 `vite.config.ts` - כזה שמרכיב את `stagePlugins` משלו במקום
-קורא ל-{@link defineJsxLibraryConfig} - יכול לחבר את Solid לשנות את
-באותה דרך {@link reactJsxPlugin}/{@link sveltePlugin} תן לזה לחבר React/Svelte,
+קורא ל-{@link defineJsxLibraryConfig} - יכול לחבר את ה-Solid להפוך את
+באותה דרך {@link reactJsxPlugin}/{@link sveltePlugin} תן לזה לחבר את React/Svelte,
 מבלי למשוך תלות ישירה חדשה. **נדרש** עבור `solid`
 יעד: בלעדיו, טרנספורמציה Oxc JSX המוגדרת כברירת מחדל של Vite מרכיבה את Solid
 מקורות נגד `react/jsx-runtime`, המייצרים פלט לא פונקציונלי.
 
-**Vite בלבד** - תחת tsdown/Rolldown השתמש במקום זאת ב-{@link solidJsxTsdownPlugin}.
+**Vite בלבד** - תחת tsdown/Rolldown השתמש ב-{@link solidJsxTsdownPlugin} במקום זאת.
 
 ### SolidJsxTsdownPlugin
 
@@ -2530,7 +1825,7 @@ function solidJsxTsdownPlugin(): Plugin;
 function stagePluginsForTsdown(plugin: FrameworkOutputPlugin): Plugin[];
 ```
 
-תוספים שלב 2 ל-Forge framework שנבנה תחת **tsdown** (Rolldown).
+תוספים של שלב 2 ל-Forge framework שנבנה תחת **tsdown** (Rolldown).
 העדיפו את זה על פני {@link reactJsxPlugin}/{@link solidJsxPlugin}/{@link sveltePlugin}
 כאשר המצרף אינו Vite - התוספים Vite בלבד Svelte/Solid קורסים בגלל
 הם דורשים את התצורה שנפתרה של Vite.
@@ -2560,7 +1855,7 @@ function svelteTsdownPlugin(): Plugin;
 ```
 
 תוסף מהדר Svelte תואם Rolldown/tsdown. מרכיב `.svelte` SFCs באמצעות
-`svelte/compiler` בהוק רגיל `transform` - ללא ממשקי API של Vite עם תצורה פתורה.
+`svelte/compiler` בהוק רגיל של `transform` - ללא ממשקי API של Vite עם תצורה פתורה.
 העדיפו את זה (או את {@link stagePluginsForTsdown}) כשאתם בונים עם tsdown.
 
 ## `src/generate-hooks`
@@ -2573,7 +1868,7 @@ function svelteTsdownPlugin(): Plugin;
 function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions): string;
 ```
 
-הרכיב ספריית הוק נייטרלית לעץ המקור שלה לכל מסגרת (שלב 1),
+הרכיב ספריית הוק ניטראלית לעץ המקור שלה לכל מסגרת (שלב 1),
 החזרת נתיב מודול הכניסה שנוצר.
 
 #### פרמטרים
@@ -2591,45 +1886,6 @@ export interface GenerateHookLibrarySourcesOptions
 ```
 
 אפשרויות עבור {@link generateHookLibrarySources}.
-
-### HookLibraryDtsOptions
-
-**סוג:** ממשק
-
-```typescript
-export interface HookLibraryDtsOptions
-```
-
-אפשרויות עבור {@link hookLibraryDtsPlugin}.
-
-### hookLibraryDtsPlugin
-
-פונקציה **סוג:**
-
-```typescript
-function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin;
-```
-
-תוסף Vite לאחר בנייה שפולט הצהרות **מקוריות, לכל מסגרת**
-עבור עץ המקור שנוצר של ספריית הוק.
-
-כל בניית מסגרת ({@link generateHookLibrarySources} + המסגרת של המסגרת
-Stage-2 bundler) מייצר JS אך ללא הצהרות, מכיוון שהעץ שנוצר הוא
-לא קובץ מקור גלוי ל-`tsc`. במקום לייצא מחדש יחיד _נפוץ_
-הצהרה ניטרלית עבור כל מסגרת, תוסף זה מריץ את TypeScript
-מהדר API על העץ שנוצר ב-`closeBundle` (שלב לאחר בנייה) ו
-כותב את קבצי `.d.ts` המתקבלים (`index.d.ts` + אחד לכל מודול) לתוך
-לבנות `outDir` משלו. אז המבנה **React** מקבל הצהרות מוקלדות נגד
-הווים של React והמבנה **Vue** מקבלים הצהרות שהרכיבים שלהן
-return Vue `Ref`s - כל מסגרת סוגים משלה. סוג אבחון הם
-הופיעו כאזהרות בנייה ולא כשלים ולכן `.d.ts` תמיד
-מיוצר.
-
-#### פרמטרים
-
-| שם       | הקלד                  | תיאור |
-| -------- | --------------------- | ----- |
-| אפשרויות | HookLibraryDtsOptions |       |
 
 ## `src/generate`
 
@@ -2686,161 +1942,33 @@ export interface GenerateFrameworkSourcesOptions
 
 אפשרויות עבור {@link generateFrameworkSources}.
 
-### jsxComponentsCssImportPlugin
-
-פונקציה **סוג:**
-
-```typescript
-function jsxComponentsCssImportPlugin(): Plugin;
-```
-
-קשר מחדש CSS לכל רכיב לנתח ה-JS שלו.
-
-מבנה Vite **ספרייה** עם `cssCodeSplit` מחלץ נכס CSS אחד לכל נתח
-אבל - בניגוד לבניית אפליקציה - לא מזריק את ה-`import './x.css'` התואם
-לתוך נתח JS, כך שצרכן המייבא רכיב בודד יקבל את שלו
-JS בלי הסגנונות שלו. תוסף זה משחזר את הקישור הזה: עבור כל הנפלט
-chunk it מקדים ייבוא תופעת לוואי של כל קובץ CSS Vite המשויך אליו
-זה (`chunk.viteMetadata.importedCss`), אז ייבוא של רכיב אחד מושך פנימה
-בדיוק גיליון הסגנונות של הרכיב הזה (ועץ מרעיד את שאר הספרייה,
-סגנונות כלולים).
-
-הוא פועל עם `enforce: 'post'` כך שה-`generateBundle` שלו פועל **אחרי**
-תוסף ה-CSS של Vite עצמו אכלס את `importedCss` - אחרת המטא נתונים הם
-עדיין ריקים (ולכן הנכסים בסגנון Vue, הנפלטים תחת
-`preserveModules`, נותרו בעבר מיותמים והרכיבים טופלו
-לא מעוצב).
-
-רק קובצי CSS שנפלטו לתוך החבילה מקושרים מחדש. מתחת
-`preserveModules` Vite מבטל כפילות של נכסי CSS זהים בתים - למשל. המשותף
-מודולי השירות `size`/`spacing` המיובאים על ידי רכיבים רבים קורסים ל-
-גיליון סגנונות שנפלט יחיד - ומפיל את הכפילויות, אך עדיין עוזב את שלהם
-שמות זמניים לכל נתח ב-`importedCss`. פליטת `import './x.css'` עבור א
-שם נפל מייצר רפרנס משתלשל ששובר כל מורד הזרם
-המבנה של הצרכן (יבוא לא פתור), כך ששמות כאלה מסוננים; את
-סגנונות משוכפלים עדיין נשלחים דרך הנתח האחד ששמר עליהם (ואת
-חביות `./vue` / `./react` של החבילה מושכות את הנתח הזה).
-
-לבסוף, כל גיליון סגנונות CSS-Module נפלט תחת השם **מקור** שלו -
-`foo.module.css` - עם הגיבוב של שם המחלקה כבר הוחל וה-
-שמות פתורים שנאפו במפת הכיתה `foo.module.js` אח. שולחים אותו
-עם הסיומת `.module.css` היא מלכודת: כל צרור _בהמשך_ (למשל
-React Vite משלו של Storybook) מזהה את `*.module.css` כמודול CSS ו
-מריץ את הטרנספורמציה של ה-CSS-Modules מעליו **פעם שנייה**, תוך גיבוש מחדש של
-בוררים, כך שהם כבר לא תואמים לשמות המחלקות (שכבר הושטפו) שנאפו בהם
-ה-JS - הרכיב הופך ללא סטייל. יש לעבד את גיליון הסגנונות
-פעם, כאן, כאשר קוד המסגרת מורכב - לא שוב במורד הזרם. אז
-כל נכס `*.module.css` שנפלט משתנה ל-`*.css` רגיל (עולמי
-צרכני גיליונות הסגנונות שולחים מילה במילה), ונקודות הייבוא המקושרות מחדש ב-
-קובץ ששונה.
-
-### JsxComponentsDtsOptions
-
-**סוג:** ממשק
-
-```typescript
-export interface JsxComponentsDtsOptions
-```
-
-אפשרויות עבור {@link jsxComponentsDtsPlugin}.
-
-### jsxComponentsDtsPlugin
-
-פונקציה **סוג:**
-
-```typescript
-function jsxComponentsDtsPlugin(options: JsxComponentsDtsOptions): Plugin;
-```
-
-תוסף Vite לאחר בנייה שפולט הצהרות **מקוריות, לכל מסגרת**
-עבור עץ המקור שנוצר של חבילת רכיבים ניטרליים.
-
-כל בניית מסגרת ({@link generateFrameworkSources} + המסגרת של המסגרת
-Stage-2 bundler) מייצר JS אך ללא הצהרות, מכיוון שהעץ שנוצר הוא
-לא קובץ מקור גלוי ל-`tsc`. במקום לסנתז ערך בודד
-הצהרה שסוגי האביזרים שלה מיובאים מחדש מה-**נייטרלי המשותף**
-הצהרות (כך שהצרכנים של כל מסגרת יראו את אותו `MpChild` /
-`MpRef`), תוסף זה מריץ את שרשרת כלי ההצהרה של כל מסגרת משלו
-העץ שנוצר ב-`closeBundle` וכותב את קבצי ה-`.d.ts` שנוצרו
-לתוך `outDir` של המבנה עצמו:
-
-- **React** - ה-API של המהדר TypeScript על עץ `.tsx`, בתהליך.
-  מכיוון שפולט React כבר כותב מחדש את סוגי הרינדור/הוק הניטרליים ל
-  המקבילות שלהם ל-React (`MpChild` → `ReactNode`, `MpRef` → `RefObject`,
-  `MpDependencyList` → `DependencyList`), ההצהרות שנפלטו נקראות
-  באופן אידיומטי עבור React.
-- **Vue** - ה-`vue-tsc` CLI מעל העץ `.vue`, שפולט כל SFC
-  `DefineComponent` מדויק (אביזרים, חריצים, פולטים) בתוספת `.vue.d.ts` שלו
-  קרונית צד.
-- **Solid** - אותו TypeScript מהדר API בתהליך כמו React, מעל
-  נוצר עץ `.tsx`, אך כאשר מרחב השמות JSX מצביע על `solid-js` כך
-  ה-JSX בטעם Solid שהפולט יוצר פותר נגד זה של Solid
-  `JSX.Element` אוצר מילים.
-- **רכיבי אינטרנט** - אותו ממשק API של TypeScript מהדר בתהליך, על פני
-  עץ `.ts` שנוצר (ללא JSX) של תת מחלקות `LitElement`.
-- **Svelte** - מנסה לסנכרן `emitDts` של `svelte2tsx` על פני
-  `.svelte` + `.ts` עץ ראשון (פולט ההצהרה המודע ל-SFC מה-
-  כלי שפה Svelte), אך נכון ל-`svelte2tsx` התלוי כרגע
-  גרסה לכל רכיב `.svelte.d.ts` מכוניות הצד שלה נשלחות תלויות
-  הפניה מסוג אביזרים שהם אף פעם לא מצהירים או מייבאים (ראה {@link * svelteDtsOutputIsUsable}), כך שכרגע זה תמיד נופל בחזרה ל-
-  הצהרת כניסה מסונתזת עבור `index.d.ts` חוקי.
-
-אבחון סוג מופיע כאזהרות בנייה ולא כשלים ולכן א
-`.d.ts` מופק תמיד (בשיקוף של {@link hookLibraryDtsPlugin}).
-
-#### פרמטרים
-
-| שם       | הקלד                    | תיאור |
-| -------- | ----------------------- | ----- |
-| אפשרויות | JsxComponentsDtsOptions |       |
-
-### JsxComponentsEntryDtsOptions
-
-**סוג:** ממשק
-
-```typescript
-export interface JsxComponentsEntryDtsOptions
-```
-
-אפשרויות עבור {@link jsxComponentsEntryDtsPlugin}.
-
-### jsxComponentsEntryDtsPlugin
-
-פונקציה **סוג:**
-
-```typescript
-function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plugin;
-```
-
-שלח את ההצהרה המסונתזת (`<declarationFileName>.d.ts`) עבור ה
-ערך שנוצר, כך שסוגי `./react` / `./vue` של החבילה פותרים אפילו
-למרות שהערך עצמו נוצר (ולכן לא נראה על ידי `tsc`).
-
-#### פרמטרים
-
-| שם       | הקלד                         | תיאור |
-| -------- | ---------------------------- | ----- |
-| אפשרויות | JsxComponentsEntryDtsOptions |       |
-
 ## `src/tsdown`
 
-### defineTsdownForgeComponents
+### CanonicalChunkCandidate
+
+**סוג:** סוג
+
+```typescript
+export type CanonicalChunkCandidate = | string |
+```
+
+לא סופק תיאור.
+
+### defineTsdownForgeComponentsAll
 
 פונקציה **סוג:**
 
 ```typescript
-function defineTsdownForgeComponents(options: TsdownForgeComponentsOptions): UserConfig[];
+function defineTsdownForgeComponentsAll(options: TsdownForgeComponentPluginsOptions): UserConfig[];
 ```
 
-שחזר מסגרת אחת של Archetype-C **component** שנבנתה תחת tsdown:
-שלב 1 (`generateFrameworkSources`) + פלאגין שלב 2 + css-import + תוספים dts,
-פולט לתוך `dist/<framework>/`.
+בנה תצורות tsdown עצמאיות עבור כל מסגרת מבוקשת של רכיב Forge.
 
 #### פרמטרים
 
-| שם       | הקלד                         | תיאור |
-| -------- | ---------------------------- | ----- |
-| אפשרויות | TsdownForgeComponentsOptions |       |
+| שם       | הקלד                               | תיאור |
+| -------- | ---------------------------------- | ----- |
+| אפשרויות | TsdownForgeComponentPluginsOptions |       |
 
 ### defineTsdownForgeEmailComponents
 
@@ -2861,24 +1989,6 @@ function defineTsdownForgeEmailComponents(options: TsdownForgeEmailComponentsOpt
 | -------- | --------------------------------- | ----- |
 | אפשרויות | TsdownForgeEmailComponentsOptions |       |
 
-### defineTsdownForgeHooks
-
-פונקציה **סוג:**
-
-```typescript
-function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig;
-```
-
-שחזר מסגרת אחת של Archetype-C **hook** שנבנתה תחת tsdown:
-שלב 1 (`generateHookLibrarySources`) + פלאגין שלב 2 + `hookLibraryDtsPlugin`,
-פולט לתוך `dist/<framework>/`.
-
-#### פרמטרים
-
-| שם       | הקלד                    | תיאור |
-| -------- | ----------------------- | ----- |
-| אפשרויות | TsdownForgeHooksOptions |       |
-
 ### defineTsdownForgeHooksAll
 
 פונקציה **סוג:**
@@ -2897,12 +2007,66 @@ function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserCon
 | -------- | -------------------------- | ----- |
 | אפשרויות | TsdownForgeHooksAllOptions |       |
 
-### TsdownForgeComponentsOptions
+### resolveCanonicalChunkName
+
+פונקציה **סוג:**
+
+```typescript
+function resolveCanonicalChunkName(chunkInfo: CanonicalChunkCandidate): string;
+```
+
+קבע את שם קובץ הנתח הנפלט הקנוני עבור נתח.
+משמר נתיבים קנוניים `[name].js` ללא התנגשויות ומפות
+Vue מודולי סקריפט וירטואליים ל-`${component}.script.js`.
+
+#### פרמטרים
+
+| שם        | הקלד                    | תיאור |
+| --------- | ----------------------- | ----- |
+| chunkInfo | CanonicalChunkCandidate |       |
+
+### resolveCanonicalEntryName
+
+פונקציה **סוג:**
+
+```typescript
+function resolveCanonicalEntryName(chunkInfo: CanonicalChunkCandidate): string;
+```
+
+קבע את שם קובץ הערך הנפלט הקנוני עבור נתח.
+ערכי זיוף וירטואליים ממופים ל-`index.js`, בעודם נשמרים
+מודולים מאצילים לרזולוציית שם נתח.
+
+#### פרמטרים
+
+| שם        | הקלד                    | תיאור |
+| --------- | ----------------------- | ----- |
+| chunkInfo | CanonicalChunkCandidate |       |
+
+### tsdownForgeComponentPlugins
+
+פונקציה **סוג:**
+
+```typescript
+function tsdownForgeComponentPlugins(options: TsdownForgeComponentPluginsOptions): TsdownPlugin[];
+```
+
+שחזר מסגרת אחת של Archetype-C **component** שנבנתה תחת tsdown:
+שלב 1 (`generateFrameworkSources`) + פלאגין שלב 2 + css-import + פלאגין dts,
+פולט לתוך `dist/<framework>/`.
+
+#### פרמטרים
+
+| שם       | הקלד                               | תיאור |
+| -------- | ---------------------------------- | ----- |
+| אפשרויות | TsdownForgeComponentPluginsOptions |       |
+
+### TsdownForgeComponentPluginsOptions
 
 **סוג:** ממשק
 
 ```typescript
-export interface TsdownForgeComponentsOptions
+export interface TsdownForgeComponentPluginsOptions
 ```
 
 לא סופק תיאור.
@@ -2917,22 +2081,30 @@ export interface TsdownForgeEmailComponentsOptions
 
 לא סופק תיאור.
 
+### tsdownForgeHookPlugins
+
+פונקציה **סוג:**
+
+```typescript
+function tsdownForgeHookPlugins(options: TsdownForgeHooksAllOptions): TsdownPlugin[];
+```
+
+צורת tsdown-plugin מקורית של מתאם הוו. התוספים שהוחזרו מזריקים
+תצורת היעד שלהם מ-`tsdownConfig`, המאפשרת ליצור בניית Hook
+עם תצורת `defineTsdownLibrary` בבעלות מתקשר אחד.
+
+#### פרמטרים
+
+| שם       | הקלד                       | תיאור |
+| -------- | -------------------------- | ----- |
+| אפשרויות | TsdownForgeHooksAllOptions |       |
+
 ### TsdownForgeHooksAllOptions
 
 **סוג:** ממשק
 
 ```typescript
 export interface TsdownForgeHooksAllOptions
-```
-
-לא סופק תיאור.
-
-### TsdownForgeHooksOptions
-
-**סוג:** ממשק
-
-```typescript
-export interface TsdownForgeHooksOptions
 ```
 
 לא סופק תיאור.

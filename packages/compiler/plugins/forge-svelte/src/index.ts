@@ -13,8 +13,9 @@ import { optimizeSvelteModule } from "./optimize.js";
 
 import type { SvelteLoweredModule } from "./lower.js";
 import type {
-  FrameworkBuildAdapters,
+  ForgeBuildAdapters,
   FrameworkOutputPlugin,
+  SemanticModule,
   TargetContext,
   TargetIntentions,
   TargetOptimizeOptions,
@@ -41,7 +42,7 @@ function svelteTsdownPlugin(): Plugin {
   };
 }
 
-const BUILD: FrameworkBuildAdapters = {
+const BUILD: ForgeBuildAdapters = {
   vite: () => [svelte() as unknown as Plugin],
   tsdown: () => [svelteTsdownPlugin() as TsdownPlugin],
 };

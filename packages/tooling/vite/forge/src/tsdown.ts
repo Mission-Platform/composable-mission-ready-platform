@@ -40,11 +40,13 @@ function flattenPlugins(plugins: UserConfig['plugins']): TsdownPlugin[] {
   return [plugins as TsdownPlugin];
 }
 
+/** Compute the cached directory path for generated Forge framework sources. */
 function forgeGeneratedDirectory(rootDir: string, targetId: string, entryModule: string, outputRoot?: string): string {
   const fingerprint = createForgeFingerprint({ entryModule, outputRoot, rootDir, targetId });
   return path.join(rootDir, 'node_modules/.cache/forge-build', fingerprint.slice(0, 20), targetId);
 }
 
+/** Clean up abandoned attempt artifacts for a generated directory on bundle close. */
 function removeGeneratedDirectoryPlugin(generatedDirectory: string, targetId: string): TsdownPlugin {
   return {
     name: '@mission-platform/vite-plugin-forge:remove-generated-directory',
@@ -54,6 +56,49 @@ function removeGeneratedDirectoryPlugin(generatedDirectory: string, targetId: st
   } as TsdownPlugin;
 }
 
+/** Resolve overrides outDir relative to the isolated output root when provided. */
+function resolveOverrideOutDir(overrides: UserConfig, rootDir?: string, outputRoot?: string): UserConfig {
+  if (rootDir === undefined || outputRoot === undefined || typeof overrides.outDir !== 'string') {
+    return overrides;
+  }
+  return {
+    ...overrides,
+    outDir: resolveTsdownOutputDirectory(rootDir, overrides.outDir, outputRoot),
+  };
+}
+
+type BundlerOption = UserConfig['inputOptions'] | UserConfig['outputOptions'];
+
+/** Combine two defined bundler option objects or functions. */
+function combineBundlerOptions<T extends BundlerOption>(base: T, overrides: T): T {
+  if (typeof overrides === 'function' || typeof base === 'function') {
+    return overrides;
+  }
+  return { ...base, ...overrides };
+}
+
+/** Merge bundler options that can be either a function or an options object. */
+function mergeBundlerOptions<T extends BundlerOption>(base?: T, overrides?: T): T | undefined {
+  if (overrides === undefined) return base;
+  if (base === undefined) return overrides;
+  return combineBundlerOptions(base, overrides);
+}
+
+/** Resolve effective dts configuration between base and overrides. */
+function resolveMergedDts(baseDts: UserConfig['dts'], overrideDts: UserConfig['dts']): UserConfig['dts'] {
+  return overrideDts === undefined ? baseDts : overrideDts;
+}
+
+/** Concatenate and normalize base and override plugins list. */
+function resolveMergedPlugins(
+  basePlugins: UserConfig['plugins'],
+  overridePlugins: UserConfig['plugins'],
+): UserConfig['plugins'] {
+  if (overridePlugins === undefined) return basePlugins;
+  if (basePlugins === undefined) return overridePlugins;
+  return [...flattenPlugins(basePlugins), ...flattenPlugins(overridePlugins)];
+}
+
 /** Deep-merge a base tsdown config with caller overrides (shallow for top-level, concat plugins). */
 function mergeTsdownConfig(
   base: UserConfig,
@@ -61,45 +106,177 @@ function mergeTsdownConfig(
   rootDir?: string,
   outputRoot?: string,
 ): UserConfig {
-  if (!overrides) {
-    return base;
-  }
-
-  const resolvedOverrides =
-    rootDir !== undefined && outputRoot !== undefined && typeof overrides.outDir === 'string'
-      ? {
-          ...overrides,
-          outDir: resolveTsdownOutputDirectory(rootDir, overrides.outDir, outputRoot),
-        }
-      : overrides;
-
-  const mergedPlugins = [...flattenPlugins(base.plugins), ...flattenPlugins(resolvedOverrides.plugins)];
-
+  if (!overrides) return base;
+  const resolvedOverrides = resolveOverrideOutDir(overrides, rootDir, outputRoot);
   return {
     ...base,
     ...resolvedOverrides,
-    deps: {
-      ...base.deps,
-      ...resolvedOverrides.deps,
-    },
-    dts: resolvedOverrides.dts === undefined ? base.dts : resolvedOverrides.dts,
+    dts: resolveMergedDts(base.dts, resolvedOverrides.dts),
     hooks: resolvedOverrides.hooks ?? base.hooks,
-    inputOptions:
-      typeof resolvedOverrides.inputOptions === 'function' || typeof base.inputOptions === 'function'
-        ? (resolvedOverrides.inputOptions ?? base.inputOptions)
-        : {
-            ...(typeof base.inputOptions === 'object' ? base.inputOptions : {}),
-            ...(typeof resolvedOverrides.inputOptions === 'object' ? resolvedOverrides.inputOptions : {}),
-          },
-    outputOptions:
-      typeof resolvedOverrides.outputOptions === 'function' || typeof base.outputOptions === 'function'
-        ? (resolvedOverrides.outputOptions ?? base.outputOptions)
-        : {
-            ...(typeof base.outputOptions === 'object' ? base.outputOptions : {}),
-            ...(typeof resolvedOverrides.outputOptions === 'object' ? resolvedOverrides.outputOptions : {}),
-          },
-    plugins: mergedPlugins.length > 0 ? mergedPlugins : undefined,
+    inputOptions: mergeBundlerOptions(base.inputOptions, resolvedOverrides.inputOptions),
+    outputOptions: mergeBundlerOptions(base.outputOptions, resolvedOverrides.outputOptions),
+    plugins: resolveMergedPlugins(base.plugins, resolvedOverrides.plugins),
   };
+}
+
+export type CanonicalChunkCandidate =
+  | string
+  | {
+      readonly name?: string | null;
+      readonly facadeModuleId?: string | null;
+    };
+
+/**
+ * Extracts candidate chunk name and facadeModuleId.
+ *
+ * @param chunkInfo - Chunk string or candidate object.
+ * @returns Normalized chunk candidate object.
+ */
+function extractChunkCandidate(chunkInfo: CanonicalChunkCandidate): {
+  readonly name: string;
+  readonly facadeModuleId?: string | null;
+} {
+  if (typeof chunkInfo === 'string') {
+    return { name: chunkInfo };
+  }
+  return {
+    name: chunkInfo.name ?? '',
+    facadeModuleId: chunkInfo.facadeModuleId,
+  };
+}
+
+/**
+ * Checks whether a candidate chunk represents a virtual Forge entry module.
+ *
+ * @param name - Candidate chunk name.
+ * @param facadeModuleId - Facade module identifier.
+ * @returns True if chunk is a Forge virtual entry.
+ */
+function isForgeVirtualEntry(name: string, facadeModuleId?: string | null): boolean {
+  if (facadeModuleId?.includes('virtual:forge-entry')) {
+    return true;
+  }
+  return name.includes('forge-entry') || /(?:^|\/)entry(?:[:_])/.test(name);
+}
+
+/**
+ * Determine the canonical emitted entry filename for a chunk.
+ * Virtual forge entries are mapped to `index.js`, while preserved
+ * modules delegate to chunk name resolution.
+ */
+export function resolveCanonicalEntryName(chunkInfo: CanonicalChunkCandidate): string {
+  const { name, facadeModuleId } = extractChunkCandidate(chunkInfo);
+  if (isForgeVirtualEntry(name, facadeModuleId)) {
+    return 'index.js';
+  }
+  return resolveCanonicalChunkName(chunkInfo);
+}
+
+/**
+ * Resolves canonical script chunk name for Vue virtual script modules.
+ *
+ * @param name - Candidate chunk name.
+ * @param facadeModuleId - Facade module identifier.
+ * @returns Emitted script chunk name if matching Vue virtual pattern, or undefined.
+ */
+function resolveVueScriptChunkName(name: string, facadeModuleId?: string | null): string | undefined {
+  const vueScriptMatch = name.match(/^(.*?)(?:\.vue)?[?_]vue[&_](?:[^/]*?)type[=_]?script(?:[^/]*)$/);
+  if (vueScriptMatch) {
+    return `${vueScriptMatch[1]}.script.js`;
+  }
+  if (facadeModuleId) {
+    const facadeMatch = facadeModuleId.match(
+      /(?:^|[/\\])((?:components|composables|styles|utils)[/\\][^\n?]+?)(?:\.vue)?[?_]vue[&_](?:[^/\\]*?)type[=_]?script/,
+    );
+    if (facadeMatch) {
+      return `${facadeMatch[1].split('\\').join('/')}.script.js`;
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Determine the canonical emitted chunk filename for a chunk.
+ * Preserves canonical `[name].js` paths without collisions and maps
+ * Vue virtual script modules to `${component}.script.js`.
+ */
+export function resolveCanonicalChunkName(chunkInfo: CanonicalChunkCandidate): string {
+  const { name, facadeModuleId } = extractChunkCandidate(chunkInfo);
+  return resolveVueScriptChunkName(name, facadeModuleId) ?? '[name].js';
+}
+
+/**
+ * Normalizes Vue virtual script import specifiers in emitted code.
+ *
+ * @param code - Emitted chunk code.
+ * @returns Code with normalized Vue script paths.
+ */
+function normalizeVueScriptSpecifiers(code: string): string {
+  if (code.includes('vue&type=script') || code.includes('vue_vue_type_script') || code.includes('.vue?')) {
+    return code.replace(
+      /(['"]\.\/[^'"]*?)(?:\.vue)?[?_]vue[&_](?:[^'"]*?)type[=_]?script[^'"]*(['"])/g,
+      '$1.script.js$2',
+    );
+  }
+  return code;
+}
+
+/**
+ * Normalizes CSS/SCSS module import specifiers in emitted code.
+ *
+ * @param code - Emitted chunk code.
+ * @returns Code with normalized stylesheet paths.
+ */
+function normalizeCssModuleSpecifiers(code: string): string {
+  if (code.includes('.module.scss') || code.includes('.module.css')) {
+    return code.replace(/(['"]\.\/[^'"]*?)\.module\.(?:scss|css)(['"])/g, '$1.css$2');
+  }
+  return code;
+}
+
+/**
+ * Normalizes chunk code specifiers: ensures Vue virtual script modules
+ * and CSS module relative specifiers point to canonical emitted files.
+ */
+export function forgePathNormalizationPlugin(): TsdownPlugin {
+  return {
+    name: '@mission-platform/vite-plugin-forge:path-normalization',
+    renderChunk(code) {
+      const updated = normalizeCssModuleSpecifiers(normalizeVueScriptSpecifiers(code));
+      return updated === code ? null : updated;
+    },
+  };
+}
+
+/** Resolves destination and staging output directories for a framework target build. */
+function resolveTargetOutputDirs(
+  rootDir: string,
+  framework: string,
+  overridesOutDir: string | undefined,
+  outputRoot?: string,
+): { targetOutDir: string; publishedOutDir: string; attemptFinalOutDir: string; attemptOutDir: string } {
+  const targetOutDir =
+    typeof overridesOutDir === 'string'
+      ? path.resolve(rootDir, overridesOutDir)
+      : path.resolve(rootDir, `dist/${framework}`);
+  const publishedOutDir = resolveTsdownOutputDirectory(rootDir, targetOutDir, outputRoot);
+  const attemptFinalOutDir = forgeArtifactAttemptDirectory(targetOutDir, framework);
+  const attemptOutDir = resolveTsdownOutputDirectory(rootDir, attemptFinalOutDir, outputRoot);
+  return { targetOutDir, publishedOutDir, attemptFinalOutDir, attemptOutDir };
+}
+
+/** Resolves tsdown stage plugins configured for a framework build. */
+function resolveStagePlugins(
+  plugin: FrameworkOutputPlugin,
+  rootDir: string,
+  generatedDirectory: string,
+  attemptOutDir: string,
+): TsdownPlugin[] {
+  return (plugin.build.tsdown?.({
+    rootDir,
+    generatedDirectory,
+    outputDirectory: attemptOutDir,
+  }) ?? []) as TsdownPlugin[];
 }
 
 export interface TsdownForgeHooksOptions {
@@ -117,26 +294,28 @@ export interface TsdownForgeHooksOptions {
   external?: readonly string[];
   /** Override or extend the generated config. */
   overrides?: UserConfig;
-  /** Persistent service shared by component and hook helpers in one build session. */
-  service?: ForgeCompilerService;
-  /** Explicit lifecycle session shared by component and hook helpers. */
+  /** Shared compiler session for multi-target builds. */
   session?: ForgeBuildSession;
-  /** Dispose an internally shared service after this config finishes. */
+  /** Shared compiler service used when session is omitted. */
+  service?: ForgeCompilerService;
+  /** When true, dipose the service when the bundle closes. */
   disposeService?: boolean;
-  /** Native router target selected independently from the framework target. */
-  router?: RouterPluginSelection;
-  /** Router targets available for id-based selection. */
-  routerPlugins?: readonly RouterOutputPlugin[];
-  /** Conditions forwarded to the selected router target. */
+  /** Optional Forge router plugin to provide route data and navigation. */
+  router?: RouterOutputPlugin;
+  /** Router plugins provided by the caller. */
+  routerPlugins?: RouterPluginSelection;
+  /** Custom condition names for router export resolution. */
   routerConditions?: readonly string[];
-  /** Reject test-fixture output; disable only for tests using fixture plugins. */
+  /**
+   * When true (default), building against a fixture placeholder plugin
+   * (e.g. from tests or unfinished plugins) throws rather than emitting stub code.
+   */
   rejectFixturePlaceholder?: boolean;
 }
 
 /**
- * Reproduce one Archetype-C **hook** framework build under tsdown:
- * Stage 1 (`generateHookLibrarySources`) + Stage 2 plugins + `hookLibraryDtsPlugin`,
- * emitting into `dist/<framework>/`.
+ * Build one tsdown config for a single Forge framework hooks build.
+ * Emits code and types into the target framework distribution directory.
  */
 export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig {
   const {
@@ -156,10 +335,12 @@ export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserCo
   const framework = plugin.id as JsxFramework;
   const resolvedEntry = resolveForgeHookEntryModule(rootDir, entryModule);
   const generatedDirectory = forgeGeneratedDirectory(rootDir, framework, resolvedEntry, outputRoot);
-  const finalOutDir = path.resolve(rootDir, `dist/${framework}`);
-  const publishedOutDir = resolveTsdownOutputDirectory(rootDir, finalOutDir, outputRoot);
-  const attemptFinalOutDir = forgeArtifactAttemptDirectory(finalOutDir, framework);
-  const outDir = resolveTsdownOutputDirectory(rootDir, attemptFinalOutDir, outputRoot);
+  const { publishedOutDir, attemptFinalOutDir, attemptOutDir } = resolveTargetOutputDirs(
+    rootDir,
+    framework,
+    overrides?.outDir,
+    outputRoot,
+  );
 
   const target = createHookTargetPlan({
     plugin,
@@ -171,15 +352,7 @@ export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserCo
     rejectFixturePlaceholder,
   });
 
-  // Hook libraries emit plain `.ts`/`.tsx` (no `.svelte` SFCs). Only React
-  // needs a JSX transform for `.tsx` entry files; Solid/Svelte hooks stay plain
-  // TS and skip the heavier stage-2 compilers.
-  const stagePlugins = (plugin.build.tsdown?.({
-    rootDir,
-    generatedDirectory,
-    outputDirectory: outDir,
-  }) ?? []) as TsdownPlugin[];
-
+  const stagePlugins = resolveStagePlugins(plugin, rootDir, generatedDirectory, attemptOutDir);
   const frameworkExternals = plugin.runtimeExternals ?? [];
 
   const base = defineTsdownLibrary({
@@ -199,8 +372,8 @@ export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserCo
       // `composables/` + `utils/` land directly under `dist/<framework>/`.
       outputOptions: {
         preserveModulesRoot: generatedDirectory,
-        entryFileNames: '[name].js',
-        chunkFileNames: '[name].js',
+        entryFileNames: resolveCanonicalEntryName,
+        chunkFileNames: resolveCanonicalChunkName,
       },
       plugins: [
         forgeBuildLifecyclePlugin({
@@ -211,15 +384,16 @@ export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserCo
           disposeSession: options.disposeService ?? options.session === undefined,
         }) as unknown as TsdownPlugin,
         ...stagePlugins,
+        forgePathNormalizationPlugin(),
         hookLibraryDtsPlugin({
           framework,
           generatedDir: generatedDirectory,
-          outDir,
+          outDir: attemptOutDir,
         }) as TsdownPlugin,
         removeGeneratedDirectoryPlugin(generatedDirectory, framework),
         forgeArtifactPublishPlugin({
           publishedDirectory: publishedOutDir,
-          attemptDirectory: outDir,
+          attemptDirectory: attemptOutDir,
           generatedDirectory,
           targetId: framework,
         }) as unknown as TsdownPlugin,
@@ -227,43 +401,59 @@ export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserCo
     },
   });
 
-  return mergeTsdownConfig(base, overrides, rootDir, outputRoot);
+  const { outDir: _ignoredOutDir, ...effectiveOverrides } = overrides ?? {};
+  return mergeTsdownConfig(base, effectiveOverrides, rootDir, outputRoot);
 }
 
 export interface TsdownForgeHooksAllOptions {
-  /** Absolute root directory of the package. */
+  /** Absolute root directory of the package (e.g. `import.meta.dirname`). */
   rootDir: string;
   /** Optional isolated output mirror used by the shared Forge runner. */
   outputRoot?: string;
-  /** Explicit output plugins to emit. */
+  /** Framework output plugins to compile. */
   frameworks: readonly FrameworkOutputPlugin[];
   /** Path to the neutral hook entry module (defaults to `<rootDir>/src/index.ts`). */
   entryModule?: string;
-  /** Base display name (parity with Vite helper). */
+  /** Base display name (informational; unused by tsdown but kept for parity). */
   name?: string;
-  /** Additional package names to externalise on every framework build. */
+  /** Additional package names to externalise. */
   external?: readonly string[];
-  /**
-   * When `true` (default), also include a neutral `dist/` build via
-   * {@link defineTsdownLibrary} as the first config in the returned array.
-   */
-  includeNeutral?: boolean;
-  /** Override applied to the neutral build only. */
-  neutralOverrides?: UserConfig;
-  /** Override applied to every framework build. */
-  frameworkOverrides?: UserConfig;
-  /** Persistent service shared by the neutral and framework generation session. */
+  /** Shared compiler service across builds. */
   service?: ForgeCompilerService;
-  /** Explicit lifecycle session shared by the neutral and framework targets. */
+  /** Shared compiler session across builds. */
   session?: ForgeBuildSession;
-  /** Native router target selected independently from the framework target. */
-  router?: RouterPluginSelection;
-  /** Router targets available for id-based selection. */
-  routerPlugins?: readonly RouterOutputPlugin[];
-  /** Conditions forwarded to the selected router target. */
+  /** When true (default), generate a neutral unbundled build for the root entry. */
+  includeNeutral?: boolean;
+  /** Overrides applied only to the neutral root entry build. */
+  neutralOverrides?: UserConfig;
+  /** Overrides applied to all framework builds. */
+  frameworkOverrides?: UserConfig;
+  /** Optional Forge router plugin to provide route data and navigation. */
+  router?: RouterOutputPlugin;
+  /** Router plugins provided by the caller. */
+  routerPlugins?: RouterPluginSelection;
+  /** Custom condition names for router export resolution. */
   routerConditions?: readonly string[];
-  /** Reject test-fixture output; disable only for tests using fixture plugins. */
+  /**
+   * When true (default), building against a fixture placeholder plugin
+   * (e.g. from tests or unfinished plugins) throws rather than emitting stub code.
+   */
   rejectFixturePlaceholder?: boolean;
+}
+
+/** Builds the neutral tsdown configuration for hooks. */
+function createNeutralHooksConfig(options: TsdownForgeHooksAllOptions): UserConfig {
+  const { rootDir, outputRoot, entryModule, external, neutralOverrides } = options;
+  return defineTsdownLibrary({
+    rootDir,
+    outputRoot,
+    entry: entryModule ? path.relative(rootDir, entryModule) : 'src/index.ts',
+    external,
+    // The isolated stage starts empty; cleaning its aggregate `dist/` while
+    // framework configs run in parallel would clobber sibling outputs.
+    clean: outputRoot === undefined,
+    overrides: neutralOverrides,
+  });
 }
 
 /**
@@ -280,7 +470,6 @@ export function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): 
     name,
     external,
     includeNeutral = true,
-    neutralOverrides,
     frameworkOverrides,
     router,
     routerPlugins,
@@ -293,18 +482,7 @@ export function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): 
   const configs: UserConfig[] = [];
 
   if (includeNeutral) {
-    configs.push(
-      defineTsdownLibrary({
-        rootDir,
-        outputRoot,
-        entry: entryModule ? path.relative(rootDir, entryModule) : 'src/index.ts',
-        external,
-        // The isolated stage starts empty; cleaning its aggregate `dist/` while
-        // framework configs run in parallel would clobber sibling outputs.
-        clean: outputRoot === undefined,
-        overrides: neutralOverrides,
-      }),
-    );
+    configs.push(createNeutralHooksConfig(options));
   }
 
   for (const [index, plugin] of selected.entries()) {
@@ -319,12 +497,11 @@ export function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): 
         session,
         service: options.service,
         disposeService: index === selected.length - 1 && options.session === undefined,
+        overrides: frameworkOverrides,
         router,
         routerPlugins,
         routerConditions,
         rejectFixturePlaceholder,
-        // `defineTsdownForgeHooks` already scopes `clean` to `dist/<framework>/`.
-        overrides: frameworkOverrides,
       }),
     );
   }
@@ -332,67 +509,116 @@ export function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): 
   return configs;
 }
 
-/**
- * Native tsdown-plugin form of the hook adapter. The returned plugins inject
- * their target config from `tsdownConfig`, allowing hook builds to be composed
- * with one caller-owned `defineTsdownLibrary` configuration.
- */
+/** Creates tsdown hook plugins for all configured framework targets. */
 export function tsdownForgeHookPlugins(options: TsdownForgeHooksAllOptions): TsdownPlugin[] {
   return defineTsdownForgeHooksAll(options).map((forgeConfig, index) => ({
-    name: `@mission-platform/vite-plugin-forge:tsdown-hook-${index}`,
-    tsdownConfig(config: UserConfig) {
-      const callerPlugins = flattenPlugins(config.plugins);
-      const injected = mergeTsdownConfig(forgeConfig, { ...config, plugins: [] }, options.rootDir, options.outputRoot);
-      Object.assign(config, injected);
-      config.plugins = [...flattenPlugins(forgeConfig.plugins), ...callerPlugins];
+    name: `@mission-platform/vite-plugin-forge:tsdown-hooks-${index}`,
+    tsdownConfig(config) {
+      Object.assign(config, forgeConfig);
     },
   }));
 }
 
 export interface TsdownForgeComponentPluginsOptions {
-  /** Absolute root directory of the package. */
+  /** Absolute root directory of the package (e.g. `import.meta.dirname`). */
   rootDir: string;
   /** Optional isolated output mirror used by the shared Forge runner. */
   outputRoot?: string;
-  /** Framework output plugins to build together through the same façade. */
+  /** Framework output plugins to compile. */
   frameworks: readonly FrameworkOutputPlugin[];
   /**
-   * Path to the neutral components entry module. Auto-detected from
-   * `src/components/index.ts`, `src/component/index.ts`, or `src/index.ts` if omitted.
+   * Path to the neutral component barrel module. Defaults to `<rootDir>/src/components/index.ts`
+   * when present, otherwise `<rootDir>/src/index.ts`.
    */
   componentsModule?: string;
   /**
-   * Path to the package public entry module used to preserve neutral exports.
-   * Defaults to `<rootDir>/src/index.ts` when it exists, otherwise the component entry.
+   * Path to the public package entry module declaring re-exports.
+   * Defaults to `componentsModule`.
    */
   publicEntryModule?: string;
-  /** Base display name (parity with Vite helper). */
-  name?: string;
-  /** Use synthesised entry declaration instead of running vue-tsc/tsc on the generated tree. */
-  useEntryDts?: boolean;
-  /** Relative import path for declaration types when `useEntryDts` is enabled. */
+  /**
+   * Module specifier emitted in framework `index.d.ts` declaration re-exports
+   * for neutral component declarations.
+   *
+   * Defaults to `'../components'`.
+   */
   declarationModule?: string;
   /** Additional package names to externalise. */
   external?: readonly string[];
-  /** Override or extend the generated config. */
+  /** Override or extend the generated configs. */
   overrides?: UserConfig;
-  /** Persistent service shared by all framework targets in one build session. */
-  service?: ForgeCompilerService;
-  /** Explicit lifecycle session shared by all framework targets. */
+  /** Shared compiler session for multi-target builds. */
   session?: ForgeBuildSession;
-  /** Native router target selected independently from the framework target. */
-  router?: RouterPluginSelection;
-  /** Router targets available for id-based selection. */
-  routerPlugins?: readonly RouterOutputPlugin[];
-  /** Conditions forwarded to the selected router target. */
+  /** Shared compiler service used when session is omitted. */
+  service?: ForgeCompilerService;
+  /** Optional Forge router plugin to provide route data and navigation. */
+  router?: RouterOutputPlugin;
+  /** Router plugins provided by the caller. */
+  routerPlugins?: RouterPluginSelection;
+  /** Custom condition names for router export resolution. */
   routerConditions?: readonly string[];
-  /** Reject test-fixture output; disable only for tests using fixture plugins. */
+  /**
+   * When true (default), building against a fixture placeholder plugin
+   * (e.g. from tests or unfinished plugins) throws rather than emitting stub code.
+   */
   rejectFixturePlaceholder?: boolean;
+}
+
+/** Resolves the declaration re-export module specifier for neutral component types. */
+function resolveDeclarationModule(declarationModule?: string): string {
+  if (declarationModule === '..' || declarationModule === '../components' || !declarationModule) {
+    return './components';
+  }
+  return declarationModule;
+}
+
+/** Detects whether watch mode flags are present in process arguments. */
+function isWatchMode(): boolean {
+  return process.argv.some(
+    (argument) => argument === '--watch' || argument === '-w' || argument.startsWith('--watch='),
+  );
 }
 
 /** Suppresses unhandled rejection during asynchronous session disposal. */
 function ignoreDisposalRejection(): void {
   // Background fire-and-forget session disposal
+}
+
+/** Check whether component framework building is explicitly skipped in current environment. */
+function isComponentFrameworkBuildSkipped(requestedFramework?: string): boolean {
+  if (requestedFramework === 'none') return true;
+  return process.env.FORGE_CMS_STORYBLOK_TARGET !== undefined && requestedFramework === undefined;
+}
+
+/** Filter framework plugins by an explicit framework target identifier. */
+function filterFrameworksByTarget(
+  selected: readonly FrameworkOutputPlugin[],
+  target: string,
+): readonly FrameworkOutputPlugin[] {
+  const filtered = selected.filter((plugin) => plugin.id === target);
+  if (filtered.length === 0) {
+    throw new Error(`Forge build target "${target}" is not available in the selected framework plugins.`);
+  }
+  return filtered;
+}
+
+/**
+ * Filter selected framework output plugins by environment target variables.
+ *
+ * @param selected - Validated framework output plugins.
+ * @returns Filtered plugins matching target environment, or empty array if skipped.
+ */
+function resolveSelectedComponentFrameworks(
+  selected: readonly FrameworkOutputPlugin[],
+): readonly FrameworkOutputPlugin[] {
+  const requestedFramework = process.env.FORGE_FRAMEWORK_TARGET;
+  if (isComponentFrameworkBuildSkipped(requestedFramework)) {
+    return [];
+  }
+  if (requestedFramework === undefined) {
+    return selected;
+  }
+  return filterFrameworksByTarget(selected, requestedFramework);
 }
 
 /**
@@ -402,20 +628,9 @@ function ignoreDisposalRejection(): void {
  */
 export function tsdownForgeComponentPlugins(options: TsdownForgeComponentPluginsOptions): TsdownPlugin[] {
   const selected = validateForgeBuildSelection(options.frameworks, 'tsdown');
-  const requestedFramework = process.env.FORGE_FRAMEWORK_TARGET;
-  const cmsOnlyBuild = process.env.FORGE_CMS_STORYBLOK_TARGET !== undefined;
-  const frameworks =
-    requestedFramework === undefined || requestedFramework === 'none'
-      ? cmsOnlyBuild
-        ? []
-        : requestedFramework === 'none'
-          ? []
-          : selected
-      : selected.filter((plugin) => plugin.id === requestedFramework);
-  if (frameworks.length === 0) {
-    if (requestedFramework === 'none' || (cmsOnlyBuild && requestedFramework === undefined)) return [];
-    throw new Error(`Forge build target "${requestedFramework}" is not available in the selected framework plugins.`);
-  }
+  const frameworks = resolveSelectedComponentFrameworks(selected);
+  if (frameworks.length === 0) return [];
+
   const session = options.session ?? createForgeBuildSession({ service: options.service });
   let activePlugins = frameworks.length;
   return frameworks.map((plugin) =>
@@ -442,20 +657,8 @@ export function tsdownForgeComponentPlugins(options: TsdownForgeComponentPlugins
 /** Build independent tsdown configs for every requested Forge component framework. */
 export function defineTsdownForgeComponentsAll(options: TsdownForgeComponentPluginsOptions): UserConfig[] {
   const selected = validateForgeBuildSelection(options.frameworks, 'tsdown');
-  const requestedFramework = process.env.FORGE_FRAMEWORK_TARGET;
-  const cmsOnlyBuild = process.env.FORGE_CMS_STORYBLOK_TARGET !== undefined;
-  const frameworks =
-    requestedFramework === undefined || requestedFramework === 'none'
-      ? cmsOnlyBuild
-        ? []
-        : requestedFramework === 'none'
-          ? []
-          : selected
-      : selected.filter((plugin) => plugin.id === requestedFramework);
-  if (frameworks.length === 0) {
-    if (requestedFramework === 'none' || (cmsOnlyBuild && requestedFramework === undefined)) return [];
-    throw new Error(`Forge build target "${requestedFramework}" is not available in the selected framework plugins.`);
-  }
+  const frameworks = resolveSelectedComponentFrameworks(selected);
+  if (frameworks.length === 0) return [];
 
   const session = options.session ?? createForgeBuildSession({ service: options.service });
   let activeConfigs = frameworks.length;
@@ -475,6 +678,7 @@ export function defineTsdownForgeComponentsAll(options: TsdownForgeComponentPlug
   );
 }
 
+/** Wrap a component config in a Tsdown plugin that injects settings into the caller config. */
 function tsdownConfigPlugin(
   forgeConfig: UserConfig,
   targetId: string,
@@ -492,6 +696,7 @@ function tsdownConfigPlugin(
   } as TsdownPlugin;
 }
 
+/** Create the internal Tsdown UserConfig for a single Forge component framework target. */
 function createTsdownForgeComponentPlugin(
   options: Readonly<
     Omit<TsdownForgeComponentPluginsOptions, 'frameworks'> & {
@@ -519,13 +724,10 @@ function createTsdownForgeComponentPlugin(
     disposeSession,
   } = options;
   const framework = plugin.id as JsxFramework;
-  const watchMode = process.argv.some(
-    (argument) => argument === '--watch' || argument === '-w' || argument.startsWith('--watch='),
-  );
+  const watchMode = isWatchMode();
 
   const resolvedComponentsModule = resolveForgeComponentsModule(rootDir, componentsModule);
   const resolvedPublicEntryModule = resolveForgePublicEntryModule(rootDir, resolvedComponentsModule, publicEntryModule);
-
   const generatedDirectory = forgeGeneratedDirectory(rootDir, framework, resolvedComponentsModule, outputRoot);
 
   validateForgeBuildPlugin(plugin, 'tsdown');
@@ -542,29 +744,26 @@ function createTsdownForgeComponentPlugin(
     rejectFixturePlaceholder,
   });
 
-  const finalOutDir = path.resolve(rootDir, `dist/${framework}`);
-  const publishedOutDir = resolveTsdownOutputDirectory(rootDir, finalOutDir, outputRoot);
-  const attemptFinalOutDir = forgeArtifactAttemptDirectory(finalOutDir, framework);
-  const attemptOutDir = resolveTsdownOutputDirectory(rootDir, attemptFinalOutDir, outputRoot);
-
-  // Component packages need real Svelte/Solid compilers. Use the tsdown-safe
-  // adapters (`stagePluginsForTsdown`) — Vite's svelte/solid plugins crash here.
-  const stagePlugins = (plugin.build.tsdown?.({
+  const { publishedOutDir, attemptFinalOutDir, attemptOutDir } = resolveTargetOutputDirs(
     rootDir,
-    generatedDirectory,
-    outputDirectory: attemptOutDir,
-  }) ?? []) as TsdownPlugin[];
+    framework,
+    overrides?.outDir,
+    outputRoot,
+  );
 
-  // All framework targets use synthesized declarations. This avoids invoking
-  // the TypeScript 7 project builder against generated source trees and keeps
-  // every emitted declaration in the package's configured dist directory.
+  const stagePlugins = resolveStagePlugins(plugin, rootDir, generatedDirectory, attemptOutDir);
+  const resolvedDeclarationModule = resolveDeclarationModule(declarationModule);
+
   const dtsPlugin = jsxComponentsEntryDtsPlugin({
     framework,
+    generatedDirectory,
     componentsModule: resolvedComponentsModule,
     publicEntryModule: resolvedPublicEntryModule,
     sourceRoot: path.dirname(path.dirname(resolvedComponentsModule)),
+    packageRoot: rootDir,
+    outputRoot,
     declarationFileName: 'index',
-    declarationModule: declarationModule ?? '../components',
+    declarationModule: resolvedDeclarationModule,
     // Keep the neutral `Forge` prefix on the public API (do not strip it).
     stripPrefix: '',
   });
@@ -580,6 +779,7 @@ function createTsdownForgeComponentPlugin(
       disposeSession: disposeSession ?? service === undefined,
     }) as unknown as TsdownPlugin,
     ...stagePlugins,
+    forgePathNormalizationPlugin(),
     jsxComponentsCssImportPlugin() as TsdownPlugin,
     dtsPlugin as TsdownPlugin,
     removeGeneratedDirectoryPlugin(generatedDirectory, framework),
@@ -591,6 +791,7 @@ function createTsdownForgeComponentPlugin(
     }) as unknown as TsdownPlugin,
   ];
 
+  const { outDir: _ignoredOutDir, ...effectiveOverrides } = overrides ?? {};
   const forgeConfig = mergeTsdownConfig(
     defineTsdownLibrary({
       rootDir,
@@ -605,13 +806,13 @@ function createTsdownForgeComponentPlugin(
       overrides: {
         outputOptions: {
           preserveModulesRoot: generatedDirectory,
-          entryFileNames: '[name].js',
-          chunkFileNames: '[name].js',
+          entryFileNames: resolveCanonicalEntryName,
+          chunkFileNames: resolveCanonicalChunkName,
         },
         plugins: forgePlugins,
       },
     }),
-    overrides,
+    effectiveOverrides,
     rootDir,
     outputRoot,
   );

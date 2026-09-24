@@ -201,6 +201,26 @@ export interface FlintWasmFeatureRequirements
 
 WebAssembly feature requirements discovered during code generation.
 
+### FlintWasmForeignCapability
+
+**Kind:** interface
+
+```typescript
+export interface FlintWasmForeignCapability
+```
+
+Lowered foreign C capability module import contract for WebAssembly emission.
+
+### FlintWasmForeignFunction
+
+**Kind:** interface
+
+```typescript
+export interface FlintWasmForeignFunction
+```
+
+Lowered foreign C function import contract for WebAssembly emission.
+
 ### FlintWasmFunction
 
 **Kind:** interface
@@ -353,6 +373,8 @@ export type FlintWasmStandardLibraryOperation =
   | 'memory-realloc'
   | 'memory-load-u32'
   | 'memory-store-u32'
+  | 'memory-load-u8'
+  | 'memory-store-u8'
   | 'memory-load-f64'
   | 'memory-store-f64'
   | 'f64-from-u32'
@@ -654,3 +676,23 @@ Lowers a complete Flint WebAssembly module intermediate representation into text
 - **@param:** - Compiled module intermediate representation.
 - **@param:** - Compilation metadata and target feature configuration.
 - **@returns:** WebAssembly text representation string.
+
+### toWatType
+
+**Kind:** function
+
+```typescript
+function toWatType(
+  type: string | { readonly name?: string; readonly reference?: string } | undefined,
+  memory64 = false,
+): string;
+```
+
+Maps a Flint or C type representation string to WebAssembly WAT value type.
+
+#### Parameters
+
+| Name     | Type                                                                           | Description |
+| -------- | ------------------------------------------------------------------------------ | ----------- |
+| type     | string \| { readonly name?: string; readonly reference?: string } \| undefined |             |
+| memory64 |                                                                                |             |

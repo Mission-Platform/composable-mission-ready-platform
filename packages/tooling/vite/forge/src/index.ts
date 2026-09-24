@@ -176,7 +176,7 @@ export type {
   CompilerDiagnostic,
   CompilerDiagnosticSeverity,
   CompilerPhase,
-  FrameworkBuildAdapters,
+  ForgeBuildAdapters,
   FrameworkOutputPlugin,
   FrameworkSourceMetadata,
   GeneratedExtraModule,
@@ -195,7 +195,6 @@ export { validateForgeOutputPlugin, validateForgeOutputPluginSelection } from '@
 export type {
   GeneratedRouterDeclaration,
   GeneratedRouterModule,
-  RouterBuildAdapters,
   RouterCapability,
   RouterCapabilityImport,
   RouterCapabilityModule,
@@ -221,11 +220,16 @@ export { generateHookLibrarySources, type GenerateHookLibrarySourcesOptions } fr
 
 export {
   defineTsdownForgeComponentsAll,
+  defineTsdownForgeHooks,
   defineTsdownForgeHooksAll,
   tsdownForgeComponentPlugins,
   tsdownForgeHookPlugins,
   defineTsdownForgeEmailComponents,
+  resolveCanonicalChunkName,
+  resolveCanonicalEntryName,
+  type CanonicalChunkCandidate,
   type TsdownForgeComponentPluginsOptions,
   type TsdownForgeEmailComponentsOptions,
   type TsdownForgeHooksAllOptions,
+  type TsdownForgeHooksOptions,
 } from './tsdown.js';

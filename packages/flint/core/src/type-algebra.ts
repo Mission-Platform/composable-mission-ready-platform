@@ -1,9 +1,18 @@
 import {
+  isCPrimitiveType,
+  layoutCPrimitive,
+  PLATFORM_CONFIGS,
+  type PlatformAbiConfig,
+  type TargetPlatform,
+} from '@mission-platform/flint-c-abi';
+
+import {
   type FlintModule,
   type FlintOwnership,
   type FlintPrimitiveType,
   type FlintReferenceMode,
   type FlintStructDeclaration,
+  type FlintStructRepr,
   type FlintTypeName,
   flintTypeNameToString,
 } from './ast.js';
@@ -69,29 +78,76 @@ export interface MonomorphizeStructRequest {
 /** Registered field-layout definition for a user-defined nominal aggregate (struct). */
 export interface AggregateLayoutDefinition {
   readonly name: string;
-  readonly genericParameters: readonly string[];
+  readonly genericParameters?: readonly string[];
   readonly fields: readonly { readonly name: string; readonly type: TypeId }[];
-  readonly record?: true;
+  readonly record?: true | boolean;
+  /**
+   * Explicit C ABI struct layout (deprecated, use repr?.kind === 'c').
+   * @deprecated Use `repr?.kind === 'c'`.
+   */
+  readonly c_struct?: boolean;
+  readonly repr?: FlintStructRepr;
+  readonly packed?: number;
+  readonly align?: number;
 }
 
-const PRIMITIVE_LAYOUTS: Readonly<Record<FlintPrimitiveType, Omit<TypeLayout, 'layoutKey'>>> = {
-  unit: { size: 0, alignment: 1 },
-  bool: { size: 4, alignment: 4 },
-  i32: { size: 4, alignment: 4 },
-  u32: { size: 4, alignment: 4 },
-  f32: { size: 4, alignment: 4 },
-  i64: { size: 8, alignment: 8 },
-  u64: { size: 8, alignment: 8 },
-  f64: { size: 8, alignment: 8 },
-  // ABI carriers are pointer+length pairs on the host boundary.
-  string: { size: 8, alignment: 4 },
-  bytes: { size: 8, alignment: 4 },
-};
+export {
+  PLATFORM_CONFIGS,
+  type PlatformAbiConfig,
+  type TargetPlatform,
+  type TargetPlatformTriplet,
+} from '@mission-platform/flint-c-abi';
+
+/** Detailed field layout offset and padding for C structs. */
+export interface CStructFieldLayout {
+  readonly name: string;
+  readonly offset: number;
+  readonly size: number;
+  readonly alignment: number;
+  readonly layoutKey: string;
+}
+
+/** Computed ABI layout for C structs with explicit field offsets and tail padding. */
+export interface CStructLayout extends TypeLayout {
+  readonly fields: readonly CStructFieldLayout[];
+  readonly tailPadding: number;
+}
+
+const PRIMITIVE_TYPE_NAMES = new Set<string>([
+  'unit',
+  'bool',
+  'i32',
+  'u32',
+  'f32',
+  'i64',
+  'u64',
+  'f64',
+  'string',
+  'bytes',
+  'u8',
+  'i8',
+  'c_char',
+  'c_uchar',
+  'c_short',
+  'c_ushort',
+  'c_int',
+  'c_uint',
+  'c_long',
+  'c_ulong',
+  'c_longlong',
+  'c_ulonglong',
+  'c_size',
+  'c_ssize',
+  'c_float',
+  'c_double',
+  'c_void',
+]);
 
 const VALUE_COLLECTIONS = new Set(['Array', 'Vector', 'Option', 'Result', 'iterResult']);
 const DESCRIPTOR_COLLECTIONS = new Set(['Iterable', 'Iterator', 'Fn']);
 const RESULT_LIKE_NOMINAL_NAMES = new Set(['Result', 'iterResult']);
 const COLLECTION_HANDLE_NOMINAL_NAMES = new Set(['Array', 'Vector']);
+const FOREIGN_POINTER_NAMES = new Set(['CPtr', 'MutCPtr', 'COpaquePtr']);
 
 /**
  * Determines whether a name refers to a built-in Flint primitive type.
@@ -100,7 +156,7 @@ const COLLECTION_HANDLE_NOMINAL_NAMES = new Set(['Array', 'Vector']);
  * @returns True if `name` is a registered primitive type name.
  */
 function isPrimitiveName(name: string): name is FlintPrimitiveType {
-  return Object.hasOwn(PRIMITIVE_LAYOUTS, name);
+  return PRIMITIVE_TYPE_NAMES.has(name);
 }
 
 /**
@@ -116,19 +172,66 @@ function alignOffset(offset: number, alignment: number): number {
   return (offset + mask) & ~mask;
 }
 
+const FIXED_PRIMITIVE_LAYOUTS: Readonly<Record<string, { readonly size: number; readonly alignment: number }>> = {
+  unit: { size: 0, alignment: 1 },
+  c_void: { size: 0, alignment: 1 },
+  bool: { size: 4, alignment: 4 },
+  u8: { size: 1, alignment: 1 },
+  i8: { size: 1, alignment: 1 },
+  c_char: { size: 1, alignment: 1 },
+  c_uchar: { size: 1, alignment: 1 },
+  c_short: { size: 2, alignment: 2 },
+  c_ushort: { size: 2, alignment: 2 },
+  i32: { size: 4, alignment: 4 },
+  u32: { size: 4, alignment: 4 },
+  f32: { size: 4, alignment: 4 },
+  c_int: { size: 4, alignment: 4 },
+  c_uint: { size: 4, alignment: 4 },
+  c_float: { size: 4, alignment: 4 },
+};
+
 /**
  * Hash-consing table and structural operations over interned types.
  */
 export class TypeAlgebra {
+  public readonly platform: PlatformAbiConfig;
   private readonly nodes: TypeNode[] = [];
   private readonly internTable = new Map<string, TypeId>();
   private readonly aggregates = new Map<string, AggregateLayoutDefinition>();
   private readonly layoutCache = new Map<TypeId, TypeLayout>();
 
+  constructor(target: TargetPlatform = 'wasm32-unknown-unknown') {
+    this.platform = PLATFORM_CONFIGS[target] ?? PLATFORM_CONFIGS['wasm32-unknown-unknown'];
+  }
+
   /** Register a nominal aggregate so monomorphization can expand field layouts. */
   defineAggregate(definition: AggregateLayoutDefinition): void {
     this.aggregates.set(definition.name, definition);
     this.layoutCache.clear();
+  }
+
+  /**
+   * Converts a module struct declaration AST node into an aggregate layout definition.
+   *
+   * @param declaration - Struct declaration AST node.
+   * @returns Aggregate layout definition ready for registration.
+   */
+  // skipcq: JS-R1005
+  private convertStructDeclaration(declaration: FlintModule['structs'][number]): AggregateLayoutDefinition {
+    const genericParameters = declaration.genericParameters.map(({ name }) => name);
+    return {
+      name: declaration.name,
+      genericParameters,
+      fields: declaration.fields.map((field) => ({
+        name: field.name,
+        type: this.fromAst(field.type, new Set(genericParameters)),
+      })),
+      ...(declaration.record ? { record: true as const } : {}),
+      ...(declaration.repr ? { repr: declaration.repr } : {}),
+      ...(declaration.repr?.kind === 'c' || declaration.c_struct ? { c_struct: true as const } : {}),
+      ...(declaration.packed === undefined ? {} : { packed: declaration.packed }),
+      ...(declaration.align === undefined ? {} : { align: declaration.align }),
+    };
   }
 
   /**
@@ -138,15 +241,7 @@ export class TypeAlgebra {
    */
   defineAggregatesFromModule(module: Pick<FlintModule, 'structs'>): void {
     for (const declaration of module.structs) {
-      this.defineAggregate({
-        name: declaration.name,
-        genericParameters: declaration.genericParameters.map(({ name }) => name),
-        fields: declaration.fields.map((field) => ({
-          name: field.name,
-          type: this.fromAst(field.type, new Set(declaration.genericParameters.map(({ name }) => name))),
-        })),
-        ...(declaration.record === true ? { record: true as const } : {}),
-      });
+      this.defineAggregate(this.convertStructDeclaration(declaration));
     }
   }
 
@@ -483,6 +578,40 @@ export class TypeAlgebra {
   }
 
   /**
+   * Returns target-dependent primitive layout (size and alignment).
+   *
+   * @param name - Primitive type name.
+   * @returns The primitive's size and alignment.
+   */
+  // skipcq: JS-R1005
+  primitiveLayout(name: FlintPrimitiveType): Omit<TypeLayout, 'layoutKey'> {
+    const fixed = FIXED_PRIMITIVE_LAYOUTS[name];
+    if (fixed !== undefined) return fixed;
+
+    if (isCPrimitiveType(name)) {
+      return layoutCPrimitive(name, this.platform);
+    }
+
+    switch (name) {
+      case 'i64':
+      case 'u64':
+      case 'f64': {
+        return { size: 8, alignment: this.platform.i64StructAlignment };
+      }
+      case 'string':
+      case 'bytes': {
+        return {
+          size: this.platform.pointerSize * 2,
+          alignment: this.platform.pointerAlignment,
+        };
+      }
+      default: {
+        throw new Error(`Unsupported primitive type for layout: ${name}`);
+      }
+    }
+  }
+
+  /**
    * Computes the layout for a reference type node.
    *
    * @param node - Interned reference type node.
@@ -497,8 +626,8 @@ export class TypeAlgebra {
   ): TypeLayout {
     const inner = this.layout(node.inner, visiting, visitingAggregates);
     return {
-      size: 4,
-      alignment: 4,
+      size: this.platform.pointerSize,
+      alignment: this.platform.pointerAlignment,
       layoutKey: `ref:${node.mode}:${inner.layoutKey}`,
     };
   }
@@ -543,7 +672,7 @@ export class TypeAlgebra {
   ): TypeLayout {
     switch (node.kind) {
       case 'primitive': {
-        const primitive = PRIMITIVE_LAYOUTS[node.name];
+        const primitive = this.primitiveLayout(node.name);
         return { ...primitive, layoutKey: `prim:${node.name}` };
       }
       case 'param': {
@@ -716,6 +845,21 @@ export class TypeAlgebra {
   }
 
   /**
+   * Determines whether an interned type qualifies for null-pointer niche optimization in Option<T>.
+   *
+   * @param typeId - Interned type identifier.
+   * @returns True if the type is a reference or foreign pointer type.
+   */
+  private isNullablePointerPayload(typeId: TypeId): boolean {
+    const node = this.node(typeId);
+    if (node.kind === 'reference') return true;
+    if (node.kind === 'nominal') {
+      return node.name === 'CPtr' || node.name === 'MutCPtr' || node.name === 'COpaquePtr';
+    }
+    return false;
+  }
+
+  /**
    * Computes the layout for the built-in `Option<T>` nominal type.
    *
    * @param arguments_ - Generic type arguments applied to `Option`.
@@ -728,10 +872,20 @@ export class TypeAlgebra {
     visiting: ReadonlySet<TypeId>,
     visitingAggregates: ReadonlySet<string>,
   ): TypeLayout {
+    const payloadId = arguments_[0];
     const payload =
-      arguments_[0] === undefined
+      payloadId === undefined
         ? { size: 0, alignment: 1, layoutKey: 'prim:unit' }
-        : this.layout(arguments_[0], visiting, visitingAggregates);
+        : this.layout(payloadId, visiting, visitingAggregates);
+
+    if (payloadId !== undefined && this.isNullablePointerPayload(payloadId)) {
+      return {
+        size: this.platform.pointerSize,
+        alignment: this.platform.pointerAlignment,
+        layoutKey: `option-nullable-ptr:${payload.layoutKey}`,
+      };
+    }
+
     const size = alignOffset(4 + payload.size, Math.max(4, payload.alignment));
     return {
       size,
@@ -825,11 +979,123 @@ export class TypeAlgebra {
     arguments_: readonly TypeId[],
   ): Map<string, TypeId> {
     const environment = new Map<string, TypeId>();
-    for (const [index, parameter] of aggregate.genericParameters.entries()) {
+    for (const [index, parameter] of (aggregate.genericParameters ?? []).entries()) {
       const argument = arguments_[index];
       if (argument !== undefined) environment.set(parameter, argument);
     }
     return environment;
+  }
+
+  /**
+   * Computes the alignment for a C struct from the maximum field alignment and repr options.
+   *
+   * @param maxFieldAlignment - Maximum alignment across all fields in the struct.
+   * @param aggregate - Struct layout definition.
+   * @returns Calculated struct alignment.
+   */
+  // skipcq: JS-0105
+  private computeCStructAlignment(maxFieldAlignment: number, aggregate: AggregateLayoutDefinition): number {
+    let structAlignment = maxFieldAlignment;
+    if (aggregate.packed !== undefined) {
+      structAlignment = Math.min(structAlignment, aggregate.packed);
+    }
+    if (aggregate.align !== undefined) {
+      structAlignment = Math.max(structAlignment, aggregate.align);
+    }
+    return Math.max(structAlignment, 1);
+  }
+
+  /**
+   * Derives the representation flag string for a C struct layout key.
+   *
+   * @param aggregate - Struct layout definition.
+   * @returns Representation key component string.
+   */
+  // skipcq: JS-0105
+  private computeReprFlag(aggregate: AggregateLayoutDefinition): string {
+    if (aggregate.packed !== undefined) {
+      return `packed(${aggregate.packed})`;
+    }
+    if (aggregate.align !== undefined) {
+      return `align(${aggregate.align})`;
+    }
+    return 'c';
+  }
+
+  /**
+   * Computes layout for C structs with target-specific natural alignment,
+   * packed clamping, and tail alignment.
+   *
+   * @param aggregate - Aggregate layout definition being expanded.
+   * @param environment - Generic-parameter substitution environment.
+   * @param visiting - Type ids currently on the layout recursion stack.
+   * @param visitingAggregates - Aggregate names currently on the recursion stack.
+   * @returns The computed C struct layout.
+   */
+  layoutCStruct(
+    aggregate: AggregateLayoutDefinition,
+    environment: ReadonlyMap<string, TypeId> = new Map(),
+    visiting: ReadonlySet<TypeId> = new Set(),
+    visitingAggregates: ReadonlySet<string> = new Set(),
+  ): CStructLayout {
+    let offset = 0;
+    let maxFieldAlignment = 1;
+    const fields: CStructFieldLayout[] = [];
+    const packClamp = aggregate.packed;
+
+    for (const field of aggregate.fields) {
+      const fieldType = this.substitute(field.type, environment);
+      const fieldLayout = this.layout(fieldType, visiting, visitingAggregates);
+
+      let effectiveAlignment = fieldLayout.alignment;
+      if (packClamp !== undefined) {
+        effectiveAlignment = Math.min(effectiveAlignment, packClamp);
+      }
+      effectiveAlignment = Math.max(effectiveAlignment, 1);
+
+      offset = alignOffset(offset, effectiveAlignment);
+      fields.push({
+        name: field.name,
+        offset,
+        size: fieldLayout.size,
+        alignment: effectiveAlignment,
+        layoutKey: fieldLayout.layoutKey,
+      });
+
+      offset += fieldLayout.size;
+      maxFieldAlignment = Math.max(maxFieldAlignment, effectiveAlignment);
+    }
+
+    const structAlignment = this.computeCStructAlignment(maxFieldAlignment, aggregate);
+    const alignedSize = alignOffset(offset, structAlignment);
+    const tailPadding = alignedSize - offset;
+
+    const fieldKeys = fields.map((f) => `${f.name}:${f.layoutKey}@${f.offset}`);
+    const reprFlag = this.computeReprFlag(aggregate);
+
+    return {
+      size: alignedSize,
+      alignment: structAlignment,
+      tailPadding,
+      fields,
+      layoutKey: `c_struct[${this.platform.platform}:${reprFlag}]{${fieldKeys.join(';')}}`,
+    };
+  }
+
+  /**
+   * Determines whether an aggregate layout represents a C struct layout.
+   *
+   * @param aggregate - Aggregate definition under check.
+   * @returns True if C struct representation or alignment rules apply.
+   */
+  // skipcq: JS-0105
+  private isCStructLayout(aggregate: AggregateLayoutDefinition): boolean {
+    return (
+      aggregate.repr?.kind === 'c' ||
+      aggregate.c_struct === true ||
+      aggregate.packed !== undefined ||
+      aggregate.align !== undefined
+    );
   }
 
   /**
@@ -847,6 +1113,9 @@ export class TypeAlgebra {
     visiting: ReadonlySet<TypeId>,
     visitingAggregates: ReadonlySet<string>,
   ): TypeLayout {
+    if (this.isCStructLayout(aggregate)) {
+      return this.layoutCStruct(aggregate, environment, visiting, visitingAggregates);
+    }
     let offset = 0;
     let alignment = 1;
     const fieldKeys: string[] = [];
@@ -903,6 +1172,30 @@ export class TypeAlgebra {
   }
 
   /**
+   * Computes layout for foreign pointer types (CPtr, MutCPtr, COpaquePtr).
+   *
+   * @param name - Pointer family nominal type name.
+   * @param arguments_ - Generic type arguments applied to the pointer.
+   * @param visiting - Type ids currently on the layout recursion stack.
+   * @param visitingAggregates - Aggregate names currently on the recursion stack.
+   * @returns The pointer type layout.
+   */
+  private layoutForeignPointer(
+    name: string,
+    arguments_: readonly TypeId[],
+    visiting: ReadonlySet<TypeId>,
+    visitingAggregates: ReadonlySet<string>,
+  ): TypeLayout {
+    const target = arguments_[0];
+    const targetKey = target === undefined ? 'opaque' : this.layout(target, visiting, visitingAggregates).layoutKey;
+    return {
+      size: this.platform.pointerSize,
+      alignment: this.platform.pointerAlignment,
+      layoutKey: `${name}:${targetKey}`,
+    };
+  }
+
+  /**
    * Dispatches nominal-type layout computation by built-in family, falling back to
    * user-defined aggregate expansion.
    *
@@ -912,6 +1205,7 @@ export class TypeAlgebra {
    * @param visitingAggregates - Aggregate names currently on the recursion stack.
    * @returns The computed layout for the nominal type.
    */
+  // skipcq: JS-R1005
   private layoutNominal(
     name: string,
     arguments_: readonly TypeId[],
@@ -920,6 +1214,9 @@ export class TypeAlgebra {
   ): TypeLayout {
     if (name === 'Option') {
       return this.layoutOption(arguments_, visiting, visitingAggregates);
+    }
+    if (FOREIGN_POINTER_NAMES.has(name)) {
+      return this.layoutForeignPointer(name, arguments_, visiting, visitingAggregates);
     }
     if (RESULT_LIKE_NOMINAL_NAMES.has(name)) {
       return this.layoutResultLike(arguments_, visiting, visitingAggregates);
@@ -1304,8 +1601,21 @@ function visitStatements(
 }
 
 /** Shared algebra instance helpers for call sites that do not need a private table. */
-export function createTypeAlgebra(module?: Pick<FlintModule, 'structs'>): TypeAlgebra {
-  const algebra = new TypeAlgebra();
+export function createTypeAlgebra(
+  moduleOrTarget?: Pick<FlintModule, 'structs'> | TargetPlatform,
+  maybeTarget?: TargetPlatform,
+): TypeAlgebra {
+  let target: TargetPlatform = 'wasm32-unknown-unknown';
+  let module: Pick<FlintModule, 'structs'> | undefined;
+
+  if (typeof moduleOrTarget === 'string') {
+    target = moduleOrTarget;
+  } else if (moduleOrTarget !== undefined) {
+    module = moduleOrTarget;
+    if (maybeTarget !== undefined) target = maybeTarget;
+  }
+
+  const algebra = new TypeAlgebra(target);
   if (module !== undefined) algebra.defineAggregatesFromModule(module);
   return algebra;
 }
@@ -1315,13 +1625,17 @@ export function createTypeAlgebra(module?: Pick<FlintModule, 'structs'>): TypeAl
  * aggregate definitions from a module's struct declarations.
  *
  * @param module - Optional module (or struct-only slice) to seed aggregate definitions from.
+ * @param target - Optional target platform profile.
  * @returns The paired `algebra` and `cache`.
  */
-export function createMonomorphizationCache(module?: Pick<FlintModule, 'structs'>): {
+export function createMonomorphizationCache(
+  module?: Pick<FlintModule, 'structs'>,
+  target?: TargetPlatform,
+): {
   readonly algebra: TypeAlgebra;
   readonly cache: MonomorphizationCache;
 } {
-  const algebra = createTypeAlgebra(module);
+  const algebra = createTypeAlgebra(module, target);
   return { algebra, cache: new MonomorphizationCache(algebra) };
 }
 
@@ -1337,13 +1651,18 @@ export function typeNameKeyFromAlgebra(type: FlintTypeName, algebra = createType
 }
 
 /**
- * Looks up the fixed ABI layout for a primitive type name.
+ * Looks up the fixed ABI layout for a primitive type name on the specified target platform.
  *
  * @param name - Primitive type name.
+ * @param target - Target platform profile.
  * @returns The primitive's size and alignment (without a layout key).
  */
-export function primitiveLayout(name: FlintPrimitiveType): Omit<TypeLayout, 'layoutKey'> {
-  return PRIMITIVE_LAYOUTS[name];
+export function primitiveLayout(
+  name: FlintPrimitiveType,
+  target: TargetPlatform = 'wasm32-unknown-unknown',
+): Omit<TypeLayout, 'layoutKey'> {
+  const algebra = new TypeAlgebra(target);
+  return algebra.primitiveLayout(name);
 }
 
 /**

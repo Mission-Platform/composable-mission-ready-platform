@@ -2952,9 +2952,9 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
     'turbo_run',
     {
       description:
-        'Execute a Turborepo task (e.g. build:check, lint, test, build) across packages with bounded timeouts and structured output parsing.',
+        'Execute a Turborepo task (e.g. type-check, lint, test, build) across packages with bounded timeouts and structured output parsing.',
       inputSchema: {
-        task: z.string().describe('Turborepo task name (e.g. "build:check", "lint", "test", "build").'),
+        task: z.string().describe('Turborepo task name (e.g. "type-check", "lint", "test", "build").'),
         filter: z
           .string()
           .optional()

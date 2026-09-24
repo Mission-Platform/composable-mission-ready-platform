@@ -151,6 +151,42 @@ FWS supports two primary link profiles for cross-project dependency management:
   uses the `dynamic-conservative` optimization profile, which is safer for
   modular distributions.
 
+## Foreign C and Rust interoperability (C ABI)
+
+Flint provides zero-copy C interoperability and foreign type declarations to interface with native libraries written in C, C++, or Rust (`extern "C"`, `#[repr(C)]`).
+
+### C primitive types and pointer abstractions
+
+- C scalar types: `c_char`, `c_uchar`, `c_short`, `c_ushort`, `c_int`, `c_uint`, `c_long`, `c_ulong`, `c_longlong`, `c_ulonglong`, `c_size`, `c_ssize`, `c_float`, `c_double`, `c_void`, `u8`, and `i8`.
+- Pointer wrappers: `CPtr<T>` (immutable pointer view), `MutCPtr<T>` (mutable pointer view), and `COpaquePtr` (untyped C handle, `void*`).
+- Nullability modeling: Nullable foreign pointers are represented with `Option<CPtr<T>>`, where `Option::None` encodes literal `0` (null pointer).
+
+### Platform-dependent alignment and representation attributes
+
+Struct memory layout in Flint is target-dependent across standard platform ABI models (`wasm32`, `wasm64`, `x86_64-linux`, `x86_64-windows`, `aarch64-darwin`, `i686-linux`).
+
+Directives supported on structs:
+
+- `#[repr(C)]`: Strict C ABI ordering, natural field alignment, and tail padding.
+- `#[repr(packed(N))]`: Clamps field alignment to maximum `N` bytes for compact binary formats.
+- `#[repr(align(N))]`: Elevates aggregate alignment to `N` bytes (e.g. 64-byte CPU cache lines or SIMD).
+
+> **Metaprogramming Roadmap Notice:** The compiler-intrinsic representation attributes (`#[repr(C)]`, `#[repr(packed(N))]`, `#[repr(align(N))]`) are pragmatic interim constructs for immediate C ABI compatibility. Long-term architectural migration to a hygienic, sandboxed typed macro metaprogramming system with compile-time and runtime introspection and reflection is formally tracked in [GitHub Issue #101](https://github.com/Mission-Platform/composable-mission-ready-platform/issues/101).
+
+### Foreign capability blocks
+
+Foreign C functions are declared inside explicit capability blocks rather than ambient extern statements:
+
+```flint
+opaque foreign type sqlite3;
+
+foreign "C" capability "sqlite3" {
+  fn sqlite3_libversion() -> CPtr<c_char>;
+  fn sqlite3_open(filename: CPtr<c_char>, ppDb: MutCPtr<COpaquePtr>) -> c_int;
+  fn sqlite3_close(db: MutCPtr<sqlite3>) -> c_int;
+}
+```
+
 ## Lexical reference
 
 The canonical checked-in grammar is

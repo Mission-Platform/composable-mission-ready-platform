@@ -20,10 +20,10 @@
     "src/self-hosted/flint"
   ],
   "scripts": {
-    "build:check": "tsc --project tsconfig.build.json --noEmit",
+    "type-check": "tsc --project tsconfig.build.json --noEmit",
+    "build": "node --experimental-strip-types ../../../scripts/build-package.ts",
     "build:bundle": "vite build",
     "build:types": "tsc --project tsconfig.build.json --emitDeclarationOnly",
-    "build:watch": "vite build --watch",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -33,6 +33,7 @@
     "format:write": "prettier --write ."
   },
   "dependencies": {
+    "@mission-platform/flint-c-abi": "workspace:*",
     "@mission-platform/flint-regex": "workspace:*",
     "@mission-platform/flint-wasm": "workspace:*"
   },
