@@ -1167,4 +1167,71 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     expect(state.graph.nodes).toHaveLength(20);
     expect(store.getUpdateTimeMs()).toBeGreaterThanOrEqual(0);
   });
+
+  it('captures complete FreeType glyph metrics with multiple-of-2 bounds on X and Y planes', () => {
+    const wasm = getFlintRenderWorkerWasm();
+    wasm.font_init_atlas_data();
+
+    const metricsTablePtr = wasm.font_get_metrics_table_ptr ? wasm.font_get_metrics_table_ptr() : 0;
+    expect(metricsTablePtr).toBeGreaterThan(0);
+
+    const totalGlyphs = 157;
+    const u32Mem = new Uint32Array(wasm.memory.buffer);
+    const i32Mem = new Int32Array(wasm.memory.buffer);
+
+    for (let idx = 0; idx < totalGlyphs; idx++) {
+      const entryBase = metricsTablePtr + idx * 32;
+      const width = u32Mem[entryBase >> 2] ?? 0;
+      const height = u32Mem[(entryBase + 4) >> 2] ?? 0;
+      const horiBearingX = i32Mem[(entryBase + 8) >> 2] ?? 0;
+      const horiBearingY = i32Mem[(entryBase + 12) >> 2] ?? 0;
+      const horiAdvance = u32Mem[(entryBase + 16) >> 2] ?? 0;
+      const vertBearingX = i32Mem[(entryBase + 20) >> 2] ?? 0;
+      const vertBearingY = i32Mem[(entryBase + 24) >> 2] ?? 0;
+      const vertAdvance = u32Mem[(entryBase + 28) >> 2] ?? 0;
+
+      // Validate all dimensions and bearings are even integers (multiples of 2 on X and Y)
+      expect(Math.abs(width % 2)).toBe(0);
+      expect(Math.abs(height % 2)).toBe(0);
+      expect(Math.abs(horiBearingX % 2)).toBe(0);
+      expect(Math.abs(horiBearingY % 2)).toBe(0);
+      expect(Math.abs(horiAdvance % 2)).toBe(0);
+      expect(Math.abs(vertBearingX % 2)).toBe(0);
+      expect(Math.abs(vertBearingY % 2)).toBe(0);
+      expect(Math.abs(vertAdvance % 2)).toBe(0);
+
+      // Validate export helper methods match serialized metrics
+      if (wasm.font_get_glyph_width) {
+        expect(wasm.font_get_glyph_width(idx)).toBe(width);
+      }
+      if (wasm.font_get_glyph_height) {
+        expect(wasm.font_get_glyph_height(idx)).toBe(height);
+      }
+      if (wasm.font_get_glyph_hori_bearing_x) {
+        expect(wasm.font_get_glyph_hori_bearing_x(idx)).toBe(horiBearingX);
+      }
+      if (wasm.font_get_glyph_hori_bearing_y) {
+        expect(wasm.font_get_glyph_hori_bearing_y(idx)).toBe(horiBearingY);
+      }
+      if (wasm.font_get_glyph_hori_advance) {
+        expect(wasm.font_get_glyph_hori_advance(idx)).toBe(horiAdvance);
+      }
+
+      // Validate BBox coordinate calculations
+      const bboxMinX = wasm.font_get_glyph_bbox_min_x ? wasm.font_get_glyph_bbox_min_x(idx) : horiBearingX;
+      const bboxMaxX = wasm.font_get_glyph_bbox_max_x ? wasm.font_get_glyph_bbox_max_x(idx) : horiBearingX + width;
+      const bboxMinY = wasm.font_get_glyph_bbox_min_y ? wasm.font_get_glyph_bbox_min_y(idx) : horiBearingY - height;
+      const bboxMaxY = wasm.font_get_glyph_bbox_max_y ? wasm.font_get_glyph_bbox_max_y(idx) : horiBearingY;
+
+      expect(Math.abs(bboxMinX % 2)).toBe(0);
+      expect(Math.abs(bboxMaxX % 2)).toBe(0);
+      expect(Math.abs(bboxMinY % 2)).toBe(0);
+      expect(Math.abs(bboxMaxY % 2)).toBe(0);
+
+      expect(bboxMinX).toBe(horiBearingX);
+      expect(bboxMaxX).toBe(horiBearingX + width);
+      expect(bboxMinY).toBe(horiBearingY - height);
+      expect(bboxMaxY).toBe(horiBearingY);
+    }
+  });
 });

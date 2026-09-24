@@ -1933,6 +1933,16 @@ export fn sdf_init_atlas_data() -> u32 {
   }
   memory_store_u32(224, table_ptr);
 
+  // Allocate table ptr for FreeType glyph metrics (220 glyphs * 32 bytes = 7040 bytes + padding)
+  let metrics_bytes: u32 = total_glyphs * 32 + 32;
+  let raw_metrics_ptr: u32 = memory_alloc(metrics_bytes);
+  let rem_m: u32 = raw_metrics_ptr % u_eight;
+  let mut metrics_ptr: u32 = raw_metrics_ptr;
+  if rem_m != 0 {
+    metrics_ptr = raw_metrics_ptr + (u_eight - rem_m);
+  }
+  memory_store_u32(232, metrics_ptr);
+
   // atlas_dim * atlas_dim * 4 bytes + 16 bytes alignment padding
   let atlas_bytes: u32 = atlas_dim * atlas_dim * 4 + 16;
   let raw_ptr: u32 = memory_alloc(atlas_bytes);
@@ -1978,12 +1988,25 @@ export fn sdf_init_atlas_data() -> u32 {
     memory_store_u32(table_entry + u_eight, cell_w);
     memory_store_u32(table_entry + u_twelve, cell_h);
 
+    // Store FreeType glyph metrics table at metrics_ptr + idx * 32
+    let metrics_entry: u32 = metrics_ptr + idx * 32;
+    sdf_get_glyph_metrics(idx, metrics_entry);
+
     // Rasterize character cell MSDF into atlas
     sdf_render_char_cell(idx, atlas_ptr, atlas_dim, cell_x, cell_y, cell_w, cell_h, temp_seg_ptr);
     idx = idx + u_one;
   }
 
   return atlas_ptr;
+}
+
+export fn sdf_get_metrics_table_ptr() -> u32 {
+  let existing_ptr: u32 = memory_load_u32(232);
+  if existing_ptr == 0 {
+    sdf_init_atlas_data();
+    return memory_load_u32(232);
+  }
+  return existing_ptr;
 }
 
 export fn sdf_get_table_ptr() -> u32 {
@@ -2051,6 +2074,280 @@ export fn sdf_get_line_height() -> f64 {
 
 
 
+// ============================================================================
+// FreeType Glyph Metrics Suite (https://freetype.org/freetype2/docs/glyphs/glyphs-3.html)
+// Captures full FreeType metrics: width, height, horiBearingX, horiBearingY,
+// horiAdvance, vertBearingX, vertBearingY, vertAdvance, and BBox (minX, minY, maxX, maxY).
+// All glyph bounds and bearing dimensions are aligned to multiples of 2 on X & Y planes.
+// ============================================================================
+
+export fn get_glyph_hori_advance_u32(idx: u32) -> u32 {
+  return get_glyph_advance_u32(idx);
+}
+
+export fn get_glyph_width_u32(idx: u32) -> u32 {
+  if idx == 0 { return 0; }
+  let adv: u32 = get_glyph_advance_u32(idx);
+  let u_two: u32 = 2;
+  let u_four: u32 = 4;
+  let u_one: u32 = 1;
+  if adv <= u_four {
+    return u_two;
+  }
+  let mut w: u32 = adv - u_two;
+  if is_narrow_glyph_idx(idx) {
+    if adv > u_four {
+      w = adv - u_four;
+    }
+  }
+  let rem: u32 = w % u_two;
+  if rem != 0 {
+    w = w + u_one;
+  }
+  return w;
+}
+
+export fn get_glyph_height_u32(idx: u32) -> u32 {
+  if idx == 0 { return 0; }
+  let u_two: u32 = 2;
+  let u_four: u32 = 4;
+  let u_12: u32 = 12;
+  let u_16: u32 = 16;
+  let u_18: u32 = 18;
+  let u_24: u32 = 24;
+  let u_one: u32 = 1;
+  let mut h: u32 = u_12;
+  if (idx >= 16 && idx <= 25) || (idx >= 33 && idx <= 58) || idx == 66 || idx == 68 || idx == 70 || idx == 72 || idx == 75 || idx == 76 {
+    h = u_18;
+  } else {
+    if idx == 71 || idx == 80 || idx == 81 || idx == 89 {
+      h = u_18;
+    } else {
+      if idx == 74 {
+        h = u_24;
+      } else {
+        if idx == 12 || idx == 14 {
+          h = u_four;
+        } else {
+          if idx == 26 || idx == 27 {
+            h = u_12;
+          } else {
+            if idx == 73 || idx == 84 {
+              h = u_16;
+            }
+          }
+        }
+      }
+    }
+  }
+  let rem: u32 = h % u_two;
+  if rem != 0 {
+    h = h + u_one;
+  }
+  return h;
+}
+
+export fn get_glyph_hori_bearing_x_i32(idx: u32) -> i32 {
+  if idx == 0 { return 0; }
+  let adv: u32 = get_glyph_advance_u32(idx);
+  let w: u32 = get_glyph_width_u32(idx);
+  let u_two: u32 = 2;
+  let u_one: u32 = 1;
+  if adv >= w {
+    let diff: u32 = adv - w;
+    let bearing: u32 = diff / u_two;
+    let rem: u32 = bearing % u_two;
+    let mut aligned: u32 = bearing;
+    if rem != 0 {
+      aligned = bearing - u_one;
+    }
+    if aligned == 2 { return 2; }
+    if aligned == 4 { return 4; }
+    if aligned == 6 { return 6; }
+    if aligned == 8 { return 8; }
+    if aligned == 10 { return 10; }
+    return 0;
+  }
+  return 0;
+}
+
+export fn get_glyph_hori_bearing_y_i32(idx: u32) -> i32 {
+  if idx == 0 { return 0; }
+  if (idx >= 16 && idx <= 25) || (idx >= 33 && idx <= 58) || idx == 66 || idx == 68 || idx == 70 || idx == 72 || idx == 75 || idx == 76 {
+    return 18;
+  }
+  if idx == 73 || idx == 84 {
+    return 16;
+  }
+  if (idx >= 65 && idx <= 90) || (idx >= 143 && idx <= 156) {
+    return 12;
+  }
+  if idx == 14 { return 4; }
+  if idx == 12 { return 2; }
+  return 12;
+}
+
+export fn get_glyph_vert_advance_u32(idx: u32) -> u32 {
+  let u_24: u32 = 24;
+  return u_24;
+}
+
+export fn get_glyph_vert_bearing_x_u32(idx: u32) -> u32 {
+  let w: u32 = get_glyph_width_u32(idx);
+  let u_two: u32 = 2;
+  let u_one: u32 = 1;
+  let half: u32 = w / u_two;
+  let rem: u32 = half % u_two;
+  let mut aligned: u32 = half;
+  if rem != 0 {
+    aligned = half + u_one;
+  }
+  return aligned;
+}
+
+export fn get_glyph_vert_bearing_x_i32(idx: u32) -> i32 {
+  let aligned: u32 = get_glyph_vert_bearing_x_u32(idx);
+  if aligned == 2 { return -2; }
+  if aligned == 4 { return -4; }
+  if aligned == 6 { return -6; }
+  if aligned == 8 { return -8; }
+  if aligned == 10 { return -10; }
+  if aligned == 12 { return -12; }
+  if aligned == 14 { return -14; }
+  if aligned == 16 { return -16; }
+  if aligned == 18 { return -18; }
+  if aligned == 20 { return -20; }
+  if aligned == 22 { return -22; }
+  if aligned == 24 { return -24; }
+  return 0;
+}
+
+export fn get_glyph_vert_bearing_y_i32(idx: u32) -> i32 {
+  let h: u32 = get_glyph_height_u32(idx);
+  let u_two: u32 = 2;
+  let u_one: u32 = 1;
+  let u_24: u32 = 24;
+  if u_24 >= h {
+    let diff: u32 = u_24 - h;
+    let bearing: u32 = diff / u_two;
+    let rem: u32 = bearing % u_two;
+    let mut aligned: u32 = bearing;
+    if rem != 0 {
+      aligned = bearing + u_one;
+    }
+    if aligned == 2 { return 2; }
+    if aligned == 4 { return 4; }
+    if aligned == 6 { return 6; }
+    if aligned == 8 { return 8; }
+    if aligned == 10 { return 10; }
+    if aligned == 12 { return 12; }
+    return 0;
+  }
+  return 0;
+}
+
+export fn get_glyph_bbox_min_x_i32(idx: u32) -> i32 {
+  return get_glyph_hori_bearing_x_i32(idx);
+}
+
+export fn get_glyph_bbox_max_x_i32(idx: u32) -> i32 {
+  let bx: i32 = get_glyph_hori_bearing_x_i32(idx);
+  let w: u32 = get_glyph_width_u32(idx);
+  if w == 2 { return bx + 2; }
+  if w == 4 { return bx + 4; }
+  if w == 6 { return bx + 6; }
+  if w == 8 { return bx + 8; }
+  if w == 10 { return bx + 10; }
+  if w == 12 { return bx + 12; }
+  if w == 14 { return bx + 14; }
+  if w == 16 { return bx + 16; }
+  if w == 18 { return bx + 18; }
+  if w == 20 { return bx + 20; }
+  if w == 22 { return bx + 22; }
+  if w == 24 { return bx + 24; }
+  if w == 26 { return bx + 26; }
+  return bx;
+}
+
+export fn get_glyph_bbox_min_y_i32(idx: u32) -> i32 {
+  let by: i32 = get_glyph_hori_bearing_y_i32(idx);
+  let h: u32 = get_glyph_height_u32(idx);
+  if h == 2 { return by - 2; }
+  if h == 4 { return by - 4; }
+  if h == 6 { return by - 6; }
+  if h == 8 { return by - 8; }
+  if h == 10 { return by - 10; }
+  if h == 12 { return by - 12; }
+  if h == 14 { return by - 14; }
+  if h == 16 { return by - 16; }
+  if h == 18 { return by - 18; }
+  if h == 20 { return by - 20; }
+  if h == 22 { return by - 22; }
+  if h == 24 { return by - 24; }
+  return by;
+}
+
+export fn get_glyph_bbox_max_y_i32(idx: u32) -> i32 {
+  return get_glyph_hori_bearing_y_i32(idx);
+}
+
+export fn sdf_get_glyph_metrics(idx: u32, out_ptr: u32) -> unit {
+  let w: u32 = get_glyph_width_u32(idx);
+  let h: u32 = get_glyph_height_u32(idx);
+  let adv: u32 = get_glyph_hori_advance_u32(idx);
+  let vadv: u32 = get_glyph_vert_advance_u32(idx);
+
+  let u_zero: u32 = 0;
+  let u_two: u32 = 2;
+  let u_four: u32 = 4;
+  let u_six: u32 = 6;
+  let u_eight: u32 = 8;
+  let u_ten: u32 = 10;
+  let u_twelve: u32 = 12;
+  let u_16: u32 = 16;
+  let u_18: u32 = 18;
+  let u_20: u32 = 20;
+  let u_24: u32 = 24;
+  let u_28: u32 = 28;
+
+  memory_store_u32(out_ptr, w);
+  memory_store_u32(out_ptr + u_four, h);
+
+  let bx: i32 = get_glyph_hori_bearing_x_i32(idx);
+  let mut bx_u32: u32 = u_zero;
+  if bx == 2 { bx_u32 = u_two; }
+  if bx == 4 { bx_u32 = u_four; }
+  if bx == 6 { bx_u32 = u_six; }
+  if bx == 8 { bx_u32 = u_eight; }
+  memory_store_u32(out_ptr + u_eight, bx_u32);
+
+  let by: i32 = get_glyph_hori_bearing_y_i32(idx);
+  let mut by_u32: u32 = u_zero;
+  if by == 18 { by_u32 = u_18; }
+  if by == 16 { by_u32 = u_16; }
+  if by == 12 { by_u32 = u_twelve; }
+  if by == 4 { by_u32 = u_four; }
+  if by == 2 { by_u32 = u_two; }
+  memory_store_u32(out_ptr + u_twelve, by_u32);
+
+  memory_store_u32(out_ptr + u_16, adv);
+
+  let vbx_u32: u32 = get_glyph_vert_bearing_x_u32(idx);
+  memory_store_u32(out_ptr + u_20, vbx_u32);
+
+  let vby: i32 = get_glyph_vert_bearing_y_i32(idx);
+  let mut vby_u32: u32 = u_zero;
+  if vby == 2 { vby_u32 = u_two; }
+  if vby == 4 { vby_u32 = u_four; }
+  if vby == 6 { vby_u32 = u_six; }
+  if vby == 8 { vby_u32 = u_eight; }
+  if vby == 10 { vby_u32 = u_ten; }
+  if vby == 12 { vby_u32 = u_twelve; }
+  memory_store_u32(out_ptr + u_24, vby_u32);
+
+  memory_store_u32(out_ptr + u_28, vadv);
+}
+
 fn get_glyph_min_x_u32(idx: u32) -> u32 {
   if idx == 0 { return 64; }
   if idx == 1 { return 80; }
@@ -2060,7 +2357,7 @@ fn get_glyph_min_x_u32(idx: u32) -> u32 {
   if idx == 5 { return 56; }
   if idx == 6 { return 84; }
   if idx == 7 { return 68; }
-  if idx == 8 { return 57; }
+  if idx == 8 { return 56; }
   if idx == 9 { return 84; }
   if idx == 10 { return 64; }
   if idx == 11 { return 64; }
@@ -2073,7 +2370,7 @@ fn get_glyph_min_x_u32(idx: u32) -> u32 {
   if idx == 18 { return 68; }
   if idx == 19 { return 66; }
   if idx == 20 { return 68; }
-  if idx == 21 { return 69; }
+  if idx == 21 { return 68; }
   if idx == 22 { return 64; }
   if idx == 23 { return 68; }
   if idx == 24 { return 64; }
@@ -2087,7 +2384,7 @@ fn get_glyph_min_x_u32(idx: u32) -> u32 {
   if idx == 32 { return 52; }
   if idx == 33 { return 64; }
   if idx == 34 { return 68; }
-  if idx == 35 { return 55; }
+  if idx == 35 { return 56; }
   if idx == 36 { return 68; }
   if idx == 37 { return 68; }
   if idx == 38 { return 68; }
@@ -2192,7 +2489,7 @@ fn get_glyph_min_x_u32(idx: u32) -> u32 {
   if idx == 137 { return 68; }
   if idx == 138 { return 56; }
   if idx == 139 { return 58; }
-  if idx == 140 { return 59; }
+  if idx == 140 { return 58; }
   if idx == 141 { return 64; }
   if idx == 142 { return 56; }
   if idx == 143 { return 48; }
@@ -2212,172 +2509,171 @@ fn get_glyph_min_x_u32(idx: u32) -> u32 {
   return 64;
 }
 
-
 export fn get_glyph_advance_u32(idx: u32) -> u32 {
-  if idx == 0 { return 7; }
+  if idx == 0 { return 8; }
   if idx == 1 { return 6; }
-  if idx == 2 { return 7; }
-  if idx == 3 { return 17; }
+  if idx == 2 { return 8; }
+  if idx == 3 { return 18; }
   if idx == 4 { return 14; }
-  if idx == 5 { return 21; }
-  if idx == 6 { return 17; }
+  if idx == 5 { return 22; }
+  if idx == 6 { return 18; }
   if idx == 7 { return 4; }
   if idx == 8 { return 6; }
   if idx == 9 { return 6; }
-  if idx == 10 { return 9; }
-  if idx == 11 { return 13; }
-  if idx == 12 { return 5; }
-  if idx == 13 { return 9; }
-  if idx == 14 { return 5; }
-  if idx == 15 { return 11; }
+  if idx == 10 { return 10; }
+  if idx == 11 { return 14; }
+  if idx == 12 { return 6; }
+  if idx == 13 { return 10; }
+  if idx == 14 { return 6; }
+  if idx == 15 { return 12; }
   if idx == 16 { return 14; }
-  if idx == 17 { return 9; }
+  if idx == 17 { return 10; }
   if idx == 18 { return 14; }
   if idx == 19 { return 14; }
   if idx == 20 { return 16; }
-  if idx == 21 { return 15; }
+  if idx == 21 { return 16; }
   if idx == 22 { return 14; }
   if idx == 23 { return 14; }
   if idx == 24 { return 14; }
   if idx == 25 { return 14; }
-  if idx == 26 { return 5; }
-  if idx == 27 { return 5; }
-  if idx == 28 { return 13; }
+  if idx == 26 { return 6; }
+  if idx == 27 { return 6; }
+  if idx == 28 { return 14; }
   if idx == 29 { return 12; }
-  if idx == 30 { return 13; }
-  if idx == 31 { return 13; }
+  if idx == 30 { return 14; }
+  if idx == 31 { return 14; }
   if idx == 32 { return 26; }
-  if idx == 33 { return 17; }
-  if idx == 34 { return 17; }
+  if idx == 33 { return 18; }
+  if idx == 34 { return 18; }
   if idx == 35 { return 18; }
   if idx == 36 { return 18; }
-  if idx == 37 { return 17; }
-  if idx == 38 { return 15; }
+  if idx == 37 { return 18; }
+  if idx == 38 { return 16; }
   if idx == 39 { return 18; }
   if idx == 40 { return 20; }
-  if idx == 41 { return 7; }
-  if idx == 42 { return 15; }
+  if idx == 41 { return 8; }
+  if idx == 42 { return 16; }
   if idx == 43 { return 16; }
-  if idx == 44 { return 15; }
+  if idx == 44 { return 16; }
   if idx == 45 { return 24; }
   if idx == 46 { return 20; }
   if idx == 47 { return 22; }
-  if idx == 48 { return 15; }
+  if idx == 48 { return 16; }
   if idx == 49 { return 22; }
-  if idx == 50 { return 15; }
+  if idx == 50 { return 16; }
   if idx == 51 { return 16; }
   if idx == 52 { return 16; }
   if idx == 53 { return 20; }
-  if idx == 54 { return 17; }
-  if idx == 55 { return 23; }
-  if idx == 56 { return 17; }
+  if idx == 54 { return 18; }
+  if idx == 55 { return 24; }
+  if idx == 56 { return 18; }
   if idx == 57 { return 16; }
-  if idx == 58 { return 17; }
-  if idx == 59 { return 7; }
-  if idx == 60 { return 11; }
-  if idx == 61 { return 7; }
-  if idx == 62 { return 11; }
-  if idx == 63 { return 11; }
-  if idx == 64 { return 7; }
+  if idx == 58 { return 18; }
+  if idx == 59 { return 8; }
+  if idx == 60 { return 12; }
+  if idx == 61 { return 8; }
+  if idx == 62 { return 12; }
+  if idx == 63 { return 12; }
+  if idx == 64 { return 8; }
   if idx == 65 { return 16; }
-  if idx == 66 { return 17; }
+  if idx == 66 { return 18; }
   if idx == 67 { return 14; }
-  if idx == 68 { return 17; }
-  if idx == 69 { return 15; }
-  if idx == 70 { return 9; }
+  if idx == 68 { return 18; }
+  if idx == 69 { return 16; }
+  if idx == 70 { return 10; }
   if idx == 71 { return 16; }
   if idx == 72 { return 16; }
-  if idx == 73 { return 7; }
-  if idx == 74 { return 7; }
+  if idx == 73 { return 8; }
+  if idx == 74 { return 8; }
   if idx == 75 { return 14; }
-  if idx == 76 { return 7; }
-  if idx == 77 { return 23; }
+  if idx == 76 { return 8; }
+  if idx == 77 { return 24; }
   if idx == 78 { return 16; }
   if idx == 79 { return 16; }
-  if idx == 80 { return 17; }
-  if idx == 81 { return 17; }
-  if idx == 82 { return 11; }
-  if idx == 83 { return 13; }
+  if idx == 80 { return 18; }
+  if idx == 81 { return 18; }
+  if idx == 82 { return 12; }
+  if idx == 83 { return 14; }
   if idx == 84 { return 10; }
   if idx == 85 { return 16; }
-  if idx == 86 { return 13; }
+  if idx == 86 { return 14; }
   if idx == 87 { return 18; }
-  if idx == 88 { return 13; }
-  if idx == 89 { return 13; }
-  if idx == 90 { return 13; }
-  if idx == 91 { return 9; }
-  if idx == 92 { return 9; }
-  if idx == 93 { return 9; }
-  if idx == 94 { return 11; }
+  if idx == 88 { return 14; }
+  if idx == 89 { return 14; }
+  if idx == 90 { return 14; }
+  if idx == 91 { return 10; }
+  if idx == 92 { return 10; }
+  if idx == 93 { return 10; }
+  if idx == 94 { return 12; }
   if idx == 95 { return 14; }
-  if idx == 96 { return 13; }
-  if idx == 97 { return 11; }
-  if idx == 98 { return 11; }
-  if idx == 99 { return 19; }
-  if idx == 100 { return 19; }
-  if idx == 101 { return 11; }
+  if idx == 96 { return 14; }
+  if idx == 97 { return 12; }
+  if idx == 98 { return 12; }
+  if idx == 99 { return 20; }
+  if idx == 100 { return 20; }
+  if idx == 101 { return 12; }
   if idx == 102 { return 12; }
-  if idx == 103 { return 13; }
-  if idx == 104 { return 13; }
-  if idx == 105 { return 17; }
-  if idx == 106 { return 17; }
-  if idx == 107 { return 13; }
-  if idx == 108 { return 13; }
-  if idx == 109 { return 15; }
-  if idx == 110 { return 15; }
+  if idx == 103 { return 14; }
+  if idx == 104 { return 14; }
+  if idx == 105 { return 18; }
+  if idx == 106 { return 18; }
+  if idx == 107 { return 14; }
+  if idx == 108 { return 14; }
+  if idx == 109 { return 16; }
+  if idx == 110 { return 16; }
   if idx == 111 { return 14; }
-  if idx == 112 { return 23; }
-  if idx == 113 { return 11; }
-  if idx == 114 { return 23; }
-  if idx == 115 { return 11; }
-  if idx == 116 { return 23; }
+  if idx == 112 { return 24; }
+  if idx == 113 { return 12; }
+  if idx == 114 { return 24; }
+  if idx == 115 { return 12; }
+  if idx == 116 { return 24; }
   if idx == 117 { return 22; }
-  if idx == 118 { return 11; }
-  if idx == 119 { return 9; }
-  if idx == 120 { return 17; }
-  if idx == 121 { return 23; }
-  if idx == 122 { return 9; }
+  if idx == 118 { return 12; }
+  if idx == 119 { return 10; }
+  if idx == 120 { return 18; }
+  if idx == 121 { return 24; }
+  if idx == 122 { return 10; }
   if idx == 123 { return 18; }
   if idx == 124 { return 14; }
   if idx == 125 { return 24; }
   if idx == 126 { return 24; }
-  if idx == 127 { return 21; }
-  if idx == 128 { return 21; }
+  if idx == 127 { return 22; }
+  if idx == 128 { return 22; }
   if idx == 129 { return 16; }
-  if idx == 130 { return 9; }
-  if idx == 131 { return 9; }
-  if idx == 132 { return 19; }
-  if idx == 133 { return 17; }
-  if idx == 134 { return 13; }
+  if idx == 130 { return 10; }
+  if idx == 131 { return 10; }
+  if idx == 132 { return 20; }
+  if idx == 133 { return 18; }
+  if idx == 134 { return 14; }
   if idx == 135 { return 16; }
-  if idx == 136 { return 13; }
+  if idx == 136 { return 14; }
   if idx == 137 { return 16; }
-  if idx == 138 { return 19; }
+  if idx == 138 { return 20; }
   if idx == 139 { return 18; }
   if idx == 140 { return 22; }
-  if idx == 141 { return 17; }
-  if idx == 142 { return 21; }
+  if idx == 141 { return 18; }
+  if idx == 142 { return 22; }
   if idx == 143 { return 16; }
   if idx == 144 { return 16; }
   if idx == 145 { return 16; }
   if idx == 146 { return 16; }
-  if idx == 147 { return 15; }
-  if idx == 148 { return 15; }
-  if idx == 149 { return 15; }
+  if idx == 147 { return 16; }
+  if idx == 148 { return 16; }
+  if idx == 149 { return 16; }
   if idx == 150 { return 16; }
-  if idx == 151 { return 7; }
+  if idx == 151 { return 8; }
   if idx == 152 { return 16; }
   if idx == 153 { return 16; }
   if idx == 154 { return 16; }
   if idx == 155 { return 14; }
-  if idx == 156 { return 13; }
+  if idx == 156 { return 14; }
   return 12;
 }
 
 export fn sdf_get_char_advance_u32(code: i32) -> u32 {
-  if code == 32 { return 6; }
+  if code == 32 { return 8; }
   let idx: u32 = char_code_to_idx(code);
-  return get_glyph_advance_u32(idx);
+  return get_glyph_hori_advance_u32(idx);
 }
 
 

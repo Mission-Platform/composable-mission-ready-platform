@@ -230,6 +230,14 @@ interface HoveredGlyphInfo {
   readonly codeHex: string;
   readonly codeDec: number;
   readonly advance: number;
+  readonly width: number;
+  readonly height: number;
+  readonly horiBearingX: number;
+  readonly horiBearingY: number;
+  readonly bboxMinX: number;
+  readonly bboxMaxX: number;
+  readonly bboxMinY: number;
+  readonly bboxMaxY: number;
   readonly cellX: number;
   readonly cellY: number;
   readonly cellW: number;
@@ -963,8 +971,40 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         const char = GLYPH_CHARS_BY_IDX[foundIndex] ?? '';
         const code = char.codePointAt(0) ?? 0;
         let advance = 14;
+        let width = foundW;
+        let height = foundH;
+        let horiBearingX = 0;
+        let horiBearingY = 18;
+        let bboxMinX = 0;
+        let bboxMaxX = foundW;
+        let bboxMinY = 0;
+        let bboxMaxY = 18;
         try {
           advance = wasm.font_get_char_advance(code);
+          if (wasm.font_get_glyph_width) {
+            width = wasm.font_get_glyph_width(foundIndex);
+          }
+          if (wasm.font_get_glyph_height) {
+            height = wasm.font_get_glyph_height(foundIndex);
+          }
+          if (wasm.font_get_glyph_hori_bearing_x) {
+            horiBearingX = wasm.font_get_glyph_hori_bearing_x(foundIndex);
+          }
+          if (wasm.font_get_glyph_hori_bearing_y) {
+            horiBearingY = wasm.font_get_glyph_hori_bearing_y(foundIndex);
+          }
+          if (wasm.font_get_glyph_bbox_min_x) {
+            bboxMinX = wasm.font_get_glyph_bbox_min_x(foundIndex);
+          }
+          if (wasm.font_get_glyph_bbox_max_x) {
+            bboxMaxX = wasm.font_get_glyph_bbox_max_x(foundIndex);
+          }
+          if (wasm.font_get_glyph_bbox_min_y) {
+            bboxMinY = wasm.font_get_glyph_bbox_min_y(foundIndex);
+          }
+          if (wasm.font_get_glyph_bbox_max_y) {
+            bboxMaxY = wasm.font_get_glyph_bbox_max_y(foundIndex);
+          }
         } catch {
           // fallback
         }
@@ -974,6 +1014,14 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           codeHex: `U+${code.toString(16).toUpperCase().padStart(4, '0')}`,
           codeDec: code,
           advance,
+          width,
+          height,
+          horiBearingX,
+          horiBearingY,
+          bboxMinX,
+          bboxMaxX,
+          bboxMinY,
+          bboxMaxY,
           cellX: foundX,
           cellY: foundY,
           cellW: foundW,
@@ -3238,8 +3286,11 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                               </ForgeBadge>
                             </div>
                             <div>
-                              Advance: {hoveredGlyph.advance}px | Packed Cell: {hoveredGlyph.cellW}×{hoveredGlyph.cellH}{' '}
-                              at ({hoveredGlyph.cellX}, {hoveredGlyph.cellY})
+                              FreeType Metrics: {hoveredGlyph.width}×{hoveredGlyph.height}px | Bearing: (
+                              {hoveredGlyph.horiBearingX}, {hoveredGlyph.horiBearingY}) | BBox: [{hoveredGlyph.bboxMinX}
+                              , {hoveredGlyph.bboxMinY}, {hoveredGlyph.bboxMaxX}, {hoveredGlyph.bboxMaxY}] | Advance:{' '}
+                              {hoveredGlyph.advance}px | Packed Cell: {hoveredGlyph.cellW}×{hoveredGlyph.cellH} at (
+                              {hoveredGlyph.cellX}, {hoveredGlyph.cellY})
                             </div>
                           </div>
                         </div>
