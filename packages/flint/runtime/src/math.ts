@@ -540,27 +540,27 @@ export interface FlintMat4 {
   ];
 }
 
-/** Perform create flint mat 2 operation. */
-export function createFlintMat2(column0OrElements?: FlintVec2 | readonly number[], column1?: FlintVec2): FlintMat2 {
-  if (Array.isArray(column0OrElements)) {
-    const element = column0OrElements;
-    const col0 = { x: element[0] ?? 0, y: element[1] ?? 0 };
-    const col1 = { x: element[2] ?? 0, y: element[3] ?? 0 };
-    return {
-      c0: col0,
-      c1: col1,
-      elements: [col0.x, col0.y, col1.x, col1.y],
-    };
-  }
-  let col0: FlintVec2 = { x: 0, y: 0 };
-  if (column0OrElements && typeof column0OrElements === 'object' && 'x' in column0OrElements) {
-    col0 = column0OrElements;
-  }
-  const col1 = column1 ?? { x: 0, y: 0 };
+function createMat2FromElements(elements: readonly number[]): FlintMat2 {
+  const col0 = { x: elements[0] ?? 0, y: elements[1] ?? 0 };
+  const col1 = { x: elements[2] ?? 0, y: elements[3] ?? 0 };
   return {
     c0: col0,
     c1: col1,
     elements: [col0.x, col0.y, col1.x, col1.y],
+  };
+}
+
+/** Perform create flint mat 2 operation. */
+export function createFlintMat2(column0OrElements?: FlintVec2 | readonly number[], column1?: FlintVec2): FlintMat2 {
+  if (Array.isArray(column0OrElements)) {
+    return createMat2FromElements(column0OrElements);
+  }
+  const columnZero = (column0OrElements as FlintVec2 | undefined) ?? { x: 0, y: 0 };
+  const columnOne = column1 ?? { x: 0, y: 0 };
+  return {
+    c0: columnZero,
+    c1: columnOne,
+    elements: [columnZero.x, columnZero.y, columnOne.x, columnOne.y],
   };
 }
 
@@ -648,6 +648,18 @@ export function flintMat2Scaling(scaleVector: FlintVec2): FlintMat2 {
   return createFlintMat2({ x: scaleVector.x, y: 0 }, { x: 0, y: scaleVector.y });
 }
 
+function createMat3FromElements(elements: readonly number[]): FlintMat3 {
+  const col0 = { x: elements[0] ?? 0, y: elements[1] ?? 0, z: elements[2] ?? 0 };
+  const col1 = { x: elements[3] ?? 0, y: elements[4] ?? 0, z: elements[5] ?? 0 };
+  const col2 = { x: elements[6] ?? 0, y: elements[7] ?? 0, z: elements[8] ?? 0 };
+  return {
+    c0: col0,
+    c1: col1,
+    c2: col2,
+    elements: [col0.x, col0.y, col0.z, col1.x, col1.y, col1.z, col2.x, col2.y, col2.z],
+  };
+}
+
 /** Perform create flint mat 3 operation. */
 export function createFlintMat3(
   column0OrElements?: FlintVec3 | readonly number[],
@@ -655,28 +667,26 @@ export function createFlintMat3(
   column2?: FlintVec3,
 ): FlintMat3 {
   if (Array.isArray(column0OrElements)) {
-    const element = column0OrElements;
-    const col0 = { x: element[0] ?? 0, y: element[1] ?? 0, z: element[2] ?? 0 };
-    const col1 = { x: element[3] ?? 0, y: element[4] ?? 0, z: element[5] ?? 0 };
-    const col2 = { x: element[6] ?? 0, y: element[7] ?? 0, z: element[8] ?? 0 };
-    return {
-      c0: col0,
-      c1: col1,
-      c2: col2,
-      elements: [col0.x, col0.y, col0.z, col1.x, col1.y, col1.z, col2.x, col2.y, col2.z],
-    };
+    return createMat3FromElements(column0OrElements);
   }
-  let col0: FlintVec3 = { x: 0, y: 0, z: 0 };
-  if (column0OrElements && typeof column0OrElements === 'object' && 'x' in column0OrElements) {
-    col0 = column0OrElements;
-  }
-  const col1 = column1 ?? { x: 0, y: 0, z: 0 };
-  const col2 = column2 ?? { x: 0, y: 0, z: 0 };
+  const columnZero = (column0OrElements as FlintVec3 | undefined) ?? { x: 0, y: 0, z: 0 };
+  const columnOne = column1 ?? { x: 0, y: 0, z: 0 };
+  const columnTwo = column2 ?? { x: 0, y: 0, z: 0 };
   return {
-    c0: col0,
-    c1: col1,
-    c2: col2,
-    elements: [col0.x, col0.y, col0.z, col1.x, col1.y, col1.z, col2.x, col2.y, col2.z],
+    c0: columnZero,
+    c1: columnOne,
+    c2: columnTwo,
+    elements: [
+      columnZero.x,
+      columnZero.y,
+      columnZero.z,
+      columnOne.x,
+      columnOne.y,
+      columnOne.z,
+      columnTwo.x,
+      columnTwo.y,
+      columnTwo.z,
+    ],
   };
 }
 
@@ -818,51 +828,11 @@ export function flintMat3Scale2D(scale: FlintVec2): FlintMat3 {
   return createFlintMat3({ x: scale.x, y: 0, z: 0 }, { x: 0, y: scale.y, z: 0 }, { x: 0, y: 0, z: 1 });
 }
 
-/** Perform create flint mat 4 operation. */
-export function createFlintMat4(
-  column0OrElements?: FlintVec4 | readonly number[],
-  column1?: FlintVec4,
-  column2?: FlintVec4,
-  column3?: FlintVec4,
-): FlintMat4 {
-  if (Array.isArray(column0OrElements)) {
-    const element = column0OrElements;
-    const col0 = { x: element[0] ?? 0, y: element[1] ?? 0, z: element[2] ?? 0, w: element[3] ?? 0 };
-    const col1 = { x: element[4] ?? 0, y: element[5] ?? 0, z: element[6] ?? 0, w: element[7] ?? 0 };
-    const col2 = { x: element[8] ?? 0, y: element[9] ?? 0, z: element[10] ?? 0, w: element[11] ?? 0 };
-    const col3 = { x: element[12] ?? 0, y: element[13] ?? 0, z: element[14] ?? 0, w: element[15] ?? 0 };
-    return {
-      c0: col0,
-      c1: col1,
-      c2: col2,
-      c3: col3,
-      elements: [
-        col0.x,
-        col0.y,
-        col0.z,
-        col0.w,
-        col1.x,
-        col1.y,
-        col1.z,
-        col1.w,
-        col2.x,
-        col2.y,
-        col2.z,
-        col2.w,
-        col3.x,
-        col3.y,
-        col3.z,
-        col3.w,
-      ],
-    };
-  }
-  let col0: FlintVec4 = { x: 0, y: 0, z: 0, w: 0 };
-  if (column0OrElements && typeof column0OrElements === 'object' && 'x' in column0OrElements) {
-    col0 = column0OrElements;
-  }
-  const col1 = column1 ?? { x: 0, y: 0, z: 0, w: 0 };
-  const col2 = column2 ?? { x: 0, y: 0, z: 0, w: 0 };
-  const col3 = column3 ?? { x: 0, y: 0, z: 0, w: 0 };
+function createMat4FromElements(elements: readonly number[]): FlintMat4 {
+  const col0 = { x: elements[0] ?? 0, y: elements[1] ?? 0, z: elements[2] ?? 0, w: elements[3] ?? 0 };
+  const col1 = { x: elements[4] ?? 0, y: elements[5] ?? 0, z: elements[6] ?? 0, w: elements[7] ?? 0 };
+  const col2 = { x: elements[8] ?? 0, y: elements[9] ?? 0, z: elements[10] ?? 0, w: elements[11] ?? 0 };
+  const col3 = { x: elements[12] ?? 0, y: elements[13] ?? 0, z: elements[14] ?? 0, w: elements[15] ?? 0 };
   return {
     c0: col0,
     c1: col1,
@@ -885,6 +855,46 @@ export function createFlintMat4(
       col3.y,
       col3.z,
       col3.w,
+    ],
+  };
+}
+
+/** Perform create flint mat 4 operation. */
+export function createFlintMat4(
+  column0OrElements?: FlintVec4 | readonly number[],
+  column1?: FlintVec4,
+  column2?: FlintVec4,
+  column3?: FlintVec4,
+): FlintMat4 {
+  if (Array.isArray(column0OrElements)) {
+    return createMat4FromElements(column0OrElements);
+  }
+  const columnZero = (column0OrElements as FlintVec4 | undefined) ?? { x: 0, y: 0, z: 0, w: 0 };
+  const columnOne = column1 ?? { x: 0, y: 0, z: 0, w: 0 };
+  const columnTwo = column2 ?? { x: 0, y: 0, z: 0, w: 0 };
+  const columnThree = column3 ?? { x: 0, y: 0, z: 0, w: 0 };
+  return {
+    c0: columnZero,
+    c1: columnOne,
+    c2: columnTwo,
+    c3: columnThree,
+    elements: [
+      columnZero.x,
+      columnZero.y,
+      columnZero.z,
+      columnZero.w,
+      columnOne.x,
+      columnOne.y,
+      columnOne.z,
+      columnOne.w,
+      columnTwo.x,
+      columnTwo.y,
+      columnTwo.z,
+      columnTwo.w,
+      columnThree.x,
+      columnThree.y,
+      columnThree.z,
+      columnThree.w,
     ],
   };
 }
@@ -1760,20 +1770,30 @@ export function flintTriangle2Area(triangle: FlintTriangle2): number {
   );
 }
 
+function isValueInRange(value: number, minimum: number, maximum: number): boolean {
+  return value >= minimum && value <= maximum;
+}
+
+function areIntervalsOverlapping(minA: number, maxA: number, minB: number, maxB: number): boolean {
+  return minA <= maxB && maxA >= minB;
+}
+
 /** Perform a a b b 3 contains point operation. */
 export function flintAABB3ContainsPoint(box: FlintAABB3, point: FlintVec3): boolean {
-  const insideX = point.x >= box.min.x && point.x <= box.max.x;
-  const insideY = point.y >= box.min.y && point.y <= box.max.y;
-  const insideZ = point.z >= box.min.z && point.z <= box.max.z;
-  return insideX && insideY && insideZ;
+  return (
+    isValueInRange(point.x, box.min.x, box.max.x) &&
+    isValueInRange(point.y, box.min.y, box.max.y) &&
+    isValueInRange(point.z, box.min.z, box.max.z)
+  );
 }
 
 /** Perform a a b b 3 intersects a a b b 3 operation. */
 export function flintAABB3IntersectsAABB3(first: FlintAABB3, second: FlintAABB3): boolean {
-  const overlapX = first.min.x <= second.max.x && first.max.x >= second.min.x;
-  const overlapY = first.min.y <= second.max.y && first.max.y >= second.min.y;
-  const overlapZ = first.min.z <= second.max.z && first.max.z >= second.min.z;
-  return overlapX && overlapY && overlapZ;
+  return (
+    areIntervalsOverlapping(first.min.x, first.max.x, second.min.x, second.max.x) &&
+    areIntervalsOverlapping(first.min.y, first.max.y, second.min.y, second.max.y) &&
+    areIntervalsOverlapping(first.min.z, first.max.z, second.min.z, second.max.z)
+  );
 }
 
 /** Perform a a b b 3 volume operation. */
@@ -1895,39 +1915,59 @@ export function flintRay3IntersectsSphere(ray: FlintRay3, sphere: FlintSphere): 
   return flintNone();
 }
 
-/** Perform ray 3 intersects a a b b 3 operation. */
-export function flintRay3IntersectsAABB3(ray: FlintRay3, box: FlintAABB3): FlintOption<number> {
-  let tmin = -Infinity;
-  let tmax = Infinity;
+interface SlabInterval {
+  readonly valid: boolean;
+  readonly tmin: number;
+  readonly tmax: number;
+}
 
-  const dims: ('x' | 'y' | 'z')[] = ['x', 'y', 'z'];
-  for (const axis of dims) {
-    const origin = ray.origin[axis];
-    const axisDirection = ray.direction[axis];
-    const min = box.min[axis];
-    const max = box.max[axis];
+function computeAxisSlabInterval(
+  origin: number,
+  axisDirection: number,
+  minimum: number,
+  maximum: number,
+): SlabInterval {
+  if (Math.abs(axisDirection) <= FLINT_MATH_EPSILON) {
+    return { valid: origin >= minimum && origin <= maximum, tmin: -Infinity, tmax: Infinity };
+  }
+  const timeA = (minimum - origin) / axisDirection;
+  const timeB = (maximum - origin) / axisDirection;
+  return {
+    valid: true,
+    tmin: Math.min(timeA, timeB),
+    tmax: Math.max(timeA, timeB),
+  };
+}
 
-    if (Math.abs(axisDirection) <= FLINT_MATH_EPSILON) {
-      if (origin < min || origin > max) {
-        return flintNone();
-      }
-    } else {
-      let t1 = (min - origin) / axisDirection;
-      let t2 = (max - origin) / axisDirection;
-      if (t1 > t2) {
-        const temporary = t1;
-        t1 = t2;
-        t2 = temporary;
-      }
-      tmin = Math.max(tmin, t1);
-      tmax = Math.min(tmax, t2);
-      if (tmin > tmax || tmax < 0) {
-        return flintNone();
-      }
+function intersectRayAABBInterval(
+  ray: FlintRay3,
+  box: FlintAABB3,
+): { readonly hit: boolean; readonly tmin: number; readonly tmax: number } {
+  let currentTmin = -Infinity;
+  let currentTmax = Infinity;
+  const dimensions: readonly ('x' | 'y' | 'z')[] = ['x', 'y', 'z'];
+  for (const axis of dimensions) {
+    const slab = computeAxisSlabInterval(ray.origin[axis], ray.direction[axis], box.min[axis], box.max[axis]);
+    if (!slab.valid) {
+      return { hit: false, tmin: currentTmin, tmax: currentTmax };
+    }
+    currentTmin = Math.max(currentTmin, slab.tmin);
+    currentTmax = Math.min(currentTmax, slab.tmax);
+    if (currentTmin > currentTmax || currentTmax < 0) {
+      return { hit: false, tmin: currentTmin, tmax: currentTmax };
     }
   }
+  return { hit: true, tmin: currentTmin, tmax: currentTmax };
+}
 
-  return flintSome(tmin >= 0 ? tmin : tmax);
+/** Perform ray 3 intersects a a b b 3 operation. */
+export function flintRay3IntersectsAABB3(ray: FlintRay3, box: FlintAABB3): FlintOption<number> {
+  const result = intersectRayAABBInterval(ray, box);
+  if (!result.hit) {
+    return flintNone();
+  }
+  const resultDistance = result.tmin >= 0 ? result.tmin : result.tmax;
+  return resultDistance >= 0 ? flintSome(resultDistance) : flintNone();
 }
 
 /** Perform ray 3 intersects plane 3 operation. */
@@ -1968,19 +2008,36 @@ export function flintRay3IntersectsTriangle3(ray: FlintRay3, triangle: FlintTria
   return hitT >= 0 ? flintSome(hitT) : flintNone();
 }
 
+function computeOBBSlabInterval(
+  centerOffsetDistance: number,
+  directionDotAxis: number,
+  halfExtent: number,
+): SlabInterval {
+  if (Math.abs(directionDotAxis) <= FLINT_MATH_EPSILON) {
+    return { valid: Math.abs(centerOffsetDistance) <= halfExtent, tmin: -Infinity, tmax: Infinity };
+  }
+  const timeA = (centerOffsetDistance - halfExtent) / directionDotAxis;
+  const timeB = (centerOffsetDistance + halfExtent) / directionDotAxis;
+  return {
+    valid: true,
+    tmin: Math.min(timeA, timeB),
+    tmax: Math.max(timeA, timeB),
+  };
+}
+
 /** Perform ray 3 intersect o b b operation. */
 export function flintRay3IntersectOBB(ray: FlintRay3, obb: FlintOBB3): FlintOption<number> {
-  const u0 = flintQuatRotateVec3(obb.orientation, { x: 1, y: 0, z: 0 });
-  const u1 = flintQuatRotateVec3(obb.orientation, { x: 0, y: 1, z: 0 });
-  const u2 = flintQuatRotateVec3(obb.orientation, { x: 0, y: 0, z: 1 });
+  const axisX = flintQuatRotateVec3(obb.orientation, { x: 1, y: 0, z: 0 });
+  const axisY = flintQuatRotateVec3(obb.orientation, { x: 0, y: 1, z: 0 });
+  const axisZ = flintQuatRotateVec3(obb.orientation, { x: 0, y: 0, z: 1 });
 
   const centerOffset = flintVec3Sub(obb.center, ray.origin);
-  const axes = [u0, u1, u2];
+  const axes = [axisX, axisY, axisZ];
   const halfExtension = obb.halfExtents ?? obb.half_extents ?? { x: 0, y: 0, z: 0 };
   const halfExtents = [halfExtension.x, halfExtension.y, halfExtension.z];
 
-  let tmin = -Infinity;
-  let tmax = Infinity;
+  let currentTmin = -Infinity;
+  let currentTmax = Infinity;
 
   for (let index = 0; index < 3; index += 1) {
     const axis = axes[index] ?? { x: 0, y: 0, z: 0 };
@@ -1988,25 +2045,18 @@ export function flintRay3IntersectOBB(ray: FlintRay3, obb: FlintOBB3): FlintOpti
     const centerOffsetDistance = flintVec3Dot(axis, centerOffset);
     const directionDotAxis = flintVec3Dot(axis, ray.direction);
 
-    if (Math.abs(directionDotAxis) > FLINT_MATH_EPSILON) {
-      let t1 = (centerOffsetDistance - hi) / directionDotAxis;
-      let t2 = (centerOffsetDistance + hi) / directionDotAxis;
-      if (t1 > t2) {
-        const temporary = t1;
-        t1 = t2;
-        t2 = temporary;
-      }
-      tmin = Math.max(tmin, t1);
-      tmax = Math.min(tmax, t2);
-      if (tmin > tmax || tmax < 0) {
-        return flintNone();
-      }
-    } else if (Math.abs(centerOffsetDistance) > hi) {
+    const slab = computeOBBSlabInterval(centerOffsetDistance, directionDotAxis, hi);
+    if (!slab.valid) {
+      return flintNone();
+    }
+    currentTmin = Math.max(currentTmin, slab.tmin);
+    currentTmax = Math.min(currentTmax, slab.tmax);
+    if (currentTmin > currentTmax || currentTmax < 0) {
       return flintNone();
     }
   }
 
-  const resultT = tmin >= 0 ? tmin : tmax;
+  const resultT = currentTmin >= 0 ? currentTmin : currentTmax;
   return resultT >= 0 ? flintSome(resultT) : flintNone();
 }
 
@@ -2027,30 +2077,47 @@ function computeBVHBounds(list: readonly FlintBVHPrim[]): FlintAABB3 {
   let maxZ = -Infinity;
 
   for (const item of list) {
-    if (item.box.min.x < minX) {
-      minX = item.box.min.x;
-    }
-    if (item.box.min.y < minY) {
-      minY = item.box.min.y;
-    }
-    if (item.box.min.z < minZ) {
-      minZ = item.box.min.z;
-    }
-    if (item.box.max.x > maxX) {
-      maxX = item.box.max.x;
-    }
-    if (item.box.max.y > maxY) {
-      maxY = item.box.max.y;
-    }
-    if (item.box.max.z > maxZ) {
-      maxZ = item.box.max.z;
-    }
+    minX = Math.min(minX, item.box.min.x);
+    minY = Math.min(minY, item.box.min.y);
+    minZ = Math.min(minZ, item.box.min.z);
+    maxX = Math.max(maxX, item.box.max.x);
+    maxY = Math.max(maxY, item.box.max.y);
+    maxZ = Math.max(maxZ, item.box.max.z);
   }
 
   return {
     min: { x: minX, y: minY, z: minZ },
     max: { x: maxX, y: maxY, z: maxZ },
   };
+}
+
+function findLongestCenterAxis(list: readonly FlintBVHPrim[]): 'x' | 'y' | 'z' {
+  let minX = Infinity;
+  let minY = Infinity;
+  let minZ = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  let maxZ = -Infinity;
+
+  for (const item of list) {
+    minX = Math.min(minX, item.center.x);
+    minY = Math.min(minY, item.center.y);
+    minZ = Math.min(minZ, item.center.z);
+    maxX = Math.max(maxX, item.center.x);
+    maxY = Math.max(maxY, item.center.y);
+    maxZ = Math.max(maxZ, item.center.z);
+  }
+
+  const extentX = maxX - minX;
+  const extentY = maxY - minY;
+  const extentZ = maxZ - minZ;
+  if (extentY >= extentX && extentY >= extentZ) {
+    return 'y';
+  }
+  if (extentZ >= extentX && extentZ >= extentY) {
+    return 'z';
+  }
+  return 'x';
 }
 
 /** Perform b v h build from a a b bs operation. */
@@ -2086,44 +2153,7 @@ export function flintBVHBuildFromAABBs(boxes: readonly FlintAABB3[]): FlintBVHTr
       return nodeIndex;
     }
 
-    let cminX = Infinity;
-    let cminY = Infinity;
-    let cminZ = Infinity;
-    let cmaxX = -Infinity;
-    let cmaxY = -Infinity;
-    let cmaxZ = -Infinity;
-    for (const item of list) {
-      if (item.center.x < cminX) {
-        cminX = item.center.x;
-      }
-      if (item.center.y < cminY) {
-        cminY = item.center.y;
-      }
-      if (item.center.z < cminZ) {
-        cminZ = item.center.z;
-      }
-      if (item.center.x > cmaxX) {
-        cmaxX = item.center.x;
-      }
-      if (item.center.y > cmaxY) {
-        cmaxY = item.center.y;
-      }
-      if (item.center.z > cmaxZ) {
-        cmaxZ = item.center.z;
-      }
-    }
-
-    const extentX = cmaxX - cminX;
-    const extentY = cmaxY - cminY;
-    const extentZ = cmaxZ - cminZ;
-
-    let axis: 'x' | 'y' | 'z' = 'x';
-    if (extentY >= extentX && extentY >= extentZ) {
-      axis = 'y';
-    } else if (extentZ >= extentX && extentZ >= extentY) {
-      axis = 'z';
-    }
-
+    const axis = findLongestCenterAxis(list);
     list.sort((primA, primB) => primA.center[axis] - primB.center[axis]);
     const mid = Math.floor(list.length / 2);
     const leftList = list.slice(0, mid);
@@ -2154,6 +2184,29 @@ export function flintBVHBuildFromAABBs(boxes: readonly FlintAABB3[]): FlintBVHTr
   return { nodes, rootIndex };
 }
 
+function computeAABBSurfaceNormal(hitPoint: FlintVec3, bounds: FlintAABB3, rayDirection: FlintVec3): FlintVec3 {
+  const epsilon = 1e-5;
+  if (Math.abs(hitPoint.x - bounds.min.x) < epsilon) {
+    return { x: -1, y: 0, z: 0 };
+  }
+  if (Math.abs(hitPoint.x - bounds.max.x) < epsilon) {
+    return { x: 1, y: 0, z: 0 };
+  }
+  if (Math.abs(hitPoint.y - bounds.min.y) < epsilon) {
+    return { x: 0, y: -1, z: 0 };
+  }
+  if (Math.abs(hitPoint.y - bounds.max.y) < epsilon) {
+    return { x: 0, y: 1, z: 0 };
+  }
+  if (Math.abs(hitPoint.z - bounds.min.z) < epsilon) {
+    return { x: 0, y: 0, z: -1 };
+  }
+  if (Math.abs(hitPoint.z - bounds.max.z) < epsilon) {
+    return { x: 0, y: 0, z: 1 };
+  }
+  return flintVec3Scale(rayDirection, -1);
+}
+
 /** Perform b v h ray intersect operation. */
 export function flintBVHRayIntersect(tree: FlintBVHTree3, ray: FlintRay3): FlintOption<FlintRayHit3> {
   if (tree.nodes.length === 0) {
@@ -2178,75 +2231,22 @@ export function flintBVHRayIntersect(tree: FlintBVHTree3, ray: FlintRay3): Flint
       continue;
     }
 
-    const bounds = node.bounds;
-    let tmin = -Infinity;
-    let tmax = Infinity;
-    let intersectsBox = true;
-
-    const dims: ('x' | 'y' | 'z')[] = ['x', 'y', 'z'];
-    for (const axis of dims) {
-      const origin = ray.origin[axis];
-      const direction = ray.direction[axis];
-      const minValue = bounds.min[axis];
-      const maxValue = bounds.max[axis];
-
-      if (Math.abs(direction) <= FLINT_MATH_EPSILON) {
-        if (origin < minValue || origin > maxValue) {
-          intersectsBox = false;
-          break;
-        }
-      } else {
-        let t1 = (minValue - origin) / direction;
-        let t2 = (maxValue - origin) / direction;
-        if (t1 > t2) {
-          const temporary = t1;
-          t1 = t2;
-          t2 = temporary;
-        }
-        tmin = Math.max(tmin, t1);
-        tmax = Math.min(tmax, t2);
-        if (tmin > tmax || tmax < 0) {
-          intersectsBox = false;
-          break;
-        }
-      }
-    }
-
-    if (!intersectsBox) {
+    const intersection = intersectRayAABBInterval(ray, node.bounds);
+    if (!intersection.hit) {
       continue;
     }
 
-    const entryDistribution = Math.max(0, tmin);
+    const entryDistribution = Math.max(0, intersection.tmin);
     if (entryDistribution >= closestT) {
       continue;
     }
 
     const primitiveIndex = node.primitiveIndex ?? node.primitive_index ?? -1;
     if (primitiveIndex >= 0) {
-      const hitT = entryDistribution;
-      if (hitT < closestT) {
-        closestT = hitT;
-        closestPrim = primitiveIndex;
-        const pt = flintVec3Add(ray.origin, flintVec3Scale(ray.direction, closestT));
-        closestPoint = pt;
-
-        const eps = 1e-5;
-        if (Math.abs(pt.x - bounds.min.x) < eps) {
-          closestNormal = { x: -1, y: 0, z: 0 };
-        } else if (Math.abs(pt.x - bounds.max.x) < eps) {
-          closestNormal = { x: 1, y: 0, z: 0 };
-        } else if (Math.abs(pt.y - bounds.min.y) < eps) {
-          closestNormal = { x: 0, y: -1, z: 0 };
-        } else if (Math.abs(pt.y - bounds.max.y) < eps) {
-          closestNormal = { x: 0, y: 1, z: 0 };
-        } else if (Math.abs(pt.z - bounds.min.z) < eps) {
-          closestNormal = { x: 0, y: 0, z: -1 };
-        } else if (Math.abs(pt.z - bounds.max.z) < eps) {
-          closestNormal = { x: 0, y: 0, z: 1 };
-        } else {
-          closestNormal = flintVec3Scale(ray.direction, -1);
-        }
-      }
+      closestT = entryDistribution;
+      closestPrim = primitiveIndex;
+      closestPoint = flintVec3Add(ray.origin, flintVec3Scale(ray.direction, closestT));
+      closestNormal = computeAABBSurfaceNormal(closestPoint, node.bounds, ray.direction);
     } else {
       const rightChild = node.rightChild ?? node.right_child ?? -1;
       const leftChild = node.leftChild ?? node.left_child ?? -1;
@@ -2471,26 +2471,15 @@ export function flintColorRgbToHsv(color: FlintColorRgba): FlintColorHsv {
 
 /** Calculate raw RGB components from hue sector, chroma, and intermediate value. */
 function calculateHsvSectorRgb(hueSector: number, chroma: number, intermediateX: number): [number, number, number] {
-  switch (hueSector) {
-    case 0: {
-      return [chroma, intermediateX, 0];
-    }
-    case 1: {
-      return [intermediateX, chroma, 0];
-    }
-    case 2: {
-      return [0, chroma, intermediateX];
-    }
-    case 3: {
-      return [0, intermediateX, chroma];
-    }
-    case 4: {
-      return [intermediateX, 0, chroma];
-    }
-    default: {
-      return [chroma, 0, intermediateX];
-    }
-  }
+  const table: readonly [number, number, number][] = [
+    [chroma, intermediateX, 0],
+    [intermediateX, chroma, 0],
+    [0, chroma, intermediateX],
+    [0, intermediateX, chroma],
+    [intermediateX, 0, chroma],
+    [chroma, 0, intermediateX],
+  ];
+  return table[hueSector] ?? [chroma, 0, intermediateX];
 }
 
 /** Perform color hsv to rgb operation. */
@@ -2636,16 +2625,36 @@ export function flintDMatrixIdentity(size: number): FlintDMatrix {
   return { rows: size, cols: size, data };
 }
 
+function isValidCoordinate(coordinate: number, limit: number): boolean {
+  return Number.isInteger(coordinate) && coordinate >= 0 && coordinate < limit;
+}
+
 /** Check whether row and column indices are within matrix bounds. */
 function isMatrixIndexInBounds(matrix: FlintDMatrix, row: number, col: number): boolean {
-  return (
-    Number.isInteger(row) && Number.isInteger(col) && row >= 0 && row < matrix.rows && col >= 0 && col < matrix.cols
-  );
+  return isValidCoordinate(row, matrix.rows) && isValidCoordinate(col, matrix.cols);
 }
 
 /** Check whether two dynamic matrices have identical dimensions. */
 function haveMatchingDimensions(matrixA: FlintDMatrix, matrixB: FlintDMatrix): boolean {
   return matrixA.rows === matrixB.rows && matrixA.cols === matrixB.cols;
+}
+
+/** Check whether a square matrix is symmetric within numerical tolerance. */
+function isMatrixSymmetric(matrix: FlintDMatrix): boolean {
+  if (matrix.rows !== matrix.cols) {
+    return false;
+  }
+  const dimension = matrix.rows;
+  for (let row = 0; row < dimension; row += 1) {
+    for (let col = row + 1; col < dimension; col += 1) {
+      const valueA = matrix.data[row * dimension + col] ?? 0;
+      const valueB = matrix.data[col * dimension + row] ?? 0;
+      if (Math.abs(valueA - valueB) > 1e-7 * Math.max(Math.abs(valueA), Math.abs(valueB), 1)) {
+        return false;
+      }
+    }
+  }
+  return true;
 }
 
 /** Perform d matrix get operation. */
@@ -2761,60 +2770,116 @@ export function flintDMatrixMul(matrixA: FlintDMatrix, matrixB: FlintDMatrix): F
   return flintSome({ rows: matrixA.rows, cols: matrixB.cols, data: [...result] });
 }
 
+function findLUPivotRow(
+  luData: readonly number[],
+  dimension: number,
+  currentIndex: number,
+): { maxRow: number; maxValue: number } {
+  let maxRow = currentIndex;
+  let maxValue = Math.abs(luData[currentIndex * dimension + currentIndex] ?? 0);
+  for (let kIndex = currentIndex + 1; kIndex < dimension; kIndex += 1) {
+    const value = Math.abs(luData[kIndex * dimension + currentIndex] ?? 0);
+    if (value > maxValue) {
+      maxValue = value;
+      maxRow = kIndex;
+    }
+  }
+  return { maxRow, maxValue };
+}
+
+function swapLURows(luData: number[], pivot: number[], dimension: number, rowA: number, rowB: number): void {
+  const temporaryPivot = pivot[rowA] ?? 0;
+  pivot[rowA] = pivot[rowB] ?? 0;
+  pivot[rowB] = temporaryPivot;
+  for (let col = 0; col < dimension; col += 1) {
+    const temporaryValue = luData[rowA * dimension + col] ?? 0;
+    luData[rowA * dimension + col] = luData[rowB * dimension + col] ?? 0;
+    luData[rowB * dimension + col] = temporaryValue;
+  }
+}
+
+function eliminateLUColumn(luData: number[], dimension: number, currentIndex: number): void {
+  const diag = luData[currentIndex * dimension + currentIndex] ?? 1;
+  for (let row = currentIndex + 1; row < dimension; row += 1) {
+    luData[row * dimension + currentIndex] = (luData[row * dimension + currentIndex] ?? 0) / diag;
+    const factor = luData[row * dimension + currentIndex] ?? 0;
+    for (let col = currentIndex + 1; col < dimension; col += 1) {
+      luData[row * dimension + col] =
+        (luData[row * dimension + col] ?? 0) - factor * (luData[currentIndex * dimension + col] ?? 0);
+    }
+  }
+}
+
 /** Perform d matrix l u operation. */
 export function flintDMatrixLU(matrix: FlintDMatrix): FlintOption<FlintLUDecomposition> {
   if (matrix.rows !== matrix.cols) {
     return flintNone();
   }
-  const n = matrix.rows;
+  const dimension = matrix.rows;
   const lu = [...matrix.data];
-  const pivot = Array.from({ length: n }, (_, index) => index);
+  const pivot = Array.from({ length: dimension }, (_, index) => index);
   let parity = 1;
 
-  for (let index = 0; index < n; index += 1) {
-    let maxRow = index;
-    let maxValue = Math.abs(lu[index * n + index] ?? 0);
-
-    for (let kIndex = index + 1; kIndex < n; kIndex += 1) {
-      const value = Math.abs(lu[kIndex * n + index] ?? 0);
-      if (value > maxValue) {
-        maxValue = value;
-        maxRow = kIndex;
-      }
-    }
-
+  for (let index = 0; index < dimension; index += 1) {
+    const { maxRow, maxValue } = findLUPivotRow(lu, dimension, index);
     if (maxValue <= FLINT_MATH_EPSILON) {
       return flintNone();
     }
-
     if (maxRow !== index) {
-      const temporaryP = pivot[index] ?? 0;
-      pivot[index] = pivot[maxRow] ?? 0;
-      pivot[maxRow] = temporaryP;
+      swapLURows(lu, pivot, dimension, index, maxRow);
       parity = -parity;
-
-      for (let kIndex = 0; kIndex < n; kIndex += 1) {
-        const temporary = lu[index * n + kIndex] ?? 0;
-        lu[index * n + kIndex] = lu[maxRow * n + kIndex] ?? 0;
-        lu[maxRow * n + kIndex] = temporary;
-      }
     }
-
-    const diag = lu[index * n + index] ?? 1;
-    for (let index_ = index + 1; index_ < n; index_ += 1) {
-      lu[index_ * n + index] = (lu[index_ * n + index] ?? 0) / diag;
-      const factor = lu[index_ * n + index] ?? 0;
-      for (let kIndex = index + 1; kIndex < n; kIndex += 1) {
-        lu[index_ * n + kIndex] = (lu[index_ * n + kIndex] ?? 0) - factor * (lu[index * n + kIndex] ?? 0);
-      }
-    }
+    eliminateLUColumn(lu, dimension, index);
   }
 
   return flintSome({
-    lu: { rows: n, cols: n, data: lu },
+    lu: { rows: dimension, cols: dimension, data: lu },
     pivot,
     parity,
   });
+}
+
+function computeGramSchmidtColumn(
+  qData: Float64Array,
+  rData: Float64Array,
+  matrixData: readonly number[],
+  rows: number,
+  cols: number,
+  columnIndex: number,
+): boolean {
+  for (let row = 0; row < rows; row += 1) {
+    qData[row * cols + columnIndex] = matrixData[row * cols + columnIndex] ?? 0;
+  }
+
+  for (let previousIndex = 0; previousIndex < columnIndex; previousIndex += 1) {
+    let dotProduct = 0;
+    for (let row = 0; row < rows; row += 1) {
+      dotProduct += (qData[row * cols + previousIndex] ?? 0) * (matrixData[row * cols + columnIndex] ?? 0);
+    }
+    rData[previousIndex * cols + columnIndex] = dotProduct;
+    for (let row = 0; row < rows; row += 1) {
+      qData[row * cols + columnIndex] =
+        (qData[row * cols + columnIndex] ?? 0) - dotProduct * (qData[row * cols + previousIndex] ?? 0);
+    }
+  }
+
+  let normSq = 0;
+  for (let row = 0; row < rows; row += 1) {
+    const value = qData[row * cols + columnIndex] ?? 0;
+    normSq += value * value;
+  }
+
+  const norm = Math.sqrt(normSq);
+  if (norm <= FLINT_MATH_EPSILON) {
+    return false;
+  }
+
+  rData[columnIndex * cols + columnIndex] = norm;
+  const invNorm = 1 / norm;
+  for (let row = 0; row < rows; row += 1) {
+    qData[row * cols + columnIndex] = (qData[row * cols + columnIndex] ?? 0) * invNorm;
+  }
+  return true;
 }
 
 /** Perform d matrix q r operation. */
@@ -2829,36 +2894,8 @@ export function flintDMatrixQR(matrix: FlintDMatrix): FlintOption<FlintQRDecompo
   const rData = new Float64Array(cols * cols);
 
   for (let index = 0; index < cols; index += 1) {
-    for (let index_ = 0; index_ < rows; index_ += 1) {
-      qData[index_ * cols + index] = matrix.data[index_ * cols + index] ?? 0;
-    }
-
-    for (let kIndex = 0; kIndex < index; kIndex += 1) {
-      let dot = 0;
-      for (let index_ = 0; index_ < rows; index_ += 1) {
-        dot += (qData[index_ * cols + kIndex] ?? 0) * (matrix.data[index_ * cols + index] ?? 0);
-      }
-      rData[kIndex * cols + index] = dot;
-      for (let index_ = 0; index_ < rows; index_ += 1) {
-        qData[index_ * cols + index] = (qData[index_ * cols + index] ?? 0) - dot * (qData[index_ * cols + kIndex] ?? 0);
-      }
-    }
-
-    let normSq = 0;
-    for (let index_ = 0; index_ < rows; index_ += 1) {
-      const value = qData[index_ * cols + index] ?? 0;
-      normSq += value * value;
-    }
-
-    const norm = Math.sqrt(normSq);
-    if (norm <= FLINT_MATH_EPSILON) {
+    if (!computeGramSchmidtColumn(qData, rData, matrix.data, rows, cols, index)) {
       return flintNone();
-    }
-
-    rData[index * cols + index] = norm;
-    const invNorm = 1 / norm;
-    for (let index_ = 0; index_ < rows; index_ += 1) {
-      qData[index_ * cols + index] = (qData[index_ * cols + index] ?? 0) * invNorm;
     }
   }
 
@@ -2868,51 +2905,95 @@ export function flintDMatrixQR(matrix: FlintDMatrix): FlintOption<FlintQRDecompo
   });
 }
 
-/** Perform d matrix cholesky operation. */
-export function flintDMatrixCholesky(matrix: FlintDMatrix): FlintOption<FlintCholeskyDecomposition> {
-  if (matrix.rows !== matrix.cols) {
-    return flintNone();
-  }
-  const n = matrix.rows;
+function computeCholeskyRow(
+  lowerData: Float64Array,
+  matrixData: readonly number[],
+  dimension: number,
+  row: number,
+): boolean {
+  for (let col = 0; col <= row; col += 1) {
+    let sum = 0;
+    for (let kIndex = 0; kIndex < col; kIndex += 1) {
+      sum += (lowerData[row * dimension + kIndex] ?? 0) * (lowerData[col * dimension + kIndex] ?? 0);
+    }
 
-  for (let row = 0; row < n; row += 1) {
-    for (let col = row + 1; col < n; col += 1) {
-      const a = matrix.data[row * n + col] ?? 0;
-      const b = matrix.data[col * n + row] ?? 0;
-      if (Math.abs(a - b) > 1e-7 * Math.max(Math.abs(a), Math.abs(b), 1)) {
-        return flintNone(); // Not symmetric
+    if (row === col) {
+      const diagonalValue = (matrixData[row * dimension + row] ?? 0) - sum;
+      if (diagonalValue <= FLINT_MATH_EPSILON) {
+        return false;
       }
+      lowerData[row * dimension + col] = Math.sqrt(diagonalValue);
+    } else {
+      const diag = lowerData[col * dimension + col] ?? 1;
+      if (diag <= FLINT_MATH_EPSILON) {
+        return false;
+      }
+      lowerData[row * dimension + col] = ((matrixData[row * dimension + col] ?? 0) - sum) / diag;
     }
   }
+  return true;
+}
 
-  const l = new Float64Array(n * n);
+/** Perform d matrix cholesky operation. */
+export function flintDMatrixCholesky(matrix: FlintDMatrix): FlintOption<FlintCholeskyDecomposition> {
+  if (!isMatrixSymmetric(matrix)) {
+    return flintNone();
+  }
+  const dimension = matrix.rows;
+  const lowerData = new Float64Array(dimension * dimension);
 
-  for (let index = 0; index < n; index += 1) {
-    for (let index_ = 0; index_ <= index; index_ += 1) {
-      let sum = 0;
-      for (let kIndex = 0; kIndex < index_; kIndex += 1) {
-        sum += (l[index * n + kIndex] ?? 0) * (l[index_ * n + kIndex] ?? 0);
-      }
-
-      if (index === index_) {
-        const value = (matrix.data[index * n + index] ?? 0) - sum;
-        if (value <= FLINT_MATH_EPSILON) {
-          return flintNone(); // Not positive definite
-        }
-        l[index * n + index_] = Math.sqrt(value);
-      } else {
-        const diag = l[index_ * n + index_] ?? 1;
-        if (diag <= FLINT_MATH_EPSILON) {
-          return flintNone();
-        }
-        l[index * n + index_] = ((matrix.data[index * n + index_] ?? 0) - sum) / diag;
-      }
+  for (let row = 0; row < dimension; row += 1) {
+    if (!computeCholeskyRow(lowerData, matrix.data, dimension, row)) {
+      return flintNone();
     }
   }
 
   return flintSome({
-    l: { rows: n, cols: n, data: [...l] },
+    l: { rows: dimension, cols: dimension, data: [...lowerData] },
   });
+}
+
+function solveCholeskyForward(
+  lowerData: readonly number[],
+  rhsData: readonly number[],
+  dimension: number,
+  rhsCols: number,
+): Float64Array | undefined {
+  const solution = new Float64Array(dimension * rhsCols);
+  for (let row = 0; row < dimension; row += 1) {
+    const diag = lowerData[row * dimension + row] ?? 1;
+    if (Math.abs(diag) <= FLINT_MATH_EPSILON) {
+      return undefined;
+    }
+    for (let col = 0; col < rhsCols; col += 1) {
+      let sum = 0;
+      for (let kIndex = 0; kIndex < row; kIndex += 1) {
+        sum += (lowerData[row * dimension + kIndex] ?? 0) * (solution[kIndex * rhsCols + col] ?? 0);
+      }
+      solution[row * rhsCols + col] = ((rhsData[row * rhsCols + col] ?? 0) - sum) / diag;
+    }
+  }
+  return solution;
+}
+
+function solveCholeskyBackward(
+  lowerData: readonly number[],
+  intermediateData: Float64Array,
+  dimension: number,
+  rhsCols: number,
+): Float64Array {
+  const solution = new Float64Array(dimension * rhsCols);
+  for (let row = dimension - 1; row >= 0; row -= 1) {
+    const diag = lowerData[row * dimension + row] ?? 1;
+    for (let col = 0; col < rhsCols; col += 1) {
+      let sum = 0;
+      for (let kIndex = row + 1; kIndex < dimension; kIndex += 1) {
+        sum += (lowerData[kIndex * dimension + row] ?? 0) * (solution[kIndex * rhsCols + col] ?? 0);
+      }
+      solution[row * rhsCols + col] = ((intermediateData[row * rhsCols + col] ?? 0) - sum) / diag;
+    }
+  }
+  return solution;
 }
 
 /** Perform d matrix cholesky solve operation. */
@@ -2920,44 +3001,48 @@ export function flintDMatrixCholeskySolve(
   chol: FlintCholeskyDecomposition,
   rhsVector: FlintDMatrix,
 ): FlintOption<FlintDMatrix> {
-  const n = chol.l.rows;
-  if (rhsVector.rows !== n) {
+  const dimension = chol.l.rows;
+  if (rhsVector.rows !== dimension) {
     return flintNone();
   }
 
-  const l = chol.l.data;
-  const bCols = rhsVector.cols;
-  const y = new Float64Array(n * bCols);
-  const x = new Float64Array(n * bCols);
-
-  // Forward substitution L * y = b
-  for (let index = 0; index < n; index += 1) {
-    const diag = l[index * n + index] ?? 1;
-    if (Math.abs(diag) <= FLINT_MATH_EPSILON) {
-      return flintNone();
-    }
-    for (let col = 0; col < bCols; col += 1) {
-      let sum = 0;
-      for (let kIndex = 0; kIndex < index; kIndex += 1) {
-        sum += (l[index * n + kIndex] ?? 0) * (y[kIndex * bCols + col] ?? 0);
-      }
-      y[index * bCols + col] = ((rhsVector.data[index * bCols + col] ?? 0) - sum) / diag;
-    }
+  const forwardSolution = solveCholeskyForward(chol.l.data, rhsVector.data, dimension, rhsVector.cols);
+  if (!forwardSolution) {
+    return flintNone();
   }
 
-  // Back substitution L^T * x = y
-  for (let index = n - 1; index >= 0; index -= 1) {
-    const diag = l[index * n + index] ?? 1;
-    for (let col = 0; col < bCols; col += 1) {
-      let sum = 0;
-      for (let kIndex = index + 1; kIndex < n; kIndex += 1) {
-        sum += (l[kIndex * n + index] ?? 0) * (x[kIndex * bCols + col] ?? 0);
+  const backwardSolution = solveCholeskyBackward(chol.l.data, forwardSolution, dimension, rhsVector.cols);
+  return flintSome({ rows: dimension, cols: rhsVector.cols, data: [...backwardSolution] });
+}
+
+function solveLUSubstitution(
+  luData: readonly number[],
+  pivot: readonly number[],
+  rhsData: readonly number[],
+  dimension: number,
+  rhsCols: number,
+): Float64Array {
+  const solution = new Float64Array(dimension * rhsCols);
+  for (let col = 0; col < rhsCols; col += 1) {
+    for (let row = 0; row < dimension; row += 1) {
+      solution[row * rhsCols + col] = rhsData[(pivot[row] ?? row) * rhsCols + col] ?? 0;
+      for (let kIndex = 0; kIndex < row; kIndex += 1) {
+        solution[row * rhsCols + col] =
+          (solution[row * rhsCols + col] ?? 0) -
+          (luData[row * dimension + kIndex] ?? 0) * (solution[kIndex * rhsCols + col] ?? 0);
       }
-      x[index * bCols + col] = ((y[index * bCols + col] ?? 0) - sum) / diag;
+    }
+
+    for (let row = dimension - 1; row >= 0; row -= 1) {
+      for (let kIndex = row + 1; kIndex < dimension; kIndex += 1) {
+        solution[row * rhsCols + col] =
+          (solution[row * rhsCols + col] ?? 0) -
+          (luData[row * dimension + kIndex] ?? 0) * (solution[kIndex * rhsCols + col] ?? 0);
+      }
+      solution[row * rhsCols + col] = (solution[row * rhsCols + col] ?? 0) / (luData[row * dimension + row] ?? 1);
     }
   }
-
-  return flintSome({ rows: n, cols: bCols, data: [...x] });
+  return solution;
 }
 
 /** Perform d matrix solve operation. */
@@ -2970,29 +3055,8 @@ export function flintDMatrixSolve(matrixA: FlintDMatrix, rhsVector: FlintDMatrix
     return flintNone();
   }
   const { lu, pivot } = luOpt.value;
-  const n = matrixA.rows;
-  const bCols = rhsVector.cols;
-
-  const x = new Float64Array(n * bCols);
-  for (let col = 0; col < bCols; col += 1) {
-    for (let index = 0; index < n; index += 1) {
-      x[index * bCols + col] = rhsVector.data[(pivot[index] ?? index) * bCols + col] ?? 0;
-      for (let kIndex = 0; kIndex < index; kIndex += 1) {
-        x[index * bCols + col] =
-          (x[index * bCols + col] ?? 0) - (lu.data[index * n + kIndex] ?? 0) * (x[kIndex * bCols + col] ?? 0);
-      }
-    }
-
-    for (let index = n - 1; index >= 0; index -= 1) {
-      for (let kIndex = index + 1; kIndex < n; kIndex += 1) {
-        x[index * bCols + col] =
-          (x[index * bCols + col] ?? 0) - (lu.data[index * n + kIndex] ?? 0) * (x[kIndex * bCols + col] ?? 0);
-      }
-      x[index * bCols + col] = (x[index * bCols + col] ?? 0) / (lu.data[index * n + index] ?? 1);
-    }
-  }
-
-  return flintSome({ rows: n, cols: bCols, data: [...x] });
+  const solution = solveLUSubstitution(lu.data, pivot, rhsVector.data, matrixA.rows, rhsVector.cols);
+  return flintSome({ rows: matrixA.rows, cols: rhsVector.cols, data: [...solution] });
 }
 
 /** Perform d matrix determinant operation. */
@@ -3021,115 +3085,325 @@ export function flintDMatrixInverse(matrix: FlintDMatrix): FlintOption<FlintDMat
   return flintDMatrixSolve(matrix, identity);
 }
 
+function performJacobiEigenRotation(
+  matrixData: Float64Array,
+  eigenvectorsData: Float64Array,
+  dimension: number,
+  pivotP: number,
+  pivotQ: number,
+): void {
+  const apq = matrixData[pivotP * dimension + pivotQ] ?? 0;
+  const app = matrixData[pivotP * dimension + pivotP] ?? 0;
+  const aqq = matrixData[pivotQ * dimension + pivotQ] ?? 0;
+  const thetaValue = (aqq - app) / (2 * apq);
+  const tanValue = (thetaValue >= 0 ? 1 : -1) / (Math.abs(thetaValue) + Math.sqrt(1 + thetaValue * thetaValue));
+  const cosValue = 1 / Math.sqrt(1 + tanValue * tanValue);
+  const sinValue = tanValue * cosValue;
+  const tauValue = sinValue / (1 + cosValue);
+
+  matrixData[pivotP * dimension + pivotP] = app - tanValue * apq;
+  matrixData[pivotQ * dimension + pivotQ] = aqq + tanValue * apq;
+  matrixData[pivotP * dimension + pivotQ] = 0;
+  matrixData[pivotQ * dimension + pivotP] = 0;
+
+  for (let kIndex = 0; kIndex < dimension; kIndex += 1) {
+    if (kIndex !== pivotP && kIndex !== pivotQ) {
+      const akp = matrixData[kIndex * dimension + pivotP] ?? 0;
+      const akq = matrixData[kIndex * dimension + pivotQ] ?? 0;
+      const nextAkp = akp - sinValue * (akq + tauValue * akp);
+      const nextAkq = akq + sinValue * (akp - tauValue * akq);
+      matrixData[kIndex * dimension + pivotP] = nextAkp;
+      matrixData[pivotP * dimension + kIndex] = nextAkp;
+      matrixData[kIndex * dimension + pivotQ] = nextAkq;
+      matrixData[pivotQ * dimension + kIndex] = nextAkq;
+    }
+  }
+
+  for (let kIndex = 0; kIndex < dimension; kIndex += 1) {
+    const vkp = eigenvectorsData[kIndex * dimension + pivotP] ?? 0;
+    const vkq = eigenvectorsData[kIndex * dimension + pivotQ] ?? 0;
+    eigenvectorsData[kIndex * dimension + pivotP] = cosValue * vkp - sinValue * vkq;
+    eigenvectorsData[kIndex * dimension + pivotQ] = sinValue * vkp + cosValue * vkq;
+  }
+}
+
+function performJacobiEigenSweep(
+  matrixData: Float64Array,
+  eigenvectorsData: Float64Array,
+  dimension: number,
+  epsilon: number,
+): boolean {
+  let offDiagNormSq = 0;
+  for (let pivotP = 0; pivotP < dimension; pivotP += 1) {
+    for (let pivotQ = pivotP + 1; pivotQ < dimension; pivotQ += 1) {
+      const value = matrixData[pivotP * dimension + pivotQ] ?? 0;
+      offDiagNormSq += value * value;
+    }
+  }
+
+  if (Math.sqrt(offDiagNormSq) <= epsilon) {
+    return true;
+  }
+
+  for (let pivotP = 0; pivotP < dimension; pivotP += 1) {
+    for (let pivotQ = pivotP + 1; pivotQ < dimension; pivotQ += 1) {
+      const apq = matrixData[pivotP * dimension + pivotQ] ?? 0;
+      if (Math.abs(apq) > epsilon) {
+        performJacobiEigenRotation(matrixData, eigenvectorsData, dimension, pivotP, pivotQ);
+      }
+    }
+  }
+  return false;
+}
+
+function sortEigenComponents(
+  matrixData: Float64Array,
+  eigenvectorsData: Float64Array,
+  dimension: number,
+): FlintEigenDecomposition {
+  const eigenPairs: Array<{ value: number; vector: number[] }> = [];
+  for (let col = 0; col < dimension; col += 1) {
+    const value = matrixData[col * dimension + col] ?? 0;
+    const vector = Array.from({ length: dimension }, (_, row) => eigenvectorsData[row * dimension + col] ?? 0);
+    eigenPairs.push({ value, vector });
+  }
+
+  eigenPairs.sort((pairA, pairB) => pairB.value - pairA.value);
+
+  const values = eigenPairs.map((pair) => pair.value);
+  const sortedV = new Float64Array(dimension * dimension);
+  for (let col = 0; col < dimension; col += 1) {
+    const vec = eigenPairs[col]?.vector ?? [];
+    for (let row = 0; row < dimension; row += 1) {
+      sortedV[row * dimension + col] = vec[row] ?? 0;
+    }
+  }
+
+  return {
+    values,
+    vectors: { rows: dimension, cols: dimension, data: [...sortedV] },
+  };
+}
+
 /** Perform d matrix eigen symmetric operation. */
 export function flintDMatrixEigenSymmetric(
   matrix: FlintDMatrix,
   maxIterations = 100,
   epsilon = FLINT_MATH_EPSILON,
 ): FlintOption<FlintEigenDecomposition> {
-  if (matrix.rows !== matrix.cols || matrix.rows === 0) {
+  if (matrix.rows === 0 || !isMatrixSymmetric(matrix)) {
     return flintNone();
   }
-  const n = matrix.rows;
-
-  // Verify symmetry
-  for (let row = 0; row < n; row += 1) {
-    for (let col = row + 1; col < n; col += 1) {
-      const a = matrix.data[row * n + col] ?? 0;
-      const b = matrix.data[col * n + row] ?? 0;
-      if (Math.abs(a - b) > 1e-7 * Math.max(Math.abs(a), Math.abs(b), 1)) {
-        return flintNone(); // Not symmetric
-      }
-    }
-  }
-
-  // Copy matrix data
-  const a = new Float64Array(matrix.data);
-  const v = new Float64Array(n * n);
-  for (let index = 0; index < n; index += 1) {
-    v[index * n + index] = 1;
+  const dimension = matrix.rows;
+  const matrixData = new Float64Array(matrix.data);
+  const eigenvectorsData = new Float64Array(dimension * dimension);
+  for (let index = 0; index < dimension; index += 1) {
+    eigenvectorsData[index * dimension + index] = 1;
   }
 
   for (let iteration = 0; iteration < maxIterations; iteration += 1) {
-    let offDiagNormSq = 0;
-    for (let pivotP = 0; pivotP < n; pivotP += 1) {
-      for (let pivotQ = pivotP + 1; pivotQ < n; pivotQ += 1) {
-        const value = a[pivotP * n + pivotQ] ?? 0;
-        offDiagNormSq += value * value;
-      }
-    }
-
-    if (Math.sqrt(offDiagNormSq) <= epsilon) {
+    if (performJacobiEigenSweep(matrixData, eigenvectorsData, dimension, epsilon)) {
       break;
     }
+  }
 
-    for (let pivotP = 0; pivotP < n; pivotP += 1) {
-      for (let pivotQ = pivotP + 1; pivotQ < n; pivotQ += 1) {
-        const apq = a[pivotP * n + pivotQ] ?? 0;
-        if (Math.abs(apq) <= epsilon) {
-          continue;
-        }
+  return flintSome(sortEigenComponents(matrixData, eigenvectorsData, dimension));
+}
 
-        const app = a[pivotP * n + pivotP] ?? 0;
-        const aqq = a[pivotQ * n + pivotQ] ?? 0;
-        const thetaValue = (aqq - app) / (2 * apq);
-        const tanValue = (thetaValue >= 0 ? 1 : -1) / (Math.abs(thetaValue) + Math.sqrt(1 + thetaValue * thetaValue));
-        const cosValue = 1 / Math.sqrt(1 + tanValue * tanValue);
-        const sinValue = tanValue * cosValue;
-        const tauValue = sinValue / (1 + cosValue);
+function performSvdPairRotation(
+  transformedData: Float64Array,
+  rightVectorsData: Float64Array,
+  rows: number,
+  cols: number,
+  colJ: number,
+  colK: number,
+  epsilon: number,
+): boolean {
+  let alpha = 0;
+  let beta = 0;
+  let gamma = 0;
 
-        a[pivotP * n + pivotP] = app - tanValue * apq;
-        a[pivotQ * n + pivotQ] = aqq + tanValue * apq;
-        a[pivotP * n + pivotQ] = 0;
-        a[pivotQ * n + pivotP] = 0;
+  for (let row = 0; row < rows; row += 1) {
+    const bj = transformedData[row * cols + colJ] ?? 0;
+    const bk = transformedData[row * cols + colK] ?? 0;
+    alpha += bj * bj;
+    beta += bk * bk;
+    gamma += bj * bk;
+  }
 
-        for (let kIndex = 0; kIndex < n; kIndex += 1) {
-          if (kIndex !== pivotP && kIndex !== pivotQ) {
-            const akp = a[kIndex * n + pivotP] ?? 0;
-            const akq = a[kIndex * n + pivotQ] ?? 0;
-            const nextAkp = akp - sinValue * (akq + tauValue * akp);
-            const nextAkq = akq + sinValue * (akp - tauValue * akq);
-            a[kIndex * n + pivotP] = nextAkp;
-            a[pivotP * n + kIndex] = nextAkp;
-            a[kIndex * n + pivotQ] = nextAkq;
-            a[pivotQ * n + kIndex] = nextAkq;
-          }
-        }
+  const denom = Math.sqrt(alpha * beta);
+  if (denom <= epsilon || Math.abs(gamma) / denom <= epsilon) {
+    return false;
+  }
 
-        for (let kIndex = 0; kIndex < n; kIndex += 1) {
-          const vkp = v[kIndex * n + pivotP] ?? 0;
-          const vkq = v[kIndex * n + pivotQ] ?? 0;
-          v[kIndex * n + pivotP] = cosValue * vkp - sinValue * vkq;
-          v[kIndex * n + pivotQ] = sinValue * vkp + cosValue * vkq;
-        }
+  const zeta = (beta - alpha) / (2 * gamma);
+  const tanValue = (zeta >= 0 ? 1 : -1) / (Math.abs(zeta) + Math.sqrt(1 + zeta * zeta));
+  const cosValue = 1 / Math.sqrt(1 + tanValue * tanValue);
+  const sinValue = tanValue * cosValue;
+
+  for (let row = 0; row < rows; row += 1) {
+    const bj = transformedData[row * cols + colJ] ?? 0;
+    const bk = transformedData[row * cols + colK] ?? 0;
+    transformedData[row * cols + colJ] = cosValue * bj - sinValue * bk;
+    transformedData[row * cols + colK] = sinValue * bj + cosValue * bk;
+  }
+
+  for (let row = 0; row < cols; row += 1) {
+    const vj = rightVectorsData[row * cols + colJ] ?? 0;
+    const vk = rightVectorsData[row * cols + colK] ?? 0;
+    rightVectorsData[row * cols + colJ] = cosValue * vj - sinValue * vk;
+    rightVectorsData[row * cols + colK] = sinValue * vj + cosValue * vk;
+  }
+  return true;
+}
+
+function performSvdJacobiSweep(
+  transformedData: Float64Array,
+  rightVectorsData: Float64Array,
+  rows: number,
+  cols: number,
+  epsilon: number,
+): boolean {
+  let rotated = false;
+  for (let colJ = 0; colJ < cols; colJ += 1) {
+    for (let colK = colJ + 1; colK < cols; colK += 1) {
+      if (performSvdPairRotation(transformedData, rightVectorsData, rows, cols, colJ, colK, epsilon)) {
+        rotated = true;
       }
     }
   }
+  return !rotated;
+}
 
-  // Extract eigenvalues
-  const eigenPairs: Array<{ val: number; vector: number[] }> = [];
-  for (let col = 0; col < n; col += 1) {
-    const value = a[col * n + col] ?? 0;
-    const vector = Array.from({ length: n }, (_, row) => v[row * n + col] ?? 0);
-    eigenPairs.push({ val: value, vector });
+function computeSingularVectorsAndValues(
+  transformedData: Float64Array,
+  rows: number,
+  cols: number,
+  epsilon: number,
+): { singularValues: Float64Array; leftVectors: Float64Array } {
+  const singularValues = new Float64Array(cols);
+  const leftVectors = new Float64Array(rows * rows);
+
+  for (let col = 0; col < cols; col += 1) {
+    let normSq = 0;
+    for (let row = 0; row < rows; row += 1) {
+      const value = transformedData[row * cols + col] ?? 0;
+      normSq += value * value;
+    }
+    const sigma = Math.sqrt(normSq);
+    singularValues[col] = sigma;
+
+    if (sigma > epsilon) {
+      const invSigma = 1 / sigma;
+      for (let row = 0; row < rows; row += 1) {
+        leftVectors[row * rows + col] = (transformedData[row * cols + col] ?? 0) * invSigma;
+      }
+    }
+  }
+  return { singularValues, leftVectors };
+}
+
+function completeOrthonormalBasis(leftVectors: Float64Array, rows: number): void {
+  for (let col = 0; col < rows; col += 1) {
+    let colNormSq = 0;
+    for (let row = 0; row < rows; row += 1) {
+      const value = leftVectors[row * rows + col] ?? 0;
+      colNormSq += value * value;
+    }
+
+    if (colNormSq >= 0.5) {
+      continue;
+    }
+
+    for (let basisIndex = 0; basisIndex < rows; basisIndex += 1) {
+      const candidate = new Float64Array(rows);
+      candidate[basisIndex] = 1;
+
+      for (let other = 0; other < rows; other += 1) {
+        if (other === col) {
+          continue;
+        }
+        let otherNormSq = 0;
+        for (let row = 0; row < rows; row += 1) {
+          const value = leftVectors[row * rows + other] ?? 0;
+          otherNormSq += value * value;
+        }
+        if (otherNormSq >= 0.5) {
+          let dotProduct = 0;
+          for (let row = 0; row < rows; row += 1) {
+            dotProduct += (leftVectors[row * rows + other] ?? 0) * (candidate[row] ?? 0);
+          }
+          for (let row = 0; row < rows; row += 1) {
+            candidate[row] = (candidate[row] ?? 0) - dotProduct * (leftVectors[row * rows + other] ?? 0);
+          }
+        }
+      }
+
+      let candidateNormSq = 0;
+      for (let row = 0; row < rows; row += 1) {
+        const value = candidate[row] ?? 0;
+        candidateNormSq += value * value;
+      }
+
+      if (candidateNormSq > 1e-4) {
+        const norm = Math.sqrt(candidateNormSq);
+        for (let row = 0; row < rows; row += 1) {
+          leftVectors[row * rows + col] = (candidate[row] ?? 0) / norm;
+        }
+        break;
+      }
+    }
+  }
+}
+
+function sortSvdComponents(
+  singularValues: Float64Array,
+  leftVectors: Float64Array,
+  rightVectorsData: Float64Array,
+  rows: number,
+  cols: number,
+): FlintSVDDecomposition {
+  interface SvdTriplet {
+    readonly singularValue: number;
+    readonly uColumn: number[];
+    readonly vColumn: number[];
   }
 
-  // Sort by eigenvalue descending
-  eigenPairs.sort((pairA, pairB) => pairB.val - pairA.val);
+  const triplets: SvdTriplet[] = [];
+  for (let col = 0; col < cols; col += 1) {
+    const singularValue = singularValues[col] ?? 0;
+    const uColumn = Array.from({ length: rows }, (_, row) => leftVectors[row * rows + col] ?? 0);
+    const vColumn = Array.from({ length: cols }, (_, row) => rightVectorsData[row * cols + col] ?? 0);
+    triplets.push({ singularValue, uColumn, vColumn });
+  }
 
-  const values = eigenPairs.map((pair) => pair.val);
-  const sortedV = new Float64Array(n * n);
-  for (let col = 0; col < n; col += 1) {
-    const vec = eigenPairs[col]?.vector ?? [];
-    for (let row = 0; row < n; row += 1) {
-      sortedV[row * n + col] = vec[row] ?? 0;
+  triplets.sort((tripA, tripB) => tripB.singularValue - tripA.singularValue);
+
+  const sortedSingularValues = triplets.map((item) => item.singularValue);
+  const sortedU = new Float64Array(rows * rows);
+  for (let col = 0; col < rows; col += 1) {
+    const sourceCol =
+      col < cols
+        ? (triplets[col]?.uColumn ?? [])
+        : Array.from({ length: rows }, (_, row) => leftVectors[row * rows + col] ?? 0);
+    for (let row = 0; row < rows; row += 1) {
+      sortedU[row * rows + col] = sourceCol[row] ?? 0;
     }
   }
 
-  return flintSome({
-    values,
-    vectors: { rows: n, cols: n, data: [...sortedV] },
-  });
+  const sortedVt = new Float64Array(cols * cols);
+  for (let row = 0; row < cols; row += 1) {
+    const vCol = triplets[row]?.vColumn ?? [];
+    for (let col = 0; col < cols; col += 1) {
+      sortedVt[row * cols + col] = vCol[col] ?? 0;
+    }
+  }
+
+  return {
+    u: { rows, cols: rows, data: [...sortedU] },
+    s: sortedSingularValues,
+    vt: { rows: cols, cols, data: [...sortedVt] },
+  };
 }
 
 /** Perform d matrix s v d operation. */
@@ -3149,175 +3423,30 @@ export function flintDMatrixSVD(
       return flintNone();
     }
     const { u: uTrans, s, vt: vtTrans } = svdOpt.value;
-    const uMat = flintDMatrixTranspose(vtTrans);
-    const vtMat = flintDMatrixTranspose(uTrans);
-    return flintSome({ u: uMat, s, vt: vtMat });
+    return flintSome({
+      u: flintDMatrixTranspose(vtTrans),
+      s,
+      vt: flintDMatrixTranspose(uTrans),
+    });
   }
 
   const rows = matrix.rows;
   const cols = matrix.cols;
-  const b = new Float64Array(matrix.data);
-  const v = new Float64Array(cols * cols);
+  const transformedData = new Float64Array(matrix.data);
+  const rightVectorsData = new Float64Array(cols * cols);
   for (let index = 0; index < cols; index += 1) {
-    v[index * cols + index] = 1;
+    rightVectorsData[index * cols + index] = 1;
   }
 
   for (let iteration = 0; iteration < maxIterations; iteration += 1) {
-    let converged = true;
-
-    for (let index = 0; index < cols; index += 1) {
-      for (let kIndex = index + 1; kIndex < cols; kIndex += 1) {
-        let alpha = 0;
-        let beta = 0;
-        let gamma = 0;
-
-        for (let index_ = 0; index_ < rows; index_ += 1) {
-          const bj = b[index_ * cols + index] ?? 0;
-          const bk = b[index_ * cols + kIndex] ?? 0;
-          alpha += bj * bj;
-          beta += bk * bk;
-          gamma += bj * bk;
-        }
-
-        const denom = Math.sqrt(alpha * beta);
-        if (denom > epsilon && Math.abs(gamma) / denom > epsilon) {
-          converged = false;
-
-          const zeta = (beta - alpha) / (2 * gamma);
-          const tanValue = (zeta >= 0 ? 1 : -1) / (Math.abs(zeta) + Math.sqrt(1 + zeta * zeta));
-          const cosValue = 1 / Math.sqrt(1 + tanValue * tanValue);
-          const sinValue = tanValue * cosValue;
-
-          for (let index_ = 0; index_ < rows; index_ += 1) {
-            const bj = b[index_ * cols + index] ?? 0;
-            const bk = b[index_ * cols + kIndex] ?? 0;
-            b[index_ * cols + index] = cosValue * bj - sinValue * bk;
-            b[index_ * cols + kIndex] = sinValue * bj + cosValue * bk;
-          }
-
-          for (let index_ = 0; index_ < cols; index_ += 1) {
-            const vj = v[index_ * cols + index] ?? 0;
-            const vk = v[index_ * cols + kIndex] ?? 0;
-            v[index_ * cols + index] = cosValue * vj - sinValue * vk;
-            v[index_ * cols + kIndex] = sinValue * vj + cosValue * vk;
-          }
-        }
-      }
-    }
-
-    if (converged) {
+    if (performSvdJacobiSweep(transformedData, rightVectorsData, rows, cols, epsilon)) {
       break;
     }
   }
 
-  // Singular values are Euclidean norms of columns of B
-  const sVals = new Float64Array(cols);
-  const u = new Float64Array(rows * rows);
-
-  for (let index = 0; index < cols; index += 1) {
-    let normSq = 0;
-    for (let index_ = 0; index_ < rows; index_ += 1) {
-      const value = b[index_ * cols + index] ?? 0;
-      normSq += value * value;
-    }
-    const sigma = Math.sqrt(normSq);
-    sVals[index] = sigma;
-
-    if (sigma > epsilon) {
-      const invSigma = 1 / sigma;
-      for (let index_ = 0; index_ < rows; index_ += 1) {
-        u[index_ * rows + index] = (b[index_ * cols + index] ?? 0) * invSigma;
-      }
-    }
-  }
-
-  // Complete U to full orthonormal m x m basis using Gram-Schmidt
-  for (let index = 0; index < rows; index += 1) {
-    let colNormSq = 0;
-    for (let index_ = 0; index_ < rows; index_ += 1) {
-      const value = u[index_ * rows + index] ?? 0;
-      colNormSq += value * value;
-    }
-
-    if (colNormSq < 0.5) {
-      for (let basisIndex = 0; basisIndex < rows; basisIndex += 1) {
-        const vec = new Float64Array(rows);
-        vec[basisIndex] = 1;
-
-        for (let other = 0; other < rows; other += 1) {
-          if (other === index) {
-            continue;
-          }
-          let otherNormSq = 0;
-          for (let index_ = 0; index_ < rows; index_ += 1) {
-            const value = u[index_ * rows + other] ?? 0;
-            otherNormSq += value * value;
-          }
-          if (otherNormSq >= 0.5) {
-            let dot = 0;
-            for (let index_ = 0; index_ < rows; index_ += 1) {
-              dot += (u[index_ * rows + other] ?? 0) * (vec[index_] ?? 0);
-            }
-            for (let index_ = 0; index_ < rows; index_ += 1) {
-              vec[index_] = (vec[index_] ?? 0) - dot * (u[index_ * rows + other] ?? 0);
-            }
-          }
-        }
-
-        let normSq = 0;
-        for (let index_ = 0; index_ < rows; index_ += 1) {
-          const value = vec[index_] ?? 0;
-          normSq += value * value;
-        }
-
-        if (normSq > 1e-4) {
-          const norm = Math.sqrt(normSq);
-          for (let index_ = 0; index_ < rows; index_ += 1) {
-            u[index_ * rows + index] = (vec[index_] ?? 0) / norm;
-          }
-          break;
-        }
-      }
-    }
-  }
-
-  interface Triplet {
-    s: number;
-    uCol: number[];
-    vCol: number[];
-  }
-
-  const triplets: Triplet[] = [];
-  for (let index = 0; index < cols; index += 1) {
-    const s = sVals[index] ?? 0;
-    const uCol = Array.from({ length: rows }, (_, index_) => u[index_ * rows + index] ?? 0);
-    const vCol = Array.from({ length: cols }, (_, index_) => v[index_ * cols + index] ?? 0);
-    triplets.push({ s, uCol, vCol });
-  }
-
-  triplets.sort((tripA, tripB) => tripB.s - tripA.s);
-
-  const sortedS = triplets.map((item) => item.s);
-  for (let index = 0; index < cols; index += 1) {
-    const uCol = triplets[index]?.uCol ?? [];
-    for (let index_ = 0; index_ < rows; index_ += 1) {
-      u[index_ * rows + index] = uCol[index_] ?? 0;
-    }
-  }
-
-  const vt = new Float64Array(cols * cols);
-  for (let index = 0; index < cols; index += 1) {
-    const vCol = triplets[index]?.vCol ?? [];
-    for (let index_ = 0; index_ < cols; index_ += 1) {
-      vt[index * cols + index_] = vCol[index_] ?? 0;
-    }
-  }
-
-  return flintSome({
-    u: { rows, cols: rows, data: [...u] },
-    s: sortedS,
-    vt: { rows: cols, cols, data: [...vt] },
-  });
+  const { singularValues, leftVectors } = computeSingularVectorsAndValues(transformedData, rows, cols, epsilon);
+  completeOrthonormalBasis(leftVectors, rows);
+  return flintSome(sortSvdComponents(singularValues, leftVectors, rightVectorsData, rows, cols));
 }
 
 /** Perform d matrix pseudoinverse operation. */
@@ -3336,19 +3465,17 @@ export function flintDMatrixPseudoinverse(
   const kLength = s.length;
   const result = new Float64Array(rows * cols);
 
-  for (let row = 0; row < rows; row += 1) {
-    for (let col = 0; col < cols; col += 1) {
-      let sum = 0;
-      for (let kIndex = 0; kIndex < kLength; kIndex += 1) {
-        const singularValue = s[kIndex] ?? 0;
-        if (singularValue > epsilon) {
-          const invS = 1 / singularValue;
-          const vValue = vt.data[kIndex * rows + row] ?? 0;
+  for (let kIndex = 0; kIndex < kLength; kIndex += 1) {
+    const singularValue = s[kIndex] ?? 0;
+    if (singularValue > epsilon) {
+      const invS = 1 / singularValue;
+      for (let row = 0; row < rows; row += 1) {
+        const vValue = vt.data[kIndex * rows + row] ?? 0;
+        for (let col = 0; col < cols; col += 1) {
           const uValue = u.data[col * cols + kIndex] ?? 0;
-          sum += vValue * invS * uValue;
+          result[row * cols + col] = (result[row * cols + col] ?? 0) + vValue * invS * uValue;
         }
       }
-      result[row * cols + col] = sum;
     }
   }
 
@@ -3441,6 +3568,10 @@ export function flintTensorView<TValue extends object | number | string | boolea
   return { shape: tensor.shape, offset: 0, data: tensor.data };
 }
 
+function isValidSliceRange(start: number, length: number, dimension: number): boolean {
+  return Number.isInteger(start) && Number.isInteger(length) && start >= 0 && length > 0 && start + length <= dimension;
+}
+
 /** Perform tensor slice operation. */
 export function flintTensorSlice<TValue extends object | number | string | boolean | symbol | bigint>(
   view: FlintTensorView<TValue>,
@@ -3448,11 +3579,11 @@ export function flintTensorSlice<TValue extends object | number | string | boole
   start: number,
   length: number,
 ): FlintOption<FlintTensorView<TValue>> {
-  if (axis < 0 || axis >= view.shape.rank || !Number.isInteger(axis)) {
+  if (!isValidCoordinate(axis, view.shape.rank)) {
     return flintNone();
   }
   const dim = view.shape.dimensions[axis] ?? 0;
-  if (start < 0 || length <= 0 || start + length > dim || !Number.isInteger(start) || !Number.isInteger(length)) {
+  if (!isValidSliceRange(start, length, dim)) {
     return flintNone();
   }
 
@@ -3472,29 +3603,34 @@ export function flintTensorSlice<TValue extends object | number | string | boole
   });
 }
 
+function computeFlatTensorIndex<TValue extends object | number | string | boolean | symbol | bigint>(
+  view: FlintTensorView<TValue>,
+  indices: readonly number[],
+): number | undefined {
+  if (indices.length !== view.shape.rank) {
+    return undefined;
+  }
+  let flatIndex = view.offset;
+  for (let index = 0; index < view.shape.rank; index += 1) {
+    const coord = indices[index] ?? 0;
+    const dim = view.shape.dimensions[index] ?? 0;
+    if (!isValidCoordinate(coord, dim)) {
+      return undefined;
+    }
+    flatIndex += coord * (view.shape.strides[index] ?? 1);
+  }
+  return isValidCoordinate(flatIndex, view.data.length) ? flatIndex : undefined;
+}
+
 /** Perform tensor view get operation. */
 export function flintTensorViewGet<TValue extends object | number | string | boolean | symbol | bigint>(
   view: FlintTensorView<TValue>,
   indices: readonly number[],
 ): FlintOption<TValue> {
-  if (indices.length !== view.shape.rank) {
+  const flatIndex = computeFlatTensorIndex(view, indices);
+  if (flatIndex === undefined) {
     return flintNone();
   }
-
-  let flatIndex = view.offset;
-  for (let index = 0; index < view.shape.rank; index += 1) {
-    const coord = indices[index] ?? 0;
-    const dim = view.shape.dimensions[index] ?? 0;
-    if (coord < 0 || coord >= dim || !Number.isInteger(coord)) {
-      return flintNone();
-    }
-    flatIndex += coord * (view.shape.strides[index] ?? 1);
-  }
-
-  if (flatIndex < 0 || flatIndex >= view.data.length) {
-    return flintNone();
-  }
-
   const item = view.data[flatIndex];
   if (item === undefined) {
     return flintNone();
@@ -3508,24 +3644,10 @@ export function flintTensorViewSet<TValue extends object | number | string | boo
   indices: readonly number[],
   value: TValue,
 ): boolean {
-  if (indices.length !== view.shape.rank) {
+  const flatIndex = computeFlatTensorIndex(view, indices);
+  if (flatIndex === undefined) {
     return false;
   }
-
-  let flatIndex = view.offset;
-  for (let index = 0; index < view.shape.rank; index += 1) {
-    const coord = indices[index] ?? 0;
-    const dim = view.shape.dimensions[index] ?? 0;
-    if (coord < 0 || coord >= dim || !Number.isInteger(coord)) {
-      return false;
-    }
-    flatIndex += coord * (view.shape.strides[index] ?? 1);
-  }
-
-  if (flatIndex < 0 || flatIndex >= view.data.length) {
-    return false;
-  }
-
   view.data[flatIndex] = value;
   return true;
 }

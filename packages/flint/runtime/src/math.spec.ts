@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  type FlintDMatrix,
   FLINT_MATH_PI,
   FLINT_MATH_TAU,
   FLINT_MATH_E,
@@ -110,6 +111,33 @@ import {
   flintTensorViewSet,
   flintTensorMatmul,
 } from './math.js';
+
+function expectSvdReconstruction(matrix: FlintDMatrix, u: FlintDMatrix, s: readonly number[], vt: FlintDMatrix): void {
+  const rank = s.length;
+  for (let row = 0; row < matrix.rows; row += 1) {
+    for (let col = 0; col < matrix.cols; col += 1) {
+      let reconstructedValue = 0;
+      for (let kIndex = 0; kIndex < rank; kIndex += 1) {
+        reconstructedValue +=
+          (u.data[row * u.cols + kIndex] ?? 0) * (s[kIndex] ?? 0) * (vt.data[kIndex * vt.cols + col] ?? 0);
+      }
+      expect(reconstructedValue).toBeCloseTo(matrix.data[row * matrix.cols + col] ?? 0, 7);
+    }
+  }
+}
+
+function expectOrthogonalColumns(matrix: FlintDMatrix): void {
+  const dimension = matrix.cols;
+  for (let row = 0; row < dimension; row += 1) {
+    for (let col = 0; col < dimension; col += 1) {
+      let dotProduct = 0;
+      for (let kIndex = 0; kIndex < matrix.rows; kIndex += 1) {
+        dotProduct += (matrix.data[kIndex * dimension + row] ?? 0) * (matrix.data[kIndex * dimension + col] ?? 0);
+      }
+      expect(dotProduct).toBeCloseTo(row === col ? 1 : 0, 6);
+    }
+  }
+}
 
 describe('Flint Standard Math Library', () => {
   describe('Constants and Scalar Functions', () => {
@@ -547,10 +575,9 @@ describe('Flint Standard Math Library', () => {
       const v0 = createFlintDMatrix(2, 1, [vectors.data[0] ?? 0, vectors.data[2] ?? 0]);
       const av0 = flintDMatrixMul(sym, v0);
       expect(av0.kind).toBe('some');
-      if (av0.kind === 'some') {
-        expect(av0.value.data[0]).toBeCloseTo(3 * (v0.data[0] ?? 0), 8);
-        expect(av0.value.data[1]).toBeCloseTo(3 * (v0.data[1] ?? 0), 8);
-      }
+      const av0Data = av0.value?.data ?? [];
+      expect(av0Data[0]).toBeCloseTo(3 * (v0.data[0] ?? 0), 8);
+      expect(av0Data[1]).toBeCloseTo(3 * (v0.data[1] ?? 0), 8);
     });
 
     it('verifies eigenvector orthogonality for symmetric matrix', () => {
@@ -589,16 +616,7 @@ describe('Flint Standard Math Library', () => {
       expect(s[0]).toBeGreaterThan(s[1] ?? 0);
       expect(s[1]).toBeGreaterThan(0);
 
-      // Verify reconstruction A ≈ U * diag(S) * V^T
-      for (let row = 0; row < 3; row += 1) {
-        for (let col = 0; col < 2; col += 1) {
-          let recon = 0;
-          for (let kIndex = 0; kIndex < 2; kIndex += 1) {
-            recon += (u.data[row * 3 + kIndex] ?? 0) * (s[kIndex] ?? 0) * (vt.data[kIndex * 2 + col] ?? 0);
-          }
-          expect(recon).toBeCloseTo(matrixA.data[row * 2 + col] ?? 0, 7);
-        }
-      }
+      expectSvdReconstruction(matrixA, u, s, vt);
     });
 
     it('computes SVD for 2x3 wide rectangular matrix', () => {
@@ -615,15 +633,7 @@ describe('Flint Standard Math Library', () => {
       expect(vt.rows).toBe(3);
       expect(vt.cols).toBe(3);
 
-      for (let row = 0; row < 2; row += 1) {
-        for (let col = 0; col < 3; col += 1) {
-          let recon = 0;
-          for (let kIndex = 0; kIndex < 2; kIndex += 1) {
-            recon += (u.data[row * 2 + kIndex] ?? 0) * (s[kIndex] ?? 0) * (vt.data[kIndex * 3 + col] ?? 0);
-          }
-          expect(recon).toBeCloseTo(aWide.data[row * 3 + col] ?? 0, 7);
-        }
-      }
+      expectSvdReconstruction(aWide, u, s, vt);
     });
 
     it('computes Moore-Penrose pseudo-inverse satisfying A * A^+ * A ≈ A', () => {
@@ -639,16 +649,12 @@ describe('Flint Standard Math Library', () => {
 
       const aPinvOpt = flintDMatrixMul(matrixA, pinv);
       expect(aPinvOpt.kind).toBe('some');
-      if (aPinvOpt.kind !== 'some') {
-        return;
-      }
-      const aPinvAOpt = flintDMatrixMul(aPinvOpt.value, matrixA);
+      const aPinvMat = aPinvOpt.value ?? createFlintDMatrix(0, 0);
+      const aPinvAOpt = flintDMatrixMul(aPinvMat, matrixA);
       expect(aPinvAOpt.kind).toBe('some');
-      if (aPinvAOpt.kind !== 'some') {
-        return;
-      }
+      const aPinvAData = aPinvAOpt.value?.data ?? [];
       for (let index = 0; index < 6; index += 1) {
-        expect(aPinvAOpt.value.data[index]).toBeCloseTo(matrixA.data[index] ?? 0, 7);
+        expect(aPinvAData[index]).toBeCloseTo(matrixA.data[index] ?? 0, 7);
       }
     });
 
@@ -664,15 +670,7 @@ describe('Flint Standard Math Library', () => {
       expect(s[1]).toBeCloseTo(0, 7);
       expect(s[2]).toBeCloseTo(0, 7);
 
-      for (let row = 0; row < 3; row += 1) {
-        for (let col = 0; col < 3; col += 1) {
-          let dot = 0;
-          for (let kIndex = 0; kIndex < 3; kIndex += 1) {
-            dot += (u.data[row * 3 + kIndex] ?? 0) * (u.data[col * 3 + kIndex] ?? 0);
-          }
-          expect(dot).toBeCloseTo(row === col ? 1 : 0, 6);
-        }
-      }
+      expectOrthogonalColumns(u);
     });
   });
 
