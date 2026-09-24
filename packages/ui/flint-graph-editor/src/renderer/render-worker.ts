@@ -1104,7 +1104,7 @@ if (
 
       // Subtitle operation identifier
       const subColor = isDark ? [0.545, 0.58, 0.62, 1] : [0.341, 0.376, 0.416, 1];
-      wasm.font_append_text_quads_mono(node.operation, x + 10, y + 28, 9, subColor[0], subColor[1], subColor[2], 1, 0);
+      wasm.font_append_text_quads(node.operation, x + 10, y + 28, 9, subColor[0], subColor[1], subColor[2], 1, 0);
 
       // Input pins & labels
       for (const [idx, port] of (node.inputs ?? []).entries()) {
@@ -2780,7 +2780,7 @@ if (
 
       // Subtitle operation identifier
       const subColor = isDark ? [0.545, 0.58, 0.62] : [0.341, 0.376, 0.416];
-      wasm.font_append_text_quads_mono(node.operation, x + 10, y + 28, 9, subColor[0], subColor[1], subColor[2], 1, 0);
+      wasm.font_append_text_quads(node.operation, x + 10, y + 28, 9, subColor[0], subColor[1], subColor[2], 1, 0);
 
       // Pins (Inputs)
       for (const [idx, port] of (node.inputs ?? []).entries()) {

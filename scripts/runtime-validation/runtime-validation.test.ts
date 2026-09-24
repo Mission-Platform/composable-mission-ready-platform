@@ -85,7 +85,7 @@ describe('repository inventory', () => {
       '@mission-platform/website',
     ]);
     expect(inventory.apps.some((app) => app.name === '@mission-platform/figma-forge-plugin')).toBe(false);
-    expect(inventory.storybookPackages).toHaveLength(22);
+    expect(inventory.storybookPackages).toHaveLength(23);
     expect(inventory.stories.some((story) => story.id.includes('@mission-platform/components:'))).toBe(true);
     expect(inventory.stories.some((story) => story.exportedStories?.includes('Default'))).toBe(true);
   });

@@ -239,7 +239,7 @@ A mutable ref container, mirroring React's `MutableRefObject`.
 **Kind:** component
 
 ```typescript
-export type MpSetState<T> = (value: T | ((previous: T) => T)) => void;
+export type MpSetState<T> = (value?: T | ((previous: T) => T)) => void;
 ```
 
 Update a piece of state, either to a new value or via an updater function.
@@ -317,7 +317,7 @@ Neutral `useMemo`. Computes the value once for the render.
 **Kind:** function
 
 ```typescript
-function useRef(initial: T): MpRef<T>;
+function useRef(initial?: T): MpRef<T>;
 ```
 
 Neutral `useRef`. Returns a fresh `{ current }` container for the single
@@ -334,7 +334,7 @@ render; the framework runtimes preserve it across renders.
 **Kind:** function
 
 ```typescript
-function useState(initial: T | (() => T)): [T, MpSetState<T>];
+function useState(initial?: T | (() => T)): [T, MpSetState<T>];
 ```
 
 Neutral `useState`. The baseline implementation returns the initial value and

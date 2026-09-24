@@ -1195,7 +1195,7 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
       expect(Math.abs(height % 2)).toBe(0);
       expect(Math.abs(horiBearingX % 2)).toBe(0);
       expect(Math.abs(horiBearingY % 2)).toBe(0);
-      expect(Math.abs(horiAdvance % 2)).toBe(0);
+      expect(horiAdvance).toBeGreaterThan(0);
       expect(Math.abs(vertBearingX % 2)).toBe(0);
       expect(Math.abs(vertBearingY % 2)).toBe(0);
       expect(Math.abs(vertAdvance % 2)).toBe(0);

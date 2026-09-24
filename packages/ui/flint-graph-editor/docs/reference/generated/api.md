@@ -58,7 +58,7 @@ Framework-neutral Forge playback scrubber for Flint execution traces.
 function ForgePerformancePieChart(properties: Readonly<ForgePerformancePieChartProperties>): MpElement;
 ```
 
-No description provided.
+D3-powered SVG donut chart visualizing rendering and pipeline execution performance metrics.
 
 #### Parameters
 
@@ -72,6 +72,34 @@ No description provided.
 
 ```typescript
 export interface ForgePerformancePieChartProperties
+```
+
+No description provided.
+
+## `src/components/molecules/forge-performance-timeline-chart/forge-performance-timeline-chart`
+
+### ForgePerformanceTimelineChart
+
+**Kind:** function
+
+```typescript
+function ForgePerformanceTimelineChart(properties: Readonly<ForgePerformanceTimelineChartProperties>): MpElement;
+```
+
+Stacked area and line timeline chart tracking rendering and update performance metrics across animation frames.
+
+#### Parameters
+
+| Name       | Type                                              | Description |
+| ---------- | ------------------------------------------------- | ----------- |
+| properties | Readonly<ForgePerformanceTimelineChartProperties> |             |
+
+### ForgePerformanceTimelineChartProperties
+
+**Kind:** interface
+
+```typescript
+export interface ForgePerformanceTimelineChartProperties
 ```
 
 No description provided.
@@ -288,7 +316,7 @@ No description provided.
 export class FlintEditorStore
 ```
 
-No description provided.
+State store managing graph topology, history stack, selection, and live Wasm compilation.
 
 ### FlintEditorStoreState
 
@@ -330,7 +358,7 @@ No description provided.
 function createCamera(viewportWidth: number, viewportHeight: number, x = 0, y = 0, zoom = 1): FlintCamera;
 ```
 
-No description provided.
+Creates a camera viewport configuration with given dimensions, pan offsets, and zoom.
 
 #### Parameters
 
@@ -350,7 +378,7 @@ No description provided.
 function createViewProjectionMatrix(camera: FlintCamera): Float32Array;
 ```
 
-No description provided.
+Computes a 4x4 orthographic view-projection matrix for the given camera.
 
 #### Parameters
 
@@ -426,7 +454,7 @@ No description provided.
 function getFlintRenderWorkerWasm(imports?: WebAssembly.Imports): FlintRenderWorkerWasmExports;
 ```
 
-No description provided.
+Instantiates or retrieves the cached native Flint WebAssembly render worker module.
 
 #### Parameters
 
@@ -442,7 +470,7 @@ No description provided.
 function getNodeBounds(node: FlintGraphNode, wasmOverride?: FlintRenderWorkerWasmExports): ViewBounds;
 ```
 
-No description provided.
+Computes the axis-aligned bounding box for a graph node in world coordinates.
 
 #### Parameters
 
@@ -459,7 +487,7 @@ No description provided.
 function getViewportBounds(camera: FlintCamera, padding = 100): ViewBounds;
 ```
 
-No description provided.
+Computes the visible world-coordinate bounds for the camera viewport with padding.
 
 #### Parameters
 
@@ -584,6 +612,16 @@ No description provided.
 
 ```typescript
 export interface GPURenderPipeline
+```
+
+No description provided.
+
+### GPUSampler
+
+**Kind:** interface
+
+```typescript
+export interface GPUSampler
 ```
 
 No description provided.
@@ -766,6 +804,26 @@ No description provided.
 
 ```typescript
 export const NODES_SHADER_WGSL;
+```
+
+No description provided.
+
+### TEXT_SHADER_WGSL
+
+**Kind:** constant
+
+```typescript
+export const TEXT_SHADER_WGSL;
+```
+
+No description provided.
+
+### TEXT_WGSL
+
+**Kind:** constant
+
+```typescript
+export const TEXT_SHADER_WGSL;
 ```
 
 No description provided.

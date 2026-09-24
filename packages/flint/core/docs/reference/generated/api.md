@@ -2600,16 +2600,16 @@ Deterministically sorts a collection of generic specializations by their unique 
 **Kind:** function
 
 ```typescript
-function buildGraphAst(graph: FlintNodeGraph): FlintAstBuildResult;
+function buildGraphAst(inputGraph: FlintNodeGraph): FlintAstBuildResult;
 ```
 
 Lowers a validated FlintNodeGraph into an in-memory FlintModule AST and bidirectional source map.
 
 #### Parameters
 
-| Name  | Type           | Description |
-| ----- | -------------- | ----------- |
-| graph | FlintNodeGraph |             |
+| Name       | Type           | Description |
+| ---------- | -------------- | ----------- |
+| inputGraph | FlintNodeGraph |             |
 
 ### FlintAstBuildResult
 
@@ -2740,7 +2740,7 @@ Compiles a visual FlintNodeGraph end-to-end into WebAssembly binary, ABI manifes
 **Kind:** interface
 
 ```typescript
-export interface FlintCompiledNodeGraphArtifact extends FlintArtifact
+export interface FlintCompiledNodeGraphArtifact extends Omit<FlintArtifact, 'sourceMap'>
 ```
 
 No description provided.
@@ -2762,16 +2762,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function emitGraphSource(graph: FlintNodeGraph): FlintSourceEmissionResult;
+function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmissionResult;
 ```
 
 Emits clean, formatted Flint source code from a validated graph with exact bidirectional source maps.
 
 #### Parameters
 
-| Name  | Type           | Description |
-| ----- | -------------- | ----------- |
-| graph | FlintNodeGraph |             |
+| Name       | Type           | Description |
+| ---------- | -------------- | ----------- |
+| inputGraph | FlintNodeGraph |             |
 
 ### FlintSourceEmissionResult
 
@@ -2845,12 +2845,39 @@ Creates a synthetic source span for graph-generated AST nodes.
 | column |      |             |
 | length |      |             |
 
+### flattenGraph
+
+**Kind:** function
+
+```typescript
+function flattenGraph(graph: FlintNodeGraph): FlintNodeGraph;
+```
+
+Recursively inlines and flattens any meta nodes in a graph into their constituent internal nodes and edges.
+Used during validation, AST generation, and source emission to seamlessly compile composite meta nodes.
+
+#### Parameters
+
+| Name  | Type           | Description |
+| ----- | -------------- | ----------- |
+| graph | FlintNodeGraph |             |
+
 ### FlintGraphEdge
 
 **Kind:** interface
 
 ```typescript
 export interface FlintGraphEdge
+```
+
+No description provided.
+
+### FlintGraphGroup
+
+**Kind:** interface
+
+```typescript
+export interface FlintGraphGroup
 ```
 
 No description provided.
@@ -2901,6 +2928,36 @@ No description provided.
 
 ```typescript
 export type FlintGraphValidationSeverity = 'error' | 'warning' | 'info';
+```
+
+No description provided.
+
+### FlintMetaNodeDefinition
+
+**Kind:** interface
+
+```typescript
+export interface FlintMetaNodeDefinition
+```
+
+No description provided.
+
+### FlintMetaNodePortMapping
+
+**Kind:** interface
+
+```typescript
+export interface FlintMetaNodePortMapping
+```
+
+No description provided.
+
+### FlintMetaNodeSubgraph
+
+**Kind:** interface
+
+```typescript
+export interface FlintMetaNodeSubgraph
 ```
 
 No description provided.
