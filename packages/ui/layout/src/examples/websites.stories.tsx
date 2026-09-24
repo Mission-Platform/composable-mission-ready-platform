@@ -77,6 +77,46 @@ const FOOTER_COLS = {
 };
 
 /**
+ * Card representing a feature item in the marketing grid.
+ */
+function FeatureCard({ title, description }: { readonly title: string; readonly description: string }) {
+  return (
+    <div style={FEATURE}>
+      <h3 style={{ marginTop: 0 }}>{title}</h3>
+      <p>{description}</p>
+    </div>
+  );
+}
+
+/**
+ * Responsive grid containing marketing feature cards.
+ */
+function FeatureGrid() {
+  return (
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(15rem, 1fr))',
+        gap: 'var(--mp-spacing-4)',
+      }}
+    >
+      <FeatureCard
+        title="Write once"
+        description="Author components in a neutral dialect."
+      />
+      <FeatureCard
+        title="Ship everywhere"
+        description="Compile straight to Vue and React."
+      />
+      <FeatureCard
+        title="Design tokens"
+        description="Theme it all with DTCG tokens."
+      />
+    </div>
+  );
+}
+
+/**
  * Helper component rendering marketing page content section.
  */
 function MarketingContent() {
@@ -92,26 +132,7 @@ function MarketingContent() {
       <section style={SECTION}>
         <ForgeContainer variant="responsive">
           <h2 style={{ marginTop: 0 }}>Features</h2>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(15rem, 1fr))',
-              gap: 'var(--mp-spacing-4)',
-            }}
-          >
-            <div style={FEATURE}>
-              <h3 style={{ marginTop: 0 }}>Write once</h3>
-              <p>Author components in a neutral dialect.</p>
-            </div>
-            <div style={FEATURE}>
-              <h3 style={{ marginTop: 0 }}>Ship everywhere</h3>
-              <p>Compile straight to Vue and React.</p>
-            </div>
-            <div style={FEATURE}>
-              <h3 style={{ marginTop: 0 }}>Design tokens</h3>
-              <p>Theme it all with DTCG tokens.</p>
-            </div>
-          </div>
+          <FeatureGrid />
         </ForgeContainer>
       </section>
     </div>

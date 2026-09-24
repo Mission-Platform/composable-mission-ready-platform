@@ -22,38 +22,89 @@ export interface DeclarativeRewriteRule {
  * Helper to match two node inputs that are identical.
  */
 function matchSelfInput(node: LowLevelSonNode, context: RewriteContext): boolean {
-  return (
-    node.valueInputs.length >= 2 &&
-    context.getNode(node.valueInputs[0] ?? -1) !== undefined &&
-    context.getNode(node.valueInputs[0] ?? -1) === context.getNode(node.valueInputs[1] ?? -1)
-  );
+  if (node.valueInputs.length < 2) return false;
+  const leftId = node.valueInputs[0];
+  const rightId = node.valueInputs[1];
+  if (leftId === undefined || leftId !== rightId) return false;
+  return context.getNode(leftId) !== undefined;
+}
+
+/**
+ * Helper checking if a node is a numeric constant.
+ */
+function isNumberConst(node?: LowLevelSonNode): boolean {
+  return node?.opcode === 'val.const' && typeof node.constantValue === 'number';
 }
 
 /**
  * Helper to match two node inputs that are numeric constants.
  */
 function matchNumericConstants(node: LowLevelSonNode, context: RewriteContext): boolean {
-  const left = context.getNode(node.valueInputs[0] ?? -1);
-  const right = context.getNode(node.valueInputs[1] ?? -1);
   return (
-    left?.opcode === 'val.const' &&
-    typeof left.constantValue === 'number' &&
-    right?.opcode === 'val.const' &&
-    typeof right.constantValue === 'number'
+    isNumberConst(context.getNode(node.valueInputs[0] ?? -1)) &&
+    isNumberConst(context.getNode(node.valueInputs[1] ?? -1))
   );
+}
+
+/**
+ * Helper checking if a node is a number or bigint constant.
+ */
+function isNumericOrBigIntConst(node?: LowLevelSonNode): boolean {
+  if (node?.opcode !== 'val.const') return false;
+  const valueType = typeof node.constantValue;
+  return valueType === 'number' || valueType === 'bigint';
 }
 
 /**
  * Helper to match two node inputs that are numbers or bigints.
  */
 function matchNumericOrBigIntConstants(node: LowLevelSonNode, context: RewriteContext): boolean {
+  return (
+    isNumericOrBigIntConst(context.getNode(node.valueInputs[0] ?? -1)) &&
+    isNumericOrBigIntConst(context.getNode(node.valueInputs[1] ?? -1))
+  );
+}
+
+/**
+ * Helper checking if a node is a zero constant.
+ */
+function isZeroConst(node?: LowLevelSonNode): boolean {
+  return node?.opcode === 'val.const' && node.constantValue === 0;
+}
+
+/**
+ * Helper matching multiplication by zero.
+ */
+function matchMulZero(node: LowLevelSonNode, context: RewriteContext): boolean {
+  return (
+    isZeroConst(context.getNode(node.valueInputs[1] ?? -1)) || isZeroConst(context.getNode(node.valueInputs[0] ?? -1))
+  );
+}
+
+/**
+ * Helper matching non-trapping division.
+ */
+function matchDiv(node: LowLevelSonNode, context: RewriteContext): boolean {
+  if (!matchNumericConstants(node, context)) return false;
+  const left = context.getNode(node.valueInputs[0] ?? -1);
+  const right = context.getNode(node.valueInputs[1] ?? -1);
+  const rightValue = right?.constantValue;
+  const leftValue = left?.constantValue;
+  if (rightValue === 0) return false;
+  return !(leftValue === -2_147_483_648 && rightValue === -1);
+}
+
+/**
+ * Helper matching two constant inputs for equality comparison.
+ */
+function matchCmpEq(node: LowLevelSonNode, context: RewriteContext): boolean {
   const left = context.getNode(node.valueInputs[0] ?? -1);
   const right = context.getNode(node.valueInputs[1] ?? -1);
   return (
     left?.opcode === 'val.const' &&
     right?.opcode === 'val.const' &&
-    (typeof left.constantValue === 'number' || typeof left.constantValue === 'bigint') &&
-    (typeof right.constantValue === 'number' || typeof right.constantValue === 'bigint')
+    left.constantValue !== undefined &&
+    right.constantValue !== undefined
   );
 }
 
@@ -164,12 +215,7 @@ export const BUILTIN_REWRITE_RULES: readonly DeclarativeRewriteRule[] = [
   {
     name: 'algebraic.mul.zero',
     opcode: 'val.mul',
-    match: (node, context) => {
-      const right = context.getNode(node.valueInputs[1] ?? -1);
-      if (right?.opcode === 'val.const' && right.constantValue === 0) return true;
-      const left = context.getNode(node.valueInputs[0] ?? -1);
-      return left?.opcode === 'val.const' && left.constantValue === 0;
-    },
+    match: matchMulZero,
     transform: (node, context) => context.createConstantNode(0, node.type),
   },
   {
@@ -214,15 +260,7 @@ export const BUILTIN_REWRITE_RULES: readonly DeclarativeRewriteRule[] = [
   {
     name: 'constant.fold.div',
     opcode: 'val.div',
-    match: (node, context) => {
-      const left = context.getNode(node.valueInputs[0] ?? -1);
-      const right = context.getNode(node.valueInputs[1] ?? -1);
-      return (
-        matchNumericConstants(node, context) &&
-        right?.constantValue !== 0 &&
-        !(left?.constantValue === -2_147_483_648 && right?.constantValue === -1)
-      );
-    },
+    match: matchDiv,
     transform: (node, context) => {
       const left = context.getNode(node.valueInputs[0] ?? -1);
       const right = context.getNode(node.valueInputs[1] ?? -1);
@@ -263,16 +301,7 @@ export const BUILTIN_REWRITE_RULES: readonly DeclarativeRewriteRule[] = [
   {
     name: 'constant.fold.cmp_eq',
     opcode: 'val.cmp_eq',
-    match: (node, context) => {
-      const left = context.getNode(node.valueInputs[0] ?? -1);
-      const right = context.getNode(node.valueInputs[1] ?? -1);
-      return (
-        left?.opcode === 'val.const' &&
-        right?.opcode === 'val.const' &&
-        left.constantValue !== undefined &&
-        right.constantValue !== undefined
-      );
-    },
+    match: matchCmpEq,
     transform: (node, context) => {
       const left = context.getNode(node.valueInputs[0] ?? -1);
       const right = context.getNode(node.valueInputs[1] ?? -1);

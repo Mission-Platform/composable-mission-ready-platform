@@ -58,6 +58,7 @@ export interface DecisionTreeCompileOptions {
 /**
  * Helper to resolve scalar case values to their canonical numeric representation.
  */
+// skipcq: JS-R1005
 function resolveNumericCaseValue(
   value: number | boolean | string,
   resolver?: (variantName: string) => number | undefined,
