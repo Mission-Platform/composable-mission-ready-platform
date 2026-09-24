@@ -1779,15 +1779,43 @@ export fn sdf_render_char_cell(
   let span_y: u32 = half_h * scale_units;
   let cx: u32 = get_glyph_center_x_u32(idx);
   let cy: u32 = get_glyph_center_y_u32(idx);
-  let base_x: u32 = cx - span_x;
-  let base_y: u32 = cy - span_y;
+  let mut base_x: u32 = 0;
+  let mut neg_x: u32 = 0;
+  if cx >= span_x {
+    base_x = cx - span_x;
+  } else {
+    neg_x = span_x - cx;
+  }
+  let mut base_y: u32 = 0;
+  let mut neg_y: u32 = 0;
+  if cy >= span_y {
+    base_y = cy - span_y;
+  } else {
+    neg_y = span_y - cy;
+  }
 
   let mut ly: u32 = 0;
   while ly < cell_h {
-    let py: u32 = base_y + ly * scale_units + u_two;
+    let curr_y: u32 = ly * scale_units + u_two;
+    let mut py: u32 = 0;
+    if neg_y == 0 {
+      py = base_y + curr_y;
+    } else {
+      if curr_y >= neg_y {
+        py = curr_y - neg_y;
+      }
+    }
     let mut lx: u32 = 0;
     while lx < cell_w {
-      let px: u32 = base_x + lx * scale_units + u_two;
+      let curr_x: u32 = lx * scale_units + u_two;
+      let mut px: u32 = 0;
+      if neg_x == 0 {
+        px = base_x + curr_x;
+      } else {
+        if curr_x >= neg_x {
+          px = curr_x - neg_x;
+        }
+      }
 
       let mut val_r: u32 = 0;
       let mut val_g: u32 = 0;
@@ -3263,18 +3291,17 @@ export fn sdf_append_text_quads_styled(
         let cell_w_f64: f64 = f64_from_u32(cell_w);
         let cell_h_f64: f64 = f64_from_u32(cell_h);
 
-        let quad_w_f64: f64 = (cell_w_f64 * font_size) / f64_from_u32(64);
-        let quad_h_f64: f64 = (cell_h_f64 * font_size) / f64_from_u32(64);
+        let quad_w_f64: f64 = (cell_w_f64 * font_size) / f64_from_u32(40);
+        let quad_h_f64: f64 = (cell_h_f64 * font_size) / f64_from_u32(40);
 
-        let cy_u32: u32 = get_glyph_center_y_u32(idx);
-        let diff_y: f64 = f64_from_u32(180) - f64_from_u32(cy_u32);
-        let quad_center_x: f64 = cursor_x + (adv_f64 / f64_from_u32(2));
-        let quad_center_y: f64 = current_baseline_y - ((diff_y * font_size) / f64_from_u32(240));
-
-        let qx0: f64 = quad_center_x - (quad_w_f64 / f64_from_u32(2));
-        let qy0: f64 = quad_center_y - (quad_h_f64 / f64_from_u32(2));
-        let qx1: f64 = qx0 + quad_w_f64;
+        let cy_f64: f64 = f64_from_u32(get_glyph_center_y_u32(idx));
+        let span_y_f64: f64 = (cell_h_f64 / f64_from_u32(2)) * f64_from_u32(4);
+        let base_y_f64: f64 = cy_f64 - span_y_f64;
+        let qy0: f64 = current_baseline_y - ((f64_from_u32(180) - base_y_f64) * font_size) / f64_from_u32(160);
         let qy1: f64 = qy0 + quad_h_f64;
+
+        let qx0: f64 = cursor_x + (adv_f64 / f64_from_u32(2)) - (quad_w_f64 / f64_from_u32(2));
+        let qx1: f64 = qx0 + quad_w_f64;
 
         let u0: f64 = cell_x_f64 / atlas_size_f64;
         let v0: f64 = cell_y_f64 / atlas_size_f64;
@@ -3358,7 +3385,7 @@ export fn sdf_append_text_quads(
 export fn sdf_measure_text_mono(text: string, font_size: f64) -> f64 {
   let len: i32 = string_length(text);
   let base_size: f64 = f64_from_u32(24);
-  let fixed_adv: f64 = (f64_from_u32(11) * font_size) / base_size;
+  let fixed_adv: f64 = (f64_from_u32(14) * font_size) / base_size;
   let mut total: f64 = f64_from_u32(0);
   let mut i: i32 = 0;
   while i < len {
@@ -3405,7 +3432,7 @@ export fn sdf_append_text_quads_mono(
     }
   }
 
-  let fixed_adv_f64: f64 = (f64_from_u32(11) * font_size) / base_size;
+  let fixed_adv_f64: f64 = (f64_from_u32(14) * font_size) / base_size;
 
   let vbuf_base: u32 = sdf_get_vertex_buffer_ptr();
   let mut float_count: u32 = sdf_get_vertex_float_count();
@@ -3436,14 +3463,17 @@ export fn sdf_append_text_quads_mono(
       let cell_w_f64: f64 = f64_from_u32(cell_w);
       let cell_h_f64: f64 = f64_from_u32(cell_h);
 
-      let quad_w_f64: f64 = (cell_w_f64 * font_size) / f64_from_u32(64);
-      let quad_h_f64: f64 = (cell_h_f64 * font_size) / f64_from_u32(64);
+      let quad_w_f64: f64 = (cell_w_f64 * font_size) / f64_from_u32(40);
+      let quad_h_f64: f64 = (cell_h_f64 * font_size) / f64_from_u32(40);
+
+      let cy_f64: f64 = f64_from_u32(get_glyph_center_y_u32(idx));
+      let span_y_f64: f64 = (cell_h_f64 / f64_from_u32(2)) * f64_from_u32(4);
+      let base_y_f64: f64 = cy_f64 - span_y_f64;
+      let qy0: f64 = baseline_y - ((f64_from_u32(180) - base_y_f64) * font_size) / f64_from_u32(160);
+      let qy1: f64 = qy0 + quad_h_f64;
 
       let qx0: f64 = cursor_x + (fixed_adv_f64 / f64_from_u32(2)) - (quad_w_f64 / f64_from_u32(2));
-      let center_y_f64: f64 = baseline_y - ((f64_from_u32(52) * font_size) / f64_from_u32(64));
-      let qy0: f64 = center_y_f64 - (quad_h_f64 / f64_from_u32(2));
       let qx1: f64 = qx0 + quad_w_f64;
-      let qy1: f64 = qy0 + quad_h_f64;
 
       let u0: f64 = cell_x_f64 / atlas_size_f64;
       let v0: f64 = cell_y_f64 / atlas_size_f64;
@@ -3586,14 +3616,17 @@ export fn sdf_append_text_quads_perspective(
       let cell_w_f64: f64 = f64_from_u32(cell_w);
       let cell_h_f64: f64 = f64_from_u32(cell_h);
 
-      let quad_w_f64: f64 = (cell_w_f64 * font_size) / f64_from_u32(64);
-      let quad_h_f64: f64 = (cell_h_f64 * font_size) / f64_from_u32(64);
+      let quad_w_f64: f64 = (cell_w_f64 * font_size) / f64_from_u32(40);
+      let quad_h_f64: f64 = (cell_h_f64 * font_size) / f64_from_u32(40);
+
+      let cy_f64: f64 = f64_from_u32(get_glyph_center_y_u32(idx));
+      let span_y_f64: f64 = (cell_h_f64 / f64_from_u32(2)) * f64_from_u32(4);
+      let base_y_f64: f64 = cy_f64 - span_y_f64;
+      let raw_qy0: f64 = baseline_y - ((f64_from_u32(180) - base_y_f64) * font_size) / f64_from_u32(160);
+      let raw_qy1: f64 = raw_qy0 + quad_h_f64;
 
       let raw_qx0: f64 = cursor_x + (adv_f64 / f64_from_u32(2)) - (quad_w_f64 / f64_from_u32(2));
-      let center_y_f64: f64 = baseline_y - ((f64_from_u32(52) * font_size) / f64_from_u32(64));
-      let raw_qy0: f64 = center_y_f64 - (quad_h_f64 / f64_from_u32(2));
       let raw_qx1: f64 = raw_qx0 + quad_w_f64;
-      let raw_qy1: f64 = raw_qy0 + quad_h_f64;
 
       // Apply perspective / affine transform around origin
       let rx0: f64 = raw_qx0 - origin_x;

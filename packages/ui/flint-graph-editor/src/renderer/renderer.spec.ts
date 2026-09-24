@@ -920,7 +920,7 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     // Datatype monospace font measurements
     const monoText = 'CONST_42';
     const monoWidth = wasm.font_measure_text_mono(monoText, 12);
-    expect(monoWidth).toBeCloseTo((8 * 11 * 12) / 24, 1);
+    expect(monoWidth).toBeCloseTo((8 * 14 * 12) / 24, 1);
 
     // Monospace quads
     wasm.font_clear_text_vertices();
@@ -938,7 +938,7 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
 
     // Also verify standalone font loader
     const fontWasm = loadFontWasm();
-    expect(fontWasm.sdf_measure_text_mono('TEST', 12)).toBeCloseTo((4 * 11 * 12) / 24, 1);
+    expect(fontWasm.sdf_measure_text_mono('TEST', 12)).toBeCloseTo((4 * 14 * 12) / 24, 1);
   });
 
   it('sets and retrieves theme mode in Flint Wasm engine and handles theme worker messages', async () => {
