@@ -247,6 +247,27 @@ export interface FlintRenderWorkerWasmExports {
     isStrike: boolean,
     maxWidth: number,
   ) => number;
+  readonly font_set_font_weight: (weight: number) => void;
+  readonly font_get_font_weight: () => number;
+  readonly font_set_font_slant: (slant: number) => void;
+  readonly font_get_font_slant: () => number;
+  readonly font_append_text_quads_perspective: (
+    text: string,
+    originX: number,
+    baselineY: number,
+    fontSize: number,
+    r: number,
+    g: number,
+    b: number,
+    a: number,
+    align: number,
+    m00: number,
+    m01: number,
+    m10: number,
+    m11: number,
+    tiltX: number,
+    tiltY: number,
+  ) => number;
   readonly font_measure_text_mono: (text: string, fontSize: number) => number;
   readonly font_append_text_quads_mono: (
     text: string,

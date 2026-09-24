@@ -563,6 +563,58 @@ export fn font_append_text_quads_mono(
   return font.sdf_append_text_quads_mono(text, origin_x, baseline_y, font_size, r, g, b, a, align);
 }
 
+export fn font_set_font_weight(weight: u32) -> unit {
+  font.sdf_set_font_weight(weight);
+}
+
+export fn font_get_font_weight() -> u32 {
+  return font.sdf_get_font_weight();
+}
+
+export fn font_set_font_slant(slant: f64) -> unit {
+  font.sdf_set_font_slant(slant);
+}
+
+export fn font_get_font_slant() -> f64 {
+  return font.sdf_get_font_slant();
+}
+
+export fn font_append_text_quads_perspective(
+  text: string,
+  origin_x: f64,
+  baseline_y: f64,
+  font_size: f64,
+  r: f64,
+  g: f64,
+  b: f64,
+  a: f64,
+  align: u32,
+  m00: f64,
+  m01: f64,
+  m10: f64,
+  m11: f64,
+  tilt_x: f64,
+  tilt_y: f64
+) -> u32 {
+  return font.sdf_append_text_quads_perspective(
+    text,
+    origin_x,
+    baseline_y,
+    font_size,
+    r,
+    g,
+    b,
+    a,
+    align,
+    m00,
+    m01,
+    m10,
+    m11,
+    tilt_x,
+    tilt_y
+  );
+}
+
 export fn font_char_code_to_idx(code: i32) -> u32 {
   return font.char_code_to_idx(code);
 }

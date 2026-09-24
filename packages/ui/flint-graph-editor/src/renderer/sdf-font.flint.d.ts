@@ -50,6 +50,27 @@ export interface FlintSdfFontWasmExports {
     isStrike: boolean,
     maxWidth: number,
   ) => number;
+  readonly sdf_set_font_weight: (weight: number) => void;
+  readonly sdf_get_font_weight: () => number;
+  readonly sdf_set_font_slant: (slant: number) => void;
+  readonly sdf_get_font_slant: () => number;
+  readonly sdf_append_text_quads_perspective: (
+    text: string,
+    originX: number,
+    baselineY: number,
+    fontSize: number,
+    r: number,
+    g: number,
+    b: number,
+    a: number,
+    align: number,
+    m00: number,
+    m01: number,
+    m10: number,
+    m11: number,
+    tiltX: number,
+    tiltY: number,
+  ) => number;
   readonly get_glyph_cell_w_u32?: (idx: number) => number;
   readonly get_glyph_cell_h_u32?: (idx: number) => number;
   readonly get_glyph_min_x_u32?: (idx: number) => number;

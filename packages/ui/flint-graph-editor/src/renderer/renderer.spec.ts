@@ -1075,6 +1075,37 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     const f64View = new Float64Array(wasm.memory.buffer, vbufPtr, emojiQuads * 48);
     // ⚡ is at index 0, vertex alpha is stored at offset 7, should be negative (-1.0)
     expect(f64View[7]).toBeLessThan(0);
+
+    // 8. Variable fonts & font hinting weighting
+    wasm.font_set_font_weight(2);
+    expect(wasm.font_get_font_weight()).toBe(2);
+    wasm.font_set_font_slant(0.2);
+    expect(wasm.font_get_font_slant()).toBeCloseTo(0.2, 2);
+    wasm.font_set_font_weight(0);
+    wasm.font_set_font_slant(0);
+
+    // 9. Perspective transform quad layout
+    wasm.font_clear_text_vertices();
+    const perspectiveQuads = wasm.font_append_text_quads_perspective(
+      'Perspective Title',
+      100,
+      100,
+      14,
+      1,
+      1,
+      1,
+      1,
+      0,
+      1,
+      0.1,
+      0,
+      1,
+      0.05,
+      0,
+    );
+    expect(perspectiveQuads).toBe(16); // 16 non-space glyphs
+    const perspFloats = new Float64Array(wasm.memory.buffer, wasm.font_get_vertex_buffer_ptr(), perspectiveQuads * 48);
+    expect(perspFloats[0]).toBeGreaterThan(0);
   });
 
   it('manages edge waypoints and group properties in editor store', () => {
