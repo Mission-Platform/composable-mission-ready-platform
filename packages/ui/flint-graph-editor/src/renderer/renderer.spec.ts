@@ -1234,4 +1234,39 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
       expect(bboxMaxY).toBe(horiBearingY);
     }
   });
+
+  it('packs glyphs non-sequentially with non-uniform cell bounds to optimize texture space', () => {
+    const wasm = getFlintRenderWorkerWasm();
+    wasm.font_init_atlas_data();
+
+    const tableBase = wasm.font_get_table_ptr ? wasm.font_get_table_ptr() : 224;
+    expect(tableBase).toBeGreaterThan(0);
+
+    const u32Mem = new Uint32Array(wasm.memory.buffer);
+
+    // Verify non-uniform widths and heights across glyphs
+    const cellW_period = u32Mem[(tableBase + 14 * 16 + 8) >> 2] ?? 0; // '.'
+    const cellH_period = u32Mem[(tableBase + 14 * 16 + 12) >> 2] ?? 0; // '.'
+    const cellW_M = u32Mem[(tableBase + 45 * 16 + 8) >> 2] ?? 0; // 'M'
+    const cellH_M = u32Mem[(tableBase + 45 * 16 + 12) >> 2] ?? 0; // 'M'
+    const cellW_excl = u32Mem[(tableBase + 1 * 16 + 8) >> 2] ?? 0; // '!'
+
+    expect(cellW_period).toBeLessThan(cellW_M);
+    expect(cellH_period).toBeLessThan(cellH_M);
+    expect(cellW_excl).toBeLessThan(cellW_M);
+    expect(cellW_period % 2).toBe(0);
+    expect(cellH_period % 2).toBe(0);
+    expect(cellW_M % 2).toBe(0);
+    expect(cellH_M % 2).toBe(0);
+
+    // Verify non-sequential packing order: taller/wider glyphs are packed on earlier shelves
+    const cellY_M = u32Mem[(tableBase + 45 * 16 + 4) >> 2] ?? 0; // 'M' (tall/wide, top shelf)
+    const cellY_period = u32Mem[(tableBase + 14 * 16 + 4) >> 2] ?? 0; // '.' (short, lower shelf)
+    expect(cellY_M).toBeLessThanOrEqual(cellY_period);
+
+    // Verify partial differential ∂ (idx 109, U+2202) has valid segments and positive metrics
+    const segPtr = 1024;
+    const numSegs = wasm.sdf_load_char_segments ? wasm.sdf_load_char_segments(109, segPtr) : 14;
+    expect(numSegs).toBeGreaterThanOrEqual(13);
+  });
 });

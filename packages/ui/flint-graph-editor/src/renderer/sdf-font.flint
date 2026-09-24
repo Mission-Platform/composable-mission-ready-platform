@@ -279,12 +279,42 @@ export fn is_narrow_glyph_idx(idx: u32) -> bool {
 }
 
 export fn get_glyph_cell_w_u32(idx: u32) -> u32 {
+  if idx == 0 { return 8; }
+  let adv: u32 = get_glyph_advance_u32(idx);
+  let w: u32 = get_glyph_width_u32(idx);
+  let u_eight: u32 = 8;
+  let u_three: u32 = 3;
+  let u_two: u32 = 2;
+  let u_one: u32 = 1;
+  let u_16: u32 = 16;
   let u_64: u32 = 64;
-  return u_64;
+  let mut cw: u32 = ((adv * u_eight) / u_three) + u_eight;
+  if w > adv {
+    cw = ((w * u_eight) / u_three) + u_eight;
+  }
+  let rem: u32 = cw % u_two;
+  if rem != 0 {
+    cw = cw + u_one;
+  }
+  if cw < u_16 { cw = u_16; }
+  if cw > u_64 { cw = u_64; }
+  return cw;
 }
 
 export fn get_glyph_cell_h_u32(idx: u32) -> u32 {
+  if idx == 0 { return 8; }
+  let h: u32 = get_glyph_height_u32(idx);
+  let u_two: u32 = 2;
+  let u_one: u32 = 1;
+  let u_24: u32 = 24;
+  let u_44: u32 = 44;
   let u_64: u32 = 64;
+  if h <= 6 {
+    return u_24;
+  }
+  if h <= 12 {
+    return u_44;
+  }
   return u_64;
 }
 
@@ -1215,12 +1245,13 @@ export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
     write_seg(seg_ptr, 5, 73, 121, 96, 112);
     write_seg(seg_ptr, 6, 96, 112, 119, 121);
     write_seg(seg_ptr, 7, 119, 121, 128, 144);
-    write_seg(seg_ptr, 8, 104, 120, 81, 110);
-    write_seg(seg_ptr, 9, 81, 110, 72, 86);
-    write_seg(seg_ptr, 10, 72, 86, 84, 63);
-    write_seg(seg_ptr, 11, 84, 63, 108, 56);
-    write_seg(seg_ptr, 12, 108, 56, 130, 69);
-    return 13;
+    write_seg(seg_ptr, 8, 128, 144, 128, 96);
+    write_seg(seg_ptr, 9, 128, 96, 116, 68);
+    write_seg(seg_ptr, 10, 116, 68, 96, 56);
+    write_seg(seg_ptr, 11, 96, 56, 74, 66);
+    write_seg(seg_ptr, 12, 74, 66, 66, 88);
+    write_seg(seg_ptr, 13, 66, 88, 76, 104);
+    return 14;
   }
   if idx == 110 {
     write_seg(seg_ptr, 0, 64, 56, 160, 56);
@@ -1739,15 +1770,29 @@ export fn sdf_render_char_cell(
   let total_bias: u32 = stroke_bias + weight_bias;
 
   let u_128: u32 = 128;
-  let mut radius: u32 = (u_256 * u_two) / cell_h;
-  if radius < u_eight { radius = u_eight; }
+  let mut radius: u32 = u_eight;
+
+  let scale_units: u32 = 4;
+  let half_w: u32 = cell_w / u_two;
+  let half_h: u32 = cell_h / u_two;
+  let span_x: u32 = half_w * scale_units;
+  let span_y: u32 = half_h * scale_units;
 
   let mut ly: u32 = 0;
   while ly < cell_h {
-    let py: u32 = (ly * u_256 + u_128) / cell_h;
+    let mut py: u32 = 0;
+    let py_offset: u32 = ly * scale_units + u_two;
+    if py_offset + span_y >= u_128 {
+      py = (u_128 + py_offset) - span_y;
+    }
+
     let mut lx: u32 = 0;
     while lx < cell_w {
-      let px: u32 = (lx * u_256 + u_128) / cell_w;
+      let mut px: u32 = 0;
+      let px_offset: u32 = lx * scale_units + u_two;
+      if px_offset + span_x >= u_128 {
+        px = (u_128 + px_offset) - span_x;
+      }
 
       let mut val_r: u32 = 0;
       let mut val_g: u32 = 0;
@@ -1854,10 +1899,11 @@ export fn sdf_render_char_cell(
   }
 }
 
-fn compute_best_atlas_dim(total_glyphs: u32) -> u32 {
+fn compute_best_atlas_dim(total_glyphs: u32, order_ptr: u32) -> u32 {
   let u_zero: u32 = 0;
   let u_one: u32 = 1;
   let u_two: u32 = 2;
+  let u_four: u32 = 4;
   let mut candidate: u32 = 256;
   while candidate <= 2048 {
     let mut shelf_x: u32 = u_zero;
@@ -1865,10 +1911,11 @@ fn compute_best_atlas_dim(total_glyphs: u32) -> u32 {
     let mut shelf_h: u32 = u_zero;
     let mut fits: bool = true;
 
-    let mut i: u32 = u_zero;
-    while i < total_glyphs {
-      let cell_w: u32 = get_glyph_cell_w_u32(i);
-      let cell_h: u32 = get_glyph_cell_h_u32(i);
+    let mut k: u32 = u_zero;
+    while k < total_glyphs {
+      let idx: u32 = memory_load_u32(order_ptr + k * u_four);
+      let cell_w: u32 = get_glyph_cell_w_u32(idx);
+      let cell_h: u32 = get_glyph_cell_h_u32(idx);
       if cell_w > candidate || cell_h > candidate {
         fits = false;
       }
@@ -1881,7 +1928,7 @@ fn compute_best_atlas_dim(total_glyphs: u32) -> u32 {
         shelf_h = cell_h;
       }
       shelf_x = shelf_x + cell_w;
-      i = i + u_one;
+      k = k + u_one;
     }
     if shelf_y + shelf_h > candidate {
       fits = false;
@@ -1895,6 +1942,7 @@ fn compute_best_atlas_dim(total_glyphs: u32) -> u32 {
 }
 
 export fn sdf_init_atlas_data() -> u32 {
+  let u_zero: u32 = 0;
   let u_one: u32 = 1;
   let u_four: u32 = 4;
   let u_eight: u32 = 8;
@@ -1906,7 +1954,62 @@ export fn sdf_init_atlas_data() -> u32 {
   }
 
   let total_glyphs: u32 = 220;
-  let atlas_dim: u32 = compute_best_atlas_dim(total_glyphs);
+
+  // Allocate order buffer for sorted packing
+  let order_ptr: u32 = memory_alloc(total_glyphs * u_four + u_16);
+  let mut i: u32 = u_zero;
+  while i < total_glyphs {
+    memory_store_u32(order_ptr + i * u_four, i);
+    i = i + u_one;
+  }
+
+  // Selection sort glyphs by cell_h descending, then cell_w descending, then idx ascending
+  i = u_zero;
+  while i < total_glyphs {
+    let mut best_j: u32 = i;
+    let mut best_idx: u32 = memory_load_u32(order_ptr + best_j * u_four);
+    let mut best_h: u32 = get_glyph_cell_h_u32(best_idx);
+    let mut best_w: u32 = get_glyph_cell_w_u32(best_idx);
+
+    let mut j: u32 = i + u_one;
+    while j < total_glyphs {
+      let cand_idx: u32 = memory_load_u32(order_ptr + j * u_four);
+      let cand_h: u32 = get_glyph_cell_h_u32(cand_idx);
+      let cand_w: u32 = get_glyph_cell_w_u32(cand_idx);
+
+      let mut is_better: bool = false;
+      if cand_h > best_h {
+        is_better = true;
+      } else {
+        if cand_h == best_h {
+          if cand_w > best_w {
+            is_better = true;
+          } else {
+            if cand_w == best_w && cand_idx < best_idx {
+              is_better = true;
+            }
+          }
+        }
+      }
+
+      if is_better {
+        best_j = j;
+        best_idx = cand_idx;
+        best_h = cand_h;
+        best_w = cand_w;
+      }
+      j = j + u_one;
+    }
+
+    if best_j != i {
+      let temp: u32 = memory_load_u32(order_ptr + i * u_four);
+      memory_store_u32(order_ptr + i * u_four, memory_load_u32(order_ptr + best_j * u_four));
+      memory_store_u32(order_ptr + best_j * u_four, temp);
+    }
+    i = i + u_one;
+  }
+
+  let atlas_dim: u32 = compute_best_atlas_dim(total_glyphs, order_ptr);
   memory_store_u32(192, atlas_dim);
 
   // Allocate table ptr for glyph rects (220 glyphs * 16 bytes = 3520 bytes + padding)
@@ -1942,14 +2045,14 @@ export fn sdf_init_atlas_data() -> u32 {
   // Scratch memory for up to 32 segments * 16 bytes = 512 bytes
   let temp_seg_ptr: u32 = memory_alloc(512);
 
-  // 2D Shelf Rectangle Packing Algorithm across optimal base-2 sprite sheet
-  let u_zero: u32 = 0;
+  // 2D Shelf Rectangle Packing Algorithm across sorted non-sequential glyphs
   let mut shelf_x: u32 = u_zero;
   let mut shelf_y: u32 = u_zero;
   let mut shelf_h: u32 = u_zero;
 
-  let mut idx: u32 = u_zero;
-  while idx < total_glyphs {
+  let mut k: u32 = u_zero;
+  while k < total_glyphs {
+    let idx: u32 = memory_load_u32(order_ptr + k * u_four);
     let cell_w: u32 = get_glyph_cell_w_u32(idx);
     let cell_h: u32 = get_glyph_cell_h_u32(idx);
 
@@ -1967,7 +2070,7 @@ export fn sdf_init_atlas_data() -> u32 {
     }
     shelf_x = shelf_x + cell_w;
 
-    // Store packed rect table at table_ptr + idx * 16
+    // Store packed rect table at table_ptr + idx * 16 (indexed by original idx)
     let table_entry: u32 = table_ptr + idx * u_16;
     memory_store_u32(table_entry, cell_x);
     memory_store_u32(table_entry + u_four, cell_y);
@@ -1980,7 +2083,7 @@ export fn sdf_init_atlas_data() -> u32 {
 
     // Rasterize character cell MSDF into atlas
     sdf_render_char_cell(idx, atlas_ptr, atlas_dim, cell_x, cell_y, cell_w, cell_h, temp_seg_ptr);
-    idx = idx + u_one;
+    k = k + u_one;
   }
 
   return atlas_ptr;
@@ -2784,13 +2887,14 @@ export fn sdf_append_text_quads_styled(
         let cell_w_f64: f64 = f64_from_u32(cell_w);
         let cell_h_f64: f64 = f64_from_u32(cell_h);
 
-        let quad_size_f64: f64 = (cell_h_f64 * font_size) / base_size;
-        let baseline_offset_f64: f64 = (quad_size_f64 * f64_from_u32(180)) / f64_from_u32(256);
+        let quad_w_f64: f64 = (cell_w_f64 * font_size) / f64_from_u32(64);
+        let quad_h_f64: f64 = (cell_h_f64 * font_size) / f64_from_u32(64);
 
-        let qx0: f64 = cursor_x + (adv_f64 / f64_from_u32(2)) - (quad_size_f64 / f64_from_u32(2));
-        let qy0: f64 = current_baseline_y - baseline_offset_f64;
-        let qx1: f64 = qx0 + quad_size_f64;
-        let qy1: f64 = qy0 + quad_size_f64;
+        let qx0: f64 = cursor_x + (adv_f64 / f64_from_u32(2)) - (quad_w_f64 / f64_from_u32(2));
+        let center_y_f64: f64 = current_baseline_y - ((f64_from_u32(52) * font_size) / f64_from_u32(64));
+        let qy0: f64 = center_y_f64 - (quad_h_f64 / f64_from_u32(2));
+        let qx1: f64 = qx0 + quad_w_f64;
+        let qy1: f64 = qy0 + quad_h_f64;
 
         let u0: f64 = cell_x_f64 / atlas_size_f64;
         let v0: f64 = cell_y_f64 / atlas_size_f64;
@@ -2952,13 +3056,14 @@ export fn sdf_append_text_quads_mono(
       let cell_w_f64: f64 = f64_from_u32(cell_w);
       let cell_h_f64: f64 = f64_from_u32(cell_h);
 
-      let quad_size_f64: f64 = (cell_h_f64 * font_size) / base_size;
-      let baseline_offset_f64: f64 = (quad_size_f64 * f64_from_u32(180)) / f64_from_u32(256);
+      let quad_w_f64: f64 = (cell_w_f64 * font_size) / f64_from_u32(64);
+      let quad_h_f64: f64 = (cell_h_f64 * font_size) / f64_from_u32(64);
 
-      let qx0: f64 = cursor_x + (fixed_adv_f64 / f64_from_u32(2)) - (quad_size_f64 / f64_from_u32(2));
-      let qy0: f64 = baseline_y - baseline_offset_f64;
-      let qx1: f64 = qx0 + quad_size_f64;
-      let qy1: f64 = qy0 + quad_size_f64;
+      let qx0: f64 = cursor_x + (fixed_adv_f64 / f64_from_u32(2)) - (quad_w_f64 / f64_from_u32(2));
+      let center_y_f64: f64 = baseline_y - ((f64_from_u32(52) * font_size) / f64_from_u32(64));
+      let qy0: f64 = center_y_f64 - (quad_h_f64 / f64_from_u32(2));
+      let qx1: f64 = qx0 + quad_w_f64;
+      let qy1: f64 = qy0 + quad_h_f64;
 
       let u0: f64 = cell_x_f64 / atlas_size_f64;
       let v0: f64 = cell_y_f64 / atlas_size_f64;
@@ -3101,13 +3206,14 @@ export fn sdf_append_text_quads_perspective(
       let cell_w_f64: f64 = f64_from_u32(cell_w);
       let cell_h_f64: f64 = f64_from_u32(cell_h);
 
-      let quad_size_f64: f64 = (cell_h_f64 * font_size) / base_size;
-      let baseline_offset_f64: f64 = (quad_size_f64 * f64_from_u32(180)) / f64_from_u32(256);
+      let quad_w_f64: f64 = (cell_w_f64 * font_size) / f64_from_u32(64);
+      let quad_h_f64: f64 = (cell_h_f64 * font_size) / f64_from_u32(64);
 
-      let raw_qx0: f64 = cursor_x + (adv_f64 / f64_from_u32(2)) - (quad_size_f64 / f64_from_u32(2));
-      let raw_qy0: f64 = baseline_y - baseline_offset_f64;
-      let raw_qx1: f64 = raw_qx0 + quad_size_f64;
-      let raw_qy1: f64 = raw_qy0 + quad_size_f64;
+      let raw_qx0: f64 = cursor_x + (adv_f64 / f64_from_u32(2)) - (quad_w_f64 / f64_from_u32(2));
+      let center_y_f64: f64 = baseline_y - ((f64_from_u32(52) * font_size) / f64_from_u32(64));
+      let raw_qy0: f64 = center_y_f64 - (quad_h_f64 / f64_from_u32(2));
+      let raw_qx1: f64 = raw_qx0 + quad_w_f64;
+      let raw_qy1: f64 = raw_qy0 + quad_h_f64;
 
       // Apply perspective / affine transform around origin
       let rx0: f64 = raw_qx0 - origin_x;
