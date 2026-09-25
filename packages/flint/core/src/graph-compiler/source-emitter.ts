@@ -2,8 +2,10 @@ import { flintTypeNameToString, type FlintPrimitiveType, type FlintTypeName } fr
 
 import {
   flattenGraph,
+  type FlintGraphEdge,
   type FlintGraphNode,
   type FlintGraphPort,
+  type FlintGraphValidationResult,
   type FlintNodeGraph,
   type FlintNodeSourceMap,
 } from './types.js';
@@ -37,9 +39,9 @@ function spanKey(span: FlintSourceSpan): string {
 }
 
 /**
- * Formats a primitive or default port value as a valid Flint literal code string.
+ * Formats a primitive value as a valid Flint literal code string.
  */
-function formatLiteral(value: unknown, type: FlintTypeName): string {
+function formatPrimitiveLiteral(value: unknown): string | undefined {
   if (typeof value === 'boolean') {
     return value ? 'true' : 'false';
   }
@@ -48,6 +50,17 @@ function formatLiteral(value: unknown, type: FlintTypeName): string {
   }
   if (typeof value === 'string') {
     return JSON.stringify(value);
+  }
+  return undefined;
+}
+
+/**
+ * Formats a primitive or default port value as a valid Flint literal code string.
+ */
+function formatLiteral(value: unknown, type: FlintTypeName): string {
+  const primitiveFormatted = formatPrimitiveLiteral(value);
+  if (primitiveFormatted !== undefined) {
+    return primitiveFormatted;
   }
 
   const primitiveType: FlintPrimitiveType = type.reference === undefined ? type.name : 'unit';
@@ -70,44 +83,44 @@ const BINARY_ARITHMETIC_SYMBOLS: Readonly<Record<string, string>> = {
   modulo: '%',
 };
 
+const ADVANCED_ARITHMETIC_EMITTERS: Readonly<
+  Record<string, (node: FlintGraphNode, resolveSource: SourceResolver) => string>
+> = {
+  negate: (node, resolveSource) => `-${resolveSource(node, 'a')}`,
+  min: (node, resolveSource) => {
+    const a = resolveSource(node, 'a');
+    const b = resolveSource(node, 'b');
+    return `match ${a} < ${b} { true => ${a}, false => ${b} }`;
+  },
+  max: (node, resolveSource) => {
+    const a = resolveSource(node, 'a');
+    const b = resolveSource(node, 'b');
+    return `match ${a} > ${b} { true => ${a}, false => ${b} }`;
+  },
+  abs: (node, resolveSource) => {
+    const a = resolveSource(node, 'a');
+    return `match ${a} < 0 { true => -${a}, false => ${a} }`;
+  },
+  div_rem: (node, resolveSource) => {
+    const structName = `Record_${sanitizeIdentifier(node.id)}`;
+    const a = resolveSource(node, 'a');
+    const b = resolveSource(node, 'b');
+    return `${structName} { quotient: ${a} / ${b}, remainder: ${a} % ${b} }`;
+  },
+  min_max: (node, resolveSource) => {
+    const structName = `Record_${sanitizeIdentifier(node.id)}`;
+    const a = resolveSource(node, 'a');
+    const b = resolveSource(node, 'b');
+    return `${structName} { min: match ${a} < ${b} { true => ${a}, false => ${b} }, max: match ${a} > ${b} { true => ${a}, false => ${b} } }`;
+  },
+};
+
 /**
  * Emits advanced multi-branch arithmetic or composite struct expressions into Flint source code.
  */
 function emitAdvancedArithmeticExpression(node: FlintGraphNode, resolveSource: SourceResolver): string | undefined {
-  switch (node.operation) {
-    case 'negate': {
-      return `-${resolveSource(node, 'a')}`;
-    }
-    case 'min': {
-      const leftValue = resolveSource(node, 'a');
-      const rightValue = resolveSource(node, 'b');
-      return `match ${leftValue} < ${rightValue} { true => ${leftValue}, false => ${rightValue} }`;
-    }
-    case 'max': {
-      const leftValue = resolveSource(node, 'a');
-      const rightValue = resolveSource(node, 'b');
-      return `match ${leftValue} > ${rightValue} { true => ${leftValue}, false => ${rightValue} }`;
-    }
-    case 'abs': {
-      const operandValue = resolveSource(node, 'a');
-      return `match ${operandValue} < 0 { true => -${operandValue}, false => ${operandValue} }`;
-    }
-    case 'div_rem': {
-      const structName = `Record_${sanitizeIdentifier(node.id)}`;
-      const dividendValue = resolveSource(node, 'a');
-      const divisorValue = resolveSource(node, 'b');
-      return `${structName} { quotient: ${dividendValue} / ${divisorValue}, remainder: ${dividendValue} % ${divisorValue} }`;
-    }
-    case 'min_max': {
-      const structName = `Record_${sanitizeIdentifier(node.id)}`;
-      const firstValue = resolveSource(node, 'a');
-      const secondValue = resolveSource(node, 'b');
-      return `${structName} { min: match ${firstValue} < ${secondValue} { true => ${firstValue}, false => ${secondValue} }, max: match ${firstValue} > ${secondValue} { true => ${firstValue}, false => ${secondValue} } }`;
-    }
-    default: {
-      return undefined;
-    }
-  }
+  const emitter = ADVANCED_ARITHMETIC_EMITTERS[node.operation];
+  return emitter ? emitter(node, resolveSource) : undefined;
 }
 
 /**
@@ -221,25 +234,47 @@ function emitControlOrTextExpression(node: FlintGraphNode, resolveSource: Source
   }
 }
 
+const KNOWN_CAPABILITIES_SOURCE: Readonly<Record<string, string>> = {
+  clock_now: 'clock.now',
+  random_f64: 'random.f64',
+  log_debug: 'env.log',
+};
+
+/**
+ * Resolves the capability identifier required by a graph node for source emission.
+ */
+function resolveNodeCapabilitySource(node: FlintGraphNode): string | undefined {
+  if (node.category !== 'capability' && node.kind !== 'capability_call') {
+    return undefined;
+  }
+  return KNOWN_CAPABILITIES_SOURCE[node.operation] ?? String(node.properties?.capability ?? node.operation);
+}
+
 /**
  * Collects host capabilities required by capability and capability-call nodes.
  */
 function collectRequiredCapabilities(nodes: readonly FlintGraphNode[], initial: readonly string[]): Set<string> {
   const required = new Set<string>(initial);
   for (const node of nodes) {
-    if (node.category === 'capability' || node.kind === 'capability_call') {
-      const capabilityName =
-        node.operation === 'clock_now'
-          ? 'clock.now'
-          : node.operation === 'random_f64'
-            ? 'random.f64'
-            : node.operation === 'log_debug'
-              ? 'env.log'
-              : String(node.properties?.capability ?? node.operation);
-      required.add(capabilityName);
+    const cap = resolveNodeCapabilitySource(node);
+    if (cap !== undefined) {
+      required.add(cap);
     }
   }
   return required;
+}
+
+const CAPABILITY_SIGNATURES: Readonly<Record<string, string>> = {
+  'clock.now': '() -> i64;',
+  'random.f64': '() -> f64;',
+  'env.log': '(message: string) -> unit;',
+};
+
+/**
+ * Returns the capability type signature string.
+ */
+function getCapabilitySignature(capability: string): string {
+  return CAPABILITY_SIGNATURES[capability] ?? '() -> unit;';
 }
 
 /**
@@ -253,26 +288,7 @@ function emitCapabilityImports(
   for (const capability of requiredCapabilities) {
     const alias = `host_${sanitizeIdentifier(capability)}`;
     capabilityAliases.set(capability, alias);
-
-    let signature = '() -> unit;';
-    switch (capability) {
-      case 'clock.now': {
-        signature = '() -> i64;';
-        break;
-      }
-      case 'random.f64': {
-        signature = '() -> f64;';
-        break;
-      }
-      case 'env.log': {
-        signature = '(message: string) -> unit;';
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-
+    const signature = getCapabilitySignature(capability);
     appendLine(`import capability "${capability}" as ${alias}${signature}`);
   }
 
@@ -304,14 +320,23 @@ function emitRecordStructs(nodes: readonly FlintGraphNode[], appendLine: (text: 
 function emitCustomCodeDeclarations(nodes: readonly FlintGraphNode[], appendLine: (text: string) => void): void {
   const emittedCustomCode = new Set<string>();
   for (const node of nodes) {
-    if ((node.kind === 'custom' || node.operation === 'flint_code') && node.properties?.code) {
-      const codeString = String(node.properties.code).trim();
-      if (!emittedCustomCode.has(codeString)) {
-        emittedCustomCode.add(codeString);
-        appendLine(`${codeString}\n`);
-      }
+    const isCustom = node.kind === 'custom' || node.operation === 'flint_code';
+    if (!isCustom || !node.properties?.code) {
+      continue;
+    }
+    const codeString = String(node.properties.code).trim();
+    if (!emittedCustomCode.has(codeString)) {
+      emittedCustomCode.add(codeString);
+      appendLine(`${codeString}\n`);
     }
   }
+}
+
+/**
+ * Determines whether a graph node represents a function input parameter.
+ */
+function isInputNode(node: FlintGraphNode | undefined): node is FlintGraphNode {
+  return node !== undefined && (node.kind === 'input' || node.operation === 'input');
 }
 
 /**
@@ -325,7 +350,7 @@ function collectInputParameters(
   const functionParameters: { name: string; type: string }[] = [];
   for (const nodeId of sortedNodeIds) {
     const node = nodeMap.get(nodeId);
-    if (node === undefined || (node.kind !== 'input' && node.operation !== 'input')) {
+    if (!isInputNode(node)) {
       continue;
     }
     const outPort = node.outputs[0];
@@ -338,6 +363,40 @@ function collectInputParameters(
     }
   }
   return functionParameters;
+}
+
+/**
+ * Registers source span for a single parameter within the function header record.
+ */
+function recordSingleParameterSpan(
+  node: FlintGraphNode,
+  functionHeaderRecord: { start: number; line: number },
+  currentOffset: number,
+  nodeToSpan: Map<string, FlintSourceSpan>,
+  spanToNode: Map<string, string>,
+): number {
+  const outPort = node.outputs[0];
+  const parameterName = sanitizeIdentifier(String(node.properties?.name ?? `param_${node.id}`));
+  const parameterType = outPort ? flintTypeNameToString(outPort.type) : 'i32';
+  const parameterText = `${parameterName}: ${parameterType}`;
+
+  const spanStart = functionHeaderRecord.start + currentOffset;
+  const spanEnd = spanStart + parameterText.length;
+  const spanColumn = currentOffset + 1;
+  const spanEndColumn = spanColumn + parameterText.length;
+
+  const span: FlintSourceSpan = {
+    start: spanStart,
+    end: spanEnd,
+    line: functionHeaderRecord.line,
+    column: spanColumn,
+    endLine: functionHeaderRecord.line,
+    endColumn: spanEndColumn,
+  };
+  nodeToSpan.set(node.id, span);
+  spanToNode.set(spanKey(span), node.id);
+
+  return parameterText.length + 2;
 }
 
 /**
@@ -354,31 +413,16 @@ function recordParameterSpans(
   let currentParameterOffset = prefixLength;
   for (const nodeId of sortedNodeIds) {
     const node = nodeMap.get(nodeId);
-    if (node === undefined || (node.kind !== 'input' && node.operation !== 'input')) {
+    if (!isInputNode(node)) {
       continue;
     }
-    const outPort = node.outputs[0];
-    const parameterName = sanitizeIdentifier(String(node.properties?.name ?? `param_${node.id}`));
-    const parameterType = outPort ? flintTypeNameToString(outPort.type) : 'i32';
-    const parameterText = `${parameterName}: ${parameterType}`;
-
-    const spanStart = functionHeaderRecord.start + currentParameterOffset;
-    const spanEnd = spanStart + parameterText.length;
-    const spanColumn = currentParameterOffset + 1;
-    const spanEndColumn = spanColumn + parameterText.length;
-
-    const span: FlintSourceSpan = {
-      start: spanStart,
-      end: spanEnd,
-      line: functionHeaderRecord.line,
-      column: spanColumn,
-      endLine: functionHeaderRecord.line,
-      endColumn: spanEndColumn,
-    };
-    nodeToSpan.set(node.id, span);
-    spanToNode.set(spanKey(span), node.id);
-
-    currentParameterOffset += parameterText.length + 2;
+    currentParameterOffset += recordSingleParameterSpan(
+      node,
+      functionHeaderRecord,
+      currentParameterOffset,
+      nodeToSpan,
+      spanToNode,
+    );
   }
 }
 
@@ -426,6 +470,18 @@ function resolveCapabilityOrCustomExpression(
 }
 
 /**
+ * Resolves standard primitive or math/collection/control expression strings for a node.
+ */
+function resolveStandardNodeSource(node: FlintGraphNode, resolveInputSource: SourceResolver): string | undefined {
+  return (
+    emitArithmeticExpression(node, resolveInputSource) ??
+    emitComparisonExpression(node, resolveInputSource) ??
+    emitCollectionExpression(node, resolveInputSource) ??
+    emitControlOrTextExpression(node, resolveInputSource)
+  );
+}
+
+/**
  * Resolves the expression string for a computation node.
  */
 function resolveNodeSourceExpression(
@@ -444,13 +500,11 @@ function resolveNodeSourceExpression(
     return formatLiteral(value, outType);
   }
 
-  return (
-    emitArithmeticExpression(node, resolveInputSource) ??
-    emitComparisonExpression(node, resolveInputSource) ??
-    emitCollectionExpression(node, resolveInputSource) ??
-    emitControlOrTextExpression(node, resolveInputSource) ??
-    resolveCapabilityOrCustomExpression(node, capabilityAliases, resolveInputSource)
-  );
+  const standardSource = resolveStandardNodeSource(node, resolveInputSource);
+  if (standardSource !== undefined) {
+    return standardSource;
+  }
+  return resolveCapabilityOrCustomExpression(node, capabilityAliases, resolveInputSource);
 }
 
 /**
@@ -546,6 +600,16 @@ function emitSingleIntermediateNode(
 }
 
 /**
+ * Determines whether a node is an intermediate computation node for source emission.
+ */
+function isIntermediateSourceNode(node: FlintGraphNode | undefined): node is FlintGraphNode {
+  if (node === undefined) {
+    return false;
+  }
+  return node.kind !== 'input' && node.operation !== 'input' && node.kind !== 'output' && node.operation !== 'output';
+}
+
+/**
  * Emits all intermediate computation node let statements.
  */
 function emitIntermediateNodesSource(
@@ -560,13 +624,7 @@ function emitIntermediateNodesSource(
 ): void {
   for (const nodeId of sortedNodeIds) {
     const node = nodeMap.get(nodeId);
-    if (
-      node === undefined ||
-      node.kind === 'input' ||
-      node.operation === 'input' ||
-      node.kind === 'output' ||
-      node.operation === 'output'
-    ) {
+    if (!isIntermediateSourceNode(node)) {
       continue;
     }
     emitSingleIntermediateNode(
@@ -613,11 +671,9 @@ function emitReturnStatementSource(
 }
 
 /**
- * Emits clean, formatted Flint source code from a validated graph with exact bidirectional source maps.
+ * Asserts graph validity and returns the topological node evaluation order.
  */
-export function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmissionResult {
-  const graph = flattenGraph(inputGraph);
-  const validation = validateGraph(graph);
+function assertValidSourceGraph(validation: FlintGraphValidationResult): readonly string[] {
   if (!validation.valid || validation.sortedNodeIds === undefined) {
     const errorMessages = validation.issues
       .filter((issue) => issue.severity === 'error')
@@ -625,19 +681,38 @@ export function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmission
       .join('\n');
     throw new Error(`Cannot emit source for invalid graph:\n${errorMessages}`);
   }
+  return validation.sortedNodeIds;
+}
+
+/**
+ * Indexes incoming graph edges targeting destination ports.
+ */
+function indexIncomingSourceEdges(
+  edges: readonly FlintGraphEdge[],
+): Map<string, { fromNodeId: string; fromPortId: string }> {
+  const incoming = new Map<string, { fromNodeId: string; fromPortId: string }>();
+  for (const edge of edges) {
+    incoming.set(`${edge.toNodeId}:${edge.toPortId}`, {
+      fromNodeId: edge.fromNodeId,
+      fromPortId: edge.fromPortId,
+    });
+  }
+  return incoming;
+}
+
+/**
+ * Emits clean, formatted Flint source code from a validated graph with exact bidirectional source maps.
+ */
+export function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmissionResult {
+  const graph = flattenGraph(inputGraph);
+  const validation = validateGraph(graph);
+  const sortedNodeIds = assertValidSourceGraph(validation);
 
   const nodeMap = new Map<string, FlintGraphNode>(graph.nodes.map((node) => [node.id, node]));
   const nodeToSpan = new Map<string, FlintSourceSpan>();
   const spanToNode = new Map<string, string>();
   const portToAstIdentifier = new Map<string, string>();
-
-  const incomingEdges = new Map<string, { fromNodeId: string; fromPortId: string }>();
-  for (const edge of graph.edges) {
-    incomingEdges.set(`${edge.toNodeId}:${edge.toPortId}`, {
-      fromNodeId: edge.fromNodeId,
-      fromPortId: edge.fromPortId,
-    });
-  }
+  const incomingEdges = indexIncomingSourceEdges(graph.edges);
 
   const lines: string[] = [];
   let currentOffset = 0;
@@ -667,7 +742,7 @@ export function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmission
   emitRecordStructs(graph.nodes, appendLine);
   emitCustomCodeDeclarations(graph.nodes, appendLine);
 
-  const functionParameters = collectInputParameters(validation.sortedNodeIds, nodeMap, portToAstIdentifier);
+  const functionParameters = collectInputParameters(sortedNodeIds, nodeMap, portToAstIdentifier);
   const entryFunctionName = sanitizeIdentifier(graph.entryFunctionName ?? 'evaluate');
   const parameterString = functionParameters.map((p) => `${p.name}: ${p.type}`).join(', ');
 
@@ -688,7 +763,7 @@ export function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmission
   const prefix = `export fn ${entryFunctionName}(`;
   const functionHeaderRecord = appendLine(`${prefix}${parameterString}) -> ${returnTypeString} {`);
 
-  recordParameterSpans(validation.sortedNodeIds, nodeMap, functionHeaderRecord, prefix.length, nodeToSpan, spanToNode);
+  recordParameterSpans(sortedNodeIds, nodeMap, functionHeaderRecord, prefix.length, nodeToSpan, spanToNode);
 
   /**
    * Resolves the source code expression for an input port from incoming edges or default literals.
@@ -715,7 +790,7 @@ export function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmission
   }
 
   emitIntermediateNodesSource(
-    validation.sortedNodeIds,
+    sortedNodeIds,
     nodeMap,
     resolveInputSource,
     capabilityAliases,

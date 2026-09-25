@@ -290,6 +290,71 @@ function inferMetaOutputPorts(
 }
 
 /**
+ * Rewires an incoming edge to target the exposed meta-node input port if matched.
+ */
+function rewireIncomingMetaEdge(
+  edge: FlintGraphEdge,
+  metaNodeId: string,
+  exposedInputPortMap: Readonly<Record<string, { internalNodeId: string; internalPortId: string }>>,
+): FlintGraphEdge | undefined {
+  const entry = Object.entries(exposedInputPortMap).find(
+    ([, map]) => map.internalNodeId === edge.toNodeId && map.internalPortId === edge.toPortId,
+  );
+  return entry ? { ...edge, toNodeId: metaNodeId, toPortId: entry[0] } : undefined;
+}
+
+/**
+ * Rewires an outgoing edge to originate from the exposed meta-node output port if matched.
+ */
+function rewireOutgoingMetaEdge(
+  edge: FlintGraphEdge,
+  metaNodeId: string,
+  exposedOutputPortMap: Readonly<Record<string, { internalNodeId: string; internalPortId: string }>>,
+): FlintGraphEdge | undefined {
+  const entry = Object.entries(exposedOutputPortMap).find(
+    ([, map]) => map.internalNodeId === edge.fromNodeId && map.internalPortId === edge.fromPortId,
+  );
+  return entry ? { ...edge, fromNodeId: metaNodeId, fromPortId: entry[0] } : undefined;
+}
+
+/**
+ * Attempts to rewire an edge if either endpoint references the newly encapsulated meta-node.
+ */
+function tryRewireIncomingOrOutgoing(
+  edge: FlintGraphEdge,
+  selectedIds: ReadonlySet<string>,
+  metaNodeId: string,
+  exposedInputPortMap: Readonly<Record<string, { internalNodeId: string; internalPortId: string }>>,
+  exposedOutputPortMap: Readonly<Record<string, { internalNodeId: string; internalPortId: string }>>,
+): FlintGraphEdge | undefined {
+  if (selectedIds.has(edge.toNodeId)) {
+    return rewireIncomingMetaEdge(edge, metaNodeId, exposedInputPortMap);
+  }
+  if (selectedIds.has(edge.fromNodeId)) {
+    return rewireOutgoingMetaEdge(edge, metaNodeId, exposedOutputPortMap);
+  }
+  return undefined;
+}
+
+/**
+ * Rewires an individual edge towards or from a meta-node boundary port.
+ */
+function processSingleGraphEdgeForMeta(
+  edge: FlintGraphEdge,
+  selectedIds: ReadonlySet<string>,
+  metaNodeId: string,
+  exposedInputPortMap: Readonly<Record<string, { internalNodeId: string; internalPortId: string }>>,
+  exposedOutputPortMap: Readonly<Record<string, { internalNodeId: string; internalPortId: string }>>,
+  remainingEdges: FlintGraphEdge[],
+): void {
+  if (selectedIds.has(edge.fromNodeId) && selectedIds.has(edge.toNodeId)) {
+    return;
+  }
+  const rewired = tryRewireIncomingOrOutgoing(edge, selectedIds, metaNodeId, exposedInputPortMap, exposedOutputPortMap);
+  remainingEdges.push(rewired ?? edge);
+}
+
+/**
  * Rewires external edges to connect to the exposed ports of a newly created compound meta-node.
  */
 function rewireGraphEdgesToMetaNode(
@@ -301,36 +366,14 @@ function rewireGraphEdgesToMetaNode(
 ): FlintGraphEdge[] {
   const remainingEdges: FlintGraphEdge[] = [];
   for (const edge of graphEdges) {
-    if (selectedIds.has(edge.fromNodeId) && selectedIds.has(edge.toNodeId)) {
-      continue;
-    }
-    if (selectedIds.has(edge.toNodeId)) {
-      const entry = Object.entries(exposedInputPortMap).find(
-        ([, map]) => map.internalNodeId === edge.toNodeId && map.internalPortId === edge.toPortId,
-      );
-      if (entry) {
-        remainingEdges.push({
-          ...edge,
-          toNodeId: metaNodeId,
-          toPortId: entry[0],
-        });
-        continue;
-      }
-    }
-    if (selectedIds.has(edge.fromNodeId)) {
-      const entry = Object.entries(exposedOutputPortMap).find(
-        ([, map]) => map.internalNodeId === edge.fromNodeId && map.internalPortId === edge.fromPortId,
-      );
-      if (entry) {
-        remainingEdges.push({
-          ...edge,
-          fromNodeId: metaNodeId,
-          fromPortId: entry[0],
-        });
-        continue;
-      }
-    }
-    remainingEdges.push(edge);
+    processSingleGraphEdgeForMeta(
+      edge,
+      selectedIds,
+      metaNodeId,
+      exposedInputPortMap,
+      exposedOutputPortMap,
+      remainingEdges,
+    );
   }
   return remainingEdges;
 }
@@ -342,15 +385,14 @@ function computePasteOffset(
   clipboardNodes: readonly FlintGraphNode[],
   targetPosition?: { readonly x: number; readonly y: number },
 ): { offsetX: number; offsetY: number } {
-  let minX = Number.POSITIVE_INFINITY;
-  let minY = Number.POSITIVE_INFINITY;
-  for (const n of clipboardNodes) {
-    if (n.position.x < minX) minX = n.position.x;
-    if (n.position.y < minY) minY = n.position.y;
+  if (!targetPosition) {
+    return { offsetX: 30, offsetY: 30 };
   }
+  const minX = Math.min(...clipboardNodes.map((n) => n.position.x));
+  const minY = Math.min(...clipboardNodes.map((n) => n.position.y));
   return {
-    offsetX: targetPosition ? targetPosition.x - minX : 30,
-    offsetY: targetPosition ? targetPosition.y - minY : 30,
+    offsetX: targetPosition.x - minX,
+    offsetY: targetPosition.y - minY,
   };
 }
 
@@ -440,6 +482,164 @@ function remapPastedEdges(
     }
     return [];
   });
+}
+
+/**
+ * Normalizes connection endpoints when dragged from input pin to output pin.
+ */
+function normalizeConnectionEndpoints(
+  fromNode: FlintGraphNode,
+  toNode: FlintGraphNode,
+  fromPortId: string,
+  toPortId: string,
+): { sourceNodeId: string; sourcePortId: string; targetNodeId: string; targetPortId: string } {
+  const fromIsInput = fromNode.inputs.some((p) => p.id === fromPortId);
+  const toIsOutput = toNode.outputs.some((p) => p.id === toPortId);
+  if (fromIsInput && toIsOutput) {
+    return {
+      sourceNodeId: toNode.id,
+      sourcePortId: toPortId,
+      targetNodeId: fromNode.id,
+      targetPortId: fromPortId,
+    };
+  }
+  return {
+    sourceNodeId: fromNode.id,
+    sourcePortId: fromPortId,
+    targetNodeId: toNode.id,
+    targetPortId: toPortId,
+  };
+}
+
+/**
+ * Constructs a fully qualified compound meta-node object.
+ */
+function buildMetaNodeObject(
+  metaNodeId: string,
+  title: string,
+  templateId: string,
+  metaPosition: { x: number; y: number },
+  metaInputs: FlintGraphPort[],
+  metaOutputs: FlintGraphPort[],
+  subNodes: readonly FlintGraphNode[],
+  subEdges: readonly FlintGraphEdge[],
+  exposedInputPortMap: Record<string, { internalNodeId: string; internalPortId: string }>,
+  exposedOutputPortMap: Record<string, { internalNodeId: string; internalPortId: string }>,
+): FlintGraphNode {
+  return {
+    id: metaNodeId,
+    title,
+    category: 'custom',
+    kind: 'operation',
+    operation: 'meta',
+    inputs: metaInputs,
+    outputs: metaOutputs,
+    position: metaPosition,
+    metaSubgraph: {
+      nodes: subNodes,
+      edges: subEdges,
+      exposedInputPortMap,
+      exposedOutputPortMap,
+    },
+    metaTemplateId: templateId,
+  };
+}
+
+/**
+ * Remaps an external boundary edge to the internal port of an expanding meta-node subgraph.
+ */
+function remapTopEdgeToInternal(
+  edge: FlintGraphEdge,
+  metaNodeId: string,
+  sub: NonNullable<FlintGraphNode['metaSubgraph']>,
+): FlintGraphEdge {
+  if (edge.toNodeId === metaNodeId) {
+    const mapping = sub.exposedInputPortMap[edge.toPortId];
+    if (mapping) {
+      return { ...edge, toNodeId: mapping.internalNodeId, toPortId: mapping.internalPortId };
+    }
+  }
+  if (edge.fromNodeId === metaNodeId) {
+    const mapping = sub.exposedOutputPortMap[edge.fromPortId];
+    if (mapping) {
+      return { ...edge, fromNodeId: mapping.internalNodeId, fromPortId: mapping.internalPortId };
+    }
+  }
+  return edge;
+}
+
+/**
+ * Inserts a waypoint into an existing point sequence.
+ */
+function insertEdgeWaypoint(
+  points: readonly { readonly x: number; readonly y: number }[] | undefined,
+  point: { readonly x: number; readonly y: number },
+  index?: number,
+): { readonly x: number; readonly y: number }[] {
+  const currentPoints = points ? [...points] : [];
+  if (typeof index === 'number' && index >= 0 && index <= currentPoints.length) {
+    currentPoints.splice(index, 0, point);
+  } else {
+    currentPoints.push(point);
+  }
+  return currentPoints;
+}
+
+/**
+ * Removes a waypoint at the specified index from a point sequence.
+ */
+function removeEdgeWaypoint(
+  points: readonly { readonly x: number; readonly y: number }[] | undefined,
+  pointIndex: number,
+): { readonly x: number; readonly y: number }[] | undefined {
+  if (!points || pointIndex < 0 || pointIndex >= points.length) {
+    return points as { readonly x: number; readonly y: number }[] | undefined;
+  }
+  const updatedPoints = points.filter((_, idx) => idx !== pointIndex);
+  return updatedPoints.length > 0 ? updatedPoints : undefined;
+}
+
+/**
+ * Recursively counts references to a meta-node definition within a graph.
+ */
+function countMetaOccurrences(g: FlintNodeGraph, templateId: string): number {
+  let count = 0;
+  for (const n of g.nodes) {
+    if (n.metaTemplateId === templateId || n.operation === templateId) {
+      count++;
+    }
+    if (n.metaSubgraph) {
+      count += countMetaOccurrences(
+        { id: '', name: '', nodes: n.metaSubgraph.nodes, edges: n.metaSubgraph.edges },
+        templateId,
+      );
+    }
+  }
+  return count;
+}
+
+/**
+ * Re-maps clipboard group metadata and registers new member node IDs.
+ */
+function applyPastedGroup(
+  clipboardGroup: FlintGraphGroup | undefined,
+  existingGroups: readonly FlintGraphGroup[] | undefined,
+  newNodes: FlintGraphNode[],
+): readonly FlintGraphGroup[] {
+  const currentGroups = existingGroups ?? [];
+  if (!clipboardGroup) {
+    return currentGroups;
+  }
+  const newGroupId = generateSecureId('group');
+  const newGroup: FlintGraphGroup = {
+    ...structuredClone(clipboardGroup),
+    id: newGroupId,
+    nodeIds: newNodes.map((n) => n.id),
+  };
+  for (const n of newNodes) {
+    (n as { groupId?: string }).groupId = newGroupId;
+  }
+  return [...currentGroups, newGroup];
 }
 
 /**
@@ -704,11 +904,6 @@ export class FlintEditorStore {
     toNodeId: string,
     toPortId: string,
   ): { readonly success: boolean; readonly error?: string } {
-    let sourceNodeId = fromNodeId;
-    let sourcePortId = fromPortId;
-    let targetNodeId = toNodeId;
-    let targetPortId = toPortId;
-
     if (fromNodeId === toNodeId) {
       return { success: false, error: 'Cannot connect a node to itself.' };
     }
@@ -719,16 +914,12 @@ export class FlintEditorStore {
       return { success: false, error: 'Nodes not found.' };
     }
 
-    const fromIsInput = fromNode.inputs.some((p) => p.id === fromPortId);
-    const toIsOutput = toNode.outputs.some((p) => p.id === toPortId);
-
-    // If dragged from input to output, normalize direction: output pin -> input pin
-    if (fromIsInput && toIsOutput) {
-      sourceNodeId = toNodeId;
-      sourcePortId = toPortId;
-      targetNodeId = fromNodeId;
-      targetPortId = fromPortId;
-    }
+    const { sourceNodeId, sourcePortId, targetNodeId, targetPortId } = normalizeConnectionEndpoints(
+      fromNode,
+      toNode,
+      fromPortId,
+      toPortId,
+    );
 
     // Prevent duplicate connection to the same input port
     const existing = this.graph.edges.find((e) => e.toNodeId === targetNodeId && e.toPortId === targetPortId);
@@ -1030,23 +1221,18 @@ export class FlintEditorStore {
 
     const metaNodeId = generateSecureId('meta_node');
     const templateId = generateSecureId('template_meta');
-    const metaNodeWithTemplate: FlintGraphNode = {
-      id: metaNodeId,
+    const metaNodeWithTemplate = buildMetaNodeObject(
+      metaNodeId,
       title,
-      category: 'custom',
-      kind: 'operation',
-      operation: 'meta',
-      inputs: metaInputs,
-      outputs: metaOutputs,
-      position: metaPosition,
-      metaSubgraph: {
-        nodes: subNodes,
-        edges: subEdges,
-        exposedInputPortMap,
-        exposedOutputPortMap,
-      },
-      metaTemplateId: templateId,
-    };
+      templateId,
+      metaPosition,
+      metaInputs,
+      metaOutputs,
+      subNodes,
+      subEdges,
+      exposedInputPortMap,
+      exposedOutputPortMap,
+    );
 
     const remainingEdges = rewireGraphEdgesToMetaNode(
       this.graph.edges,
@@ -1093,33 +1279,7 @@ export class FlintEditorStore {
     const remainingNodes = this.graph.nodes.filter((node) => node.id !== metaNodeId);
     const unpackedNodes = sub.nodes.map((node) => ({ ...node }));
     const unpackedEdges = [...sub.edges];
-    const topEdges: FlintGraphEdge[] = [];
-
-    for (const edge of this.graph.edges) {
-      if (edge.toNodeId === metaNodeId) {
-        const mapping = sub.exposedInputPortMap[edge.toPortId];
-        if (mapping) {
-          topEdges.push({
-            ...edge,
-            toNodeId: mapping.internalNodeId,
-            toPortId: mapping.internalPortId,
-          });
-          continue;
-        }
-      }
-      if (edge.fromNodeId === metaNodeId) {
-        const mapping = sub.exposedOutputPortMap[edge.fromPortId];
-        if (mapping) {
-          topEdges.push({
-            ...edge,
-            fromNodeId: mapping.internalNodeId,
-            fromPortId: mapping.internalPortId,
-          });
-          continue;
-        }
-      }
-      topEdges.push(edge);
-    }
+    const topEdges = this.graph.edges.map((edge) => remapTopEdgeToInternal(edge, metaNodeId, sub));
 
     this.graph = {
       ...this.graph,
@@ -1341,15 +1501,9 @@ export class FlintEditorStore {
       ...this.graph,
       edges: this.graph.edges.map((edge) => {
         if (edge.id !== edgeId) return edge;
-        const currentPoints = edge.points ? [...edge.points] : [];
-        if (typeof index === 'number' && index >= 0 && index <= currentPoints.length) {
-          currentPoints.splice(index, 0, point);
-        } else {
-          currentPoints.push(point);
-        }
         return {
           ...edge,
-          points: currentPoints,
+          points: insertEdgeWaypoint(edge.points, point, index),
         };
       }),
     };
@@ -1385,13 +1539,10 @@ export class FlintEditorStore {
     this.graph = {
       ...this.graph,
       edges: this.graph.edges.map((edge) => {
-        if (edge.id !== edgeId || !edge.points || pointIndex < 0 || pointIndex >= edge.points.length) {
-          return edge;
-        }
-        const updatedPoints = edge.points.filter((_, idx) => idx !== pointIndex);
+        if (edge.id !== edgeId) return edge;
         return {
           ...edge,
-          points: updatedPoints.length > 0 ? updatedPoints : undefined,
+          points: removeEdgeWaypoint(edge.points, pointIndex),
         };
       }),
     };
@@ -1518,32 +1669,15 @@ export class FlintEditorStore {
    * Removes a meta-node definition from the palette if it is not currently referenced.
    */
   removeRegisteredMetaNode(templateId: string): boolean {
-    /**
-     * Counts recursive references to a meta-node definition within a graph.
-     */
-    const countInGraph = (g: FlintNodeGraph): number => {
-      let count = 0;
-      for (const n of g.nodes) {
-        if (n.metaTemplateId === templateId || n.operation === templateId) {
-          count++;
-        }
-        if (n.metaSubgraph) {
-          count += countInGraph({ id: '', name: '', nodes: n.metaSubgraph.nodes, edges: n.metaSubgraph.edges });
-        }
-      }
-      return count;
-    };
-
-    let totalRefs = countInGraph(this.graph);
+    let totalRefs = countMetaOccurrences(this.graph, templateId);
     for (const frame of this.navigationStack) {
-      totalRefs += countInGraph(frame.parentGraph);
+      totalRefs += countMetaOccurrences(frame.parentGraph, templateId);
     }
 
     const def = this.registeredMetaNodes.get(templateId);
-    let isRecursive = false;
-    if (def) {
-      isRecursive = countInGraph({ id: '', name: '', nodes: def.subgraph.nodes, edges: def.subgraph.edges }) > 0;
-    }
+    const isRecursive = def
+      ? countMetaOccurrences({ id: '', name: '', nodes: def.subgraph.nodes, edges: def.subgraph.edges }, templateId) > 0
+      : false;
 
     if (totalRefs === 0 || isRecursive) {
       this.registeredMetaNodes.delete(templateId);
@@ -1715,20 +1849,7 @@ export class FlintEditorStore {
     });
 
     const newEdges = remapPastedEdges(this.clipboard.edges, idMap);
-
-    let updatedGroups = this.graph.groups ?? [];
-    if (this.clipboard.group) {
-      const newGroupId = generateSecureId('group');
-      const newGroup: FlintGraphGroup = {
-        ...structuredClone(this.clipboard.group),
-        id: newGroupId,
-        nodeIds: newNodes.map((n) => n.id),
-      };
-      updatedGroups = [...updatedGroups, newGroup];
-      for (const n of newNodes) {
-        (n as { groupId?: string }).groupId = newGroupId;
-      }
-    }
+    const updatedGroups = applyPastedGroup(this.clipboard.group, this.graph.groups, newNodes);
 
     this.graph = {
       ...this.graph,

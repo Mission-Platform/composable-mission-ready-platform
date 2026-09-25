@@ -555,6 +555,44 @@ if (
   }
 
   /**
+   * Parses hexadecimal color strings (#rgb, #rrggbb, #rrggbbaa) into normalized RGBA tuples.
+   */
+  function parseHexColor(hexStr: string): [number, number, number, number] | undefined {
+    let hex = hexStr.slice(1);
+    if (hex.length === 3) {
+      hex = `${[...hex].map((c) => `${c}${c}`).join('')}ff`;
+    } else if (hex.length === 6) {
+      hex = `${hex}ff`;
+    }
+    if (hex.length !== 8) {
+      return undefined;
+    }
+    const red = Number.parseInt(hex.slice(0, 2), 16) / 255;
+    const green = Number.parseInt(hex.slice(2, 4), 16) / 255;
+    const blue = Number.parseInt(hex.slice(4, 6), 16) / 255;
+    const alpha = Number.parseInt(hex.slice(6, 8), 16) / 255;
+    if (Number.isNaN(red) || Number.isNaN(green) || Number.isNaN(blue) || Number.isNaN(alpha)) {
+      return undefined;
+    }
+    return [red, green, blue, alpha];
+  }
+
+  /**
+   * Parses functional rgb() and rgba() color strings into normalized RGBA tuples.
+   */
+  function parseRgbColor(rgbStr: string): [number, number, number, number] | undefined {
+    const match = rgbStr.match(/rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)/);
+    if (!match) {
+      return undefined;
+    }
+    const red = Number.parseInt(match[1] ?? '0', 10) / 255;
+    const green = Number.parseInt(match[2] ?? '0', 10) / 255;
+    const blue = Number.parseInt(match[3] ?? '0', 10) / 255;
+    const alpha = match[4] === undefined ? 1 : Number.parseFloat(match[4]);
+    return [red, green, blue, alpha];
+  }
+
+  /**
    * Parses arbitrary CSS color hex, rgb, or rgba strings to normalized 0..1 RGBA float tuples.
    */
   function parseColorToRgba(
@@ -564,30 +602,10 @@ if (
     if (!colorStr) return defaultRgba;
     const str = colorStr.trim();
     if (str.startsWith('#')) {
-      let hex = str.slice(1);
-      if (hex.length === 3) {
-        hex = `${[...hex].map((c) => `${c}${c}`).join('')}ff`;
-      } else if (hex.length === 6) {
-        hex = `${hex}ff`;
-      }
-      if (hex.length === 8) {
-        const red = Number.parseInt(hex.slice(0, 2), 16) / 255;
-        const green = Number.parseInt(hex.slice(2, 4), 16) / 255;
-        const blue = Number.parseInt(hex.slice(4, 6), 16) / 255;
-        const alpha = Number.parseInt(hex.slice(6, 8), 16) / 255;
-        if (!Number.isNaN(red) && !Number.isNaN(green) && !Number.isNaN(blue) && !Number.isNaN(alpha)) {
-          return [red, green, blue, alpha];
-        }
-      }
-    } else if (str.startsWith('rgb')) {
-      const match = str.match(/rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)/);
-      if (match) {
-        const red = Number.parseInt(match[1] ?? '0', 10) / 255;
-        const green = Number.parseInt(match[2] ?? '0', 10) / 255;
-        const blue = Number.parseInt(match[3] ?? '0', 10) / 255;
-        const alpha = match[4] === undefined ? 1 : Number.parseFloat(match[4]);
-        return [red, green, blue, alpha];
-      }
+      return parseHexColor(str) ?? defaultRgba;
+    }
+    if (str.startsWith('rgb')) {
+      return parseRgbColor(str) ?? defaultRgba;
     }
     return defaultRgba;
   }

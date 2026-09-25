@@ -3,6 +3,7 @@ import { flintTypeNameToString, type FlintTypeName } from '../ast.js';
 import type {
   FlintGraphEdge,
   FlintGraphNode,
+  FlintGraphPort,
   FlintGraphValidationIssue,
   FlintGraphValidationResult,
   FlintNodeGraph,
@@ -25,13 +26,19 @@ function areTypeArgumentsCompatible(
 }
 
 /**
+ * Determines whether two type names share the same base reference and array length constraints.
+ */
+function hasMatchingBaseType(source: FlintTypeName, target: FlintTypeName): boolean {
+  const sourceName = source.reference ?? source.name;
+  const targetName = target.reference ?? target.name;
+  return sourceName === targetName && source.length === target.length;
+}
+
+/**
  * Checks structural and semantic compatibility between source and destination Flint types.
  */
 export function areTypesCompatible(source: FlintTypeName, target: FlintTypeName): boolean {
-  const sourceName = source.reference ?? source.name;
-  const targetName = target.reference ?? target.name;
-
-  if (sourceName !== targetName || source.length !== target.length) {
+  if (!hasMatchingBaseType(source, target)) {
     return false;
   }
 
@@ -198,6 +205,28 @@ function validateEdgeIntegrity(
 }
 
 /**
+ * Verifies if an individual input port is satisfied via incoming edge or default value.
+ */
+function validateSingleInputPort(
+  node: FlintGraphNode,
+  inputPort: FlintGraphPort,
+  inputPortConnections: ReadonlyMap<string, string>,
+  issues: FlintGraphValidationIssue[],
+): void {
+  const isConnected = inputPortConnections.has(`${node.id}:${inputPort.id}`);
+  if (isConnected || !inputPort.required || inputPort.defaultValue !== undefined) {
+    return;
+  }
+  issues.push({
+    code: 'FLINT-GRAPH-REQUIRED-PORT-UNCONNECTED',
+    severity: 'error',
+    message: `Required input port '${inputPort.name}' on node '${node.title}' (${node.id}) is not connected and provides no default value.`,
+    nodeId: node.id,
+    portId: inputPort.id,
+  });
+}
+
+/**
  * Ensures all required input ports have either an active incoming edge or an explicit default value.
  */
 function validateRequiredUnconnectedPorts(
@@ -207,18 +236,17 @@ function validateRequiredUnconnectedPorts(
 ): void {
   for (const node of nodes) {
     for (const inputPort of node.inputs) {
-      const isConnected = inputPortConnections.has(`${node.id}:${inputPort.id}`);
-      if (!isConnected && inputPort.required && inputPort.defaultValue === undefined) {
-        issues.push({
-          code: 'FLINT-GRAPH-REQUIRED-PORT-UNCONNECTED',
-          severity: 'error',
-          message: `Required input port '${inputPort.name}' on node '${node.title}' (${node.id}) is not connected and provides no default value.`,
-          nodeId: node.id,
-          portId: inputPort.id,
-        });
-      }
+      validateSingleInputPort(node, inputPort, inputPortConnections, issues);
     }
   }
+}
+
+/**
+ * Validates that an edge connects two distinct, registered nodes in the graph.
+ */
+function isValidDistinctEdge(edge: FlintGraphEdge, nodeMap: ReadonlyMap<string, FlintGraphNode>): boolean {
+  if (edge.fromNodeId === edge.toNodeId) return false;
+  return nodeMap.has(edge.fromNodeId) && nodeMap.has(edge.toNodeId);
 }
 
 /**
@@ -230,7 +258,7 @@ function addEdgeAdjacency(
   adjacency: Map<string, Set<string>>,
   inDegree: Map<string, number>,
 ): void {
-  if (!nodeMap.has(edge.fromNodeId) || !nodeMap.has(edge.toNodeId) || edge.fromNodeId === edge.toNodeId) {
+  if (!isValidDistinctEdge(edge, nodeMap)) {
     return;
   }
   const neighbors = adjacency.get(edge.fromNodeId);
@@ -238,7 +266,8 @@ function addEdgeAdjacency(
     return;
   }
   neighbors.add(edge.toNodeId);
-  inDegree.set(edge.toNodeId, (inDegree.get(edge.toNodeId) ?? 0) + 1);
+  const currentDegree = inDegree.get(edge.toNodeId) ?? 0;
+  inDegree.set(edge.toNodeId, currentDegree + 1);
 }
 
 /**

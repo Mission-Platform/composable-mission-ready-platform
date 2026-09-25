@@ -2,8 +2,10 @@ import {
   createPrimitiveType,
   createSyntheticSpan,
   flattenGraph,
+  type FlintGraphEdge,
   type FlintGraphNode,
   type FlintGraphPort,
+  type FlintGraphValidationResult,
   type FlintNodeGraph,
   type FlintNodeSourceMap,
 } from './types.js';
@@ -68,11 +70,13 @@ function createDefaultFallbackLiteral(
 }
 
 /**
- * Builds an AST literal expression for a default or constant port value.
+ * Builds an AST literal expression for primitive values.
  */
-function createLiteralExpression(value: unknown, type: FlintTypeName, span: FlintSourceSpan): FlintLiteralExpression {
-  const primitiveType: FlintPrimitiveType = type.reference === undefined ? type.name : 'unit';
-
+function createPrimitiveLiteral(
+  value: unknown,
+  primitiveType: FlintPrimitiveType,
+  span: FlintSourceSpan,
+): FlintLiteralExpression {
   if (typeof value === 'boolean') {
     return { kind: 'literal', value, type: 'bool', span };
   }
@@ -82,8 +86,15 @@ function createLiteralExpression(value: unknown, type: FlintTypeName, span: Flin
   if (typeof value === 'string') {
     return { kind: 'literal', value, type: 'string', span };
   }
-
   return createDefaultFallbackLiteral(primitiveType, span);
+}
+
+/**
+ * Builds an AST literal expression for a default or constant port value.
+ */
+function createLiteralExpression(value: unknown, type: FlintTypeName, span: FlintSourceSpan): FlintLiteralExpression {
+  const primitiveType: FlintPrimitiveType = type.reference === undefined ? type.name : 'unit';
+  return createPrimitiveLiteral(value, primitiveType, span);
 }
 
 type InputResolver = (node: FlintGraphNode, portId: string) => FlintExpression;
@@ -101,6 +112,158 @@ const BINARY_ARITHMETIC_OPERATORS: Readonly<Record<string, FlintBinaryExpression
 };
 
 /**
+ * Builds a match expression comparing two values and selecting the appropriate branch arm.
+ */
+function buildMinMaxExpression(
+  node: FlintGraphNode,
+  resolveInput: InputResolver,
+  span: FlintSourceSpan,
+  isMin: boolean,
+): FlintExpression {
+  const leftValue = resolveInput(node, 'a');
+  const rightValue = resolveInput(node, 'b');
+  const arms: readonly FlintMatchArm[] = [
+    { kind: 'match-arm', pattern: { kind: 'literal', value: true, span }, value: leftValue, span },
+    { kind: 'match-arm', pattern: { kind: 'literal', value: false, span }, value: rightValue, span },
+  ];
+  return {
+    kind: 'match',
+    value: { kind: 'binary', operator: isMin ? '<' : '>', left: leftValue, right: rightValue, span },
+    arms,
+    span,
+  };
+}
+
+/**
+ * Builds a div-rem record struct value containing quotient and remainder expressions.
+ */
+function buildDivRemExpression(
+  node: FlintGraphNode,
+  resolveInput: InputResolver,
+  span: FlintSourceSpan,
+): FlintExpression {
+  const dividend = resolveInput(node, 'a');
+  const divisor = resolveInput(node, 'b');
+  const structName = `Record_${sanitizeIdentifier(node.id)}`;
+  return {
+    kind: 'struct-value',
+    type: { kind: 'type-name', name: 'unit', reference: structName, span },
+    fields: {
+      quotient: { kind: 'binary', operator: '/', left: dividend, right: divisor, span },
+      remainder: { kind: 'binary', operator: '%', left: dividend, right: divisor, span },
+    },
+    span,
+  };
+}
+
+/**
+ * Builds a min-max record struct value with evaluated min and max fields.
+ */
+function buildMinMaxStructExpression(
+  node: FlintGraphNode,
+  resolveInput: InputResolver,
+  span: FlintSourceSpan,
+): FlintExpression {
+  const firstValue = resolveInput(node, 'a');
+  const secondValue = resolveInput(node, 'b');
+  const structName = `Record_${sanitizeIdentifier(node.id)}`;
+  return {
+    kind: 'struct-value',
+    type: { kind: 'type-name', name: 'unit', reference: structName, span },
+    fields: {
+      min: {
+        kind: 'match',
+        value: { kind: 'binary', operator: '<', left: firstValue, right: secondValue, span },
+        arms: [
+          { kind: 'match-arm', pattern: { kind: 'literal', value: true, span }, value: firstValue, span },
+          { kind: 'match-arm', pattern: { kind: 'literal', value: false, span }, value: secondValue, span },
+        ],
+        span,
+      },
+      max: {
+        kind: 'match',
+        value: { kind: 'binary', operator: '>', left: firstValue, right: secondValue, span },
+        arms: [
+          { kind: 'match-arm', pattern: { kind: 'literal', value: true, span }, value: firstValue, span },
+          { kind: 'match-arm', pattern: { kind: 'literal', value: false, span }, value: secondValue, span },
+        ],
+        span,
+      },
+    },
+    span,
+  };
+}
+
+/**
+ * Builds a signum expression returning -1, 0, or 1 based on input sign.
+ */
+function buildSignumExpression(
+  node: FlintGraphNode,
+  resolveInput: InputResolver,
+  span: FlintSourceSpan,
+): FlintExpression {
+  const operand = resolveInput(node, 'a');
+  const zero = createLiteralExpression(0, createPrimitiveType('i32'), span);
+  const one = createLiteralExpression(1, createPrimitiveType('i32'), span);
+  const minusOne = createLiteralExpression(-1, createPrimitiveType('i32'), span);
+  return {
+    kind: 'match',
+    value: { kind: 'binary', operator: '>', left: operand, right: zero, span },
+    arms: [
+      { kind: 'match-arm', pattern: { kind: 'literal', value: true, span }, value: one, span },
+      {
+        kind: 'match-arm',
+        pattern: { kind: 'literal', value: false, span },
+        value: {
+          kind: 'match',
+          value: { kind: 'binary', operator: '<', left: operand, right: zero, span },
+          arms: [
+            { kind: 'match-arm', pattern: { kind: 'literal', value: true, span }, value: minusOne, span },
+            { kind: 'match-arm', pattern: { kind: 'literal', value: false, span }, value: zero, span },
+          ],
+          span,
+        },
+        span,
+      },
+    ],
+    span,
+  };
+}
+
+/**
+ * Builds an absolute value match expression.
+ */
+function buildAbsExpression(node: FlintGraphNode, resolveInput: InputResolver, span: FlintSourceSpan): FlintExpression {
+  const operand = resolveInput(node, 'a');
+  const zero = createLiteralExpression(0, createPrimitiveType('i32'), span);
+  const arms: readonly FlintMatchArm[] = [
+    {
+      kind: 'match-arm',
+      pattern: { kind: 'literal', value: true, span },
+      value: { kind: 'unary', operator: '-', operand, span },
+      span,
+    },
+    { kind: 'match-arm', pattern: { kind: 'literal', value: false, span }, value: operand, span },
+  ];
+  return { kind: 'match', value: { kind: 'binary', operator: '<', left: operand, right: zero, span }, arms, span };
+}
+
+const ADVANCED_ARITHMETIC_BUILDERS: Readonly<
+  Record<
+    string,
+    (node: FlintGraphNode, resolveInput: InputResolver, span: FlintSourceSpan) => FlintExpression | undefined
+  >
+> = {
+  negate: (node, resolveInput, span) => ({ kind: 'unary', operator: '-', operand: resolveInput(node, 'a'), span }),
+  abs: buildAbsExpression,
+  min: (node, resolveInput, span) => buildMinMaxExpression(node, resolveInput, span, true),
+  max: (node, resolveInput, span) => buildMinMaxExpression(node, resolveInput, span, false),
+  div_rem: buildDivRemExpression,
+  min_max: buildMinMaxStructExpression,
+  signum: buildSignumExpression,
+};
+
+/**
  * Builds composite multi-arm or struct AST expressions for advanced mathematical operations.
  */
 function buildAdvancedArithmeticExpression(
@@ -108,100 +271,8 @@ function buildAdvancedArithmeticExpression(
   resolveInput: InputResolver,
   span: FlintSourceSpan,
 ): FlintExpression | undefined {
-  switch (node.operation) {
-    case 'negate': {
-      return { kind: 'unary', operator: '-', operand: resolveInput(node, 'a'), span };
-    }
-    case 'abs': {
-      const operand = resolveInput(node, 'a');
-      const zero = createLiteralExpression(0, createPrimitiveType('i32'), span);
-      const arms: readonly FlintMatchArm[] = [
-        {
-          kind: 'match-arm',
-          pattern: { kind: 'literal', value: true, span },
-          value: { kind: 'unary', operator: '-', operand, span },
-          span,
-        },
-        { kind: 'match-arm', pattern: { kind: 'literal', value: false, span }, value: operand, span },
-      ];
-      return { kind: 'match', value: { kind: 'binary', operator: '<', left: operand, right: zero, span }, arms, span };
-    }
-    case 'min': {
-      const leftValue = resolveInput(node, 'a');
-      const rightValue = resolveInput(node, 'b');
-      const arms: readonly FlintMatchArm[] = [
-        { kind: 'match-arm', pattern: { kind: 'literal', value: true, span }, value: leftValue, span },
-        { kind: 'match-arm', pattern: { kind: 'literal', value: false, span }, value: rightValue, span },
-      ];
-      return {
-        kind: 'match',
-        value: { kind: 'binary', operator: '<', left: leftValue, right: rightValue, span },
-        arms,
-        span,
-      };
-    }
-    case 'max': {
-      const leftValue = resolveInput(node, 'a');
-      const rightValue = resolveInput(node, 'b');
-      const arms: readonly FlintMatchArm[] = [
-        { kind: 'match-arm', pattern: { kind: 'literal', value: true, span }, value: leftValue, span },
-        { kind: 'match-arm', pattern: { kind: 'literal', value: false, span }, value: rightValue, span },
-      ];
-      return {
-        kind: 'match',
-        value: { kind: 'binary', operator: '>', left: leftValue, right: rightValue, span },
-        arms,
-        span,
-      };
-    }
-    case 'div_rem': {
-      const dividend = resolveInput(node, 'a');
-      const divisor = resolveInput(node, 'b');
-      const structName = `Record_${sanitizeIdentifier(node.id)}`;
-      return {
-        kind: 'struct-value',
-        type: { kind: 'type-name', name: 'unit', reference: structName, span },
-        fields: {
-          quotient: { kind: 'binary', operator: '/', left: dividend, right: divisor, span },
-          remainder: { kind: 'binary', operator: '%', left: dividend, right: divisor, span },
-        },
-        span,
-      };
-    }
-    case 'min_max': {
-      const firstValue = resolveInput(node, 'a');
-      const secondValue = resolveInput(node, 'b');
-      const structName = `Record_${sanitizeIdentifier(node.id)}`;
-      return {
-        kind: 'struct-value',
-        type: { kind: 'type-name', name: 'unit', reference: structName, span },
-        fields: {
-          min: {
-            kind: 'match',
-            value: { kind: 'binary', operator: '<', left: firstValue, right: secondValue, span },
-            arms: [
-              { kind: 'match-arm', pattern: { kind: 'literal', value: true, span }, value: firstValue, span },
-              { kind: 'match-arm', pattern: { kind: 'literal', value: false, span }, value: secondValue, span },
-            ],
-            span,
-          },
-          max: {
-            kind: 'match',
-            value: { kind: 'binary', operator: '>', left: firstValue, right: secondValue, span },
-            arms: [
-              { kind: 'match-arm', pattern: { kind: 'literal', value: true, span }, value: firstValue, span },
-              { kind: 'match-arm', pattern: { kind: 'literal', value: false, span }, value: secondValue, span },
-            ],
-            span,
-          },
-        },
-        span,
-      };
-    }
-    default: {
-      return undefined;
-    }
-  }
+  const builder = ADVANCED_ARITHMETIC_BUILDERS[node.operation];
+  return builder ? builder(node, resolveInput, span) : undefined;
 }
 
 /**
@@ -260,6 +331,35 @@ function buildComparisonExpression(
   return undefined;
 }
 
+const VECTOR_BUILDERS: Readonly<
+  Record<string, (node: FlintGraphNode, resolveInput: InputResolver, span: FlintSourceSpan) => FlintExpression>
+> = {
+  vector_new: (node, _resolveInput, span) => ({
+    kind: 'vector-literal',
+    elements: [],
+    type: node.outputs[0]?.type ?? createPrimitiveType('i32'),
+    span,
+  }),
+  vector_push: (node, resolveInput, span) => ({
+    kind: 'call',
+    callee: 'Vector.push',
+    arguments: [resolveInput(node, 'vector'), resolveInput(node, 'item')],
+    span,
+  }),
+  vector_get: (node, resolveInput, span) => ({
+    kind: 'call',
+    callee: 'Vector.get',
+    arguments: [resolveInput(node, 'vector'), resolveInput(node, 'index')],
+    span,
+  }),
+  vector_len: (node, resolveInput, span) => ({
+    kind: 'call',
+    callee: 'Vector.length',
+    arguments: [resolveInput(node, 'vector')],
+    span,
+  }),
+};
+
 /**
  * Lowers vector operations into standard library AST call expressions.
  */
@@ -268,36 +368,47 @@ function buildVectorExpression(
   resolveInput: InputResolver,
   span: FlintSourceSpan,
 ): FlintExpression | undefined {
-  const primaryOutPort = node.outputs[0];
-  switch (node.operation) {
-    case 'vector_new': {
-      const outType = primaryOutPort?.type ?? createPrimitiveType('i32');
-      return { kind: 'vector-literal', elements: [], type: outType, span };
-    }
-    case 'vector_push': {
-      return {
-        kind: 'call',
-        callee: 'Vector.push',
-        arguments: [resolveInput(node, 'vector'), resolveInput(node, 'item')],
-        span,
-      };
-    }
-    case 'vector_get': {
-      return {
-        kind: 'call',
-        callee: 'Vector.get',
-        arguments: [resolveInput(node, 'vector'), resolveInput(node, 'index')],
-        span,
-      };
-    }
-    case 'vector_len': {
-      return { kind: 'call', callee: 'Vector.length', arguments: [resolveInput(node, 'vector')], span };
-    }
-    default: {
-      return undefined;
-    }
-  }
+  const builder = VECTOR_BUILDERS[node.operation];
+  return builder ? builder(node, resolveInput, span) : undefined;
 }
+
+const OPTION_BUILDERS: Readonly<
+  Record<string, (node: FlintGraphNode, resolveInput: InputResolver, span: FlintSourceSpan) => FlintExpression>
+> = {
+  option_some: (node, resolveInput, span) => ({
+    kind: 'enum-value',
+    type: node.outputs[0]?.type ?? createPrimitiveType('i32'),
+    variant: 'Some',
+    arguments: [resolveInput(node, 'value')],
+    span,
+  }),
+  option_none: (node, _resolveInput, span) => ({
+    kind: 'enum-value',
+    type: node.outputs[0]?.type ?? createPrimitiveType('i32'),
+    variant: 'None',
+    arguments: [],
+    span,
+  }),
+  option_unwrap_or: (node, resolveInput, span) => ({
+    kind: 'match',
+    value: resolveInput(node, 'option'),
+    arms: [
+      {
+        kind: 'match-arm',
+        pattern: { kind: 'variant', name: 'Some', bindings: ['val'], span },
+        value: { kind: 'identifier', name: 'val', span },
+        span,
+      },
+      {
+        kind: 'match-arm',
+        pattern: { kind: 'variant', name: 'None', bindings: [], span },
+        value: resolveInput(node, 'fallback'),
+        span,
+      },
+    ],
+    span,
+  }),
+};
 
 /**
  * Lowers Option operations into enum construction or match unwrapping expressions.
@@ -307,34 +418,8 @@ function buildOptionExpression(
   resolveInput: InputResolver,
   span: FlintSourceSpan,
 ): FlintExpression | undefined {
-  const primaryOutPort = node.outputs[0];
-  switch (node.operation) {
-    case 'option_some': {
-      const outType = primaryOutPort?.type ?? createPrimitiveType('i32');
-      return { kind: 'enum-value', type: outType, variant: 'Some', arguments: [resolveInput(node, 'value')], span };
-    }
-    case 'option_none': {
-      const outType = primaryOutPort?.type ?? createPrimitiveType('i32');
-      return { kind: 'enum-value', type: outType, variant: 'None', arguments: [], span };
-    }
-    case 'option_unwrap_or': {
-      const opt = resolveInput(node, 'option');
-      const fallback = resolveInput(node, 'fallback');
-      const arms: readonly FlintMatchArm[] = [
-        {
-          kind: 'match-arm',
-          pattern: { kind: 'variant', name: 'Some', bindings: ['val'], span },
-          value: { kind: 'identifier', name: 'val', span },
-          span,
-        },
-        { kind: 'match-arm', pattern: { kind: 'variant', name: 'None', bindings: [], span }, value: fallback, span },
-      ];
-      return { kind: 'match', value: opt, arms, span };
-    }
-    default: {
-      return undefined;
-    }
-  }
+  const builder = OPTION_BUILDERS[node.operation];
+  return builder ? builder(node, resolveInput, span) : undefined;
 }
 
 /**
@@ -384,22 +469,31 @@ function buildControlOrTextExpression(
   }
 }
 
+const KNOWN_CAPABILITIES: Readonly<Record<string, string>> = {
+  clock_now: 'clock.now',
+  random_f64: 'random.f64',
+  log_debug: 'env.log',
+};
+
+/**
+ * Resolves the capability identifier required by a graph node.
+ */
+function resolveNodeCapability(node: FlintGraphNode): string | undefined {
+  if (node.category !== 'capability' && node.kind !== 'capability_call') {
+    return undefined;
+  }
+  return KNOWN_CAPABILITIES[node.operation] ?? String(node.properties?.capability ?? node.operation);
+}
+
 /**
  * Collects host capabilities required by capability and capability-call nodes.
  */
 function collectRequiredCapabilities(nodes: readonly FlintGraphNode[], initial: readonly string[]): Set<string> {
   const required = new Set<string>(initial);
   for (const node of nodes) {
-    if (node.category === 'capability' || node.kind === 'capability_call') {
-      const capabilityName =
-        node.operation === 'clock_now'
-          ? 'clock.now'
-          : node.operation === 'random_f64'
-            ? 'random.f64'
-            : node.operation === 'log_debug'
-              ? 'env.log'
-              : String(node.properties?.capability ?? node.operation);
-      required.add(capabilityName);
+    const cap = resolveNodeCapability(node);
+    if (cap !== undefined) {
+      required.add(cap);
     }
   }
   return required;
@@ -458,6 +552,42 @@ function createCapabilityImports(
 }
 
 /**
+ * Creates a single function parameter declaration from an input graph node.
+ */
+function createSingleInputParameter(
+  node: FlintGraphNode,
+  currentLine: number,
+  portToAstIdentifier: Map<string, string>,
+  nodeToSpan: Map<string, FlintSourceSpan>,
+  spanToNode: Map<string, string>,
+): FlintParameter {
+  const outPort = node.outputs[0];
+  const parameterName = sanitizeIdentifier(String(node.properties?.name ?? `param_${node.id}`));
+  const parameterType = outPort?.type ?? createPrimitiveType('f32');
+  const parameterSpan = createSyntheticSpan(currentLine, 1, parameterName.length + 10);
+
+  if (outPort !== undefined) {
+    portToAstIdentifier.set(`${node.id}:${outPort.id}`, parameterName);
+  }
+  nodeToSpan.set(node.id, parameterSpan);
+  spanToNode.set(spanKey(parameterSpan), node.id);
+
+  return {
+    kind: 'parameter',
+    name: parameterName,
+    type: parameterType,
+    span: parameterSpan,
+  };
+}
+
+/**
+ * Determines whether a graph node represents a function input parameter.
+ */
+function isInputNode(node: FlintGraphNode | undefined): node is FlintGraphNode {
+  return node !== undefined && (node.kind === 'input' || node.operation === 'input');
+}
+
+/**
  * Builds function parameter declarations from graph input nodes.
  */
 function createInputParameters(
@@ -473,27 +603,10 @@ function createInputParameters(
 
   for (const nodeId of sortedNodeIds) {
     const node = nodeMap.get(nodeId);
-    if (node === undefined || (node.kind !== 'input' && node.operation !== 'input')) {
+    if (!isInputNode(node)) {
       continue;
     }
-
-    const outPort = node.outputs[0];
-    const parameterName = sanitizeIdentifier(String(node.properties?.name ?? `param_${node.id}`));
-    const parameterType = outPort?.type ?? createPrimitiveType('f32');
-    const parameterSpan = createSyntheticSpan(currentLine++, 1, parameterName.length + 10);
-
-    parameters.push({
-      kind: 'parameter',
-      name: parameterName,
-      type: parameterType,
-      span: parameterSpan,
-    });
-
-    if (outPort !== undefined) {
-      portToAstIdentifier.set(`${node.id}:${outPort.id}`, parameterName);
-    }
-    nodeToSpan.set(node.id, parameterSpan);
-    spanToNode.set(spanKey(parameterSpan), node.id);
+    parameters.push(createSingleInputParameter(node, currentLine++, portToAstIdentifier, nodeToSpan, spanToNode));
   }
 
   return { parameters, nextLine: currentLine };
@@ -524,6 +637,45 @@ function lowerCapabilityCall(
 }
 
 /**
+ * Registers a synthetic helper function for custom inline code blocks.
+ */
+function registerCustomFunction(
+  node: FlintGraphNode,
+  customFunctionName: string,
+  helperFunctions: FlintFunction[],
+  currentLine: number,
+  nodeSpan: FlintSourceSpan,
+  primaryOutPort?: FlintGraphPort,
+): void {
+  if (helperFunctions.some((f) => f.name === customFunctionName)) {
+    return;
+  }
+  helperFunctions.push({
+    kind: 'function',
+    name: customFunctionName,
+    exported: false,
+    genericParameters: [],
+    parameters: node.inputs.map((inp, index) => ({
+      kind: 'parameter',
+      name: sanitizeIdentifier(inp.name),
+      type: inp.type,
+      span: createSyntheticSpan(currentLine + index, 1, 10),
+    })),
+    result: primaryOutPort?.type ?? createPrimitiveType('f32'),
+    body: [
+      {
+        kind: 'return',
+        value: node.inputs[0]
+          ? { kind: 'identifier', name: sanitizeIdentifier(node.inputs[0].name), span: nodeSpan }
+          : undefined,
+        span: nodeSpan,
+      },
+    ],
+    span: nodeSpan,
+  });
+}
+
+/**
  * Lowers custom Flint code blocks or unmapped operations into helper functions or calls.
  */
 function lowerCustomOrUnmappedCode(
@@ -537,33 +689,7 @@ function lowerCustomOrUnmappedCode(
   if (node.operation === 'flint_code' || node.kind === 'custom') {
     const customFunctionName = sanitizeIdentifier(String(node.properties?.functionName ?? `custom_${node.id}`));
     const arguments_ = node.inputs.map((port) => resolveInput(node, port.id));
-
-    if (!helperFunctions.some((f) => f.name === customFunctionName)) {
-      helperFunctions.push({
-        kind: 'function',
-        name: customFunctionName,
-        exported: false,
-        genericParameters: [],
-        parameters: node.inputs.map((inp, index) => ({
-          kind: 'parameter',
-          name: sanitizeIdentifier(inp.name),
-          type: inp.type,
-          span: createSyntheticSpan(currentLine + index, 1, 10),
-        })),
-        result: primaryOutPort?.type ?? createPrimitiveType('f32'),
-        body: [
-          {
-            kind: 'return',
-            value: node.inputs[0]
-              ? { kind: 'identifier', name: sanitizeIdentifier(node.inputs[0].name), span: nodeSpan }
-              : undefined,
-            span: nodeSpan,
-          },
-        ],
-        span: nodeSpan,
-      });
-    }
-
+    registerCustomFunction(node, customFunctionName, helperFunctions, currentLine, nodeSpan, primaryOutPort);
     return { kind: 'call', callee: customFunctionName, arguments: arguments_, span: nodeSpan };
   }
 
@@ -688,6 +814,22 @@ function lowerNodeOutputs(
 }
 
 /**
+ * Resolves standard primitive or math/collection/control expressions for an intermediate node.
+ */
+function resolveStandardNodeExpression(
+  node: FlintGraphNode,
+  resolveInputExpression: InputResolver,
+  nodeSpan: FlintSourceSpan,
+): FlintExpression | undefined {
+  return (
+    buildArithmeticExpression(node, resolveInputExpression, nodeSpan) ??
+    buildComparisonExpression(node, resolveInputExpression, nodeSpan) ??
+    buildCollectionExpression(node, resolveInputExpression, nodeSpan) ??
+    buildControlOrTextExpression(node, resolveInputExpression, nodeSpan)
+  );
+}
+
+/**
  * Resolves the computation expression for an intermediate graph node.
  */
 function resolveNodeExpression(
@@ -706,11 +848,11 @@ function resolveNodeExpression(
       nodeSpan,
     );
   }
+  const standardExpr = resolveStandardNodeExpression(node, resolveInputExpression, nodeSpan);
+  if (standardExpr !== undefined) {
+    return standardExpr;
+  }
   return (
-    buildArithmeticExpression(node, resolveInputExpression, nodeSpan) ??
-    buildComparisonExpression(node, resolveInputExpression, nodeSpan) ??
-    buildCollectionExpression(node, resolveInputExpression, nodeSpan) ??
-    buildControlOrTextExpression(node, resolveInputExpression, nodeSpan) ??
     lowerCapabilityCall(node, capabilityAliases, resolveInputExpression, nodeSpan) ??
     lowerCustomOrUnmappedCode(node, resolveInputExpression, helperFunctions, currentLine, nodeSpan, primaryOutPort)
   );
@@ -765,6 +907,16 @@ function lowerComputationNode(
 }
 
 /**
+ * Determines whether a node is an intermediate computation node (neither input nor output).
+ */
+function isIntermediateNode(node: FlintGraphNode | undefined): node is FlintGraphNode {
+  if (node === undefined) {
+    return false;
+  }
+  return node.kind !== 'input' && node.operation !== 'input' && node.kind !== 'output' && node.operation !== 'output';
+}
+
+/**
  * Iterates through sorted intermediate nodes and lowers them sequentially into statements.
  */
 function lowerIntermediateComputationNodes(
@@ -783,13 +935,7 @@ function lowerIntermediateComputationNodes(
   let currentLine = startLine;
   for (const nodeId of sortedNodeIds) {
     const node = nodeMap.get(nodeId);
-    if (
-      node === undefined ||
-      node.kind === 'input' ||
-      node.operation === 'input' ||
-      node.kind === 'output' ||
-      node.operation === 'output'
-    ) {
+    if (!isIntermediateNode(node)) {
       continue;
     }
     currentLine = lowerComputationNode(
@@ -818,7 +964,7 @@ function createOutputReturnStatement(
   nodeToSpan: Map<string, FlintSourceSpan>,
   spanToNode: Map<string, string>,
 ): { returnStatement: FlintReturnStatement; returnType: FlintTypeName } {
-  if (outputNodes.length === 0) {
+  if (outputNodes.length === 0 || outputNodes[0] === undefined) {
     return {
       returnStatement: { kind: 'return', span: createSyntheticSpan(currentLine, 3, 7) },
       returnType: createPrimitiveType('unit'),
@@ -826,13 +972,6 @@ function createOutputReturnStatement(
   }
 
   const primaryOutput = outputNodes[0];
-  if (primaryOutput === undefined) {
-    return {
-      returnStatement: { kind: 'return', span: createSyntheticSpan(currentLine, 3, 7) },
-      returnType: createPrimitiveType('unit'),
-    };
-  }
-
   const returnSpan = createSyntheticSpan(currentLine, 3, 20);
   nodeToSpan.set(primaryOutput.id, returnSpan);
   spanToNode.set(spanKey(returnSpan), primaryOutput.id);
@@ -848,11 +987,9 @@ function createOutputReturnStatement(
 }
 
 /**
- * Lowers a validated FlintNodeGraph into an in-memory FlintModule AST and bidirectional source map.
+ * Asserts that a graph validation result is valid and returns the topological node order.
  */
-export function buildGraphAst(inputGraph: FlintNodeGraph): FlintAstBuildResult {
-  const graph = flattenGraph(inputGraph);
-  const validation = validateGraph(graph);
+function assertValidGraph(validation: FlintGraphValidationResult): readonly string[] {
   if (!validation.valid || validation.sortedNodeIds === undefined) {
     const errorMessages = validation.issues
       .filter((issue) => issue.severity === 'error')
@@ -860,19 +997,36 @@ export function buildGraphAst(inputGraph: FlintNodeGraph): FlintAstBuildResult {
       .join('\n');
     throw new Error(`Cannot build AST for invalid graph:\n${errorMessages}`);
   }
+  return validation.sortedNodeIds;
+}
+
+/**
+ * Indexes incoming edges targeting input ports.
+ */
+function indexIncomingEdges(edges: readonly FlintGraphEdge[]): Map<string, { fromNodeId: string; fromPortId: string }> {
+  const incoming = new Map<string, { fromNodeId: string; fromPortId: string }>();
+  for (const edge of edges) {
+    incoming.set(`${edge.toNodeId}:${edge.toPortId}`, {
+      fromNodeId: edge.fromNodeId,
+      fromPortId: edge.fromPortId,
+    });
+  }
+  return incoming;
+}
+
+/**
+ * Lowers a validated FlintNodeGraph into an in-memory FlintModule AST and bidirectional source map.
+ */
+export function buildGraphAst(inputGraph: FlintNodeGraph): FlintAstBuildResult {
+  const graph = flattenGraph(inputGraph);
+  const validation = validateGraph(graph);
+  const sortedNodeIds = assertValidGraph(validation);
 
   const nodeMap = new Map<string, FlintGraphNode>(graph.nodes.map((node) => [node.id, node]));
   const nodeToSpan = new Map<string, FlintSourceSpan>();
   const spanToNode = new Map<string, string>();
   const portToAstIdentifier = new Map<string, string>();
-
-  const incomingEdges = new Map<string, { fromNodeId: string; fromPortId: string }>();
-  for (const edge of graph.edges) {
-    incomingEdges.set(`${edge.toNodeId}:${edge.toPortId}`, {
-      fromNodeId: edge.fromNodeId,
-      fromPortId: edge.fromPortId,
-    });
-  }
+  const incomingEdges = indexIncomingEdges(graph.edges);
 
   const moduleName = sanitizeIdentifier(graph.name || 'graph_module');
   const entryFunctionName = sanitizeIdentifier(graph.entryFunctionName ?? 'evaluate');
@@ -888,7 +1042,7 @@ export function buildGraphAst(inputGraph: FlintNodeGraph): FlintAstBuildResult {
   } = createCapabilityImports(requiredCapabilities, 1);
 
   const { parameters, nextLine: lineAfterParameters } = createInputParameters(
-    validation.sortedNodeIds,
+    sortedNodeIds,
     nodeMap,
     lineAfterImports + 1,
     portToAstIdentifier,
@@ -921,7 +1075,7 @@ export function buildGraphAst(inputGraph: FlintNodeGraph): FlintAstBuildResult {
   }
 
   const lineAfterNodes = lowerIntermediateComputationNodes(
-    validation.sortedNodeIds,
+    sortedNodeIds,
     nodeMap,
     lineAfterParameters + 1,
     resolveInputExpression,

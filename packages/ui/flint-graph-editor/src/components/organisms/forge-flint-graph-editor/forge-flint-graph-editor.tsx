@@ -293,6 +293,27 @@ interface FlintRendererBridge {
 }
 
 /**
+ * Tests whether a point lies within the radius of any port in a port list.
+ */
+function hitTestPortList(
+  ports: readonly FlintGraphPort[],
+  nodeX: number,
+  nodeY: number,
+  worldX: number,
+  worldY: number,
+  snapRadius: number,
+  nodeId: string,
+): FlintHitResult | undefined {
+  for (const [index, port] of ports.entries()) {
+    const portY = nodeY + 44 + index * 28 + 14;
+    if (Math.hypot(worldX - nodeX, worldY - portY) <= snapRadius) {
+      return { type: 'port', nodeId, portId: port.id, worldX, worldY };
+    }
+  }
+  return undefined;
+}
+
+/**
  * Performs port hit-testing against candidate nodes within a snap radius.
  */
 function hitTestPorts(
@@ -302,20 +323,47 @@ function hitTestPorts(
   snapRadius: number,
 ): FlintHitResult | undefined {
   for (const node of nodes) {
-    for (const [index, port] of (node.inputs ?? []).entries()) {
-      const portY = node.position.y + 44 + index * 28 + 14;
-      if (Math.hypot(worldX - node.position.x, worldY - portY) <= snapRadius) {
-        return { type: 'port', nodeId: node.id, portId: port.id, worldX, worldY };
-      }
-    }
-    for (const [index, port] of (node.outputs ?? []).entries()) {
-      const portY = node.position.y + 44 + index * 28 + 14;
-      if (Math.hypot(worldX - (node.position.x + 220), worldY - portY) <= snapRadius) {
-        return { type: 'port', nodeId: node.id, portId: port.id, worldX, worldY };
-      }
-    }
+    const inHit = hitTestPortList(
+      node.inputs ?? [],
+      node.position.x,
+      node.position.y,
+      worldX,
+      worldY,
+      snapRadius,
+      node.id,
+    );
+    if (inHit) return inHit;
+
+    const outHit = hitTestPortList(
+      node.outputs ?? [],
+      node.position.x + 220,
+      node.position.y,
+      worldX,
+      worldY,
+      snapRadius,
+      node.id,
+    );
+    if (outHit) return outHit;
   }
   return undefined;
+}
+
+/**
+ * Tests whether a point is within a node's computed bounding box.
+ */
+function isPointInsideNode(
+  worldX: number,
+  worldY: number,
+  node: FlintGraphNode,
+  wasm: ReturnType<typeof getFlintRenderWorkerWasm>,
+): boolean {
+  const maxPorts = Math.max(node.inputs?.length ?? 0, node.outputs?.length ?? 0);
+  wasm.getNodeBounds(node.position.x, node.position.y, maxPorts);
+  const minX = wasm.get_node_bounds_min_x();
+  const minY = wasm.get_node_bounds_min_y();
+  const maxX = wasm.get_node_bounds_max_x();
+  const maxY = wasm.get_node_bounds_max_y();
+  return worldX >= minX && worldX <= maxX && worldY >= minY && worldY <= maxY;
 }
 
 /**
@@ -328,13 +376,7 @@ function hitTestNodes(
   wasm: ReturnType<typeof getFlintRenderWorkerWasm>,
 ): FlintHitResult | undefined {
   for (const node of nodes) {
-    const maxPorts = Math.max(node.inputs?.length ?? 0, node.outputs?.length ?? 0);
-    wasm.getNodeBounds(node.position.x, node.position.y, maxPorts);
-    const minX = wasm.get_node_bounds_min_x();
-    const minY = wasm.get_node_bounds_min_y();
-    const maxX = wasm.get_node_bounds_max_x();
-    const maxY = wasm.get_node_bounds_max_y();
-    if (worldX >= minX && worldX <= maxX && worldY >= minY && worldY <= maxY) {
+    if (isPointInsideNode(worldX, worldY, node, wasm)) {
       return { type: 'node', nodeId: node.id, worldX, worldY };
     }
   }
@@ -384,6 +426,47 @@ function hitTestWaypoints(
 }
 
 /**
+ * Computes top-left bounding position of a group from its member nodes.
+ */
+function computeGroupBoundingBox(
+  nodeIds: readonly string[],
+  nodeMap: ReadonlyMap<string, FlintGraphNode>,
+): { minX: number; minY: number } | undefined {
+  let minX = Number.POSITIVE_INFINITY;
+  let minY = Number.POSITIVE_INFINITY;
+  for (const id of nodeIds) {
+    const node = nodeMap.get(id);
+    if (node) {
+      if (node.position.x < minX) minX = node.position.x;
+      if (node.position.y < minY) minY = node.position.y;
+    }
+  }
+  return Number.isFinite(minX) ? { minX, minY } : undefined;
+}
+
+/**
+ * Tests whether cursor coordinates lie within a group's header label pill.
+ */
+function isPointInGroupPill(
+  worldX: number,
+  worldY: number,
+  title: string,
+  bounds: { minX: number; minY: number },
+): boolean {
+  const padding = 24;
+  const labelX = bounds.minX - padding + 10;
+  const labelY = bounds.minY - padding - 22 + 4;
+  const labelWidth = Math.max(120, title.length * 10 + 32);
+  const labelHeight = 24;
+  return (
+    worldX >= labelX - 6 &&
+    worldX <= labelX + labelWidth + 6 &&
+    worldY >= labelY - 6 &&
+    worldY <= labelY + labelHeight + 6
+  );
+}
+
+/**
  * Performs hit testing for group label pills.
  */
 function hitTestGroupLabels(
@@ -395,31 +478,76 @@ function hitTestGroupLabels(
   if (!groups || groups.length === 0) return undefined;
   const nodeMap = new Map<string, FlintGraphNode>(nodes.map((n) => [n.id, n]));
   for (const group of groups) {
-    let minX = Infinity;
-    let minY = Infinity;
-    for (const id of group.nodeIds) {
-      const node = nodeMap.get(id);
-      if (node) {
-        if (node.position.x < minX) minX = node.position.x;
-        if (node.position.y < minY) minY = node.position.y;
-      }
-    }
-    if (minX === Infinity) continue;
-    const padding = 24;
-    const labelX = minX - padding + 10;
-    const labelY = minY - padding - 22 + 4;
-    const labelWidth = Math.max(120, group.title.length * 10 + 32);
-    const labelHeight = 24;
-    if (
-      worldX >= labelX - 6 &&
-      worldX <= labelX + labelWidth + 6 &&
-      worldY >= labelY - 6 &&
-      worldY <= labelY + labelHeight + 6
-    ) {
+    const bounds = computeGroupBoundingBox(group.nodeIds, nodeMap);
+    if (bounds && isPointInGroupPill(worldX, worldY, group.title, bounds)) {
       return { type: 'group', groupId: group.id, nodeId: '', worldX, worldY };
     }
   }
   return undefined;
+}
+
+/**
+ * Tests whether cursor coordinates lie near any linear waypoint segments of an edge.
+ */
+function isPointNearWaypointSegments(
+  worldX: number,
+  worldY: number,
+  p0x: number,
+  p0y: number,
+  p3x: number,
+  p3y: number,
+  points: readonly { x: number; y: number }[],
+): boolean {
+  let previousX = p0x;
+  let previousY = p0y;
+  for (const pt of points) {
+    if (distributionToSegmentSquared(worldX, worldY, previousX, previousY, pt.x, pt.y) <= 14 * 14) {
+      return true;
+    }
+    previousX = pt.x;
+    previousY = pt.y;
+  }
+  return distributionToSegmentSquared(worldX, worldY, previousX, previousY, p3x, p3y) <= 14 * 14;
+}
+
+/**
+ * Tests hit intersection against a single graph edge.
+ */
+function hitTestSingleEdge(
+  worldX: number,
+  worldY: number,
+  edge: FlintGraphEdge,
+  from: FlintGraphNode,
+  to: FlintGraphNode,
+  wasm: ReturnType<typeof getFlintRenderWorkerWasm>,
+): boolean {
+  const fromIndex = Math.max(
+    0,
+    from.outputs.findIndex((p) => p.id === edge.fromPortId),
+  );
+  const toIndex = Math.max(
+    0,
+    to.inputs.findIndex((p) => p.id === edge.toPortId),
+  );
+  const p0x = from.position.x + 220;
+  const p0y = from.position.y + 44 + fromIndex * 28 + 14;
+  const p3x = to.position.x;
+  const p3y = to.position.y + 44 + toIndex * 28 + 14;
+
+  if (edge.points && edge.points.length > 0) {
+    return isPointNearWaypointSegments(worldX, worldY, p0x, p0y, p3x, p3y, edge.points);
+  }
+  return Boolean(
+    wasm.edge_hit_test(
+      Math.round(worldX),
+      Math.round(worldY),
+      Math.round(p0x),
+      Math.round(p0y),
+      Math.round(p3x),
+      Math.round(p3y),
+      14,
+    ),
+  );
 }
 
 /**
@@ -436,49 +564,7 @@ function hitTestEdges(
   for (const edge of edges) {
     const from = nodeMap.get(edge.fromNodeId);
     const to = nodeMap.get(edge.toNodeId);
-    if (!from || !to) continue;
-    const fromIndex = Math.max(
-      0,
-      from.outputs.findIndex((p) => p.id === edge.fromPortId),
-    );
-    const toIndex = Math.max(
-      0,
-      to.inputs.findIndex((p) => p.id === edge.toPortId),
-    );
-    const p0x = from.position.x + 220;
-    const p0y = from.position.y + 44 + fromIndex * 28 + 14;
-    const p3x = to.position.x;
-    const p3y = to.position.y + 44 + toIndex * 28 + 14;
-
-    if (edge.points && edge.points.length > 0) {
-      let previousX = p0x;
-      let previousY = p0y;
-      let hitSegment = false;
-      for (const pt of edge.points) {
-        if (distributionToSegmentSquared(worldX, worldY, previousX, previousY, pt.x, pt.y) <= 14 * 14) {
-          hitSegment = true;
-          break;
-        }
-        previousX = pt.x;
-        previousY = pt.y;
-      }
-      if (!hitSegment && distributionToSegmentSquared(worldX, worldY, previousX, previousY, p3x, p3y) <= 14 * 14) {
-        hitSegment = true;
-      }
-      if (hitSegment) {
-        return { type: 'edge', nodeId: '', edgeId: edge.id, worldX, worldY };
-      }
-    } else if (
-      wasm.edge_hit_test(
-        Math.round(worldX),
-        Math.round(worldY),
-        Math.round(p0x),
-        Math.round(p0y),
-        Math.round(p3x),
-        Math.round(p3y),
-        14,
-      )
-    ) {
+    if (from && to && hitTestSingleEdge(worldX, worldY, edge, from, to, wasm)) {
       return { type: 'edge', nodeId: '', edgeId: edge.id, worldX, worldY };
     }
   }
@@ -715,14 +801,21 @@ function createRendererBridge(
 }
 
 /**
+ * Retrieves color theme explicitly configured on the document root or body.
+ */
+function getDatasetTheme(): 'light' | 'dark' | undefined {
+  if (typeof document === 'undefined') return undefined;
+  const theme = document.documentElement.dataset.theme ?? document.body?.dataset.theme;
+  return theme === 'light' || theme === 'dark' ? theme : undefined;
+}
+
+/**
  * Detects the active color theme from the DOM data-theme attribute or system color preference.
  */
 function detectCurrentTheme(): 'light' | 'dark' {
-  if (typeof document !== 'undefined') {
-    const documentTheme = document.documentElement.dataset.theme ?? document.body?.dataset.theme;
-    if (documentTheme === 'light' || documentTheme === 'dark') {
-      return documentTheme;
-    }
+  const datasetTheme = getDatasetTheme();
+  if (datasetTheme !== undefined) {
+    return datasetTheme;
   }
   if (
     globalThis.window !== undefined &&

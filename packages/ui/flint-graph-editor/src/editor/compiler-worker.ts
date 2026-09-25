@@ -131,18 +131,23 @@ async function invokeWasmEntry(wasmBytes: Uint8Array, entryFnName: string, callA
   return Reflect.apply(entryFn, undefined, callArgs);
 }
 
+interface ValidCompileCheck {
+  readonly artifact: ReturnType<typeof compileNodeGraph>;
+  readonly sortedNodeIds: readonly string[];
+  readonly wasm: Uint8Array;
+}
+
 /**
  * Validates a graph, compiles its AST, and verifies valid WebAssembly artifact emission.
  */
 function validateAndCompileGraph(graph: FlintNodeGraph): {
-  errorResponse?: CompilerWorkerResponse;
-  artifact?: ReturnType<typeof compileNodeGraph>;
-  sortedNodeIds?: readonly string[];
+  error?: CompilerWorkerResponse;
+  valid?: ValidCompileCheck;
 } {
   const validation = validateGraph(graph);
-  if (!validation.valid) {
+  if (!validation.valid || validation.sortedNodeIds === undefined) {
     return {
-      errorResponse: {
+      error: {
         type: 'run_error',
         error: 'Graph validation failed.',
         nodeErrors: collectValidationErrors(validation.issues),
@@ -154,7 +159,7 @@ function validateAndCompileGraph(graph: FlintNodeGraph): {
   const errorDiagnostics = artifact.diagnostics.filter((d) => d.severity === 'error');
   if (errorDiagnostics.length > 0) {
     return {
-      errorResponse: {
+      error: {
         type: 'run_error',
         error: errorDiagnostics.map((d) => d.message).join('\n'),
         nodeErrors: collectDiagnosticErrors(errorDiagnostics, artifact.compilation.sourceMap.spanToNode),
@@ -164,7 +169,7 @@ function validateAndCompileGraph(graph: FlintNodeGraph): {
 
   if (!artifact.wasm) {
     return {
-      errorResponse: {
+      error: {
         type: 'run_error',
         error: 'No WebAssembly binary was emitted by the Flint compiler.',
         nodeErrors: {},
@@ -172,7 +177,7 @@ function validateAndCompileGraph(graph: FlintNodeGraph): {
     };
   }
 
-  return { artifact, sortedNodeIds: validation.sortedNodeIds };
+  return { valid: { artifact, sortedNodeIds: validation.sortedNodeIds, wasm: artifact.wasm } };
 }
 
 /**
@@ -183,26 +188,28 @@ export async function executeGraph(
   inputs: Readonly<Record<string, unknown>> = {},
 ): Promise<CompilerWorkerResponse> {
   const check = validateAndCompileGraph(graph);
-  if (check.errorResponse || !check.artifact || !check.sortedNodeIds || !check.artifact.wasm) {
+  if (check.error !== undefined || check.valid === undefined) {
     return (
-      check.errorResponse ?? {
+      check.error ?? {
         type: 'run_error',
         error: 'Graph validation or compilation failed.',
         nodeErrors: {},
       }
     );
   }
-  const artifact = check.artifact;
-  const sortedNodeIds = check.sortedNodeIds;
 
   try {
-    const callArgs = prepareCallArguments(sortedNodeIds, graph.nodes, inputs);
-    const result = await invokeWasmEntry(artifact.wasm, artifact.compilation.entryFunctionName, callArgs);
+    const callArgs = prepareCallArguments(check.valid.sortedNodeIds, graph.nodes, inputs);
+    const result = await invokeWasmEntry(
+      check.valid.wasm,
+      check.valid.artifact.compilation.entryFunctionName,
+      callArgs,
+    );
 
     return {
       type: 'run_success',
       outputs: { result },
-      wasmBytes: artifact.wasm,
+      wasmBytes: check.valid.wasm,
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);

@@ -357,15 +357,197 @@ describe('WebGPU Graph Renderer - Worker Protocol & Serialization', () => {
   });
 });
 
+interface MockGpuHooks {
+  onCameraUpload?: () => void;
+  onNodeWrite?: (cx: number, cy: number, w: number, h: number, radius: number, isSelected: number) => void;
+  onEdgeWrite?: (
+    p0x: number,
+    p0y: number,
+    p1x: number,
+    p1y: number,
+    p2x: number,
+    p2y: number,
+    p3x: number,
+    p3y: number,
+  ) => void;
+  onPinWrite?: (px: number, py: number, radius: number) => void;
+  onEdgeUpload?: (count: number) => void;
+  onGridRender?: () => void;
+  onNodesRender?: (count: number) => void;
+}
+
+/**
+ * Creates capability table for testing WebGPU capability bindings.
+ */
+function createMockWebGpuCapabilities(hooks: MockGpuHooks = {}): FlintCapabilityTable {
+  return {
+    'webgpu.upload_camera_buffer': {
+      gpu_upload_camera_buffer: () => hooks.onCameraUpload?.(),
+    },
+    'webgpu.write_node_instance': {
+      gpu_write_node_instance: (cx: number, cy: number, w: number, h: number, radius: number, isSelected: number) =>
+        hooks.onNodeWrite?.(cx, cy, w, h, radius, isSelected),
+    },
+    'webgpu.write_edge_instance': {
+      gpu_write_edge_instance: (
+        p0x: number,
+        p0y: number,
+        p1x: number,
+        p1y: number,
+        p2x: number,
+        p2y: number,
+        p3x: number,
+        p3y: number,
+      ) => hooks.onEdgeWrite?.(p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y),
+    },
+    'webgpu.write_pin_instance': {
+      gpu_write_pin_instance: (px: number, py: number, radius: number) => hooks.onPinWrite?.(px, py, radius),
+    },
+    'webgpu.upload_node_buffer': {
+      gpu_upload_node_buffer: () => {},
+    },
+    'webgpu.upload_edge_buffer': {
+      gpu_upload_edge_buffer: (count: number) => hooks.onEdgeUpload?.(count),
+    },
+    'webgpu.upload_pin_buffer': {
+      gpu_upload_pin_buffer: () => {},
+    },
+    'webgpu.render_begin': {
+      gpu_render_begin: () => {},
+    },
+    'webgpu.render_grid': {
+      gpu_render_grid: () => hooks.onGridRender?.(),
+    },
+    'webgpu.render_edges': {
+      gpu_render_edges: () => {},
+    },
+    'webgpu.render_nodes': {
+      gpu_render_nodes: (count: number) => hooks.onNodesRender?.(count),
+    },
+    'webgpu.render_pins': {
+      gpu_render_pins: () => {},
+    },
+    'webgpu.render_end': {
+      gpu_render_end: () => {},
+    },
+  };
+}
+
+/**
+ * Verifies group creation, title/color modification, and group movement in editor store.
+ */
+function verifyGroupStoreProperties(store: FlintEditorStore, nodeA: { id: string }, nodeB: { id: string }): void {
+  store.createGroup('Math Group', [nodeA.id, nodeB.id]);
+  const group = store.getState().graph.groups?.[0];
+  expect(group).toBeDefined();
+  expect(group?.title).toBe('Math Group');
+
+  const groupId = group?.id ?? '';
+  store.selectGroup(group?.id);
+  expect(store.getState().selectedGroupId).toBe(group?.id);
+
+  store.setGroupTitle(groupId, 'Calculations');
+  store.setGroupColor(groupId, '#3fb950');
+  const modifiedGroup = store.getState().graph.groups?.[0];
+  expect(modifiedGroup?.title).toBe('Calculations');
+  expect(modifiedGroup?.color).toBe('#3fb950');
+
+  const initialPosA = store.getState().graph.nodes.find((n) => n.id === nodeA.id)?.position.x ?? 0;
+  store.moveGroup(groupId, 50, 30);
+  const movedPosA = store.getState().graph.nodes.find((n) => n.id === nodeA.id)?.position.x ?? 0;
+  expect(movedPosA).toBe(initialPosA + 50);
+}
+
+/**
+ * Reads a 32-bit integer value from WebAssembly memory at the specified byte offset.
+ */
+function readMemValue(mem: Uint32Array | Int32Array, byteOffset: number): number {
+  return mem[byteOffset >> 2] ?? 0;
+}
+
+/**
+ * Verifies that a glyph satisfies FreeType metric constraints in multiples of 2.
+ */
+function verifySingleGlyphMetrics(
+  wasm: ReturnType<typeof getFlintRenderWorkerWasm>,
+  idx: number,
+  u32Mem: Uint32Array,
+  i32Mem: Int32Array,
+  metricsTablePtr: number,
+): void {
+  const entryBase = metricsTablePtr + idx * 32;
+  const width = readMemValue(u32Mem, entryBase);
+  const height = readMemValue(u32Mem, entryBase + 4);
+  const horiBearingX = readMemValue(i32Mem, entryBase + 8);
+  const horiBearingY = readMemValue(i32Mem, entryBase + 12);
+  const horiAdvance = readMemValue(u32Mem, entryBase + 16);
+  const vertBearingX = readMemValue(i32Mem, entryBase + 20);
+  const vertBearingY = readMemValue(i32Mem, entryBase + 24);
+  const vertAdvance = readMemValue(u32Mem, entryBase + 28);
+
+  // Validate all dimensions and bearings are even integers (multiples of 2 on X and Y)
+  expect(Math.abs(width % 2)).toBe(0);
+  expect(Math.abs(height % 2)).toBe(0);
+  expect(Math.abs(horiBearingX % 2)).toBe(0);
+  expect(Math.abs(horiBearingY % 2)).toBe(0);
+  expect(horiAdvance).toBeGreaterThan(0);
+  expect(Math.abs(vertBearingX % 2)).toBe(0);
+  expect(Math.abs(vertBearingY % 2)).toBe(0);
+  expect(Math.abs(vertAdvance % 2)).toBe(0);
+
+  // Validate export helper methods match serialized metrics
+  expect(wasm.font_get_glyph_width(idx)).toBe(width);
+  expect(wasm.font_get_glyph_height(idx)).toBe(height);
+  expect(wasm.font_get_glyph_hori_bearing_x(idx)).toBe(horiBearingX);
+  expect(wasm.font_get_glyph_hori_bearing_y(idx)).toBe(horiBearingY);
+  expect(wasm.font_get_glyph_hori_advance(idx)).toBe(horiAdvance);
+
+  // Validate BBox coordinate calculations
+  const bboxMinX = wasm.font_get_glyph_bbox_min_x(idx);
+  const bboxMaxX = wasm.font_get_glyph_bbox_max_x(idx);
+  const bboxMinY = wasm.font_get_glyph_bbox_min_y(idx);
+  const bboxMaxY = wasm.font_get_glyph_bbox_max_y(idx);
+
+  expect(Math.abs(bboxMinX % 2)).toBe(0);
+  expect(Math.abs(bboxMaxX % 2)).toBe(0);
+  expect(Math.abs(bboxMinY % 2)).toBe(0);
+  expect(Math.abs(bboxMaxY % 2)).toBe(0);
+
+  expect(bboxMinX).toBe(horiBearingX);
+  expect(bboxMaxX).toBe(horiBearingX + width);
+  expect(bboxMinY).toBe(horiBearingY - height);
+  expect(bboxMaxY).toBe(horiBearingY);
+}
+
+/**
+ * Reads packed cell bounds and texture coordinates from serialized memory table.
+ */
+function readPackedCell(
+  u32Mem: Uint32Array,
+  tableBase: number,
+  idx: number,
+): { x: number; y: number; w: number; h: number } {
+  const base = (tableBase + idx * 16) >> 2;
+  return {
+    x: u32Mem[base] ?? 0,
+    y: u32Mem[base + 1] ?? 0,
+    w: u32Mem[base + 2] ?? 0,
+    h: u32Mem[base + 3] ?? 0,
+  };
+}
+
 describe('Flint WebAssembly Renderer & Camera Engines', () => {
-  it('executes native Flint WebAssembly projections and calculations accurately', () => {
+  it('executes coordinate space transformations in Flint WebAssembly', () => {
     const renderWasm = getFlintRenderWorkerWasm();
-    const cameraWasm = getFlintCameraWasm();
 
     expect(renderWasm.screen_to_world_x(400, 0, 800, 100)).toBe(0);
     expect(renderWasm.screen_to_world_y(300, 0, 600, 100)).toBe(0);
     expect(renderWasm.world_to_screen_x(0, 0, 800, 100)).toBe(400);
     expect(renderWasm.world_to_screen_y(0, 0, 600, 100)).toBe(300);
+  });
+
+  it('computes spatial intersection geometry in Flint WebAssembly', () => {
+    const renderWasm = getFlintRenderWorkerWasm();
 
     expect(renderWasm.point_in_rect(50, 50, 0, 0, 100, 100)).toBe(1);
     expect(renderWasm.point_in_rect(150, 50, 0, 0, 100, 100)).toBe(0);
@@ -375,6 +557,11 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
 
     expect(renderWasm.rect_intersects_box(10, 10, 50, 50, 0, 0, 100, 100)).toBe(1);
     expect(renderWasm.rect_intersects_box(200, 200, 50, 50, 0, 0, 100, 100)).toBe(0);
+  });
+
+  it('computes camera pan, zoom, and clamp bounds in Flint WebAssembly', () => {
+    const cameraWasm = getFlintCameraWasm();
+    const renderWasm = getFlintRenderWorkerWasm();
 
     expect(cameraWasm.clamp_i32(5, 10, 500)).toBe(10);
     expect(cameraWasm.clamp_i32(600, 10, 500)).toBe(500);
@@ -393,82 +580,31 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     let renderedGrid = false;
     let renderedNodesCount = 0;
 
-    const testWasm = getFlintRenderWorkerWasm({
-      'webgpu.upload_camera_buffer': {
-        gpu_upload_camera_buffer: () => {
+    const testWasm = getFlintRenderWorkerWasm(
+      createMockWebGpuCapabilities({
+        onCameraUpload: () => {
           uploadedCamera = true;
         },
-      },
-      'webgpu.write_node_instance': {
-        gpu_write_node_instance: (cx: number, cy: number, w: number, h: number, radius: number, isSelected: number) => {
+        onNodeWrite: (cx, cy, w, h, radius, isSelected) => {
           recordedNode = { cx, cy, w, h, radius, isSelected };
         },
-      },
-      'webgpu.write_edge_instance': {
-        gpu_write_edge_instance: (
-          p0x: number,
-          p0y: number,
-          p1x: number,
-          p1y: number,
-          p2x: number,
-          p2y: number,
-          p3x: number,
-          p3y: number,
-        ) => {
+        onEdgeWrite: (p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y) => {
           recordedEdge = { p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y };
         },
-      },
-      'webgpu.write_pin_instance': {
-        gpu_write_pin_instance: (px: number, py: number, radius: number) => {
+        onPinWrite: (px, py, radius) => {
           recordedPin = { px, py, radius };
         },
-      },
-      'webgpu.upload_node_buffer': {
-        gpu_upload_node_buffer: () => {
-          /* no-op */
-        },
-      },
-      'webgpu.upload_edge_buffer': {
-        gpu_upload_edge_buffer: (count: number) => {
+        onEdgeUpload: (count) => {
           uploadedEdgeCount = count;
         },
-      },
-      'webgpu.upload_pin_buffer': {
-        gpu_upload_pin_buffer: () => {
-          /* no-op */
-        },
-      },
-      'webgpu.render_begin': {
-        gpu_render_begin: () => {
-          /* no-op */
-        },
-      },
-      'webgpu.render_grid': {
-        gpu_render_grid: () => {
+        onGridRender: () => {
           renderedGrid = true;
         },
-      },
-      'webgpu.render_edges': {
-        gpu_render_edges: () => {
-          /* no-op */
-        },
-      },
-      'webgpu.render_nodes': {
-        gpu_render_nodes: (count: number) => {
+        onNodesRender: (count) => {
           renderedNodesCount = count;
         },
-      },
-      'webgpu.render_pins': {
-        gpu_render_pins: () => {
-          /* no-op */
-        },
-      },
-      'webgpu.render_end': {
-        gpu_render_end: () => {
-          /* no-op */
-        },
-      },
-    });
+      }),
+    );
 
     testWasm.compute_node_instance(0, 0, 220, 100, 1, 0, 0);
     expect(recordedNode).toEqual({ cx: 110, cy: 50, w: 220, h: 100, radius: 8, isSelected: 1 });
@@ -1138,29 +1274,7 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     const store = new FlintEditorStore();
     const nodeA = store.addNode('add', { x: 100, y: 100 });
     const nodeB = store.addNode('multiply', { x: 400, y: 100 });
-
-    // Group management
-    store.createGroup('Math Group', [nodeA.id, nodeB.id]);
-    const group = store.getState().graph.groups?.[0];
-    expect(group).toBeDefined();
-    expect(group?.title).toBe('Math Group');
-
-    // Select group
-    store.selectGroup(group?.id);
-    expect(store.getState().selectedGroupId).toBe(group?.id);
-
-    // Modify group title and color
-    store.setGroupTitle(group?.id ?? '', 'Calculations');
-    store.setGroupColor(group?.id ?? '', '#3fb950');
-    const modifiedGroup = store.getState().graph.groups?.[0];
-    expect(modifiedGroup?.title).toBe('Calculations');
-    expect(modifiedGroup?.color).toBe('#3fb950');
-
-    // Move group
-    const initialPosA = store.getState().graph.nodes.find((n) => n.id === nodeA.id)?.position.x ?? 0;
-    store.moveGroup(group?.id ?? '', 50, 30);
-    const movedPosA = store.getState().graph.nodes.find((n) => n.id === nodeA.id)?.position.x ?? 0;
-    expect(movedPosA).toBe(initialPosA + 50);
+    verifyGroupStoreProperties(store, nodeA, nodeB);
   });
 
   it('tracks detailed performance categories and updates in renderer metrics', () => {
@@ -1186,48 +1300,7 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     const i32Mem = new Int32Array(wasm.memory.buffer);
 
     for (let idx = 0; idx < totalGlyphs; idx++) {
-      const entryBase = metricsTablePtr + idx * 32;
-      const width = u32Mem[entryBase >> 2] ?? 0;
-      const height = u32Mem[(entryBase + 4) >> 2] ?? 0;
-      const horiBearingX = i32Mem[(entryBase + 8) >> 2] ?? 0;
-      const horiBearingY = i32Mem[(entryBase + 12) >> 2] ?? 0;
-      const horiAdvance = u32Mem[(entryBase + 16) >> 2] ?? 0;
-      const vertBearingX = i32Mem[(entryBase + 20) >> 2] ?? 0;
-      const vertBearingY = i32Mem[(entryBase + 24) >> 2] ?? 0;
-      const vertAdvance = u32Mem[(entryBase + 28) >> 2] ?? 0;
-
-      // Validate all dimensions and bearings are even integers (multiples of 2 on X and Y)
-      expect(Math.abs(width % 2)).toBe(0);
-      expect(Math.abs(height % 2)).toBe(0);
-      expect(Math.abs(horiBearingX % 2)).toBe(0);
-      expect(Math.abs(horiBearingY % 2)).toBe(0);
-      expect(horiAdvance).toBeGreaterThan(0);
-      expect(Math.abs(vertBearingX % 2)).toBe(0);
-      expect(Math.abs(vertBearingY % 2)).toBe(0);
-      expect(Math.abs(vertAdvance % 2)).toBe(0);
-
-      // Validate export helper methods match serialized metrics
-      expect(wasm.font_get_glyph_width(idx)).toBe(width);
-      expect(wasm.font_get_glyph_height(idx)).toBe(height);
-      expect(wasm.font_get_glyph_hori_bearing_x(idx)).toBe(horiBearingX);
-      expect(wasm.font_get_glyph_hori_bearing_y(idx)).toBe(horiBearingY);
-      expect(wasm.font_get_glyph_hori_advance(idx)).toBe(horiAdvance);
-
-      // Validate BBox coordinate calculations
-      const bboxMinX = wasm.font_get_glyph_bbox_min_x(idx);
-      const bboxMaxX = wasm.font_get_glyph_bbox_max_x(idx);
-      const bboxMinY = wasm.font_get_glyph_bbox_min_y(idx);
-      const bboxMaxY = wasm.font_get_glyph_bbox_max_y(idx);
-
-      expect(Math.abs(bboxMinX % 2)).toBe(0);
-      expect(Math.abs(bboxMaxX % 2)).toBe(0);
-      expect(Math.abs(bboxMinY % 2)).toBe(0);
-      expect(Math.abs(bboxMaxY % 2)).toBe(0);
-
-      expect(bboxMinX).toBe(horiBearingX);
-      expect(bboxMaxX).toBe(horiBearingX + width);
-      expect(bboxMinY).toBe(horiBearingY - height);
-      expect(bboxMaxY).toBe(horiBearingY);
+      verifySingleGlyphMetrics(wasm, idx, u32Mem, i32Mem, metricsTablePtr);
     }
   });
 
@@ -1241,24 +1314,20 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     const u32Mem = new Uint32Array(wasm.memory.buffer);
 
     // Verify non-uniform widths and heights across glyphs
-    const cellW_period = u32Mem[(tableBase + 14 * 16 + 8) >> 2] ?? 0; // '.'
-    const cellH_period = u32Mem[(tableBase + 14 * 16 + 12) >> 2] ?? 0; // '.'
-    const cellW_M = u32Mem[(tableBase + 45 * 16 + 8) >> 2] ?? 0; // 'M'
-    const cellH_M = u32Mem[(tableBase + 45 * 16 + 12) >> 2] ?? 0; // 'M'
-    const cellW_excl = u32Mem[(tableBase + 1 * 16 + 8) >> 2] ?? 0; // '!'
+    const periodCell = readPackedCell(u32Mem, tableBase, 14); // '.'
+    const mCell = readPackedCell(u32Mem, tableBase, 45); // 'M'
+    const exclCell = readPackedCell(u32Mem, tableBase, 1); // '!'
 
-    expect(cellW_period).toBeLessThan(cellW_M);
-    expect(cellH_period).toBeLessThan(cellH_M);
-    expect(cellW_excl).toBeLessThan(cellW_M);
-    expect(cellW_period % 2).toBe(0);
-    expect(cellH_period % 2).toBe(0);
-    expect(cellW_M % 2).toBe(0);
-    expect(cellH_M % 2).toBe(0);
+    expect(periodCell.w).toBeLessThan(mCell.w);
+    expect(periodCell.h).toBeLessThan(mCell.h);
+    expect(exclCell.w).toBeLessThan(mCell.w);
+    expect(periodCell.w % 2).toBe(0);
+    expect(periodCell.h % 2).toBe(0);
+    expect(mCell.w % 2).toBe(0);
+    expect(mCell.h % 2).toBe(0);
 
     // Verify non-sequential packing order: taller/wider glyphs are packed on earlier shelves
-    const cellY_M = u32Mem[(tableBase + 45 * 16 + 4) >> 2] ?? 0; // 'M' (tall/wide, top shelf)
-    const cellY_period = u32Mem[(tableBase + 14 * 16 + 4) >> 2] ?? 0; // '.' (short, lower shelf)
-    expect(cellY_M).toBeLessThanOrEqual(cellY_period);
+    expect(mCell.y).toBeLessThanOrEqual(periodCell.y);
 
     // Verify partial differential ∂ (idx 109, U+2202) has valid segments and positive metrics
     const segPtr = 1024;

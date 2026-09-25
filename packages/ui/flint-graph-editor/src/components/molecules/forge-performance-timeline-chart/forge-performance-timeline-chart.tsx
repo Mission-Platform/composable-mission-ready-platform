@@ -90,45 +90,48 @@ function renderTargetFpsLines(
   }
 }
 
+interface LayerDefinition {
+  readonly key: string;
+  readonly color: string;
+  readonly getValue: (m: FlintPerformanceMetrics) => number;
+}
+
+const TIMELINE_LAYERS: readonly LayerDefinition[] = [
+  {
+    key: 'updates',
+    color: '#f0883e',
+    getValue: (m: FlintPerformanceMetrics) => (m.updateTimeMs ?? 0) + (m.layoutTimeMs ?? 0),
+  },
+  {
+    key: 'spatial',
+    color: '#3fb950',
+    getValue: (m: FlintPerformanceMetrics) => m.spatialIndexTimeMs ?? 0,
+  },
+  {
+    key: 'buffers',
+    color: '#a371f7',
+    getValue: (m: FlintPerformanceMetrics) => m.bufferUploadTimeMs ?? 0,
+  },
+  {
+    key: 'text',
+    color: '#39c5bb',
+    getValue: (m: FlintPerformanceMetrics) => m.textPassTimeMs ?? (m.renderTimeMs ? m.renderTimeMs * 0.3 : 0.2),
+  },
+  {
+    key: 'draw',
+    color: '#388bfd',
+    getValue: (m: FlintPerformanceMetrics) => m.drawPassTimeMs ?? (m.renderTimeMs ? m.renderTimeMs * 0.5 : 0.4),
+  },
+];
+
 /**
- * Renders stacked category area polygons and top-stroke boundaries.
+ * Computes stacked Y ranges for each metric layer across all samples.
  */
-function renderStackedAreaLayers(
-  root: SvgGroupSelection,
+function computeStackedLayerPoints(
   samples: readonly FlintPerformanceMetrics[],
-  xScale: (val: number) => number,
-  yScale: (val: number) => number,
-): void {
-  const layers = [
-    {
-      key: 'updates',
-      color: '#f0883e',
-      getValue: (m: FlintPerformanceMetrics) => (m.updateTimeMs ?? 0) + (m.layoutTimeMs ?? 0),
-    },
-    {
-      key: 'spatial',
-      color: '#3fb950',
-      getValue: (m: FlintPerformanceMetrics) => m.spatialIndexTimeMs ?? 0,
-    },
-    {
-      key: 'buffers',
-      color: '#a371f7',
-      getValue: (m: FlintPerformanceMetrics) => m.bufferUploadTimeMs ?? 0,
-    },
-    {
-      key: 'text',
-      color: '#39c5bb',
-      getValue: (m: FlintPerformanceMetrics) => m.textPassTimeMs ?? (m.renderTimeMs ? m.renderTimeMs * 0.3 : 0.2),
-    },
-    {
-      key: 'draw',
-      color: '#388bfd',
-      getValue: (m: FlintPerformanceMetrics) => m.drawPassTimeMs ?? (m.renderTimeMs ? m.renderTimeMs * 0.5 : 0.4),
-    },
-  ];
-
+  layers: readonly LayerDefinition[],
+): { y0: number; y1: number }[][] {
   const stackedPoints: { y0: number; y1: number }[][] = layers.map(() => []);
-
   for (const sample of samples) {
     let runningY = 0;
     for (const [layerIndex, layer] of layers.entries()) {
@@ -139,35 +142,70 @@ function renderStackedAreaLayers(
       runningY = y1;
     }
   }
+  return stackedPoints;
+}
 
-  for (const [layerIndex, layer] of layers.entries()) {
-    const points = stackedPoints[layerIndex];
-    if (!points || points.length === 0) continue;
-
-    let areaD = '';
-    for (const [pointIndex, point] of points.entries()) {
-      const x = xScale(pointIndex);
-      const y = yScale(point.y1);
-      areaD += pointIndex === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`;
-    }
-    for (let reverseIndex = points.length - 1; reverseIndex >= 0; reverseIndex--) {
-      const point = points[reverseIndex];
-      if (!point) continue;
+/**
+ * Builds SVG closed polygon path string for a stacked area layer.
+ */
+function buildAreaPath(
+  points: readonly { y0: number; y1: number }[],
+  xScale: (val: number) => number,
+  yScale: (val: number) => number,
+): string {
+  let areaD = '';
+  for (const [pointIndex, point] of points.entries()) {
+    const x = xScale(pointIndex);
+    const y = yScale(point.y1);
+    areaD += pointIndex === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`;
+  }
+  for (let reverseIndex = points.length - 1; reverseIndex >= 0; reverseIndex--) {
+    const point = points[reverseIndex];
+    if (point) {
       const x = xScale(reverseIndex);
       const y = yScale(point.y0);
       areaD += ` L ${x} ${y}`;
     }
-    areaD += ' Z';
+  }
+  return `${areaD} Z`;
+}
 
+/**
+ * Builds SVG stroke line path string along the top edge of a layer.
+ */
+function buildLinePath(
+  points: readonly { y0: number; y1: number }[],
+  xScale: (val: number) => number,
+  yScale: (val: number) => number,
+): string {
+  let lineD = '';
+  for (const [pointIndex, point] of points.entries()) {
+    const x = xScale(pointIndex);
+    const y = yScale(point.y1);
+    lineD += pointIndex === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`;
+  }
+  return lineD;
+}
+
+/**
+ * Renders stacked category area polygons and top-stroke boundaries.
+ */
+function renderStackedAreaLayers(
+  root: SvgGroupSelection,
+  samples: readonly FlintPerformanceMetrics[],
+  xScale: (val: number) => number,
+  yScale: (val: number) => number,
+): void {
+  const stackedPoints = computeStackedLayerPoints(samples, TIMELINE_LAYERS);
+
+  for (const [layerIndex, layer] of TIMELINE_LAYERS.entries()) {
+    const points = stackedPoints[layerIndex];
+    if (!points || points.length === 0) continue;
+
+    const areaD = buildAreaPath(points, xScale, yScale);
     root.append('path').attr('d', areaD).attr('fill', layer.color).attr('opacity', 0.25);
 
-    let lineD = '';
-    for (const [pointIndex, point] of points.entries()) {
-      const x = xScale(pointIndex);
-      const y = yScale(point.y1);
-      lineD += pointIndex === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`;
-    }
-
+    const lineD = buildLinePath(points, xScale, yScale);
     root.append('path').attr('d', lineD).attr('fill', 'none').attr('stroke', layer.color).attr('stroke-width', 1.5);
   }
 }
@@ -245,6 +283,52 @@ function renderTimelineSummaryAndAxes(
   }
 }
 
+interface CategoryLegendItem {
+  readonly label: string;
+  readonly color: string;
+  readonly value: number;
+}
+
+/**
+ * Renders individual latency metric category summary cards.
+ */
+function TimelineCategoryGrid(properties: Readonly<{ metrics: FlintPerformanceMetrics }>): MpElement {
+  const { metrics } = properties;
+  const updatesValue = (metrics.updateTimeMs ?? 0) + (metrics.layoutTimeMs ?? 0);
+  const spatialValue = metrics.spatialIndexTimeMs ?? 0;
+  const buffersValue = metrics.bufferUploadTimeMs ?? 0;
+  const textValue = metrics.textPassTimeMs ?? (metrics.renderTimeMs ? metrics.renderTimeMs * 0.3 : 0.2);
+  const drawValue = metrics.drawPassTimeMs ?? (metrics.renderTimeMs ? metrics.renderTimeMs * 0.5 : 0.4);
+
+  const items: readonly CategoryLegendItem[] = [
+    { label: 'Updates & Layout', color: '#f0883e', value: updatesValue },
+    { label: 'Spatial Indexing', color: '#3fb950', value: spatialValue },
+    { label: 'Buffer Upload', color: '#a371f7', value: buffersValue },
+    { label: 'Text & SDF Pass', color: '#39c5bb', value: textValue },
+    { label: 'Draw Submissions', color: '#388bfd', value: drawValue },
+  ];
+
+  return (
+    <div className={styles.categoryGrid}>
+      {items.map((item) => (
+        <div
+          key={item.label}
+          className={styles.categoryCard}
+        >
+          <span className={styles.categoryLabel}>
+            <span
+              className={styles.categoryIndicator}
+              style={{ backgroundColor: item.color }}
+            />
+            {item.label}
+          </span>
+          <span className={styles.categoryValue}>{item.value.toFixed(2)} ms</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /**
  * Stacked area and line timeline chart tracking rendering and update performance metrics across animation frames.
  */
@@ -292,14 +376,6 @@ export function ForgePerformanceTimelineChart(
     [history, currentMetrics, width, height],
   );
 
-  const updatesValue = (currentMetrics.updateTimeMs ?? 0) + (currentMetrics.layoutTimeMs ?? 0);
-  const spatialValue = currentMetrics.spatialIndexTimeMs ?? 0;
-  const buffersValue = currentMetrics.bufferUploadTimeMs ?? 0;
-  const textValue =
-    currentMetrics.textPassTimeMs ?? (currentMetrics.renderTimeMs ? currentMetrics.renderTimeMs * 0.3 : 0.2);
-  const drawValue =
-    currentMetrics.drawPassTimeMs ?? (currentMetrics.renderTimeMs ? currentMetrics.renderTimeMs * 0.5 : 0.4);
-
   return (
     <div className={styles.timelineContainer}>
       <div className={styles.chartHeader}>
@@ -326,58 +402,7 @@ export function ForgePerformanceTimelineChart(
         />
       </div>
 
-      <div className={styles.categoryGrid}>
-        <div className={styles.categoryCard}>
-          <span className={styles.categoryLabel}>
-            <span
-              className={styles.categoryIndicator}
-              style={{ backgroundColor: '#f0883e' }}
-            />
-            Updates & Layout
-          </span>
-          <span className={styles.categoryValue}>{updatesValue.toFixed(2)} ms</span>
-        </div>
-        <div className={styles.categoryCard}>
-          <span className={styles.categoryLabel}>
-            <span
-              className={styles.categoryIndicator}
-              style={{ backgroundColor: '#3fb950' }}
-            />
-            Spatial Indexing
-          </span>
-          <span className={styles.categoryValue}>{spatialValue.toFixed(2)} ms</span>
-        </div>
-        <div className={styles.categoryCard}>
-          <span className={styles.categoryLabel}>
-            <span
-              className={styles.categoryIndicator}
-              style={{ backgroundColor: '#a371f7' }}
-            />
-            Buffer Upload
-          </span>
-          <span className={styles.categoryValue}>{buffersValue.toFixed(2)} ms</span>
-        </div>
-        <div className={styles.categoryCard}>
-          <span className={styles.categoryLabel}>
-            <span
-              className={styles.categoryIndicator}
-              style={{ backgroundColor: '#39c5bb' }}
-            />
-            Text & SDF Pass
-          </span>
-          <span className={styles.categoryValue}>{textValue.toFixed(2)} ms</span>
-        </div>
-        <div className={styles.categoryCard}>
-          <span className={styles.categoryLabel}>
-            <span
-              className={styles.categoryIndicator}
-              style={{ backgroundColor: '#388bfd' }}
-            />
-            Draw Pass
-          </span>
-          <span className={styles.categoryValue}>{drawValue.toFixed(2)} ms</span>
-        </div>
-      </div>
+      <TimelineCategoryGrid metrics={currentMetrics} />
     </div>
   );
 }
