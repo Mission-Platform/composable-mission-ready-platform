@@ -1,5 +1,13 @@
 # @mission-platform/forge-figma-bridge
 
+## 0.1.3
+
+### Patch Changes
+
+- 8be0da7: optimize turbo pipeline, standardize type-check task, and consolidate package build scripts
+- Updated dependencies [8be0da7]
+  - @mission-platform/forge-figma@0.1.3
+
 ## 0.1.2
 
 ### Patch Changes

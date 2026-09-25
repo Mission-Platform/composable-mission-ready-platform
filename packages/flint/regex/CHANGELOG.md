@@ -1,5 +1,17 @@
 # @mission-platform/forge-web-script-regex
 
+## 1.0.0
+
+### Major Changes
+
+- 94a694a: migrate Forge Web Script (FWS) packages and downstream integrations to Flint
+  
+  BREAKING CHANGE: The systems programming language formerly known as Forge Web Script (FWS) is now Flint. All package names have migrated to `@mission-platform/flint*`, primary source files now use `.flint` (with `.flt` supported as compact), diagnostic codes now emit `FLINT-*` prefixes, and compiler executables have been renamed to `flint` and `flint-lsp`.
+
+### Patch Changes
+
+- 8be0da7: optimize turbo pipeline, standardize type-check task, and consolidate package build scripts
+
 ## 0.3.1
 
 ### Patch Changes

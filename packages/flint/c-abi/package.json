@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/flint-c-abi",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "publishConfig": {
     "access": "public"
   },
