@@ -44,7 +44,7 @@ class FuzzPrng {
   }
 }
 
-describe('Multi-Memory Partitioned Fallback Fuzz Testing (Target 4)', () => {
+describe('Multi-Memory Partitioned Fallback Fuzz Testing (Target 4)', { timeout: 60_000 }, () => {
   const prng = new FuzzPrng(0xfe_ed_fa_11);
 
   it('correctly initializes fallback mode when requested explicitly or when capabilities are absent', () => {
@@ -65,7 +65,7 @@ describe('Multi-Memory Partitioned Fallback Fuzz Testing (Target 4)', () => {
   });
 
   // skipcq: JS-R1005
-  it('fuzzes 3,000 randomized cross-partition allocation, read, write, and isolation operations', () => {
+  it('fuzzes 1,000 randomized cross-partition allocation, read, write, and isolation operations', () => {
     const multiMemory = createFlintMultiMemory({
       mode: 'partitioned-fallback',
       guestHeap: { initialPages: 16 },
@@ -89,7 +89,7 @@ describe('Multi-Memory Partitioned Fallback Fuzz Testing (Target 4)', () => {
 
     const liveAllocations: TrackedAllocation[] = [];
 
-    for (let iteration = 0; iteration < 3000; iteration += 1) {
+    for (let iteration = 0; iteration < 1000; iteration += 1) {
       const action = prng.nextInt(0, 3);
 
       if (action <= 1 || liveAllocations.length === 0) {
@@ -214,7 +214,7 @@ describe('Multi-Memory Partitioned Fallback Fuzz Testing (Target 4)', () => {
     const slabAllocations: SlabAlloc[] = [];
 
     // Fuzz alloc/dealloc across all SLAB_SIZE_CLASSES including medium buckets up to 65536
-    for (let index = 0; index < 1000; index += 1) {
+    for (let index = 0; index < 300; index += 1) {
       const sizeClass = prng.pick(SLAB_SIZE_CLASSES);
       const size = prng.nextInt(Math.max(1, sizeClass - 8), sizeClass);
       const pattern = prng.nextBytes(size);

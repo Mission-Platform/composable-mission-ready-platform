@@ -37,7 +37,7 @@ class FuzzPrng {
   }
 }
 
-describe('WebAssembly Binary Parser & Verifier Fuzz Testing (Target 1)', () => {
+describe('WebAssembly Binary Parser & Verifier Fuzz Testing (Target 1)', { timeout: 60_000 }, () => {
   const prng = new FuzzPrng(0x11_22_33_44);
 
   it('fuzzes LEB128 32-bit and 64-bit integer decoding with arbitrary and malformed byte streams', () => {

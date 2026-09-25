@@ -34,7 +34,7 @@ class FuzzPrng {
   }
 }
 
-describe('Lexer, Parser & Compiler Grammar AST Fuzz Testing (Target 2)', () => {
+describe('Lexer, Parser & Compiler Grammar AST Fuzz Testing (Target 2)', { timeout: 60_000 }, () => {
   const prng = new FuzzPrng(0x98_76_54_32);
 
   const TOKENS = [

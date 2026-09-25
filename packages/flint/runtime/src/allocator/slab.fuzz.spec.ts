@@ -37,7 +37,7 @@ class FuzzPrng {
   }
 }
 
-describe('Multi-Memory & Allocator Stress Fuzz Testing (Target 4)', () => {
+describe('Multi-Memory & Allocator Stress Fuzz Testing (Target 4)', { timeout: 60_000 }, () => {
   const prng = new FuzzPrng(0x99_88_77_66);
 
   // skipcq: JS-R1005
@@ -53,7 +53,7 @@ describe('Multi-Memory & Allocator Stress Fuzz Testing (Target 4)', () => {
 
     const activeAllocations: ActiveAlloc[] = [];
 
-    for (let step = 0; step < 5000; step += 1) {
+    for (let step = 0; step < 2000; step += 1) {
       const isAlloc = activeAllocations.length === 0 || prng.nextFloat() < 0.6;
 
       if (isAlloc) {

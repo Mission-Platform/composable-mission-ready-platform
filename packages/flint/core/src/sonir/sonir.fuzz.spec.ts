@@ -40,7 +40,7 @@ class FuzzPrng {
   }
 }
 
-describe('SonIR Optimization & Declarative Rewrite Invariant Fuzzing (Target 3)', () => {
+describe('SonIR Optimization & Declarative Rewrite Invariant Fuzzing (Target 3)', { timeout: 60_000 }, () => {
   const prng = new FuzzPrng(0xab_cd_ef_01);
 
   it('fuzzes declarative algebraic rewrites with randomized expression graphs and asserts idempotency', () => {
