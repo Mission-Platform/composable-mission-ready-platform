@@ -6,7 +6,7 @@
       "dependsOn": [
         "^build",
         "@mission-platform/scripts#docs:generate",
-        "build:check",
+        "type-check",
         "build:bundle",
         "build:prerender",
         "build:verify"
@@ -15,7 +15,7 @@
       "outputs": ["dist/**", ".vite/**"]
     },
     "build:bundle": {
-      "dependsOn": ["build:check"],
+      "dependsOn": ["type-check"],
       "env": ["VITE_*"],
       "outputs": ["dist/**", ".vite/**"]
     },
@@ -25,6 +25,14 @@
     },
     "build:verify": {
       "dependsOn": ["build:prerender"]
+    },
+    "type-check": {
+      "dependsOn": ["^build"]
+    },
+    "dev": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
     }
   }
 }

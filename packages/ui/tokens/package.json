@@ -32,7 +32,6 @@
   ],
   "scripts": {
     "build": "tsdown",
-    "build:watch": "tsdown --watch",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "lint:style": "stylelint \"src/**/*.scss\"",

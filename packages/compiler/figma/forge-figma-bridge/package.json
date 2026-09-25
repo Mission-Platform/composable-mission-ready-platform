@@ -30,7 +30,7 @@
     "build": "tsdown",
     "start": "node dist/main.js",
     "dev": "node --watch src/main.ts",
-    "build:check": "tsc --project tsconfig.build.json --noEmit",
+    "type-check": "tsc --project tsconfig.build.json --noEmit",
     "build:types": "tsc --project tsconfig.build.json --emitDeclarationOnly",
     "test": "vitest run",
     "test:watch": "vitest",

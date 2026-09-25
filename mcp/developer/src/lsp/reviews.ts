@@ -256,7 +256,11 @@ function countBySeverity(findings: readonly SecurityFinding[], severity: 'critic
  * Extract unique security standard categories from findings.
  */
 function extractUniqueCategories(findings: readonly SecurityFinding[], key: 'owasp' | 'cwe' | 'isoControl'): string[] {
-  return [...new Set(findings.map((f) => f[key]).filter(Boolean))];
+  return [
+    ...new Set(
+      findings.map((f) => f[key]).filter((item): item is string => typeof item === 'string' && item.length > 0),
+    ),
+  ];
 }
 
 /**

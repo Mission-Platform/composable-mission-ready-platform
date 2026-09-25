@@ -94,7 +94,7 @@ All LSP server definitions in `agent-lsp.json` must be portable:
 ### Flint and scanner validation
 
 - Treat Flint LSP diagnostics as source-level feedback only; they do not prove that a linked multi-module graph emits valid Wasm or that its runtime ABI executes correctly.
-- For scanner graph changes, run the focused graph suite, package `build:check`, and the package Vitest suite; record artifact-emission failures separately from source diagnostics.
+- For scanner graph changes, run the focused graph suite, package `type-check`, and the package Vitest suite; record artifact-emission failures separately from source diagnostics.
 - Passing a fixture or reduced decoder path does not establish full ZXing parity. Mark unsupported modes, format subsets, metadata, retries, and public-contract migrations explicitly in the plan and pull request.
 - When static linking fails, capture the graph module/edge counts, emitter diagnostic, and the smallest isolated reproducer before changing algorithm code or weakening tests.
 
@@ -166,9 +166,9 @@ All new files must be `.ts` or `.vue` (using `<script setup lang="ts">`). Avoid 
 ### Language Server Protocol (LSP) Resilience
 
 - **Active Session Requirement**: Tools that query or execute via LSP (such as `lsp_run_tests`, `lsp_get_diagnostics`, or symbol inspection) require an active session for the given language. Verify with `lsp_status` and initialize with `lsp_start` when no session is active.
-- **TypeScript 7 Experimental Native LSP**: The `typescript` server runs `tsc --lsp --stdio` (`typescript-go` 7.0.2). It provides fast, zero-configuration diagnostics via `get_diagnostics`. However, whole-workspace document symbol queries or hover requests may time out during indexing in large monorepos; configure protocol timeouts to 15,000–30,000 ms (`DEFAULT_TIMEOUT_MS`) and complement with package-scoped typecheck (`pnpm --filter <pkg> run build:check`) and Vitest.
+- **TypeScript 7 Experimental Native LSP**: The `typescript` server runs `tsc --lsp --stdio` (`typescript-go` 7.0.2). It provides fast, zero-configuration diagnostics via `get_diagnostics`. However, whole-workspace document symbol queries or hover requests may time out during indexing in large monorepos; configure protocol timeouts to 15,000–30,000 ms (`DEFAULT_TIMEOUT_MS`) and complement with package-scoped typecheck (`pnpm --filter <pkg> run type-check`) and Vitest.
 - **Monorepo Startup Latency**: In large workspaces with multiple project references, TypeScript language server startup may exceed 5 seconds. Configure protocol client timeouts to at least 15,000–30,000 ms (`DEFAULT_TIMEOUT_MS`).
-- **Graceful Diagnostic Fallback**: If an LSP server times out during initial startup or file discovery, fall back to package-scoped typecheck (`pnpm --filter <pkg> run build:check`) and Vitest to avoid blocking workflow progress.
+- **Graceful Diagnostic Fallback**: If an LSP server times out during initial startup or file discovery, fall back to package-scoped typecheck (`pnpm --filter <pkg> run type-check`) and Vitest to avoid blocking workflow progress.
 
 <!-- agent-lsp:rules:start -->
 

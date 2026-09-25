@@ -1984,6 +1984,23 @@ It preserves the Forge tree so
 | ------- | --------------------------------- | ----------- |
 | options | TsdownForgeEmailComponentsOptions |             |
 
+### defineTsdownForgeHooks
+
+**Kind:** function
+
+```typescript
+function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig;
+```
+
+Build one tsdown config for a single Forge framework hooks build.
+Emits code and types into the target framework distribution directory.
+
+#### Parameters
+
+| Name    | Type                    | Description |
+| ------- | ----------------------- | ----------- |
+| options | TsdownForgeHooksOptions |             |
+
 ### defineTsdownForgeHooksAll
 
 **Kind:** function
@@ -2084,9 +2101,7 @@ No description provided.
 function tsdownForgeHookPlugins(options: TsdownForgeHooksAllOptions): TsdownPlugin[];
 ```
 
-Native tsdown-plugin form of the hook adapter. The returned plugins inject
-their target config from `tsdownConfig`, allowing hook builds to be composed
-with one caller-owned `defineTsdownLibrary` configuration.
+Creates tsdown hook plugins for all configured framework targets.
 
 #### Parameters
 
@@ -2100,6 +2115,16 @@ with one caller-owned `defineTsdownLibrary` configuration.
 
 ```typescript
 export interface TsdownForgeHooksAllOptions
+```
+
+No description provided.
+
+### TsdownForgeHooksOptions
+
+**Kind:** interface
+
+```typescript
+export interface TsdownForgeHooksOptions
 ```
 
 No description provided.

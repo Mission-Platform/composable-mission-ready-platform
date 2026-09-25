@@ -220,6 +220,7 @@ export { generateHookLibrarySources, type GenerateHookLibrarySourcesOptions } fr
 
 export {
   defineTsdownForgeComponentsAll,
+  defineTsdownForgeHooks,
   defineTsdownForgeHooksAll,
   tsdownForgeComponentPlugins,
   tsdownForgeHookPlugins,
@@ -230,4 +231,5 @@ export {
   type TsdownForgeComponentPluginsOptions,
   type TsdownForgeEmailComponentsOptions,
   type TsdownForgeHooksAllOptions,
+  type TsdownForgeHooksOptions,
 } from './tsdown.js';

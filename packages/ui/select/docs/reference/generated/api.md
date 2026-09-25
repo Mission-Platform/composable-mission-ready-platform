@@ -182,7 +182,7 @@ Canonical control size scale.
 **Kind:** constant
 
 ```typescript
-export const ForgeCombobox;
+export const ForgeCombobox: typeof ForgeSelect;
 ```
 
 No description provided.
@@ -205,34 +205,8 @@ No description provided.
 function ForgeSelect(properties: Readonly<SelectProperties>): MpElement;
 ```
 
-`ForgeSelect` — a custom combobox/select authored once in the neutral JSX
-dialect and compiled straight to React or Vue by
-`@mission-platform/vite-plugin-forge`.
-
-By default (`searchable`, the default) the trigger is a text field that filters
-the options as the user types — mirroring {@link ForgeMultiselect} — so a value
-can be found by searching rather than scrolling; set `searchable={false}` for a
-plain button trigger. Either way the listbox is backed by a visually hidden
-native `<select>` so browser autofill and native form submission keep working.
-Selection is controlled with the established `modelValue` +
-`onUpdateModelValue`/`onChange` callback-prop convention. It owns its styling
-through the co-located CSS Module `forge-select.module.scss`.
-
-The floating listbox is rendered through the write-once **`ForgeDropdown`**
-(itself compiled to React/Vue), composed via the neutral named-slot **passing**
-syntax: the combobox wrapper is handed to the dropdown's `trigger` slot
-(`slot="trigger"`) and the `<ul role="listbox">` becomes its default slot, so
-the panel is portalled through `<Teleport>` and anchored with CSS Anchor
-Positioning instead of an in-place absolutely-positioned list. The internal
-`useState` open flag is kept in sync with the dropdown via its
-`onUpdateOpen` callback.
-
-Other substitutions from the original Vue SFC: the `useId` composable maps to
-the framework-native `useId` hook; the chevron is the write-once
-`@mission-platform/icons` `ForgeIconChevron` (rotated via its `direction` prop,
-itself compiled to React/Vue); the `useI18n` strings become plain text; and
-the `v-model` + emits become callback props. The `start`/`end` named slots are
-preserved as neutral named slots.
+ForgeSelect component providing an accessible, framework-neutral select control with
+support for live filtering, asynchronous search, keyboard navigation, and custom slots.
 
 #### Parameters
 

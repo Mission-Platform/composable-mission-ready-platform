@@ -303,7 +303,7 @@ export function collectComplianceEvidence(
   const depIncomplete = depResult.incomplete === true || depResult.scannedFiles === 0;
   const supplyChainIncomplete =
     supplyChainResult.incomplete === true ||
-    supplyChainResult.stats.manifestsScanned === 0;
+    supplyChainResult.stats.totalManifests === 0;
   const manifestAuditIncomplete = depIncomplete || supplyChainIncomplete;
 
   const incompleteControls: Record<string, boolean> = {

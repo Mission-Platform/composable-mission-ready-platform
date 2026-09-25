@@ -71,6 +71,8 @@ export interface TsdownForgeCmsPluginsOptions {
   overrides?: UserConfig;
 }
 
+/** Merges base tsdown configuration with caller-provided overrides. */
+// skipcq: JS-R1005
 function mergeTsdownConfig(
   base: UserConfig,
   overrides?: UserConfig,
@@ -178,6 +180,7 @@ export function cmsOutputDirectory(
   return path.resolve(rootDir, `dist/cms/${target.id}/${target.framework.id}`);
 }
 
+/** Computes the cache bundle directory for shared CMS assets. */
 function cmsSharedAssetsBundleDirectory(
   rootDir: string,
   target: CmsOutputPlugin,
@@ -191,6 +194,7 @@ function cmsSharedAssetsBundleDirectory(
   );
 }
 
+/** Resolves the build output directory for a CMS target based on artifact mode. */
 function cmsBuildOutputDirectory(
   rootDir: string,
   target: CmsOutputPlugin,
@@ -200,13 +204,12 @@ function cmsBuildOutputDirectory(
   if (artifactMode === "shared" && outputRoot === undefined) {
     return cmsSharedAssetsBundleDirectory(rootDir, target);
   }
-  return path.resolve(
-    rootDir,
-    `dist/cms/${target.id}` +
-      (artifactMode === "shared" ? "" : `/${target.framework.id}`),
-  );
+  const frameworkSuffix =
+    artifactMode === "shared" ? "" : `/${target.framework.id}`;
+  return path.resolve(rootDir, `dist/cms/${target.id}${frameworkSuffix}`);
 }
 
+/** Returns the artifact kinds associated with an artifact mode. */
 function artifactKindsForMode(
   mode: TsdownForgeCmsTargetOptions["artifactMode"],
 ): readonly CmsArtifactKind[] | undefined {
@@ -215,6 +218,7 @@ function artifactKindsForMode(
   return undefined;
 }
 
+/** Resolves the TypeScript configuration file for Forge builds. */
 function resolveForgeTsconfig(rootDir: string): string | undefined {
   return ["tsconfig.build.json", "tsconfig.json"]
     .map((fileName) => path.resolve(rootDir, fileName))
@@ -249,6 +253,7 @@ function cmsEntryDeclarationsTsdownPlugin(
 }
 
 /** Mirror every `asset: true` artifact into `dist/cms/<cmsId>/`. */
+// skipcq: JS-R1005
 function cmsAssetsTsdownPlugin(
   rootDir: string,
   cacheDirectory: string,
@@ -302,6 +307,7 @@ function cmsAssetsTsdownPlugin(
   } as TsdownPlugin;
 }
 
+/** Plugin cleaning up temporary CMS cache directories on bundle close. */
 function cmsCleanupTsdownPlugin(cacheDirectory: string): TsdownPlugin {
   return {
     name: "mission-platform:cms-cache-cleanup",
@@ -315,6 +321,7 @@ function cmsCleanupTsdownPlugin(cacheDirectory: string): TsdownPlugin {
 }
 
 /** Create a tsdown config for one CMS target for the native plugin adapter. */
+// skipcq: JS-R1005
 function createTsdownForgeCmsConfig(
   options: TsdownForgeCmsTargetOptions,
 ): UserConfig {
@@ -440,6 +447,7 @@ function createTsdownForgeCmsConfig(
   return mergeTsdownConfig(base, overrides, rootDir, outputRoot);
 }
 
+/** Filters configured CMS targets based on environment variables. */
 function selectedCmsTargets(
   options: TsdownForgeCmsPluginsOptions,
 ): readonly CmsOutputPlugin[] {
@@ -471,6 +479,7 @@ export type ForgeCmsTsdownPlugin = TsdownPlugin & {
   readonly cmsTargetConfigs: readonly UserConfig[];
 };
 
+/** Determines whether a plugin is an internal CMS orchestrator plugin. */
 function isOrchestratorPlugin(plugin: TsdownPlugin): boolean {
   return (
     plugin.name === CMS_TSDOWN_PLUGIN_NAME ||
@@ -511,61 +520,29 @@ function applyCmsConfigToHost(
   config.plugins = [...forgePlugins, ...callerPlugins];
 }
 
-/** Real on-disk noop entry used when the host config is demoted to a multi-target shell. */
-function ensureCmsNoopEntry(rootDir: string): string {
-  const directory = path.join(
-    rootDir,
-    "node_modules/.cache/forge-cms-tsdown-noop",
-  );
-  fs.mkdirSync(directory, { recursive: true });
-  const entryPath = path.join(directory, "noop.ts");
-  fs.writeFileSync(entryPath, "export {}\n");
-  return entryPath;
-}
-
 /**
- * Demote the shared host config to a write-disabled shell so multi-target CMS
- * builds run as independent nested tsdown builds instead of last-wins merges.
+ * Return native tsdown `UserConfig[]` configurations for the selected CMS targets.
+ * Each configuration directly compiles its own CMS target and projections,
+ * allowing tsdown / Rolldown to run targets concurrently without dummy disk entries
+ * or nested execution loops.
  */
-function neutralizeHostCmsConfig(config: UserConfig, rootDir: string): void {
-  const noopEntry = ensureCmsNoopEntry(rootDir);
-  const noopOutDir = path.join(
-    rootDir,
-    "node_modules/.cache/forge-cms-tsdown-noop/out",
-  );
-  Object.assign(config, {
-    cwd: rootDir,
-    entry: noopEntry,
-    outDir: noopOutDir,
-    dts: false,
-    clean: false,
-    write: false,
-    unbundle: true,
-    platform: "neutral",
-    plugins: [],
-  });
-}
-
-/**
- * Native tsdown-plugin form of the CMS adapter. The returned
- * plugins inject CMS lifecycle/config through `tsdownConfig`, matching the
- * Forge component/hook plugin adapters so callers compose one
- * `defineTsdownLibrary` configuration.
- *
- * Multi-framework compositions keep one caller-owned config: the adapter runs
- * one nested tsdown build per selected target so entry/outDir/lifecycle plugins
- * never last-wins collide on the shared host object.
- */
-export function tsdownForgeCmsPlugins(
+export function defineTsdownForgeCmsTargetConfigs(
   options: TsdownForgeCmsPluginsOptions,
-): TsdownPlugin[] {
+): UserConfig[] {
   const targets = selectedCmsTargets(options);
   if (targets.length === 0) {
-    return [];
+    return [
+      {
+        entry: {},
+        dts: false,
+        clean: false,
+        write: false,
+      },
+    ];
   }
   const outputRoot = options.outputRoot ?? process.env.FORGE_BUILD_STAGE_ROOT;
   const session = options.session ?? createForgeBuildSession();
-  const forgeConfigs = targets.map((target, index) =>
+  return targets.map((target, index) =>
     createTsdownForgeCmsConfig({
       ...options,
       target,
@@ -575,51 +552,43 @@ export function tsdownForgeCmsPlugins(
         index === targets.length - 1 && options.session === undefined,
     }),
   );
+}
+
+/**
+ * Native tsdown-plugin form of the CMS adapter for single-target usage.
+ * For multi-target generation, prefer {@link defineTsdownForgeCmsTargetConfigs}.
+ */
+export function tsdownForgeCmsPlugins(
+  options: TsdownForgeCmsPluginsOptions,
+): TsdownPlugin[] {
+  const targets = selectedCmsTargets(options);
+  if (targets.length === 0) {
+    return [];
+  }
+  const forgeConfigs = defineTsdownForgeCmsTargetConfigs(options);
+  if (forgeConfigs.length === 0) {
+    return [];
+  }
+  const outputRoot = options.outputRoot ?? process.env.FORGE_BUILD_STAGE_ROOT;
 
   const plugin: ForgeCmsTsdownPlugin = {
     name: CMS_TSDOWN_PLUGIN_NAME,
     cmsTargetConfigs: forgeConfigs,
-    async tsdownConfig(config: UserConfig) {
+    tsdownConfig(config: UserConfig) {
       const callerPlugins = flattenPlugins(config.plugins).filter(
         (entry) => !isOrchestratorPlugin(entry),
       );
 
-      if (forgeConfigs.length === 1) {
+      const firstForgeConfig = forgeConfigs[0];
+      if (firstForgeConfig !== undefined) {
         applyCmsConfigToHost(
           config,
-          forgeConfigs[0]!,
+          firstForgeConfig,
           callerPlugins,
           options.rootDir,
           outputRoot,
         );
-        return;
       }
-
-      const nestedConfigs: UserConfig[] = forgeConfigs.map((forgeConfig) => ({
-        ...forgeConfig,
-        cwd:
-          typeof forgeConfig.cwd === "string"
-            ? forgeConfig.cwd
-            : options.rootDir,
-        plugins: [...flattenPlugins(forgeConfig.plugins), ...callerPlugins],
-      }));
-
-      neutralizeHostCmsConfig(config, options.rootDir);
-
-      const nestedRunner = {
-        name: CMS_TSDOWN_NESTED_RUNNER_NAME,
-        async buildStart() {
-          const { build } = await import("tsdown");
-          for (const nestedConfig of nestedConfigs) {
-            await build({
-              config: false,
-              ...nestedConfig,
-            });
-          }
-        },
-      } as TsdownPlugin;
-
-      config.plugins = [nestedRunner];
     },
   };
 

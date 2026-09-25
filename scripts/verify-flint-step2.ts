@@ -71,7 +71,7 @@ export function runPackageBuild(pkg: string): { success: boolean; output: string
   const pkgName = pkgJson.name;
 
   try {
-    const res = spawnSync('pnpm', ['--filter', pkgName, 'run', 'build:check'], {
+    const res = spawnSync('pnpm', ['--filter', pkgName, 'run', 'type-check'], {
       cwd: process.cwd(),
       encoding: 'utf8',
       timeout: 120_000,
@@ -159,7 +159,7 @@ if (process.argv[1]?.endsWith('verify-flint-step2.ts')) {
   const pkgsToRun = targetPkg ? [targetPkg] : PACKAGES;
 
   if (isBuild) {
-    console.log('\n--- Building Flint Packages (build:check) ---');
+    console.log('\n--- Building Flint Packages (type-check) ---');
     for (const pkg of pkgsToRun) {
       process.stdout.write(`Building ${pkg}... `);
       const res = runPackageBuild(pkg);
