@@ -1,5 +1,11 @@
 # @mission-platform/harper
 
+## 0.2.4
+
+### Patch Changes
+
+- 8be0da7: optimize turbo pipeline, standardize type-check task, and consolidate package build scripts
+
 ## 0.2.3
 
 ### Patch Changes

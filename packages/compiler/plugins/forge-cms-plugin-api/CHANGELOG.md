@@ -1,5 +1,39 @@
 # @mission-platform/forge-cms-plugin-api
 
+## 1.0.2
+
+### Patch Changes
+
+- 8be0da7: resolve DeepSource code quality and complexity issues across tooling and plugin configs
+- 8be0da7: export native target configs and eliminate sequential runner loop
+- 0c0e7ce: feat(forge): implement forge plugin recommendations and CST rewrites
+  
+  - Introduce @mission-platform/forge-cst for robust AST/CST-based import rewrites
+  - Add declarative intention validation schemas in @mission-platform/forge-plugin-api
+  - Unify Forge build adapter contracts across React, Vue, Solid, Svelte, and Web Components
+  - Move path normalization into Tsdown and simplify artifact staging in @mission-platform/vite-plugin-forge
+  - Resolve DeepSource code quality findings across compiler plugins and tooling
+- 8be0da7: Resolve code review and DeepSource code quality, documentation, and complexity issues.
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [94a694a]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [0c0e7ce]
+- Updated dependencies [0878d97]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+  - @mission-platform/vite-plugin-forge@2.1.0
+  - @mission-platform/tsdown-config@0.3.0
+  - @mission-platform/forge-plugin-api@0.5.0
+  - @mission-platform/vite-config@1.1.4
+
 ## 1.0.1
 
 ### Patch Changes

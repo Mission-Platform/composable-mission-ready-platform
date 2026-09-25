@@ -1,5 +1,11 @@
 # @mission-platform/forms-core
 
+## 0.3.3
+
+### Patch Changes
+
+- 8be0da7: optimize turbo pipeline, standardize type-check task, and consolidate package build scripts
+
 ## 0.3.2
 
 ### Patch Changes

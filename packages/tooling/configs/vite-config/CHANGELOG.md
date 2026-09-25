@@ -1,5 +1,13 @@
 # @mission-platform/vite-config
 
+## 1.1.4
+
+### Patch Changes
+
+- 8be0da7: optimize turbo pipeline, standardize type-check task, and consolidate package build scripts
+- 8be0da7: resolve DeepSource code quality, documentation, complexity, and typing issues
+- @mission-platform/postcss-config@0.1.5
+
 ## 1.1.3
 
 ### Patch Changes
