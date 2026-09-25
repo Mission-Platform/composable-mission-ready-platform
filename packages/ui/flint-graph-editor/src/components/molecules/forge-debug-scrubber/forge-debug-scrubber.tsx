@@ -10,6 +10,22 @@ export interface DebugScrubberProperties {
 }
 
 /**
+ * Extracts numeric value from a DOM input event if valid.
+ */
+function extractInputNumberValue(event: unknown): number | undefined {
+  if (
+    typeof HTMLInputElement !== 'undefined' &&
+    event &&
+    typeof event === 'object' &&
+    'target' in event &&
+    event.target instanceof HTMLInputElement
+  ) {
+    return Number(event.target.value);
+  }
+  return undefined;
+}
+
+/**
  * Framework-neutral Forge playback scrubber for Flint execution traces.
  */
 export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>): MpElement {
@@ -43,14 +59,8 @@ export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>
    * Seeks the execution timeline to the slider's target step index.
    */
   const handleSliderChange = (event: unknown): void => {
-    if (
-      typeof HTMLInputElement !== 'undefined' &&
-      event &&
-      typeof event === 'object' &&
-      'target' in event &&
-      event.target instanceof HTMLInputElement
-    ) {
-      const stepIndex = Number(event.target.value);
+    const stepIndex = extractInputNumberValue(event);
+    if (stepIndex !== undefined) {
       controller.seekTo(stepIndex);
     }
   };

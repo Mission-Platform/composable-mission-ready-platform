@@ -642,6 +642,9 @@ export function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmission
   const lines: string[] = [];
   let currentOffset = 0;
 
+  /**
+   * Appends a line of code to the emitted source buffer and records offset metadata.
+   */
   function appendLine(text: string): { start: number; end: number; line: number; text: string } {
     const lineIndex = lines.length + 1;
     const lineStart = currentOffset;
@@ -687,6 +690,9 @@ export function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmission
 
   recordParameterSpans(validation.sortedNodeIds, nodeMap, functionHeaderRecord, prefix.length, nodeToSpan, spanToNode);
 
+  /**
+   * Resolves the source code expression for an input port from incoming edges or default literals.
+   */
   function resolveInputSource(node: FlintGraphNode, portId: string): string {
     const port = node.inputs.find((p) => p.id === portId);
     const key = `${node.id}:${portId}`;

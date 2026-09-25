@@ -132,18 +132,21 @@ async function invokeWasmEntry(wasmBytes: Uint8Array, entryFnName: string, callA
 }
 
 /**
- * Executes a visual graph compilation and runs the WebAssembly binary in-memory.
+ * Validates a graph, compiles its AST, and verifies valid WebAssembly artifact emission.
  */
-export async function executeGraph(
-  graph: FlintNodeGraph,
-  inputs: Readonly<Record<string, unknown>> = {},
-): Promise<CompilerWorkerResponse> {
+function validateAndCompileGraph(graph: FlintNodeGraph): {
+  errorResponse?: CompilerWorkerResponse;
+  artifact?: ReturnType<typeof compileNodeGraph>;
+  sortedNodeIds?: readonly string[];
+} {
   const validation = validateGraph(graph);
   if (!validation.valid) {
     return {
-      type: 'run_error',
-      error: 'Graph validation failed.',
-      nodeErrors: collectValidationErrors(validation.issues),
+      errorResponse: {
+        type: 'run_error',
+        error: 'Graph validation failed.',
+        nodeErrors: collectValidationErrors(validation.issues),
+      },
     };
   }
 
@@ -151,22 +154,49 @@ export async function executeGraph(
   const errorDiagnostics = artifact.diagnostics.filter((d) => d.severity === 'error');
   if (errorDiagnostics.length > 0) {
     return {
-      type: 'run_error',
-      error: errorDiagnostics.map((d) => d.message).join('\n'),
-      nodeErrors: collectDiagnosticErrors(errorDiagnostics, artifact.compilation.sourceMap.spanToNode),
+      errorResponse: {
+        type: 'run_error',
+        error: errorDiagnostics.map((d) => d.message).join('\n'),
+        nodeErrors: collectDiagnosticErrors(errorDiagnostics, artifact.compilation.sourceMap.spanToNode),
+      },
     };
   }
 
   if (!artifact.wasm) {
     return {
-      type: 'run_error',
-      error: 'No WebAssembly binary was emitted by the Flint compiler.',
-      nodeErrors: {},
+      errorResponse: {
+        type: 'run_error',
+        error: 'No WebAssembly binary was emitted by the Flint compiler.',
+        nodeErrors: {},
+      },
     };
   }
 
+  return { artifact, sortedNodeIds: validation.sortedNodeIds };
+}
+
+/**
+ * Executes a visual graph compilation and runs the WebAssembly binary in-memory.
+ */
+export async function executeGraph(
+  graph: FlintNodeGraph,
+  inputs: Readonly<Record<string, unknown>> = {},
+): Promise<CompilerWorkerResponse> {
+  const check = validateAndCompileGraph(graph);
+  if (check.errorResponse || !check.artifact || !check.sortedNodeIds || !check.artifact.wasm) {
+    return (
+      check.errorResponse ?? {
+        type: 'run_error',
+        error: 'Graph validation or compilation failed.',
+        nodeErrors: {},
+      }
+    );
+  }
+  const artifact = check.artifact;
+  const sortedNodeIds = check.sortedNodeIds;
+
   try {
-    const callArgs = prepareCallArguments(validation.sortedNodeIds, graph.nodes, inputs);
+    const callArgs = prepareCallArguments(sortedNodeIds, graph.nodes, inputs);
     const result = await invokeWasmEntry(artifact.wasm, artifact.compilation.entryFunctionName, callArgs);
 
     return {

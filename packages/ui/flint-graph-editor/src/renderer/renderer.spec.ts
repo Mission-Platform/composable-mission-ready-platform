@@ -1005,8 +1005,8 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     const testFloats = new Float64Array(wasm.memory.buffer, testPtr, testCount * 48);
     for (let i = 0; i < testCount; i++) {
       const off = i * 48;
-      const u0 = testFloats[off + 2]!;
-      const u1 = testFloats[off + 10]!;
+      const u0 = testFloats[off + 2] ?? 0;
+      const u1 = testFloats[off + 10] ?? 0;
       expect(u1).toBeGreaterThan(u0);
     }
 
@@ -1108,7 +1108,7 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     expect(perspFloats[0]).toBeGreaterThan(0);
   });
 
-  it('manages edge waypoints and group properties in editor store', () => {
+  it('manages edge waypoints in editor store', () => {
     const store = new FlintEditorStore();
     const nodeA = store.addNode('add', { x: 100, y: 100 });
     const nodeB = store.addNode('multiply', { x: 400, y: 100 });
@@ -1132,6 +1132,12 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     store.clearEdgePoints(edge.id);
     updatedEdge = store.getState().graph.edges[0];
     expect(updatedEdge.points).toBeUndefined();
+  });
+
+  it('manages group properties and movement in editor store', () => {
+    const store = new FlintEditorStore();
+    const nodeA = store.addNode('add', { x: 100, y: 100 });
+    const nodeB = store.addNode('multiply', { x: 400, y: 100 });
 
     // Group management
     store.createGroup('Math Group', [nodeA.id, nodeB.id]);
@@ -1172,7 +1178,7 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     const wasm = getFlintRenderWorkerWasm();
     wasm.font_init_atlas_data();
 
-    const metricsTablePtr = wasm.font_get_metrics_table_ptr ? wasm.font_get_metrics_table_ptr() : 0;
+    const metricsTablePtr = wasm.font_get_metrics_table_ptr();
     expect(metricsTablePtr).toBeGreaterThan(0);
 
     const totalGlyphs = 157;
@@ -1201,27 +1207,17 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
       expect(Math.abs(vertAdvance % 2)).toBe(0);
 
       // Validate export helper methods match serialized metrics
-      if (wasm.font_get_glyph_width) {
-        expect(wasm.font_get_glyph_width(idx)).toBe(width);
-      }
-      if (wasm.font_get_glyph_height) {
-        expect(wasm.font_get_glyph_height(idx)).toBe(height);
-      }
-      if (wasm.font_get_glyph_hori_bearing_x) {
-        expect(wasm.font_get_glyph_hori_bearing_x(idx)).toBe(horiBearingX);
-      }
-      if (wasm.font_get_glyph_hori_bearing_y) {
-        expect(wasm.font_get_glyph_hori_bearing_y(idx)).toBe(horiBearingY);
-      }
-      if (wasm.font_get_glyph_hori_advance) {
-        expect(wasm.font_get_glyph_hori_advance(idx)).toBe(horiAdvance);
-      }
+      expect(wasm.font_get_glyph_width(idx)).toBe(width);
+      expect(wasm.font_get_glyph_height(idx)).toBe(height);
+      expect(wasm.font_get_glyph_hori_bearing_x(idx)).toBe(horiBearingX);
+      expect(wasm.font_get_glyph_hori_bearing_y(idx)).toBe(horiBearingY);
+      expect(wasm.font_get_glyph_hori_advance(idx)).toBe(horiAdvance);
 
       // Validate BBox coordinate calculations
-      const bboxMinX = wasm.font_get_glyph_bbox_min_x ? wasm.font_get_glyph_bbox_min_x(idx) : horiBearingX;
-      const bboxMaxX = wasm.font_get_glyph_bbox_max_x ? wasm.font_get_glyph_bbox_max_x(idx) : horiBearingX + width;
-      const bboxMinY = wasm.font_get_glyph_bbox_min_y ? wasm.font_get_glyph_bbox_min_y(idx) : horiBearingY - height;
-      const bboxMaxY = wasm.font_get_glyph_bbox_max_y ? wasm.font_get_glyph_bbox_max_y(idx) : horiBearingY;
+      const bboxMinX = wasm.font_get_glyph_bbox_min_x(idx);
+      const bboxMaxX = wasm.font_get_glyph_bbox_max_x(idx);
+      const bboxMinY = wasm.font_get_glyph_bbox_min_y(idx);
+      const bboxMaxY = wasm.font_get_glyph_bbox_max_y(idx);
 
       expect(Math.abs(bboxMinX % 2)).toBe(0);
       expect(Math.abs(bboxMaxX % 2)).toBe(0);
@@ -1239,7 +1235,7 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
     const wasm = getFlintRenderWorkerWasm();
     wasm.font_init_atlas_data();
 
-    const tableBase = wasm.font_get_table_ptr ? wasm.font_get_table_ptr() : 224;
+    const tableBase = wasm.font_get_table_ptr();
     expect(tableBase).toBeGreaterThan(0);
 
     const u32Mem = new Uint32Array(wasm.memory.buffer);
@@ -1266,41 +1262,27 @@ describe('Flint WebAssembly Renderer & Camera Engines', () => {
 
     // Verify partial differential ∂ (idx 109, U+2202) has valid segments and positive metrics
     const segPtr = 1024;
-    const numSegs = wasm.sdf_load_char_segments ? wasm.sdf_load_char_segments(109, segPtr) : 14;
+    const numSegs = wasm.sdf_load_char_segments(109, segPtr);
     expect(numSegs).toBeGreaterThanOrEqual(13);
   });
 
   it('captures ascent, descent, leadings, linegap, bearings, and centers for origin-based layout', () => {
     const wasm = getFlintRenderWorkerWasm();
 
-    if (wasm.font_get_ascent) {
-      expect(wasm.font_get_ascent()).toBe(18);
-    }
-    if (wasm.font_get_descent) {
-      expect(wasm.font_get_descent()).toBe(6);
-    }
-    if (wasm.font_get_linegap) {
-      expect(wasm.font_get_linegap()).toBe(4);
-    }
-    if (wasm.font_get_internal_leading) {
-      expect(wasm.font_get_internal_leading()).toBe(2);
-    }
-    if (wasm.font_get_external_leading) {
-      expect(wasm.font_get_external_leading()).toBe(4);
-    }
+    expect(wasm.font_get_ascent()).toBe(18);
+    expect(wasm.font_get_descent()).toBe(6);
+    expect(wasm.font_get_linegap()).toBe(4);
+    expect(wasm.font_get_internal_leading()).toBe(2);
+    expect(wasm.font_get_external_leading()).toBe(4);
 
     // Check right side bearing (RSB)
-    if (wasm.font_get_glyph_right_bearing) {
-      expect(wasm.font_get_glyph_right_bearing(45)).toBeGreaterThanOrEqual(0); // 'M'
-      expect(wasm.font_get_glyph_right_bearing(14)).toBeGreaterThanOrEqual(0); // '.'
-    }
+    expect(wasm.font_get_glyph_right_bearing(45)).toBeGreaterThanOrEqual(0); // 'M'
+    expect(wasm.font_get_glyph_right_bearing(14)).toBeGreaterThanOrEqual(0); // '.'
 
     // Check center points for glyphs
-    if (wasm.font_get_glyph_center_x && wasm.font_get_glyph_center_y) {
-      expect(wasm.font_get_glyph_center_x(45)).toBeGreaterThan(0);
-      expect(wasm.font_get_glyph_center_y(45)).toBeGreaterThan(0);
-      expect(wasm.font_get_glyph_center_x(1)).toBeGreaterThan(0); // '!'
-      expect(wasm.font_get_glyph_center_y(1)).toBeGreaterThan(0);
-    }
+    expect(wasm.font_get_glyph_center_x(45)).toBeGreaterThan(0);
+    expect(wasm.font_get_glyph_center_y(45)).toBeGreaterThan(0);
+    expect(wasm.font_get_glyph_center_x(1)).toBeGreaterThan(0); // '!'
+    expect(wasm.font_get_glyph_center_y(1)).toBeGreaterThan(0);
   });
 });

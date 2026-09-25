@@ -347,10 +347,10 @@ function hitTestNodes(
 function distributionToSegmentSquared(px: number, py: number, x1: number, y1: number, x2: number, y2: number): number {
   const l2 = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
   if (l2 === 0) return (px - x1) * (px - x1) + (py - y1) * (py - y1);
-  let t = ((px - x1) * (x2 - x1) + (py - y1) * (y2 - y1)) / l2;
-  t = Math.max(0, Math.min(1, t));
-  const projX = x1 + t * (x2 - x1);
-  const projY = y1 + t * (y2 - y1);
+  let projectionRatio = ((px - x1) * (x2 - x1) + (py - y1) * (y2 - y1)) / l2;
+  projectionRatio = Math.max(0, Math.min(1, projectionRatio));
+  const projX = x1 + projectionRatio * (x2 - x1);
+  const projY = y1 + projectionRatio * (y2 - y1);
   return (px - projX) * (px - projX) + (py - projY) * (py - projY);
 }
 
@@ -735,6 +735,471 @@ function detectCurrentTheme(): 'light' | 'dark' {
 }
 
 /**
+ * Modal dialog for displaying generated Flint source code.
+ */
+function ExportModal(properties: { readonly open: boolean; readonly source: string; readonly onClose: () => void }) {
+  if (!properties.open) return;
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      className={styles.modalOverlay}
+      onClick={properties.onClose}
+    >
+      <div
+        className={styles.modalCard}
+        onClick={(event: unknown) => {
+          if (typeof MouseEvent !== 'undefined' && event instanceof MouseEvent) {
+            event.stopPropagation();
+          }
+        }}
+      >
+        <ForgeCard
+          size="lg"
+          variant="neutral"
+          padding="none"
+          bordered={true}
+          shadow={true}
+        >
+          <div className={styles.modalHeader}>
+            <span
+              className={styles.inspectorTitle}
+              style={{ margin: 0 }}
+            >
+              Generated Flint Source
+            </span>
+            <ForgeButton
+              variant="ghost"
+              size="xs"
+              onClick={properties.onClose}
+              ariaLabel="Close export modal"
+            >
+              ✕
+            </ForgeButton>
+          </div>
+          <div className={styles.modalBody}>
+            <pre className={styles.codeBlock}>
+              <code>{properties.source}</code>
+            </pre>
+          </div>
+          <div className={styles.modalFooter}>
+            <ForgeButton
+              variant="primary"
+              size="sm"
+              onClick={properties.onClose}
+            >
+              Close
+            </ForgeButton>
+          </div>
+        </ForgeCard>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Interactive font atlas inspector section displaying the 1024x1024 MSDF sprite sheet and hovered glyph metrics.
+ */
+function SpriteSheetSection(properties: {
+  readonly mode: 'crisp' | 'raw';
+  readonly grid: boolean;
+  readonly hoveredGlyph: HoveredGlyphInfo | undefined;
+  readonly canvasRef: { current?: HTMLCanvasElement };
+  readonly inspectCanvasRef: { current?: HTMLCanvasElement };
+  readonly onModeChange: (mode: 'crisp' | 'raw') => void;
+  readonly onGridToggle: () => void;
+  readonly onPointerMove: (event: PointerEvent) => void;
+  readonly onPointerLeave: () => void;
+  readonly onToggle: () => void;
+}) {
+  return (
+    <div style={{ marginTop: '16px' }}>
+      <ForgeCollapse
+        summary="Debug Glyph Sprite Sheet (1024x1024 2D Shelf Packed SDF Atlas)"
+        open={true}
+        size="sm"
+        onToggle={properties.onToggle}
+      >
+        <div className={styles.spriteSheetContainer}>
+          <div className={styles.spriteSheetToolbar}>
+            <ForgeButtonGroup size="xs">
+              <ForgeButton
+                variant={properties.mode === 'crisp' ? 'primary' : 'ghost'}
+                size="xs"
+                onClick={() => properties.onModeChange('crisp')}
+              >
+                Crisp Glyphs
+              </ForgeButton>
+              <ForgeButton
+                variant={properties.mode === 'raw' ? 'primary' : 'ghost'}
+                size="xs"
+                onClick={() => properties.onModeChange('raw')}
+              >
+                Raw SDF
+              </ForgeButton>
+            </ForgeButtonGroup>
+            <ForgeButton
+              variant={properties.grid ? 'secondary' : 'ghost'}
+              size="xs"
+              onClick={properties.onGridToggle}
+            >
+              {properties.grid ? 'Grid: ON' : 'Grid: OFF'}
+            </ForgeButton>
+          </div>
+          <div className={styles.spriteSheetMeta}>
+            <ForgeBadge
+              variant="primary"
+              size="xs"
+            >
+              1024 × 1024 px
+            </ForgeBadge>
+            <ForgeBadge
+              variant="neutral"
+              size="xs"
+            >
+              2D Shelf Packed (4x4 to 64x64)
+            </ForgeBadge>
+            <ForgeBadge
+              variant="info"
+              size="xs"
+            >
+              Comfortaa & Datatype
+            </ForgeBadge>
+            <ForgeBadge
+              variant="success"
+              size="xs"
+            >
+              {GLYPH_CHARS_BY_IDX.length} Active Glyphs
+            </ForgeBadge>
+          </div>
+          <canvas
+            ref={properties.canvasRef}
+            width={1024}
+            height={1024}
+            className={styles.spriteSheetCanvas}
+            onPointerMove={properties.onPointerMove}
+            onPointerLeave={properties.onPointerLeave}
+          />
+          {properties.hoveredGlyph && (
+            <div className={styles.spriteSheetInspector}>
+              <canvas
+                ref={properties.inspectCanvasRef}
+                width={64}
+                height={64}
+                className={styles.spriteSheetInspectCanvas}
+              />
+              <div className={styles.spriteSheetInspectDetails}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span className={styles.spriteSheetInspectChar}>
+                    {properties.hoveredGlyph.char === ' ' ? 'Space' : properties.hoveredGlyph.char}
+                  </span>
+                  <ForgeBadge
+                    variant="info"
+                    size="xs"
+                  >
+                    {properties.hoveredGlyph.codeHex}
+                  </ForgeBadge>
+                  <ForgeBadge
+                    variant="neutral"
+                    size="xs"
+                  >
+                    Idx {properties.hoveredGlyph.index}
+                  </ForgeBadge>
+                </div>
+                <div style={{ fontSize: '11px', lineHeight: '1.5', color: '#c9d1d9' }}>
+                  <div>
+                    <strong>Dimensions & Advance:</strong> {properties.hoveredGlyph.width}×
+                    {properties.hoveredGlyph.height}px | Advance H: {properties.hoveredGlyph.advance}px | Advance V:{' '}
+                    {properties.hoveredGlyph.vertAdvance}px
+                  </div>
+                  <div>
+                    <strong>Bearings:</strong> Left (LSB): {properties.hoveredGlyph.horiBearingX}px | Right (RSB):{' '}
+                    {properties.hoveredGlyph.rightBearing}px | Top: {properties.hoveredGlyph.horiBearingY}px
+                  </div>
+                  <div>
+                    <strong>Font Metrics:</strong> Ascent: {properties.hoveredGlyph.ascent}px | Descent:{' '}
+                    {properties.hoveredGlyph.descent}px | LineGap: {properties.hoveredGlyph.linegap}px | Int Leading:{' '}
+                    {properties.hoveredGlyph.internalLeading}px | Ext Leading: {properties.hoveredGlyph.externalLeading}
+                    px
+                  </div>
+                  <div>
+                    <strong>BBox & Origin:</strong> [{properties.hoveredGlyph.bboxMinX},{' '}
+                    {properties.hoveredGlyph.bboxMinY}, {properties.hoveredGlyph.bboxMaxX},{' '}
+                    {properties.hoveredGlyph.bboxMaxY}] | Origin: (0, 0) on baseline | Packed Cell:{' '}
+                    {properties.hoveredGlyph.cellW}×{properties.hoveredGlyph.cellH} at ({properties.hoveredGlyph.cellX},{' '}
+                    {properties.hoveredGlyph.cellY})
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </ForgeCollapse>
+    </div>
+  );
+}
+
+/**
+ * Modal dialog for real-time performance telemetry, stacked D3 timeline chart, pie chart, and font atlas inspector.
+ */
+function PerfProfilerModal(properties: {
+  readonly open: boolean;
+  readonly perfMetrics: FlintPerformanceMetrics;
+  readonly perfHistory: readonly FlintPerformanceMetrics[];
+  readonly telemetryInterval: string;
+  readonly onTelemetryIntervalChange: (interval: 'realtime' | '100ms' | '250ms' | '500ms' | '750ms' | '1500ms') => void;
+  readonly spriteSheetMode: 'crisp' | 'raw';
+  readonly onSpriteSheetModeChange: (mode: 'crisp' | 'raw') => void;
+  readonly spriteSheetGrid: boolean;
+  readonly onSpriteSheetGridChange: (grid: boolean) => void;
+  readonly hoveredGlyph: HoveredGlyphInfo | undefined;
+  readonly canvasRef: { current?: HTMLCanvasElement };
+  readonly inspectCanvasRef: { current?: HTMLCanvasElement };
+  readonly onPointerMove: (event: PointerEvent) => void;
+  readonly onPointerLeave: () => void;
+  readonly onPaintSpriteSheet: () => void;
+  readonly onClose: () => void;
+}) {
+  if (!properties.open) return;
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      className={styles.modalOverlay}
+      onClick={properties.onClose}
+    >
+      <div
+        className={styles.perfModal}
+        onClick={(event: unknown) => {
+          if (typeof MouseEvent !== 'undefined' && event instanceof MouseEvent) {
+            event.stopPropagation();
+          }
+        }}
+      >
+        <ForgeCard
+          size="xl"
+          variant="neutral"
+          padding="none"
+          bordered={true}
+          shadow={true}
+        >
+          <div className={styles.modalHeader}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span className={styles.modalTitle}>Performance Profiler & Realtime Telemetry</span>
+              <ForgeBadge
+                variant="success"
+                size="xs"
+              >
+                {Math.round(1000 / Math.max(1, properties.perfMetrics.totalFrameTimeMs))} FPS
+              </ForgeBadge>
+              <ForgeBadge
+                variant="neutral"
+                size="xs"
+              >
+                {properties.perfMetrics.backend?.toUpperCase() ??
+                  (properties.perfMetrics.isFallback ? 'CANVAS2D' : 'WEBGPU')}
+              </ForgeBadge>
+            </div>
+            <ForgeButton
+              variant="ghost"
+              size="xs"
+              onClick={properties.onClose}
+              ariaLabel="Close performance modal"
+            >
+              ✕
+            </ForgeButton>
+          </div>
+          <div className={styles.modalBody}>
+            <div style={{ marginBottom: '14px' }}>
+              <div style={{ fontSize: '12px', fontWeight: 600, color: '#8b949e', marginBottom: '6px' }}>
+                Telemetry Refresh Interval
+              </div>
+              <ForgeButtonGroup size="xs">
+                {(['realtime', '100ms', '250ms', '500ms', '750ms', '1500ms'] as const).map((interval) => (
+                  <ForgeButton
+                    key={interval}
+                    variant={properties.telemetryInterval === interval ? 'primary' : 'ghost'}
+                    size="xs"
+                    onClick={() => properties.onTelemetryIntervalChange(interval)}
+                  >
+                    {interval === 'realtime' ? 'Realtime' : interval}
+                  </ForgeButton>
+                ))}
+              </ForgeButtonGroup>
+            </div>
+
+            <div style={{ marginBottom: '16px' }}>
+              <ForgePerformanceTimelineChart
+                history={properties.perfHistory}
+                currentMetrics={properties.perfMetrics}
+                width={880}
+                height={180}
+              />
+            </div>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(4, 1fr)',
+                gap: '8px',
+                marginBottom: '16px',
+              }}
+            >
+              <div
+                style={{
+                  background: '#161b22',
+                  padding: '8px',
+                  borderRadius: '6px',
+                  border: '1px solid #30363d',
+                }}
+              >
+                <div style={{ fontSize: '10px', color: '#8b949e' }}>Total Frame Time</div>
+                <div style={{ fontSize: '14px', fontWeight: 600, color: '#58a6ff' }}>
+                  {properties.perfMetrics.totalFrameTimeMs.toFixed(2)} ms
+                </div>
+              </div>
+              <div
+                style={{
+                  background: '#161b22',
+                  padding: '8px',
+                  borderRadius: '6px',
+                  border: '1px solid #30363d',
+                }}
+              >
+                <div style={{ fontSize: '10px', color: '#8b949e' }}>Render Duration</div>
+                <div style={{ fontSize: '14px', fontWeight: 600, color: '#3fb950' }}>
+                  {properties.perfMetrics.renderTimeMs.toFixed(2)} ms
+                </div>
+              </div>
+              <div
+                style={{
+                  background: '#161b22',
+                  padding: '8px',
+                  borderRadius: '6px',
+                  border: '1px solid #30363d',
+                }}
+              >
+                <div style={{ fontSize: '10px', color: '#8b949e' }}>Spatial Indexing</div>
+                <div style={{ fontSize: '14px', fontWeight: 600, color: '#d29922' }}>
+                  {properties.perfMetrics.spatialIndexTimeMs.toFixed(2)} ms
+                </div>
+              </div>
+              <div
+                style={{
+                  background: '#161b22',
+                  padding: '8px',
+                  borderRadius: '6px',
+                  border: '1px solid #30363d',
+                }}
+              >
+                <div style={{ fontSize: '10px', color: '#8b949e' }}>Visible Nodes</div>
+                <div style={{ fontSize: '14px', fontWeight: 600, color: '#f0883e' }}>
+                  {properties.perfMetrics.visibleNodesCount} /{' '}
+                  {properties.perfMetrics.totalNodesCount ?? properties.perfMetrics.visibleNodesCount}
+                </div>
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(4, 1fr)',
+                gap: '8px',
+                marginBottom: '16px',
+              }}
+            >
+              <div
+                style={{
+                  background: '#161b22',
+                  padding: '8px',
+                  borderRadius: '6px',
+                  border: '1px solid #30363d',
+                }}
+              >
+                <div style={{ fontSize: '10px', color: '#8b949e' }}>Updates & Layout</div>
+                <div style={{ fontSize: '14px', fontWeight: 600, color: '#f0883e' }}>
+                  {((properties.perfMetrics.updateTimeMs ?? 0) + (properties.perfMetrics.layoutTimeMs ?? 0)).toFixed(2)}{' '}
+                  ms
+                </div>
+              </div>
+              <div
+                style={{
+                  background: '#161b22',
+                  padding: '8px',
+                  borderRadius: '6px',
+                  border: '1px solid #30363d',
+                }}
+              >
+                <div style={{ fontSize: '10px', color: '#8b949e' }}>Buffer Uploads</div>
+                <div style={{ fontSize: '14px', fontWeight: 600, color: '#a371f7' }}>
+                  {(properties.perfMetrics.bufferUploadTimeMs ?? 0).toFixed(2)} ms
+                </div>
+              </div>
+              <div
+                style={{
+                  background: '#161b22',
+                  padding: '8px',
+                  borderRadius: '6px',
+                  border: '1px solid #30363d',
+                }}
+              >
+                <div style={{ fontSize: '10px', color: '#8b949e' }}>Visible Edges & Pins</div>
+                <div style={{ fontSize: '14px', fontWeight: 600, color: '#388bfd' }}>
+                  {properties.perfMetrics.visibleEdgesCount}E / {properties.perfMetrics.visiblePinsCount}P
+                </div>
+              </div>
+              <div
+                style={{
+                  background: '#161b22',
+                  padding: '8px',
+                  borderRadius: '6px',
+                  border: '1px solid #30363d',
+                }}
+              >
+                <div style={{ fontSize: '10px', color: '#8b949e' }}>DPR / Scale</div>
+                <div style={{ fontSize: '14px', fontWeight: 600, color: '#39c5bb' }}>
+                  {properties.perfMetrics.dpr.toFixed(1)}x DPR
+                </div>
+              </div>
+            </div>
+
+            <ForgePerformancePieChart
+              metrics={properties.perfMetrics}
+              width={280}
+              height={240}
+            />
+
+            <SpriteSheetSection
+              mode={properties.spriteSheetMode}
+              grid={properties.spriteSheetGrid}
+              hoveredGlyph={properties.hoveredGlyph}
+              canvasRef={properties.canvasRef}
+              inspectCanvasRef={properties.inspectCanvasRef}
+              onModeChange={properties.onSpriteSheetModeChange}
+              onGridToggle={() => properties.onSpriteSheetGridChange(!properties.spriteSheetGrid)}
+              onPointerMove={properties.onPointerMove}
+              onPointerLeave={properties.onPointerLeave}
+              onToggle={properties.onPaintSpriteSheet}
+            />
+          </div>
+          <div className={styles.modalFooter}>
+            <ForgeButton
+              variant="primary"
+              size="sm"
+              onClick={properties.onClose}
+            >
+              Close
+            </ForgeButton>
+          </div>
+        </ForgeCard>
+      </div>
+    </div>
+  );
+}
+
+/**
  * Framework-neutral Forge component for the Flint visual node graph editor.
  * Authors interactive dataflow programs, renders instanced WebGPU primitives,
  * and compiles natively to WebAssembly.
@@ -775,6 +1240,11 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
   });
   const [perfHistory, setPerfHistory] = useState<readonly FlintPerformanceMetrics[]>([]);
 
+  /**
+   * Records newly emitted performance telemetry metrics into the rolling historical buffer.
+   *
+   * @param nextMetrics - The latest collected performance telemetry metrics.
+   */
   const recordPerfMetrics = (nextMetrics: FlintPerformanceMetrics): void => {
     setPerfMetrics(nextMetrics);
     const updated = [...perfHistory, nextMetrics];
@@ -876,14 +1346,14 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
 
         if (mode === 'crisp') {
           for (let pixelIndex = 0; pixelIndex < atlasSize * atlasSize; pixelIndex++) {
-            const r = (rawBytes[pixelIndex * 4] ?? 0) / 255;
-            const g = (rawBytes[pixelIndex * 4 + 1] ?? 0) / 255;
-            const b = (rawBytes[pixelIndex * 4 + 2] ?? 0) / 255;
-            const msdf = Math.max(Math.min(r, g), Math.min(Math.max(r, g), b));
+            const red = (rawBytes[pixelIndex * 4] ?? 0) / 255;
+            const green = (rawBytes[pixelIndex * 4 + 1] ?? 0) / 255;
+            const blue = (rawBytes[pixelIndex * 4 + 2] ?? 0) / 255;
+            const msdf = Math.max(Math.min(red, green), Math.min(Math.max(red, green), blue));
             const edge = 0.5;
             const smoothing = 0.045;
-            const t = Math.max(0, Math.min(1, (msdf - (edge - smoothing)) / (2 * smoothing)));
-            const alpha = t * t * (3 - 2 * t);
+            const threshold = Math.max(0, Math.min(1, (msdf - (edge - smoothing)) / (2 * smoothing)));
+            const alpha = threshold * threshold * (3 - 2 * threshold);
             const outputIndex = pixelIndex * 4;
             outBytes[outputIndex] = Math.round(13 + (255 - 13) * alpha);
             outBytes[outputIndex + 1] = Math.round(17 + (255 - 17) * alpha);
@@ -1084,25 +1554,26 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
   }, [showPerfModal]);
 
   useEffect(() => {
-    if (!showPerfModal) return;
-    if (telemetryInterval === 'realtime') return;
+    let cleanupTimer: (() => void) | undefined;
+    if (showPerfModal && telemetryInterval !== 'realtime') {
+      const msMap: Record<string, number> = {
+        '100ms': 100,
+        '250ms': 250,
+        '500ms': 500,
+        '750ms': 750,
+        '1500ms': 1500,
+      };
+      const intervalMs = msMap[telemetryInterval] ?? 250;
 
-    const msMap: Record<string, number> = {
-      '100ms': 100,
-      '250ms': 250,
-      '500ms': 500,
-      '750ms': 750,
-      '1500ms': 1500,
-    };
-    const intervalMs = msMap[telemetryInterval] ?? 250;
+      const timer = setInterval(() => {
+        if (rendererReference.current) {
+          recordPerfMetrics(rendererReference.current.getPerformanceStats());
+        }
+      }, intervalMs);
 
-    const timer = setInterval(() => {
-      if (rendererReference.current) {
-        recordPerfMetrics(rendererReference.current.getPerformanceStats());
-      }
-    }, intervalMs);
-
-    return () => clearInterval(timer);
+      cleanupTimer = () => clearInterval(timer);
+    }
+    return cleanupTimer;
   }, [showPerfModal, telemetryInterval]);
 
   useEffect(() => {
@@ -2961,395 +3432,37 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
       <ForgeDebugScrubber controller={store.getTraceController()} />
 
       {/* Code Export Dialog Modal */}
-      {showExportModal && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className={styles.modalOverlay}
-          onClick={() => setShowExportModal(false)}
-        >
-          <div
-            className={styles.modalCard}
-            onClick={(event: unknown) => {
-              if (typeof MouseEvent !== 'undefined' && event instanceof MouseEvent) {
-                event.stopPropagation();
-              }
-            }}
-          >
-            <ForgeCard
-              size="lg"
-              variant="neutral"
-              padding="none"
-              bordered={true}
-              shadow={true}
-            >
-              <div className={styles.modalHeader}>
-                <span
-                  className={styles.inspectorTitle}
-                  style={{ margin: 0 }}
-                >
-                  Generated Flint Source
-                </span>
-                <ForgeButton
-                  variant="ghost"
-                  size="xs"
-                  onClick={() => setShowExportModal(false)}
-                  ariaLabel="Close export modal"
-                >
-                  ✕
-                </ForgeButton>
-              </div>
-              <div className={styles.modalBody}>
-                <pre className={styles.codeBlock}>
-                  <code>{exportedSource}</code>
-                </pre>
-              </div>
-              <div className={styles.modalFooter}>
-                <ForgeButton
-                  variant="primary"
-                  size="sm"
-                  onClick={() => setShowExportModal(false)}
-                >
-                  Close
-                </ForgeButton>
-              </div>
-            </ForgeCard>
-          </div>
-        </div>
-      )}
+      <ExportModal
+        open={showExportModal}
+        source={exportedSource}
+        onClose={() => setShowExportModal(false)}
+      />
 
       {/* Detailed D3 Performance Profiler Modal */}
-      {showPerfModal && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className={styles.modalOverlay}
-          onClick={() => setShowPerfModal(false)}
-        >
-          <div
-            className={styles.perfModal}
-            onClick={(event: unknown) => {
-              if (typeof MouseEvent !== 'undefined' && event instanceof MouseEvent) {
-                event.stopPropagation();
-              }
-            }}
-          >
-            <ForgeCard
-              size="xl"
-              variant="neutral"
-              padding="none"
-              bordered={true}
-              shadow={true}
-            >
-              <div className={styles.modalHeader}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span className={styles.modalTitle}>Performance Profiler & Realtime Telemetry</span>
-                  <ForgeBadge
-                    variant="success"
-                    size="xs"
-                  >
-                    {Math.round(1000 / Math.max(1, perfMetrics.totalFrameTimeMs))} FPS
-                  </ForgeBadge>
-                  <ForgeBadge
-                    variant="neutral"
-                    size="xs"
-                  >
-                    {perfMetrics.backend?.toUpperCase() ?? (perfMetrics.isFallback ? 'CANVAS2D' : 'WEBGPU')}
-                  </ForgeBadge>
-                </div>
-                <ForgeButton
-                  variant="ghost"
-                  size="xs"
-                  onClick={() => setShowPerfModal(false)}
-                  ariaLabel="Close performance modal"
-                >
-                  ✕
-                </ForgeButton>
-              </div>
-              <div className={styles.modalBody}>
-                <div style={{ marginBottom: '14px' }}>
-                  <div style={{ fontSize: '12px', fontWeight: 600, color: '#8b949e', marginBottom: '6px' }}>
-                    Telemetry Refresh Interval
-                  </div>
-                  <ForgeButtonGroup size="xs">
-                    <ForgeButton
-                      variant={telemetryInterval === 'realtime' ? 'primary' : 'ghost'}
-                      size="xs"
-                      onClick={() => setTelemetryInterval('realtime')}
-                    >
-                      Realtime
-                    </ForgeButton>
-                    <ForgeButton
-                      variant={telemetryInterval === '100ms' ? 'primary' : 'ghost'}
-                      size="xs"
-                      onClick={() => setTelemetryInterval('100ms')}
-                    >
-                      100ms
-                    </ForgeButton>
-                    <ForgeButton
-                      variant={telemetryInterval === '250ms' ? 'primary' : 'ghost'}
-                      size="xs"
-                      onClick={() => setTelemetryInterval('250ms')}
-                    >
-                      250ms
-                    </ForgeButton>
-                    <ForgeButton
-                      variant={telemetryInterval === '500ms' ? 'primary' : 'ghost'}
-                      size="xs"
-                      onClick={() => setTelemetryInterval('500ms')}
-                    >
-                      500ms
-                    </ForgeButton>
-                    <ForgeButton
-                      variant={telemetryInterval === '750ms' ? 'primary' : 'ghost'}
-                      size="xs"
-                      onClick={() => setTelemetryInterval('750ms')}
-                    >
-                      750ms
-                    </ForgeButton>
-                    <ForgeButton
-                      variant={telemetryInterval === '1500ms' ? 'primary' : 'ghost'}
-                      size="xs"
-                      onClick={() => setTelemetryInterval('1500ms')}
-                    >
-                      1500ms
-                    </ForgeButton>
-                  </ForgeButtonGroup>
-                </div>
-
-                <div style={{ marginBottom: '16px' }}>
-                  <ForgePerformanceTimelineChart
-                    history={perfHistory}
-                    currentMetrics={perfMetrics}
-                    width={880}
-                    height={180}
-                  />
-                </div>
-
-                <div
-                  style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '16px' }}
-                >
-                  <div
-                    style={{ background: '#161b22', padding: '8px', borderRadius: '6px', border: '1px solid #30363d' }}
-                  >
-                    <div style={{ fontSize: '10px', color: '#8b949e' }}>Total Frame Time</div>
-                    <div style={{ fontSize: '14px', fontWeight: 600, color: '#58a6ff' }}>
-                      {perfMetrics.totalFrameTimeMs.toFixed(2)} ms
-                    </div>
-                  </div>
-                  <div
-                    style={{ background: '#161b22', padding: '8px', borderRadius: '6px', border: '1px solid #30363d' }}
-                  >
-                    <div style={{ fontSize: '10px', color: '#8b949e' }}>Render Duration</div>
-                    <div style={{ fontSize: '14px', fontWeight: 600, color: '#3fb950' }}>
-                      {perfMetrics.renderTimeMs.toFixed(2)} ms
-                    </div>
-                  </div>
-                  <div
-                    style={{ background: '#161b22', padding: '8px', borderRadius: '6px', border: '1px solid #30363d' }}
-                  >
-                    <div style={{ fontSize: '10px', color: '#8b949e' }}>Spatial Indexing</div>
-                    <div style={{ fontSize: '14px', fontWeight: 600, color: '#d29922' }}>
-                      {perfMetrics.spatialIndexTimeMs.toFixed(2)} ms
-                    </div>
-                  </div>
-                  <div
-                    style={{ background: '#161b22', padding: '8px', borderRadius: '6px', border: '1px solid #30363d' }}
-                  >
-                    <div style={{ fontSize: '10px', color: '#8b949e' }}>Visible Nodes</div>
-                    <div style={{ fontSize: '14px', fontWeight: 600, color: '#f0883e' }}>
-                      {perfMetrics.visibleNodesCount} / {perfMetrics.totalNodesCount ?? perfMetrics.visibleNodesCount}
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '16px' }}
-                >
-                  <div
-                    style={{ background: '#161b22', padding: '8px', borderRadius: '6px', border: '1px solid #30363d' }}
-                  >
-                    <div style={{ fontSize: '10px', color: '#8b949e' }}>Updates & Layout</div>
-                    <div style={{ fontSize: '14px', fontWeight: 600, color: '#f0883e' }}>
-                      {((perfMetrics.updateTimeMs ?? 0) + (perfMetrics.layoutTimeMs ?? 0)).toFixed(2)} ms
-                    </div>
-                  </div>
-                  <div
-                    style={{ background: '#161b22', padding: '8px', borderRadius: '6px', border: '1px solid #30363d' }}
-                  >
-                    <div style={{ fontSize: '10px', color: '#8b949e' }}>Buffer Uploads</div>
-                    <div style={{ fontSize: '14px', fontWeight: 600, color: '#a371f7' }}>
-                      {(perfMetrics.bufferUploadTimeMs ?? 0).toFixed(2)} ms
-                    </div>
-                  </div>
-                  <div
-                    style={{ background: '#161b22', padding: '8px', borderRadius: '6px', border: '1px solid #30363d' }}
-                  >
-                    <div style={{ fontSize: '10px', color: '#8b949e' }}>Visible Edges & Pins</div>
-                    <div style={{ fontSize: '14px', fontWeight: 600, color: '#388bfd' }}>
-                      {perfMetrics.visibleEdgesCount}E / {perfMetrics.visiblePinsCount}P
-                    </div>
-                  </div>
-                  <div
-                    style={{ background: '#161b22', padding: '8px', borderRadius: '6px', border: '1px solid #30363d' }}
-                  >
-                    <div style={{ fontSize: '10px', color: '#8b949e' }}>DPR / Scale</div>
-                    <div style={{ fontSize: '14px', fontWeight: 600, color: '#39c5bb' }}>
-                      {perfMetrics.dpr.toFixed(1)}x DPR
-                    </div>
-                  </div>
-                </div>
-
-                <ForgePerformancePieChart
-                  metrics={perfMetrics}
-                  width={280}
-                  height={240}
-                />
-
-                <div style={{ marginTop: '16px' }}>
-                  <ForgeCollapse
-                    summary="Debug Glyph Sprite Sheet (1024x1024 2D Shelf Packed SDF Atlas)"
-                    open={true}
-                    size="sm"
-                    onToggle={() => paintSpriteSheet()}
-                  >
-                    <div className={styles.spriteSheetContainer}>
-                      <div className={styles.spriteSheetToolbar}>
-                        <ForgeButtonGroup size="xs">
-                          <ForgeButton
-                            variant={spriteSheetMode === 'crisp' ? 'primary' : 'ghost'}
-                            size="xs"
-                            onClick={() => {
-                              setSpriteSheetMode('crisp');
-                              paintSpriteSheet('crisp', spriteSheetGrid, hoveredGlyph?.index);
-                            }}
-                          >
-                            Crisp Glyphs
-                          </ForgeButton>
-                          <ForgeButton
-                            variant={spriteSheetMode === 'raw' ? 'primary' : 'ghost'}
-                            size="xs"
-                            onClick={() => {
-                              setSpriteSheetMode('raw');
-                              paintSpriteSheet('raw', spriteSheetGrid, hoveredGlyph?.index);
-                            }}
-                          >
-                            Raw SDF
-                          </ForgeButton>
-                        </ForgeButtonGroup>
-                        <ForgeButton
-                          variant={spriteSheetGrid ? 'secondary' : 'ghost'}
-                          size="xs"
-                          onClick={() => {
-                            const nextGrid = !spriteSheetGrid;
-                            setSpriteSheetGrid(nextGrid);
-                            paintSpriteSheet(spriteSheetMode, nextGrid, hoveredGlyph?.index);
-                          }}
-                        >
-                          {spriteSheetGrid ? 'Grid: ON' : 'Grid: OFF'}
-                        </ForgeButton>
-                      </div>
-                      <div className={styles.spriteSheetMeta}>
-                        <ForgeBadge
-                          variant="primary"
-                          size="xs"
-                        >
-                          1024 × 1024 px
-                        </ForgeBadge>
-                        <ForgeBadge
-                          variant="neutral"
-                          size="xs"
-                        >
-                          2D Shelf Packed (4x4 to 64x64)
-                        </ForgeBadge>
-                        <ForgeBadge
-                          variant="info"
-                          size="xs"
-                        >
-                          Comfortaa & Datatype
-                        </ForgeBadge>
-                        <ForgeBadge
-                          variant="success"
-                          size="xs"
-                        >
-                          {GLYPH_CHARS_BY_IDX.length} Active Glyphs
-                        </ForgeBadge>
-                      </div>
-                      <canvas
-                        ref={spriteSheetCanvasReference}
-                        width={1024}
-                        height={1024}
-                        className={styles.spriteSheetCanvas}
-                        onPointerMove={onSpriteSheetPointerMove}
-                        onPointerLeave={onSpriteSheetPointerLeave}
-                      />
-                      {hoveredGlyph && (
-                        <div className={styles.spriteSheetInspector}>
-                          <canvas
-                            ref={inspectCanvasReference}
-                            width={64}
-                            height={64}
-                            className={styles.spriteSheetInspectCanvas}
-                          />
-                          <div className={styles.spriteSheetInspectDetails}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                              <span className={styles.spriteSheetInspectChar}>
-                                {hoveredGlyph.char === ' ' ? 'Space' : hoveredGlyph.char}
-                              </span>
-                              <ForgeBadge
-                                variant="info"
-                                size="xs"
-                              >
-                                {hoveredGlyph.codeHex}
-                              </ForgeBadge>
-                              <ForgeBadge
-                                variant="neutral"
-                                size="xs"
-                              >
-                                Idx {hoveredGlyph.index}
-                              </ForgeBadge>
-                            </div>
-                            <div style={{ fontSize: '11px', lineHeight: '1.5', color: '#c9d1d9' }}>
-                              <div>
-                                <strong>Dimensions & Advance:</strong> {hoveredGlyph.width}×{hoveredGlyph.height}px |
-                                Advance H: {hoveredGlyph.advance}px | Advance V: {hoveredGlyph.vertAdvance}px
-                              </div>
-                              <div>
-                                <strong>Bearings:</strong> Left (LSB): {hoveredGlyph.horiBearingX}px | Right (RSB):{' '}
-                                {hoveredGlyph.rightBearing}px | Top: {hoveredGlyph.horiBearingY}px
-                              </div>
-                              <div>
-                                <strong>Font Metrics:</strong> Ascent: {hoveredGlyph.ascent}px | Descent:{' '}
-                                {hoveredGlyph.descent}px | LineGap: {hoveredGlyph.linegap}px | Int Leading:{' '}
-                                {hoveredGlyph.internalLeading}px | Ext Leading: {hoveredGlyph.externalLeading}px
-                              </div>
-                              <div>
-                                <strong>BBox & Origin:</strong> [{hoveredGlyph.bboxMinX}, {hoveredGlyph.bboxMinY},{' '}
-                                {hoveredGlyph.bboxMaxX}, {hoveredGlyph.bboxMaxY}] | Origin: (0, 0) on baseline | Packed
-                                Cell: {hoveredGlyph.cellW}×{hoveredGlyph.cellH} at ({hoveredGlyph.cellX},{' '}
-                                {hoveredGlyph.cellY})
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </ForgeCollapse>
-                </div>
-              </div>
-              <div className={styles.modalFooter}>
-                <ForgeButton
-                  variant="primary"
-                  size="sm"
-                  onClick={() => setShowPerfModal(false)}
-                >
-                  Close
-                </ForgeButton>
-              </div>
-            </ForgeCard>
-          </div>
-        </div>
-      )}
+      <PerfProfilerModal
+        open={showPerfModal}
+        perfMetrics={perfMetrics}
+        perfHistory={perfHistory}
+        telemetryInterval={telemetryInterval}
+        onTelemetryIntervalChange={(interval) => setTelemetryInterval(interval)}
+        spriteSheetMode={spriteSheetMode}
+        onSpriteSheetModeChange={(mode) => {
+          setSpriteSheetMode(mode);
+          paintSpriteSheet(mode, spriteSheetGrid, hoveredGlyph?.index);
+        }}
+        spriteSheetGrid={spriteSheetGrid}
+        onSpriteSheetGridChange={(nextGrid) => {
+          setSpriteSheetGrid(nextGrid);
+          paintSpriteSheet(spriteSheetMode, nextGrid, hoveredGlyph?.index);
+        }}
+        hoveredGlyph={hoveredGlyph}
+        canvasRef={spriteSheetCanvasReference}
+        inspectCanvasRef={inspectCanvasReference}
+        onPointerMove={onSpriteSheetPointerMove}
+        onPointerLeave={onSpriteSheetPointerLeave}
+        onPaintSpriteSheet={() => paintSpriteSheet()}
+        onClose={() => setShowPerfModal(false)}
+      />
     </div>
   );
 }

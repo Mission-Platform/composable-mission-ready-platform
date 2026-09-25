@@ -271,6 +271,39 @@ function inlineMetaNode(
 }
 
 /**
+ * Appends an edge to the target node's meta connection list.
+ */
+function appendMetaEdge(edgeMap: Map<string, FlintGraphEdge[]>, nodeId: string, edge: FlintGraphEdge): void {
+  const list = edgeMap.get(nodeId) ?? [];
+  list.push(edge);
+  edgeMap.set(nodeId, list);
+}
+
+/**
+ * Categorizes a single edge into incoming meta, outgoing meta, or standard edge partitions.
+ */
+function partitionSingleEdge(
+  edge: FlintGraphEdge,
+  metaNodeIds: ReadonlySet<string>,
+  externalEdgesToMeta: Map<string, FlintGraphEdge[]>,
+  externalEdgesFromMeta: Map<string, FlintGraphEdge[]>,
+  standardEdges: FlintGraphEdge[],
+): void {
+  const toMeta = metaNodeIds.has(edge.toNodeId);
+  const fromMeta = metaNodeIds.has(edge.fromNodeId);
+
+  if (toMeta) {
+    appendMetaEdge(externalEdgesToMeta, edge.toNodeId, edge);
+  }
+  if (fromMeta) {
+    appendMetaEdge(externalEdgesFromMeta, edge.fromNodeId, edge);
+  }
+  if (!toMeta && !fromMeta) {
+    standardEdges.push(edge);
+  }
+}
+
+/**
  * Partitions graph edges into external meta-node connections and standard direct edges.
  */
 function partitionGraphEdges(
@@ -286,22 +319,7 @@ function partitionGraphEdges(
   const standardEdges: FlintGraphEdge[] = [];
 
   for (const edge of edges) {
-    const toMeta = metaNodeIds.has(edge.toNodeId);
-    const fromMeta = metaNodeIds.has(edge.fromNodeId);
-
-    if (toMeta) {
-      const list = externalEdgesToMeta.get(edge.toNodeId) ?? [];
-      list.push(edge);
-      externalEdgesToMeta.set(edge.toNodeId, list);
-    }
-    if (fromMeta) {
-      const list = externalEdgesFromMeta.get(edge.fromNodeId) ?? [];
-      list.push(edge);
-      externalEdgesFromMeta.set(edge.fromNodeId, list);
-    }
-    if (!toMeta && !fromMeta) {
-      standardEdges.push(edge);
-    }
+    partitionSingleEdge(edge, metaNodeIds, externalEdgesToMeta, externalEdgesFromMeta, standardEdges);
   }
 
   return { externalEdgesToMeta, externalEdgesFromMeta, standardEdges };

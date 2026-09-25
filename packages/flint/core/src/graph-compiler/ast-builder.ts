@@ -896,6 +896,9 @@ export function buildGraphAst(inputGraph: FlintNodeGraph): FlintAstBuildResult {
     spanToNode,
   );
 
+  /**
+   * Resolves the input expression for a port from incoming edge connections or default literals.
+   */
   function resolveInputExpression(node: FlintGraphNode, portId: string): FlintExpression {
     const port = node.inputs.find((p) => p.id === portId);
     const key = `${node.id}:${portId}`;

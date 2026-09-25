@@ -1,5 +1,5 @@
 import { useD3 } from '@mission-platform/d3';
-import { scaleLinear } from 'd3';
+import { scaleLinear, type Selection } from 'd3';
 
 import styles from './forge-performance-timeline-chart.module.scss';
 
@@ -11,6 +11,238 @@ export interface ForgePerformanceTimelineChartProperties {
   readonly currentMetrics: FlintPerformanceMetrics;
   readonly width?: number;
   readonly height?: number;
+}
+
+type SvgGroupSelection = Selection<SVGGElement, unknown, null, undefined>;
+
+/**
+ * Computes the maximum frame duration across sample metrics.
+ */
+function calculateSampleMaxTime(samples: readonly FlintPerformanceMetrics[]): number {
+  return Math.max(
+    20,
+    ...samples.map(
+      (metricsItem) =>
+        metricsItem.totalFrameTimeMs ||
+        (metricsItem.drawPassTimeMs ?? 0) +
+          (metricsItem.textPassTimeMs ?? 0) +
+          (metricsItem.bufferUploadTimeMs ?? 0) +
+          (metricsItem.spatialIndexTimeMs ?? 0) +
+          (metricsItem.updateTimeMs ?? 0) +
+          (metricsItem.layoutTimeMs ?? 0),
+    ),
+  );
+}
+
+/**
+ * Renders 60 FPS (16.6ms) and 120 FPS (8.3ms) target threshold lines on the D3 chart.
+ */
+function renderTargetFpsLines(
+  root: SvgGroupSelection,
+  yScale: (val: number) => number,
+  innerWidth: number,
+  maxTime: number,
+): void {
+  if (maxTime >= 14) {
+    const y60 = yScale(16.6);
+    root
+      .append('line')
+      .attr('x1', 0)
+      .attr('x2', innerWidth)
+      .attr('y1', y60)
+      .attr('y2', y60)
+      .attr('stroke', '#f85149')
+      .attr('stroke-dasharray', '4,4')
+      .attr('stroke-width', 1)
+      .attr('opacity', 0.6);
+
+    root
+      .append('text')
+      .attr('x', innerWidth + 4)
+      .attr('y', y60 + 3)
+      .attr('fill', '#f85149')
+      .attr('font-size', '9px')
+      .attr('font-family', 'var(--mp-font-family-mono, "Datatype", monospace)')
+      .text('60 FPS (16.6ms)');
+  }
+
+  if (maxTime >= 7) {
+    const y120 = yScale(8.3);
+    root
+      .append('line')
+      .attr('x1', 0)
+      .attr('x2', innerWidth)
+      .attr('y1', y120)
+      .attr('y2', y120)
+      .attr('stroke', '#3fb950')
+      .attr('stroke-dasharray', '4,4')
+      .attr('stroke-width', 1)
+      .attr('opacity', 0.6);
+
+    root
+      .append('text')
+      .attr('x', innerWidth + 4)
+      .attr('y', y120 + 3)
+      .attr('fill', '#3fb950')
+      .attr('font-size', '9px')
+      .attr('font-family', 'var(--mp-font-family-mono, "Datatype", monospace)')
+      .text('120 FPS (8.3ms)');
+  }
+}
+
+/**
+ * Renders stacked category area polygons and top-stroke boundaries.
+ */
+function renderStackedAreaLayers(
+  root: SvgGroupSelection,
+  samples: readonly FlintPerformanceMetrics[],
+  xScale: (val: number) => number,
+  yScale: (val: number) => number,
+): void {
+  const layers = [
+    {
+      key: 'updates',
+      color: '#f0883e',
+      getValue: (m: FlintPerformanceMetrics) => (m.updateTimeMs ?? 0) + (m.layoutTimeMs ?? 0),
+    },
+    {
+      key: 'spatial',
+      color: '#3fb950',
+      getValue: (m: FlintPerformanceMetrics) => m.spatialIndexTimeMs ?? 0,
+    },
+    {
+      key: 'buffers',
+      color: '#a371f7',
+      getValue: (m: FlintPerformanceMetrics) => m.bufferUploadTimeMs ?? 0,
+    },
+    {
+      key: 'text',
+      color: '#39c5bb',
+      getValue: (m: FlintPerformanceMetrics) => m.textPassTimeMs ?? (m.renderTimeMs ? m.renderTimeMs * 0.3 : 0.2),
+    },
+    {
+      key: 'draw',
+      color: '#388bfd',
+      getValue: (m: FlintPerformanceMetrics) => m.drawPassTimeMs ?? (m.renderTimeMs ? m.renderTimeMs * 0.5 : 0.4),
+    },
+  ];
+
+  const stackedPoints: { y0: number; y1: number }[][] = layers.map(() => []);
+
+  for (const sample of samples) {
+    let runningY = 0;
+    for (const [layerIndex, layer] of layers.entries()) {
+      const value = layer.getValue(sample);
+      const y0 = runningY;
+      const y1 = runningY + value;
+      stackedPoints[layerIndex]?.push({ y0, y1 });
+      runningY = y1;
+    }
+  }
+
+  for (const [layerIndex, layer] of layers.entries()) {
+    const points = stackedPoints[layerIndex];
+    if (!points || points.length === 0) continue;
+
+    let areaD = '';
+    for (const [pointIndex, point] of points.entries()) {
+      const x = xScale(pointIndex);
+      const y = yScale(point.y1);
+      areaD += pointIndex === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`;
+    }
+    for (let reverseIndex = points.length - 1; reverseIndex >= 0; reverseIndex--) {
+      const point = points[reverseIndex];
+      if (!point) continue;
+      const x = xScale(reverseIndex);
+      const y = yScale(point.y0);
+      areaD += ` L ${x} ${y}`;
+    }
+    areaD += ' Z';
+
+    root.append('path').attr('d', areaD).attr('fill', layer.color).attr('opacity', 0.25);
+
+    let lineD = '';
+    for (const [pointIndex, point] of points.entries()) {
+      const x = xScale(pointIndex);
+      const y = yScale(point.y1);
+      lineD += pointIndex === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`;
+    }
+
+    root.append('path').attr('d', lineD).attr('fill', 'none').attr('stroke', layer.color).attr('stroke-width', 1.5);
+  }
+}
+
+/**
+ * Renders the total frame time dashed line, latest sample marker, and Y-axis tick labels.
+ */
+function renderTimelineSummaryAndAxes(
+  root: SvgGroupSelection,
+  samples: readonly FlintPerformanceMetrics[],
+  xScale: (val: number) => number,
+  yScale: (val: number) => number,
+  innerWidth: number,
+  innerHeight: number,
+  maxTime: number,
+): void {
+  let totalLineD = '';
+  for (const [sampleIndex, sample] of samples.entries()) {
+    const x = xScale(sampleIndex);
+    const y = yScale(sample.totalFrameTimeMs);
+    totalLineD += sampleIndex === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`;
+  }
+
+  root
+    .append('path')
+    .attr('d', totalLineD)
+    .attr('fill', 'none')
+    .attr('stroke', '#ffffff')
+    .attr('stroke-width', 2)
+    .attr('stroke-dasharray', '2,2');
+
+  const lastIndex = samples.length - 1;
+  const lastSample = samples[lastIndex];
+  if (lastSample) {
+    root
+      .append('circle')
+      .attr('cx', xScale(lastIndex))
+      .attr('cy', yScale(lastSample.totalFrameTimeMs))
+      .attr('r', 4)
+      .attr('fill', '#ffffff')
+      .attr('stroke', '#0d1117')
+      .attr('stroke-width', 2);
+  }
+
+  root
+    .append('line')
+    .attr('x1', 0)
+    .attr('x2', innerWidth)
+    .attr('y1', innerHeight)
+    .attr('y2', innerHeight)
+    .attr('stroke', '#30363d')
+    .attr('stroke-width', 1);
+
+  const yTicks = [0, maxTime * 0.5, maxTime];
+  for (const tickValue of yTicks) {
+    const y = yScale(tickValue);
+    root
+      .append('line')
+      .attr('x1', -4)
+      .attr('x2', innerWidth)
+      .attr('y1', y)
+      .attr('y2', y)
+      .attr('stroke', '#21262d')
+      .attr('stroke-width', 1);
+
+    root
+      .append('text')
+      .attr('x', -8)
+      .attr('y', y + 3)
+      .attr('text-anchor', 'end')
+      .attr('fill', '#8b949e')
+      .attr('font-size', '9px')
+      .attr('font-family', 'var(--mp-font-family-mono, "Datatype", monospace)')
+      .text(`${tickValue.toFixed(0)}ms`);
+  }
 }
 
 /**
@@ -41,19 +273,7 @@ export function ForgePerformanceTimelineChart(
     (selection) => {
       selection.selectAll('*').remove();
 
-      const maxTime = Math.max(
-        20,
-        ...samples.map(
-          (metricsItem) =>
-            metricsItem.totalFrameTimeMs ||
-            (metricsItem.drawPassTimeMs ?? 0) +
-              (metricsItem.textPassTimeMs ?? 0) +
-              (metricsItem.bufferUploadTimeMs ?? 0) +
-              (metricsItem.spatialIndexTimeMs ?? 0) +
-              (metricsItem.updateTimeMs ?? 0) +
-              (metricsItem.layoutTimeMs ?? 0),
-        ),
-      );
+      const maxTime = calculateSampleMaxTime(samples);
 
       const xScale = scaleLinear()
         .domain([0, samples.length - 1])
@@ -65,195 +285,9 @@ export function ForgePerformanceTimelineChart(
 
       const root = selection.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-      // 60 FPS (16.6ms) target line
-      if (maxTime >= 14) {
-        const y60 = yScale(16.6);
-        root
-          .append('line')
-          .attr('x1', 0)
-          .attr('x2', innerWidth)
-          .attr('y1', y60)
-          .attr('y2', y60)
-          .attr('stroke', '#f85149')
-          .attr('stroke-dasharray', '4,4')
-          .attr('stroke-width', 1)
-          .attr('opacity', 0.6);
-
-        root
-          .append('text')
-          .attr('x', innerWidth + 4)
-          .attr('y', y60 + 3)
-          .attr('fill', '#f85149')
-          .attr('font-size', '9px')
-          .attr('font-family', 'var(--mp-font-family-mono, "Datatype", monospace)')
-          .text('60 FPS (16.6ms)');
-      }
-
-      // 120 FPS (8.3ms) target line
-      if (maxTime >= 7) {
-        const y120 = yScale(8.3);
-        root
-          .append('line')
-          .attr('x1', 0)
-          .attr('x2', innerWidth)
-          .attr('y1', y120)
-          .attr('y2', y120)
-          .attr('stroke', '#3fb950')
-          .attr('stroke-dasharray', '4,4')
-          .attr('stroke-width', 1)
-          .attr('opacity', 0.6);
-
-        root
-          .append('text')
-          .attr('x', innerWidth + 4)
-          .attr('y', y120 + 3)
-          .attr('fill', '#3fb950')
-          .attr('font-size', '9px')
-          .attr('font-family', 'var(--mp-font-family-mono, "Datatype", monospace)')
-          .text('120 FPS (8.3ms)');
-      }
-
-      // Compute stacked layers
-      const layers = [
-        {
-          key: 'updates',
-          color: '#f0883e',
-          getValue: (m: FlintPerformanceMetrics) => (m.updateTimeMs ?? 0) + (m.layoutTimeMs ?? 0),
-        },
-        {
-          key: 'spatial',
-          color: '#3fb950',
-          getValue: (m: FlintPerformanceMetrics) => m.spatialIndexTimeMs ?? 0,
-        },
-        {
-          key: 'buffers',
-          color: '#a371f7',
-          getValue: (m: FlintPerformanceMetrics) => m.bufferUploadTimeMs ?? 0,
-        },
-        {
-          key: 'text',
-          color: '#39c5bb',
-          getValue: (m: FlintPerformanceMetrics) => m.textPassTimeMs ?? (m.renderTimeMs ? m.renderTimeMs * 0.3 : 0.2),
-        },
-        {
-          key: 'draw',
-          color: '#388bfd',
-          getValue: (m: FlintPerformanceMetrics) => m.drawPassTimeMs ?? (m.renderTimeMs ? m.renderTimeMs * 0.5 : 0.4),
-        },
-      ];
-
-      // Build stacked coordinates
-      const stackedPoints: { y0: number; y1: number }[][] = layers.map(() => []);
-
-      for (const sample of samples) {
-        let runningY = 0;
-        for (const [layerIndex, layer] of layers.entries()) {
-          const value = layer.getValue(sample);
-          const y0 = runningY;
-          const y1 = runningY + value;
-          stackedPoints[layerIndex]?.push({ y0, y1 });
-          runningY = y1;
-        }
-      }
-
-      // Render stacked area paths
-      for (const [layerIndex, layer] of layers.entries()) {
-        const points = stackedPoints[layerIndex];
-        if (!points || points.length === 0) continue;
-
-        let areaD = '';
-        // Top boundary
-        for (const [pointIndex, point] of points.entries()) {
-          const x = xScale(pointIndex);
-          const y = yScale(point.y1);
-          areaD += pointIndex === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`;
-        }
-        // Bottom boundary (reversed)
-        for (let reverseIndex = points.length - 1; reverseIndex >= 0; reverseIndex--) {
-          const point = points[reverseIndex];
-          if (!point) continue;
-          const x = xScale(reverseIndex);
-          const y = yScale(point.y0);
-          areaD += ` L ${x} ${y}`;
-        }
-        areaD += ' Z';
-
-        root.append('path').attr('d', areaD).attr('fill', layer.color).attr('opacity', 0.25);
-
-        // Top line stroke
-        let lineD = '';
-        for (const [pointIndex, point] of points.entries()) {
-          const x = xScale(pointIndex);
-          const y = yScale(point.y1);
-          lineD += pointIndex === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`;
-        }
-
-        root.append('path').attr('d', lineD).attr('fill', 'none').attr('stroke', layer.color).attr('stroke-width', 1.5);
-      }
-
-      // Total frame time line
-      let totalLineD = '';
-      for (const [sampleIndex, sample] of samples.entries()) {
-        const x = xScale(sampleIndex);
-        const y = yScale(sample.totalFrameTimeMs);
-        totalLineD += sampleIndex === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`;
-      }
-
-      root
-        .append('path')
-        .attr('d', totalLineD)
-        .attr('fill', 'none')
-        .attr('stroke', '#ffffff')
-        .attr('stroke-width', 2)
-        .attr('stroke-dasharray', '2,2');
-
-      // Latest point marker
-      const lastIndex = samples.length - 1;
-      const lastSample = samples[lastIndex];
-      if (lastSample) {
-        root
-          .append('circle')
-          .attr('cx', xScale(lastIndex))
-          .attr('cy', yScale(lastSample.totalFrameTimeMs))
-          .attr('r', 4)
-          .attr('fill', '#ffffff')
-          .attr('stroke', '#0d1117')
-          .attr('stroke-width', 2);
-      }
-
-      // X-Axis baseline
-      root
-        .append('line')
-        .attr('x1', 0)
-        .attr('x2', innerWidth)
-        .attr('y1', innerHeight)
-        .attr('y2', innerHeight)
-        .attr('stroke', '#30363d')
-        .attr('stroke-width', 1);
-
-      // Y-Axis labels (0ms, half, max)
-      const yTicks = [0, maxTime * 0.5, maxTime];
-      for (const t of yTicks) {
-        const y = yScale(t);
-        root
-          .append('line')
-          .attr('x1', -4)
-          .attr('x2', innerWidth)
-          .attr('y1', y)
-          .attr('y2', y)
-          .attr('stroke', '#21262d')
-          .attr('stroke-width', 1);
-
-        root
-          .append('text')
-          .attr('x', -8)
-          .attr('y', y + 3)
-          .attr('text-anchor', 'end')
-          .attr('fill', '#8b949e')
-          .attr('font-size', '9px')
-          .attr('font-family', 'var(--mp-font-family-mono, "Datatype", monospace)')
-          .text(`${t.toFixed(0)}ms`);
-      }
+      renderTargetFpsLines(root, yScale, innerWidth, maxTime);
+      renderStackedAreaLayers(root, samples, xScale, yScale);
+      renderTimelineSummaryAndAxes(root, samples, xScale, yScale, innerWidth, innerHeight, maxTime);
     },
     [history, currentMetrics, width, height],
   );

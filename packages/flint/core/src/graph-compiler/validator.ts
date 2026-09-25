@@ -222,6 +222,26 @@ function validateRequiredUnconnectedPorts(
 }
 
 /**
+ * Registers an edge in the adjacency and in-degree maps if both endpoints are valid distinct nodes.
+ */
+function addEdgeAdjacency(
+  edge: FlintGraphEdge,
+  nodeMap: ReadonlyMap<string, FlintGraphNode>,
+  adjacency: Map<string, Set<string>>,
+  inDegree: Map<string, number>,
+): void {
+  if (!nodeMap.has(edge.fromNodeId) || !nodeMap.has(edge.toNodeId) || edge.fromNodeId === edge.toNodeId) {
+    return;
+  }
+  const neighbors = adjacency.get(edge.fromNodeId);
+  if (neighbors === undefined || neighbors.has(edge.toNodeId)) {
+    return;
+  }
+  neighbors.add(edge.toNodeId);
+  inDegree.set(edge.toNodeId, (inDegree.get(edge.toNodeId) ?? 0) + 1);
+}
+
+/**
  * Constructs node in-degrees and neighbor adjacency sets for Kahn's algorithm.
  */
 function buildGraphAdjacency(
@@ -238,16 +258,31 @@ function buildGraphAdjacency(
   }
 
   for (const edge of edges) {
-    if (nodeMap.has(edge.fromNodeId) && nodeMap.has(edge.toNodeId) && edge.fromNodeId !== edge.toNodeId) {
-      const neighbors = adjacency.get(edge.fromNodeId);
-      if (neighbors !== undefined && !neighbors.has(edge.toNodeId)) {
-        neighbors.add(edge.toNodeId);
-        inDegree.set(edge.toNodeId, (inDegree.get(edge.toNodeId) ?? 0) + 1);
-      }
-    }
+    addEdgeAdjacency(edge, nodeMap, adjacency, inDegree);
   }
 
   return { inDegree, adjacency };
+}
+
+/**
+ * Decrements in-degrees of neighboring nodes and enqueues newly unblocked nodes.
+ */
+function processKahnNeighbors(
+  current: string,
+  adjacency: ReadonlyMap<string, Set<string>>,
+  inDegree: Map<string, number>,
+  queue: string[],
+): void {
+  const neighbors = adjacency.get(current);
+  if (neighbors === undefined) return;
+  const nextNodes = [...neighbors].toSorted((a, b) => a.localeCompare(b));
+  for (const neighbor of nextNodes) {
+    const nextDegree = (inDegree.get(neighbor) ?? 1) - 1;
+    inDegree.set(neighbor, nextDegree);
+    if (nextDegree === 0) {
+      queue.push(neighbor);
+    }
+  }
 }
 
 /**
@@ -270,18 +305,7 @@ function resolveKahnOrder(
     const current = queue.shift();
     if (current === undefined) break;
     sortedNodeIds.push(current);
-
-    const neighbors = adjacency.get(current);
-    if (neighbors !== undefined) {
-      const nextNodes = [...neighbors].toSorted((a, b) => a.localeCompare(b));
-      for (const neighbor of nextNodes) {
-        const nextDegree = (inDegree.get(neighbor) ?? 1) - 1;
-        inDegree.set(neighbor, nextDegree);
-        if (nextDegree === 0) {
-          queue.push(neighbor);
-        }
-      }
-    }
+    processKahnNeighbors(current, adjacency, inDegree, queue);
   }
 
   if (sortedNodeIds.length < nodes.length) {

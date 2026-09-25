@@ -17,13 +17,23 @@ export interface TraceExecutionStep {
 export type TraceStepListener = (step: TraceExecutionStep, controller: TraceDebuggerController) => void;
 
 /**
+ * Checks whether an event source span falls within a node's source span boundaries.
+ */
+function isSpanWithinNode(
+  span: { line: number; column: number },
+  nodeSpan: { line: number; column: number; endColumn: number },
+): boolean {
+  return nodeSpan.line === span.line && span.column >= nodeSpan.column && span.column <= nodeSpan.endColumn;
+}
+
+/**
  * Correlates an execution trace event source location with a graph node ID.
  */
 function correlateEventToNodeId(event: FlintTraceEvent, sourceMap: FlintNodeSourceMap): string | undefined {
   if (!event.source) return undefined;
   const span = event.source;
   for (const [mappedNodeId, nodeSpan] of sourceMap.nodeToSpan) {
-    if (nodeSpan.line === span.line && span.column >= nodeSpan.column && span.column <= nodeSpan.endColumn) {
+    if (isSpanWithinNode(span, nodeSpan)) {
       return mappedNodeId;
     }
   }
@@ -43,6 +53,30 @@ function computeEdgePulses(
   }
   const edgeId = edgeMap.get(`${previousNodeId}:${currentNodeId}`);
   return edgeId ? [{ edgeId, offset: 0.5 }] : [];
+}
+
+/**
+ * Creates an execution trace step from an event, accumulated port values, and edge pulses.
+ */
+function createTraceStep(
+  index: number,
+  event: FlintTraceEvent,
+  nodeId: string | undefined,
+  portValues: Readonly<Record<string, unknown>>,
+  edgePulses: readonly { edgeId: string; offset: number }[],
+): TraceExecutionStep {
+  const isTrap = event.type === 'trap';
+  const trapMessage = isTrap ? (event.detail ?? 'Runtime Trap') : undefined;
+
+  return {
+    stepIndex: index,
+    event,
+    nodeId,
+    portValues: { ...portValues },
+    isTrap,
+    trapMessage,
+    edgePulses,
+  };
 }
 
 /**
@@ -84,24 +118,13 @@ export class TraceDebuggerController {
 
     for (const [index, event] of report.events.entries()) {
       const nodeId = correlateEventToNodeId(event, sourceMap);
-      const isTrap = event.type === 'trap';
-      const trapMessage = isTrap ? (event.detail ?? 'Runtime Trap') : undefined;
 
       if (nodeId && event.value !== undefined) {
         portValues[nodeId] = event.value;
       }
 
       const edgePulses = computeEdgePulses(previousNodeId, nodeId, edgeMap);
-
-      steps.push({
-        stepIndex: index,
-        event,
-        nodeId,
-        portValues: { ...portValues },
-        isTrap,
-        trapMessage,
-        edgePulses,
-      });
+      steps.push(createTraceStep(index, event, nodeId, portValues, edgePulses));
 
       if (nodeId) {
         previousNodeId = nodeId;

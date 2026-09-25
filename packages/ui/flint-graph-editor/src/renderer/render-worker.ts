@@ -566,27 +566,27 @@ if (
     if (str.startsWith('#')) {
       let hex = str.slice(1);
       if (hex.length === 3) {
-        hex = [...hex].map((c) => c + c).join('') + 'ff';
+        hex = `${[...hex].map((c) => `${c}${c}`).join('')}ff`;
       } else if (hex.length === 6) {
-        hex += 'ff';
+        hex = `${hex}ff`;
       }
       if (hex.length === 8) {
-        const r = Number.parseInt(hex.slice(0, 2), 16) / 255;
-        const g = Number.parseInt(hex.slice(2, 4), 16) / 255;
-        const b = Number.parseInt(hex.slice(4, 6), 16) / 255;
-        const a = Number.parseInt(hex.slice(6, 8), 16) / 255;
-        if (!Number.isNaN(r) && !Number.isNaN(g) && !Number.isNaN(b) && !Number.isNaN(a)) {
-          return [r, g, b, a];
+        const red = Number.parseInt(hex.slice(0, 2), 16) / 255;
+        const green = Number.parseInt(hex.slice(2, 4), 16) / 255;
+        const blue = Number.parseInt(hex.slice(4, 6), 16) / 255;
+        const alpha = Number.parseInt(hex.slice(6, 8), 16) / 255;
+        if (!Number.isNaN(red) && !Number.isNaN(green) && !Number.isNaN(blue) && !Number.isNaN(alpha)) {
+          return [red, green, blue, alpha];
         }
       }
     } else if (str.startsWith('rgb')) {
       const match = str.match(/rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)/);
       if (match) {
-        const r = Number.parseInt(match[1] ?? '0', 10) / 255;
-        const g = Number.parseInt(match[2] ?? '0', 10) / 255;
-        const b = Number.parseInt(match[3] ?? '0', 10) / 255;
-        const a = match[4] === undefined ? 1 : Number.parseFloat(match[4]);
-        return [r, g, b, a];
+        const red = Number.parseInt(match[1] ?? '0', 10) / 255;
+        const green = Number.parseInt(match[2] ?? '0', 10) / 255;
+        const blue = Number.parseInt(match[3] ?? '0', 10) / 255;
+        const alpha = match[4] === undefined ? 1 : Number.parseFloat(match[4]);
+        return [red, green, blue, alpha];
       }
     }
     return defaultRgba;
