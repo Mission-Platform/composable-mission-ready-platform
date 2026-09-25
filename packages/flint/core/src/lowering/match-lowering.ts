@@ -63,9 +63,10 @@ function resolveNumericCaseValue(
   value: number | boolean | string,
   resolver?: (variantName: string) => number | undefined,
 ): number | undefined {
-  if (typeof value === 'number') return Number.isInteger(value) ? value : undefined;
+  if (typeof value === 'number' && Number.isInteger(value)) return value;
   if (typeof value === 'boolean') return value ? 1 : 0;
-  return typeof value === 'string' ? resolver?.(value) : undefined;
+  if (typeof value === 'string' && resolver) return resolver(value);
+  return undefined;
 }
 
 /**
