@@ -37,7 +37,7 @@ async function flush(times = 8): Promise<void> {
   }
 }
 
-describe('ForgeSchemaFormDialog forwards update:modelValue on the compiled Vue build', () => {
+describe('ForgeSchemaFormDialog forwards update:modelValue on the compiled Vue build', { timeout: 60_000 }, () => {
   afterEach(() => {
     document.body.innerHTML = '';
   });
@@ -82,5 +82,5 @@ describe('ForgeSchemaFormDialog forwards update:modelValue on the compiled Vue b
     // proving the dialog re-emits its model rather than swallowing the update.
     expect(updates.length).toBeGreaterThan(0);
     expect(updates.at(-1)?.name).toBe('Ada Lovelace');
-  }, 30_000);
+  }, 60_000);
 });

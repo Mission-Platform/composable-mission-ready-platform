@@ -29,8 +29,8 @@ export interface WasmExport {
 
 /** WebAssembly linear memory declaration. */
 export interface WasmMemory {
-  readonly minimum: number;
-  readonly maximum?: number;
+  readonly minimum: number | bigint;
+  readonly maximum?: number | bigint;
   readonly shared: boolean;
   readonly memory64: boolean;
 }
@@ -68,17 +68,53 @@ export class Cursor {
     return this.bytes[this.position++] ?? 0;
   }
 
-  /** Decodes an unsigned LEB128 integer from the buffer. */
-  public leb(maxBytes = 5): number {
+  /** Decodes an unsigned LEB128 integer from the buffer with strict canonical encoding checks. */
+  // skipcq: JS-R1005
+  public leb(maxBytes = 5, strictCanonical = true): number {
     let value = 0;
     let shift = 0;
     for (let count = 0; count < maxBytes; count += 1) {
       const byte = this.byte();
+      // On 5th byte (count === 4), for 32-bit integer, only 4 bits (bits 0..3) can be used (shift = 28).
+      if (count === 4 && (byte & 0x70) !== 0) {
+        throw new Error('WebAssembly integer exceeds 32-bit bounds.');
+      }
       value += (byte & 0x7f) * 2 ** shift;
-      if ((byte & 0x80) === 0) return value;
+      if ((byte & 0x80) === 0) {
+        if (strictCanonical && count > 0 && byte === 0x00) {
+          throw new Error('Non-canonical overlong LEB128 integer encoding.');
+        }
+        if (!Number.isSafeInteger(value)) {
+          throw new TypeError('WebAssembly integer exceeds safe integer limit.');
+        }
+        return value;
+      }
       shift += 7;
     }
     throw new Error('WebAssembly integer is too long.');
+  }
+
+  /** Decodes an unsigned 64-bit LEB128 integer from the buffer using BigInt with strict canonical encoding checks. */
+  // skipcq: JS-R1005
+  public leb64(maxBytes = 10, strictCanonical = true): bigint {
+    let value = 0n;
+    let shift = 0n;
+    for (let count = 0; count < maxBytes; count += 1) {
+      const byte = BigInt(this.byte());
+      // On 10th byte (count === 9), for 64-bit integer, only 1 bit (bit 0) can be used (shift = 63).
+      if (count === 9 && (byte & 0x7en) !== 0n) {
+        throw new Error('WebAssembly 64-bit integer exceeds bounds.');
+      }
+      value |= (byte & 0x7fn) << shift;
+      if ((byte & 0x80n) === 0n) {
+        if (strictCanonical && count > 0 && byte === 0n) {
+          throw new Error('Non-canonical overlong 64-bit LEB128 integer encoding.');
+        }
+        return value;
+      }
+      shift += 7n;
+    }
+    throw new Error('WebAssembly 64-bit integer is too long.');
   }
 
   /** Reads a slice of bytes from the buffer. */
@@ -94,6 +130,7 @@ export class Cursor {
   public string(maxLength: number): string {
     const length = this.leb();
     if (length > maxLength) throw new Error('WebAssembly name exceeds the verifier limit.');
+    if (length > this.remaining()) throw new Error('WebAssembly string length exceeds remaining payload bytes.');
     return new TextDecoder().decode(this.bytesValue(length));
   }
 }
@@ -105,8 +142,16 @@ export function parseLimits(cursor: Cursor): WasmMemory {
   const memory64 = (flags & 0x04) !== 0;
   const shared = (flags & 0x02) !== 0;
   const hasMaximum = (flags & 0x01) !== 0 || (flags & 0x02) !== 0;
-  const minimum = cursor.leb(memory64 ? 10 : 5);
-  const maximum = hasMaximum ? cursor.leb(memory64 ? 10 : 5) : undefined;
+  if (memory64) {
+    const rawMin = cursor.leb64(10);
+    const rawMax = hasMaximum ? cursor.leb64(10) : undefined;
+    const minimum = rawMin <= BigInt(Number.MAX_SAFE_INTEGER) ? Number(rawMin) : rawMin;
+    const maximum =
+      rawMax === undefined ? undefined : rawMax <= BigInt(Number.MAX_SAFE_INTEGER) ? Number(rawMax) : rawMax;
+    return { minimum, ...(maximum === undefined ? {} : { maximum }), shared, memory64 };
+  }
+  const minimum = cursor.leb(5);
+  const maximum = hasMaximum ? cursor.leb(5) : undefined;
   return { minimum, ...(maximum === undefined ? {} : { maximum }), shared, memory64 };
 }
 
@@ -120,14 +165,25 @@ function readWasmType(payload: Cursor): WasmType {
 }
 
 /** Parses the type section of a WebAssembly module. */
+// skipcq: JS-R1005
 function parseTypeSection(payload: Cursor): FunctionType[] {
   const count = payload.leb();
-  if (count > 100_000) throw new Error('WebAssembly type section is too large.');
+  if (count > 100_000 || count > payload.remaining()) {
+    throw new Error('WebAssembly type section is too large or exceeds payload bytes.');
+  }
   const types: FunctionType[] = [];
   for (let index = 0; index < count; index += 1) {
     if (payload.byte() !== 0x60) throw new Error('Unsupported WebAssembly type declaration.');
-    const parameters = Array.from({ length: payload.leb() }, () => readWasmType(payload));
-    const results = Array.from({ length: payload.leb() }, () => readWasmType(payload));
+    const parameterCount = payload.leb();
+    if (parameterCount > payload.remaining()) {
+      throw new Error('WebAssembly parameter count exceeds payload bytes.');
+    }
+    const parameters = Array.from({ length: parameterCount }, () => readWasmType(payload));
+    const resultCount = payload.leb();
+    if (resultCount > payload.remaining()) {
+      throw new Error('WebAssembly result count exceeds payload bytes.');
+    }
+    const results = Array.from({ length: resultCount }, () => readWasmType(payload));
     types.push({ parameters, results });
   }
   return types;
@@ -163,7 +219,9 @@ function parseImportEntry(payload: Cursor): WasmImport {
 /** Parses the import section of a WebAssembly module. */
 function parseImportSection(payload: Cursor): WasmImport[] {
   const count = payload.leb();
-  if (count > 100_000) throw new Error('WebAssembly import section is too large.');
+  if (count > 100_000 || count > payload.remaining()) {
+    throw new Error('WebAssembly import section is too large or exceeds payload bytes.');
+  }
   const imports: WasmImport[] = [];
   for (let index = 0; index < count; index += 1) {
     imports.push(parseImportEntry(payload));
@@ -174,7 +232,9 @@ function parseImportSection(payload: Cursor): WasmImport[] {
 /** Parses the function section of a WebAssembly module. */
 function parseFunctionSection(payload: Cursor): number[] {
   const count = payload.leb();
-  if (count > 100_000) throw new Error('WebAssembly function section is too large.');
+  if (count > 100_000 || count > payload.remaining()) {
+    throw new Error('WebAssembly function section is too large or exceeds payload bytes.');
+  }
   const indexes: number[] = [];
   for (let index = 0; index < count; index += 1) {
     indexes.push(payload.leb());
@@ -192,7 +252,9 @@ function parseMemorySection(payload: Cursor, existingMemory: WasmMemory | undefi
 /** Parses the export section of a WebAssembly module. */
 function parseExportSection(payload: Cursor): WasmExport[] {
   const count = payload.leb();
-  if (count > 100_000) throw new Error('WebAssembly export section is too large.');
+  if (count > 100_000 || count > payload.remaining()) {
+    throw new Error('WebAssembly export section is too large or exceeds payload bytes.');
+  }
   const exports: WasmExport[] = [];
   for (let index = 0; index < count; index += 1) {
     exports.push({ name: payload.string(256), kind: payload.byte(), index: payload.leb() });
@@ -280,6 +342,12 @@ export function parseWasm(bytes: Uint8Array, maxCustomSectionBytes: number): Par
   while (cursor.remaining() > 0) {
     const id = cursor.byte();
     const length = cursor.leb(5);
+    if (length > cursor.remaining()) {
+      throw new Error('WebAssembly section length exceeds physical binary size.');
+    }
+    if (id === 0 && length > maxCustomSectionBytes) {
+      throw new Error('WebAssembly custom section exceeds the verifier limit.');
+    }
     const payload = new Cursor(cursor.bytesValue(length));
     if (id !== 0 && id < lastSection) throw new Error('WebAssembly sections are out of order.');
     if (id !== 0) lastSection = id;

@@ -4,6 +4,206 @@
 
 Generated from public source declarations in `@mission-platform/flint-wasm`.
 
+## `src/codegen/abi`
+
+### AggregateFieldDescriptor
+
+**Kind:** interface
+
+```typescript
+export interface AggregateFieldDescriptor
+```
+
+Aggregate field layout descriptor.
+
+### AggregateLayoutDescriptor
+
+**Kind:** interface
+
+```typescript
+export interface AggregateLayoutDescriptor
+```
+
+Aggregate struct layout descriptor.
+
+### canonicalizeSliceCallingConvention
+
+**Kind:** function
+
+```typescript
+function canonicalizeSliceCallingConvention(type: FlintWasmPrimitiveType): readonly FlintWasmPrimitiveType[];
+```
+
+Lowers a slice or bytes type into unpacked WebAssembly register types.
+
+#### Parameters
+
+| Name | Type                   | Description |
+| ---- | ---------------------- | ----------- |
+| type | FlintWasmPrimitiveType |             |
+
+### computeArrayAllocationSize
+
+**Kind:** function
+
+```typescript
+function computeArrayAllocationSize(
+  count: number,
+  elementSize: number,
+  maxBytes: number = MAX_ARRAY_ALLOCATION_BYTES,
+): number;
+```
+
+Computes the total byte size required for an array allocation of count * elementSize.
+Enforces checked multiplication and throws a RangeError on integer overflow or bounds violation.
+
+#### Parameters
+
+| Name        | Type   | Description |
+| ----------- | ------ | ----------- |
+| count       | number |             |
+| elementSize | number |             |
+| maxBytes    | number |             |
+
+### computeSliceCapacity
+
+**Kind:** function
+
+```typescript
+function computeSliceCapacity(bufferBytes: number, elementSize: number): number;
+```
+
+Computes capacity for a slice descriptor given total buffer byte size and element byte size.
+Safely handles zero-sized types (elementSize === 0) by returning infinite/unbounded capacity without division by zero.
+
+#### Parameters
+
+| Name        | Type   | Description |
+| ----------- | ------ | ----------- |
+| bufferBytes | number |             |
+| elementSize | number |             |
+
+### decodeSliceRegisterTriplet
+
+**Kind:** function
+
+```typescript
+function decodeSliceRegisterTriplet(pointer: number, length: number, capacity: number = length): SliceRegisterTriplet;
+```
+
+Decodes and validates an unpacked `(ptr: i32, len: i32, cap: i32)` register triplet received across boundary.
+
+#### Parameters
+
+| Name     | Type   | Description |
+| -------- | ------ | ----------- |
+| pointer  | number |             |
+| length   | number |             |
+| capacity | number |             |
+
+### encodeSliceRegisterTriplet
+
+**Kind:** function
+
+```typescript
+function encodeSliceRegisterTriplet(pointer: number, length: number, capacity: number = length): SliceRegisterTriplet;
+```
+
+Packs slice metadata into an unpacked `(ptr: i32, len: i32, cap: i32)` register triplet.
+Enforces unsigned bounds and non-overflow invariants to prevent wraparound exploits.
+
+#### Parameters
+
+| Name     | Type   | Description |
+| -------- | ------ | ----------- |
+| pointer  | number |             |
+| length   | number |             |
+| capacity | number |             |
+
+### MAX_ARRAY_ALLOCATION_BYTES
+
+**Kind:** constant
+
+```typescript
+export const MAX_ARRAY_ALLOCATION_BYTES;
+```
+
+No description provided.
+
+### MAX_SLICE_ADDRESS
+
+**Kind:** constant
+
+```typescript
+export const MAX_SLICE_ADDRESS;
+```
+
+No description provided.
+
+### sanitizeAggregatePadding
+
+**Kind:** function
+
+```typescript
+function sanitizeAggregatePadding(buffer: Uint8Array, layout: AggregateLayoutDescriptor, baseOffset = 0): Uint8Array;
+```
+
+Zero-initializes all padding bytes within an aggregate struct buffer before ABI transmission.
+Prevents uninitialized memory and confidential data leakage across trust boundaries.
+
+#### Parameters
+
+| Name       | Type                      | Description                                          |
+| ---------- | ------------------------- | ---------------------------------------------------- |
+| buffer     | Uint8Array                | - Raw buffer containing serialized aggregate.        |
+| layout     | AggregateLayoutDescriptor | - Aggregate layout descriptor.                       |
+| baseOffset |                           | - Starting offset within the buffer (defaults to 0). |
+
+#### Contract
+
+- **@param:** - Raw buffer containing serialized aggregate.
+- **@param:** - Aggregate layout descriptor.
+- **@param:** - Starting offset within the buffer (defaults to 0).
+- **@returns:** Cleaned buffer with zeroed padding.
+
+### SliceRegisterTriplet
+
+**Kind:** interface
+
+```typescript
+export interface SliceRegisterTriplet
+```
+
+Register representation of an unpacked slice passed directly across WebAssembly boundaries.
+
+### validateSliceBounds
+
+**Kind:** function
+
+```typescript
+function validateSliceBounds(pointer: number, length: number, capacity: number): boolean;
+```
+
+Validates that slice register triplets satisfy spatial bounds and unsigned arithmetic non-wrapping invariants.
+
+#### Parameters
+
+| Name     | Type   | Description |
+| -------- | ------ | ----------- |
+| pointer  | number |             |
+| length   | number |             |
+| capacity | number |             |
+
+### ZERO_SIZED_TYPE_SENTINEL_POINTER
+
+**Kind:** constant
+
+```typescript
+export const ZERO_SIZED_TYPE_SENTINEL_POINTER;
+```
+
+No description provided.
+
 ## `src/collection-runtime`
 
 ### buildFlintWasmCollectionRuntimeBodies
@@ -435,6 +635,58 @@ Abstract type name representation utilized during WebAssembly lowering.
 
 ## `src/emitter`
 
+### appendF32
+
+**Kind:** function
+
+```typescript
+function appendF32(value: number): number[];
+```
+
+Appends a 32-bit floating point number in little-endian binary format, canonicalizing NaNs.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | number |             |
+
+### appendF64
+
+**Kind:** function
+
+```typescript
+function appendF64(value: number): number[];
+```
+
+Appends a 64-bit floating point number in little-endian binary format, canonicalizing NaNs.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | number |             |
+
+### CANONICAL_F32_NAN_BYTES
+
+**Kind:** constant
+
+```typescript
+export const CANONICAL_F32_NAN_BYTES;
+```
+
+Canonical quiet NaN bit pattern for 32-bit floats (0x7fc00000 in little-endian).
+
+### CANONICAL_F64_NAN_BYTES
+
+**Kind:** constant
+
+```typescript
+export const CANONICAL_F64_NAN_BYTES;
+```
+
+Canonical quiet NaN bit pattern for 64-bit floats (0x7ff8000000000000 in little-endian).
+
 ### compileFlintWasm
 
 **Kind:** function
@@ -523,6 +775,34 @@ Executes the full suite of WebAssembly optimization passes on an IR module.
 | ------------ | -------------------- | ----------- |
 | module       | FlintWasmModule      |             |
 | optimization | 'debug' \| 'release' |             |
+
+## `src/sections/custom`
+
+### encodeFlintAbiCustomSection
+
+**Kind:** function
+
+```typescript
+function encodeFlintAbiCustomSection(manifest: FlintCAbiManifest | object): number[];
+```
+
+Emits a binary WebAssembly custom section containing a compact CBOR ABI manifest (`flint.abi.v2`).
+
+#### Parameters
+
+| Name     | Type                        | Description |
+| -------- | --------------------------- | ----------- |
+| manifest | FlintCAbiManifest \| object |             |
+
+### FLINT_ABI_V2_CUSTOM_SECTION
+
+**Kind:** constant
+
+```typescript
+export const FLINT_ABI_V2_CUSTOM_SECTION;
+```
+
+Standard WebAssembly custom section name for embedded binary CBOR ABI manifests.
 
 ## `src/verifier`
 

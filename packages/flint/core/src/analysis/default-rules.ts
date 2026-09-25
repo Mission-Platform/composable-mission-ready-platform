@@ -180,19 +180,28 @@ function evaluateUnary(operator: string, operand: Constant): Constant {
   return undefined;
 }
 
+/** Maximum evaluation steps permitted during compile-time constant evaluation to prevent DoS. */
+export const MAX_CONST_EVAL_STEPS = 100_000;
+
+/** Maximum recursion depth permitted during compile-time constant evaluation. */
+export const MAX_CONST_EVAL_DEPTH = 64;
+
+/** Evaluation budget tracking state. */
+export interface ConstEvalBudget {
+  stepsRemaining: number;
+}
+
 /**
- * Evaluates a binary expression against the environment.
- *
- * @param expression - Binary expression node.
- * @param environment - Current analysis environment.
- * @returns Evaluated constant or undefined.
+ * Evaluates a binary expression against the environment with budget tracking.
  */
 function evaluateBinary(
   expression: FlintIrExpression & { kind: 'binary' },
   environment: ReadonlyMap<string, Constant>,
+  budget?: ConstEvalBudget,
+  depth = 0,
 ): Constant {
-  const left = evaluate(expression.left, environment);
-  const right = evaluate(expression.right, environment);
+  const left = evaluate(expression.left, environment, budget, depth + 1);
+  const right = evaluate(expression.right, environment, budget, depth + 1);
   if (typeof left === 'number' && typeof right === 'number') {
     return evaluateNumericBinary(expression.operator, left, right);
   }
@@ -203,22 +212,52 @@ function evaluateBinary(
 }
 
 /**
- * Statically evaluates a compile-time constant expression using the current environment.
+ * Statically evaluates a compile-time constant expression using the current environment and budget.
  *
  * @param expression - IR expression to evaluate.
  * @param environment - Map of variable names to constant values.
- * @returns Known constant value, or undefined if the expression is non-constant.
+ * @param budget - Optional step budget tracker.
+ * @param depth - Current recursion depth.
+ * @returns Known constant value, or undefined if the expression is non-constant or exceeds budget.
  */
-function evaluate(expression: FlintIrExpression, environment: ReadonlyMap<string, Constant>): Constant {
+// skipcq: JS-R1005
+export function evaluate(
+  expression: FlintIrExpression,
+  environment: ReadonlyMap<string, Constant>,
+  budget?: ConstEvalBudget,
+  depth = 0,
+): Constant {
+  if (depth > MAX_CONST_EVAL_DEPTH) return undefined;
+  if (budget !== undefined) {
+    if (budget.stepsRemaining <= 0) return undefined;
+    budget.stepsRemaining -= 1;
+  }
   if (expression.kind === 'literal') return expression.value;
   if (expression.kind === 'identifier') return environment.get(expression.name);
   if (expression.kind === 'unary') {
-    return evaluateUnary(expression.operator, evaluate(expression.operand, environment));
+    return evaluateUnary(expression.operator, evaluate(expression.operand, environment, budget, depth + 1));
   }
   if (expression.kind === 'binary') {
-    return evaluateBinary(expression, environment);
+    return evaluateBinary(expression, environment, budget, depth);
   }
   return undefined;
+}
+
+/**
+ * Public bounded constant evaluation wrapper with fresh step budget.
+ */
+// skipcq: JS-R1005
+export function evaluateConstantBounded(
+  expression: FlintIrExpression,
+  environment: ReadonlyMap<string, Constant> = new Map(),
+  maxSteps = MAX_CONST_EVAL_STEPS,
+): { readonly value: Constant; readonly exceededBudget: boolean } {
+  const budget: ConstEvalBudget = { stepsRemaining: maxSteps };
+  const value = evaluate(expression, environment, budget, 0);
+  return {
+    value,
+    exceededBudget: budget.stepsRemaining <= 0,
+  };
 }
 
 /**
@@ -1685,10 +1724,7 @@ const capabilityRule: FlintAnalysisRule = {
     if (module === undefined) return [];
     const findings: FlintAnalysisFinding[] = [];
     for (const imported of module.imports) {
-      if (
-        context.policy.allowedCapabilities.length > 0 &&
-        !context.policy.allowedCapabilities.includes(imported.capability)
-      )
+      if (!context.policy.allowedCapabilities.includes(imported.capability))
         findings.push(
           finding(
             context,

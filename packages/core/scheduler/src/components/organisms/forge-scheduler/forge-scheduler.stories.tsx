@@ -43,23 +43,31 @@ type Story = StoryObj<typeof meta>;
 
 // ─── Sample events anchored to the current week ───────────────────────────────
 
-function at(dayOffset: number, hour: number, minute = 0): string {
-  const d = new Date();
-  d.setDate(d.getDate() + dayOffset);
-  d.setHours(hour, minute, 0, 0);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}T${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:00`;
+/** Formats an ISO datetime string anchored to the current week with day and hour offsets. */
+function formatOffsetTime(dayOffset: number, hour: number, minute = 0): string {
+  const date = new Date();
+  date.setDate(date.getDate() + dayOffset);
+  date.setHours(hour, minute, 0, 0);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}T${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:00`;
 }
 
-function event(uid: string, summary: string, dtstart: string, dtend: string, extra: Partial<VEvent> = {}): VEvent {
+/** Constructs a sample VEvent for scheduler component stories. */
+function createEvent(
+  uid: string,
+  summary: string,
+  dtstart: string,
+  dtend: string,
+  extra: Partial<VEvent> = {},
+): VEvent {
   return { uid, dtstamp: new Date().toISOString(), summary, dtstart, dtend, ...extra };
 }
 
 const SAMPLE_EVENTS: VEvent[] = [
-  event('standup', 'Daily standup', at(0, 9), at(0, 9, 30), { color: '#2563eb' }),
-  event('review', 'Design review', at(0, 11), at(0, 12, 30), { location: 'Room 4' }),
-  event('lunch', 'Lunch', at(1, 12), at(1, 13)),
-  event('1on1', '1:1 with Alex', at(2, 15), at(2, 15, 30), { status: 'TENTATIVE' }),
-  event('demo', 'Sprint demo', at(4, 14), at(4, 15, 30), { color: '#16a34a' }),
+  createEvent('standup', 'Daily standup', formatOffsetTime(0, 9), formatOffsetTime(0, 9, 30), { color: '#2563eb' }),
+  createEvent('review', 'Design review', formatOffsetTime(0, 11), formatOffsetTime(0, 12, 30), { location: 'Room 4' }),
+  createEvent('lunch', 'Lunch', formatOffsetTime(1, 12), formatOffsetTime(1, 13)),
+  createEvent('1on1', '1:1 with Alex', formatOffsetTime(2, 15), formatOffsetTime(2, 15, 30), { status: 'TENTATIVE' }),
+  createEvent('demo', 'Sprint demo', formatOffsetTime(4, 14), formatOffsetTime(4, 15, 30), { color: '#16a34a' }),
 ];
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
@@ -80,10 +88,10 @@ export const ManyOverlappingEvents: Story = {
   args: {
     defaultView: 'day',
     modelValue: [
-      event('a', 'Event A', at(0, 9), at(0, 11)),
-      event('b', 'Event B', at(0, 9, 30), at(0, 10, 30)),
-      event('c', 'Event C', at(0, 10), at(0, 12)),
-      event('d', 'Event D', at(0, 10, 30), at(0, 11, 30)),
+      createEvent('a', 'Event A', formatOffsetTime(0, 9), formatOffsetTime(0, 11)),
+      createEvent('b', 'Event B', formatOffsetTime(0, 9, 30), formatOffsetTime(0, 10, 30)),
+      createEvent('c', 'Event C', formatOffsetTime(0, 10), formatOffsetTime(0, 12)),
+      createEvent('d', 'Event D', formatOffsetTime(0, 10, 30), formatOffsetTime(0, 11, 30)),
     ],
   },
   parameters: {
@@ -99,10 +107,10 @@ export const WithCancelledAndTentative: Story = {
   args: {
     defaultView: 'week',
     modelValue: [
-      event('ok', 'Confirmed sync', at(0, 9), at(0, 10), { status: 'CONFIRMED' }),
-      event('maybe', 'Tentative chat', at(1, 11), at(1, 12), { status: 'TENTATIVE' }),
+      createEvent('ok', 'Confirmed sync', formatOffsetTime(0, 9), formatOffsetTime(0, 10), { status: 'CONFIRMED' }),
+      createEvent('maybe', 'Tentative chat', formatOffsetTime(1, 11), formatOffsetTime(1, 12), { status: 'TENTATIVE' }),
       // CANCELLED events are filtered out of every view by the scheduler core.
-      event('gone', 'Cancelled call', at(2, 14), at(2, 15), { status: 'CANCELLED' }),
+      createEvent('gone', 'Cancelled call', formatOffsetTime(2, 14), formatOffsetTime(2, 15), { status: 'CANCELLED' }),
     ],
   },
 };
@@ -111,10 +119,10 @@ export const WithRecurringEvents: Story = {
   args: {
     defaultView: 'week',
     modelValue: [
-      event('weekday-standup', 'Weekday standup', at(0, 9), at(0, 9, 15), {
+      createEvent('weekday-standup', 'Weekday standup', formatOffsetTime(0, 9), formatOffsetTime(0, 9, 15), {
         rrule: { freq: 'WEEKLY', byday: ['MO', 'TU', 'WE', 'TH', 'FR'], count: 20 },
       }),
-      event('biweekly', 'Bi-weekly planning', at(0, 13), at(0, 14), {
+      createEvent('biweekly', 'Bi-weekly planning', formatOffsetTime(0, 13), formatOffsetTime(0, 14), {
         rrule: { freq: 'WEEKLY', interval: 2, byday: ['MO'], count: 8 },
       }),
     ],

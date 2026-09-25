@@ -347,6 +347,70 @@ Type signature fact capturing parameter and result type names.
 
 ## `src/analysis/default-rules`
 
+### ConstEvalBudget
+
+**Kind:** interface
+
+```typescript
+export interface ConstEvalBudget
+```
+
+Evaluation budget tracking state.
+
+### evaluate
+
+**Kind:** function
+
+```typescript
+function evaluate(
+  expression: FlintIrExpression,
+  environment: ReadonlyMap<string, Constant>,
+  budget?: ConstEvalBudget,
+  depth = 0,
+): Constant;
+```
+
+Statically evaluates a compile-time constant expression using the current environment and budget.
+
+#### Parameters
+
+| Name        | Type                          | Description                                 |
+| ----------- | ----------------------------- | ------------------------------------------- |
+| expression  | FlintIrExpression             | - IR expression to evaluate.                |
+| environment | ReadonlyMap<string, Constant> | - Map of variable names to constant values. |
+| budget      | ConstEvalBudget               | - Optional step budget tracker.             |
+| depth       |                               | - Current recursion depth.                  |
+
+#### Contract
+
+- **@param:** - IR expression to evaluate.
+- **@param:** - Map of variable names to constant values.
+- **@param:** - Optional step budget tracker.
+- **@param:** - Current recursion depth.
+- **@returns:** Known constant value, or undefined if the expression is non-constant or exceeds budget.
+
+### evaluateConstantBounded
+
+**Kind:** function
+
+```typescript
+function evaluateConstantBounded(
+  expression: FlintIrExpression,
+  environment: ReadonlyMap<string, Constant> = new Map(),
+  maxSteps = MAX_CONST_EVAL_STEPS,
+): { readonly value: Constant; readonly exceededBudget: boolean };
+```
+
+Public bounded constant evaluation wrapper with fresh step budget.
+
+#### Parameters
+
+| Name        | Type                          | Description |
+| ----------- | ----------------------------- | ----------- |
+| expression  | FlintIrExpression             |             |
+| environment | ReadonlyMap<string, Constant> |             |
+| maxSteps    |                               |             |
+
 ### FLINT_DEFAULT_ANALYSIS_RULES
 
 **Kind:** constant
@@ -356,6 +420,26 @@ export const FLINT_DEFAULT_ANALYSIS_RULES: readonly FlintAnalysisRule[];
 ```
 
 No description provided.
+
+### MAX_CONST_EVAL_DEPTH
+
+**Kind:** constant
+
+```typescript
+export const MAX_CONST_EVAL_DEPTH;
+```
+
+Maximum recursion depth permitted during compile-time constant evaluation.
+
+### MAX_CONST_EVAL_STEPS
+
+**Kind:** constant
+
+```typescript
+export const MAX_CONST_EVAL_STEPS;
+```
+
+Maximum evaluation steps permitted during compile-time constant evaluation to prevent DoS.
 
 ## `src/analysis/facts`
 
@@ -451,6 +535,23 @@ export type FlintAnalysisOptionsLike = Omit<Partial<FlintAnalysisPolicy>, 'limit
 
 Loose input type for configuring analysis policy options.
 
+### isCapabilityAuthorized
+
+**Kind:** function
+
+```typescript
+function isCapabilityAuthorized(capability: string, allowedCapabilities: readonly string[]): boolean;
+```
+
+Checks whether a requested capability is authorized under the active policy using constant-time comparison.
+
+#### Parameters
+
+| Name                | Type              | Description |
+| ------------------- | ----------------- | ----------- |
+| capability          | string            |             |
+| allowedCapabilities | readonly string[] |             |
+
 ### isFlintAnalysisFindingBlocking
 
 **Kind:** function
@@ -473,6 +574,115 @@ Determines whether a static analysis finding should block compilation under the 
 - **@param:** - Static analysis finding to evaluate.
 - **@param:** - Active analysis policy governing the build.
 - **@returns:** True if the finding is considered blocking in the current policy profile.
+
+### timingSafeEqualString
+
+**Kind:** function
+
+```typescript
+function timingSafeEqualString(stringA: string, stringB: string): boolean;
+```
+
+Constant-time string comparison to prevent timing side-channel attacks on security tokens and capability names.
+
+#### Parameters
+
+| Name    | Type   | Description |
+| ------- | ------ | ----------- |
+| stringA | string |             |
+| stringB | string |             |
+
+## `src/analysis/query-engine`
+
+### createFlintQueryEngine
+
+**Kind:** function
+
+```typescript
+function createFlintQueryEngine(): FlintQueryEngine;
+```
+
+Creates an incremental query engine for the Flint compiler.
+
+### FlintQueryEngine
+
+**Kind:** interface
+
+```typescript
+export interface FlintQueryEngine
+```
+
+Query engine interface implementing Salsa/Roslyn style incremental compilation memoization.
+
+### FlintQueryEngineStats
+
+**Kind:** interface
+
+```typescript
+export interface FlintQueryEngineStats
+```
+
+Cache statistics tracked by the incremental query engine.
+
+### FlintSarifLog
+
+**Kind:** interface
+
+```typescript
+export interface FlintSarifLog
+```
+
+Diagnostic record formatted in SARIF v2.1.0 compliant structure.
+
+### FlintSarifResult
+
+**Kind:** interface
+
+```typescript
+export interface FlintSarifResult
+```
+
+Result issue report within a SARIF run.
+
+### FlintSarifRule
+
+**Kind:** interface
+
+```typescript
+export interface FlintSarifRule
+```
+
+Rule metadata within a SARIF tool component.
+
+### FlintSarifRun
+
+**Kind:** interface
+
+```typescript
+export interface FlintSarifRun
+```
+
+Single run entry in a SARIF log.
+
+### formatFlintSarif
+
+**Kind:** function
+
+```typescript
+function formatFlintSarif(
+  diagnostics: readonly FlintDiagnostic[],
+  options: { readonly toolVersion?: string; readonly informationUri?: string } = {},
+): FlintSarifLog;
+```
+
+Formats a collection of Flint diagnostics into a standard SARIF v2.1.0 document.
+
+#### Parameters
+
+| Name        | Type                                                                | Description |
+| ----------- | ------------------------------------------------------------------- | ----------- |
+| diagnostics | readonly FlintDiagnostic[]                                          |             |
+| options     | { readonly toolVersion?: string; readonly informationUri?: string } |             |
 
 ## `src/analysis/registry`
 
@@ -4070,6 +4280,42 @@ Lexes a Flint source string into a stream of tokens and diagnostics.
 - **@param:** - Optional file name for diagnostics.
 - **@returns:** Lex result containing token sequence and diagnostics.
 
+### MAX_LEX_SOURCE_LENGTH
+
+**Kind:** constant
+
+```typescript
+export const MAX_LEX_SOURCE_LENGTH;
+```
+
+No description provided.
+
+### MAX_TOKEN_LENGTH
+
+**Kind:** constant
+
+```typescript
+export const MAX_TOKEN_LENGTH;
+```
+
+No description provided.
+
+### normalizeIdentifier
+
+**Kind:** function
+
+```typescript
+function normalizeIdentifier(name: string): string;
+```
+
+Normalizes an identifier to Unicode Normalization Form C (NFC) to eliminate homoglyph spoofing.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| name | string |             |
+
 ## `src/linker`
 
 ### FlintLinkResult
@@ -4114,6 +4360,398 @@ Validates module graph linking constraints, detects static cycles, and merges st
 - **@param:** - Resolved module dependency graph.
 - **@param:** - Active link configuration rules.
 - **@returns:** Result object containing diagnostics, merged static modules, and dynamic edges.
+
+## `src/linker/thinlto`
+
+### buildThinLtoIndex
+
+**Kind:** function
+
+```typescript
+function buildThinLtoIndex(
+  moduleSummaries: readonly ThinLtoModuleSummary[],
+  rootEntryPoints: readonly string[],
+  options?: ThinLtoBuildOptions,
+): ThinLtoIndex;
+```
+
+Builds a global ThinLTO summary index across a set of module summaries.
+
+#### Parameters
+
+| Name            | Type                            | Description |
+| --------------- | ------------------------------- | ----------- |
+| moduleSummaries | readonly ThinLtoModuleSummary[] |             |
+| rootEntryPoints | readonly string[]               |             |
+| options         | ThinLtoBuildOptions             |             |
+
+### computeThinLtoInliningPlan
+
+**Kind:** function
+
+```typescript
+function computeThinLtoInliningPlan(
+  index: ThinLtoIndex,
+  maxInlineInstructions = 50,
+): ReadonlyMap<string, readonly string[]>;
+```
+
+Computes cross-module inlining and devirtualization candidates from a ThinLTO index.
+
+#### Parameters
+
+| Name                  | Type         | Description |
+| --------------------- | ------------ | ----------- |
+| index                 | ThinLtoIndex |             |
+| maxInlineInstructions |              |             |
+
+### computeTransitiveModuleCapabilities
+
+**Kind:** function
+
+```typescript
+function computeTransitiveModuleCapabilities(index: ThinLtoIndex): ReadonlyMap<string, ReadonlySet<string>>;
+```
+
+Public accessor for computing transitive module capabilities from a built ThinLTO index.
+
+#### Parameters
+
+| Name  | Type         | Description |
+| ----- | ------------ | ----------- |
+| index | ThinLtoIndex |             |
+
+### createModuleSummary
+
+**Kind:** function
+
+```typescript
+function createModuleSummary(
+  moduleName: string,
+  functions: readonly ThinLtoFunctionSummary[],
+  dispatchTableRoots?: readonly string[],
+): ThinLtoModuleSummary;
+```
+
+Computes a ThinLTO summary for a module.
+
+#### Parameters
+
+| Name               | Type                              | Description |
+| ------------------ | --------------------------------- | ----------- |
+| moduleName         | string                            |             |
+| functions          | readonly ThinLtoFunctionSummary[] |             |
+| dispatchTableRoots | readonly string[]                 |             |
+
+### ThinLtoBuildOptions
+
+**Kind:** interface
+
+```typescript
+export interface ThinLtoBuildOptions
+```
+
+Configuration options for ThinLTO index building.
+
+### ThinLtoExportDefinition
+
+**Kind:** interface
+
+```typescript
+export interface ThinLtoExportDefinition
+```
+
+Export definition descriptor specifying module, field name, and function signature.
+
+### ThinLtoFunctionSummary
+
+**Kind:** interface
+
+```typescript
+export interface ThinLtoFunctionSummary
+```
+
+Function summary record within a ThinLTO module summary.
+
+### ThinLtoGlobalExport
+
+**Kind:** interface
+
+```typescript
+export interface ThinLtoGlobalExport
+```
+
+Global variable export descriptor specifying module namespace, field name, value type, and mutability.
+
+### ThinLtoGlobalImport
+
+**Kind:** interface
+
+```typescript
+export interface ThinLtoGlobalImport
+```
+
+Global variable import descriptor specifying module namespace, field name, value type, and mutability.
+
+### ThinLtoImportRequirement
+
+**Kind:** interface
+
+```typescript
+export interface ThinLtoImportRequirement
+```
+
+Import requirement descriptor specifying two-level namespace qualification and function signature.
+
+### ThinLtoIndex
+
+**Kind:** interface
+
+```typescript
+export interface ThinLtoIndex
+```
+
+Global ThinLTO index combining summaries from all linked modules.
+
+### ThinLtoLinkVerificationResult
+
+**Kind:** interface
+
+```typescript
+export interface ThinLtoLinkVerificationResult
+```
+
+Result of link-time import and namespace verification across multi-module assemblies.
+
+### ThinLtoModuleSummary
+
+**Kind:** interface
+
+```typescript
+export interface ThinLtoModuleSummary
+```
+
+Summary record for a single compilation unit (.sonir module).
+
+### verifyLinkTimeGlobals
+
+**Kind:** function
+
+```typescript
+function verifyLinkTimeGlobals(
+  imports: readonly ThinLtoGlobalImport[],
+  exports: readonly ThinLtoGlobalExport[],
+): ThinLtoLinkVerificationResult;
+```
+
+Verifies link-time global variable imports, ensuring type and mutability equivalence.
+
+#### Parameters
+
+| Name    | Type                           | Description |
+| ------- | ------------------------------ | ----------- |
+| imports | readonly ThinLtoGlobalImport[] |             |
+| exports | readonly ThinLtoGlobalExport[] |             |
+
+### verifyLinkTimeImports
+
+**Kind:** function
+
+```typescript
+function verifyLinkTimeImports(
+  imports: readonly ThinLtoImportRequirement[],
+  exports: readonly ThinLtoExportDefinition[],
+): ThinLtoLinkVerificationResult;
+```
+
+Verifies link-time imports across modules, asserting two-level namespace qualification and 1:1 structural type signature equivalence.
+
+#### Parameters
+
+| Name    | Type                                | Description |
+| ------- | ----------------------------------- | ----------- |
+| imports | readonly ThinLtoImportRequirement[] |             |
+| exports | readonly ThinLtoExportDefinition[]  |             |
+
+### verifyTransitiveCapabilityClosure
+
+**Kind:** function
+
+```typescript
+function verifyTransitiveCapabilityClosure(
+  index: ThinLtoIndex,
+  moduleName: string,
+  allowedCapabilities?: readonly string[],
+): {
+  readonly valid: boolean;
+  readonly transitiveCapabilities: readonly string[];
+  readonly undeclaredCapabilities: readonly string[];
+};
+```
+
+Verifies that a module's transitively reachable capabilities do not exceed its allowed or declared capability set.
+
+#### Parameters
+
+| Name                | Type              | Description |
+| ------------------- | ----------------- | ----------- |
+| index               | ThinLtoIndex      |             |
+| moduleName          | string            |             |
+| allowedCapabilities | readonly string[] |             |
+
+## `src/lowering/match-lowering`
+
+### compileDecisionTree
+
+**Kind:** function
+
+```typescript
+function compileDecisionTree(
+  discriminant: FlintExpression,
+  arms: readonly FlintMatchArm[],
+  options: DecisionTreeCompileOptions = {},
+): DecisionTreeNode;
+```
+
+Compiles a list of match arms into an optimal pattern matching decision tree.
+
+#### Parameters
+
+| Name         | Type                       | Description |
+| ------------ | -------------------------- | ----------- |
+| discriminant | FlintExpression            |             |
+| arms         | readonly FlintMatchArm[]   |             |
+| options      | DecisionTreeCompileOptions |             |
+
+### DecisionTreeCompileOptions
+
+**Kind:** interface
+
+```typescript
+export interface DecisionTreeCompileOptions
+```
+
+Options configuring decision tree compilation.
+
+### DecisionTreeFail
+
+**Kind:** interface
+
+```typescript
+export interface DecisionTreeFail
+```
+
+Failure node representing an unmatched branch or non-exhaustive trap.
+
+### DecisionTreeLeaf
+
+**Kind:** interface
+
+```typescript
+export interface DecisionTreeLeaf
+```
+
+Terminal leaf node in a decision tree representing a matched arm.
+
+### DecisionTreeNode
+
+**Kind:** type
+
+```typescript
+export type DecisionTreeNode = DecisionTreeLeaf | DecisionTreeSwitch | DecisionTreeFail;
+```
+
+Node in the pattern matching decision tree.
+
+### DecisionTreeSwitch
+
+**Kind:** interface
+
+```typescript
+export interface DecisionTreeSwitch
+```
+
+Branching switch node in a decision tree testing an expression.
+
+### isDenseSwitchEligible
+
+**Kind:** function
+
+```typescript
+function isDenseSwitchEligible(
+  values: readonly (number | boolean | string)[],
+  options: DecisionTreeCompileOptions = {},
+): boolean;
+```
+
+Determines whether a collection of scalar case values is eligible for constant-time `br_table` dispatch.
+
+#### Parameters
+
+| Name    | Type                                     | Description |
+| ------- | ---------------------------------------- | ----------- |
+| values  | readonly (number \| boolean \| string)[] |             |
+| options | DecisionTreeCompileOptions               |             |
+
+### lowerMatchExpression
+
+**Kind:** function
+
+```typescript
+function lowerMatchExpression(
+  expression: FlintMatchExpression,
+  options: DecisionTreeCompileOptions = {},
+): DecisionTreeNode;
+```
+
+Lowers a match expression into a decision tree representation.
+
+#### Parameters
+
+| Name       | Type                       | Description |
+| ---------- | -------------------------- | ----------- |
+| expression | FlintMatchExpression       |             |
+| options    | DecisionTreeCompileOptions |             |
+
+### lowerMatchStatement
+
+**Kind:** function
+
+```typescript
+function lowerMatchStatement(
+  statement: FlintMatchStatement,
+  options: DecisionTreeCompileOptions = {},
+): DecisionTreeNode;
+```
+
+Lowers a match statement into a decision tree representation.
+
+#### Parameters
+
+| Name      | Type                       | Description |
+| --------- | -------------------------- | ----------- |
+| statement | FlintMatchStatement        |             |
+| options   | DecisionTreeCompileOptions |             |
+
+### selectMatchStrategy
+
+**Kind:** function
+
+```typescript
+function selectMatchStrategy(
+  values: readonly (number | boolean | string)[],
+  options: DecisionTreeCompileOptions = {},
+): 'br-table' | 'binary-search' | 'sparse';
+```
+
+Selects the optimal match dispatch strategy based on density and value distribution.
+
+#### Parameters
+
+| Name    | Type                                     | Description |
+| ------- | ---------------------------------------- | ----------- |
+| values  | readonly (number \| boolean \| string)[] |             |
+| options | DecisionTreeCompileOptions               |             |
 
 ## `src/manifest`
 
@@ -4556,7 +5194,80 @@ export const primitiveTypes;
 
 No description provided.
 
+## `src/passes/sanitizer`
+
+### FlintSanitizerMode
+
+**Kind:** type
+
+```typescript
+export type FlintSanitizerMode = 'capabilities' | 'bounds' | 'effects';
+```
+
+Sanitizer modes supported by Flint `F-San`.
+
+### FlintSanitizerOptions
+
+**Kind:** interface
+
+```typescript
+export interface FlintSanitizerOptions
+```
+
+Configuration options for F-San sanitizer instrumentation.
+
+### FlintSanitizerReport
+
+**Kind:** interface
+
+```typescript
+export interface FlintSanitizerReport
+```
+
+Result report from the F-San instrumentation pass.
+
+### runFlintSanitizerPass
+
+**Kind:** function
+
+```typescript
+function runFlintSanitizerPass(
+  module: LowLevelSonModule,
+  options: FlintSanitizerOptions = {},
+): {
+  readonly module: LowLevelSonModule;
+  readonly report: FlintSanitizerReport;
+};
+```
+
+Runs the `F-San` shadow-memory and capability sanitization pass over a Low-Level SonIR module.
+
+#### Parameters
+
+| Name    | Type                  | Description |
+| ------- | --------------------- | ----------- |
+| module  | LowLevelSonModule     |             |
+| options | FlintSanitizerOptions |             |
+
 ## `src/safety`
+
+### canLifetimeEscape
+
+**Kind:** function
+
+```typescript
+function canLifetimeEscape(source: RegionLifetime, target: RegionLifetime): boolean;
+```
+
+Validates that an assignment or return from source lifetime to target lifetime does not violate region safety.
+Storing a shorter-lived reference into a longer-lived target without explicit promotion/cloning is disallowed.
+
+#### Parameters
+
+| Name   | Type           | Description |
+| ------ | -------------- | ----------- |
+| source | RegionLifetime |             |
+| target | RegionLifetime |             |
 
 ### checkFlintSafety
 
@@ -4581,6 +5292,102 @@ Performs source-level checks that cannot be represented by the legacy type strin
 - **@param:** - Module AST to validate.
 - **@param:** - File name used for diagnostics.
 - **@param:** - Accumulator for error diagnostics.
+
+### ClosureCaptureInfo
+
+**Kind:** interface
+
+```typescript
+export interface ClosureCaptureInfo
+```
+
+Descriptor of a variable captured by a closure.
+
+### MoveSafetyInfo
+
+**Kind:** interface
+
+```typescript
+export interface MoveSafetyInfo
+```
+
+Struct move safety info descriptor.
+
+### REGION_LIFETIME_ORDER
+
+**Kind:** constant
+
+```typescript
+export const REGION_LIFETIME_ORDER: Readonly<Record<RegionLifetime, number>>;
+```
+
+No description provided.
+
+### REGION_LIFETIMES
+
+**Kind:** constant
+
+```typescript
+export const REGION_LIFETIMES;
+```
+
+No description provided.
+
+### RegionLifetime
+
+**Kind:** type
+
+```typescript
+export type RegionLifetime = 'local' | 'function' | 'arena' | 'global' | 'Local' | 'Function' | 'Arena' | 'GlobalHeap';
+```
+
+Regional lifetime lattice hierarchy: Local < Function < Arena < GlobalHeap.
+
+### validateClosureCaptureSafety
+
+**Kind:** function
+
+```typescript
+function validateClosureCaptureSafety(capture: ClosureCaptureInfo): {
+  readonly safe: boolean;
+  readonly requiresHeapPromotion: boolean;
+  readonly reason?: string;
+};
+```
+
+Validates closure capture safety and determines if stack variable heap promotion is mandatory.
+Prevents Use-After-Scope memory corruption when closures outlive captured stack frames.
+
+#### Parameters
+
+| Name    | Type               | Description                            |
+| ------- | ------------------ | -------------------------------------- |
+| capture | ClosureCaptureInfo | - Closure capture metadata descriptor. |
+
+#### Contract
+
+- **@param:** - Closure capture metadata descriptor.
+- **@returns:** Validation outcome, whether heap promotion is required, and error message if unsafe.
+
+### validateMoveSafety
+
+**Kind:** function
+
+```typescript
+function validateMoveSafety(info: MoveSafetyInfo): {
+  readonly safe: boolean;
+  readonly reason?: string;
+};
+```
+
+Validates whether an aggregate or struct value can be safely moved by value.
+Prohibits moving pinned or self-referential structures to eliminate stack frame smashing and Use-After-Move hazards.
+
+#### Parameters
+
+| Name | Type           | Description |
+| ---- | -------------- | ----------- |
+| info | MoveSafetyInfo |             |
 
 ## `src/self-hosted`
 
@@ -5830,6 +6637,354 @@ adapter and is no longer the source of truth for the optimized output.
 - **@param:** - Optimization profile to apply.
 - **@returns:** Optimized SoN module, compatible IR, and pass report.
 
+## `src/sonir/high-level/dialect`
+
+### createHighLevelSonModule
+
+**Kind:** function
+
+```typescript
+function createHighLevelSonModule(name: string): HighLevelSonModule;
+```
+
+Creates an empty High-Level SonIR module graph.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| name | string |             |
+
+### HighLevelSonModule
+
+**Kind:** interface
+
+```typescript
+export interface HighLevelSonModule
+```
+
+High-Level SonIR Module graph container.
+
+### HighLevelSonNode
+
+**Kind:** interface
+
+```typescript
+export interface HighLevelSonNode
+```
+
+Node in the High-Level SonIR graph representation.
+
+### HighLevelSonOpcode
+
+**Kind:** type
+
+```typescript
+export type HighLevelSonOpcode =
+  | 'affine.scope.begin'
+  | 'affine.scope.end'
+  | 'affine.borrow'
+  | 'affine.transfer'
+  | 'region.arena.create'
+  | 'region.arena.destroy'
+  | 'region.alloc'
+  | 'collection.iter.create'
+  | 'collection.iter.next'
+  | 'struct.construct'
+  | 'struct.extract';
+```
+
+High-Level SonIR dialect operation kinds preserving affine semantics and regional scopes.
+
+### HighLevelSonRegion
+
+**Kind:** interface
+
+```typescript
+export interface HighLevelSonRegion
+```
+
+Region representation within High-Level SonIR.
+
+## `src/sonir/low-level/dialect`
+
+### createLowLevelSonModule
+
+**Kind:** function
+
+```typescript
+function createLowLevelSonModule(name: string): LowLevelSonModule;
+```
+
+Creates an initial Low-Level SonIR module graph with entry control and base memory token.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| name | string |             |
+
+### LowLevelSonModule
+
+**Kind:** interface
+
+```typescript
+export interface LowLevelSonModule
+```
+
+Low-Level SonIR Module graph.
+
+### LowLevelSonNode
+
+**Kind:** interface
+
+```typescript
+export interface LowLevelSonNode
+```
+
+Node in the Low-Level Memory SSA SonIR graph.
+
+### LowLevelSonOpcode
+
+**Kind:** type
+
+```typescript
+export type LowLevelSonOpcode =
+  | 'mem.phi'
+  | 'mem.load'
+  | 'mem.store'
+  | 'mem.alloc'
+  | 'mem.free'
+  | 'ref.retain'
+  | 'ref.release'
+  | 'val.const'
+  | 'val.add'
+  | 'val.sub'
+  | 'val.mul'
+  | 'val.div'
+  | 'val.shl'
+  | 'val.shr_u'
+  | 'val.shr_s'
+  | 'val.cmp_eq'
+  | 'val.cmp_ne'
+  | 'val.cmp_lt_u'
+  | 'val.cmp_lt_s'
+  | 'val.cmp_gt_u'
+  | 'val.cmp_gt_s'
+  | 'val.cmp_le_u'
+  | 'val.cmp_le_s'
+  | 'val.cmp_ge_u'
+  | 'val.cmp_ge_s'
+  | 'val.select'
+  | 'val.call'
+  | 'val.simd.and'
+  | 'val.simd.or'
+  | 'val.simd.xor'
+  | 'ctrl.start'
+  | 'ctrl.branch'
+  | 'ctrl.jump'
+  | 'ctrl.suspend'
+  | 'ctrl.barrier'
+  | 'ctrl.return';
+```
+
+Low-Level SonIR opcodes representing scalar operations, control branches, and Memory SSA effects.
+
+### MemoryDomain
+
+**Kind:** type
+
+```typescript
+export type MemoryDomain = 0 | 1;
+```
+
+Memory domain identifier (0 = guest private heap, 1 = host interop channel).
+
+### MemorySsaToken
+
+**Kind:** interface
+
+```typescript
+export interface MemorySsaToken
+```
+
+Explicit Memory SSA token tracking dependencies between memory-mutating operations.
+
+## `src/sonir/passes/canonical`
+
+### CanonicalPassReport
+
+**Kind:** interface
+
+```typescript
+export interface CanonicalPassReport
+```
+
+Result report from running whole-module canonicalization passes.
+
+### detectGraphCycles
+
+**Kind:** function
+
+```typescript
+function detectGraphCycles(nodes: readonly LowLevelSonNode[]): {
+  readonly hasCycles: boolean;
+  readonly cyclicNodes: readonly number[];
+};
+```
+
+Detects cycles in a SonIR directed dependency graph using depth-first search.
+
+#### Parameters
+
+| Name  | Type                       | Description |
+| ----- | -------------------------- | ----------- |
+| nodes | readonly LowLevelSonNode[] |             |
+
+### runArcOptimizationPass
+
+**Kind:** function
+
+```typescript
+function runArcOptimizationPass(module: LowLevelSonModule): {
+  readonly module: LowLevelSonModule;
+  readonly elidedPairs: number;
+};
+```
+
+Executes ARC (Automatic Reference Counting) optimization over Low-Level SonIR nodes.
+Strictly respects suspension barriers (ctrl.suspend, ctrl.barrier, val.call) and prevents
+elision of retain/release pairs across asynchronous suspension points to eliminate Use-After-Free.
+
+#### Parameters
+
+| Name   | Type              | Description |
+| ------ | ----------------- | ----------- |
+| module | LowLevelSonModule |             |
+
+### runDominatorGvnPass
+
+**Kind:** function
+
+```typescript
+function runDominatorGvnPass(module: LowLevelSonModule): {
+  readonly module: LowLevelSonModule;
+  readonly deduplicatedCount: number;
+};
+```
+
+Executes Global Value Numbering (GVN) over pure value nodes in a Low-Level SonIR module.
+
+#### Parameters
+
+| Name   | Type              | Description |
+| ------ | ----------------- | ----------- |
+| module | LowLevelSonModule |             |
+
+### runRedundantLoadEliminationPass
+
+**Kind:** function
+
+```typescript
+function runRedundantLoadEliminationPass(module: LowLevelSonModule): {
+  readonly module: LowLevelSonModule;
+  readonly eliminatedCount: number;
+};
+```
+
+Executes Redundant Load Elimination (RLE) and Store-to-Load forwarding over Memory SSA nodes.
+Strictly isolates guest private heap (Domain 0) and host interop channel (Domain 1).
+
+#### Parameters
+
+| Name   | Type              | Description |
+| ------ | ----------------- | ----------- |
+| module | LowLevelSonModule |             |
+
+### runSccpPass
+
+**Kind:** function
+
+```typescript
+function runSccpPass(module: LowLevelSonModule): {
+  readonly module: LowLevelSonModule;
+  readonly constantsPropagated: number;
+};
+```
+
+Executes Sparse Conditional Constant Propagation (SCCP) over Low-Level SonIR nodes.
+Strictly respects WebAssembly trapping semantics on division by zero and signed overflow.
+
+#### Parameters
+
+| Name   | Type              | Description |
+| ------ | ----------------- | ----------- |
+| module | LowLevelSonModule |             |
+
+### runSparseConditionalConstantPropagationPass
+
+**Kind:** constant
+
+```typescript
+export const runSparseConditionalConstantPropagationPass;
+```
+
+Alias for runSccpPass.
+
+## `src/sonir/rewrites/engine`
+
+### applyDeclarativeRewrites
+
+**Kind:** function
+
+```typescript
+function applyDeclarativeRewrites(
+  nodes: readonly LowLevelSonNode[],
+  rules: readonly DeclarativeRewriteRule[] = BUILTIN_REWRITE_RULES,
+  maxIterations = 10,
+): { readonly nodes: readonly LowLevelSonNode[]; readonly appliedRules: readonly string[] };
+```
+
+Executes rewrite passes over a list of Low-Level SonIR nodes until fixed-point or iteration limit.
+
+#### Parameters
+
+| Name          | Type                              | Description |
+| ------------- | --------------------------------- | ----------- |
+| nodes         | readonly LowLevelSonNode[]        |             |
+| rules         | readonly DeclarativeRewriteRule[] |             |
+| maxIterations |                                   |             |
+
+### BUILTIN_REWRITE_RULES
+
+**Kind:** constant
+
+```typescript
+export const BUILTIN_REWRITE_RULES: readonly DeclarativeRewriteRule[];
+```
+
+Built-in algebraic and constant-folding rewrite rules (TableGen / match.pd style).
+
+### DeclarativeRewriteRule
+
+**Kind:** interface
+
+```typescript
+export interface DeclarativeRewriteRule
+```
+
+Declarative rewrite rule specification.
+
+### RewriteContext
+
+**Kind:** interface
+
+```typescript
+export interface RewriteContext
+```
+
+Context passed to rewrite rule match and transform callbacks.
+
 ## `src/stdlib/memory`
 
 ### DEFAULT_C_ALLOCATOR_BRIDGE
@@ -6103,6 +7258,87 @@ export interface AggregateLayoutDefinition
 
 Registered field-layout definition for a user-defined nominal aggregate (struct).
 
+### buildTraitVTableLayout
+
+**Kind:** function
+
+```typescript
+function buildTraitVTableLayout(traitName: string, traits: ReadonlyMap<string, TraitDefinition>): TraitVTableLayout;
+```
+
+Builds a deterministic vtable layout for a composite trait with inherited supertraits.
+
+#### Parameters
+
+| Name      | Type                                 | Description |
+| --------- | ------------------------------------ | ----------- |
+| traitName | string                               |             |
+| traits    | ReadonlyMap<string, TraitDefinition> |             |
+
+### calculateGenericDepth
+
+**Kind:** function
+
+```typescript
+function calculateGenericDepth(algebra: TypeAlgebra, id: TypeId, depth = 1): number;
+```
+
+Calculates the recursive generic nesting depth of a type node.
+
+#### Parameters
+
+| Name    | Type        | Description |
+| ------- | ----------- | ----------- |
+| algebra | TypeAlgebra |             |
+| id      | TypeId      |             |
+| depth   |             |             |
+
+### castTraitObject
+
+**Kind:** function
+
+```typescript
+function castTraitObject(
+  source: TraitObjectFatPointer,
+  sourceTrait: string,
+  targetTrait: string,
+  traits: ReadonlyMap<string, TraitDefinition>,
+): TraitObjectFatPointer;
+```
+
+Upcasts a trait object fat pointer to a target supertrait, normalizing the vtable offset.
+
+#### Parameters
+
+| Name        | Type                                 | Description |
+| ----------- | ------------------------------------ | ----------- |
+| source      | TraitObjectFatPointer                |             |
+| sourceTrait | string                               |             |
+| targetTrait | string                               |             |
+| traits      | ReadonlyMap<string, TraitDefinition> |             |
+
+### computeTraitUpcastOffset
+
+**Kind:** function
+
+```typescript
+function computeTraitUpcastOffset(
+  sourceTrait: string,
+  targetTrait: string,
+  traits: ReadonlyMap<string, TraitDefinition>,
+): number;
+```
+
+Computes the exact vtable offset adjustment required when upcasting a trait object from sourceTrait to targetTrait.
+
+#### Parameters
+
+| Name        | Type                                 | Description |
+| ----------- | ------------------------------------ | ----------- |
+| sourceTrait | string                               |             |
+| targetTrait | string                               |             |
+| traits      | ReadonlyMap<string, TraitDefinition> |             |
+
 ### createMonomorphizationCache
 
 **Kind:** function
@@ -6183,6 +7419,92 @@ export type FlintGenericBoundary = 'value' | 'interface' | 'iterator';
 
 Generic instantiation policy: value monomorphization, or descriptor-boundary interface/iterator surfaces.
 
+### INTERIOR_MUTABILITY_TYPES
+
+**Kind:** constant
+
+```typescript
+export const INTERIOR_MUTABILITY_TYPES;
+```
+
+No description provided.
+
+### isInteriorMutabilityType
+
+**Kind:** function
+
+```typescript
+function isInteriorMutabilityType(name: string): boolean;
+```
+
+Checks whether a nominal type constructor represents an interior mutability container.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| name | string |             |
+
+### MAX_EXPANSION_DEPTH
+
+**Kind:** constant
+
+```typescript
+export const MAX_EXPANSION_DEPTH;
+```
+
+No description provided.
+
+### MAX_GENERIC_DEPTH
+
+**Kind:** constant
+
+```typescript
+export const MAX_GENERIC_DEPTH;
+```
+
+No description provided.
+
+### MAX_MACRO_EXPANSION_STEPS
+
+**Kind:** constant
+
+```typescript
+export const MAX_MACRO_EXPANSION_STEPS;
+```
+
+No description provided.
+
+### MAX_MONOMORPHIZATION_SPECIALIZATIONS
+
+**Kind:** constant
+
+```typescript
+export const MAX_MONOMORPHIZATION_SPECIALIZATIONS;
+```
+
+No description provided.
+
+### MAX_STATIC_ARRAY_BYTES
+
+**Kind:** constant
+
+```typescript
+export const MAX_STATIC_ARRAY_BYTES;
+```
+
+No description provided.
+
+### MAX_STATIC_ARRAY_ELEMENTS
+
+**Kind:** constant
+
+```typescript
+export const MAX_STATIC_ARRAY_ELEMENTS;
+```
+
+No description provided.
+
 ### MonomorphizationCache
 
 **Kind:** class
@@ -6261,6 +7583,46 @@ Looks up the fixed ABI layout for a primitive type name on the specified target 
 - **@param:** - Target platform profile.
 - **@returns:** The primitive's size and alignment (without a layout key).
 
+### TraitDefinition
+
+**Kind:** interface
+
+```typescript
+export interface TraitDefinition
+```
+
+Trait definition with direct supertraits and methods.
+
+### TraitMethodDescriptor
+
+**Kind:** interface
+
+```typescript
+export interface TraitMethodDescriptor
+```
+
+Method signature entry in a trait vtable.
+
+### TraitObjectFatPointer
+
+**Kind:** interface
+
+```typescript
+export interface TraitObjectFatPointer
+```
+
+Trait object fat pointer representation storing data pointer, vtable pointer, and vtable slice offset.
+
+### TraitVTableLayout
+
+**Kind:** interface
+
+```typescript
+export interface TraitVTableLayout
+```
+
+Trait composition vtable layout descriptor detailing method slots and supertrait base offsets.
+
 ### TypeAlgebra
 
 **Kind:** class
@@ -6327,6 +7689,22 @@ export type TypeNode = |
 ```
 
 Discriminated union of interned structural type node shapes.
+
+### validateFixedArrayLength
+
+**Kind:** function
+
+```typescript
+function validateFixedArrayLength(length: number): void;
+```
+
+Validates fixed array length bounds to protect against compile-time and layout DoS.
+
+#### Parameters
+
+| Name   | Type   | Description |
+| ------ | ------ | ----------- |
+| length | number |             |
 
 ## `src/type-checker`
 

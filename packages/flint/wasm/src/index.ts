@@ -4,3 +4,5 @@ export * from './wat.js';
 export * from './collection-runtime.js';
 export * from './verifier.js';
 export * from './optimizer.js';
+export * from './sections/custom.js';
+export * from './codegen/abi.js';

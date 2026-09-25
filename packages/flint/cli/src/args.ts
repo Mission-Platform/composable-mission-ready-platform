@@ -38,7 +38,8 @@ export interface FlintCliOptions {
   readonly outputDirectory?: string;
   readonly compilerVersion: string;
   readonly vmMode: FlintVmExecutionMode;
-  readonly format?: 'text' | 'json';
+  readonly format?: 'text' | 'json' | 'sarif';
+  readonly sanitize?: readonly ('capabilities' | 'bounds' | 'effects')[];
   readonly boundsChecks: FlintSoNBoundsChecks;
   readonly showOptimizerReport: boolean;
   readonly trace?: FlintCliTraceOptions;
@@ -77,7 +78,8 @@ Options:
   -o, --out-dir <directory>       Artifact directory for compile (default: ./dist)
   --compiler-version <version>    Compiler version in deterministic metadata
   --vm-mode <interpret|jit|aot>   Bounded FWS stage execution mode (default: interpret)
-  --format <text|json>            Check/compile result format (default: text)
+  --format <text|json|sarif>      Check/compile result format (default: text)
+  --sanitize <modes>              Enable F-San instrumentation (capabilities, bounds, effects)
   --trace-capture <summary|events|snapshot>
                                   Bounded forensic capture mode (trace command)
   --max-trace-events <count>      Maximum trace events (default: 512)
@@ -96,7 +98,8 @@ interface ParseState {
   optimization: FlintOptimization;
   compilerVersion: string;
   vmMode: FlintVmExecutionMode;
-  format?: 'text' | 'json';
+  format?: 'text' | 'json' | 'sarif';
+  sanitize?: ('capabilities' | 'bounds' | 'effects')[];
   boundsChecks: FlintSoNBoundsChecks;
   showOptimizerReport: boolean;
   traceCapture: FlintCliTraceOptions['capture'];
@@ -312,8 +315,20 @@ const FLAG_HANDLERS: Readonly<Record<string, FlagHandler>> = {
   },
   '--format': (argv, index, state) => {
     const [value, nextIndex] = valueFor(argv, index, '--format');
-    if (value !== 'text' && value !== 'json') throw new FlintCliUsageError(`Invalid output format '${value}'.`);
+    if (value !== 'text' && value !== 'json' && value !== 'sarif')
+      throw new FlintCliUsageError(`Invalid output format '${value}'.`);
     state.format = value;
+    return nextIndex;
+  },
+  '--sanitize': (argv, index, state) => {
+    const [value, nextIndex] = valueFor(argv, index, '--sanitize');
+    const items = value.split(',').map((item) => item.trim());
+    for (const item of items) {
+      if (item !== 'capabilities' && item !== 'bounds' && item !== 'effects') {
+        throw new FlintCliUsageError(`Invalid sanitize mode '${item}'. Must be capabilities, bounds, or effects.`);
+      }
+    }
+    state.sanitize = items as ('capabilities' | 'bounds' | 'effects')[];
     return nextIndex;
   },
   '--trace-capture': (argv, index, state) => {
@@ -365,6 +380,7 @@ function buildCliOptions(state: ParseState, cwd: string): FlintCliOptions {
     ...(state.linkMode === undefined ? {} : { linkMode: state.linkMode }),
     ...(state.outputDirectory === undefined ? {} : { outputDirectory: state.outputDirectory }),
     ...(state.format === undefined ? {} : { format: state.format }),
+    ...(state.sanitize === undefined ? {} : { sanitize: state.sanitize }),
     ...(state.command === 'trace' || state.traceRequested
       ? {
           trace: {

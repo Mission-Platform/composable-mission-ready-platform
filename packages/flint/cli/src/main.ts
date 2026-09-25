@@ -22,7 +22,13 @@ import {
   parseFlintCliArgs,
   type FlintCliOptions,
 } from './args.js';
-import { formatFlintDiagnostics, formatFlintSoNSummary, outputDirectoryFor, writeFlintArtifacts } from './output.js';
+import {
+  formatFlintDiagnostics,
+  formatFlintSarif,
+  formatFlintSoNSummary,
+  outputDirectoryFor,
+  writeFlintArtifacts,
+} from './output.js';
 
 /**
  * Exit code indicating invalid command-line usage or arguments.
@@ -268,6 +274,11 @@ function emitCompilationResult(
 ): void {
   if (options.format === 'json') {
     emitJsonResult(options, result, io);
+  } else if (options.format === 'sarif') {
+    const sarif = formatFlintSarif(result.diagnostics, {
+      toolVersion: options.compilerVersion,
+    });
+    io.stdout(JSON.stringify(sarif, undefined, 2));
   } else if (result.diagnostics.length > 0) {
     io.stderr(formatFlintDiagnostics(result.diagnostics));
   }
@@ -287,7 +298,7 @@ function handleCheckCommand(
   result: Awaited<ReturnType<typeof compileOptions>>,
   io: FlintCliIo,
 ): number {
-  if (options.format === 'json') return 0;
+  if (options.format === 'json' || options.format === 'sarif') return 0;
   io.stdout(`Checked ${result.entryFileName}.`);
   if (options.showOptimizerReport || options.boundsChecks !== 'runtime')
     io.stdout(`Bounds checks: ${options.boundsChecks}.`);
@@ -308,7 +319,7 @@ function handleTraceCommand(
   result: Awaited<ReturnType<typeof compileOptions>>,
   io: FlintCliIo,
 ): number {
-  if (options.format !== 'json') {
+  if (options.format !== 'json' && options.format !== 'sarif') {
     io.stdout(`Trace captured for ${result.entryFileName}: ${result.trace?.traceHash ?? 'unavailable'}.`);
   }
   return 0;

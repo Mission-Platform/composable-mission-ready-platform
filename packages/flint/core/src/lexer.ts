@@ -516,6 +516,16 @@ function scanTokenAt(state: LexerState, offset: number): number {
   return next;
 }
 
+export const MAX_LEX_SOURCE_LENGTH = 16 * 1024 * 1024;
+export const MAX_TOKEN_LENGTH = 65_536;
+
+/**
+ * Normalizes an identifier to Unicode Normalization Form C (NFC) to eliminate homoglyph spoofing.
+ */
+export function normalizeIdentifier(name: string): string {
+  return name.normalize('NFC');
+}
+
 /**
  * Lexes a Flint source string into a stream of tokens and diagnostics.
  *
@@ -524,8 +534,20 @@ function scanTokenAt(state: LexerState, offset: number): number {
  * @returns Lex result containing token sequence and diagnostics.
  */
 export function lexFlint(source: string, fileName = '<input>'): FlintLexResult {
-  const lineOffsets = computeLineOffsets(source);
-  const state: LexerState = { source, fileName, lineOffsets, tokens: [], diagnostics: [] };
+  const normalizedSource = source.normalize('NFC');
+  if (normalizedSource.length > MAX_LEX_SOURCE_LENGTH) {
+    const errorDiagnostic = createDiagnostic(
+      fileName,
+      'lex',
+      'FLINT-LEX-001',
+      `Source exceeds maximum allowed length of ${MAX_LEX_SOURCE_LENGTH} bytes (got ${normalizedSource.length}).`,
+      { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 },
+    );
+    return { tokens: [{ kind: 'eof', text: '', span: errorDiagnostic.span }], diagnostics: [errorDiagnostic] };
+  }
+
+  const lineOffsets = computeLineOffsets(normalizedSource);
+  const state: LexerState = { source: normalizedSource, fileName, lineOffsets, tokens: [], diagnostics: [] };
   let offset = 0;
   while (offset < source.length) {
     if (isWhitespace(source[offset])) {

@@ -1,5 +1,8 @@
 import { type CompiledRegex, INSTR_WIDTH, Op } from "./bytecode.js";
 
+export const MAX_REGEX_PATTERN_LENGTH = 65_536;
+export const MAX_REGEX_REPEAT_BOUND = 10_000;
+
 /** Compiler-owned syntax error with deterministic source-relative messages. */
 export class RegexSyntaxError extends Error {
   public readonly code:
@@ -171,6 +174,12 @@ class Parser {
       case "{": {
         const parsed = this.tryParseBrace();
         if (parsed === null) return atom;
+        if (parsed.max !== Infinity && parsed.max > MAX_REGEX_REPEAT_BOUND) {
+          throw new RegexSyntaxError(
+            `Quantifier upper bound exceeds maximum limit of ${MAX_REGEX_REPEAT_BOUND}`,
+            "FLINT-REGEX-002",
+          );
+        }
         min = parsed.min;
         max = parsed.max;
 
@@ -578,10 +587,17 @@ function compileNode(node: Node, emitter: Emitter): void {
  * @param node - Repeat quantifier node.
  * @param emitter - Instruction emitter.
  */
+// skipcq: JS-R1005
 function compileRepeat(
   node: Extract<Node, { kind: "repeat" }>,
   emitter: Emitter,
 ): void {
+  if (node.max !== Infinity && node.max > MAX_REGEX_REPEAT_BOUND) {
+    throw new RegexSyntaxError(
+      `Quantifier upper bound exceeds maximum limit of ${MAX_REGEX_REPEAT_BOUND}`,
+      "FLINT-REGEX-002",
+    );
+  }
   for (let index = 0; index < node.min; index++)
     compileNode(node.child, emitter);
   if (node.max === Infinity) {
@@ -624,6 +640,12 @@ function patchSplit(
 
 /** Compile the supported deterministic regex subset into Forge bytecode. */
 export function compileRegex(pattern: string): CompiledRegex {
+  if (pattern.length > MAX_REGEX_PATTERN_LENGTH) {
+    throw new RegexSyntaxError(
+      `Regex pattern length exceeds maximum limit of ${MAX_REGEX_PATTERN_LENGTH} bytes`,
+      "FLINT-REGEX-001",
+    );
+  }
   const { root, groupCount } = new Parser(pattern).parse();
   const emitter = new Emitter();
   emitter.emit(Op.SAVE, 0);

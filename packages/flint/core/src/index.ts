@@ -1,5 +1,6 @@
 export * from './ast.js';
-export * from './analysis';
+// eslint-disable-next-line import-x/no-useless-path-segments
+export * from './analysis/index.js';
 export * from './cache.js';
 export * from './contracts.js';
 export * from './compiler.js';
@@ -8,6 +9,7 @@ export * from './documentation.js';
 export * from './dynamic-links.js';
 export * from './graph.js';
 export * from './linker.js';
+export * from './linker/thinlto.js';
 export * from './identity.js';
 export * from './lexer.js';
 export * from './son-cache.js';
@@ -28,4 +30,11 @@ export * from './generics.js';
 export * from './type-algebra.js';
 export * from './safety.js';
 export * from './self-hosted.js';
-export * from './interop';
+export * from './lowering/match-lowering.js';
+export * from './sonir/high-level/dialect.js';
+export * from './sonir/low-level/dialect.js';
+export * from './sonir/rewrites/engine.js';
+export * from './sonir/passes/canonical.js';
+export * from './passes/sanitizer.js';
+// eslint-disable-next-line import-x/no-useless-path-segments
+export * from './interop/index.js';

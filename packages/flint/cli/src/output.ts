@@ -1,7 +1,9 @@
 import { mkdir, mkdtemp, rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
-import type { FlintArtifact, FlintSoNModule } from '@mission-platform/flint';
+import type { FlintArtifact, FlintDiagnostic, FlintSoNModule } from '@mission-platform/flint';
+
+export { formatFlintSarif } from '@mission-platform/flint';
 
 /**
  * Collection of artifact payloads to be written to disk.
@@ -27,6 +29,63 @@ export function flintArtifactBaseName(entryFileName: string): string {
 }
 
 /**
+ * Sanitizes and virtualizes a source file path to prevent host path traversal (e.g. `../`) and host filesystem disclosure.
+ *
+ * @param filePath Raw source path from AST or source map.
+ * @param workspaceRoot Optional root directory to calculate relative paths against.
+ * @returns Sanitized virtual or relative path string.
+ */
+export function sanitizeSourceMapPath(filePath: string, workspaceRoot?: string): string {
+  if (filePath.length === 0) return 'source.flint';
+  let normalized = filePath.replaceAll('\\', '/');
+
+  // Strip workspace root prefix if present
+  if (workspaceRoot !== undefined) {
+    const normalizedRoot = workspaceRoot.replaceAll('\\', '/').replace(/\/+$/, '');
+    if (normalized.startsWith(normalizedRoot)) {
+      normalized = normalized.slice(normalizedRoot.length).replace(/^\/+/, '');
+    }
+  }
+
+  // Strip drive letter if present (e.g. C:)
+  normalized = normalized.replace(/^[a-z]:/i, '');
+  // Strip host user and private system directories
+  normalized = normalized.replace(/^(\/private|\/Users\/[^/]+|\/home\/[^/]+)/i, '');
+  normalized = normalized.replace(/^\/+/, '');
+
+  // Strip path traversal sequences (`../`, `..`)
+  const segments = normalized.split('/').filter((seg) => seg.length > 0 && seg !== '.' && seg !== '..');
+  const safePath = segments.length > 0 ? segments.join('/') : path.basename(filePath);
+
+  return `flint://workspace/${safePath}`;
+}
+
+/**
+ * Sanitizes a v3 source map JSON string, virtualizing all source paths to prevent traversal and leakage.
+ */
+// skipcq: JS-R1005
+export function sanitizeSourceMap(sourceMap: string, workspaceRoot?: string): string {
+  if (sourceMap.trim().length === 0) return sourceMap;
+  try {
+    const parsed = JSON.parse(sourceMap) as Record<string, unknown>;
+    if (Array.isArray(parsed.sources)) {
+      parsed.sources = parsed.sources.map((source: unknown) =>
+        typeof source === 'string' ? sanitizeSourceMapPath(source, workspaceRoot) : source,
+      );
+    }
+    if (typeof parsed.file === 'string') {
+      parsed.file = path.basename(parsed.file);
+    }
+    if (typeof parsed.sourceRoot === 'string') {
+      parsed.sourceRoot = '';
+    }
+    return JSON.stringify(parsed);
+  } catch {
+    return sourceMap;
+  }
+}
+
+/**
  * Extracts and prepares the binary and textual file payloads from a compiled Flint artifact.
  *
  * @param artifact Compiled Flint artifact containing WASM, WAT, and metadata.
@@ -43,7 +102,7 @@ export function artifactFilesFor(artifact: FlintArtifact): FlintCliArtifactFiles
     manifest: `${JSON.stringify(manifest, undefined, 2)}\n`,
     declarations,
     esm: esmSource,
-    sourceMap,
+    sourceMap: sanitizeSourceMap(sourceMap),
   };
 }
 
@@ -91,6 +150,81 @@ export async function writeFlintArtifacts(
   } finally {
     await rm(temporaryDirectory, { recursive: true, force: true });
   }
+}
+
+/**
+ * Formats a single diagnostic record with multi-span carets and line gutters.
+ */
+// skipcq: JS-R1005
+function formatSingleCaretDiagnostic(
+  diagnostic: FlintDiagnostic,
+  sourceResolver?: (fileName: string) => string | undefined,
+): string {
+  const { severity, code, message, fileName, span, hint, evidence } = diagnostic;
+  const header = `${severity}[${code}]: ${message}`;
+  const location = ` --> ${fileName}:${span.line}:${span.column}`;
+
+  const source = sourceResolver?.(fileName);
+  if (source === undefined || source.length === 0) {
+    const hintText = hint === undefined ? '' : `\n = note: ${hint}`;
+    return `${header}\n${location}${hintText}`;
+  }
+
+  const lines = source.split(/\r?\n/u);
+  const targetLine = lines[span.line - 1] ?? '';
+  const lineNumberString = String(span.line);
+  const gutterPadding = ' '.repeat(lineNumberString.length);
+
+  const colStart = Math.max(0, span.column - 1);
+  const colEnd = span.endLine === span.line ? Math.max(colStart + 1, span.endColumn - 1) : targetLine.length;
+  const underlineLength = Math.max(1, colEnd - colStart);
+  const caretLine = `${' '.repeat(colStart)}${'^'.repeat(underlineLength)}`;
+
+  const evidenceLines =
+    evidence === undefined || evidence.length === 0
+      ? []
+      : evidence.flatMap((item) => {
+          if (item.span === undefined) return [`${gutterPadding} = evidence: ${item.message}`];
+          const itemLine = lines[item.span.line - 1] ?? '';
+          const itemLineNumber = String(item.span.line);
+          const itemGutter = ' '.repeat(itemLineNumber.length);
+          const itemColStart = Math.max(0, item.span.column - 1);
+          const itemColEnd =
+            item.span.endLine === item.span.line
+              ? Math.max(itemColStart + 1, item.span.endColumn - 1)
+              : itemLine.length;
+          const itemUnderline = `${' '.repeat(itemColStart)}${'-'.repeat(Math.max(1, itemColEnd - itemColStart))}`;
+          return [
+            `${itemGutter} |`,
+            `${itemLineNumber} | ${itemLine}`,
+            `${itemGutter} | ${itemUnderline} ${item.message}`,
+          ];
+        });
+
+  const hintText = hint === undefined ? '' : `\n${gutterPadding} = note: ${hint}`;
+  const middleSection = [
+    `${gutterPadding} |`,
+    `${lineNumberString} | ${targetLine}`,
+    `${gutterPadding} | ${caretLine}`,
+    ...evidenceLines,
+  ].join('\n');
+
+  return `${header}\n${location}\n${middleSection}${hintText}`;
+}
+
+/**
+ * Formats compiler diagnostics with multi-span carets, line gutters, and remediation notes.
+ *
+ * @param diagnostics Array of diagnostic records to format.
+ * @param sourceResolver Optional source resolver returning file contents by file name.
+ * @returns Human-readable multi-span caret diagnostic string.
+ */
+// skipcq: JS-R1005
+export function formatFlintCaretDiagnostics(
+  diagnostics: readonly FlintDiagnostic[],
+  sourceResolver?: (fileName: string) => string | undefined,
+): string {
+  return diagnostics.map((diagnostic) => formatSingleCaretDiagnostic(diagnostic, sourceResolver)).join('\n\n');
 }
 
 /**
