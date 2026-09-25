@@ -8,6 +8,7 @@
 /* the data-theme attribute set by @storybook/addon-themes is visible. */
 body,
 #storybook-root {
+  font-family: var(--mp-font-family-sans);
   background-color: var(--mp-color-bg-base);
   color: var(--mp-color-text-primary);
   transition:

@@ -29,3 +29,4 @@ export * from './type-algebra.js';
 export * from './safety.js';
 export * from './self-hosted.js';
 export * from './interop';
+export * from './graph-compiler';
