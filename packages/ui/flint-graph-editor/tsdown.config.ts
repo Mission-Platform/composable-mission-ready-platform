@@ -5,7 +5,7 @@ import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
 import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
 import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
-import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
+import { defineTsdownForgeTarget } from '@mission-platform/tsdown-config';
 import flintPlugin from '@mission-platform/vite-plugin-flint';
 import { defineTsdownForgeComponentsAll } from '@mission-platform/vite-plugin-forge';
 
@@ -51,11 +51,9 @@ const flintPlugins = [
 export default [
   ...(buildNeutral
     ? [
-        defineTsdownLibrary({
+        defineTsdownForgeTarget({
           rootDir: rootDirectory,
-          entry: {
-            index: 'src/index.ts',
-          },
+          entry: 'src/index.ts',
           dts: true,
           clean: true,
           overrides: {
