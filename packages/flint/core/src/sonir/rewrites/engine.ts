@@ -82,30 +82,40 @@ function matchMulZero(node: LowLevelSonNode, context: RewriteContext): boolean {
 }
 
 /**
+ * Helper checking if division would overflow in 32-bit two's complement.
+ */
+function isOverflowDiv(left: unknown, right: unknown): boolean {
+  return left === -2_147_483_648 && right === -1;
+}
+
+/**
  * Helper matching non-trapping division.
  */
+// skipcq: JS-R1005
 function matchDiv(node: LowLevelSonNode, context: RewriteContext): boolean {
   if (!matchNumericConstants(node, context)) return false;
   const left = context.getNode(node.valueInputs[0] ?? -1);
   const right = context.getNode(node.valueInputs[1] ?? -1);
   const rightValue = right?.constantValue;
-  const leftValue = left?.constantValue;
   if (rightValue === 0) return false;
-  return !(leftValue === -2_147_483_648 && rightValue === -1);
+  return !isOverflowDiv(left?.constantValue, rightValue);
+}
+
+/**
+ * Helper checking if a node is a constant node with a defined value.
+ */
+function isDefinedConst(node?: LowLevelSonNode): boolean {
+  return node?.opcode === 'val.const' && node.constantValue !== undefined;
 }
 
 /**
  * Helper matching two constant inputs for equality comparison.
  */
+// skipcq: JS-R1005
 function matchCmpEq(node: LowLevelSonNode, context: RewriteContext): boolean {
   const left = context.getNode(node.valueInputs[0] ?? -1);
   const right = context.getNode(node.valueInputs[1] ?? -1);
-  return (
-    left?.opcode === 'val.const' &&
-    right?.opcode === 'val.const' &&
-    left.constantValue !== undefined &&
-    right.constantValue !== undefined
-  );
+  return isDefinedConst(left) && isDefinedConst(right);
 }
 
 /**
