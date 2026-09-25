@@ -140,6 +140,8 @@ export interface VisualParityResult {
   comparisons: VisualParityComparison[];
 }
 
+export const DEFAULT_VISUAL_PARITY_MISMATCH_THRESHOLD = 0.02;
+
 export interface VisualParityDiffOptions {
   pixelThreshold: number;
   maxMismatchRatio: number;

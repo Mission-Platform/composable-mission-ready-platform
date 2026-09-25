@@ -54,7 +54,17 @@ export const node: StoryNodeFactory = (type, properties, ...children) => {
 
 /** @see {@link RenderWithSlots} */
 export const renderWithSlots: RenderWithSlots = (component, properties, slots, children) => {
-  const element = document.createElement(typeof component === 'string' ? component : customElementTag(component));
+  const tag = typeof component === 'string' ? component : customElementTag(component);
+  let element = document.createElement(tag);
+  const customConstructor = typeof customElements === 'undefined' ? undefined : customElements.get(tag);
+  if (customConstructor && element instanceof customConstructor) {
+    // Standard custom element matching registered constructor.
+  } else if (
+    customConstructor ||
+    (element instanceof HTMLUnknownElement && (tag.includes('-') || typeof component !== 'string'))
+  ) {
+    element = document.createElement('div', { is: tag });
+  }
   applyProperties(element, properties);
   if (typeof component !== 'string' || component.includes('-')) {
     setComponentChildren(element, children === undefined ? [] : [children]);

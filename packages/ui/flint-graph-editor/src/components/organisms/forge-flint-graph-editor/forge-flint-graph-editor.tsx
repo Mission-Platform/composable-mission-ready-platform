@@ -1,11 +1,4 @@
-import {
-  ForgeBadge,
-  ForgeBreadcrumb,
-  ForgeButton,
-  ForgeButtonGroup,
-  ForgeCard,
-  ForgeCollapse,
-} from '@mission-platform/components';
+import { ForgeBadge, ForgeBreadcrumb, ForgeCard, ForgeCollapse } from '@mission-platform/components';
 import {
   getAllNodeDefinitions,
   getNodeDefinition,
@@ -805,8 +798,16 @@ function createRendererBridge(
  */
 function getDatasetTheme(): 'light' | 'dark' | undefined {
   if (typeof document === 'undefined') return undefined;
-  const theme = document.documentElement.dataset.theme ?? document.body?.dataset.theme;
-  return theme === 'light' || theme === 'dark' ? theme : undefined;
+  const htmlTheme = document.documentElement.dataset.theme;
+  if (htmlTheme === 'light' || htmlTheme === 'dark') return htmlTheme;
+  const bodyTheme = document.body?.dataset.theme;
+  if (bodyTheme === 'light' || bodyTheme === 'dark') return bodyTheme;
+  const root = document.querySelector('[data-theme]');
+  if (root instanceof HTMLElement) {
+    const theme = root.dataset.theme;
+    if (theme === 'light' || theme === 'dark') return theme;
+  }
+  return undefined;
 }
 
 /**
@@ -827,470 +828,19 @@ function detectCurrentTheme(): 'light' | 'dark' {
   return 'dark';
 }
 
-/**
- * Modal dialog for displaying generated Flint source code.
- */
-function ExportModal(properties: { readonly open: boolean; readonly source: string; readonly onClose: () => void }) {
-  if (!properties.open) return;
-
-  return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      className={styles.modalOverlay}
-      onClick={properties.onClose}
-    >
-      <div
-        className={styles.modalCard}
-        onClick={(event: unknown) => {
-          if (typeof MouseEvent !== 'undefined' && event instanceof MouseEvent) {
-            event.stopPropagation();
-          }
-        }}
-      >
-        <ForgeCard
-          size="lg"
-          variant="neutral"
-          padding="none"
-          bordered={true}
-          shadow={true}
-        >
-          <div className={styles.modalHeader}>
-            <span
-              className={styles.inspectorTitle}
-              style={{ margin: 0 }}
-            >
-              Generated Flint Source
-            </span>
-            <ForgeButton
-              variant="ghost"
-              size="xs"
-              onClick={properties.onClose}
-              ariaLabel="Close export modal"
-            >
-              ✕
-            </ForgeButton>
-          </div>
-          <div className={styles.modalBody}>
-            <pre className={styles.codeBlock}>
-              <code>{properties.source}</code>
-            </pre>
-          </div>
-          <div className={styles.modalFooter}>
-            <ForgeButton
-              variant="primary"
-              size="sm"
-              onClick={properties.onClose}
-            >
-              Close
-            </ForgeButton>
-          </div>
-        </ForgeCard>
-      </div>
-    </div>
-  );
-}
-
-/**
- * Interactive font atlas inspector section displaying the 1024x1024 MSDF sprite sheet and hovered glyph metrics.
- */
-function SpriteSheetSection(properties: {
-  readonly mode: 'crisp' | 'raw';
-  readonly grid: boolean;
-  readonly hoveredGlyph: HoveredGlyphInfo | undefined;
-  readonly canvasRef: { current?: HTMLCanvasElement };
-  readonly inspectCanvasRef: { current?: HTMLCanvasElement };
-  readonly onModeChange: (mode: 'crisp' | 'raw') => void;
-  readonly onGridToggle: () => void;
-  readonly onPointerMove: (event: PointerEvent) => void;
-  readonly onPointerLeave: () => void;
-  readonly onToggle: () => void;
-}) {
-  return (
-    <div style={{ marginTop: '16px' }}>
-      <ForgeCollapse
-        summary="Debug Glyph Sprite Sheet (1024x1024 2D Shelf Packed SDF Atlas)"
-        open={true}
-        size="sm"
-        onToggle={properties.onToggle}
-      >
-        <div className={styles.spriteSheetContainer}>
-          <div className={styles.spriteSheetToolbar}>
-            <ForgeButtonGroup size="xs">
-              <ForgeButton
-                variant={properties.mode === 'crisp' ? 'primary' : 'ghost'}
-                size="xs"
-                onClick={() => properties.onModeChange('crisp')}
-              >
-                Crisp Glyphs
-              </ForgeButton>
-              <ForgeButton
-                variant={properties.mode === 'raw' ? 'primary' : 'ghost'}
-                size="xs"
-                onClick={() => properties.onModeChange('raw')}
-              >
-                Raw SDF
-              </ForgeButton>
-            </ForgeButtonGroup>
-            <ForgeButton
-              variant={properties.grid ? 'secondary' : 'ghost'}
-              size="xs"
-              onClick={properties.onGridToggle}
-            >
-              {properties.grid ? 'Grid: ON' : 'Grid: OFF'}
-            </ForgeButton>
-          </div>
-          <div className={styles.spriteSheetMeta}>
-            <ForgeBadge
-              variant="primary"
-              size="xs"
-            >
-              1024 × 1024 px
-            </ForgeBadge>
-            <ForgeBadge
-              variant="neutral"
-              size="xs"
-            >
-              2D Shelf Packed (4x4 to 64x64)
-            </ForgeBadge>
-            <ForgeBadge
-              variant="info"
-              size="xs"
-            >
-              Comfortaa & Datatype
-            </ForgeBadge>
-            <ForgeBadge
-              variant="success"
-              size="xs"
-            >
-              {GLYPH_CHARS_BY_IDX.length} Active Glyphs
-            </ForgeBadge>
-          </div>
-          <canvas
-            ref={properties.canvasRef}
-            width={1024}
-            height={1024}
-            className={styles.spriteSheetCanvas}
-            onPointerMove={properties.onPointerMove}
-            onPointerLeave={properties.onPointerLeave}
-          />
-          {properties.hoveredGlyph && (
-            <div className={styles.spriteSheetInspector}>
-              <canvas
-                ref={properties.inspectCanvasRef}
-                width={64}
-                height={64}
-                className={styles.spriteSheetInspectCanvas}
-              />
-              <div className={styles.spriteSheetInspectDetails}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span className={styles.spriteSheetInspectChar}>
-                    {properties.hoveredGlyph.char === ' ' ? 'Space' : properties.hoveredGlyph.char}
-                  </span>
-                  <ForgeBadge
-                    variant="info"
-                    size="xs"
-                  >
-                    {properties.hoveredGlyph.codeHex}
-                  </ForgeBadge>
-                  <ForgeBadge
-                    variant="neutral"
-                    size="xs"
-                  >
-                    Idx {properties.hoveredGlyph.index}
-                  </ForgeBadge>
-                </div>
-                <div style={{ fontSize: '11px', lineHeight: '1.5', color: '#c9d1d9' }}>
-                  <div>
-                    <strong>Dimensions & Advance:</strong> {properties.hoveredGlyph.width}×
-                    {properties.hoveredGlyph.height}px | Advance H: {properties.hoveredGlyph.advance}px | Advance V:{' '}
-                    {properties.hoveredGlyph.vertAdvance}px
-                  </div>
-                  <div>
-                    <strong>Bearings:</strong> Left (LSB): {properties.hoveredGlyph.horiBearingX}px | Right (RSB):{' '}
-                    {properties.hoveredGlyph.rightBearing}px | Top: {properties.hoveredGlyph.horiBearingY}px
-                  </div>
-                  <div>
-                    <strong>Font Metrics:</strong> Ascent: {properties.hoveredGlyph.ascent}px | Descent:{' '}
-                    {properties.hoveredGlyph.descent}px | LineGap: {properties.hoveredGlyph.linegap}px | Int Leading:{' '}
-                    {properties.hoveredGlyph.internalLeading}px | Ext Leading: {properties.hoveredGlyph.externalLeading}
-                    px
-                  </div>
-                  <div>
-                    <strong>BBox & Origin:</strong> [{properties.hoveredGlyph.bboxMinX},{' '}
-                    {properties.hoveredGlyph.bboxMinY}, {properties.hoveredGlyph.bboxMaxX},{' '}
-                    {properties.hoveredGlyph.bboxMaxY}] | Origin: (0, 0) on baseline | Packed Cell:{' '}
-                    {properties.hoveredGlyph.cellW}×{properties.hoveredGlyph.cellH} at ({properties.hoveredGlyph.cellX},{' '}
-                    {properties.hoveredGlyph.cellY})
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </ForgeCollapse>
-    </div>
-  );
-}
-
-/**
- * Modal dialog for real-time performance telemetry, stacked D3 timeline chart, pie chart, and font atlas inspector.
- */
-function PerfProfilerModal(properties: {
-  readonly open: boolean;
-  readonly perfMetrics: FlintPerformanceMetrics;
-  readonly perfHistory: readonly FlintPerformanceMetrics[];
-  readonly telemetryInterval: string;
-  readonly onTelemetryIntervalChange: (interval: 'realtime' | '100ms' | '250ms' | '500ms' | '750ms' | '1500ms') => void;
-  readonly spriteSheetMode: 'crisp' | 'raw';
-  readonly onSpriteSheetModeChange: (mode: 'crisp' | 'raw') => void;
-  readonly spriteSheetGrid: boolean;
-  readonly onSpriteSheetGridChange: (grid: boolean) => void;
-  readonly hoveredGlyph: HoveredGlyphInfo | undefined;
-  readonly canvasRef: { current?: HTMLCanvasElement };
-  readonly inspectCanvasRef: { current?: HTMLCanvasElement };
-  readonly onPointerMove: (event: PointerEvent) => void;
-  readonly onPointerLeave: () => void;
-  readonly onPaintSpriteSheet: () => void;
-  readonly onClose: () => void;
-}) {
-  if (!properties.open) return;
-
-  return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      className={styles.modalOverlay}
-      onClick={properties.onClose}
-    >
-      <div
-        className={styles.perfModal}
-        onClick={(event: unknown) => {
-          if (typeof MouseEvent !== 'undefined' && event instanceof MouseEvent) {
-            event.stopPropagation();
-          }
-        }}
-      >
-        <ForgeCard
-          size="xl"
-          variant="neutral"
-          padding="none"
-          bordered={true}
-          shadow={true}
-        >
-          <div className={styles.modalHeader}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span className={styles.modalTitle}>Performance Profiler & Realtime Telemetry</span>
-              <ForgeBadge
-                variant="success"
-                size="xs"
-              >
-                {Math.round(1000 / Math.max(1, properties.perfMetrics.totalFrameTimeMs))} FPS
-              </ForgeBadge>
-              <ForgeBadge
-                variant="neutral"
-                size="xs"
-              >
-                {properties.perfMetrics.backend?.toUpperCase() ??
-                  (properties.perfMetrics.isFallback ? 'CANVAS2D' : 'WEBGPU')}
-              </ForgeBadge>
-            </div>
-            <ForgeButton
-              variant="ghost"
-              size="xs"
-              onClick={properties.onClose}
-              ariaLabel="Close performance modal"
-            >
-              ✕
-            </ForgeButton>
-          </div>
-          <div className={styles.modalBody}>
-            <div style={{ marginBottom: '14px' }}>
-              <div style={{ fontSize: '12px', fontWeight: 600, color: '#8b949e', marginBottom: '6px' }}>
-                Telemetry Refresh Interval
-              </div>
-              <ForgeButtonGroup size="xs">
-                {(['realtime', '100ms', '250ms', '500ms', '750ms', '1500ms'] as const).map((interval) => (
-                  <ForgeButton
-                    key={interval}
-                    variant={properties.telemetryInterval === interval ? 'primary' : 'ghost'}
-                    size="xs"
-                    onClick={() => properties.onTelemetryIntervalChange(interval)}
-                  >
-                    {interval === 'realtime' ? 'Realtime' : interval}
-                  </ForgeButton>
-                ))}
-              </ForgeButtonGroup>
-            </div>
-
-            <div style={{ marginBottom: '16px' }}>
-              <ForgePerformanceTimelineChart
-                history={properties.perfHistory}
-                currentMetrics={properties.perfMetrics}
-                width={880}
-                height={180}
-              />
-            </div>
-
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: '8px',
-                marginBottom: '16px',
-              }}
-            >
-              <div
-                style={{
-                  background: '#161b22',
-                  padding: '8px',
-                  borderRadius: '6px',
-                  border: '1px solid #30363d',
-                }}
-              >
-                <div style={{ fontSize: '10px', color: '#8b949e' }}>Total Frame Time</div>
-                <div style={{ fontSize: '14px', fontWeight: 600, color: '#58a6ff' }}>
-                  {properties.perfMetrics.totalFrameTimeMs.toFixed(2)} ms
-                </div>
-              </div>
-              <div
-                style={{
-                  background: '#161b22',
-                  padding: '8px',
-                  borderRadius: '6px',
-                  border: '1px solid #30363d',
-                }}
-              >
-                <div style={{ fontSize: '10px', color: '#8b949e' }}>Render Duration</div>
-                <div style={{ fontSize: '14px', fontWeight: 600, color: '#3fb950' }}>
-                  {properties.perfMetrics.renderTimeMs.toFixed(2)} ms
-                </div>
-              </div>
-              <div
-                style={{
-                  background: '#161b22',
-                  padding: '8px',
-                  borderRadius: '6px',
-                  border: '1px solid #30363d',
-                }}
-              >
-                <div style={{ fontSize: '10px', color: '#8b949e' }}>Spatial Indexing</div>
-                <div style={{ fontSize: '14px', fontWeight: 600, color: '#d29922' }}>
-                  {properties.perfMetrics.spatialIndexTimeMs.toFixed(2)} ms
-                </div>
-              </div>
-              <div
-                style={{
-                  background: '#161b22',
-                  padding: '8px',
-                  borderRadius: '6px',
-                  border: '1px solid #30363d',
-                }}
-              >
-                <div style={{ fontSize: '10px', color: '#8b949e' }}>Visible Nodes</div>
-                <div style={{ fontSize: '14px', fontWeight: 600, color: '#f0883e' }}>
-                  {properties.perfMetrics.visibleNodesCount} /{' '}
-                  {properties.perfMetrics.totalNodesCount ?? properties.perfMetrics.visibleNodesCount}
-                </div>
-              </div>
-            </div>
-
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: '8px',
-                marginBottom: '16px',
-              }}
-            >
-              <div
-                style={{
-                  background: '#161b22',
-                  padding: '8px',
-                  borderRadius: '6px',
-                  border: '1px solid #30363d',
-                }}
-              >
-                <div style={{ fontSize: '10px', color: '#8b949e' }}>Updates & Layout</div>
-                <div style={{ fontSize: '14px', fontWeight: 600, color: '#f0883e' }}>
-                  {((properties.perfMetrics.updateTimeMs ?? 0) + (properties.perfMetrics.layoutTimeMs ?? 0)).toFixed(2)}{' '}
-                  ms
-                </div>
-              </div>
-              <div
-                style={{
-                  background: '#161b22',
-                  padding: '8px',
-                  borderRadius: '6px',
-                  border: '1px solid #30363d',
-                }}
-              >
-                <div style={{ fontSize: '10px', color: '#8b949e' }}>Buffer Uploads</div>
-                <div style={{ fontSize: '14px', fontWeight: 600, color: '#a371f7' }}>
-                  {(properties.perfMetrics.bufferUploadTimeMs ?? 0).toFixed(2)} ms
-                </div>
-              </div>
-              <div
-                style={{
-                  background: '#161b22',
-                  padding: '8px',
-                  borderRadius: '6px',
-                  border: '1px solid #30363d',
-                }}
-              >
-                <div style={{ fontSize: '10px', color: '#8b949e' }}>Visible Edges & Pins</div>
-                <div style={{ fontSize: '14px', fontWeight: 600, color: '#388bfd' }}>
-                  {properties.perfMetrics.visibleEdgesCount}E / {properties.perfMetrics.visiblePinsCount}P
-                </div>
-              </div>
-              <div
-                style={{
-                  background: '#161b22',
-                  padding: '8px',
-                  borderRadius: '6px',
-                  border: '1px solid #30363d',
-                }}
-              >
-                <div style={{ fontSize: '10px', color: '#8b949e' }}>DPR / Scale</div>
-                <div style={{ fontSize: '14px', fontWeight: 600, color: '#39c5bb' }}>
-                  {properties.perfMetrics.dpr.toFixed(1)}x DPR
-                </div>
-              </div>
-            </div>
-
-            <ForgePerformancePieChart
-              metrics={properties.perfMetrics}
-              width={280}
-              height={240}
-            />
-
-            <SpriteSheetSection
-              mode={properties.spriteSheetMode}
-              grid={properties.spriteSheetGrid}
-              hoveredGlyph={properties.hoveredGlyph}
-              canvasRef={properties.canvasRef}
-              inspectCanvasRef={properties.inspectCanvasRef}
-              onModeChange={properties.onSpriteSheetModeChange}
-              onGridToggle={() => properties.onSpriteSheetGridChange(!properties.spriteSheetGrid)}
-              onPointerMove={properties.onPointerMove}
-              onPointerLeave={properties.onPointerLeave}
-              onToggle={properties.onPaintSpriteSheet}
-            />
-          </div>
-          <div className={styles.modalFooter}>
-            <ForgeButton
-              variant="primary"
-              size="sm"
-              onClick={properties.onClose}
-            >
-              Close
-            </ForgeButton>
-          </div>
-        </ForgeCard>
-      </div>
-    </div>
-  );
-}
+const DEFAULT_INITIAL_EDITOR_STATE: FlintEditorStoreState = {
+  graph: { nodes: [], edges: [], groups: [] },
+  selectedNodeIds: [],
+  activeEdgeId: undefined,
+  selectedGroupId: undefined,
+  canUndo: false,
+  canRedo: false,
+  isExecuting: false,
+  hasClipboard: false,
+  validation: { valid: true, issues: [] },
+  breadcrumbs: [{ id: 'root', title: 'Main Graph' }],
+  lastOutputs: {},
+};
 
 /**
  * Framework-neutral Forge component for the Flint visual node graph editor.
@@ -1298,19 +848,15 @@ function PerfProfilerModal(properties: {
  * and compiles natively to WebAssembly.
  */
 export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorProperties>): MpElement {
-  const storeReference = useRef<FlintEditorStore>(properties.store ?? new FlintEditorStore());
-  const store = properties.store ?? storeReference.current;
+  const store = properties?.store ?? new FlintEditorStore();
 
   const canvasReference = useRef<HTMLCanvasElement | undefined>();
-  const rendererReference = useRef<FlintRendererBridge | undefined>();
+  const bridgeReference = useRef<FlintRendererBridge | undefined>();
 
-  const [editorState, setEditorState] = useState<FlintEditorStoreState>(store.getState());
-  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(() => {
-    if (properties.theme && properties.theme !== 'auto') {
-      return properties.theme;
-    }
-    return detectCurrentTheme();
-  });
+  const [editorState, setEditorState] = useState<FlintEditorStoreState>(DEFAULT_INITIAL_EDITOR_STATE);
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(
+    properties?.theme && properties.theme !== 'auto' ? properties.theme : detectCurrentTheme(),
+  );
   const [searchQuery, setSearchQuery] = useState('');
   const [showExportModal, setShowExportModal] = useState(false);
   const [showPerfModal, setShowPerfModal] = useState(false);
@@ -1334,14 +880,12 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
   const [perfHistory, setPerfHistory] = useState<readonly FlintPerformanceMetrics[]>([]);
 
   /**
-   * Records newly emitted performance telemetry metrics into the rolling historical buffer.
+   * Records newly emitted performance telemetry metrics into component state.
    *
    * @param nextMetrics - The latest collected performance telemetry metrics.
    */
   const recordPerfMetrics = (nextMetrics: FlintPerformanceMetrics): void => {
     setPerfMetrics(nextMetrics);
-    const updated = [...perfHistory, nextMetrics];
-    setPerfHistory(updated.length > 50 ? updated.slice(-50) : updated);
   };
   const [isFallback, setIsFallback] = useState(false);
   const [selectionSquare, setSelectionSquare] = useState<{
@@ -1659,8 +1203,10 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
       const intervalMs = msMap[telemetryInterval] ?? 250;
 
       const timer = setInterval(() => {
-        if (rendererReference.current) {
-          recordPerfMetrics(rendererReference.current.getPerformanceStats());
+        if (bridgeReference.current) {
+          const stats = bridgeReference.current.getPerformanceStats();
+          setPerfMetrics(stats);
+          setPerfHistory((previous) => (previous.length > 50 ? [...previous.slice(-49), stats] : [...previous, stats]));
         }
       }, intervalMs);
 
@@ -1673,7 +1219,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
     let cleanup: (() => void) | undefined;
     if (properties.theme && properties.theme !== 'auto') {
       setResolvedTheme(properties.theme);
-    } else {
+    } else if (typeof MutationObserver !== 'undefined' && typeof document !== 'undefined') {
       /**
        * Checks and synchronizes color theme changes from the document environment.
        */
@@ -1681,53 +1227,33 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         const detected = detectCurrentTheme();
         setResolvedTheme(detected);
       };
-      checkTheme();
-      if (typeof MutationObserver !== 'undefined' && typeof document !== 'undefined') {
-        const observer = new MutationObserver(checkTheme);
-        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
-        if (document.body) {
-          observer.observe(document.body, { attributes: true, attributeFilter: ['data-theme', 'class'] });
-        }
-        cleanup = () => {
-          observer.disconnect();
-        };
+      const observer = new MutationObserver(checkTheme);
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+      if (document.body) {
+        observer.observe(document.body, { attributes: true, attributeFilter: ['data-theme', 'class'] });
       }
+      cleanup = () => {
+        observer.disconnect();
+      };
     }
     return cleanup;
   }, [properties.theme]);
 
   useEffect(() => {
-    if (rendererReference.current) {
-      rendererReference.current.setTheme(resolvedTheme);
-      rendererReference.current.renderFrame();
-    }
-  }, [resolvedTheme]);
-
-  useEffect(() => {
-    setEditorState(store.getState());
-    const unsubscribe = store.subscribe((newState) => {
-      setEditorState(newState);
-      if (rendererReference.current) {
-        rendererReference.current.setGraph(newState.graph.nodes, newState.graph.edges, newState.graph.groups ?? []);
-        rendererReference.current.setSelection(
-          newState.selectedNodeIds,
-          newState.activeEdgeId ? [newState.activeEdgeId] : [],
-          newState.selectedGroupId,
-        );
-      }
-    });
-
     let resizeObserver: ResizeObserver | undefined;
     let cleanupListeners: (() => void) | undefined;
+    let unsubscribe: (() => void) | undefined;
+    let bridge: FlintRendererBridge | undefined;
 
-    if (canvasReference.current) {
-      const canvasElement = canvasReference.current;
+    const canvasElement = canvasReference.current;
+
+    if (canvasElement) {
       const rect = canvasElement.getBoundingClientRect();
       const width = Math.max(rect.width, 800);
       const height = Math.max(rect.height, 600);
       const initialDpr = globalThis.window === undefined ? 1 : globalThis.window.devicePixelRatio || 1;
 
-      const renderer = createRendererBridge(
+      bridge = createRendererBridge(
         canvasElement,
         width,
         height,
@@ -1741,11 +1267,15 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
               break;
             }
             case 'ready': {
-              if (message.supported === false) {
+              if (message.supported) {
+                if (message.performance) {
+                  recordPerfMetrics(message.performance);
+                }
+              } else {
                 setIsFallback(true);
-              }
-              if (message.performance) {
-                recordPerfMetrics(message.performance);
+                if (message.performance) {
+                  recordPerfMetrics(message.performance);
+                }
               }
               break;
             }
@@ -1763,17 +1293,24 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           }
         },
         properties.renderer,
-        resolvedTheme,
+        properties.theme && properties.theme !== 'auto' ? properties.theme : 'dark',
       );
 
-      rendererReference.current = renderer;
-      renderer.setGraph(
-        store.getState().graph.nodes,
-        store.getState().graph.edges,
-        store.getState().graph.groups ?? [],
-      );
-      renderer.renderFrame();
-      recordPerfMetrics(renderer.getPerformanceStats());
+      bridgeReference.current = bridge;
+
+      unsubscribe = store.subscribe((newState) => {
+        setEditorState(newState);
+        bridge?.setGraph(newState.graph.nodes, newState.graph.edges, newState.graph.groups ?? []);
+        bridge?.setSelection(
+          newState.selectedNodeIds,
+          newState.activeEdgeId ? [newState.activeEdgeId] : [],
+          newState.selectedGroupId,
+        );
+      });
+
+      bridge.setGraph(store.getState().graph.nodes, store.getState().graph.edges, store.getState().graph.groups ?? []);
+      bridge.renderFrame();
+      recordPerfMetrics(bridge.getPerformanceStats());
 
       if (typeof ResizeObserver !== 'undefined') {
         resizeObserver = new ResizeObserver((entries) => {
@@ -1781,8 +1318,10 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
             const contentRect = entry.contentRect;
             if (contentRect.width > 0 && contentRect.height > 0) {
               const currentDpr = globalThis.window === undefined ? 1 : globalThis.window.devicePixelRatio || 1;
-              renderer.resize(contentRect.width, contentRect.height, currentDpr);
-              recordPerfMetrics(renderer.getPerformanceStats());
+              bridge?.resize(contentRect.width, contentRect.height, currentDpr);
+              if (bridge) {
+                recordPerfMetrics(bridge.getPerformanceStats());
+              }
             }
           }
         });
@@ -1803,8 +1342,8 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
       const nodesStartPositions = new Map<string, { readonly x: number; readonly y: number }>();
 
       const profilerInterval = setInterval(() => {
-        if (rendererReference.current) {
-          const stats = rendererReference.current.getPerformanceStats();
+        if (bridge) {
+          const stats = bridge.getPerformanceStats();
           const storeUpdateTime = store.getUpdateTimeMs();
           recordPerfMetrics({
             ...stats,
@@ -1820,14 +1359,14 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         event.preventDefault();
         const normalizedDelta = Math.max(-100, Math.min(100, event.deltaY));
         const factor = Math.exp(-normalizedDelta * 0.003);
-        renderer.zoom(event.offsetX, event.offsetY, factor);
+        bridge?.zoom(event.offsetX, event.offsetY, factor);
       };
 
       /**
        * Handles pointer down events to initiate node dragging, port connection, or pan navigation.
        */
       const onPointerDown = (event: PointerEvent): void => {
-        if (event.button !== 0) return;
+        if (event.button !== 0 || !bridge) return;
         setContextMenu((previous) => (previous.open ? { ...previous, open: false } : previous));
         isPointerDown = true;
         dragStartScreen = { x: event.clientX, y: event.clientY };
@@ -1839,13 +1378,13 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
 
         const now = Date.now();
         const isShift = event.shiftKey;
-        const hit = renderer.hitTestSync(event.offsetX, event.offsetY);
+        const hit = bridge.hitTestSync(event.offsetX, event.offsetY);
 
         if (hit?.type === 'group' && hit.groupId) {
           dragMode = 'group';
           draggedGroupId = hit.groupId;
           store.selectGroup(hit.groupId);
-          renderer.setSelection([], [], hit.groupId);
+          bridge.setSelection([], [], hit.groupId);
           const group = store.getState().graph.groups?.find((g) => g.id === hit.groupId);
           nodesStartPositions.clear();
           if (group) {
@@ -1856,7 +1395,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
               }
             }
           }
-          renderer.renderFrame();
+          bridge.renderFrame();
           return;
         }
 
@@ -1865,21 +1404,21 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           draggedEdgeId = hit.edgeId;
           draggedWaypointIndex = hit.waypointIndex;
           store.selectEdge(hit.edgeId);
-          renderer.setSelection([], [hit.edgeId]);
-          renderer.renderFrame();
+          bridge.setSelection([], [hit.edgeId]);
+          bridge.renderFrame();
           return;
         }
 
         if (hit?.type === 'edge' && hit.edgeId) {
           if (now - lastClickTime < 350 && lastClickNodeId === hit.edgeId) {
-            const world = renderer.screenToWorld(event.offsetX, event.offsetY);
+            const world = bridge.screenToWorld(event.offsetX, event.offsetY);
             store.addEdgePoint(hit.edgeId, { x: Math.round(world.x), y: Math.round(world.y) });
-            renderer.setGraph(
+            bridge.setGraph(
               store.getState().graph.nodes,
               store.getState().graph.edges,
               store.getState().graph.groups ?? [],
             );
-            renderer.renderFrame();
+            bridge.renderFrame();
             lastClickTime = 0;
             lastClickNodeId = '';
             return;
@@ -1887,8 +1426,8 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           lastClickTime = now;
           lastClickNodeId = hit.edgeId;
           store.selectEdge(hit.edgeId);
-          renderer.setSelection([], [hit.edgeId]);
-          renderer.renderFrame();
+          bridge.setSelection([], [hit.edgeId]);
+          bridge.renderFrame();
           return;
         }
 
@@ -1897,12 +1436,12 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
             const clickedNode = store.getState().graph.nodes.find((n) => n.id === hit.nodeId);
             if (clickedNode && (clickedNode.metaSubgraph || clickedNode.operation === 'meta')) {
               store.drillIntoMetaNode(clickedNode.id);
-              renderer.setGraph(
+              bridge.setGraph(
                 store.getState().graph.nodes,
                 store.getState().graph.edges,
                 store.getState().graph.groups ?? [],
               );
-              renderer.renderFrame();
+              bridge.renderFrame();
               return;
             }
           }
@@ -1918,7 +1457,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           connectingSourceNodeId = hit.nodeId;
           connectingSourcePortId = hit.portId;
           store.startConnecting(hit.nodeId, hit.portId, hit.worldX ?? 0, hit.worldY ?? 0);
-          renderer.setConnectingEdge({
+          bridge.setConnectingEdge({
             fromNodeId: hit.nodeId,
             fromPortId: hit.portId,
             cursorX: hit.worldX ?? 0,
@@ -1939,8 +1478,8 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
               nodesStartPositions.set(n.id, { ...n.position });
             }
           }
-          renderer.setSelection([...selectedSet, hit.nodeId]);
-          renderer.renderFrame();
+          bridge.setSelection([...selectedSet, hit.nodeId]);
+          bridge.renderFrame();
         } else {
           if (isShift) {
             dragMode = 'box_select';
@@ -1955,8 +1494,8 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           } else {
             dragMode = 'pan';
             store.deselectAll();
-            renderer.setSelection([], []);
-            renderer.renderFrame();
+            bridge.setSelection([], []);
+            bridge.renderFrame();
           }
         }
       };
@@ -1965,53 +1504,54 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
        * Handles pointer move events for dragging nodes, updating connection preview cables, or box selection.
        */
       const onPointerMove = (event: PointerEvent): void => {
+        if (!bridge) return;
         if (!isPointerDown) {
-          const hoverHit = renderer.hitTestSync(event.offsetX, event.offsetY);
+          const hoverHit = bridge.hitTestSync(event.offsetX, event.offsetY);
           switch (hoverHit?.type) {
             case 'port': {
               canvasElement.style.cursor = 'crosshair';
               if (hoverHit.portId) {
-                renderer.setHoveredPort({ nodeId: hoverHit.nodeId, portId: hoverHit.portId });
-                renderer.renderFrame();
+                bridge.setHoveredPort({ nodeId: hoverHit.nodeId, portId: hoverHit.portId });
+                bridge.renderFrame();
               }
               break;
             }
             case 'waypoint': {
               canvasElement.style.cursor = 'grab';
-              renderer.setHoveredPort();
-              renderer.renderFrame();
+              bridge.setHoveredPort();
+              bridge.renderFrame();
               break;
             }
             case 'group': {
               canvasElement.style.cursor = 'move';
-              renderer.setHoveredPort();
-              renderer.renderFrame();
+              bridge.setHoveredPort();
+              bridge.renderFrame();
               break;
             }
             case 'edge': {
               canvasElement.style.cursor = 'pointer';
-              renderer.setHoveredPort();
-              renderer.renderFrame();
+              bridge.setHoveredPort();
+              bridge.renderFrame();
               break;
             }
             case 'node': {
               canvasElement.style.cursor = 'move';
-              renderer.setHoveredPort();
-              renderer.renderFrame();
+              bridge.setHoveredPort();
+              bridge.renderFrame();
               break;
             }
             default: {
               canvasElement.style.cursor = 'default';
-              if (renderer.getHoveredPort()) {
-                renderer.setHoveredPort();
-                renderer.renderFrame();
+              if (bridge.getHoveredPort()) {
+                bridge.setHoveredPort();
+                bridge.renderFrame();
               }
             }
           }
           return;
         }
 
-        const camera = renderer.getCamera();
+        const camera = bridge.getCamera();
         const deltaX = event.clientX - dragStartScreen.x;
         const deltaY = event.clientY - dragStartScreen.y;
 
@@ -2025,47 +1565,47 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           const worldDeltaX = deltaX / camera.zoom;
           const worldDeltaY = deltaY / camera.zoom;
           store.moveSelectedNodes(worldDeltaX, worldDeltaY, nodesStartPositions);
-          renderer.renderFrame();
+          bridge.renderFrame();
         } else if (dragMode === 'waypoint' && draggedEdgeId) {
-          const { x: worldX, y: worldY } = renderer.screenToWorld(event.offsetX, event.offsetY);
+          const { x: worldX, y: worldY } = bridge.screenToWorld(event.offsetX, event.offsetY);
           store.updateEdgePoint(draggedEdgeId, draggedWaypointIndex, {
             x: Math.round(worldX),
             y: Math.round(worldY),
           });
-          renderer.setGraph(
+          bridge.setGraph(
             store.getState().graph.nodes,
             store.getState().graph.edges,
             store.getState().graph.groups ?? [],
           );
-          renderer.renderFrame();
+          bridge.renderFrame();
         } else if (dragMode === 'connect') {
-          const { x: worldX, y: worldY } = renderer.screenToWorld(event.offsetX, event.offsetY);
+          const { x: worldX, y: worldY } = bridge.screenToWorld(event.offsetX, event.offsetY);
           store.updateConnectingCursor(worldX, worldY);
-          renderer.setConnectingEdge({
+          bridge.setConnectingEdge({
             fromNodeId: connectingSourceNodeId,
             fromPortId: connectingSourcePortId,
             cursorX: worldX,
             cursorY: worldY,
           });
-          const hoverHit = renderer.hitTestSync(event.offsetX, event.offsetY, 16);
+          const hoverHit = bridge.hitTestSync(event.offsetX, event.offsetY, 16);
           if (hoverHit?.type === 'port' && hoverHit.nodeId !== connectingSourceNodeId && hoverHit.portId) {
-            renderer.setHoveredPort({
+            bridge.setHoveredPort({
               nodeId: hoverHit.nodeId,
               portId: hoverHit.portId,
             });
           } else {
-            renderer.setHoveredPort();
+            bridge.setHoveredPort();
           }
-          renderer.renderFrame();
+          bridge.renderFrame();
         } else if (dragMode === 'node' && nodesStartPositions.size > 0) {
           const worldDeltaX = deltaX / camera.zoom;
           const worldDeltaY = deltaY / camera.zoom;
           store.moveSelectedNodes(worldDeltaX, worldDeltaY, nodesStartPositions);
-          renderer.renderFrame();
+          bridge.renderFrame();
         } else if (dragMode === 'pan') {
           dragStartScreen = { x: event.clientX, y: event.clientY };
-          renderer.pan(deltaX, deltaY);
-          renderer.renderFrame();
+          bridge.pan(deltaX, deltaY);
+          bridge.renderFrame();
         }
       };
 
@@ -2073,7 +1613,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
        * Handles pointer up events to commit node moves or complete connection linking.
        */
       const onPointerUp = (event: PointerEvent): void => {
-        if (!isPointerDown) return;
+        if (!isPointerDown || !bridge) return;
         isPointerDown = false;
         try {
           canvasElement.releasePointerCapture(event.pointerId);
@@ -2088,10 +1628,10 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
             const minScreenY = Math.min(boxSelectStart.y, event.offsetY);
             const maxScreenY = Math.max(boxSelectStart.y, event.offsetY);
 
-            const topLeftWorld = renderer.screenToWorld(minScreenX, minScreenY);
-            const bottomRightWorld = renderer.screenToWorld(maxScreenX, maxScreenY);
+            const topLeftWorld = bridge.screenToWorld(minScreenX, minScreenY);
+            const bottomRightWorld = bridge.screenToWorld(maxScreenX, maxScreenY);
 
-            const matchedNodeIds = renderer.queryNodesInBox({
+            const matchedNodeIds = bridge.queryNodesInBox({
               minX: Math.min(topLeftWorld.x, bottomRightWorld.x),
               minY: Math.min(topLeftWorld.y, bottomRightWorld.y),
               maxX: Math.max(topLeftWorld.x, bottomRightWorld.x),
@@ -2103,24 +1643,24 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
             break;
           }
           case 'connect': {
-            const targetHit = renderer.hitTestSync(event.offsetX, event.offsetY, 18);
+            const targetHit = bridge.hitTestSync(event.offsetX, event.offsetY, 18);
             if (targetHit?.type === 'port' && targetHit.nodeId !== connectingSourceNodeId && targetHit.portId) {
               store.connectPorts(connectingSourceNodeId, connectingSourcePortId, targetHit.nodeId, targetHit.portId);
             }
             store.cancelConnecting();
-            renderer.setConnectingEdge();
-            renderer.setHoveredPort();
-            renderer.renderFrame();
+            bridge.setConnectingEdge();
+            bridge.setHoveredPort();
+            bridge.renderFrame();
             break;
           }
           case 'node':
           case 'group': {
             store.commitNodeMove();
-            renderer.renderFrame();
+            bridge.renderFrame();
             break;
           }
           case 'waypoint': {
-            renderer.renderFrame();
+            bridge.renderFrame();
             break;
           }
           default: {
@@ -2135,15 +1675,16 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
        * Handles right-click events to display context actions for nodes, groups, edges, or the canvas.
        */
       const onContextMenu = (event: MouseEvent): void => {
+        if (!bridge) return;
         event.preventDefault();
         const canvasRect = canvasElement.getBoundingClientRect();
         const screenX = event.clientX - canvasRect.left;
         const screenY = event.clientY - canvasRect.top;
-        const world = renderer.screenToWorld(screenX, screenY);
+        const world = bridge.screenToWorld(screenX, screenY);
         const windowWidth = globalThis.window ? window.innerWidth : 1200;
         const windowHeight = globalThis.window ? window.innerHeight : 800;
 
-        const hit = renderer.hitTestSync(screenX, screenY);
+        const hit = bridge.hitTestSync(screenX, screenY);
         let targetType: 'empty' | 'node' | 'group' | 'selection' | 'edge' = 'empty';
         let targetId = '';
         let targetGroupId = '';
@@ -2152,7 +1693,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           targetType = 'edge';
           targetId = hit.edgeId;
           store.selectEdge(hit.edgeId);
-          renderer.setSelection([], [hit.edgeId]);
+          bridge.setSelection([], [hit.edgeId]);
         } else if (hit?.type === 'node') {
           const isSelected = store.getState().selectedNodeIds.includes(hit.nodeId);
           if (store.getState().selectedNodeIds.length > 1 && isSelected) {
@@ -2161,7 +1702,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
             targetType = 'node';
             targetId = hit.nodeId;
             store.selectNode(hit.nodeId);
-            renderer.setSelection([hit.nodeId]);
+            bridge.setSelection([hit.nodeId]);
           }
           const node = store.getState().graph.nodes.find((n) => n.id === hit.nodeId);
           if (node?.groupId) {
@@ -2210,18 +1751,17 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         if (event.key === 'Escape') {
           if (store.canNavigateBack()) {
             store.navigateBack();
-            renderer.setGraph(
+            bridge?.setGraph(
               store.getState().graph.nodes,
               store.getState().graph.edges,
               store.getState().graph.groups ?? [],
             );
-            renderer.renderFrame();
-          } else if (contextMenu.open) {
-            setContextMenu((previous) => ({ ...previous, open: false }));
+            bridge?.renderFrame();
           } else {
+            setContextMenu((previous) => (previous.open ? { ...previous, open: false } : previous));
             store.deselectAll();
-            renderer.setSelection([], []);
-            renderer.renderFrame();
+            bridge?.setSelection([], []);
+            bridge?.renderFrame();
           }
         } else if (event.key === 'Delete' || event.key === 'Backspace') {
           if (
@@ -2233,20 +1773,20 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           }
           if (store.getState().activeEdgeId) {
             store.removeActiveEdge();
-            renderer.setGraph(
+            bridge?.setGraph(
               store.getState().graph.nodes,
               store.getState().graph.edges,
               store.getState().graph.groups ?? [],
             );
-            renderer.renderFrame();
+            bridge?.renderFrame();
           } else if (store.getState().selectedNodeIds.length > 0) {
             store.deleteSelected();
-            renderer.setGraph(
+            bridge?.setGraph(
               store.getState().graph.nodes,
               store.getState().graph.edges,
               store.getState().graph.groups ?? [],
             );
-            renderer.renderFrame();
+            bridge?.renderFrame();
           }
         }
       };
@@ -2276,15 +1816,13 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
     }
 
     return () => {
-      unsubscribe();
+      unsubscribe?.();
       resizeObserver?.disconnect();
       cleanupListeners?.();
-      if (rendererReference.current) {
-        rendererReference.current.destroy();
-        rendererReference.current = undefined;
-      }
+      bridge?.destroy();
+      bridgeReference.current = undefined;
     };
-  }, [store, properties.renderer, resolvedTheme]);
+  }, [store, properties.renderer]);
 
   const query = searchQuery.toLowerCase().trim();
   const allDefinitions = getAllNodeDefinitions();
@@ -2314,7 +1852,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
    * Instantiates a new node from the catalog at the current viewport center.
    */
   const handleAddNode = (operation: string): void => {
-    const center = rendererReference.current?.getCamera();
+    const center = bridgeReference.current?.getCamera();
     const position = center ? { x: Math.round(center.x), y: Math.round(center.y) } : { x: 0, y: 0 };
     store.addNode(operation, position);
   };
@@ -2345,7 +1883,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
   const outputEntries = Object.entries(editorState.lastOutputs);
 
   return (
-    <div
+    <main
       className={classNames(styles.editorContainer, properties.className)}
       data-theme={resolvedTheme}
     >
@@ -2361,91 +1899,88 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           >
             Flint Node Graph
           </span>
-          <ForgeButtonGroup
-            size="sm"
-            attached={false}
-            gap="xs"
-            ariaLabel="Graph Execution and Export"
+          <div
+            className={styles.buttonGroup}
+            role="group"
+            aria-label="Graph Execution and Export"
           >
-            <ForgeButton
-              variant="primary"
-              size="sm"
+            <button
+              type="button"
+              className={classNames(styles.toolbarBtn, styles.toolbarBtnPrimary)}
               onClick={handleRun}
               disabled={editorState.isExecuting}
             >
               {editorState.isExecuting ? 'Running...' : 'Run Wasm'}
-            </ForgeButton>
-            <ForgeButton
-              variant="secondary"
-              size="sm"
+            </button>
+            <button
+              type="button"
+              className={styles.toolbarBtn}
               onClick={handleExport}
             >
               Export Flint
-            </ForgeButton>
-            <ForgeButton
-              variant="secondary"
-              size="sm"
+            </button>
+            <button
+              type="button"
+              className={styles.toolbarBtn}
               onClick={() => {
                 const nextTheme = resolvedTheme === 'dark' ? 'light' : 'dark';
                 setResolvedTheme(nextTheme);
-                rendererReference.current?.setTheme(nextTheme);
-                rendererReference.current?.renderFrame();
+                bridgeReference.current?.setTheme(nextTheme);
+                bridgeReference.current?.renderFrame();
               }}
-              ariaLabel={`Switch to ${resolvedTheme === 'dark' ? 'Light' : 'Dark'} mode`}
+              aria-label={`Switch to ${resolvedTheme === 'dark' ? 'Light' : 'Dark'} mode`}
             >
               {resolvedTheme === 'dark' ? '☀️ Light' : '🌙 Dark'}
-            </ForgeButton>
-          </ForgeButtonGroup>
+            </button>
+          </div>
 
-          <ForgeButtonGroup
-            size="sm"
-            attached={false}
-            gap="xs"
-            ariaLabel="History Actions"
+          <div
+            className={styles.buttonGroup}
+            role="group"
+            aria-label="History Actions"
           >
-            <ForgeButton
-              variant="secondary"
-              size="sm"
+            <button
+              type="button"
+              className={styles.toolbarBtn}
               disabled={!editorState.canUndo}
               onClick={() => store.undo()}
             >
               Undo
-            </ForgeButton>
-            <ForgeButton
-              variant="secondary"
-              size="sm"
+            </button>
+            <button
+              type="button"
+              className={styles.toolbarBtn}
               disabled={!editorState.canRedo}
               onClick={() => store.redo()}
             >
               Redo
-            </ForgeButton>
-          </ForgeButtonGroup>
+            </button>
+          </div>
 
-          <ForgeButtonGroup
-            size="sm"
-            attached={false}
-            gap="xs"
-            ariaLabel="Node Structuring Actions"
+          <div
+            className={styles.buttonGroup}
+            role="group"
+            aria-label="Node Structuring Actions"
           >
-            <ForgeButton
-              variant="secondary"
-              size="sm"
+            <button
+              type="button"
+              className={styles.toolbarBtn}
               disabled={editorState.selectedNodeIds.length === 0}
               onClick={() => store.groupSelectedNodes()}
             >
               Group
-            </ForgeButton>
-            <ForgeButton
-              variant="secondary"
-              size="sm"
+            </button>
+            <button
+              type="button"
+              className={styles.toolbarBtn}
               disabled={editorState.selectedNodeIds.length === 0}
               onClick={() => store.createMetaNodeFromSelected()}
             >
               Create Meta
-            </ForgeButton>
-            <ForgeButton
-              variant="secondary"
-              size="sm"
+            </button>
+            <button
+              type="button"
+              className={styles.toolbarBtn}
               disabled={
                 !editorState.selectedNodeIds.some(
                   (id) => editorState.graph.nodes.find((node) => node?.id === id)?.groupId,
@@ -2454,43 +1989,47 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
               onClick={() => store.ungroupSelected()}
             >
               Ungroup
-            </ForgeButton>
-            <ForgeButton
-              variant="error"
-              size="sm"
+            </button>
+            <button
+              type="button"
+              className={classNames(styles.toolbarBtn, styles.toolbarBtnError)}
               disabled={editorState.selectedNodeIds.length === 0 && !editorState.activeEdgeId}
               onClick={() => store.deleteSelected()}
             >
               Delete
-            </ForgeButton>
-          </ForgeButtonGroup>
+            </button>
+          </div>
         </div>
 
         <div className={styles.toolbarGroup}>
-          <ForgeBadge
-            variant={editorState.validation.valid ? 'success' : 'error'}
-            size="sm"
+          <span
+            className={classNames(
+              styles.statusBadge,
+              editorState.validation.valid ? styles.statusBadgeSuccess : styles.statusBadgeError,
+            )}
           >
             {editorState.validation.valid ? 'Valid DAG' : `${editorState.validation.issues.length} Issues`}
-          </ForgeBadge>
-          <ForgeBadge
-            variant={isFallback ? 'warning' : 'primary'}
-            size="sm"
+          </span>
+          <span
+            className={classNames(
+              styles.statusBadge,
+              isFallback ? styles.statusBadgeWarning : styles.statusBadgePrimary,
+            )}
           >
             {isFallback ? '2D Canvas' : 'WebGPU'}
-          </ForgeBadge>
-          <ForgeButton
-            variant="ghost"
-            size="sm"
+          </span>
+          <button
+            type="button"
+            className={classNames(styles.toolbarBtn, styles.toolbarBtnGhost)}
             onClick={() => setShowPerfModal(true)}
-            ariaLabel="Click to view detailed D3 performance breakdown"
+            aria-label="Click to view detailed D3 performance breakdown"
           >
             <span className={styles.perfDot} />
             <span>
               update: {perfMetrics.updateTimeMs.toFixed(1)}ms | render: {perfMetrics.renderTimeMs.toFixed(1)}ms{' '}
               {isFallback ? '(2D)' : '(WebGPU)'}
             </span>
-          </ForgeButton>
+          </button>
         </div>
       </header>
 
@@ -2521,12 +2060,15 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
 
           <div className={styles.paletteList}>
             {editorState.registeredMetaNodes && editorState.registeredMetaNodes.length > 0 && (
-              <ForgeCollapse
-                summary="Meta Nodes"
+              <details
+                className={styles.categoryCollapse}
                 open={true}
-                size="sm"
               >
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', padding: '4px 0' }}>
+                <summary className={styles.categorySummary}>
+                  <span>META NODES</span>
+                  <span className={styles.categoryBadge}>{editorState.registeredMetaNodes.length}</span>
+                </summary>
+                <div className={styles.categoryItemList}>
                   {editorState.registeredMetaNodes.map((meta) => (
                     <button
                       key={meta?.id ?? ''}
@@ -2556,16 +2098,19 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                     </button>
                   ))}
                 </div>
-              </ForgeCollapse>
+              </details>
             )}
             {populatedCategories.map((group) => (
-              <ForgeCollapse
+              <details
                 key={group.category}
-                summary={group.category.toUpperCase()}
+                className={styles.categoryCollapse}
                 open={true}
-                size="sm"
               >
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', padding: '4px 0' }}>
+                <summary className={styles.categorySummary}>
+                  <span>{group.category.toUpperCase()}</span>
+                  <span className={styles.categoryBadge}>{group.definitions.length}</span>
+                </summary>
+                <div className={styles.categoryItemList}>
                   {group.definitions.map((item) => (
                     <button
                       key={item?.operation ?? ''}
@@ -2585,7 +2130,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                     </button>
                   ))}
                 </div>
-              </ForgeCollapse>
+              </details>
             ))}
           </div>
         </aside>
@@ -2605,9 +2150,9 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
             if (typeof DragEvent !== 'undefined' && event instanceof DragEvent && event.dataTransfer) {
               event.preventDefault();
               const op = event.dataTransfer.getData('text/plain');
-              if (op && rendererReference.current && canvasReference.current) {
+              if (op && bridgeReference.current && canvasReference.current) {
                 const rect = canvasReference.current.getBoundingClientRect();
-                const world = rendererReference.current.screenToWorld(
+                const world = bridgeReference.current.screenToWorld(
                   event.clientX - rect.left,
                   event.clientY - rect.top,
                 );
@@ -2623,22 +2168,22 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         >
           {editorState.breadcrumbs && editorState.breadcrumbs.length > 1 && (
             <div className={styles.breadcrumbBar}>
-              <ForgeButton
-                variant="ghost"
-                size="xs"
+              <button
+                type="button"
+                className={classNames(styles.toolbarBtn, styles.toolbarBtnGhost)}
                 onClick={() => {
                   store.navigateBack();
-                  rendererReference.current?.setGraph(
+                  bridgeReference.current?.setGraph(
                     store.getState().graph.nodes,
                     store.getState().graph.edges,
                     store.getState().graph.groups ?? [],
                   );
-                  rendererReference.current?.renderFrame();
+                  bridgeReference.current?.renderFrame();
                 }}
-                ariaLabel="Back to parent graph"
+                aria-label="Back to parent graph"
               >
                 ← Back
-              </ForgeButton>
+              </button>
               <span className={styles.breadcrumbDivider}>|</span>
               <ForgeBreadcrumb
                 items={editorState.breadcrumbs.map((crumb) => ({ label: crumb.title }))}
@@ -2712,12 +2257,12 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                         event.target instanceof HTMLInputElement
                       ) {
                         store.setGroupTitle(selectedGroup.id, event.target.value);
-                        rendererReference.current?.setGraph(
+                        activeBridge?.setGraph(
                           store.getState().graph.nodes,
                           store.getState().graph.edges,
                           store.getState().graph.groups ?? [],
                         );
-                        rendererReference.current?.renderFrame();
+                        activeBridge?.renderFrame();
                       }
                     }}
                   />
@@ -2739,12 +2284,12 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                         }}
                         onClick={() => {
                           store.setGroupColor(selectedGroup.id, c);
-                          rendererReference.current?.setGraph(
+                          bridgeReference.current?.setGraph(
                             store.getState().graph.nodes,
                             store.getState().graph.edges,
                             store.getState().graph.groups ?? [],
                           );
-                          rendererReference.current?.renderFrame();
+                          bridgeReference.current?.renderFrame();
                         }}
                       />
                     ))}
@@ -2755,21 +2300,21 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                   <span style={{ fontSize: '12px' }}>{selectedGroup.nodeIds.length} nodes</span>
                 </div>
                 <div style={{ marginTop: '12px' }}>
-                  <ForgeButton
-                    variant="secondary"
-                    size="sm"
+                  <button
+                    type="button"
+                    className={styles.toolbarBtn}
                     onClick={() => {
                       store.ungroup(selectedGroup.id);
-                      rendererReference.current?.setGraph(
+                      bridgeReference.current?.setGraph(
                         store.getState().graph.nodes,
                         store.getState().graph.edges,
                         store.getState().graph.groups ?? [],
                       );
-                      rendererReference.current?.renderFrame();
+                      bridgeReference.current?.renderFrame();
                     }}
                   >
                     Ungroup
-                  </ForgeButton>
+                  </button>
                 </div>
               </div>
             ) : selectedEdge ? (
@@ -2790,36 +2335,36 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                   <span style={{ fontSize: '12px' }}>{selectedEdge.points?.length ?? 0} custom points</span>
                 </div>
                 <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <ForgeButton
-                    variant="secondary"
-                    size="sm"
+                  <button
+                    type="button"
+                    className={styles.toolbarBtn}
                     onClick={() => {
                       store.clearEdgePoints(selectedEdge.id);
-                      rendererReference.current?.setGraph(
+                      bridgeReference.current?.setGraph(
                         store.getState().graph.nodes,
                         store.getState().graph.edges,
                         store.getState().graph.groups ?? [],
                       );
-                      rendererReference.current?.renderFrame();
+                      bridgeReference.current?.renderFrame();
                     }}
                   >
                     Reset Path (Default Curve)
-                  </ForgeButton>
-                  <ForgeButton
-                    variant="error"
-                    size="sm"
+                  </button>
+                  <button
+                    type="button"
+                    className={classNames(styles.toolbarBtn, styles.toolbarBtnError)}
                     onClick={() => {
                       store.removeEdge(selectedEdge.id);
-                      rendererReference.current?.setGraph(
+                      bridgeReference.current?.setGraph(
                         store.getState().graph.nodes,
                         store.getState().graph.edges,
                         store.getState().graph.groups ?? [],
                       );
-                      rendererReference.current?.renderFrame();
+                      bridgeReference.current?.renderFrame();
                     }}
                   >
                     Delete Connection
-                  </ForgeButton>
+                  </button>
                 </div>
               </div>
             ) : selectedNode ? (
@@ -3104,12 +2649,12 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                           onClick={() => {
                             if (selectedNode.groupId) {
                               store.setGroupColor(selectedNode.groupId, c);
-                              rendererReference.current?.setGraph(
+                              activeBridge?.setGraph(
                                 store.getState().graph.nodes,
                                 store.getState().graph.edges,
                                 store.getState().graph.groups ?? [],
                               );
-                              rendererReference.current?.renderFrame();
+                              activeBridge?.renderFrame();
                             }
                           }}
                         />
@@ -3119,13 +2664,13 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                 )}
 
                 <div style={{ marginTop: '12px' }}>
-                  <ForgeButton
-                    variant="error"
-                    size="sm"
+                  <button
+                    type="button"
+                    className={classNames(styles.toolbarBtn, styles.toolbarBtnError)}
                     onClick={() => store.removeNode(selectedNode.id)}
                   >
                     Delete Node
-                  </ForgeButton>
+                  </button>
                 </div>
               </div>
             ) : (
@@ -3141,12 +2686,12 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
             style={{ borderTop: '1px solid #30363d', paddingTop: '12px' }}
           >
             <div className={styles.inspectorTitle}>Execution Output</div>
-            <ForgeCard padding="sm">
+            <div className={styles.outputBox}>
               {editorState.lastError ? (
                 <div style={{ color: '#f85149', fontSize: '12px' }}>{editorState.lastError}</div>
-              ) : outputEntries.length > 0 ? (
+              ) : Object.entries(editorState.lastOutputs ?? {}).length > 0 ? (
                 <div>
-                  {outputEntries.map(([key, value]) => (
+                  {Object.entries(editorState.lastOutputs ?? {}).map(([key, value]) => (
                     <div
                       key={key}
                       className={styles.inspectorRow}
@@ -3166,10 +2711,10 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                 </div>
               ) : (
                 <div style={{ color: '#8b949e', fontSize: '12px' }}>
-                  Click &quot;Run Wasm&quot; to compile and execute graph.
+                  {'Click "Run Wasm" to compile and execute graph.'}
                 </div>
               )}
-            </ForgeCard>
+            </div>
           </div>
         </aside>
       </div>
@@ -3211,12 +2756,12 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                     x: Math.round(contextMenu.worldX),
                     y: Math.round(contextMenu.worldY),
                   });
-                  rendererReference.current?.setGraph(
+                  bridgeReference.current?.setGraph(
                     store.getState().graph.nodes,
                     store.getState().graph.edges,
                     store.getState().graph.groups ?? [],
                   );
-                  rendererReference.current?.renderFrame();
+                  bridgeReference.current?.renderFrame();
                   setContextMenu({ ...contextMenu, open: false });
                 }}
               >
@@ -3227,12 +2772,12 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                 className={styles.contextMenuItem}
                 onClick={() => {
                   store.clearEdgePoints(contextMenu.targetId ?? '');
-                  rendererReference.current?.setGraph(
+                  bridgeReference.current?.setGraph(
                     store.getState().graph.nodes,
                     store.getState().graph.edges,
                     store.getState().graph.groups ?? [],
                   );
-                  rendererReference.current?.renderFrame();
+                  bridgeReference.current?.renderFrame();
                   setContextMenu({ ...contextMenu, open: false });
                 }}
               >
@@ -3244,12 +2789,12 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                 style={{ color: '#f85149' }}
                 onClick={() => {
                   store.removeEdge(contextMenu.targetId ?? '');
-                  rendererReference.current?.setGraph(
+                  bridgeReference.current?.setGraph(
                     store.getState().graph.nodes,
                     store.getState().graph.edges,
                     store.getState().graph.groups ?? [],
                   );
-                  rendererReference.current?.renderFrame();
+                  bridgeReference.current?.renderFrame();
                   setContextMenu({ ...contextMenu, open: false });
                 }}
               >
@@ -3277,12 +2822,12 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                     className={styles.contextMenuItem}
                     onClick={() => {
                       store.drillIntoMetaNode(contextMenu.targetId ?? '');
-                      rendererReference.current?.setGraph(
+                      bridgeReference.current?.setGraph(
                         store.getState().graph.nodes,
                         store.getState().graph.edges,
                         store.getState().graph.groups ?? [],
                       );
-                      rendererReference.current?.renderFrame();
+                      bridgeReference.current?.renderFrame();
                       setContextMenu({ ...contextMenu, open: false });
                     }}
                   >
@@ -3293,12 +2838,12 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                     className={styles.contextMenuItem}
                     onClick={() => {
                       store.duplicateMetaNode(contextMenu.targetId ?? '');
-                      rendererReference.current?.setGraph(
+                      bridgeReference.current?.setGraph(
                         store.getState().graph.nodes,
                         store.getState().graph.edges,
                         store.getState().graph.groups ?? [],
                       );
-                      rendererReference.current?.renderFrame();
+                      bridgeReference.current?.renderFrame();
                       setContextMenu({ ...contextMenu, open: false });
                     }}
                   >
@@ -3323,12 +2868,12 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                     className={styles.contextMenuItem}
                     onClick={() => {
                       store.ungroup(contextMenu.targetGroupId ?? '');
-                      rendererReference.current?.setGraph(
+                      bridgeReference.current?.setGraph(
                         store.getState().graph.nodes,
                         store.getState().graph.edges,
                         store.getState().graph.groups ?? [],
                       );
-                      rendererReference.current?.renderFrame();
+                      bridgeReference.current?.renderFrame();
                       setContextMenu({ ...contextMenu, open: false });
                     }}
                   >
@@ -3354,12 +2899,12 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                 style={{ color: '#f85149' }}
                 onClick={() => {
                   store.removeNode(contextMenu.targetId ?? '');
-                  rendererReference.current?.setGraph(
+                  bridgeReference.current?.setGraph(
                     store.getState().graph.nodes,
                     store.getState().graph.edges,
                     store.getState().graph.groups ?? [],
                   );
-                  rendererReference.current?.renderFrame();
+                  bridgeReference.current?.renderFrame();
                   setContextMenu({ ...contextMenu, open: false });
                 }}
               >
@@ -3385,12 +2930,12 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                 className={styles.contextMenuItem}
                 onClick={() => {
                   store.ungroup(contextMenu.targetGroupId ?? '');
-                  rendererReference.current?.setGraph(
+                  bridgeReference.current?.setGraph(
                     store.getState().graph.nodes,
                     store.getState().graph.edges,
                     store.getState().graph.groups ?? [],
                   );
-                  rendererReference.current?.renderFrame();
+                  bridgeReference.current?.renderFrame();
                   setContextMenu({ ...contextMenu, open: false });
                 }}
               >
@@ -3409,12 +2954,12 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                     style={{ backgroundColor: c }}
                     onClick={() => {
                       store.setGroupColor(contextMenu.targetGroupId ?? '', c);
-                      rendererReference.current?.setGraph(
+                      bridgeReference.current?.setGraph(
                         store.getState().graph.nodes,
                         store.getState().graph.edges,
                         store.getState().graph.groups ?? [],
                       );
-                      rendererReference.current?.renderFrame();
+                      bridgeReference.current?.renderFrame();
                       setContextMenu({ ...contextMenu, open: false });
                     }}
                   />
@@ -3479,12 +3024,12 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
                 className={styles.contextMenuItem}
                 onClick={() => {
                   store.paste({ x: contextMenu.worldX, y: contextMenu.worldY });
-                  rendererReference.current?.setGraph(
+                  bridgeReference.current?.setGraph(
                     store.getState().graph.nodes,
                     store.getState().graph.edges,
                     store.getState().graph.groups ?? [],
                   );
-                  rendererReference.current?.renderFrame();
+                  bridgeReference.current?.renderFrame();
                   setContextMenu({ ...contextMenu, open: false });
                 }}
               >
@@ -3525,37 +3070,423 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
       <ForgeDebugScrubber controller={store.getTraceController()} />
 
       {/* Code Export Dialog Modal */}
-      <ExportModal
-        open={showExportModal}
-        source={exportedSource}
-        onClose={() => setShowExportModal(false)}
-      />
+      {showExportModal && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className={styles.modalOverlay}
+          onClick={() => setShowExportModal(false)}
+        >
+          <div
+            className={styles.modalCard}
+            onClick={(event: unknown) => {
+              if (typeof MouseEvent !== 'undefined' && event instanceof MouseEvent) {
+                event.stopPropagation();
+              }
+            }}
+          >
+            <ForgeCard
+              size="lg"
+              variant="neutral"
+              padding="none"
+              bordered={true}
+              shadow={true}
+            >
+              <div className={styles.modalHeader}>
+                <span
+                  className={styles.inspectorTitle}
+                  style={{ margin: 0 }}
+                >
+                  Generated Flint Source
+                </span>
+                <button
+                  type="button"
+                  className={classNames(styles.toolbarBtn, styles.toolbarBtnGhost)}
+                  onClick={() => setShowExportModal(false)}
+                  aria-label="Close export modal"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className={styles.modalBody}>
+                <pre className={styles.codeBlock}>
+                  <code>{exportedSource}</code>
+                </pre>
+              </div>
+              <div className={styles.modalFooter}>
+                <button
+                  type="button"
+                  className={classNames(styles.toolbarBtn, styles.toolbarBtnPrimary)}
+                  onClick={() => setShowExportModal(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </ForgeCard>
+          </div>
+        </div>
+      )}
 
       {/* Detailed D3 Performance Profiler Modal */}
-      <PerfProfilerModal
-        open={showPerfModal}
-        perfMetrics={perfMetrics}
-        perfHistory={perfHistory}
-        telemetryInterval={telemetryInterval}
-        onTelemetryIntervalChange={(interval) => setTelemetryInterval(interval)}
-        spriteSheetMode={spriteSheetMode}
-        onSpriteSheetModeChange={(mode) => {
-          setSpriteSheetMode(mode);
-          paintSpriteSheet(mode, spriteSheetGrid, hoveredGlyph?.index);
-        }}
-        spriteSheetGrid={spriteSheetGrid}
-        onSpriteSheetGridChange={(nextGrid) => {
-          setSpriteSheetGrid(nextGrid);
-          paintSpriteSheet(spriteSheetMode, nextGrid, hoveredGlyph?.index);
-        }}
-        hoveredGlyph={hoveredGlyph}
-        canvasRef={spriteSheetCanvasReference}
-        inspectCanvasRef={inspectCanvasReference}
-        onPointerMove={onSpriteSheetPointerMove}
-        onPointerLeave={onSpriteSheetPointerLeave}
-        onPaintSpriteSheet={() => paintSpriteSheet()}
-        onClose={() => setShowPerfModal(false)}
-      />
-    </div>
+      {showPerfModal && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className={styles.modalOverlay}
+          onClick={() => setShowPerfModal(false)}
+        >
+          <div
+            className={styles.perfModal}
+            onClick={(event: unknown) => {
+              if (typeof MouseEvent !== 'undefined' && event instanceof MouseEvent) {
+                event.stopPropagation();
+              }
+            }}
+          >
+            <ForgeCard
+              size="xl"
+              variant="neutral"
+              padding="none"
+              bordered={true}
+              shadow={true}
+            >
+              <div className={styles.modalHeader}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span className={styles.modalTitle}>Performance Profiler & Realtime Telemetry</span>
+                  <ForgeBadge
+                    variant="success"
+                    size="xs"
+                  >
+                    {Math.round(1000 / Math.max(1, perfMetrics.totalFrameTimeMs))} FPS
+                  </ForgeBadge>
+                  <ForgeBadge
+                    variant="neutral"
+                    size="xs"
+                  >
+                    {perfMetrics.backend?.toUpperCase() ?? (perfMetrics.isFallback ? 'CANVAS2D' : 'WEBGPU')}
+                  </ForgeBadge>
+                </div>
+                <button
+                  type="button"
+                  className={classNames(styles.toolbarBtn, styles.toolbarBtnGhost)}
+                  onClick={() => setShowPerfModal(false)}
+                  aria-label="Close performance modal"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className={styles.modalBody}>
+                <div style={{ marginBottom: '14px' }}>
+                  <div style={{ fontSize: '12px', fontWeight: 600, color: '#8b949e', marginBottom: '6px' }}>
+                    Telemetry Refresh Interval
+                  </div>
+                  <div className={styles.buttonGroup}>
+                    {(['realtime', '100ms', '250ms', '500ms', '750ms', '1500ms'] as const).map((interval) => (
+                      <button
+                        key={interval}
+                        type="button"
+                        className={classNames(
+                          styles.toolbarBtn,
+                          telemetryInterval === interval ? styles.toolbarBtnPrimary : styles.toolbarBtnGhost,
+                        )}
+                        onClick={() => setTelemetryInterval(interval)}
+                      >
+                        {interval === 'realtime' ? 'Realtime' : interval}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: '16px' }}>
+                  <ForgePerformanceTimelineChart
+                    history={perfHistory}
+                    currentMetrics={perfMetrics}
+                    width={880}
+                    height={180}
+                  />
+                </div>
+
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(4, 1fr)',
+                    gap: '8px',
+                    marginBottom: '16px',
+                  }}
+                >
+                  <div
+                    style={{
+                      background: '#161b22',
+                      padding: '8px',
+                      borderRadius: '6px',
+                      border: '1px solid #30363d',
+                    }}
+                  >
+                    <div style={{ fontSize: '10px', color: '#8b949e' }}>Total Frame Time</div>
+                    <div style={{ fontSize: '14px', fontWeight: 600, color: '#58a6ff' }}>
+                      {perfMetrics.totalFrameTimeMs.toFixed(2)} ms
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      background: '#161b22',
+                      padding: '8px',
+                      borderRadius: '6px',
+                      border: '1px solid #30363d',
+                    }}
+                  >
+                    <div style={{ fontSize: '10px', color: '#8b949e' }}>Render Duration</div>
+                    <div style={{ fontSize: '14px', fontWeight: 600, color: '#3fb950' }}>
+                      {perfMetrics.renderTimeMs.toFixed(2)} ms
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      background: '#161b22',
+                      padding: '8px',
+                      borderRadius: '6px',
+                      border: '1px solid #30363d',
+                    }}
+                  >
+                    <div style={{ fontSize: '10px', color: '#8b949e' }}>Spatial Indexing</div>
+                    <div style={{ fontSize: '14px', fontWeight: 600, color: '#d29922' }}>
+                      {perfMetrics.spatialIndexTimeMs.toFixed(2)} ms
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      background: '#161b22',
+                      padding: '8px',
+                      borderRadius: '6px',
+                      border: '1px solid #30363d',
+                    }}
+                  >
+                    <div style={{ fontSize: '10px', color: '#8b949e' }}>Visible Nodes</div>
+                    <div style={{ fontSize: '14px', fontWeight: 600, color: '#f0883e' }}>
+                      {perfMetrics.visibleNodesCount} / {perfMetrics.totalNodesCount ?? perfMetrics.visibleNodesCount}
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(4, 1fr)',
+                    gap: '8px',
+                    marginBottom: '16px',
+                  }}
+                >
+                  <div
+                    style={{
+                      background: '#161b22',
+                      padding: '8px',
+                      borderRadius: '6px',
+                      border: '1px solid #30363d',
+                    }}
+                  >
+                    <div style={{ fontSize: '10px', color: '#8b949e' }}>Updates & Layout</div>
+                    <div style={{ fontSize: '14px', fontWeight: 600, color: '#f0883e' }}>
+                      {((perfMetrics.updateTimeMs ?? 0) + (perfMetrics.layoutTimeMs ?? 0)).toFixed(2)} ms
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      background: '#161b22',
+                      padding: '8px',
+                      borderRadius: '6px',
+                      border: '1px solid #30363d',
+                    }}
+                  >
+                    <div style={{ fontSize: '10px', color: '#8b949e' }}>Buffer Uploads</div>
+                    <div style={{ fontSize: '14px', fontWeight: 600, color: '#a371f7' }}>
+                      {(perfMetrics.bufferUploadTimeMs ?? 0).toFixed(2)} ms
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      background: '#161b22',
+                      padding: '8px',
+                      borderRadius: '6px',
+                      border: '1px solid #30363d',
+                    }}
+                  >
+                    <div style={{ fontSize: '10px', color: '#8b949e' }}>Visible Edges & Pins</div>
+                    <div style={{ fontSize: '14px', fontWeight: 600, color: '#388bfd' }}>
+                      {perfMetrics.visibleEdgesCount}E / {perfMetrics.visiblePinsCount}P
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      background: '#161b22',
+                      padding: '8px',
+                      borderRadius: '6px',
+                      border: '1px solid #30363d',
+                    }}
+                  >
+                    <div style={{ fontSize: '10px', color: '#8b949e' }}>DPR / Scale</div>
+                    <div style={{ fontSize: '14px', fontWeight: 600, color: '#39c5bb' }}>
+                      {perfMetrics.dpr.toFixed(1)}x DPR
+                    </div>
+                  </div>
+                </div>
+
+                <ForgePerformancePieChart
+                  metrics={perfMetrics}
+                  width={280}
+                  height={240}
+                />
+
+                <div style={{ marginTop: '16px' }}>
+                  <ForgeCollapse
+                    summary="Debug Glyph Sprite Sheet (1024x1024 2D Shelf Packed SDF Atlas)"
+                    open={true}
+                    size="sm"
+                    onToggle={() => paintSpriteSheet()}
+                  >
+                    <div className={styles.spriteSheetContainer}>
+                      <div className={styles.spriteSheetToolbar}>
+                        <div className={styles.buttonGroup}>
+                          <button
+                            type="button"
+                            className={classNames(
+                              styles.toolbarBtn,
+                              spriteSheetMode === 'crisp' ? styles.toolbarBtnPrimary : styles.toolbarBtnGhost,
+                            )}
+                            onClick={() => {
+                              setSpriteSheetMode('crisp');
+                              paintSpriteSheet('crisp', spriteSheetGrid, hoveredGlyph?.index);
+                            }}
+                          >
+                            Crisp Glyphs
+                          </button>
+                          <button
+                            type="button"
+                            className={classNames(
+                              styles.toolbarBtn,
+                              spriteSheetMode === 'raw' ? styles.toolbarBtnPrimary : styles.toolbarBtnGhost,
+                            )}
+                            onClick={() => {
+                              setSpriteSheetMode('raw');
+                              paintSpriteSheet('raw', spriteSheetGrid, hoveredGlyph?.index);
+                            }}
+                          >
+                            Raw SDF
+                          </button>
+                        </div>
+                        <button
+                          type="button"
+                          className={classNames(styles.toolbarBtn, styles.toolbarBtnGhost)}
+                          onClick={() => {
+                            const nextGrid = !spriteSheetGrid;
+                            setSpriteSheetGrid(nextGrid);
+                            paintSpriteSheet(spriteSheetMode, nextGrid, hoveredGlyph?.index);
+                          }}
+                        >
+                          {spriteSheetGrid ? 'Grid: ON' : 'Grid: OFF'}
+                        </button>
+                      </div>
+                      <div className={styles.spriteSheetMeta}>
+                        <ForgeBadge
+                          variant="primary"
+                          size="xs"
+                        >
+                          1024 × 1024 px
+                        </ForgeBadge>
+                        <ForgeBadge
+                          variant="neutral"
+                          size="xs"
+                        >
+                          2D Shelf Packed (4x4 to 64x64)
+                        </ForgeBadge>
+                        <ForgeBadge
+                          variant="info"
+                          size="xs"
+                        >
+                          Comfortaa & Datatype
+                        </ForgeBadge>
+                        <ForgeBadge
+                          variant="success"
+                          size="xs"
+                        >
+                          {GLYPH_CHARS_BY_IDX.length} Active Glyphs
+                        </ForgeBadge>
+                      </div>
+                      <canvas
+                        ref={spriteSheetCanvasReference}
+                        width={1024}
+                        height={1024}
+                        className={styles.spriteSheetCanvas}
+                        onPointerMove={onSpriteSheetPointerMove}
+                        onPointerLeave={onSpriteSheetPointerLeave}
+                      />
+                      {hoveredGlyph && (
+                        <div className={styles.spriteSheetInspector}>
+                          <canvas
+                            ref={inspectCanvasReference}
+                            width={64}
+                            height={64}
+                            className={styles.spriteSheetInspectCanvas}
+                          />
+                          <div className={styles.spriteSheetInspectDetails}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <span className={styles.spriteSheetInspectChar}>
+                                {hoveredGlyph.char === ' ' ? 'Space' : hoveredGlyph.char}
+                              </span>
+                              <ForgeBadge
+                                variant="info"
+                                size="xs"
+                              >
+                                {hoveredGlyph.codeHex}
+                              </ForgeBadge>
+                              <ForgeBadge
+                                variant="neutral"
+                                size="xs"
+                              >
+                                Idx {hoveredGlyph.index}
+                              </ForgeBadge>
+                            </div>
+                            <div style={{ fontSize: '11px', lineHeight: '1.5', color: '#c9d1d9' }}>
+                              <div>
+                                <strong>Dimensions & Advance:</strong> {hoveredGlyph.width}×{hoveredGlyph.height}px |
+                                Advance H: {hoveredGlyph.advance}px | Advance V: {hoveredGlyph.vertAdvance}px
+                              </div>
+                              <div>
+                                <strong>Bearings:</strong> Left (LSB): {hoveredGlyph.horiBearingX}px | Right (RSB):{' '}
+                                {hoveredGlyph.rightBearing}px | Top: {hoveredGlyph.horiBearingY}px
+                              </div>
+                              <div>
+                                <strong>Font Metrics:</strong> Ascent: {hoveredGlyph.ascent}px | Descent:{' '}
+                                {hoveredGlyph.descent}px | LineGap: {hoveredGlyph.linegap}px | Int Leading:{' '}
+                                {hoveredGlyph.internalLeading}px | Ext Leading: {hoveredGlyph.externalLeading}
+                                px
+                              </div>
+                              <div>
+                                <strong>BBox & Origin:</strong> [{hoveredGlyph.bboxMinX}, {hoveredGlyph.bboxMinY},{' '}
+                                {hoveredGlyph.bboxMaxX}, {hoveredGlyph.bboxMaxY}] | Origin: (0, 0) on baseline | Packed
+                                Cell: {hoveredGlyph.cellW}×{hoveredGlyph.cellH} at ({hoveredGlyph.cellX},{' '}
+                                {hoveredGlyph.cellY})
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </ForgeCollapse>
+                </div>
+              </div>
+              <div className={styles.modalFooter}>
+                <button
+                  type="button"
+                  className={classNames(styles.toolbarBtn, styles.toolbarBtnPrimary)}
+                  onClick={() => setShowPerfModal(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </ForgeCard>
+          </div>
+        </div>
+      )}
+    </main>
   );
 }

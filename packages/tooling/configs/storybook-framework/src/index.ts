@@ -128,6 +128,8 @@ export function storyGlobs(
     ...packages.flatMap((package_) => [
       ...patternsFor(`${packagesRoot}/packages/${package_}/src`),
       ...patternsFor(`${packagesRoot}/packages/*/${package_}/src`),
+      ...patternsFor(`../../packages/${package_}/src`),
+      ...patternsFor(`../../packages/*/${package_}/src`),
     ]),
   ];
 }

@@ -114,7 +114,13 @@ export function createDomElement(
   properties: Record<string, unknown> | null | undefined,
   children: readonly ChildValue[],
 ): Element {
-  const element = document.createElement(tag);
+  let element = document.createElement(tag);
+  const customConstructor = typeof customElements === 'undefined' ? undefined : customElements.get(tag);
+  if (customConstructor && element instanceof customConstructor) {
+    // Standard custom element matching registered constructor.
+  } else if (customConstructor || (element instanceof HTMLUnknownElement && isCustomElementTag(tag))) {
+    element = document.createElement('div', { is: tag });
+  }
   applyProperties(element, properties);
   for (const child of children) {
     appendChild(element, child);

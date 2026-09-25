@@ -1,4 +1,3 @@
-import { ForgeBadge, ForgeButton, ForgeButtonGroup } from '@mission-platform/components';
 import {
   compileNodeGraph,
   createNodeFromDefinition,
@@ -574,42 +573,6 @@ export const WebGpuRenderer: Story = {
     const store = createMathPipelineStore();
     return (
       <div style={storyWrapperStyle}>
-        <div
-          style={{
-            padding: '8px 16px',
-            background: 'var(--mp-editor-surface, #161b22)',
-            borderBottom: '1px solid var(--mp-editor-border, #30363d)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <ForgeBadge
-              variant="primary"
-              size="xs"
-            >
-              Renderer
-            </ForgeBadge>
-            <ForgeBadge
-              variant="neutral"
-              size="xs"
-            >
-              WebGPU Instanced Buffer Pipeline
-            </ForgeBadge>
-          </div>
-          <ForgeButtonGroup
-            size="xs"
-            ariaLabel="Renderer controls"
-          >
-            <ForgeButton
-              variant="primary"
-              size="xs"
-            >
-              WebGPU
-            </ForgeButton>
-          </ForgeButtonGroup>
-        </div>
         <ForgeFlintGraphEditor
           store={store}
           renderer="webgpu"
@@ -624,42 +587,6 @@ export const WebGlRenderer: Story = {
     const store = createMathPipelineStore();
     return (
       <div style={storyWrapperStyle}>
-        <div
-          style={{
-            padding: '8px 16px',
-            background: 'var(--mp-editor-surface, #161b22)',
-            borderBottom: '1px solid var(--mp-editor-border, #30363d)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <ForgeBadge
-              variant="secondary"
-              size="xs"
-            >
-              Renderer
-            </ForgeBadge>
-            <ForgeBadge
-              variant="neutral"
-              size="xs"
-            >
-              WebGL 2.0 / 1.0 Pipeline
-            </ForgeBadge>
-          </div>
-          <ForgeButtonGroup
-            size="xs"
-            ariaLabel="Renderer controls"
-          >
-            <ForgeButton
-              variant="primary"
-              size="xs"
-            >
-              WebGL
-            </ForgeButton>
-          </ForgeButtonGroup>
-        </div>
         <ForgeFlintGraphEditor
           store={store}
           renderer="webgl"
@@ -674,42 +601,6 @@ export const Canvas2DRenderer: Story = {
     const store = createMathPipelineStore();
     return (
       <div style={storyWrapperStyle}>
-        <div
-          style={{
-            padding: '8px 16px',
-            background: 'var(--mp-editor-surface, #161b22)',
-            borderBottom: '1px solid var(--mp-editor-border, #30363d)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <ForgeBadge
-              variant="warning"
-              size="xs"
-            >
-              Renderer
-            </ForgeBadge>
-            <ForgeBadge
-              variant="neutral"
-              size="xs"
-            >
-              2D Canvas Context Fallback
-            </ForgeBadge>
-          </div>
-          <ForgeButtonGroup
-            size="xs"
-            ariaLabel="Renderer controls"
-          >
-            <ForgeButton
-              variant="primary"
-              size="xs"
-            >
-              Canvas2D
-            </ForgeButton>
-          </ForgeButtonGroup>
-        </div>
         <ForgeFlintGraphEditor
           store={store}
           renderer="canvas2d"
@@ -724,46 +615,6 @@ export const Utf8SdfTypography: Story = {
     const store = createUtf8TypographyStore();
     return (
       <div style={storyWrapperStyle}>
-        <div
-          style={{
-            padding: '8px 16px',
-            background: 'var(--mp-editor-surface, #161b22)',
-            borderBottom: '1px solid var(--mp-editor-border, #30363d)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <ForgeBadge
-              variant="primary"
-              size="xs"
-            >
-              SDF Typography
-            </ForgeBadge>
-            <ForgeBadge
-              variant="success"
-              size="xs"
-            >
-              UTF-8 / Math / Greek
-            </ForgeBadge>
-            <span style={{ fontSize: '12px', color: 'var(--mp-editor-text-secondary, #c9d1d9)' }}>
-              157 distance-field glyphs: √, ±, ∑, ∏, ∫, ≠, ≤, ≥, →, ←, ⚡, ★, α, β, Ω, Δ, é, ö, ñ, ß
-            </span>
-          </div>
-          <ForgeButtonGroup
-            size="xs"
-            ariaLabel="Actions"
-          >
-            <ForgeButton
-              variant="secondary"
-              size="xs"
-              onClick={() => store.resetView()}
-            >
-              Reset Camera
-            </ForgeButton>
-          </ForgeButtonGroup>
-        </div>
         <ForgeFlintGraphEditor store={store} />
       </div>
     );

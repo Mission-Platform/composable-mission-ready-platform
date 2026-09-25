@@ -290,46 +290,6 @@ interface CategoryLegendItem {
 }
 
 /**
- * Renders individual latency metric category summary cards.
- */
-function TimelineCategoryGrid(properties: Readonly<{ metrics: FlintPerformanceMetrics }>): MpElement {
-  const { metrics } = properties;
-  const updatesValue = (metrics.updateTimeMs ?? 0) + (metrics.layoutTimeMs ?? 0);
-  const spatialValue = metrics.spatialIndexTimeMs ?? 0;
-  const buffersValue = metrics.bufferUploadTimeMs ?? 0;
-  const textValue = metrics.textPassTimeMs ?? (metrics.renderTimeMs ? metrics.renderTimeMs * 0.3 : 0.2);
-  const drawValue = metrics.drawPassTimeMs ?? (metrics.renderTimeMs ? metrics.renderTimeMs * 0.5 : 0.4);
-
-  const items: readonly CategoryLegendItem[] = [
-    { label: 'Updates & Layout', color: '#f0883e', value: updatesValue },
-    { label: 'Spatial Indexing', color: '#3fb950', value: spatialValue },
-    { label: 'Buffer Upload', color: '#a371f7', value: buffersValue },
-    { label: 'Text & SDF Pass', color: '#39c5bb', value: textValue },
-    { label: 'Draw Submissions', color: '#388bfd', value: drawValue },
-  ];
-
-  return (
-    <div className={styles.categoryGrid}>
-      {items.map((item) => (
-        <div
-          key={item.label}
-          className={styles.categoryCard}
-        >
-          <span className={styles.categoryLabel}>
-            <span
-              className={styles.categoryIndicator}
-              style={{ backgroundColor: item.color }}
-            />
-            {item.label}
-          </span>
-          <span className={styles.categoryValue}>{item.value.toFixed(2)} ms</span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-/**
  * Stacked area and line timeline chart tracking rendering and update performance metrics across animation frames.
  */
 export function ForgePerformanceTimelineChart(
@@ -376,6 +336,22 @@ export function ForgePerformanceTimelineChart(
     [history, currentMetrics, width, height],
   );
 
+  const updatesValue = (currentMetrics.updateTimeMs ?? 0) + (currentMetrics.layoutTimeMs ?? 0);
+  const spatialValue = currentMetrics.spatialIndexTimeMs ?? 0;
+  const buffersValue = currentMetrics.bufferUploadTimeMs ?? 0;
+  const textValue =
+    currentMetrics.textPassTimeMs ?? (currentMetrics.renderTimeMs ? currentMetrics.renderTimeMs * 0.3 : 0.2);
+  const drawValue =
+    currentMetrics.drawPassTimeMs ?? (currentMetrics.renderTimeMs ? currentMetrics.renderTimeMs * 0.5 : 0.4);
+
+  const categoryItems: readonly CategoryLegendItem[] = [
+    { label: 'Updates & Layout', color: '#f0883e', value: updatesValue },
+    { label: 'Spatial Indexing', color: '#3fb950', value: spatialValue },
+    { label: 'Buffer Upload', color: '#a371f7', value: buffersValue },
+    { label: 'Text & SDF Pass', color: '#39c5bb', value: textValue },
+    { label: 'Draw Submissions', color: '#388bfd', value: drawValue },
+  ];
+
   return (
     <div className={styles.timelineContainer}>
       <div className={styles.chartHeader}>
@@ -402,7 +378,23 @@ export function ForgePerformanceTimelineChart(
         />
       </div>
 
-      <TimelineCategoryGrid metrics={currentMetrics} />
+      <div className={styles.categoryGrid}>
+        {categoryItems.map((item) => (
+          <div
+            key={item.label}
+            className={styles.categoryCard}
+          >
+            <span className={styles.categoryLabel}>
+              <span
+                className={styles.categoryIndicator}
+                style={{ backgroundColor: item.color }}
+              />
+              {item.label}
+            </span>
+            <span className={styles.categoryValue}>{item.value.toFixed(2)} ms</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
