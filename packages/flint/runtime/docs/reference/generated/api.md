@@ -81,6 +81,88 @@ Validates a Flint ABI manifest against specification requirements, layouts, and 
 - **@param:** - ABI manifest to validate.
 - **@returns:** Validation outcome containing boolean status and collected diagnostic errors.
 
+## `src/allocator/slab`
+
+### FlintAtomicSpinLock
+
+**Kind:** class
+
+```typescript
+export class FlintAtomicSpinLock
+```
+
+Atomic spinlock providing mutually exclusive access to shared WebAssembly memory structures.
+
+### RegionalBumpArena
+
+**Kind:** class
+
+```typescript
+export class RegionalBumpArena
+```
+
+Regional bump allocator arena providing $O(1)$ allocation and instant bulk reset.
+
+### SegregatedSlabAllocator
+
+**Kind:** class
+
+```typescript
+export class SegregatedSlabAllocator
+```
+
+Segregated $O(1)$ size-class slab allocator.
+
+### SegregatedSlabAllocatorOptions
+
+**Kind:** interface
+
+```typescript
+export interface SegregatedSlabAllocatorOptions
+```
+
+Configuration options for the segregated slab allocator.
+
+### SLAB_CANARY_TAG
+
+**Kind:** constant
+
+```typescript
+export const SLAB_CANARY_TAG;
+```
+
+No description provided.
+
+### SLAB_SIZE_CLASSES
+
+**Kind:** constant
+
+```typescript
+export const SLAB_SIZE_CLASSES;
+```
+
+Standard power-of-two size classes for segregated small and medium object slab allocation.
+
+### SlabBlock
+
+**Kind:** interface
+
+```typescript
+export interface SlabBlock
+```
+
+Allocation slab managing fixed-size slots for a specific size class.
+
+### SlabSizeClass
+
+**Kind:** type
+
+```typescript
+export type SlabSizeClass = (typeof SLAB_SIZE_CLASSES)[number];
+```
+
+No description provided.
+
 ## `src/async`
 
 ### createFlintAsyncRuntime
@@ -292,6 +374,49 @@ export class FlintJspiSuspender
 WebAssembly JavaScript Promise Integration (JSPI) stack switching.
 Suspends and resumes WebAssembly stacks across asynchronous host promises
 natively without requiring compiler-driven Asyncify code transformations.
+
+## `src/async/fiber`
+
+### FlintFiber
+
+**Kind:** interface
+
+```typescript
+export interface FlintFiber<T = unknown>
+```
+
+Handle to an active or suspended cooperative fiber continuation.
+
+### FlintFiberScheduler
+
+**Kind:** class
+
+```typescript
+export class FlintFiberScheduler
+```
+
+Cooperative fiber scheduler supporting JSPI-style async stack suspension,
+frame isolation, stack boundary assertion, and reentrancy protection.
+
+### FlintFiberSchedulerOptions
+
+**Kind:** interface
+
+```typescript
+export interface FlintFiberSchedulerOptions
+```
+
+Configuration options for the cooperative fiber scheduler.
+
+### FlintFiberState
+
+**Kind:** type
+
+```typescript
+export type FlintFiberState = 'ready' | 'running' | 'suspended' | 'completed' | 'failed' | 'cancelled';
+```
+
+Execution state of a cooperative fiber.
 
 ## `src/collections`
 
@@ -1799,6 +1924,17 @@ Validates a sequence of signals against declared signal definitions.
 
 ## `src/host`
 
+### AtomicRingBufferChannel
+
+**Kind:** class
+
+```typescript
+export class AtomicRingBufferChannel
+```
+
+Synchronizes atomic head/tail pointer updates on shared host interop ring buffer memory.
+Uses WebAssembly-compatible atomic store/load operations with memory ordering guarantees to prevent race conditions.
+
 ### createDefaultFlintCapabilities
 
 **Kind:** function
@@ -1938,6 +2074,51 @@ export interface FlintHostOptions
 ```
 
 Configuration options for initializing a FlintHost instance.
+
+### MAX_FFI_CALL_DEPTH
+
+**Kind:** constant
+
+```typescript
+export const MAX_FFI_CALL_DEPTH;
+```
+
+No description provided.
+
+### timingSafeEqualString
+
+**Kind:** function
+
+```typescript
+function timingSafeEqualString(stringA: string, stringB: string): boolean;
+```
+
+Performs a constant-time comparison of two strings to prevent timing side-channel attacks on security-critical identifiers.
+
+#### Parameters
+
+| Name    | Type   | Description |
+| ------- | ------ | ----------- |
+| stringA | string |             |
+| stringB | string |             |
+
+### validateHostPointerBounds
+
+**Kind:** function
+
+```typescript
+function validateHostPointerBounds(pointer: number, length: number, memoryLimit = 0xff_ff_ff_ff): boolean;
+```
+
+Validates that a host pointer offset and length satisfy spatial bounds invariants.
+
+#### Parameters
+
+| Name        | Type   | Description |
+| ----------- | ------ | ----------- |
+| pointer     | number |             |
+| length      | number |             |
+| memoryLimit |        |             |
 
 ## `src/iterator`
 
@@ -6252,6 +6433,16 @@ Creates an isolated multi-memory instance with dedicated guest heap, host intero
 | ------- | ----------------------- | ----------- |
 | options | FlintMultiMemoryOptions |             |
 
+### FALLBACK_GUARD_PAGE_SIZE
+
+**Kind:** constant
+
+```typescript
+export const FALLBACK_GUARD_PAGE_SIZE;
+```
+
+No description provided.
+
 ### FLINT_MEMORY_CAPABILITIES
 
 **Kind:** constant
@@ -6315,6 +6506,9 @@ Isolates memory into dedicated spaces for guest execution (Memory 0),
 foreign untrusted C/Rust heap (Memory 1), host interop buffer (Memory 2),
 and static constants/tables (Memory 3).
 
+Supports native multi-memory hardware isolation as well as zero-allocation
+partitioned single-memory fallback emulation for runtimes without multi-memory (e.g. Safari / WebKit).
+
 ### FlintMultiMemoryOptions
 
 **Kind:** interface
@@ -6335,6 +6529,16 @@ export class FlintRegionalArena
 
 Scoped regional bump allocator pool (Tier 1) providing O(1) allocation
 and deterministic bulk deallocation upon scope exit.
+
+### isMultiMemorySupported
+
+**Kind:** function
+
+```typescript
+function isMultiMemorySupported(): boolean;
+```
+
+Detects whether the host JavaScript environment natively supports WebAssembly multi-memory.
 
 ## `src/parallel`
 
@@ -6692,6 +6896,17 @@ export const FLINT_MEMORY_MODEL;
 
 No description provided.
 
+### FlintDynamicTableManager
+
+**Kind:** class
+
+```typescript
+export class FlintDynamicTableManager
+```
+
+Dynamic WebAssembly function table manager providing slot allocation, generation tracking,
+and immediate nullification upon closure release to prevent stale function dispatch.
+
 ### FlintRegion
 
 **Kind:** interface
@@ -6744,6 +6959,16 @@ export interface FlintSharedHandle
 
 Handle reference identifying a reference-counted shared memory allocation.
 
+### FlintTableSlotHandle
+
+**Kind:** interface
+
+```typescript
+export interface FlintTableSlotHandle
+```
+
+Dynamic function table slot handle tracking table index and generational token.
+
 ### FlintTlsfAllocator
 
 **Kind:** class
@@ -6755,6 +6980,17 @@ export class FlintTlsfAllocator
 Two-Level Segregated Fit (TLSF) memory allocator.
 Guarantees O(1) allocation and deallocation time with immediate physical coalescing
 and minimal fragmentation for embedded/real-time Wasm workloads.
+
+### FlintWeakHandle
+
+**Kind:** interface
+
+```typescript
+export interface FlintWeakHandle
+```
+
+Weak reference handle referencing a shared memory allocation without incrementing strong reference counts.
+Mitigates monotonic memory leaks caused by cyclic data structures.
 
 ## `src/self-hosted`
 
@@ -7313,7 +7549,9 @@ export type FlintTrapCode =
   | 'BorrowViolation'
   | 'RegionExpired'
   | 'UseAfterRelease'
-  | 'DoubleRelease';
+  | 'DoubleRelease'
+  | 'StackOverflow'
+  | 'CallDepthExhausted';
 ```
 
 Canonical runtime trap error category codes.

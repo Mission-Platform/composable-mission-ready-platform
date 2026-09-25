@@ -13,5 +13,6 @@ export default defineConfig({
   plugins: [flintPlugin({
     projectRoots: [resolve(import.meta.dirname, 'src'), resolve(import.meta.dirname, 'shared-project')],
     crossProjectLinkMode: 'dynamic',
+    requestedCapabilities: ['clock.now'],
   })],
 });

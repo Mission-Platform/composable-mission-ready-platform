@@ -4,6 +4,97 @@
 
 Generated from public source declarations in `@mission-platform/flint-c-abi`.
 
+## `src/manifest`
+
+### CborDecodeOptions
+
+**Kind:** interface
+
+```typescript
+export interface CborDecodeOptions
+```
+
+Options configuring CBOR decoding behavior and validation checks.
+
+### decodeCbor
+
+**Kind:** function
+
+```typescript
+function decodeCbor(bytes: Uint8Array, options: CborDecodeOptions = {}): T;
+```
+
+Decodes canonical binary CBOR bytes into a JavaScript object structure.
+
+#### Parameters
+
+| Name    | Type              | Description |
+| ------- | ----------------- | ----------- |
+| bytes   | Uint8Array        |             |
+| options | CborDecodeOptions |             |
+
+### decodeCborAbiManifest
+
+**Kind:** function
+
+```typescript
+function decodeCborAbiManifest(
+  bytes: Uint8Array,
+  options?: CborDecodeOptions,
+): T;
+```
+
+Decodes a binary CBOR byte array into a Flint ABI Manifest.
+
+#### Parameters
+
+| Name    | Type              | Description |
+| ------- | ----------------- | ----------- |
+| bytes   | Uint8Array        |             |
+| options | CborDecodeOptions |             |
+
+### encodeCbor
+
+**Kind:** function
+
+```typescript
+function encodeCbor(value: unknown): Uint8Array;
+```
+
+Encodes arbitrary JavaScript primitive, array, and object data structures into canonical binary CBOR.
+
+#### Parameters
+
+| Name  | Type    | Description |
+| ----- | ------- | ----------- |
+| value | unknown |             |
+
+### encodeCborAbiManifest
+
+**Kind:** function
+
+```typescript
+function encodeCborAbiManifest(manifest: T): Uint8Array;
+```
+
+Encodes a Flint ABI Manifest directly to binary CBOR byte array.
+
+#### Parameters
+
+| Name     | Type | Description |
+| -------- | ---- | ----------- |
+| manifest | T    |             |
+
+### FlintCAbiManifest
+
+**Kind:** interface
+
+```typescript
+export interface FlintCAbiManifest
+```
+
+Structural representation of a Flint ABI Manifest.
+
 ## `src/mappings`
 
 ### BIGINT_FLINT_TYPES

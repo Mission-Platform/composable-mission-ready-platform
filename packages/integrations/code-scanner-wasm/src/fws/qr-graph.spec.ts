@@ -46,6 +46,7 @@ describe('QR decoder graph', () => {
         entryFileName: entry,
         compilerVersion: '0.1.0',
         linkConfiguration,
+        requestedCapabilities: ['qr.decode.utf8'],
       });
       const errors = artifact.diagnostics.filter(({ severity }) => severity === 'error');
       expect(errors, errors.map((error) => JSON.stringify(error)).join('\n')).toHaveLength(0);
