@@ -216,6 +216,31 @@ function normalizeViewport(viewport?: VisualParityViewport): VisualParityViewpor
   return value;
 }
 
+interface EgoScriptConfig {
+  readonly viewport: VisualParityViewport;
+  readonly retries: number;
+  readonly timeoutSeconds: number;
+  readonly taskName: string;
+  readonly theme: string;
+}
+
+/**
+ * Extracts configuration values for Ego script generation.
+ */
+function buildEgoScriptConfig(options: VisualParityCaptureOptions): EgoScriptConfig {
+  const viewport = normalizeViewport(options.viewport);
+  const rawRetries = options.retries ?? 3;
+  const rawTimeout = options.timeoutMs ?? 30_000;
+  const baseTaskName = options.taskName ?? 'visual parity capture';
+  return {
+    viewport,
+    retries: Math.max(1, Math.floor(rawRetries)),
+    timeoutSeconds: Math.max(1, Math.ceil(rawTimeout / 1000)),
+    taskName: `${baseTaskName}-${Date.now()}-${process.pid}`,
+    theme: options.theme ?? 'light',
+  };
+}
+
 /**
  * Generates the stdin program consumed by `ego-browser nodejs`.
  *
@@ -223,14 +248,10 @@ function normalizeViewport(viewport?: VisualParityViewport): VisualParityViewpor
  * so manager/chrome layout cannot affect the captured pixels.
  */
 export function visualParityEgoScript(options: VisualParityCaptureOptions): string {
-  const viewport = normalizeViewport(options.viewport);
-  const retries = Math.max(1, Math.floor(options.retries ?? 3));
-  const timeoutSeconds = Math.max(1, Math.ceil((options.timeoutMs ?? 30_000) / 1000));
-  const taskName = `${options.taskName ?? 'visual parity capture'}-${Date.now()}-${process.pid}`;
-  const theme = options.theme ?? 'light';
+  const config = buildEgoScriptConfig(options);
   const captures = options.captures.map((capture) => ({
     ...capture,
-    url: buildStoryIframeUrl(capture.baseUrl, capture.storyId, theme),
+    url: buildStoryIframeUrl(capture.baseUrl, capture.storyId, config.theme),
   }));
   return String.raw`
 (async () => {
@@ -239,11 +260,11 @@ const path = await import('node:path');
 const captures = ${JSON.stringify(captures)};
 const repositoryRoot = ${JSON.stringify(options.repositoryRoot)};
 const artifactDirectory = ${JSON.stringify(options.artifactDirectory)};
-const viewport = ${JSON.stringify(viewport)};
-const theme = ${JSON.stringify(options.theme ?? 'light')};
-const maxAttempts = ${retries};
-const timeoutSeconds = ${timeoutSeconds};
-const task = await useOrCreateTaskSpace(${JSON.stringify(taskName)});
+const viewport = ${JSON.stringify(config.viewport)};
+const theme = ${JSON.stringify(config.theme)};
+const maxAttempts = ${config.retries};
+const timeoutSeconds = ${config.timeoutSeconds};
+const task = await useOrCreateTaskSpace(${JSON.stringify(config.taskName)});
 const allDiagnostics = [];
 let cleanupErrors = [];
 try {
@@ -420,6 +441,16 @@ export function egoProcessTimeoutMs(captureCount: number, perCaptureTimeoutMs = 
 }
 
 /**
+ * Resolves fallback error message for missing capture entries.
+ */
+function resolveFailureMessage(diagnostics: readonly string[], stderr: string): string {
+  const lastDiag = diagnostics.at(-1);
+  if (lastDiag) return lastDiag;
+  const trimmed = stderr.trim();
+  return trimmed.length > 0 ? trimmed : 'Ego Lite completed without a capture result.';
+}
+
+/**
  * Fills in failure capture results for entries missing from Ego output.
  */
 function populateMissingCaptureFailures(
@@ -429,12 +460,25 @@ function populateMissingCaptureFailures(
   stderr: string,
 ): void {
   const byKey = new Map(results.map((result) => [`${result.renderer}:${result.storyId}`, result]));
+  const defaultMessage = resolveFailureMessage(diagnostics, stderr);
+  const failureStatus = diagnostics.length > 0 ? 'runtime-failure' : 'blocked';
   for (const capture of options.captures) {
     const key = `${capture.renderer}:${capture.storyId}`;
     if (!byKey.has(key)) {
-      const message = (diagnostics.at(-1) ?? stderr.trim()) || 'Ego Lite completed without a capture result.';
-      results.push(failureResult(capture, message, diagnostics.length > 0 ? 'runtime-failure' : 'blocked'));
+      results.push(failureResult(capture, defaultMessage, failureStatus));
     }
+  }
+}
+
+/**
+ * Handles completed message payload from child process.
+ */
+function handleDoneMessage(message: CaptureMessage, diagnostics: string[], cleanupErrors: string[]): void {
+  if (message.diagnostics) {
+    diagnostics.push(...message.diagnostics);
+  }
+  if (message.cleanupErrors) {
+    cleanupErrors.push(...message.cleanupErrors);
   }
 }
 
@@ -450,15 +494,17 @@ function parseOutputLine(
   try {
     const message = JSON.parse(line) as CaptureMessage;
     if (message.kind === 'capture' && message.result) results.push(message.result);
-    if (message.kind === 'done') {
-      diagnostics.push(...(message.diagnostics ?? []));
-      if (message.cleanupErrors) {
-        cleanupErrors.push(...message.cleanupErrors);
-      }
-    }
+    if (message.kind === 'done') handleDoneMessage(message, diagnostics, cleanupErrors);
   } catch {
     // ego-browser may emit human-readable diagnostics alongside JSON.
   }
+}
+
+/**
+ * Formats exit diagnostic message for child process failure.
+ */
+function extractChildExitDiagnostic(code: number | null, stderr: string): string {
+  return stderr || `ego-browser exited with code ${code ?? 'null'}`;
 }
 
 /**
@@ -478,6 +524,7 @@ function runVisualParityCaptureChunk(options: VisualParityCaptureOptions): Promi
     let pending = '';
     let stderr = '';
     let settled = false;
+    let timer: NodeJS.Timeout | undefined;
 
     /**
      * Finalizes child process lifecycle and resolves promise.
@@ -485,13 +532,13 @@ function runVisualParityCaptureChunk(options: VisualParityCaptureOptions): Promi
     const finish = (): void => {
       if (settled) return;
       settled = true;
-      clearTimeout(timer);
+      if (timer) clearTimeout(timer);
       populateMissingCaptureFailures(options, results, diagnostics, stderr);
       resolve({ results, diagnostics, cleanupErrors });
     };
 
     const timeoutMs = egoProcessTimeoutMs(options.captures.length, options.timeoutMs ?? 30_000);
-    const timer = setTimeout(() => {
+    timer = setTimeout(() => {
       diagnostics.push(`Ego Lite timed out after ${timeoutMs}ms`);
       terminateProcessTree(child, { graceMs: 250 }).finally(() => finish());
     }, timeoutMs);
@@ -520,7 +567,7 @@ function runVisualParityCaptureChunk(options: VisualParityCaptureOptions): Promi
     child.on('close', (code) => {
       if (pending.trim()) parse(Buffer.from(`${pending}\n`));
       if (code !== 0 && diagnostics.length === 0) {
-        diagnostics.push(stderr || `ego-browser exited with code ${code ?? 'null'}`);
+        diagnostics.push(extractChildExitDiagnostic(code, stderr));
       }
       finish();
     });

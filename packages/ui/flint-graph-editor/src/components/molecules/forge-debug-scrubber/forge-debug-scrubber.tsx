@@ -10,14 +10,31 @@ export interface DebugScrubberProperties {
 }
 
 /**
+ * Safely extracts raw property value from event target.
+ */
+function extractEventTargetValue(event: unknown): unknown {
+  if (!event || typeof event !== 'object' || !('target' in event)) {
+    return undefined;
+  }
+  const target = Reflect.get(event, 'target');
+  if (!target || typeof target !== 'object' || !('value' in target)) {
+    return undefined;
+  }
+  return Reflect.get(target, 'value');
+}
+
+/**
  * Extracts numeric value from a DOM input event if valid.
  */
 function extractInputNumberValue(event: unknown): number | undefined {
-  const target =
-    typeof event === 'object' && event !== null && 'target' in event ? Reflect.get(event, 'target') : undefined;
-  const rawValue =
-    typeof target === 'object' && target !== null && 'value' in target ? Reflect.get(target, 'value') : undefined;
-  return typeof rawValue === 'string' || typeof rawValue === 'number' ? Number(rawValue) : undefined;
+  const rawValue = extractEventTargetValue(event);
+  if (typeof rawValue === 'number') {
+    return rawValue;
+  }
+  if (typeof rawValue === 'string' && rawValue.trim().length > 0) {
+    return Number(rawValue);
+  }
+  return undefined;
 }
 
 const SPEED_PRESETS = [0.5, 1, 2] as const;
@@ -30,16 +47,29 @@ const DEFAULT_PLAYBACK_STATE = {
 };
 
 /**
+ * Computes disabled state flags for scrubber controls.
+ */
+function computeScrubberFlags(controller: unknown, currentStepIndex: number, totalSteps: number) {
+  const hasNoController = !controller;
+  const hasNoSteps = totalSteps === 0;
+  return {
+    disabledPrev: hasNoController || currentStepIndex === 0,
+    disabledNext: hasNoController || currentStepIndex >= totalSteps - 1,
+    disabledPlay: hasNoController || hasNoSteps,
+    disabledSlider: hasNoController || hasNoSteps,
+    displayStep: totalSteps > 0 ? currentStepIndex + 1 : 0,
+  };
+}
+
+/**
  * Framework-neutral Forge playback scrubber for Flint execution traces.
  */
 export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>): MpElement {
   const controller = properties?.controller;
-  const [playbackState, setPlaybackState] = useState(
-    controller ? controller.getPlaybackState() : DEFAULT_PLAYBACK_STATE,
-  );
-  const [currentStep, setCurrentStep] = useState<TraceExecutionStep | undefined>(
-    controller ? controller.getCurrentStep() : undefined,
-  );
+  const initialPlaybackState = controller ? controller.getPlaybackState() : DEFAULT_PLAYBACK_STATE;
+  const initialStep = controller ? controller.getCurrentStep() : undefined;
+  const [playbackState, setPlaybackState] = useState(initialPlaybackState);
+  const [currentStep, setCurrentStep] = useState<TraceExecutionStep | undefined>(initialStep);
 
   useEffect(() => {
     let cleanup: (() => void) | undefined;
@@ -94,10 +124,9 @@ export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>
 
   const totalSteps = playbackState.totalSteps;
   const isTrap = Boolean(currentStep?.isTrap);
-  const displayStep = totalSteps > 0 ? playbackState.currentStep + 1 : 0;
-  const isFirstStep = playbackState.currentStep === 0;
-  const isLastStep = playbackState.currentStep >= totalSteps - 1;
-  const hasNoSteps = totalSteps === 0;
+  const flags = computeScrubberFlags(controller, playbackState.currentStep, totalSteps);
+  const playIcon = playbackState.isPlaying ? '⏸' : '▶';
+  const playLabel = playbackState.isPlaying ? 'Pause' : 'Play';
 
   return (
     <div className={classNames(styles.scrubberContainer, properties?.className)}>
@@ -108,7 +137,7 @@ export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>
             className={styles.controlBtn}
             title="Step Backward"
             aria-label="Step Backward"
-            disabled={isFirstStep || !controller}
+            disabled={flags.disabledPrev}
             onClick={() => controller?.stepBackward()}
           >
             ⏮
@@ -116,19 +145,19 @@ export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>
           <button
             type="button"
             className={classNames(styles.controlBtn, styles.primaryBtn)}
-            title={playbackState.isPlaying ? 'Pause' : 'Play'}
-            aria-label={playbackState.isPlaying ? 'Pause' : 'Play'}
-            disabled={hasNoSteps || !controller}
+            title={playLabel}
+            aria-label={playLabel}
+            disabled={flags.disabledPlay}
             onClick={handleTogglePlay}
           >
-            {playbackState.isPlaying ? '⏸' : '▶'}
+            {playIcon}
           </button>
           <button
             type="button"
             className={styles.controlBtn}
             title="Step Forward"
             aria-label="Step Forward"
-            disabled={isLastStep || !controller}
+            disabled={flags.disabledNext}
             onClick={() => controller?.stepForward()}
           >
             ⏭
@@ -141,7 +170,7 @@ export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>
             min="0"
             max={Math.max(0, totalSteps - 1)}
             value={playbackState.currentStep}
-            disabled={hasNoSteps || !controller}
+            disabled={flags.disabledSlider}
             aria-label="Execution timeline scrubber"
             className={styles.slider}
             onInput={handleSliderChange}
@@ -169,7 +198,7 @@ export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>
             <span className={styles.trapBadge}>⚠️ TRAP: {currentStep?.trapMessage ?? 'Runtime Trap'}</span>
           ) : (
             <span className={styles.stepBadge}>
-              Step {displayStep} of {totalSteps}
+              Step {flags.displayStep} of {totalSteps}
             </span>
           )}
         </div>

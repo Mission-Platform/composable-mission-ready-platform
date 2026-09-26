@@ -72,13 +72,20 @@ function firstOptionName(args: string[], names: string[]): string {
 }
 
 /**
+ * Checks if a numeric value is within bounds.
+ */
+function isWithinBounds(value: number, min: number, max?: number): boolean {
+  if (!Number.isFinite(value) || value < min) return false;
+  return max === undefined || value <= max;
+}
+
+/**
  * Asserts numeric value is finite and within bounds.
  */
 function assertNumericBounds(value: number, name: string, min: number, max?: number): void {
-  const isValid = Number.isFinite(value) && value >= min && (max === undefined || value <= max);
-  if (!isValid) {
-    throw new Error(`${name} must be a number${max === undefined ? ` >= ${min}` : ` between ${min} and ${max}`}.`);
-  }
+  if (isWithinBounds(value, min, max)) return;
+  const range = max === undefined ? ` >= ${min}` : ` between ${min} and ${max}`;
+  throw new Error(`${name} must be a number${range}.`);
 }
 
 /**
@@ -106,15 +113,29 @@ function positiveIntegerOption(args: string[], name: string, fallback: number): 
  */
 function parseBasePort(args: string[], ports: Partial<Record<VisualParityRenderer, number>>): void {
   const base = option(args, '--port');
-  if (base !== undefined) {
-    const value = Number(base);
-    if (!Number.isInteger(value) || value < 1 || value > 65_531) {
-      throw new Error('--port must allow five valid consecutive TCP ports.');
-    }
-    for (const [index, renderer] of VISUAL_PARITY_RENDERERS.entries()) {
-      ports[renderer] = value + index;
-    }
+  if (base === undefined) return;
+  const value = Number(base);
+  if (!Number.isInteger(value) || value < 1 || value > 65_531) {
+    throw new Error('--port must allow five valid consecutive TCP ports.');
   }
+  let index = 0;
+  for (const renderer of VISUAL_PARITY_RENDERERS) {
+    ports[renderer] = value + index;
+    index += 1;
+  }
+}
+
+/**
+ * Parses single port option from CLI flags.
+ */
+function parsePortOption(args: string[], flag: string): number | undefined {
+  const raw = option(args, flag);
+  if (raw === undefined) return undefined;
+  const port = Number(raw);
+  if (!Number.isInteger(port) || port < 1 || port > 65_535) {
+    throw new Error(`${flag} must be a valid TCP port.`);
+  }
+  return port;
 }
 
 /**
@@ -122,15 +143,26 @@ function parseBasePort(args: string[], ports: Partial<Record<VisualParityRendere
  */
 function parseIndividualPorts(args: string[], ports: Partial<Record<VisualParityRenderer, number>>): void {
   for (const renderer of VISUAL_PARITY_RENDERERS) {
-    const value = option(args, `--${renderer}-port`);
-    if (value !== undefined) {
-      const port = Number(value);
-      if (!Number.isInteger(port) || port < 1 || port > 65_535) {
-        throw new Error(`--${renderer}-port must be a valid TCP port.`);
-      }
+    const port = parsePortOption(args, `--${renderer}-port`);
+    if (port !== undefined) {
       ports[renderer] = port;
     }
   }
+}
+
+/**
+ * Parses single renderer port mapping item.
+ */
+function parseSinglePortMapping(item: string): [VisualParityRenderer, number] {
+  const [renderer, rawPort] = item.split('=');
+  if (!VISUAL_PARITY_RENDERERS.includes(renderer as VisualParityRenderer)) {
+    throw new Error(`Unknown renderer in --ports: ${renderer}`);
+  }
+  const port = Number(rawPort);
+  if (!Number.isInteger(port) || port < 1 || port > 65_535) {
+    throw new Error(`Invalid port in --ports: ${item}`);
+  }
+  return [renderer as VisualParityRenderer, port];
 }
 
 /**
@@ -138,18 +170,10 @@ function parseIndividualPorts(args: string[], ports: Partial<Record<VisualParity
  */
 function parsePortsList(args: string[], ports: Partial<Record<VisualParityRenderer, number>>): void {
   const list = option(args, '--ports');
-  if (list !== undefined) {
-    for (const item of list.split(',')) {
-      const [renderer, rawPort] = item.split('=');
-      if (!VISUAL_PARITY_RENDERERS.includes(renderer as VisualParityRenderer)) {
-        throw new Error(`Unknown renderer in --ports: ${renderer}`);
-      }
-      const port = Number(rawPort);
-      if (!Number.isInteger(port) || port < 1 || port > 65_535) {
-        throw new Error(`Invalid port in --ports: ${item}`);
-      }
-      ports[renderer as VisualParityRenderer] = port;
-    }
+  if (list === undefined) return;
+  for (const item of list.split(',')) {
+    const [renderer, port] = parseSinglePortMapping(item);
+    ports[renderer] = port;
   }
 }
 
@@ -345,6 +369,26 @@ function executeDiffComparison(
 }
 
 /**
+ * Checks if both baseline and candidate captures completed successfully.
+ */
+function hasPassingCaptures(baseline?: VisualParityCaptureResult, candidate?: VisualParityCaptureResult): boolean {
+  return Boolean(baseline && candidate && baseline.status === 'pass' && candidate.status === 'pass');
+}
+
+/**
+ * Formats diagnostic failure messages for failed capture comparison.
+ */
+function handleFailedComparison(
+  baseline: VisualParityCaptureResult | undefined,
+  candidateCapture: VisualParityCaptureResult | undefined,
+  comparison: VisualParityComparison,
+): void {
+  comparison.status = captureFailure(baseline?.status === 'pass' ? candidateCapture : baseline);
+  comparison.message =
+    [baseline?.message, candidateCapture?.message].filter(Boolean).join('\n') || 'Renderer capture did not complete.';
+}
+
+/**
  * Compares candidate renderer capture against web-component baseline.
  */
 function compareRenderer(
@@ -363,17 +407,21 @@ function compareRenderer(
     baselineUrl: baseline?.url,
     candidateUrl: candidateCapture?.url,
   };
-  if (!baseline || !candidateCapture || baseline.status !== 'pass' || candidateCapture.status !== 'pass') {
-    comparison.status = captureFailure(baseline?.status === 'pass' ? candidateCapture : baseline);
-    comparison.message =
-      [baseline?.message, candidateCapture?.message].filter(Boolean).join('\n') || 'Renderer capture did not complete.';
+  if (!hasPassingCaptures(baseline, candidateCapture)) {
+    handleFailedComparison(baseline, candidateCapture, comparison);
     return comparison;
   }
   const diffPath = path.join(
     storyArtifactDirectory(outputDirectory, storyId),
     `web-component-to-${candidate}.diff.png`,
   );
-  executeDiffComparison(baseline, candidateCapture, diffPath, options, comparison);
+  executeDiffComparison(
+    baseline as VisualParityCaptureResult,
+    candidateCapture as VisualParityCaptureResult,
+    diffPath,
+    options,
+    comparison,
+  );
   return comparison;
 }
 

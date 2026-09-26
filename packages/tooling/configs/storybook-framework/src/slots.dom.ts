@@ -80,10 +80,24 @@ function applyPrimitiveAttribute(element: Element, key: string, value: unknown):
 }
 
 /**
+ * Checks if key represents a reserved JSX property or absent value.
+ */
+function isIgnoredProperty(key: string, value: unknown): boolean {
+  return key === 'children' || key === 'key' || value === undefined;
+}
+
+/**
+ * Checks if property should be handled as custom object or function.
+ */
+function isObjectOrFunctionProperty(custom: boolean, value: unknown): boolean {
+  return custom || typeof value === 'object' || typeof value === 'function';
+}
+
+/**
  * Applies a single JSX property or attribute to a DOM element.
  */
 function applySingleProperty(element: Element, key: string, value: unknown, custom: boolean): void {
-  if (key === 'children' || key === 'key' || value === undefined) {
+  if (isIgnoredProperty(key, value)) {
     return;
   }
   if (key === 'style') {
@@ -94,7 +108,7 @@ function applySingleProperty(element: Element, key: string, value: unknown, cust
     element.setAttribute('class', String(value));
     return;
   }
-  if (custom || typeof value === 'object' || typeof value === 'function') {
+  if (isObjectOrFunctionProperty(custom, value)) {
     applyCustomOrObjectProperty(element, key, value, custom);
     return;
   }
@@ -155,6 +169,14 @@ function isCustomElementInstance(element: Element, tag: string): boolean {
 }
 
 /**
+ * Checks if tag requires fallback host construction.
+ */
+function requiresFallbackHost(element: Element, tag: string): boolean {
+  const hasConstructor = typeof customElements !== 'undefined' && Boolean(customElements.get(tag));
+  return hasConstructor || (element instanceof HTMLUnknownElement && isCustomElementTag(tag));
+}
+
+/**
  * Instantiates a DOM element or custom element host fallback.
  */
 export function instantiateDomElement(tag: string): Element {
@@ -162,8 +184,7 @@ export function instantiateDomElement(tag: string): Element {
   if (isCustomElementInstance(element, tag)) {
     return element;
   }
-  const hasCustomConstructor = typeof customElements !== 'undefined' && Boolean(customElements.get(tag));
-  if (hasCustomConstructor || (element instanceof HTMLUnknownElement && isCustomElementTag(tag))) {
+  if (requiresFallbackHost(element, tag)) {
     element = document.createElement('div', { is: tag });
   }
   return element;

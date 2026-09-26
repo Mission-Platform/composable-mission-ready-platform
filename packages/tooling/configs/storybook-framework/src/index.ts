@@ -226,14 +226,12 @@ function frameworkPackageResolvePlugin(
     enforce: 'pre',
     resolveId(source: string, importer: string | undefined) {
       const match = /^@mission-platform\/([^/]+)$/.exec(source);
-      if (match) {
-        const isFacadeSelfImport =
-          FACADE_FIRST_PACKAGES.includes(match[1]) && Boolean(importer && /[/\\]dist[/\\]/.test(importer));
-        if (!isFacadeSelfImport) {
-          const packageRoot = resolvePackageRoot(repoRoot, match[1], exists);
-          return resolvePackageArtifact(packageRoot, target, exists);
-        }
-      }
+      if (!match) return;
+      const isFacadeSelfImport =
+        FACADE_FIRST_PACKAGES.includes(match[1]) && Boolean(importer && /[/\\]dist[/\\]/.test(importer));
+      if (isFacadeSelfImport) return;
+      const packageRoot = resolvePackageRoot(repoRoot, match[1], exists);
+      return resolvePackageArtifact(packageRoot, target, exists);
     },
   };
 }
@@ -300,36 +298,49 @@ function webComponentStoryMetadataPlugin(): Plugin {
 }
 
 /**
+ * Loads Vue or React plugins.
+ */
+async function loadVueOrReactPlugins(
+  framework: 'vue' | 'react',
+  ignoreVueI18nBlocksPlugin: () => Plugin,
+): Promise<Plugin[]> {
+  if (framework === 'vue') {
+    const { default: vueJsx } = await import('@vitejs/plugin-vue-jsx');
+    return [vueJsx() as Plugin, ignoreVueI18nBlocksPlugin()];
+  }
+  const { default: react } = await import('@vitejs/plugin-react');
+  return [...(react() as unknown as Plugin[])];
+}
+
+/**
+ * Loads Solid, Svelte, or Web-Component plugins.
+ */
+async function loadNonReactPlugins(framework: 'solid' | 'svelte' | 'web-component'): Promise<Plugin[]> {
+  if (framework === 'solid') {
+    const { default: solid } = await import('vite-plugin-solid');
+    return [solid() as unknown as Plugin];
+  }
+  if (framework === 'svelte') {
+    const { svelte } = await import('@sveltejs/vite-plugin-svelte');
+    return [svelte() as unknown as Plugin];
+  }
+  return [webComponentStoryMetadataPlugin()];
+}
+
+/**
  * Loads framework-specific Vite transform plugins.
  */
 async function loadFrameworkPlugins(
   framework: StorybookFramework,
   ignoreVueI18nBlocksPlugin: () => Plugin,
 ): Promise<Plugin[]> {
-  switch (framework) {
-    case 'vue': {
-      const { default: vueJsx } = await import('@vitejs/plugin-vue-jsx');
-      return [vueJsx() as Plugin, ignoreVueI18nBlocksPlugin()];
-    }
-    case 'react': {
-      const { default: react } = await import('@vitejs/plugin-react');
-      return [...(react() as unknown as Plugin[])];
-    }
-    case 'solid': {
-      const { default: solid } = await import('vite-plugin-solid');
-      return [solid() as unknown as Plugin];
-    }
-    case 'svelte': {
-      const { svelte } = await import('@sveltejs/vite-plugin-svelte');
-      return [svelte() as unknown as Plugin];
-    }
-    case 'web-component': {
-      return [webComponentStoryMetadataPlugin()];
-    }
-    default: {
-      return [];
-    }
+  if (framework === 'vue' || framework === 'react') {
+    return loadVueOrReactPlugins(framework, ignoreVueI18nBlocksPlugin);
   }
+  if (framework === 'solid' || framework === 'svelte' || framework === 'web-component') {
+    return loadNonReactPlugins(framework);
+  }
+  return [];
 }
 
 /** The shared `viteFinal` every Mission Platform Storybook build layers on. */

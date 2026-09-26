@@ -402,10 +402,7 @@ export function getFlintRenderWorkerWasm(imports?: WebAssembly.Imports): FlintRe
 }
 
 // Dedicated OffscreenCanvas Web Worker message listener
-if (
-  globalThis.self !== undefined &&
-  typeof (globalThis as unknown as { postMessage?: unknown }).postMessage === 'function'
-) {
+if (globalThis.self !== undefined) {
   let wasm: FlintRenderWorkerWasmExports | undefined;
   let canvas: OffscreenCanvas | HTMLCanvasElement | undefined;
   let width = 800;
@@ -3825,17 +3822,15 @@ if (
   const postReply = (reply: RenderWorkerOutputMessage): void => {
     const messageWithId: RenderWorkerOutputMessage = { id: 'flint_render_worker', ...reply };
     if (globalThis.self === undefined) return;
-    if (globalThis.window === undefined || globalThis.self !== globalThis.window) {
-      if (typeof globalThis.self.postMessage === 'function') {
-        try {
-          globalThis.self.postMessage(messageWithId);
-        } catch {
-          // Ignore JSDOM window.postMessage arity requirements
-        }
+    if (typeof globalThis.self.postMessage === 'function') {
+      try {
+        globalThis.self.postMessage(messageWithId);
+      } catch {
+        // Ignore JSDOM window.postMessage arity requirements
       }
-      if ('dispatchEvent' in globalThis.self && typeof MessageEvent !== 'undefined') {
-        globalThis.self.dispatchEvent(new MessageEvent('message', { data: messageWithId }));
-      }
+    }
+    if ('dispatchEvent' in globalThis.self && typeof MessageEvent !== 'undefined') {
+      globalThis.self.dispatchEvent(new MessageEvent('message', { data: messageWithId }));
     }
   };
 
