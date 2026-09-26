@@ -57,6 +57,28 @@ function computeScrubberFlags(controller: unknown, currentStepIndex: number, tot
 }
 
 /**
+ * Toggles playback controller between play and pause.
+ */
+function toggleControllerPlayback(controller?: TraceDebuggerController, isPlaying = false): void {
+  if (!controller) return;
+  if (isPlaying) {
+    controller.pause();
+  } else {
+    controller.play();
+  }
+}
+
+/**
+ * Seeks controller to target step index if valid.
+ */
+function seekControllerStep(controller: TraceDebuggerController | undefined, event: unknown): void {
+  const stepIndex = extractInputNumberValue(event);
+  if (controller && stepIndex !== undefined) {
+    controller.seekTo(stepIndex);
+  }
+}
+
+/**
  * Framework-neutral Forge playback scrubber for Flint execution traces.
  */
 export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>): MpElement {
@@ -67,41 +89,36 @@ export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>
   const [currentStep, setCurrentStep] = useState<TraceExecutionStep | undefined>(initialStep);
 
   useEffect(() => {
-    if (!controller) return;
-    setPlaybackState(controller.getPlaybackState());
-    setCurrentStep(controller.getCurrentStep());
-    const unsubscribe = controller.subscribe((step) => {
-      setCurrentStep(step);
+    let cleanup: (() => void) | undefined;
+    if (controller) {
       setPlaybackState(controller.getPlaybackState());
-    });
-    return () => {
-      unsubscribe();
-    };
+      setCurrentStep(controller.getCurrentStep());
+      const unsubscribe = controller.subscribe((step) => {
+        setCurrentStep(step);
+        setPlaybackState(controller.getPlaybackState());
+      });
+      cleanup = () => {
+        unsubscribe();
+      };
+    }
+    return cleanup;
   }, [controller]);
 
   /**
    * Toggles playback between playing and paused states.
    */
   const handleTogglePlay = (): void => {
-    if (!controller) {
-      return;
+    toggleControllerPlayback(controller, playbackState.isPlaying);
+    if (controller) {
+      setPlaybackState(controller.getPlaybackState());
     }
-    if (playbackState.isPlaying) {
-      controller.pause();
-    } else {
-      controller.play();
-    }
-    setPlaybackState(controller.getPlaybackState());
   };
 
   /**
    * Seeks the execution timeline to the slider's target step index.
    */
   const handleSliderChange = (event: unknown): void => {
-    const stepIndex = extractInputNumberValue(event);
-    if (controller && stepIndex !== undefined) {
-      controller.seekTo(stepIndex);
-    }
+    seekControllerStep(controller, event);
   };
 
   /**
