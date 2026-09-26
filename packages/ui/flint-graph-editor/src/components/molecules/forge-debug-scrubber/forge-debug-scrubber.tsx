@@ -13,14 +13,8 @@ export interface DebugScrubberProperties {
  * Safely extracts raw property value from event target.
  */
 function extractEventTargetValue(event: unknown): unknown {
-  if (!event || typeof event !== 'object' || !('target' in event)) {
-    return undefined;
-  }
-  const target = Reflect.get(event, 'target');
-  if (!target || typeof target !== 'object' || !('value' in target)) {
-    return undefined;
-  }
-  return Reflect.get(target, 'value');
+  const target = (event as { target?: { value?: unknown } } | undefined)?.target;
+  return target?.value;
 }
 
 /**
@@ -50,13 +44,14 @@ const DEFAULT_PLAYBACK_STATE = {
  * Computes disabled state flags for scrubber controls.
  */
 function computeScrubberFlags(controller: unknown, currentStepIndex: number, totalSteps: number) {
-  const hasNoController = !controller;
-  const hasNoSteps = totalSteps === 0;
+  const disabledPrevious = !controller || currentStepIndex === 0;
+  const disabledNext = !controller || currentStepIndex >= totalSteps - 1;
+  const disabledAction = !controller || totalSteps === 0;
   return {
-    disabledPrev: hasNoController || currentStepIndex === 0,
-    disabledNext: hasNoController || currentStepIndex >= totalSteps - 1,
-    disabledPlay: hasNoController || hasNoSteps,
-    disabledSlider: hasNoController || hasNoSteps,
+    disabledPrevious,
+    disabledNext,
+    disabledPlay: disabledAction,
+    disabledSlider: disabledAction,
     displayStep: totalSteps > 0 ? currentStepIndex + 1 : 0,
   };
 }
@@ -66,25 +61,22 @@ function computeScrubberFlags(controller: unknown, currentStepIndex: number, tot
  */
 export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>): MpElement {
   const controller = properties?.controller;
-  const initialPlaybackState = controller ? controller.getPlaybackState() : DEFAULT_PLAYBACK_STATE;
-  const initialStep = controller ? controller.getCurrentStep() : undefined;
+  const initialPlaybackState = controller?.getPlaybackState() ?? DEFAULT_PLAYBACK_STATE;
+  const initialStep = controller?.getCurrentStep();
   const [playbackState, setPlaybackState] = useState(initialPlaybackState);
   const [currentStep, setCurrentStep] = useState<TraceExecutionStep | undefined>(initialStep);
 
   useEffect(() => {
-    let cleanup: (() => void) | undefined;
-    if (controller) {
+    if (!controller) return;
+    setPlaybackState(controller.getPlaybackState());
+    setCurrentStep(controller.getCurrentStep());
+    const unsubscribe = controller.subscribe((step) => {
+      setCurrentStep(step);
       setPlaybackState(controller.getPlaybackState());
-      setCurrentStep(controller.getCurrentStep());
-      const unsubscribe = controller.subscribe((step) => {
-        setCurrentStep(step);
-        setPlaybackState(controller.getPlaybackState());
-      });
-      cleanup = () => {
-        unsubscribe();
-      };
-    }
-    return cleanup;
+    });
+    return () => {
+      unsubscribe();
+    };
   }, [controller]);
 
   /**
@@ -137,7 +129,7 @@ export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>
             className={styles.controlBtn}
             title="Step Backward"
             aria-label="Step Backward"
-            disabled={flags.disabledPrev}
+            disabled={flags.disabledPrevious}
             onClick={() => controller?.stepBackward()}
           >
             ⏮

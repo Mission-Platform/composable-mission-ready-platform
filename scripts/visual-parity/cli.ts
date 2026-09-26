@@ -109,13 +109,20 @@ function positiveIntegerOption(args: string[], name: string, fallback: number): 
 }
 
 /**
+ * Checks if a numeric value is a valid TCP base port allowing consecutive allocation.
+ */
+function isValidBasePort(value: number): boolean {
+  return Number.isInteger(value) && value >= 1 && value <= 65_531;
+}
+
+/**
  * Parses base port flag for all renderers.
  */
 function parseBasePort(args: string[], ports: Partial<Record<VisualParityRenderer, number>>): void {
   const base = option(args, '--port');
   if (base === undefined) return;
   const value = Number(base);
-  if (!Number.isInteger(value) || value < 1 || value > 65_531) {
+  if (!isValidBasePort(value)) {
     throw new Error('--port must allow five valid consecutive TCP ports.');
   }
   let index = 0;
@@ -268,13 +275,19 @@ function matchesCompactSelector(id: string, sel: string): boolean {
   return compactSel.length > 0 && (compactId === compactSel || compactId.endsWith(compactSel));
 }
 
+/**
+ * Checks if a story ID matches a selector or common naming variants.
+ */
+function isDirectStoryMatch(id: string, sel: string): boolean {
+  return !sel || id === sel || id.endsWith(sel) || id.endsWith(`--${sel}`);
+}
+
 /** Match exact Storybook IDs, documented short selectors, or compact alphanumeric suffixes. */
 export function matchesStorySelector(storyId: string, selector?: string): boolean {
   if (!selector || storyId === selector) return true;
   const id = storyId.toLowerCase();
   const sel = selector.toLowerCase().trim().replaceAll(/\s+/g, '-');
-  if (!sel || id === sel || id.endsWith(sel) || id.endsWith(`--${sel}`)) return true;
-  return matchesCompactSelector(id, sel);
+  return isDirectStoryMatch(id, sel) || matchesCompactSelector(id, sel);
 }
 
 /**

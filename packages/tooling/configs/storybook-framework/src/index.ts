@@ -225,13 +225,17 @@ function frameworkPackageResolvePlugin(
     name: 'mission-platform:framework-package-resolve',
     enforce: 'pre',
     resolveId(source: string, importer: string | undefined) {
+      let resolved: string | undefined;
       const match = /^@mission-platform\/([^/]+)$/.exec(source);
-      if (!match) return;
-      const isFacadeSelfImport =
-        FACADE_FIRST_PACKAGES.includes(match[1]) && Boolean(importer && /[/\\]dist[/\\]/.test(importer));
-      if (isFacadeSelfImport) return;
-      const packageRoot = resolvePackageRoot(repoRoot, match[1], exists);
-      return resolvePackageArtifact(packageRoot, target, exists);
+      if (match) {
+        const isFacadeSelfImport =
+          FACADE_FIRST_PACKAGES.includes(match[1]) && Boolean(importer && /[/\\]dist[/\\]/.test(importer));
+        if (!isFacadeSelfImport) {
+          const packageRoot = resolvePackageRoot(repoRoot, match[1], exists);
+          resolved = resolvePackageArtifact(packageRoot, target, exists);
+        }
+      }
+      return resolved;
     },
   };
 }
@@ -335,12 +339,9 @@ async function loadFrameworkPlugins(
   ignoreVueI18nBlocksPlugin: () => Plugin,
 ): Promise<Plugin[]> {
   if (framework === 'vue' || framework === 'react') {
-    return loadVueOrReactPlugins(framework, ignoreVueI18nBlocksPlugin);
+    return await loadVueOrReactPlugins(framework, ignoreVueI18nBlocksPlugin);
   }
-  if (framework === 'solid' || framework === 'svelte' || framework === 'web-component') {
-    return loadNonReactPlugins(framework);
-  }
-  return [];
+  return await loadNonReactPlugins(framework);
 }
 
 /** The shared `viteFinal` every Mission Platform Storybook build layers on. */

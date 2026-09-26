@@ -524,7 +524,12 @@ function runVisualParityCaptureChunk(options: VisualParityCaptureOptions): Promi
     let pending = '';
     let stderr = '';
     let settled = false;
-    let timer: NodeJS.Timeout | undefined;
+
+    const timeoutMs = egoProcessTimeoutMs(options.captures.length, options.timeoutMs ?? 30_000);
+    const timer = setTimeout(() => {
+      diagnostics.push(`Ego Lite timed out after ${timeoutMs}ms`);
+      terminateProcessTree(child, { graceMs: 250 }).finally(() => finish());
+    }, timeoutMs);
 
     /**
      * Finalizes child process lifecycle and resolves promise.
@@ -532,16 +537,10 @@ function runVisualParityCaptureChunk(options: VisualParityCaptureOptions): Promi
     const finish = (): void => {
       if (settled) return;
       settled = true;
-      if (timer) clearTimeout(timer);
+      clearTimeout(timer);
       populateMissingCaptureFailures(options, results, diagnostics, stderr);
       resolve({ results, diagnostics, cleanupErrors });
     };
-
-    const timeoutMs = egoProcessTimeoutMs(options.captures.length, options.timeoutMs ?? 30_000);
-    timer = setTimeout(() => {
-      diagnostics.push(`Ego Lite timed out after ${timeoutMs}ms`);
-      terminateProcessTree(child, { graceMs: 250 }).finally(() => finish());
-    }, timeoutMs);
 
     /**
      * Ingests chunk stream buffer and processes JSON lines.

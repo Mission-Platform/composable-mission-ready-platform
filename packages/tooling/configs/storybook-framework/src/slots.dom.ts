@@ -94,25 +94,26 @@ function isObjectOrFunctionProperty(custom: boolean, value: unknown): boolean {
 }
 
 /**
+ * Checks if property key matches class attribute name.
+ */
+function isClassProperty(key: string): boolean {
+  return key === 'class' || key === 'className';
+}
+
+/**
  * Applies a single JSX property or attribute to a DOM element.
  */
 function applySingleProperty(element: Element, key: string, value: unknown, custom: boolean): void {
-  if (isIgnoredProperty(key, value)) {
-    return;
-  }
+  if (isIgnoredProperty(key, value)) return;
   if (key === 'style') {
     applyStyleProperty(element, value);
-    return;
-  }
-  if (key === 'class' || key === 'className') {
+  } else if (isClassProperty(key)) {
     element.setAttribute('class', String(value));
-    return;
-  }
-  if (isObjectOrFunctionProperty(custom, value)) {
+  } else if (isObjectOrFunctionProperty(custom, value)) {
     applyCustomOrObjectProperty(element, key, value, custom);
-    return;
+  } else {
+    applyPrimitiveAttribute(element, key, value);
   }
-  applyPrimitiveAttribute(element, key, value);
 }
 
 /** Apply a JSX property bag to a real DOM element. */
