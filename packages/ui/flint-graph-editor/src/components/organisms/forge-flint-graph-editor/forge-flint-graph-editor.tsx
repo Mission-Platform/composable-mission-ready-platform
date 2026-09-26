@@ -307,6 +307,21 @@ function hitTestPortList(
 }
 
 /**
+ * Tests port hits on both input and output ports of a single node.
+ */
+function hitTestNodePorts(
+  node: FlintGraphNode,
+  worldX: number,
+  worldY: number,
+  snapRadius: number,
+): FlintHitResult | undefined {
+  return (
+    hitTestPortList(node.inputs ?? [], node.position.x, node.position.y, worldX, worldY, snapRadius, node.id) ??
+    hitTestPortList(node.outputs ?? [], node.position.x + 220, node.position.y, worldX, worldY, snapRadius, node.id)
+  );
+}
+
+/**
  * Performs port hit-testing against candidate nodes within a snap radius.
  */
 function hitTestPorts(
@@ -316,27 +331,8 @@ function hitTestPorts(
   snapRadius: number,
 ): FlintHitResult | undefined {
   for (const node of nodes) {
-    const inHit = hitTestPortList(
-      node.inputs ?? [],
-      node.position.x,
-      node.position.y,
-      worldX,
-      worldY,
-      snapRadius,
-      node.id,
-    );
-    if (inHit) return inHit;
-
-    const outHit = hitTestPortList(
-      node.outputs ?? [],
-      node.position.x + 220,
-      node.position.y,
-      worldX,
-      worldY,
-      snapRadius,
-      node.id,
-    );
-    if (outHit) return outHit;
+    const hit = hitTestNodePorts(node, worldX, worldY, snapRadius);
+    if (hit) return hit;
   }
   return undefined;
 }
@@ -352,12 +348,9 @@ function isPointInsideNode(
 ): boolean {
   const maxPorts = Math.max(node.inputs?.length ?? 0, node.outputs?.length ?? 0);
   wasm.getNodeBounds(node.position.x, node.position.y, maxPorts);
-  return (
-    worldX >= wasm.get_node_bounds_min_x() &&
-    worldX <= wasm.get_node_bounds_max_x() &&
-    worldY >= wasm.get_node_bounds_min_y() &&
-    worldY <= wasm.get_node_bounds_max_y()
-  );
+  const inX = worldX >= wasm.get_node_bounds_min_x() && worldX <= wasm.get_node_bounds_max_x();
+  const inY = worldY >= wasm.get_node_bounds_min_y() && worldY <= wasm.get_node_bounds_max_y();
+  return inX && inY;
 }
 
 /**
@@ -486,13 +479,11 @@ function hitTestGroupLabels(
 ): FlintHitResult | undefined {
   if (!groups || groups.length === 0) return undefined;
   const nodeMap = new Map<string, FlintGraphNode>(nodes.map((n) => [n.id, n]));
-  for (const group of groups) {
+  const matched = groups.find((group) => {
     const bounds = computeGroupBoundingBox(group.nodeIds, nodeMap);
-    if (bounds && isPointInGroupPill(worldX, worldY, group.title, bounds)) {
-      return { type: 'group', groupId: group.id, nodeId: '', worldX, worldY };
-    }
-  }
-  return undefined;
+    return bounds ? isPointInGroupPill(worldX, worldY, group.title, bounds) : false;
+  });
+  return matched ? { type: 'group', groupId: matched.id, nodeId: '', worldX, worldY } : undefined;
 }
 
 /**

@@ -13,13 +13,11 @@ export interface DebugScrubberProperties {
  * Extracts numeric value from a DOM input event if valid.
  */
 function extractInputNumberValue(event: unknown): number | undefined {
-  if (typeof HTMLInputElement !== 'undefined' && typeof event === 'object' && event !== null && 'target' in event) {
-    const target = Reflect.get(event, 'target');
-    if (target instanceof HTMLInputElement) {
-      return Number(target.value);
-    }
-  }
-  return undefined;
+  const target =
+    typeof event === 'object' && event !== null && 'target' in event ? Reflect.get(event, 'target') : undefined;
+  const rawValue =
+    typeof target === 'object' && target !== null && 'value' in target ? Reflect.get(target, 'value') : undefined;
+  return typeof rawValue === 'string' || typeof rawValue === 'number' ? Number(rawValue) : undefined;
 }
 
 const SPEED_PRESETS = [0.5, 1, 2] as const;
@@ -44,18 +42,19 @@ export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>
   );
 
   useEffect(() => {
-    if (!controller) {
-      return;
-    }
-    setPlaybackState(controller.getPlaybackState());
-    setCurrentStep(controller.getCurrentStep());
-    const unsubscribe = controller.subscribe((step) => {
-      setCurrentStep(step);
+    let cleanup: (() => void) | undefined;
+    if (controller) {
       setPlaybackState(controller.getPlaybackState());
-    });
-    return () => {
-      unsubscribe();
-    };
+      setCurrentStep(controller.getCurrentStep());
+      const unsubscribe = controller.subscribe((step) => {
+        setCurrentStep(step);
+        setPlaybackState(controller.getPlaybackState());
+      });
+      cleanup = () => {
+        unsubscribe();
+      };
+    }
+    return cleanup;
   }, [controller]);
 
   /**
@@ -94,8 +93,11 @@ export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>
   };
 
   const totalSteps = playbackState.totalSteps;
-  const isTrap = currentStep?.isTrap ?? false;
+  const isTrap = Boolean(currentStep?.isTrap);
   const displayStep = totalSteps > 0 ? playbackState.currentStep + 1 : 0;
+  const isFirstStep = playbackState.currentStep === 0;
+  const isLastStep = playbackState.currentStep >= totalSteps - 1;
+  const hasNoSteps = totalSteps === 0;
 
   return (
     <div className={classNames(styles.scrubberContainer, properties?.className)}>
@@ -106,7 +108,7 @@ export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>
             className={styles.controlBtn}
             title="Step Backward"
             aria-label="Step Backward"
-            disabled={playbackState.currentStep === 0 || !controller}
+            disabled={isFirstStep || !controller}
             onClick={() => controller?.stepBackward()}
           >
             ⏮
@@ -116,7 +118,7 @@ export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>
             className={classNames(styles.controlBtn, styles.primaryBtn)}
             title={playbackState.isPlaying ? 'Pause' : 'Play'}
             aria-label={playbackState.isPlaying ? 'Pause' : 'Play'}
-            disabled={totalSteps === 0 || !controller}
+            disabled={hasNoSteps || !controller}
             onClick={handleTogglePlay}
           >
             {playbackState.isPlaying ? '⏸' : '▶'}
@@ -126,7 +128,7 @@ export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>
             className={styles.controlBtn}
             title="Step Forward"
             aria-label="Step Forward"
-            disabled={playbackState.currentStep >= totalSteps - 1 || !controller}
+            disabled={isLastStep || !controller}
             onClick={() => controller?.stepForward()}
           >
             ⏭
@@ -139,7 +141,7 @@ export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>
             min="0"
             max={Math.max(0, totalSteps - 1)}
             value={playbackState.currentStep}
-            disabled={totalSteps === 0 || !controller}
+            disabled={hasNoSteps || !controller}
             aria-label="Execution timeline scrubber"
             className={styles.slider}
             onInput={handleSliderChange}

@@ -315,14 +315,22 @@ function emitRecordStructs(nodes: readonly FlintGraphNode[], appendLine: (text: 
 }
 
 /**
+ * Extracts unique custom code string from node if defined.
+ */
+function extractNodeCustomCode(node: FlintGraphNode): string | undefined {
+  const isCustom = node.kind === 'custom' || node.operation === 'flint_code';
+  return isCustom && node.properties?.code ? String(node.properties.code).trim() : undefined;
+}
+
+/**
  * Emits user-defined custom code declarations once per unique code body.
  */
 function emitCustomCodeDeclarations(nodes: readonly FlintGraphNode[], appendLine: (text: string) => void): void {
   const customCodes = new Set<string>();
   for (const node of nodes) {
-    const isCustom = node.kind === 'custom' || node.operation === 'flint_code';
-    if (isCustom && node.properties?.code) {
-      customCodes.add(String(node.properties.code).trim());
+    const code = extractNodeCustomCode(node);
+    if (code) {
+      customCodes.add(code);
     }
   }
   for (const codeString of customCodes) {
@@ -452,6 +460,16 @@ function resolveCapabilityCallSource(
 }
 
 /**
+ * Resolves the callee identifier for a custom code node or operation.
+ */
+function resolveCustomOrOperationCallee(node: FlintGraphNode): string {
+  const isCustomCode = node.operation === 'flint_code' || node.kind === 'custom';
+  return isCustomCode
+    ? sanitizeIdentifier(String(node.properties?.functionName ?? `custom_${node.id}`))
+    : node.operation;
+}
+
+/**
  * Resolves capability calls or custom function invocations into Flint expression strings.
  */
 function resolveCapabilityOrCustomExpression(
@@ -469,10 +487,7 @@ function resolveCapabilityOrCustomExpression(
   }
 
   const arguments_ = node.inputs.map((port) => resolveInputSource(node, port.id)).join(', ');
-  const isCustomCode = node.operation === 'flint_code' || node.kind === 'custom';
-  const callee = isCustomCode
-    ? sanitizeIdentifier(String(node.properties?.functionName ?? `custom_${node.id}`))
-    : node.operation;
+  const callee = resolveCustomOrOperationCallee(node);
   return `${callee}(${arguments_})`;
 }
 

@@ -72,16 +72,23 @@ function firstOptionName(args: string[], names: string[]): string {
 }
 
 /**
+ * Asserts numeric value is finite and within bounds.
+ */
+function assertNumericBounds(value: number, name: string, min: number, max?: number): void {
+  const isValid = Number.isFinite(value) && value >= min && (max === undefined || value <= max);
+  if (!isValid) {
+    throw new Error(`${name} must be a number${max === undefined ? ` >= ${min}` : ` between ${min} and ${max}`}.`);
+  }
+}
+
+/**
  * Parses a numeric CLI option with validation bounds.
  */
 function numericOption(args: string[], name: string, fallback: number, min: number, max?: number): number {
   const raw = option(args, name);
   if (raw === undefined) return fallback;
   const value = Number(raw);
-  const isValid = Number.isFinite(value) && value >= min && (max === undefined || value <= max);
-  if (!isValid) {
-    throw new Error(`${name} must be a number${max === undefined ? ` >= ${min}` : ` between ${min} and ${max}`}.`);
-  }
+  assertNumericBounds(value, name, min, max);
   return value;
 }
 
@@ -95,10 +102,9 @@ function positiveIntegerOption(args: string[], name: string, fallback: number): 
 }
 
 /**
- * Parses TCP port allocations for framework renderers from CLI flags.
+ * Parses base port flag for all renderers.
  */
-function parsePorts(args: string[]): Partial<Record<VisualParityRenderer, number>> {
-  const ports: Partial<Record<VisualParityRenderer, number>> = {};
+function parseBasePort(args: string[], ports: Partial<Record<VisualParityRenderer, number>>): void {
   const base = option(args, '--port');
   if (base !== undefined) {
     const value = Number(base);
@@ -109,6 +115,12 @@ function parsePorts(args: string[]): Partial<Record<VisualParityRenderer, number
       ports[renderer] = value + index;
     }
   }
+}
+
+/**
+ * Parses individual framework renderer port flags.
+ */
+function parseIndividualPorts(args: string[], ports: Partial<Record<VisualParityRenderer, number>>): void {
   for (const renderer of VISUAL_PARITY_RENDERERS) {
     const value = option(args, `--${renderer}-port`);
     if (value !== undefined) {
@@ -119,6 +131,12 @@ function parsePorts(args: string[]): Partial<Record<VisualParityRenderer, number
       ports[renderer] = port;
     }
   }
+}
+
+/**
+ * Parses comma-separated --ports list flag.
+ */
+function parsePortsList(args: string[], ports: Partial<Record<VisualParityRenderer, number>>): void {
   const list = option(args, '--ports');
   if (list !== undefined) {
     for (const item of list.split(',')) {
@@ -133,6 +151,16 @@ function parsePorts(args: string[]): Partial<Record<VisualParityRenderer, number
       ports[renderer as VisualParityRenderer] = port;
     }
   }
+}
+
+/**
+ * Parses TCP port allocations for framework renderers from CLI flags.
+ */
+function parsePorts(args: string[]): Partial<Record<VisualParityRenderer, number>> {
+  const ports: Partial<Record<VisualParityRenderer, number>> = {};
+  parseBasePort(args, ports);
+  parseIndividualPorts(args, ports);
+  parsePortsList(args, ports);
   return ports;
 }
 
@@ -159,13 +187,24 @@ function parseTargets(args: string[]): readonly VisualParityCandidate[] | undefi
 }
 
 /**
+ * Validates viewport and theme CLI parameters.
+ */
+function assertViewportAndTheme(viewport: string, theme: string): void {
+  if (viewport !== 'md') {
+    throw new Error('Visual parity currently supports only --viewport md.');
+  }
+  if (theme !== 'light') {
+    throw new Error('Visual parity currently supports only --theme light.');
+  }
+}
+
+/**
  * Parses command line options for visual parity execution and verification.
  */
 export function parseVisualParityArgs(args: string[], root = repositoryRoot()): VisualParityCliOptions {
   const viewport = option(args, '--viewport') ?? 'md';
   const theme = option(args, '--theme') ?? 'light';
-  if (viewport !== 'md') throw new Error('Visual parity currently supports only --viewport md.');
-  if (theme !== 'light') throw new Error('Visual parity currently supports only --theme light.');
+  assertViewportAndTheme(viewport, theme);
   return {
     repositoryRoot: root,
     packageName: option(args, '--package'),
@@ -196,15 +235,22 @@ export function parseVisualParityArgs(args: string[], root = repositoryRoot()): 
   };
 }
 
+/**
+ * Compares compact normalized forms of story and selector.
+ */
+function matchesCompactSelector(id: string, sel: string): boolean {
+  const compactId = compactSelector(id);
+  const compactSel = compactSelector(sel);
+  return compactSel.length > 0 && (compactId === compactSel || compactId.endsWith(compactSel));
+}
+
 /** Match exact Storybook IDs, documented short selectors, or compact alphanumeric suffixes. */
 export function matchesStorySelector(storyId: string, selector?: string): boolean {
   if (!selector || storyId === selector) return true;
   const id = storyId.toLowerCase();
   const sel = selector.toLowerCase().trim().replaceAll(/\s+/g, '-');
   if (!sel || id === sel || id.endsWith(sel) || id.endsWith(`--${sel}`)) return true;
-  const compactId = compactSelector(id);
-  const compactSel = compactSelector(sel);
-  return compactSel.length > 0 && (compactId === compactSel || compactId.endsWith(compactSel));
+  return matchesCompactSelector(id, sel);
 }
 
 /**
@@ -262,6 +308,43 @@ function captureFailure(capture: VisualParityCaptureResult | undefined): VisualP
 type VisualParityComparisonStatus = VisualParityComparison['status'];
 
 /**
+ * Executes PNG diff comparison and populates result fields.
+ */
+function executeDiffComparison(
+  baseline: VisualParityCaptureResult,
+  candidateCapture: VisualParityCaptureResult,
+  diffPath: string,
+  options: VisualParityCliOptions,
+  comparison: VisualParityComparison,
+): void {
+  try {
+    const diff = comparePngFiles({
+      baselinePath: baseline.imagePath as string,
+      candidatePath: candidateCapture.imagePath as string,
+      diffPath,
+      pixelThreshold: options.pixelThreshold,
+      maxMismatchRatio: options.maxMismatchRatio,
+    });
+    comparison.mismatchPixels = diff.mismatchPixels;
+    comparison.mismatchRatio = diff.mismatchRatio;
+    if (diff.status === 'dimension-mismatch') {
+      comparison.status = 'runtime-failure';
+      comparison.message = diff.message;
+    } else {
+      comparison.status = diff.status;
+      if (diff.diffPath) {
+        comparison.diffImage = diff.diffPath;
+        comparison.baselineImage = baseline.imagePath;
+        comparison.candidateImage = candidateCapture.imagePath;
+      }
+    }
+  } catch (error) {
+    comparison.status = 'runtime-failure';
+    comparison.message = error instanceof Error ? error.message : String(error);
+  }
+}
+
+/**
  * Compares candidate renderer capture against web-component baseline.
  */
 function compareRenderer(
@@ -290,31 +373,7 @@ function compareRenderer(
     storyArtifactDirectory(outputDirectory, storyId),
     `web-component-to-${candidate}.diff.png`,
   );
-  try {
-    const diff = comparePngFiles({
-      baselinePath: baseline.imagePath as string,
-      candidatePath: candidateCapture.imagePath as string,
-      diffPath,
-      pixelThreshold: options.pixelThreshold,
-      maxMismatchRatio: options.maxMismatchRatio,
-    });
-    comparison.mismatchPixels = diff.mismatchPixels;
-    comparison.mismatchRatio = diff.mismatchRatio;
-    if (diff.status === 'dimension-mismatch') {
-      comparison.status = 'runtime-failure';
-      comparison.message = diff.message;
-    } else {
-      comparison.status = diff.status;
-      if (diff.diffPath) {
-        comparison.diffImage = diff.diffPath;
-        comparison.baselineImage = baseline.imagePath;
-        comparison.candidateImage = candidateCapture.imagePath;
-      }
-    }
-  } catch (error) {
-    comparison.status = 'runtime-failure';
-    comparison.message = error instanceof Error ? error.message : String(error);
-  }
+  executeDiffComparison(baseline, candidateCapture, diffPath, options, comparison);
   return comparison;
 }
 

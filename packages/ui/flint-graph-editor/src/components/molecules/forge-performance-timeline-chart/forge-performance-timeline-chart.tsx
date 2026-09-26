@@ -19,14 +19,15 @@ type SvgGroupSelection = Selection<SVGGElement, unknown, null, undefined>;
  * Sums individual breakdown time metrics for a single sample.
  */
 function sumSampleBreakdown(metricsItem: FlintPerformanceMetrics): number {
-  return (
-    (metricsItem.drawPassTimeMs ?? 0) +
-    (metricsItem.textPassTimeMs ?? 0) +
-    (metricsItem.bufferUploadTimeMs ?? 0) +
-    (metricsItem.spatialIndexTimeMs ?? 0) +
-    (metricsItem.updateTimeMs ?? 0) +
-    (metricsItem.layoutTimeMs ?? 0)
-  );
+  const values = [
+    metricsItem.drawPassTimeMs,
+    metricsItem.textPassTimeMs,
+    metricsItem.bufferUploadTimeMs,
+    metricsItem.spatialIndexTimeMs,
+    metricsItem.updateTimeMs,
+    metricsItem.layoutTimeMs,
+  ];
+  return values.reduce((accumulator: number, current) => accumulator + (current ?? 0), 0);
 }
 
 /**
@@ -311,12 +312,22 @@ function normalizeTimelineSamples(
 }
 
 /**
+ * Resolves fallback rendering fraction if explicit pass latency is absent.
+ */
+function resolveRenderFraction(passTime: number | undefined, totalRender: number | undefined, ratio: number): number {
+  if (passTime !== undefined) {
+    return passTime;
+  }
+  return totalRender ? totalRender * ratio : 0.2;
+}
+
+/**
  * Builds legend items for individual latency metric categories.
  */
 function buildCategoryLegendItems(metrics: FlintPerformanceMetrics): readonly CategoryLegendItem[] {
   const updatesValue = (metrics.updateTimeMs ?? 0) + (metrics.layoutTimeMs ?? 0);
-  const textValue = metrics.textPassTimeMs ?? (metrics.renderTimeMs ? metrics.renderTimeMs * 0.3 : 0.2);
-  const drawValue = metrics.drawPassTimeMs ?? (metrics.renderTimeMs ? metrics.renderTimeMs * 0.5 : 0.4);
+  const textValue = resolveRenderFraction(metrics.textPassTimeMs, metrics.renderTimeMs, 0.3);
+  const drawValue = resolveRenderFraction(metrics.drawPassTimeMs, metrics.renderTimeMs, 0.5);
 
   return [
     { label: 'Updates & Layout', color: '#f0883e', value: updatesValue },

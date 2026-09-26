@@ -199,11 +199,18 @@ export function buildStoryIframeUrl(baseUrl: string, storyId: string, theme?: st
 }
 
 /**
+ * Validates that a viewport matches the deterministic md viewport constraints.
+ */
+function isStandardMdViewport(value: VisualParityViewport): boolean {
+  return value.name === 'md' && value.width === 1024 && value.height === 768 && value.deviceScaleFactor === 1;
+}
+
+/**
  * Validates and normalizes viewport configuration against deterministic capture constraints.
  */
 function normalizeViewport(viewport?: VisualParityViewport): VisualParityViewport {
   const value = viewport ?? DEFAULT_VISUAL_PARITY_VIEWPORT;
-  if (value.name !== 'md' || value.width !== 1024 || value.height !== 768 || value.deviceScaleFactor !== 1) {
+  if (!isStandardMdViewport(value)) {
     throw new Error('Visual parity capture currently supports only the deterministic md viewport (1024x768 @ 1x).');
   }
   return value;
@@ -413,6 +420,48 @@ export function egoProcessTimeoutMs(captureCount: number, perCaptureTimeoutMs = 
 }
 
 /**
+ * Fills in failure capture results for entries missing from Ego output.
+ */
+function populateMissingCaptureFailures(
+  options: VisualParityCaptureOptions,
+  results: VisualParityCaptureResult[],
+  diagnostics: readonly string[],
+  stderr: string,
+): void {
+  const byKey = new Map(results.map((result) => [`${result.renderer}:${result.storyId}`, result]));
+  for (const capture of options.captures) {
+    const key = `${capture.renderer}:${capture.storyId}`;
+    if (!byKey.has(key)) {
+      const message = (diagnostics.at(-1) ?? stderr.trim()) || 'Ego Lite completed without a capture result.';
+      results.push(failureResult(capture, message, diagnostics.length > 0 ? 'runtime-failure' : 'blocked'));
+    }
+  }
+}
+
+/**
+ * Parses a single line of Ego runner JSON output.
+ */
+function parseOutputLine(
+  line: string,
+  results: VisualParityCaptureResult[],
+  diagnostics: string[],
+  cleanupErrors: string[],
+): void {
+  try {
+    const message = JSON.parse(line) as CaptureMessage;
+    if (message.kind === 'capture' && message.result) results.push(message.result);
+    if (message.kind === 'done') {
+      diagnostics.push(...(message.diagnostics ?? []));
+      if (message.cleanupErrors) {
+        cleanupErrors.push(...message.cleanupErrors);
+      }
+    }
+  } catch {
+    // ego-browser may emit human-readable diagnostics alongside JSON.
+  }
+}
+
+/**
  * Executes an isolated batch of captures within an Ego Lite child process.
  */
 function runVisualParityCaptureChunk(options: VisualParityCaptureOptions): Promise<VisualParityCaptureRun> {
@@ -425,50 +474,40 @@ function runVisualParityCaptureChunk(options: VisualParityCaptureOptions): Promi
     }) as unknown as PipedProcess;
     const results: VisualParityCaptureResult[] = [];
     const diagnostics: string[] = [];
-    let cleanupErrors: string[] = [];
+    const cleanupErrors: string[] = [];
     let pending = '';
     let stderr = '';
     let settled = false;
-    let timeout: NodeJS.Timeout | undefined;
 
+    /**
+     * Finalizes child process lifecycle and resolves promise.
+     */
     const finish = (): void => {
       if (settled) return;
       settled = true;
-      if (timeout) clearTimeout(timeout);
-      const byKey = new Map(results.map((result) => [`${result.renderer}:${result.storyId}`, result]));
-      for (const capture of options.captures) {
-        const key = `${capture.renderer}:${capture.storyId}`;
-        if (!byKey.has(key)) {
-          const message = (diagnostics.at(-1) ?? stderr.trim()) || 'Ego Lite completed without a capture result.';
-          results.push(failureResult(capture, message, diagnostics.length > 0 ? 'runtime-failure' : 'blocked'));
-        }
-      }
+      clearTimeout(timer);
+      populateMissingCaptureFailures(options, results, diagnostics, stderr);
       resolve({ results, diagnostics, cleanupErrors });
     };
 
     const timeoutMs = egoProcessTimeoutMs(options.captures.length, options.timeoutMs ?? 30_000);
-    timeout = setTimeout(() => {
+    const timer = setTimeout(() => {
       diagnostics.push(`Ego Lite timed out after ${timeoutMs}ms`);
       terminateProcessTree(child, { graceMs: 250 }).finally(() => finish());
     }, timeoutMs);
 
+    /**
+     * Ingests chunk stream buffer and processes JSON lines.
+     */
     const parse = (chunk: Buffer): void => {
       pending += chunk.toString();
       const lines = pending.split('\n');
       pending = lines.pop() ?? '';
       for (const line of lines) {
-        try {
-          const message = JSON.parse(line) as CaptureMessage;
-          if (message.kind === 'capture' && message.result) results.push(message.result);
-          if (message.kind === 'done') {
-            diagnostics.push(...(message.diagnostics ?? []));
-            cleanupErrors = message.cleanupErrors ?? [];
-          }
-        } catch {
-          // ego-browser may emit human-readable diagnostics alongside JSON.
-        }
+        parseOutputLine(line, results, diagnostics, cleanupErrors);
       }
     };
+
     child.stdout.on('data', parse);
     child.stderr.on('data', (chunk) => {
       stderr += chunk.toString();
@@ -480,8 +519,9 @@ function runVisualParityCaptureChunk(options: VisualParityCaptureOptions): Promi
     });
     child.on('close', (code) => {
       if (pending.trim()) parse(Buffer.from(`${pending}\n`));
-      if (code !== 0 && diagnostics.length === 0)
+      if (code !== 0 && diagnostics.length === 0) {
         diagnostics.push(stderr || `ego-browser exited with code ${code ?? 'null'}`);
+      }
       finish();
     });
     child.stdin.end(visualParityEgoScript(options));
@@ -499,6 +539,10 @@ async function mapPool<T, R>(
   const limit = Math.max(1, Math.floor(concurrency));
   const results = Array.from({ length: items.length });
   let next = 0;
+
+  /**
+   * Worker loop pulling work items from the shared pool queue.
+   */
   const run = async (): Promise<void> => {
     while (next < items.length) {
       const index = next++;
@@ -508,6 +552,7 @@ async function mapPool<T, R>(
       }
     }
   };
+
   await Promise.all(Array.from({ length: Math.min(limit, items.length) }, () => run()));
   return results as R[];
 }

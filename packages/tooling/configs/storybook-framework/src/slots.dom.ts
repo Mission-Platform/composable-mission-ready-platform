@@ -47,12 +47,18 @@ function kebabCase(name: string): string {
     .toLowerCase();
 }
 
+/**
+ * Applies CSS style object to HTMLElement.
+ */
 function applyStyleProperty(element: Element, value: unknown): void {
   if (typeof value === 'object' && value !== null) {
     Object.assign((element as HTMLElement).style, value);
   }
 }
 
+/**
+ * Applies custom element or event listener property.
+ */
 function applyCustomOrObjectProperty(element: Element, key: string, value: unknown, custom: boolean): void {
   if (!custom && EVENT_PROPERTY.test(key) && typeof value === 'function') {
     element.addEventListener(key.slice(2).toLowerCase(), value as EventListener);
@@ -61,6 +67,21 @@ function applyCustomOrObjectProperty(element: Element, key: string, value: unkno
   (element as unknown as Record<string, unknown>)[key] = value;
 }
 
+/**
+ * Sets primitive HTML element attribute.
+ */
+function applyPrimitiveAttribute(element: Element, key: string, value: unknown): void {
+  if (value === false || value === null) {
+    return;
+  }
+  const attributeName = value === true ? key : toAttributeName(key);
+  const attributeValue = value === true ? '' : String(value);
+  element.setAttribute(attributeName, attributeValue);
+}
+
+/**
+ * Applies a single JSX property or attribute to a DOM element.
+ */
 function applySingleProperty(element: Element, key: string, value: unknown, custom: boolean): void {
   if (key === 'children' || key === 'key' || value === undefined) {
     return;
@@ -77,12 +98,7 @@ function applySingleProperty(element: Element, key: string, value: unknown, cust
     applyCustomOrObjectProperty(element, key, value, custom);
     return;
   }
-  if (value === false || value === null) {
-    return;
-  }
-  const attributeName = value === true ? key : toAttributeName(key);
-  const attributeValue = value === true ? '' : String(value);
-  element.setAttribute(attributeName, attributeValue);
+  applyPrimitiveAttribute(element, key, value);
 }
 
 /** Apply a JSX property bag to a real DOM element. */
@@ -104,6 +120,9 @@ function toAttributeName(key: string): string {
   return key.startsWith('aria') && key.length > 4 ? kebabCase(key) : key;
 }
 
+/**
+ * Determines whether a child value is null, undefined, or boolean and should be skipped.
+ */
 function isSkippableChild(child: ChildValue): boolean {
   return child === undefined || child === null || typeof child === 'boolean';
 }
@@ -127,15 +146,24 @@ export function appendChild(parent: ParentNode, child: ChildValue): void {
 }
 
 /**
+ * Checks if an element matches a custom element constructor or fallback tag.
+ */
+function isCustomElementInstance(element: Element, tag: string): boolean {
+  if (typeof customElements === 'undefined') return false;
+  const customConstructor = customElements.get(tag);
+  return Boolean(customConstructor && element instanceof customConstructor);
+}
+
+/**
  * Instantiates a DOM element or custom element host fallback.
  */
 export function instantiateDomElement(tag: string): Element {
   let element = document.createElement(tag);
-  const customConstructor = typeof customElements === 'undefined' ? undefined : customElements.get(tag);
-  if (customConstructor && element instanceof customConstructor) {
+  if (isCustomElementInstance(element, tag)) {
     return element;
   }
-  if (customConstructor || (element instanceof HTMLUnknownElement && isCustomElementTag(tag))) {
+  const hasCustomConstructor = typeof customElements !== 'undefined' && Boolean(customElements.get(tag));
+  if (hasCustomConstructor || (element instanceof HTMLUnknownElement && isCustomElementTag(tag))) {
     element = document.createElement('div', { is: tag });
   }
   return element;

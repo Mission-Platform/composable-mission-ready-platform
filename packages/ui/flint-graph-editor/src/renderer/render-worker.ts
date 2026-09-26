@@ -525,7 +525,8 @@ if (
   ): [number, number, number, number] {
     if (isMeta) return isDark ? [0.345, 0.651, 1, 1] : [0.035, 0.412, 0.855, 1];
     const table = isDark ? CATEGORY_RGBA_DARK : CATEGORY_RGBA_LIGHT;
-    return (category ? table[category] : undefined) ?? (isDark ? [0.545, 0.58, 0.62, 1] : [0.341, 0.376, 0.416, 1]);
+    const fallback: [number, number, number, number] = isDark ? [0.545, 0.58, 0.62, 1] : [0.341, 0.376, 0.416, 1];
+    return (category ? table[category] : undefined) ?? fallback;
   }
 
   const PORT_TYPE_RGBA_DARK: Record<string, [number, number, number, number]> = {
@@ -551,19 +552,28 @@ if (
   ): [number, number, number, number] {
     const key = typeof type === 'string' ? type : undefined;
     const table = isDark ? PORT_TYPE_RGBA_DARK : PORT_TYPE_RGBA_LIGHT;
-    return (key ? table[key] : undefined) ?? (isDark ? [0.788, 0.82, 0.851, 1] : [0.141, 0.161, 0.184, 1]);
+    const fallback: [number, number, number, number] = isDark ? [0.788, 0.82, 0.851, 1] : [0.141, 0.161, 0.184, 1];
+    return (key ? table[key] : undefined) ?? fallback;
+  }
+
+  /**
+   * Expands short 3-hex and 6-hex strings to full 8-hex representations.
+   */
+  function expandShortHex(hex: string): string {
+    if (hex.length === 3) {
+      return `${[...hex].map((c) => `${c}${c}`).join('')}ff`;
+    }
+    if (hex.length === 6) {
+      return `${hex}ff`;
+    }
+    return hex;
   }
 
   /**
    * Parses hexadecimal color strings (#rgb, #rrggbb, #rrggbbaa) into normalized RGBA tuples.
    */
   function parseHexColor(hexStr: string): [number, number, number, number] | undefined {
-    let hex = hexStr.slice(1);
-    if (hex.length === 3) {
-      hex = `${[...hex].map((c) => `${c}${c}`).join('')}ff`;
-    } else if (hex.length === 6) {
-      hex = `${hex}ff`;
-    }
+    const hex = expandShortHex(hexStr.slice(1));
     if (hex.length !== 8) {
       return undefined;
     }
@@ -571,10 +581,8 @@ if (
     const green = Number.parseInt(hex.slice(2, 4), 16) / 255;
     const blue = Number.parseInt(hex.slice(4, 6), 16) / 255;
     const alpha = Number.parseInt(hex.slice(6, 8), 16) / 255;
-    if (Number.isNaN(red) || Number.isNaN(green) || Number.isNaN(blue) || Number.isNaN(alpha)) {
-      return undefined;
-    }
-    return [red, green, blue, alpha];
+    const hasNan = Number.isNaN(red) || Number.isNaN(green) || Number.isNaN(blue) || Number.isNaN(alpha);
+    return hasNan ? undefined : [red, green, blue, alpha];
   }
 
   /**
@@ -3816,16 +3824,11 @@ if (
    */
   const postReply = (reply: RenderWorkerOutputMessage): void => {
     const messageWithId: RenderWorkerOutputMessage = { id: 'flint_render_worker', ...reply };
-    if (globalThis.self !== undefined) {
-      if (globalThis.window === undefined || globalThis.self !== globalThis.window) {
-        if (typeof globalThis.self.postMessage === 'function') {
-          globalThis.self.postMessage(messageWithId);
-        }
-      } else {
+    if (globalThis.self === undefined) return;
+    if (globalThis.window === undefined || globalThis.self !== globalThis.window) {
+      if (typeof globalThis.self.postMessage === 'function') {
         try {
-          if (typeof globalThis.self.postMessage === 'function' && globalThis.self.postMessage.length <= 1) {
-            globalThis.self.postMessage(messageWithId);
-          }
+          globalThis.self.postMessage(messageWithId);
         } catch {
           // Ignore JSDOM window.postMessage arity requirements
         }

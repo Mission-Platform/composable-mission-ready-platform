@@ -665,6 +665,27 @@ function applyPastedGroup(
 }
 
 /**
+ * Resolves normalized connection endpoints if candidate nodes are valid.
+ */
+function resolveConnectionEndpoints(
+  nodes: readonly FlintGraphNode[],
+  fromNodeId: string,
+  toNodeId: string,
+  fromPortId: string,
+  toPortId: string,
+): { sourceNodeId: string; sourcePortId: string; targetNodeId: string; targetPortId: string } | undefined {
+  if (fromNodeId === toNodeId) {
+    return undefined;
+  }
+  const fromNode = nodes.find((n) => n.id === fromNodeId);
+  const toNode = nodes.find((n) => n.id === toNodeId);
+  if (!fromNode || !toNode) {
+    return undefined;
+  }
+  return normalizeConnectionEndpoints(fromNode, toNode, fromPortId, toPortId);
+}
+
+/**
  * State store managing graph topology, history stack, selection, and live Wasm compilation.
  */
 export class FlintEditorStore {
@@ -926,22 +947,12 @@ export class FlintEditorStore {
     toNodeId: string,
     toPortId: string,
   ): { readonly success: boolean; readonly error?: string } {
-    if (fromNodeId === toNodeId) {
-      return { success: false, error: 'Cannot connect a node to itself.' };
+    const endpoints = resolveConnectionEndpoints(this.graph.nodes, fromNodeId, toNodeId, fromPortId, toPortId);
+    if (!endpoints) {
+      return { success: false, error: 'Invalid connection endpoints.' };
     }
 
-    const fromNode = this.graph.nodes.find((n) => n.id === fromNodeId);
-    const toNode = this.graph.nodes.find((n) => n.id === toNodeId);
-    if (!fromNode || !toNode) {
-      return { success: false, error: 'Nodes not found.' };
-    }
-
-    const { sourceNodeId, sourcePortId, targetNodeId, targetPortId } = normalizeConnectionEndpoints(
-      fromNode,
-      toNode,
-      fromPortId,
-      toPortId,
-    );
+    const { sourceNodeId, sourcePortId, targetNodeId, targetPortId } = endpoints;
 
     // Prevent duplicate connection to the same input port
     const existing = this.graph.edges.find((e) => e.toNodeId === targetNodeId && e.toPortId === targetPortId);

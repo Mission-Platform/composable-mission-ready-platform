@@ -226,16 +226,14 @@ function frameworkPackageResolvePlugin(
     enforce: 'pre',
     resolveId(source: string, importer: string | undefined) {
       const match = /^@mission-platform\/([^/]+)$/.exec(source);
-      if (!match) {
-        return;
+      if (match) {
+        const isFacadeSelfImport =
+          FACADE_FIRST_PACKAGES.includes(match[1]) && Boolean(importer && /[/\\]dist[/\\]/.test(importer));
+        if (!isFacadeSelfImport) {
+          const packageRoot = resolvePackageRoot(repoRoot, match[1], exists);
+          return resolvePackageArtifact(packageRoot, target, exists);
+        }
       }
-      const isFacadeSelfImport =
-        FACADE_FIRST_PACKAGES.includes(match[1]) && Boolean(importer && /[/\\]dist[/\\]/.test(importer));
-      if (isFacadeSelfImport) {
-        return;
-      }
-      const packageRoot = resolvePackageRoot(repoRoot, match[1], exists);
-      return resolvePackageArtifact(packageRoot, target, exists);
     },
   };
 }
@@ -308,26 +306,30 @@ async function loadFrameworkPlugins(
   framework: StorybookFramework,
   ignoreVueI18nBlocksPlugin: () => Plugin,
 ): Promise<Plugin[]> {
-  if (framework === 'vue') {
-    const { default: vueJsx } = await import('@vitejs/plugin-vue-jsx');
-    return [vueJsx() as Plugin, ignoreVueI18nBlocksPlugin()];
+  switch (framework) {
+    case 'vue': {
+      const { default: vueJsx } = await import('@vitejs/plugin-vue-jsx');
+      return [vueJsx() as Plugin, ignoreVueI18nBlocksPlugin()];
+    }
+    case 'react': {
+      const { default: react } = await import('@vitejs/plugin-react');
+      return [...(react() as unknown as Plugin[])];
+    }
+    case 'solid': {
+      const { default: solid } = await import('vite-plugin-solid');
+      return [solid() as unknown as Plugin];
+    }
+    case 'svelte': {
+      const { svelte } = await import('@sveltejs/vite-plugin-svelte');
+      return [svelte() as unknown as Plugin];
+    }
+    case 'web-component': {
+      return [webComponentStoryMetadataPlugin()];
+    }
+    default: {
+      return [];
+    }
   }
-  if (framework === 'react') {
-    const { default: react } = await import('@vitejs/plugin-react');
-    return [...(react() as unknown as Plugin[])];
-  }
-  if (framework === 'solid') {
-    const { default: solid } = await import('vite-plugin-solid');
-    return [solid() as unknown as Plugin];
-  }
-  if (framework === 'svelte') {
-    const { svelte } = await import('@sveltejs/vite-plugin-svelte');
-    return [svelte() as unknown as Plugin];
-  }
-  if (framework === 'web-component') {
-    return [webComponentStoryMetadataPlugin()];
-  }
-  return [];
 }
 
 /** The shared `viteFinal` every Mission Platform Storybook build layers on. */
