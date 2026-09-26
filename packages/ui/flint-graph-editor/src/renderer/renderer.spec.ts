@@ -404,31 +404,43 @@ function createMockWebGpuCapabilities(hooks: MockGpuHooks = {}): FlintCapability
       gpu_write_pin_instance: (px: number, py: number, radius: number) => hooks.onPinWrite?.(px, py, radius),
     },
     'webgpu.upload_node_buffer': {
-      gpu_upload_node_buffer: () => {},
+      gpu_upload_node_buffer: () => {
+        /* no-op */
+      },
     },
     'webgpu.upload_edge_buffer': {
       gpu_upload_edge_buffer: (count: number) => hooks.onEdgeUpload?.(count),
     },
     'webgpu.upload_pin_buffer': {
-      gpu_upload_pin_buffer: () => {},
+      gpu_upload_pin_buffer: () => {
+        /* no-op */
+      },
     },
     'webgpu.render_begin': {
-      gpu_render_begin: () => {},
+      gpu_render_begin: () => {
+        /* no-op */
+      },
     },
     'webgpu.render_grid': {
       gpu_render_grid: () => hooks.onGridRender?.(),
     },
     'webgpu.render_edges': {
-      gpu_render_edges: () => {},
+      gpu_render_edges: () => {
+        /* no-op */
+      },
     },
     'webgpu.render_nodes': {
       gpu_render_nodes: (count: number) => hooks.onNodesRender?.(count),
     },
     'webgpu.render_pins': {
-      gpu_render_pins: () => {},
+      gpu_render_pins: () => {
+        /* no-op */
+      },
     },
     'webgpu.render_end': {
-      gpu_render_end: () => {},
+      gpu_render_end: () => {
+        /* no-op */
+      },
     },
   };
 }

@@ -352,11 +352,12 @@ function isPointInsideNode(
 ): boolean {
   const maxPorts = Math.max(node.inputs?.length ?? 0, node.outputs?.length ?? 0);
   wasm.getNodeBounds(node.position.x, node.position.y, maxPorts);
-  const minX = wasm.get_node_bounds_min_x();
-  const minY = wasm.get_node_bounds_min_y();
-  const maxX = wasm.get_node_bounds_max_x();
-  const maxY = wasm.get_node_bounds_max_y();
-  return worldX >= minX && worldX <= maxX && worldY >= minY && worldY <= maxY;
+  return (
+    worldX >= wasm.get_node_bounds_min_x() &&
+    worldX <= wasm.get_node_bounds_max_x() &&
+    worldY >= wasm.get_node_bounds_min_y() &&
+    worldY <= wasm.get_node_bounds_max_y()
+  );
 }
 
 /**
@@ -390,6 +391,33 @@ function distributionToSegmentSquared(px: number, py: number, x1: number, y1: nu
 }
 
 /**
+ * Tests hit intersection against waypoint handles on a single segmented edge.
+ */
+function hitTestEdgeWaypoints(
+  worldX: number,
+  worldY: number,
+  edge: FlintGraphEdge,
+  radiusSquared: number,
+): FlintHitResult | undefined {
+  if (!edge.points || edge.points.length === 0) return undefined;
+  for (const [index, pt] of edge.points.entries()) {
+    const dx = worldX - pt.x;
+    const dy = worldY - pt.y;
+    if (dx * dx + dy * dy <= radiusSquared) {
+      return {
+        type: 'waypoint',
+        nodeId: '',
+        edgeId: edge.id,
+        waypointIndex: index,
+        worldX: pt.x,
+        worldY: pt.y,
+      };
+    }
+  }
+  return undefined;
+}
+
+/**
  * Performs hit testing for waypoint handles on segmented edges.
  */
 function hitTestWaypoints(
@@ -398,22 +426,10 @@ function hitTestWaypoints(
   edges: readonly FlintGraphEdge[],
   radius = 12,
 ): FlintHitResult | undefined {
+  const radiusSquared = radius * radius;
   for (const edge of edges) {
-    if (!edge.points || edge.points.length === 0) continue;
-    for (const [index, pt] of edge.points.entries()) {
-      const dx = worldX - pt.x;
-      const dy = worldY - pt.y;
-      if (dx * dx + dy * dy <= radius * radius) {
-        return {
-          type: 'waypoint',
-          nodeId: '',
-          edgeId: edge.id,
-          waypointIndex: index,
-          worldX: pt.x,
-          worldY: pt.y,
-        };
-      }
-    }
+    const hit = hitTestEdgeWaypoints(worldX, worldY, edge, radiusSquared);
+    if (hit) return hit;
   }
   return undefined;
 }
@@ -425,16 +441,16 @@ function computeGroupBoundingBox(
   nodeIds: readonly string[],
   nodeMap: ReadonlyMap<string, FlintGraphNode>,
 ): { minX: number; minY: number } | undefined {
-  let minX = Number.POSITIVE_INFINITY;
-  let minY = Number.POSITIVE_INFINITY;
+  const nodes: FlintGraphNode[] = [];
   for (const id of nodeIds) {
     const node = nodeMap.get(id);
-    if (node) {
-      if (node.position.x < minX) minX = node.position.x;
-      if (node.position.y < minY) minY = node.position.y;
-    }
+    if (node) nodes.push(node);
   }
-  return Number.isFinite(minX) ? { minX, minY } : undefined;
+  if (nodes.length === 0) return undefined;
+  return {
+    minX: Math.min(...nodes.map((n) => n.position.x)),
+    minY: Math.min(...nodes.map((n) => n.position.y)),
+  };
 }
 
 /**
@@ -798,16 +814,8 @@ function createRendererBridge(
  */
 function getDatasetTheme(): 'light' | 'dark' | undefined {
   if (typeof document === 'undefined') return undefined;
-  const htmlTheme = document.documentElement.dataset.theme;
-  if (htmlTheme === 'light' || htmlTheme === 'dark') return htmlTheme;
-  const bodyTheme = document.body?.dataset.theme;
-  if (bodyTheme === 'light' || bodyTheme === 'dark') return bodyTheme;
-  const root = document.querySelector('[data-theme]');
-  if (root instanceof HTMLElement) {
-    const theme = root.dataset.theme;
-    if (theme === 'light' || theme === 'dark') return theme;
-  }
-  return undefined;
+  const rawTheme = document.documentElement.dataset.theme ?? document.body?.dataset.theme;
+  return rawTheme === 'light' || rawTheme === 'dark' ? rawTheme : undefined;
 }
 
 /**
@@ -1879,8 +1887,6 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
     category,
     definitions: filteredDefinitions.filter((item) => item.category === category),
   })).filter((group) => group.definitions.length > 0);
-
-  const outputEntries = Object.entries(editorState.lastOutputs);
 
   return (
     <main

@@ -47,6 +47,44 @@ function kebabCase(name: string): string {
     .toLowerCase();
 }
 
+function applyStyleProperty(element: Element, value: unknown): void {
+  if (typeof value === 'object' && value !== null) {
+    Object.assign((element as HTMLElement).style, value);
+  }
+}
+
+function applyCustomOrObjectProperty(element: Element, key: string, value: unknown, custom: boolean): void {
+  if (!custom && EVENT_PROPERTY.test(key) && typeof value === 'function') {
+    element.addEventListener(key.slice(2).toLowerCase(), value as EventListener);
+    return;
+  }
+  (element as unknown as Record<string, unknown>)[key] = value;
+}
+
+function applySingleProperty(element: Element, key: string, value: unknown, custom: boolean): void {
+  if (key === 'children' || key === 'key' || value === undefined) {
+    return;
+  }
+  if (key === 'style') {
+    applyStyleProperty(element, value);
+    return;
+  }
+  if (key === 'class' || key === 'className') {
+    element.setAttribute('class', String(value));
+    return;
+  }
+  if (custom || typeof value === 'object' || typeof value === 'function') {
+    applyCustomOrObjectProperty(element, key, value, custom);
+    return;
+  }
+  if (value === false || value === null) {
+    return;
+  }
+  const attributeName = value === true ? key : toAttributeName(key);
+  const attributeValue = value === true ? '' : String(value);
+  element.setAttribute(attributeName, attributeValue);
+}
+
 /** Apply a JSX property bag to a real DOM element. */
 export function applyProperties(element: Element, properties: Record<string, unknown> | null | undefined): void {
   if (!properties) {
@@ -54,31 +92,7 @@ export function applyProperties(element: Element, properties: Record<string, unk
   }
   const custom = isCustomElementTag(element.tagName.toLowerCase());
   for (const [key, value] of Object.entries(properties)) {
-    if (key === 'children' || key === 'key' || value === undefined) {
-      continue;
-    }
-    if (key === 'style' && typeof value === 'object' && value !== null) {
-      Object.assign((element as HTMLElement).style, value);
-      continue;
-    }
-    if (key === 'class' || key === 'className') {
-      element.setAttribute('class', String(value));
-      continue;
-    }
-    if (custom || typeof value === 'object' || typeof value === 'function') {
-      // Custom elements (and any object/function value on a native element)
-      // must be set as properties — an attribute would stringify them.
-      if (!custom && EVENT_PROPERTY.test(key) && typeof value === 'function') {
-        element.addEventListener(key.slice(2).toLowerCase(), value as EventListener);
-        continue;
-      }
-      (element as unknown as Record<string, unknown>)[key] = value;
-      continue;
-    }
-    if (value === false || value === null) {
-      continue;
-    }
-    element.setAttribute(value === true ? key : toAttributeName(key), value === true ? '' : String(value));
+    applySingleProperty(element, key, value, custom);
   }
 }
 
@@ -90,9 +104,13 @@ function toAttributeName(key: string): string {
   return key.startsWith('aria') && key.length > 4 ? kebabCase(key) : key;
 }
 
+function isSkippableChild(child: ChildValue): boolean {
+  return child === undefined || child === null || typeof child === 'boolean';
+}
+
 /** Append a JSX child (node, primitive, or nested array) to `parent`. */
 export function appendChild(parent: ParentNode, child: ChildValue): void {
-  if (child === undefined || child === null || typeof child === 'boolean') {
+  if (isSkippableChild(child)) {
     return;
   }
   if (Array.isArray(child)) {
@@ -108,19 +126,28 @@ export function appendChild(parent: ParentNode, child: ChildValue): void {
   parent.append(String(child));
 }
 
+/**
+ * Instantiates a DOM element or custom element host fallback.
+ */
+export function instantiateDomElement(tag: string): Element {
+  let element = document.createElement(tag);
+  const customConstructor = typeof customElements === 'undefined' ? undefined : customElements.get(tag);
+  if (customConstructor && element instanceof customConstructor) {
+    return element;
+  }
+  if (customConstructor || (element instanceof HTMLUnknownElement && isCustomElementTag(tag))) {
+    element = document.createElement('div', { is: tag });
+  }
+  return element;
+}
+
 /** Build a real DOM element for a native tag with its JSX properties/children. */
 export function createDomElement(
   tag: string,
   properties: Record<string, unknown> | null | undefined,
   children: readonly ChildValue[],
 ): Element {
-  let element = document.createElement(tag);
-  const customConstructor = typeof customElements === 'undefined' ? undefined : customElements.get(tag);
-  if (customConstructor && element instanceof customConstructor) {
-    // Standard custom element matching registered constructor.
-  } else if (customConstructor || (element instanceof HTMLUnknownElement && isCustomElementTag(tag))) {
-    element = document.createElement('div', { is: tag });
-  }
+  const element = instantiateDomElement(tag);
   applyProperties(element, properties);
   for (const child of children) {
     appendChild(element, child);

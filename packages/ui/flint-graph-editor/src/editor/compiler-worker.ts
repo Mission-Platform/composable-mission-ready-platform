@@ -188,7 +188,7 @@ export async function executeGraph(
   inputs: Readonly<Record<string, unknown>> = {},
 ): Promise<CompilerWorkerResponse> {
   const check = validateAndCompileGraph(graph);
-  if (check.error !== undefined || check.valid === undefined) {
+  if (!check.valid) {
     return (
       check.error ?? {
         type: 'run_error',

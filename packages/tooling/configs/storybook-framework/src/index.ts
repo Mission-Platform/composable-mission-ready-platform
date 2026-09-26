@@ -51,23 +51,11 @@ export function resolveStorybookFramework(explicit?: StorybookFramework): Storyb
  * preview (`preview.ts` branches on the framework to wire the right runtime).
  */
 function readFrameworkEnvironment(): string | undefined {
-  // Node / config time (`main.ts`): read the `STORYBOOK_FRAMEWORK` env var set by
-  // the `storybook:<fw>` scripts (or mirrored in `createStorybookConfig`).
-  // `import.meta.env` is undefined here, so this branch must come first.
-  if (typeof process !== 'undefined' && process.env && process.env.STORYBOOK_FRAMEWORK) {
-    return process.env.STORYBOOK_FRAMEWORK;
+  if (typeof process !== 'undefined') {
+    return process.env?.STORYBOOK_FRAMEWORK;
   }
-  // Browser preview: `process` does not exist. `createStorybookConfig` exposes
-  // the framework to the preview as a `STORYBOOK_`-prefixed env var, which Vite
-  // inlines into `import.meta.env` (it replaces `import.meta.env` in every
-  // module, including this package's `dist`, unlike a custom `define`). The cast
-  // is erased at build time so the emitted `dist` keeps the literal
-  // `import.meta.env` expression Vite looks for.
   const environment = (import.meta as { env?: Record<string, string | undefined> }).env;
-  if (environment && typeof environment.STORYBOOK_FRAMEWORK === 'string') {
-    return environment.STORYBOOK_FRAMEWORK;
-  }
-  return undefined;
+  return typeof environment?.STORYBOOK_FRAMEWORK === 'string' ? environment.STORYBOOK_FRAMEWORK : undefined;
 }
 
 /** Options for {@link createStorybookConfig}. */
@@ -110,6 +98,9 @@ const SHARED_ADDONS: readonly string[] = [
 
 const STORY_EXTENSIONS = '@(js|jsx|mjs|ts|tsx)';
 
+/**
+ * Builds glob patterns for neutral stories in a directory.
+ */
 function patternsFor(base: string): string[] {
   return [`${base}/**/!(*.vue|*.react|*.solid|*.svelte|*.web-component).stories.${STORY_EXTENSIONS}`];
 }
@@ -199,6 +190,26 @@ function facadeNeutralResolvePlugin(repoRoot: string, exists: (filePath: string)
 }
 
 /**
+ * Resolves the primary framework or neutral entry file path within a package root.
+ */
+function resolvePackageArtifact(
+  packageRoot: string,
+  target: string,
+  exists: (filePath: string) => boolean,
+): string | undefined {
+  const frameworkEntry = `${packageRoot}/dist/${target}/index.js`;
+  if (exists(frameworkEntry)) {
+    return frameworkEntry;
+  }
+  const frameworkFile = `${packageRoot}/dist/${target}.js`;
+  if (exists(frameworkFile)) {
+    return frameworkFile;
+  }
+  const neutralEntry = `${packageRoot}/dist/index.js`;
+  return exists(neutralEntry) ? neutralEntry : undefined;
+}
+
+/**
  * Resolve workspace package roots to the active built artifact when the
  * Storybook/Rolldown resolver does not apply custom `mp:*` conditions to a
  * linked package. Packages without a framework build deliberately fall back
@@ -214,22 +225,17 @@ function frameworkPackageResolvePlugin(
     name: 'mission-platform:framework-package-resolve',
     enforce: 'pre',
     resolveId(source: string, importer: string | undefined) {
-      let resolved: string | undefined;
       const match = /^@mission-platform\/([^/]+)$/.exec(source);
-      if (match && !(FACADE_FIRST_PACKAGES.includes(match[1]) && importer && /[/\\]dist[/\\]/.test(importer))) {
-        const packageRoot = resolvePackageRoot(repoRoot, match[1], exists);
-        const frameworkEntry = `${packageRoot}/dist/${target}/index.js`;
-        const frameworkFile = `${packageRoot}/dist/${target}.js`;
-        const neutralEntry = `${packageRoot}/dist/index.js`;
-        if (exists(frameworkEntry)) {
-          resolved = frameworkEntry;
-        } else if (exists(frameworkFile)) {
-          resolved = frameworkFile;
-        } else if (exists(neutralEntry)) {
-          resolved = neutralEntry;
-        }
+      if (!match) {
+        return;
       }
-      return resolved;
+      const isFacadeSelfImport =
+        FACADE_FIRST_PACKAGES.includes(match[1]) && Boolean(importer && /[/\\]dist[/\\]/.test(importer));
+      if (isFacadeSelfImport) {
+        return;
+      }
+      const packageRoot = resolvePackageRoot(repoRoot, match[1], exists);
+      return resolvePackageArtifact(packageRoot, target, exists);
     },
   };
 }
@@ -255,7 +261,7 @@ function storyJsxOxcOverride(
   if (framework === 'svelte' || framework === 'web-component') {
     return {
       jsx: { runtime: 'classic', pragma: 'node', pragmaFrag: 'MpFragment' },
-      jsxInject: `import { node, Fragment as MpFragment } from '@mission-platform/storybook-framework/slots'`,
+      jsxInject: "import { node, Fragment as MpFragment } from '@mission-platform/storybook-framework/slots'",
     };
   }
   if (framework === 'react') {
@@ -295,18 +301,37 @@ function webComponentStoryMetadataPlugin(): Plugin {
   };
 }
 
+/**
+ * Loads framework-specific Vite transform plugins.
+ */
+async function loadFrameworkPlugins(
+  framework: StorybookFramework,
+  ignoreVueI18nBlocksPlugin: () => Plugin,
+): Promise<Plugin[]> {
+  if (framework === 'vue') {
+    const { default: vueJsx } = await import('@vitejs/plugin-vue-jsx');
+    return [vueJsx() as Plugin, ignoreVueI18nBlocksPlugin()];
+  }
+  if (framework === 'react') {
+    const { default: react } = await import('@vitejs/plugin-react');
+    return [...(react() as unknown as Plugin[])];
+  }
+  if (framework === 'solid') {
+    const { default: solid } = await import('vite-plugin-solid');
+    return [solid() as unknown as Plugin];
+  }
+  if (framework === 'svelte') {
+    const { svelte } = await import('@sveltejs/vite-plugin-svelte');
+    return [svelte() as unknown as Plugin];
+  }
+  if (framework === 'web-component') {
+    return [webComponentStoryMetadataPlugin()];
+  }
+  return [];
+}
+
 /** The shared `viteFinal` every Mission Platform Storybook build layers on. */
 async function sharedViteFinal(framework: StorybookFramework, config: UserConfig): Promise<UserConfig> {
-  // Import the node-only build tooling lazily *inside* this config-time function
-  // rather than at module top level. The browser preview imports this package
-  // (for `resolveStorybookFramework` and the shared preview config, re-exported
-  // below), so any top-level `import ... from 'vite'` / vite plugin would be
-  // pulled into the preview's optimized deps and evaluated in the browser —
-  // dragging in Vite's bundled Rolldown, whose node internals declare
-  // `__vite__injectQuery` a second time and crash the whole preview iframe with
-  // `SyntaxError: Identifier '__vite__injectQuery' has already been declared`.
-  // Keeping these imports lazy means `sharedViteFinal` still runs at config time
-  // in Node while the browser never eagerly loads Vite.
   const [
     { mergeConfig },
     { ignoreVueI18nBlocksPlugin, frameworkResolveConditions, DEFAULT_CSS_CONFIG },
@@ -319,57 +344,14 @@ async function sharedViteFinal(framework: StorybookFramework, config: UserConfig
     import('node:fs'),
   ]);
 
-  // Storybook always runs from `apps/storybook`, whose translations live in the
-  // nested top-level `locales/<code>/mp.storybook.yaml` tree (not the default
-  // `src/locales`, which only holds the generated `.d.ts` shims). Point the
-  // plugin at `locales` so those bundles actually load — otherwise
-  // `virtual:i18n-resources` resolves to English defaults only.
   const repoRoot = process.cwd().split('/').slice(0, -2).join('/');
+  const frameworkPlugins = await loadFrameworkPlugins(framework, ignoreVueI18nBlocksPlugin);
   const plugins: Plugin[] = [
     frameworkPackageResolvePlugin(framework, repoRoot, existsSync),
     facadeNeutralResolvePlugin(repoRoot, existsSync),
     i18nPlugin({ defaultLocale: 'en', localesDir: 'locales' }) as Plugin,
+    ...frameworkPlugins,
   ];
-
-  // Every framework needs a JSX transform for the shared neutral `*.stories.tsx`
-  // files. Storybook 10's renderer packages (`@storybook/react-vite`, …) no
-  // longer bundle the framework's Vite JSX plugin, so without an explicit plugin
-  // Vite's core transform uses the stories tsconfig's `jsxImportSource: "vue"` —
-  // emitting Vue vnodes for *every* framework. Under the Vue renderer that
-  // happens to be correct, but under React/Solid it hands a Vue vnode to the
-  // wrong runtime (`Objects are not valid as a React child … __v_isVNode`).
-  // Registering the matching JSX transform per framework makes the story JSX
-  // compile to the active framework's element factory.
-  switch (framework) {
-    case 'vue': {
-      // The Vue renderer compiles `.vue.stories.tsx` via the Vue JSX transform
-      // and needs the `<i18n>` custom-block no-op; other renderers do not.
-      const { default: vueJsx } = await import('@vitejs/plugin-vue-jsx');
-      plugins.push(vueJsx() as Plugin, ignoreVueI18nBlocksPlugin());
-      break;
-    }
-    case 'react': {
-      const { default: react } = await import('@vitejs/plugin-react');
-      plugins.push(...(react() as unknown as Plugin[]));
-      break;
-    }
-    case 'solid': {
-      const { default: solid } = await import('vite-plugin-solid');
-      plugins.push(solid() as unknown as Plugin);
-      break;
-    }
-    case 'svelte': {
-      const { svelte } = await import('@sveltejs/vite-plugin-svelte');
-      plugins.push(svelte() as unknown as Plugin);
-      break;
-    }
-    default: {
-      break;
-    }
-  }
-  if (framework === 'web-component') {
-    plugins.push(webComponentStoryMetadataPlugin());
-  }
 
   const conditions = frameworkResolveConditions(framework);
   const slotsEntry = `${process.cwd().split('/').slice(0, -2).join('/')}/packages/tooling/configs/storybook-framework/dist/slots.${framework}.js`;
@@ -377,19 +359,7 @@ async function sharedViteFinal(framework: StorybookFramework, config: UserConfig
   return mergeConfig(config, {
     css: DEFAULT_CSS_CONFIG,
     plugins,
-    // Svelte and Web Components have no JSX transform of their own (`svelte()`
-    // only compiles `.svelte` files, and the web-components renderer expects lit
-    // templates), so neutral `*.stories.tsx` files use the slot helper's
-    // intentional Oxc classic runtime. It builds real DOM (web components) or
-    // mountable snippets (Svelte), which both renderers accept; the setting lives
-    // under `oxc` alongside the automatic runtime used by package sources.
     ...(storyJsxOxcOverride(framework) ? { oxc: storyJsxOxcOverride(framework) } : {}),
-    // Resolve bare `@mission-platform/*` imports in stories to the build for the
-    // active framework via the `mp:<framework>` export conditions (the same
-    // mechanism in-repo apps and external consumers use). Without this the
-    // preview resolves the framework-agnostic default build, whose barrel only
-    // exports the `Base*` names — so a neutral story importing the friendly alias
-    // (`Accordion`, `Avatar`, …) fails with `MISSING_EXPORT`.
     resolve: {
       alias: { '@mission-platform/storybook-framework/slots': slotsEntry },
       conditions,
@@ -400,11 +370,7 @@ async function sharedViteFinal(framework: StorybookFramework, config: UserConfig
       noExternal: [/^@mission-platform\//],
       resolve: { conditions, externalConditions: conditions },
     },
-    // Emit Monaco's `?worker` entries as ES-module workers so their internal
-    // `import` statements resolve.
     worker: { format: 'es' },
-    // Inline component CSS into JS chunks so Chromatic's headless browser does
-    // not fail to preload lazily-loaded CSS chunks during story extraction.
     build: { cssCodeSplit: false },
   });
 }

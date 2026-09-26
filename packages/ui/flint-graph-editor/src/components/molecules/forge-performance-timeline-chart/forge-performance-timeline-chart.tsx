@@ -16,22 +16,24 @@ export interface ForgePerformanceTimelineChartProperties {
 type SvgGroupSelection = Selection<SVGGElement, unknown, null, undefined>;
 
 /**
+ * Sums individual breakdown time metrics for a single sample.
+ */
+function sumSampleBreakdown(metricsItem: FlintPerformanceMetrics): number {
+  return (
+    (metricsItem.drawPassTimeMs ?? 0) +
+    (metricsItem.textPassTimeMs ?? 0) +
+    (metricsItem.bufferUploadTimeMs ?? 0) +
+    (metricsItem.spatialIndexTimeMs ?? 0) +
+    (metricsItem.updateTimeMs ?? 0) +
+    (metricsItem.layoutTimeMs ?? 0)
+  );
+}
+
+/**
  * Computes the maximum frame duration across sample metrics.
  */
 function calculateSampleMaxTime(samples: readonly FlintPerformanceMetrics[]): number {
-  return Math.max(
-    20,
-    ...samples.map(
-      (metricsItem) =>
-        metricsItem.totalFrameTimeMs ||
-        (metricsItem.drawPassTimeMs ?? 0) +
-          (metricsItem.textPassTimeMs ?? 0) +
-          (metricsItem.bufferUploadTimeMs ?? 0) +
-          (metricsItem.spatialIndexTimeMs ?? 0) +
-          (metricsItem.updateTimeMs ?? 0) +
-          (metricsItem.layoutTimeMs ?? 0),
-    ),
-  );
+  return Math.max(20, ...samples.map((metricsItem) => metricsItem.totalFrameTimeMs || sumSampleBreakdown(metricsItem)));
 }
 
 /**
@@ -290,6 +292,42 @@ interface CategoryLegendItem {
 }
 
 /**
+ * Normalizes sample array ensuring at least two data points for linear interpolation.
+ */
+function normalizeTimelineSamples(
+  history: readonly FlintPerformanceMetrics[],
+  currentMetrics: FlintPerformanceMetrics,
+): readonly FlintPerformanceMetrics[] {
+  if (history.length >= 2) {
+    return history;
+  }
+  return [
+    currentMetrics,
+    {
+      ...currentMetrics,
+      totalFrameTimeMs: currentMetrics.totalFrameTimeMs * 1.05,
+    },
+  ];
+}
+
+/**
+ * Builds legend items for individual latency metric categories.
+ */
+function buildCategoryLegendItems(metrics: FlintPerformanceMetrics): readonly CategoryLegendItem[] {
+  const updatesValue = (metrics.updateTimeMs ?? 0) + (metrics.layoutTimeMs ?? 0);
+  const textValue = metrics.textPassTimeMs ?? (metrics.renderTimeMs ? metrics.renderTimeMs * 0.3 : 0.2);
+  const drawValue = metrics.drawPassTimeMs ?? (metrics.renderTimeMs ? metrics.renderTimeMs * 0.5 : 0.4);
+
+  return [
+    { label: 'Updates & Layout', color: '#f0883e', value: updatesValue },
+    { label: 'Spatial Indexing', color: '#3fb950', value: metrics.spatialIndexTimeMs ?? 0 },
+    { label: 'Buffer Upload', color: '#a371f7', value: metrics.bufferUploadTimeMs ?? 0 },
+    { label: 'Text & SDF Pass', color: '#39c5bb', value: textValue },
+    { label: 'Draw Submissions', color: '#388bfd', value: drawValue },
+  ];
+}
+
+/**
  * Stacked area and line timeline chart tracking rendering and update performance metrics across animation frames.
  */
 export function ForgePerformanceTimelineChart(
@@ -300,18 +338,7 @@ export function ForgePerformanceTimelineChart(
   const margin = { top: 16, right: 36, bottom: 24, left: 36 };
   const innerWidth = Math.max(10, width - margin.left - margin.right);
   const innerHeight = Math.max(10, height - margin.top - margin.bottom);
-
-  // Normalize history: ensure at least 2 samples for line rendering
-  const samples =
-    history.length >= 2
-      ? history
-      : [
-          currentMetrics,
-          {
-            ...currentMetrics,
-            totalFrameTimeMs: currentMetrics.totalFrameTimeMs * 1.05,
-          },
-        ];
+  const samples = normalizeTimelineSamples(history, currentMetrics);
 
   const svgReference = useD3<SVGSVGElement>(
     (selection) => {
@@ -336,21 +363,7 @@ export function ForgePerformanceTimelineChart(
     [history, currentMetrics, width, height],
   );
 
-  const updatesValue = (currentMetrics.updateTimeMs ?? 0) + (currentMetrics.layoutTimeMs ?? 0);
-  const spatialValue = currentMetrics.spatialIndexTimeMs ?? 0;
-  const buffersValue = currentMetrics.bufferUploadTimeMs ?? 0;
-  const textValue =
-    currentMetrics.textPassTimeMs ?? (currentMetrics.renderTimeMs ? currentMetrics.renderTimeMs * 0.3 : 0.2);
-  const drawValue =
-    currentMetrics.drawPassTimeMs ?? (currentMetrics.renderTimeMs ? currentMetrics.renderTimeMs * 0.5 : 0.4);
-
-  const categoryItems: readonly CategoryLegendItem[] = [
-    { label: 'Updates & Layout', color: '#f0883e', value: updatesValue },
-    { label: 'Spatial Indexing', color: '#3fb950', value: spatialValue },
-    { label: 'Buffer Upload', color: '#a371f7', value: buffersValue },
-    { label: 'Text & SDF Pass', color: '#39c5bb', value: textValue },
-    { label: 'Draw Submissions', color: '#388bfd', value: drawValue },
-  ];
+  const categoryItems = buildCategoryLegendItems(currentMetrics);
 
   return (
     <div className={styles.timelineContainer}>

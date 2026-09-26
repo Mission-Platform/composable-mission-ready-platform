@@ -612,6 +612,12 @@ function createInputParameters(
   return { parameters, nextLine: currentLine };
 }
 
+const CAPABILITY_CALL_MAP: Readonly<Record<string, { key: string; defaultAlias: string; hasMessageArg?: boolean }>> = {
+  clock_now: { key: 'clock.now', defaultAlias: 'host_clock_now' },
+  random_f64: { key: 'random.f64', defaultAlias: 'host_random_f64' },
+  log_debug: { key: 'env.log', defaultAlias: 'host_log_debug', hasMessageArg: true },
+};
+
 /**
  * Lowers host capability calls into invocation AST expressions.
  */
@@ -621,19 +627,13 @@ function lowerCapabilityCall(
   resolveInput: InputResolver,
   span: FlintSourceSpan,
 ): FlintExpression | undefined {
-  if (node.operation === 'clock_now') {
-    const alias = capabilityAliases.get('clock.now') ?? 'host_clock_now';
-    return { kind: 'call', callee: alias, arguments: [], span };
+  const descriptor = CAPABILITY_CALL_MAP[node.operation];
+  if (!descriptor) {
+    return undefined;
   }
-  if (node.operation === 'random_f64') {
-    const alias = capabilityAliases.get('random.f64') ?? 'host_random_f64';
-    return { kind: 'call', callee: alias, arguments: [], span };
-  }
-  if (node.operation === 'log_debug') {
-    const alias = capabilityAliases.get('env.log') ?? 'host_log_debug';
-    return { kind: 'call', callee: alias, arguments: [resolveInput(node, 'message')], span };
-  }
-  return undefined;
+  const alias = capabilityAliases.get(descriptor.key) ?? descriptor.defaultAlias;
+  const arguments_ = descriptor.hasMessageArg ? [resolveInput(node, 'message')] : [];
+  return { kind: 'call', callee: alias, arguments: arguments_, span };
 }
 
 /**

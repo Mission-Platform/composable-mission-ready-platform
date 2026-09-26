@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
@@ -43,53 +42,80 @@ const DEFAULT_MAX_MISMATCH_RATIO = DEFAULT_VISUAL_PARITY_MISMATCH_THRESHOLD;
 const DEFAULT_WORKERS = 1;
 const DEFAULT_OUTPUT_DIRECTORY = '.artifacts/visual-parity';
 
+/**
+ * Normalizes a selector string into lowercase alphanumeric characters.
+ */
 function compactSelector(value: string): string {
   return value.replaceAll(/[^a-z0-9]+/g, '');
 }
 
+/**
+ * Computes the absolute path to the repository root directory.
+ */
 function repositoryRoot(): string {
   return path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 }
 
+/**
+ * Extracts a named option value from a CLI argument list.
+ */
 function option(args: string[], name: string): string | undefined {
   const index = args.indexOf(name);
   return index === -1 ? undefined : args[index + 1];
 }
 
+/**
+ * Returns the first option name present in the argument list.
+ */
 function firstOptionName(args: string[], names: string[]): string {
   return names.find((name) => option(args, name) !== undefined) ?? names[0];
 }
 
+/**
+ * Parses a numeric CLI option with validation bounds.
+ */
 function numericOption(args: string[], name: string, fallback: number, min: number, max?: number): number {
   const raw = option(args, name);
   if (raw === undefined) return fallback;
   const value = Number(raw);
-  if (!Number.isFinite(value) || value < min || (max !== undefined && value > max))
+  const isValid = Number.isFinite(value) && value >= min && (max === undefined || value <= max);
+  if (!isValid) {
     throw new Error(`${name} must be a number${max === undefined ? ` >= ${min}` : ` between ${min} and ${max}`}.`);
+  }
   return value;
 }
 
+/**
+ * Parses a positive integer CLI option.
+ */
 function positiveIntegerOption(args: string[], name: string, fallback: number): number {
   const value = numericOption(args, name, fallback, 1);
   if (!Number.isInteger(value)) throw new Error(`${name} must be a positive integer.`);
   return value;
 }
 
+/**
+ * Parses TCP port allocations for framework renderers from CLI flags.
+ */
 function parsePorts(args: string[]): Partial<Record<VisualParityRenderer, number>> {
   const ports: Partial<Record<VisualParityRenderer, number>> = {};
   const base = option(args, '--port');
   if (base !== undefined) {
     const value = Number(base);
-    if (!Number.isInteger(value) || value < 1 || value > 65_531)
+    if (!Number.isInteger(value) || value < 1 || value > 65_531) {
       throw new Error('--port must allow five valid consecutive TCP ports.');
-    for (const [index, renderer] of VISUAL_PARITY_RENDERERS.entries()) ports[renderer] = value + index;
+    }
+    for (const [index, renderer] of VISUAL_PARITY_RENDERERS.entries()) {
+      ports[renderer] = value + index;
+    }
   }
   for (const renderer of VISUAL_PARITY_RENDERERS) {
     const value = option(args, `--${renderer}-port`);
     if (value !== undefined) {
       const port = Number(value);
-      if (!Number.isInteger(port) || port < 1 || port > 65_535)
+      if (!Number.isInteger(port) || port < 1 || port > 65_535) {
         throw new Error(`--${renderer}-port must be a valid TCP port.`);
+      }
       ports[renderer] = port;
     }
   }
@@ -97,10 +123,13 @@ function parsePorts(args: string[]): Partial<Record<VisualParityRenderer, number
   if (list !== undefined) {
     for (const item of list.split(',')) {
       const [renderer, rawPort] = item.split('=');
-      if (!VISUAL_PARITY_RENDERERS.includes(renderer as VisualParityRenderer))
+      if (!VISUAL_PARITY_RENDERERS.includes(renderer as VisualParityRenderer)) {
         throw new Error(`Unknown renderer in --ports: ${renderer}`);
+      }
       const port = Number(rawPort);
-      if (!Number.isInteger(port) || port < 1 || port > 65_535) throw new Error(`Invalid port in --ports: ${item}`);
+      if (!Number.isInteger(port) || port < 1 || port > 65_535) {
+        throw new Error(`Invalid port in --ports: ${item}`);
+      }
       ports[renderer as VisualParityRenderer] = port;
     }
   }
@@ -129,6 +158,9 @@ function parseTargets(args: string[]): readonly VisualParityCandidate[] | undefi
   });
 }
 
+/**
+ * Parses command line options for visual parity execution and verification.
+ */
 export function parseVisualParityArgs(args: string[], root = repositoryRoot()): VisualParityCliOptions {
   const viewport = option(args, '--viewport') ?? 'md';
   const theme = option(args, '--theme') ?? 'light';
@@ -166,17 +198,18 @@ export function parseVisualParityArgs(args: string[], root = repositoryRoot()): 
 
 /** Match exact Storybook IDs, documented short selectors, or compact alphanumeric suffixes. */
 export function matchesStorySelector(storyId: string, selector?: string): boolean {
-  if (!selector) return true;
-  if (storyId === selector) return true;
+  if (!selector || storyId === selector) return true;
   const id = storyId.toLowerCase();
   const sel = selector.toLowerCase().trim().replaceAll(/\s+/g, '-');
-  if (!sel) return true;
-  if (id === sel || id.endsWith(sel) || id.endsWith(`--${sel}`)) return true;
+  if (!sel || id === sel || id.endsWith(sel) || id.endsWith(`--${sel}`)) return true;
   const compactId = compactSelector(id);
   const compactSel = compactSelector(sel);
   return compactSel.length > 0 && (compactId === compactSel || compactId.endsWith(compactSel));
 }
 
+/**
+ * Filters matched story index pairs matching package name and story selector constraints.
+ */
 export function selectedPairs(
   pairs: StorybookIndexPair[],
   inventory: ReturnType<typeof discoverInventory>,
@@ -193,6 +226,9 @@ export function selectedPairs(
   return options.maxStories === undefined ? selected : selected.slice(0, options.maxStories);
 }
 
+/**
+ * Filters missing story index pairs matching package name and story selector constraints.
+ */
 export function selectedMissing(
   missing: StorybookIndexMissingPair[],
   inventory: ReturnType<typeof discoverInventory>,
@@ -209,17 +245,25 @@ export function selectedMissing(
   return options.maxStories === undefined ? selected : selected.slice(0, options.maxStories);
 }
 
+/**
+ * Creates a lookup map of captures indexed by renderer and story ID.
+ */
 function captureByKey(captures: VisualParityCaptureResult[]): Map<string, VisualParityCaptureResult> {
   return new Map(captures.map((capture) => [`${capture.renderer}\u0000${capture.storyId}`, capture]));
 }
 
+/**
+ * Categorizes failure status based on diagnostic readiness.
+ */
 function captureFailure(capture: VisualParityCaptureResult | undefined): VisualParityComparisonStatus {
-  if (capture?.status === 'blocked') return 'blocked';
-  return 'runtime-failure';
+  return capture?.status === 'blocked' ? 'blocked' : 'runtime-failure';
 }
 
 type VisualParityComparisonStatus = VisualParityComparison['status'];
 
+/**
+ * Compares candidate renderer capture against web-component baseline.
+ */
 function compareRenderer(
   storyId: string,
   candidate: VisualParityCandidate,
@@ -274,6 +318,9 @@ function compareRenderer(
   return comparison;
 }
 
+/**
+ * Generates visual parity result record for missing renderer index pairs.
+ */
 function missingResult(
   pair: StorybookIndexMissingPair,
   packageName: string,
@@ -615,6 +662,9 @@ export async function runVisualParity(options: VisualParityCliOptions): Promise<
   return buildVisualParityReport(options, definitions, results, captures, diagnostics, cleanupErrors);
 }
 
+/**
+ * CLI entrypoint executing visual parity test suite from process arguments.
+ */
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
   if (args.includes('--help')) {

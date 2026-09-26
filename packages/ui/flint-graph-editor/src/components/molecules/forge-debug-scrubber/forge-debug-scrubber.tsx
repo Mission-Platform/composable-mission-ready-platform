@@ -13,14 +13,13 @@ export interface DebugScrubberProperties {
  * Extracts numeric value from a DOM input event if valid.
  */
 function extractInputNumberValue(event: unknown): number | undefined {
-  if (typeof HTMLInputElement === 'undefined') {
-    return undefined;
+  if (typeof HTMLInputElement !== 'undefined' && typeof event === 'object' && event !== null && 'target' in event) {
+    const target = Reflect.get(event, 'target');
+    if (target instanceof HTMLInputElement) {
+      return Number(target.value);
+    }
   }
-  if (!event || typeof event !== 'object' || !('target' in event)) {
-    return undefined;
-  }
-  const target = Reflect.get(event, 'target');
-  return target instanceof HTMLInputElement ? Number(target.value) : undefined;
+  return undefined;
 }
 
 const SPEED_PRESETS = [0.5, 1, 2] as const;
@@ -45,24 +44,27 @@ export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>
   );
 
   useEffect(() => {
-    if (controller) {
-      setPlaybackState(controller.getPlaybackState());
-      setCurrentStep(controller.getCurrentStep());
-      const unsubscribe = controller.subscribe((step) => {
-        setCurrentStep(step);
-        setPlaybackState(controller.getPlaybackState());
-      });
-      return () => {
-        unsubscribe();
-      };
+    if (!controller) {
+      return;
     }
+    setPlaybackState(controller.getPlaybackState());
+    setCurrentStep(controller.getCurrentStep());
+    const unsubscribe = controller.subscribe((step) => {
+      setCurrentStep(step);
+      setPlaybackState(controller.getPlaybackState());
+    });
+    return () => {
+      unsubscribe();
+    };
   }, [controller]);
 
   /**
    * Toggles playback between playing and paused states.
    */
   const handleTogglePlay = (): void => {
-    if (!controller) return;
+    if (!controller) {
+      return;
+    }
     if (playbackState.isPlaying) {
       controller.pause();
     } else {
@@ -75,9 +77,8 @@ export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>
    * Seeks the execution timeline to the slider's target step index.
    */
   const handleSliderChange = (event: unknown): void => {
-    if (!controller) return;
     const stepIndex = extractInputNumberValue(event);
-    if (stepIndex !== undefined) {
+    if (controller && stepIndex !== undefined) {
       controller.seekTo(stepIndex);
     }
   };
@@ -86,9 +87,10 @@ export function ForgeDebugScrubber(properties: Readonly<DebugScrubberProperties>
    * Sets the playback speed multiplier and updates component state.
    */
   const handleSpeedChange = (speed: number): void => {
-    if (!controller) return;
-    controller.setPlaybackSpeed(speed);
-    setPlaybackState(controller.getPlaybackState());
+    if (controller) {
+      controller.setPlaybackSpeed(speed);
+      setPlaybackState(controller.getPlaybackState());
+    }
   };
 
   const totalSteps = playbackState.totalSteps;

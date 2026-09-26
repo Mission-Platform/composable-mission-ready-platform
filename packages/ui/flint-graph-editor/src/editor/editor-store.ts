@@ -485,6 +485,28 @@ function remapPastedEdges(
 }
 
 /**
+ * Validates whether candidate connection edge introduces cyclical or type errors.
+ */
+function validateCandidateConnection(
+  graph: FlintNodeGraph,
+  newEdge: FlintGraphEdge,
+): { valid: boolean; validation: FlintValidationResult; error?: string } {
+  const candidateGraph: FlintNodeGraph = {
+    ...graph,
+    edges: [...graph.edges, newEdge],
+  };
+  const validation = validateGraph(candidateGraph);
+  const errorIssue = validation.issues.find(
+    (i) => i.severity === 'error' && i.code !== 'FLINT-GRAPH-REQUIRED-PORT-UNCONNECTED',
+  );
+  return {
+    valid: errorIssue === undefined,
+    validation,
+    error: errorIssue?.message,
+  };
+}
+
+/**
  * Normalizes connection endpoints when dragged from input pin to output pin.
  */
 function normalizeConnectionEndpoints(
@@ -939,21 +961,16 @@ export class FlintEditorStore {
       toPortId: targetPortId,
     };
 
-    const candidateGraph: FlintNodeGraph = {
+    const validationCheck = validateCandidateConnection(this.graph, newEdge);
+    if (!validationCheck.valid) {
+      return { success: false, error: validationCheck.error };
+    }
+
+    this.graph = {
       ...this.graph,
       edges: [...this.graph.edges, newEdge],
     };
-
-    const candidateValidation = validateGraph(candidateGraph);
-    const connectionError = candidateValidation.issues.find(
-      (i) => i.severity === 'error' && i.code !== 'FLINT-GRAPH-REQUIRED-PORT-UNCONNECTED',
-    );
-    if (connectionError) {
-      return { success: false, error: connectionError.message };
-    }
-
-    this.graph = candidateGraph;
-    this.validation = candidateValidation;
+    this.validation = validationCheck.validation;
     this.pushHistoryState(this.graph);
     this.connectingEdge = undefined;
     this.notify();

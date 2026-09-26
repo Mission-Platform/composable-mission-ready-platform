@@ -9,7 +9,14 @@
  * `@storybook/web-components` renders (it hands the story result to lit's
  * `render`, and lit accepts a DOM node).
  */
-import { appendChild, applyProperties, asSlotElement, createDomElement, customElementTag } from './slots.dom.js';
+import {
+  appendChild,
+  applyProperties,
+  asSlotElement,
+  createDomElement,
+  customElementTag,
+  instantiateDomElement,
+} from './slots.dom.js';
 
 import type { RenderWithSlots, StoryNodeFactory, StorySlots } from './slots.types.js';
 
@@ -52,29 +59,25 @@ export const node: StoryNodeFactory = (type, properties, ...children) => {
   return element;
 };
 
-/** @see {@link RenderWithSlots} */
-export const renderWithSlots: RenderWithSlots = (component, properties, slots, children) => {
-  const tag = typeof component === 'string' ? component : customElementTag(component);
-  let element = document.createElement(tag);
-  const customConstructor = typeof customElements === 'undefined' ? undefined : customElements.get(tag);
-  if (customConstructor && element instanceof customConstructor) {
-    // Standard custom element matching registered constructor.
-  } else if (
-    customConstructor ||
-    (element instanceof HTMLUnknownElement && (tag.includes('-') || typeof component !== 'string'))
-  ) {
-    element = document.createElement('div', { is: tag });
-  }
-  applyProperties(element, properties);
-  if (typeof component !== 'string' || component.includes('-')) {
-    setComponentChildren(element, children === undefined ? [] : [children]);
-  }
-  for (const [name, content] of Object.entries(slots as StorySlots)) {
+/** Appends named slots as child elements with slot attributes. */
+function appendSlottedElements(element: Element, slots: StorySlots): void {
+  for (const [name, content] of Object.entries(slots)) {
     const slotted = asSlotElement(content, name);
     if (slotted) {
       element.append(slotted);
     }
   }
+}
+
+/** @see {@link RenderWithSlots} */
+export const renderWithSlots: RenderWithSlots = (component, properties, slots, children) => {
+  const tag = typeof component === 'string' ? component : customElementTag(component);
+  const element = instantiateDomElement(tag);
+  applyProperties(element, properties);
+  if (typeof component !== 'string' || component.includes('-')) {
+    setComponentChildren(element, children === undefined ? [] : [children]);
+  }
+  appendSlottedElements(element, slots as StorySlots);
   appendChild(element, children);
   return element;
 };

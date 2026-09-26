@@ -88,30 +88,30 @@ const ADVANCED_ARITHMETIC_EMITTERS: Readonly<
 > = {
   negate: (node, resolveSource) => `-${resolveSource(node, 'a')}`,
   min: (node, resolveSource) => {
-    const a = resolveSource(node, 'a');
-    const b = resolveSource(node, 'b');
-    return `match ${a} < ${b} { true => ${a}, false => ${b} }`;
+    const leftSource = resolveSource(node, 'a');
+    const rightSource = resolveSource(node, 'b');
+    return `match ${leftSource} < ${rightSource} { true => ${leftSource}, false => ${rightSource} }`;
   },
   max: (node, resolveSource) => {
-    const a = resolveSource(node, 'a');
-    const b = resolveSource(node, 'b');
-    return `match ${a} > ${b} { true => ${a}, false => ${b} }`;
+    const leftSource = resolveSource(node, 'a');
+    const rightSource = resolveSource(node, 'b');
+    return `match ${leftSource} > ${rightSource} { true => ${leftSource}, false => ${rightSource} }`;
   },
   abs: (node, resolveSource) => {
-    const a = resolveSource(node, 'a');
-    return `match ${a} < 0 { true => -${a}, false => ${a} }`;
+    const valueSource = resolveSource(node, 'a');
+    return `match ${valueSource} < 0 { true => -${valueSource}, false => ${valueSource} }`;
   },
   div_rem: (node, resolveSource) => {
     const structName = `Record_${sanitizeIdentifier(node.id)}`;
-    const a = resolveSource(node, 'a');
-    const b = resolveSource(node, 'b');
-    return `${structName} { quotient: ${a} / ${b}, remainder: ${a} % ${b} }`;
+    const leftSource = resolveSource(node, 'a');
+    const rightSource = resolveSource(node, 'b');
+    return `${structName} { quotient: ${leftSource} / ${rightSource}, remainder: ${leftSource} % ${rightSource} }`;
   },
   min_max: (node, resolveSource) => {
     const structName = `Record_${sanitizeIdentifier(node.id)}`;
-    const a = resolveSource(node, 'a');
-    const b = resolveSource(node, 'b');
-    return `${structName} { min: match ${a} < ${b} { true => ${a}, false => ${b} }, max: match ${a} > ${b} { true => ${a}, false => ${b} } }`;
+    const leftSource = resolveSource(node, 'a');
+    const rightSource = resolveSource(node, 'b');
+    return `${structName} { min: match ${leftSource} < ${rightSource} { true => ${leftSource}, false => ${rightSource} }, max: match ${leftSource} > ${rightSource} { true => ${leftSource}, false => ${rightSource} } }`;
   },
 };
 
@@ -318,17 +318,15 @@ function emitRecordStructs(nodes: readonly FlintGraphNode[], appendLine: (text: 
  * Emits user-defined custom code declarations once per unique code body.
  */
 function emitCustomCodeDeclarations(nodes: readonly FlintGraphNode[], appendLine: (text: string) => void): void {
-  const emittedCustomCode = new Set<string>();
+  const customCodes = new Set<string>();
   for (const node of nodes) {
     const isCustom = node.kind === 'custom' || node.operation === 'flint_code';
-    if (!isCustom || !node.properties?.code) {
-      continue;
+    if (isCustom && node.properties?.code) {
+      customCodes.add(String(node.properties.code).trim());
     }
-    const codeString = String(node.properties.code).trim();
-    if (!emittedCustomCode.has(codeString)) {
-      emittedCustomCode.add(codeString);
-      appendLine(`${codeString}\n`);
-    }
+  }
+  for (const codeString of customCodes) {
+    appendLine(`${codeString}\n`);
   }
 }
 
@@ -337,6 +335,23 @@ function emitCustomCodeDeclarations(nodes: readonly FlintGraphNode[], appendLine
  */
 function isInputNode(node: FlintGraphNode | undefined): node is FlintGraphNode {
   return node !== undefined && (node.kind === 'input' || node.operation === 'input');
+}
+
+/**
+ * Extracts a single input parameter descriptor and maps its output port.
+ */
+function extractSingleInputParameter(
+  node: FlintGraphNode,
+  portToAstIdentifier: Map<string, string>,
+): { name: string; type: string } {
+  const outPort = node.outputs[0];
+  const parameterName = sanitizeIdentifier(String(node.properties?.name ?? `param_${node.id}`));
+  const parameterType = outPort ? flintTypeNameToString(outPort.type) : 'f32';
+
+  if (outPort !== undefined) {
+    portToAstIdentifier.set(`${node.id}:${outPort.id}`, parameterName);
+  }
+  return { name: parameterName, type: parameterType };
 }
 
 /**
@@ -350,16 +365,8 @@ function collectInputParameters(
   const functionParameters: { name: string; type: string }[] = [];
   for (const nodeId of sortedNodeIds) {
     const node = nodeMap.get(nodeId);
-    if (!isInputNode(node)) {
-      continue;
-    }
-    const outPort = node.outputs[0];
-    const parameterName = sanitizeIdentifier(String(node.properties?.name ?? `param_${node.id}`));
-    const parameterType = outPort ? flintTypeNameToString(outPort.type) : 'f32';
-
-    functionParameters.push({ name: parameterName, type: parameterType });
-    if (outPort !== undefined) {
-      portToAstIdentifier.set(`${node.id}:${outPort.id}`, parameterName);
+    if (isInputNode(node)) {
+      functionParameters.push(extractSingleInputParameter(node, portToAstIdentifier));
     }
   }
   return functionParameters;
@@ -462,11 +469,11 @@ function resolveCapabilityOrCustomExpression(
   }
 
   const arguments_ = node.inputs.map((port) => resolveInputSource(node, port.id)).join(', ');
-  if (node.operation === 'flint_code' || node.kind === 'custom') {
-    const customFunctionName = sanitizeIdentifier(String(node.properties?.functionName ?? `custom_${node.id}`));
-    return `${customFunctionName}(${arguments_})`;
-  }
-  return `${node.operation}(${arguments_})`;
+  const isCustomCode = node.operation === 'flint_code' || node.kind === 'custom';
+  const callee = isCustomCode
+    ? sanitizeIdentifier(String(node.properties?.functionName ?? `custom_${node.id}`))
+    : node.operation;
+  return `${callee}(${arguments_})`;
 }
 
 /**
@@ -701,6 +708,30 @@ function indexIncomingSourceEdges(
 }
 
 /**
+ * Resolves return type metadata from the primary graph output node.
+ */
+function resolveGraphReturnType(outputNodes: readonly FlintGraphNode[]): {
+  returnTypeString: string;
+  returnTypeNode: FlintTypeName;
+} {
+  const firstOutputPort = outputNodes[0]?.inputs[0];
+  if (firstOutputPort !== undefined) {
+    return {
+      returnTypeString: flintTypeNameToString(firstOutputPort.type),
+      returnTypeNode: firstOutputPort.type,
+    };
+  }
+  return {
+    returnTypeString: 'unit',
+    returnTypeNode: {
+      kind: 'type-name',
+      name: 'unit',
+      span: { start: 0, end: 4, line: 1, column: 1, endLine: 1, endColumn: 5 },
+    },
+  };
+}
+
+/**
  * Emits clean, formatted Flint source code from a validated graph with exact bidirectional source maps.
  */
 export function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmissionResult {
@@ -747,18 +778,7 @@ export function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmission
   const parameterString = functionParameters.map((p) => `${p.name}: ${p.type}`).join(', ');
 
   const outputNodes = graph.nodes.filter((node) => node.kind === 'output' || node.operation === 'output');
-  let returnTypeString = 'unit';
-  let returnTypeNode: FlintTypeName = {
-    kind: 'type-name',
-    name: 'unit',
-    span: { start: 0, end: 4, line: 1, column: 1, endLine: 1, endColumn: 5 },
-  };
-
-  if (outputNodes.length > 0 && outputNodes[0]?.inputs[0] !== undefined) {
-    const inPort = outputNodes[0].inputs[0];
-    returnTypeString = flintTypeNameToString(inPort.type);
-    returnTypeNode = inPort.type;
-  }
+  const { returnTypeString, returnTypeNode } = resolveGraphReturnType(outputNodes);
 
   const prefix = `export fn ${entryFunctionName}(`;
   const functionHeaderRecord = appendLine(`${prefix}${parameterString}) -> ${returnTypeString} {`);
