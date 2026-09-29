@@ -524,10 +524,7 @@ if (globalThis.self !== undefined) {
       return isDark ? [0.345, 0.651, 1, 1] : [0.035, 0.412, 0.855, 1];
     }
     const table = isDark ? CATEGORY_RGBA_DARK : CATEGORY_RGBA_LIGHT;
-    if (category && category in table) {
-      return table[category];
-    }
-    return isDark ? [0.545, 0.58, 0.62, 1] : [0.341, 0.376, 0.416, 1];
+    return (category ? table[category] : undefined) ?? (isDark ? [0.545, 0.58, 0.62, 1] : [0.341, 0.376, 0.416, 1]);
   }
 
   const PORT_TYPE_RGBA_DARK: Record<string, [number, number, number, number]> = {
@@ -2976,25 +2973,24 @@ if (globalThis.self !== undefined) {
     };
   }
 
-  function computeWebGpuNodeGlowAndBorder(isSelected: number, isActive: number, isTrapped: number, isDark: boolean) {
-    let glowR = 0;
-    let glowG = 0;
-    let glowB = 0;
-    let glowA = 0;
+  /**
+   * Computes WebGPU node instance glow parameters based on node state.
+   */
+  function getWebGpuNodeGlow(isSelected: number, isActive: number, isTrapped: number, isDark: boolean) {
     if (isTrapped) {
-      glowR = isDark ? 0.95 : 0.81;
-      glowG = isDark ? 0.15 : 0.13;
-      glowB = isDark ? 0.2 : 0.18;
-      glowA = 0.9;
-    } else if (isActive) {
-      glowR = isDark ? 0.15 : 0.1;
-      glowG = isDark ? 0.75 : 0.5;
-      glowB = isDark ? 1 : 0.22;
-      glowA = 0.8;
-    } else if (isSelected) {
-      glowA = 0.5;
+      return { glowR: isDark ? 0.95 : 0.81, glowG: isDark ? 0.15 : 0.13, glowB: isDark ? 0.2 : 0.18, glowA: 0.9 };
     }
+    if (isActive) {
+      return { glowR: isDark ? 0.15 : 0.1, glowG: isDark ? 0.75 : 0.5, glowB: isDark ? 1 : 0.22, glowA: 0.8 };
+    }
+    return { glowR: 0, glowG: 0, glowB: 0, glowA: isSelected ? 0.5 : 0 };
+  }
 
+  /**
+   * Computes WebGPU node instance fill and border styling tuples.
+   */
+  function computeWebGpuNodeGlowAndBorder(isSelected: number, isActive: number, isTrapped: number, isDark: boolean) {
+    const glow = getWebGpuNodeGlow(isSelected, isActive, isTrapped, isDark);
     const fillR = isDark ? 0.14 : 1;
     const fillG = isDark ? 0.16 : 1;
     const fillB = isDark ? 0.22 : 1;
@@ -3006,66 +3002,98 @@ if (globalThis.self !== undefined) {
     const borderA = isSelected ? 1 : 0.7;
     const borderWidth = isSelected ? 2.5 : 1.2;
 
-    return { glowR, glowG, glowB, glowA, fillR, fillG, fillB, fillA, borderR, borderG, borderB, borderA, borderWidth };
+    return { ...glow, fillR, fillG, fillB, fillA, borderR, borderG, borderB, borderA, borderWidth };
   }
 
+  /**
+   * Computes WebGPU edge instance color channels and cable stroke width.
+   */
   function computeWebGpuEdgeColorAndWidth(isSelected: number, isActive: number, isDark: boolean) {
-    let colorR = isDark ? 0.45 : 0.34;
-    let colorG = isDark ? 0.52 : 0.38;
-    let colorB = isDark ? 0.65 : 0.42;
-    let colorA = isDark ? 0.8 : 0.65;
-
     if (isSelected) {
-      colorR = isDark ? 0.35 : 0.035;
-      colorG = isDark ? 0.65 : 0.412;
-      colorB = isDark ? 1 : 0.855;
-      colorA = 1;
-    } else if (isActive) {
-      colorR = isDark ? 0.2 : 0.1;
-      colorG = isDark ? 0.8 : 0.5;
-      colorB = isDark ? 1 : 0.22;
-      colorA = 0.9;
+      return {
+        colorR: isDark ? 0.35 : 0.035,
+        colorG: isDark ? 0.65 : 0.412,
+        colorB: isDark ? 1 : 0.855,
+        colorA: 1,
+        widthVal: 3,
+      };
     }
-
-    const widthVal = isSelected ? 3 : 2.5;
-    return { colorR, colorG, colorB, colorA, widthVal };
+    if (isActive) {
+      return {
+        colorR: isDark ? 0.2 : 0.1,
+        colorG: isDark ? 0.8 : 0.5,
+        colorB: isDark ? 1 : 0.22,
+        colorA: 0.9,
+        widthVal: 2.5,
+      };
+    }
+    return {
+      colorR: isDark ? 0.45 : 0.34,
+      colorG: isDark ? 0.52 : 0.38,
+      colorB: isDark ? 0.65 : 0.42,
+      colorA: isDark ? 0.8 : 0.65,
+      widthVal: 2.5,
+    };
   }
 
+  /**
+   * Computes WebGPU pin instance color and halo glow attributes.
+   */
   function computeWebGpuPinColorAndWidth(isHovered: number, isActive: number, isDark: boolean) {
-    let fillR = isDark ? 0.15 : 0.94;
-    let fillG = isDark ? 0.2 : 0.95;
-    let fillB = isDark ? 0.28 : 0.96;
-    let glowG = 0;
-    let glowB = 0;
-    let glowA = 0;
-
     if (isHovered) {
-      fillR = isDark ? 0 : 1;
-      fillG = isDark ? 0.94 : 1;
-      fillB = isDark ? 1 : 1;
-      glowG = isDark ? 0.94 : 0.41;
-      glowB = isDark ? 1 : 0.85;
-      glowA = 0.8;
-    } else if (isActive) {
-      fillR = isDark ? 0 : 0.1;
-      fillG = isDark ? 1 : 0.5;
-      fillB = isDark ? 0.53 : 0.22;
-      glowG = isDark ? 1 : 0.5;
-      glowB = isDark ? 0.53 : 0.22;
-      glowA = 0.6;
+      return {
+        fillR: isDark ? 0 : 1,
+        fillG: isDark ? 0.94 : 1,
+        fillB: isDark ? 1 : 1,
+        fillA: 1,
+        borderR: isDark ? 0.45 : 0.34,
+        borderG: isDark ? 0.52 : 0.38,
+        borderB: isDark ? 0.65 : 0.42,
+        borderA: 0.8,
+        borderWidth: 2.5,
+        glowR: 0,
+        glowG: isDark ? 0.94 : 0.41,
+        glowB: isDark ? 1 : 0.85,
+        glowA: 0.8,
+      };
     }
-
-    const fillA = 1;
-    const borderR = isDark ? 0.45 : 0.34;
-    const borderG = isDark ? 0.52 : 0.38;
-    const borderB = isDark ? 0.65 : 0.42;
-    const borderA = 0.8;
-    const borderWidth = isHovered ? 2.5 : 1.5;
-    const glowR = 0;
-
-    return { fillR, fillG, fillB, fillA, borderR, borderG, borderB, borderA, borderWidth, glowR, glowG, glowB, glowA };
+    if (isActive) {
+      return {
+        fillR: isDark ? 0 : 0.1,
+        fillG: isDark ? 1 : 0.5,
+        fillB: isDark ? 0.53 : 0.22,
+        fillA: 1,
+        borderR: isDark ? 0.45 : 0.34,
+        borderG: isDark ? 0.52 : 0.38,
+        borderB: isDark ? 0.65 : 0.42,
+        borderA: 0.8,
+        borderWidth: 1.5,
+        glowR: 0,
+        glowG: isDark ? 1 : 0.5,
+        glowB: isDark ? 0.53 : 0.22,
+        glowA: 0.6,
+      };
+    }
+    return {
+      fillR: isDark ? 0.15 : 0.94,
+      fillG: isDark ? 0.2 : 0.95,
+      fillB: isDark ? 0.28 : 0.96,
+      fillA: 1,
+      borderR: isDark ? 0.45 : 0.34,
+      borderG: isDark ? 0.52 : 0.38,
+      borderB: isDark ? 0.65 : 0.42,
+      borderA: 0.8,
+      borderWidth: 1.5,
+      glowR: 0,
+      glowG: 0,
+      glowB: 0,
+      glowA: 0,
+    };
   }
 
+  /**
+   * Allocates or reuses GPU instancing buffer ensuring required byte capacity.
+   */
   function ensureGpuInstanceBuffer(
     existingBuffer: GPUBuffer | undefined,
     requiredBytes: number,
@@ -3081,6 +3109,9 @@ if (globalThis.self !== undefined) {
     });
   }
 
+  /**
+   * Uploads packed float array data into WebGPU instancing buffer.
+   */
   function uploadGpuInstanceData(
     device: GPUDevice | undefined,
     buffer: GPUBuffer | undefined,
@@ -3098,6 +3129,9 @@ if (globalThis.self !== undefined) {
     return targetBuffer;
   }
 
+  /**
+   * Configures pipeline state and issues instanced WebGPU draw calls.
+   */
   function executeGpuInstancedDraw(
     passEncoder: GPURenderPassEncoder | undefined,
     pipeline: GPURenderPipeline | undefined,
@@ -3120,46 +3154,38 @@ if (globalThis.self !== undefined) {
     passEncoder.draw(vertexCount, actualCount, 0, 0);
   }
 
+  /**
+   * Computes WebGL node border RGB color channels.
+   */
   function computeGlNodeBorder(isSelected: number, isActive: number, isTrapped: number, isDark: boolean) {
-    let br = isDark ? 0.22 : 0.816;
-    let bg = isDark ? 0.25 : 0.843;
-    let bb = isDark ? 0.32 : 0.871;
-
     if (isSelected) {
-      br = isDark ? 0.35 : 0.035;
-      bg = isDark ? 0.65 : 0.412;
-      bb = isDark ? 1 : 0.855;
-    } else if (isTrapped) {
-      br = isDark ? 0.97 : 0.81;
-      bg = isDark ? 0.32 : 0.13;
-      bb = isDark ? 0.29 : 0.18;
-    } else if (isActive) {
-      br = isDark ? 0.25 : 0.1;
-      bg = isDark ? 0.73 : 0.5;
-      bb = isDark ? 0.31 : 0.22;
+      return { br: isDark ? 0.35 : 0.035, bg: isDark ? 0.65 : 0.412, bb: isDark ? 1 : 0.855 };
     }
-
-    return { br, bg, bb };
+    if (isTrapped) {
+      return { br: isDark ? 0.97 : 0.81, bg: isDark ? 0.32 : 0.13, bb: isDark ? 0.29 : 0.18 };
+    }
+    if (isActive) {
+      return { br: isDark ? 0.25 : 0.1, bg: isDark ? 0.73 : 0.5, bb: isDark ? 0.31 : 0.22 };
+    }
+    return { br: isDark ? 0.22 : 0.816, bg: isDark ? 0.25 : 0.843, bb: isDark ? 0.32 : 0.871 };
   }
 
+  /**
+   * Computes WebGL pin circle RGB fill color.
+   */
   function computeGlPinColor(isHovered: number, isActive: number, isDark: boolean) {
-    let pr = isDark ? 0.55 : 0.34;
-    let pg = isDark ? 0.58 : 0.38;
-    let pb = isDark ? 0.62 : 0.42;
-
     if (isHovered) {
-      pr = isDark ? 0.47 : 0.035;
-      pg = isDark ? 0.75 : 0.412;
-      pb = isDark ? 1 : 0.855;
-    } else if (isActive) {
-      pr = isDark ? 0.25 : 0.1;
-      pg = isDark ? 0.73 : 0.5;
-      pb = isDark ? 0.31 : 0.22;
+      return { pr: isDark ? 0.47 : 0.035, pg: isDark ? 0.75 : 0.412, pb: isDark ? 1 : 0.855 };
     }
-
-    return { pr, pg, pb };
+    if (isActive) {
+      return { pr: isDark ? 0.25 : 0.1, pg: isDark ? 0.73 : 0.5, pb: isDark ? 0.31 : 0.22 };
+    }
+    return { pr: isDark ? 0.55 : 0.34, pg: isDark ? 0.58 : 0.38, pb: isDark ? 0.62 : 0.42 };
   }
 
+  /**
+   * Computes 2D Canvas node stroke styling properties.
+   */
   function computeC2dNodeStroke(isSelected: number, isActive: number, isTrapped: number, isDark: boolean) {
     if (isSelected) {
       return { strokeStyle: isDark ? '#58a6ff' : '#0969da', lineWidth: 2 };
@@ -3173,6 +3199,9 @@ if (globalThis.self !== undefined) {
     return { strokeStyle: isDark ? 'rgba(56, 64, 82, 0.8)' : '#d0d7de', lineWidth: 1 };
   }
 
+  /**
+   * Computes 2D Canvas pin circle fill color string.
+   */
   function computeC2dPinFill(isHovered: number, isActive: number, isDark: boolean): string {
     if (isHovered) {
       return isDark ? '#79c0ff' : '#0969da';
@@ -3894,6 +3923,27 @@ if (globalThis.self !== undefined) {
   };
 
   /**
+   * Selects and initializes the most suitable GPU/canvas rendering backend.
+   */
+  async function selectAndInitBackend(
+    targetCanvas: OffscreenCanvas | HTMLCanvasElement,
+    preferred?: 'webgpu' | 'webgl' | 'canvas2d',
+  ): Promise<{ tier: number; backend: 'webgpu' | 'webgl' | 'canvas2d'; ok: boolean }> {
+    const hasGpu =
+      typeof navigator !== 'undefined' && 'gpu' in navigator && Boolean((navigator as unknown as WebGpuNavigator).gpu);
+    if ((!preferred || preferred === 'webgpu') && hasGpu && (await initWebGpuBackend(targetCanvas))) {
+      return { tier: 1, backend: 'webgpu', ok: true };
+    }
+    if ((!preferred || preferred === 'webgl') && initWebGLBackend(targetCanvas)) {
+      return { tier: 2, backend: 'webgl', ok: true };
+    }
+    if (init2dBackend(targetCanvas)) {
+      return { tier: 3, backend: 'canvas2d', ok: true };
+    }
+    return { tier: 3, backend: 'canvas2d', ok: false };
+  }
+
+  /**
    * Initializes the render worker backend pipelines and initial canvas buffer dimensions.
    */
   async function handleWorkerInit(msg: Extract<RenderWorkerInputMessage, { type: 'init' }>): Promise<void> {
@@ -3902,10 +3952,8 @@ if (globalThis.self !== undefined) {
     width = msg.width ?? 800;
     height = msg.height ?? 600;
     dpr = msg.dpr ?? 1;
-    const preferredRenderer = msg.renderer;
     if (msg.theme !== undefined) {
       currentTheme = msg.theme;
-      wasm.engine_set_theme(currentTheme === 'light' ? 1 : 0);
     }
 
     if (canvas) {
@@ -3916,63 +3964,11 @@ if (globalThis.self !== undefined) {
     wasm.engine_create(width, height, dpr);
     wasm.engine_set_theme(currentTheme === 'light' ? 1 : 0);
 
-    let initialized = false;
     let selectedTier = 3;
-
     if (canvas) {
-      const hasWebGpu =
-        typeof navigator !== 'undefined' &&
-        'gpu' in navigator &&
-        (navigator as unknown as WebGpuNavigator).gpu !== undefined;
-
-      if ((preferredRenderer === 'webgpu' || !preferredRenderer) && hasWebGpu) {
-        initialized = await initWebGpuBackend(canvas);
-        if (initialized) {
-          selectedTier = 1;
-          activeBackend = 'webgpu';
-        }
-      }
-
-      if (!initialized && (preferredRenderer === 'webgl' || !preferredRenderer)) {
-        initialized = initWebGLBackend(canvas);
-        if (initialized) {
-          selectedTier = 2;
-          activeBackend = 'webgl';
-        }
-      }
-
-      if (!initialized && (preferredRenderer === 'canvas2d' || !preferredRenderer)) {
-        initialized = init2dBackend(canvas);
-        if (initialized) {
-          selectedTier = 3;
-          activeBackend = 'canvas2d';
-        }
-      }
-
-      if (!initialized && !preferredRenderer) {
-        if (hasWebGpu) {
-          initialized = await initWebGpuBackend(canvas);
-          if (initialized) {
-            selectedTier = 1;
-            activeBackend = 'webgpu';
-          }
-        }
-        if (!initialized) {
-          initialized = initWebGLBackend(canvas);
-          if (initialized) {
-            selectedTier = 2;
-            activeBackend = 'webgl';
-          }
-        }
-        if (!initialized) {
-          initialized = init2dBackend(canvas);
-          if (initialized) {
-            selectedTier = 3;
-            activeBackend = 'canvas2d';
-          }
-        }
-      }
-
+      const result = await selectAndInitBackend(canvas, msg.renderer);
+      selectedTier = result.tier;
+      activeBackend = result.backend;
       wasm.engine_set_backend(selectedTier);
     }
 
@@ -3990,6 +3986,26 @@ if (globalThis.self !== undefined) {
   }
 
   /**
+   * Inserts single node into spatial acceleration structure.
+   */
+  function insertNodeIntoSpatialIndex(index: number, node: FlintGraphNode): void {
+    if (!wasm) return;
+    const maxPorts = Math.max(node.inputs?.length ?? 0, node.outputs?.length ?? 0);
+    wasm.getNodeBounds(node.position.x, node.position.y, maxPorts);
+    const minX = wasm.get_node_bounds_min_x();
+    const minY = wasm.get_node_bounds_min_y();
+    const maxX = wasm.get_node_bounds_max_x();
+    const maxY = wasm.get_node_bounds_max_y();
+    wasm.spatial_insert_node(
+      index,
+      Math.round(minX) + COORD_OFFSET,
+      Math.round(minY) + COORD_OFFSET,
+      Math.round(maxX) + COORD_OFFSET,
+      Math.round(maxY) + COORD_OFFSET,
+    );
+  }
+
+  /**
    * Sets the active graph elements and populates the spatial index.
    */
   function handleWorkerSetGraph(msg: Extract<RenderWorkerInputMessage, { type: 'set_graph' }>): void {
@@ -4001,19 +4017,7 @@ if (globalThis.self !== undefined) {
     wasm.spatial_clear();
     for (const [i, node] of nodes.entries()) {
       if (node) {
-        const maxPorts = Math.max(node.inputs?.length ?? 0, node.outputs?.length ?? 0);
-        wasm.getNodeBounds(node.position.x, node.position.y, maxPorts);
-        const minX = wasm.get_node_bounds_min_x();
-        const minY = wasm.get_node_bounds_min_y();
-        const maxX = wasm.get_node_bounds_max_x();
-        const maxY = wasm.get_node_bounds_max_y();
-        wasm.spatial_insert_node(
-          i,
-          Math.round(minX) + COORD_OFFSET,
-          Math.round(minY) + COORD_OFFSET,
-          Math.round(maxX) + COORD_OFFSET,
-          Math.round(maxY) + COORD_OFFSET,
-        );
+        insertNodeIntoSpatialIndex(i, node);
       }
     }
     wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
@@ -4156,6 +4160,47 @@ if (globalThis.self !== undefined) {
   }
 
   /**
+   * Performs hit-testing against active edge geometry curves.
+   */
+  function hitTestEdges(
+    cursorX: number,
+    cursorY: number,
+    snapRadius: number,
+    nodeList: readonly FlintGraphNode[],
+    edgeList: readonly FlintGraphEdge[],
+  ): FlintHitResult | undefined {
+    if (!wasm) return undefined;
+    const nodeMap = new Map<string, FlintGraphNode>(nodeList.map((n) => [n.id, n]));
+    for (const edge of edgeList) {
+      const fromNode = nodeMap.get(edge.fromNodeId);
+      const toNode = nodeMap.get(edge.toNodeId);
+      if (!fromNode || !toNode) continue;
+      const fromPortIndex = Math.max(
+        0,
+        (fromNode.outputs ?? []).findIndex((p) => p.id === edge.fromPortId),
+      );
+      const toPortIndex = Math.max(
+        0,
+        (toNode.inputs ?? []).findIndex((p) => p.id === edge.toPortId),
+      );
+      const p0x = fromNode.position.x + NODE_WIDTH;
+      const p0y = fromNode.position.y + NODE_HEADER_HEIGHT + fromPortIndex * PORT_ROW_HEIGHT + 14;
+      const p3x = toNode.position.x;
+      const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIndex * PORT_ROW_HEIGHT + 14;
+      if (wasm.edge_hit_test(cursorX, cursorY, p0x, p0y, p3x, p3y, snapRadius)) {
+        return {
+          type: 'edge',
+          nodeId: edge.fromNodeId,
+          edgeId: edge.id,
+          worldX: cursorX,
+          worldY: cursorY,
+        };
+      }
+    }
+    return undefined;
+  }
+
+  /**
    * Executes spatial hit testing for cursor coordinates.
    */
   function handleWorkerHitTest(msg: Extract<RenderWorkerInputMessage, { type: 'hit_test' }>): void {
@@ -4164,46 +4209,15 @@ if (globalThis.self !== undefined) {
     const py = Math.round(msg.cursorY) + COORD_OFFSET;
     const hit = wasm.spatial_hit_test_point(px, py);
     let hitResult: FlintHitResult | undefined;
-    if (hit > 0) {
-      const node = nodes[hit - 1];
-      if (node) {
-        hitResult = {
-          type: 'node',
-          nodeId: node.id,
-          worldX: msg.cursorX,
-          worldY: msg.cursorY,
-        };
-      }
-    } else {
-      const nodeMap = new Map<string, FlintGraphNode>(nodes.map((n) => [n.id, n]));
-      for (const edge of edges) {
-        const fromNode = nodeMap.get(edge.fromNodeId);
-        const toNode = nodeMap.get(edge.toNodeId);
-        if (!fromNode || !toNode) continue;
-        const fromPortIndex = Math.max(
-          0,
-          (fromNode.outputs ?? []).findIndex((p) => p.id === edge.fromPortId),
-        );
-        const toPortIndex = Math.max(
-          0,
-          (toNode.inputs ?? []).findIndex((p) => p.id === edge.toPortId),
-        );
-        const p0x = fromNode.position.x + NODE_WIDTH;
-        const p0y = fromNode.position.y + NODE_HEADER_HEIGHT + fromPortIndex * PORT_ROW_HEIGHT + 14;
-        const p3x = toNode.position.x;
-        const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIndex * PORT_ROW_HEIGHT + 14;
-        if (wasm.edge_hit_test(msg.cursorX, msg.cursorY, p0x, p0y, p3x, p3y, msg.snapRadius ?? 15)) {
-          hitResult = {
-            type: 'edge',
-            nodeId: edge.fromNodeId,
-            edgeId: edge.id,
+    hitResult =
+      hit > 0 && nodes[hit - 1]
+        ? {
+            type: 'node',
+            nodeId: nodes[hit - 1].id,
             worldX: msg.cursorX,
             worldY: msg.cursorY,
-          };
-          break;
-        }
-      }
-    }
+          }
+        : hitTestEdges(msg.cursorX, msg.cursorY, msg.snapRadius ?? 15, nodes, edges);
     postReply({
       type: 'hit_test_result',
       hit: hitResult,
@@ -4260,9 +4274,64 @@ if (globalThis.self !== undefined) {
     canvas = undefined;
   }
 
+  /**
+   * Processes secondary interactive manipulation worker messages.
+   */
+  function handleWorkerOtherMessage(msg: RenderWorkerInputMessage): void {
+    if (!wasm) return;
+    if (msg.type === 'set_theme' && msg.theme !== undefined) {
+      currentTheme = msg.theme;
+      wasm.engine_set_theme(currentTheme === 'light' ? 1 : 0);
+    } else
+      switch (msg.type) {
+        case 'pan': {
+          handleWorkerPan(msg);
+          return;
+        }
+        case 'zoom': {
+          handleWorkerZoom(msg);
+          return;
+        }
+        case 'resize': {
+          handleWorkerResize(msg);
+
+          break;
+        }
+        case 'set_selection': {
+          handleWorkerSetSelection(msg);
+
+          break;
+        }
+        case 'set_connecting_edge': {
+          connectingEdge = msg.edge;
+
+          break;
+        }
+        case 'set_hovered_port': {
+          hoveredPort = msg.hoveredPort;
+
+          break;
+        }
+        default: {
+          if (msg.type === 'set_pulse' && msg.edgeId !== undefined) {
+            edgePulses.set(msg.edgeId, msg.progress);
+          } else if (msg.type === 'set_trace_state') {
+            handleWorkerSetTraceState(msg);
+          }
+        }
+      }
+    wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
+    postReply({
+      type: 'frame',
+      performance: performanceStats,
+      visibleNodes: nodes.length,
+      visibleEdges: edges.length,
+    } as RenderWorkerOutputMessage);
+  }
+
   globalThis.self.addEventListener('message', async (event: MessageEvent<RenderWorkerInputMessage>) => {
     const msg = event.data;
-    if (!msg || typeof msg !== 'object' || !('type' in msg)) {
+    if (!msg || typeof msg !== 'object' || !('type' in msg) || ('id' in msg && msg.id === 'flint_render_worker')) {
       return;
     }
 
@@ -4274,101 +4343,26 @@ if (globalThis.self !== undefined) {
       switch (msg.type) {
         case 'init': {
           await handleWorkerInit(msg);
-          break;
-        }
-        case 'set_theme': {
-          if (msg.theme !== undefined) {
-            currentTheme = msg.theme;
-            wasm.engine_set_theme(currentTheme === 'light' ? 1 : 0);
-            wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
-            postReply({
-              type: 'frame',
-              performance: performanceStats,
-              visibleNodes: nodes.length,
-              visibleEdges: edges.length,
-            } as RenderWorkerOutputMessage);
-          }
+
           break;
         }
         case 'set_graph': {
           handleWorkerSetGraph(msg);
-          break;
-        }
-        case 'pan': {
-          handleWorkerPan(msg);
-          break;
-        }
-        case 'zoom': {
-          handleWorkerZoom(msg);
-          break;
-        }
-        case 'resize': {
-          handleWorkerResize(msg);
-          break;
-        }
-        case 'set_selection': {
-          handleWorkerSetSelection(msg);
-          break;
-        }
-        case 'set_connecting_edge': {
-          connectingEdge = msg.edge;
-          wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
-          postReply({
-            type: 'frame',
-            performance: performanceStats,
-            visibleNodes: nodes.length,
-            visibleEdges: edges.length,
-          } as RenderWorkerOutputMessage);
-          break;
-        }
-        case 'set_hovered_port': {
-          hoveredPort = msg.hoveredPort;
-          wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
-          postReply({
-            type: 'frame',
-            performance: performanceStats,
-            visibleNodes: nodes.length,
-            visibleEdges: edges.length,
-          } as RenderWorkerOutputMessage);
-          break;
-        }
-        case 'set_pulse': {
-          if (msg.edgeId !== undefined) {
-            edgePulses.set(msg.edgeId, msg.progress);
-            wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
-            postReply({
-              type: 'frame',
-              performance: performanceStats,
-              visibleNodes: nodes.length,
-              visibleEdges: edges.length,
-            } as RenderWorkerOutputMessage);
-          }
-          break;
-        }
-        case 'set_trace_state': {
-          handleWorkerSetTraceState(msg);
-          break;
-        }
-        case 'render_frame': {
-          wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
-          postReply({
-            type: 'frame',
-            performance: performanceStats,
-            visibleNodes: nodes.length,
-            visibleEdges: edges.length,
-          } as RenderWorkerOutputMessage);
+
           break;
         }
         case 'hit_test': {
           handleWorkerHitTest(msg);
+
           break;
         }
         case 'destroy': {
           handleWorkerDestroy();
+
           break;
         }
         default: {
-          break;
+          handleWorkerOtherMessage(msg);
         }
       }
     } catch (error) {

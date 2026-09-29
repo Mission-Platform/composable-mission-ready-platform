@@ -256,6 +256,14 @@ interface ContextMenuState {
   readonly targetGroupId?: string;
 }
 
+interface SelectionSquareState {
+  readonly active: boolean;
+  readonly startX: number;
+  readonly startY: number;
+  readonly currentX: number;
+  readonly currentY: number;
+}
+
 interface FlintRendererBridge {
   readonly setGraph: (
     nodes: readonly FlintGraphNode[],
@@ -365,33 +373,15 @@ function isPointInsideNode(
 }
 
 /**
- * Safely extracts string value from an HTML input event target.
+ * Safely extracts string value from an HTML input or textarea event target.
  */
-function extractInputElementValue(event: unknown): string | undefined {
-  if (
-    typeof HTMLInputElement !== 'undefined' &&
-    event &&
-    typeof event === 'object' &&
-    'target' in event &&
-    event.target instanceof HTMLInputElement
-  ) {
-    return event.target.value;
-  }
-  return undefined;
-}
-
-/**
- * Safely extracts string value from an HTML textarea event target.
- */
-function extractTextAreaElementValue(event: unknown): string | undefined {
-  if (
-    typeof HTMLTextAreaElement !== 'undefined' &&
-    event &&
-    typeof event === 'object' &&
-    'target' in event &&
-    event.target instanceof HTMLTextAreaElement
-  ) {
-    return event.target.value;
+function extractEventTargetStringValue(event: unknown): string | undefined {
+  if (event && typeof event === 'object' && 'target' in event) {
+    const target = Reflect.get(event, 'target');
+    if (target && typeof target === 'object' && 'value' in target) {
+      const value = Reflect.get(target, 'value');
+      return typeof value === 'string' ? value : undefined;
+    }
   }
   return undefined;
 }
@@ -406,6 +396,45 @@ function extractDragOperationType(event: unknown): string | undefined {
   return undefined;
 }
 
+interface GroupBoundingRect {
+  readonly minX: number;
+  readonly minY: number;
+  readonly maxX: number;
+  readonly maxY: number;
+}
+
+/**
+ * Computes bounding rectangle enclosing all nodes belonging to a group.
+ */
+function computeFullGroupBoundingBox(
+  group: FlintGraphGroup,
+  nodeMap: Map<string, FlintGraphNode>,
+): GroupBoundingRect | undefined {
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  let hasNodes = false;
+  for (const id of group.nodeIds) {
+    const n = nodeMap.get(id);
+    if (!n) continue;
+    hasNodes = true;
+    minX = Math.min(minX, n.position.x);
+    minY = Math.min(minY, n.position.y);
+    maxX = Math.max(maxX, n.position.x + 180);
+    maxY = Math.max(maxY, n.position.y + 120);
+  }
+  return hasNodes ? { minX, minY, maxX, maxY } : undefined;
+}
+
+/**
+ * Tests whether world coordinates are inside a group padded bounding box.
+ */
+function isPointInPaddedBox(box: GroupBoundingRect, worldX: number, worldY: number): boolean {
+  if (worldX < box.minX - 24 || worldX > box.maxX + 24) return false;
+  return worldY >= box.minY - 36 && worldY <= box.maxY + 24;
+}
+
 /**
  * Finds graph group bounding box containing world coordinates.
  */
@@ -418,27 +447,21 @@ function findGroupAtPoint(
   if (!groups || groups.length === 0) return undefined;
   const nodeMap = new Map(nodes.map((n) => [n.id, n]));
   for (const group of groups) {
-    const groupNodes: FlintGraphNode[] = [];
-    for (const id of group.nodeIds) {
-      const node = nodeMap.get(id);
-      if (node) groupNodes.push(node);
-    }
-    if (groupNodes.length === 0) continue;
-    let minX = Infinity;
-    let minY = Infinity;
-    let maxX = -Infinity;
-    let maxY = -Infinity;
-    for (const n of groupNodes) {
-      minX = Math.min(minX, n.position.x);
-      minY = Math.min(minY, n.position.y);
-      maxX = Math.max(maxX, n.position.x + 180);
-      maxY = Math.max(maxY, n.position.y + 120);
-    }
-    if (worldX >= minX - 24 && worldX <= maxX + 24 && worldY >= minY - 36 && worldY <= maxY + 24) {
+    const box = computeFullGroupBoundingBox(group, nodeMap);
+    if (box && isPointInPaddedBox(box, worldX, worldY)) {
       return group;
     }
   }
   return undefined;
+}
+
+/**
+ * Stops mouse event propagation when clicking modal content cards.
+ */
+function stopMouseEventPropagation(event: unknown): void {
+  if (typeof MouseEvent !== 'undefined' && event instanceof MouseEvent) {
+    event.stopPropagation();
+  }
 }
 
 /**
@@ -922,6 +945,52 @@ interface FlintCodeExportModalProperties {
 }
 
 /**
+ * Inner card content of the Flint code export dialog.
+ */
+function FlintCodeExportCard(properties: FlintCodeExportModalProperties): MpElement {
+  return (
+    <ForgeCard
+      size="lg"
+      variant="neutral"
+      padding="none"
+      bordered={true}
+      shadow={true}
+    >
+      <div className={styles.modalHeader}>
+        <span
+          className={styles.inspectorTitle}
+          style={{ margin: 0 }}
+        >
+          Generated Flint Source
+        </span>
+        <button
+          type="button"
+          className={classNames(styles.toolbarBtn, styles.toolbarBtnGhost)}
+          onClick={properties.onClose}
+          aria-label="Close export modal"
+        >
+          ✕
+        </button>
+      </div>
+      <div className={styles.modalBody}>
+        <pre className={styles.codeBlock}>
+          <code>{properties.source}</code>
+        </pre>
+      </div>
+      <div className={styles.modalFooter}>
+        <button
+          type="button"
+          className={classNames(styles.toolbarBtn, styles.toolbarBtnPrimary)}
+          onClick={properties.onClose}
+        >
+          Close
+        </button>
+      </div>
+    </ForgeCard>
+  );
+}
+
+/**
  * Modal dialog displaying generated Flint Wasm source code.
  */
 function FlintCodeExportModal(properties: FlintCodeExportModalProperties): MpElement | undefined {
@@ -935,50 +1004,9 @@ function FlintCodeExportModal(properties: FlintCodeExportModalProperties): MpEle
     >
       <div
         className={styles.modalCard}
-        onClick={(event: unknown) => {
-          if (typeof MouseEvent !== 'undefined' && event instanceof MouseEvent) {
-            event.stopPropagation();
-          }
-        }}
+        onClick={stopMouseEventPropagation}
       >
-        <ForgeCard
-          size="lg"
-          variant="neutral"
-          padding="none"
-          bordered={true}
-          shadow={true}
-        >
-          <div className={styles.modalHeader}>
-            <span
-              className={styles.inspectorTitle}
-              style={{ margin: 0 }}
-            >
-              Generated Flint Source
-            </span>
-            <button
-              type="button"
-              className={classNames(styles.toolbarBtn, styles.toolbarBtnGhost)}
-              onClick={properties.onClose}
-              aria-label="Close export modal"
-            >
-              ✕
-            </button>
-          </div>
-          <div className={styles.modalBody}>
-            <pre className={styles.codeBlock}>
-              <code>{properties.source}</code>
-            </pre>
-          </div>
-          <div className={styles.modalFooter}>
-            <button
-              type="button"
-              className={classNames(styles.toolbarBtn, styles.toolbarBtnPrimary)}
-              onClick={properties.onClose}
-            >
-              Close
-            </button>
-          </div>
-        </ForgeCard>
+        <FlintCodeExportCard {...properties} />
       </div>
     </div>
   );
@@ -998,6 +1026,143 @@ interface SpriteSheetInspectorSectionProperties {
 }
 
 /**
+ * Sprite sheet view mode and grid toggles toolbar.
+ */
+function SpriteSheetToolbar(properties: SpriteSheetInspectorSectionProperties): MpElement {
+  const isCrisp = properties.spriteSheetMode === 'crisp';
+  const isRaw = properties.spriteSheetMode === 'raw';
+  return (
+    <div className={styles.spriteSheetToolbar}>
+      <div className={styles.buttonGroup}>
+        <button
+          type="button"
+          className={classNames(styles.toolbarBtn, isCrisp ? styles.toolbarBtnPrimary : styles.toolbarBtnGhost)}
+          onClick={() => {
+            properties.setSpriteSheetMode('crisp');
+            properties.paintSpriteSheet('crisp', properties.spriteSheetGrid, properties.hoveredGlyph?.index);
+          }}
+        >
+          Crisp Glyphs
+        </button>
+        <button
+          type="button"
+          className={classNames(styles.toolbarBtn, isRaw ? styles.toolbarBtnPrimary : styles.toolbarBtnGhost)}
+          onClick={() => {
+            properties.setSpriteSheetMode('raw');
+            properties.paintSpriteSheet('raw', properties.spriteSheetGrid, properties.hoveredGlyph?.index);
+          }}
+        >
+          Raw SDF
+        </button>
+      </div>
+      <button
+        type="button"
+        className={classNames(styles.toolbarBtn, styles.toolbarBtnGhost)}
+        onClick={() => {
+          const nextGrid = !properties.spriteSheetGrid;
+          properties.setSpriteSheetGrid(nextGrid);
+          properties.paintSpriteSheet(properties.spriteSheetMode, nextGrid, properties.hoveredGlyph?.index);
+        }}
+      >
+        {properties.spriteSheetGrid ? 'Grid: ON' : 'Grid: OFF'}
+      </button>
+    </div>
+  );
+}
+
+/**
+ * Metadata badges displaying sprite sheet atlas characteristics.
+ */
+function SpriteSheetMetaBadges(): MpElement {
+  return (
+    <div className={styles.spriteSheetMeta}>
+      <ForgeBadge
+        variant="primary"
+        size="xs"
+      >
+        1024 × 1024 px
+      </ForgeBadge>
+      <ForgeBadge
+        variant="neutral"
+        size="xs"
+      >
+        2D Shelf Packed (4x4 to 64x64)
+      </ForgeBadge>
+      <ForgeBadge
+        variant="info"
+        size="xs"
+      >
+        Comfortaa & Datatype
+      </ForgeBadge>
+      <ForgeBadge
+        variant="success"
+        size="xs"
+      >
+        {GLYPH_CHARS_BY_IDX.length} Active Glyphs
+      </ForgeBadge>
+    </div>
+  );
+}
+
+interface SpriteSheetGlyphDetailsProperties {
+  readonly hoveredGlyph: HoveredGlyphInfo;
+  readonly inspectCanvasReference: { current?: HTMLCanvasElement };
+}
+
+/**
+ * Detailed glyph metrics inspector sub-panel.
+ */
+function SpriteSheetGlyphDetails(properties: SpriteSheetGlyphDetailsProperties): MpElement {
+  const glyph = properties.hoveredGlyph;
+  const charDisplay = glyph.char === ' ' ? 'Space' : glyph.char;
+  return (
+    <div className={styles.spriteSheetInspector}>
+      <canvas
+        ref={properties.inspectCanvasReference}
+        width={64}
+        height={64}
+        className={styles.spriteSheetInspectCanvas}
+      />
+      <div className={styles.spriteSheetInspectDetails}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span className={styles.spriteSheetInspectChar}>{charDisplay}</span>
+          <ForgeBadge
+            variant="info"
+            size="xs"
+          >
+            {glyph.codeHex}
+          </ForgeBadge>
+          <ForgeBadge
+            variant="neutral"
+            size="xs"
+          >
+            Idx {glyph.index}
+          </ForgeBadge>
+        </div>
+        <div style={{ fontSize: '11px', lineHeight: '1.5', color: '#c9d1d9' }}>
+          <div>
+            <strong>Dimensions & Advance:</strong> {glyph.width}×{glyph.height}px | Advance H: {glyph.advance}px |
+            Advance V: {glyph.vertAdvance}px
+          </div>
+          <div>
+            <strong>Bearings:</strong> Left (LSB): {glyph.horiBearingX}px | Right (RSB): {glyph.rightBearing}px | Top:{' '}
+            {glyph.horiBearingY}px
+          </div>
+          <div>
+            <strong>Font Metrics:</strong> Ascent: {glyph.ascent}px | Descent: {glyph.descent}px | LineGap:{' '}
+            {glyph.linegap}px | Int Leading: {glyph.internalLeading}px | Ext Leading: {glyph.externalLeading}px
+          </div>
+          <div>
+            <strong>BBox & Origin:</strong> [{glyph.bboxMinX}, {glyph.bboxMinY}, {glyph.bboxMaxX}, {glyph.bboxMaxY}] |
+            Origin: (0, 0) on baseline | Packed Cell: {glyph.cellW}×{glyph.cellH} at ({glyph.cellX}, {glyph.cellY})
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
  * Collapsible section for inspecting the 2D Shelf Packed SDF glyph atlas.
  */
 function SpriteSheetInspectorSection(properties: SpriteSheetInspectorSectionProperties): MpElement {
@@ -1009,73 +1174,8 @@ function SpriteSheetInspectorSection(properties: SpriteSheetInspectorSectionProp
       onToggle={() => properties.paintSpriteSheet()}
     >
       <div className={styles.spriteSheetContainer}>
-        <div className={styles.spriteSheetToolbar}>
-          <div className={styles.buttonGroup}>
-            <button
-              type="button"
-              className={classNames(
-                styles.toolbarBtn,
-                properties.spriteSheetMode === 'crisp' ? styles.toolbarBtnPrimary : styles.toolbarBtnGhost,
-              )}
-              onClick={() => {
-                properties.setSpriteSheetMode('crisp');
-                properties.paintSpriteSheet('crisp', properties.spriteSheetGrid, properties.hoveredGlyph?.index);
-              }}
-            >
-              Crisp Glyphs
-            </button>
-            <button
-              type="button"
-              className={classNames(
-                styles.toolbarBtn,
-                properties.spriteSheetMode === 'raw' ? styles.toolbarBtnPrimary : styles.toolbarBtnGhost,
-              )}
-              onClick={() => {
-                properties.setSpriteSheetMode('raw');
-                properties.paintSpriteSheet('raw', properties.spriteSheetGrid, properties.hoveredGlyph?.index);
-              }}
-            >
-              Raw SDF
-            </button>
-          </div>
-          <button
-            type="button"
-            className={classNames(styles.toolbarBtn, styles.toolbarBtnGhost)}
-            onClick={() => {
-              const nextGrid = !properties.spriteSheetGrid;
-              properties.setSpriteSheetGrid(nextGrid);
-              properties.paintSpriteSheet(properties.spriteSheetMode, nextGrid, properties.hoveredGlyph?.index);
-            }}
-          >
-            {properties.spriteSheetGrid ? 'Grid: ON' : 'Grid: OFF'}
-          </button>
-        </div>
-        <div className={styles.spriteSheetMeta}>
-          <ForgeBadge
-            variant="primary"
-            size="xs"
-          >
-            1024 × 1024 px
-          </ForgeBadge>
-          <ForgeBadge
-            variant="neutral"
-            size="xs"
-          >
-            2D Shelf Packed (4x4 to 64x64)
-          </ForgeBadge>
-          <ForgeBadge
-            variant="info"
-            size="xs"
-          >
-            Comfortaa & Datatype
-          </ForgeBadge>
-          <ForgeBadge
-            variant="success"
-            size="xs"
-          >
-            {GLYPH_CHARS_BY_IDX.length} Active Glyphs
-          </ForgeBadge>
-        </div>
+        <SpriteSheetToolbar {...properties} />
+        <SpriteSheetMetaBadges />
         <canvas
           ref={properties.spriteSheetCanvasReference}
           width={1024}
@@ -1085,57 +1185,10 @@ function SpriteSheetInspectorSection(properties: SpriteSheetInspectorSectionProp
           onPointerLeave={properties.onSpriteSheetPointerLeave}
         />
         {properties.hoveredGlyph && (
-          <div className={styles.spriteSheetInspector}>
-            <canvas
-              ref={properties.inspectCanvasReference}
-              width={64}
-              height={64}
-              className={styles.spriteSheetInspectCanvas}
-            />
-            <div className={styles.spriteSheetInspectDetails}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span className={styles.spriteSheetInspectChar}>
-                  {properties.hoveredGlyph.char === ' ' ? 'Space' : properties.hoveredGlyph.char}
-                </span>
-                <ForgeBadge
-                  variant="info"
-                  size="xs"
-                >
-                  {properties.hoveredGlyph.codeHex}
-                </ForgeBadge>
-                <ForgeBadge
-                  variant="neutral"
-                  size="xs"
-                >
-                  Idx {properties.hoveredGlyph.index}
-                </ForgeBadge>
-              </div>
-              <div style={{ fontSize: '11px', lineHeight: '1.5', color: '#c9d1d9' }}>
-                <div>
-                  <strong>Dimensions & Advance:</strong> {properties.hoveredGlyph.width}×
-                  {properties.hoveredGlyph.height}px | Advance H: {properties.hoveredGlyph.advance}px | Advance V:{' '}
-                  {properties.hoveredGlyph.vertAdvance}px
-                </div>
-                <div>
-                  <strong>Bearings:</strong> Left (LSB): {properties.hoveredGlyph.horiBearingX}px | Right (RSB):{' '}
-                  {properties.hoveredGlyph.rightBearing}px | Top: {properties.hoveredGlyph.horiBearingY}px
-                </div>
-                <div>
-                  <strong>Font Metrics:</strong> Ascent: {properties.hoveredGlyph.ascent}px | Descent:{' '}
-                  {properties.hoveredGlyph.descent}px | LineGap: {properties.hoveredGlyph.linegap}px | Int Leading:{' '}
-                  {properties.hoveredGlyph.internalLeading}px | Ext Leading: {properties.hoveredGlyph.externalLeading}
-                  px
-                </div>
-                <div>
-                  <strong>BBox & Origin:</strong> [{properties.hoveredGlyph.bboxMinX},{' '}
-                  {properties.hoveredGlyph.bboxMinY}, {properties.hoveredGlyph.bboxMaxX},{' '}
-                  {properties.hoveredGlyph.bboxMaxY}] | Origin: (0, 0) on baseline | Packed Cell:{' '}
-                  {properties.hoveredGlyph.cellW}×{properties.hoveredGlyph.cellH} at ({properties.hoveredGlyph.cellX},{' '}
-                  {properties.hoveredGlyph.cellY})
-                </div>
-              </div>
-            </div>
-          </div>
+          <SpriteSheetGlyphDetails
+            hoveredGlyph={properties.hoveredGlyph}
+            inspectCanvasReference={properties.inspectCanvasReference}
+          />
         )}
       </div>
     </ForgeCollapse>
@@ -1161,15 +1214,225 @@ interface FlintPerfModalProperties {
   readonly paintSpriteSheet: (mode?: 'crisp' | 'raw', grid?: boolean, highlightIndex?: number) => void;
 }
 
+interface PerfModalHeaderProperties {
+  readonly perfMetrics: FlintPerformanceMetrics;
+  readonly onClose: () => void;
+}
+
+/**
+ * Performance profiler modal header toolbar with FPS and backend badges.
+ */
+function PerfModalHeader(properties: PerfModalHeaderProperties): MpElement {
+  const fps = Math.round(1000 / Math.max(1, properties.perfMetrics.totalFrameTimeMs));
+  const backendLabel =
+    properties.perfMetrics.backend?.toUpperCase() ?? (properties.perfMetrics.isFallback ? 'CANVAS2D' : 'WEBGPU');
+  return (
+    <div className={styles.modalHeader}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span className={styles.modalTitle}>Performance Profiler & Realtime Telemetry</span>
+        <ForgeBadge
+          variant="success"
+          size="xs"
+        >
+          {fps} FPS
+        </ForgeBadge>
+        <ForgeBadge
+          variant="neutral"
+          size="xs"
+        >
+          {backendLabel}
+        </ForgeBadge>
+      </div>
+      <button
+        type="button"
+        className={classNames(styles.toolbarBtn, styles.toolbarBtnGhost)}
+        onClick={properties.onClose}
+        aria-label="Close performance modal"
+      >
+        ✕
+      </button>
+    </div>
+  );
+}
+
+interface PerfIntervalSelectorProperties {
+  readonly telemetryInterval: 'realtime' | '100ms' | '250ms' | '500ms' | '750ms' | '1500ms';
+  readonly setTelemetryInterval: (interval: 'realtime' | '100ms' | '250ms' | '500ms' | '750ms' | '1500ms') => void;
+}
+
+const TELEMETRY_INTERVALS = ['realtime', '100ms', '250ms', '500ms', '750ms', '1500ms'] as const;
+
+/**
+ * Telemetry refresh rate selector buttons.
+ */
+function PerfIntervalSelector(properties: PerfIntervalSelectorProperties): MpElement {
+  return (
+    <div style={{ marginBottom: '14px' }}>
+      <div style={{ fontSize: '12px', fontWeight: 600, color: '#8b949e', marginBottom: '6px' }}>
+        Telemetry Refresh Interval
+      </div>
+      <div className={styles.buttonGroup}>
+        {TELEMETRY_INTERVALS.map((interval) => (
+          <button
+            key={interval}
+            type="button"
+            className={classNames(
+              styles.toolbarBtn,
+              properties.telemetryInterval === interval ? styles.toolbarBtnPrimary : styles.toolbarBtnGhost,
+            )}
+            onClick={() => properties.setTelemetryInterval(interval)}
+          >
+            {interval === 'realtime' ? 'Realtime' : interval}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+interface PerfMetricCardProperties {
+  readonly label: string;
+  readonly value: string;
+  readonly color: string;
+}
+
+/**
+ * Single performance summary metric badge card.
+ */
+function PerfMetricCard(properties: PerfMetricCardProperties): MpElement {
+  return (
+    <div style={{ background: '#161b22', padding: '8px', borderRadius: '6px', border: '1px solid #30363d' }}>
+      <div style={{ fontSize: '10px', color: '#8b949e' }}>{properties.label}</div>
+      <div style={{ fontSize: '14px', fontWeight: 600, color: properties.color }}>{properties.value}</div>
+    </div>
+  );
+}
+
+/**
+ * 2x4 performance metrics card grid display.
+ */
+function PerfMetricsGrid(properties: { readonly perfMetrics: FlintPerformanceMetrics }): MpElement {
+  const m = properties.perfMetrics;
+  const updateLayout = ((m.updateTimeMs ?? 0) + (m.layoutTimeMs ?? 0)).toFixed(2);
+  const totalNodes = m.totalNodesCount ?? m.visibleNodesCount;
+  return (
+    <div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '8px' }}>
+        <PerfMetricCard
+          label="Total Frame Time"
+          value={`${m.totalFrameTimeMs.toFixed(2)} ms`}
+          color="#58a6ff"
+        />
+        <PerfMetricCard
+          label="Render Duration"
+          value={`${m.renderTimeMs.toFixed(2)} ms`}
+          color="#3fb950"
+        />
+        <PerfMetricCard
+          label="Spatial Indexing"
+          value={`${m.spatialIndexTimeMs.toFixed(2)} ms`}
+          color="#d29922"
+        />
+        <PerfMetricCard
+          label="Visible Nodes"
+          value={`${m.visibleNodesCount} / ${totalNodes}`}
+          color="#f0883e"
+        />
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '16px' }}>
+        <PerfMetricCard
+          label="Updates & Layout"
+          value={`${updateLayout} ms`}
+          color="#f0883e"
+        />
+        <PerfMetricCard
+          label="Buffer Uploads"
+          value={`${(m.bufferUploadTimeMs ?? 0).toFixed(2)} ms`}
+          color="#a371f7"
+        />
+        <PerfMetricCard
+          label="Visible Edges & Pins"
+          value={`${m.visibleEdgesCount}E / ${m.visiblePinsCount}P`}
+          color="#388bfd"
+        />
+        <PerfMetricCard
+          label="DPR / Scale"
+          value={`${m.dpr.toFixed(1)}x DPR`}
+          color="#39c5bb"
+        />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Card contents for the D3 performance telemetry and glyph atlas modal.
+ */
+function FlintPerfCardContent(properties: FlintPerfModalProperties): MpElement {
+  return (
+    <ForgeCard
+      size="xl"
+      variant="neutral"
+      padding="none"
+      bordered={true}
+      shadow={true}
+    >
+      <PerfModalHeader
+        perfMetrics={properties.perfMetrics}
+        onClose={properties.onClose}
+      />
+      <div className={styles.modalBody}>
+        <PerfIntervalSelector
+          telemetryInterval={properties.telemetryInterval}
+          setTelemetryInterval={properties.setTelemetryInterval}
+        />
+        <div style={{ marginBottom: '16px' }}>
+          <ForgePerformanceTimelineChart
+            history={properties.perfHistory}
+            currentMetrics={properties.perfMetrics}
+            width={880}
+            height={180}
+          />
+        </div>
+        <PerfMetricsGrid perfMetrics={properties.perfMetrics} />
+        <ForgePerformancePieChart
+          metrics={properties.perfMetrics}
+          width={280}
+          height={240}
+        />
+        <div style={{ marginTop: '16px' }}>
+          <SpriteSheetInspectorSection
+            spriteSheetMode={properties.spriteSheetMode}
+            setSpriteSheetMode={properties.setSpriteSheetMode}
+            spriteSheetGrid={properties.spriteSheetGrid}
+            setSpriteSheetGrid={properties.setSpriteSheetGrid}
+            hoveredGlyph={properties.hoveredGlyph}
+            spriteSheetCanvasReference={properties.spriteSheetCanvasReference}
+            inspectCanvasReference={properties.inspectCanvasReference}
+            onSpriteSheetPointerMove={properties.onSpriteSheetPointerMove}
+            onSpriteSheetPointerLeave={properties.onSpriteSheetPointerLeave}
+            paintSpriteSheet={properties.paintSpriteSheet}
+          />
+        </div>
+      </div>
+      <div className={styles.modalFooter}>
+        <button
+          type="button"
+          className={classNames(styles.toolbarBtn, styles.toolbarBtnPrimary)}
+          onClick={properties.onClose}
+        >
+          Close
+        </button>
+      </div>
+    </ForgeCard>
+  );
+}
+
 /**
  * Modal dialog for inspecting realtime D3 performance charts and GPU glyph atlas.
  */
 function FlintPerfProfilerModal(properties: FlintPerfModalProperties): MpElement | undefined {
   if (!properties.show) return undefined;
-  const fps = Math.round(1000 / Math.max(1, properties.perfMetrics.totalFrameTimeMs));
-  const backendLabel =
-    properties.perfMetrics.backend?.toUpperCase() ?? (properties.perfMetrics.isFallback ? 'CANVAS2D' : 'WEBGPU');
-
   return (
     <div
       role="dialog"
@@ -1179,232 +1442,1895 @@ function FlintPerfProfilerModal(properties: FlintPerfModalProperties): MpElement
     >
       <div
         className={styles.perfModal}
-        onClick={(event: unknown) => {
-          if (typeof MouseEvent !== 'undefined' && event instanceof MouseEvent) {
-            event.stopPropagation();
-          }
-        }}
+        onClick={stopMouseEventPropagation}
       >
-        <ForgeCard
-          size="xl"
-          variant="neutral"
-          padding="none"
-          bordered={true}
-          shadow={true}
+        <FlintPerfCardContent {...properties} />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Renders atlas pixels using multi-channel signed distance field sharpening.
+ */
+function renderAtlasCrisp(rawBytes: Uint8ClampedArray, outBytes: Uint8ClampedArray, atlasSize: number): void {
+  for (let pixelIndex = 0; pixelIndex < atlasSize * atlasSize; pixelIndex++) {
+    const red = (rawBytes[pixelIndex * 4] ?? 0) / 255;
+    const green = (rawBytes[pixelIndex * 4 + 1] ?? 0) / 255;
+    const blue = (rawBytes[pixelIndex * 4 + 2] ?? 0) / 255;
+    const msdf = Math.max(Math.min(red, green), Math.min(Math.max(red, green), blue));
+    const edge = 0.5;
+    const smoothing = 0.045;
+    const threshold = Math.max(0, Math.min(1, (msdf - (edge - smoothing)) / (2 * smoothing)));
+    const alpha = threshold * threshold * (3 - 2 * threshold);
+    const outputIndex = pixelIndex * 4;
+    outBytes[outputIndex] = Math.round(13 + (255 - 13) * alpha);
+    outBytes[outputIndex + 1] = Math.round(17 + (255 - 17) * alpha);
+    outBytes[outputIndex + 2] = Math.round(23 + (255 - 23) * alpha);
+    outBytes[outputIndex + 3] = 255;
+  }
+}
+
+/**
+ * Copies raw font atlas RGB texture channels into canvas image data buffer.
+ */
+function renderAtlasRaw(rawBytes: Uint8ClampedArray, outBytes: Uint8ClampedArray, atlasSize: number): void {
+  for (let pixelIndex = 0; pixelIndex < atlasSize * atlasSize; pixelIndex++) {
+    const outputIndex = pixelIndex * 4;
+    outBytes[outputIndex] = rawBytes[outputIndex] ?? 0;
+    outBytes[outputIndex + 1] = rawBytes[outputIndex + 1] ?? 0;
+    outBytes[outputIndex + 2] = rawBytes[outputIndex + 2] ?? 0;
+    outBytes[outputIndex + 3] = 255;
+  }
+}
+
+/**
+ * Renders glyph cell grid outlines and optional selection highlight box.
+ */
+function renderAtlasGrid(
+  context: CanvasRenderingContext2D,
+  u32Memory: Uint32Array,
+  tableBase: number,
+  highlightIndex?: number,
+): void {
+  context.save();
+  context.lineWidth = 1;
+  context.strokeStyle = 'rgba(88, 166, 255, 0.25)';
+
+  for (let glyphIndex = 0; glyphIndex < GLYPH_CHARS_BY_IDX.length; glyphIndex++) {
+    const cellX = u32Memory[(tableBase + glyphIndex * 16) >> 2] ?? 0;
+    const cellY = u32Memory[(tableBase + glyphIndex * 16 + 4) >> 2] ?? 0;
+    const cellW = u32Memory[(tableBase + glyphIndex * 16 + 8) >> 2] ?? 24;
+    const cellH = u32Memory[(tableBase + glyphIndex * 16 + 12) >> 2] ?? 32;
+    context.strokeRect(cellX + 0.5, cellY + 0.5, cellW - 1, cellH - 1);
+  }
+
+  if (highlightIndex !== undefined && highlightIndex >= 0 && highlightIndex < GLYPH_CHARS_BY_IDX.length) {
+    const hX = u32Memory[(tableBase + highlightIndex * 16) >> 2] ?? 0;
+    const hY = u32Memory[(tableBase + highlightIndex * 16 + 4) >> 2] ?? 0;
+    const hW = u32Memory[(tableBase + highlightIndex * 16 + 8) >> 2] ?? 24;
+    const hH = u32Memory[(tableBase + highlightIndex * 16 + 12) >> 2] ?? 32;
+    context.strokeStyle = '#58a6ff';
+    context.lineWidth = 2;
+    context.strokeRect(hX + 0.5, hY + 0.5, hW - 1, hH - 1);
+  }
+  context.restore();
+}
+
+/**
+ * Finds glyph cell bounding box under normalized atlas coordinates.
+ */
+function findSpriteSheetCellAtPoint(u32Memory: Uint32Array, tableBase: number, atlasX: number, atlasY: number) {
+  for (let glyphIndex = 0; glyphIndex < GLYPH_CHARS_BY_IDX.length; glyphIndex++) {
+    const cellX = u32Memory[(tableBase + glyphIndex * 16) >> 2] ?? 0;
+    const cellY = u32Memory[(tableBase + glyphIndex * 16 + 4) >> 2] ?? 0;
+    const cellW = u32Memory[(tableBase + glyphIndex * 16 + 8) >> 2] ?? 24;
+    const cellH = u32Memory[(tableBase + glyphIndex * 16 + 12) >> 2] ?? 32;
+
+    if (atlasX >= cellX && atlasX < cellX + cellW && atlasY >= cellY && atlasY < cellY + cellH) {
+      return { foundIndex: glyphIndex, foundX: cellX, foundY: cellY, foundW: cellW, foundH: cellH };
+    }
+  }
+  return;
+}
+
+/**
+ * Extracts typography and layout metrics for a hovered glyph.
+ */
+function resolveGlyphDetails(
+  wasm: ReturnType<typeof getFlintRenderWorkerWasm>,
+  foundIndex: number,
+  foundX: number,
+  foundY: number,
+  foundW: number,
+  foundH: number,
+): HoveredGlyphInfo {
+  const char = GLYPH_CHARS_BY_IDX[foundIndex] ?? '';
+  const code = char.codePointAt(0) ?? 0;
+  const advance = wasm.font_get_char_advance ? wasm.font_get_char_advance(code) : 14;
+  const width = wasm.font_get_glyph_width ? wasm.font_get_glyph_width(foundIndex) : foundW;
+  const height = wasm.font_get_glyph_height ? wasm.font_get_glyph_height(foundIndex) : foundH;
+  const horiBearingX = wasm.font_get_glyph_hori_bearing_x ? wasm.font_get_glyph_hori_bearing_x(foundIndex) : 0;
+  const horiBearingY = wasm.font_get_glyph_hori_bearing_y ? wasm.font_get_glyph_hori_bearing_y(foundIndex) : 18;
+  const bboxMinX = wasm.font_get_glyph_bbox_min_x ? wasm.font_get_glyph_bbox_min_x(foundIndex) : 0;
+  const bboxMaxX = wasm.font_get_glyph_bbox_max_x ? wasm.font_get_glyph_bbox_max_x(foundIndex) : foundW;
+  const bboxMinY = wasm.font_get_glyph_bbox_min_y ? wasm.font_get_glyph_bbox_min_y(foundIndex) : 0;
+  const bboxMaxY = wasm.font_get_glyph_bbox_max_y ? wasm.font_get_glyph_bbox_max_y(foundIndex) : 18;
+  const rightBearing = wasm.font_get_glyph_right_bearing
+    ? wasm.font_get_glyph_right_bearing(foundIndex)
+    : Math.max(0, advance - horiBearingX - width);
+  const vertAdvance = wasm.font_get_glyph_vert_advance ? wasm.font_get_glyph_vert_advance(foundIndex) : 24;
+  const ascent = wasm.font_get_ascent ? wasm.font_get_ascent() : 18;
+  const descent = wasm.font_get_descent ? wasm.font_get_descent() : 6;
+  const linegap = wasm.font_get_linegap ? wasm.font_get_linegap() : 4;
+  const internalLeading = wasm.font_get_internal_leading ? wasm.font_get_internal_leading() : 2;
+  const externalLeading = wasm.font_get_external_leading ? wasm.font_get_external_leading() : 4;
+
+  return {
+    index: foundIndex,
+    char,
+    codeHex: `U+${code.toString(16).toUpperCase().padStart(4, '0')}`,
+    codeDec: code,
+    advance,
+    vertAdvance,
+    width,
+    height,
+    horiBearingX,
+    horiBearingY,
+    rightBearing,
+    ascent,
+    descent,
+    linegap,
+    internalLeading,
+    externalLeading,
+    bboxMinX,
+    bboxMaxX,
+    bboxMinY,
+    bboxMaxY,
+    cellX: foundX,
+    cellY: foundY,
+    cellW: foundW,
+    cellH: foundH,
+  };
+}
+
+/**
+ * Returns CSS cursor property string for canvas hit test hover target.
+ */
+function getPointerHoverCursor(hoverHit?: FlintHitResult): string {
+  if (!hoverHit) return 'default';
+  if (hoverHit.type === 'port') return 'crosshair';
+  if (hoverHit.type === 'waypoint') return 'grab';
+  if (hoverHit.type === 'edge') return 'pointer';
+  if (hoverHit.type === 'group' || hoverHit.type === 'node') return 'move';
+  return 'default';
+}
+
+/**
+ * Processes global keyboard shortcuts for editor navigation, deletion, and undo/redo.
+ */
+function handleEditorKeyboardAction(
+  event: KeyboardEvent,
+  store: FlintEditorStore,
+  bridge: FlintRendererBridge | undefined,
+): void {
+  if (event.key === 'Escape') {
+    if (store.canNavigateBack()) {
+      store.navigateBack();
+      bridge?.setGraph(store.getState().graph.nodes, store.getState().graph.edges, store.getState().graph.groups ?? []);
+      bridge?.renderFrame();
+    } else {
+      store.deselectAll();
+      bridge?.setSelection([], []);
+      bridge?.renderFrame();
+    }
+  } else if (event.key === 'Delete' || event.key === 'Backspace') {
+    const activeElement = typeof document === 'undefined' ? undefined : document.activeElement;
+    if (activeElement instanceof HTMLInputElement || activeElement instanceof HTMLTextAreaElement) return;
+    store.deleteSelected();
+    bridge?.setGraph(store.getState().graph.nodes, store.getState().graph.edges, store.getState().graph.groups ?? []);
+    bridge?.renderFrame();
+  } else if (event.key === 'z' && (event.ctrlKey || event.metaKey)) {
+    if (event.shiftKey) {
+      store.redo();
+    } else {
+      store.undo();
+    }
+  }
+}
+
+/**
+ * Handles incoming renderer bridge message payloads.
+ */
+function handleBridgeMessage(
+  message: RenderWorkerOutputMessage,
+  recordPerf: (metrics: FlintPerformanceMetrics) => void,
+  setFallback: (v: boolean) => void,
+  store: FlintEditorStore,
+): void {
+  if (message.performance) {
+    recordPerf(message.performance);
+  }
+  if (message.type === 'ready' && !message.supported) {
+    setFallback(true);
+  } else if (message.type === 'hit_result') {
+    if (message.hit?.type === 'node') {
+      store.selectNode(message.hit.nodeId);
+    } else if (!message.hit) {
+      store.deselectAll();
+    }
+  }
+}
+
+/**
+ * Attaches ResizeObserver to synchronize canvas buffer resolution on viewport resize.
+ */
+function setupResizeObserver(
+  canvas: HTMLCanvasElement,
+  bridge: FlintRendererBridge,
+  store: FlintEditorStore,
+  dpr: number,
+): () => void {
+  if (typeof ResizeObserver === 'undefined') return () => {};
+  const observer = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      const { width, height } = entry.contentRect;
+      if (width > 0 && height > 0) {
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        bridge.resize(width, height, dpr);
+        bridge.setGraph(
+          store.getState().graph.nodes,
+          store.getState().graph.edges,
+          store.getState().graph.groups ?? [],
+        );
+      }
+    }
+  });
+  observer.observe(canvas);
+  return () => observer.disconnect();
+}
+
+interface CanvasGestureBindingsOptions {
+  readonly canvasElement: HTMLCanvasElement;
+  readonly bridge: FlintRendererBridge;
+  readonly store: FlintEditorStore;
+  readonly setContextMenu: (updater: (prev: ContextMenuState) => ContextMenuState) => void;
+  readonly setSelectionSquare: (updater: (prev: SelectionSquareState) => SelectionSquareState) => void;
+  readonly recordPerfMetrics: (metrics: FlintPerformanceMetrics) => void;
+}
+
+/**
+ * Handles pointer down on group header/body.
+ */
+function handleGroupPointerDown(
+  hit: Extract<FlintHitResult, { type: 'group' }>,
+  store: FlintEditorStore,
+  bridge: FlintRendererBridge,
+  nodesStartPositions: Map<string, { readonly x: number; readonly y: number }>,
+): void {
+  store.selectGroup(hit.groupId);
+  bridge.setSelection([], [], hit.groupId);
+  const group = store.getState().graph.groups?.find((g) => g.id === hit.groupId);
+  nodesStartPositions.clear();
+  if (group) {
+    const groupNodeIds = new Set(group.nodeIds);
+    for (const n of store.getState().graph.nodes) {
+      if (groupNodeIds.has(n.id)) {
+        nodesStartPositions.set(n.id, { ...n.position });
+      }
+    }
+  }
+  bridge.renderFrame();
+}
+
+/**
+ * Attaches pointer, wheel, context menu, and keyboard gesture listeners to canvas and window.
+ */
+function setupCanvasEventListeners(options: CanvasGestureBindingsOptions): () => void {
+  const { canvasElement, bridge, store, setContextMenu, setSelectionSquare, recordPerfMetrics } = options;
+
+  let isPointerDown = false;
+  let dragMode: 'pan' | 'node' | 'group' | 'waypoint' | 'connect' | 'box_select' | 'none' = 'none';
+  let connectingSourceNodeId = '';
+  let connectingSourcePortId = '';
+  let draggedGroupId = '';
+  let draggedEdgeId = '';
+  let draggedWaypointIndex = -1;
+  let dragStartScreen = { x: 0, y: 0 };
+  let boxSelectStart = { x: 0, y: 0 };
+  let lastClickTime = 0;
+  let lastClickNodeId = '';
+  const nodesStartPositions = new Map<string, { readonly x: number; readonly y: number }>();
+
+  const profilerInterval = setInterval(() => {
+    const stats = bridge.getPerformanceStats();
+    const storeUpdateTime = store.getUpdateTimeMs();
+    recordPerfMetrics({
+      ...stats,
+      updateTimeMs: storeUpdateTime,
+    });
+  }, 1000);
+
+  const onWheel = (event: WheelEvent): void => {
+    event.preventDefault();
+    const normalizedDelta = Math.max(-100, Math.min(100, event.deltaY));
+    const factor = Math.exp(-normalizedDelta * 0.003);
+    bridge.zoom(event.offsetX, event.offsetY, factor);
+  };
+
+  const onPointerDown = (event: PointerEvent): void => {
+    if (event.button !== 0) return;
+    setContextMenu((previous) => (previous.open ? { ...previous, open: false } : previous));
+    isPointerDown = true;
+    dragStartScreen = { x: event.clientX, y: event.clientY };
+    try {
+      canvasElement.setPointerCapture(event.pointerId);
+    } catch {
+      // pointer capture optional
+    }
+
+    const now = Date.now();
+    const isShift = event.shiftKey;
+    const hit = bridge.hitTestSync(event.offsetX, event.offsetY);
+
+    if (hit?.type === 'group' && hit.groupId) {
+      dragMode = 'group';
+      draggedGroupId = hit.groupId;
+      handleGroupPointerDown(hit, store, bridge, nodesStartPositions);
+      return;
+    }
+
+    if (hit?.type === 'waypoint' && hit.edgeId && hit.waypointIndex !== undefined) {
+      dragMode = 'waypoint';
+      draggedEdgeId = hit.edgeId;
+      draggedWaypointIndex = hit.waypointIndex;
+      store.selectEdge(hit.edgeId);
+      bridge.setSelection([], [hit.edgeId]);
+      bridge.renderFrame();
+      return;
+    }
+
+    if (hit?.type === 'edge' && hit.edgeId) {
+      if (now - lastClickTime < 350 && lastClickNodeId === hit.edgeId) {
+        const world = bridge.screenToWorld(event.offsetX, event.offsetY);
+        store.addEdgePoint(hit.edgeId, { x: Math.round(world.x), y: Math.round(world.y) });
+        bridge.setGraph(
+          store.getState().graph.nodes,
+          store.getState().graph.edges,
+          store.getState().graph.groups ?? [],
+        );
+        bridge.renderFrame();
+        lastClickTime = 0;
+        lastClickNodeId = '';
+        return;
+      }
+      lastClickTime = now;
+      lastClickNodeId = hit.edgeId;
+      store.selectEdge(hit.edgeId);
+      bridge.setSelection([], [hit.edgeId]);
+      bridge.renderFrame();
+      return;
+    }
+
+    if (hit?.type === 'node') {
+      if (now - lastClickTime < 350 && lastClickNodeId === hit.nodeId) {
+        const clickedNode = store.getState().graph.nodes.find((n) => n.id === hit.nodeId);
+        if (clickedNode && (clickedNode.metaSubgraph || clickedNode.operation === 'meta')) {
+          store.drillIntoMetaNode(clickedNode.id);
+          bridge.setGraph(
+            store.getState().graph.nodes,
+            store.getState().graph.edges,
+            store.getState().graph.groups ?? [],
+          );
+          bridge.renderFrame();
+          return;
+        }
+      }
+      lastClickTime = now;
+      lastClickNodeId = hit.nodeId;
+    } else {
+      lastClickTime = 0;
+      lastClickNodeId = '';
+    }
+
+    if (hit?.type === 'port' && hit.portId) {
+      dragMode = 'connect';
+      connectingSourceNodeId = hit.nodeId;
+      connectingSourcePortId = hit.portId;
+      store.startConnecting(hit.nodeId, hit.portId, hit.worldX ?? 0, hit.worldY ?? 0);
+      bridge.setConnectingEdge({
+        fromNodeId: hit.nodeId,
+        fromPortId: hit.portId,
+        cursorX: hit.worldX ?? 0,
+        cursorY: hit.worldY ?? 0,
+      });
+    } else if (hit?.type === 'node') {
+      dragMode = 'node';
+      if (isShift) {
+        store.toggleNodeSelection(hit.nodeId);
+      } else if (!store.getState().selectedNodeIds.includes(hit.nodeId)) {
+        store.selectNode(hit.nodeId);
+      }
+      const currentNodes = store.getState().graph.nodes;
+      const selectedSet = new Set(store.getState().selectedNodeIds);
+      nodesStartPositions.clear();
+      for (const n of currentNodes) {
+        if (selectedSet.has(n.id) || n.id === hit.nodeId) {
+          nodesStartPositions.set(n.id, { ...n.position });
+        }
+      }
+      bridge.setSelection([...selectedSet, hit.nodeId]);
+      bridge.renderFrame();
+    } else {
+      if (isShift) {
+        dragMode = 'box_select';
+        boxSelectStart = { x: event.offsetX, y: event.offsetY };
+        setSelectionSquare({
+          active: true,
+          startX: event.offsetX,
+          startY: event.offsetY,
+          currentX: event.offsetX,
+          currentY: event.offsetY,
+        });
+      } else {
+        dragMode = 'pan';
+        store.deselectAll();
+        bridge.setSelection([], []);
+        bridge.renderFrame();
+      }
+    }
+  };
+
+  const onPointerMove = (event: PointerEvent): void => {
+    if (!isPointerDown) {
+      const hoverHit = bridge.hitTestSync(event.offsetX, event.offsetY);
+      canvasElement.style.cursor = getPointerHoverCursor(hoverHit);
+      if (hoverHit?.type === 'port' && hoverHit.portId) {
+        bridge.setHoveredPort({ nodeId: hoverHit.nodeId, portId: hoverHit.portId });
+        bridge.renderFrame();
+      } else if (bridge.getHoveredPort()) {
+        bridge.setHoveredPort();
+        bridge.renderFrame();
+      }
+      return;
+    }
+
+    const camera = bridge.getCamera();
+    const deltaX = event.clientX - dragStartScreen.x;
+    const deltaY = event.clientY - dragStartScreen.y;
+
+    if (dragMode === 'box_select') {
+      setSelectionSquare((previous) => ({
+        ...previous,
+        currentX: event.offsetX,
+        currentY: event.offsetY,
+      }));
+    } else if (dragMode === 'group' && nodesStartPositions.size > 0 && draggedGroupId) {
+      const worldDeltaX = deltaX / camera.zoom;
+      const worldDeltaY = deltaY / camera.zoom;
+      store.moveSelectedNodes(worldDeltaX, worldDeltaY, nodesStartPositions);
+      bridge.renderFrame();
+    } else if (dragMode === 'waypoint' && draggedEdgeId) {
+      const { x: worldX, y: worldY } = bridge.screenToWorld(event.offsetX, event.offsetY);
+      store.updateEdgePoint(draggedEdgeId, draggedWaypointIndex, {
+        x: Math.round(worldX),
+        y: Math.round(worldY),
+      });
+      bridge.setGraph(store.getState().graph.nodes, store.getState().graph.edges, store.getState().graph.groups ?? []);
+      bridge.renderFrame();
+    } else if (dragMode === 'connect') {
+      const { x: worldX, y: worldY } = bridge.screenToWorld(event.offsetX, event.offsetY);
+      store.updateConnectingCursor(worldX, worldY);
+      bridge.setConnectingEdge({
+        fromNodeId: connectingSourceNodeId,
+        fromPortId: connectingSourcePortId,
+        cursorX: worldX,
+        cursorY: worldY,
+      });
+      const hoverHit = bridge.hitTestSync(event.offsetX, event.offsetY, 16);
+      if (hoverHit?.type === 'port' && hoverHit.nodeId !== connectingSourceNodeId && hoverHit.portId) {
+        bridge.setHoveredPort({
+          nodeId: hoverHit.nodeId,
+          portId: hoverHit.portId,
+        });
+      } else {
+        bridge.setHoveredPort();
+      }
+      bridge.renderFrame();
+    } else if (dragMode === 'node' && nodesStartPositions.size > 0) {
+      const worldDeltaX = deltaX / camera.zoom;
+      const worldDeltaY = deltaY / camera.zoom;
+      store.moveSelectedNodes(worldDeltaX, worldDeltaY, nodesStartPositions);
+      bridge.renderFrame();
+    } else if (dragMode === 'pan') {
+      dragStartScreen = { x: event.clientX, y: event.clientY };
+      bridge.pan(deltaX, deltaY);
+      bridge.renderFrame();
+    }
+  };
+
+  const onPointerUp = (event: PointerEvent): void => {
+    if (!isPointerDown) return;
+    isPointerDown = false;
+    try {
+      canvasElement.releasePointerCapture(event.pointerId);
+    } catch {
+      // ignore release error
+    }
+
+    switch (dragMode) {
+      case 'box_select': {
+        const minScreenX = Math.min(boxSelectStart.x, event.offsetX);
+        const maxScreenX = Math.max(boxSelectStart.x, event.offsetX);
+        const minScreenY = Math.min(boxSelectStart.y, event.offsetY);
+        const maxScreenY = Math.max(boxSelectStart.y, event.offsetY);
+
+        const topLeftWorld = bridge.screenToWorld(minScreenX, minScreenY);
+        const bottomRightWorld = bridge.screenToWorld(maxScreenX, maxScreenY);
+
+        const matchedNodeIds = bridge.queryNodesInBox({
+          minX: Math.min(topLeftWorld.x, bottomRightWorld.x),
+          minY: Math.min(topLeftWorld.y, bottomRightWorld.y),
+          maxX: Math.max(topLeftWorld.x, bottomRightWorld.x),
+          maxY: Math.max(topLeftWorld.y, bottomRightWorld.y),
+        });
+
+        store.selectNodes(matchedNodeIds, event.shiftKey);
+        setSelectionSquare({ active: false, startX: 0, startY: 0, currentX: 0, currentY: 0 });
+        break;
+      }
+      case 'connect': {
+        const targetHit = bridge.hitTestSync(event.offsetX, event.offsetY, 18);
+        if (targetHit?.type === 'port' && targetHit.nodeId !== connectingSourceNodeId && targetHit.portId) {
+          store.connectPorts(connectingSourceNodeId, connectingSourcePortId, targetHit.nodeId, targetHit.portId);
+        }
+        store.cancelConnecting();
+        bridge.setConnectingEdge();
+        bridge.setHoveredPort();
+        bridge.renderFrame();
+        break;
+      }
+      case 'node':
+      case 'group': {
+        store.commitNodeMove();
+        bridge.renderFrame();
+        break;
+      }
+      case 'waypoint': {
+        bridge.renderFrame();
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+    dragMode = 'none';
+    nodesStartPositions.clear();
+  };
+
+  const onContextMenu = (event: MouseEvent): void => {
+    event.preventDefault();
+    const canvasRect = canvasElement.getBoundingClientRect();
+    const screenX = event.clientX - canvasRect.left;
+    const screenY = event.clientY - canvasRect.top;
+    const world = bridge.screenToWorld(screenX, screenY);
+    const windowWidth = globalThis.window ? window.innerWidth : 1200;
+    const windowHeight = globalThis.window ? window.innerHeight : 800;
+
+    const hit = bridge.hitTestSync(screenX, screenY);
+    let targetType: 'empty' | 'node' | 'group' | 'selection' | 'edge' = 'empty';
+    let targetId = '';
+    let targetGroupId = '';
+
+    if (hit?.type === 'edge' && hit.edgeId) {
+      targetType = 'edge';
+      targetId = hit.edgeId;
+      store.selectEdge(hit.edgeId);
+      bridge.setSelection([], [hit.edgeId]);
+    } else if (hit?.type === 'node') {
+      const isSelected = store.getState().selectedNodeIds.includes(hit.nodeId);
+      if (store.getState().selectedNodeIds.length > 1 && isSelected) {
+        targetType = 'selection';
+      } else {
+        targetType = 'node';
+        targetId = hit.nodeId;
+        store.selectNode(hit.nodeId);
+        bridge.setSelection([hit.nodeId]);
+      }
+      const node = store.getState().graph.nodes.find((n) => n.id === hit.nodeId);
+      if (node?.groupId) {
+        targetGroupId = node.groupId;
+      }
+    } else {
+      const groupHit = findGroupAtPoint(store.getState().graph.groups, store.getState().graph.nodes, world.x, world.y);
+      if (groupHit) {
+        targetType = 'group';
+        targetGroupId = groupHit.id;
+      }
+    }
+
+    setContextMenu({
+      open: true,
+      x: Math.min(event.clientX, windowWidth - 280),
+      y: Math.min(event.clientY, windowHeight - 400),
+      worldX: world.x,
+      worldY: world.y,
+      query: '',
+      targetType,
+      targetId,
+      targetGroupId,
+    });
+  };
+
+  const onKeyDown = (event: KeyboardEvent): void => {
+    if (event.key === 'Escape') {
+      if (store.canNavigateBack()) {
+        store.navigateBack();
+        bridge.setGraph(
+          store.getState().graph.nodes,
+          store.getState().graph.edges,
+          store.getState().graph.groups ?? [],
+        );
+        bridge.renderFrame();
+      } else {
+        setContextMenu((previous) => (previous.open ? { ...previous, open: false } : previous));
+        store.deselectAll();
+        bridge.setSelection([], []);
+        bridge.renderFrame();
+      }
+    } else if (event.key === 'Delete' || event.key === 'Backspace') {
+      if (
+        typeof document !== 'undefined' &&
+        (document.activeElement instanceof HTMLInputElement || document.activeElement instanceof HTMLTextAreaElement)
+      ) {
+        return;
+      }
+      if (store.getState().activeEdgeId) {
+        store.removeActiveEdge();
+        bridge.setGraph(
+          store.getState().graph.nodes,
+          store.getState().graph.edges,
+          store.getState().graph.groups ?? [],
+        );
+        bridge.renderFrame();
+      } else if (store.getState().selectedNodeIds.length > 0) {
+        store.deleteSelected();
+        bridge.setGraph(
+          store.getState().graph.nodes,
+          store.getState().graph.edges,
+          store.getState().graph.groups ?? [],
+        );
+        bridge.renderFrame();
+      }
+    }
+  };
+
+  canvasElement.addEventListener('wheel', onWheel, { passive: false });
+  canvasElement.addEventListener('pointerdown', onPointerDown);
+  canvasElement.addEventListener('pointermove', onPointerMove);
+  canvasElement.addEventListener('pointerup', onPointerUp);
+  canvasElement.addEventListener('pointercancel', onPointerUp);
+  canvasElement.addEventListener('contextmenu', onContextMenu);
+  if (globalThis.window !== undefined) {
+    globalThis.addEventListener('keydown', onKeyDown);
+  }
+
+  return () => {
+    clearInterval(profilerInterval);
+    canvasElement.removeEventListener('wheel', onWheel);
+    canvasElement.removeEventListener('pointerdown', onPointerDown);
+    canvasElement.removeEventListener('pointermove', onPointerMove);
+    canvasElement.removeEventListener('pointerup', onPointerUp);
+    canvasElement.removeEventListener('pointercancel', onPointerUp);
+    canvasElement.removeEventListener('contextmenu', onContextMenu);
+    if (globalThis.window !== undefined) {
+      globalThis.removeEventListener('keydown', onKeyDown);
+    }
+  };
+}
+
+interface InspectorGroupSectionProperties {
+  readonly group: FlintGraphGroup;
+  readonly store: FlintEditorStore;
+  readonly bridge?: FlintRendererBridge;
+}
+
+const SWATCH_COLORS = ['#58a6ff', '#a371f7', '#3fb950', '#d29922', '#f85149', '#39c5bb'] as const;
+
+/**
+ * Property inspector controls for selected graph group.
+ */
+function InspectorGroupSection(properties: InspectorGroupSectionProperties): MpElement {
+  const g = properties.group;
+  const store = properties.store;
+  const bridge = properties.bridge;
+  const refreshGraph = () => {
+    bridge?.setGraph(store.getState().graph.nodes, store.getState().graph.edges, store.getState().graph.groups ?? []);
+    bridge?.renderFrame();
+  };
+
+  return (
+    <div>
+      <div className={styles.inspectorRow}>
+        <label
+          htmlFor="inspector-group-title"
+          className={styles.inspectorLabel}
         >
-          <div className={styles.modalHeader}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span className={styles.modalTitle}>Performance Profiler & Realtime Telemetry</span>
-              <ForgeBadge
-                variant="success"
-                size="xs"
-              >
-                {fps} FPS
-              </ForgeBadge>
-              <ForgeBadge
-                variant="neutral"
-                size="xs"
-              >
-                {backendLabel}
-              </ForgeBadge>
-            </div>
+          Group Name
+        </label>
+        <input
+          id="inspector-group-title"
+          value={g.title}
+          type="text"
+          aria-label="Group Name"
+          className={styles.inspectorInput}
+          onInput={(event: unknown) => {
+            const value = extractEventTargetStringValue(event);
+            if (value !== undefined) {
+              store.setGroupTitle(g.id, value);
+              refreshGraph();
+            }
+          }}
+        />
+      </div>
+      <div
+        className={styles.inspectorRow}
+        style={{ flexDirection: 'column', alignItems: 'flex-start' }}
+      >
+        <span className={styles.inspectorLabel}>Group Color</span>
+        <div className={styles.colorPickerRow}>
+          {SWATCH_COLORS.map((c) => (
             <button
+              key={c}
               type="button"
-              className={classNames(styles.toolbarBtn, styles.toolbarBtnGhost)}
-              onClick={properties.onClose}
-              aria-label="Close performance modal"
-            >
-              ✕
-            </button>
-          </div>
-          <div className={styles.modalBody}>
-            <div style={{ marginBottom: '14px' }}>
-              <div style={{ fontSize: '12px', fontWeight: 600, color: '#8b949e', marginBottom: '6px' }}>
-                Telemetry Refresh Interval
-              </div>
-              <div className={styles.buttonGroup}>
-                {(['realtime', '100ms', '250ms', '500ms', '750ms', '1500ms'] as const).map((interval) => (
-                  <button
-                    key={interval}
-                    type="button"
-                    className={classNames(
-                      styles.toolbarBtn,
-                      properties.telemetryInterval === interval ? styles.toolbarBtnPrimary : styles.toolbarBtnGhost,
-                    )}
-                    onClick={() => properties.setTelemetryInterval(interval)}
-                  >
-                    {interval === 'realtime' ? 'Realtime' : interval}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div style={{ marginBottom: '16px' }}>
-              <ForgePerformanceTimelineChart
-                history={properties.perfHistory}
-                currentMetrics={properties.perfMetrics}
-                width={880}
-                height={180}
-              />
-            </div>
-
-            <div
+              className={styles.colorSwatch}
               style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: '8px',
-                marginBottom: '16px',
+                backgroundColor: c,
+                border: g.color === c ? '2px solid #ffffff' : '1px solid #30363d',
               }}
-            >
-              <div
-                style={{
-                  background: '#161b22',
-                  padding: '8px',
-                  borderRadius: '6px',
-                  border: '1px solid #30363d',
-                }}
-              >
-                <div style={{ fontSize: '10px', color: '#8b949e' }}>Total Frame Time</div>
-                <div style={{ fontSize: '14px', fontWeight: 600, color: '#58a6ff' }}>
-                  {properties.perfMetrics.totalFrameTimeMs.toFixed(2)} ms
-                </div>
-              </div>
-              <div
-                style={{
-                  background: '#161b22',
-                  padding: '8px',
-                  borderRadius: '6px',
-                  border: '1px solid #30363d',
-                }}
-              >
-                <div style={{ fontSize: '10px', color: '#8b949e' }}>Render Duration</div>
-                <div style={{ fontSize: '14px', fontWeight: 600, color: '#3fb950' }}>
-                  {properties.perfMetrics.renderTimeMs.toFixed(2)} ms
-                </div>
-              </div>
-              <div
-                style={{
-                  background: '#161b22',
-                  padding: '8px',
-                  borderRadius: '6px',
-                  border: '1px solid #30363d',
-                }}
-              >
-                <div style={{ fontSize: '10px', color: '#8b949e' }}>Spatial Indexing</div>
-                <div style={{ fontSize: '14px', fontWeight: 600, color: '#d29922' }}>
-                  {properties.perfMetrics.spatialIndexTimeMs.toFixed(2)} ms
-                </div>
-              </div>
-              <div
-                style={{
-                  background: '#161b22',
-                  padding: '8px',
-                  borderRadius: '6px',
-                  border: '1px solid #30363d',
-                }}
-              >
-                <div style={{ fontSize: '10px', color: '#8b949e' }}>Visible Nodes</div>
-                <div style={{ fontSize: '14px', fontWeight: 600, color: '#f0883e' }}>
-                  {properties.perfMetrics.visibleNodesCount} /{' '}
-                  {properties.perfMetrics.totalNodesCount ?? properties.perfMetrics.visibleNodesCount}
-                </div>
-              </div>
-            </div>
-
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: '8px',
-                marginBottom: '16px',
+              onClick={() => {
+                store.setGroupColor(g.id, c);
+                refreshGraph();
               }}
-            >
-              <div
-                style={{
-                  background: '#161b22',
-                  padding: '8px',
-                  borderRadius: '6px',
-                  border: '1px solid #30363d',
-                }}
-              >
-                <div style={{ fontSize: '10px', color: '#8b949e' }}>Updates & Layout</div>
-                <div style={{ fontSize: '14px', fontWeight: 600, color: '#f0883e' }}>
-                  {((properties.perfMetrics.updateTimeMs ?? 0) + (properties.perfMetrics.layoutTimeMs ?? 0)).toFixed(2)}{' '}
-                  ms
-                </div>
-              </div>
-              <div
-                style={{
-                  background: '#161b22',
-                  padding: '8px',
-                  borderRadius: '6px',
-                  border: '1px solid #30363d',
-                }}
-              >
-                <div style={{ fontSize: '10px', color: '#8b949e' }}>Buffer Uploads</div>
-                <div style={{ fontSize: '14px', fontWeight: 600, color: '#a371f7' }}>
-                  {(properties.perfMetrics.bufferUploadTimeMs ?? 0).toFixed(2)} ms
-                </div>
-              </div>
-              <div
-                style={{
-                  background: '#161b22',
-                  padding: '8px',
-                  borderRadius: '6px',
-                  border: '1px solid #30363d',
-                }}
-              >
-                <div style={{ fontSize: '10px', color: '#8b949e' }}>Visible Edges & Pins</div>
-                <div style={{ fontSize: '14px', fontWeight: 600, color: '#388bfd' }}>
-                  {properties.perfMetrics.visibleEdgesCount}E / {properties.perfMetrics.visiblePinsCount}P
-                </div>
-              </div>
-              <div
-                style={{
-                  background: '#161b22',
-                  padding: '8px',
-                  borderRadius: '6px',
-                  border: '1px solid #30363d',
-                }}
-              >
-                <div style={{ fontSize: '10px', color: '#8b949e' }}>DPR / Scale</div>
-                <div style={{ fontSize: '14px', fontWeight: 600, color: '#39c5bb' }}>
-                  {properties.perfMetrics.dpr.toFixed(1)}x DPR
-                </div>
-              </div>
-            </div>
-
-            <ForgePerformancePieChart
-              metrics={properties.perfMetrics}
-              width={280}
-              height={240}
             />
+          ))}
+        </div>
+      </div>
+      <div className={styles.inspectorRow}>
+        <span className={styles.inspectorLabel}>Member Nodes</span>
+        <span style={{ fontSize: '12px' }}>{g.nodeIds.length} nodes</span>
+      </div>
+      <div style={{ marginTop: '12px' }}>
+        <button
+          type="button"
+          className={styles.toolbarBtn}
+          onClick={() => {
+            store.ungroup(g.id);
+            refreshGraph();
+          }}
+        >
+          Ungroup
+        </button>
+      </div>
+    </div>
+  );
+}
 
-            <div style={{ marginTop: '16px' }}>
-              <SpriteSheetInspectorSection
-                spriteSheetMode={properties.spriteSheetMode}
-                setSpriteSheetMode={properties.setSpriteSheetMode}
-                spriteSheetGrid={properties.spriteSheetGrid}
-                setSpriteSheetGrid={properties.setSpriteSheetGrid}
-                hoveredGlyph={properties.hoveredGlyph}
-                spriteSheetCanvasReference={properties.spriteSheetCanvasReference}
-                inspectCanvasReference={properties.inspectCanvasReference}
-                onSpriteSheetPointerMove={properties.onSpriteSheetPointerMove}
-                onSpriteSheetPointerLeave={properties.onSpriteSheetPointerLeave}
-                paintSpriteSheet={properties.paintSpriteSheet}
-              />
-            </div>
+interface InspectorEdgeSectionProperties {
+  readonly edge: FlintGraphEdge;
+  readonly store: FlintEditorStore;
+  readonly bridge?: FlintRendererBridge;
+}
+
+/**
+ * Property inspector controls for selected connection edge.
+ */
+function InspectorEdgeSection(properties: InspectorEdgeSectionProperties): MpElement {
+  const edge = properties.edge;
+  const store = properties.store;
+  const bridge = properties.bridge;
+  const refreshGraph = () => {
+    bridge?.setGraph(store.getState().graph.nodes, store.getState().graph.edges, store.getState().graph.groups ?? []);
+    bridge?.renderFrame();
+  };
+
+  return (
+    <div>
+      <div className={styles.inspectorRow}>
+        <span className={styles.inspectorLabel}>Connection ID</span>
+        <span style={{ fontSize: '12px', fontFamily: 'var(--mp-font-family-mono, "Datatype", monospace)' }}>
+          {edge.id}
+        </span>
+      </div>
+      <div className={styles.inspectorRow}>
+        <span className={styles.inspectorLabel}>Waypoints</span>
+        <span style={{ fontSize: '12px' }}>{edge.points?.length ?? 0} custom points</span>
+      </div>
+      <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <button
+          type="button"
+          className={styles.toolbarBtn}
+          onClick={() => {
+            store.clearEdgePoints(edge.id);
+            refreshGraph();
+          }}
+        >
+          Reset Path (Default Curve)
+        </button>
+        <button
+          type="button"
+          className={classNames(styles.toolbarBtn, styles.toolbarBtnError)}
+          onClick={() => {
+            store.removeEdge(edge.id);
+            refreshGraph();
+          }}
+        >
+          Delete Connection
+        </button>
+      </div>
+    </div>
+  );
+}
+
+interface InspectorNodePinsTableProperties {
+  readonly label: string;
+  readonly ports: readonly FlintPortDefinition[];
+  readonly badgeVariant: 'info' | 'success';
+}
+
+/**
+ * Data pins table listing port identifiers and data types.
+ */
+function InspectorNodePinsTable(properties: InspectorNodePinsTableProperties): MpElement {
+  if (properties.ports.length === 0) return <div />;
+  return (
+    <div>
+      <span
+        className={styles.inspectorLabel}
+        style={{ fontWeight: 600 }}
+      >
+        {properties.label}
+      </span>
+      <div className={styles.portTable}>
+        {properties.ports.map((port) => (
+          <div
+            key={port.id}
+            className={styles.portTableRow}
+          >
+            <span>{port.name}</span>
+            <ForgeBadge
+              variant={properties.badgeVariant}
+              size="xs"
+            >
+              {port.type.reference ?? port.type.name}
+            </ForgeBadge>
           </div>
-          <div className={styles.modalFooter}>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+interface InspectorNodeDetailsProperties {
+  readonly node: FlintGraphNode;
+  readonly definition?: FlintNodeDefinition;
+  readonly store: FlintEditorStore;
+  readonly bridge?: FlintRendererBridge;
+}
+
+/**
+ * Inspector sub-panel displaying node parameters, data pins, and Flint source code.
+ */
+function InspectorNodeDetails(properties: InspectorNodeDetailsProperties): MpElement {
+  const node = properties.node;
+  const store = properties.store;
+  const bridge = properties.bridge;
+  const refreshGraph = () => {
+    bridge?.setGraph(store.getState().graph.nodes, store.getState().graph.edges, store.getState().graph.groups ?? []);
+    bridge?.renderFrame();
+  };
+
+  return (
+    <div>
+      <div className={styles.inspectorRow}>
+        <label
+          htmlFor="inspector-node-title"
+          className={styles.inspectorLabel}
+        >
+          Title
+        </label>
+        <input
+          id="inspector-node-title"
+          value={node.title}
+          type="text"
+          aria-label="Node Title"
+          className={styles.inspectorInput}
+          onInput={(event: unknown) => {
+            const value = extractEventTargetStringValue(event);
+            if (value !== undefined) store.renameNode(node.id, value);
+          }}
+        />
+      </div>
+      <div className={styles.inspectorRow}>
+        <label
+          htmlFor="inspector-node-op"
+          className={styles.inspectorLabel}
+        >
+          Operation
+        </label>
+        <input
+          id="inspector-node-op"
+          value={node.operation}
+          type="text"
+          aria-label="Node Operation"
+          className={styles.inspectorInput}
+          readOnly
+        />
+      </div>
+      <div className={styles.inspectorRow}>
+        <label
+          htmlFor="inspector-node-cat"
+          className={styles.inspectorLabel}
+        >
+          Category
+        </label>
+        <input
+          id="inspector-node-cat"
+          value={node.category}
+          type="text"
+          aria-label="Node Category"
+          className={styles.inspectorInput}
+          readOnly
+        />
+      </div>
+
+      {properties.definition && <div className={styles.docBlock}>{properties.definition.description}</div>}
+
+      {node.metaSubgraph && (
+        <div
+          className={styles.docBlock}
+          style={{ borderLeftColor: '#79c0ff' }}
+        >
+          <strong>Composite Meta Node:</strong> Contains {node.metaSubgraph.nodes.length} internal nodes and{' '}
+          {node.metaSubgraph.edges.length} connections.
+          <div style={{ marginTop: '8px' }}>
+            <ForgeButton
+              variant="secondary"
+              size="xs"
+              onClick={() => store.expandMetaNode(node.id)}
+            >
+              Expand / Unpack Meta Node
+            </ForgeButton>
+          </div>
+        </div>
+      )}
+
+      <InspectorNodePinsTable
+        label="Input Pins"
+        ports={node.inputs}
+        badgeVariant="info"
+      />
+      <InspectorNodePinsTable
+        label="Output Pins"
+        ports={node.outputs}
+        badgeVariant="success"
+      />
+
+      {node.properties?.value !== undefined && (
+        <div className={styles.inspectorRow}>
+          <label
+            htmlFor="inspector-prop-val"
+            className={styles.inspectorLabel}
+          >
+            Value
+          </label>
+          <input
+            id="inspector-prop-val"
+            type="number"
+            aria-label="Literal Value"
+            className={styles.inspectorInput}
+            value={String(node.properties.value)}
+            onInput={(event: unknown) => {
+              const raw = extractEventTargetStringValue(event);
+              if (raw !== undefined) {
+                const number_ = Number(raw);
+                store.updateNodeProperty(node.id, 'value', Number.isNaN(number_) ? 0 : number_);
+              }
+            }}
+          />
+        </div>
+      )}
+
+      {node.properties?.name !== undefined && (
+        <div className={styles.inspectorRow}>
+          <label
+            htmlFor="inspector-prop-name"
+            className={styles.inspectorLabel}
+          >
+            Parameter Name
+          </label>
+          <input
+            id="inspector-prop-name"
+            type="text"
+            aria-label="Parameter Name"
+            className={styles.inspectorInput}
+            value={String(node.properties.name)}
+            onInput={(event: unknown) => {
+              const raw = extractEventTargetStringValue(event);
+              if (raw !== undefined) store.updateNodeProperty(node.id, 'name', raw);
+            }}
+          />
+        </div>
+      )}
+
+      <div className={styles.inspectorRow}>
+        <span className={styles.inspectorLabel}>Position</span>
+        <span style={{ fontSize: '12px' }}>
+          X: {Math.round(node.position.x)}, Y: {Math.round(node.position.y)}
+        </span>
+      </div>
+
+      {(node.operation === 'flint_code' || node.kind === 'custom') && (
+        <div
+          className={styles.inspectorRow}
+          style={{ flexDirection: 'column', alignItems: 'flex-start' }}
+        >
+          <label
+            htmlFor="inspector-flint-code"
+            className={styles.inspectorLabel}
+          >
+            Flint Function Code
+          </label>
+          <textarea
+            id="inspector-flint-code"
+            className={styles.codeEditorTextarea}
+            value={String(node.properties?.code ?? '')}
+            onInput={(event: unknown) => {
+              const code = extractEventTargetStringValue(event);
+              if (code !== undefined) {
+                store.updateCodeNode(
+                  node.id,
+                  code,
+                  node.inputs,
+                  node.outputs,
+                  typeof node.properties?.functionName === 'string' ? node.properties.functionName : undefined,
+                );
+              }
+            }}
+          />
+        </div>
+      )}
+
+      {node.outputs.length > 1 && (
+        <div className={styles.inspectorRow}>
+          <label
+            htmlFor="inspector-split-outputs"
+            className={styles.inspectorLabel}
+          >
+            Split Outputs to Fields
+          </label>
+          <input
+            id="inspector-split-outputs"
+            type="checkbox"
+            checked={node.splitOutputs !== false}
+            onChange={() => store.toggleSplitOutputs(node.id)}
+          />
+        </div>
+      )}
+
+      {node.groupId && (
+        <div
+          className={styles.inspectorRow}
+          style={{ flexDirection: 'column', alignItems: 'flex-start' }}
+        >
+          <span className={styles.inspectorLabel}>Group Color</span>
+          <div className={styles.colorPickerRow}>
+            {SWATCH_COLORS.map((c) => (
+              <button
+                key={c}
+                type="button"
+                className={styles.colorSwatch}
+                style={{ backgroundColor: c }}
+                onClick={() => {
+                  if (node.groupId) {
+                    store.setGroupColor(node.groupId, c);
+                    refreshGraph();
+                  }
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div style={{ marginTop: '12px' }}>
+        <button
+          type="button"
+          className={classNames(styles.toolbarBtn, styles.toolbarBtnError)}
+          onClick={() => store.removeNode(node.id)}
+        >
+          Delete Node
+        </button>
+      </div>
+    </div>
+  );
+}
+
+interface InspectorExecutionOutputProperties {
+  readonly lastError?: string;
+  readonly lastOutputs?: Record<string, unknown>;
+}
+
+/**
+ * Bottom drawer section showing Wasm execution output and error logs.
+ */
+function InspectorExecutionOutput(properties: InspectorExecutionOutputProperties): MpElement {
+  return (
+    <div
+      className={styles.inspectorSection}
+      style={{ borderTop: '1px solid #30363d', paddingTop: '12px' }}
+    >
+      <div className={styles.inspectorTitle}>Execution Output</div>
+      <div className={styles.outputBox}>
+        {properties.lastError ? (
+          <div style={{ color: '#f85149', fontSize: '12px' }}>{properties.lastError}</div>
+        ) : Object.entries(properties.lastOutputs ?? {}).length > 0 ? (
+          <div>
+            {Object.entries(properties.lastOutputs ?? {}).map(([key, value]) => (
+              <div
+                key={key}
+                className={styles.inspectorRow}
+              >
+                <span className={styles.inspectorLabel}>{key}</span>
+                <span
+                  style={{
+                    fontSize: '13px',
+                    color: '#3fb950',
+                    fontFamily: 'var(--mp-font-family-mono, "Datatype", monospace)',
+                  }}
+                >
+                  {String(value)}
+                </span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div style={{ color: '#8b949e', fontSize: '12px' }}>{'Click "Run Wasm" to compile and execute graph.'}</div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+interface FlintEditorInspectorProperties {
+  readonly selectedGroup?: FlintGraphGroup;
+  readonly selectedEdge?: FlintGraphEdge;
+  readonly selectedNode?: FlintGraphNode;
+  readonly selectedDefinition?: FlintNodeDefinition;
+  readonly store: FlintEditorStore;
+  readonly bridge?: FlintRendererBridge;
+  readonly editorState: FlintEditorStoreState;
+}
+
+/**
+ * Right-side drawer for inspecting element attributes and execution telemetry.
+ */
+function FlintEditorInspector(properties: FlintEditorInspectorProperties): MpElement {
+  return (
+    <aside className={styles.inspectorDrawer}>
+      <div className={styles.inspectorSection}>
+        <div className={styles.inspectorTitle}>Inspector</div>
+        {properties.selectedGroup ? (
+          <InspectorGroupSection
+            group={properties.selectedGroup}
+            store={properties.store}
+            bridge={properties.bridge}
+          />
+        ) : properties.selectedEdge ? (
+          <InspectorEdgeSection
+            edge={properties.selectedEdge}
+            store={properties.store}
+            bridge={properties.bridge}
+          />
+        ) : properties.selectedNode ? (
+          <InspectorNodeDetails
+            node={properties.selectedNode}
+            definition={properties.selectedDefinition}
+            store={properties.store}
+            bridge={properties.bridge}
+          />
+        ) : (
+          <div style={{ color: '#8b949e', fontSize: '12px' }}>
+            Select a node, group label, or connection on canvas to view and configure properties.
+          </div>
+        )}
+      </div>
+      <InspectorExecutionOutput
+        lastError={properties.editorState.lastError}
+        lastOutputs={properties.editorState.lastOutputs}
+      />
+    </aside>
+  );
+}
+
+interface FlintEditorToolbarProperties {
+  readonly editorState: FlintEditorStoreState;
+  readonly resolvedTheme: 'light' | 'dark';
+  readonly isFallback: boolean;
+  readonly perfMetrics: FlintPerformanceMetrics;
+  readonly store: FlintEditorStore;
+  readonly bridge?: FlintRendererBridge;
+  readonly onRun: () => void;
+  readonly onExport: () => void;
+  readonly onToggleTheme: () => void;
+  readonly onOpenPerf: () => void;
+}
+
+/**
+ * Top application toolbar containing graph execution, history, and grouping controls.
+ */
+function FlintEditorToolbar(properties: FlintEditorToolbarProperties): MpElement {
+  const state = properties.editorState;
+  const store = properties.store;
+  const isDark = properties.resolvedTheme === 'dark';
+  const hasGroupedSelected = state.selectedNodeIds.some(
+    (id) => state.graph.nodes.find((node) => node?.id === id)?.groupId,
+  );
+
+  return (
+    <header className={styles.toolbar}>
+      <div className={styles.toolbarGroup}>
+        <span style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '0.02em' }}>Flint Node Graph</span>
+        <div
+          className={styles.buttonGroup}
+          role="group"
+          aria-label="Graph Execution and Export"
+        >
+          <button
+            type="button"
+            className={classNames(styles.toolbarBtn, styles.toolbarBtnPrimary)}
+            onClick={properties.onRun}
+            disabled={state.isExecuting}
+          >
+            {state.isExecuting ? 'Running...' : 'Run Wasm'}
+          </button>
+          <button
+            type="button"
+            className={styles.toolbarBtn}
+            onClick={properties.onExport}
+          >
+            Export Flint
+          </button>
+          <button
+            type="button"
+            className={styles.toolbarBtn}
+            onClick={properties.onToggleTheme}
+            aria-label={`Switch to ${isDark ? 'Light' : 'Dark'} mode`}
+          >
+            {isDark ? '☀️ Light' : '🌙 Dark'}
+          </button>
+        </div>
+
+        <div
+          className={styles.buttonGroup}
+          role="group"
+          aria-label="History Actions"
+        >
+          <button
+            type="button"
+            className={styles.toolbarBtn}
+            disabled={!state.canUndo}
+            onClick={() => store.undo()}
+          >
+            Undo
+          </button>
+          <button
+            type="button"
+            className={styles.toolbarBtn}
+            disabled={!state.canRedo}
+            onClick={() => store.redo()}
+          >
+            Redo
+          </button>
+        </div>
+
+        <div
+          className={styles.buttonGroup}
+          role="group"
+          aria-label="Node Structuring Actions"
+        >
+          <button
+            type="button"
+            className={styles.toolbarBtn}
+            disabled={state.selectedNodeIds.length === 0}
+            onClick={() => store.groupSelectedNodes()}
+          >
+            Group
+          </button>
+          <button
+            type="button"
+            className={styles.toolbarBtn}
+            disabled={state.selectedNodeIds.length === 0}
+            onClick={() => store.createMetaNodeFromSelected()}
+          >
+            Create Meta
+          </button>
+          <button
+            type="button"
+            className={styles.toolbarBtn}
+            disabled={!hasGroupedSelected}
+            onClick={() => store.ungroupSelected()}
+          >
+            Ungroup
+          </button>
+          <button
+            type="button"
+            className={classNames(styles.toolbarBtn, styles.toolbarBtnError)}
+            disabled={state.selectedNodeIds.length === 0 && !state.activeEdgeId}
+            onClick={() => store.deleteSelected()}
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+
+      <div className={styles.toolbarGroup}>
+        <span
+          className={classNames(
+            styles.statusBadge,
+            state.validation.valid ? styles.statusBadgeSuccess : styles.statusBadgeError,
+          )}
+        >
+          {state.validation.valid ? 'Valid DAG' : `${state.validation.issues.length} Issues`}
+        </span>
+        <span
+          className={classNames(
+            styles.statusBadge,
+            properties.isFallback ? styles.statusBadgeWarning : styles.statusBadgePrimary,
+          )}
+        >
+          {properties.isFallback ? '2D Canvas' : 'WebGPU'}
+        </span>
+        <button
+          type="button"
+          className={classNames(styles.toolbarBtn, styles.toolbarBtnGhost)}
+          onClick={properties.onOpenPerf}
+          aria-label="Click to view detailed D3 performance breakdown"
+        >
+          <span className={styles.perfDot} />
+          <span>
+            update: {properties.perfMetrics.updateTimeMs.toFixed(1)}ms | render:{' '}
+            {properties.perfMetrics.renderTimeMs.toFixed(1)}ms {properties.isFallback ? '(2D)' : '(WebGPU)'}
+          </span>
+        </button>
+      </div>
+    </header>
+  );
+}
+
+interface FlintEditorPaletteProperties {
+  readonly searchQuery: string;
+  readonly onSearchInput: (q: string) => void;
+  readonly registeredMetaNodes?: readonly FlintRegisteredMetaNode[];
+  readonly populatedCategories: readonly { category: string; definitions: readonly FlintNodeDefinition[] }[];
+  readonly onAddNode: (op: string) => void;
+  readonly store: FlintEditorStore;
+}
+
+/**
+ * Left-side drawer listing categorized draggable Flint operations and meta templates.
+ */
+function FlintEditorPalette(properties: FlintEditorPaletteProperties): MpElement {
+  return (
+    <aside className={styles.paletteDrawer}>
+      <div className={styles.paletteHeader}>
+        <input
+          type="text"
+          aria-label="Search node palette"
+          placeholder="Search operations..."
+          className={styles.paletteSearch}
+          value={properties.searchQuery}
+          onInput={(event: unknown) => {
+            const value = extractEventTargetStringValue(event);
+            if (value !== undefined) properties.onSearchInput(value);
+          }}
+        />
+      </div>
+
+      <div className={styles.paletteList}>
+        {properties.registeredMetaNodes && properties.registeredMetaNodes.length > 0 && (
+          <details
+            className={styles.categoryCollapse}
+            open={true}
+          >
+            <summary className={styles.categorySummary}>
+              <span>META NODES</span>
+              <span className={styles.categoryBadge}>{properties.registeredMetaNodes.length}</span>
+            </summary>
+            <div className={styles.categoryItemList}>
+              {properties.registeredMetaNodes.map((meta) => (
+                <button
+                  key={meta?.id ?? ''}
+                  type="button"
+                  draggable={true}
+                  className={styles.paletteItem}
+                  onClick={() => properties.store.instantiateMetaNode(meta.id)}
+                  onDragStart={(event: unknown) => {
+                    if (typeof DragEvent !== 'undefined' && event instanceof DragEvent && event.dataTransfer) {
+                      event.dataTransfer.setData('text/plain', `meta_template:${meta.id}`);
+                      event.dataTransfer.effectAllowed = 'copy';
+                    }
+                  }}
+                  onContextMenu={(event: unknown) => {
+                    if (typeof MouseEvent !== 'undefined' && event instanceof MouseEvent) {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      properties.store.removeRegisteredMetaNode(meta.id);
+                    }
+                  }}
+                  title="Click or drag to add. Right-click to remove if unreferenced."
+                >
+                  <span className={styles.paletteItemTitle}>{meta.title}</span>
+                  <span className={styles.paletteItemDesc}>
+                    {meta.nodes.length} nodes | {meta.edges.length} edges
+                  </span>
+                </button>
+              ))}
+            </div>
+          </details>
+        )}
+
+        {properties.populatedCategories.map((group) => (
+          <details
+            key={group.category}
+            className={styles.categoryCollapse}
+            open={true}
+          >
+            <summary className={styles.categorySummary}>
+              <span>{group.category.toUpperCase()}</span>
+              <span className={styles.categoryBadge}>{group.definitions.length}</span>
+            </summary>
+            <div className={styles.categoryItemList}>
+              {group.definitions.map((item) => (
+                <button
+                  key={item?.operation ?? ''}
+                  type="button"
+                  draggable={true}
+                  className={styles.paletteItem}
+                  onClick={() => properties.onAddNode(item.operation)}
+                  onDragStart={(event: unknown) => {
+                    if (typeof DragEvent !== 'undefined' && event instanceof DragEvent && event.dataTransfer) {
+                      event.dataTransfer.setData('text/plain', item.operation);
+                      event.dataTransfer.effectAllowed = 'copy';
+                    }
+                  }}
+                >
+                  <span className={styles.paletteItemTitle}>{item.title}</span>
+                  <span className={styles.paletteItemDesc}>{item.description}</span>
+                </button>
+              ))}
+            </div>
+          </details>
+        ))}
+      </div>
+    </aside>
+  );
+}
+
+interface FlintEditorCanvasProperties {
+  readonly canvasReference: { current?: HTMLCanvasElement };
+  readonly renderer?: string;
+  readonly editorState: FlintEditorStoreState;
+  readonly isFallback: boolean;
+  readonly selectionSquare: { active: boolean; startX: number; startY: number; currentX: number; currentY: number };
+  readonly store: FlintEditorStore;
+  readonly bridge?: FlintRendererBridge;
+}
+
+/**
+ * Center canvas container hosting the WebGPU canvas, breadcrumbs, and selection rect.
+ */
+function FlintEditorCanvas(properties: FlintEditorCanvasProperties): MpElement {
+  const state = properties.editorState;
+  const store = properties.store;
+  const bridge = properties.bridge;
+  const sq = properties.selectionSquare;
+
+  return (
+    <main
+      className={styles.canvasContainer}
+      onDragOver={(event: unknown) => {
+        if (typeof DragEvent !== 'undefined' && event instanceof DragEvent) {
+          event.preventDefault();
+          if (event.dataTransfer) event.dataTransfer.dropEffect = 'copy';
+        }
+      }}
+      onDrop={(event: unknown) => {
+        const op = extractDragOperationType(event);
+        if (op && bridge && properties.canvasReference.current) {
+          if (typeof DragEvent !== 'undefined' && event instanceof DragEvent) event.preventDefault();
+          const rect = properties.canvasReference.current.getBoundingClientRect();
+          const clientX = typeof MouseEvent !== 'undefined' && event instanceof MouseEvent ? event.clientX : 0;
+          const clientY = typeof MouseEvent !== 'undefined' && event instanceof MouseEvent ? event.clientY : 0;
+          const world = bridge.screenToWorld(clientX - rect.left, clientY - rect.top);
+          if (op.startsWith('meta_template:')) {
+            store.instantiateMetaNode(op.slice('meta_template:'.length), world);
+          } else {
+            store.addNode(op, world);
+          }
+        }
+      }}
+    >
+      {state.breadcrumbs && state.breadcrumbs.length > 1 && (
+        <div className={styles.breadcrumbBar}>
+          <button
+            type="button"
+            className={classNames(styles.toolbarBtn, styles.toolbarBtnGhost)}
+            onClick={() => {
+              store.navigateBack();
+              bridge?.setGraph(
+                store.getState().graph.nodes,
+                store.getState().graph.edges,
+                store.getState().graph.groups ?? [],
+              );
+              bridge?.renderFrame();
+            }}
+            aria-label="Back to parent graph"
+          >
+            ← Back
+          </button>
+          <span className={styles.breadcrumbDivider}>|</span>
+          <ForgeBreadcrumb
+            items={state.breadcrumbs.map((crumb) => ({ label: crumb.title }))}
+            size="xs"
+          />
+        </div>
+      )}
+      {properties.isFallback && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '12px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            backgroundColor: 'rgba(210, 153, 34, 0.15)',
+            border: '1px solid #d29922',
+            color: '#f0f6fc',
+            fontSize: '11px',
+            padding: '4px 12px',
+            borderRadius: '16px',
+            zIndex: 20,
+            pointerEvents: 'none',
+          }}
+        >
+          ⚠ WebGPU not available in this environment. Operating in 2D Canvas fallback mode.
+        </div>
+      )}
+      <canvas
+        key={properties.renderer ?? 'default'}
+        ref={properties.canvasReference}
+        className={styles.canvas}
+      />
+      {sq.active && (
+        <div
+          className={styles.selectionSquare}
+          style={{
+            left: `${Math.min(sq.startX, sq.currentX)}px`,
+            top: `${Math.min(sq.startY, sq.currentY)}px`,
+            width: `${Math.abs(sq.currentX - sq.startX)}px`,
+            height: `${Math.abs(sq.currentY - sq.startY)}px`,
+          }}
+        />
+      )}
+    </main>
+  );
+}
+
+interface FlintEditorContextMenuProperties {
+  readonly contextMenu: ContextMenuState;
+  readonly setContextMenu: (s: ContextMenuState) => void;
+  readonly selectedNode?: FlintGraphNode;
+  readonly store: FlintEditorStore;
+  readonly bridge?: FlintRendererBridge;
+  readonly allDefinitions: readonly FlintNodeDefinition[];
+  readonly editorState: FlintEditorStoreState;
+}
+
+/**
+ * Context menu floating popup with node insertion and action items.
+ */
+function FlintEditorContextMenu(properties: FlintEditorContextMenuProperties): MpElement | undefined {
+  const cm = properties.contextMenu;
+  if (!cm.open) return undefined;
+  const store = properties.store;
+  const bridge = properties.bridge;
+  const refreshGraph = () => {
+    bridge?.setGraph(store.getState().graph.nodes, store.getState().graph.edges, store.getState().graph.groups ?? []);
+    bridge?.renderFrame();
+  };
+
+  const filteredItems = properties.allDefinitions.filter(
+    (definition) =>
+      !cm.query ||
+      definition.title.toLowerCase().includes(cm.query.toLowerCase()) ||
+      definition.operation.toLowerCase().includes(cm.query.toLowerCase()),
+  );
+
+  return (
+    <div
+      role="dialog"
+      aria-label="Add Node Context Menu"
+      className={styles.contextMenu}
+      style={{ left: `${cm.x}px`, top: `${cm.y}px` }}
+    >
+      <div className={styles.contextMenuHeader}>
+        <input
+          type="text"
+          placeholder="Search node..."
+          className={styles.contextMenuSearch}
+          value={cm.query}
+          onInput={(event: unknown) => {
+            const query = extractEventTargetStringValue(event);
+            if (query !== undefined) properties.setContextMenu({ ...cm, query });
+          }}
+        />
+      </div>
+
+      {cm.targetType === 'edge' && cm.targetId && (
+        <div className={styles.contextMenuActions}>
+          <button
+            type="button"
+            className={styles.contextMenuItem}
+            onClick={() => {
+              store.addEdgePoint(cm.targetId ?? '', { x: Math.round(cm.worldX), y: Math.round(cm.worldY) });
+              refreshGraph();
+              properties.setContextMenu({ ...cm, open: false });
+            }}
+          >
+            + Add Waypoint Here
+          </button>
+          <button
+            type="button"
+            className={styles.contextMenuItem}
+            onClick={() => {
+              store.clearEdgePoints(cm.targetId ?? '');
+              refreshGraph();
+              properties.setContextMenu({ ...cm, open: false });
+            }}
+          >
+            Reset Path (Default Curve)
+          </button>
+          <button
+            type="button"
+            className={styles.contextMenuItem}
+            style={{ color: '#f85149' }}
+            onClick={() => {
+              store.removeEdge(cm.targetId ?? '');
+              refreshGraph();
+              properties.setContextMenu({ ...cm, open: false });
+            }}
+          >
+            Remove Connection
+          </button>
+        </div>
+      )}
+
+      {cm.targetType === 'node' && cm.targetId && (
+        <div className={styles.contextMenuActions}>
+          <button
+            type="button"
+            className={styles.contextMenuItem}
+            onClick={() => {
+              store.copyNode(cm.targetId ?? '');
+              properties.setContextMenu({ ...cm, open: false });
+            }}
+          >
+            Copy Node
+          </button>
+          {properties.selectedNode?.metaSubgraph && (
+            <div>
+              <button
+                type="button"
+                className={styles.contextMenuItem}
+                onClick={() => {
+                  store.drillIntoMetaNode(cm.targetId ?? '');
+                  refreshGraph();
+                  properties.setContextMenu({ ...cm, open: false });
+                }}
+              >
+                Enter Function (Drill Down)
+              </button>
+              <button
+                type="button"
+                className={styles.contextMenuItem}
+                onClick={() => {
+                  store.duplicateMetaNode(cm.targetId ?? '');
+                  refreshGraph();
+                  properties.setContextMenu({ ...cm, open: false });
+                }}
+              >
+                Duplicate Meta Node
+              </button>
+            </div>
+          )}
+          {cm.targetGroupId && (
+            <div>
+              <button
+                type="button"
+                className={styles.contextMenuItem}
+                onClick={() => {
+                  store.copyGroup(cm.targetGroupId ?? '');
+                  properties.setContextMenu({ ...cm, open: false });
+                }}
+              >
+                Copy Group
+              </button>
+              <button
+                type="button"
+                className={styles.contextMenuItem}
+                onClick={() => {
+                  store.ungroup(cm.targetGroupId ?? '');
+                  refreshGraph();
+                  properties.setContextMenu({ ...cm, open: false });
+                }}
+              >
+                Ungroup
+              </button>
+            </div>
+          )}
+          {properties.selectedNode && properties.selectedNode.outputs.length > 1 && (
             <button
               type="button"
-              className={classNames(styles.toolbarBtn, styles.toolbarBtnPrimary)}
-              onClick={properties.onClose}
+              className={styles.contextMenuItem}
+              onClick={() => {
+                store.toggleSplitOutputs(cm.targetId ?? '');
+                properties.setContextMenu({ ...cm, open: false });
+              }}
             >
-              Close
+              {properties.selectedNode.splitOutputs === false ? 'Split Outputs to Fields' : 'Combine Outputs to Record'}
             </button>
+          )}
+          <button
+            type="button"
+            className={styles.contextMenuItem}
+            style={{ color: '#f85149' }}
+            onClick={() => {
+              store.removeNode(cm.targetId ?? '');
+              refreshGraph();
+              properties.setContextMenu({ ...cm, open: false });
+            }}
+          >
+            Delete Node
+          </button>
+        </div>
+      )}
+
+      {cm.targetType === 'group' && cm.targetGroupId && (
+        <div className={styles.contextMenuActions}>
+          <button
+            type="button"
+            className={styles.contextMenuItem}
+            onClick={() => {
+              store.copyGroup(cm.targetGroupId ?? '');
+              properties.setContextMenu({ ...cm, open: false });
+            }}
+          >
+            Copy Group (with Connections)
+          </button>
+          <button
+            type="button"
+            className={styles.contextMenuItem}
+            onClick={() => {
+              store.ungroup(cm.targetGroupId ?? '');
+              refreshGraph();
+              properties.setContextMenu({ ...cm, open: false });
+            }}
+          >
+            Ungroup
+          </button>
+          <div style={{ padding: '4px 8px', fontSize: '11px', color: '#8b949e' }}>Group Color:</div>
+          <div
+            className={styles.colorPickerRow}
+            style={{ padding: '0 8px' }}
+          >
+            {SWATCH_COLORS.map((c) => (
+              <button
+                key={c}
+                type="button"
+                className={styles.colorSwatch}
+                style={{ backgroundColor: c }}
+                onClick={() => {
+                  store.setGroupColor(cm.targetGroupId ?? '', c);
+                  refreshGraph();
+                  properties.setContextMenu({ ...cm, open: false });
+                }}
+              />
+            ))}
           </div>
-        </ForgeCard>
+        </div>
+      )}
+
+      {cm.targetType === 'selection' && (
+        <div className={styles.contextMenuActions}>
+          <button
+            type="button"
+            className={styles.contextMenuItem}
+            onClick={() => {
+              store.copySelection();
+              properties.setContextMenu({ ...cm, open: false });
+            }}
+          >
+            Copy Selected ({properties.editorState.selectedNodeIds.length} Nodes + Connections)
+          </button>
+          <button
+            type="button"
+            className={styles.contextMenuItem}
+            onClick={() => {
+              store.groupSelectedNodes();
+              properties.setContextMenu({ ...cm, open: false });
+            }}
+          >
+            Group Selected
+          </button>
+          <button
+            type="button"
+            className={styles.contextMenuItem}
+            onClick={() => {
+              store.createMetaNodeFromSelected();
+              properties.setContextMenu({ ...cm, open: false });
+            }}
+          >
+            Create Meta Node
+          </button>
+          <button
+            type="button"
+            className={styles.contextMenuItem}
+            style={{ color: '#f85149' }}
+            onClick={() => {
+              store.deleteSelected();
+              properties.setContextMenu({ ...cm, open: false });
+            }}
+          >
+            Delete Selected
+          </button>
+        </div>
+      )}
+
+      {properties.editorState.hasClipboard && (
+        <div
+          className={styles.contextMenuActions}
+          style={{ borderTop: '1px solid #30363d' }}
+        >
+          <button
+            type="button"
+            className={styles.contextMenuItem}
+            onClick={() => {
+              store.paste({ x: cm.worldX, y: cm.worldY });
+              refreshGraph();
+              properties.setContextMenu({ ...cm, open: false });
+            }}
+          >
+            Paste
+          </button>
+        </div>
+      )}
+
+      <div className={styles.contextMenuList}>
+        {filteredItems.map((item) => (
+          <button
+            key={item.operation}
+            type="button"
+            className={styles.contextMenuItem}
+            onClick={() => {
+              store.addNode(item.operation, { x: cm.worldX, y: cm.worldY });
+              properties.setContextMenu({ ...cm, open: false });
+            }}
+          >
+            <span style={{ fontWeight: 600 }}>{item.title}</span>
+            <span style={{ fontSize: '10px', color: '#8b949e' }}>{item.description}</span>
+          </button>
+        ))}
       </div>
     </div>
   );
@@ -1431,9 +3357,12 @@ const DEFAULT_INITIAL_EDITOR_STATE: FlintEditorStoreState = {
  */
 export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorProperties>): MpElement {
   const store = properties?.store ?? new FlintEditorStore();
+  const controller = properties?.controller;
 
+  const containerReference = useRef<HTMLDivElement | undefined>();
   const canvasReference = useRef<HTMLCanvasElement | undefined>();
   const bridgeReference = useRef<FlintRendererBridge | undefined>();
+  const d3ChartCanvasReference = useRef<HTMLCanvasElement | undefined>();
 
   const [editorState, setEditorState] = useState<FlintEditorStoreState>(DEFAULT_INITIAL_EDITOR_STATE);
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(
@@ -1501,42 +3430,25 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
 
   /**
    * Paints a single magnified cell into the inspect canvas preview.
-   *
-   * @param cellX - Atlas X coordinate.
-   * @param cellY - Atlas Y coordinate.
-   * @param cellW - Cell width in pixels.
-   * @param cellH - Cell height in pixels.
    */
   const paintInspectCell = (cellX: number, cellY: number, cellW: number, cellH: number): void => {
     const inspectCanvas = inspectCanvasReference.current;
     const mainCanvas = spriteSheetCanvasReference.current;
-    if (!inspectCanvas || !mainCanvas) {
-      return;
-    }
-    const inspectContext = inspectCanvas.getContext('2d');
-    if (!inspectContext) return;
+    if (!inspectCanvas || !mainCanvas) return;
+    const context = inspectCanvas.getContext('2d');
+    if (!context) return;
     try {
-      inspectContext.imageSmoothingEnabled = false;
-      inspectContext.fillStyle = '#0d1117';
-      inspectContext.fillRect(0, 0, inspectCanvas.width, inspectCanvas.height);
+      context.imageSmoothingEnabled = false;
+      context.fillStyle = '#0d1117';
+      context.fillRect(0, 0, inspectCanvas.width, inspectCanvas.height);
       const safeW = Math.max(cellW, 1);
       const safeH = Math.max(cellH, 1);
       const scale = Math.min((inspectCanvas.width - 8) / safeW, (inspectCanvas.height - 8) / safeH);
-      const destinationWidth = safeW * scale;
-      const destinationHeight = safeH * scale;
-      const destinationX = (inspectCanvas.width - destinationWidth) / 2;
-      const destinationY = (inspectCanvas.height - destinationHeight) / 2;
-      inspectContext.drawImage(
-        mainCanvas,
-        cellX,
-        cellY,
-        safeW,
-        safeH,
-        destinationX,
-        destinationY,
-        destinationWidth,
-        destinationHeight,
-      );
+      const destinationW = safeW * scale;
+      const destinationH = safeH * scale;
+      const destinationX = (inspectCanvas.width - destinationW) / 2;
+      const destinationY = (inspectCanvas.height - destinationH) / 2;
+      context.drawImage(mainCanvas, cellX, cellY, safeW, safeH, destinationX, destinationY, destinationW, destinationH);
     } catch (error) {
       console.error('paintInspectCell error:', error);
     }
@@ -1552,71 +3464,24 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
   ): void => {
     const canvas = spriteSheetCanvasReference.current;
     if (!canvas) return;
-    const canvasContext = canvas.getContext('2d');
-    if (!canvasContext) return;
+    const context = canvas.getContext('2d');
+    if (!context) return;
     try {
       const wasm = getFlintRenderWorkerWasm();
       const atlasSize = wasm.font_get_atlas_size();
       const atlasPtr = wasm.font_init_atlas_data();
-      if (atlasPtr > 0 && atlasSize > 0) {
-        const rawBytes = new Uint8ClampedArray(wasm.memory.buffer, atlasPtr, atlasSize * atlasSize * 4);
-        const outData = canvasContext.createImageData(atlasSize, atlasSize);
-        const outBytes = outData.data;
-
-        if (mode === 'crisp') {
-          for (let pixelIndex = 0; pixelIndex < atlasSize * atlasSize; pixelIndex++) {
-            const red = (rawBytes[pixelIndex * 4] ?? 0) / 255;
-            const green = (rawBytes[pixelIndex * 4 + 1] ?? 0) / 255;
-            const blue = (rawBytes[pixelIndex * 4 + 2] ?? 0) / 255;
-            const msdf = Math.max(Math.min(red, green), Math.min(Math.max(red, green), blue));
-            const edge = 0.5;
-            const smoothing = 0.045;
-            const threshold = Math.max(0, Math.min(1, (msdf - (edge - smoothing)) / (2 * smoothing)));
-            const alpha = threshold * threshold * (3 - 2 * threshold);
-            const outputIndex = pixelIndex * 4;
-            outBytes[outputIndex] = Math.round(13 + (255 - 13) * alpha);
-            outBytes[outputIndex + 1] = Math.round(17 + (255 - 17) * alpha);
-            outBytes[outputIndex + 2] = Math.round(23 + (255 - 23) * alpha);
-            outBytes[outputIndex + 3] = 255;
-          }
-        } else {
-          for (let pixelIndex = 0; pixelIndex < atlasSize * atlasSize; pixelIndex++) {
-            const outputIndex = pixelIndex * 4;
-            outBytes[outputIndex] = rawBytes[outputIndex] ?? 0;
-            outBytes[outputIndex + 1] = rawBytes[outputIndex + 1] ?? 0;
-            outBytes[outputIndex + 2] = rawBytes[outputIndex + 2] ?? 0;
-            outBytes[outputIndex + 3] = 255;
-          }
-        }
-
-        canvasContext.putImageData(outData, 0, 0);
-
-        if (grid) {
-          const tableBase = wasm.font_get_table_ptr ? wasm.font_get_table_ptr() : 256;
-          const u32Memory = new Uint32Array(wasm.memory.buffer);
-          canvasContext.save();
-          canvasContext.lineWidth = 1;
-          canvasContext.strokeStyle = 'rgba(88, 166, 255, 0.25)';
-
-          for (let glyphIndex = 0; glyphIndex < GLYPH_CHARS_BY_IDX.length; glyphIndex++) {
-            const cellX = u32Memory[(tableBase + glyphIndex * 16) >> 2] ?? 0;
-            const cellY = u32Memory[(tableBase + glyphIndex * 16 + 4) >> 2] ?? 0;
-            const cellW = u32Memory[(tableBase + glyphIndex * 16 + 8) >> 2] ?? 24;
-            const cellH = u32Memory[(tableBase + glyphIndex * 16 + 12) >> 2] ?? 32;
-            canvasContext.strokeRect(cellX + 0.5, cellY + 0.5, cellW - 1, cellH - 1);
-          }
-
-          if (highlightIndex !== undefined && highlightIndex >= 0 && highlightIndex < GLYPH_CHARS_BY_IDX.length) {
-            const highlightX = u32Memory[(tableBase + highlightIndex * 16) >> 2] ?? 0;
-            const highlightY = u32Memory[(tableBase + highlightIndex * 16 + 4) >> 2] ?? 0;
-            const highlightW = u32Memory[(tableBase + highlightIndex * 16 + 8) >> 2] ?? 24;
-            const highlightH = u32Memory[(tableBase + highlightIndex * 16 + 12) >> 2] ?? 32;
-            canvasContext.strokeStyle = '#58a6ff';
-            canvasContext.lineWidth = 2;
-            canvasContext.strokeRect(highlightX + 0.5, highlightY + 0.5, highlightW - 1, highlightH - 1);
-          }
-          canvasContext.restore();
-        }
+      if (atlasPtr <= 0 || atlasSize <= 0) return;
+      const rawBytes = new Uint8ClampedArray(wasm.memory.buffer, atlasPtr, atlasSize * atlasSize * 4);
+      const outData = context.createImageData(atlasSize, atlasSize);
+      if (mode === 'crisp') {
+        renderAtlasCrisp(rawBytes, outData.data, atlasSize);
+      } else {
+        renderAtlasRaw(rawBytes, outData.data, atlasSize);
+      }
+      context.putImageData(outData, 0, 0);
+      if (grid) {
+        const tableBase = wasm.font_get_table_ptr ? wasm.font_get_table_ptr() : 256;
+        renderAtlasGrid(context, new Uint32Array(wasm.memory.buffer), tableBase, highlightIndex);
       }
     } catch {
       // Ignore if wasm not ready yet
@@ -1630,118 +3495,29 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
     const canvas = spriteSheetCanvasReference.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
     const scale = 1024 / rect.width;
-    const atlasX = x * scale;
-    const atlasY = y * scale;
+    const atlasX = (event.clientX - rect.left) * scale;
+    const atlasY = (event.clientY - rect.top) * scale;
 
     try {
       const wasm = getFlintRenderWorkerWasm();
       const tableBase = wasm.font_get_table_ptr ? wasm.font_get_table_ptr() : 256;
-      const u32Memory = new Uint32Array(wasm.memory.buffer);
-
-      let foundIndex = -1;
-      let foundX = 0;
-      let foundY = 0;
-      let foundW = 24;
-      let foundH = 32;
-
-      for (let glyphIndex = 0; glyphIndex < GLYPH_CHARS_BY_IDX.length; glyphIndex++) {
-        const cellX = u32Memory[(tableBase + glyphIndex * 16) >> 2] ?? 0;
-        const cellY = u32Memory[(tableBase + glyphIndex * 16 + 4) >> 2] ?? 0;
-        const cellW = u32Memory[(tableBase + glyphIndex * 16 + 8) >> 2] ?? 24;
-        const cellH = u32Memory[(tableBase + glyphIndex * 16 + 12) >> 2] ?? 32;
-
-        if (atlasX >= cellX && atlasX < cellX + cellW && atlasY >= cellY && atlasY < cellY + cellH) {
-          foundIndex = glyphIndex;
-          foundX = cellX;
-          foundY = cellY;
-          foundW = cellW;
-          foundH = cellH;
-          break;
-        }
-      }
-
-      if (foundIndex >= 0 && foundIndex < GLYPH_CHARS_BY_IDX.length) {
-        const char = GLYPH_CHARS_BY_IDX[foundIndex] ?? '';
-        const code = char.codePointAt(0) ?? 0;
-        let advance = 14;
-        let width = foundW;
-        let height = foundH;
-        let horiBearingX = 0;
-        let horiBearingY = 18;
-        let bboxMinX = 0;
-        let bboxMaxX = foundW;
-        let bboxMinY = 0;
-        let bboxMaxY = 18;
-        try {
-          advance = wasm.font_get_char_advance(code);
-          if (wasm.font_get_glyph_width) {
-            width = wasm.font_get_glyph_width(foundIndex);
-          }
-          if (wasm.font_get_glyph_height) {
-            height = wasm.font_get_glyph_height(foundIndex);
-          }
-          if (wasm.font_get_glyph_hori_bearing_x) {
-            horiBearingX = wasm.font_get_glyph_hori_bearing_x(foundIndex);
-          }
-          if (wasm.font_get_glyph_hori_bearing_y) {
-            horiBearingY = wasm.font_get_glyph_hori_bearing_y(foundIndex);
-          }
-          if (wasm.font_get_glyph_bbox_min_x) {
-            bboxMinX = wasm.font_get_glyph_bbox_min_x(foundIndex);
-          }
-          if (wasm.font_get_glyph_bbox_max_x) {
-            bboxMaxX = wasm.font_get_glyph_bbox_max_x(foundIndex);
-          }
-          if (wasm.font_get_glyph_bbox_min_y) {
-            bboxMinY = wasm.font_get_glyph_bbox_min_y(foundIndex);
-          }
-          if (wasm.font_get_glyph_bbox_max_y) {
-            bboxMaxY = wasm.font_get_glyph_bbox_max_y(foundIndex);
-          }
-        } catch {
-          // fallback
-        }
-        const rightBearing = wasm.font_get_glyph_right_bearing
-          ? wasm.font_get_glyph_right_bearing(foundIndex)
-          : Math.max(0, advance - horiBearingX - width);
-        const vertAdvance = wasm.font_get_glyph_vert_advance ? wasm.font_get_glyph_vert_advance(foundIndex) : 24;
-        const ascent = wasm.font_get_ascent ? wasm.font_get_ascent() : 18;
-        const descent = wasm.font_get_descent ? wasm.font_get_descent() : 6;
-        const linegap = wasm.font_get_linegap ? wasm.font_get_linegap() : 4;
-        const internalLeading = wasm.font_get_internal_leading ? wasm.font_get_internal_leading() : 2;
-        const externalLeading = wasm.font_get_external_leading ? wasm.font_get_external_leading() : 4;
-
-        setHoveredGlyph({
-          index: foundIndex,
-          char,
-          codeHex: `U+${code.toString(16).toUpperCase().padStart(4, '0')}`,
-          codeDec: code,
-          advance,
-          vertAdvance,
-          width,
-          height,
-          horiBearingX,
-          horiBearingY,
-          rightBearing,
-          ascent,
-          descent,
-          linegap,
-          internalLeading,
-          externalLeading,
-          bboxMinX,
-          bboxMaxX,
-          bboxMinY,
-          bboxMaxY,
-          cellX: foundX,
-          cellY: foundY,
-          cellW: foundW,
-          cellH: foundH,
-        });
-        paintSpriteSheet(spriteSheetMode, spriteSheetGrid, foundIndex);
-        paintInspectCell(foundX, foundY, foundW, foundH);
+      const cell = findSpriteSheetCellAtPoint(new Uint32Array(wasm.memory.buffer), tableBase, atlasX, atlasY);
+      if (cell) {
+        const glyphInfo = resolveGlyphDetails(
+          wasm,
+          cell.foundIndex,
+          cell.foundX,
+          cell.foundY,
+          cell.foundW,
+          cell.foundH,
+        );
+        setHoveredGlyph(glyphInfo);
+        paintSpriteSheet(spriteSheetMode, spriteSheetGrid, cell.foundIndex);
+        paintInspectCell(cell.foundX, cell.foundY, cell.foundW, cell.foundH);
+      } else {
+        setHoveredGlyph(undefined);
+        paintSpriteSheet(spriteSheetMode, spriteSheetGrid);
       }
     } catch {
       // Ignore if wasm not ready yet
@@ -1910,482 +3686,14 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         resizeObserver.observe(canvasElement);
       }
 
-      let isPointerDown = false;
-      let dragMode: 'pan' | 'node' | 'group' | 'waypoint' | 'connect' | 'box_select' | 'none' = 'none';
-      let connectingSourceNodeId = '';
-      let connectingSourcePortId = '';
-      let draggedGroupId = '';
-      let draggedEdgeId = '';
-      let draggedWaypointIndex = -1;
-      let dragStartScreen = { x: 0, y: 0 };
-      let boxSelectStart = { x: 0, y: 0 };
-      let lastClickTime = 0;
-      let lastClickNodeId = '';
-      const nodesStartPositions = new Map<string, { readonly x: number; readonly y: number }>();
-
-      const profilerInterval = setInterval(() => {
-        if (bridge) {
-          const stats = bridge.getPerformanceStats();
-          const storeUpdateTime = store.getUpdateTimeMs();
-          recordPerfMetrics({
-            ...stats,
-            updateTimeMs: storeUpdateTime,
-          });
-        }
-      }, 1000);
-
-      /**
-       * Handles mouse wheel events to zoom the editor canvas centered at cursor coordinates.
-       */
-      const onWheel = (event: WheelEvent): void => {
-        event.preventDefault();
-        const normalizedDelta = Math.max(-100, Math.min(100, event.deltaY));
-        const factor = Math.exp(-normalizedDelta * 0.003);
-        bridge?.zoom(event.offsetX, event.offsetY, factor);
-      };
-
-      /**
-       * Handles pointer down events to initiate node dragging, port connection, or pan navigation.
-       */
-      const onPointerDown = (event: PointerEvent): void => {
-        if (event.button !== 0 || !bridge) return;
-        setContextMenu((previous) => (previous.open ? { ...previous, open: false } : previous));
-        isPointerDown = true;
-        dragStartScreen = { x: event.clientX, y: event.clientY };
-        try {
-          canvasElement.setPointerCapture(event.pointerId);
-        } catch {
-          // pointer capture optional
-        }
-
-        const now = Date.now();
-        const isShift = event.shiftKey;
-        const hit = bridge.hitTestSync(event.offsetX, event.offsetY);
-
-        if (hit?.type === 'group' && hit.groupId) {
-          dragMode = 'group';
-          draggedGroupId = hit.groupId;
-          store.selectGroup(hit.groupId);
-          bridge.setSelection([], [], hit.groupId);
-          const group = store.getState().graph.groups?.find((g) => g.id === hit.groupId);
-          nodesStartPositions.clear();
-          if (group) {
-            const groupNodeIds = new Set(group.nodeIds);
-            for (const n of store.getState().graph.nodes) {
-              if (groupNodeIds.has(n.id)) {
-                nodesStartPositions.set(n.id, { ...n.position });
-              }
-            }
-          }
-          bridge.renderFrame();
-          return;
-        }
-
-        if (hit?.type === 'waypoint' && hit.edgeId && hit.waypointIndex !== undefined) {
-          dragMode = 'waypoint';
-          draggedEdgeId = hit.edgeId;
-          draggedWaypointIndex = hit.waypointIndex;
-          store.selectEdge(hit.edgeId);
-          bridge.setSelection([], [hit.edgeId]);
-          bridge.renderFrame();
-          return;
-        }
-
-        if (hit?.type === 'edge' && hit.edgeId) {
-          if (now - lastClickTime < 350 && lastClickNodeId === hit.edgeId) {
-            const world = bridge.screenToWorld(event.offsetX, event.offsetY);
-            store.addEdgePoint(hit.edgeId, { x: Math.round(world.x), y: Math.round(world.y) });
-            bridge.setGraph(
-              store.getState().graph.nodes,
-              store.getState().graph.edges,
-              store.getState().graph.groups ?? [],
-            );
-            bridge.renderFrame();
-            lastClickTime = 0;
-            lastClickNodeId = '';
-            return;
-          }
-          lastClickTime = now;
-          lastClickNodeId = hit.edgeId;
-          store.selectEdge(hit.edgeId);
-          bridge.setSelection([], [hit.edgeId]);
-          bridge.renderFrame();
-          return;
-        }
-
-        if (hit?.type === 'node') {
-          if (now - lastClickTime < 350 && lastClickNodeId === hit.nodeId) {
-            const clickedNode = store.getState().graph.nodes.find((n) => n.id === hit.nodeId);
-            if (clickedNode && (clickedNode.metaSubgraph || clickedNode.operation === 'meta')) {
-              store.drillIntoMetaNode(clickedNode.id);
-              bridge.setGraph(
-                store.getState().graph.nodes,
-                store.getState().graph.edges,
-                store.getState().graph.groups ?? [],
-              );
-              bridge.renderFrame();
-              return;
-            }
-          }
-          lastClickTime = now;
-          lastClickNodeId = hit.nodeId;
-        } else {
-          lastClickTime = 0;
-          lastClickNodeId = '';
-        }
-
-        if (hit?.type === 'port' && hit.portId) {
-          dragMode = 'connect';
-          connectingSourceNodeId = hit.nodeId;
-          connectingSourcePortId = hit.portId;
-          store.startConnecting(hit.nodeId, hit.portId, hit.worldX ?? 0, hit.worldY ?? 0);
-          bridge.setConnectingEdge({
-            fromNodeId: hit.nodeId,
-            fromPortId: hit.portId,
-            cursorX: hit.worldX ?? 0,
-            cursorY: hit.worldY ?? 0,
-          });
-        } else if (hit?.type === 'node') {
-          dragMode = 'node';
-          if (isShift) {
-            store.toggleNodeSelection(hit.nodeId);
-          } else if (!store.getState().selectedNodeIds.includes(hit.nodeId)) {
-            store.selectNode(hit.nodeId);
-          }
-          const currentNodes = store.getState().graph.nodes;
-          const selectedSet = new Set(store.getState().selectedNodeIds);
-          nodesStartPositions.clear();
-          for (const n of currentNodes) {
-            if (selectedSet.has(n.id) || n.id === hit.nodeId) {
-              nodesStartPositions.set(n.id, { ...n.position });
-            }
-          }
-          bridge.setSelection([...selectedSet, hit.nodeId]);
-          bridge.renderFrame();
-        } else {
-          if (isShift) {
-            dragMode = 'box_select';
-            boxSelectStart = { x: event.offsetX, y: event.offsetY };
-            setSelectionSquare({
-              active: true,
-              startX: event.offsetX,
-              startY: event.offsetY,
-              currentX: event.offsetX,
-              currentY: event.offsetY,
-            });
-          } else {
-            dragMode = 'pan';
-            store.deselectAll();
-            bridge.setSelection([], []);
-            bridge.renderFrame();
-          }
-        }
-      };
-
-      /**
-       * Handles pointer move events for dragging nodes, updating connection preview cables, or box selection.
-       */
-      const onPointerMove = (event: PointerEvent): void => {
-        if (!bridge) return;
-        if (!isPointerDown) {
-          const hoverHit = bridge.hitTestSync(event.offsetX, event.offsetY);
-          switch (hoverHit?.type) {
-            case 'port': {
-              canvasElement.style.cursor = 'crosshair';
-              if (hoverHit.portId) {
-                bridge.setHoveredPort({ nodeId: hoverHit.nodeId, portId: hoverHit.portId });
-                bridge.renderFrame();
-              }
-              break;
-            }
-            case 'waypoint': {
-              canvasElement.style.cursor = 'grab';
-              bridge.setHoveredPort();
-              bridge.renderFrame();
-              break;
-            }
-            case 'group': {
-              canvasElement.style.cursor = 'move';
-              bridge.setHoveredPort();
-              bridge.renderFrame();
-              break;
-            }
-            case 'edge': {
-              canvasElement.style.cursor = 'pointer';
-              bridge.setHoveredPort();
-              bridge.renderFrame();
-              break;
-            }
-            case 'node': {
-              canvasElement.style.cursor = 'move';
-              bridge.setHoveredPort();
-              bridge.renderFrame();
-              break;
-            }
-            default: {
-              canvasElement.style.cursor = 'default';
-              if (bridge.getHoveredPort()) {
-                bridge.setHoveredPort();
-                bridge.renderFrame();
-              }
-            }
-          }
-          return;
-        }
-
-        const camera = bridge.getCamera();
-        const deltaX = event.clientX - dragStartScreen.x;
-        const deltaY = event.clientY - dragStartScreen.y;
-
-        if (dragMode === 'box_select') {
-          setSelectionSquare((previous) => ({
-            ...previous,
-            currentX: event.offsetX,
-            currentY: event.offsetY,
-          }));
-        } else if (dragMode === 'group' && nodesStartPositions.size > 0 && draggedGroupId) {
-          const worldDeltaX = deltaX / camera.zoom;
-          const worldDeltaY = deltaY / camera.zoom;
-          store.moveSelectedNodes(worldDeltaX, worldDeltaY, nodesStartPositions);
-          bridge.renderFrame();
-        } else if (dragMode === 'waypoint' && draggedEdgeId) {
-          const { x: worldX, y: worldY } = bridge.screenToWorld(event.offsetX, event.offsetY);
-          store.updateEdgePoint(draggedEdgeId, draggedWaypointIndex, {
-            x: Math.round(worldX),
-            y: Math.round(worldY),
-          });
-          bridge.setGraph(
-            store.getState().graph.nodes,
-            store.getState().graph.edges,
-            store.getState().graph.groups ?? [],
-          );
-          bridge.renderFrame();
-        } else if (dragMode === 'connect') {
-          const { x: worldX, y: worldY } = bridge.screenToWorld(event.offsetX, event.offsetY);
-          store.updateConnectingCursor(worldX, worldY);
-          bridge.setConnectingEdge({
-            fromNodeId: connectingSourceNodeId,
-            fromPortId: connectingSourcePortId,
-            cursorX: worldX,
-            cursorY: worldY,
-          });
-          const hoverHit = bridge.hitTestSync(event.offsetX, event.offsetY, 16);
-          if (hoverHit?.type === 'port' && hoverHit.nodeId !== connectingSourceNodeId && hoverHit.portId) {
-            bridge.setHoveredPort({
-              nodeId: hoverHit.nodeId,
-              portId: hoverHit.portId,
-            });
-          } else {
-            bridge.setHoveredPort();
-          }
-          bridge.renderFrame();
-        } else if (dragMode === 'node' && nodesStartPositions.size > 0) {
-          const worldDeltaX = deltaX / camera.zoom;
-          const worldDeltaY = deltaY / camera.zoom;
-          store.moveSelectedNodes(worldDeltaX, worldDeltaY, nodesStartPositions);
-          bridge.renderFrame();
-        } else if (dragMode === 'pan') {
-          dragStartScreen = { x: event.clientX, y: event.clientY };
-          bridge.pan(deltaX, deltaY);
-          bridge.renderFrame();
-        }
-      };
-
-      /**
-       * Handles pointer up events to commit node moves or complete connection linking.
-       */
-      const onPointerUp = (event: PointerEvent): void => {
-        if (!isPointerDown || !bridge) return;
-        isPointerDown = false;
-        try {
-          canvasElement.releasePointerCapture(event.pointerId);
-        } catch {
-          // ignore release error
-        }
-
-        switch (dragMode) {
-          case 'box_select': {
-            const minScreenX = Math.min(boxSelectStart.x, event.offsetX);
-            const maxScreenX = Math.max(boxSelectStart.x, event.offsetX);
-            const minScreenY = Math.min(boxSelectStart.y, event.offsetY);
-            const maxScreenY = Math.max(boxSelectStart.y, event.offsetY);
-
-            const topLeftWorld = bridge.screenToWorld(minScreenX, minScreenY);
-            const bottomRightWorld = bridge.screenToWorld(maxScreenX, maxScreenY);
-
-            const matchedNodeIds = bridge.queryNodesInBox({
-              minX: Math.min(topLeftWorld.x, bottomRightWorld.x),
-              minY: Math.min(topLeftWorld.y, bottomRightWorld.y),
-              maxX: Math.max(topLeftWorld.x, bottomRightWorld.x),
-              maxY: Math.max(topLeftWorld.y, bottomRightWorld.y),
-            });
-
-            store.selectNodes(matchedNodeIds, event.shiftKey);
-            setSelectionSquare({ active: false, startX: 0, startY: 0, currentX: 0, currentY: 0 });
-            break;
-          }
-          case 'connect': {
-            const targetHit = bridge.hitTestSync(event.offsetX, event.offsetY, 18);
-            if (targetHit?.type === 'port' && targetHit.nodeId !== connectingSourceNodeId && targetHit.portId) {
-              store.connectPorts(connectingSourceNodeId, connectingSourcePortId, targetHit.nodeId, targetHit.portId);
-            }
-            store.cancelConnecting();
-            bridge.setConnectingEdge();
-            bridge.setHoveredPort();
-            bridge.renderFrame();
-            break;
-          }
-          case 'node':
-          case 'group': {
-            store.commitNodeMove();
-            bridge.renderFrame();
-            break;
-          }
-          case 'waypoint': {
-            bridge.renderFrame();
-            break;
-          }
-          default: {
-            break;
-          }
-        }
-        dragMode = 'none';
-        nodesStartPositions.clear();
-      };
-
-      /**
-       * Handles right-click events to display context actions for nodes, groups, edges, or the canvas.
-       */
-      const onContextMenu = (event: MouseEvent): void => {
-        if (!bridge) return;
-        event.preventDefault();
-        const canvasRect = canvasElement.getBoundingClientRect();
-        const screenX = event.clientX - canvasRect.left;
-        const screenY = event.clientY - canvasRect.top;
-        const world = bridge.screenToWorld(screenX, screenY);
-        const windowWidth = globalThis.window ? window.innerWidth : 1200;
-        const windowHeight = globalThis.window ? window.innerHeight : 800;
-
-        const hit = bridge.hitTestSync(screenX, screenY);
-        let targetType: 'empty' | 'node' | 'group' | 'selection' | 'edge' = 'empty';
-        let targetId = '';
-        let targetGroupId = '';
-
-        if (hit?.type === 'edge' && hit.edgeId) {
-          targetType = 'edge';
-          targetId = hit.edgeId;
-          store.selectEdge(hit.edgeId);
-          bridge.setSelection([], [hit.edgeId]);
-        } else if (hit?.type === 'node') {
-          const isSelected = store.getState().selectedNodeIds.includes(hit.nodeId);
-          if (store.getState().selectedNodeIds.length > 1 && isSelected) {
-            targetType = 'selection';
-          } else {
-            targetType = 'node';
-            targetId = hit.nodeId;
-            store.selectNode(hit.nodeId);
-            bridge.setSelection([hit.nodeId]);
-          }
-          const node = store.getState().graph.nodes.find((n) => n.id === hit.nodeId);
-          if (node?.groupId) {
-            targetGroupId = node.groupId;
-          }
-        } else {
-          // Check if cursor is inside any group bounds
-          const groupHit = findGroupAtPoint(
-            store.getState().graph.groups,
-            store.getState().graph.nodes,
-            world.x,
-            world.y,
-          );
-          if (groupHit) {
-            targetType = 'group';
-            targetGroupId = groupHit.id;
-          }
-        }
-
-        setContextMenu({
-          open: true,
-          x: Math.min(event.clientX, windowWidth - 280),
-          y: Math.min(event.clientY, windowHeight - 400),
-          worldX: world.x,
-          worldY: world.y,
-          query: '',
-          targetType,
-          targetId,
-          targetGroupId,
-        });
-      };
-
-      /**
-       * Handles global keyboard shortcuts for escape navigation, node deletion, and clipboard actions.
-       */
-      const onKeyDown = (event: KeyboardEvent): void => {
-        if (event.key === 'Escape') {
-          if (store.canNavigateBack()) {
-            store.navigateBack();
-            bridge?.setGraph(
-              store.getState().graph.nodes,
-              store.getState().graph.edges,
-              store.getState().graph.groups ?? [],
-            );
-            bridge?.renderFrame();
-          } else {
-            setContextMenu((previous) => (previous.open ? { ...previous, open: false } : previous));
-            store.deselectAll();
-            bridge?.setSelection([], []);
-            bridge?.renderFrame();
-          }
-        } else if (event.key === 'Delete' || event.key === 'Backspace') {
-          if (
-            typeof document !== 'undefined' &&
-            (document.activeElement instanceof HTMLInputElement ||
-              document.activeElement instanceof HTMLTextAreaElement)
-          ) {
-            return;
-          }
-          if (store.getState().activeEdgeId) {
-            store.removeActiveEdge();
-            bridge?.setGraph(
-              store.getState().graph.nodes,
-              store.getState().graph.edges,
-              store.getState().graph.groups ?? [],
-            );
-            bridge?.renderFrame();
-          } else if (store.getState().selectedNodeIds.length > 0) {
-            store.deleteSelected();
-            bridge?.setGraph(
-              store.getState().graph.nodes,
-              store.getState().graph.edges,
-              store.getState().graph.groups ?? [],
-            );
-            bridge?.renderFrame();
-          }
-        }
-      };
-
-      canvasElement.addEventListener('wheel', onWheel, { passive: false });
-      canvasElement.addEventListener('pointerdown', onPointerDown);
-      canvasElement.addEventListener('pointermove', onPointerMove);
-      canvasElement.addEventListener('pointerup', onPointerUp);
-      canvasElement.addEventListener('pointercancel', onPointerUp);
-      canvasElement.addEventListener('contextmenu', onContextMenu);
-      if (globalThis.window !== undefined) {
-        globalThis.addEventListener('keydown', onKeyDown);
-      }
-
-      cleanupListeners = () => {
-        clearInterval(profilerInterval);
-        canvasElement.removeEventListener('wheel', onWheel);
-        canvasElement.removeEventListener('pointerdown', onPointerDown);
-        canvasElement.removeEventListener('pointermove', onPointerMove);
-        canvasElement.removeEventListener('pointerup', onPointerUp);
-        canvasElement.removeEventListener('pointercancel', onPointerUp);
-        canvasElement.removeEventListener('contextmenu', onContextMenu);
-        if (globalThis.window !== undefined) {
-          globalThis.removeEventListener('keydown', onKeyDown);
-        }
-      };
+      cleanupListeners = setupCanvasEventListeners({
+        canvasElement,
+        bridge,
+        store,
+        setContextMenu,
+        setSelectionSquare,
+        recordPerfMetrics,
+      });
     }
 
     return () => {
@@ -2441,6 +3749,29 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
     }
   };
 
+  const [copiedExport, setCopiedExport] = useState(false);
+
+  /**
+   * Toggles between light and dark themes.
+   */
+  const handleToggleTheme = (): void => {
+    const nextTheme = resolvedTheme === 'dark' ? 'light' : 'dark';
+    setResolvedTheme(nextTheme);
+    bridgeReference.current?.setTheme(nextTheme);
+  };
+
+  /**
+   * Copies exported source to the clipboard.
+   */
+  const handleCopyExport = (): void => {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(exportedSource).then(() => {
+        setCopiedExport(true);
+        setTimeout(() => setCopiedExport(false), 2000);
+      });
+    }
+  };
+
   /**
    * Triggers asynchronous graph compilation and WebAssembly execution.
    */
@@ -2458,329 +3789,57 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
       className={classNames(styles.editorContainer, properties.className)}
       data-theme={resolvedTheme}
     >
-      {/* Top Application Toolbar */}
-      <header className={styles.toolbar}>
-        <div className={styles.toolbarGroup}>
-          <span
-            style={{
-              fontWeight: 700,
-              fontSize: '14px',
-              letterSpacing: '0.02em',
-            }}
-          >
-            Flint Node Graph
-          </span>
-          <div
-            className={styles.buttonGroup}
-            role="group"
-            aria-label="Graph Execution and Export"
-          >
-            <button
-              type="button"
-              className={classNames(styles.toolbarBtn, styles.toolbarBtnPrimary)}
-              onClick={handleRun}
-              disabled={editorState.isExecuting}
-            >
-              {editorState.isExecuting ? 'Running...' : 'Run Wasm'}
-            </button>
-            <button
-              type="button"
-              className={styles.toolbarBtn}
-              onClick={handleExport}
-            >
-              Export Flint
-            </button>
-            <button
-              type="button"
-              className={styles.toolbarBtn}
-              onClick={() => {
-                const nextTheme = resolvedTheme === 'dark' ? 'light' : 'dark';
-                setResolvedTheme(nextTheme);
-                bridgeReference.current?.setTheme(nextTheme);
-                bridgeReference.current?.renderFrame();
-              }}
-              aria-label={`Switch to ${resolvedTheme === 'dark' ? 'Light' : 'Dark'} mode`}
-            >
-              {resolvedTheme === 'dark' ? '☀️ Light' : '🌙 Dark'}
-            </button>
-          </div>
+      <FlintEditorToolbar
+        isExecuting={editorState.isExecuting}
+        canUndo={editorState.canUndo}
+        canRedo={editorState.canRedo}
+        renderer={properties.renderer}
+        theme={resolvedTheme}
+        onRun={handleRun}
+        onExport={handleExport}
+        onUndo={() => store.undo()}
+        onRedo={() => store.redo()}
+        onFitView={() => bridgeReference.current?.fitView()}
+        onToggleTheme={handleToggleTheme}
+        onOpenPerfModal={() => setShowPerfModal(true)}
+      />
 
-          <div
-            className={styles.buttonGroup}
-            role="group"
-            aria-label="History Actions"
-          >
-            <button
-              type="button"
-              className={styles.toolbarBtn}
-              disabled={!editorState.canUndo}
-              onClick={() => store.undo()}
-            >
-              Undo
-            </button>
-            <button
-              type="button"
-              className={styles.toolbarBtn}
-              disabled={!editorState.canRedo}
-              onClick={() => store.redo()}
-            >
-              Redo
-            </button>
-          </div>
+      <div className={styles.editorWorkspace}>
+        <FlintEditorPalette
+          searchQuery={searchQuery}
+          populatedCategories={populatedCategories}
+          onSearchChange={setSearchQuery}
+          onAddNode={handleAddNode}
+        />
 
-          <div
-            className={styles.buttonGroup}
-            role="group"
-            aria-label="Node Structuring Actions"
-          >
-            <button
-              type="button"
-              className={styles.toolbarBtn}
-              disabled={editorState.selectedNodeIds.length === 0}
-              onClick={() => store.groupSelectedNodes()}
-            >
-              Group
-            </button>
-            <button
-              type="button"
-              className={styles.toolbarBtn}
-              disabled={editorState.selectedNodeIds.length === 0}
-              onClick={() => store.createMetaNodeFromSelected()}
-            >
-              Create Meta
-            </button>
-            <button
-              type="button"
-              className={styles.toolbarBtn}
-              disabled={
-                !editorState.selectedNodeIds.some(
-                  (id) => editorState.graph.nodes.find((node) => node?.id === id)?.groupId,
-                )
-              }
-              onClick={() => store.ungroupSelected()}
-            >
-              Ungroup
-            </button>
-            <button
-              type="button"
-              className={classNames(styles.toolbarBtn, styles.toolbarBtnError)}
-              disabled={editorState.selectedNodeIds.length === 0 && !editorState.activeEdgeId}
-              onClick={() => store.deleteSelected()}
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-
-        <div className={styles.toolbarGroup}>
-          <span
-            className={classNames(
-              styles.statusBadge,
-              editorState.validation.valid ? styles.statusBadgeSuccess : styles.statusBadgeError,
-            )}
-          >
-            {editorState.validation.valid ? 'Valid DAG' : `${editorState.validation.issues.length} Issues`}
-          </span>
-          <span
-            className={classNames(
-              styles.statusBadge,
-              isFallback ? styles.statusBadgeWarning : styles.statusBadgePrimary,
-            )}
-          >
-            {isFallback ? '2D Canvas' : 'WebGPU'}
-          </span>
-          <button
-            type="button"
-            className={classNames(styles.toolbarBtn, styles.toolbarBtnGhost)}
-            onClick={() => setShowPerfModal(true)}
-            aria-label="Click to view detailed D3 performance breakdown"
-          >
-            <span className={styles.perfDot} />
-            <span>
-              update: {perfMetrics.updateTimeMs.toFixed(1)}ms | render: {perfMetrics.renderTimeMs.toFixed(1)}ms{' '}
-              {isFallback ? '(2D)' : '(WebGPU)'}
-            </span>
-          </button>
-        </div>
-      </header>
-
-      {/* Main Workspace */}
-      <div className={styles.mainArea}>
-        {/* Left Node Palette Drawer */}
-        <aside className={styles.paletteDrawer}>
-          <div className={styles.paletteHeader}>
-            <input
-              type="text"
-              aria-label="Search node palette"
-              placeholder="Search operations..."
-              className={styles.paletteSearch}
-              value={searchQuery}
-              onInput={(event: unknown) => {
-                const value = extractInputElementValue(event);
-                if (value !== undefined) {
-                  setSearchQuery(value);
-                }
-              }}
-            />
-          </div>
-
-          <div className={styles.paletteList}>
-            {editorState.registeredMetaNodes && editorState.registeredMetaNodes.length > 0 && (
-              <details
-                className={styles.categoryCollapse}
-                open={true}
-              >
-                <summary className={styles.categorySummary}>
-                  <span>META NODES</span>
-                  <span className={styles.categoryBadge}>{editorState.registeredMetaNodes.length}</span>
-                </summary>
-                <div className={styles.categoryItemList}>
-                  {editorState.registeredMetaNodes.map((meta) => (
-                    <button
-                      key={meta?.id ?? ''}
-                      type="button"
-                      draggable={true}
-                      className={styles.paletteItem}
-                      onClick={() => store.instantiateMetaNode(meta.id)}
-                      onDragStart={(event: unknown) => {
-                        if (typeof DragEvent !== 'undefined' && event instanceof DragEvent && event.dataTransfer) {
-                          event.dataTransfer.setData('text/plain', `meta_template:${meta.id}`);
-                          event.dataTransfer.effectAllowed = 'copy';
-                        }
-                      }}
-                      onContextMenu={(event: unknown) => {
-                        if (typeof MouseEvent !== 'undefined' && event instanceof MouseEvent) {
-                          event.preventDefault();
-                          event.stopPropagation();
-                          store.removeRegisteredMetaNode(meta.id);
-                        }
-                      }}
-                      title="Click or drag to add. Right-click to remove if unreferenced."
-                    >
-                      <span className={styles.paletteItemTitle}>{meta.title}</span>
-                      <span className={styles.paletteItemDesc}>
-                        {meta.description ?? 'Reusable composite meta node function'}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </details>
-            )}
-            {populatedCategories.map((group) => (
-              <details
-                key={group.category}
-                className={styles.categoryCollapse}
-                open={true}
-              >
-                <summary className={styles.categorySummary}>
-                  <span>{group.category.toUpperCase()}</span>
-                  <span className={styles.categoryBadge}>{group.definitions.length}</span>
-                </summary>
-                <div className={styles.categoryItemList}>
-                  {group.definitions.map((item) => (
-                    <button
-                      key={item?.operation ?? ''}
-                      type="button"
-                      draggable={true}
-                      className={styles.paletteItem}
-                      onClick={() => handleAddNode(item.operation)}
-                      onDragStart={(event: unknown) => {
-                        if (typeof DragEvent !== 'undefined' && event instanceof DragEvent && event.dataTransfer) {
-                          event.dataTransfer.setData('text/plain', item.operation);
-                          event.dataTransfer.effectAllowed = 'copy';
-                        }
-                      }}
-                    >
-                      <span className={styles.paletteItemTitle}>{item.title}</span>
-                      <span className={styles.paletteItemDesc}>{item.description}</span>
-                    </button>
-                  ))}
-                </div>
-              </details>
-            ))}
-          </div>
-        </aside>
-
-        {/* Center WebGPU Canvas */}
-        <main
+        <div
+          ref={containerReference}
           className={styles.canvasContainer}
           onDragOver={(event: unknown) => {
             if (typeof DragEvent !== 'undefined' && event instanceof DragEvent) {
               event.preventDefault();
-              if (event.dataTransfer) {
-                event.dataTransfer.dropEffect = 'copy';
-              }
             }
           }}
           onDrop={(event: unknown) => {
             const op = extractDragOperationType(event);
-            if (op && bridgeReference.current && canvasReference.current) {
-              if (typeof DragEvent !== 'undefined' && event instanceof DragEvent) {
-                event.preventDefault();
-              }
+            if (
+              op &&
+              bridgeReference.current &&
+              canvasReference.current &&
+              typeof DragEvent !== 'undefined' &&
+              event instanceof DragEvent
+            ) {
               const rect = canvasReference.current.getBoundingClientRect();
-              const clientX = typeof MouseEvent !== 'undefined' && event instanceof MouseEvent ? event.clientX : 0;
-              const clientY = typeof MouseEvent !== 'undefined' && event instanceof MouseEvent ? event.clientY : 0;
-              const world = bridgeReference.current.screenToWorld(clientX - rect.left, clientY - rect.top);
-              if (op.startsWith('meta_template:')) {
-                const templateId = op.slice('meta_template:'.length);
-                store.instantiateMetaNode(templateId, world);
-              } else {
-                store.addNode(op, world);
-              }
+              const world = bridgeReference.current.screenToWorld(event.clientX - rect.left, event.clientY - rect.top);
+              store.addNode(op, { x: Math.round(world.x), y: Math.round(world.y) });
             }
           }}
         >
-          {editorState.breadcrumbs && editorState.breadcrumbs.length > 1 && (
-            <div className={styles.breadcrumbBar}>
-              <button
-                type="button"
-                className={classNames(styles.toolbarBtn, styles.toolbarBtnGhost)}
-                onClick={() => {
-                  store.navigateBack();
-                  bridgeReference.current?.setGraph(
-                    store.getState().graph.nodes,
-                    store.getState().graph.edges,
-                    store.getState().graph.groups ?? [],
-                  );
-                  bridgeReference.current?.renderFrame();
-                }}
-                aria-label="Back to parent graph"
-              >
-                ← Back
-              </button>
-              <span className={styles.breadcrumbDivider}>|</span>
-              <ForgeBreadcrumb
-                items={editorState.breadcrumbs.map((crumb) => ({ label: crumb.title }))}
-                size="xs"
-              />
-            </div>
-          )}
-          {isFallback && (
-            <div
-              style={{
-                position: 'absolute',
-                top: '12px',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                backgroundColor: 'rgba(210, 153, 34, 0.15)',
-                border: '1px solid #d29922',
-                color: '#f0f6fc',
-                fontSize: '11px',
-                padding: '4px 12px',
-                borderRadius: '16px',
-                zIndex: 20,
-                pointerEvents: 'none',
-              }}
-            >
-              ⚠ WebGPU not available in this environment. Operating in 2D Canvas fallback mode.
-            </div>
-          )}
           <canvas
-            key={properties.renderer ?? 'default'}
             ref={canvasReference}
             className={styles.canvas}
           />
+
           {selectionSquare.active && (
             <div
               className={styles.selectionSquare}
@@ -2792,840 +3851,53 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
               }}
             />
           )}
-        </main>
 
-        {/* Right Property & Output Inspector */}
-        <aside className={styles.inspectorDrawer}>
-          <div className={styles.inspectorSection}>
-            <div className={styles.inspectorTitle}>Inspector</div>
-            {selectedGroup ? (
-              <div>
-                <div className={styles.inspectorRow}>
-                  <label
-                    htmlFor="inspector-group-title"
-                    className={styles.inspectorLabel}
-                  >
-                    Group Name
-                  </label>
-                  <input
-                    id="inspector-group-title"
-                    value={selectedGroup.title}
-                    type="text"
-                    aria-label="Group Name"
-                    className={styles.inspectorInput}
-                    onInput={(event: unknown) => {
-                      const value = extractInputElementValue(event);
-                      if (value !== undefined) {
-                        store.setGroupTitle(selectedGroup.id, value);
-                        activeBridge?.setGraph(
-                          store.getState().graph.nodes,
-                          store.getState().graph.edges,
-                          store.getState().graph.groups ?? [],
-                        );
-                        activeBridge?.renderFrame();
-                      }
-                    }}
-                  />
-                </div>
-                <div
-                  className={styles.inspectorRow}
-                  style={{ flexDirection: 'column', alignItems: 'flex-start' }}
-                >
-                  <span className={styles.inspectorLabel}>Group Color</span>
-                  <div className={styles.colorPickerRow}>
-                    {['#58a6ff', '#a371f7', '#3fb950', '#d29922', '#f85149', '#39c5bb'].map((c) => (
-                      <button
-                        key={c}
-                        type="button"
-                        className={styles.colorSwatch}
-                        style={{
-                          backgroundColor: c,
-                          border: selectedGroup.color === c ? '2px solid #ffffff' : '1px solid #30363d',
-                        }}
-                        onClick={() => {
-                          store.setGroupColor(selectedGroup.id, c);
-                          bridgeReference.current?.setGraph(
-                            store.getState().graph.nodes,
-                            store.getState().graph.edges,
-                            store.getState().graph.groups ?? [],
-                          );
-                          bridgeReference.current?.renderFrame();
-                        }}
-                      />
-                    ))}
-                  </div>
-                </div>
-                <div className={styles.inspectorRow}>
-                  <span className={styles.inspectorLabel}>Member Nodes</span>
-                  <span style={{ fontSize: '12px' }}>{selectedGroup.nodeIds.length} nodes</span>
-                </div>
-                <div style={{ marginTop: '12px' }}>
-                  <button
-                    type="button"
-                    className={styles.toolbarBtn}
-                    onClick={() => {
-                      store.ungroup(selectedGroup.id);
-                      bridgeReference.current?.setGraph(
-                        store.getState().graph.nodes,
-                        store.getState().graph.edges,
-                        store.getState().graph.groups ?? [],
-                      );
-                      bridgeReference.current?.renderFrame();
-                    }}
-                  >
-                    Ungroup
-                  </button>
-                </div>
-              </div>
-            ) : selectedEdge ? (
-              <div>
-                <div className={styles.inspectorRow}>
-                  <span className={styles.inspectorLabel}>Connection ID</span>
-                  <span
-                    style={{
-                      fontSize: '12px',
-                      fontFamily: 'var(--mp-font-family-mono, "Datatype", monospace)',
-                    }}
-                  >
-                    {selectedEdge.id}
-                  </span>
-                </div>
-                <div className={styles.inspectorRow}>
-                  <span className={styles.inspectorLabel}>Waypoints</span>
-                  <span style={{ fontSize: '12px' }}>{selectedEdge.points?.length ?? 0} custom points</span>
-                </div>
-                <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <button
-                    type="button"
-                    className={styles.toolbarBtn}
-                    onClick={() => {
-                      store.clearEdgePoints(selectedEdge.id);
-                      bridgeReference.current?.setGraph(
-                        store.getState().graph.nodes,
-                        store.getState().graph.edges,
-                        store.getState().graph.groups ?? [],
-                      );
-                      bridgeReference.current?.renderFrame();
-                    }}
-                  >
-                    Reset Path (Default Curve)
-                  </button>
-                  <button
-                    type="button"
-                    className={classNames(styles.toolbarBtn, styles.toolbarBtnError)}
-                    onClick={() => {
-                      store.removeEdge(selectedEdge.id);
-                      bridgeReference.current?.setGraph(
-                        store.getState().graph.nodes,
-                        store.getState().graph.edges,
-                        store.getState().graph.groups ?? [],
-                      );
-                      bridgeReference.current?.renderFrame();
-                    }}
-                  >
-                    Delete Connection
-                  </button>
-                </div>
-              </div>
-            ) : selectedNode ? (
-              <div>
-                <div className={styles.inspectorRow}>
-                  <label
-                    htmlFor="inspector-node-title"
-                    className={styles.inspectorLabel}
-                  >
-                    Title
-                  </label>
-                  <input
-                    id="inspector-node-title"
-                    value={selectedNode.title}
-                    type="text"
-                    aria-label="Node Title"
-                    className={styles.inspectorInput}
-                    onInput={(event: unknown) => {
-                      const value = extractInputElementValue(event);
-                      if (value !== undefined) {
-                        store.renameNode(selectedNode.id, value);
-                      }
-                    }}
-                  />
-                </div>
-                <div className={styles.inspectorRow}>
-                  <label
-                    htmlFor="inspector-node-op"
-                    className={styles.inspectorLabel}
-                  >
-                    Operation
-                  </label>
-                  <input
-                    id="inspector-node-op"
-                    value={selectedNode.operation}
-                    type="text"
-                    aria-label="Node Operation"
-                    className={styles.inspectorInput}
-                    readOnly
-                  />
-                </div>
-                <div className={styles.inspectorRow}>
-                  <label
-                    htmlFor="inspector-node-cat"
-                    className={styles.inspectorLabel}
-                  >
-                    Category
-                  </label>
-                  <input
-                    id="inspector-node-cat"
-                    value={selectedNode.category}
-                    type="text"
-                    aria-label="Node Category"
-                    className={styles.inspectorInput}
-                    readOnly
-                  />
-                </div>
-
-                {/* Node Documentation */}
-                {selectedDefinition && <div className={styles.docBlock}>{selectedDefinition.description}</div>}
-
-                {/* Meta Node Subgraph Info */}
-                {selectedNode.metaSubgraph && (
-                  <div
-                    className={styles.docBlock}
-                    style={{ borderLeftColor: '#79c0ff' }}
-                  >
-                    <strong>Composite Meta Node:</strong> Contains {selectedNode.metaSubgraph.nodes.length} internal
-                    nodes and {selectedNode.metaSubgraph.edges.length} connections.
-                    <div style={{ marginTop: '8px' }}>
-                      <ForgeButton
-                        variant="secondary"
-                        size="xs"
-                        onClick={() => store.expandMetaNode(selectedNode.id)}
-                      >
-                        Expand / Unpack Meta Node
-                      </ForgeButton>
-                    </div>
-                  </div>
-                )}
-
-                {/* Input Pins Table */}
-                {selectedNode.inputs.length > 0 && (
-                  <div>
-                    <span
-                      className={styles.inspectorLabel}
-                      style={{ fontWeight: 600 }}
-                    >
-                      Input Pins
-                    </span>
-                    <div className={styles.portTable}>
-                      {selectedNode.inputs.map((port) => (
-                        <div
-                          key={port.id}
-                          className={styles.portTableRow}
-                        >
-                          <span>{port.name}</span>
-                          <ForgeBadge
-                            variant="info"
-                            size="xs"
-                          >
-                            {port.type.reference ?? port.type.name}
-                          </ForgeBadge>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Output Pins Table */}
-                {selectedNode.outputs.length > 0 && (
-                  <div>
-                    <span
-                      className={styles.inspectorLabel}
-                      style={{ fontWeight: 600 }}
-                    >
-                      Output Pins
-                    </span>
-                    <div className={styles.portTable}>
-                      {selectedNode.outputs.map((port) => (
-                        <div
-                          key={port.id}
-                          className={styles.portTableRow}
-                        >
-                          <span>{port.name}</span>
-                          <ForgeBadge
-                            variant="success"
-                            size="xs"
-                          >
-                            {port.type.reference ?? port.type.name}
-                          </ForgeBadge>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Property Values Editor */}
-                {selectedNode.properties?.value !== undefined && (
-                  <div className={styles.inspectorRow}>
-                    <label
-                      htmlFor="inspector-prop-val"
-                      className={styles.inspectorLabel}
-                    >
-                      Value
-                    </label>
-                    <input
-                      id="inspector-prop-val"
-                      type="number"
-                      aria-label="Literal Value"
-                      className={styles.inspectorInput}
-                      value={String(selectedNode.properties.value)}
-                      onInput={(event: unknown) => {
-                        const raw = extractInputElementValue(event);
-                        if (raw !== undefined) {
-                          const numberValue = Number(raw);
-                          store.updateNodeProperty(
-                            selectedNode.id,
-                            'value',
-                            Number.isNaN(numberValue) ? 0 : numberValue,
-                          );
-                        }
-                      }}
-                    />
-                  </div>
-                )}
-
-                {selectedNode.properties?.name !== undefined && (
-                  <div className={styles.inspectorRow}>
-                    <label
-                      htmlFor="inspector-prop-name"
-                      className={styles.inspectorLabel}
-                    >
-                      Parameter Name
-                    </label>
-                    <input
-                      id="inspector-prop-name"
-                      type="text"
-                      aria-label="Parameter Name"
-                      className={styles.inspectorInput}
-                      value={String(selectedNode.properties.name)}
-                      onInput={(event: unknown) => {
-                        const raw = extractInputElementValue(event);
-                        if (raw !== undefined) {
-                          store.updateNodeProperty(selectedNode.id, 'name', raw);
-                        }
-                      }}
-                    />
-                  </div>
-                )}
-
-                <div className={styles.inspectorRow}>
-                  <span className={styles.inspectorLabel}>Position</span>
-                  <span style={{ fontSize: '12px' }}>
-                    X: {Math.round(selectedNode.position.x)}, Y: {Math.round(selectedNode.position.y)}
-                  </span>
-                </div>
-
-                {(selectedNode.operation === 'flint_code' || selectedNode.kind === 'custom') && (
-                  <div
-                    className={styles.inspectorRow}
-                    style={{ flexDirection: 'column', alignItems: 'flex-start' }}
-                  >
-                    <label
-                      htmlFor="inspector-flint-code"
-                      className={styles.inspectorLabel}
-                    >
-                      Flint Function Code
-                    </label>
-                    <textarea
-                      id="inspector-flint-code"
-                      className={styles.codeEditorTextarea}
-                      value={String(selectedNode.properties?.code ?? '')}
-                      onInput={(event: unknown) => {
-                        const code = extractTextAreaElementValue(event);
-                        if (code !== undefined) {
-                          store.updateCodeNode(
-                            selectedNode.id,
-                            code,
-                            selectedNode.inputs,
-                            selectedNode.outputs,
-                            typeof selectedNode.properties?.functionName === 'string'
-                              ? selectedNode.properties.functionName
-                              : undefined,
-                          );
-                        }
-                      }}
-                    />
-                  </div>
-                )}
-
-                {selectedNode.outputs.length > 1 && (
-                  <div className={styles.inspectorRow}>
-                    <label
-                      htmlFor="inspector-split-outputs"
-                      className={styles.inspectorLabel}
-                    >
-                      Split Outputs to Fields
-                    </label>
-                    <input
-                      id="inspector-split-outputs"
-                      type="checkbox"
-                      checked={selectedNode.splitOutputs !== false}
-                      onChange={() => store.toggleSplitOutputs(selectedNode.id)}
-                    />
-                  </div>
-                )}
-
-                {selectedNode.groupId && (
-                  <div
-                    className={styles.inspectorRow}
-                    style={{ flexDirection: 'column', alignItems: 'flex-start' }}
-                  >
-                    <span className={styles.inspectorLabel}>Group Color</span>
-                    <div className={styles.colorPickerRow}>
-                      {['#58a6ff', '#a371f7', '#3fb950', '#d29922', '#f85149', '#39c5bb'].map((c) => (
-                        <button
-                          key={c}
-                          type="button"
-                          className={styles.colorSwatch}
-                          style={{ backgroundColor: c }}
-                          onClick={() => {
-                            if (selectedNode.groupId) {
-                              store.setGroupColor(selectedNode.groupId, c);
-                              activeBridge?.setGraph(
-                                store.getState().graph.nodes,
-                                store.getState().graph.edges,
-                                store.getState().graph.groups ?? [],
-                              );
-                              activeBridge?.renderFrame();
-                            }
-                          }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <div style={{ marginTop: '12px' }}>
-                  <button
-                    type="button"
-                    className={classNames(styles.toolbarBtn, styles.toolbarBtnError)}
-                    onClick={() => store.removeNode(selectedNode.id)}
-                  >
-                    Delete Node
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div style={{ color: '#8b949e', fontSize: '12px' }}>
-                Select a node, group label, or connection on canvas to view and configure properties.
-              </div>
-            )}
-          </div>
-
-          {/* Execution Results Panel */}
-          <div
-            className={styles.inspectorSection}
-            style={{ borderTop: '1px solid #30363d', paddingTop: '12px' }}
-          >
-            <div className={styles.inspectorTitle}>Execution Output</div>
-            <div className={styles.outputBox}>
-              {editorState.lastError ? (
-                <div style={{ color: '#f85149', fontSize: '12px' }}>{editorState.lastError}</div>
-              ) : Object.entries(editorState.lastOutputs ?? {}).length > 0 ? (
-                <div>
-                  {Object.entries(editorState.lastOutputs ?? {}).map(([key, value]) => (
-                    <div
-                      key={key}
-                      className={styles.inspectorRow}
-                    >
-                      <span className={styles.inspectorLabel}>{key}</span>
-                      <span
-                        style={{
-                          fontSize: '13px',
-                          color: '#3fb950',
-                          fontFamily: 'var(--mp-font-family-mono, "Datatype", monospace)',
-                        }}
-                      >
-                        {String(value)}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div style={{ color: '#8b949e', fontSize: '12px' }}>
-                  {'Click "Run Wasm" to compile and execute graph.'}
-                </div>
-              )}
+          {controller && (
+            <div className={styles.debugScrubberDock}>
+              <ForgeDebugScrubber controller={controller} />
             </div>
-          </div>
-        </aside>
+          )}
+        </div>
+
+        <FlintEditorInspector
+          selectedNode={selectedNode}
+          selectedDefinition={selectedDefinition}
+          selectedGroup={selectedGroup}
+          selectedEdge={selectedEdge}
+          store={store}
+          bridge={bridgeReference.current}
+        />
       </div>
 
-      {/* Floating Right-Click Context Menu */}
-      {contextMenu.open && (
-        <div
-          role="dialog"
-          aria-label="Add Node Context Menu"
-          className={styles.contextMenu}
-          style={{ left: `${contextMenu.x}px`, top: `${contextMenu.y}px` }}
-        >
-          <div className={styles.contextMenuHeader}>
-            <input
-              type="text"
-              placeholder="Search node..."
-              className={styles.contextMenuSearch}
-              value={contextMenu.query}
-              onInput={(event: unknown) => {
-                const query = extractInputElementValue(event);
-                if (query !== undefined) {
-                  setContextMenu({ ...contextMenu, query });
-                }
-              }}
-            />
-          </div>
-          {contextMenu.targetType === 'edge' && contextMenu.targetId && (
-            <div className={styles.contextMenuActions}>
-              <button
-                type="button"
-                className={styles.contextMenuItem}
-                onClick={() => {
-                  store.addEdgePoint(contextMenu.targetId ?? '', {
-                    x: Math.round(contextMenu.worldX),
-                    y: Math.round(contextMenu.worldY),
-                  });
-                  bridgeReference.current?.setGraph(
-                    store.getState().graph.nodes,
-                    store.getState().graph.edges,
-                    store.getState().graph.groups ?? [],
-                  );
-                  bridgeReference.current?.renderFrame();
-                  setContextMenu({ ...contextMenu, open: false });
-                }}
-              >
-                + Add Waypoint Here
-              </button>
-              <button
-                type="button"
-                className={styles.contextMenuItem}
-                onClick={() => {
-                  store.clearEdgePoints(contextMenu.targetId ?? '');
-                  bridgeReference.current?.setGraph(
-                    store.getState().graph.nodes,
-                    store.getState().graph.edges,
-                    store.getState().graph.groups ?? [],
-                  );
-                  bridgeReference.current?.renderFrame();
-                  setContextMenu({ ...contextMenu, open: false });
-                }}
-              >
-                Reset Path (Default Curve)
-              </button>
-              <button
-                type="button"
-                className={styles.contextMenuItem}
-                style={{ color: '#f85149' }}
-                onClick={() => {
-                  store.removeEdge(contextMenu.targetId ?? '');
-                  bridgeReference.current?.setGraph(
-                    store.getState().graph.nodes,
-                    store.getState().graph.edges,
-                    store.getState().graph.groups ?? [],
-                  );
-                  bridgeReference.current?.renderFrame();
-                  setContextMenu({ ...contextMenu, open: false });
-                }}
-              >
-                Remove Connection
-              </button>
-            </div>
-          )}
+      <FlintEditorContextMenu
+        contextMenu={contextMenu}
+        allDefinitions={allDefinitions}
+        store={store}
+        bridge={bridgeReference.current}
+        onClose={() => setContextMenu((previous) => ({ ...previous, open: false }))}
+        onQueryChange={(q) => setContextMenu((previous) => ({ ...previous, query: q }))}
+      />
 
-          {contextMenu.targetType === 'node' && contextMenu.targetId && (
-            <div className={styles.contextMenuActions}>
-              <button
-                type="button"
-                className={styles.contextMenuItem}
-                onClick={() => {
-                  store.copyNode(contextMenu.targetId ?? '');
-                  setContextMenu({ ...contextMenu, open: false });
-                }}
-              >
-                Copy Node
-              </button>
-              {selectedNode?.metaSubgraph && (
-                <div>
-                  <button
-                    type="button"
-                    className={styles.contextMenuItem}
-                    onClick={() => {
-                      store.drillIntoMetaNode(contextMenu.targetId ?? '');
-                      bridgeReference.current?.setGraph(
-                        store.getState().graph.nodes,
-                        store.getState().graph.edges,
-                        store.getState().graph.groups ?? [],
-                      );
-                      bridgeReference.current?.renderFrame();
-                      setContextMenu({ ...contextMenu, open: false });
-                    }}
-                  >
-                    Enter Function (Drill Down)
-                  </button>
-                  <button
-                    type="button"
-                    className={styles.contextMenuItem}
-                    onClick={() => {
-                      store.duplicateMetaNode(contextMenu.targetId ?? '');
-                      bridgeReference.current?.setGraph(
-                        store.getState().graph.nodes,
-                        store.getState().graph.edges,
-                        store.getState().graph.groups ?? [],
-                      );
-                      bridgeReference.current?.renderFrame();
-                      setContextMenu({ ...contextMenu, open: false });
-                    }}
-                  >
-                    Duplicate Meta Node
-                  </button>
-                </div>
-              )}
-              {contextMenu.targetGroupId && (
-                <div>
-                  <button
-                    type="button"
-                    className={styles.contextMenuItem}
-                    onClick={() => {
-                      store.copyGroup(contextMenu.targetGroupId ?? '');
-                      setContextMenu({ ...contextMenu, open: false });
-                    }}
-                  >
-                    Copy Group
-                  </button>
-                  <button
-                    type="button"
-                    className={styles.contextMenuItem}
-                    onClick={() => {
-                      store.ungroup(contextMenu.targetGroupId ?? '');
-                      bridgeReference.current?.setGraph(
-                        store.getState().graph.nodes,
-                        store.getState().graph.edges,
-                        store.getState().graph.groups ?? [],
-                      );
-                      bridgeReference.current?.renderFrame();
-                      setContextMenu({ ...contextMenu, open: false });
-                    }}
-                  >
-                    Ungroup
-                  </button>
-                </div>
-              )}
-              {selectedNode && selectedNode.outputs.length > 1 && (
-                <button
-                  type="button"
-                  className={styles.contextMenuItem}
-                  onClick={() => {
-                    store.toggleSplitOutputs(contextMenu.targetId ?? '');
-                    setContextMenu({ ...contextMenu, open: false });
-                  }}
-                >
-                  {selectedNode.splitOutputs === false ? 'Split Outputs to Fields' : 'Combine Outputs to Record'}
-                </button>
-              )}
-              <button
-                type="button"
-                className={styles.contextMenuItem}
-                style={{ color: '#f85149' }}
-                onClick={() => {
-                  store.removeNode(contextMenu.targetId ?? '');
-                  bridgeReference.current?.setGraph(
-                    store.getState().graph.nodes,
-                    store.getState().graph.edges,
-                    store.getState().graph.groups ?? [],
-                  );
-                  bridgeReference.current?.renderFrame();
-                  setContextMenu({ ...contextMenu, open: false });
-                }}
-              >
-                Delete Node
-              </button>
-            </div>
-          )}
-
-          {contextMenu.targetType === 'group' && contextMenu.targetGroupId && (
-            <div className={styles.contextMenuActions}>
-              <button
-                type="button"
-                className={styles.contextMenuItem}
-                onClick={() => {
-                  store.copyGroup(contextMenu.targetGroupId ?? '');
-                  setContextMenu({ ...contextMenu, open: false });
-                }}
-              >
-                Copy Group (with Connections)
-              </button>
-              <button
-                type="button"
-                className={styles.contextMenuItem}
-                onClick={() => {
-                  store.ungroup(contextMenu.targetGroupId ?? '');
-                  bridgeReference.current?.setGraph(
-                    store.getState().graph.nodes,
-                    store.getState().graph.edges,
-                    store.getState().graph.groups ?? [],
-                  );
-                  bridgeReference.current?.renderFrame();
-                  setContextMenu({ ...contextMenu, open: false });
-                }}
-              >
-                Ungroup
-              </button>
-              <div style={{ padding: '4px 8px', fontSize: '11px', color: '#8b949e' }}>Group Color:</div>
-              <div
-                className={styles.colorPickerRow}
-                style={{ padding: '0 8px' }}
-              >
-                {['#58a6ff', '#a371f7', '#3fb950', '#d29922', '#f85149', '#39c5bb'].map((c) => (
-                  <button
-                    key={c}
-                    type="button"
-                    className={styles.colorSwatch}
-                    style={{ backgroundColor: c }}
-                    onClick={() => {
-                      store.setGroupColor(contextMenu.targetGroupId ?? '', c);
-                      bridgeReference.current?.setGraph(
-                        store.getState().graph.nodes,
-                        store.getState().graph.edges,
-                        store.getState().graph.groups ?? [],
-                      );
-                      bridgeReference.current?.renderFrame();
-                      setContextMenu({ ...contextMenu, open: false });
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {contextMenu.targetType === 'selection' && (
-            <div className={styles.contextMenuActions}>
-              <button
-                type="button"
-                className={styles.contextMenuItem}
-                onClick={() => {
-                  store.copySelection();
-                  setContextMenu({ ...contextMenu, open: false });
-                }}
-              >
-                Copy Selected ({editorState.selectedNodeIds.length} Nodes + Connections)
-              </button>
-              <button
-                type="button"
-                className={styles.contextMenuItem}
-                onClick={() => {
-                  store.groupSelectedNodes();
-                  setContextMenu({ ...contextMenu, open: false });
-                }}
-              >
-                Group Selected
-              </button>
-              <button
-                type="button"
-                className={styles.contextMenuItem}
-                onClick={() => {
-                  store.createMetaNodeFromSelected();
-                  setContextMenu({ ...contextMenu, open: false });
-                }}
-              >
-                Create Meta Node
-              </button>
-              <button
-                type="button"
-                className={styles.contextMenuItem}
-                style={{ color: '#f85149' }}
-                onClick={() => {
-                  store.deleteSelected();
-                  setContextMenu({ ...contextMenu, open: false });
-                }}
-              >
-                Delete Selected
-              </button>
-            </div>
-          )}
-
-          {editorState.hasClipboard && (
-            <div
-              className={styles.contextMenuActions}
-              style={{ borderTop: '1px solid #30363d' }}
-            >
-              <button
-                type="button"
-                className={styles.contextMenuItem}
-                onClick={() => {
-                  store.paste({ x: contextMenu.worldX, y: contextMenu.worldY });
-                  bridgeReference.current?.setGraph(
-                    store.getState().graph.nodes,
-                    store.getState().graph.edges,
-                    store.getState().graph.groups ?? [],
-                  );
-                  bridgeReference.current?.renderFrame();
-                  setContextMenu({ ...contextMenu, open: false });
-                }}
-              >
-                Paste
-              </button>
-            </div>
-          )}
-          <div className={styles.contextMenuList}>
-            {allDefinitions
-              .filter(
-                (definition) =>
-                  !contextMenu.query ||
-                  definition.title.toLowerCase().includes(contextMenu.query.toLowerCase()) ||
-                  definition.operation.toLowerCase().includes(contextMenu.query.toLowerCase()),
-              )
-              .map((item) => (
-                <button
-                  key={item.operation}
-                  type="button"
-                  className={styles.contextMenuItem}
-                  onClick={() => {
-                    store.addNode(item.operation, {
-                      x: contextMenu.worldX,
-                      y: contextMenu.worldY,
-                    });
-                    setContextMenu({ ...contextMenu, open: false });
-                  }}
-                >
-                  <span style={{ fontWeight: 600 }}>{item.title}</span>
-                  <span style={{ fontSize: '10px', color: '#8b949e' }}>{item.description}</span>
-                </button>
-              ))}
-          </div>
-        </div>
-      )}
-
-      {/* Bottom Trace Debugger Bar */}
-      <ForgeDebugScrubber controller={store.getTraceController()} />
-
-      {/* Code Export Dialog Modal */}
       <FlintCodeExportModal
         show={showExportModal}
         source={exportedSource}
+        copied={copiedExport}
         onClose={() => setShowExportModal(false)}
+        onCopy={handleCopyExport}
       />
 
-      {/* Detailed D3 Performance Profiler Modal */}
       <FlintPerfProfilerModal
         show={showPerfModal}
-        onClose={() => setShowPerfModal(false)}
         perfMetrics={perfMetrics}
-        perfHistory={perfHistory}
-        telemetryInterval={telemetryInterval}
-        setTelemetryInterval={setTelemetryInterval}
-        spriteSheetMode={spriteSheetMode}
-        setSpriteSheetMode={setSpriteSheetMode}
-        spriteSheetGrid={spriteSheetGrid}
-        setSpriteSheetGrid={setSpriteSheetGrid}
-        hoveredGlyph={hoveredGlyph}
+        d3ChartCanvasReference={d3ChartCanvasReference}
         spriteSheetCanvasReference={spriteSheetCanvasReference}
         inspectCanvasReference={inspectCanvasReference}
+        hoveredGlyph={hoveredGlyph}
+        spriteSheetMode={spriteSheetMode}
+        spriteSheetGrid={spriteSheetGrid}
+        onClose={() => setShowPerfModal(false)}
+        onSetSpriteSheetMode={setSpriteSheetMode}
+        onToggleSpriteSheetGrid={() => setSpriteSheetGrid((previous) => !previous)}
         onSpriteSheetPointerMove={onSpriteSheetPointerMove}
         onSpriteSheetPointerLeave={onSpriteSheetPointerLeave}
         paintSpriteSheet={paintSpriteSheet}
