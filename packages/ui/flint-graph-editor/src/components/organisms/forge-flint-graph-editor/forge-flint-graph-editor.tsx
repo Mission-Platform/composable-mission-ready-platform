@@ -376,24 +376,17 @@ function isPointInsideNode(
  * Safely extracts string value from an HTML input or textarea event target.
  */
 function extractEventTargetStringValue(event: unknown): string | undefined {
-  if (event && typeof event === 'object' && 'target' in event) {
-    const target = Reflect.get(event, 'target');
-    if (target && typeof target === 'object' && 'value' in target) {
-      const value = Reflect.get(target, 'value');
-      return typeof value === 'string' ? value : undefined;
-    }
-  }
-  return undefined;
+  const target = (event as { target?: { value?: unknown } } | undefined)?.target;
+  const value = target?.value;
+  return typeof value === 'string' ? value : undefined;
 }
 
 /**
  * Safely extracts operation name from drag data transfer payload.
  */
 function extractDragOperationType(event: unknown): string | undefined {
-  if (typeof DragEvent !== 'undefined' && event instanceof DragEvent && event.dataTransfer) {
-    return event.dataTransfer.getData('text/plain');
-  }
-  return undefined;
+  const dataTransfer = (event as { dataTransfer?: DataTransfer } | undefined)?.dataTransfer;
+  return dataTransfer?.getData('text/plain');
 }
 
 interface GroupBoundingRect {
@@ -446,13 +439,20 @@ function findGroupAtPoint(
 ): FlintGraphGroup | undefined {
   if (!groups || groups.length === 0) return undefined;
   const nodeMap = new Map(nodes.map((n) => [n.id, n]));
-  for (const group of groups) {
+  return groups.find((group) => {
     const box = computeFullGroupBoundingBox(group, nodeMap);
-    if (box && isPointInPaddedBox(box, worldX, worldY)) {
-      return group;
-    }
-  }
-  return undefined;
+    return box !== undefined && isPointInPaddedBox(box, worldX, worldY);
+  });
+}
+
+/**
+ * Synchronizes store graph state with renderer bridge and renders a frame.
+ */
+function syncGraphWithBridge(store: FlintEditorStore, bridge?: FlintRendererBridge): void {
+  if (!bridge) return;
+  const state = store.getState();
+  bridge.setGraph(state.graph.nodes, state.graph.edges, state.graph.groups ?? []);
+  bridge.renderFrame();
 }
 
 /**
@@ -1110,6 +1110,33 @@ interface SpriteSheetGlyphDetailsProperties {
 }
 
 /**
+ * Text description rows displaying typographical and bounding box metrics.
+ */
+function SpriteSheetMetricRows(properties: { readonly glyph: HoveredGlyphInfo }): MpElement {
+  const glyph = properties.glyph;
+  return (
+    <div style={{ fontSize: '11px', lineHeight: '1.5', color: '#c9d1d9' }}>
+      <div>
+        <strong>Dimensions & Advance:</strong> {glyph.width}×{glyph.height}px | Advance H: {glyph.advance}px | Advance
+        V: {glyph.vertAdvance}px
+      </div>
+      <div>
+        <strong>Bearings:</strong> Left (LSB): {glyph.horiBearingX}px | Right (RSB): {glyph.rightBearing}px | Top:{' '}
+        {glyph.horiBearingY}px
+      </div>
+      <div>
+        <strong>Font Metrics:</strong> Ascent: {glyph.ascent}px | Descent: {glyph.descent}px | LineGap: {glyph.linegap}
+        px | Int Leading: {glyph.internalLeading}px | Ext Leading: {glyph.externalLeading}px
+      </div>
+      <div>
+        <strong>BBox & Origin:</strong> [{glyph.bboxMinX}, {glyph.bboxMinY}, {glyph.bboxMaxX}, {glyph.bboxMaxY}] |
+        Origin: (0, 0) on baseline | Packed Cell: {glyph.cellW}×{glyph.cellH} at ({glyph.cellX}, {glyph.cellY})
+      </div>
+    </div>
+  );
+}
+
+/**
  * Detailed glyph metrics inspector sub-panel.
  */
 function SpriteSheetGlyphDetails(properties: SpriteSheetGlyphDetailsProperties): MpElement {
@@ -1139,24 +1166,7 @@ function SpriteSheetGlyphDetails(properties: SpriteSheetGlyphDetailsProperties):
             Idx {glyph.index}
           </ForgeBadge>
         </div>
-        <div style={{ fontSize: '11px', lineHeight: '1.5', color: '#c9d1d9' }}>
-          <div>
-            <strong>Dimensions & Advance:</strong> {glyph.width}×{glyph.height}px | Advance H: {glyph.advance}px |
-            Advance V: {glyph.vertAdvance}px
-          </div>
-          <div>
-            <strong>Bearings:</strong> Left (LSB): {glyph.horiBearingX}px | Right (RSB): {glyph.rightBearing}px | Top:{' '}
-            {glyph.horiBearingY}px
-          </div>
-          <div>
-            <strong>Font Metrics:</strong> Ascent: {glyph.ascent}px | Descent: {glyph.descent}px | LineGap:{' '}
-            {glyph.linegap}px | Int Leading: {glyph.internalLeading}px | Ext Leading: {glyph.externalLeading}px
-          </div>
-          <div>
-            <strong>BBox & Origin:</strong> [{glyph.bboxMinX}, {glyph.bboxMinY}, {glyph.bboxMaxX}, {glyph.bboxMaxY}] |
-            Origin: (0, 0) on baseline | Packed Cell: {glyph.cellW}×{glyph.cellH} at ({glyph.cellX}, {glyph.cellY})
-          </div>
-        </div>
+        <SpriteSheetMetricRows glyph={glyph} />
       </div>
     </div>
   );
@@ -1312,30 +1322,30 @@ function PerfMetricCard(properties: PerfMetricCardProperties): MpElement {
  * 2x4 performance metrics card grid display.
  */
 function PerfMetricsGrid(properties: { readonly perfMetrics: FlintPerformanceMetrics }): MpElement {
-  const m = properties.perfMetrics;
-  const updateLayout = ((m.updateTimeMs ?? 0) + (m.layoutTimeMs ?? 0)).toFixed(2);
-  const totalNodes = m.totalNodesCount ?? m.visibleNodesCount;
+  const metrics = properties.perfMetrics;
+  const updateLayout = ((metrics.updateTimeMs ?? 0) + (metrics.layoutTimeMs ?? 0)).toFixed(2);
+  const totalNodes = metrics.totalNodesCount ?? metrics.visibleNodesCount;
   return (
     <div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '8px' }}>
         <PerfMetricCard
           label="Total Frame Time"
-          value={`${m.totalFrameTimeMs.toFixed(2)} ms`}
+          value={`${metrics.totalFrameTimeMs.toFixed(2)} ms`}
           color="#58a6ff"
         />
         <PerfMetricCard
           label="Render Duration"
-          value={`${m.renderTimeMs.toFixed(2)} ms`}
+          value={`${metrics.renderTimeMs.toFixed(2)} ms`}
           color="#3fb950"
         />
         <PerfMetricCard
           label="Spatial Indexing"
-          value={`${m.spatialIndexTimeMs.toFixed(2)} ms`}
+          value={`${metrics.spatialIndexTimeMs.toFixed(2)} ms`}
           color="#d29922"
         />
         <PerfMetricCard
           label="Visible Nodes"
-          value={`${m.visibleNodesCount} / ${totalNodes}`}
+          value={`${metrics.visibleNodesCount} / ${totalNodes}`}
           color="#f0883e"
         />
       </div>
@@ -1347,17 +1357,17 @@ function PerfMetricsGrid(properties: { readonly perfMetrics: FlintPerformanceMet
         />
         <PerfMetricCard
           label="Buffer Uploads"
-          value={`${(m.bufferUploadTimeMs ?? 0).toFixed(2)} ms`}
+          value={`${(metrics.bufferUploadTimeMs ?? 0).toFixed(2)} ms`}
           color="#a371f7"
         />
         <PerfMetricCard
           label="Visible Edges & Pins"
-          value={`${m.visibleEdgesCount}E / ${m.visiblePinsCount}P`}
+          value={`${metrics.visibleEdgesCount}E / ${metrics.visiblePinsCount}P`}
           color="#388bfd"
         />
         <PerfMetricCard
           label="DPR / Scale"
-          value={`${m.dpr.toFixed(1)}x DPR`}
+          value={`${metrics.dpr.toFixed(1)}x DPR`}
           color="#39c5bb"
         />
       </div>
@@ -1485,6 +1495,39 @@ function renderAtlasRaw(rawBytes: Uint8ClampedArray, outBytes: Uint8ClampedArray
 }
 
 /**
+ * Renders individual glyph cell outlines.
+ */
+function renderAtlasCellOutlines(context: CanvasRenderingContext2D, u32Memory: Uint32Array, tableBase: number): void {
+  for (let glyphIndex = 0; glyphIndex < GLYPH_CHARS_BY_IDX.length; glyphIndex++) {
+    const base = (tableBase + glyphIndex * 16) >> 2;
+    const cellX = u32Memory[base] ?? 0;
+    const cellY = u32Memory[base + 1] ?? 0;
+    const cellW = u32Memory[base + 2] ?? 24;
+    const cellH = u32Memory[base + 3] ?? 32;
+    context.strokeRect(cellX + 0.5, cellY + 0.5, cellW - 1, cellH - 1);
+  }
+}
+
+/**
+ * Renders highlighted glyph cell bounding box.
+ */
+function renderAtlasHighlightBox(
+  context: CanvasRenderingContext2D,
+  u32Memory: Uint32Array,
+  tableBase: number,
+  highlightIndex: number,
+): void {
+  const base = (tableBase + highlightIndex * 16) >> 2;
+  const hX = u32Memory[base] ?? 0;
+  const hY = u32Memory[base + 1] ?? 0;
+  const hW = u32Memory[base + 2] ?? 24;
+  const hH = u32Memory[base + 3] ?? 32;
+  context.strokeStyle = '#58a6ff';
+  context.lineWidth = 2;
+  context.strokeRect(hX + 0.5, hY + 0.5, hW - 1, hH - 1);
+}
+
+/**
  * Renders glyph cell grid outlines and optional selection highlight box.
  */
 function renderAtlasGrid(
@@ -1496,25 +1539,19 @@ function renderAtlasGrid(
   context.save();
   context.lineWidth = 1;
   context.strokeStyle = 'rgba(88, 166, 255, 0.25)';
-
-  for (let glyphIndex = 0; glyphIndex < GLYPH_CHARS_BY_IDX.length; glyphIndex++) {
-    const cellX = u32Memory[(tableBase + glyphIndex * 16) >> 2] ?? 0;
-    const cellY = u32Memory[(tableBase + glyphIndex * 16 + 4) >> 2] ?? 0;
-    const cellW = u32Memory[(tableBase + glyphIndex * 16 + 8) >> 2] ?? 24;
-    const cellH = u32Memory[(tableBase + glyphIndex * 16 + 12) >> 2] ?? 32;
-    context.strokeRect(cellX + 0.5, cellY + 0.5, cellW - 1, cellH - 1);
-  }
+  renderAtlasCellOutlines(context, u32Memory, tableBase);
 
   if (highlightIndex !== undefined && highlightIndex >= 0 && highlightIndex < GLYPH_CHARS_BY_IDX.length) {
-    const hX = u32Memory[(tableBase + highlightIndex * 16) >> 2] ?? 0;
-    const hY = u32Memory[(tableBase + highlightIndex * 16 + 4) >> 2] ?? 0;
-    const hW = u32Memory[(tableBase + highlightIndex * 16 + 8) >> 2] ?? 24;
-    const hH = u32Memory[(tableBase + highlightIndex * 16 + 12) >> 2] ?? 32;
-    context.strokeStyle = '#58a6ff';
-    context.lineWidth = 2;
-    context.strokeRect(hX + 0.5, hY + 0.5, hW - 1, hH - 1);
+    renderAtlasHighlightBox(context, u32Memory, tableBase, highlightIndex);
   }
   context.restore();
+}
+
+/**
+ * Tests if point is inside cell bounding box.
+ */
+function isPointInCell(x: number, y: number, cellX: number, cellY: number, cellW: number, cellH: number): boolean {
+  return x >= cellX && x < cellX + cellW && y >= cellY && y < cellY + cellH;
 }
 
 /**
@@ -1522,16 +1559,41 @@ function renderAtlasGrid(
  */
 function findSpriteSheetCellAtPoint(u32Memory: Uint32Array, tableBase: number, atlasX: number, atlasY: number) {
   for (let glyphIndex = 0; glyphIndex < GLYPH_CHARS_BY_IDX.length; glyphIndex++) {
-    const cellX = u32Memory[(tableBase + glyphIndex * 16) >> 2] ?? 0;
-    const cellY = u32Memory[(tableBase + glyphIndex * 16 + 4) >> 2] ?? 0;
-    const cellW = u32Memory[(tableBase + glyphIndex * 16 + 8) >> 2] ?? 24;
-    const cellH = u32Memory[(tableBase + glyphIndex * 16 + 12) >> 2] ?? 32;
+    const base = (tableBase + glyphIndex * 16) >> 2;
+    const cellX = u32Memory[base] ?? 0;
+    const cellY = u32Memory[base + 1] ?? 0;
+    const cellW = u32Memory[base + 2] ?? 24;
+    const cellH = u32Memory[base + 3] ?? 32;
 
-    if (atlasX >= cellX && atlasX < cellX + cellW && atlasY >= cellY && atlasY < cellY + cellH) {
+    if (isPointInCell(atlasX, atlasY, cellX, cellY, cellW, cellH)) {
       return { foundIndex: glyphIndex, foundX: cellX, foundY: cellY, foundW: cellW, foundH: cellH };
     }
   }
-  return;
+}
+
+/**
+ * Resolves font bounding box metrics for a glyph.
+ */
+function resolveGlyphBBox(wasm: ReturnType<typeof getFlintRenderWorkerWasm>, index: number, fallbackW: number) {
+  return {
+    bboxMinX: wasm.font_get_glyph_bbox_min_x ? wasm.font_get_glyph_bbox_min_x(index) : 0,
+    bboxMaxX: wasm.font_get_glyph_bbox_max_x ? wasm.font_get_glyph_bbox_max_x(index) : fallbackW,
+    bboxMinY: wasm.font_get_glyph_bbox_min_y ? wasm.font_get_glyph_bbox_min_y(index) : 0,
+    bboxMaxY: wasm.font_get_glyph_bbox_max_y ? wasm.font_get_glyph_bbox_max_y(index) : 18,
+  };
+}
+
+/**
+ * Resolves font line spacing and leading metrics.
+ */
+function resolveGlyphLineMetrics(wasm: ReturnType<typeof getFlintRenderWorkerWasm>) {
+  return {
+    ascent: wasm.font_get_ascent ? wasm.font_get_ascent() : 18,
+    descent: wasm.font_get_descent ? wasm.font_get_descent() : 6,
+    linegap: wasm.font_get_linegap ? wasm.font_get_linegap() : 4,
+    internalLeading: wasm.font_get_internal_leading ? wasm.font_get_internal_leading() : 2,
+    externalLeading: wasm.font_get_external_leading ? wasm.font_get_external_leading() : 4,
+  };
 }
 
 /**
@@ -1552,19 +1614,12 @@ function resolveGlyphDetails(
   const height = wasm.font_get_glyph_height ? wasm.font_get_glyph_height(foundIndex) : foundH;
   const horiBearingX = wasm.font_get_glyph_hori_bearing_x ? wasm.font_get_glyph_hori_bearing_x(foundIndex) : 0;
   const horiBearingY = wasm.font_get_glyph_hori_bearing_y ? wasm.font_get_glyph_hori_bearing_y(foundIndex) : 18;
-  const bboxMinX = wasm.font_get_glyph_bbox_min_x ? wasm.font_get_glyph_bbox_min_x(foundIndex) : 0;
-  const bboxMaxX = wasm.font_get_glyph_bbox_max_x ? wasm.font_get_glyph_bbox_max_x(foundIndex) : foundW;
-  const bboxMinY = wasm.font_get_glyph_bbox_min_y ? wasm.font_get_glyph_bbox_min_y(foundIndex) : 0;
-  const bboxMaxY = wasm.font_get_glyph_bbox_max_y ? wasm.font_get_glyph_bbox_max_y(foundIndex) : 18;
+  const bbox = resolveGlyphBBox(wasm, foundIndex, foundW);
+  const lineMetrics = resolveGlyphLineMetrics(wasm);
   const rightBearing = wasm.font_get_glyph_right_bearing
     ? wasm.font_get_glyph_right_bearing(foundIndex)
     : Math.max(0, advance - horiBearingX - width);
   const vertAdvance = wasm.font_get_glyph_vert_advance ? wasm.font_get_glyph_vert_advance(foundIndex) : 24;
-  const ascent = wasm.font_get_ascent ? wasm.font_get_ascent() : 18;
-  const descent = wasm.font_get_descent ? wasm.font_get_descent() : 6;
-  const linegap = wasm.font_get_linegap ? wasm.font_get_linegap() : 4;
-  const internalLeading = wasm.font_get_internal_leading ? wasm.font_get_internal_leading() : 2;
-  const externalLeading = wasm.font_get_external_leading ? wasm.font_get_external_leading() : 4;
 
   return {
     index: foundIndex,
@@ -1578,33 +1633,31 @@ function resolveGlyphDetails(
     horiBearingX,
     horiBearingY,
     rightBearing,
-    ascent,
-    descent,
-    linegap,
-    internalLeading,
-    externalLeading,
-    bboxMinX,
-    bboxMaxX,
-    bboxMinY,
-    bboxMaxY,
     cellX: foundX,
     cellY: foundY,
     cellW: foundW,
     cellH: foundH,
+    ...bbox,
+    ...lineMetrics,
   };
 }
+
+const CURSOR_BY_HIT_TYPE: Record<string, string> = {
+  port: 'crosshair',
+  waypoint: 'grab',
+  edge: 'pointer',
+  node: 'move',
+  group: 'move',
+};
 
 /**
  * Returns CSS cursor property string for canvas hit test hover target.
  */
 function getPointerHoverCursor(hoverHit?: FlintHitResult): string {
-  if (!hoverHit) return 'default';
-  if (hoverHit.type === 'port') return 'crosshair';
-  if (hoverHit.type === 'waypoint') return 'grab';
-  if (hoverHit.type === 'edge') return 'pointer';
-  if (hoverHit.type === 'group' || hoverHit.type === 'node') return 'move';
-  return 'default';
+  return (hoverHit ? CURSOR_BY_HIT_TYPE[hoverHit.type] : undefined) ?? 'default';
 }
+
+const NOOP_DISPOSE = (): void => {};
 
 /**
  * Processes global keyboard shortcuts for editor navigation, deletion, and undo/redo.
@@ -1617,8 +1670,7 @@ function handleEditorKeyboardAction(
   if (event.key === 'Escape') {
     if (store.canNavigateBack()) {
       store.navigateBack();
-      bridge?.setGraph(store.getState().graph.nodes, store.getState().graph.edges, store.getState().graph.groups ?? []);
-      bridge?.renderFrame();
+      syncGraphWithBridge(store, bridge);
     } else {
       store.deselectAll();
       bridge?.setSelection([], []);
@@ -1627,9 +1679,13 @@ function handleEditorKeyboardAction(
   } else if (event.key === 'Delete' || event.key === 'Backspace') {
     const activeElement = typeof document === 'undefined' ? undefined : document.activeElement;
     if (activeElement instanceof HTMLInputElement || activeElement instanceof HTMLTextAreaElement) return;
-    store.deleteSelected();
-    bridge?.setGraph(store.getState().graph.nodes, store.getState().graph.edges, store.getState().graph.groups ?? []);
-    bridge?.renderFrame();
+    if (store.getState().activeEdgeId) {
+      store.removeActiveEdge();
+      syncGraphWithBridge(store, bridge);
+    } else if (store.getState().selectedNodeIds.length > 0) {
+      store.deleteSelected();
+      syncGraphWithBridge(store, bridge);
+    }
   } else if (event.key === 'z' && (event.ctrlKey || event.metaKey)) {
     if (event.shiftKey) {
       store.redo();
@@ -1671,7 +1727,7 @@ function setupResizeObserver(
   store: FlintEditorStore,
   dpr: number,
 ): () => void {
-  if (typeof ResizeObserver === 'undefined') return () => {};
+  if (typeof ResizeObserver === 'undefined') return NOOP_DISPOSE;
   const observer = new ResizeObserver((entries) => {
     for (const entry of entries) {
       const { width, height } = entry.contentRect;
@@ -1679,11 +1735,7 @@ function setupResizeObserver(
         canvas.width = Math.round(width * dpr);
         canvas.height = Math.round(height * dpr);
         bridge.resize(width, height, dpr);
-        bridge.setGraph(
-          store.getState().graph.nodes,
-          store.getState().graph.edges,
-          store.getState().graph.groups ?? [],
-        );
+        syncGraphWithBridge(store, bridge);
       }
     }
   });
@@ -1752,6 +1804,9 @@ function setupCanvasEventListeners(options: CanvasGestureBindingsOptions): () =>
     });
   }, 1000);
 
+  /**
+   * Handles canvas wheel zooming gestures.
+   */
   const onWheel = (event: WheelEvent): void => {
     event.preventDefault();
     const normalizedDelta = Math.max(-100, Math.min(100, event.deltaY));
@@ -1759,6 +1814,9 @@ function setupCanvasEventListeners(options: CanvasGestureBindingsOptions): () =>
     bridge.zoom(event.offsetX, event.offsetY, factor);
   };
 
+  /**
+   * Handles pointer down gesture to select or initiate drag/linking operations.
+   */
   const onPointerDown = (event: PointerEvent): void => {
     if (event.button !== 0) return;
     setContextMenu((previous) => (previous.open ? { ...previous, open: false } : previous));
@@ -1795,12 +1853,7 @@ function setupCanvasEventListeners(options: CanvasGestureBindingsOptions): () =>
       if (now - lastClickTime < 350 && lastClickNodeId === hit.edgeId) {
         const world = bridge.screenToWorld(event.offsetX, event.offsetY);
         store.addEdgePoint(hit.edgeId, { x: Math.round(world.x), y: Math.round(world.y) });
-        bridge.setGraph(
-          store.getState().graph.nodes,
-          store.getState().graph.edges,
-          store.getState().graph.groups ?? [],
-        );
-        bridge.renderFrame();
+        syncGraphWithBridge(store, bridge);
         lastClickTime = 0;
         lastClickNodeId = '';
         return;
@@ -1818,12 +1871,7 @@ function setupCanvasEventListeners(options: CanvasGestureBindingsOptions): () =>
         const clickedNode = store.getState().graph.nodes.find((n) => n.id === hit.nodeId);
         if (clickedNode && (clickedNode.metaSubgraph || clickedNode.operation === 'meta')) {
           store.drillIntoMetaNode(clickedNode.id);
-          bridge.setGraph(
-            store.getState().graph.nodes,
-            store.getState().graph.edges,
-            store.getState().graph.groups ?? [],
-          );
-          bridge.renderFrame();
+          syncGraphWithBridge(store, bridge);
           return;
         }
       }
@@ -1882,6 +1930,9 @@ function setupCanvasEventListeners(options: CanvasGestureBindingsOptions): () =>
     }
   };
 
+  /**
+   * Handles pointer move dragging and hover cursor synchronization.
+   */
   const onPointerMove = (event: PointerEvent): void => {
     if (!isPointerDown) {
       const hoverHit = bridge.hitTestSync(event.offsetX, event.offsetY);
@@ -1917,8 +1968,7 @@ function setupCanvasEventListeners(options: CanvasGestureBindingsOptions): () =>
         x: Math.round(worldX),
         y: Math.round(worldY),
       });
-      bridge.setGraph(store.getState().graph.nodes, store.getState().graph.edges, store.getState().graph.groups ?? []);
-      bridge.renderFrame();
+      syncGraphWithBridge(store, bridge);
     } else if (dragMode === 'connect') {
       const { x: worldX, y: worldY } = bridge.screenToWorld(event.offsetX, event.offsetY);
       store.updateConnectingCursor(worldX, worldY);
@@ -1950,6 +2000,9 @@ function setupCanvasEventListeners(options: CanvasGestureBindingsOptions): () =>
     }
   };
 
+  /**
+   * Commits drag transformations or connection links upon pointer release.
+   */
   const onPointerUp = (event: PointerEvent): void => {
     if (!isPointerDown) return;
     isPointerDown = false;
@@ -2009,6 +2062,9 @@ function setupCanvasEventListeners(options: CanvasGestureBindingsOptions): () =>
     nodesStartPositions.clear();
   };
 
+  /**
+   * Opens contextual popup for node, edge, group, or canvas creation actions.
+   */
   const onContextMenu = (event: MouseEvent): void => {
     event.preventDefault();
     const canvasRect = canvasElement.getBoundingClientRect();
@@ -2063,47 +2119,11 @@ function setupCanvasEventListeners(options: CanvasGestureBindingsOptions): () =>
     });
   };
 
+  /**
+   * Handles global keyboard navigation and mutation shortcuts.
+   */
   const onKeyDown = (event: KeyboardEvent): void => {
-    if (event.key === 'Escape') {
-      if (store.canNavigateBack()) {
-        store.navigateBack();
-        bridge.setGraph(
-          store.getState().graph.nodes,
-          store.getState().graph.edges,
-          store.getState().graph.groups ?? [],
-        );
-        bridge.renderFrame();
-      } else {
-        setContextMenu((previous) => (previous.open ? { ...previous, open: false } : previous));
-        store.deselectAll();
-        bridge.setSelection([], []);
-        bridge.renderFrame();
-      }
-    } else if (event.key === 'Delete' || event.key === 'Backspace') {
-      if (
-        typeof document !== 'undefined' &&
-        (document.activeElement instanceof HTMLInputElement || document.activeElement instanceof HTMLTextAreaElement)
-      ) {
-        return;
-      }
-      if (store.getState().activeEdgeId) {
-        store.removeActiveEdge();
-        bridge.setGraph(
-          store.getState().graph.nodes,
-          store.getState().graph.edges,
-          store.getState().graph.groups ?? [],
-        );
-        bridge.renderFrame();
-      } else if (store.getState().selectedNodeIds.length > 0) {
-        store.deleteSelected();
-        bridge.setGraph(
-          store.getState().graph.nodes,
-          store.getState().graph.edges,
-          store.getState().graph.groups ?? [],
-        );
-        bridge.renderFrame();
-      }
-    }
+    handleEditorKeyboardAction(event, store, bridge);
   };
 
   canvasElement.addEventListener('wheel', onWheel, { passive: false });
@@ -2142,13 +2162,9 @@ const SWATCH_COLORS = ['#58a6ff', '#a371f7', '#3fb950', '#d29922', '#f85149', '#
  * Property inspector controls for selected graph group.
  */
 function InspectorGroupSection(properties: InspectorGroupSectionProperties): MpElement {
-  const g = properties.group;
+  const group = properties.group;
   const store = properties.store;
   const bridge = properties.bridge;
-  const refreshGraph = () => {
-    bridge?.setGraph(store.getState().graph.nodes, store.getState().graph.edges, store.getState().graph.groups ?? []);
-    bridge?.renderFrame();
-  };
 
   return (
     <div>
@@ -2161,15 +2177,15 @@ function InspectorGroupSection(properties: InspectorGroupSectionProperties): MpE
         </label>
         <input
           id="inspector-group-title"
-          value={g.title}
+          value={group.title}
           type="text"
           aria-label="Group Name"
           className={styles.inspectorInput}
           onInput={(event: unknown) => {
             const value = extractEventTargetStringValue(event);
             if (value !== undefined) {
-              store.setGroupTitle(g.id, value);
-              refreshGraph();
+              store.setGroupTitle(group.id, value);
+              syncGraphWithBridge(store, bridge);
             }
           }}
         />
@@ -2187,11 +2203,11 @@ function InspectorGroupSection(properties: InspectorGroupSectionProperties): MpE
               className={styles.colorSwatch}
               style={{
                 backgroundColor: c,
-                border: g.color === c ? '2px solid #ffffff' : '1px solid #30363d',
+                border: group.color === c ? '2px solid #ffffff' : '1px solid #30363d',
               }}
               onClick={() => {
-                store.setGroupColor(g.id, c);
-                refreshGraph();
+                store.setGroupColor(group.id, c);
+                syncGraphWithBridge(store, bridge);
               }}
             />
           ))}
@@ -2199,15 +2215,15 @@ function InspectorGroupSection(properties: InspectorGroupSectionProperties): MpE
       </div>
       <div className={styles.inspectorRow}>
         <span className={styles.inspectorLabel}>Member Nodes</span>
-        <span style={{ fontSize: '12px' }}>{g.nodeIds.length} nodes</span>
+        <span style={{ fontSize: '12px' }}>{group.nodeIds.length} nodes</span>
       </div>
       <div style={{ marginTop: '12px' }}>
         <button
           type="button"
           className={styles.toolbarBtn}
           onClick={() => {
-            store.ungroup(g.id);
-            refreshGraph();
+            store.ungroup(group.id);
+            syncGraphWithBridge(store, bridge);
           }}
         >
           Ungroup
@@ -2230,10 +2246,6 @@ function InspectorEdgeSection(properties: InspectorEdgeSectionProperties): MpEle
   const edge = properties.edge;
   const store = properties.store;
   const bridge = properties.bridge;
-  const refreshGraph = () => {
-    bridge?.setGraph(store.getState().graph.nodes, store.getState().graph.edges, store.getState().graph.groups ?? []);
-    bridge?.renderFrame();
-  };
 
   return (
     <div>
@@ -2253,7 +2265,7 @@ function InspectorEdgeSection(properties: InspectorEdgeSectionProperties): MpEle
           className={styles.toolbarBtn}
           onClick={() => {
             store.clearEdgePoints(edge.id);
-            refreshGraph();
+            syncGraphWithBridge(store, bridge);
           }}
         >
           Reset Path (Default Curve)
@@ -2263,7 +2275,7 @@ function InspectorEdgeSection(properties: InspectorEdgeSectionProperties): MpEle
           className={classNames(styles.toolbarBtn, styles.toolbarBtnError)}
           onClick={() => {
             store.removeEdge(edge.id);
-            refreshGraph();
+            syncGraphWithBridge(store, bridge);
           }}
         >
           Delete Connection
@@ -2312,25 +2324,17 @@ function InspectorNodePinsTable(properties: InspectorNodePinsTableProperties): M
   );
 }
 
-interface InspectorNodeDetailsProperties {
+interface InspectorNodeBasicPropertiesProps {
   readonly node: FlintGraphNode;
   readonly definition?: FlintNodeDefinition;
-  readonly store: FlintEditorStore;
-  readonly bridge?: FlintRendererBridge;
+  readonly onRename: (title: string) => void;
 }
 
 /**
- * Inspector sub-panel displaying node parameters, data pins, and Flint source code.
+ * Basic node title, operation identifier, and category rows.
  */
-function InspectorNodeDetails(properties: InspectorNodeDetailsProperties): MpElement {
+function InspectorNodeBasicProperties(properties: InspectorNodeBasicPropertiesProps): MpElement {
   const node = properties.node;
-  const store = properties.store;
-  const bridge = properties.bridge;
-  const refreshGraph = () => {
-    bridge?.setGraph(store.getState().graph.nodes, store.getState().graph.edges, store.getState().graph.groups ?? []);
-    bridge?.renderFrame();
-  };
-
   return (
     <div>
       <div className={styles.inspectorRow}>
@@ -2348,7 +2352,7 @@ function InspectorNodeDetails(properties: InspectorNodeDetailsProperties): MpEle
           className={styles.inspectorInput}
           onInput={(event: unknown) => {
             const value = extractEventTargetStringValue(event);
-            if (value !== undefined) store.renameNode(node.id, value);
+            if (value !== undefined) properties.onRename(value);
           }}
         />
       </div>
@@ -2384,8 +2388,76 @@ function InspectorNodeDetails(properties: InspectorNodeDetailsProperties): MpEle
           readOnly
         />
       </div>
-
       {properties.definition && <div className={styles.docBlock}>{properties.definition.description}</div>}
+    </div>
+  );
+}
+
+interface InspectorNodeCodeEditorProperties {
+  readonly node: FlintGraphNode;
+  readonly store: FlintEditorStore;
+}
+
+/**
+ * Source code textarea for custom Flint functions.
+ */
+function InspectorNodeCodeEditor(properties: InspectorNodeCodeEditorProperties): MpElement {
+  const node = properties.node;
+  const store = properties.store;
+  return (
+    <div
+      className={styles.inspectorRow}
+      style={{ flexDirection: 'column', alignItems: 'flex-start' }}
+    >
+      <label
+        htmlFor="inspector-flint-code"
+        className={styles.inspectorLabel}
+      >
+        Flint Function Code
+      </label>
+      <textarea
+        id="inspector-flint-code"
+        className={styles.codeEditorTextarea}
+        value={String(node.properties?.code ?? '')}
+        onInput={(event: unknown) => {
+          const code = extractEventTargetStringValue(event);
+          if (code !== undefined) {
+            store.updateCodeNode(
+              node.id,
+              code,
+              node.inputs,
+              node.outputs,
+              typeof node.properties?.functionName === 'string' ? node.properties.functionName : undefined,
+            );
+          }
+        }}
+      />
+    </div>
+  );
+}
+
+interface InspectorNodeDetailsProperties {
+  readonly node: FlintGraphNode;
+  readonly definition?: FlintNodeDefinition;
+  readonly store: FlintEditorStore;
+  readonly bridge?: FlintRendererBridge;
+}
+
+/**
+ * Inspector sub-panel displaying node parameters, data pins, and Flint source code.
+ */
+function InspectorNodeDetails(properties: InspectorNodeDetailsProperties): MpElement {
+  const node = properties.node;
+  const store = properties.store;
+  const bridge = properties.bridge;
+
+  return (
+    <div>
+      <InspectorNodeBasicProperties
+        node={node}
+        definition={properties.definition}
+        onRename={(title) => store.renameNode(node.id, title)}
+      />
 
       {node.metaSubgraph && (
         <div
@@ -2472,34 +2544,10 @@ function InspectorNodeDetails(properties: InspectorNodeDetailsProperties): MpEle
       </div>
 
       {(node.operation === 'flint_code' || node.kind === 'custom') && (
-        <div
-          className={styles.inspectorRow}
-          style={{ flexDirection: 'column', alignItems: 'flex-start' }}
-        >
-          <label
-            htmlFor="inspector-flint-code"
-            className={styles.inspectorLabel}
-          >
-            Flint Function Code
-          </label>
-          <textarea
-            id="inspector-flint-code"
-            className={styles.codeEditorTextarea}
-            value={String(node.properties?.code ?? '')}
-            onInput={(event: unknown) => {
-              const code = extractEventTargetStringValue(event);
-              if (code !== undefined) {
-                store.updateCodeNode(
-                  node.id,
-                  code,
-                  node.inputs,
-                  node.outputs,
-                  typeof node.properties?.functionName === 'string' ? node.properties.functionName : undefined,
-                );
-              }
-            }}
-          />
-        </div>
+        <InspectorNodeCodeEditor
+          node={node}
+          store={store}
+        />
       )}
 
       {node.outputs.length > 1 && (
@@ -2535,7 +2583,7 @@ function InspectorNodeDetails(properties: InspectorNodeDetailsProperties): MpEle
                 onClick={() => {
                   if (node.groupId) {
                     store.setGroupColor(node.groupId, c);
-                    refreshGraph();
+                    syncGraphWithBridge(store, bridge);
                   }
                 }}
               />
@@ -2654,6 +2702,190 @@ function FlintEditorInspector(properties: FlintEditorInspectorProperties): MpEle
   );
 }
 
+interface ToolbarExecutionGroupProperties {
+  readonly isExecuting: boolean;
+  readonly isDark: boolean;
+  readonly onRun: () => void;
+  readonly onExport: () => void;
+  readonly onToggleTheme: () => void;
+}
+
+/**
+ * Execution and export button group in the editor toolbar.
+ */
+function ToolbarExecutionGroup(properties: ToolbarExecutionGroupProperties): MpElement {
+  return (
+    <div
+      className={styles.buttonGroup}
+      role="group"
+      aria-label="Graph Execution and Export"
+    >
+      <button
+        type="button"
+        className={classNames(styles.toolbarBtn, styles.toolbarBtnPrimary)}
+        onClick={properties.onRun}
+        disabled={properties.isExecuting}
+      >
+        {properties.isExecuting ? 'Running...' : 'Run Wasm'}
+      </button>
+      <button
+        type="button"
+        className={styles.toolbarBtn}
+        onClick={properties.onExport}
+      >
+        Export Flint
+      </button>
+      <button
+        type="button"
+        className={styles.toolbarBtn}
+        onClick={properties.onToggleTheme}
+        aria-label={`Switch to ${properties.isDark ? 'Light' : 'Dark'} mode`}
+      >
+        {properties.isDark ? '☀️ Light' : '🌙 Dark'}
+      </button>
+    </div>
+  );
+}
+
+interface ToolbarHistoryGroupProperties {
+  readonly canUndo: boolean;
+  readonly canRedo: boolean;
+  readonly onUndo: () => void;
+  readonly onRedo: () => void;
+}
+
+/**
+ * History undo/redo button group in the editor toolbar.
+ */
+function ToolbarHistoryGroup(properties: ToolbarHistoryGroupProperties): MpElement {
+  return (
+    <div
+      className={styles.buttonGroup}
+      role="group"
+      aria-label="History Actions"
+    >
+      <button
+        type="button"
+        className={styles.toolbarBtn}
+        disabled={!properties.canUndo}
+        onClick={properties.onUndo}
+      >
+        Undo
+      </button>
+      <button
+        type="button"
+        className={styles.toolbarBtn}
+        disabled={!properties.canRedo}
+        onClick={properties.onRedo}
+      >
+        Redo
+      </button>
+    </div>
+  );
+}
+
+interface ToolbarStructureGroupProperties {
+  readonly hasSelectedNodes: boolean;
+  readonly hasGroupedSelected: boolean;
+  readonly hasActiveSelectionOrEdge: boolean;
+  readonly onGroup: () => void;
+  readonly onCreateMeta: () => void;
+  readonly onUngroup: () => void;
+  readonly onDelete: () => void;
+}
+
+/**
+ * Node structuring, grouping, and deletion button group in the editor toolbar.
+ */
+function ToolbarStructureGroup(properties: ToolbarStructureGroupProperties): MpElement {
+  return (
+    <div
+      className={styles.buttonGroup}
+      role="group"
+      aria-label="Node Structuring Actions"
+    >
+      <button
+        type="button"
+        className={styles.toolbarBtn}
+        disabled={!properties.hasSelectedNodes}
+        onClick={properties.onGroup}
+      >
+        Group
+      </button>
+      <button
+        type="button"
+        className={styles.toolbarBtn}
+        disabled={!properties.hasSelectedNodes}
+        onClick={properties.onCreateMeta}
+      >
+        Create Meta
+      </button>
+      <button
+        type="button"
+        className={styles.toolbarBtn}
+        disabled={!properties.hasGroupedSelected}
+        onClick={properties.onUngroup}
+      >
+        Ungroup
+      </button>
+      <button
+        type="button"
+        className={classNames(styles.toolbarBtn, styles.toolbarBtnError)}
+        disabled={!properties.hasActiveSelectionOrEdge}
+        onClick={properties.onDelete}
+      >
+        Delete
+      </button>
+    </div>
+  );
+}
+
+interface ToolbarStatusGroupProperties {
+  readonly isValidDag: boolean;
+  readonly issuesCount: number;
+  readonly isFallback: boolean;
+  readonly perfMetrics: FlintPerformanceMetrics;
+  readonly onOpenPerf: () => void;
+}
+
+/**
+ * Real-time validation and telemetry status group in the editor toolbar.
+ */
+function ToolbarStatusGroup(properties: ToolbarStatusGroupProperties): MpElement {
+  return (
+    <div className={styles.toolbarGroup}>
+      <span
+        className={classNames(
+          styles.statusBadge,
+          properties.isValidDag ? styles.statusBadgeSuccess : styles.statusBadgeError,
+        )}
+      >
+        {properties.isValidDag ? 'Valid DAG' : `${properties.issuesCount} Issues`}
+      </span>
+      <span
+        className={classNames(
+          styles.statusBadge,
+          properties.isFallback ? styles.statusBadgeWarning : styles.statusBadgePrimary,
+        )}
+      >
+        {properties.isFallback ? '2D Canvas' : 'WebGPU'}
+      </span>
+      <button
+        type="button"
+        className={classNames(styles.toolbarBtn, styles.toolbarBtnGhost)}
+        onClick={properties.onOpenPerf}
+        aria-label="Click to view detailed D3 performance breakdown"
+      >
+        <span className={styles.perfDot} />
+        <span>
+          update: {properties.perfMetrics.updateTimeMs.toFixed(1)}ms | render:{' '}
+          {properties.perfMetrics.renderTimeMs.toFixed(1)}ms {properties.isFallback ? '(2D)' : '(WebGPU)'}
+        </span>
+      </button>
+    </div>
+  );
+}
+
 interface FlintEditorToolbarProperties {
   readonly editorState: FlintEditorStoreState;
   readonly resolvedTheme: 'light' | 'dark';
@@ -2682,129 +2914,37 @@ function FlintEditorToolbar(properties: FlintEditorToolbarProperties): MpElement
     <header className={styles.toolbar}>
       <div className={styles.toolbarGroup}>
         <span style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '0.02em' }}>Flint Node Graph</span>
-        <div
-          className={styles.buttonGroup}
-          role="group"
-          aria-label="Graph Execution and Export"
-        >
-          <button
-            type="button"
-            className={classNames(styles.toolbarBtn, styles.toolbarBtnPrimary)}
-            onClick={properties.onRun}
-            disabled={state.isExecuting}
-          >
-            {state.isExecuting ? 'Running...' : 'Run Wasm'}
-          </button>
-          <button
-            type="button"
-            className={styles.toolbarBtn}
-            onClick={properties.onExport}
-          >
-            Export Flint
-          </button>
-          <button
-            type="button"
-            className={styles.toolbarBtn}
-            onClick={properties.onToggleTheme}
-            aria-label={`Switch to ${isDark ? 'Light' : 'Dark'} mode`}
-          >
-            {isDark ? '☀️ Light' : '🌙 Dark'}
-          </button>
-        </div>
-
-        <div
-          className={styles.buttonGroup}
-          role="group"
-          aria-label="History Actions"
-        >
-          <button
-            type="button"
-            className={styles.toolbarBtn}
-            disabled={!state.canUndo}
-            onClick={() => store.undo()}
-          >
-            Undo
-          </button>
-          <button
-            type="button"
-            className={styles.toolbarBtn}
-            disabled={!state.canRedo}
-            onClick={() => store.redo()}
-          >
-            Redo
-          </button>
-        </div>
-
-        <div
-          className={styles.buttonGroup}
-          role="group"
-          aria-label="Node Structuring Actions"
-        >
-          <button
-            type="button"
-            className={styles.toolbarBtn}
-            disabled={state.selectedNodeIds.length === 0}
-            onClick={() => store.groupSelectedNodes()}
-          >
-            Group
-          </button>
-          <button
-            type="button"
-            className={styles.toolbarBtn}
-            disabled={state.selectedNodeIds.length === 0}
-            onClick={() => store.createMetaNodeFromSelected()}
-          >
-            Create Meta
-          </button>
-          <button
-            type="button"
-            className={styles.toolbarBtn}
-            disabled={!hasGroupedSelected}
-            onClick={() => store.ungroupSelected()}
-          >
-            Ungroup
-          </button>
-          <button
-            type="button"
-            className={classNames(styles.toolbarBtn, styles.toolbarBtnError)}
-            disabled={state.selectedNodeIds.length === 0 && !state.activeEdgeId}
-            onClick={() => store.deleteSelected()}
-          >
-            Delete
-          </button>
-        </div>
+        <ToolbarExecutionGroup
+          isExecuting={state.isExecuting}
+          isDark={isDark}
+          onRun={properties.onRun}
+          onExport={properties.onExport}
+          onToggleTheme={properties.onToggleTheme}
+        />
+        <ToolbarHistoryGroup
+          canUndo={state.canUndo}
+          canRedo={state.canRedo}
+          onUndo={() => store.undo()}
+          onRedo={() => store.redo()}
+        />
+        <ToolbarStructureGroup
+          hasSelectedNodes={state.selectedNodeIds.length > 0}
+          hasGroupedSelected={hasGroupedSelected}
+          hasActiveSelectionOrEdge={state.selectedNodeIds.length > 0 || Boolean(state.activeEdgeId)}
+          onGroup={() => store.groupSelectedNodes()}
+          onCreateMeta={() => store.createMetaNodeFromSelected()}
+          onUngroup={() => store.ungroupSelected()}
+          onDelete={() => store.deleteSelected()}
+        />
       </div>
 
-      <div className={styles.toolbarGroup}>
-        <span
-          className={classNames(
-            styles.statusBadge,
-            state.validation.valid ? styles.statusBadgeSuccess : styles.statusBadgeError,
-          )}
-        >
-          {state.validation.valid ? 'Valid DAG' : `${state.validation.issues.length} Issues`}
-        </span>
-        <span
-          className={classNames(
-            styles.statusBadge,
-            properties.isFallback ? styles.statusBadgeWarning : styles.statusBadgePrimary,
-          )}
-        >
-          {properties.isFallback ? '2D Canvas' : 'WebGPU'}
-        </span>
-        <button
-          type="button"
-          className={classNames(styles.toolbarBtn, styles.toolbarBtnGhost)}
-          onClick={properties.onOpenPerf}
-          aria-label="Click to view detailed D3 performance breakdown"
-        >
-          <span className={styles.perfDot} />
-          <span>
-            update: {properties.perfMetrics.updateTimeMs.toFixed(1)}ms | render:{' '}
-            {properties.perfMetrics.renderTimeMs.toFixed(1)}ms {properties.isFallback ? '(2D)' : '(WebGPU)'}
-          </span>
-        </button>
-      </div>
+      <ToolbarStatusGroup
+        isValidDag={state.validation.valid}
+        issuesCount={state.validation.issues.length}
+        isFallback={properties.isFallback}
+        perfMetrics={properties.perfMetrics}
+        onOpenPerf={properties.onOpenPerf}
+      />
     </header>
   );
 }
@@ -2920,10 +3060,12 @@ function FlintEditorPalette(properties: FlintEditorPaletteProperties): MpElement
 
 interface FlintEditorCanvasProperties {
   readonly canvasReference: { current?: HTMLCanvasElement };
+  readonly containerReference?: { current?: HTMLDivElement };
   readonly renderer?: string;
   readonly editorState: FlintEditorStoreState;
   readonly isFallback: boolean;
-  readonly selectionSquare: { active: boolean; startX: number; startY: number; currentX: number; currentY: number };
+  readonly selectionSquare: SelectionSquareState;
+  readonly controller?: TraceDebuggerController;
   readonly store: FlintEditorStore;
   readonly bridge?: FlintRendererBridge;
 }
@@ -2938,7 +3080,8 @@ function FlintEditorCanvas(properties: FlintEditorCanvasProperties): MpElement {
   const sq = properties.selectionSquare;
 
   return (
-    <main
+    <div
+      ref={properties.containerReference}
       className={styles.canvasContainer}
       onDragOver={(event: unknown) => {
         if (typeof DragEvent !== 'undefined' && event instanceof DragEvent) {
@@ -2969,12 +3112,7 @@ function FlintEditorCanvas(properties: FlintEditorCanvasProperties): MpElement {
             className={classNames(styles.toolbarBtn, styles.toolbarBtnGhost)}
             onClick={() => {
               store.navigateBack();
-              bridge?.setGraph(
-                store.getState().graph.nodes,
-                store.getState().graph.edges,
-                store.getState().graph.groups ?? [],
-              );
-              bridge?.renderFrame();
+              syncGraphWithBridge(store, bridge);
             }}
             aria-label="Back to parent graph"
           >
@@ -3023,7 +3161,319 @@ function FlintEditorCanvas(properties: FlintEditorCanvasProperties): MpElement {
           }}
         />
       )}
-    </main>
+      {properties.controller && (
+        <div className={styles.debugScrubberDock}>
+          <ForgeDebugScrubber controller={properties.controller} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+interface ContextMenuEdgeActionsProperties {
+  readonly targetId: string;
+  readonly worldX: number;
+  readonly worldY: number;
+  readonly store: FlintEditorStore;
+  readonly bridge?: FlintRendererBridge;
+  readonly onClose: () => void;
+}
+
+/**
+ * Context menu actions for a selected edge connection.
+ */
+function ContextMenuEdgeActions(properties: ContextMenuEdgeActionsProperties): MpElement {
+  const { targetId, worldX, worldY, store, bridge, onClose } = properties;
+  return (
+    <div className={styles.contextMenuActions}>
+      <button
+        type="button"
+        className={styles.contextMenuItem}
+        onClick={() => {
+          store.addEdgePoint(targetId, { x: Math.round(worldX), y: Math.round(worldY) });
+          syncGraphWithBridge(store, bridge);
+          onClose();
+        }}
+      >
+        + Add Waypoint Here
+      </button>
+      <button
+        type="button"
+        className={styles.contextMenuItem}
+        onClick={() => {
+          store.clearEdgePoints(targetId);
+          syncGraphWithBridge(store, bridge);
+          onClose();
+        }}
+      >
+        Reset Path (Default Curve)
+      </button>
+      <button
+        type="button"
+        className={styles.contextMenuItem}
+        style={{ color: '#f85149' }}
+        onClick={() => {
+          store.removeEdge(targetId);
+          syncGraphWithBridge(store, bridge);
+          onClose();
+        }}
+      >
+        Remove Connection
+      </button>
+    </div>
+  );
+}
+
+interface ContextMenuNodeActionsProperties {
+  readonly targetId: string;
+  readonly targetGroupId?: string;
+  readonly selectedNode?: FlintGraphNode;
+  readonly store: FlintEditorStore;
+  readonly bridge?: FlintRendererBridge;
+  readonly onClose: () => void;
+}
+
+/**
+ * Context menu actions for an individual graph node.
+ */
+function ContextMenuNodeActions(properties: ContextMenuNodeActionsProperties): MpElement {
+  const { targetId, targetGroupId, selectedNode, store, bridge, onClose } = properties;
+  return (
+    <div className={styles.contextMenuActions}>
+      <button
+        type="button"
+        className={styles.contextMenuItem}
+        onClick={() => {
+          store.copyNode(targetId);
+          onClose();
+        }}
+      >
+        Copy Node
+      </button>
+      {selectedNode?.metaSubgraph && (
+        <div>
+          <button
+            type="button"
+            className={styles.contextMenuItem}
+            onClick={() => {
+              store.drillIntoMetaNode(targetId);
+              syncGraphWithBridge(store, bridge);
+              onClose();
+            }}
+          >
+            Enter Function (Drill Down)
+          </button>
+          <button
+            type="button"
+            className={styles.contextMenuItem}
+            onClick={() => {
+              store.duplicateMetaNode(targetId);
+              syncGraphWithBridge(store, bridge);
+              onClose();
+            }}
+          >
+            Duplicate Meta Node
+          </button>
+        </div>
+      )}
+      {targetGroupId && (
+        <div>
+          <button
+            type="button"
+            className={styles.contextMenuItem}
+            onClick={() => {
+              store.copyGroup(targetGroupId);
+              onClose();
+            }}
+          >
+            Copy Group
+          </button>
+          <button
+            type="button"
+            className={styles.contextMenuItem}
+            onClick={() => {
+              store.ungroup(targetGroupId);
+              syncGraphWithBridge(store, bridge);
+              onClose();
+            }}
+          >
+            Ungroup
+          </button>
+        </div>
+      )}
+      {selectedNode && selectedNode.outputs.length > 1 && (
+        <button
+          type="button"
+          className={styles.contextMenuItem}
+          onClick={() => {
+            store.toggleSplitOutputs(targetId);
+            onClose();
+          }}
+        >
+          {selectedNode.splitOutputs === false ? 'Split Outputs to Fields' : 'Combine Outputs to Record'}
+        </button>
+      )}
+      <button
+        type="button"
+        className={styles.contextMenuItem}
+        style={{ color: '#f85149' }}
+        onClick={() => {
+          store.removeNode(targetId);
+          syncGraphWithBridge(store, bridge);
+          onClose();
+        }}
+      >
+        Delete Node
+      </button>
+    </div>
+  );
+}
+
+interface ContextMenuGroupActionsProperties {
+  readonly targetGroupId: string;
+  readonly store: FlintEditorStore;
+  readonly bridge?: FlintRendererBridge;
+  readonly onClose: () => void;
+}
+
+/**
+ * Context menu actions for a selected node group container.
+ */
+function ContextMenuGroupActions(properties: ContextMenuGroupActionsProperties): MpElement {
+  const { targetGroupId, store, bridge, onClose } = properties;
+  return (
+    <div className={styles.contextMenuActions}>
+      <button
+        type="button"
+        className={styles.contextMenuItem}
+        onClick={() => {
+          store.copyGroup(targetGroupId);
+          onClose();
+        }}
+      >
+        Copy Group (with Connections)
+      </button>
+      <button
+        type="button"
+        className={styles.contextMenuItem}
+        onClick={() => {
+          store.ungroup(targetGroupId);
+          syncGraphWithBridge(store, bridge);
+          onClose();
+        }}
+      >
+        Ungroup
+      </button>
+      <div style={{ padding: '4px 8px', fontSize: '11px', color: '#8b949e' }}>Group Color:</div>
+      <div
+        className={styles.colorPickerRow}
+        style={{ padding: '0 8px' }}
+      >
+        {SWATCH_COLORS.map((c) => (
+          <button
+            key={c}
+            type="button"
+            className={styles.colorSwatch}
+            style={{ backgroundColor: c }}
+            onClick={() => {
+              store.setGroupColor(targetGroupId, c);
+              syncGraphWithBridge(store, bridge);
+              onClose();
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+interface ContextMenuSelectionActionsProperties {
+  readonly selectedNodeCount: number;
+  readonly store: FlintEditorStore;
+  readonly onClose: () => void;
+}
+
+/**
+ * Context menu actions for multiple selected nodes.
+ */
+function ContextMenuSelectionActions(properties: ContextMenuSelectionActionsProperties): MpElement {
+  const { selectedNodeCount, store, onClose } = properties;
+  return (
+    <div className={styles.contextMenuActions}>
+      <button
+        type="button"
+        className={styles.contextMenuItem}
+        onClick={() => {
+          store.copySelection();
+          onClose();
+        }}
+      >
+        Copy Selected ({selectedNodeCount} Nodes + Connections)
+      </button>
+      <button
+        type="button"
+        className={styles.contextMenuItem}
+        onClick={() => {
+          store.groupSelectedNodes();
+          onClose();
+        }}
+      >
+        Group Selected
+      </button>
+      <button
+        type="button"
+        className={styles.contextMenuItem}
+        onClick={() => {
+          store.createMetaNodeFromSelected();
+          onClose();
+        }}
+      >
+        Create Meta Node
+      </button>
+      <button
+        type="button"
+        className={styles.contextMenuItem}
+        style={{ color: '#f85149' }}
+        onClick={() => {
+          store.deleteSelected();
+          onClose();
+        }}
+      >
+        Delete Selected
+      </button>
+    </div>
+  );
+}
+
+interface ContextMenuNodeListProperties {
+  readonly filteredItems: readonly FlintNodeDefinition[];
+  readonly worldX: number;
+  readonly worldY: number;
+  readonly store: FlintEditorStore;
+  readonly onClose: () => void;
+}
+
+/**
+ * Filtered node operation list items for insertion from context menu.
+ */
+function ContextMenuNodeList(properties: ContextMenuNodeListProperties): MpElement {
+  return (
+    <div className={styles.contextMenuList}>
+      {properties.filteredItems.map((item) => (
+        <button
+          key={item.operation}
+          type="button"
+          className={styles.contextMenuItem}
+          onClick={() => {
+            properties.store.addNode(item.operation, { x: properties.worldX, y: properties.worldY });
+            properties.onClose();
+          }}
+        >
+          <span style={{ fontWeight: 600 }}>{item.title}</span>
+          <span style={{ fontSize: '10px', color: '#8b949e' }}>{item.description}</span>
+        </button>
+      ))}
+    </div>
   );
 }
 
@@ -3045,10 +3495,7 @@ function FlintEditorContextMenu(properties: FlintEditorContextMenuProperties): M
   if (!cm.open) return undefined;
   const store = properties.store;
   const bridge = properties.bridge;
-  const refreshGraph = () => {
-    bridge?.setGraph(store.getState().graph.nodes, store.getState().graph.edges, store.getState().graph.groups ?? []);
-    bridge?.renderFrame();
-  };
+  const handleClose = () => properties.setContextMenu({ ...cm, open: false });
 
   const filteredItems = properties.allDefinitions.filter(
     (definition) =>
@@ -3078,223 +3525,42 @@ function FlintEditorContextMenu(properties: FlintEditorContextMenuProperties): M
       </div>
 
       {cm.targetType === 'edge' && cm.targetId && (
-        <div className={styles.contextMenuActions}>
-          <button
-            type="button"
-            className={styles.contextMenuItem}
-            onClick={() => {
-              store.addEdgePoint(cm.targetId ?? '', { x: Math.round(cm.worldX), y: Math.round(cm.worldY) });
-              refreshGraph();
-              properties.setContextMenu({ ...cm, open: false });
-            }}
-          >
-            + Add Waypoint Here
-          </button>
-          <button
-            type="button"
-            className={styles.contextMenuItem}
-            onClick={() => {
-              store.clearEdgePoints(cm.targetId ?? '');
-              refreshGraph();
-              properties.setContextMenu({ ...cm, open: false });
-            }}
-          >
-            Reset Path (Default Curve)
-          </button>
-          <button
-            type="button"
-            className={styles.contextMenuItem}
-            style={{ color: '#f85149' }}
-            onClick={() => {
-              store.removeEdge(cm.targetId ?? '');
-              refreshGraph();
-              properties.setContextMenu({ ...cm, open: false });
-            }}
-          >
-            Remove Connection
-          </button>
-        </div>
+        <ContextMenuEdgeActions
+          targetId={cm.targetId}
+          worldX={cm.worldX}
+          worldY={cm.worldY}
+          store={store}
+          bridge={bridge}
+          onClose={handleClose}
+        />
       )}
 
       {cm.targetType === 'node' && cm.targetId && (
-        <div className={styles.contextMenuActions}>
-          <button
-            type="button"
-            className={styles.contextMenuItem}
-            onClick={() => {
-              store.copyNode(cm.targetId ?? '');
-              properties.setContextMenu({ ...cm, open: false });
-            }}
-          >
-            Copy Node
-          </button>
-          {properties.selectedNode?.metaSubgraph && (
-            <div>
-              <button
-                type="button"
-                className={styles.contextMenuItem}
-                onClick={() => {
-                  store.drillIntoMetaNode(cm.targetId ?? '');
-                  refreshGraph();
-                  properties.setContextMenu({ ...cm, open: false });
-                }}
-              >
-                Enter Function (Drill Down)
-              </button>
-              <button
-                type="button"
-                className={styles.contextMenuItem}
-                onClick={() => {
-                  store.duplicateMetaNode(cm.targetId ?? '');
-                  refreshGraph();
-                  properties.setContextMenu({ ...cm, open: false });
-                }}
-              >
-                Duplicate Meta Node
-              </button>
-            </div>
-          )}
-          {cm.targetGroupId && (
-            <div>
-              <button
-                type="button"
-                className={styles.contextMenuItem}
-                onClick={() => {
-                  store.copyGroup(cm.targetGroupId ?? '');
-                  properties.setContextMenu({ ...cm, open: false });
-                }}
-              >
-                Copy Group
-              </button>
-              <button
-                type="button"
-                className={styles.contextMenuItem}
-                onClick={() => {
-                  store.ungroup(cm.targetGroupId ?? '');
-                  refreshGraph();
-                  properties.setContextMenu({ ...cm, open: false });
-                }}
-              >
-                Ungroup
-              </button>
-            </div>
-          )}
-          {properties.selectedNode && properties.selectedNode.outputs.length > 1 && (
-            <button
-              type="button"
-              className={styles.contextMenuItem}
-              onClick={() => {
-                store.toggleSplitOutputs(cm.targetId ?? '');
-                properties.setContextMenu({ ...cm, open: false });
-              }}
-            >
-              {properties.selectedNode.splitOutputs === false ? 'Split Outputs to Fields' : 'Combine Outputs to Record'}
-            </button>
-          )}
-          <button
-            type="button"
-            className={styles.contextMenuItem}
-            style={{ color: '#f85149' }}
-            onClick={() => {
-              store.removeNode(cm.targetId ?? '');
-              refreshGraph();
-              properties.setContextMenu({ ...cm, open: false });
-            }}
-          >
-            Delete Node
-          </button>
-        </div>
+        <ContextMenuNodeActions
+          targetId={cm.targetId}
+          targetGroupId={cm.targetGroupId}
+          selectedNode={properties.selectedNode}
+          store={store}
+          bridge={bridge}
+          onClose={handleClose}
+        />
       )}
 
       {cm.targetType === 'group' && cm.targetGroupId && (
-        <div className={styles.contextMenuActions}>
-          <button
-            type="button"
-            className={styles.contextMenuItem}
-            onClick={() => {
-              store.copyGroup(cm.targetGroupId ?? '');
-              properties.setContextMenu({ ...cm, open: false });
-            }}
-          >
-            Copy Group (with Connections)
-          </button>
-          <button
-            type="button"
-            className={styles.contextMenuItem}
-            onClick={() => {
-              store.ungroup(cm.targetGroupId ?? '');
-              refreshGraph();
-              properties.setContextMenu({ ...cm, open: false });
-            }}
-          >
-            Ungroup
-          </button>
-          <div style={{ padding: '4px 8px', fontSize: '11px', color: '#8b949e' }}>Group Color:</div>
-          <div
-            className={styles.colorPickerRow}
-            style={{ padding: '0 8px' }}
-          >
-            {SWATCH_COLORS.map((c) => (
-              <button
-                key={c}
-                type="button"
-                className={styles.colorSwatch}
-                style={{ backgroundColor: c }}
-                onClick={() => {
-                  store.setGroupColor(cm.targetGroupId ?? '', c);
-                  refreshGraph();
-                  properties.setContextMenu({ ...cm, open: false });
-                }}
-              />
-            ))}
-          </div>
-        </div>
+        <ContextMenuGroupActions
+          targetGroupId={cm.targetGroupId}
+          store={store}
+          bridge={bridge}
+          onClose={handleClose}
+        />
       )}
 
       {cm.targetType === 'selection' && (
-        <div className={styles.contextMenuActions}>
-          <button
-            type="button"
-            className={styles.contextMenuItem}
-            onClick={() => {
-              store.copySelection();
-              properties.setContextMenu({ ...cm, open: false });
-            }}
-          >
-            Copy Selected ({properties.editorState.selectedNodeIds.length} Nodes + Connections)
-          </button>
-          <button
-            type="button"
-            className={styles.contextMenuItem}
-            onClick={() => {
-              store.groupSelectedNodes();
-              properties.setContextMenu({ ...cm, open: false });
-            }}
-          >
-            Group Selected
-          </button>
-          <button
-            type="button"
-            className={styles.contextMenuItem}
-            onClick={() => {
-              store.createMetaNodeFromSelected();
-              properties.setContextMenu({ ...cm, open: false });
-            }}
-          >
-            Create Meta Node
-          </button>
-          <button
-            type="button"
-            className={styles.contextMenuItem}
-            style={{ color: '#f85149' }}
-            onClick={() => {
-              store.deleteSelected();
-              properties.setContextMenu({ ...cm, open: false });
-            }}
-          >
-            Delete Selected
-          </button>
-        </div>
+        <ContextMenuSelectionActions
+          selectedNodeCount={properties.editorState.selectedNodeIds.length}
+          store={store}
+          onClose={handleClose}
+        />
       )}
 
       {properties.editorState.hasClipboard && (
@@ -3307,8 +3573,8 @@ function FlintEditorContextMenu(properties: FlintEditorContextMenuProperties): M
             className={styles.contextMenuItem}
             onClick={() => {
               store.paste({ x: cm.worldX, y: cm.worldY });
-              refreshGraph();
-              properties.setContextMenu({ ...cm, open: false });
+              syncGraphWithBridge(store, bridge);
+              handleClose();
             }}
           >
             Paste
@@ -3316,22 +3582,13 @@ function FlintEditorContextMenu(properties: FlintEditorContextMenuProperties): M
         </div>
       )}
 
-      <div className={styles.contextMenuList}>
-        {filteredItems.map((item) => (
-          <button
-            key={item.operation}
-            type="button"
-            className={styles.contextMenuItem}
-            onClick={() => {
-              store.addNode(item.operation, { x: cm.worldX, y: cm.worldY });
-              properties.setContextMenu({ ...cm, open: false });
-            }}
-          >
-            <span style={{ fontWeight: 600 }}>{item.title}</span>
-            <span style={{ fontSize: '10px', color: '#8b949e' }}>{item.description}</span>
-          </button>
-        ))}
-      </div>
+      <ContextMenuNodeList
+        filteredItems={filteredItems}
+        worldX={cm.worldX}
+        worldY={cm.worldY}
+        store={store}
+        onClose={handleClose}
+      />
     </div>
   );
 }
@@ -3516,7 +3773,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         paintSpriteSheet(spriteSheetMode, spriteSheetGrid, cell.foundIndex);
         paintInspectCell(cell.foundX, cell.foundY, cell.foundW, cell.foundH);
       } else {
-        setHoveredGlyph(undefined);
+        setHoveredGlyph();
         paintSpriteSheet(spriteSheetMode, spriteSheetGrid);
       }
     } catch {
@@ -3616,40 +3873,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         width,
         height,
         initialDpr,
-        (message) => {
-          switch (message.type) {
-            case 'frame': {
-              if (message.performance) {
-                recordPerfMetrics(message.performance);
-              }
-              break;
-            }
-            case 'ready': {
-              if (message.supported) {
-                if (message.performance) {
-                  recordPerfMetrics(message.performance);
-                }
-              } else {
-                setIsFallback(true);
-                if (message.performance) {
-                  recordPerfMetrics(message.performance);
-                }
-              }
-              break;
-            }
-            case 'hit_result': {
-              if (message.hit?.type === 'node') {
-                store.selectNode(message.hit.nodeId);
-              } else if (!message.hit) {
-                store.deselectAll();
-              }
-              break;
-            }
-            default: {
-              break;
-            }
-          }
-        },
+        (message) => handleBridgeMessage(message, recordPerfMetrics, setIsFallback, store),
         properties.renderer,
         properties.theme && properties.theme !== 'auto' ? properties.theme : 'dark',
       );
@@ -3666,8 +3890,7 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         );
       });
 
-      bridge.setGraph(store.getState().graph.nodes, store.getState().graph.edges, store.getState().graph.groups ?? []);
-      bridge.renderFrame();
+      syncGraphWithBridge(store, bridge);
       recordPerfMetrics(bridge.getPerformanceStats());
 
       if (typeof ResizeObserver !== 'undefined') {
@@ -3790,74 +4013,39 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
       data-theme={resolvedTheme}
     >
       <FlintEditorToolbar
-        isExecuting={editorState.isExecuting}
-        canUndo={editorState.canUndo}
-        canRedo={editorState.canRedo}
-        renderer={properties.renderer}
-        theme={resolvedTheme}
+        editorState={editorState}
+        resolvedTheme={resolvedTheme}
+        isFallback={isFallback}
+        perfMetrics={perfMetrics}
+        store={store}
+        bridge={bridgeReference.current}
         onRun={handleRun}
         onExport={handleExport}
-        onUndo={() => store.undo()}
-        onRedo={() => store.redo()}
-        onFitView={() => bridgeReference.current?.fitView()}
         onToggleTheme={handleToggleTheme}
-        onOpenPerfModal={() => setShowPerfModal(true)}
+        onOpenPerf={() => setShowPerfModal(true)}
       />
 
       <div className={styles.editorWorkspace}>
         <FlintEditorPalette
           searchQuery={searchQuery}
+          onSearchInput={setSearchQuery}
+          registeredMetaNodes={editorState.registeredMetaNodes}
           populatedCategories={populatedCategories}
-          onSearchChange={setSearchQuery}
           onAddNode={handleAddNode}
+          store={store}
         />
 
-        <div
-          ref={containerReference}
-          className={styles.canvasContainer}
-          onDragOver={(event: unknown) => {
-            if (typeof DragEvent !== 'undefined' && event instanceof DragEvent) {
-              event.preventDefault();
-            }
-          }}
-          onDrop={(event: unknown) => {
-            const op = extractDragOperationType(event);
-            if (
-              op &&
-              bridgeReference.current &&
-              canvasReference.current &&
-              typeof DragEvent !== 'undefined' &&
-              event instanceof DragEvent
-            ) {
-              const rect = canvasReference.current.getBoundingClientRect();
-              const world = bridgeReference.current.screenToWorld(event.clientX - rect.left, event.clientY - rect.top);
-              store.addNode(op, { x: Math.round(world.x), y: Math.round(world.y) });
-            }
-          }}
-        >
-          <canvas
-            ref={canvasReference}
-            className={styles.canvas}
-          />
-
-          {selectionSquare.active && (
-            <div
-              className={styles.selectionSquare}
-              style={{
-                left: `${Math.min(selectionSquare.startX, selectionSquare.currentX)}px`,
-                top: `${Math.min(selectionSquare.startY, selectionSquare.currentY)}px`,
-                width: `${Math.abs(selectionSquare.currentX - selectionSquare.startX)}px`,
-                height: `${Math.abs(selectionSquare.currentY - selectionSquare.startY)}px`,
-              }}
-            />
-          )}
-
-          {controller && (
-            <div className={styles.debugScrubberDock}>
-              <ForgeDebugScrubber controller={controller} />
-            </div>
-          )}
-        </div>
+        <FlintEditorCanvas
+          canvasReference={canvasReference}
+          containerReference={containerReference}
+          renderer={properties.renderer}
+          editorState={editorState}
+          isFallback={isFallback}
+          selectionSquare={selectionSquare}
+          controller={controller}
+          store={store}
+          bridge={bridgeReference.current}
+        />
 
         <FlintEditorInspector
           selectedNode={selectedNode}
@@ -3866,16 +4054,18 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
           selectedEdge={selectedEdge}
           store={store}
           bridge={bridgeReference.current}
+          editorState={editorState}
         />
       </div>
 
       <FlintEditorContextMenu
         contextMenu={contextMenu}
-        allDefinitions={allDefinitions}
+        setContextMenu={setContextMenu}
+        selectedNode={selectedNode}
         store={store}
         bridge={bridgeReference.current}
-        onClose={() => setContextMenu((previous) => ({ ...previous, open: false }))}
-        onQueryChange={(q) => setContextMenu((previous) => ({ ...previous, query: q }))}
+        allDefinitions={allDefinitions}
+        editorState={editorState}
       />
 
       <FlintCodeExportModal
@@ -3889,15 +4079,17 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
       <FlintPerfProfilerModal
         show={showPerfModal}
         perfMetrics={perfMetrics}
-        d3ChartCanvasReference={d3ChartCanvasReference}
+        perfHistory={perfHistory}
+        telemetryInterval={telemetryInterval}
+        setTelemetryInterval={setTelemetryInterval}
+        spriteSheetMode={spriteSheetMode}
+        setSpriteSheetMode={setSpriteSheetMode}
+        spriteSheetGrid={spriteSheetGrid}
+        setSpriteSheetGrid={setSpriteSheetGrid}
+        hoveredGlyph={hoveredGlyph}
         spriteSheetCanvasReference={spriteSheetCanvasReference}
         inspectCanvasReference={inspectCanvasReference}
-        hoveredGlyph={hoveredGlyph}
-        spriteSheetMode={spriteSheetMode}
-        spriteSheetGrid={spriteSheetGrid}
         onClose={() => setShowPerfModal(false)}
-        onSetSpriteSheetMode={setSpriteSheetMode}
-        onToggleSpriteSheetGrid={() => setSpriteSheetGrid((previous) => !previous)}
         onSpriteSheetPointerMove={onSpriteSheetPointerMove}
         onSpriteSheetPointerLeave={onSpriteSheetPointerLeave}
         paintSpriteSheet={paintSpriteSheet}

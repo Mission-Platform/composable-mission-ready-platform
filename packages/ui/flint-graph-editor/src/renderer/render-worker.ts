@@ -520,11 +520,12 @@ if (globalThis.self !== undefined) {
     isMeta?: boolean,
     isDark = currentTheme !== 'light',
   ): [number, number, number, number] {
-    if (isMeta) {
-      return isDark ? [0.345, 0.651, 1, 1] : [0.035, 0.412, 0.855, 1];
-    }
     const table = isDark ? CATEGORY_RGBA_DARK : CATEGORY_RGBA_LIGHT;
-    return (category ? table[category] : undefined) ?? (isDark ? [0.545, 0.58, 0.62, 1] : [0.341, 0.376, 0.416, 1]);
+    if (isMeta) {
+      return table.math;
+    }
+    const catColor = category ? table[category] : undefined;
+    return catColor ?? (isDark ? [0.545, 0.58, 0.62, 1] : [0.341, 0.376, 0.416, 1]);
   }
 
   const PORT_TYPE_RGBA_DARK: Record<string, [number, number, number, number]> = {
@@ -549,10 +550,8 @@ if (globalThis.self !== undefined) {
     isDark = currentTheme !== 'light',
   ): [number, number, number, number] {
     const table = isDark ? PORT_TYPE_RGBA_DARK : PORT_TYPE_RGBA_LIGHT;
-    if (typeof type === 'string' && type in table) {
-      return table[type];
-    }
-    return isDark ? [0.788, 0.82, 0.851, 1] : [0.141, 0.161, 0.184, 1];
+    const typeStr = typeof type === 'string' ? type : '';
+    return table[typeStr] ?? (isDark ? [0.788, 0.82, 0.851, 1] : [0.141, 0.161, 0.184, 1]);
   }
 
   /**
@@ -578,10 +577,7 @@ if (globalThis.self !== undefined) {
     const green = Number.parseInt(hex.slice(2, 4), 16) / 255;
     const blue = Number.parseInt(hex.slice(4, 6), 16) / 255;
     const alpha = Number.parseInt(hex.slice(6, 8), 16) / 255;
-    const channels = [red, green, blue, alpha] as const;
-    for (const channel of channels) {
-      if (Number.isNaN(channel)) return undefined;
-    }
+    if (Number.isNaN(red) || Number.isNaN(green) || Number.isNaN(blue) || Number.isNaN(alpha)) return undefined;
     return [red, green, blue, alpha];
   }
 
@@ -594,8 +590,7 @@ if (globalThis.self !== undefined) {
     const red = Number.parseInt(match[1] || '0', 10) / 255;
     const green = Number.parseInt(match[2] || '0', 10) / 255;
     const blue = Number.parseInt(match[3] || '0', 10) / 255;
-    const alphaStr = match[4];
-    const alpha = alphaStr === undefined ? 1 : Number.parseFloat(alphaStr);
+    const alpha = match[4] === undefined ? 1 : Number.parseFloat(match[4]);
     return [red, green, blue, alpha];
   }
 
@@ -608,12 +603,8 @@ if (globalThis.self !== undefined) {
   ): [number, number, number, number] {
     if (!colorStr) return defaultRgba;
     const str = colorStr.trim();
-    if (str.startsWith('#')) {
-      return parseHexColor(str) ?? defaultRgba;
-    }
-    if (str.startsWith('rgb')) {
-      return parseRgbColor(str) ?? defaultRgba;
-    }
+    if (str.startsWith('#')) return parseHexColor(str) ?? defaultRgba;
+    if (str.startsWith('rgb')) return parseRgbColor(str) ?? defaultRgba;
     return defaultRgba;
   }
 
@@ -2973,121 +2964,128 @@ if (globalThis.self !== undefined) {
     };
   }
 
-  /**
-   * Computes WebGPU node instance glow parameters based on node state.
-   */
-  function getWebGpuNodeGlow(isSelected: number, isActive: number, isTrapped: number, isDark: boolean) {
-    if (isTrapped) {
-      return { glowR: isDark ? 0.95 : 0.81, glowG: isDark ? 0.15 : 0.13, glowB: isDark ? 0.2 : 0.18, glowA: 0.9 };
-    }
-    if (isActive) {
-      return { glowR: isDark ? 0.15 : 0.1, glowG: isDark ? 0.75 : 0.5, glowB: isDark ? 1 : 0.22, glowA: 0.8 };
-    }
-    return { glowR: 0, glowG: 0, glowB: 0, glowA: isSelected ? 0.5 : 0 };
+  interface WebGpuNodeStyle {
+    readonly border: [number, number, number, number];
+    readonly width: number;
+    readonly glow: [number, number, number, number];
   }
+
+  const GPU_NODE_STYLES_DARK: Record<string, WebGpuNodeStyle> = {
+    trapped: { border: [0.97, 0.32, 0.29, 1], width: 2.5, glow: [0.95, 0.15, 0.2, 0.9] },
+    active: { border: [0.25, 0.73, 0.31, 1], width: 2.5, glow: [0.15, 0.75, 1, 0.8] },
+    selected: { border: [0.35, 0.65, 1, 1], width: 2.5, glow: [0, 0, 0, 0.5] },
+    default: { border: [0.28, 0.32, 0.42, 0.7], width: 1.2, glow: [0, 0, 0, 0] },
+  };
+
+  const GPU_NODE_STYLES_LIGHT: Record<string, WebGpuNodeStyle> = {
+    trapped: { border: [0.81, 0.13, 0.18, 1], width: 2.5, glow: [0.81, 0.13, 0.18, 0.9] },
+    active: { border: [0.1, 0.5, 0.22, 1], width: 2.5, glow: [0.1, 0.5, 0.22, 0.8] },
+    selected: { border: [0.035, 0.412, 0.855, 1], width: 2.5, glow: [0, 0, 0, 0.5] },
+    default: { border: [0.816, 0.843, 0.871, 0.7], width: 1.2, glow: [0, 0, 0, 0] },
+  };
 
   /**
    * Computes WebGPU node instance fill and border styling tuples.
    */
   function computeWebGpuNodeGlowAndBorder(isSelected: number, isActive: number, isTrapped: number, isDark: boolean) {
-    const glow = getWebGpuNodeGlow(isSelected, isActive, isTrapped, isDark);
+    const table = isDark ? GPU_NODE_STYLES_DARK : GPU_NODE_STYLES_LIGHT;
+    const key = isTrapped ? 'trapped' : isActive ? 'active' : isSelected ? 'selected' : 'default';
+    const s = table[key];
     const fillR = isDark ? 0.14 : 1;
     const fillG = isDark ? 0.16 : 1;
     const fillB = isDark ? 0.22 : 1;
     const fillA = isDark ? 0.95 : 0.98;
 
-    const borderR = isDark ? (isSelected ? 0.35 : 0.28) : isSelected ? 0.035 : 0.816;
-    const borderG = isDark ? (isSelected ? 0.65 : 0.32) : isSelected ? 0.412 : 0.843;
-    const borderB = isDark ? (isSelected ? 1 : 0.42) : isSelected ? 0.855 : 0.871;
-    const borderA = isSelected ? 1 : 0.7;
-    const borderWidth = isSelected ? 2.5 : 1.2;
-
-    return { ...glow, fillR, fillG, fillB, fillA, borderR, borderG, borderB, borderA, borderWidth };
+    return {
+      glowR: s.glow[0],
+      glowG: s.glow[1],
+      glowB: s.glow[2],
+      glowA: s.glow[3],
+      fillR,
+      fillG,
+      fillB,
+      fillA,
+      borderR: s.border[0],
+      borderG: s.border[1],
+      borderB: s.border[2],
+      borderA: s.border[3],
+      borderWidth: s.width,
+    };
   }
+
+  interface WebGpuEdgeStyle {
+    readonly color: [number, number, number, number];
+    readonly width: number;
+  }
+
+  const GPU_EDGE_STYLES_DARK: Record<string, WebGpuEdgeStyle> = {
+    selected: { color: [0.35, 0.65, 1, 1], width: 3 },
+    active: { color: [0.2, 0.8, 1, 0.9], width: 2.5 },
+    default: { color: [0.45, 0.52, 0.65, 0.8], width: 2.5 },
+  };
+
+  const GPU_EDGE_STYLES_LIGHT: Record<string, WebGpuEdgeStyle> = {
+    selected: { color: [0.035, 0.412, 0.855, 1], width: 3 },
+    active: { color: [0.1, 0.5, 0.22, 0.9], width: 2.5 },
+    default: { color: [0.34, 0.38, 0.42, 0.65], width: 2.5 },
+  };
 
   /**
    * Computes WebGPU edge instance color channels and cable stroke width.
    */
   function computeWebGpuEdgeColorAndWidth(isSelected: number, isActive: number, isDark: boolean) {
-    if (isSelected) {
-      return {
-        colorR: isDark ? 0.35 : 0.035,
-        colorG: isDark ? 0.65 : 0.412,
-        colorB: isDark ? 1 : 0.855,
-        colorA: 1,
-        widthVal: 3,
-      };
-    }
-    if (isActive) {
-      return {
-        colorR: isDark ? 0.2 : 0.1,
-        colorG: isDark ? 0.8 : 0.5,
-        colorB: isDark ? 1 : 0.22,
-        colorA: 0.9,
-        widthVal: 2.5,
-      };
-    }
+    const table = isDark ? GPU_EDGE_STYLES_DARK : GPU_EDGE_STYLES_LIGHT;
+    const key = isSelected ? 'selected' : isActive ? 'active' : 'default';
+    const s = table[key];
     return {
-      colorR: isDark ? 0.45 : 0.34,
-      colorG: isDark ? 0.52 : 0.38,
-      colorB: isDark ? 0.65 : 0.42,
-      colorA: isDark ? 0.8 : 0.65,
-      widthVal: 2.5,
+      colorR: s.color[0],
+      colorG: s.color[1],
+      colorB: s.color[2],
+      colorA: s.color[3],
+      widthVal: s.width,
     };
   }
+
+  interface WebGpuPinStyle {
+    readonly fill: [number, number, number, number];
+    readonly border: [number, number, number, number];
+    readonly borderWidth: number;
+    readonly glow: [number, number, number, number];
+  }
+
+  const GPU_PIN_STYLES_DARK: Record<string, WebGpuPinStyle> = {
+    hovered: { fill: [0, 0.94, 1, 1], border: [0.45, 0.52, 0.65, 0.8], borderWidth: 2.5, glow: [0, 0.94, 1, 0.8] },
+    active: { fill: [0, 1, 0.53, 1], border: [0.45, 0.52, 0.65, 0.8], borderWidth: 1.5, glow: [0, 1, 0.53, 0.6] },
+    default: { fill: [0.15, 0.2, 0.28, 1], border: [0.45, 0.52, 0.65, 0.8], borderWidth: 1.5, glow: [0, 0, 0, 0] },
+  };
+
+  const GPU_PIN_STYLES_LIGHT: Record<string, WebGpuPinStyle> = {
+    hovered: { fill: [1, 1, 1, 1], border: [0.34, 0.38, 0.42, 0.8], borderWidth: 2.5, glow: [0, 0.41, 0.85, 0.8] },
+    active: { fill: [0.1, 0.5, 0.22, 1], border: [0.34, 0.38, 0.42, 0.8], borderWidth: 1.5, glow: [0, 0.5, 0.22, 0.6] },
+    default: { fill: [0.94, 0.95, 0.96, 1], border: [0.34, 0.38, 0.42, 0.8], borderWidth: 1.5, glow: [0, 0, 0, 0] },
+  };
 
   /**
    * Computes WebGPU pin instance color and halo glow attributes.
    */
   function computeWebGpuPinColorAndWidth(isHovered: number, isActive: number, isDark: boolean) {
-    if (isHovered) {
-      return {
-        fillR: isDark ? 0 : 1,
-        fillG: isDark ? 0.94 : 1,
-        fillB: isDark ? 1 : 1,
-        fillA: 1,
-        borderR: isDark ? 0.45 : 0.34,
-        borderG: isDark ? 0.52 : 0.38,
-        borderB: isDark ? 0.65 : 0.42,
-        borderA: 0.8,
-        borderWidth: 2.5,
-        glowR: 0,
-        glowG: isDark ? 0.94 : 0.41,
-        glowB: isDark ? 1 : 0.85,
-        glowA: 0.8,
-      };
-    }
-    if (isActive) {
-      return {
-        fillR: isDark ? 0 : 0.1,
-        fillG: isDark ? 1 : 0.5,
-        fillB: isDark ? 0.53 : 0.22,
-        fillA: 1,
-        borderR: isDark ? 0.45 : 0.34,
-        borderG: isDark ? 0.52 : 0.38,
-        borderB: isDark ? 0.65 : 0.42,
-        borderA: 0.8,
-        borderWidth: 1.5,
-        glowR: 0,
-        glowG: isDark ? 1 : 0.5,
-        glowB: isDark ? 0.53 : 0.22,
-        glowA: 0.6,
-      };
-    }
+    const table = isDark ? GPU_PIN_STYLES_DARK : GPU_PIN_STYLES_LIGHT;
+    const key = isHovered ? 'hovered' : isActive ? 'active' : 'default';
+    const s = table[key];
     return {
-      fillR: isDark ? 0.15 : 0.94,
-      fillG: isDark ? 0.2 : 0.95,
-      fillB: isDark ? 0.28 : 0.96,
-      fillA: 1,
-      borderR: isDark ? 0.45 : 0.34,
-      borderG: isDark ? 0.52 : 0.38,
-      borderB: isDark ? 0.65 : 0.42,
-      borderA: 0.8,
-      borderWidth: 1.5,
-      glowR: 0,
-      glowG: 0,
-      glowB: 0,
-      glowA: 0,
+      fillR: s.fill[0],
+      fillG: s.fill[1],
+      fillB: s.fill[2],
+      fillA: s.fill[3],
+      borderR: s.border[0],
+      borderG: s.border[1],
+      borderB: s.border[2],
+      borderA: s.border[3],
+      borderWidth: s.borderWidth,
+      glowR: s.glow[0],
+      glowG: s.glow[1],
+      glowB: s.glow[2],
+      glowA: s.glow[3],
     };
   }
 
@@ -3154,62 +3152,308 @@ if (globalThis.self !== undefined) {
     passEncoder.draw(vertexCount, actualCount, 0, 0);
   }
 
+  const GL_NODE_BORDER_DARK: Record<string, [number, number, number]> = {
+    selected: [0.35, 0.65, 1],
+    trapped: [0.97, 0.32, 0.29],
+    active: [0.25, 0.73, 0.31],
+    default: [0.22, 0.25, 0.32],
+  };
+
+  const GL_NODE_BORDER_LIGHT: Record<string, [number, number, number]> = {
+    selected: [0.035, 0.412, 0.855],
+    trapped: [0.81, 0.13, 0.18],
+    active: [0.1, 0.5, 0.22],
+    default: [0.816, 0.843, 0.871],
+  };
+
   /**
    * Computes WebGL node border RGB color channels.
    */
   function computeGlNodeBorder(isSelected: number, isActive: number, isTrapped: number, isDark: boolean) {
-    if (isSelected) {
-      return { br: isDark ? 0.35 : 0.035, bg: isDark ? 0.65 : 0.412, bb: isDark ? 1 : 0.855 };
-    }
-    if (isTrapped) {
-      return { br: isDark ? 0.97 : 0.81, bg: isDark ? 0.32 : 0.13, bb: isDark ? 0.29 : 0.18 };
-    }
-    if (isActive) {
-      return { br: isDark ? 0.25 : 0.1, bg: isDark ? 0.73 : 0.5, bb: isDark ? 0.31 : 0.22 };
-    }
-    return { br: isDark ? 0.22 : 0.816, bg: isDark ? 0.25 : 0.843, bb: isDark ? 0.32 : 0.871 };
+    const table = isDark ? GL_NODE_BORDER_DARK : GL_NODE_BORDER_LIGHT;
+    const key = isTrapped ? 'trapped' : isActive ? 'active' : isSelected ? 'selected' : 'default';
+    const c = table[key];
+    return { br: c[0], bg: c[1], bb: c[2] };
   }
+
+  const GL_PIN_COLOR_DARK: Record<string, [number, number, number]> = {
+    hovered: [0.47, 0.75, 1],
+    active: [0.25, 0.73, 0.31],
+    default: [0.55, 0.58, 0.62],
+  };
+
+  const GL_PIN_COLOR_LIGHT: Record<string, [number, number, number]> = {
+    hovered: [0.035, 0.412, 0.855],
+    active: [0.1, 0.5, 0.22],
+    default: [0.34, 0.38, 0.42],
+  };
 
   /**
    * Computes WebGL pin circle RGB fill color.
    */
   function computeGlPinColor(isHovered: number, isActive: number, isDark: boolean) {
-    if (isHovered) {
-      return { pr: isDark ? 0.47 : 0.035, pg: isDark ? 0.75 : 0.412, pb: isDark ? 1 : 0.855 };
-    }
-    if (isActive) {
-      return { pr: isDark ? 0.25 : 0.1, pg: isDark ? 0.73 : 0.5, pb: isDark ? 0.31 : 0.22 };
-    }
-    return { pr: isDark ? 0.55 : 0.34, pg: isDark ? 0.58 : 0.38, pb: isDark ? 0.62 : 0.42 };
+    const table = isDark ? GL_PIN_COLOR_DARK : GL_PIN_COLOR_LIGHT;
+    const key = isHovered ? 'hovered' : isActive ? 'active' : 'default';
+    const c = table[key];
+    return { pr: c[0], pg: c[1], pb: c[2] };
   }
+
+  const C2D_NODE_STROKE_DARK: Record<string, { strokeStyle: string; lineWidth: number }> = {
+    selected: { strokeStyle: '#58a6ff', lineWidth: 2 },
+    trapped: { strokeStyle: '#f85149', lineWidth: 2 },
+    active: { strokeStyle: '#3fb950', lineWidth: 2 },
+    default: { strokeStyle: 'rgba(56, 64, 82, 0.8)', lineWidth: 1 },
+  };
+
+  const C2D_NODE_STROKE_LIGHT: Record<string, { strokeStyle: string; lineWidth: number }> = {
+    selected: { strokeStyle: '#0969da', lineWidth: 2 },
+    trapped: { strokeStyle: '#cf222e', lineWidth: 2 },
+    active: { strokeStyle: '#1a7f37', lineWidth: 2 },
+    default: { strokeStyle: '#d0d7de', lineWidth: 1 },
+  };
 
   /**
    * Computes 2D Canvas node stroke styling properties.
    */
   function computeC2dNodeStroke(isSelected: number, isActive: number, isTrapped: number, isDark: boolean) {
-    if (isSelected) {
-      return { strokeStyle: isDark ? '#58a6ff' : '#0969da', lineWidth: 2 };
-    }
-    if (isTrapped) {
-      return { strokeStyle: isDark ? '#f85149' : '#cf222e', lineWidth: 2 };
-    }
-    if (isActive) {
-      return { strokeStyle: isDark ? '#3fb950' : '#1a7f37', lineWidth: 2 };
-    }
-    return { strokeStyle: isDark ? 'rgba(56, 64, 82, 0.8)' : '#d0d7de', lineWidth: 1 };
+    const table = isDark ? C2D_NODE_STROKE_DARK : C2D_NODE_STROKE_LIGHT;
+    const key = isTrapped ? 'trapped' : isActive ? 'active' : isSelected ? 'selected' : 'default';
+    return table[key];
   }
+
+  const C2D_PIN_FILL_DARK: Record<string, string> = {
+    hovered: '#79c0ff',
+    active: '#3fb950',
+    default: '#8b949e',
+  };
+
+  const C2D_PIN_FILL_LIGHT: Record<string, string> = {
+    hovered: '#0969da',
+    active: '#1a7f37',
+    default: '#57606a',
+  };
 
   /**
    * Computes 2D Canvas pin circle fill color string.
    */
   function computeC2dPinFill(isHovered: number, isActive: number, isDark: boolean): string {
-    if (isHovered) {
-      return isDark ? '#79c0ff' : '#0969da';
+    const table = isDark ? C2D_PIN_FILL_DARK : C2D_PIN_FILL_LIGHT;
+    const key = isHovered ? 'hovered' : isActive ? 'active' : 'default';
+    return table[key];
+  }
+
+  /**
+   * Flushes WebGPU text vertex buffer and executes text draw calls.
+   */
+  function flushWebGpuTextBatch(): void {
+    if (!currentPassEncoder || !textPipeline || !cameraBindGroup || !fontBindGroup || !gpuDevice) return;
+    if (webGpuTextVertices.length === 0) return;
+    const requiredBytes = webGpuTextVertices.length * 4;
+    textVertexBuffer = ensureGpuInstanceBuffer(textVertexBuffer, requiredBytes, gpuDevice);
+    gpuDevice.queue.writeBuffer(textVertexBuffer, 0, new Float32Array(webGpuTextVertices));
+    currentPassEncoder.setPipeline(textPipeline);
+    currentPassEncoder.setBindGroup(0, cameraBindGroup);
+    currentPassEncoder.setBindGroup(1, fontBindGroup);
+    currentPassEncoder.setVertexBuffer(0, textVertexBuffer);
+    currentPassEncoder.draw(webGpuTextVertices.length / 8, 1, 0, 0);
+  }
+
+  /**
+   * Configures WebGL viewport, clear color, and global uniform matrices.
+   */
+  function setupWebGLViewport(w: number, h: number, dprVal: number, camX: number, camY: number, zoomVal: number): void {
+    if (!glCtx || !glProgram) return;
+    const gl = glCtx;
+    const isDark = currentTheme !== 'light';
+    const canvasW = canvas ? canvas.width : Math.round(w * dprVal);
+    const canvasH = canvas ? canvas.height : Math.round(h * dprVal);
+    gl.viewport(0, 0, canvasW, canvasH);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    const clearR = isDark ? 0.043 : 0.961;
+    const clearG = isDark ? 0.071 : 0.965;
+    const clearB = isDark ? 0.098 : 0.973;
+    gl.clearColor(clearR, clearG, clearB, 1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.useProgram(glProgram);
+    if (glUniformLocations) {
+      gl.uniform2f(glUniformLocations.u_resolution, w, h);
+      gl.uniform2f(glUniformLocations.u_camera, camX, camY);
+      gl.uniform1f(glUniformLocations.u_zoom, zoomVal);
     }
-    if (isActive) {
-      return isDark ? '#3fb950' : '#1a7f37';
+    triVertices = [];
+    lineVertices = [];
+  }
+
+  /**
+   * Generates line segments for WebGL background coordinate grid.
+   */
+  function buildWebGLGridLines(minX: number, minY: number, maxX: number, maxY: number, zoomVal: number): void {
+    const isDark = currentTheme !== 'light';
+    const minorColor = isDark ? [0.22, 0.25, 0.32, 0.18] : [0.55, 0.61, 0.69, 0.25];
+    const majorColor = isDark ? [0.35, 0.4, 0.5, 0.35] : [0.39, 0.47, 0.57, 0.45];
+
+    if (zoomVal > 0.4) {
+      for (let x = Math.floor(minX / 24) * 24; x <= Math.ceil(maxX / 24) * 24; x += 24) {
+        if (x % 120 !== 0) {
+          lineVertices.push(
+            x,
+            minY,
+            minorColor[0],
+            minorColor[1],
+            minorColor[2],
+            minorColor[3],
+            x,
+            maxY,
+            minorColor[0],
+            minorColor[1],
+            minorColor[2],
+            minorColor[3],
+          );
+        }
+      }
+      for (let y = Math.floor(minY / 24) * 24; y <= Math.ceil(maxY / 24) * 24; y += 24) {
+        if (y % 120 !== 0) {
+          lineVertices.push(
+            minX,
+            y,
+            minorColor[0],
+            minorColor[1],
+            minorColor[2],
+            minorColor[3],
+            maxX,
+            y,
+            minorColor[0],
+            minorColor[1],
+            minorColor[2],
+            minorColor[3],
+          );
+        }
+      }
     }
-    return isDark ? '#8b949e' : '#57606a';
+
+    for (let x = Math.floor(minX / 120) * 120; x <= Math.ceil(maxX / 120) * 120; x += 120) {
+      lineVertices.push(
+        x,
+        minY,
+        majorColor[0],
+        majorColor[1],
+        majorColor[2],
+        majorColor[3],
+        x,
+        maxY,
+        majorColor[0],
+        majorColor[1],
+        majorColor[2],
+        majorColor[3],
+      );
+    }
+    for (let y = Math.floor(minY / 120) * 120; y <= Math.ceil(maxY / 120) * 120; y += 120) {
+      lineVertices.push(
+        minX,
+        y,
+        majorColor[0],
+        majorColor[1],
+        majorColor[2],
+        majorColor[3],
+        maxX,
+        y,
+        majorColor[0],
+        majorColor[1],
+        majorColor[2],
+        majorColor[3],
+      );
+    }
+  }
+
+  /**
+   * Flushes batched triangles and line primitives to WebGL framebuffer.
+   */
+  function flushWebGLPrimitives(): void {
+    if (!glCtx || !glVertexBuffer || !glAttribLocations) return;
+    const gl = glCtx;
+    if (triVertices.length > 0) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, glVertexBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(triVertices), gl.DYNAMIC_DRAW);
+      gl.enableVertexAttribArray(glAttribLocations.a_position);
+      gl.vertexAttribPointer(glAttribLocations.a_position, 2, gl.FLOAT, false, 24, 0);
+      gl.enableVertexAttribArray(glAttribLocations.a_color);
+      gl.vertexAttribPointer(glAttribLocations.a_color, 4, gl.FLOAT, false, 24, 8);
+      gl.drawArrays(gl.TRIANGLES, 0, triVertices.length / 6);
+    }
+    if (lineVertices.length > 0) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, glVertexBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(lineVertices), gl.DYNAMIC_DRAW);
+      gl.enableVertexAttribArray(glAttribLocations.a_position);
+      gl.vertexAttribPointer(glAttribLocations.a_position, 2, gl.FLOAT, false, 24, 0);
+      gl.enableVertexAttribArray(glAttribLocations.a_color);
+      gl.vertexAttribPointer(glAttribLocations.a_color, 4, gl.FLOAT, false, 24, 8);
+      gl.drawArrays(gl.LINES, 0, lineVertices.length / 6);
+    }
+    triVertices = [];
+    lineVertices = [];
+  }
+
+  /**
+   * Renders background coordinate grid in Canvas2D context.
+   */
+  function drawCanvas2dGridLines(
+    ctx: CanvasRenderingContext2D,
+    minX: number,
+    minY: number,
+    maxX: number,
+    maxY: number,
+    zoomVal: number,
+  ): void {
+    const isDark = currentTheme !== 'light';
+    ctx.lineWidth = 1 / zoomVal;
+    if (zoomVal > 0.4) {
+      ctx.strokeStyle = isDark ? 'rgba(56, 64, 82, 0.25)' : 'rgba(140, 155, 175, 0.25)';
+      ctx.beginPath();
+      for (let x = Math.floor(minX / 24) * 24; x <= Math.ceil(maxX / 24) * 24; x += 24) {
+        if (x % 120 !== 0) {
+          ctx.moveTo(x, minY);
+          ctx.lineTo(x, maxY);
+        }
+      }
+      for (let y = Math.floor(minY / 24) * 24; y <= Math.ceil(maxY / 24) * 24; y += 24) {
+        if (y % 120 !== 0) {
+          ctx.moveTo(minX, y);
+          ctx.lineTo(maxX, y);
+        }
+      }
+      ctx.stroke();
+    }
+
+    ctx.strokeStyle = isDark ? 'rgba(89, 102, 128, 0.35)' : 'rgba(100, 120, 145, 0.45)';
+    ctx.beginPath();
+    for (let x = Math.floor(minX / 120) * 120; x <= Math.ceil(maxX / 120) * 120; x += 120) {
+      ctx.moveTo(x, minY);
+      ctx.lineTo(x, maxY);
+    }
+    for (let y = Math.floor(minY / 120) * 120; y <= Math.ceil(maxY / 120) * 120; y += 120) {
+      ctx.moveTo(minX, y);
+      ctx.lineTo(maxX, y);
+    }
+    ctx.stroke();
+  }
+
+  /**
+   * Packs camera view projection matrix and viewport uniforms into a Float32Array.
+   */
+  function packCameraUniforms(w: NonNullable<typeof wasm>, theme: string): Float32Array {
+    const uniforms = new Float32Array(24);
+    w.createViewProjectionMatrix(256);
+    const f64Array = new Float64Array(w.memory.buffer, 256, 16);
+    uniforms.set(f64Array);
+    uniforms[16] = w.get_camera_viewport_width();
+    uniforms[17] = w.get_camera_viewport_height();
+    uniforms[18] = w.get_camera_x();
+    uniforms[19] = w.get_camera_y();
+    uniforms[20] = w.get_camera_zoom();
+    uniforms[21] = 1;
+    uniforms[22] = theme === 'light' ? 0 : 1;
+    return uniforms;
   }
 
   const capabilities: WebAssembly.Imports = {
@@ -3217,20 +3461,7 @@ if (globalThis.self !== undefined) {
       gpu_upload_camera_buffer: () => {
         if (!gpuContext || !cameraBuffer || !wasm || !gpuDevice) return;
         prepareWebGpuInstances();
-        const cameraUniforms = new Float32Array(24);
-        wasm.createViewProjectionMatrix(256);
-        const f64Array = new Float64Array(wasm.memory.buffer, 256, 16);
-        for (let i = 0; i < 16; i++) {
-          cameraUniforms[i] = f64Array[i] ?? 0;
-        }
-        cameraUniforms[16] = wasm.get_camera_viewport_width();
-        cameraUniforms[17] = wasm.get_camera_viewport_height();
-        cameraUniforms[18] = wasm.get_camera_x();
-        cameraUniforms[19] = wasm.get_camera_y();
-        cameraUniforms[20] = wasm.get_camera_zoom();
-        cameraUniforms[21] = 1;
-        cameraUniforms[22] = currentTheme === 'light' ? 0 : 1;
-        gpuDevice.queue.writeBuffer(cameraBuffer, 0, cameraUniforms);
+        gpuDevice.queue.writeBuffer(cameraBuffer, 0, packCameraUniforms(wasm, currentTheme));
       },
     },
     'webgpu.write_node_instance': {
@@ -3424,24 +3655,7 @@ if (globalThis.self !== undefined) {
     'webgpu.render_end': {
       gpu_render_end: () => {
         if (!currentPassEncoder || !currentCommandEncoder || !gpuContext) return;
-        if (textPipeline && cameraBindGroup && fontBindGroup && webGpuTextVertices.length > 0 && gpuDevice) {
-          const requiredBytes = webGpuTextVertices.length * 4;
-          if (!textVertexBuffer || textVertexBuffer.size < requiredBytes) {
-            textVertexBuffer?.destroy();
-            textVertexBuffer = gpuDevice.createBuffer({
-              size: Math.max(requiredBytes, 4096),
-              usage: 0x00_20 | 0x00_08,
-            });
-          }
-          if (textVertexBuffer) {
-            gpuDevice.queue.writeBuffer(textVertexBuffer, 0, new Float32Array(webGpuTextVertices));
-            currentPassEncoder.setPipeline(textPipeline);
-            currentPassEncoder.setBindGroup(0, cameraBindGroup);
-            currentPassEncoder.setBindGroup(1, fontBindGroup);
-            currentPassEncoder.setVertexBuffer(0, textVertexBuffer);
-            currentPassEncoder.draw(webGpuTextVertices.length / 8, 1, 0, 0);
-          }
-        }
+        flushWebGpuTextBatch();
         currentPassEncoder.end();
         gpuDevice?.queue.submit([currentCommandEncoder.finish()]);
         currentPassEncoder = undefined;
@@ -3450,118 +3664,12 @@ if (globalThis.self !== undefined) {
     },
     'webgl.render_begin': {
       gl_render_begin: (w: number, h: number, dprVal: number, camX: number, camY: number, zoomVal: number) => {
-        if (!glCtx || !glProgram) return;
-        const gl = glCtx;
-        const isDark = currentTheme !== 'light';
-        const canvasW = canvas ? canvas.width : Math.round(w * dprVal);
-        const canvasH = canvas ? canvas.height : Math.round(h * dprVal);
-        gl.viewport(0, 0, canvasW, canvasH);
-        gl.enable(gl.BLEND);
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-        if (isDark) {
-          gl.clearColor(0.043, 0.071, 0.098, 1);
-        } else {
-          gl.clearColor(0.961, 0.965, 0.973, 1);
-        }
-        gl.clear(gl.COLOR_BUFFER_BIT);
-        gl.useProgram(glProgram);
-        if (glUniformLocations) {
-          gl.uniform2f(glUniformLocations.u_resolution, w, h);
-          gl.uniform2f(glUniformLocations.u_camera, camX, camY);
-          gl.uniform1f(glUniformLocations.u_zoom, zoomVal);
-        }
-        triVertices = [];
-        lineVertices = [];
+        setupWebGLViewport(w, h, dprVal, camX, camY, zoomVal);
       },
     },
     'webgl.render_grid': {
       gl_render_grid: (minX: number, minY: number, maxX: number, maxY: number, zoomVal: number) => {
-        const isDark = currentTheme !== 'light';
-        const minorSpacing = 24;
-        const majorSpacing = 120;
-        const startX = Math.floor(minX / minorSpacing) * minorSpacing;
-        const endX = Math.ceil(maxX / minorSpacing) * minorSpacing;
-        const startY = Math.floor(minY / minorSpacing) * minorSpacing;
-        const endY = Math.ceil(maxY / minorSpacing) * minorSpacing;
-
-        const minorColor = isDark ? [0.22, 0.25, 0.32, 0.18] : [0.55, 0.61, 0.69, 0.25];
-        const majorColor = isDark ? [0.35, 0.4, 0.5, 0.35] : [0.39, 0.47, 0.57, 0.45];
-
-        if (zoomVal > 0.4) {
-          for (let x = startX; x <= endX; x += minorSpacing) {
-            if (x % majorSpacing !== 0) {
-              lineVertices.push(
-                x,
-                minY,
-                minorColor[0],
-                minorColor[1],
-                minorColor[2],
-                minorColor[3],
-                x,
-                maxY,
-                minorColor[0],
-                minorColor[1],
-                minorColor[2],
-                minorColor[3],
-              );
-            }
-          }
-          for (let y = startY; y <= endY; y += minorSpacing) {
-            if (y % majorSpacing !== 0) {
-              lineVertices.push(
-                minX,
-                y,
-                minorColor[0],
-                minorColor[1],
-                minorColor[2],
-                minorColor[3],
-                maxX,
-                y,
-                minorColor[0],
-                minorColor[1],
-                minorColor[2],
-                minorColor[3],
-              );
-            }
-          }
-        }
-
-        const majorStartX = Math.floor(minX / majorSpacing) * majorSpacing;
-        const majorEndX = Math.ceil(maxX / majorSpacing) * majorSpacing;
-        const majorStartY = Math.floor(minY / majorSpacing) * majorSpacing;
-        const majorEndY = Math.ceil(maxY / majorSpacing) * majorSpacing;
-        for (let x = majorStartX; x <= majorEndX; x += majorSpacing) {
-          lineVertices.push(
-            x,
-            minY,
-            majorColor[0],
-            majorColor[1],
-            majorColor[2],
-            majorColor[3],
-            x,
-            maxY,
-            majorColor[0],
-            majorColor[1],
-            majorColor[2],
-            majorColor[3],
-          );
-        }
-        for (let y = majorStartY; y <= majorEndY; y += majorSpacing) {
-          lineVertices.push(
-            minX,
-            y,
-            majorColor[0],
-            majorColor[1],
-            majorColor[2],
-            majorColor[3],
-            maxX,
-            y,
-            majorColor[0],
-            majorColor[1],
-            majorColor[2],
-            majorColor[3],
-          );
-        }
+        buildWebGLGridLines(minX, minY, maxX, maxY, zoomVal);
       },
     },
     'webgl.draw_edge': {
@@ -3691,26 +3799,7 @@ if (globalThis.self !== undefined) {
     },
     'webgl.render_end': {
       gl_render_end: () => {
-        if (!glCtx || !glVertexBuffer || !glAttribLocations) return;
-        const gl = glCtx;
-        if (triVertices.length > 0) {
-          gl.bindBuffer(gl.ARRAY_BUFFER, glVertexBuffer);
-          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(triVertices), gl.DYNAMIC_DRAW);
-          gl.enableVertexAttribArray(glAttribLocations.a_position);
-          gl.vertexAttribPointer(glAttribLocations.a_position, 2, gl.FLOAT, false, 24, 0);
-          gl.enableVertexAttribArray(glAttribLocations.a_color);
-          gl.vertexAttribPointer(glAttribLocations.a_color, 4, gl.FLOAT, false, 24, 8);
-          gl.drawArrays(gl.TRIANGLES, 0, triVertices.length / 6);
-        }
-        if (lineVertices.length > 0) {
-          gl.bindBuffer(gl.ARRAY_BUFFER, glVertexBuffer);
-          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(lineVertices), gl.DYNAMIC_DRAW);
-          gl.enableVertexAttribArray(glAttribLocations.a_position);
-          gl.vertexAttribPointer(glAttribLocations.a_position, 2, gl.FLOAT, false, 24, 0);
-          gl.enableVertexAttribArray(glAttribLocations.a_color);
-          gl.vertexAttribPointer(glAttribLocations.a_color, 4, gl.FLOAT, false, 24, 8);
-          gl.drawArrays(gl.LINES, 0, lineVertices.length / 6);
-        }
+        flushWebGLPrimitives();
       },
     },
     'webgl.render_frame': {
@@ -3735,49 +3824,7 @@ if (globalThis.self !== undefined) {
     'canvas2d.render_grid': {
       c2d_render_grid: (minX: number, minY: number, maxX: number, maxY: number, zoomVal: number) => {
         if (!canvas2dCtx) return;
-        const ctx = canvas2dCtx;
-        const isDark = currentTheme !== 'light';
-        const minorSpacing = 24;
-        const majorSpacing = 120;
-        const startX = Math.floor(minX / minorSpacing) * minorSpacing;
-        const endX = Math.ceil(maxX / minorSpacing) * minorSpacing;
-        const startY = Math.floor(minY / minorSpacing) * minorSpacing;
-        const endY = Math.ceil(maxY / minorSpacing) * minorSpacing;
-
-        ctx.lineWidth = 1 / zoomVal;
-        if (zoomVal > 0.4) {
-          ctx.strokeStyle = isDark ? 'rgba(56, 64, 82, 0.25)' : 'rgba(140, 155, 175, 0.25)';
-          ctx.beginPath();
-          for (let x = startX; x <= endX; x += minorSpacing) {
-            if (x % majorSpacing !== 0) {
-              ctx.moveTo(x, minY);
-              ctx.lineTo(x, maxY);
-            }
-          }
-          for (let y = startY; y <= endY; y += minorSpacing) {
-            if (y % majorSpacing !== 0) {
-              ctx.moveTo(minX, y);
-              ctx.lineTo(maxX, y);
-            }
-          }
-          ctx.stroke();
-        }
-
-        ctx.strokeStyle = isDark ? 'rgba(89, 102, 128, 0.35)' : 'rgba(100, 120, 145, 0.45)';
-        ctx.beginPath();
-        const majorStartX = Math.floor(minX / majorSpacing) * majorSpacing;
-        const majorEndX = Math.ceil(maxX / majorSpacing) * majorSpacing;
-        const majorStartY = Math.floor(minY / majorSpacing) * majorSpacing;
-        const majorEndY = Math.ceil(maxY / majorSpacing) * majorSpacing;
-        for (let x = majorStartX; x <= majorEndX; x += majorSpacing) {
-          ctx.moveTo(x, minY);
-          ctx.lineTo(x, maxY);
-        }
-        for (let y = majorStartY; y <= majorEndY; y += majorSpacing) {
-          ctx.moveTo(minX, y);
-          ctx.lineTo(maxX, y);
-        }
-        ctx.stroke();
+        drawCanvas2dGridLines(canvas2dCtx, minX, minY, maxX, maxY, zoomVal);
       },
     },
     'canvas2d.draw_edge': {
@@ -3812,18 +3859,10 @@ if (globalThis.self !== undefined) {
         ctx.stroke();
 
         if (isActive) {
-          const pulseRatio = pulseOffsetPermille / 1000;
-          const invPulseRatio = 1 - pulseRatio;
-          const bx =
-            invPulseRatio * invPulseRatio * invPulseRatio * p0x +
-            3 * invPulseRatio * invPulseRatio * pulseRatio * p1x +
-            3 * invPulseRatio * pulseRatio * pulseRatio * p2x +
-            pulseRatio * pulseRatio * pulseRatio * p3x;
-          const by =
-            invPulseRatio * invPulseRatio * invPulseRatio * p0y +
-            3 * invPulseRatio * invPulseRatio * pulseRatio * p1y +
-            3 * invPulseRatio * pulseRatio * pulseRatio * p2y +
-            pulseRatio * pulseRatio * pulseRatio * p3y;
+          const t = pulseOffsetPermille / 1000;
+          const u = 1 - t;
+          const bx = u * u * u * p0x + 3 * u * u * t * p1x + 3 * u * t * t * p2x + t * t * t * p3x;
+          const by = u * u * u * p0y + 3 * u * u * t * p1y + 3 * u * t * t * p2y + t * t * t * p3y;
           ctx.fillStyle = isDark ? '#79c0ff' : '#0969da';
           ctx.beginPath();
           ctx.arc(bx, by, 4, 0, Math.PI * 2);
@@ -3909,16 +3948,21 @@ if (globalThis.self !== undefined) {
    */
   const postReply = (reply: RenderWorkerOutputMessage): void => {
     const messageWithId: RenderWorkerOutputMessage = { id: 'flint_render_worker', ...reply };
-    if (globalThis.self === undefined) return;
-    if (typeof globalThis.self.postMessage === 'function') {
+    const globalObj = globalThis.self;
+    if (!globalObj) return;
+    if (typeof globalObj.postMessage === 'function') {
       try {
-        globalThis.self.postMessage(messageWithId);
+        globalObj.postMessage(messageWithId);
       } catch {
         // Ignore JSDOM window.postMessage arity requirements
       }
     }
-    if ('dispatchEvent' in globalThis.self && typeof MessageEvent !== 'undefined') {
-      globalThis.self.dispatchEvent(new MessageEvent('message', { data: messageWithId }));
+    if (typeof globalObj.dispatchEvent === 'function' && typeof MessageEvent !== 'undefined') {
+      try {
+        globalObj.dispatchEvent(new MessageEvent('message', { data: messageWithId }));
+      } catch {
+        // Ignore dispatch errors in non-browser environments
+      }
     }
   };
 
@@ -3929,18 +3973,18 @@ if (globalThis.self !== undefined) {
     targetCanvas: OffscreenCanvas | HTMLCanvasElement,
     preferred?: 'webgpu' | 'webgl' | 'canvas2d',
   ): Promise<{ tier: number; backend: 'webgpu' | 'webgl' | 'canvas2d'; ok: boolean }> {
-    const hasGpu =
-      typeof navigator !== 'undefined' && 'gpu' in navigator && Boolean((navigator as unknown as WebGpuNavigator).gpu);
-    if ((!preferred || preferred === 'webgpu') && hasGpu && (await initWebGpuBackend(targetCanvas))) {
-      return { tier: 1, backend: 'webgpu', ok: true };
+    const nav = typeof navigator === 'undefined' ? undefined : (navigator as unknown as WebGpuNavigator);
+    const hasGpu = Boolean(nav?.gpu);
+    if ((!preferred || preferred === 'webgpu') && hasGpu) {
+      const ok = await initWebGpuBackend(targetCanvas);
+      if (ok) return { tier: 1, backend: 'webgpu', ok: true };
     }
-    if ((!preferred || preferred === 'webgl') && initWebGLBackend(targetCanvas)) {
-      return { tier: 2, backend: 'webgl', ok: true };
+    if (!preferred || preferred === 'webgl') {
+      const ok = initWebGLBackend(targetCanvas);
+      if (ok) return { tier: 2, backend: 'webgl', ok: true };
     }
-    if (init2dBackend(targetCanvas)) {
-      return { tier: 3, backend: 'canvas2d', ok: true };
-    }
-    return { tier: 3, backend: 'canvas2d', ok: false };
+    const ok = init2dBackend(targetCanvas);
+    return { tier: 3, backend: 'canvas2d', ok };
   }
 
   /**
@@ -4208,11 +4252,10 @@ if (globalThis.self !== undefined) {
     const px = Math.round(msg.cursorX) + COORD_OFFSET;
     const py = Math.round(msg.cursorY) + COORD_OFFSET;
     const hit = wasm.spatial_hit_test_point(px, py);
-    let hitResult: FlintHitResult | undefined;
-    hitResult =
+    const hitResult =
       hit > 0 && nodes[hit - 1]
         ? {
-            type: 'node',
+            type: 'node' as const,
             nodeId: nodes[hit - 1].id,
             worldX: msg.cursorX,
             worldY: msg.cursorY,
@@ -4279,47 +4322,53 @@ if (globalThis.self !== undefined) {
    */
   function handleWorkerOtherMessage(msg: RenderWorkerInputMessage): void {
     if (!wasm) return;
-    if (msg.type === 'set_theme' && msg.theme !== undefined) {
-      currentTheme = msg.theme;
-      wasm.engine_set_theme(currentTheme === 'light' ? 1 : 0);
-    } else
-      switch (msg.type) {
-        case 'pan': {
-          handleWorkerPan(msg);
-          return;
+    switch (msg.type) {
+      case 'set_theme': {
+        if (msg.theme !== undefined) {
+          currentTheme = msg.theme;
+          wasm.engine_set_theme(currentTheme === 'light' ? 1 : 0);
         }
-        case 'zoom': {
-          handleWorkerZoom(msg);
-          return;
-        }
-        case 'resize': {
-          handleWorkerResize(msg);
-
-          break;
-        }
-        case 'set_selection': {
-          handleWorkerSetSelection(msg);
-
-          break;
-        }
-        case 'set_connecting_edge': {
-          connectingEdge = msg.edge;
-
-          break;
-        }
-        case 'set_hovered_port': {
-          hoveredPort = msg.hoveredPort;
-
-          break;
-        }
-        default: {
-          if (msg.type === 'set_pulse' && msg.edgeId !== undefined) {
-            edgePulses.set(msg.edgeId, msg.progress);
-          } else if (msg.type === 'set_trace_state') {
-            handleWorkerSetTraceState(msg);
-          }
-        }
+        break;
       }
+      case 'pan': {
+        handleWorkerPan(msg);
+        return;
+      }
+      case 'zoom': {
+        handleWorkerZoom(msg);
+        return;
+      }
+      case 'resize': {
+        handleWorkerResize(msg);
+        break;
+      }
+      case 'set_selection': {
+        handleWorkerSetSelection(msg);
+        break;
+      }
+      case 'set_connecting_edge': {
+        connectingEdge = msg.edge;
+        break;
+      }
+      case 'set_hovered_port': {
+        hoveredPort = msg.hoveredPort;
+        break;
+      }
+      case 'set_pulse': {
+        if (msg.edgeId !== undefined) {
+          edgePulses.set(msg.edgeId, msg.progress);
+        }
+        break;
+      }
+      case 'set_trace_state': {
+        handleWorkerSetTraceState(msg);
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+
     wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
     postReply({
       type: 'frame',
@@ -4343,26 +4392,23 @@ if (globalThis.self !== undefined) {
       switch (msg.type) {
         case 'init': {
           await handleWorkerInit(msg);
-
           break;
         }
         case 'set_graph': {
           handleWorkerSetGraph(msg);
-
           break;
         }
         case 'hit_test': {
           handleWorkerHitTest(msg);
-
           break;
         }
         case 'destroy': {
           handleWorkerDestroy();
-
           break;
         }
         default: {
           handleWorkerOtherMessage(msg);
+          break;
         }
       }
     } catch (error) {
