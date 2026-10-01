@@ -521,11 +521,8 @@ if (globalThis.self !== undefined) {
     isDark = currentTheme !== 'light',
   ): [number, number, number, number] {
     const table = isDark ? CATEGORY_RGBA_DARK : CATEGORY_RGBA_LIGHT;
-    if (isMeta) {
-      return table.math;
-    }
-    const catColor = category ? table[category] : undefined;
-    return catColor ?? (isDark ? [0.545, 0.58, 0.62, 1] : [0.341, 0.376, 0.416, 1]);
+    if (isMeta) return table.math;
+    return (category ? table[category] : undefined) ?? (isDark ? [0.545, 0.58, 0.62, 1] : [0.341, 0.376, 0.416, 1]);
   }
 
   const PORT_TYPE_RGBA_DARK: Record<string, [number, number, number, number]> = {
@@ -572,13 +569,13 @@ if (globalThis.self !== undefined) {
    */
   function parseHexColor(hexStr: string): [number, number, number, number] | undefined {
     const hex = expandShortHex(hexStr.slice(1));
-    if (hex.length !== 8) return undefined;
-    const red = Number.parseInt(hex.slice(0, 2), 16) / 255;
-    const green = Number.parseInt(hex.slice(2, 4), 16) / 255;
-    const blue = Number.parseInt(hex.slice(4, 6), 16) / 255;
-    const alpha = Number.parseInt(hex.slice(6, 8), 16) / 255;
-    if (Number.isNaN(red) || Number.isNaN(green) || Number.isNaN(blue) || Number.isNaN(alpha)) return undefined;
-    return [red, green, blue, alpha];
+    if (!/^[\da-f]{8}$/i.test(hex)) return undefined;
+    return [
+      Number.parseInt(hex.slice(0, 2), 16) / 255,
+      Number.parseInt(hex.slice(2, 4), 16) / 255,
+      Number.parseInt(hex.slice(4, 6), 16) / 255,
+      Number.parseInt(hex.slice(6, 8), 16) / 255,
+    ];
   }
 
   /**
@@ -587,11 +584,13 @@ if (globalThis.self !== undefined) {
   function parseRgbColor(rgbStr: string): [number, number, number, number] | undefined {
     const match = rgbStr.match(/rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)/);
     if (!match) return undefined;
-    const red = Number.parseInt(match[1] || '0', 10) / 255;
-    const green = Number.parseInt(match[2] || '0', 10) / 255;
-    const blue = Number.parseInt(match[3] || '0', 10) / 255;
-    const alpha = match[4] === undefined ? 1 : Number.parseFloat(match[4]);
-    return [red, green, blue, alpha];
+    const alphaVal = match[4] ? Number.parseFloat(match[4]) : 1;
+    return [
+      Number.parseInt(match[1] || '0', 10) / 255,
+      Number.parseInt(match[2] || '0', 10) / 255,
+      Number.parseInt(match[3] || '0', 10) / 255,
+      alphaVal,
+    ];
   }
 
   /**
@@ -1313,6 +1312,221 @@ if (globalThis.self !== undefined) {
   }
 
   /**
+   * Resets existing WebGPU buffers, samplers, and pipelines when switching devices.
+   */
+  function resetWebGpuPipelines(): void {
+    nodeInstanceBuffer?.destroy();
+    nodeInstanceBuffer = undefined;
+    edgeInstanceBuffer?.destroy();
+    edgeInstanceBuffer = undefined;
+    pinInstanceBuffer?.destroy();
+    pinInstanceBuffer = undefined;
+    textVertexBuffer?.destroy();
+    textVertexBuffer = undefined;
+    fontTexture?.destroy?.();
+    fontTexture = undefined;
+    fontSampler = undefined;
+    fontBindGroup = undefined;
+    textPipeline = undefined;
+    cameraBuffer?.destroy();
+    cameraBuffer = undefined;
+    cameraBindGroup = undefined;
+    gridPipeline = undefined;
+    nodesPipeline = undefined;
+    edgesPipeline = undefined;
+  }
+
+  /**
+   * Creates WebGPU geometry and grid render pipelines.
+   */
+  function createWebGpuGeometryPipelines(
+    device: GPUDevice,
+    pipelineLayout: GPUPipelineLayout,
+    format: GPUTextureFormat,
+  ): void {
+    const gridModule = device.createShaderModule({ code: GRID_WGSL });
+    gridPipeline = device.createRenderPipeline({
+      layout: pipelineLayout,
+      vertex: { module: gridModule, entryPoint: 'vs_main' },
+      fragment: {
+        module: gridModule,
+        entryPoint: 'fs_main',
+        targets: [
+          {
+            format,
+            blend: {
+              color: { srcFactor: 'src-alpha', dstFactor: 'one-minus-src-alpha', operation: 'add' },
+              alpha: { srcFactor: 'one', dstFactor: 'one-minus-src-alpha', operation: 'add' },
+            },
+          },
+        ],
+      },
+      primitive: { topology: 'triangle-list' },
+    });
+
+    const nodesModule = device.createShaderModule({ code: NODES_WGSL });
+    nodesPipeline = device.createRenderPipeline({
+      layout: pipelineLayout,
+      vertex: {
+        module: nodesModule,
+        entryPoint: 'vs_main',
+        buffers: [
+          {
+            arrayStride: 72,
+            stepMode: 'instance',
+            attributes: [
+              { shaderLocation: 0, offset: 0, format: 'float32x2' },
+              { shaderLocation: 1, offset: 8, format: 'float32x2' },
+              { shaderLocation: 2, offset: 16, format: 'float32' },
+              { shaderLocation: 3, offset: 20, format: 'float32x4' },
+              { shaderLocation: 4, offset: 36, format: 'float32x4' },
+              { shaderLocation: 5, offset: 52, format: 'float32' },
+              { shaderLocation: 6, offset: 56, format: 'float32x4' },
+            ],
+          },
+        ],
+      },
+      fragment: {
+        module: nodesModule,
+        entryPoint: 'fs_main',
+        targets: [
+          {
+            format,
+            blend: {
+              color: { srcFactor: 'src-alpha', dstFactor: 'one-minus-src-alpha', operation: 'add' },
+              alpha: { srcFactor: 'one', dstFactor: 'one-minus-src-alpha', operation: 'add' },
+            },
+          },
+        ],
+      },
+      primitive: { topology: 'triangle-list' },
+    });
+
+    const edgesModule = device.createShaderModule({ code: EDGES_WGSL });
+    edgesPipeline = device.createRenderPipeline({
+      layout: pipelineLayout,
+      vertex: {
+        module: edgesModule,
+        entryPoint: 'vs_main',
+        buffers: [
+          {
+            arrayStride: 60,
+            stepMode: 'instance',
+            attributes: [
+              { shaderLocation: 0, offset: 0, format: 'float32x2' },
+              { shaderLocation: 1, offset: 8, format: 'float32x2' },
+              { shaderLocation: 2, offset: 16, format: 'float32x2' },
+              { shaderLocation: 3, offset: 24, format: 'float32x2' },
+              { shaderLocation: 4, offset: 32, format: 'float32x4' },
+              { shaderLocation: 5, offset: 48, format: 'float32' },
+              { shaderLocation: 6, offset: 52, format: 'float32' },
+              { shaderLocation: 7, offset: 56, format: 'float32' },
+            ],
+          },
+        ],
+      },
+      fragment: {
+        module: edgesModule,
+        entryPoint: 'fs_main',
+        targets: [
+          {
+            format,
+            blend: {
+              color: { srcFactor: 'src-alpha', dstFactor: 'one-minus-src-alpha', operation: 'add' },
+              alpha: { srcFactor: 'one', dstFactor: 'one-minus-src-alpha', operation: 'add' },
+            },
+          },
+        ],
+      },
+      primitive: { topology: 'triangle-strip' },
+    });
+  }
+
+  /**
+   * Initializes WebGPU font atlas texture and SDF text pipeline.
+   */
+  function setupWebGpuFontPipeline(
+    device: GPUDevice,
+    cameraBindGroupLayout: GPUBindGroupLayout,
+    format: GPUTextureFormat,
+  ): void {
+    const atlasSize = wasm ? wasm.font_get_atlas_size() : 1024;
+    const atlasPtr = wasm ? wasm.font_get_atlas_ptr() : 0;
+    const rgbaData =
+      wasm && atlasPtr > 0
+        ? new Uint8Array(wasm.memory.buffer, atlasPtr, atlasSize * atlasSize * 4)
+        : new Uint8Array(atlasSize * atlasSize * 4);
+
+    fontTexture = device.createTexture({
+      size: [atlasSize, atlasSize, 1],
+      format: 'rgba8unorm',
+      usage: 0x00_04 | 0x00_02,
+    });
+    device.queue.writeTexture(
+      { texture: fontTexture },
+      rgbaData,
+      { bytesPerRow: atlasSize * 4, rowsPerImage: atlasSize },
+      [atlasSize, atlasSize, 1],
+    );
+    fontSampler = device.createSampler({
+      magFilter: 'linear',
+      minFilter: 'linear',
+    });
+    const fontBindGroupLayout = device.createBindGroupLayout({
+      entries: [
+        { binding: 0, visibility: 2, texture: { sampleType: 'float' } },
+        { binding: 1, visibility: 2, sampler: { type: 'filtering' } },
+      ],
+    });
+    if (fontTexture && fontSampler) {
+      fontBindGroup = device.createBindGroup({
+        layout: fontBindGroupLayout,
+        entries: [
+          { binding: 0, resource: fontTexture.createView() },
+          { binding: 1, resource: fontSampler },
+        ],
+      });
+    }
+
+    const textPipelineLayout = device.createPipelineLayout({
+      bindGroupLayouts: [cameraBindGroupLayout, fontBindGroupLayout],
+    });
+    const textModule = device.createShaderModule({ code: TEXT_WGSL });
+    textPipeline = device.createRenderPipeline({
+      layout: textPipelineLayout,
+      vertex: {
+        module: textModule,
+        entryPoint: 'vs_main',
+        buffers: [
+          {
+            arrayStride: 32,
+            stepMode: 'vertex',
+            attributes: [
+              { shaderLocation: 0, offset: 0, format: 'float32x2' },
+              { shaderLocation: 1, offset: 8, format: 'float32x2' },
+              { shaderLocation: 2, offset: 16, format: 'float32x4' },
+            ],
+          },
+        ],
+      },
+      fragment: {
+        module: textModule,
+        entryPoint: 'fs_main',
+        targets: [
+          {
+            format,
+            blend: {
+              color: { srcFactor: 'src-alpha', dstFactor: 'one-minus-src-alpha', operation: 'add' },
+              alpha: { srcFactor: 'one', dstFactor: 'one-minus-src-alpha', operation: 'add' },
+            },
+          },
+        ],
+      },
+      primitive: { topology: 'triangle-list' },
+    });
+  }
+
+  /**
    * Initializes the WebGPU device, swapchain context, pipelines, and uniform bind groups.
    */
   async function initWebGpuBackend(targetCanvas: OffscreenCanvas | HTMLCanvasElement): Promise<boolean> {
@@ -1329,25 +1543,7 @@ if (globalThis.self !== undefined) {
       context.configure({ device, format, alphaMode: 'premultiplied' });
 
       if (gpuDevice !== device) {
-        nodeInstanceBuffer?.destroy();
-        nodeInstanceBuffer = undefined;
-        edgeInstanceBuffer?.destroy();
-        edgeInstanceBuffer = undefined;
-        pinInstanceBuffer?.destroy();
-        pinInstanceBuffer = undefined;
-        textVertexBuffer?.destroy();
-        textVertexBuffer = undefined;
-        fontTexture?.destroy?.();
-        fontTexture = undefined;
-        fontSampler = undefined;
-        fontBindGroup = undefined;
-        textPipeline = undefined;
-        cameraBuffer?.destroy();
-        cameraBuffer = undefined;
-        cameraBindGroup = undefined;
-        gridPipeline = undefined;
-        nodesPipeline = undefined;
-        edgesPipeline = undefined;
+        resetWebGpuPipelines();
       }
 
       gpuDevice = device;
@@ -1364,181 +1560,154 @@ if (globalThis.self !== undefined) {
         entries: [{ binding: 0, resource: { buffer: cameraBuffer } }],
       });
 
-      const gridModule = device.createShaderModule({ code: GRID_WGSL });
-      gridPipeline = device.createRenderPipeline({
-        layout: pipelineLayout,
-        vertex: { module: gridModule, entryPoint: 'vs_main' },
-        fragment: {
-          module: gridModule,
-          entryPoint: 'fs_main',
-          targets: [
-            {
-              format,
-              blend: {
-                color: { srcFactor: 'src-alpha', dstFactor: 'one-minus-src-alpha', operation: 'add' },
-                alpha: { srcFactor: 'one', dstFactor: 'one-minus-src-alpha', operation: 'add' },
-              },
-            },
-          ],
-        },
-        primitive: { topology: 'triangle-list' },
-      });
-
-      const nodesModule = device.createShaderModule({ code: NODES_WGSL });
-      nodesPipeline = device.createRenderPipeline({
-        layout: pipelineLayout,
-        vertex: {
-          module: nodesModule,
-          entryPoint: 'vs_main',
-          buffers: [
-            {
-              arrayStride: 72,
-              stepMode: 'instance',
-              attributes: [
-                { shaderLocation: 0, offset: 0, format: 'float32x2' },
-                { shaderLocation: 1, offset: 8, format: 'float32x2' },
-                { shaderLocation: 2, offset: 16, format: 'float32' },
-                { shaderLocation: 3, offset: 20, format: 'float32x4' },
-                { shaderLocation: 4, offset: 36, format: 'float32x4' },
-                { shaderLocation: 5, offset: 52, format: 'float32' },
-                { shaderLocation: 6, offset: 56, format: 'float32x4' },
-              ],
-            },
-          ],
-        },
-        fragment: {
-          module: nodesModule,
-          entryPoint: 'fs_main',
-          targets: [
-            {
-              format,
-              blend: {
-                color: { srcFactor: 'src-alpha', dstFactor: 'one-minus-src-alpha', operation: 'add' },
-                alpha: { srcFactor: 'one', dstFactor: 'one-minus-src-alpha', operation: 'add' },
-              },
-            },
-          ],
-        },
-        primitive: { topology: 'triangle-list' },
-      });
-
-      const edgesModule = device.createShaderModule({ code: EDGES_WGSL });
-      edgesPipeline = device.createRenderPipeline({
-        layout: pipelineLayout,
-        vertex: {
-          module: edgesModule,
-          entryPoint: 'vs_main',
-          buffers: [
-            {
-              arrayStride: 60,
-              stepMode: 'instance',
-              attributes: [
-                { shaderLocation: 0, offset: 0, format: 'float32x2' },
-                { shaderLocation: 1, offset: 8, format: 'float32x2' },
-                { shaderLocation: 2, offset: 16, format: 'float32x2' },
-                { shaderLocation: 3, offset: 24, format: 'float32x2' },
-                { shaderLocation: 4, offset: 32, format: 'float32x4' },
-                { shaderLocation: 5, offset: 48, format: 'float32' },
-                { shaderLocation: 6, offset: 52, format: 'float32' },
-                { shaderLocation: 7, offset: 56, format: 'float32' },
-              ],
-            },
-          ],
-        },
-        fragment: {
-          module: edgesModule,
-          entryPoint: 'fs_main',
-          targets: [
-            {
-              format,
-              blend: {
-                color: { srcFactor: 'src-alpha', dstFactor: 'one-minus-src-alpha', operation: 'add' },
-                alpha: { srcFactor: 'one', dstFactor: 'one-minus-src-alpha', operation: 'add' },
-              },
-            },
-          ],
-        },
-        primitive: { topology: 'triangle-strip' },
-      });
-
-      const atlasSize = wasm ? wasm.font_get_atlas_size() : 1024;
-      const atlasPtr = wasm ? wasm.font_get_atlas_ptr() : 0;
-      const rgbaData =
-        wasm && atlasPtr > 0
-          ? new Uint8Array(wasm.memory.buffer, atlasPtr, atlasSize * atlasSize * 4)
-          : new Uint8Array(atlasSize * atlasSize * 4);
-      fontTexture = device.createTexture({
-        size: [atlasSize, atlasSize, 1],
-        format: 'rgba8unorm',
-        usage: 0x00_04 | 0x00_02,
-      });
-      device.queue.writeTexture(
-        { texture: fontTexture },
-        rgbaData,
-        { bytesPerRow: atlasSize * 4, rowsPerImage: atlasSize },
-        [atlasSize, atlasSize, 1],
-      );
-      fontSampler = device.createSampler({
-        magFilter: 'linear',
-        minFilter: 'linear',
-      });
-      const fontBindGroupLayout = device.createBindGroupLayout({
-        entries: [
-          { binding: 0, visibility: 2, texture: { sampleType: 'float' } },
-          { binding: 1, visibility: 2, sampler: { type: 'filtering' } },
-        ],
-      });
-      if (fontTexture && fontSampler) {
-        fontBindGroup = device.createBindGroup({
-          layout: fontBindGroupLayout,
-          entries: [
-            { binding: 0, resource: fontTexture.createView() },
-            { binding: 1, resource: fontSampler },
-          ],
-        });
-      }
-
-      const textPipelineLayout = device.createPipelineLayout({
-        bindGroupLayouts: [cameraBindGroupLayout, fontBindGroupLayout],
-      });
-      const textModule = device.createShaderModule({ code: TEXT_WGSL });
-      textPipeline = device.createRenderPipeline({
-        layout: textPipelineLayout,
-        vertex: {
-          module: textModule,
-          entryPoint: 'vs_main',
-          buffers: [
-            {
-              arrayStride: 32,
-              stepMode: 'vertex',
-              attributes: [
-                { shaderLocation: 0, offset: 0, format: 'float32x2' },
-                { shaderLocation: 1, offset: 8, format: 'float32x2' },
-                { shaderLocation: 2, offset: 16, format: 'float32x4' },
-              ],
-            },
-          ],
-        },
-        fragment: {
-          module: textModule,
-          entryPoint: 'fs_main',
-          targets: [
-            {
-              format,
-              blend: {
-                color: { srcFactor: 'src-alpha', dstFactor: 'one-minus-src-alpha', operation: 'add' },
-                alpha: { srcFactor: 'one', dstFactor: 'one-minus-src-alpha', operation: 'add' },
-              },
-            },
-          ],
-        },
-        primitive: { topology: 'triangle-list' },
-      });
+      createWebGpuGeometryPipelines(device, pipelineLayout, format);
+      setupWebGpuFontPipeline(device, cameraBindGroupLayout, format);
 
       return true;
     } catch {
       return false;
     }
+  }
+
+  /**
+   * Compiles WebGL shader from GLSL source string.
+   */
+  function compileGlShader(
+    gl: WebGLRenderingContext | WebGL2RenderingContext,
+    type: number,
+    source: string,
+  ): WebGLShader | undefined {
+    const shader = gl.createShader(type);
+    if (!shader) return undefined;
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) return undefined;
+    return shader;
+  }
+
+  /**
+   * Creates and links linked WebGL shader program.
+   */
+  function createGlProgram(
+    gl: WebGLRenderingContext | WebGL2RenderingContext,
+    vsSource: string,
+    fsSource: string,
+  ): WebGLProgram | undefined {
+    const vs = compileGlShader(gl, gl.VERTEX_SHADER, vsSource);
+    const fs = compileGlShader(gl, gl.FRAGMENT_SHADER, fsSource);
+    if (!vs || !fs) return undefined;
+    const program = gl.createProgram();
+    if (!program) return undefined;
+    gl.attachShader(program, vs);
+    gl.attachShader(program, fs);
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return undefined;
+    return program;
+  }
+
+  /**
+   * Initializes and binds glyph font texture in WebGL context.
+   */
+  function setupGlFontTexture(gl: WebGLRenderingContext | WebGL2RenderingContext): void {
+    const atlasSize = wasm ? wasm.font_get_atlas_size() : 1024;
+    const atlasPtr = wasm ? wasm.font_get_atlas_ptr() : 0;
+    const rgbaData =
+      wasm && atlasPtr > 0
+        ? new Uint8Array(wasm.memory.buffer, atlasPtr, atlasSize * atlasSize * 4)
+        : new Uint8Array(atlasSize * atlasSize * 4);
+    const tex = gl.createTexture();
+    if (tex) {
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, atlasSize, atlasSize, 0, gl.RGBA, gl.UNSIGNED_BYTE, rgbaData);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      glFontTexture = tex;
+    }
+  }
+
+  /**
+   * Initializes WebGL SDF text shader program and vertex attribute bindings.
+   */
+  function setupGlTextProgram(gl: WebGLRenderingContext | WebGL2RenderingContext): void {
+    const vsTextSource = `
+      attribute vec2 a_position;
+      attribute vec2 a_uv;
+      attribute vec4 a_color;
+      uniform vec2 u_resolution;
+      uniform vec2 u_camera;
+      uniform float u_zoom;
+      varying vec2 v_uv;
+      varying vec4 v_color;
+      void main() {
+        vec2 screenPos = (a_position - u_camera) * u_zoom + (u_resolution * 0.5);
+        vec2 clipSpace = (screenPos / u_resolution) * 2.0 - 1.0;
+        gl_Position = vec4(clipSpace.x, -clipSpace.y, 0.0, 1.0);
+        v_uv = a_uv;
+        v_color = a_color;
+      }
+    `;
+    const fsTextSource = `
+      #extension GL_OES_standard_derivatives : enable
+      precision mediump float;
+      uniform sampler2D u_fontTexture;
+      varying vec2 v_uv;
+      varying vec4 v_color;
+      float median(float r, float g, float b) {
+        return max(min(r, g), min(max(r, g), b));
+      }
+      void main() {
+        vec4 sampleCenter = texture2D(u_fontTexture, v_uv);
+        if (v_color.a < 0.0) {
+          if (sampleCenter.a < 0.01) discard;
+          gl_FragColor = vec4(sampleCenter.rgb, sampleCenter.a * -v_color.a);
+          return;
+        }
+        #ifdef GL_OES_standard_derivatives
+          vec2 unitRange = vec2(4.0) / 1024.0;
+          vec2 dUV = fwidth(v_uv);
+          vec2 screenTexSize = vec2(1.0) / max(dUV, vec2(0.00001));
+          float screenPxRange = max(0.5 * dot(unitRange, screenTexSize), 1.0);
+          
+          vec2 sub = dUV * 0.25;
+          vec4 s0 = texture2D(u_fontTexture, v_uv + vec2(-sub.x, -sub.y));
+          vec4 s1 = texture2D(u_fontTexture, v_uv + vec2( sub.x, -sub.y));
+          vec4 s2 = texture2D(u_fontTexture, v_uv + vec2(-sub.x,  sub.y));
+          vec4 s3 = texture2D(u_fontTexture, v_uv + vec2( sub.x,  sub.y));
+          
+          float a0 = clamp(screenPxRange * (median(s0.r, s0.g, s0.b) - 0.5) + 0.5, 0.0, 1.0);
+          float a1 = clamp(screenPxRange * (median(s1.r, s1.g, s1.b) - 0.5) + 0.5, 0.0, 1.0);
+          float a2 = clamp(screenPxRange * (median(s2.r, s2.g, s2.b) - 0.5) + 0.5, 0.0, 1.0);
+          float a3 = clamp(screenPxRange * (median(s3.r, s3.g, s3.b) - 0.5) + 0.5, 0.0, 1.0);
+          float alpha = (a0 + a1 + a2 + a3) * 0.25;
+        #else
+          float dist = median(sampleCenter.r, sampleCenter.g, sampleCenter.b);
+          float alpha = smoothstep(0.46, 0.54, dist);
+        #endif
+        if (alpha < 0.01) discard;
+        gl_FragColor = vec4(v_color.rgb, v_color.a * alpha);
+      }
+    `;
+
+    const textProgram = createGlProgram(gl, vsTextSource, fsTextSource);
+    if (!textProgram) return;
+
+    glTextProgram = textProgram;
+    glTexVertexBuffer = gl.createBuffer() ?? undefined;
+    glTextUniformLocations = {
+      u_resolution: gl.getUniformLocation(textProgram, 'u_resolution'),
+      u_camera: gl.getUniformLocation(textProgram, 'u_camera'),
+      u_zoom: gl.getUniformLocation(textProgram, 'u_zoom'),
+      u_fontTexture: gl.getUniformLocation(textProgram, 'u_fontTexture'),
+    };
+    glTextAttribLocations = {
+      a_position: gl.getAttribLocation(textProgram, 'a_position'),
+      a_uv: gl.getAttribLocation(textProgram, 'a_uv'),
+      a_color: gl.getAttribLocation(textProgram, 'a_color'),
+    };
+
+    setupGlFontTexture(gl);
   }
 
   /**
@@ -1574,24 +1743,8 @@ if (globalThis.self !== undefined) {
         }
       `;
 
-      const vs = gl.createShader(gl.VERTEX_SHADER);
-      if (!vs) return false;
-      gl.shaderSource(vs, vsSource);
-      gl.compileShader(vs);
-      if (!gl.getShaderParameter(vs, gl.COMPILE_STATUS)) return false;
-
-      const fs = gl.createShader(gl.FRAGMENT_SHADER);
-      if (!fs) return false;
-      gl.shaderSource(fs, fsSource);
-      gl.compileShader(fs);
-      if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS)) return false;
-
-      const program = gl.createProgram();
+      const program = createGlProgram(gl, vsSource, fsSource);
       if (!program) return false;
-      gl.attachShader(program, vs);
-      gl.attachShader(program, fs);
-      gl.linkProgram(program);
-      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return false;
 
       glProgram = program;
       glVertexBuffer = gl.createBuffer() ?? undefined;
@@ -1606,114 +1759,7 @@ if (globalThis.self !== undefined) {
       };
 
       gl.getExtension('OES_standard_derivatives');
-
-      const vsTextSource = `
-        attribute vec2 a_position;
-        attribute vec2 a_uv;
-        attribute vec4 a_color;
-        uniform vec2 u_resolution;
-        uniform vec2 u_camera;
-        uniform float u_zoom;
-        varying vec2 v_uv;
-        varying vec4 v_color;
-        void main() {
-          vec2 screenPos = (a_position - u_camera) * u_zoom + (u_resolution * 0.5);
-          vec2 clipSpace = (screenPos / u_resolution) * 2.0 - 1.0;
-          gl_Position = vec4(clipSpace.x, -clipSpace.y, 0.0, 1.0);
-          v_uv = a_uv;
-          v_color = a_color;
-        }
-      `;
-      const fsTextSource = `
-        #extension GL_OES_standard_derivatives : enable
-        precision mediump float;
-        uniform sampler2D u_fontTexture;
-        varying vec2 v_uv;
-        varying vec4 v_color;
-        float median(float r, float g, float b) {
-          return max(min(r, g), min(max(r, g), b));
-        }
-        void main() {
-          vec4 sampleCenter = texture2D(u_fontTexture, v_uv);
-          if (v_color.a < 0.0) {
-            if (sampleCenter.a < 0.01) discard;
-            gl_FragColor = vec4(sampleCenter.rgb, sampleCenter.a * -v_color.a);
-            return;
-          }
-          #ifdef GL_OES_standard_derivatives
-            vec2 unitRange = vec2(4.0) / 1024.0;
-            vec2 dUV = fwidth(v_uv);
-            vec2 screenTexSize = vec2(1.0) / max(dUV, vec2(0.00001));
-            float screenPxRange = max(0.5 * dot(unitRange, screenTexSize), 1.0);
-            
-            vec2 sub = dUV * 0.25;
-            vec4 s0 = texture2D(u_fontTexture, v_uv + vec2(-sub.x, -sub.y));
-            vec4 s1 = texture2D(u_fontTexture, v_uv + vec2( sub.x, -sub.y));
-            vec4 s2 = texture2D(u_fontTexture, v_uv + vec2(-sub.x,  sub.y));
-            vec4 s3 = texture2D(u_fontTexture, v_uv + vec2( sub.x,  sub.y));
-            
-            float a0 = clamp(screenPxRange * (median(s0.r, s0.g, s0.b) - 0.5) + 0.5, 0.0, 1.0);
-            float a1 = clamp(screenPxRange * (median(s1.r, s1.g, s1.b) - 0.5) + 0.5, 0.0, 1.0);
-            float a2 = clamp(screenPxRange * (median(s2.r, s2.g, s2.b) - 0.5) + 0.5, 0.0, 1.0);
-            float a3 = clamp(screenPxRange * (median(s3.r, s3.g, s3.b) - 0.5) + 0.5, 0.0, 1.0);
-            float alpha = (a0 + a1 + a2 + a3) * 0.25;
-          #else
-            float dist = median(sampleCenter.r, sampleCenter.g, sampleCenter.b);
-            float alpha = smoothstep(0.46, 0.54, dist);
-          #endif
-          if (alpha < 0.01) discard;
-          gl_FragColor = vec4(v_color.rgb, v_color.a * alpha);
-        }
-      `;
-
-      const vsText = gl.createShader(gl.VERTEX_SHADER);
-      if (vsText) {
-        gl.shaderSource(vsText, vsTextSource);
-        gl.compileShader(vsText);
-        const fsText = gl.createShader(gl.FRAGMENT_SHADER);
-        if (fsText) {
-          gl.shaderSource(fsText, fsTextSource);
-          gl.compileShader(fsText);
-          const textProgram = gl.createProgram();
-          if (textProgram) {
-            gl.attachShader(textProgram, vsText);
-            gl.attachShader(textProgram, fsText);
-            gl.linkProgram(textProgram);
-            if (gl.getProgramParameter(textProgram, gl.LINK_STATUS)) {
-              glTextProgram = textProgram;
-              glTexVertexBuffer = gl.createBuffer() ?? undefined;
-              glTextUniformLocations = {
-                u_resolution: gl.getUniformLocation(textProgram, 'u_resolution'),
-                u_camera: gl.getUniformLocation(textProgram, 'u_camera'),
-                u_zoom: gl.getUniformLocation(textProgram, 'u_zoom'),
-                u_fontTexture: gl.getUniformLocation(textProgram, 'u_fontTexture'),
-              };
-              glTextAttribLocations = {
-                a_position: gl.getAttribLocation(textProgram, 'a_position'),
-                a_uv: gl.getAttribLocation(textProgram, 'a_uv'),
-                a_color: gl.getAttribLocation(textProgram, 'a_color'),
-              };
-
-              const atlasSize = wasm ? wasm.font_get_atlas_size() : 1024;
-              const atlasPtr = wasm ? wasm.font_get_atlas_ptr() : 0;
-              const rgbaData =
-                wasm && atlasPtr > 0
-                  ? new Uint8Array(wasm.memory.buffer, atlasPtr, atlasSize * atlasSize * 4)
-                  : new Uint8Array(atlasSize * atlasSize * 4);
-              const tex = gl.createTexture();
-              if (tex) {
-                gl.bindTexture(gl.TEXTURE_2D, tex);
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, atlasSize, atlasSize, 0, gl.RGBA, gl.UNSIGNED_BYTE, rgbaData);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-                glFontTexture = tex;
-              }
-            }
-          }
-        }
-      }
+      setupGlTextProgram(gl);
 
       return true;
     } catch {
@@ -2990,26 +3036,26 @@ if (globalThis.self !== undefined) {
   function computeWebGpuNodeGlowAndBorder(isSelected: number, isActive: number, isTrapped: number, isDark: boolean) {
     const table = isDark ? GPU_NODE_STYLES_DARK : GPU_NODE_STYLES_LIGHT;
     const key = isTrapped ? 'trapped' : isActive ? 'active' : isSelected ? 'selected' : 'default';
-    const s = table[key];
+    const nodeStyle = table[key];
     const fillR = isDark ? 0.14 : 1;
     const fillG = isDark ? 0.16 : 1;
     const fillB = isDark ? 0.22 : 1;
     const fillA = isDark ? 0.95 : 0.98;
 
     return {
-      glowR: s.glow[0],
-      glowG: s.glow[1],
-      glowB: s.glow[2],
-      glowA: s.glow[3],
+      glowR: nodeStyle.glow[0],
+      glowG: nodeStyle.glow[1],
+      glowB: nodeStyle.glow[2],
+      glowA: nodeStyle.glow[3],
       fillR,
       fillG,
       fillB,
       fillA,
-      borderR: s.border[0],
-      borderG: s.border[1],
-      borderB: s.border[2],
-      borderA: s.border[3],
-      borderWidth: s.width,
+      borderR: nodeStyle.border[0],
+      borderG: nodeStyle.border[1],
+      borderB: nodeStyle.border[2],
+      borderA: nodeStyle.border[3],
+      borderWidth: nodeStyle.width,
     };
   }
 
@@ -3036,13 +3082,13 @@ if (globalThis.self !== undefined) {
   function computeWebGpuEdgeColorAndWidth(isSelected: number, isActive: number, isDark: boolean) {
     const table = isDark ? GPU_EDGE_STYLES_DARK : GPU_EDGE_STYLES_LIGHT;
     const key = isSelected ? 'selected' : isActive ? 'active' : 'default';
-    const s = table[key];
+    const edgeStyle = table[key];
     return {
-      colorR: s.color[0],
-      colorG: s.color[1],
-      colorB: s.color[2],
-      colorA: s.color[3],
-      widthVal: s.width,
+      colorR: edgeStyle.color[0],
+      colorG: edgeStyle.color[1],
+      colorB: edgeStyle.color[2],
+      colorA: edgeStyle.color[3],
+      widthVal: edgeStyle.width,
     };
   }
 
@@ -3071,21 +3117,21 @@ if (globalThis.self !== undefined) {
   function computeWebGpuPinColorAndWidth(isHovered: number, isActive: number, isDark: boolean) {
     const table = isDark ? GPU_PIN_STYLES_DARK : GPU_PIN_STYLES_LIGHT;
     const key = isHovered ? 'hovered' : isActive ? 'active' : 'default';
-    const s = table[key];
+    const pinStyle = table[key];
     return {
-      fillR: s.fill[0],
-      fillG: s.fill[1],
-      fillB: s.fill[2],
-      fillA: s.fill[3],
-      borderR: s.border[0],
-      borderG: s.border[1],
-      borderB: s.border[2],
-      borderA: s.border[3],
-      borderWidth: s.borderWidth,
-      glowR: s.glow[0],
-      glowG: s.glow[1],
-      glowB: s.glow[2],
-      glowA: s.glow[3],
+      fillR: pinStyle.fill[0],
+      fillG: pinStyle.fill[1],
+      fillB: pinStyle.fill[2],
+      fillA: pinStyle.fill[3],
+      borderR: pinStyle.border[0],
+      borderG: pinStyle.border[1],
+      borderB: pinStyle.border[2],
+      borderA: pinStyle.border[3],
+      borderWidth: pinStyle.borderWidth,
+      glowR: pinStyle.glow[0],
+      glowG: pinStyle.glow[1],
+      glowB: pinStyle.glow[2],
+      glowA: pinStyle.glow[3],
     };
   }
 
@@ -3172,8 +3218,8 @@ if (globalThis.self !== undefined) {
   function computeGlNodeBorder(isSelected: number, isActive: number, isTrapped: number, isDark: boolean) {
     const table = isDark ? GL_NODE_BORDER_DARK : GL_NODE_BORDER_LIGHT;
     const key = isTrapped ? 'trapped' : isActive ? 'active' : isSelected ? 'selected' : 'default';
-    const c = table[key];
-    return { br: c[0], bg: c[1], bb: c[2] };
+    const borderTuple = table[key];
+    return { br: borderTuple[0], bg: borderTuple[1], bb: borderTuple[2] };
   }
 
   const GL_PIN_COLOR_DARK: Record<string, [number, number, number]> = {
@@ -3194,8 +3240,8 @@ if (globalThis.self !== undefined) {
   function computeGlPinColor(isHovered: number, isActive: number, isDark: boolean) {
     const table = isDark ? GL_PIN_COLOR_DARK : GL_PIN_COLOR_LIGHT;
     const key = isHovered ? 'hovered' : isActive ? 'active' : 'default';
-    const c = table[key];
-    return { pr: c[0], pg: c[1], pb: c[2] };
+    const colorTuple = table[key];
+    return { pr: colorTuple[0], pg: colorTuple[1], pb: colorTuple[2] };
   }
 
   const C2D_NODE_STROKE_DARK: Record<string, { strokeStyle: string; lineWidth: number }> = {
@@ -3286,6 +3332,98 @@ if (globalThis.self !== undefined) {
   }
 
   /**
+   * Appends minor WebGL grid line vertices to the line buffer.
+   */
+  function pushWebGlMinorGridLines(
+    minX: number,
+    minY: number,
+    maxX: number,
+    maxY: number,
+    color: readonly number[],
+  ): void {
+    for (let x = Math.floor(minX / 24) * 24; x <= Math.ceil(maxX / 24) * 24; x += 24) {
+      if (x % 120 !== 0) {
+        lineVertices.push(
+          x,
+          minY,
+          color[0],
+          color[1],
+          color[2],
+          color[3],
+          x,
+          maxY,
+          color[0],
+          color[1],
+          color[2],
+          color[3],
+        );
+      }
+    }
+    for (let y = Math.floor(minY / 24) * 24; y <= Math.ceil(maxY / 24) * 24; y += 24) {
+      if (y % 120 !== 0) {
+        lineVertices.push(
+          minX,
+          y,
+          color[0],
+          color[1],
+          color[2],
+          color[3],
+          maxX,
+          y,
+          color[0],
+          color[1],
+          color[2],
+          color[3],
+        );
+      }
+    }
+  }
+
+  /**
+   * Appends major WebGL grid line vertices to the line buffer.
+   */
+  function pushWebGlMajorGridLines(
+    minX: number,
+    minY: number,
+    maxX: number,
+    maxY: number,
+    color: readonly number[],
+  ): void {
+    for (let x = Math.floor(minX / 120) * 120; x <= Math.ceil(maxX / 120) * 120; x += 120) {
+      lineVertices.push(
+        x,
+        minY,
+        color[0],
+        color[1],
+        color[2],
+        color[3],
+        x,
+        maxY,
+        color[0],
+        color[1],
+        color[2],
+        color[3],
+      );
+    }
+    for (let y = Math.floor(minY / 120) * 120; y <= Math.ceil(maxY / 120) * 120; y += 120) {
+      lineVertices.push(
+        minX,
+        y,
+        color[0],
+        color[1],
+        color[2],
+        color[3],
+        maxX,
+        y,
+        color[0],
+        color[1],
+        color[2],
+        color[3],
+      );
+    }
+  }
+
+  /**
    * Generates line segments for WebGL background coordinate grid.
    */
   function buildWebGLGridLines(minX: number, minY: number, maxX: number, maxY: number, zoomVal: number): void {
@@ -3294,76 +3432,9 @@ if (globalThis.self !== undefined) {
     const majorColor = isDark ? [0.35, 0.4, 0.5, 0.35] : [0.39, 0.47, 0.57, 0.45];
 
     if (zoomVal > 0.4) {
-      for (let x = Math.floor(minX / 24) * 24; x <= Math.ceil(maxX / 24) * 24; x += 24) {
-        if (x % 120 !== 0) {
-          lineVertices.push(
-            x,
-            minY,
-            minorColor[0],
-            minorColor[1],
-            minorColor[2],
-            minorColor[3],
-            x,
-            maxY,
-            minorColor[0],
-            minorColor[1],
-            minorColor[2],
-            minorColor[3],
-          );
-        }
-      }
-      for (let y = Math.floor(minY / 24) * 24; y <= Math.ceil(maxY / 24) * 24; y += 24) {
-        if (y % 120 !== 0) {
-          lineVertices.push(
-            minX,
-            y,
-            minorColor[0],
-            minorColor[1],
-            minorColor[2],
-            minorColor[3],
-            maxX,
-            y,
-            minorColor[0],
-            minorColor[1],
-            minorColor[2],
-            minorColor[3],
-          );
-        }
-      }
+      pushWebGlMinorGridLines(minX, minY, maxX, maxY, minorColor);
     }
-
-    for (let x = Math.floor(minX / 120) * 120; x <= Math.ceil(maxX / 120) * 120; x += 120) {
-      lineVertices.push(
-        x,
-        minY,
-        majorColor[0],
-        majorColor[1],
-        majorColor[2],
-        majorColor[3],
-        x,
-        maxY,
-        majorColor[0],
-        majorColor[1],
-        majorColor[2],
-        majorColor[3],
-      );
-    }
-    for (let y = Math.floor(minY / 120) * 120; y <= Math.ceil(maxY / 120) * 120; y += 120) {
-      lineVertices.push(
-        minX,
-        y,
-        majorColor[0],
-        majorColor[1],
-        majorColor[2],
-        majorColor[3],
-        maxX,
-        y,
-        majorColor[0],
-        majorColor[1],
-        majorColor[2],
-        majorColor[3],
-      );
-    }
+    pushWebGlMajorGridLines(minX, minY, maxX, maxY, majorColor);
   }
 
   /**
@@ -3395,6 +3466,50 @@ if (globalThis.self !== undefined) {
   }
 
   /**
+   * Draws minor grid lines on Canvas2D.
+   */
+  function drawCanvas2dMinorGridLines(
+    ctx: CanvasRenderingContext2D,
+    minX: number,
+    minY: number,
+    maxX: number,
+    maxY: number,
+  ): void {
+    for (let x = Math.floor(minX / 24) * 24; x <= Math.ceil(maxX / 24) * 24; x += 24) {
+      if (x % 120 !== 0) {
+        ctx.moveTo(x, minY);
+        ctx.lineTo(x, maxY);
+      }
+    }
+    for (let y = Math.floor(minY / 24) * 24; y <= Math.ceil(maxY / 24) * 24; y += 24) {
+      if (y % 120 !== 0) {
+        ctx.moveTo(minX, y);
+        ctx.lineTo(maxX, y);
+      }
+    }
+  }
+
+  /**
+   * Draws major grid lines on Canvas2D.
+   */
+  function drawCanvas2dMajorGridLines(
+    ctx: CanvasRenderingContext2D,
+    minX: number,
+    minY: number,
+    maxX: number,
+    maxY: number,
+  ): void {
+    for (let x = Math.floor(minX / 120) * 120; x <= Math.ceil(maxX / 120) * 120; x += 120) {
+      ctx.moveTo(x, minY);
+      ctx.lineTo(x, maxY);
+    }
+    for (let y = Math.floor(minY / 120) * 120; y <= Math.ceil(maxY / 120) * 120; y += 120) {
+      ctx.moveTo(minX, y);
+      ctx.lineTo(maxX, y);
+    }
+  }
+
+  /**
    * Renders background coordinate grid in Canvas2D context.
    */
   function drawCanvas2dGridLines(
@@ -3410,32 +3525,52 @@ if (globalThis.self !== undefined) {
     if (zoomVal > 0.4) {
       ctx.strokeStyle = isDark ? 'rgba(56, 64, 82, 0.25)' : 'rgba(140, 155, 175, 0.25)';
       ctx.beginPath();
-      for (let x = Math.floor(minX / 24) * 24; x <= Math.ceil(maxX / 24) * 24; x += 24) {
-        if (x % 120 !== 0) {
-          ctx.moveTo(x, minY);
-          ctx.lineTo(x, maxY);
-        }
-      }
-      for (let y = Math.floor(minY / 24) * 24; y <= Math.ceil(maxY / 24) * 24; y += 24) {
-        if (y % 120 !== 0) {
-          ctx.moveTo(minX, y);
-          ctx.lineTo(maxX, y);
-        }
-      }
+      drawCanvas2dMinorGridLines(ctx, minX, minY, maxX, maxY);
       ctx.stroke();
     }
 
     ctx.strokeStyle = isDark ? 'rgba(89, 102, 128, 0.35)' : 'rgba(100, 120, 145, 0.45)';
     ctx.beginPath();
-    for (let x = Math.floor(minX / 120) * 120; x <= Math.ceil(maxX / 120) * 120; x += 120) {
-      ctx.moveTo(x, minY);
-      ctx.lineTo(x, maxY);
-    }
-    for (let y = Math.floor(minY / 120) * 120; y <= Math.ceil(maxY / 120) * 120; y += 120) {
-      ctx.moveTo(minX, y);
-      ctx.lineTo(maxX, y);
-    }
+    drawCanvas2dMajorGridLines(ctx, minX, minY, maxX, maxY);
     ctx.stroke();
+  }
+
+  /**
+   * Evaluates cubic Bezier point for coordinate axis and step factor.
+   */
+  function evaluateCubicBezier(p0: number, p1: number, p2: number, p3: number, progressRatio: number): number {
+    const inverseRatio = 1 - progressRatio;
+    return (
+      inverseRatio * inverseRatio * inverseRatio * p0 +
+      3 * inverseRatio * inverseRatio * progressRatio * p1 +
+      3 * inverseRatio * progressRatio * progressRatio * p2 +
+      progressRatio * progressRatio * progressRatio * p3
+    );
+  }
+
+  /**
+   * Renders animated pulse particle traveling along an active edge.
+   */
+  function drawCanvas2dPulseDot(
+    ctx: CanvasRenderingContext2D,
+    p0x: number,
+    p0y: number,
+    p1x: number,
+    p1y: number,
+    p2x: number,
+    p2y: number,
+    p3x: number,
+    p3y: number,
+    pulseOffsetPermille: number,
+    isDark: boolean,
+  ): void {
+    const progressRatio = pulseOffsetPermille / 1000;
+    const bezierX = evaluateCubicBezier(p0x, p1x, p2x, p3x, progressRatio);
+    const bezierY = evaluateCubicBezier(p0y, p1y, p2y, p3y, progressRatio);
+    ctx.fillStyle = isDark ? '#79c0ff' : '#0969da';
+    ctx.beginPath();
+    ctx.arc(bezierX, bezierY, 4, 0, Math.PI * 2);
+    ctx.fill();
   }
 
   /**
@@ -3695,17 +3830,8 @@ if (globalThis.self !== undefined) {
         let prevY = p0y;
         for (let step = 1; step <= 20; step++) {
           const stepFactor = step / 20;
-          const invStepFactor = 1 - stepFactor;
-          const currX =
-            invStepFactor * invStepFactor * invStepFactor * p0x +
-            3 * invStepFactor * invStepFactor * stepFactor * p1x +
-            3 * invStepFactor * stepFactor * stepFactor * p2x +
-            stepFactor * stepFactor * stepFactor * p3x;
-          const currY =
-            invStepFactor * invStepFactor * invStepFactor * p0y +
-            3 * invStepFactor * invStepFactor * stepFactor * p1y +
-            3 * invStepFactor * stepFactor * stepFactor * p2y +
-            stepFactor * stepFactor * stepFactor * p3y;
+          const currX = evaluateCubicBezier(p0x, p1x, p2x, p3x, stepFactor);
+          const currY = evaluateCubicBezier(p0y, p1y, p2y, p3y, stepFactor);
           lineVertices.push(
             prevX,
             prevY,
@@ -3859,14 +3985,7 @@ if (globalThis.self !== undefined) {
         ctx.stroke();
 
         if (isActive) {
-          const t = pulseOffsetPermille / 1000;
-          const u = 1 - t;
-          const bx = u * u * u * p0x + 3 * u * u * t * p1x + 3 * u * t * t * p2x + t * t * t * p3x;
-          const by = u * u * u * p0y + 3 * u * u * t * p1y + 3 * u * t * t * p2y + t * t * t * p3y;
-          ctx.fillStyle = isDark ? '#79c0ff' : '#0969da';
-          ctx.beginPath();
-          ctx.arc(bx, by, 4, 0, Math.PI * 2);
-          ctx.fill();
+          drawCanvas2dPulseDot(ctx, p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, pulseOffsetPermille, isDark);
         }
         ctx.restore();
       },
@@ -3946,24 +4065,27 @@ if (globalThis.self !== undefined) {
   /**
    * Dispatches a response message from the render worker back to the main thread or window.
    */
-  const postReply = (reply: RenderWorkerOutputMessage): void => {
-    const messageWithId: RenderWorkerOutputMessage = { id: 'flint_render_worker', ...reply };
-    const globalObj = globalThis.self;
-    if (!globalObj) return;
+  function dispatchGlobalWorkerReply(globalObj: typeof globalThis.self, message: RenderWorkerOutputMessage): void {
     if (typeof globalObj.postMessage === 'function') {
       try {
-        globalObj.postMessage(messageWithId);
+        globalObj.postMessage(message);
       } catch {
-        // Ignore JSDOM window.postMessage arity requirements
+        // Ignore JSDOM postMessage error
       }
     }
     if (typeof globalObj.dispatchEvent === 'function' && typeof MessageEvent !== 'undefined') {
       try {
-        globalObj.dispatchEvent(new MessageEvent('message', { data: messageWithId }));
+        globalObj.dispatchEvent(new MessageEvent('message', { data: message }));
       } catch {
         // Ignore dispatch errors in non-browser environments
       }
     }
+  }
+
+  const postReply = (reply: RenderWorkerOutputMessage): void => {
+    const messageWithId: RenderWorkerOutputMessage = { id: 'flint_render_worker', ...reply };
+    if (!globalThis.self) return;
+    dispatchGlobalWorkerReply(globalThis.self, messageWithId);
   };
 
   /**
@@ -3973,18 +4095,16 @@ if (globalThis.self !== undefined) {
     targetCanvas: OffscreenCanvas | HTMLCanvasElement,
     preferred?: 'webgpu' | 'webgl' | 'canvas2d',
   ): Promise<{ tier: number; backend: 'webgpu' | 'webgl' | 'canvas2d'; ok: boolean }> {
-    const nav = typeof navigator === 'undefined' ? undefined : (navigator as unknown as WebGpuNavigator);
-    const hasGpu = Boolean(nav?.gpu);
-    if ((!preferred || preferred === 'webgpu') && hasGpu) {
-      const ok = await initWebGpuBackend(targetCanvas);
-      if (ok) return { tier: 1, backend: 'webgpu', ok: true };
+    if (preferred !== 'webgl' && preferred !== 'canvas2d') {
+      const okGpu = await initWebGpuBackend(targetCanvas);
+      if (okGpu) return { tier: 1, backend: 'webgpu', ok: true };
     }
-    if (!preferred || preferred === 'webgl') {
-      const ok = initWebGLBackend(targetCanvas);
-      if (ok) return { tier: 2, backend: 'webgl', ok: true };
+    if (preferred !== 'canvas2d') {
+      const okGl = initWebGLBackend(targetCanvas);
+      if (okGl) return { tier: 2, backend: 'webgl', ok: true };
     }
-    const ok = init2dBackend(targetCanvas);
-    return { tier: 3, backend: 'canvas2d', ok };
+    const ok2d = init2dBackend(targetCanvas);
+    return { tier: 3, backend: 'canvas2d', ok: ok2d };
   }
 
   /**
@@ -4155,17 +4275,9 @@ if (globalThis.self !== undefined) {
   function handleWorkerSetSelection(msg: Extract<RenderWorkerInputMessage, { type: 'set_selection' }>): void {
     if (!wasm) return;
     selectedNodeIds.clear();
-    if (msg.selectedNodeIds) {
-      for (const id of msg.selectedNodeIds) {
-        selectedNodeIds.add(id);
-      }
-    }
+    for (const id of msg.selectedNodeIds ?? []) selectedNodeIds.add(id);
     selectedEdgeIds.clear();
-    if (msg.selectedEdgeIds) {
-      for (const id of msg.selectedEdgeIds) {
-        selectedEdgeIds.add(id);
-      }
-    }
+    for (const id of msg.selectedEdgeIds ?? []) selectedEdgeIds.add(id);
     selectedGroupId = msg.selectedGroupId;
     wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
     postReply({
@@ -4182,18 +4294,10 @@ if (globalThis.self !== undefined) {
   function handleWorkerSetTraceState(msg: Extract<RenderWorkerInputMessage, { type: 'set_trace_state' }>): void {
     if (!wasm) return;
     activeNodeIds.clear();
-    if (msg.activeNodeIds) {
-      for (const id of msg.activeNodeIds) {
-        activeNodeIds.add(id);
-      }
-    }
+    for (const id of msg.activeNodeIds ?? []) activeNodeIds.add(id);
     trappedNodeId = msg.trappedNodeId;
     edgePulses.clear();
-    if (msg.edgePulses) {
-      for (const pulse of msg.edgePulses) {
-        edgePulses.set(pulse.edgeId, pulse.offset);
-      }
-    }
+    for (const pulse of msg.edgePulses ?? []) edgePulses.set(pulse.edgeId, pulse.offset);
     wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
     postReply({
       type: 'frame',
@@ -4201,6 +4305,35 @@ if (globalThis.self !== undefined) {
       visibleNodes: nodes.length,
       visibleEdges: edges.length,
     } as RenderWorkerOutputMessage);
+  }
+
+  /**
+   * Tests whether an edge connection is intersected by cursor point.
+   */
+  function isEdgeHitByCursor(
+    edge: FlintGraphEdge,
+    nodeMap: Map<string, FlintGraphNode>,
+    cursorX: number,
+    cursorY: number,
+    snapRadius: number,
+    wasmEngine: NonNullable<typeof wasm>,
+  ): boolean {
+    const fromNode = nodeMap.get(edge.fromNodeId);
+    const toNode = nodeMap.get(edge.toNodeId);
+    if (!fromNode || !toNode) return false;
+    const fromPortIdx = Math.max(
+      0,
+      (fromNode.outputs ?? []).findIndex((p) => p.id === edge.fromPortId),
+    );
+    const toPortIdx = Math.max(
+      0,
+      (toNode.inputs ?? []).findIndex((p) => p.id === edge.toPortId),
+    );
+    const p0x = fromNode.position.x + NODE_WIDTH;
+    const p0y = fromNode.position.y + NODE_HEADER_HEIGHT + fromPortIdx * PORT_ROW_HEIGHT + 14;
+    const p3x = toNode.position.x;
+    const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIdx * PORT_ROW_HEIGHT + 14;
+    return wasmEngine.edge_hit_test(cursorX, cursorY, p0x, p0y, p3x, p3y, snapRadius);
   }
 
   /**
@@ -4216,22 +4349,7 @@ if (globalThis.self !== undefined) {
     if (!wasm) return undefined;
     const nodeMap = new Map<string, FlintGraphNode>(nodeList.map((n) => [n.id, n]));
     for (const edge of edgeList) {
-      const fromNode = nodeMap.get(edge.fromNodeId);
-      const toNode = nodeMap.get(edge.toNodeId);
-      if (!fromNode || !toNode) continue;
-      const fromPortIndex = Math.max(
-        0,
-        (fromNode.outputs ?? []).findIndex((p) => p.id === edge.fromPortId),
-      );
-      const toPortIndex = Math.max(
-        0,
-        (toNode.inputs ?? []).findIndex((p) => p.id === edge.toPortId),
-      );
-      const p0x = fromNode.position.x + NODE_WIDTH;
-      const p0y = fromNode.position.y + NODE_HEADER_HEIGHT + fromPortIndex * PORT_ROW_HEIGHT + 14;
-      const p3x = toNode.position.x;
-      const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIndex * PORT_ROW_HEIGHT + 14;
-      if (wasm.edge_hit_test(cursorX, cursorY, p0x, p0y, p3x, p3y, snapRadius)) {
+      if (isEdgeHitByCursor(edge, nodeMap, cursorX, cursorY, snapRadius, wasm)) {
         return {
           type: 'edge',
           nodeId: edge.fromNodeId,
@@ -4252,15 +4370,15 @@ if (globalThis.self !== undefined) {
     const px = Math.round(msg.cursorX) + COORD_OFFSET;
     const py = Math.round(msg.cursorY) + COORD_OFFSET;
     const hit = wasm.spatial_hit_test_point(px, py);
-    const hitResult =
-      hit > 0 && nodes[hit - 1]
-        ? {
-            type: 'node' as const,
-            nodeId: nodes[hit - 1].id,
-            worldX: msg.cursorX,
-            worldY: msg.cursorY,
-          }
-        : hitTestEdges(msg.cursorX, msg.cursorY, msg.snapRadius ?? 15, nodes, edges);
+    const hitNode = hit > 0 ? nodes[hit - 1] : undefined;
+    const hitResult = hitNode
+      ? {
+          type: 'node' as const,
+          nodeId: hitNode.id,
+          worldX: msg.cursorX,
+          worldY: msg.cursorY,
+        }
+      : hitTestEdges(msg.cursorX, msg.cursorY, msg.snapRadius ?? 15, nodes, edges);
     postReply({
       type: 'hit_test_result',
       hit: hitResult,
@@ -4271,6 +4389,17 @@ if (globalThis.self !== undefined) {
       hit: hitResult,
       requestId: msg.requestId,
     } as RenderWorkerOutputMessage);
+  }
+
+  /**
+   * Cleans up WebGL buffers, textures, and shader programs.
+   */
+  function cleanupGlResources(gl: WebGLRenderingContext | WebGL2RenderingContext): void {
+    if (glVertexBuffer) gl.deleteBuffer(glVertexBuffer);
+    if (glTexVertexBuffer) gl.deleteBuffer(glTexVertexBuffer);
+    if (glFontTexture) gl.deleteTexture(glFontTexture);
+    if (glProgram) gl.deleteProgram(glProgram);
+    if (glTextProgram) gl.deleteProgram(glTextProgram);
   }
 
   /**
@@ -4300,13 +4429,7 @@ if (globalThis.self !== undefined) {
     textPipeline = undefined;
     gpuDevice = undefined;
     gpuContext = undefined;
-    if (glCtx) {
-      if (glVertexBuffer) glCtx.deleteBuffer(glVertexBuffer);
-      if (glTexVertexBuffer) glCtx.deleteBuffer(glTexVertexBuffer);
-      if (glFontTexture) glCtx.deleteTexture(glFontTexture);
-      if (glProgram) glCtx.deleteProgram(glProgram);
-      if (glTextProgram) glCtx.deleteProgram(glTextProgram);
-    }
+    if (glCtx) cleanupGlResources(glCtx);
     glVertexBuffer = undefined;
     glTexVertexBuffer = undefined;
     glFontTexture = undefined;
@@ -4378,15 +4501,22 @@ if (globalThis.self !== undefined) {
     } as RenderWorkerOutputMessage);
   }
 
+  /**
+   * Checks whether incoming message event should be discarded.
+   */
+  function isWorkerMessageIgnored(eventData: unknown): boolean {
+    return (
+      !eventData ||
+      typeof eventData !== 'object' ||
+      !('type' in eventData) ||
+      ('id' in eventData && (eventData as { id?: string }).id === 'flint_render_worker')
+    );
+  }
+
   globalThis.self.addEventListener('message', async (event: MessageEvent<RenderWorkerInputMessage>) => {
     const msg = event.data;
-    if (!msg || typeof msg !== 'object' || !('type' in msg) || ('id' in msg && msg.id === 'flint_render_worker')) {
-      return;
-    }
-
-    if (!wasm) {
-      wasm = getFlintRenderWorkerWasm(capabilities);
-    }
+    if (isWorkerMessageIgnored(msg)) return;
+    if (!wasm) wasm = getFlintRenderWorkerWasm(capabilities);
 
     try {
       switch (msg.type) {
