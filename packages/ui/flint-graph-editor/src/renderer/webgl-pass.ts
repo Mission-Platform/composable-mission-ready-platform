@@ -2,7 +2,12 @@ import { evaluateCubicBezier, getNodeBounds } from './camera';
 import { computeGlNodeBorder, getCategoryRgba, getPortTypeRgba, parseColorToRgba } from './color';
 import { NODE_HEADER_HEIGHT, NODE_WIDTH, PORT_ROW_HEIGHT } from './constants';
 
-import type { FlintRenderWorkerWasmExports, WebGLUniformLocations } from './types';
+import type {
+  FlintRenderWorkerWasmExports,
+  WebGLTextAttribLocations,
+  WebGLTextUniformLocations,
+  WebGLUniformLocations,
+} from './types';
 import type { RenderWorkerState } from './worker-state';
 import type { FlintGraphEdge, FlintGraphGroup, FlintGraphNode, FlintGraphPort } from '@mission-platform/flint';
 
@@ -1565,13 +1570,64 @@ export function renderWebGLNodePass(
   return { visibleNodesCount, visiblePinsCount };
 }
 
+interface GlTextPipeline {
+  readonly program: WebGLProgram;
+  readonly buffer: WebGLBuffer;
+  readonly texture: WebGLTexture;
+  readonly uniforms: WebGLTextUniformLocations;
+  readonly attribs: WebGLTextAttribLocations;
+  readonly vertices: Float32Array;
+}
+
 /**
- * Checks whether WebGL SDF text rendering pipeline is initialized.
+ * Resolves initialized WebGL SDF text pipeline resources.
  */
-function isGlTextPipelineReady(state: RenderWorkerState): boolean {
-  if (state.textTriVertices.length === 0) return false;
-  if (!state.glTextProgram || !state.glTexVertexBuffer || !state.glFontTexture) return false;
-  return Boolean(state.glTextUniformLocations && state.glTextAttribLocations);
+function getGlTextPipeline(state: RenderWorkerState): GlTextPipeline | undefined {
+  if (state.textTriVertices.length === 0) return undefined;
+  if (!state.glTextProgram || !state.glTexVertexBuffer) return undefined;
+  if (!state.glFontTexture || !state.glTextUniformLocations || !state.glTextAttribLocations) return undefined;
+  return {
+    program: state.glTextProgram,
+    buffer: state.glTexVertexBuffer,
+    texture: state.glFontTexture,
+    uniforms: state.glTextUniformLocations,
+    attribs: state.glTextAttribLocations,
+    vertices: state.textTriVertices,
+  };
+}
+
+/**
+ * Sets shader uniforms for WebGL SDF text pipeline.
+ */
+function applyGlTextUniforms(
+  gl: WebGLRenderingContext | WebGL2RenderingContext,
+  locs: WebGLTextUniformLocations,
+  state: RenderWorkerState,
+  wasmEngine: FlintRenderWorkerWasmExports,
+): void {
+  gl.uniform2f(locs.u_resolution, state.width, state.height);
+  gl.uniform2f(locs.u_camera, wasmEngine.get_camera_x(), wasmEngine.get_camera_y());
+  gl.uniform1f(locs.u_zoom, wasmEngine.get_camera_zoom());
+  gl.uniform1i(locs.u_fontTexture, 0);
+}
+
+/**
+ * Binds vertex buffers and attributes for WebGL SDF text geometry.
+ */
+function applyGlTextAttributes(
+  gl: WebGLRenderingContext | WebGL2RenderingContext,
+  buf: WebGLBuffer,
+  attribs: WebGLTextAttribLocations,
+  vertices: Float32Array,
+): void {
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.DYNAMIC_DRAW);
+  gl.enableVertexAttribArray(attribs.a_position);
+  gl.vertexAttribPointer(attribs.a_position, 2, gl.FLOAT, false, 32, 0);
+  gl.enableVertexAttribArray(attribs.a_uv);
+  gl.vertexAttribPointer(attribs.a_uv, 2, gl.FLOAT, false, 32, 8);
+  gl.enableVertexAttribArray(attribs.a_color);
+  gl.vertexAttribPointer(attribs.a_color, 4, gl.FLOAT, false, 32, 16);
 }
 
 /**
@@ -1582,37 +1638,15 @@ function flushGlTextTriangles(
   gl: WebGLRenderingContext | WebGL2RenderingContext,
   wasmEngine: FlintRenderWorkerWasmExports,
 ): void {
-  const prog = state.glTextProgram;
-  const buf = state.glTexVertexBuffer;
-  const tex = state.glFontTexture;
-  if (
-    !isGlTextPipelineReady(state) ||
-    !state.glTextUniformLocations ||
-    !state.glTextAttribLocations ||
-    !prog ||
-    !buf ||
-    !tex
-  )
-    return;
+  const pipeline = getGlTextPipeline(state);
+  if (!pipeline) return;
 
-  gl.useProgram(prog);
-  gl.uniform2f(state.glTextUniformLocations.u_resolution, state.width, state.height);
-  gl.uniform2f(state.glTextUniformLocations.u_camera, wasmEngine.get_camera_x(), wasmEngine.get_camera_y());
-  gl.uniform1f(state.glTextUniformLocations.u_zoom, wasmEngine.get_camera_zoom());
-
+  gl.useProgram(pipeline.program);
   gl.activeTexture(gl.TEXTURE0);
-  gl.bindTexture(gl.TEXTURE_2D, tex);
-  gl.uniform1i(state.glTextUniformLocations.u_fontTexture, 0);
-
-  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-  gl.bufferData(gl.ARRAY_BUFFER, state.textTriVertices, gl.DYNAMIC_DRAW);
-  gl.enableVertexAttribArray(state.glTextAttribLocations.a_position);
-  gl.vertexAttribPointer(state.glTextAttribLocations.a_position, 2, gl.FLOAT, false, 32, 0);
-  gl.enableVertexAttribArray(state.glTextAttribLocations.a_uv);
-  gl.vertexAttribPointer(state.glTextAttribLocations.a_uv, 2, gl.FLOAT, false, 32, 8);
-  gl.enableVertexAttribArray(state.glTextAttribLocations.a_color);
-  gl.vertexAttribPointer(state.glTextAttribLocations.a_color, 4, gl.FLOAT, false, 32, 16);
-  gl.drawArrays(gl.TRIANGLES, 0, state.textTriVertices.length / 8);
+  gl.bindTexture(gl.TEXTURE_2D, pipeline.texture);
+  applyGlTextUniforms(gl, pipeline.uniforms, state, wasmEngine);
+  applyGlTextAttributes(gl, pipeline.buffer, pipeline.attribs, pipeline.vertices);
+  gl.drawArrays(gl.TRIANGLES, 0, pipeline.vertices.length / 8);
 }
 
 /**
@@ -1662,14 +1696,29 @@ function recordWebGLFrameStats(
 }
 
 /**
+ * Safely resolves high-resolution performance timestamp.
+ */
+function getPerformanceTimestamp(): number {
+  return typeof performance === 'undefined' ? 0 : performance.now();
+}
+
+/**
+ * Checks whether WebGL rendering context and core shader resources are ready.
+ */
+function isGlContextReady(state: RenderWorkerState): boolean {
+  if (!state.glCtx || !state.wasm) return false;
+  return Boolean(state.glProgram && state.glVertexBuffer);
+}
+
+/**
  * Renders the complete node graph using WebGL draw arrays and native Flint vertex batching.
  */
 export function renderWebGLFrame(state: RenderWorkerState): void {
-  const gl = state.glCtx;
-  const wasm = state.wasm;
-  if (!gl || !wasm || !state.glProgram || !state.glVertexBuffer) return;
+  if (!isGlContextReady(state)) return;
+  const gl = state.glCtx as NonNullable<typeof state.glCtx>;
+  const wasm = state.wasm as NonNullable<typeof state.wasm>;
 
-  const t0 = typeof performance === 'undefined' ? 0 : performance.now();
+  const t0 = getPerformanceTimestamp();
   const isDark = state.currentTheme !== 'light';
 
   setupWebGLViewport(

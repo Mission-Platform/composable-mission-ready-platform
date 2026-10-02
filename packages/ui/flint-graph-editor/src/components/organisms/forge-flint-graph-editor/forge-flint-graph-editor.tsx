@@ -381,8 +381,13 @@ function isPointInsideNode(
  * Safely extracts string value from an HTML input or textarea event target.
  */
 function extractEventTargetStringValue(event: unknown): string | undefined {
-  const value = (event as { target?: { value?: unknown } })?.target?.value;
-  return typeof value === 'string' ? value : undefined;
+  if (event && typeof event === 'object' && 'target' in event) {
+    const target = event.target;
+    if (target && typeof target === 'object' && 'value' in target && typeof target.value === 'string') {
+      return target.value;
+    }
+  }
+  return undefined;
 }
 
 /**
@@ -2169,9 +2174,9 @@ function handleEntityEdgeHit(
 }
 
 /**
- * Routes pointer down hit test results on specific entities.
+ * Routes waypoint hit test results on pointer down.
  */
-function handleSubEntityPointerDown(
+function handleWaypointHit(
   hit: FlintHitResult,
   store: FlintEditorStore,
   bridge: FlintRendererBridge,
@@ -2179,10 +2184,32 @@ function handleSubEntityPointerDown(
   if (hit.type === 'waypoint' && hit.edgeId && hit.waypointIndex !== undefined) {
     return handleWaypointHitPointerDown(hit, store, bridge);
   }
+  return undefined;
+}
+
+/**
+ * Routes port hit test results on pointer down.
+ */
+function handlePortHit(
+  hit: FlintHitResult,
+  store: FlintEditorStore,
+  bridge: FlintRendererBridge,
+): PointerDownHitOutcome | undefined {
   if (hit.type === 'port' && hit.portId) {
     return handlePortHitPointerDown(hit, store, bridge);
   }
   return undefined;
+}
+
+/**
+ * Routes pointer down hit test results on specific entities.
+ */
+function handleSubEntityPointerDown(
+  hit: FlintHitResult,
+  store: FlintEditorStore,
+  bridge: FlintRendererBridge,
+): PointerDownHitOutcome | undefined {
+  return handleWaypointHit(hit, store, bridge) ?? handlePortHit(hit, store, bridge);
 }
 
 /**
@@ -2282,8 +2309,10 @@ function handleConnectPointerUp(
 function handleEntityPointerUp(dragMode: string, store: FlintEditorStore, bridge: FlintRendererBridge): void {
   if (dragMode === 'node' || dragMode === 'group') {
     store.commitNodeMove();
+    bridge.renderFrame();
+  } else if (dragMode === 'waypoint') {
+    bridge.renderFrame();
   }
-  bridge.renderFrame();
 }
 
 /**
@@ -2299,22 +2328,15 @@ function handlePointerUpAction(
   store: FlintEditorStore,
   setSelectionSquare: (updater: SelectionSquareState | ((prev: SelectionSquareState) => SelectionSquareState)) => void,
 ): void {
-  switch (dragMode) {
-    case 'box_select': {
-      handleBoxSelectPointerUp(event, boxSelectStart, bridge, store, setSelectionSquare);
-      break;
-    }
-    case 'connect': {
-      handleConnectPointerUp(event, connectingSourceNodeId, connectingSourcePortId, bridge, store);
-      break;
-    }
-    case 'node':
-    case 'group':
-    case 'waypoint': {
-      handleEntityPointerUp(dragMode, store, bridge);
-      break;
-    }
+  if (dragMode === 'box_select') {
+    handleBoxSelectPointerUp(event, boxSelectStart, bridge, store, setSelectionSquare);
+    return;
   }
+  if (dragMode === 'connect') {
+    handleConnectPointerUp(event, connectingSourceNodeId, connectingSourcePortId, bridge, store);
+    return;
+  }
+  handleEntityPointerUp(dragMode, store, bridge);
 }
 
 /**
@@ -2406,6 +2428,22 @@ function handleWaypointDragStep(
 }
 
 /**
+ * Dispatches node or group position drag changes.
+ */
+function handleNodeOrGroupDragMove(
+  deltaX: number,
+  deltaY: number,
+  cameraZoom: number,
+  nodesStartPositions: Map<string, { readonly x: number; readonly y: number }>,
+  store: FlintEditorStore,
+  bridge: FlintRendererBridge,
+): void {
+  if (nodesStartPositions.size > 0) {
+    handleNodeGroupDrag(deltaX, deltaY, cameraZoom, nodesStartPositions, store, bridge);
+  }
+}
+
+/**
  * Handles entity-specific gesture drag step routing.
  */
 function handleEntityDragMoveStep(context: DragMoveContext): void {
@@ -2427,9 +2465,7 @@ function handleEntityDragMoveStep(context: DragMoveContext): void {
   switch (dragMode) {
     case 'group':
     case 'node': {
-      if (nodesStartPositions.size > 0) {
-        handleNodeGroupDrag(deltaX, deltaY, cameraZoom, nodesStartPositions, store, bridge);
-      }
+      handleNodeOrGroupDragMove(deltaX, deltaY, cameraZoom, nodesStartPositions, store, bridge);
       break;
     }
     case 'waypoint': {
@@ -2438,6 +2474,9 @@ function handleEntityDragMoveStep(context: DragMoveContext): void {
     }
     case 'connect': {
       handleConnectDrag(event, bridge, store, connectingSourceNodeId, connectingSourcePortId);
+      break;
+    }
+    default: {
       break;
     }
   }

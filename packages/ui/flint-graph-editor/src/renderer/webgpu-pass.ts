@@ -162,6 +162,19 @@ function calculateClampedInstances(
 }
 
 /**
+ * Checks whether GPU render pass and draw resources are configured.
+ */
+function isGpuDrawTargetReady(
+  passEncoder: GPURenderPassEncoder | undefined,
+  pipeline: GPURenderPipeline | undefined,
+  cameraGroup: GPUBindGroup | undefined,
+  instanceBuffer: GPUBuffer | undefined,
+): boolean {
+  if (!passEncoder || !pipeline) return false;
+  return Boolean(cameraGroup && instanceBuffer);
+}
+
+/**
  * Configures pipeline state and issues instanced WebGPU draw calls.
  */
 export function executeGpuInstancedDraw(
@@ -174,41 +187,60 @@ export function executeGpuInstancedDraw(
   vertexCount: number,
   maxCount?: number,
 ): void {
-  if (!passEncoder || !pipeline || !cameraGroup || !instanceBuffer) return;
-  const actualCount = calculateClampedInstances(floats.length, instanceBuffer.size, strideFloats, maxCount);
-  if (actualCount > 0) {
-    passEncoder.setPipeline(pipeline);
-    passEncoder.setBindGroup(0, cameraGroup);
-    passEncoder.setVertexBuffer(0, instanceBuffer);
-    passEncoder.draw(vertexCount, actualCount, 0, 0);
-  }
+  if (!isGpuDrawTargetReady(passEncoder, pipeline, cameraGroup, instanceBuffer)) return;
+  const buf = instanceBuffer as GPUBuffer;
+  const actualCount = calculateClampedInstances(floats.length, buf.size, strideFloats, maxCount);
+  if (actualCount <= 0) return;
+
+  (passEncoder as GPURenderPassEncoder).setPipeline(pipeline as GPURenderPipeline);
+  (passEncoder as GPURenderPassEncoder).setBindGroup(0, cameraGroup as GPUBindGroup);
+  (passEncoder as GPURenderPassEncoder).setVertexBuffer(0, buf);
+  (passEncoder as GPURenderPassEncoder).draw(vertexCount, actualCount, 0, 0);
+}
+
+interface WebGpuTextContext {
+  readonly encoder: GPURenderPassEncoder;
+  readonly device: GPUDevice;
+  readonly pipeline: GPURenderPipeline;
+  readonly cameraBindGroup: GPUBindGroup;
+  readonly fontBindGroup: GPUBindGroup;
+  readonly vertices: Float32Array;
 }
 
 /**
- * Determines whether WebGPU text render pipeline and bind groups are active.
+ * Resolves active WebGPU text render context and pipelines.
  */
-function isWebGpuTextReady(state: RenderWorkerState): boolean {
-  if (state.webGpuTextVertices.length === 0) return false;
-  if (!state.currentPassEncoder || !state.textPipeline || !state.gpuDevice) return false;
-  return Boolean(state.cameraBindGroup && state.fontBindGroup);
+function getWebGpuTextContext(state: RenderWorkerState): WebGpuTextContext | undefined {
+  const { currentPassEncoder, gpuDevice, textPipeline, cameraBindGroup, fontBindGroup, webGpuTextVertices } = state;
+  if (webGpuTextVertices.length === 0) return undefined;
+  if (!currentPassEncoder || !gpuDevice) return undefined;
+  if (!textPipeline || !cameraBindGroup || !fontBindGroup) return undefined;
+  return {
+    encoder: currentPassEncoder,
+    device: gpuDevice,
+    pipeline: textPipeline,
+    cameraBindGroup,
+    fontBindGroup,
+    vertices: webGpuTextVertices,
+  };
 }
 
 /**
  * Flushes WebGPU text vertex buffer and executes text draw calls.
  */
 export function flushWebGpuTextBatch(state: RenderWorkerState): void {
-  if (!isWebGpuTextReady(state)) return;
-  const encoder = state.currentPassEncoder!;
-  const device = state.gpuDevice!;
+  const textCtx = getWebGpuTextContext(state);
+  if (!textCtx) return;
+  const { encoder, device, pipeline, cameraBindGroup, fontBindGroup, vertices } = textCtx;
 
-  const requiredBytes = state.webGpuTextVertices.length * 4;
+  const requiredBytes = vertices.length * 4;
   state.textVertexBuffer = ensureGpuInstanceBuffer(state.textVertexBuffer, requiredBytes, device);
-  device.queue.writeBuffer(state.textVertexBuffer, 0, new Float32Array(state.webGpuTextVertices));
-  encoder.setPipeline(state.textPipeline!);
-  encoder.setBindGroup(0, state.cameraBindGroup!);
-  encoder.setBindGroup(1, state.fontBindGroup!);
+  device.queue.writeBuffer(state.textVertexBuffer, 0, vertices);
+  encoder.setPipeline(pipeline);
+  encoder.setBindGroup(0, cameraBindGroup);
+  encoder.setBindGroup(1, fontBindGroup);
   encoder.setVertexBuffer(0, state.textVertexBuffer);
-  encoder.draw(state.webGpuTextVertices.length / 8, 1, 0, 0);
+  encoder.draw(vertices.length / 8, 1, 0, 0);
 }
 
 /**
@@ -505,6 +537,14 @@ function configureGpuPipelines(
 }
 
 /**
+ * Safely resolves navigator WebGPU interface if available.
+ */
+function getWebGpuNavigator(): WebGpuNavigator | undefined {
+  if (typeof navigator === 'undefined') return undefined;
+  return navigator as unknown as WebGpuNavigator;
+}
+
+/**
  * Initializes the WebGPU device, swapchain context, pipelines, and uniform bind groups.
  */
 export async function initWebGpuBackend(
@@ -512,13 +552,11 @@ export async function initWebGpuBackend(
   targetCanvas: OffscreenCanvas | HTMLCanvasElement,
 ): Promise<boolean> {
   try {
-    const nav = typeof navigator === 'undefined' ? undefined : (navigator as unknown as WebGpuNavigator);
+    const nav = getWebGpuNavigator();
     if (!nav?.gpu) return false;
     const device = await requestGpuDevice(nav);
-    if (!device) return false;
-
-    const surface = resolveGpuContext(targetCanvas, nav, device);
-    if (!surface) return false;
+    const surface = device ? resolveGpuContext(targetCanvas, nav, device) : undefined;
+    if (!device || !surface) return false;
 
     configureGpuPipelines(state, device, surface.context, surface.format);
     return true;
