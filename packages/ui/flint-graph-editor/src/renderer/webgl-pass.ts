@@ -1583,16 +1583,27 @@ interface GlTextPipeline {
  * Resolves initialized WebGL SDF text pipeline resources.
  */
 function getGlTextPipeline(state: RenderWorkerState): GlTextPipeline | undefined {
-  if (state.textTriVertices.length === 0) return undefined;
-  if (!state.glTextProgram || !state.glTexVertexBuffer) return undefined;
-  if (!state.glFontTexture || !state.glTextUniformLocations || !state.glTextAttribLocations) return undefined;
+  const {
+    glTextProgram,
+    glTexVertexBuffer,
+    glFontTexture,
+    glTextUniformLocations,
+    glTextAttribLocations,
+    textTriVertices,
+  } = state;
+  if (textTriVertices.length === 0) return undefined;
+  if (
+    [glTextProgram, glTexVertexBuffer, glFontTexture, glTextUniformLocations, glTextAttribLocations].includes(undefined)
+  ) {
+    return undefined;
+  }
   return {
-    program: state.glTextProgram,
-    buffer: state.glTexVertexBuffer,
-    texture: state.glFontTexture,
-    uniforms: state.glTextUniformLocations,
-    attribs: state.glTextAttribLocations,
-    vertices: state.textTriVertices,
+    program: glTextProgram as WebGLProgram,
+    buffer: glTexVertexBuffer as WebGLBuffer,
+    texture: glFontTexture as WebGLTexture,
+    uniforms: glTextUniformLocations as WebGLTextUniformLocations,
+    attribs: glTextAttribLocations as WebGLTextAttribLocations,
+    vertices: textTriVertices,
   };
 }
 

@@ -377,17 +377,26 @@ function isPointInsideNode(
   return worldY >= minY && worldY <= maxY;
 }
 
+interface EventWithStringValue {
+  readonly target?: {
+    readonly value?: string;
+  };
+}
+
+/**
+ * Checks whether an event payload contains an object target.
+ */
+function isEventWithStringValue(event: unknown): event is EventWithStringValue {
+  return Boolean(event && typeof event === 'object');
+}
+
 /**
  * Safely extracts string value from an HTML input or textarea event target.
  */
 function extractEventTargetStringValue(event: unknown): string | undefined {
-  if (event && typeof event === 'object' && 'target' in event) {
-    const target = event.target;
-    if (target && typeof target === 'object' && 'value' in target && typeof target.value === 'string') {
-      return target.value;
-    }
-  }
-  return undefined;
+  if (!isEventWithStringValue(event)) return undefined;
+  const value = event.target?.value;
+  return typeof value === 'string' ? value : undefined;
 }
 
 /**

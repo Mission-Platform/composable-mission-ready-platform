@@ -348,7 +348,7 @@ export type StoreListener = (state: FlintEditorStoreState) => void;
 
 No description provided.
 
-## `src/renderer/render-worker`
+## `src/renderer/camera`
 
 ### createCamera
 
@@ -386,55 +386,25 @@ Computes a 4x4 orthographic view-projection matrix for the given camera.
 | ------ | ----------- | ----------- |
 | camera | FlintCamera |             |
 
-### DEFAULT_ZOOM
+### evaluateCubicBezier
 
-**Kind:** constant
-
-```typescript
-export const DEFAULT_ZOOM;
-```
-
-No description provided.
-
-### FlintCamera
-
-**Kind:** interface
+**Kind:** function
 
 ```typescript
-export interface FlintCamera
+function evaluateCubicBezier(p0: number, p1: number, p2: number, p3: number, progressRatio: number): number;
 ```
 
-No description provided.
+Evaluates cubic Bezier point for coordinate axis and step factor.
 
-### FlintHitResult
+#### Parameters
 
-**Kind:** interface
-
-```typescript
-export interface FlintHitResult
-```
-
-No description provided.
-
-### FlintPerformanceMetrics
-
-**Kind:** interface
-
-```typescript
-export interface FlintPerformanceMetrics
-```
-
-No description provided.
-
-### FlintRenderWorkerWasmExports
-
-**Kind:** type
-
-```typescript
-export type FlintRenderWorkerWasmExports = ReturnType<typeof loadSync>;
-```
-
-No description provided.
+| Name          | Type   | Description |
+| ------------- | ------ | ----------- |
+| p0            | number |             |
+| p1            | number |             |
+| p2            | number |             |
+| p3            | number |             |
+| progressRatio | number |             |
 
 ### getFlintCameraWasm
 
@@ -445,22 +415,6 @@ export const getFlintCameraWasm: (imports?: WebAssembly.Imports) => FlintRenderW
 ```
 
 No description provided.
-
-### getFlintRenderWorkerWasm
-
-**Kind:** function
-
-```typescript
-function getFlintRenderWorkerWasm(imports?: WebAssembly.Imports): FlintRenderWorkerWasmExports;
-```
-
-Instantiates or retrieves the cached native Flint WebAssembly render worker module.
-
-#### Parameters
-
-| Name    | Type                | Description |
-| ------- | ------------------- | ----------- |
-| imports | WebAssembly.Imports |             |
 
 ### getNodeBounds
 
@@ -495,6 +449,1306 @@ Computes the visible world-coordinate bounds for the camera viewport with paddin
 | ------- | ----------- | ----------- |
 | camera  | FlintCamera |             |
 | padding |             |             |
+
+## `src/renderer/canvas2d-pass`
+
+### createCanvas2dCapabilities
+
+**Kind:** function
+
+```typescript
+function createCanvas2dCapabilities(state: RenderWorkerState): WebAssembly.Imports;
+```
+
+Creates Canvas 2D WebAssembly host capabilities object.
+
+#### Parameters
+
+| Name  | Type              | Description |
+| ----- | ----------------- | ----------- |
+| state | RenderWorkerState |             |
+
+### drawC2dPulseDot
+
+**Kind:** function
+
+```typescript
+function drawC2dPulseDot(
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  p0x: number,
+  p0y: number,
+  p1x: number,
+  p1y: number,
+  p2x: number,
+  p2y: number,
+  p3x: number,
+  p3y: number,
+  pulseOffsetPermille: number,
+  isDark: boolean,
+): void;
+```
+
+Renders pulse execution dot along 2D canvas cubic bezier curve.
+
+#### Parameters
+
+| Name                | Type                                                          | Description |
+| ------------------- | ------------------------------------------------------------- | ----------- |
+| ctx                 | CanvasRenderingContext2D \| OffscreenCanvasRenderingContext2D |             |
+| p0x                 | number                                                        |             |
+| p0y                 | number                                                        |             |
+| p1x                 | number                                                        |             |
+| p1y                 | number                                                        |             |
+| p2x                 | number                                                        |             |
+| p2y                 | number                                                        |             |
+| p3x                 | number                                                        |             |
+| p3y                 | number                                                        |             |
+| pulseOffsetPermille | number                                                        |             |
+| isDark              | boolean                                                       |             |
+
+### getC2dEdgeColor
+
+**Kind:** function
+
+```typescript
+function getC2dEdgeColor(isSelected: number, isDark: boolean): string;
+```
+
+Computes 2D canvas edge stroke color string.
+
+#### Parameters
+
+| Name       | Type    | Description |
+| ---------- | ------- | ----------- |
+| isSelected | number  |             |
+| isDark     | boolean |             |
+
+### init2dBackend
+
+**Kind:** function
+
+```typescript
+function init2dBackend(state: RenderWorkerState, targetCanvas: OffscreenCanvas | HTMLCanvasElement): boolean;
+```
+
+Initializes standard 2D canvas context as a fallback rendering pipeline.
+
+#### Parameters
+
+| Name         | Type                                 | Description |
+| ------------ | ------------------------------------ | ----------- |
+| state        | RenderWorkerState                    |             |
+| targetCanvas | OffscreenCanvas \| HTMLCanvasElement |             |
+
+### render2dConnectingEdgePass
+
+**Kind:** function
+
+```typescript
+function render2dConnectingEdgePass(
+  state: RenderWorkerState,
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  zoomVal: number,
+  isDark: boolean,
+  nodeMap: Map<string, FlintGraphNode>,
+): void;
+```
+
+Renders interactive in-flight wire connection cable on 2D canvas.
+
+#### Parameters
+
+| Name    | Type                                                          | Description |
+| ------- | ------------------------------------------------------------- | ----------- |
+| state   | RenderWorkerState                                             |             |
+| ctx     | CanvasRenderingContext2D \| OffscreenCanvasRenderingContext2D |             |
+| zoomVal | number                                                        |             |
+| isDark  | boolean                                                       |             |
+| nodeMap | Map<string, FlintGraphNode>                                   |             |
+
+### render2dEdgeCurve
+
+**Kind:** function
+
+```typescript
+function render2dEdgeCurve(
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  edge: FlintGraphEdge,
+  p0x: number,
+  p0y: number,
+  p3x: number,
+  p3y: number,
+  p1x: number,
+  p1y: number,
+  p2x: number,
+  p2y: number,
+  zoomVal: number,
+  isDark: boolean,
+  isSelected: boolean,
+  isPulseActive: boolean,
+): void;
+```
+
+Renders waypoints and spline curves for a single edge on 2D canvas.
+
+#### Parameters
+
+| Name          | Type                                                          | Description |
+| ------------- | ------------------------------------------------------------- | ----------- |
+| ctx           | CanvasRenderingContext2D \| OffscreenCanvasRenderingContext2D |             |
+| edge          | FlintGraphEdge                                                |             |
+| p0x           | number                                                        |             |
+| p0y           | number                                                        |             |
+| p3x           | number                                                        |             |
+| p3y           | number                                                        |             |
+| p1x           | number                                                        |             |
+| p1y           | number                                                        |             |
+| p2x           | number                                                        |             |
+| p2y           | number                                                        |             |
+| zoomVal       | number                                                        |             |
+| isDark        | boolean                                                       |             |
+| isSelected    | boolean                                                       |             |
+| isPulseActive | boolean                                                       |             |
+
+### render2dEdgePass
+
+**Kind:** function
+
+```typescript
+function render2dEdgePass(
+  state: RenderWorkerState,
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+  zoomVal: number,
+  isDark: boolean,
+  nodeMap: Map<string, FlintGraphNode>,
+  wasmEngine: FlintRenderWorkerWasmExports,
+): void;
+```
+
+Renders edge connection cables and execution flow pulses on 2D canvas.
+
+#### Parameters
+
+| Name       | Type                                                          | Description |
+| ---------- | ------------------------------------------------------------- | ----------- |
+| state      | RenderWorkerState                                             |             |
+| ctx        | CanvasRenderingContext2D \| OffscreenCanvasRenderingContext2D |             |
+| minX       | number                                                        |             |
+| minY       | number                                                        |             |
+| maxX       | number                                                        |             |
+| maxY       | number                                                        |             |
+| zoomVal    | number                                                        |             |
+| isDark     | boolean                                                       |             |
+| nodeMap    | Map<string, FlintGraphNode>                                   |             |
+| wasmEngine | FlintRenderWorkerWasmExports                                  |             |
+
+### render2dFrame
+
+**Kind:** function
+
+```typescript
+function render2dFrame(state: RenderWorkerState): void;
+```
+
+Renders the complete node graph using the 2D canvas context and native Flint geometry projections.
+
+#### Parameters
+
+| Name  | Type              | Description |
+| ----- | ----------------- | ----------- |
+| state | RenderWorkerState |             |
+
+### render2dGridPass
+
+**Kind:** function
+
+```typescript
+function render2dGridPass(
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+  zoomVal: number,
+  isDark: boolean,
+): void;
+```
+
+Renders background grid lines onto the 2D canvas context.
+
+#### Parameters
+
+| Name    | Type                                                          | Description |
+| ------- | ------------------------------------------------------------- | ----------- |
+| ctx     | CanvasRenderingContext2D \| OffscreenCanvasRenderingContext2D |             |
+| minX    | number                                                        |             |
+| minY    | number                                                        |             |
+| maxX    | number                                                        |             |
+| maxY    | number                                                        |             |
+| zoomVal | number                                                        |             |
+| isDark  | boolean                                                       |             |
+
+### render2dGroupPass
+
+**Kind:** function
+
+```typescript
+function render2dGroupPass(
+  state: RenderWorkerState,
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+  zoomVal: number,
+  isDark: boolean,
+): void;
+```
+
+Renders node group bounding boxes, titles, and borders on 2D canvas.
+
+#### Parameters
+
+| Name    | Type                                                          | Description |
+| ------- | ------------------------------------------------------------- | ----------- |
+| state   | RenderWorkerState                                             |             |
+| ctx     | CanvasRenderingContext2D \| OffscreenCanvasRenderingContext2D |             |
+| minX    | number                                                        |             |
+| minY    | number                                                        |             |
+| maxX    | number                                                        |             |
+| maxY    | number                                                        |             |
+| zoomVal | number                                                        |             |
+| isDark  | boolean                                                       |             |
+
+### render2dNodePins
+
+**Kind:** function
+
+```typescript
+function render2dNodePins(
+  state: RenderWorkerState,
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  node: FlintGraphNode,
+  x: number,
+  y: number,
+  nodeWidth: number,
+  zoomVal: number,
+  isDark: boolean,
+): void;
+```
+
+Renders input and output port pins and labels for a single 2D node.
+
+#### Parameters
+
+| Name      | Type                                                          | Description |
+| --------- | ------------------------------------------------------------- | ----------- |
+| state     | RenderWorkerState                                             |             |
+| ctx       | CanvasRenderingContext2D \| OffscreenCanvasRenderingContext2D |             |
+| node      | FlintGraphNode                                                |             |
+| x         | number                                                        |             |
+| y         | number                                                        |             |
+| nodeWidth | number                                                        |             |
+| zoomVal   | number                                                        |             |
+| isDark    | boolean                                                       |             |
+
+### render2dSingleNode
+
+**Kind:** function
+
+```typescript
+function render2dSingleNode(
+  state: RenderWorkerState,
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  node: FlintGraphNode,
+  zoomVal: number,
+  isDark: boolean,
+): void;
+```
+
+Renders an individual node card, header, categories, and port pins on 2D canvas.
+
+#### Parameters
+
+| Name    | Type                                                          | Description |
+| ------- | ------------------------------------------------------------- | ----------- |
+| state   | RenderWorkerState                                             |             |
+| ctx     | CanvasRenderingContext2D \| OffscreenCanvasRenderingContext2D |             |
+| node    | FlintGraphNode                                                |             |
+| zoomVal | number                                                        |             |
+| isDark  | boolean                                                       |             |
+
+## `src/renderer/color`
+
+### computeC2dNodeStroke
+
+**Kind:** function
+
+```typescript
+function computeC2dNodeStroke(isSelected: number, isActive: number, isTrapped: number, isDark: boolean);
+```
+
+Computes 2D Canvas node stroke styling properties.
+
+#### Parameters
+
+| Name       | Type    | Description |
+| ---------- | ------- | ----------- |
+| isSelected | number  |             |
+| isActive   | number  |             |
+| isTrapped  | number  |             |
+| isDark     | boolean |             |
+
+### computeC2dPinFill
+
+**Kind:** function
+
+```typescript
+function computeC2dPinFill(isHovered: number, isActive: number, isDark: boolean): string;
+```
+
+Computes 2D Canvas pin circle fill color string.
+
+#### Parameters
+
+| Name      | Type    | Description |
+| --------- | ------- | ----------- |
+| isHovered | number  |             |
+| isActive  | number  |             |
+| isDark    | boolean |             |
+
+### computeGlNodeBorder
+
+**Kind:** function
+
+```typescript
+function computeGlNodeBorder(isSelected: number, isActive: number, isTrapped: number, isDark: boolean);
+```
+
+Computes WebGL node border RGB color channels.
+
+#### Parameters
+
+| Name       | Type    | Description |
+| ---------- | ------- | ----------- |
+| isSelected | number  |             |
+| isActive   | number  |             |
+| isTrapped  | number  |             |
+| isDark     | boolean |             |
+
+### computeWebGpuEdgeColorAndWidth
+
+**Kind:** function
+
+```typescript
+function computeWebGpuEdgeColorAndWidth(isSelected: number, isActive: number, isDark: boolean);
+```
+
+Computes WebGPU edge instance color channels and cable stroke width.
+
+#### Parameters
+
+| Name       | Type    | Description |
+| ---------- | ------- | ----------- |
+| isSelected | number  |             |
+| isActive   | number  |             |
+| isDark     | boolean |             |
+
+### computeWebGpuNodeGlowAndBorder
+
+**Kind:** function
+
+```typescript
+function computeWebGpuNodeGlowAndBorder(isSelected: number, isActive: number, isTrapped: number, isDark: boolean);
+```
+
+Computes WebGPU node instance fill and border styling tuples.
+
+#### Parameters
+
+| Name       | Type    | Description |
+| ---------- | ------- | ----------- |
+| isSelected | number  |             |
+| isActive   | number  |             |
+| isTrapped  | number  |             |
+| isDark     | boolean |             |
+
+### computeWebGpuPinColorAndWidth
+
+**Kind:** function
+
+```typescript
+function computeWebGpuPinColorAndWidth(isHovered: number, isActive: number, isDark: boolean);
+```
+
+Computes WebGPU pin instance color and halo glow attributes.
+
+#### Parameters
+
+| Name      | Type    | Description |
+| --------- | ------- | ----------- |
+| isHovered | number  |             |
+| isActive  | number  |             |
+| isDark    | boolean |             |
+
+### expandShortHex
+
+**Kind:** function
+
+```typescript
+function expandShortHex(hex: string): string;
+```
+
+Expands short 3-hex and 6-hex strings to full 8-hex representations.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| hex  | string |             |
+
+### getCategoryRgba
+
+**Kind:** function
+
+```typescript
+function getCategoryRgba(category?: string, isMeta?: boolean, isDark = true): [number, number, number, number];
+```
+
+Maps a graph node category to an RGBA color tuple adapted to light or dark themes.
+
+#### Parameters
+
+| Name     | Type    | Description |
+| -------- | ------- | ----------- |
+| category | string  |             |
+| isMeta   | boolean |             |
+| isDark   |         |             |
+
+### getPortTypeRgba
+
+**Kind:** function
+
+```typescript
+function getPortTypeRgba(type?: string | unknown, isDark = true): [number, number, number, number];
+```
+
+Maps a port data type to an RGBA color tuple adapted to light or dark themes.
+
+#### Parameters
+
+| Name   | Type              | Description |
+| ------ | ----------------- | ----------- |
+| type   | string \| unknown |             |
+| isDark |                   |             |
+
+### parseColorToRgba
+
+**Kind:** function
+
+```typescript
+function parseColorToRgba(
+  colorStr?: string,
+  defaultRgba: [number, number, number, number] = [0.35, 0.65, 1, 1],
+): [number, number, number, number];
+```
+
+Parses arbitrary CSS color hex, rgb, or rgba strings to normalized 0..1 RGBA float tuples.
+
+#### Parameters
+
+| Name        | Type                             | Description |
+| ----------- | -------------------------------- | ----------- |
+| colorStr    | string                           |             |
+| defaultRgba | [number, number, number, number] |             |
+
+### parseHexColor
+
+**Kind:** function
+
+```typescript
+function parseHexColor(hexStr: string): [number, number, number, number] | undefined;
+```
+
+Parses hexadecimal color strings (#rgb, #rrggbb, #rrggbbaa) into normalized RGBA tuples.
+
+#### Parameters
+
+| Name   | Type   | Description |
+| ------ | ------ | ----------- |
+| hexStr | string |             |
+
+### parseRgbColor
+
+**Kind:** function
+
+```typescript
+function parseRgbColor(rgbStr: string): [number, number, number, number] | undefined;
+```
+
+Parses functional rgb() and rgba() color strings into normalized RGBA tuples.
+
+#### Parameters
+
+| Name   | Type   | Description |
+| ------ | ------ | ----------- |
+| rgbStr | string |             |
+
+## `src/renderer/constants`
+
+### C2D_NODE_STROKE_DARK
+
+**Kind:** constant
+
+```typescript
+export const C2D_NODE_STROKE_DARK: Readonly<Record<string, { strokeStyle: string; lineWidth: number }>>;
+```
+
+No description provided.
+
+### C2D_NODE_STROKE_LIGHT
+
+**Kind:** constant
+
+```typescript
+export const C2D_NODE_STROKE_LIGHT: Readonly<Record<string, { strokeStyle: string; lineWidth: number }>>;
+```
+
+No description provided.
+
+### C2D_PIN_FILL_DARK
+
+**Kind:** constant
+
+```typescript
+export const C2D_PIN_FILL_DARK: Readonly<Record<string, string>>;
+```
+
+No description provided.
+
+### C2D_PIN_FILL_LIGHT
+
+**Kind:** constant
+
+```typescript
+export const C2D_PIN_FILL_LIGHT: Readonly<Record<string, string>>;
+```
+
+No description provided.
+
+### CATEGORY_RGBA_DARK
+
+**Kind:** constant
+
+```typescript
+export const CATEGORY_RGBA_DARK: Readonly<Record<string, readonly [number, number, number, number]>>;
+```
+
+No description provided.
+
+### CATEGORY_RGBA_LIGHT
+
+**Kind:** constant
+
+```typescript
+export const CATEGORY_RGBA_LIGHT: Readonly<Record<string, readonly [number, number, number, number]>>;
+```
+
+No description provided.
+
+### COORD_OFFSET
+
+**Kind:** constant
+
+```typescript
+export const COORD_OFFSET;
+```
+
+No description provided.
+
+### DEFAULT_ZOOM
+
+**Kind:** constant
+
+```typescript
+export const DEFAULT_ZOOM;
+```
+
+No description provided.
+
+### GL_NODE_BORDER_DARK
+
+**Kind:** constant
+
+```typescript
+export const GL_NODE_BORDER_DARK: Readonly<Record<string, readonly [number, number, number]>>;
+```
+
+No description provided.
+
+### GL_NODE_BORDER_LIGHT
+
+**Kind:** constant
+
+```typescript
+export const GL_NODE_BORDER_LIGHT: Readonly<Record<string, readonly [number, number, number]>>;
+```
+
+No description provided.
+
+### GL_PIN_COLOR_DARK
+
+**Kind:** constant
+
+```typescript
+export const GL_PIN_COLOR_DARK: Readonly<Record<string, readonly [number, number, number]>>;
+```
+
+No description provided.
+
+### GL_PIN_COLOR_LIGHT
+
+**Kind:** constant
+
+```typescript
+export const GL_PIN_COLOR_LIGHT: Readonly<Record<string, readonly [number, number, number]>>;
+```
+
+No description provided.
+
+### GPU_EDGE_STYLES_DARK
+
+**Kind:** constant
+
+```typescript
+export const GPU_EDGE_STYLES_DARK: Readonly<Record<string, WebGpuEdgeStyle>>;
+```
+
+No description provided.
+
+### GPU_EDGE_STYLES_LIGHT
+
+**Kind:** constant
+
+```typescript
+export const GPU_EDGE_STYLES_LIGHT: Readonly<Record<string, WebGpuEdgeStyle>>;
+```
+
+No description provided.
+
+### GPU_NODE_STYLES_DARK
+
+**Kind:** constant
+
+```typescript
+export const GPU_NODE_STYLES_DARK: Readonly<Record<string, WebGpuNodeStyle>>;
+```
+
+No description provided.
+
+### GPU_NODE_STYLES_LIGHT
+
+**Kind:** constant
+
+```typescript
+export const GPU_NODE_STYLES_LIGHT: Readonly<Record<string, WebGpuNodeStyle>>;
+```
+
+No description provided.
+
+### GPU_PIN_STYLES_DARK
+
+**Kind:** constant
+
+```typescript
+export const GPU_PIN_STYLES_DARK: Readonly<Record<string, WebGpuPinStyle>>;
+```
+
+No description provided.
+
+### GPU_PIN_STYLES_LIGHT
+
+**Kind:** constant
+
+```typescript
+export const GPU_PIN_STYLES_LIGHT: Readonly<Record<string, WebGpuPinStyle>>;
+```
+
+No description provided.
+
+### MAX_ZOOM
+
+**Kind:** constant
+
+```typescript
+export const MAX_ZOOM;
+```
+
+No description provided.
+
+### MIN_ZOOM
+
+**Kind:** constant
+
+```typescript
+export const MIN_ZOOM;
+```
+
+No description provided.
+
+### NODE_HEADER_HEIGHT
+
+**Kind:** constant
+
+```typescript
+export const NODE_HEADER_HEIGHT;
+```
+
+No description provided.
+
+### NODE_WIDTH
+
+**Kind:** constant
+
+```typescript
+export const NODE_WIDTH;
+```
+
+No description provided.
+
+### PORT_ROW_HEIGHT
+
+**Kind:** constant
+
+```typescript
+export const PORT_ROW_HEIGHT;
+```
+
+No description provided.
+
+### PORT_TYPE_RGBA_DARK
+
+**Kind:** constant
+
+```typescript
+export const PORT_TYPE_RGBA_DARK: Readonly<Record<string, readonly [number, number, number, number]>>;
+```
+
+No description provided.
+
+### PORT_TYPE_RGBA_LIGHT
+
+**Kind:** constant
+
+```typescript
+export const PORT_TYPE_RGBA_LIGHT: Readonly<Record<string, readonly [number, number, number, number]>>;
+```
+
+No description provided.
+
+### WebGpuEdgeStyle
+
+**Kind:** interface
+
+```typescript
+export interface WebGpuEdgeStyle
+```
+
+No description provided.
+
+### WebGpuNodeStyle
+
+**Kind:** interface
+
+```typescript
+export interface WebGpuNodeStyle
+```
+
+No description provided.
+
+### WebGpuPinStyle
+
+**Kind:** interface
+
+```typescript
+export interface WebGpuPinStyle
+```
+
+No description provided.
+
+## `src/renderer/message-handlers`
+
+### dispatchGlobalWorkerReply
+
+**Kind:** function
+
+```typescript
+function dispatchGlobalWorkerReply(globalObj: typeof globalThis.self, message: RenderWorkerOutputMessage): void;
+```
+
+Dispatches a response message from the render worker back to the main thread or window.
+
+#### Parameters
+
+| Name      | Type                      | Description |
+| --------- | ------------------------- | ----------- |
+| globalObj | typeof globalThis.self    |             |
+| message   | RenderWorkerOutputMessage |             |
+
+### dispatchWorkerInputMessage
+
+**Kind:** function
+
+```typescript
+function dispatchWorkerInputMessage(state: RenderWorkerState, msg: RenderWorkerInputMessage): Promise<void>;
+```
+
+Routes worker input messages to appropriate handler procedures.
+
+#### Parameters
+
+| Name  | Type                     | Description |
+| ----- | ------------------------ | ----------- |
+| state | RenderWorkerState        |             |
+| msg   | RenderWorkerInputMessage |             |
+
+### handleWorkerDestroy
+
+**Kind:** function
+
+```typescript
+function handleWorkerDestroy(state: RenderWorkerState): void;
+```
+
+Cleans up all GPU, WebGL, and canvas resources.
+
+#### Parameters
+
+| Name  | Type              | Description |
+| ----- | ----------------- | ----------- |
+| state | RenderWorkerState |             |
+
+### handleWorkerHitTest
+
+**Kind:** function
+
+```typescript
+function handleWorkerHitTest(
+  state: RenderWorkerState,
+  msg: Extract<RenderWorkerInputMessage, { type: 'hit_test' }>,
+): void;
+```
+
+Executes spatial hit testing for cursor coordinates.
+
+#### Parameters
+
+| Name  | Type                                                    | Description |
+| ----- | ------------------------------------------------------- | ----------- |
+| state | RenderWorkerState                                       |             |
+| msg   | Extract<RenderWorkerInputMessage, { type: 'hit_test' }> |             |
+
+### handleWorkerInit
+
+**Kind:** function
+
+```typescript
+function handleWorkerInit(
+  state: RenderWorkerState,
+  msg: Extract<RenderWorkerInputMessage, { type: 'init' }>,
+): Promise<void>;
+```
+
+Initializes the render worker backend pipelines and initial canvas buffer dimensions.
+
+#### Parameters
+
+| Name  | Type                                                | Description |
+| ----- | --------------------------------------------------- | ----------- |
+| state | RenderWorkerState                                   |             |
+| msg   | Extract<RenderWorkerInputMessage, { type: 'init' }> |             |
+
+### handleWorkerOtherMessage
+
+**Kind:** function
+
+```typescript
+function handleWorkerOtherMessage(state: RenderWorkerState, msg: RenderWorkerInputMessage): void;
+```
+
+Processes secondary interactive manipulation worker messages.
+
+#### Parameters
+
+| Name  | Type                     | Description |
+| ----- | ------------------------ | ----------- |
+| state | RenderWorkerState        |             |
+| msg   | RenderWorkerInputMessage |             |
+
+### handleWorkerPan
+
+**Kind:** function
+
+```typescript
+function handleWorkerPan(state: RenderWorkerState, msg: Extract<RenderWorkerInputMessage, { type: 'pan' }>): void;
+```
+
+Pans the camera by the given pixel delta.
+
+#### Parameters
+
+| Name  | Type                                               | Description |
+| ----- | -------------------------------------------------- | ----------- |
+| state | RenderWorkerState                                  |             |
+| msg   | Extract<RenderWorkerInputMessage, { type: 'pan' }> |             |
+
+### handleWorkerResize
+
+**Kind:** function
+
+```typescript
+function handleWorkerResize(state: RenderWorkerState, msg: Extract<RenderWorkerInputMessage, { type: 'resize' }>): void;
+```
+
+Resizes viewport and buffer dimensions.
+
+#### Parameters
+
+| Name  | Type                                                  | Description |
+| ----- | ----------------------------------------------------- | ----------- |
+| state | RenderWorkerState                                     |             |
+| msg   | Extract<RenderWorkerInputMessage, { type: 'resize' }> |             |
+
+### handleWorkerSetGraph
+
+**Kind:** function
+
+```typescript
+function handleWorkerSetGraph(
+  state: RenderWorkerState,
+  msg: Extract<RenderWorkerInputMessage, { type: 'set_graph' }>,
+): void;
+```
+
+Sets the active graph elements and populates the spatial index.
+
+#### Parameters
+
+| Name  | Type                                                     | Description |
+| ----- | -------------------------------------------------------- | ----------- |
+| state | RenderWorkerState                                        |             |
+| msg   | Extract<RenderWorkerInputMessage, { type: 'set_graph' }> |             |
+
+### handleWorkerSetSelection
+
+**Kind:** function
+
+```typescript
+function handleWorkerSetSelection(
+  state: RenderWorkerState,
+  msg: Extract<RenderWorkerInputMessage, { type: 'set_selection' }>,
+): void;
+```
+
+Sets node/edge selection sets.
+
+#### Parameters
+
+| Name  | Type                                                         | Description |
+| ----- | ------------------------------------------------------------ | ----------- |
+| state | RenderWorkerState                                            |             |
+| msg   | Extract<RenderWorkerInputMessage, { type: 'set_selection' }> |             |
+
+### handleWorkerSetTraceState
+
+**Kind:** function
+
+```typescript
+function handleWorkerSetTraceState(
+  state: RenderWorkerState,
+  msg: Extract<RenderWorkerInputMessage, { type: 'set_trace_state' }>,
+): void;
+```
+
+Updates execution trace state and edge pulse animations.
+
+#### Parameters
+
+| Name  | Type                                                           | Description |
+| ----- | -------------------------------------------------------------- | ----------- |
+| state | RenderWorkerState                                              |             |
+| msg   | Extract<RenderWorkerInputMessage, { type: 'set_trace_state' }> |             |
+
+### handleWorkerZoom
+
+**Kind:** function
+
+```typescript
+function handleWorkerZoom(state: RenderWorkerState, msg: Extract<RenderWorkerInputMessage, { type: 'zoom' }>): void;
+```
+
+Zooms the camera by the given factor centered at cursor coordinates.
+
+#### Parameters
+
+| Name  | Type                                                | Description |
+| ----- | --------------------------------------------------- | ----------- |
+| state | RenderWorkerState                                   |             |
+| msg   | Extract<RenderWorkerInputMessage, { type: 'zoom' }> |             |
+
+### hitTestEdges
+
+**Kind:** function
+
+```typescript
+function hitTestEdges(
+  cursorX: number,
+  cursorY: number,
+  snapRadius: number,
+  nodeList: readonly FlintGraphNode[],
+  edgeList: readonly FlintGraphEdge[],
+  wasmEngine: FlintRenderWorkerWasmExports,
+): FlintHitResult | undefined;
+```
+
+Performs hit-testing against active edge geometry curves.
+
+#### Parameters
+
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| cursorX    | number                       |             |
+| cursorY    | number                       |             |
+| snapRadius | number                       |             |
+| nodeList   | readonly FlintGraphNode[]    |             |
+| edgeList   | readonly FlintGraphEdge[]    |             |
+| wasmEngine | FlintRenderWorkerWasmExports |             |
+
+### insertNodeIntoSpatialIndex
+
+**Kind:** function
+
+```typescript
+function insertNodeIntoSpatialIndex(state: RenderWorkerState, index: number, node: FlintGraphNode): void;
+```
+
+Inserts single node into spatial acceleration structure.
+
+#### Parameters
+
+| Name  | Type              | Description |
+| ----- | ----------------- | ----------- |
+| state | RenderWorkerState |             |
+| index | number            |             |
+| node  | FlintGraphNode    |             |
+
+### isEdgeHitByCursor
+
+**Kind:** function
+
+```typescript
+function isEdgeHitByCursor(
+  edge: FlintGraphEdge,
+  nodeMap: Map<string, FlintGraphNode>,
+  cursorX: number,
+  cursorY: number,
+  snapRadius: number,
+  wasmEngine: FlintRenderWorkerWasmExports,
+): boolean;
+```
+
+Tests whether an edge connection is intersected by cursor point.
+
+#### Parameters
+
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| edge       | FlintGraphEdge               |             |
+| nodeMap    | Map<string, FlintGraphNode>  |             |
+| cursorX    | number                       |             |
+| cursorY    | number                       |             |
+| snapRadius | number                       |             |
+| wasmEngine | FlintRenderWorkerWasmExports |             |
+
+### isWorkerMessageIgnored
+
+**Kind:** function
+
+```typescript
+function isWorkerMessageIgnored(eventData: unknown): boolean;
+```
+
+Checks whether incoming message event should be discarded.
+
+#### Parameters
+
+| Name      | Type    | Description |
+| --------- | ------- | ----------- |
+| eventData | unknown |             |
+
+### postReply
+
+**Kind:** constant
+
+```typescript
+export const postReply;
+```
+
+Dispatches a response message from the render worker back to the main thread or window.
+
+#### Contract
+
+- **@param:** - Output response message payload.
+
+### selectAndInitBackend
+
+**Kind:** function
+
+```typescript
+function selectAndInitBackend(
+  state: RenderWorkerState,
+  targetCanvas: OffscreenCanvas | HTMLCanvasElement,
+  preferred?: 'webgpu' | 'webgl' | 'canvas2d',
+): Promise<{ tier: number; backend: 'webgpu' | 'webgl' | 'canvas2d'; ok: boolean }>;
+```
+
+Selects and initializes the most suitable GPU/canvas rendering backend.
+
+#### Parameters
+
+| Name         | Type                                 | Description |
+| ------------ | ------------------------------------ | ----------- |
+| state        | RenderWorkerState                    |             |
+| targetCanvas | OffscreenCanvas \| HTMLCanvasElement |             |
+| preferred    | 'webgpu' \| 'webgl' \| 'canvas2d'    |             |
+
+## `src/renderer/shaders/index`
+
+### EDGES_SHADER_WGSL
+
+**Kind:** constant
+
+```typescript
+export const EDGES_SHADER_WGSL;
+```
+
+No description provided.
+
+### EDGES_WGSL
+
+**Kind:** constant
+
+```typescript
+export const EDGES_SHADER_WGSL;
+```
+
+No description provided.
+
+### GRID_SHADER_WGSL
+
+**Kind:** constant
+
+```typescript
+export const GRID_SHADER_WGSL;
+```
+
+No description provided.
+
+### GRID_WGSL
+
+**Kind:** constant
+
+```typescript
+export const GRID_SHADER_WGSL;
+```
+
+No description provided.
+
+### NODES_SHADER_WGSL
+
+**Kind:** constant
+
+```typescript
+export const NODES_SHADER_WGSL;
+```
+
+No description provided.
+
+### NODES_WGSL
+
+**Kind:** constant
+
+```typescript
+export const NODES_SHADER_WGSL;
+```
+
+No description provided.
+
+### TEXT_SHADER_WGSL
+
+**Kind:** constant
+
+```typescript
+export const TEXT_SHADER_WGSL;
+```
+
+No description provided.
+
+### TEXT_WGSL
+
+**Kind:** constant
+
+```typescript
+export const TEXT_SHADER_WGSL;
+```
+
+No description provided.
+
+## `src/renderer/types`
+
+### FlintCamera
+
+**Kind:** interface
+
+```typescript
+export interface FlintCamera
+```
+
+No description provided.
+
+### FlintHitResult
+
+**Kind:** type
+
+```typescript
+export type FlintHitResult = |
+```
+
+No description provided.
+
+### FlintPerformanceMetrics
+
+**Kind:** interface
+
+```typescript
+export interface FlintPerformanceMetrics
+```
+
+No description provided.
+
+### FlintRenderWorkerWasmExports
+
+**Kind:** type
+
+```typescript
+export type FlintRenderWorkerWasmExports = ReturnType<typeof loadSync>;
+```
+
+No description provided.
 
 ### GPUAdapter
 
@@ -646,62 +1900,22 @@ export interface GPUTexture
 
 No description provided.
 
+### GPUTextureFormat
+
+**Kind:** type
+
+```typescript
+export type GPUTextureFormat = string;
+```
+
+No description provided.
+
 ### GPUTextureView
 
 **Kind:** interface
 
 ```typescript
 export interface GPUTextureView
-```
-
-No description provided.
-
-### MAX_ZOOM
-
-**Kind:** constant
-
-```typescript
-export const MAX_ZOOM;
-```
-
-No description provided.
-
-### MIN_ZOOM
-
-**Kind:** constant
-
-```typescript
-export const MIN_ZOOM;
-```
-
-No description provided.
-
-### NODE_HEADER_HEIGHT
-
-**Kind:** constant
-
-```typescript
-export const NODE_HEADER_HEIGHT;
-```
-
-No description provided.
-
-### NODE_WIDTH
-
-**Kind:** constant
-
-```typescript
-export const NODE_WIDTH;
-```
-
-No description provided.
-
-### PORT_ROW_HEIGHT
-
-**Kind:** constant
-
-```typescript
-export const PORT_ROW_HEIGHT;
 ```
 
 No description provided.
@@ -746,84 +1960,1358 @@ export interface ViewBounds
 
 No description provided.
 
-## `src/renderer/shaders/index`
+### WebGLAttribLocations
 
-### EDGES_SHADER_WGSL
-
-**Kind:** constant
+**Kind:** interface
 
 ```typescript
-export const EDGES_SHADER_WGSL;
+export interface WebGLAttribLocations
 ```
 
 No description provided.
 
-### EDGES_WGSL
+### WebGLTextAttribLocations
 
-**Kind:** constant
+**Kind:** interface
 
 ```typescript
-export const EDGES_SHADER_WGSL;
+export interface WebGLTextAttribLocations
 ```
 
 No description provided.
 
-### GRID_SHADER_WGSL
+### WebGLTextUniformLocations
 
-**Kind:** constant
+**Kind:** interface
 
 ```typescript
-export const GRID_SHADER_WGSL;
+export interface WebGLTextUniformLocations
 ```
 
 No description provided.
 
-### GRID_WGSL
+### WebGLUniformLocations
 
-**Kind:** constant
+**Kind:** interface
 
 ```typescript
-export const GRID_SHADER_WGSL;
+export interface WebGLUniformLocations
 ```
 
 No description provided.
 
-### NODES_SHADER_WGSL
+### WebGpuNavigator
 
-**Kind:** constant
+**Kind:** interface
 
 ```typescript
-export const NODES_SHADER_WGSL;
+export interface WebGpuNavigator
 ```
 
 No description provided.
 
-### NODES_WGSL
+## `src/renderer/wasm`
 
-**Kind:** constant
+### createDefaultCapabilities
+
+**Kind:** function
 
 ```typescript
-export const NODES_SHADER_WGSL;
+function createDefaultCapabilities(): WebAssembly.Imports;
 ```
 
-No description provided.
+Creates default host capability imports for WebAssembly initialization.
 
-### TEXT_SHADER_WGSL
+### getFlintRenderWorkerWasm
 
-**Kind:** constant
+**Kind:** function
 
 ```typescript
-export const TEXT_SHADER_WGSL;
+function getFlintRenderWorkerWasm(imports?: WebAssembly.Imports): FlintRenderWorkerWasmExports;
 ```
 
-No description provided.
+Instantiates or retrieves the cached native Flint WebAssembly render worker module.
 
-### TEXT_WGSL
+#### Parameters
+
+| Name    | Type                | Description |
+| ------- | ------------------- | ----------- |
+| imports | WebAssembly.Imports |             |
+
+### noopHostCapability
 
 **Kind:** constant
 
 ```typescript
-export const TEXT_SHADER_WGSL;
+export const noopHostCapability;
+```
+
+Default fallback callback for unconfigured host capability imports.
+
+## `src/renderer/webgl-pass`
+
+### cleanupGlResources
+
+**Kind:** function
+
+```typescript
+function cleanupGlResources(state: RenderWorkerState, gl: WebGLRenderingContext | WebGL2RenderingContext): void;
+```
+
+Cleans up WebGL buffers, textures, and shader programs.
+
+#### Parameters
+
+| Name  | Type                                            | Description |
+| ----- | ----------------------------------------------- | ----------- |
+| state | RenderWorkerState                               |             |
+| gl    | WebGLRenderingContext \| WebGL2RenderingContext |             |
+
+### compileGlShader
+
+**Kind:** function
+
+```typescript
+function compileGlShader(
+  gl: WebGLRenderingContext | WebGL2RenderingContext,
+  type: number,
+  source: string,
+): WebGLShader | undefined;
+```
+
+Compiles WebGL shader from GLSL source string.
+
+#### Parameters
+
+| Name   | Type                                            | Description |
+| ------ | ----------------------------------------------- | ----------- |
+| gl     | WebGLRenderingContext \| WebGL2RenderingContext |             |
+| type   | number                                          |             |
+| source | string                                          |             |
+
+### createGlProgram
+
+**Kind:** function
+
+```typescript
+function createGlProgram(
+  gl: WebGLRenderingContext | WebGL2RenderingContext,
+  vsSource: string,
+  fsSource: string,
+): WebGLProgram | undefined;
+```
+
+Creates and links linked WebGL shader program.
+
+#### Parameters
+
+| Name     | Type                                            | Description |
+| -------- | ----------------------------------------------- | ----------- |
+| gl       | WebGLRenderingContext \| WebGL2RenderingContext |             |
+| vsSource | string                                          |             |
+| fsSource | string                                          |             |
+
+### createWebGLCapabilities
+
+**Kind:** function
+
+```typescript
+function createWebGLCapabilities(state: RenderWorkerState): WebAssembly.Imports;
+```
+
+Creates WebGL WebAssembly host capabilities object.
+
+#### Parameters
+
+| Name  | Type              | Description |
+| ----- | ----------------- | ----------- |
+| state | RenderWorkerState |             |
+
+### flushWebGLPrimitives
+
+**Kind:** function
+
+```typescript
+function flushWebGLPrimitives(state: RenderWorkerState): void;
+```
+
+Flushes batched triangles and line primitives to WebGL framebuffer.
+
+#### Parameters
+
+| Name  | Type              | Description |
+| ----- | ----------------- | ----------- |
+| state | RenderWorkerState |             |
+
+### getGlEdgeColor
+
+**Kind:** function
+
+```typescript
+function getGlEdgeColor(isSelected: number, isDark: boolean): [number, number, number, number];
+```
+
+Computes WebGL edge color RGBA tuple for selected or default states.
+
+#### Parameters
+
+| Name       | Type    | Description |
+| ---------- | ------- | ----------- |
+| isSelected | number  |             |
+| isDark     | boolean |             |
+
+### initWebGLBackend
+
+**Kind:** function
+
+```typescript
+function initWebGLBackend(state: RenderWorkerState, targetCanvas: OffscreenCanvas | HTMLCanvasElement): boolean;
+```
+
+Initializes WebGL 1.0 or 2.0 context, compiles vertex and fragment shaders, and configures vertex attributes.
+
+#### Parameters
+
+| Name         | Type                                 | Description |
+| ------------ | ------------------------------------ | ----------- |
+| state        | RenderWorkerState                    |             |
+| targetCanvas | OffscreenCanvas \| HTMLCanvasElement |             |
+
+### pushCircle
+
+**Kind:** function
+
+```typescript
+function pushCircle(
+  state: RenderWorkerState,
+  cx: number,
+  cy: number,
+  radius: number,
+  red: number,
+  green: number,
+  blue: number,
+  alpha: number,
+  segments = 12,
+): void;
+```
+
+Appends triangle fan vertices for a solid circle to the batch triangle buffer.
+
+#### Parameters
+
+| Name     | Type              | Description |
+| -------- | ----------------- | ----------- |
+| state    | RenderWorkerState |             |
+| cx       | number            |             |
+| cy       | number            |             |
+| radius   | number            |             |
+| red      | number            |             |
+| green    | number            |             |
+| blue     | number            |             |
+| alpha    | number            |             |
+| segments |                   |             |
+
+### pushLine
+
+**Kind:** function
+
+```typescript
+function pushLine(
+  state: RenderWorkerState,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  red: number,
+  green: number,
+  blue: number,
+  alpha: number,
+): void;
+```
+
+Appends line vertex coordinates and colors to the batch line buffer.
+
+#### Parameters
+
+| Name  | Type              | Description |
+| ----- | ----------------- | ----------- |
+| state | RenderWorkerState |             |
+| x1    | number            |             |
+| y1    | number            |             |
+| x2    | number            |             |
+| y2    | number            |             |
+| red   | number            |             |
+| green | number            |             |
+| blue  | number            |             |
+| alpha | number            |             |
+
+### pushQuad
+
+**Kind:** function
+
+```typescript
+function pushQuad(
+  state: RenderWorkerState,
+  x0: number,
+  y0: number,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  x3: number,
+  y3: number,
+  red: number,
+  green: number,
+  blue: number,
+  alpha: number,
+): void;
+```
+
+Appends a quadrilateral as two triangles to the batch triangle buffer.
+
+#### Parameters
+
+| Name  | Type              | Description |
+| ----- | ----------------- | ----------- |
+| state | RenderWorkerState |             |
+| x0    | number            |             |
+| y0    | number            |             |
+| x1    | number            |             |
+| y1    | number            |             |
+| x2    | number            |             |
+| y2    | number            |             |
+| x3    | number            |             |
+| y3    | number            |             |
+| red   | number            |             |
+| green | number            |             |
+| blue  | number            |             |
+| alpha | number            |             |
+
+### pushRect
+
+**Kind:** function
+
+```typescript
+function pushRect(
+  state: RenderWorkerState,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  red: number,
+  green: number,
+  blue: number,
+  alpha: number,
+): void;
+```
+
+Appends solid triangle quad vertices and colors to the batch triangle buffer.
+
+#### Parameters
+
+| Name   | Type              | Description |
+| ------ | ----------------- | ----------- |
+| state  | RenderWorkerState |             |
+| x      | number            |             |
+| y      | number            |             |
+| width  | number            |             |
+| height | number            |             |
+| red    | number            |             |
+| green  | number            |             |
+| blue   | number            |             |
+| alpha  | number            |             |
+
+### pushRectBorder
+
+**Kind:** function
+
+```typescript
+function pushRectBorder(
+  state: RenderWorkerState,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  red: number,
+  green: number,
+  blue: number,
+  alpha: number,
+  thickness = 1.5,
+): void;
+```
+
+Appends outline line segments for a rectangle to the batch line buffer.
+
+#### Parameters
+
+| Name      | Type              | Description |
+| --------- | ----------------- | ----------- |
+| state     | RenderWorkerState |             |
+| x         | number            |             |
+| y         | number            |             |
+| width     | number            |             |
+| height    | number            |             |
+| red       | number            |             |
+| green     | number            |             |
+| blue      | number            |             |
+| alpha     | number            |             |
+| thickness |                   |             |
+
+### pushThickLine
+
+**Kind:** function
+
+```typescript
+function pushThickLine(
+  state: RenderWorkerState,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  thickness: number,
+  red: number,
+  green: number,
+  blue: number,
+  alpha: number,
+): void;
+```
+
+Appends a thick line segment as two triangles (quad ribbon) to the batch triangle buffer.
+
+#### Parameters
+
+| Name      | Type              | Description |
+| --------- | ----------------- | ----------- |
+| state     | RenderWorkerState |             |
+| x1        | number            |             |
+| y1        | number            |             |
+| x2        | number            |             |
+| y2        | number            |             |
+| thickness | number            |             |
+| red       | number            |             |
+| green     | number            |             |
+| blue      | number            |             |
+| alpha     | number            |             |
+
+### pushWebGLBezierEdge
+
+**Kind:** function
+
+```typescript
+function pushWebGLBezierEdge(
+  state: RenderWorkerState,
+  p0x: number,
+  p0y: number,
+  p3x: number,
+  p3y: number,
+  edgeThickness: number,
+  colorR: number,
+  colorG: number,
+  colorB: number,
+  colorA: number,
+  wasmEngine: FlintRenderWorkerWasmExports,
+): void;
+```
+
+Evaluates bezier segments for an edge and emits WebGL thick lines.
+
+#### Parameters
+
+| Name          | Type                         | Description |
+| ------------- | ---------------------------- | ----------- |
+| state         | RenderWorkerState            |             |
+| p0x           | number                       |             |
+| p0y           | number                       |             |
+| p3x           | number                       |             |
+| p3y           | number                       |             |
+| edgeThickness | number                       |             |
+| colorR        | number                       |             |
+| colorG        | number                       |             |
+| colorB        | number                       |             |
+| colorA        | number                       |             |
+| wasmEngine    | FlintRenderWorkerWasmExports |             |
+
+### pushWebGLBezierEdgeSegments
+
+**Kind:** function
+
+```typescript
+function pushWebGLBezierEdgeSegments(
+  state: RenderWorkerState,
+  p0x: number,
+  p0y: number,
+  p1x: number,
+  p1y: number,
+  p2x: number,
+  p2y: number,
+  p3x: number,
+  p3y: number,
+  color: readonly number[],
+): void;
+```
+
+Evaluates and appends WebGL bezier curve edge segments.
+
+#### Parameters
+
+| Name  | Type              | Description |
+| ----- | ----------------- | ----------- |
+| state | RenderWorkerState |             |
+| p0x   | number            |             |
+| p0y   | number            |             |
+| p1x   | number            |             |
+| p1y   | number            |             |
+| p2x   | number            |             |
+| p2y   | number            |             |
+| p3x   | number            |             |
+| p3y   | number            |             |
+| color | readonly number[] |             |
+
+### pushWebGlMajorGridLines
+
+**Kind:** function
+
+```typescript
+function pushWebGlMajorGridLines(
+  state: RenderWorkerState,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+  color: readonly number[],
+): void;
+```
+
+Appends major WebGL grid line vertices to the line buffer.
+
+#### Parameters
+
+| Name  | Type              | Description |
+| ----- | ----------------- | ----------- |
+| state | RenderWorkerState |             |
+| minX  | number            |             |
+| minY  | number            |             |
+| maxX  | number            |             |
+| maxY  | number            |             |
+| color | readonly number[] |             |
+
+### pushWebGlMinorGridLines
+
+**Kind:** function
+
+```typescript
+function pushWebGlMinorGridLines(
+  state: RenderWorkerState,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+  color: readonly number[],
+): void;
+```
+
+Appends minor WebGL grid line vertices to the line buffer.
+
+#### Parameters
+
+| Name  | Type              | Description |
+| ----- | ----------------- | ----------- |
+| state | RenderWorkerState |             |
+| minX  | number            |             |
+| minY  | number            |             |
+| maxX  | number            |             |
+| maxY  | number            |             |
+| color | readonly number[] |             |
+
+### renderWebGLConnectingEdgePass
+
+**Kind:** function
+
+```typescript
+function renderWebGLConnectingEdgePass(
+  state: RenderWorkerState,
+  nodeMap: Map<string, FlintGraphNode>,
+  isDark: boolean,
+): void;
+```
+
+Renders in-progress connecting wire drag in WebGL.
+
+#### Parameters
+
+| Name    | Type                        | Description |
+| ------- | --------------------------- | ----------- |
+| state   | RenderWorkerState           |             |
+| nodeMap | Map<string, FlintGraphNode> |             |
+| isDark  | boolean                     |             |
+
+### renderWebGLEdgePass
+
+**Kind:** function
+
+```typescript
+function renderWebGLEdgePass(
+  state: RenderWorkerState,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+  nodeMap: Map<string, FlintGraphNode>,
+  isDark: boolean,
+  wasmEngine: FlintRenderWorkerWasmExports,
+): number;
+```
+
+Renders edge connections and waypoints into WebGL primitive buffers.
+
+#### Parameters
+
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| state      | RenderWorkerState            |             |
+| minX       | number                       |             |
+| minY       | number                       |             |
+| maxX       | number                       |             |
+| maxY       | number                       |             |
+| nodeMap    | Map<string, FlintGraphNode>  |             |
+| isDark     | boolean                      |             |
+| wasmEngine | FlintRenderWorkerWasmExports |             |
+
+### renderWebGLFrame
+
+**Kind:** function
+
+```typescript
+function renderWebGLFrame(state: RenderWorkerState): void;
+```
+
+Renders the complete node graph using WebGL draw arrays and native Flint vertex batching.
+
+#### Parameters
+
+| Name  | Type              | Description |
+| ----- | ----------------- | ----------- |
+| state | RenderWorkerState |             |
+
+### renderWebGLGridPass
+
+**Kind:** function
+
+```typescript
+function renderWebGLGridPass(
+  state: RenderWorkerState,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+  zoomVal: number,
+  isDark: boolean,
+): void;
+```
+
+Renders background grid lines into WebGL line vertex buffers.
+
+#### Parameters
+
+| Name    | Type              | Description |
+| ------- | ----------------- | ----------- |
+| state   | RenderWorkerState |             |
+| minX    | number            |             |
+| minY    | number            |             |
+| maxX    | number            |             |
+| maxY    | number            |             |
+| zoomVal | number            |             |
+| isDark  | boolean           |             |
+
+### renderWebGLGroupPass
+
+**Kind:** function
+
+```typescript
+function renderWebGLGroupPass(
+  state: RenderWorkerState,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+  isDark: boolean,
+  wasmEngine: FlintRenderWorkerWasmExports,
+): void;
+```
+
+Renders group boxes and labels into WebGL triangle/quad batches.
+
+#### Parameters
+
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| state      | RenderWorkerState            |             |
+| minX       | number                       |             |
+| minY       | number                       |             |
+| maxX       | number                       |             |
+| maxY       | number                       |             |
+| isDark     | boolean                      |             |
+| wasmEngine | FlintRenderWorkerWasmExports |             |
+
+### renderWebGLNodePass
+
+**Kind:** function
+
+```typescript
+function renderWebGLNodePass(
+  state: RenderWorkerState,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+  isDark: boolean,
+  wasmEngine: FlintRenderWorkerWasmExports,
+): { visibleNodesCount: number; visiblePinsCount: number };
+```
+
+Renders all visible nodes in WebGL.
+
+#### Parameters
+
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| state      | RenderWorkerState            |             |
+| minX       | number                       |             |
+| minY       | number                       |             |
+| maxX       | number                       |             |
+| maxY       | number                       |             |
+| isDark     | boolean                      |             |
+| wasmEngine | FlintRenderWorkerWasmExports |             |
+
+### renderWebGLNodePins
+
+**Kind:** function
+
+```typescript
+function renderWebGLNodePins(
+  state: RenderWorkerState,
+  node: FlintGraphNode,
+  x: number,
+  y: number,
+  nodeWidth: number,
+  isDark: boolean,
+  wasmEngine: FlintRenderWorkerWasmExports,
+): number;
+```
+
+Renders port circles and labels for WebGL node.
+
+#### Parameters
+
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| state      | RenderWorkerState            |             |
+| node       | FlintGraphNode               |             |
+| x          | number                       |             |
+| y          | number                       |             |
+| nodeWidth  | number                       |             |
+| isDark     | boolean                      |             |
+| wasmEngine | FlintRenderWorkerWasmExports |             |
+
+### renderWebGLSingleNode
+
+**Kind:** function
+
+```typescript
+function renderWebGLSingleNode(
+  state: RenderWorkerState,
+  node: FlintGraphNode,
+  isDark: boolean,
+  wasmEngine: FlintRenderWorkerWasmExports,
+): number;
+```
+
+Renders individual WebGL node body, header, pin, and text primitives.
+
+#### Parameters
+
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| state      | RenderWorkerState            |             |
+| node       | FlintGraphNode               |             |
+| isDark     | boolean                      |             |
+| wasmEngine | FlintRenderWorkerWasmExports |             |
+
+### renderWebGLTextPass
+
+**Kind:** function
+
+```typescript
+function renderWebGLTextPass(
+  state: RenderWorkerState,
+  gl: WebGLRenderingContext | WebGL2RenderingContext,
+  wasmEngine: FlintRenderWorkerWasmExports,
+): number;
+```
+
+Flushes WebGL SDF text batch to screen.
+
+#### Parameters
+
+| Name       | Type                                            | Description |
+| ---------- | ----------------------------------------------- | ----------- |
+| state      | RenderWorkerState                               |             |
+| gl         | WebGLRenderingContext \| WebGL2RenderingContext |             |
+| wasmEngine | FlintRenderWorkerWasmExports                    |             |
+
+### setupGlFontTexture
+
+**Kind:** function
+
+```typescript
+function setupGlFontTexture(state: RenderWorkerState, gl: WebGLRenderingContext | WebGL2RenderingContext): void;
+```
+
+Initializes and binds glyph font texture in WebGL context.
+
+#### Parameters
+
+| Name  | Type                                            | Description |
+| ----- | ----------------------------------------------- | ----------- |
+| state | RenderWorkerState                               |             |
+| gl    | WebGLRenderingContext \| WebGL2RenderingContext |             |
+
+### setupGlTextProgram
+
+**Kind:** function
+
+```typescript
+function setupGlTextProgram(state: RenderWorkerState, gl: WebGLRenderingContext | WebGL2RenderingContext): void;
+```
+
+Initializes WebGL SDF text shader program and vertex attribute bindings.
+
+#### Parameters
+
+| Name  | Type                                            | Description |
+| ----- | ----------------------------------------------- | ----------- |
+| state | RenderWorkerState                               |             |
+| gl    | WebGLRenderingContext \| WebGL2RenderingContext |             |
+
+### setupWebGLViewport
+
+**Kind:** function
+
+```typescript
+function setupWebGLViewport(
+  state: RenderWorkerState,
+  w: number,
+  h: number,
+  dprVal: number,
+  camX: number,
+  camY: number,
+  zoomVal: number,
+): void;
+```
+
+Configures WebGL viewport, clear color, and global uniform matrices.
+
+#### Parameters
+
+| Name    | Type              | Description |
+| ------- | ----------------- | ----------- |
+| state   | RenderWorkerState |             |
+| w       | number            |             |
+| h       | number            |             |
+| dprVal  | number            |             |
+| camX    | number            |             |
+| camY    | number            |             |
+| zoomVal | number            |             |
+
+## `src/renderer/webgpu-pass`
+
+### createWebGpuCapabilities
+
+**Kind:** function
+
+```typescript
+function createWebGpuCapabilities(state: RenderWorkerState): WebAssembly.Imports;
+```
+
+Creates WebGPU WebAssembly host capabilities object.
+
+#### Parameters
+
+| Name  | Type              | Description |
+| ----- | ----------------- | ----------- |
+| state | RenderWorkerState |             |
+
+### createWebGpuGeometryPipelines
+
+**Kind:** function
+
+```typescript
+function createWebGpuGeometryPipelines(
+  state: RenderWorkerState,
+  device: GPUDevice,
+  pipelineLayout: GPUPipelineLayout,
+  format: GPUTextureFormat,
+): void;
+```
+
+Creates WebGPU geometry and grid render pipelines.
+
+#### Parameters
+
+| Name           | Type              | Description |
+| -------------- | ----------------- | ----------- |
+| state          | RenderWorkerState |             |
+| device         | GPUDevice         |             |
+| pipelineLayout | GPUPipelineLayout |             |
+| format         | GPUTextureFormat  |             |
+
+### ensureGpuInstanceBuffer
+
+**Kind:** function
+
+```typescript
+function ensureGpuInstanceBuffer(
+  existingBuffer: GPUBuffer | undefined,
+  requiredBytes: number,
+  device: GPUDevice,
+): GPUBuffer;
+```
+
+Allocates or reuses GPU instancing buffer ensuring required byte capacity.
+
+#### Parameters
+
+| Name           | Type                   | Description |
+| -------------- | ---------------------- | ----------- |
+| existingBuffer | GPUBuffer \| undefined |             |
+| requiredBytes  | number                 |             |
+| device         | GPUDevice              |             |
+
+### executeGpuInstancedDraw
+
+**Kind:** function
+
+```typescript
+function executeGpuInstancedDraw(
+  passEncoder: GPURenderPassEncoder | undefined,
+  pipeline: GPURenderPipeline | undefined,
+  cameraGroup: GPUBindGroup | undefined,
+  instanceBuffer: GPUBuffer | undefined,
+  floats: number[],
+  strideFloats: number,
+  vertexCount: number,
+  maxCount?: number,
+): void;
+```
+
+Configures pipeline state and issues instanced WebGPU draw calls.
+
+#### Parameters
+
+| Name           | Type                              | Description |
+| -------------- | --------------------------------- | ----------- |
+| passEncoder    | GPURenderPassEncoder \| undefined |             |
+| pipeline       | GPURenderPipeline \| undefined    |             |
+| cameraGroup    | GPUBindGroup \| undefined         |             |
+| instanceBuffer | GPUBuffer \| undefined            |             |
+| floats         | number[]                          |             |
+| strideFloats   | number                            |             |
+| vertexCount    | number                            |             |
+| maxCount       | number                            |             |
+
+### flushWebGpuTextBatch
+
+**Kind:** function
+
+```typescript
+function flushWebGpuTextBatch(state: RenderWorkerState): void;
+```
+
+Flushes WebGPU text vertex buffer and executes text draw calls.
+
+#### Parameters
+
+| Name  | Type              | Description |
+| ----- | ----------------- | ----------- |
+| state | RenderWorkerState |             |
+
+### initWebGpuBackend
+
+**Kind:** function
+
+```typescript
+function initWebGpuBackend(
+  state: RenderWorkerState,
+  targetCanvas: OffscreenCanvas | HTMLCanvasElement,
+): Promise<boolean>;
+```
+
+Initializes the WebGPU device, swapchain context, pipelines, and uniform bind groups.
+
+#### Parameters
+
+| Name         | Type                                 | Description |
+| ------------ | ------------------------------------ | ----------- |
+| state        | RenderWorkerState                    |             |
+| targetCanvas | OffscreenCanvas \| HTMLCanvasElement |             |
+
+### packCameraUniforms
+
+**Kind:** function
+
+```typescript
+function packCameraUniforms(w: FlintRenderWorkerWasmExports, theme: string): Float32Array;
+```
+
+Packs camera view projection matrix and viewport uniforms into a Float32Array.
+
+#### Parameters
+
+| Name  | Type                         | Description |
+| ----- | ---------------------------- | ----------- |
+| w     | FlintRenderWorkerWasmExports |             |
+| theme | string                       |             |
+
+### prepareSingleWebGpuNode
+
+**Kind:** function
+
+```typescript
+function prepareSingleWebGpuNode(
+  state: RenderWorkerState,
+  node: FlintGraphNode,
+  isDark: boolean,
+  hoveredPortInfo: typeof state.hoveredPort,
+  wasmEngine: FlintRenderWorkerWasmExports,
+): number;
+```
+
+Prepares individual WebGPU node background, headers, category accent, and typography.
+
+#### Parameters
+
+| Name            | Type                         | Description |
+| --------------- | ---------------------------- | ----------- |
+| state           | RenderWorkerState            |             |
+| node            | FlintGraphNode               |             |
+| isDark          | boolean                      |             |
+| hoveredPortInfo | typeof state.hoveredPort     |             |
+| wasmEngine      | FlintRenderWorkerWasmExports |             |
+
+### prepareWebGpuConnectingEdge
+
+**Kind:** function
+
+```typescript
+function prepareWebGpuConnectingEdge(
+  state: RenderWorkerState,
+  connectingEdgeInfo: typeof state.connectingEdge,
+  nodeMap: Map<string, FlintGraphNode>,
+  hoveredPortInfo: typeof state.hoveredPort,
+  isDark: boolean,
+  wasmEngine: FlintRenderWorkerWasmExports,
+): void;
+```
+
+Prepares in-flight interactive wire connection spline.
+
+#### Parameters
+
+| Name               | Type                         | Description |
+| ------------------ | ---------------------------- | ----------- |
+| state              | RenderWorkerState            |             |
+| connectingEdgeInfo | typeof state.connectingEdge  |             |
+| nodeMap            | Map<string, FlintGraphNode>  |             |
+| hoveredPortInfo    | typeof state.hoveredPort     |             |
+| isDark             | boolean                      |             |
+| wasmEngine         | FlintRenderWorkerWasmExports |             |
+
+### prepareWebGpuEdgeInstances
+
+**Kind:** function
+
+```typescript
+function prepareWebGpuEdgeInstances(
+  state: RenderWorkerState,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+  nodeMap: Map<string, FlintGraphNode>,
+  wasmEngine: FlintRenderWorkerWasmExports,
+): number;
+```
+
+Prepares instanced WebGPU spline geometry for graph edges.
+
+#### Parameters
+
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| state      | RenderWorkerState            |             |
+| minX       | number                       |             |
+| minY       | number                       |             |
+| maxX       | number                       |             |
+| maxY       | number                       |             |
+| nodeMap    | Map<string, FlintGraphNode>  |             |
+| wasmEngine | FlintRenderWorkerWasmExports |             |
+
+### prepareWebGpuGroupInstances
+
+**Kind:** function
+
+```typescript
+function prepareWebGpuGroupInstances(
+  state: RenderWorkerState,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+  isDark: boolean,
+  selectedGroupIdVal: string | undefined,
+  wasmEngine: FlintRenderWorkerWasmExports,
+): void;
+```
+
+Prepares instanced WebGPU geometry and text quads for node groups.
+
+#### Parameters
+
+| Name               | Type                         | Description |
+| ------------------ | ---------------------------- | ----------- |
+| state              | RenderWorkerState            |             |
+| minX               | number                       |             |
+| minY               | number                       |             |
+| maxX               | number                       |             |
+| maxY               | number                       |             |
+| isDark             | boolean                      |             |
+| selectedGroupIdVal | string \| undefined          |             |
+| wasmEngine         | FlintRenderWorkerWasmExports |             |
+
+### prepareWebGpuInstances
+
+**Kind:** function
+
+```typescript
+function prepareWebGpuInstances(state: RenderWorkerState): void;
+```
+
+Prepares instanced WebGPU vertex buffers and text quads for active nodes, groups, edges, and pins.
+
+#### Parameters
+
+| Name  | Type              | Description |
+| ----- | ----------------- | ----------- |
+| state | RenderWorkerState |             |
+
+### prepareWebGpuNodeInstances
+
+**Kind:** function
+
+```typescript
+function prepareWebGpuNodeInstances(
+  state: RenderWorkerState,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+  isDark: boolean,
+  hoveredPortInfo: typeof state.hoveredPort,
+  wasmEngine: FlintRenderWorkerWasmExports,
+): { visibleNodesCount: number; visiblePinsCount: number };
+```
+
+Prepares instanced WebGPU geometry and SDF text quads for nodes.
+
+#### Parameters
+
+| Name            | Type                         | Description |
+| --------------- | ---------------------------- | ----------- |
+| state           | RenderWorkerState            |             |
+| minX            | number                       |             |
+| minY            | number                       |             |
+| maxX            | number                       |             |
+| maxY            | number                       |             |
+| isDark          | boolean                      |             |
+| hoveredPortInfo | typeof state.hoveredPort     |             |
+| wasmEngine      | FlintRenderWorkerWasmExports |             |
+
+### prepareWebGpuNodePins
+
+**Kind:** function
+
+```typescript
+function prepareWebGpuNodePins(
+  state: RenderWorkerState,
+  node: FlintGraphNode,
+  isDark: boolean,
+  hoveredPortInfo: typeof state.hoveredPort,
+  wasmEngine: FlintRenderWorkerWasmExports,
+): number;
+```
+
+Prepares port pins and labels for a WebGPU node instance.
+
+#### Parameters
+
+| Name            | Type                         | Description |
+| --------------- | ---------------------------- | ----------- |
+| state           | RenderWorkerState            |             |
+| node            | FlintGraphNode               |             |
+| isDark          | boolean                      |             |
+| hoveredPortInfo | typeof state.hoveredPort     |             |
+| wasmEngine      | FlintRenderWorkerWasmExports |             |
+
+### pushGpuNodeInstance
+
+**Kind:** function
+
+```typescript
+function pushGpuNodeInstance(
+  state: RenderWorkerState,
+  posX: number,
+  posY: number,
+  width: number,
+  height: number,
+  radius: number,
+  fillRgba: readonly [number, number, number, number],
+  borderRgba: readonly [number, number, number, number] = [0, 0, 0, 0],
+  borderWidth = 0,
+  glowRgba: readonly [number, number, number, number] = [0, 0, 0, 0],
+): void;
+```
+
+Enqueues an instanced WebGPU node rectangle with position, size, borders, and glow.
+
+#### Parameters
+
+| Name        | Type                                      | Description |
+| ----------- | ----------------------------------------- | ----------- |
+| state       | RenderWorkerState                         |             |
+| posX        | number                                    |             |
+| posY        | number                                    |             |
+| width       | number                                    |             |
+| height      | number                                    |             |
+| radius      | number                                    |             |
+| fillRgba    | readonly [number, number, number, number] |             |
+| borderRgba  | readonly [number, number, number, number] |             |
+| borderWidth |                                           |             |
+| glowRgba    | readonly [number, number, number, number] |             |
+
+### pushGpuPinInstance
+
+**Kind:** function
+
+```typescript
+function pushGpuPinInstance(
+  state: RenderWorkerState,
+  posX: number,
+  posY: number,
+  radius: number,
+  fillRgba: readonly [number, number, number, number],
+  borderWidth = 0,
+  borderRgba: readonly [number, number, number, number] = [0, 0, 0, 0],
+): void;
+```
+
+Enqueues an instanced WebGPU port pin circle with fill and optional selection border.
+
+#### Parameters
+
+| Name        | Type                                      | Description |
+| ----------- | ----------------------------------------- | ----------- |
+| state       | RenderWorkerState                         |             |
+| posX        | number                                    |             |
+| posY        | number                                    |             |
+| radius      | number                                    |             |
+| fillRgba    | readonly [number, number, number, number] |             |
+| borderWidth |                                           |             |
+| borderRgba  | readonly [number, number, number, number] |             |
+
+### resetWebGpuPipelines
+
+**Kind:** function
+
+```typescript
+function resetWebGpuPipelines(state: RenderWorkerState): void;
+```
+
+Resets existing WebGPU buffers, samplers, and pipelines when switching devices.
+
+#### Parameters
+
+| Name  | Type              | Description |
+| ----- | ----------------- | ----------- |
+| state | RenderWorkerState |             |
+
+### setupWebGpuFontPipeline
+
+**Kind:** function
+
+```typescript
+function setupWebGpuFontPipeline(
+  state: RenderWorkerState,
+  device: GPUDevice,
+  cameraBindGroupLayout: GPUBindGroupLayout,
+  format: GPUTextureFormat,
+): void;
+```
+
+Initializes WebGPU font atlas texture and SDF text pipeline.
+
+#### Parameters
+
+| Name                  | Type               | Description |
+| --------------------- | ------------------ | ----------- |
+| state                 | RenderWorkerState  |             |
+| device                | GPUDevice          |             |
+| cameraBindGroupLayout | GPUBindGroupLayout |             |
+| format                | GPUTextureFormat   |             |
+
+### uploadGpuInstanceData
+
+**Kind:** function
+
+```typescript
+function uploadGpuInstanceData(
+  device: GPUDevice | undefined,
+  buffer: GPUBuffer | undefined,
+  floats: number[],
+  strideFloats: number,
+  count?: number,
+): GPUBuffer | undefined;
+```
+
+Uploads packed float array data into WebGPU instancing buffer.
+
+#### Parameters
+
+| Name         | Type                   | Description |
+| ------------ | ---------------------- | ----------- |
+| device       | GPUDevice \| undefined |             |
+| buffer       | GPUBuffer \| undefined |             |
+| floats       | number[]               |             |
+| strideFloats | number                 |             |
+| count        | number                 |             |
+
+## `src/renderer/worker-state`
+
+### createRenderWorkerState
+
+**Kind:** function
+
+```typescript
+function createRenderWorkerState(): RenderWorkerState;
+```
+
+Creates and initializes default render worker state container.
+
+### RenderWorkerState
+
+**Kind:** interface
+
+```typescript
+export interface RenderWorkerState
 ```
 
 No description provided.

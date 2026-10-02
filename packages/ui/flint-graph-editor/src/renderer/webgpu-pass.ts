@@ -213,14 +213,15 @@ interface WebGpuTextContext {
 function getWebGpuTextContext(state: RenderWorkerState): WebGpuTextContext | undefined {
   const { currentPassEncoder, gpuDevice, textPipeline, cameraBindGroup, fontBindGroup, webGpuTextVertices } = state;
   if (webGpuTextVertices.length === 0) return undefined;
-  if (!currentPassEncoder || !gpuDevice) return undefined;
-  if (!textPipeline || !cameraBindGroup || !fontBindGroup) return undefined;
+  if ([currentPassEncoder, gpuDevice, textPipeline, cameraBindGroup, fontBindGroup].includes(undefined)) {
+    return undefined;
+  }
   return {
-    encoder: currentPassEncoder,
-    device: gpuDevice,
-    pipeline: textPipeline,
-    cameraBindGroup,
-    fontBindGroup,
+    encoder: currentPassEncoder as GPURenderPassEncoder,
+    device: gpuDevice as GPUDevice,
+    pipeline: textPipeline as GPURenderPipeline,
+    cameraBindGroup: cameraBindGroup as GPUBindGroup,
+    fontBindGroup: fontBindGroup as GPUBindGroup,
     vertices: webGpuTextVertices,
   };
 }
@@ -544,6 +545,28 @@ function getWebGpuNavigator(): WebGpuNavigator | undefined {
   return navigator as unknown as WebGpuNavigator;
 }
 
+interface AcquiredGpuSurface {
+  readonly device: GPUDevice;
+  readonly surface: {
+    readonly context: GPUCanvasContext;
+    readonly format: GPUTextureFormat;
+  };
+}
+
+/**
+ * Requests GPU adapter and initializes swapchain canvas context.
+ */
+async function acquireGpuSurface(
+  targetCanvas: OffscreenCanvas | HTMLCanvasElement,
+  nav: WebGpuNavigator,
+): Promise<AcquiredGpuSurface | undefined> {
+  const device = await requestGpuDevice(nav);
+  if (!device) return undefined;
+  const surface = resolveGpuContext(targetCanvas, nav, device);
+  if (!surface) return undefined;
+  return { device, surface };
+}
+
 /**
  * Initializes the WebGPU device, swapchain context, pipelines, and uniform bind groups.
  */
@@ -554,11 +577,10 @@ export async function initWebGpuBackend(
   try {
     const nav = getWebGpuNavigator();
     if (!nav?.gpu) return false;
-    const device = await requestGpuDevice(nav);
-    const surface = device ? resolveGpuContext(targetCanvas, nav, device) : undefined;
-    if (!device || !surface) return false;
+    const acquired = await acquireGpuSurface(targetCanvas, nav);
+    if (!acquired) return false;
 
-    configureGpuPipelines(state, device, surface.context, surface.format);
+    configureGpuPipelines(state, acquired.device, acquired.surface.context, acquired.surface.format);
     return true;
   } catch {
     return false;

@@ -9,17 +9,25 @@ export interface DebugScrubberProperties {
   readonly className?: string;
 }
 
+interface EventWithValue {
+  readonly target?: {
+    readonly value?: unknown;
+  };
+}
+
+/**
+ * Checks whether an event payload contains an object target.
+ */
+function isEventWithValue(event: unknown): event is EventWithValue {
+  return Boolean(event && typeof event === 'object');
+}
+
 /**
  * Safely extracts raw property value from event target.
  */
 function extractEventTargetValue(event: unknown): unknown {
-  if (event && typeof event === 'object' && 'target' in event) {
-    const target = event.target;
-    if (target && typeof target === 'object' && 'value' in target) {
-      return target.value;
-    }
-  }
-  return undefined;
+  if (!isEventWithValue(event)) return undefined;
+  return event.target?.value;
 }
 
 /**
