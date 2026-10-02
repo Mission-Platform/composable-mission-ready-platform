@@ -381,13 +381,8 @@ function isPointInsideNode(
  * Safely extracts string value from an HTML input or textarea event target.
  */
 function extractEventTargetStringValue(event: unknown): string | undefined {
-  if (event && typeof event === 'object' && 'target' in event) {
-    const target = event.target;
-    if (target && typeof target === 'object' && 'value' in target && typeof target.value === 'string') {
-      return target.value;
-    }
-  }
-  return undefined;
+  const value = (event as { target?: { value?: unknown } })?.target?.value;
+  return typeof value === 'string' ? value : undefined;
 }
 
 /**
@@ -1753,6 +1748,9 @@ function handleEscapeKey(store: FlintEditorStore, bridge?: FlintRendererBridge):
   }
 }
 
+/**
+ * Checks whether an interactive text input element is currently focused.
+ */
 function isInputFocused(): boolean {
   const activeElement = typeof document === 'undefined' ? undefined : document.activeElement;
   return activeElement instanceof HTMLInputElement || activeElement instanceof HTMLTextAreaElement;
@@ -1798,13 +1796,9 @@ function handleEditorKeyboardAction(
 ): void {
   if (event.key === 'Escape') {
     handleEscapeKey(store, bridge);
-    return;
-  }
-  if (event.key === 'Delete' || event.key === 'Backspace') {
+  } else if (event.key === 'Delete' || event.key === 'Backspace') {
     handleDeleteKey(store, bridge);
-    return;
-  }
-  if (event.ctrlKey || event.metaKey) {
+  } else if (event.ctrlKey || event.metaKey) {
     handleCtrlShortcuts(event, store, bridge);
   }
 }
@@ -1960,6 +1954,22 @@ function updateNodePositions(
 }
 
 /**
+ * Checks for double click on a node and triggers meta drill-in if matched.
+ */
+function tryHandleNodeDoubleClick(
+  hitNodeId: string,
+  now: number,
+  lastClick: { time: number; id: string },
+  store: FlintEditorStore,
+  bridge: FlintRendererBridge,
+): boolean {
+  const isDouble = now - lastClick.time < 350 && lastClick.id === hitNodeId;
+  lastClick.time = now;
+  lastClick.id = hitNodeId;
+  return isDouble && handleNodeDoubleClick(hitNodeId, store, bridge);
+}
+
+/**
  * Handles pointer down on a node to select or drill into meta graph on double click.
  */
 function handleNodeHitPointerDown(
@@ -1971,10 +1981,7 @@ function handleNodeHitPointerDown(
   bridge: FlintRendererBridge,
   nodesStartPositions: Map<string, { readonly x: number; readonly y: number }>,
 ): void {
-  if (now - lastClick.time < 350 && lastClick.id === hit.nodeId && handleNodeDoubleClick(hit.nodeId, store, bridge))
-    return;
-  lastClick.time = now;
-  lastClick.id = hit.nodeId;
+  if (tryHandleNodeDoubleClick(hit.nodeId, now, lastClick, store, bridge)) return;
 
   if (isShift) {
     store.toggleNodeSelection(hit.nodeId);
@@ -2081,6 +2088,42 @@ interface PointerDownHitOutcome {
 }
 
 /**
+ * Handles pointer down on an edge waypoint.
+ */
+function handleWaypointHitPointerDown(
+  hit: Extract<FlintHitResult, { type: 'waypoint' }>,
+  store: FlintEditorStore,
+  bridge: FlintRendererBridge,
+): PointerDownHitOutcome {
+  store.selectEdge(hit.edgeId);
+  bridge.setSelection([], [hit.edgeId]);
+  bridge.renderFrame();
+  return { dragMode: 'waypoint', draggedEdgeId: hit.edgeId, draggedWaypointIndex: hit.waypointIndex };
+}
+
+/**
+ * Handles pointer down on a port pin to initiate connecting wire drag.
+ */
+function handlePortHitPointerDown(
+  hit: Extract<FlintHitResult, { type: 'port' }>,
+  store: FlintEditorStore,
+  bridge: FlintRendererBridge,
+): PointerDownHitOutcome {
+  store.startConnecting(hit.nodeId, hit.portId, hit.worldX ?? 0, hit.worldY ?? 0);
+  bridge.setConnectingEdge({
+    fromNodeId: hit.nodeId,
+    fromPortId: hit.portId,
+    cursorX: hit.worldX ?? 0,
+    cursorY: hit.worldY ?? 0,
+  });
+  return {
+    dragMode: 'connect',
+    connectingSourceNodeId: hit.nodeId,
+    connectingSourcePortId: hit.portId,
+  };
+}
+
+/**
  * Routes pointer down hit test results on specific entities.
  */
 function handleEntityPointerDown(
@@ -2099,10 +2142,7 @@ function handleEntityPointerDown(
     return { dragMode: 'group' };
   }
   if (hit.type === 'waypoint' && hit.edgeId && hit.waypointIndex !== undefined) {
-    store.selectEdge(hit.edgeId);
-    bridge.setSelection([], [hit.edgeId]);
-    bridge.renderFrame();
-    return { dragMode: 'waypoint', draggedEdgeId: hit.edgeId, draggedWaypointIndex: hit.waypointIndex };
+    return handleWaypointHitPointerDown(hit as Extract<FlintHitResult, { type: 'waypoint' }>, store, bridge);
   }
   if (hit.type === 'edge' && hit.edgeId) {
     handleEdgeHitPointerDown(hit, offsetX, offsetY, now, lastClick, store, bridge);
@@ -2113,18 +2153,7 @@ function handleEntityPointerDown(
     return { dragMode: 'node' };
   }
   if (hit.type === 'port' && hit.portId) {
-    store.startConnecting(hit.nodeId, hit.portId, hit.worldX ?? 0, hit.worldY ?? 0);
-    bridge.setConnectingEdge({
-      fromNodeId: hit.nodeId,
-      fromPortId: hit.portId,
-      cursorX: hit.worldX ?? 0,
-      cursorY: hit.worldY ?? 0,
-    });
-    return {
-      dragMode: 'connect',
-      connectingSourceNodeId: hit.nodeId,
-      connectingSourcePortId: hit.portId,
-    };
+    return handlePortHitPointerDown(hit as Extract<FlintHitResult, { type: 'port' }>, store, bridge);
   }
   return undefined;
 }
@@ -2210,21 +2239,28 @@ function handlePointerUpAction(
   store: FlintEditorStore,
   setSelectionSquare: (updater: SelectionSquareState | ((prev: SelectionSquareState) => SelectionSquareState)) => void,
 ): void {
-  if (dragMode === 'box_select') {
-    handleBoxSelectPointerUp(event, boxSelectStart, bridge, store, setSelectionSquare);
-    return;
-  }
-  if (dragMode === 'connect') {
-    handleConnectPointerUp(event, connectingSourceNodeId, connectingSourcePortId, bridge, store);
-    return;
-  }
-  if (dragMode === 'node' || dragMode === 'group') {
-    store.commitNodeMove();
-    bridge.renderFrame();
-    return;
-  }
-  if (dragMode === 'waypoint') {
-    bridge.renderFrame();
+  switch (dragMode) {
+    case 'box_select': {
+      handleBoxSelectPointerUp(event, boxSelectStart, bridge, store, setSelectionSquare);
+      break;
+    }
+    case 'connect': {
+      handleConnectPointerUp(event, connectingSourceNodeId, connectingSourcePortId, bridge, store);
+      break;
+    }
+    case 'node':
+    case 'group': {
+      store.commitNodeMove();
+      bridge.renderFrame();
+      break;
+    }
+    case 'waypoint': {
+      bridge.renderFrame();
+      break;
+    }
+    default: {
+      break;
+    }
   }
 }
 
@@ -2317,37 +2353,75 @@ function handleDragMoveStep(context: DragMoveContext): { resetDragStart?: boolea
     setSelectionSquare,
   } = context;
 
-  if (dragMode === 'box_select') {
-    setSelectionSquare((previous) => ({
-      ...previous,
-      currentX: event.offsetX,
-      currentY: event.offsetY,
-    }));
-    return {};
+  switch (dragMode) {
+    case 'box_select': {
+      setSelectionSquare((previous) => ({
+        ...previous,
+        currentX: event.offsetX,
+        currentY: event.offsetY,
+      }));
+      return {};
+    }
+    case 'group':
+    case 'node': {
+      if (nodesStartPositions.size > 0) {
+        handleNodeGroupDrag(deltaX, deltaY, cameraZoom, nodesStartPositions, store, bridge);
+      }
+      return {};
+    }
+    case 'waypoint': {
+      if (draggedEdgeId) {
+        const { x: worldX, y: worldY } = bridge.screenToWorld(event.offsetX, event.offsetY);
+        store.updateEdgePoint(draggedEdgeId, draggedWaypointIndex, {
+          x: Math.round(worldX),
+          y: Math.round(worldY),
+        });
+        syncGraphWithBridge(store, bridge);
+      }
+      return {};
+    }
+    case 'connect': {
+      handleConnectDrag(event, bridge, store, connectingSourceNodeId, connectingSourcePortId);
+      return {};
+    }
+    case 'pan': {
+      bridge.pan(deltaX, deltaY);
+      bridge.renderFrame();
+      return { resetDragStart: true };
+    }
+    default: {
+      return {};
+    }
   }
-  if ((dragMode === 'group' || dragMode === 'node') && nodesStartPositions.size > 0) {
-    handleNodeGroupDrag(deltaX, deltaY, cameraZoom, nodesStartPositions, store, bridge);
-    return {};
+}
+
+/**
+ * Initializes box selection bounds and activates selection square.
+ */
+function initBoxSelection(
+  event: PointerEvent,
+  setSelectionSquare: (updater: SelectionSquareState | ((prev: SelectionSquareState) => SelectionSquareState)) => void,
+): { x: number; y: number } {
+  const boxStart = { x: event.offsetX, y: event.offsetY };
+  setSelectionSquare({
+    active: true,
+    startX: event.offsetX,
+    startY: event.offsetY,
+    currentX: event.offsetX,
+    currentY: event.offsetY,
+  });
+  return boxStart;
+}
+
+/**
+ * Safely captures pointer on element if supported.
+ */
+function tryCapturePointer(element: HTMLCanvasElement, pointerId: number): void {
+  try {
+    element.setPointerCapture(pointerId);
+  } catch {
+    // pointer capture optional
   }
-  if (dragMode === 'waypoint' && draggedEdgeId) {
-    const { x: worldX, y: worldY } = bridge.screenToWorld(event.offsetX, event.offsetY);
-    store.updateEdgePoint(draggedEdgeId, draggedWaypointIndex, {
-      x: Math.round(worldX),
-      y: Math.round(worldY),
-    });
-    syncGraphWithBridge(store, bridge);
-    return {};
-  }
-  if (dragMode === 'connect') {
-    handleConnectDrag(event, bridge, store, connectingSourceNodeId, connectingSourcePortId);
-    return {};
-  }
-  if (dragMode === 'pan') {
-    bridge.pan(deltaX, deltaY);
-    bridge.renderFrame();
-    return { resetDragStart: true };
-  }
-  return {};
 }
 
 /**
@@ -2394,11 +2468,7 @@ function setupCanvasEventListeners(options: CanvasGestureBindingsOptions): () =>
     setContextMenu((previous) => (previous.open ? { ...previous, open: false } : previous));
     isPointerDown = true;
     dragStartScreen = { x: event.clientX, y: event.clientY };
-    try {
-      canvasElement.setPointerCapture(event.pointerId);
-    } catch {
-      // pointer capture optional
-    }
+    tryCapturePointer(canvasElement, event.pointerId);
 
     const hit = bridge.hitTestSync(event.offsetX, event.offsetY);
     const outcome = dispatchPointerDownHit({
@@ -2414,20 +2484,13 @@ function setupCanvasEventListeners(options: CanvasGestureBindingsOptions): () =>
     });
 
     dragMode = outcome.dragMode;
-    connectingSourceNodeId = outcome.connectingSourceNodeId ?? '';
-    connectingSourcePortId = outcome.connectingSourcePortId ?? '';
-    draggedEdgeId = outcome.draggedEdgeId ?? '';
-    draggedWaypointIndex = outcome.draggedWaypointIndex ?? -1;
+    connectingSourceNodeId = outcome.connectingSourceNodeId || '';
+    connectingSourcePortId = outcome.connectingSourcePortId || '';
+    draggedEdgeId = outcome.draggedEdgeId || '';
+    draggedWaypointIndex = outcome.draggedWaypointIndex === undefined ? -1 : outcome.draggedWaypointIndex;
 
     if (dragMode === 'box_select') {
-      boxSelectStart = { x: event.offsetX, y: event.offsetY };
-      setSelectionSquare({
-        active: true,
-        startX: event.offsetX,
-        startY: event.offsetY,
-        currentX: event.offsetX,
-        currentY: event.offsetY,
-      });
+      boxSelectStart = initBoxSelection(event, setSelectionSquare);
     }
   };
 
@@ -3524,6 +3587,9 @@ function extractDropClientCoordinates(event: unknown): { clientX: number; client
   return { clientX: 0, clientY: 0 };
 }
 
+/**
+ * Prevents default browser drag and drop action.
+ */
 function preventDragEvent(event: unknown): void {
   if (typeof DragEvent !== 'undefined' && event instanceof DragEvent) {
     event.preventDefault();
@@ -4070,50 +4136,60 @@ function renderTargetActions(
   bridge: FlintRendererBridge | undefined,
   onClose: () => void,
 ): MpElement {
-  if (cm.targetType === 'edge' && cm.targetId) {
-    return (
-      <ContextMenuEdgeActions
-        targetId={cm.targetId}
-        worldX={cm.worldX}
-        worldY={cm.worldY}
-        store={store}
-        bridge={bridge}
-        onClose={onClose}
-      />
-    );
+  switch (cm.targetType) {
+    case 'edge': {
+      return cm.targetId ? (
+        <ContextMenuEdgeActions
+          targetId={cm.targetId}
+          worldX={cm.worldX}
+          worldY={cm.worldY}
+          store={store}
+          bridge={bridge}
+          onClose={onClose}
+        />
+      ) : (
+        <></>
+      );
+    }
+    case 'node': {
+      return cm.targetId ? (
+        <ContextMenuNodeActions
+          targetId={cm.targetId}
+          targetGroupId={cm.targetGroupId}
+          selectedNode={selectedNode}
+          store={store}
+          bridge={bridge}
+          onClose={onClose}
+        />
+      ) : (
+        <></>
+      );
+    }
+    case 'group': {
+      return cm.targetGroupId ? (
+        <ContextMenuGroupActions
+          targetGroupId={cm.targetGroupId}
+          store={store}
+          bridge={bridge}
+          onClose={onClose}
+        />
+      ) : (
+        <></>
+      );
+    }
+    case 'selection': {
+      return (
+        <ContextMenuSelectionActions
+          selectedNodeCount={selectedNodeCount}
+          store={store}
+          onClose={onClose}
+        />
+      );
+    }
+    default: {
+      return <></>;
+    }
   }
-  if (cm.targetType === 'node' && cm.targetId) {
-    return (
-      <ContextMenuNodeActions
-        targetId={cm.targetId}
-        targetGroupId={cm.targetGroupId}
-        selectedNode={selectedNode}
-        store={store}
-        bridge={bridge}
-        onClose={onClose}
-      />
-    );
-  }
-  if (cm.targetType === 'group' && cm.targetGroupId) {
-    return (
-      <ContextMenuGroupActions
-        targetGroupId={cm.targetGroupId}
-        store={store}
-        bridge={bridge}
-        onClose={onClose}
-      />
-    );
-  }
-  if (cm.targetType === 'selection') {
-    return (
-      <ContextMenuSelectionActions
-        selectedNodeCount={selectedNodeCount}
-        store={store}
-        onClose={onClose}
-      />
-    );
-  }
-  return <></>;
 }
 
 /**
@@ -4402,16 +4478,10 @@ interface ActiveSelections {
  */
 function resolveActiveSelections(editorState: FlintEditorStoreState): ActiveSelections {
   const selectedNodeId = editorState.selectedNodeIds[0];
-  const selectedNode: FlintGraphNode | undefined = selectedNodeId
-    ? editorState.graph.nodes.find((node) => node?.id === selectedNodeId)
-    : undefined;
+  const selectedNode = selectedNodeId ? editorState.graph.nodes.find((node) => node?.id === selectedNodeId) : undefined;
   const selectedDefinition = selectedNode ? getNodeDefinition(selectedNode.operation) : undefined;
-  const selectedGroup = editorState.selectedGroupId
-    ? (editorState.graph.groups ?? []).find((group) => group.id === editorState.selectedGroupId)
-    : undefined;
-  const selectedEdge = editorState.activeEdgeId
-    ? editorState.graph.edges.find((edge) => edge.id === editorState.activeEdgeId)
-    : undefined;
+  const selectedGroup = (editorState.graph.groups ?? []).find((group) => group.id === editorState.selectedGroupId);
+  const selectedEdge = editorState.graph.edges.find((edge) => edge.id === editorState.activeEdgeId);
   return { selectedNode, selectedDefinition, selectedGroup, selectedEdge };
 }
 

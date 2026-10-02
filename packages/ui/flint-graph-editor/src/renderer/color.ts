@@ -32,10 +32,10 @@ function resolveNodeStatusKey(isTrapped: number, isActive: number, isSelected: n
  */
 export function getCategoryRgba(category?: string, isMeta?: boolean, isDark = true): [number, number, number, number] {
   const table = isDark ? CATEGORY_RGBA_DARK : CATEGORY_RGBA_LIGHT;
-  const defaultRgba: [number, number, number, number] = isDark ? [0.545, 0.58, 0.62, 1] : [0.341, 0.376, 0.416, 1];
-  if (isMeta) return [...table.math];
-  if (category && table[category]) return [...table[category]];
-  return defaultRgba;
+  const key = isMeta ? 'math' : (category ?? '');
+  const color = table[key];
+  if (color) return [...color];
+  return isDark ? [0.545, 0.58, 0.62, 1] : [0.341, 0.376, 0.416, 1];
 }
 
 /**
@@ -81,10 +81,10 @@ export function parseHexColor(hexStr: string): [number, number, number, number] 
 export function parseRgbColor(rgbStr: string): [number, number, number, number] | undefined {
   const match = rgbStr.match(/rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)/);
   if (!match) return undefined;
-  const redChannel = Number.parseInt(match[1] || '0', 10) / 255;
-  const greenChannel = Number.parseInt(match[2] || '0', 10) / 255;
-  const blueChannel = Number.parseInt(match[3] || '0', 10) / 255;
-  const alphaChannel = match[4] ? Number.parseFloat(match[4]) : 1;
+  const redChannel = Number.parseInt(match[1]!, 10) / 255;
+  const greenChannel = Number.parseInt(match[2]!, 10) / 255;
+  const blueChannel = Number.parseInt(match[3]!, 10) / 255;
+  const alphaChannel = Number.parseFloat(match[4] ?? '1');
   return [redChannel, greenChannel, blueChannel, alphaChannel];
 }
 
@@ -95,12 +95,13 @@ export function parseColorToRgba(
   colorStr?: string,
   defaultRgba: [number, number, number, number] = [0.35, 0.65, 1, 1],
 ): [number, number, number, number] {
-  if (!colorStr) return defaultRgba;
-  const str = colorStr.trim();
-  if (str.startsWith('#')) return parseHexColor(str) ?? defaultRgba;
-  if (str.startsWith('rgb')) return parseRgbColor(str) ?? defaultRgba;
-  return defaultRgba;
+  const str = colorStr?.trim();
+  const parsed = str ? (str.startsWith('#') ? parseHexColor(str) : parseRgbColor(str)) : undefined;
+  return parsed ?? defaultRgba;
 }
+
+const GPU_FILL_DARK = { r: 0.14, g: 0.16, b: 0.22, a: 0.95 };
+const GPU_FILL_LIGHT = { r: 1, g: 1, b: 1, a: 0.98 };
 
 /**
  * Computes WebGPU node instance fill and border styling tuples.
@@ -114,20 +115,17 @@ export function computeWebGpuNodeGlowAndBorder(
   const table = isDark ? GPU_NODE_STYLES_DARK : GPU_NODE_STYLES_LIGHT;
   const key = resolveNodeStatusKey(isTrapped, isActive, isSelected);
   const nodeStyle = table[key] ?? table.default;
-  const fillR = isDark ? 0.14 : 1;
-  const fillG = isDark ? 0.16 : 1;
-  const fillB = isDark ? 0.22 : 1;
-  const fillA = isDark ? 0.95 : 0.98;
+  const fill = isDark ? GPU_FILL_DARK : GPU_FILL_LIGHT;
 
   return {
     glowR: nodeStyle.glow[0],
     glowG: nodeStyle.glow[1],
     glowB: nodeStyle.glow[2],
     glowA: nodeStyle.glow[3],
-    fillR,
-    fillG,
-    fillB,
-    fillA,
+    fillR: fill.r,
+    fillG: fill.g,
+    fillB: fill.b,
+    fillA: fill.a,
     borderR: nodeStyle.border[0],
     borderG: nodeStyle.border[1],
     borderB: nodeStyle.border[2],

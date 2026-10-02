@@ -58,6 +58,26 @@ export const postReply = (reply: RenderWorkerOutputMessage): void => {
 };
 
 /**
+ * Tries initializing non-default preferred backend.
+ */
+function tryInitPreferredBackend(
+  state: RenderWorkerState,
+  targetCanvas: OffscreenCanvas | HTMLCanvasElement,
+  preferred?: 'webgpu' | 'webgl' | 'canvas2d',
+): { tier: number; backend: 'webgpu' | 'webgl' | 'canvas2d'; ok: boolean } | undefined {
+  if (preferred === 'canvas2d') {
+    return { tier: 3, backend: 'canvas2d', ok: init2dBackend(state, targetCanvas) };
+  }
+  if (preferred === 'webgl') {
+    const okGl = initWebGLBackend(state, targetCanvas);
+    return okGl
+      ? { tier: 2, backend: 'webgl', ok: true }
+      : { tier: 3, backend: 'canvas2d', ok: init2dBackend(state, targetCanvas) };
+  }
+  return undefined;
+}
+
+/**
  * Selects and initializes the most suitable GPU/canvas rendering backend.
  */
 export async function selectAndInitBackend(
@@ -65,18 +85,11 @@ export async function selectAndInitBackend(
   targetCanvas: OffscreenCanvas | HTMLCanvasElement,
   preferred?: 'webgpu' | 'webgl' | 'canvas2d',
 ): Promise<{ tier: number; backend: 'webgpu' | 'webgl' | 'canvas2d'; ok: boolean }> {
-  if (preferred === 'canvas2d') {
-    return { tier: 3, backend: 'canvas2d', ok: init2dBackend(state, targetCanvas) };
-  }
-  if (preferred === 'webgl') {
-    const okGl = initWebGLBackend(state, targetCanvas);
-    if (okGl) return { tier: 2, backend: 'webgl', ok: true };
-    return { tier: 3, backend: 'canvas2d', ok: init2dBackend(state, targetCanvas) };
-  }
-  const okGpu = await initWebGpuBackend(state, targetCanvas);
-  if (okGpu) return { tier: 1, backend: 'webgpu', ok: true };
-  const okGl = initWebGLBackend(state, targetCanvas);
-  if (okGl) return { tier: 2, backend: 'webgl', ok: true };
+  const preferredResult = tryInitPreferredBackend(state, targetCanvas, preferred);
+  if (preferredResult) return preferredResult;
+
+  if (await initWebGpuBackend(state, targetCanvas)) return { tier: 1, backend: 'webgpu', ok: true };
+  if (initWebGLBackend(state, targetCanvas)) return { tier: 2, backend: 'webgl', ok: true };
   return { tier: 3, backend: 'canvas2d', ok: init2dBackend(state, targetCanvas) };
 }
 
@@ -138,9 +151,7 @@ export async function handleWorkerInit(
   state.width = msg.width ?? 800;
   state.height = msg.height ?? 600;
   state.dpr = msg.dpr ?? 1;
-  if (msg.theme !== undefined) {
-    state.currentTheme = msg.theme;
-  }
+  state.currentTheme = msg.theme ?? state.currentTheme;
 
   syncCanvasDimensions(state);
   wasm.engine_create(state.width, state.height, state.dpr);
@@ -151,7 +162,6 @@ export async function handleWorkerInit(
     ...state.performanceStats,
     dpr: state.dpr,
   };
-
   wasm.engine_render_frame(state.nodes.length, state.edges.length, state.nodes.length * 4);
 
   postReply({
@@ -363,26 +373,35 @@ export function hitTestEdges(
 }
 
 /**
+ * Resolves node or edge hit target from spatial index and edge math.
+ */
+function resolveSpatialHit(
+  state: RenderWorkerState,
+  cursorX: number,
+  cursorY: number,
+  snapRadius = 15,
+): FlintHitResult | undefined {
+  const wasm = state.wasm;
+  if (!wasm) return undefined;
+  const px = Math.round(cursorX) + COORD_OFFSET;
+  const py = Math.round(cursorY) + COORD_OFFSET;
+  const hit = wasm.spatial_hit_test_point(px, py);
+  const hitNode = hit > 0 ? state.nodes[hit - 1] : undefined;
+  if (hitNode) {
+    return { type: 'node', nodeId: hitNode.id, worldX: cursorX, worldY: cursorY };
+  }
+  return hitTestEdges(cursorX, cursorY, snapRadius, state.nodes, state.edges, wasm);
+}
+
+/**
  * Executes spatial hit testing for cursor coordinates.
  */
 export function handleWorkerHitTest(
   state: RenderWorkerState,
   msg: Extract<RenderWorkerInputMessage, { type: 'hit_test' }>,
 ): void {
-  const wasm = state.wasm;
-  if (!wasm || msg.cursorX === undefined || msg.cursorY === undefined) return;
-  const px = Math.round(msg.cursorX) + COORD_OFFSET;
-  const py = Math.round(msg.cursorY) + COORD_OFFSET;
-  const hit = wasm.spatial_hit_test_point(px, py);
-  const hitNode = hit > 0 ? state.nodes[hit - 1] : undefined;
-  const hitResult = hitNode
-    ? {
-        type: 'node' as const,
-        nodeId: hitNode.id,
-        worldX: msg.cursorX,
-        worldY: msg.cursorY,
-      }
-    : hitTestEdges(msg.cursorX, msg.cursorY, msg.snapRadius ?? 15, state.nodes, state.edges, wasm);
+  if (!state.wasm || msg.cursorX === undefined || msg.cursorY === undefined) return;
+  const hitResult = resolveSpatialHit(state, msg.cursorX, msg.cursorY, msg.snapRadius);
   postReply({
     type: 'hit_test_result',
     hit: hitResult,

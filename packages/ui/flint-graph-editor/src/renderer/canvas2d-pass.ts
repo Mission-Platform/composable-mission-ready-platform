@@ -111,10 +111,10 @@ function computeGroupBounds2d(groupNodes: readonly FlintGraphNode[]): GroupBound
 
   for (const node of groupNodes) {
     const bounds = getNodeBounds(node);
-    if (bounds.minX < gMinX) gMinX = bounds.minX;
-    if (bounds.maxX > gMaxX) gMaxX = bounds.maxX;
-    if (bounds.minY < gMinY) gMinY = bounds.minY;
-    if (bounds.maxY > gMaxY) gMaxY = bounds.maxY;
+    gMinX = Math.min(gMinX, bounds.minX);
+    gMaxX = Math.max(gMaxX, bounds.maxX);
+    gMinY = Math.min(gMinY, bounds.minY);
+    gMaxY = Math.max(gMaxY, bounds.maxY);
   }
 
   const padding = 24;
@@ -124,6 +124,64 @@ function computeGroupBounds2d(groupNodes: readonly FlintGraphNode[]): GroupBound
     gw: gMaxX - gMinX + padding * 2,
     gh: gMaxY - gMinY + padding * 2 + 22,
   };
+}
+
+/**
+ * Helper to draw a rounded rectangle on 2D context.
+ */
+function draw2dRoundRect(
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  radius: number | number[] = 0,
+): void {
+  ctx.beginPath();
+  if (typeof ctx.roundRect === 'function') {
+    ctx.roundRect(x, y, w, h, radius);
+  } else {
+    ctx.rect(x, y, w, h);
+  }
+}
+
+/**
+ * Computes theme-adaptive background and border colors for 2D group.
+ */
+function get2dGroupColors(group: { color?: string; backgroundColor?: string }, isDark: boolean) {
+  const defaultBorder: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 1] : [0.035, 0.412, 0.855, 1];
+  const parsed = parseColorToRgba(group.color, defaultBorder);
+  const rgb = `${Math.round(parsed[0] * 255)}, ${Math.round(parsed[1] * 255)}, ${Math.round(parsed[2] * 255)}`;
+  return {
+    bg: group.backgroundColor ?? `rgba(${rgb}, ${isDark ? 0.12 : 0.08})`,
+    border: group.color ?? `rgba(${rgb}, ${isDark ? 0.7 : 0.6})`,
+  };
+}
+
+/**
+ * Renders 2D group header title badge.
+ */
+function render2dGroupTitle(
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  title: string,
+  gx: number,
+  gy: number,
+  groupBorder: string,
+  isSelected: boolean,
+  zoomVal: number,
+): void {
+  ctx.fillStyle = groupBorder;
+  ctx.font = 'bold 12px "Comfortaa", -apple-system, sans-serif';
+  const labelW = ctx.measureText(title).width;
+  draw2dRoundRect(ctx, gx + 10, gy + 4, labelW + 16, 20, 4);
+  ctx.fill();
+  if (isSelected) {
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.5 / zoomVal;
+    ctx.stroke();
+  }
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(title, gx + 18, gy + 18);
 }
 
 /**
@@ -139,51 +197,23 @@ function render2dSingleGroup(
 ): void {
   const isSelectedGroup = state.selectedGroupId === group.id;
   const { gx, gy, gw, gh } = box;
+  const colors = get2dGroupColors(group, isDark);
+
   ctx.save();
-  const defaultBorder: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 1] : [0.035, 0.412, 0.855, 1];
-  const parsedColor = parseColorToRgba(group.color, defaultBorder);
-  const groupBg =
-    group.backgroundColor ??
-    `rgba(${Math.round(parsedColor[0] * 255)}, ${Math.round(parsedColor[1] * 255)}, ${Math.round(parsedColor[2] * 255)}, ${isDark ? 0.12 : 0.08})`;
-  const groupBorder =
-    group.color ??
-    `rgba(${Math.round(parsedColor[0] * 255)}, ${Math.round(parsedColor[1] * 255)}, ${Math.round(parsedColor[2] * 255)}, ${isDark ? 0.7 : 0.6})`;
-  ctx.fillStyle = groupBg;
-  ctx.strokeStyle = groupBorder;
+  ctx.fillStyle = colors.bg;
+  ctx.strokeStyle = colors.border;
   ctx.lineWidth = (isSelectedGroup ? 3.5 : 2) / zoomVal;
   if (isSelectedGroup) {
-    ctx.shadowColor = groupBorder;
+    ctx.shadowColor = colors.border;
     ctx.shadowBlur = 12;
   }
   ctx.setLineDash(isSelectedGroup ? [] : [8, 4]);
-  ctx.beginPath();
-  if (typeof ctx.roundRect === 'function') {
-    ctx.roundRect(gx, gy, gw, gh, 12);
-  } else {
-    ctx.rect(gx, gy, gw, gh);
-  }
+  draw2dRoundRect(ctx, gx, gy, gw, gh, 12);
   ctx.fill();
   ctx.stroke();
   ctx.setLineDash([]);
 
-  ctx.fillStyle = groupBorder;
-  ctx.font = 'bold 12px "Comfortaa", -apple-system, sans-serif';
-  const labelW = ctx.measureText(group.title).width;
-  ctx.beginPath();
-  if (typeof ctx.roundRect === 'function') {
-    ctx.roundRect(gx + 10, gy + 4, labelW + 16, 20, 4);
-  } else {
-    ctx.rect(gx + 10, gy + 4, labelW + 16, 20);
-  }
-  ctx.fill();
-  if (isSelectedGroup) {
-    ctx.strokeStyle = '#ffffff';
-    ctx.lineWidth = 1.5 / zoomVal;
-    ctx.stroke();
-  }
-
-  ctx.fillStyle = '#ffffff';
-  ctx.fillText(group.title, gx + 18, gy + 18);
+  render2dGroupTitle(ctx, group.title, gx, gy, colors.border, isSelectedGroup, zoomVal);
   ctx.restore();
 }
 
@@ -204,10 +234,37 @@ export function render2dGroupPass(
     const groupNodes = state.nodes.filter((node) => group.nodeIds.includes(node.id));
     if (groupNodes.length === 0) continue;
     const box = computeGroupBounds2d(groupNodes);
-    if (box.gx + box.gw < minX || box.gx > maxX || box.gy + box.gh < minY || box.gy > maxY) {
-      continue;
-    }
+    const outside = box.gx + box.gw < minX || box.gx > maxX || box.gy + box.gh < minY || box.gy > maxY;
+    if (outside) continue;
     render2dSingleGroup(state, ctx, group, box, zoomVal, isDark);
+  }
+}
+
+/**
+ * Traces waypoint segments through quadratic/cubic Bezier links.
+ */
+function trace2dWaypoints(
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  points: readonly { x: number; y: number }[],
+  p0x: number,
+  p0y: number,
+  p3x: number,
+  p3y: number,
+): void {
+  for (let i = 0; i < points.length; i++) {
+    const pt = points[i];
+    if (pt) {
+      const prev = i === 0 ? { x: p0x, y: p0y } : points[i - 1];
+      if (prev) {
+        const midX = (prev.x + pt.x) / 2;
+        ctx.bezierCurveTo(midX, prev.y, midX, pt.y, pt.x, pt.y);
+      }
+    }
+  }
+  const lastPt = points.at(-1);
+  if (lastPt) {
+    const midX = (lastPt.x + p3x) / 2;
+    ctx.bezierCurveTo(midX, lastPt.y, midX, p3y, p3x, p3y);
   }
 }
 
@@ -228,23 +285,8 @@ function trace2dSplinePath(
 ): void {
   ctx.beginPath();
   ctx.moveTo(p0x, p0y);
-  const hasWaypoints = edge.points && edge.points.length > 0;
-  if (hasWaypoints && edge.points) {
-    for (let i = 0; i < edge.points.length; i++) {
-      const pt = edge.points[i];
-      if (pt) {
-        const prev = i === 0 ? { x: p0x, y: p0y } : edge.points[i - 1];
-        if (prev) {
-          const midX = (prev.x + pt.x) / 2;
-          ctx.bezierCurveTo(midX, prev.y, midX, pt.y, pt.x, pt.y);
-        }
-      }
-    }
-    const lastPt = edge.points.at(-1);
-    if (lastPt) {
-      const midX = (lastPt.x + p3x) / 2;
-      ctx.bezierCurveTo(midX, lastPt.y, midX, p3y, p3x, p3y);
-    }
+  if (edge.points && edge.points.length > 0) {
+    trace2dWaypoints(ctx, edge.points, p0x, p0y, p3x, p3y);
   } else {
     ctx.bezierCurveTo(p1x, p1y, p2x, p2y, p3x, p3y);
   }
@@ -258,32 +300,104 @@ interface C2dEdgeStyle {
   readonly shadowBlur: number;
 }
 
+const C2D_EDGE_SELECTED_DARK = {
+  strokeStyle: '#79c0ff',
+  shadowColor: 'rgba(88, 166, 255, 0.9)',
+  widthMult: 4.5,
+  shadowBlur: 10,
+};
+const C2D_EDGE_SELECTED_LIGHT = {
+  strokeStyle: '#0969da',
+  shadowColor: 'rgba(9, 105, 218, 0.7)',
+  widthMult: 4.5,
+  shadowBlur: 10,
+};
+const C2D_EDGE_PULSE_DARK = {
+  strokeStyle: '#3fb950',
+  shadowColor: 'rgba(63, 185, 80, 0.9)',
+  widthMult: 4,
+  shadowBlur: 10,
+};
+const C2D_EDGE_PULSE_LIGHT = {
+  strokeStyle: '#1a7f37',
+  shadowColor: 'rgba(26, 127, 55, 0.7)',
+  widthMult: 4,
+  shadowBlur: 10,
+};
+const C2D_EDGE_DEFAULT_DARK = {
+  strokeStyle: '#58a6ff',
+  shadowColor: 'rgba(88, 166, 255, 0.35)',
+  widthMult: 3.2,
+  shadowBlur: 4,
+};
+const C2D_EDGE_DEFAULT_LIGHT = {
+  strokeStyle: '#0550ae',
+  shadowColor: 'rgba(9, 105, 218, 0.25)',
+  widthMult: 3.2,
+  shadowBlur: 4,
+};
+
 /**
  * Computes 2D canvas edge stroke styling.
  */
 function get2dEdgeStyle(isSelected: boolean, isPulseActive: boolean, isDark: boolean, zoomVal: number): C2dEdgeStyle {
-  if (isSelected) {
-    return {
-      strokeStyle: isDark ? '#79c0ff' : '#0969da',
-      lineWidth: 4.5 / zoomVal,
-      shadowColor: isDark ? 'rgba(88, 166, 255, 0.9)' : 'rgba(9, 105, 218, 0.7)',
-      shadowBlur: 10,
-    };
-  }
-  if (isPulseActive) {
-    return {
-      strokeStyle: isDark ? '#3fb950' : '#1a7f37',
-      lineWidth: 4 / zoomVal,
-      shadowColor: isDark ? 'rgba(63, 185, 80, 0.9)' : 'rgba(26, 127, 55, 0.7)',
-      shadowBlur: 10,
-    };
-  }
+  const conf = isSelected
+    ? isDark
+      ? C2D_EDGE_SELECTED_DARK
+      : C2D_EDGE_SELECTED_LIGHT
+    : isPulseActive
+      ? isDark
+        ? C2D_EDGE_PULSE_DARK
+        : C2D_EDGE_PULSE_LIGHT
+      : isDark
+        ? C2D_EDGE_DEFAULT_DARK
+        : C2D_EDGE_DEFAULT_LIGHT;
   return {
-    strokeStyle: isDark ? '#58a6ff' : '#0550ae',
-    lineWidth: 3.2 / zoomVal,
-    shadowColor: isDark ? 'rgba(88, 166, 255, 0.35)' : 'rgba(9, 105, 218, 0.25)',
-    shadowBlur: 4,
+    strokeStyle: conf.strokeStyle,
+    lineWidth: conf.widthMult / zoomVal,
+    shadowColor: conf.shadowColor,
+    shadowBlur: conf.shadowBlur,
   };
+}
+
+/**
+ * Renders waypoint circles for multi-segment edges.
+ */
+function render2dWaypointDots(
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  points: readonly { x: number; y: number }[],
+  zoomVal: number,
+  isSelected: boolean,
+  isDark: boolean,
+): void {
+  for (const pt of points) {
+    ctx.fillStyle = isSelected ? '#58a6ff' : '#ffffff';
+    ctx.strokeStyle = isDark ? '#0d1117' : '#30363d';
+    ctx.lineWidth = 2 / zoomVal;
+    ctx.beginPath();
+    ctx.arc(pt.x, pt.y, 6 / zoomVal, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+  }
+}
+
+/**
+ * Renders direction indicator arrow on edge spline.
+ */
+function render2dEdgeArrow(
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  arrowX: number,
+  arrowY: number,
+  zoomVal: number,
+  isSelected: boolean,
+  isDark: boolean,
+): void {
+  ctx.fillStyle = isSelected ? '#ffffff' : isDark ? '#79c0ff' : '#0969da';
+  ctx.beginPath();
+  ctx.moveTo(arrowX - 4 / zoomVal, arrowY - 4 / zoomVal);
+  ctx.lineTo(arrowX + 4 / zoomVal, arrowY);
+  ctx.lineTo(arrowX - 4 / zoomVal, arrowY + 4 / zoomVal);
+  ctx.fill();
 }
 
 /**
@@ -307,25 +421,12 @@ function render2dEdgeDecorations(
   ctx.fill();
 
   if (edge.points && edge.points.length > 0) {
-    for (const pt of edge.points) {
-      ctx.fillStyle = isSelected ? '#58a6ff' : '#ffffff';
-      ctx.strokeStyle = isDark ? '#0d1117' : '#30363d';
-      ctx.lineWidth = 2 / zoomVal;
-      ctx.beginPath();
-      ctx.arc(pt.x, pt.y, 6 / zoomVal, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-    }
+    render2dWaypointDots(ctx, edge.points, zoomVal, isSelected, isDark);
   }
 
   const arrowX = edge.points && edge.points.length > 0 ? (edge.points[0]?.x ?? (p0x + p3x) / 2) : (p0x + p3x) / 2;
   const arrowY = edge.points && edge.points.length > 0 ? (edge.points[0]?.y ?? (p0y + p3y) / 2) : (p0y + p3y) / 2;
-  ctx.fillStyle = isSelected ? '#ffffff' : isDark ? '#79c0ff' : '#0969da';
-  ctx.beginPath();
-  ctx.moveTo(arrowX - 4 / zoomVal, arrowY - 4 / zoomVal);
-  ctx.lineTo(arrowX + 4 / zoomVal, arrowY);
-  ctx.lineTo(arrowX - 4 / zoomVal, arrowY + 4 / zoomVal);
-  ctx.fill();
+  render2dEdgeArrow(ctx, arrowX, arrowY, zoomVal, isSelected, isDark);
 }
 
 /**
@@ -363,6 +464,48 @@ export function render2dEdgeCurve(
 }
 
 /**
+ * Renders pulse execution dot along 2D canvas cubic bezier curve.
+ */
+function render2dEdgePulse(
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  p0x: number,
+  p0y: number,
+  p1x: number,
+  p1y: number,
+  p2x: number,
+  p2y: number,
+  p3x: number,
+  p3y: number,
+  pulseOffset: number,
+  zoomVal: number,
+  isDark: boolean,
+  wasmEngine: FlintRenderWorkerWasmExports,
+): void {
+  const pulseProgress = Math.max(0, Math.min(1, pulseOffset));
+  const tPermille = Math.round(pulseProgress * 1000);
+  const pulseX = wasmEngine.bezier_point_1d(
+    Math.round(p0x),
+    Math.round(p1x),
+    Math.round(p2x),
+    Math.round(p3x),
+    tPermille,
+  );
+  const pulseY = wasmEngine.bezier_point_1d(
+    Math.round(p0y),
+    Math.round(p1y),
+    Math.round(p2y),
+    Math.round(p3y),
+    tPermille,
+  );
+  ctx.fillStyle = '#ffffff';
+  ctx.shadowColor = isDark ? '#58a6ff' : '#0969da';
+  ctx.shadowBlur = 10;
+  ctx.beginPath();
+  ctx.arc(pulseX, pulseY, 6 / zoomVal, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+/**
  * Renders edge connection cables and execution flow pulses on 2D canvas.
  */
 export function render2dEdgePass(
@@ -396,14 +539,9 @@ export function render2dEdgePass(
     const p3x = toNode.position.x;
     const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIndex * PORT_ROW_HEIGHT + 14;
 
-    if (
-      Math.max(p0x, p3x) < minX ||
-      Math.min(p0x, p3x) > maxX ||
-      Math.max(p0y, p3y) < minY ||
-      Math.min(p0y, p3y) > maxY
-    ) {
-      continue;
-    }
+    const outside =
+      Math.max(p0x, p3x) < minX || Math.min(p0x, p3x) > maxX || Math.max(p0y, p3y) < minY || Math.min(p0y, p3y) > maxY;
+    if (outside) continue;
 
     const dx = wasmEngine.bezier_control_dx(Math.round(p0x), Math.round(p3x));
     const p1x = p0x + dx;
@@ -418,28 +556,7 @@ export function render2dEdgePass(
     render2dEdgeCurve(ctx, edge, p0x, p0y, p3x, p3y, p1x, p1y, p2x, p2y, zoomVal, isDark, isSelected, isPulseActive);
 
     if (isPulseActive && pulseOffset !== undefined) {
-      const pulseProgress = Math.max(0, Math.min(1, pulseOffset));
-      const tPermille = Math.round(pulseProgress * 1000);
-      const pulseX = wasmEngine.bezier_point_1d(
-        Math.round(p0x),
-        Math.round(p1x),
-        Math.round(p2x),
-        Math.round(p3x),
-        tPermille,
-      );
-      const pulseY = wasmEngine.bezier_point_1d(
-        Math.round(p0y),
-        Math.round(p1y),
-        Math.round(p2y),
-        Math.round(p3y),
-        tPermille,
-      );
-      ctx.fillStyle = '#ffffff';
-      ctx.shadowColor = isDark ? '#58a6ff' : '#0969da';
-      ctx.shadowBlur = 10;
-      ctx.beginPath();
-      ctx.arc(pulseX, pulseY, 6 / zoomVal, 0, Math.PI * 2);
-      ctx.fill();
+      render2dEdgePulse(ctx, p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, pulseOffset, zoomVal, isDark, wasmEngine);
     }
     ctx.restore();
   }
@@ -450,22 +567,17 @@ export function render2dEdgePass(
  */
 function get2dConnectingEdgeSource(fromNode: FlintGraphNode, fromPortId?: string): { p0x: number; p0y: number } {
   const outIdx = (fromNode.outputs ?? []).findIndex((p) => p.id === fromPortId);
-  const inIdx = (fromNode.inputs ?? []).findIndex((p) => p.id === fromPortId);
   if (outIdx !== -1) {
     return {
       p0x: fromNode.position.x + NODE_WIDTH,
       p0y: fromNode.position.y + NODE_HEADER_HEIGHT + outIdx * PORT_ROW_HEIGHT + 14,
     };
   }
-  if (inIdx !== -1) {
-    return {
-      p0x: fromNode.position.x,
-      p0y: fromNode.position.y + NODE_HEADER_HEIGHT + inIdx * PORT_ROW_HEIGHT + 14,
-    };
-  }
+  const inIdx = (fromNode.inputs ?? []).findIndex((p) => p.id === fromPortId);
+  const isInput = inIdx !== -1;
   return {
-    p0x: fromNode.position.x + NODE_WIDTH,
-    p0y: fromNode.position.y + NODE_HEADER_HEIGHT + 14,
+    p0x: isInput ? fromNode.position.x : fromNode.position.x + NODE_WIDTH,
+    p0y: fromNode.position.y + NODE_HEADER_HEIGHT + (isInput ? inIdx : 0) * PORT_ROW_HEIGHT + 14,
   };
 }
 
@@ -481,23 +593,58 @@ function get2dConnectingEdgeTarget(
   const targetNode = nodeMap.get(hoveredPort.nodeId);
   if (!targetNode) return { p3x: cursor.x, p3y: cursor.y, isSnapped: false };
 
-  const tInIdx = (targetNode.inputs ?? []).findIndex((p) => p.id === hoveredPort.portId);
-  if (tInIdx !== -1) {
+  const inIndex = (targetNode.inputs ?? []).findIndex((p) => p.id === hoveredPort.portId);
+  if (inIndex !== -1) {
     return {
       p3x: targetNode.position.x,
-      p3y: targetNode.position.y + NODE_HEADER_HEIGHT + tInIdx * PORT_ROW_HEIGHT + 14,
+      p3y: targetNode.position.y + NODE_HEADER_HEIGHT + inIndex * PORT_ROW_HEIGHT + 14,
       isSnapped: true,
     };
   }
-  const tOutIdx = (targetNode.outputs ?? []).findIndex((p) => p.id === hoveredPort.portId);
-  if (tOutIdx !== -1) {
+  const outIndex = (targetNode.outputs ?? []).findIndex((p) => p.id === hoveredPort.portId);
+  if (outIndex !== -1) {
     return {
       p3x: targetNode.position.x + NODE_WIDTH,
-      p3y: targetNode.position.y + NODE_HEADER_HEIGHT + tOutIdx * PORT_ROW_HEIGHT + 14,
+      p3y: targetNode.position.y + NODE_HEADER_HEIGHT + outIndex * PORT_ROW_HEIGHT + 14,
       isSnapped: true,
     };
   }
   return { p3x: cursor.x, p3y: cursor.y, isSnapped: false };
+}
+
+/**
+ * Renders in-flight cable Bezier curve with dashed styling.
+ */
+function render2dConnectingSpline(
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  p0x: number,
+  p0y: number,
+  p3x: number,
+  p3y: number,
+  dx: number,
+  isSnapped: boolean,
+  isDark: boolean,
+  zoomVal: number,
+): void {
+  ctx.strokeStyle = isSnapped
+    ? 'rgba(63, 185, 80, 0.45)'
+    : isDark
+      ? 'rgba(88, 166, 255, 0.45)'
+      : 'rgba(9, 105, 218, 0.35)';
+  ctx.lineWidth = 6 / zoomVal;
+  ctx.beginPath();
+  ctx.moveTo(p0x, p0y);
+  ctx.bezierCurveTo(p0x + dx, p0y, p3x - dx, p3y, p3x, p3y);
+  ctx.stroke();
+
+  ctx.strokeStyle = isSnapped ? '#3fb950' : isDark ? '#58a6ff' : '#0969da';
+  ctx.lineWidth = 3.5 / zoomVal;
+  ctx.setLineDash([8 / zoomVal, 4 / zoomVal]);
+  ctx.beginPath();
+  ctx.moveTo(p0x, p0y);
+  ctx.bezierCurveTo(p0x + dx, p0y, p3x - dx, p3y, p3x, p3y);
+  ctx.stroke();
+  ctx.setLineDash([]);
 }
 
 /**
@@ -523,25 +670,7 @@ export function render2dConnectingEdgePass(
   const dx = Math.max(Math.abs(p3x - p0x) * 0.5, 40);
 
   ctx.save();
-  ctx.strokeStyle = isSnapped
-    ? 'rgba(63, 185, 80, 0.45)'
-    : isDark
-      ? 'rgba(88, 166, 255, 0.45)'
-      : 'rgba(9, 105, 218, 0.35)';
-  ctx.lineWidth = 6 / zoomVal;
-  ctx.beginPath();
-  ctx.moveTo(p0x, p0y);
-  ctx.bezierCurveTo(p0x + dx, p0y, p3x - dx, p3y, p3x, p3y);
-  ctx.stroke();
-
-  ctx.strokeStyle = isSnapped ? '#3fb950' : isDark ? '#58a6ff' : '#0969da';
-  ctx.lineWidth = 3.5 / zoomVal;
-  ctx.setLineDash([8 / zoomVal, 4 / zoomVal]);
-  ctx.beginPath();
-  ctx.moveTo(p0x, p0y);
-  ctx.bezierCurveTo(p0x + dx, p0y, p3x - dx, p3y, p3x, p3y);
-  ctx.stroke();
-  ctx.setLineDash([]);
+  render2dConnectingSpline(ctx, p0x, p0y, p3x, p3y, dx, isSnapped, isDark, zoomVal);
 
   ctx.fillStyle = isDark ? '#58a6ff' : '#0969da';
   ctx.beginPath();
@@ -556,6 +685,34 @@ export function render2dConnectingEdgePass(
   ctx.lineWidth = 2 / zoomVal;
   ctx.stroke();
 
+  ctx.restore();
+}
+
+/**
+ * Renders a single 2D port pin circle and halo.
+ */
+function render2dPinCircle(
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  px: number,
+  py: number,
+  portColor: string,
+  isHovered: boolean,
+  isDark: boolean,
+  zoomVal: number,
+): void {
+  ctx.save();
+  ctx.fillStyle = isDark ? '#161b22' : '#f0f2f5';
+  ctx.strokeStyle = portColor;
+  ctx.lineWidth = (isHovered ? 2.5 : 1.5) / zoomVal;
+  ctx.beginPath();
+  ctx.arc(px, py, 5 / zoomVal, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = isHovered ? '#ffffff' : portColor;
+  ctx.beginPath();
+  ctx.arc(px, py, 2.5 / zoomVal, 0, Math.PI * 2);
+  ctx.fill();
   ctx.restore();
 }
 
@@ -577,21 +734,7 @@ function render2dInputPins(
     const portRgb = getPortTypeRgba(port.type, isDark);
     const portColor = `rgba(${Math.round(portRgb[0] * 255)},${Math.round(portRgb[1] * 255)},${Math.round(portRgb[2] * 255)},${portRgb[3]})`;
 
-    ctx.save();
-    ctx.fillStyle = isDark ? '#161b22' : '#f0f2f5';
-    ctx.strokeStyle = portColor;
-    ctx.lineWidth = (isHovered ? 2.5 : 1.5) / zoomVal;
-    ctx.beginPath();
-    ctx.arc(x, portY, 5 / zoomVal, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.fillStyle = isHovered ? '#ffffff' : portColor;
-    ctx.beginPath();
-    ctx.arc(x, portY, 2.5 / zoomVal, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-
+    render2dPinCircle(ctx, x, portY, portColor, isHovered, isDark, zoomVal);
     ctx.fillStyle = isDark ? '#c9d1d9' : '#24292f';
     ctx.fillText(port.name, x + 12, portY + 4);
   }
@@ -616,21 +759,7 @@ function render2dOutputPins(
     const portRgb = getPortTypeRgba(port.type, isDark);
     const portColor = `rgba(${Math.round(portRgb[0] * 255)},${Math.round(portRgb[1] * 255)},${Math.round(portRgb[2] * 255)},${portRgb[3]})`;
 
-    ctx.save();
-    ctx.fillStyle = isDark ? '#161b22' : '#f0f2f5';
-    ctx.strokeStyle = portColor;
-    ctx.lineWidth = (isHovered ? 2.5 : 1.5) / zoomVal;
-    ctx.beginPath();
-    ctx.arc(x + nodeWidth, portY, 5 / zoomVal, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.fillStyle = isHovered ? '#ffffff' : portColor;
-    ctx.beginPath();
-    ctx.arc(x + nodeWidth, portY, 2.5 / zoomVal, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-
+    render2dPinCircle(ctx, x + nodeWidth, portY, portColor, isHovered, isDark, zoomVal);
     ctx.fillStyle = isDark ? '#c9d1d9' : '#24292f';
     const labelWidth = ctx.measureText(port.name).width;
     ctx.fillText(port.name, x + nodeWidth - labelWidth - 12, portY + 4);
@@ -669,6 +798,9 @@ const C2D_HEADER_BG_LIGHT: Readonly<Record<string, string>> = {
   default: '#f0f2f5',
 };
 
+/**
+ * Resolves node header background color for 2D canvas based on execution and theme state.
+ */
 function getC2dNodeHeaderBg(isTrapped: boolean, isActive: boolean, isMeta: boolean, isDark: boolean): string {
   const table = isDark ? C2D_HEADER_BG_DARK : C2D_HEADER_BG_LIGHT;
   if (isTrapped) return table.trapped;
@@ -692,12 +824,7 @@ function render2dNodeHeader(
   isActive: boolean,
   isMeta: boolean,
 ): void {
-  ctx.beginPath();
-  if (typeof ctx.roundRect === 'function') {
-    ctx.roundRect(x, y, nodeWidth, NODE_HEADER_HEIGHT, [8, 8, 0, 0]);
-  } else {
-    ctx.rect(x, y, nodeWidth, NODE_HEADER_HEIGHT);
-  }
+  draw2dRoundRect(ctx, x, y, nodeWidth, NODE_HEADER_HEIGHT, [8, 8, 0, 0]);
   ctx.fillStyle = getC2dNodeHeaderBg(isTrapped, isActive, isMeta, isDark);
   ctx.fill();
 
@@ -730,6 +857,28 @@ function render2dNodeHeader(
 }
 
 /**
+ * Sets up 2D canvas node box shadow based on selection and trace state.
+ */
+function apply2dNodeShadow(
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  isTrapped: boolean,
+  isActive: boolean,
+  isSelected: boolean,
+  isDark: boolean,
+): void {
+  if (isTrapped) {
+    ctx.shadowColor = isDark ? '#f85149' : '#cf222e';
+    ctx.shadowBlur = 14;
+  } else if (isActive) {
+    ctx.shadowColor = isDark ? '#3fb950' : '#1a7f37';
+    ctx.shadowBlur = 14;
+  } else if (isSelected) {
+    ctx.shadowColor = isDark ? '#58a6ff' : '#0969da';
+    ctx.shadowBlur = 10;
+  }
+}
+
+/**
  * Renders an individual node card, header, categories, and port pins on 2D canvas.
  */
 export function render2dSingleNode(
@@ -751,28 +900,14 @@ export function render2dSingleNode(
   const isMeta = node.metaSubgraph !== undefined || node.operation === 'meta';
 
   ctx.save();
-  if (isTrapped) {
-    ctx.shadowColor = isDark ? '#f85149' : '#cf222e';
-    ctx.shadowBlur = 14;
-  } else if (isActive) {
-    ctx.shadowColor = isDark ? '#3fb950' : '#1a7f37';
-    ctx.shadowBlur = 14;
-  } else if (isSelected) {
-    ctx.shadowColor = isDark ? '#58a6ff' : '#0969da';
-    ctx.shadowBlur = 10;
-  }
+  apply2dNodeShadow(ctx, isTrapped, isActive, isSelected, isDark);
 
   ctx.fillStyle = isDark ? (isMeta ? '#161e2e' : '#21262d') : isMeta ? '#f0f4f8' : '#ffffff';
   const nodeStroke = computeC2dNodeStroke(isSelected ? 1 : 0, isActive ? 1 : 0, isTrapped ? 1 : 0, isDark);
   ctx.strokeStyle = nodeStroke.strokeStyle;
   ctx.lineWidth = (isTrapped || isActive ? 2.5 : isSelected ? 2 : 1) / zoomVal;
 
-  ctx.beginPath();
-  if (typeof ctx.roundRect === 'function') {
-    ctx.roundRect(x, y, nodeWidth, nodeHeight, 8);
-  } else {
-    ctx.rect(x, y, nodeWidth, nodeHeight);
-  }
+  draw2dRoundRect(ctx, x, y, nodeWidth, nodeHeight, 8);
   ctx.fill();
   ctx.stroke();
 
@@ -791,51 +926,40 @@ export function render2dSingleNode(
 }
 
 /**
- * Renders the complete node graph using the 2D canvas context and native Flint geometry projections.
+ * Configures canvas 2D matrix transformation for camera translation and zoom.
  */
-export function render2dFrame(state: RenderWorkerState): void {
-  if (!state.canvas2dCtx || !state.wasm) return;
-  const ctx = state.canvas2dCtx;
-  const isDark = state.currentTheme !== 'light';
-  const t0 = typeof performance === 'undefined' ? 0 : performance.now();
+function setup2dCameraTransform(
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  state: RenderWorkerState,
+  wasm: FlintRenderWorkerWasmExports,
+  isDark: boolean,
+): { minX: number; minY: number; maxX: number; maxY: number; zoomVal: number } {
   ctx.save();
   ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
   ctx.fillStyle = isDark ? '#0b1219' : '#f5f6f8';
   ctx.fillRect(0, 0, state.width, state.height);
 
   ctx.translate(state.width / 2, state.height / 2);
-  const zoomVal = state.wasm.get_camera_zoom();
-  const camX = state.wasm.get_camera_x();
-  const camY = state.wasm.get_camera_y();
+  const zoomVal = wasm.get_camera_zoom();
+  const camX = wasm.get_camera_x();
+  const camY = wasm.get_camera_y();
   ctx.scale(zoomVal, zoomVal);
   ctx.translate(-camX, -camY);
 
-  state.wasm.getViewportBounds(100);
-  const minX = state.wasm.get_bounds_min_x();
-  const minY = state.wasm.get_bounds_min_y();
-  const maxX = state.wasm.get_bounds_max_x();
-  const maxY = state.wasm.get_bounds_max_y();
+  wasm.getViewportBounds(100);
+  return {
+    minX: wasm.get_bounds_min_x(),
+    minY: wasm.get_bounds_min_y(),
+    maxX: wasm.get_bounds_max_x(),
+    maxY: wasm.get_bounds_max_y(),
+    zoomVal,
+  };
+}
 
-  render2dGridPass(ctx, minX, minY, maxX, maxY, zoomVal, isDark);
-  render2dGroupPass(state, ctx, minX, minY, maxX, maxY, zoomVal, isDark);
-
-  const nodeMap = new Map<string, FlintGraphNode>(state.nodes.map((n) => [n.id, n]));
-  render2dEdgePass(state, ctx, minX, minY, maxX, maxY, zoomVal, isDark, nodeMap, state.wasm);
-  render2dConnectingEdgePass(state, ctx, zoomVal, isDark, nodeMap);
-
-  for (const node of state.nodes) {
-    const bounds = getNodeBounds(node);
-    const nodeWidth = bounds.maxX - bounds.minX;
-    const nodeHeight = bounds.maxY - bounds.minY;
-    const x = bounds.minX;
-    const y = bounds.minY;
-
-    if (x + nodeWidth < minX || x > maxX || y + nodeHeight < minY || y > maxY) continue;
-    render2dSingleNode(state, ctx, node, zoomVal, isDark);
-  }
-
-  ctx.restore();
-
+/**
+ * Updates frame timing performance stats for 2D canvas backend.
+ */
+function record2dFrameStats(state: RenderWorkerState, t0: number): void {
   const tEnd = typeof performance === 'undefined' ? 0 : performance.now();
   const frameTime = t0 > 0 && tEnd > 0 ? tEnd - t0 : 1.7;
   state.performanceStats = {
@@ -848,6 +972,55 @@ export function render2dFrame(state: RenderWorkerState): void {
     isFallback: true,
     backend: 'canvas2d',
   };
+}
+
+/**
+ * Renders nodes intersecting with the visible viewport bounds.
+ */
+function render2dVisibleNodes(
+  state: RenderWorkerState,
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+  zoomVal: number,
+  isDark: boolean,
+): void {
+  for (const node of state.nodes) {
+    const bounds = getNodeBounds(node);
+    const nodeWidth = bounds.maxX - bounds.minX;
+    const nodeHeight = bounds.maxY - bounds.minY;
+    const x = bounds.minX;
+    const y = bounds.minY;
+
+    if (x + nodeWidth < minX || x > maxX || y + nodeHeight < minY || y > maxY) continue;
+    render2dSingleNode(state, ctx, node, zoomVal, isDark);
+  }
+}
+
+/**
+ * Renders the complete node graph using the 2D canvas context and native Flint geometry projections.
+ */
+export function render2dFrame(state: RenderWorkerState): void {
+  if (!state.canvas2dCtx || !state.wasm) return;
+  const ctx = state.canvas2dCtx;
+  const isDark = state.currentTheme !== 'light';
+  const t0 = typeof performance === 'undefined' ? 0 : performance.now();
+
+  const bounds = setup2dCameraTransform(ctx, state, state.wasm, isDark);
+  const { minX, minY, maxX, maxY, zoomVal } = bounds;
+
+  render2dGridPass(ctx, minX, minY, maxX, maxY, zoomVal, isDark);
+  render2dGroupPass(state, ctx, minX, minY, maxX, maxY, zoomVal, isDark);
+
+  const nodeMap = new Map<string, FlintGraphNode>(state.nodes.map((n) => [n.id, n]));
+  render2dEdgePass(state, ctx, minX, minY, maxX, maxY, zoomVal, isDark, nodeMap, state.wasm);
+  render2dConnectingEdgePass(state, ctx, zoomVal, isDark, nodeMap);
+  render2dVisibleNodes(state, ctx, minX, minY, maxX, maxY, zoomVal, isDark);
+
+  ctx.restore();
+  record2dFrameStats(state, t0);
 }
 
 /**

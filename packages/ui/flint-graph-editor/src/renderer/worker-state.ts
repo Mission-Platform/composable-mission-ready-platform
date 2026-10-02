@@ -93,6 +93,9 @@ export interface RenderWorkerState {
   fps: number;
 }
 
+/**
+ * Creates and initializes default render worker state container.
+ */
 export function createRenderWorkerState(): RenderWorkerState {
   return {
     wasm: undefined,

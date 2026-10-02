@@ -604,29 +604,41 @@ export function pushWebGLBezierEdgeSegments(
 }
 
 /**
+ * Flushes batched triangles to WebGL framebuffer.
+ */
+function flushWebGLTriangles(gl: WebGLRenderingContext | WebGL2RenderingContext, state: RenderWorkerState): void {
+  if (state.triVertices.length === 0 || !state.glVertexBuffer || !state.glAttribLocations) return;
+  gl.bindBuffer(gl.ARRAY_BUFFER, state.glVertexBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(state.triVertices), gl.DYNAMIC_DRAW);
+  gl.enableVertexAttribArray(state.glAttribLocations.a_position);
+  gl.vertexAttribPointer(state.glAttribLocations.a_position, 2, gl.FLOAT, false, 24, 0);
+  gl.enableVertexAttribArray(state.glAttribLocations.a_color);
+  gl.vertexAttribPointer(state.glAttribLocations.a_color, 4, gl.FLOAT, false, 24, 8);
+  gl.drawArrays(gl.TRIANGLES, 0, state.triVertices.length / 6);
+}
+
+/**
+ * Flushes batched line primitives to WebGL framebuffer.
+ */
+function flushWebGLLines(gl: WebGLRenderingContext | WebGL2RenderingContext, state: RenderWorkerState): void {
+  if (state.lineVertices.length === 0 || !state.glVertexBuffer || !state.glAttribLocations) return;
+  gl.bindBuffer(gl.ARRAY_BUFFER, state.glVertexBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(state.lineVertices), gl.DYNAMIC_DRAW);
+  gl.enableVertexAttribArray(state.glAttribLocations.a_position);
+  gl.vertexAttribPointer(state.glAttribLocations.a_position, 2, gl.FLOAT, false, 24, 0);
+  gl.enableVertexAttribArray(state.glAttribLocations.a_color);
+  gl.vertexAttribPointer(state.glAttribLocations.a_color, 4, gl.FLOAT, false, 24, 8);
+  gl.drawArrays(gl.LINES, 0, state.lineVertices.length / 6);
+}
+
+/**
  * Flushes batched triangles and line primitives to WebGL framebuffer.
  */
 export function flushWebGLPrimitives(state: RenderWorkerState): void {
-  if (!state.glCtx || !state.glVertexBuffer || !state.glAttribLocations) return;
   const gl = state.glCtx;
-  if (state.triVertices.length > 0) {
-    gl.bindBuffer(gl.ARRAY_BUFFER, state.glVertexBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(state.triVertices), gl.DYNAMIC_DRAW);
-    gl.enableVertexAttribArray(state.glAttribLocations.a_position);
-    gl.vertexAttribPointer(state.glAttribLocations.a_position, 2, gl.FLOAT, false, 24, 0);
-    gl.enableVertexAttribArray(state.glAttribLocations.a_color);
-    gl.vertexAttribPointer(state.glAttribLocations.a_color, 4, gl.FLOAT, false, 24, 8);
-    gl.drawArrays(gl.TRIANGLES, 0, state.triVertices.length / 6);
-  }
-  if (state.lineVertices.length > 0) {
-    gl.bindBuffer(gl.ARRAY_BUFFER, state.glVertexBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(state.lineVertices), gl.DYNAMIC_DRAW);
-    gl.enableVertexAttribArray(state.glAttribLocations.a_position);
-    gl.vertexAttribPointer(state.glAttribLocations.a_position, 2, gl.FLOAT, false, 24, 0);
-    gl.enableVertexAttribArray(state.glAttribLocations.a_color);
-    gl.vertexAttribPointer(state.glAttribLocations.a_color, 4, gl.FLOAT, false, 24, 8);
-    gl.drawArrays(gl.LINES, 0, state.lineVertices.length / 6);
-  }
+  if (!gl) return;
+  flushWebGLTriangles(gl, state);
+  flushWebGLLines(gl, state);
 }
 
 /**
@@ -681,10 +693,10 @@ function computeGroupBounds(groupNodes: readonly FlintGraphNode[]): GroupBoundin
   let gMaxY = Number.NEGATIVE_INFINITY;
   for (const node of groupNodes) {
     const bounds = getNodeBounds(node);
-    if (bounds.minX < gMinX) gMinX = bounds.minX;
-    if (bounds.maxX > gMaxX) gMaxX = bounds.maxX;
-    if (bounds.minY < gMinY) gMinY = bounds.minY;
-    if (bounds.maxY > gMaxY) gMaxY = bounds.maxY;
+    gMinX = Math.min(gMinX, bounds.minX);
+    gMaxX = Math.max(gMaxX, bounds.maxX);
+    gMinY = Math.min(gMinY, bounds.minY);
+    gMaxY = Math.max(gMaxY, bounds.maxY);
   }
   const pad = 24;
   return {
@@ -708,12 +720,17 @@ function renderWebGLSingleGroup(
   const isSelectedGroup = state.selectedGroupId === group.id;
   const defaultBorder: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 1] : [0.035, 0.412, 0.855, 1];
   const parsedColor = parseColorToRgba(group.color, defaultBorder);
-  const groupBg: [number, number, number, number] = group.backgroundColor
-    ? parseColorToRgba(group.backgroundColor, [parsedColor[0], parsedColor[1], parsedColor[2], isDark ? 0.12 : 0.08])
-    : [parsedColor[0], parsedColor[1], parsedColor[2], isDark ? 0.12 : 0.08];
+  const fallbackBg: [number, number, number, number] = [
+    parsedColor[0],
+    parsedColor[1],
+    parsedColor[2],
+    isDark ? 0.12 : 0.08,
+  ];
+  const groupBg = parseColorToRgba(group.backgroundColor, fallbackBg);
   const groupBorder: [number, number, number, number] = isSelectedGroup
     ? [1, 1, 1, 1]
     : [parsedColor[0], parsedColor[1], parsedColor[2], isDark ? 0.7 : 0.6];
+
   pushRect(state, box.gx, box.gy, box.gw, box.gh, groupBg[0], groupBg[1], groupBg[2], groupBg[3]);
   pushRectBorder(state, box.gx, box.gy, box.gw, box.gh, groupBorder[0], groupBorder[1], groupBorder[2], groupBorder[3]);
 
@@ -742,9 +759,8 @@ export function renderWebGLGroupPass(
     const groupNodes = state.nodes.filter((n) => group.nodeIds.includes(n.id));
     if (groupNodes.length === 0) continue;
     const box = computeGroupBounds(groupNodes);
-    if (box.gx + box.gw < minX || box.gx > maxX || box.gy + box.gh < minY || box.gy > maxY) {
-      continue;
-    }
+    const outside = box.gx + box.gw < minX || box.gx > maxX || box.gy + box.gh < minY || box.gy > maxY;
+    if (outside) continue;
     renderWebGLSingleGroup(state, group, box, isDark, wasmEngine);
   }
 }
@@ -838,35 +854,56 @@ function computeEdgeCoordinates(
   };
 }
 
+const GL_EDGE_STYLE_SELECTED_DARK: WebGLEdgeStyle = {
+  colorR: 0.35,
+  colorG: 0.65,
+  colorB: 1,
+  colorA: 1,
+  edgeThickness: 3,
+};
+const GL_EDGE_STYLE_SELECTED_LIGHT: WebGLEdgeStyle = {
+  colorR: 0.035,
+  colorG: 0.412,
+  colorB: 0.855,
+  colorA: 1,
+  edgeThickness: 3,
+};
+const GL_EDGE_STYLE_ACTIVE_DARK: WebGLEdgeStyle = {
+  colorR: 0.25,
+  colorG: 0.73,
+  colorB: 0.31,
+  colorA: 1,
+  edgeThickness: 2.5,
+};
+const GL_EDGE_STYLE_ACTIVE_LIGHT: WebGLEdgeStyle = {
+  colorR: 0.1,
+  colorG: 0.5,
+  colorB: 0.22,
+  colorA: 1,
+  edgeThickness: 2.5,
+};
+const GL_EDGE_STYLE_DEFAULT_DARK: WebGLEdgeStyle = {
+  colorR: 0.35,
+  colorG: 0.4,
+  colorB: 0.52,
+  colorA: 0.8,
+  edgeThickness: 2,
+};
+const GL_EDGE_STYLE_DEFAULT_LIGHT: WebGLEdgeStyle = {
+  colorR: 0.34,
+  colorG: 0.38,
+  colorB: 0.42,
+  colorA: 0.65,
+  edgeThickness: 2,
+};
+
 /**
  * Resolves edge color and thickness attributes.
  */
 function getWebGLEdgeStyle(isSelected: boolean, isActive: boolean, isDark: boolean): WebGLEdgeStyle {
-  if (isSelected) {
-    return {
-      colorR: isDark ? 0.35 : 0.035,
-      colorG: isDark ? 0.65 : 0.412,
-      colorB: isDark ? 1 : 0.855,
-      colorA: 1,
-      edgeThickness: 3,
-    };
-  }
-  if (isActive) {
-    return {
-      colorR: isDark ? 0.25 : 0.1,
-      colorG: isDark ? 0.73 : 0.5,
-      colorB: isDark ? 0.31 : 0.22,
-      colorA: 1,
-      edgeThickness: 2.5,
-    };
-  }
-  return {
-    colorR: isDark ? 0.35 : 0.34,
-    colorG: isDark ? 0.4 : 0.38,
-    colorB: isDark ? 0.52 : 0.42,
-    colorA: isDark ? 0.8 : 0.65,
-    edgeThickness: 2,
-  };
+  if (isSelected) return isDark ? GL_EDGE_STYLE_SELECTED_DARK : GL_EDGE_STYLE_SELECTED_LIGHT;
+  if (isActive) return isDark ? GL_EDGE_STYLE_ACTIVE_DARK : GL_EDGE_STYLE_ACTIVE_LIGHT;
+  return isDark ? GL_EDGE_STYLE_DEFAULT_DARK : GL_EDGE_STYLE_DEFAULT_LIGHT;
 }
 
 /**
@@ -1123,6 +1160,9 @@ const GL_HEADER_COLORS_LIGHT: Readonly<Record<string, readonly [number, number, 
   default: [0.941, 0.949, 0.961],
 };
 
+/**
+ * Computes WebGL node header background RGB color channels.
+ */
 function getGlHeaderColor(
   isTrapped: number,
   isActive: number,
@@ -1136,6 +1176,9 @@ function getGlHeaderColor(
   return table.default;
 }
 
+/**
+ * Resolves node card fill RGBA channels for WebGL background.
+ */
 function getGlNodeFill(isMeta: boolean, isDark: boolean): [number, number, number, number] {
   if (isDark) {
     return isMeta ? [0.051, 0.157, 0.278, 0.95] : [0.086, 0.106, 0.133, 0.95];
@@ -1414,6 +1457,31 @@ export function renderWebGLFrame(state: RenderWorkerState): void {
   };
 }
 
+const GL_PIN_COLORS_DARK: Readonly<Record<string, readonly [number, number, number, number]>> = {
+  hovered: [0.47, 0.75, 1, 1],
+  active: [0.25, 0.73, 0.31, 1],
+  default: [0.55, 0.58, 0.62, 1],
+};
+
+const GL_PIN_COLORS_LIGHT: Readonly<Record<string, readonly [number, number, number, number]>> = {
+  hovered: [0.035, 0.412, 0.855, 1],
+  active: [0.1, 0.5, 0.22, 1],
+  default: [0.34, 0.38, 0.42, 1],
+};
+
+/**
+ * Computes pin color for WebGL host capabilities drawing.
+ */
+function getGlPinColor(
+  isHovered: number,
+  isActive: number,
+  isDark: boolean,
+): readonly [number, number, number, number] {
+  const table = isDark ? GL_PIN_COLORS_DARK : GL_PIN_COLORS_LIGHT;
+  const key = isHovered ? 'hovered' : isActive ? 'active' : 'default';
+  return table[key] ?? table.default;
+}
+
 /**
  * Creates WebGL WebAssembly host capabilities object.
  */
@@ -1470,17 +1538,7 @@ export function createWebGLCapabilities(state: RenderWorkerState): WebAssembly.I
     'webgl.draw_pin': {
       gl_draw_pin: (x: number, y: number, radius: number, isHovered: number, isActive: number) => {
         const isDark = state.currentTheme !== 'light';
-        const col = isHovered
-          ? isDark
-            ? [0.47, 0.75, 1, 1]
-            : [0.035, 0.412, 0.855, 1]
-          : isActive
-            ? isDark
-              ? [0.25, 0.73, 0.31, 1]
-              : [0.1, 0.5, 0.22, 1]
-            : isDark
-              ? [0.55, 0.58, 0.62, 1]
-              : [0.34, 0.38, 0.42, 1];
+        const col = getGlPinColor(isHovered, isActive, isDark);
         pushCircle(state, x, y, radius, col[0], col[1], col[2], col[3]);
       },
     },

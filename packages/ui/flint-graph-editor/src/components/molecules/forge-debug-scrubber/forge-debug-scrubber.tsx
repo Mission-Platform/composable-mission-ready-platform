@@ -13,13 +13,7 @@ export interface DebugScrubberProperties {
  * Safely extracts raw property value from event target.
  */
 function extractEventTargetValue(event: unknown): unknown {
-  if (event && typeof event === 'object' && 'target' in event) {
-    const target = event.target;
-    if (target && typeof target === 'object' && 'value' in target) {
-      return target.value;
-    }
-  }
-  return undefined;
+  return (event as { target?: { value?: unknown } })?.target?.value;
 }
 
 /**

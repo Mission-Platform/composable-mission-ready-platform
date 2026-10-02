@@ -486,10 +486,10 @@ function computeGroupBoundsGpu(groupNodes: readonly FlintGraphNode[]): GroupBoun
   let gMaxY = Number.NEGATIVE_INFINITY;
   for (const node of groupNodes) {
     const bounds = getNodeBounds(node);
-    if (bounds.minX < gMinX) gMinX = bounds.minX;
-    if (bounds.maxX > gMaxX) gMaxX = bounds.maxX;
-    if (bounds.minY < gMinY) gMinY = bounds.minY;
-    if (bounds.maxY > gMaxY) gMaxY = bounds.maxY;
+    gMinX = Math.min(gMinX, bounds.minX);
+    gMaxX = Math.max(gMaxX, bounds.maxX);
+    gMinY = Math.min(gMinY, bounds.minY);
+    gMaxY = Math.max(gMaxY, bounds.maxY);
   }
   const pad = 24;
   return {
@@ -514,12 +514,17 @@ function prepareSingleWebGpuGroup(
   const { gx, gy, gw, gh } = box;
   const defaultBorder: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 1] : [0.035, 0.412, 0.855, 1];
   const parsedColor = parseColorToRgba(group.color, defaultBorder);
-  const groupBg: [number, number, number, number] = group.backgroundColor
-    ? parseColorToRgba(group.backgroundColor, [parsedColor[0], parsedColor[1], parsedColor[2], isDark ? 0.12 : 0.08])
-    : [parsedColor[0], parsedColor[1], parsedColor[2], isDark ? 0.12 : 0.08];
+  const fallbackBg: [number, number, number, number] = [
+    parsedColor[0],
+    parsedColor[1],
+    parsedColor[2],
+    isDark ? 0.12 : 0.08,
+  ];
+  const groupBg = parseColorToRgba(group.backgroundColor, fallbackBg);
   const groupBorder: [number, number, number, number] = isSelectedGroup
     ? [1, 1, 1, 1]
     : [parsedColor[0], parsedColor[1], parsedColor[2], isDark ? 0.7 : 0.6];
+
   pushGpuNodeInstance(state, gx + gw / 2, gy + gh / 2, gw, gh, 12, groupBg, groupBorder, isSelectedGroup ? 3.5 : 2);
 
   const titleW = wasmEngine.font_measure_text(group.title, 12);
@@ -555,12 +560,29 @@ export function prepareWebGpuGroupInstances(
     const groupNodes = state.nodes.filter((n) => group.nodeIds.includes(n.id));
     if (groupNodes.length === 0) continue;
     const box = computeGroupBoundsGpu(groupNodes);
-    if (box.gx + box.gw < minX || box.gx > maxX || box.gy + box.gh < minY || box.gy > maxY) {
-      continue;
-    }
-    const isSelectedGroup = selectedGroupIdVal === group.id;
-    prepareSingleWebGpuGroup(state, group, box, isDark, isSelectedGroup, wasmEngine);
+    const outside = box.gx + box.gw < minX || box.gx > maxX || box.gy + box.gh < minY || box.gy > maxY;
+    if (outside) continue;
+    prepareSingleWebGpuGroup(state, group, box, isDark, selectedGroupIdVal === group.id, wasmEngine);
   }
+}
+
+/**
+ * Prepares WebGPU pin geometry instances and halo circles.
+ */
+function prepareSingleGpuPin(
+  state: RenderWorkerState,
+  px: number,
+  py: number,
+  isHovered: boolean,
+  portType: unknown,
+  isDark: boolean,
+): void {
+  const pinRadius = isHovered ? 7 : 5;
+  const portColor = getPortTypeRgba(portType, isDark);
+  const pinInnerBg: [number, number, number, number] = isDark ? [0.086, 0.106, 0.133, 1] : [0.941, 0.949, 0.961, 1];
+
+  pushGpuPinInstance(state, px, py, pinRadius, pinInnerBg, 1.5, portColor);
+  pushGpuPinInstance(state, px, py, 2.5, isHovered ? [1, 1, 1, 1] : portColor);
 }
 
 /**
@@ -577,12 +599,7 @@ function prepareWebGpuInputPins(
   for (const [idx, port] of (node.inputs ?? []).entries()) {
     const py = node.position.y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
     const isHovered = hoveredPortInfo?.nodeId === node.id && hoveredPortInfo?.portId === port.id;
-    const pinRadius = isHovered ? 7 : 5;
-    const portColor = getPortTypeRgba(port.type, isDark);
-    const pinInnerBg: [number, number, number, number] = isDark ? [0.086, 0.106, 0.133, 1] : [0.941, 0.949, 0.961, 1];
-
-    pushGpuPinInstance(state, node.position.x, py, pinRadius, pinInnerBg, 1.5, portColor);
-    pushGpuPinInstance(state, node.position.x, py, 2.5, isHovered ? [1, 1, 1, 1] : portColor);
+    prepareSingleGpuPin(state, node.position.x, py, isHovered, port.type, isDark);
     pinCount++;
 
     const portTextColor = isDark ? [0.788, 0.82, 0.851, 1] : [0.141, 0.161, 0.184, 1];
@@ -615,12 +632,7 @@ function prepareWebGpuOutputPins(
   for (const [idx, port] of (node.outputs ?? []).entries()) {
     const py = node.position.y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
     const isHovered = hoveredPortInfo?.nodeId === node.id && hoveredPortInfo?.portId === port.id;
-    const pinRadius = isHovered ? 7 : 5;
-    const portColor = getPortTypeRgba(port.type, isDark);
-    const pinInnerBg: [number, number, number, number] = isDark ? [0.086, 0.106, 0.133, 1] : [0.941, 0.949, 0.961, 1];
-
-    pushGpuPinInstance(state, node.position.x + NODE_WIDTH, py, pinRadius, pinInnerBg, 1.5, portColor);
-    pushGpuPinInstance(state, node.position.x + NODE_WIDTH, py, 2.5, isHovered ? [1, 1, 1, 1] : portColor);
+    prepareSingleGpuPin(state, node.position.x + NODE_WIDTH, py, isHovered, port.type, isDark);
     pinCount++;
 
     const portTextColor = isDark ? [0.788, 0.82, 0.851, 1] : [0.141, 0.161, 0.184, 1];
@@ -668,6 +680,9 @@ const GPU_HEADER_COLORS_LIGHT: Readonly<Record<string, readonly [number, number,
   default: [0.941, 0.949, 0.961, 1],
 };
 
+/**
+ * Computes WebGPU node header background RGBA color channels.
+ */
 function getGpuHeaderColor(
   isTrapped: boolean,
   isActive: boolean,
@@ -681,6 +696,9 @@ function getGpuHeaderColor(
   return [...table.default];
 }
 
+/**
+ * Resolves node card fill RGBA channels for WebGPU background.
+ */
 function getGpuNodeFill(isMeta: boolean, isDark: boolean): [number, number, number, number] {
   if (isDark) {
     return isMeta ? [0.086, 0.118, 0.18, 0.95] : [0.129, 0.149, 0.176, 0.95];
@@ -986,7 +1004,6 @@ export function prepareWebGpuConnectingEdge(
   const { p0x, p0y } = computeGpuConnectingSource(fromNode, connectingEdgeInfo.fromPortId);
   const p3x = connectingEdgeInfo.cursorX;
   const p3y = connectingEdgeInfo.cursorY;
-
   wasmEngine.compute_edge_instance(p0x, p0y, p3x, p3y, 1, 1, 0);
 
   const hoverColor: [number, number, number, number] = hoveredPortInfo
@@ -1054,6 +1071,30 @@ export function prepareWebGpuInstances(state: RenderWorkerState): void {
     backend: 'webgpu',
     isFallback: false,
   };
+}
+
+/**
+ * Initiates WebGPU command encoder and render pass with clear color.
+ */
+function beginGpuRenderPass(state: RenderWorkerState): void {
+  if (!state.gpuContext || !state.gpuDevice) return;
+  state.currentCommandEncoder = state.gpuDevice.createCommandEncoder();
+  const textureView = state.gpuContext.getCurrentTexture().createView();
+  const isDark = state.currentTheme !== 'light';
+  const clearR = isDark ? 0.043 : 0.961;
+  const clearG = isDark ? 0.071 : 0.965;
+  const clearB = isDark ? 0.098 : 0.973;
+
+  state.currentPassEncoder = state.currentCommandEncoder.beginRenderPass({
+    colorAttachments: [
+      {
+        view: textureView,
+        clearValue: { r: clearR, g: clearG, b: clearB, a: 1 },
+        loadOp: 'clear',
+        storeOp: 'store',
+      },
+    ],
+  });
 }
 
 /**
@@ -1191,24 +1232,7 @@ export function createWebGpuCapabilities(state: RenderWorkerState): WebAssembly.
     },
     'webgpu.render_begin': {
       gpu_render_begin: () => {
-        if (!state.gpuContext || !state.gpuDevice) return;
-        state.currentCommandEncoder = state.gpuDevice.createCommandEncoder();
-        const textureView = state.gpuContext.getCurrentTexture().createView();
-        const isDark = state.currentTheme !== 'light';
-        const clearR = isDark ? 0.043 : 0.961;
-        const clearG = isDark ? 0.071 : 0.965;
-        const clearB = isDark ? 0.098 : 0.973;
-
-        state.currentPassEncoder = state.currentCommandEncoder.beginRenderPass({
-          colorAttachments: [
-            {
-              view: textureView,
-              clearValue: { r: clearR, g: clearG, b: clearB, a: 1 },
-              loadOp: 'clear',
-              storeOp: 'store',
-            },
-          ],
-        });
+        beginGpuRenderPass(state);
       },
     },
     'webgpu.render_grid': {
