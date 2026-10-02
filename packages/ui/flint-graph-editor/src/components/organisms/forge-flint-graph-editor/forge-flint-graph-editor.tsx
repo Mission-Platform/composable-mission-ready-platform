@@ -2171,6 +2171,23 @@ function handleEntityEdgeHit(
 /**
  * Routes pointer down hit test results on specific entities.
  */
+function handleSubEntityPointerDown(
+  hit: FlintHitResult,
+  store: FlintEditorStore,
+  bridge: FlintRendererBridge,
+): PointerDownHitOutcome | undefined {
+  if (hit.type === 'waypoint' && hit.edgeId && hit.waypointIndex !== undefined) {
+    return handleWaypointHitPointerDown(hit, store, bridge);
+  }
+  if (hit.type === 'port' && hit.portId) {
+    return handlePortHitPointerDown(hit, store, bridge);
+  }
+  return undefined;
+}
+
+/**
+ * Routes pointer down hit test results on specific entities.
+ */
 function handleEntityPointerDown(
   hit: FlintHitResult,
   isShift: boolean,
@@ -2188,13 +2205,7 @@ function handleEntityPointerDown(
     handleNodeHitPointerDown(hit, isShift, now, lastClick, store, bridge, nodesStartPositions);
     return { dragMode: 'node' };
   }
-  if (hit.type === 'waypoint' && hit.edgeId && hit.waypointIndex !== undefined) {
-    return handleWaypointHitPointerDown(hit, store, bridge);
-  }
-  if (hit.type === 'port' && hit.portId) {
-    return handlePortHitPointerDown(hit, store, bridge);
-  }
-  return undefined;
+  return handleSubEntityPointerDown(hit, store, bridge);
 }
 
 /**
@@ -2266,6 +2277,16 @@ function handleConnectPointerUp(
 }
 
 /**
+ * Handles node, group, or waypoint gesture completion upon pointer release.
+ */
+function handleEntityPointerUp(dragMode: string, store: FlintEditorStore, bridge: FlintRendererBridge): void {
+  if (dragMode === 'node' || dragMode === 'group') {
+    store.commitNodeMove();
+  }
+  bridge.renderFrame();
+}
+
+/**
  * Handles pointer release cleanup and gesture completion.
  */
 function handlePointerUpAction(
@@ -2278,21 +2299,21 @@ function handlePointerUpAction(
   store: FlintEditorStore,
   setSelectionSquare: (updater: SelectionSquareState | ((prev: SelectionSquareState) => SelectionSquareState)) => void,
 ): void {
-  if (dragMode === 'box_select') {
-    handleBoxSelectPointerUp(event, boxSelectStart, bridge, store, setSelectionSquare);
-    return;
-  }
-  if (dragMode === 'connect') {
-    handleConnectPointerUp(event, connectingSourceNodeId, connectingSourcePortId, bridge, store);
-    return;
-  }
-  if (dragMode === 'node' || dragMode === 'group') {
-    store.commitNodeMove();
-    bridge.renderFrame();
-    return;
-  }
-  if (dragMode === 'waypoint') {
-    bridge.renderFrame();
+  switch (dragMode) {
+    case 'box_select': {
+      handleBoxSelectPointerUp(event, boxSelectStart, bridge, store, setSelectionSquare);
+      break;
+    }
+    case 'connect': {
+      handleConnectPointerUp(event, connectingSourceNodeId, connectingSourcePortId, bridge, store);
+      break;
+    }
+    case 'node':
+    case 'group':
+    case 'waypoint': {
+      handleEntityPointerUp(dragMode, store, bridge);
+      break;
+    }
   }
 }
 
@@ -2385,9 +2406,9 @@ function handleWaypointDragStep(
 }
 
 /**
- * Handles active gesture drag step routing.
+ * Handles entity-specific gesture drag step routing.
  */
-function handleDragMoveStep(context: DragMoveContext): { resetDragStart?: boolean } {
+function handleEntityDragMoveStep(context: DragMoveContext): void {
   const {
     dragMode,
     event,
@@ -2401,8 +2422,32 @@ function handleDragMoveStep(context: DragMoveContext): { resetDragStart?: boolea
     connectingSourcePortId,
     store,
     bridge,
-    setSelectionSquare,
   } = context;
+
+  switch (dragMode) {
+    case 'group':
+    case 'node': {
+      if (nodesStartPositions.size > 0) {
+        handleNodeGroupDrag(deltaX, deltaY, cameraZoom, nodesStartPositions, store, bridge);
+      }
+      break;
+    }
+    case 'waypoint': {
+      handleWaypointDragStep(event, draggedEdgeId, draggedWaypointIndex, store, bridge);
+      break;
+    }
+    case 'connect': {
+      handleConnectDrag(event, bridge, store, connectingSourceNodeId, connectingSourcePortId);
+      break;
+    }
+  }
+}
+
+/**
+ * Handles active gesture drag step routing.
+ */
+function handleDragMoveStep(context: DragMoveContext): { resetDragStart?: boolean } {
+  const { dragMode, event, deltaX, deltaY, bridge, setSelectionSquare } = context;
 
   if (dragMode === 'box_select') {
     setSelectionSquare((previous) => ({
@@ -2412,25 +2457,12 @@ function handleDragMoveStep(context: DragMoveContext): { resetDragStart?: boolea
     }));
     return {};
   }
-  if (dragMode === 'group' || dragMode === 'node') {
-    if (nodesStartPositions.size > 0) {
-      handleNodeGroupDrag(deltaX, deltaY, cameraZoom, nodesStartPositions, store, bridge);
-    }
-    return {};
-  }
-  if (dragMode === 'waypoint') {
-    handleWaypointDragStep(event, draggedEdgeId, draggedWaypointIndex, store, bridge);
-    return {};
-  }
-  if (dragMode === 'connect') {
-    handleConnectDrag(event, bridge, store, connectingSourceNodeId, connectingSourcePortId);
-    return {};
-  }
   if (dragMode === 'pan') {
     bridge.pan(deltaX, deltaY);
     bridge.renderFrame();
     return { resetDragStart: true };
   }
+  handleEntityDragMoveStep(context);
   return {};
 }
 
@@ -4785,14 +4817,17 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
   }, [showPerfModal, telemetryInterval]);
 
   useEffect(() => {
+    let cleanup: (() => void) | undefined;
     if (properties.theme && properties.theme !== 'auto') {
       setResolvedTheme(properties.theme);
     } else {
-      return setupThemeObserver(setResolvedTheme);
+      cleanup = setupThemeObserver(setResolvedTheme);
     }
+    return cleanup;
   }, [properties.theme]);
 
   useEffect(() => {
+    let cleanup: (() => void) | undefined;
     const canvasElement = canvasReference.current;
     if (canvasElement) {
       const session = setupEditorCanvasBridge(
@@ -4807,11 +4842,12 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
         setSelectionSquare,
       );
       bridgeReference.current = session.bridge;
-      return () => {
+      cleanup = () => {
         session.cleanup();
         bridgeReference.current = undefined;
       };
     }
+    return cleanup;
   }, [store, properties.renderer]);
 
   const query = searchQuery.toLowerCase().trim();

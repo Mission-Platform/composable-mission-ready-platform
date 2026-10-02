@@ -627,6 +627,44 @@ function resolveEdgeEndpoints(
 }
 
 /**
+ * Renders a single graph edge on 2D canvas context.
+ */
+function render2dSingleEdge(
+  state: RenderWorkerState,
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  edge: FlintGraphEdge,
+  fromNode: FlintGraphNode,
+  toNode: FlintGraphNode,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+  zoomVal: number,
+  isDark: boolean,
+  wasmEngine: FlintRenderWorkerWasmExports,
+): void {
+  const { p0x, p0y, p3x, p3y } = resolveEdgeEndpoints(fromNode, toNode, edge);
+  if (isEdgeOutsideViewport(p0x, p0y, p3x, p3y, minX, minY, maxX, maxY)) return;
+
+  const dx = wasmEngine.bezier_control_dx(Math.round(p0x), Math.round(p3x));
+  const p1x = p0x + dx;
+  const p1y = p0y;
+  const p2x = p3x - dx;
+  const p2y = p3y;
+
+  const pulseOffset = state.edgePulses.get(edge.id);
+  const isPulseActive = pulseOffset !== undefined;
+  const isSelected = state.selectedEdgeIds.has(edge.id);
+
+  render2dEdgeCurve(ctx, edge, p0x, p0y, p3x, p3y, p1x, p1y, p2x, p2y, zoomVal, isDark, isSelected, isPulseActive);
+
+  if (pulseOffset !== undefined) {
+    render2dEdgePulse(ctx, p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, pulseOffset, zoomVal, isDark, wasmEngine);
+  }
+  ctx.restore();
+}
+
+/**
  * Renders edge connection cables and execution flow pulses on 2D canvas.
  */
 export function render2dEdgePass(
@@ -644,27 +682,9 @@ export function render2dEdgePass(
   for (const edge of state.edges) {
     const fromNode = nodeMap.get(edge.fromNodeId);
     const toNode = nodeMap.get(edge.toNodeId);
-    if (!fromNode || !toNode) continue;
-
-    const { p0x, p0y, p3x, p3y } = resolveEdgeEndpoints(fromNode, toNode, edge);
-    if (isEdgeOutsideViewport(p0x, p0y, p3x, p3y, minX, minY, maxX, maxY)) continue;
-
-    const dx = wasmEngine.bezier_control_dx(Math.round(p0x), Math.round(p3x));
-    const p1x = p0x + dx;
-    const p1y = p0y;
-    const p2x = p3x - dx;
-    const p2y = p3y;
-
-    const pulseOffset = state.edgePulses.get(edge.id);
-    const isPulseActive = pulseOffset !== undefined;
-    const isSelected = state.selectedEdgeIds.has(edge.id);
-
-    render2dEdgeCurve(ctx, edge, p0x, p0y, p3x, p3y, p1x, p1y, p2x, p2y, zoomVal, isDark, isSelected, isPulseActive);
-
-    if (pulseOffset !== undefined) {
-      render2dEdgePulse(ctx, p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, pulseOffset, zoomVal, isDark, wasmEngine);
+    if (fromNode && toNode) {
+      render2dSingleEdge(state, ctx, edge, fromNode, toNode, minX, minY, maxX, maxY, zoomVal, isDark, wasmEngine);
     }
-    ctx.restore();
   }
 }
 
@@ -765,6 +785,42 @@ function render2dConnectingSpline(
 }
 
 /**
+ * Renders source endpoint circle for in-flight connecting cable.
+ */
+function renderConnectingSourceEndpoint(
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  p0x: number,
+  p0y: number,
+  isDark: boolean,
+  zoomVal: number,
+): void {
+  ctx.fillStyle = isDark ? '#58a6ff' : '#0969da';
+  ctx.beginPath();
+  ctx.arc(p0x, p0y, 5 / zoomVal, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+/**
+ * Renders target endpoint circle for in-flight connecting cable.
+ */
+function renderConnectingTargetEndpoint(
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  p3x: number,
+  p3y: number,
+  isSnapped: boolean,
+  isDark: boolean,
+  zoomVal: number,
+): void {
+  ctx.fillStyle = isSnapped ? '#3fb950' : isDark ? '#79c0ff' : '#218bff';
+  ctx.beginPath();
+  ctx.arc(p3x, p3y, (isSnapped ? 8 : 6) / zoomVal, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = isDark ? '#ffffff' : '#0d1117';
+  ctx.lineWidth = 2 / zoomVal;
+  ctx.stroke();
+}
+
+/**
  * Renders source and target endpoint circles for in-flight connecting cable.
  */
 function renderConnectingEdgeEndpoints(
@@ -777,18 +833,8 @@ function renderConnectingEdgeEndpoints(
   isDark: boolean,
   zoomVal: number,
 ): void {
-  ctx.fillStyle = isDark ? '#58a6ff' : '#0969da';
-  ctx.beginPath();
-  ctx.arc(p0x, p0y, 5 / zoomVal, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.fillStyle = isSnapped ? '#3fb950' : isDark ? '#79c0ff' : '#218bff';
-  ctx.beginPath();
-  ctx.arc(p3x, p3y, (isSnapped ? 8 : 6) / zoomVal, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = isDark ? '#ffffff' : '#0d1117';
-  ctx.lineWidth = 2 / zoomVal;
-  ctx.stroke();
+  renderConnectingSourceEndpoint(ctx, p0x, p0y, isDark, zoomVal);
+  renderConnectingTargetEndpoint(ctx, p3x, p3y, isSnapped, isDark, zoomVal);
 }
 
 /**
@@ -950,6 +996,21 @@ function resolveNodeCategoryLabel(node: FlintGraphNode, isMeta: boolean): string
   return (node.category || 'OPERATION').toUpperCase();
 }
 
+const C2D_CAT_LABEL_COLORS = {
+  meta_dark: '#58a6ff',
+  meta_light: '#0969da',
+  normal_dark: '#8b949e',
+  normal_light: '#57606a',
+};
+
+/**
+ * Resolves category text fill color for 2D node header.
+ */
+function resolveC2dCategoryTextColor(isMeta: boolean, isDark: boolean): string {
+  if (isMeta) return isDark ? C2D_CAT_LABEL_COLORS.meta_dark : C2D_CAT_LABEL_COLORS.meta_light;
+  return isDark ? C2D_CAT_LABEL_COLORS.normal_dark : C2D_CAT_LABEL_COLORS.normal_light;
+}
+
 /**
  * Renders node title, category, and operation text labels.
  */
@@ -966,7 +1027,7 @@ function render2dNodeHeaderLabels(
   ctx.font = 'bold 12px "Comfortaa", -apple-system, sans-serif';
   ctx.fillText(node.title, x + 10, y + 17);
 
-  ctx.fillStyle = isMeta ? (isDark ? '#58a6ff' : '#0969da') : isDark ? '#8b949e' : '#57606a';
+  ctx.fillStyle = resolveC2dCategoryTextColor(isMeta, isDark);
   ctx.font = '10px "Datatype", monospace';
   const catText = resolveNodeCategoryLabel(node, isMeta);
   const catWidth = ctx.measureText(catText).width;

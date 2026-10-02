@@ -17,7 +17,7 @@ import type {
   WebGpuNavigator,
 } from './types';
 import type { RenderWorkerState } from './worker-state';
-import type { FlintGraphNode } from '@mission-platform/flint';
+import type { FlintGraphEdge, FlintGraphNode } from '@mission-platform/flint';
 
 /**
  * Enqueues an instanced WebGPU node rectangle with position, size, borders, and glow.
@@ -146,6 +146,9 @@ export function uploadGpuInstanceData(
   return targetBuffer;
 }
 
+/**
+ * Calculates clamped instance count based on buffer capacity and float count.
+ */
 function calculateClampedInstances(
   floatsLength: number,
   bufferSize: number,
@@ -173,28 +176,37 @@ export function executeGpuInstancedDraw(
 ): void {
   if (!passEncoder || !pipeline || !cameraGroup || !instanceBuffer) return;
   const actualCount = calculateClampedInstances(floats.length, instanceBuffer.size, strideFloats, maxCount);
-  if (actualCount === 0) return;
-  passEncoder.setPipeline(pipeline);
-  passEncoder.setBindGroup(0, cameraGroup);
-  passEncoder.setVertexBuffer(0, instanceBuffer);
-  passEncoder.draw(vertexCount, actualCount, 0, 0);
+  if (actualCount > 0) {
+    passEncoder.setPipeline(pipeline);
+    passEncoder.setBindGroup(0, cameraGroup);
+    passEncoder.setVertexBuffer(0, instanceBuffer);
+    passEncoder.draw(vertexCount, actualCount, 0, 0);
+  }
+}
+
+/**
+ * Determines whether WebGPU text render pipeline and bind groups are active.
+ */
+function isWebGpuTextReady(state: RenderWorkerState): boolean {
+  if (state.webGpuTextVertices.length === 0) return false;
+  if (!state.currentPassEncoder || !state.textPipeline || !state.gpuDevice) return false;
+  return Boolean(state.cameraBindGroup && state.fontBindGroup);
 }
 
 /**
  * Flushes WebGPU text vertex buffer and executes text draw calls.
  */
 export function flushWebGpuTextBatch(state: RenderWorkerState): void {
-  const encoder = state.currentPassEncoder;
-  const device = state.gpuDevice;
-  if (!encoder || !state.textPipeline || !state.cameraBindGroup || !state.fontBindGroup || !device) return;
-  if (state.webGpuTextVertices.length === 0) return;
+  if (!isWebGpuTextReady(state)) return;
+  const encoder = state.currentPassEncoder!;
+  const device = state.gpuDevice!;
 
   const requiredBytes = state.webGpuTextVertices.length * 4;
   state.textVertexBuffer = ensureGpuInstanceBuffer(state.textVertexBuffer, requiredBytes, device);
   device.queue.writeBuffer(state.textVertexBuffer, 0, new Float32Array(state.webGpuTextVertices));
-  encoder.setPipeline(state.textPipeline);
-  encoder.setBindGroup(0, state.cameraBindGroup);
-  encoder.setBindGroup(1, state.fontBindGroup);
+  encoder.setPipeline(state.textPipeline!);
+  encoder.setBindGroup(0, state.cameraBindGroup!);
+  encoder.setBindGroup(1, state.fontBindGroup!);
   encoder.setVertexBuffer(0, state.textVertexBuffer);
   encoder.draw(state.webGpuTextVertices.length / 8, 1, 0, 0);
 }
@@ -455,6 +467,44 @@ function setupGpuCameraBuffers(
 }
 
 /**
+ * Resolves GPU canvas context and surface texture format.
+ */
+function resolveGpuContext(
+  targetCanvas: OffscreenCanvas | HTMLCanvasElement,
+  nav: WebGpuNavigator,
+  device: GPUDevice,
+): { context: GPUCanvasContext; format: GPUTextureFormat } | undefined {
+  const canvasObj = targetCanvas as unknown as { getContext(id: string): GPUCanvasContext | null };
+  const context = canvasObj.getContext('webgpu');
+  if (!context) return undefined;
+
+  const getFormat = nav.gpu?.getPreferredCanvasFormat?.bind(nav.gpu);
+  const format = (getFormat ? getFormat() : 'bgra8unorm') as GPUTextureFormat;
+  context.configure({ device, format, alphaMode: 'premultiplied' });
+  return { context, format };
+}
+
+/**
+ * Configures WebGPU state containers and creates shader pipelines.
+ */
+function configureGpuPipelines(
+  state: RenderWorkerState,
+  device: GPUDevice,
+  context: GPUCanvasContext,
+  format: GPUTextureFormat,
+): void {
+  if (state.gpuDevice !== device) {
+    resetWebGpuPipelines(state);
+  }
+  state.gpuDevice = device;
+  state.gpuContext = context;
+
+  const { cameraBindGroupLayout, pipelineLayout } = setupGpuCameraBuffers(state, device);
+  createWebGpuGeometryPipelines(state, device, pipelineLayout, format);
+  setupWebGpuFontPipeline(state, device, cameraBindGroupLayout, format);
+}
+
+/**
  * Initializes the WebGPU device, swapchain context, pipelines, and uniform bind groups.
  */
 export async function initWebGpuBackend(
@@ -466,25 +516,11 @@ export async function initWebGpuBackend(
     if (!nav?.gpu) return false;
     const device = await requestGpuDevice(nav);
     if (!device) return false;
-    const canvasObj = targetCanvas as unknown as { getContext(id: string): GPUCanvasContext | null };
-    const context = canvasObj.getContext('webgpu');
-    if (!context) return false;
-    const format = (
-      nav.gpu.getPreferredCanvasFormat ? nav.gpu.getPreferredCanvasFormat() : 'bgra8unorm'
-    ) as GPUTextureFormat;
-    context.configure({ device, format, alphaMode: 'premultiplied' });
 
-    if (state.gpuDevice !== device) {
-      resetWebGpuPipelines(state);
-    }
+    const surface = resolveGpuContext(targetCanvas, nav, device);
+    if (!surface) return false;
 
-    state.gpuDevice = device;
-    state.gpuContext = context;
-
-    const { cameraBindGroupLayout, pipelineLayout } = setupGpuCameraBuffers(state, device);
-    createWebGpuGeometryPipelines(state, device, pipelineLayout, format);
-    setupWebGpuFontPipeline(state, device, cameraBindGroupLayout, format);
-
+    configureGpuPipelines(state, device, surface.context, surface.format);
     return true;
   } catch {
     return false;
@@ -772,6 +808,14 @@ function resolveGpuCategoryTextColor(isMeta: boolean, isDark: boolean): [number,
 }
 
 /**
+ * Resolves category label text for WebGPU node header.
+ */
+function resolveGpuCategoryLabel(node: FlintGraphNode, isMeta: boolean): string {
+  if (isMeta) return `META (${node.metaSubgraph?.nodes.length ?? 0})`;
+  return (node.category || 'OPERATION').toUpperCase();
+}
+
+/**
  * Prepares WebGPU node header card, category strip, and titles.
  */
 function prepareWebGpuNodeHeader(
@@ -795,12 +839,10 @@ function prepareWebGpuNodeHeader(
   const sepColor: [number, number, number, number] = isDark ? [0.188, 0.212, 0.239, 0.8] : [0.816, 0.843, 0.871, 0.8];
   pushGpuNodeInstance(state, x + nodeWidth / 2, y + NODE_HEADER_HEIGHT, nodeWidth - 2, 1, 0, sepColor);
 
-  const titleColor = isDark ? [0.941, 0.965, 0.988, 1] : [0.122, 0.137, 0.157, 1];
+  const titleColor: [number, number, number, number] = isDark ? [0.941, 0.965, 0.988, 1] : [0.122, 0.137, 0.157, 1];
   wasmEngine.font_append_text_quads(node.title, x + 10, y + 17, 12, titleColor[0], titleColor[1], titleColor[2], 1, 0);
 
-  const catText = isMeta
-    ? `META (${node.metaSubgraph?.nodes.length ?? 0})`
-    : (node.category || 'OPERATION').toUpperCase();
+  const catText = resolveGpuCategoryLabel(node, isMeta);
   const catTextColor = resolveGpuCategoryTextColor(isMeta, isDark);
   wasmEngine.font_append_text_quads(
     catText,
@@ -814,7 +856,7 @@ function prepareWebGpuNodeHeader(
     1,
   );
 
-  const subColor = isDark ? [0.545, 0.58, 0.62, 1] : [0.341, 0.376, 0.416, 1];
+  const subColor: [number, number, number, number] = isDark ? [0.545, 0.58, 0.62, 1] : [0.341, 0.376, 0.416, 1];
   wasmEngine.font_append_text_quads(node.operation, x + 10, y + 28, 9, subColor[0], subColor[1], subColor[2], 1, 0);
 }
 
@@ -1008,6 +1050,31 @@ function prepareSingleWebGpuEdge(
 }
 
 /**
+ * Prepares WebGPU spline geometry for a single graph edge.
+ */
+function prepareSingleGpuEdgeInstance(
+  state: RenderWorkerState,
+  edge: FlintGraphEdge,
+  fromNode: FlintGraphNode,
+  toNode: FlintGraphNode,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+  wasmEngine: FlintRenderWorkerWasmExports,
+): boolean {
+  const { p0x, p0y, p3x, p3y } = computeGpuEdgeCoordinates(fromNode, toNode, edge.fromPortId, edge.toPortId);
+  if (isGpuEdgeOutsideViewport(p0x, p0y, p3x, p3y, minX, minY, maxX, maxY)) return false;
+
+  const isSelected = state.selectedEdgeIds.has(edge.id) ? 1 : 0;
+  const isActive = state.edgePulses.has(edge.id) ? 1 : 0;
+  const pulseOffset = state.edgePulses.get(edge.id) ?? 0;
+
+  prepareSingleWebGpuEdge(state, edge, p0x, p0y, p3x, p3y, isSelected, isActive, pulseOffset, wasmEngine);
+  return true;
+}
+
+/**
  * Prepares instanced WebGPU spline geometry for graph edges.
  */
 export function prepareWebGpuEdgeInstances(
@@ -1024,17 +1091,13 @@ export function prepareWebGpuEdgeInstances(
   for (const edge of state.edges) {
     const fromNode = nodeMap.get(edge.fromNodeId);
     const toNode = nodeMap.get(edge.toNodeId);
-    if (!fromNode || !toNode) continue;
-
-    const { p0x, p0y, p3x, p3y } = computeGpuEdgeCoordinates(fromNode, toNode, edge.fromPortId, edge.toPortId);
-    if (isGpuEdgeOutsideViewport(p0x, p0y, p3x, p3y, minX, minY, maxX, maxY)) continue;
-    visibleEdgesCount++;
-
-    const isSelected = state.selectedEdgeIds.has(edge.id) ? 1 : 0;
-    const isActive = state.edgePulses.has(edge.id) ? 1 : 0;
-    const pulseOffset = state.edgePulses.get(edge.id) ?? 0;
-
-    prepareSingleWebGpuEdge(state, edge, p0x, p0y, p3x, p3y, isSelected, isActive, pulseOffset, wasmEngine);
+    if (
+      fromNode &&
+      toNode &&
+      prepareSingleGpuEdgeInstance(state, edge, fromNode, toNode, minX, minY, maxX, maxY, wasmEngine)
+    ) {
+      visibleEdgesCount++;
+    }
   }
 
   return visibleEdgesCount;

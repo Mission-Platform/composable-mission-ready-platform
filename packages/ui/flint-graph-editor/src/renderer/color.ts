@@ -87,16 +87,25 @@ export function parseHexColor(hexStr: string): [number, number, number, number] 
 }
 
 /**
+ * Extracts and normalizes channel numbers from regular expression match.
+ */
+function parseRgbChannelsFromMatch(match: RegExpMatchArray): [number, number, number, number] {
+  const [_, r = '0', g = '0', b = '0', a = '1'] = match;
+  return [
+    Number.parseInt(r, 10) / 255,
+    Number.parseInt(g, 10) / 255,
+    Number.parseInt(b, 10) / 255,
+    Number.parseFloat(a),
+  ];
+}
+
+/**
  * Parses functional rgb() and rgba() color strings into normalized RGBA tuples.
  */
 export function parseRgbColor(rgbStr: string): [number, number, number, number] | undefined {
   const match = rgbStr.match(/rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)/);
   if (!match) return undefined;
-  const redChannel = Number.parseInt(match[1] ?? '0', 10) / 255;
-  const greenChannel = Number.parseInt(match[2] ?? '0', 10) / 255;
-  const blueChannel = Number.parseInt(match[3] ?? '0', 10) / 255;
-  const alphaChannel = Number.parseFloat(match[4] ?? '1');
-  return [redChannel, greenChannel, blueChannel, alphaChannel];
+  return parseRgbChannelsFromMatch(match);
 }
 
 /**

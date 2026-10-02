@@ -2,9 +2,9 @@ import { evaluateCubicBezier, getNodeBounds } from './camera';
 import { computeGlNodeBorder, getCategoryRgba, getPortTypeRgba, parseColorToRgba } from './color';
 import { NODE_HEADER_HEIGHT, NODE_WIDTH, PORT_ROW_HEIGHT } from './constants';
 
-import type { FlintRenderWorkerWasmExports } from './types';
+import type { FlintRenderWorkerWasmExports, WebGLUniformLocations } from './types';
 import type { RenderWorkerState } from './worker-state';
-import type { FlintGraphGroup, FlintGraphNode } from '@mission-platform/flint';
+import type { FlintGraphEdge, FlintGraphGroup, FlintGraphNode, FlintGraphPort } from '@mission-platform/flint';
 
 /**
  * Appends line vertex coordinates and colors to the batch line buffer.
@@ -470,6 +470,37 @@ function applyGlViewportState(
 }
 
 /**
+ * Resolves framebuffer canvas pixel dimensions.
+ */
+function resolveGlCanvasDimensions(
+  canvas: OffscreenCanvas | HTMLCanvasElement | undefined,
+  w: number,
+  h: number,
+  dprVal: number,
+): { canvasW: number; canvasH: number } {
+  if (canvas) return { canvasW: canvas.width, canvasH: canvas.height };
+  return { canvasW: Math.round(w * dprVal), canvasH: Math.round(h * dprVal) };
+}
+
+/**
+ * Sets global uniform matrix values for camera and resolution in WebGL shader program.
+ */
+function applyGlUniforms(
+  gl: WebGLRenderingContext | WebGL2RenderingContext,
+  locs: WebGLUniformLocations | undefined,
+  w: number,
+  h: number,
+  camX: number,
+  camY: number,
+  zoomVal: number,
+): void {
+  if (!locs) return;
+  gl.uniform2f(locs.u_resolution, w, h);
+  gl.uniform2f(locs.u_camera, camX, camY);
+  gl.uniform1f(locs.u_zoom, zoomVal);
+}
+
+/**
  * Configures WebGL viewport, clear color, and global uniform matrices.
  */
 export function setupWebGLViewport(
@@ -481,19 +512,16 @@ export function setupWebGLViewport(
   camY: number,
   zoomVal: number,
 ): void {
-  if (!state.glCtx || !state.glProgram) return;
   const gl = state.glCtx;
+  if (!gl || !state.glProgram) return;
+
   const isDark = state.currentTheme !== 'light';
-  const canvasW = state.canvas ? state.canvas.width : Math.round(w * dprVal);
-  const canvasH = state.canvas ? state.canvas.height : Math.round(h * dprVal);
+  const { canvasW, canvasH } = resolveGlCanvasDimensions(state.canvas, w, h, dprVal);
 
   applyGlViewportState(gl, canvasW, canvasH, isDark);
   gl.useProgram(state.glProgram);
-  if (state.glUniformLocations) {
-    gl.uniform2f(state.glUniformLocations.u_resolution, w, h);
-    gl.uniform2f(state.glUniformLocations.u_camera, camX, camY);
-    gl.uniform1f(state.glUniformLocations.u_zoom, zoomVal);
-  }
+  applyGlUniforms(gl, state.glUniformLocations, w, h, camX, camY, zoomVal);
+
   state.triVertices = [];
   state.lineVertices = [];
 }
@@ -1106,6 +1134,37 @@ function isGlEdgeOutsideViewport(
 }
 
 /**
+ * Renders a single graph edge into WebGL primitive buffers if visible.
+ */
+function renderWebGLSingleEdge(
+  state: RenderWorkerState,
+  edge: FlintGraphEdge,
+  fromNode: FlintGraphNode,
+  toNode: FlintGraphNode,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+  isDark: boolean,
+  wasmEngine: FlintRenderWorkerWasmExports,
+): boolean {
+  const { p0x, p0y, p3x, p3y } = computeEdgeCoordinates(fromNode, toNode, edge.fromPortId, edge.toPortId);
+  if (isGlEdgeOutsideViewport(p0x, p0y, p3x, p3y, minX, minY, maxX, maxY)) return false;
+
+  const isSelected = state.selectedEdgeIds.has(edge.id);
+  const pulseOffset = state.edgePulses.get(edge.id);
+  const isActive = pulseOffset !== undefined;
+  const style = getWebGLEdgeStyle(isSelected, isActive, isDark);
+
+  renderWebGLEdgePath(state, edge, p0x, p0y, p3x, p3y, isSelected, style, wasmEngine);
+
+  if (pulseOffset !== undefined) {
+    renderWebGLEdgePulse(state, p0x, p0y, p3x, pulseOffset, isDark, wasmEngine);
+  }
+  return true;
+}
+
+/**
  * Renders edge connections and waypoints into WebGL primitive buffers.
  */
 export function renderWebGLEdgePass(
@@ -1123,21 +1182,12 @@ export function renderWebGLEdgePass(
   for (const edge of state.edges) {
     const fromNode = nodeMap.get(edge.fromNodeId);
     const toNode = nodeMap.get(edge.toNodeId);
-    if (!fromNode || !toNode) continue;
-
-    const { p0x, p0y, p3x, p3y } = computeEdgeCoordinates(fromNode, toNode, edge.fromPortId, edge.toPortId);
-    if (isGlEdgeOutsideViewport(p0x, p0y, p3x, p3y, minX, minY, maxX, maxY)) continue;
-    visibleEdgesCount++;
-
-    const isSelected = state.selectedEdgeIds.has(edge.id);
-    const pulseOffset = state.edgePulses.get(edge.id);
-    const isActive = pulseOffset !== undefined;
-    const style = getWebGLEdgeStyle(isSelected, isActive, isDark);
-
-    renderWebGLEdgePath(state, edge, p0x, p0y, p3x, p3y, isSelected, style, wasmEngine);
-
-    if (pulseOffset !== undefined) {
-      renderWebGLEdgePulse(state, p0x, p0y, p3x, pulseOffset, isDark, wasmEngine);
+    if (
+      fromNode &&
+      toNode &&
+      renderWebGLSingleEdge(state, edge, fromNode, toNode, minX, minY, maxX, maxY, isDark, wasmEngine)
+    ) {
+      visibleEdgesCount++;
     }
   }
 
@@ -1195,6 +1245,29 @@ export function renderWebGLConnectingEdgePass(
 }
 
 /**
+ * Renders a single WebGL port pin circle and typography label.
+ */
+function renderWebGLSinglePin(
+  state: RenderWorkerState,
+  node: FlintGraphNode,
+  port: FlintGraphPort,
+  px: number,
+  py: number,
+  textX: number,
+  align: number,
+  textColor: readonly [number, number, number],
+  isDark: boolean,
+  wasmEngine: FlintRenderWorkerWasmExports,
+): void {
+  const isHovered = state.hoveredPort?.nodeId === node.id && state.hoveredPort?.portId === port.id;
+  const portColor = getPortTypeRgba(port.type, isDark);
+
+  pushCircle(state, px, py, isHovered ? 6 : 4, portColor[0], portColor[1], portColor[2], portColor[3]);
+  if (isHovered) pushCircle(state, px, py, 2.5, 1, 1, 1, 1);
+  wasmEngine.font_append_text_quads(port.name, textX, py + 4, 11, textColor[0], textColor[1], textColor[2], 1, align);
+}
+
+/**
  * Renders input port circles and labels for WebGL node.
  */
 function renderWebGLInputPins(
@@ -1206,26 +1279,11 @@ function renderWebGLInputPins(
   wasmEngine: FlintRenderWorkerWasmExports,
 ): number {
   const inputs = node.inputs ?? [];
-  const portTextColor = isDark ? [0.788, 0.82, 0.851] : [0.141, 0.161, 0.184];
+  const portTextColor: readonly [number, number, number] = isDark ? [0.788, 0.82, 0.851] : [0.141, 0.161, 0.184];
 
   for (const [idx, port] of inputs.entries()) {
     const py = y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
-    const isHovered = state.hoveredPort?.nodeId === node.id && state.hoveredPort?.portId === port.id;
-    const portColor = getPortTypeRgba(port.type, isDark);
-
-    pushCircle(state, x, py, isHovered ? 6 : 4, portColor[0], portColor[1], portColor[2], portColor[3]);
-    if (isHovered) pushCircle(state, x, py, 2.5, 1, 1, 1, 1);
-    wasmEngine.font_append_text_quads(
-      port.name,
-      x + 12,
-      py + 4,
-      11,
-      portTextColor[0],
-      portTextColor[1],
-      portTextColor[2],
-      1,
-      0,
-    );
+    renderWebGLSinglePin(state, node, port, x, py, x + 12, 0, portTextColor, isDark, wasmEngine);
   }
   return inputs.length;
 }
@@ -1243,25 +1301,21 @@ function renderWebGLOutputPins(
   wasmEngine: FlintRenderWorkerWasmExports,
 ): number {
   const outputs = node.outputs ?? [];
-  const portTextColor = isDark ? [0.788, 0.82, 0.851] : [0.141, 0.161, 0.184];
+  const portTextColor: readonly [number, number, number] = isDark ? [0.788, 0.82, 0.851] : [0.141, 0.161, 0.184];
 
   for (const [idx, port] of outputs.entries()) {
     const py = y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
-    const isHovered = state.hoveredPort?.nodeId === node.id && state.hoveredPort?.portId === port.id;
-    const portColor = getPortTypeRgba(port.type, isDark);
-
-    pushCircle(state, x + nodeWidth, py, isHovered ? 6 : 4, portColor[0], portColor[1], portColor[2], portColor[3]);
-    if (isHovered) pushCircle(state, x + nodeWidth, py, 2.5, 1, 1, 1, 1);
-    wasmEngine.font_append_text_quads(
-      port.name,
+    renderWebGLSinglePin(
+      state,
+      node,
+      port,
+      x + nodeWidth,
+      py,
       x + nodeWidth - 12,
-      py + 4,
-      11,
-      portTextColor[0],
-      portTextColor[1],
-      portTextColor[2],
       1,
-      1,
+      portTextColor,
+      isDark,
+      wasmEngine,
     );
   }
   return outputs.length;
@@ -1335,6 +1389,14 @@ function resolveWebGLCategoryColors(isMeta: boolean, isDark: boolean): [number, 
 }
 
 /**
+ * Resolves WebGL category badge text.
+ */
+function resolveWebGLCategoryLabel(node: FlintGraphNode, isMeta: boolean): string {
+  if (isMeta) return `META (${node.metaSubgraph?.nodes.length ?? 0})`;
+  return (node.category || 'OPERATION').toUpperCase();
+}
+
+/**
  * Renders node header card and category badge in WebGL.
  */
 function renderWebGLNodeHeader(
@@ -1355,7 +1417,7 @@ function renderWebGLNodeHeader(
   const catColor = getCategoryRgba(node.category, isMeta, isDark);
   pushRect(state, x + 1, y + 1, nodeWidth - 2, 4, catColor[0], catColor[1], catColor[2], 1);
 
-  const sepColor = isDark ? [0.188, 0.212, 0.239, 0.8] : [0.816, 0.843, 0.871, 0.8];
+  const sepColor: [number, number, number, number] = isDark ? [0.188, 0.212, 0.239, 0.8] : [0.816, 0.843, 0.871, 0.8];
   pushLine(
     state,
     x + 1,
@@ -1371,9 +1433,7 @@ function renderWebGLNodeHeader(
   const titleColor = isDark ? [0.941, 0.965, 0.988] : [0.122, 0.137, 0.157];
   wasmEngine.font_append_text_quads(node.title, x + 10, y + 17, 12, titleColor[0], titleColor[1], titleColor[2], 1, 0);
 
-  const catText = isMeta
-    ? `META (${node.metaSubgraph?.nodes.length ?? 0})`
-    : (node.category || 'OPERATION').toUpperCase();
+  const catText = resolveWebGLCategoryLabel(node, isMeta);
   const catTextColor = resolveWebGLCategoryColors(isMeta, isDark);
   wasmEngine.font_append_text_quads(
     catText,
@@ -1506,6 +1566,15 @@ export function renderWebGLNodePass(
 }
 
 /**
+ * Checks whether WebGL SDF text rendering pipeline is initialized.
+ */
+function isGlTextPipelineReady(state: RenderWorkerState): boolean {
+  if (state.textTriVertices.length === 0) return false;
+  if (!state.glTextProgram || !state.glTexVertexBuffer || !state.glFontTexture) return false;
+  return Boolean(state.glTextUniformLocations && state.glTextAttribLocations);
+}
+
+/**
  * Flushes WebGL SDF text batch to screen.
  */
 function flushGlTextTriangles(
@@ -1513,26 +1582,29 @@ function flushGlTextTriangles(
   gl: WebGLRenderingContext | WebGL2RenderingContext,
   wasmEngine: FlintRenderWorkerWasmExports,
 ): void {
+  const prog = state.glTextProgram;
+  const buf = state.glTexVertexBuffer;
+  const tex = state.glFontTexture;
   if (
-    state.textTriVertices.length === 0 ||
-    !state.glTextProgram ||
-    !state.glTexVertexBuffer ||
-    !state.glFontTexture ||
+    !isGlTextPipelineReady(state) ||
     !state.glTextUniformLocations ||
-    !state.glTextAttribLocations
-  ) {
+    !state.glTextAttribLocations ||
+    !prog ||
+    !buf ||
+    !tex
+  )
     return;
-  }
-  gl.useProgram(state.glTextProgram);
+
+  gl.useProgram(prog);
   gl.uniform2f(state.glTextUniformLocations.u_resolution, state.width, state.height);
   gl.uniform2f(state.glTextUniformLocations.u_camera, wasmEngine.get_camera_x(), wasmEngine.get_camera_y());
   gl.uniform1f(state.glTextUniformLocations.u_zoom, wasmEngine.get_camera_zoom());
 
   gl.activeTexture(gl.TEXTURE0);
-  gl.bindTexture(gl.TEXTURE_2D, state.glFontTexture);
+  gl.bindTexture(gl.TEXTURE_2D, tex);
   gl.uniform1i(state.glTextUniformLocations.u_fontTexture, 0);
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, state.glTexVertexBuffer);
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
   gl.bufferData(gl.ARRAY_BUFFER, state.textTriVertices, gl.DYNAMIC_DRAW);
   gl.enableVertexAttribArray(state.glTextAttribLocations.a_position);
   gl.vertexAttribPointer(state.glTextAttribLocations.a_position, 2, gl.FLOAT, false, 32, 0);
@@ -1594,26 +1666,23 @@ function recordWebGLFrameStats(
  */
 export function renderWebGLFrame(state: RenderWorkerState): void {
   const gl = state.glCtx;
-  if (!gl || !state.glProgram || !state.glVertexBuffer || !state.wasm) return;
-
-  const isDark = state.currentTheme !== 'light';
-  const t0 = typeof performance === 'undefined' ? 0 : performance.now();
-  const canvasW = state.canvas ? state.canvas.width : Math.round(state.width * state.dpr);
-  const canvasH = state.canvas ? state.canvas.height : Math.round(state.height * state.dpr);
-
-  applyGlViewportState(gl, canvasW, canvasH, isDark);
-  gl.useProgram(state.glProgram);
-  if (state.glUniformLocations) {
-    gl.uniform2f(state.glUniformLocations.u_resolution, state.width, state.height);
-    gl.uniform2f(state.glUniformLocations.u_camera, state.wasm.get_camera_x(), state.wasm.get_camera_y());
-    gl.uniform1f(state.glUniformLocations.u_zoom, state.wasm.get_camera_zoom());
-  }
-
-  state.lineVertices = [];
-  state.triVertices = [];
-  state.textTriVertices = new Float32Array(0);
-
   const wasm = state.wasm;
+  if (!gl || !wasm || !state.glProgram || !state.glVertexBuffer) return;
+
+  const t0 = typeof performance === 'undefined' ? 0 : performance.now();
+  const isDark = state.currentTheme !== 'light';
+
+  setupWebGLViewport(
+    state,
+    state.width,
+    state.height,
+    state.dpr,
+    wasm.get_camera_x(),
+    wasm.get_camera_y(),
+    wasm.get_camera_zoom(),
+  );
+
+  state.textTriVertices = new Float32Array(0);
   wasm.font_clear_text_vertices();
   wasm.getViewportBounds(150);
   const minX = wasm.get_bounds_min_x();
