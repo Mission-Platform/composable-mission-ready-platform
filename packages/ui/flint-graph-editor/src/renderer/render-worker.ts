@@ -20,16 +20,57 @@ export interface ViewBounds {
   readonly maxY: number;
 }
 
-export interface FlintHitResult {
-  readonly type: 'node' | 'edge' | 'port' | 'group' | 'waypoint';
-  readonly nodeId: string;
-  readonly edgeId?: string;
-  readonly portId?: string;
-  readonly groupId?: string;
-  readonly waypointIndex?: number;
-  readonly worldX?: number;
-  readonly worldY?: number;
-}
+export type FlintHitResult =
+  | {
+      readonly type: 'node';
+      readonly nodeId: string;
+      readonly edgeId?: string;
+      readonly portId?: string;
+      readonly groupId?: string;
+      readonly waypointIndex?: number;
+      readonly worldX?: number;
+      readonly worldY?: number;
+    }
+  | {
+      readonly type: 'edge';
+      readonly edgeId: string;
+      readonly nodeId?: string;
+      readonly portId?: string;
+      readonly groupId?: string;
+      readonly waypointIndex?: number;
+      readonly worldX?: number;
+      readonly worldY?: number;
+    }
+  | {
+      readonly type: 'port';
+      readonly nodeId: string;
+      readonly portId: string;
+      readonly edgeId?: string;
+      readonly groupId?: string;
+      readonly waypointIndex?: number;
+      readonly worldX?: number;
+      readonly worldY?: number;
+    }
+  | {
+      readonly type: 'group';
+      readonly groupId: string;
+      readonly nodeId?: string;
+      readonly edgeId?: string;
+      readonly portId?: string;
+      readonly waypointIndex?: number;
+      readonly worldX?: number;
+      readonly worldY?: number;
+    }
+  | {
+      readonly type: 'waypoint';
+      readonly edgeId: string;
+      readonly waypointIndex: number;
+      readonly nodeId?: string;
+      readonly portId?: string;
+      readonly groupId?: string;
+      readonly worldX?: number;
+      readonly worldY?: number;
+    };
 
 export interface ScreenPoint {
   readonly x: number;
@@ -522,7 +563,8 @@ if (globalThis.self !== undefined) {
   ): [number, number, number, number] {
     const table = isDark ? CATEGORY_RGBA_DARK : CATEGORY_RGBA_LIGHT;
     if (isMeta) return table.math;
-    return (category ? table[category] : undefined) ?? (isDark ? [0.545, 0.58, 0.62, 1] : [0.341, 0.376, 0.416, 1]);
+    const color = category ? table[category] : undefined;
+    return color ?? (isDark ? [0.545, 0.58, 0.62, 1] : [0.341, 0.376, 0.416, 1]);
   }
 
   const PORT_TYPE_RGBA_DARK: Record<string, [number, number, number, number]> = {
@@ -584,13 +626,11 @@ if (globalThis.self !== undefined) {
   function parseRgbColor(rgbStr: string): [number, number, number, number] | undefined {
     const match = rgbStr.match(/rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)/);
     if (!match) return undefined;
-    const alphaVal = match[4] ? Number.parseFloat(match[4]) : 1;
-    return [
-      Number.parseInt(match[1] || '0', 10) / 255,
-      Number.parseInt(match[2] || '0', 10) / 255,
-      Number.parseInt(match[3] || '0', 10) / 255,
-      alphaVal,
-    ];
+    const r = Number.parseInt(match[1] || '0', 10) / 255;
+    const g = Number.parseInt(match[2] || '0', 10) / 255;
+    const b = Number.parseInt(match[3] || '0', 10) / 255;
+    const a = match[4] ? Number.parseFloat(match[4]) : 1;
+    return [r, g, b, a];
   }
 
   /**
@@ -902,26 +942,17 @@ if (globalThis.self !== undefined) {
   };
 
   /**
-   * Prepares instanced WebGPU vertex buffers and text quads for active nodes, groups, edges, and pins.
+   * Prepares instanced WebGPU geometry and text quads for node groups.
    */
-  function prepareWebGpuInstances(): void {
-    if (!gpuContext || !cameraBuffer || !wasm) return;
-
-    nodeInstanceFloats = [];
-    edgeInstanceFloats = [];
-    pinInstanceFloats = [];
-    webGpuTextVertices = new Float32Array(0);
-
-    wasm.font_clear_text_vertices();
-    wasm.getViewportBounds(150);
-    const minX = wasm.get_bounds_min_x();
-    const minY = wasm.get_bounds_min_y();
-    const maxX = wasm.get_bounds_max_x();
-    const maxY = wasm.get_bounds_max_y();
-
-    const isDark = currentTheme !== 'light';
-
-    // 1. Groups
+  function prepareWebGpuGroupInstances(
+    minX: number,
+    minY: number,
+    maxX: number,
+    maxY: number,
+    isDark: boolean,
+    selectedGroupIdVal: string | undefined,
+    wasmEngine: NonNullable<typeof wasm>,
+  ): void {
     for (const group of groups) {
       const groupNodes = nodes.filter((n) => group.nodeIds.includes(n.id));
       if (groupNodes.length === 0) continue;
@@ -943,14 +974,11 @@ if (globalThis.self !== undefined) {
       const gw = gMaxX - gMinX + pad * 2;
       const gh = gMaxY - gMinY + pad * 2 + 22;
 
-      // Viewport culling for group
       if (gx + gw < minX || gx > maxX || gy + gh < minY || gy > maxY) {
         continue;
       }
 
-      const isSelectedGroup = selectedGroupId === group.id;
-
-      // Group background and border using parsed group color
+      const isSelectedGroup = selectedGroupIdVal === group.id;
       const defaultBorder: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 1] : [0.035, 0.412, 0.855, 1];
       const parsedColor = parseColorToRgba(group.color, defaultBorder);
       const groupBg: [number, number, number, number] = group.backgroundColor
@@ -966,8 +994,7 @@ if (globalThis.self !== undefined) {
         : [parsedColor[0], parsedColor[1], parsedColor[2], isDark ? 0.7 : 0.6];
       pushGpuNodeInstance(gx + gw / 2, gy + gh / 2, gw, gh, 12, groupBg, groupBorder, isSelectedGroup ? 3.5 : 2);
 
-      // Group title pill
-      const titleW = wasm.font_measure_text(group.title, 12);
+      const titleW = wasmEngine.font_measure_text(group.title, 12);
       const pillW = titleW + 16;
       pushGpuNodeInstance(
         gx + 10 + pillW / 2,
@@ -979,12 +1006,248 @@ if (globalThis.self !== undefined) {
         isSelectedGroup ? [1, 1, 1, 1] : undefined,
         isSelectedGroup ? 1.5 : 0,
       );
-      wasm.font_append_text_quads(group.title, gx + 18, gy + 18, 12, 1, 1, 1, 1, 0);
+      wasmEngine.font_append_text_quads(group.title, gx + 18, gy + 18, 12, 1, 1, 1, 1, 0);
+    }
+  }
+
+  /**
+   * Prepares port pins and labels for a WebGPU node instance.
+   */
+  function prepareWebGpuNodePins(
+    node: FlintGraphNode,
+    isDark: boolean,
+    hoveredPortInfo: typeof hoveredPort,
+    wasmEngine: NonNullable<typeof wasm>,
+  ): number {
+    let pinCount = 0;
+
+    for (const [idx, port] of (node.inputs ?? []).entries()) {
+      const py = node.position.y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
+      const isHovered = hoveredPortInfo?.nodeId === node.id && hoveredPortInfo?.portId === port.id;
+      const pinRadius = isHovered ? 7 : 5;
+      const portColor = getPortTypeRgba(port.type, isDark);
+      const pinInnerBg: [number, number, number, number] = isDark ? [0.086, 0.106, 0.133, 1] : [0.941, 0.949, 0.961, 1];
+
+      pushGpuPinInstance(node.position.x, py, pinRadius, pinInnerBg, 1.5, portColor);
+      pushGpuPinInstance(node.position.x, py, 2.5, isHovered ? [1, 1, 1, 1] : portColor);
+      pinCount++;
+
+      const portTextColor = isDark ? [0.788, 0.82, 0.851, 1] : [0.141, 0.161, 0.184, 1];
+      wasmEngine.font_append_text_quads(
+        port.name,
+        node.position.x + 12,
+        py + 4,
+        11,
+        portTextColor[0],
+        portTextColor[1],
+        portTextColor[2],
+        1,
+        0,
+      );
     }
 
-    // 2. Nodes
+    for (const [idx, port] of (node.outputs ?? []).entries()) {
+      const py = node.position.y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
+      const isHovered = hoveredPortInfo?.nodeId === node.id && hoveredPortInfo?.portId === port.id;
+      const pinRadius = isHovered ? 7 : 5;
+      const portColor = getPortTypeRgba(port.type, isDark);
+      const pinInnerBg: [number, number, number, number] = isDark ? [0.086, 0.106, 0.133, 1] : [0.941, 0.949, 0.961, 1];
+
+      pushGpuPinInstance(node.position.x + NODE_WIDTH, py, pinRadius, pinInnerBg, 1.5, portColor);
+      pushGpuPinInstance(node.position.x + NODE_WIDTH, py, 2.5, isHovered ? [1, 1, 1, 1] : portColor);
+      pinCount++;
+
+      const portTextColor = isDark ? [0.788, 0.82, 0.851, 1] : [0.141, 0.161, 0.184, 1];
+      wasmEngine.font_append_text_quads(
+        port.name,
+        node.position.x + NODE_WIDTH - 12,
+        py + 4,
+        11,
+        portTextColor[0],
+        portTextColor[1],
+        portTextColor[2],
+        1,
+        1,
+      );
+    }
+
+    return pinCount;
+  }
+
+  /**
+   * Prepares individual WebGPU node background, headers, category accent, and typography.
+   */
+  function prepareSingleWebGpuNode(
+    node: FlintGraphNode,
+    isDark: boolean,
+    hoveredPortInfo: typeof hoveredPort,
+    wasmEngine: NonNullable<typeof wasm>,
+  ): number {
+    const bounds = getNodeBounds(node);
+    const nodeWidth = bounds.maxX - bounds.minX;
+    const nodeHeight = bounds.maxY - bounds.minY;
+    const x = bounds.minX;
+    const y = bounds.minY;
+
+    const isSelected = selectedNodeIds.has(node.id);
+    const isActive = activeNodeIds.has(node.id);
+    const isTrapped = trappedNodeId === node.id;
+    const isMeta = node.metaSubgraph !== undefined || node.operation === 'meta';
+
+    const fillRgba: [number, number, number, number] = isDark
+      ? isMeta
+        ? [0.086, 0.118, 0.18, 0.95]
+        : [0.129, 0.149, 0.176, 0.95]
+      : isMeta
+        ? [0.941, 0.957, 0.973, 0.98]
+        : [1, 1, 1, 0.98];
+
+    const borderRgba: [number, number, number, number] = isDark
+      ? isTrapped
+        ? [0.973, 0.318, 0.286, 1]
+        : isActive
+          ? [0.247, 0.725, 0.314, 1]
+          : isSelected
+            ? [0.345, 0.651, 1, 1]
+            : isMeta
+              ? [0.475, 0.753, 1, 0.8]
+              : [0.188, 0.212, 0.239, 0.8]
+      : isTrapped
+        ? [0.812, 0.133, 0.18, 1]
+        : isActive
+          ? [0.102, 0.498, 0.216, 1]
+          : isSelected
+            ? [0.035, 0.412, 0.855, 1]
+            : isMeta
+              ? [0.035, 0.412, 0.855, 0.85]
+              : [0.816, 0.843, 0.871, 0.9];
+
+    const borderWidth = isSelected || isTrapped || isActive ? 2.5 : 1.5;
+    const glowRgba: [number, number, number, number] = isDark
+      ? isTrapped
+        ? [0.973, 0.318, 0.286, 0.9]
+        : isActive
+          ? [0.247, 0.725, 0.314, 0.8]
+          : isSelected
+            ? [0.345, 0.651, 1, 0.5]
+            : [0, 0, 0, 0]
+      : isTrapped
+        ? [0.812, 0.133, 0.18, 0.5]
+        : isActive
+          ? [0.102, 0.498, 0.216, 0.5]
+          : isSelected
+            ? [0.035, 0.412, 0.855, 0.4]
+            : [0, 0, 0, 0];
+
+    pushGpuNodeInstance(
+      x + nodeWidth / 2,
+      y + nodeHeight / 2,
+      nodeWidth,
+      nodeHeight,
+      8,
+      fillRgba,
+      borderRgba,
+      borderWidth,
+      glowRgba,
+    );
+
+    const headerRgba: [number, number, number, number] = isDark
+      ? isTrapped
+        ? [0.239, 0.078, 0.09, 1]
+        : isActive
+          ? [0.078, 0.239, 0.133, 1]
+          : isMeta
+            ? [0.051, 0.157, 0.278, 1]
+            : [0.086, 0.106, 0.133, 1]
+      : isTrapped
+        ? [0.996, 0.886, 0.886, 1]
+        : isActive
+          ? [0.863, 0.988, 0.906, 1]
+          : isMeta
+            ? [0.882, 0.925, 0.969, 1]
+            : [0.941, 0.949, 0.961, 1];
+    pushGpuNodeInstance(x + nodeWidth / 2, y + 16, nodeWidth - 2, 30, 4, headerRgba);
+
+    const catColor = getCategoryRgba(node.category, isMeta, isDark);
+    pushGpuNodeInstance(x + nodeWidth / 2, y + 3, nodeWidth - 4, 4, 2, catColor);
+
+    const sepColor: [number, number, number, number] = isDark ? [0.188, 0.212, 0.239, 0.8] : [0.816, 0.843, 0.871, 0.8];
+    pushGpuNodeInstance(x + nodeWidth / 2, y + NODE_HEADER_HEIGHT, nodeWidth - 2, 1, 0, sepColor);
+
+    const titleColor = isDark ? [0.941, 0.965, 0.988, 1] : [0.122, 0.137, 0.157, 1];
+    wasmEngine.font_append_text_quads(
+      node.title,
+      x + 10,
+      y + 17,
+      12,
+      titleColor[0],
+      titleColor[1],
+      titleColor[2],
+      1,
+      0,
+    );
+
+    const catText = isMeta
+      ? `META (${node.metaSubgraph?.nodes.length ?? 0})`
+      : (node.category || 'OPERATION').toUpperCase();
+    const catTextColor = isMeta
+      ? isDark
+        ? [0.345, 0.651, 1, 1]
+        : [0.035, 0.412, 0.855, 1]
+      : isDark
+        ? [0.545, 0.58, 0.62, 1]
+        : [0.341, 0.376, 0.416, 1];
+    wasmEngine.font_append_text_quads(
+      catText,
+      x + nodeWidth - 10,
+      y + 17,
+      10,
+      catTextColor[0],
+      catTextColor[1],
+      catTextColor[2],
+      1,
+      1,
+    );
+
+    const subColor = isDark ? [0.545, 0.58, 0.62, 1] : [0.341, 0.376, 0.416, 1];
+    wasmEngine.font_append_text_quads(node.operation, x + 10, y + 28, 9, subColor[0], subColor[1], subColor[2], 1, 0);
+
+    const pinCount = prepareWebGpuNodePins(node, isDark, hoveredPortInfo, wasmEngine);
+
+    if (node.properties && Object.keys(node.properties).length > 0) {
+      const firstVal = String(Object.values(node.properties)[0]);
+      const propColor = isDark ? [0.345, 0.651, 1, 1] : [0.035, 0.412, 0.855, 1];
+      wasmEngine.font_append_text_quads_mono(
+        `= ${firstVal}`,
+        x + 10,
+        y + nodeHeight - 8,
+        10,
+        propColor[0],
+        propColor[1],
+        propColor[2],
+        1,
+        0,
+      );
+    }
+
+    return pinCount;
+  }
+
+  /**
+   * Prepares instanced WebGPU geometry and SDF text quads for nodes.
+   */
+  function prepareWebGpuNodeInstances(
+    minX: number,
+    minY: number,
+    maxX: number,
+    maxY: number,
+    isDark: boolean,
+    hoveredPortInfo: typeof hoveredPort,
+    wasmEngine: NonNullable<typeof wasm>,
+  ): { visibleNodesCount: number; visiblePinsCount: number } {
     let visibleNodesCount = 0;
     let visiblePinsCount = 0;
+
     for (const node of nodes) {
       const bounds = getNodeBounds(node);
       const nodeWidth = bounds.maxX - bounds.minX;
@@ -992,220 +1255,30 @@ if (globalThis.self !== undefined) {
       const x = bounds.minX;
       const y = bounds.minY;
 
-      // Strict viewport culling for high-performance rendering in stress tests
       if (x + nodeWidth < minX || x > maxX || y + nodeHeight < minY || y > maxY) {
         continue;
       }
       visibleNodesCount++;
 
-      const isSelected = selectedNodeIds.has(node.id);
-      const isActive = activeNodeIds.has(node.id);
-      const isTrapped = trappedNodeId === node.id;
-      const isMeta = node.metaSubgraph !== undefined || node.operation === 'meta';
-
-      const fillRgba: [number, number, number, number] = isDark
-        ? isMeta
-          ? [0.086, 0.118, 0.18, 0.95]
-          : [0.129, 0.149, 0.176, 0.95]
-        : isMeta
-          ? [0.941, 0.957, 0.973, 0.98]
-          : [1, 1, 1, 0.98];
-
-      const borderRgba: [number, number, number, number] = isDark
-        ? isTrapped
-          ? [0.973, 0.318, 0.286, 1]
-          : isActive
-            ? [0.247, 0.725, 0.314, 1]
-            : isSelected
-              ? [0.345, 0.651, 1, 1]
-              : isMeta
-                ? [0.475, 0.753, 1, 0.8]
-                : [0.188, 0.212, 0.239, 0.8]
-        : isTrapped
-          ? [0.812, 0.133, 0.18, 1]
-          : isActive
-            ? [0.102, 0.498, 0.216, 1]
-            : isSelected
-              ? [0.035, 0.412, 0.855, 1]
-              : isMeta
-                ? [0.035, 0.412, 0.855, 0.85]
-                : [0.816, 0.843, 0.871, 0.9];
-
-      const borderWidth = isSelected || isTrapped || isActive ? 2.5 : 1.5;
-      const glowRgba: [number, number, number, number] = isDark
-        ? isTrapped
-          ? [0.973, 0.318, 0.286, 0.9]
-          : isActive
-            ? [0.247, 0.725, 0.314, 0.8]
-            : isSelected
-              ? [0.345, 0.651, 1, 0.5]
-              : [0, 0, 0, 0]
-        : isTrapped
-          ? [0.812, 0.133, 0.18, 0.5]
-          : isActive
-            ? [0.102, 0.498, 0.216, 0.5]
-            : isSelected
-              ? [0.035, 0.412, 0.855, 0.4]
-              : [0, 0, 0, 0];
-
-      // Node body
-      pushGpuNodeInstance(
-        x + nodeWidth / 2,
-        y + nodeHeight / 2,
-        nodeWidth,
-        nodeHeight,
-        8,
-        fillRgba,
-        borderRgba,
-        borderWidth,
-        glowRgba,
-      );
-
-      // Node header background
-      const headerRgba: [number, number, number, number] = isDark
-        ? isTrapped
-          ? [0.239, 0.078, 0.09, 1]
-          : isActive
-            ? [0.078, 0.239, 0.133, 1]
-            : isMeta
-              ? [0.051, 0.157, 0.278, 1]
-              : [0.086, 0.106, 0.133, 1]
-        : isTrapped
-          ? [0.996, 0.886, 0.886, 1]
-          : isActive
-            ? [0.863, 0.988, 0.906, 1]
-            : isMeta
-              ? [0.882, 0.925, 0.969, 1]
-              : [0.941, 0.949, 0.961, 1];
-      pushGpuNodeInstance(x + nodeWidth / 2, y + 16, nodeWidth - 2, 30, 4, headerRgba);
-
-      // Category accent bar (4px)
-      const catColor = getCategoryRgba(node.category, isMeta, isDark);
-      pushGpuNodeInstance(x + nodeWidth / 2, y + 3, nodeWidth - 4, 4, 2, catColor);
-
-      // Header separator
-      const sepColor: [number, number, number, number] = isDark
-        ? [0.188, 0.212, 0.239, 0.8]
-        : [0.816, 0.843, 0.871, 0.8];
-      pushGpuNodeInstance(x + nodeWidth / 2, y + NODE_HEADER_HEIGHT, nodeWidth - 2, 1, 0, sepColor);
-
-      // Node Text
-      // Title
-      const titleColor = isDark ? [0.941, 0.965, 0.988, 1] : [0.122, 0.137, 0.157, 1];
-      wasm.font_append_text_quads(node.title, x + 10, y + 17, 12, titleColor[0], titleColor[1], titleColor[2], 1, 0);
-
-      // Category / Meta pill
-      const catText = isMeta
-        ? `META (${node.metaSubgraph?.nodes.length ?? 0})`
-        : (node.category || 'OPERATION').toUpperCase();
-      const catTextColor = isMeta
-        ? isDark
-          ? [0.345, 0.651, 1, 1]
-          : [0.035, 0.412, 0.855, 1]
-        : isDark
-          ? [0.545, 0.58, 0.62, 1]
-          : [0.341, 0.376, 0.416, 1];
-      wasm.font_append_text_quads(
-        catText,
-        x + nodeWidth - 10,
-        y + 17,
-        10,
-        catTextColor[0],
-        catTextColor[1],
-        catTextColor[2],
-        1,
-        1,
-      );
-
-      // Subtitle operation identifier
-      const subColor = isDark ? [0.545, 0.58, 0.62, 1] : [0.341, 0.376, 0.416, 1];
-      wasm.font_append_text_quads(node.operation, x + 10, y + 28, 9, subColor[0], subColor[1], subColor[2], 1, 0);
-
-      // Input pins & labels
-      for (const [idx, port] of (node.inputs ?? []).entries()) {
-        const py = node.position.y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
-        const isHovered = hoveredPort?.nodeId === node.id && hoveredPort?.portId === port.id;
-        const pinRadius = isHovered ? 7 : 5;
-        const portColor = getPortTypeRgba(port.type, isDark);
-        const pinInnerBg: [number, number, number, number] = isDark
-          ? [0.086, 0.106, 0.133, 1]
-          : [0.941, 0.949, 0.961, 1];
-
-        // Outer circle (border) + inner dot
-        pushGpuPinInstance(node.position.x, py, pinRadius, pinInnerBg, 1.5, portColor);
-        pushGpuPinInstance(node.position.x, py, 2.5, isHovered ? [1, 1, 1, 1] : portColor);
-        visiblePinsCount++;
-
-        // Port label text
-        const portTextColor = isDark ? [0.788, 0.82, 0.851, 1] : [0.141, 0.161, 0.184, 1];
-        wasm.font_append_text_quads(
-          port.name,
-          node.position.x + 12,
-          py + 4,
-          11,
-          portTextColor[0],
-          portTextColor[1],
-          portTextColor[2],
-          1,
-          0,
-        );
-      }
-
-      // Output pins & labels
-      for (const [idx, port] of (node.outputs ?? []).entries()) {
-        const py = node.position.y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
-        const isHovered = hoveredPort?.nodeId === node.id && hoveredPort?.portId === port.id;
-        const pinRadius = isHovered ? 7 : 5;
-        const portColor = getPortTypeRgba(port.type, isDark);
-        const pinInnerBg: [number, number, number, number] = isDark
-          ? [0.086, 0.106, 0.133, 1]
-          : [0.941, 0.949, 0.961, 1];
-
-        // Outer circle (border) + inner dot
-        pushGpuPinInstance(node.position.x + NODE_WIDTH, py, pinRadius, pinInnerBg, 1.5, portColor);
-        pushGpuPinInstance(node.position.x + NODE_WIDTH, py, 2.5, isHovered ? [1, 1, 1, 1] : portColor);
-        visiblePinsCount++;
-
-        // Port label text
-        const portTextColor = isDark ? [0.788, 0.82, 0.851, 1] : [0.141, 0.161, 0.184, 1];
-        wasm.font_append_text_quads(
-          port.name,
-          node.position.x + NODE_WIDTH - 12,
-          py + 4,
-          11,
-          portTextColor[0],
-          portTextColor[1],
-          portTextColor[2],
-          1,
-          1,
-        );
-      }
-
-      // Literal properties preview
-      if (node.properties && Object.keys(node.properties).length > 0) {
-        const firstVal = String(Object.values(node.properties)[0]);
-        const propColor = isDark ? [0.345, 0.651, 1, 1] : [0.035, 0.412, 0.855, 1];
-        wasm.font_append_text_quads_mono(
-          `= ${firstVal}`,
-          x + 10,
-          y + nodeHeight - 8,
-          10,
-          propColor[0],
-          propColor[1],
-          propColor[2],
-          1,
-          0,
-        );
-      }
+      visiblePinsCount += prepareSingleWebGpuNode(node, isDark, hoveredPortInfo, wasmEngine);
     }
 
-    const floatCount = wasm.font_get_vertex_float_count();
-    const vbufPtr = wasm.font_get_vertex_buffer_ptr();
-    const f64View = new Float64Array(wasm.memory.buffer, vbufPtr, floatCount);
-    webGpuTextVertices = new Float32Array(f64View);
+    return { visibleNodesCount, visiblePinsCount };
+  }
 
+  /**
+   * Prepares instanced WebGPU spline geometry for graph edges.
+   */
+  function prepareWebGpuEdgeInstances(
+    minX: number,
+    minY: number,
+    maxX: number,
+    maxY: number,
+    nodeMap: Map<string, FlintGraphNode>,
+    wasmEngine: NonNullable<typeof wasm>,
+  ): number {
     let visibleEdgesCount = 0;
-    const nodeMap = new Map<string, FlintGraphNode>(nodes.map((n) => [n.id, n]));
+
     for (const edge of edges) {
       const fromNode = nodeMap.get(edge.fromNodeId);
       const toNode = nodeMap.get(edge.toNodeId);
@@ -1225,7 +1298,6 @@ if (globalThis.self !== undefined) {
       const p3x = toNode.position.x;
       const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIndex * PORT_ROW_HEIGHT + 14;
 
-      // Viewport culling for edge
       if (
         Math.max(p0x, p3x) < minX ||
         Math.min(p0x, p3x) > maxX ||
@@ -1244,59 +1316,122 @@ if (globalThis.self !== undefined) {
         let prevX = p0x;
         let prevY = p0y;
         for (const pt of edge.points) {
-          wasm.compute_edge_instance(prevX, prevY, pt.x, pt.y, isSelected, isActive, Math.round(pulseOffset * 1000));
+          wasmEngine.compute_edge_instance(
+            prevX,
+            prevY,
+            pt.x,
+            pt.y,
+            isSelected,
+            isActive,
+            Math.round(pulseOffset * 1000),
+          );
           pushGpuPinInstance(pt.x, pt.y, isSelected ? 6 : 4.5, isSelected ? [0.35, 0.65, 1, 1] : [0.7, 0.7, 0.7, 1]);
           prevX = pt.x;
           prevY = pt.y;
         }
-        wasm.compute_edge_instance(prevX, prevY, p3x, p3y, isSelected, isActive, Math.round(pulseOffset * 1000));
+        wasmEngine.compute_edge_instance(prevX, prevY, p3x, p3y, isSelected, isActive, Math.round(pulseOffset * 1000));
       } else {
-        wasm.compute_edge_instance(p0x, p0y, p3x, p3y, isSelected, isActive, Math.round(pulseOffset * 1000));
+        wasmEngine.compute_edge_instance(p0x, p0y, p3x, p3y, isSelected, isActive, Math.round(pulseOffset * 1000));
       }
     }
 
-    if (connectingEdge) {
-      const fromNode = nodeMap.get(connectingEdge.fromNodeId);
-      if (fromNode) {
-        const outIdx = Math.max(
-          0,
-          (fromNode.outputs ?? []).findIndex((p) => p.id === connectingEdge?.fromPortId),
-        );
-        const inIdx = Math.max(
-          0,
-          (fromNode.inputs ?? []).findIndex((p) => p.id === connectingEdge?.fromPortId),
-        );
-        let p0x = fromNode.position.x + NODE_WIDTH;
-        let p0y = fromNode.position.y + NODE_HEADER_HEIGHT + 14;
-        if (outIdx !== -1) {
-          p0x = fromNode.position.x + NODE_WIDTH;
-          p0y = fromNode.position.y + NODE_HEADER_HEIGHT + outIdx * PORT_ROW_HEIGHT + 14;
-        } else if (inIdx !== -1) {
-          p0x = fromNode.position.x;
-          p0y = fromNode.position.y + NODE_HEADER_HEIGHT + inIdx * PORT_ROW_HEIGHT + 14;
-        }
+    return visibleEdgesCount;
+  }
 
-        let p3x = connectingEdge.cursorX;
-        let p3y = connectingEdge.cursorY;
-        if (hoveredPort) {
-          const targetNode = nodeMap.get(hoveredPort.nodeId);
-          if (targetNode) {
-            const tInIdx = (targetNode.inputs ?? []).findIndex((p) => p.id === hoveredPort?.portId);
-            const tOutIdx = (targetNode.outputs ?? []).findIndex((p) => p.id === hoveredPort?.portId);
-            if (tInIdx !== -1) {
-              p3x = targetNode.position.x;
-              p3y = targetNode.position.y + NODE_HEADER_HEIGHT + tInIdx * PORT_ROW_HEIGHT + 14;
-            } else if (tOutIdx !== -1) {
-              p3x = targetNode.position.x + NODE_WIDTH;
-              p3y = targetNode.position.y + NODE_HEADER_HEIGHT + tOutIdx * PORT_ROW_HEIGHT + 14;
-            }
-          }
-        }
+  /**
+   * Prepares in-flight interactive wire connection spline.
+   */
+  function prepareWebGpuConnectingEdge(
+    connectingEdgeInfo: typeof connectingEdge,
+    nodeMap: Map<string, FlintGraphNode>,
+    hoveredPortInfo: typeof hoveredPort,
+    isDark: boolean,
+    wasmEngine: NonNullable<typeof wasm>,
+  ): void {
+    if (!connectingEdgeInfo) return;
+    const fromNode = nodeMap.get(connectingEdgeInfo.fromNodeId);
+    if (!fromNode) return;
 
-        wasm.compute_edge_instance(p0x, p0y, p3x, p3y, 1, 1, 500);
-        pushGpuPinInstance(p3x, p3y, 6, isDark ? [0.475, 0.753, 1, 1] : [0.035, 0.412, 0.855, 1]);
+    const outIdx = Math.max(
+      0,
+      (fromNode.outputs ?? []).findIndex((p) => p.id === connectingEdgeInfo?.fromPortId),
+    );
+    const inIdx = Math.max(
+      0,
+      (fromNode.inputs ?? []).findIndex((p) => p.id === connectingEdgeInfo?.fromPortId),
+    );
+    let p0x = fromNode.position.x + NODE_WIDTH;
+    let p0y = fromNode.position.y + NODE_HEADER_HEIGHT + 14;
+    if (outIdx !== -1) {
+      p0x = fromNode.position.x + NODE_WIDTH;
+      p0y = fromNode.position.y + NODE_HEADER_HEIGHT + outIdx * PORT_ROW_HEIGHT + 14;
+    } else if (inIdx !== -1) {
+      p0x = fromNode.position.x;
+      p0y = fromNode.position.y + NODE_HEADER_HEIGHT + inIdx * PORT_ROW_HEIGHT + 14;
+    }
+
+    let p3x = connectingEdgeInfo.cursorX;
+    let p3y = connectingEdgeInfo.cursorY;
+    if (hoveredPortInfo) {
+      const targetNode = nodeMap.get(hoveredPortInfo.nodeId);
+      if (targetNode) {
+        const tInIdx = (targetNode.inputs ?? []).findIndex((p) => p.id === hoveredPortInfo?.portId);
+        const tOutIdx = (targetNode.outputs ?? []).findIndex((p) => p.id === hoveredPortInfo?.portId);
+        if (tInIdx !== -1) {
+          p3x = targetNode.position.x;
+          p3y = targetNode.position.y + NODE_HEADER_HEIGHT + tInIdx * PORT_ROW_HEIGHT + 14;
+        } else if (tOutIdx !== -1) {
+          p3x = targetNode.position.x + NODE_WIDTH;
+          p3y = targetNode.position.y + NODE_HEADER_HEIGHT + tOutIdx * PORT_ROW_HEIGHT + 14;
+        }
       }
     }
+
+    wasmEngine.compute_edge_instance(p0x, p0y, p3x, p3y, 1, 1, 500);
+    pushGpuPinInstance(p3x, p3y, 6, isDark ? [0.475, 0.753, 1, 1] : [0.035, 0.412, 0.855, 1]);
+  }
+
+  /**
+   * Prepares instanced WebGPU vertex buffers and text quads for active nodes, groups, edges, and pins.
+   */
+  function prepareWebGpuInstances(): void {
+    if (!gpuContext || !cameraBuffer || !wasm) return;
+
+    nodeInstanceFloats = [];
+    edgeInstanceFloats = [];
+    pinInstanceFloats = [];
+    webGpuTextVertices = new Float32Array(0);
+
+    wasm.font_clear_text_vertices();
+    wasm.getViewportBounds(150);
+    const minX = wasm.get_bounds_min_x();
+    const minY = wasm.get_bounds_min_y();
+    const maxX = wasm.get_bounds_max_x();
+    const maxY = wasm.get_bounds_max_y();
+
+    const isDark = currentTheme !== 'light';
+
+    prepareWebGpuGroupInstances(minX, minY, maxX, maxY, isDark, selectedGroupId, wasm);
+
+    const { visibleNodesCount, visiblePinsCount } = prepareWebGpuNodeInstances(
+      minX,
+      minY,
+      maxX,
+      maxY,
+      isDark,
+      hoveredPort,
+      wasm,
+    );
+
+    const floatCount = wasm.font_get_vertex_float_count();
+    const vbufPtr = wasm.font_get_vertex_buffer_ptr();
+    const f64View = new Float64Array(wasm.memory.buffer, vbufPtr, floatCount);
+    webGpuTextVertices = new Float32Array(f64View);
+
+    const nodeMap = new Map<string, FlintGraphNode>(nodes.map((n) => [n.id, n]));
+    const visibleEdgesCount = prepareWebGpuEdgeInstances(minX, minY, maxX, maxY, nodeMap, wasm);
+
+    prepareWebGpuConnectingEdge(connectingEdge, nodeMap, hoveredPort, isDark, wasm);
 
     performanceStats = {
       ...performanceStats,
@@ -1539,7 +1674,9 @@ if (globalThis.self !== undefined) {
       const canvasObj = targetCanvas as unknown as { getContext(id: string): GPUCanvasContext | null };
       const context = canvasObj.getContext('webgpu');
       if (!context) return false;
-      const format = nav.gpu.getPreferredCanvasFormat();
+      const format = (
+        nav.gpu.getPreferredCanvasFormat ? nav.gpu.getPreferredCanvasFormat() : 'bgra8unorm'
+      ) as GPUTextureFormat;
       context.configure({ device, format, alphaMode: 'premultiplied' });
 
       if (gpuDevice !== device) {
@@ -1616,15 +1753,14 @@ if (globalThis.self !== undefined) {
         ? new Uint8Array(wasm.memory.buffer, atlasPtr, atlasSize * atlasSize * 4)
         : new Uint8Array(atlasSize * atlasSize * 4);
     const tex = gl.createTexture();
-    if (tex) {
-      gl.bindTexture(gl.TEXTURE_2D, tex);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, atlasSize, atlasSize, 0, gl.RGBA, gl.UNSIGNED_BYTE, rgbaData);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-      glFontTexture = tex;
-    }
+    if (!tex) return;
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, atlasSize, atlasSize, 0, gl.RGBA, gl.UNSIGNED_BYTE, rgbaData);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    glFontTexture = tex;
   }
 
   /**
@@ -1784,32 +1920,17 @@ if (globalThis.self !== undefined) {
   }
 
   /**
-   * Renders the complete node graph using the 2D canvas context and native Flint geometry projections.
+   * Renders background grid lines onto the 2D canvas context.
    */
-  function render2dFrame(): void {
-    if (!canvas2dCtx || !wasm) return;
-    const ctx = canvas2dCtx;
-    const isDark = currentTheme !== 'light';
-    const t0 = typeof performance === 'undefined' ? 0 : performance.now();
-    ctx.save();
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = isDark ? '#0b1219' : '#f5f6f8';
-    ctx.fillRect(0, 0, width, height);
-
-    ctx.translate(width / 2, height / 2);
-    const zoom = wasm.get_camera_zoom();
-    const camX = wasm.get_camera_x();
-    const camY = wasm.get_camera_y();
-    ctx.scale(zoom, zoom);
-    ctx.translate(-camX, -camY);
-
-    wasm.getViewportBounds(100);
-    const minX = wasm.get_bounds_min_x();
-    const minY = wasm.get_bounds_min_y();
-    const maxX = wasm.get_bounds_max_x();
-    const maxY = wasm.get_bounds_max_y();
-
-    // 1. Grid
+  function render2dGridPass(
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+    minX: number,
+    minY: number,
+    maxX: number,
+    maxY: number,
+    zoomVal: number,
+    isDark: boolean,
+  ): void {
     const minorSpacing = 24;
     const majorSpacing = 120;
     const startX = Math.floor(minX / minorSpacing) * minorSpacing;
@@ -1817,8 +1938,8 @@ if (globalThis.self !== undefined) {
     const startY = Math.floor(minY / minorSpacing) * minorSpacing;
     const endY = Math.ceil(maxY / minorSpacing) * minorSpacing;
 
-    ctx.lineWidth = 1 / zoom;
-    if (zoom > 0.4) {
+    ctx.lineWidth = 1 / zoomVal;
+    if (zoomVal > 0.4) {
       ctx.strokeStyle = isDark ? 'rgba(56, 64, 82, 0.25)' : 'rgba(140, 155, 175, 0.25)';
       ctx.beginPath();
       for (let x = startX; x <= endX; x += minorSpacing) {
@@ -1851,8 +1972,20 @@ if (globalThis.self !== undefined) {
       ctx.lineTo(maxX, y);
     }
     ctx.stroke();
+  }
 
-    // 2. Groups
+  /**
+   * Renders node group bounding boxes, titles, and borders on 2D canvas.
+   */
+  function render2dGroupPass(
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+    minX: number,
+    minY: number,
+    maxX: number,
+    maxY: number,
+    zoomVal: number,
+    isDark: boolean,
+  ): void {
     for (const group of groups) {
       const groupNodes = nodes.filter((node) => group.nodeIds.includes(node.id));
       if (groupNodes.length === 0) continue;
@@ -1876,7 +2009,6 @@ if (globalThis.self !== undefined) {
       const gw = gMaxX - gMinX + padding * 2;
       const gh = gMaxY - gMinY + padding * 2 + 22;
 
-      // Viewport culling for 2D group
       if (gx + gw < minX || gx > maxX || gy + gh < minY || gy > maxY) {
         continue;
       }
@@ -1893,7 +2025,7 @@ if (globalThis.self !== undefined) {
         `rgba(${Math.round(parsedColor[0] * 255)}, ${Math.round(parsedColor[1] * 255)}, ${Math.round(parsedColor[2] * 255)}, ${isDark ? 0.7 : 0.6})`;
       ctx.fillStyle = groupBg;
       ctx.strokeStyle = groupBorder;
-      ctx.lineWidth = (isSelectedGroup ? 3.5 : 2) / zoom;
+      ctx.lineWidth = (isSelectedGroup ? 3.5 : 2) / zoomVal;
       if (isSelectedGroup) {
         ctx.shadowColor = groupBorder;
         ctx.shadowBlur = 12;
@@ -1921,7 +2053,7 @@ if (globalThis.self !== undefined) {
       ctx.fill();
       if (isSelectedGroup) {
         ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 1.5 / zoom;
+        ctx.lineWidth = 1.5 / zoomVal;
         ctx.stroke();
       }
 
@@ -1929,9 +2061,146 @@ if (globalThis.self !== undefined) {
       ctx.fillText(group.title, gx + 18, gy + 18);
       ctx.restore();
     }
+  }
 
-    // 3. Edges
-    const nodeMap = new Map<string, FlintGraphNode>(nodes.map((n) => [n.id, n]));
+  /**
+   * Renders waypoints and spline curves for a single edge on 2D canvas.
+   */
+  function render2dEdgeCurve(
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+    edge: FlintGraphEdge,
+    p0x: number,
+    p0y: number,
+    p3x: number,
+    p3y: number,
+    p1x: number,
+    p1y: number,
+    p2x: number,
+    p2y: number,
+    zoomVal: number,
+    isDark: boolean,
+    isSelected: boolean,
+    isPulseActive: boolean,
+  ): void {
+    const hasWaypoints = edge.points && edge.points.length > 0;
+    ctx.save();
+
+    ctx.strokeStyle = isDark ? 'rgba(5, 10, 15, 0.85)' : 'rgba(255, 255, 255, 0.9)';
+    ctx.lineWidth = (isSelected ? 6.5 : 5) / zoomVal;
+    ctx.beginPath();
+    ctx.moveTo(p0x, p0y);
+    if (hasWaypoints && edge.points) {
+      for (let i = 0; i < edge.points.length; i++) {
+        const pt = edge.points[i];
+        if (pt) {
+          if (i === 0) {
+            const midX = (p0x + pt.x) / 2;
+            ctx.bezierCurveTo(midX, p0y, midX, pt.y, pt.x, pt.y);
+          } else {
+            const prev = edge.points[i - 1];
+            if (prev) {
+              const midX = (prev.x + pt.x) / 2;
+              ctx.bezierCurveTo(midX, prev.y, midX, pt.y, pt.x, pt.y);
+            }
+          }
+        }
+      }
+      const lastPt = edge.points.at(-1);
+      if (lastPt) {
+        const midX = (lastPt.x + p3x) / 2;
+        ctx.bezierCurveTo(midX, lastPt.y, midX, p3y, p3x, p3y);
+      }
+    } else {
+      ctx.bezierCurveTo(p1x, p1y, p2x, p2y, p3x, p3y);
+    }
+    ctx.stroke();
+
+    if (isSelected) {
+      ctx.strokeStyle = isDark ? '#79c0ff' : '#0969da';
+      ctx.lineWidth = 4.5 / zoomVal;
+      ctx.shadowColor = isDark ? 'rgba(88, 166, 255, 0.9)' : 'rgba(9, 105, 218, 0.7)';
+      ctx.shadowBlur = 10;
+    } else if (isPulseActive) {
+      ctx.strokeStyle = isDark ? '#3fb950' : '#1a7f37';
+      ctx.lineWidth = 4 / zoomVal;
+      ctx.shadowColor = isDark ? 'rgba(63, 185, 80, 0.9)' : 'rgba(26, 127, 55, 0.7)';
+      ctx.shadowBlur = 10;
+    } else {
+      ctx.strokeStyle = isDark ? '#58a6ff' : '#0550ae';
+      ctx.lineWidth = 3.2 / zoomVal;
+      ctx.shadowColor = isDark ? 'rgba(88, 166, 255, 0.35)' : 'rgba(9, 105, 218, 0.25)';
+      ctx.shadowBlur = 4;
+    }
+    ctx.beginPath();
+    ctx.moveTo(p0x, p0y);
+    if (hasWaypoints && edge.points) {
+      for (let i = 0; i < edge.points.length; i++) {
+        const pt = edge.points[i];
+        if (pt) {
+          if (i === 0) {
+            const midX = (p0x + pt.x) / 2;
+            ctx.bezierCurveTo(midX, p0y, midX, pt.y, pt.x, pt.y);
+          } else {
+            const prev = edge.points[i - 1];
+            if (prev) {
+              const midX = (prev.x + pt.x) / 2;
+              ctx.bezierCurveTo(midX, prev.y, midX, pt.y, pt.x, pt.y);
+            }
+          }
+        }
+      }
+      const lastPt = edge.points.at(-1);
+      if (lastPt) {
+        const midX = (lastPt.x + p3x) / 2;
+        ctx.bezierCurveTo(midX, lastPt.y, midX, p3y, p3x, p3y);
+      }
+    } else {
+      ctx.bezierCurveTo(p1x, p1y, p2x, p2y, p3x, p3y);
+    }
+    ctx.stroke();
+
+    ctx.fillStyle = isSelected ? '#79c0ff' : isDark ? '#58a6ff' : '#0969da';
+    ctx.beginPath();
+    ctx.arc(p0x, p0y, 4 / zoomVal, 0, Math.PI * 2);
+    ctx.arc(p3x, p3y, 4 / zoomVal, 0, Math.PI * 2);
+    ctx.fill();
+
+    if (hasWaypoints && edge.points) {
+      for (const pt of edge.points) {
+        ctx.fillStyle = isSelected ? '#58a6ff' : '#ffffff';
+        ctx.strokeStyle = isDark ? '#0d1117' : '#30363d';
+        ctx.lineWidth = 2 / zoomVal;
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 6 / zoomVal, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
+    }
+
+    const arrowX = hasWaypoints && edge.points ? (edge.points[0]?.x ?? (p0x + p3x) / 2) : (p0x + p3x) / 2;
+    const arrowY = hasWaypoints && edge.points ? (edge.points[0]?.y ?? (p0y + p3y) / 2) : (p0y + p3y) / 2;
+    ctx.fillStyle = isSelected ? '#ffffff' : isDark ? '#79c0ff' : '#0969da';
+    ctx.beginPath();
+    ctx.moveTo(arrowX - 4 / zoomVal, arrowY - 4 / zoomVal);
+    ctx.lineTo(arrowX + 4 / zoomVal, arrowY);
+    ctx.lineTo(arrowX - 4 / zoomVal, arrowY + 4 / zoomVal);
+    ctx.fill();
+  }
+
+  /**
+   * Renders edge connection cables and execution flow pulses on 2D canvas.
+   */
+  function render2dEdgePass(
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+    minX: number,
+    minY: number,
+    maxX: number,
+    maxY: number,
+    zoomVal: number,
+    isDark: boolean,
+    nodeMap: Map<string, FlintGraphNode>,
+    wasmEngine: NonNullable<typeof wasm>,
+  ): void {
     for (const edge of edges) {
       const fromNode = nodeMap.get(edge.fromNodeId);
       const toNode = nodeMap.get(edge.toNodeId);
@@ -1951,7 +2220,16 @@ if (globalThis.self !== undefined) {
       const p3x = toNode.position.x;
       const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIndex * PORT_ROW_HEIGHT + 14;
 
-      const dx = wasm.bezier_control_dx(Math.round(p0x), Math.round(p3x));
+      if (
+        Math.max(p0x, p3x) < minX ||
+        Math.min(p0x, p3x) > maxX ||
+        Math.max(p0y, p3y) < minY ||
+        Math.min(p0y, p3y) > maxY
+      ) {
+        continue;
+      }
+
+      const dx = wasmEngine.bezier_control_dx(Math.round(p0x), Math.round(p3x));
       const p1x = p0x + dx;
       const p1y = p0y;
       const p2x = p3x - dx;
@@ -1960,127 +2238,20 @@ if (globalThis.self !== undefined) {
       const pulseOffset = edgePulses.get(edge.id);
       const isPulseActive = pulseOffset !== undefined;
       const isSelected = selectedEdgeIds.has(edge.id);
-      const hasWaypoints = edge.points && edge.points.length > 0;
 
-      ctx.save();
-
-      // Outer backing stroke for crisp edge contrast
-      ctx.strokeStyle = isDark ? 'rgba(5, 10, 15, 0.85)' : 'rgba(255, 255, 255, 0.9)';
-      ctx.lineWidth = (isSelected ? 6.5 : 5) / zoom;
-      ctx.beginPath();
-      ctx.moveTo(p0x, p0y);
-      if (hasWaypoints && edge.points) {
-        for (let i = 0; i < edge.points.length; i++) {
-          const pt = edge.points[i];
-          if (pt) {
-            if (i === 0) {
-              const midX = (p0x + pt.x) / 2;
-              ctx.bezierCurveTo(midX, p0y, midX, pt.y, pt.x, pt.y);
-            } else {
-              const prev = edge.points[i - 1];
-              if (prev) {
-                const midX = (prev.x + pt.x) / 2;
-                ctx.bezierCurveTo(midX, prev.y, midX, pt.y, pt.x, pt.y);
-              }
-            }
-          }
-        }
-        const lastPt = edge.points.at(-1);
-        if (lastPt) {
-          const midX = (lastPt.x + p3x) / 2;
-          ctx.bezierCurveTo(midX, lastPt.y, midX, p3y, p3x, p3y);
-        }
-      } else {
-        ctx.bezierCurveTo(p1x, p1y, p2x, p2y, p3x, p3y);
-      }
-      ctx.stroke();
-
-      // Foreground colored cable
-      if (isSelected) {
-        ctx.strokeStyle = isDark ? '#79c0ff' : '#0969da';
-        ctx.lineWidth = 4.5 / zoom;
-        ctx.shadowColor = isDark ? 'rgba(88, 166, 255, 0.9)' : 'rgba(9, 105, 218, 0.7)';
-        ctx.shadowBlur = 10;
-      } else if (isPulseActive) {
-        ctx.strokeStyle = isDark ? '#3fb950' : '#1a7f37';
-        ctx.lineWidth = 4 / zoom;
-        ctx.shadowColor = isDark ? 'rgba(63, 185, 80, 0.9)' : 'rgba(26, 127, 55, 0.7)';
-        ctx.shadowBlur = 10;
-      } else {
-        ctx.strokeStyle = isDark ? '#58a6ff' : '#0550ae';
-        ctx.lineWidth = 3.2 / zoom;
-        ctx.shadowColor = isDark ? 'rgba(88, 166, 255, 0.35)' : 'rgba(9, 105, 218, 0.25)';
-        ctx.shadowBlur = 4;
-      }
-      ctx.beginPath();
-      ctx.moveTo(p0x, p0y);
-      if (hasWaypoints && edge.points) {
-        for (let i = 0; i < edge.points.length; i++) {
-          const pt = edge.points[i];
-          if (pt) {
-            if (i === 0) {
-              const midX = (p0x + pt.x) / 2;
-              ctx.bezierCurveTo(midX, p0y, midX, pt.y, pt.x, pt.y);
-            } else {
-              const prev = edge.points[i - 1];
-              if (prev) {
-                const midX = (prev.x + pt.x) / 2;
-                ctx.bezierCurveTo(midX, prev.y, midX, pt.y, pt.x, pt.y);
-              }
-            }
-          }
-        }
-        const lastPt = edge.points.at(-1);
-        if (lastPt) {
-          const midX = (lastPt.x + p3x) / 2;
-          ctx.bezierCurveTo(midX, lastPt.y, midX, p3y, p3x, p3y);
-        }
-      } else {
-        ctx.bezierCurveTo(p1x, p1y, p2x, p2y, p3x, p3y);
-      }
-      ctx.stroke();
-
-      // Pin connection terminal dots
-      ctx.fillStyle = isSelected ? '#79c0ff' : isDark ? '#58a6ff' : '#0969da';
-      ctx.beginPath();
-      ctx.arc(p0x, p0y, 4 / zoom, 0, Math.PI * 2);
-      ctx.arc(p3x, p3y, 4 / zoom, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Waypoint circular handles
-      if (hasWaypoints && edge.points) {
-        for (const pt of edge.points) {
-          ctx.fillStyle = isSelected ? '#58a6ff' : '#ffffff';
-          ctx.strokeStyle = isDark ? '#0d1117' : '#30363d';
-          ctx.lineWidth = 2 / zoom;
-          ctx.beginPath();
-          ctx.arc(pt.x, pt.y, 6 / zoom, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.stroke();
-        }
-      }
-
-      // Directional chevron arrow indicating data flow
-      const arrowX = hasWaypoints && edge.points ? (edge.points[0]?.x ?? (p0x + p3x) / 2) : (p0x + p3x) / 2;
-      const arrowY = hasWaypoints && edge.points ? (edge.points[0]?.y ?? (p0y + p3y) / 2) : (p0y + p3y) / 2;
-      ctx.fillStyle = isSelected ? '#ffffff' : isDark ? '#79c0ff' : '#0969da';
-      ctx.beginPath();
-      ctx.moveTo(arrowX - 4 / zoom, arrowY - 4 / zoom);
-      ctx.lineTo(arrowX + 4 / zoom, arrowY);
-      ctx.lineTo(arrowX - 4 / zoom, arrowY + 4 / zoom);
-      ctx.fill();
+      render2dEdgeCurve(ctx, edge, p0x, p0y, p3x, p3y, p1x, p1y, p2x, p2y, zoomVal, isDark, isSelected, isPulseActive);
 
       if (isPulseActive && pulseOffset !== undefined) {
         const pulseProgress = Math.max(0, Math.min(1, pulseOffset));
         const tPermille = Math.round(pulseProgress * 1000);
-        const pulseX = wasm.bezier_point_1d(
+        const pulseX = wasmEngine.bezier_point_1d(
           Math.round(p0x),
           Math.round(p1x),
           Math.round(p2x),
           Math.round(p3x),
           tPermille,
         );
-        const pulseY = wasm.bezier_point_1d(
+        const pulseY = wasmEngine.bezier_point_1d(
           Math.round(p0y),
           Math.round(p1y),
           Math.round(p2y),
@@ -2091,96 +2262,326 @@ if (globalThis.self !== undefined) {
         ctx.shadowColor = isDark ? '#58a6ff' : '#0969da';
         ctx.shadowBlur = 10;
         ctx.beginPath();
-        ctx.arc(pulseX, pulseY, 6 / zoom, 0, Math.PI * 2);
+        ctx.arc(pulseX, pulseY, 6 / zoomVal, 0, Math.PI * 2);
         ctx.fill();
       }
       ctx.restore();
     }
+  }
 
-    // 4. Connecting Edge
-    if (connectingEdge) {
-      const fromNode = nodeMap.get(connectingEdge.fromNodeId);
-      if (fromNode) {
-        const outIdx = (fromNode.outputs ?? []).findIndex((p) => p.id === connectingEdge?.fromPortId);
-        const inIdx = (fromNode.inputs ?? []).findIndex((p) => p.id === connectingEdge?.fromPortId);
+  /**
+   * Renders interactive in-flight wire connection cable on 2D canvas.
+   */
+  function render2dConnectingEdgePass(
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+    zoomVal: number,
+    isDark: boolean,
+    nodeMap: Map<string, FlintGraphNode>,
+  ): void {
+    if (!connectingEdge) return;
+    const fromNode = nodeMap.get(connectingEdge.fromNodeId);
+    if (!fromNode) return;
 
-        let p0x = fromNode.position.x + NODE_WIDTH;
-        let p0y = fromNode.position.y + NODE_HEADER_HEIGHT + 14;
+    const outIdx = (fromNode.outputs ?? []).findIndex((p) => p.id === connectingEdge?.fromPortId);
+    const inIdx = (fromNode.inputs ?? []).findIndex((p) => p.id === connectingEdge?.fromPortId);
 
-        if (outIdx !== -1) {
-          p0x = fromNode.position.x + NODE_WIDTH;
-          p0y = fromNode.position.y + NODE_HEADER_HEIGHT + outIdx * PORT_ROW_HEIGHT + 14;
-        } else if (inIdx !== -1) {
-          p0x = fromNode.position.x;
-          p0y = fromNode.position.y + NODE_HEADER_HEIGHT + inIdx * PORT_ROW_HEIGHT + 14;
+    let p0x = fromNode.position.x + NODE_WIDTH;
+    let p0y = fromNode.position.y + NODE_HEADER_HEIGHT + 14;
+
+    if (outIdx !== -1) {
+      p0x = fromNode.position.x + NODE_WIDTH;
+      p0y = fromNode.position.y + NODE_HEADER_HEIGHT + outIdx * PORT_ROW_HEIGHT + 14;
+    } else if (inIdx !== -1) {
+      p0x = fromNode.position.x;
+      p0y = fromNode.position.y + NODE_HEADER_HEIGHT + inIdx * PORT_ROW_HEIGHT + 14;
+    }
+
+    let p3x = connectingEdge.cursorX;
+    let p3y = connectingEdge.cursorY;
+    let isSnapped = false;
+
+    if (hoveredPort) {
+      const targetNode = nodeMap.get(hoveredPort.nodeId);
+      if (targetNode) {
+        const tInIdx = (targetNode.inputs ?? []).findIndex((p) => p.id === hoveredPort?.portId);
+        const tOutIdx = (targetNode.outputs ?? []).findIndex((p) => p.id === hoveredPort?.portId);
+        if (tInIdx !== -1) {
+          p3x = targetNode.position.x;
+          p3y = targetNode.position.y + NODE_HEADER_HEIGHT + tInIdx * PORT_ROW_HEIGHT + 14;
+          isSnapped = true;
+        } else if (tOutIdx !== -1) {
+          p3x = targetNode.position.x + NODE_WIDTH;
+          p3y = targetNode.position.y + NODE_HEADER_HEIGHT + tOutIdx * PORT_ROW_HEIGHT + 14;
+          isSnapped = true;
         }
-
-        let p3x = connectingEdge.cursorX;
-        let p3y = connectingEdge.cursorY;
-        let isSnapped = false;
-
-        if (hoveredPort) {
-          const targetNode = nodeMap.get(hoveredPort.nodeId);
-          if (targetNode) {
-            const tInIdx = (targetNode.inputs ?? []).findIndex((p) => p.id === hoveredPort?.portId);
-            const tOutIdx = (targetNode.outputs ?? []).findIndex((p) => p.id === hoveredPort?.portId);
-            if (tInIdx !== -1) {
-              p3x = targetNode.position.x;
-              p3y = targetNode.position.y + NODE_HEADER_HEIGHT + tInIdx * PORT_ROW_HEIGHT + 14;
-              isSnapped = true;
-            } else if (tOutIdx !== -1) {
-              p3x = targetNode.position.x + NODE_WIDTH;
-              p3y = targetNode.position.y + NODE_HEADER_HEIGHT + tOutIdx * PORT_ROW_HEIGHT + 14;
-              isSnapped = true;
-            }
-          }
-        }
-
-        const dx = Math.max(Math.abs(p3x - p0x) * 0.5, 40);
-
-        ctx.save();
-        // Outer glow
-        ctx.strokeStyle = isSnapped
-          ? 'rgba(63, 185, 80, 0.45)'
-          : isDark
-            ? 'rgba(88, 166, 255, 0.45)'
-            : 'rgba(9, 105, 218, 0.35)';
-        ctx.lineWidth = 6 / zoom;
-        ctx.beginPath();
-        ctx.moveTo(p0x, p0y);
-        ctx.bezierCurveTo(p0x + dx, p0y, p3x - dx, p3y, p3x, p3y);
-        ctx.stroke();
-
-        // Main line
-        ctx.strokeStyle = isSnapped ? '#3fb950' : isDark ? '#58a6ff' : '#0969da';
-        ctx.lineWidth = 3.5 / zoom;
-        ctx.setLineDash([8 / zoom, 4 / zoom]);
-        ctx.beginPath();
-        ctx.moveTo(p0x, p0y);
-        ctx.bezierCurveTo(p0x + dx, p0y, p3x - dx, p3y, p3x, p3y);
-        ctx.stroke();
-        ctx.setLineDash([]);
-
-        // Origin terminal dot
-        ctx.fillStyle = isDark ? '#58a6ff' : '#0969da';
-        ctx.beginPath();
-        ctx.arc(p0x, p0y, 5 / zoom, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Target cursor reticle
-        ctx.fillStyle = isSnapped ? '#3fb950' : isDark ? '#79c0ff' : '#218bff';
-        ctx.beginPath();
-        ctx.arc(p3x, p3y, (isSnapped ? 8 : 6) / zoom, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = isDark ? '#ffffff' : '#0d1117';
-        ctx.lineWidth = 2 / zoom;
-        ctx.stroke();
-
-        ctx.restore();
       }
     }
 
-    // 5. Nodes
+    const dx = Math.max(Math.abs(p3x - p0x) * 0.5, 40);
+
+    ctx.save();
+    ctx.strokeStyle = isSnapped
+      ? 'rgba(63, 185, 80, 0.45)'
+      : isDark
+        ? 'rgba(88, 166, 255, 0.45)'
+        : 'rgba(9, 105, 218, 0.35)';
+    ctx.lineWidth = 6 / zoomVal;
+    ctx.beginPath();
+    ctx.moveTo(p0x, p0y);
+    ctx.bezierCurveTo(p0x + dx, p0y, p3x - dx, p3y, p3x, p3y);
+    ctx.stroke();
+
+    ctx.strokeStyle = isSnapped ? '#3fb950' : isDark ? '#58a6ff' : '#0969da';
+    ctx.lineWidth = 3.5 / zoomVal;
+    ctx.setLineDash([8 / zoomVal, 4 / zoomVal]);
+    ctx.beginPath();
+    ctx.moveTo(p0x, p0y);
+    ctx.bezierCurveTo(p0x + dx, p0y, p3x - dx, p3y, p3x, p3y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = isDark ? '#58a6ff' : '#0969da';
+    ctx.beginPath();
+    ctx.arc(p0x, p0y, 5 / zoomVal, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = isSnapped ? '#3fb950' : isDark ? '#79c0ff' : '#218bff';
+    ctx.beginPath();
+    ctx.arc(p3x, p3y, (isSnapped ? 8 : 6) / zoomVal, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = isDark ? '#ffffff' : '#0d1117';
+    ctx.lineWidth = 2 / zoomVal;
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  /**
+   * Renders input and output port pins and labels for a single 2D node.
+   */
+  function render2dNodePins(
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+    node: FlintGraphNode,
+    x: number,
+    y: number,
+    nodeWidth: number,
+    zoomVal: number,
+    isDark: boolean,
+  ): void {
+    ctx.font = '11px "Comfortaa", -apple-system, sans-serif';
+    for (const [idx, port] of (node.inputs ?? []).entries()) {
+      const portY = y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
+      const isHovered = hoveredPort?.nodeId === node.id && hoveredPort.portId === port.id;
+      const portRgb = getPortTypeRgba(port.type, isDark);
+      const portColor = `rgba(${Math.round(portRgb[0] * 255)},${Math.round(portRgb[1] * 255)},${Math.round(portRgb[2] * 255)},${portRgb[3]})`;
+
+      ctx.save();
+      ctx.fillStyle = isDark ? '#161b22' : '#f0f2f5';
+      ctx.strokeStyle = portColor;
+      ctx.lineWidth = (isHovered ? 2.5 : 1.5) / zoomVal;
+      ctx.beginPath();
+      ctx.arc(x, portY, 5 / zoomVal, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = isHovered ? '#ffffff' : portColor;
+      ctx.beginPath();
+      ctx.arc(x, portY, 2.5 / zoomVal, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      ctx.fillStyle = isDark ? '#c9d1d9' : '#24292f';
+      ctx.fillText(port.name, x + 12, portY + 4);
+    }
+
+    for (const [idx, port] of (node.outputs ?? []).entries()) {
+      const portY = y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
+      const isHovered = hoveredPort?.nodeId === node.id && hoveredPort.portId === port.id;
+      const portRgb = getPortTypeRgba(port.type, isDark);
+      const portColor = `rgba(${Math.round(portRgb[0] * 255)},${Math.round(portRgb[1] * 255)},${Math.round(portRgb[2] * 255)},${portRgb[3]})`;
+
+      ctx.save();
+      ctx.fillStyle = isDark ? '#161b22' : '#f0f2f5';
+      ctx.strokeStyle = portColor;
+      ctx.lineWidth = (isHovered ? 2.5 : 1.5) / zoomVal;
+      ctx.beginPath();
+      ctx.arc(x + nodeWidth, portY, 5 / zoomVal, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = isHovered ? '#ffffff' : portColor;
+      ctx.beginPath();
+      ctx.arc(x + nodeWidth, portY, 2.5 / zoomVal, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      ctx.fillStyle = isDark ? '#c9d1d9' : '#24292f';
+      const labelWidth = ctx.measureText(port.name).width;
+      ctx.fillText(port.name, x + nodeWidth - labelWidth - 12, portY + 4);
+    }
+  }
+
+  /**
+   * Renders an individual node card, header, categories, and port pins on 2D canvas.
+   */
+  function render2dSingleNode(
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+    node: FlintGraphNode,
+    zoomVal: number,
+    isDark: boolean,
+  ): void {
+    const bounds = getNodeBounds(node);
+    const nodeWidth = bounds.maxX - bounds.minX;
+    const nodeHeight = bounds.maxY - bounds.minY;
+    const x = bounds.minX;
+    const y = bounds.minY;
+
+    const isSelected = selectedNodeIds.has(node.id);
+    const isActive = activeNodeIds.has(node.id);
+    const isTrapped = trappedNodeId === node.id;
+    const isMeta = node.metaSubgraph !== undefined || node.operation === 'meta';
+
+    ctx.save();
+    if (isTrapped) {
+      ctx.shadowColor = isDark ? '#f85149' : '#cf222e';
+      ctx.shadowBlur = 14;
+    } else if (isActive) {
+      ctx.shadowColor = isDark ? '#3fb950' : '#1a7f37';
+      ctx.shadowBlur = 14;
+    } else if (isSelected) {
+      ctx.shadowColor = isDark ? '#58a6ff' : '#0969da';
+      ctx.shadowBlur = 10;
+    }
+
+    ctx.fillStyle = isDark ? (isMeta ? '#161e2e' : '#21262d') : isMeta ? '#f0f4f8' : '#ffffff';
+    ctx.strokeStyle = isTrapped
+      ? isDark
+        ? '#f85149'
+        : '#cf222e'
+      : isActive
+        ? isDark
+          ? '#3fb950'
+          : '#1a7f37'
+        : isSelected
+          ? isDark
+            ? '#58a6ff'
+            : '#0969da'
+          : isMeta
+            ? isDark
+              ? '#79c0ff'
+              : '#0969da'
+            : isDark
+              ? '#30363d'
+              : '#d0d7de';
+    ctx.lineWidth = (isSelected || isTrapped || isActive ? 2.5 : 1.5) / zoomVal;
+
+    ctx.beginPath();
+    if (typeof ctx.roundRect === 'function') {
+      ctx.roundRect(x, y, nodeWidth, nodeHeight, 8);
+    } else {
+      ctx.rect(x, y, nodeWidth, nodeHeight);
+    }
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.save();
+    ctx.beginPath();
+    if (typeof ctx.roundRect === 'function') {
+      ctx.roundRect(x, y, nodeWidth, NODE_HEADER_HEIGHT, [8, 8, 0, 0]);
+    } else {
+      ctx.rect(x, y, nodeWidth, NODE_HEADER_HEIGHT);
+    }
+    ctx.fillStyle = isTrapped
+      ? isDark
+        ? '#3d1417'
+        : '#fee2e2'
+      : isActive
+        ? isDark
+          ? '#143d22'
+          : '#dcfce7'
+        : isMeta
+          ? isDark
+            ? '#0d2847'
+            : '#e1ecf7'
+          : isDark
+            ? '#161b22'
+            : '#f0f2f5';
+    ctx.fill();
+
+    const catColor = getCategoryRgba(node.category, isMeta, isDark);
+    ctx.fillStyle = `rgba(${Math.round(catColor[0] * 255)},${Math.round(catColor[1] * 255)},${Math.round(catColor[2] * 255)},${catColor[3]})`;
+    ctx.fillRect(x + 1, y + 1, nodeWidth - 2, 4);
+
+    ctx.strokeStyle = isDark ? 'rgba(48, 54, 61, 0.8)' : 'rgba(208, 215, 222, 0.8)';
+    ctx.lineWidth = 1 / zoomVal;
+    ctx.beginPath();
+    ctx.moveTo(x + 1, y + NODE_HEADER_HEIGHT);
+    ctx.lineTo(x + nodeWidth - 1, y + NODE_HEADER_HEIGHT);
+    ctx.stroke();
+
+    ctx.fillStyle = isDark ? '#f0f6fc' : '#1f2328';
+    ctx.font = 'bold 12px "Comfortaa", -apple-system, sans-serif';
+    ctx.fillText(node.title, x + 10, y + 17);
+
+    ctx.fillStyle = isMeta ? (isDark ? '#58a6ff' : '#0969da') : isDark ? '#8b949e' : '#57606a';
+    ctx.font = '10px "Datatype", monospace';
+    const catText = isMeta
+      ? `META (${node.metaSubgraph?.nodes.length ?? 0})`
+      : (node.category || 'OPERATION').toUpperCase();
+    const catWidth = ctx.measureText(catText).width;
+    ctx.fillText(catText, x + nodeWidth - catWidth - 10, y + 17);
+
+    ctx.fillStyle = isDark ? '#8b949e' : '#57606a';
+    ctx.font = '9px "Datatype", monospace';
+    ctx.fillText(node.operation, x + 10, y + 28);
+
+    render2dNodePins(ctx, node, x, y, nodeWidth, zoomVal, isDark);
+
+    if (node.properties && Object.keys(node.properties).length > 0) {
+      const propKeys = Object.keys(node.properties);
+      const firstVal = String(node.properties[propKeys[0]]);
+      ctx.fillStyle = isDark ? '#58a6ff' : '#0969da';
+      ctx.font = '10px "Datatype", monospace';
+      ctx.fillText(`= ${firstVal}`, x + 10, y + nodeHeight - 8);
+    }
+
+    ctx.restore();
+  }
+
+  /**
+   * Renders the complete node graph using the 2D canvas context and native Flint geometry projections.
+   */
+  function render2dFrame(): void {
+    if (!canvas2dCtx || !wasm) return;
+    const ctx = canvas2dCtx;
+    const isDark = currentTheme !== 'light';
+    const t0 = typeof performance === 'undefined' ? 0 : performance.now();
+    ctx.save();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = isDark ? '#0b1219' : '#f5f6f8';
+    ctx.fillRect(0, 0, width, height);
+
+    ctx.translate(width / 2, height / 2);
+    const zoomVal = wasm.get_camera_zoom();
+    const camX = wasm.get_camera_x();
+    const camY = wasm.get_camera_y();
+    ctx.scale(zoomVal, zoomVal);
+    ctx.translate(-camX, -camY);
+
+    wasm.getViewportBounds(100);
+    const minX = wasm.get_bounds_min_x();
+    const minY = wasm.get_bounds_min_y();
+    const maxX = wasm.get_bounds_max_x();
+    const maxY = wasm.get_bounds_max_y();
+
+    render2dGridPass(ctx, minX, minY, maxX, maxY, zoomVal, isDark);
+    render2dGroupPass(ctx, minX, minY, maxX, maxY, zoomVal, isDark);
+
+    const nodeMap = new Map<string, FlintGraphNode>(nodes.map((n) => [n.id, n]));
+    render2dEdgePass(ctx, minX, minY, maxX, maxY, zoomVal, isDark, nodeMap, wasm);
+    render2dConnectingEdgePass(ctx, zoomVal, isDark, nodeMap);
+
     for (const node of nodes) {
       const bounds = getNodeBounds(node);
       const nodeWidth = bounds.maxX - bounds.minX;
@@ -2188,178 +2589,8 @@ if (globalThis.self !== undefined) {
       const x = bounds.minX;
       const y = bounds.minY;
 
-      // Cull nodes completely outside viewport
       if (x + nodeWidth < minX || x > maxX || y + nodeHeight < minY || y > maxY) continue;
-
-      const isSelected = selectedNodeIds.has(node.id);
-      const isActive = activeNodeIds.has(node.id);
-      const isTrapped = trappedNodeId === node.id;
-      const isMeta = node.metaSubgraph !== undefined || node.operation === 'meta';
-
-      ctx.save();
-      if (isTrapped) {
-        ctx.shadowColor = isDark ? '#f85149' : '#cf222e';
-        ctx.shadowBlur = 14;
-      } else if (isActive) {
-        ctx.shadowColor = isDark ? '#3fb950' : '#1a7f37';
-        ctx.shadowBlur = 14;
-      } else if (isSelected) {
-        ctx.shadowColor = isDark ? '#58a6ff' : '#0969da';
-        ctx.shadowBlur = 10;
-      }
-
-      ctx.fillStyle = isDark ? (isMeta ? '#161e2e' : '#21262d') : isMeta ? '#f0f4f8' : '#ffffff';
-      ctx.strokeStyle = isTrapped
-        ? isDark
-          ? '#f85149'
-          : '#cf222e'
-        : isActive
-          ? isDark
-            ? '#3fb950'
-            : '#1a7f37'
-          : isSelected
-            ? isDark
-              ? '#58a6ff'
-              : '#0969da'
-            : isMeta
-              ? isDark
-                ? '#79c0ff'
-                : '#0969da'
-              : isDark
-                ? '#30363d'
-                : '#d0d7de';
-      ctx.lineWidth = (isSelected || isTrapped || isActive ? 2.5 : 1.5) / zoom;
-
-      ctx.beginPath();
-      if (typeof ctx.roundRect === 'function') {
-        ctx.roundRect(x, y, nodeWidth, nodeHeight, 8);
-      } else {
-        ctx.rect(x, y, nodeWidth, nodeHeight);
-      }
-      ctx.fill();
-      ctx.stroke();
-      ctx.restore();
-
-      // Node Header
-      ctx.save();
-      ctx.beginPath();
-      if (typeof ctx.roundRect === 'function') {
-        ctx.roundRect(x, y, nodeWidth, NODE_HEADER_HEIGHT, [8, 8, 0, 0]);
-      } else {
-        ctx.rect(x, y, nodeWidth, NODE_HEADER_HEIGHT);
-      }
-      ctx.fillStyle = isTrapped
-        ? isDark
-          ? '#3d1417'
-          : '#fee2e2'
-        : isActive
-          ? isDark
-            ? '#143d22'
-            : '#dcfce7'
-          : isMeta
-            ? isDark
-              ? '#0d2847'
-              : '#e1ecf7'
-            : isDark
-              ? '#161b22'
-              : '#f0f2f5';
-      ctx.fill();
-
-      // Category accent bar (4px)
-      const catColor = getCategoryRgba(node.category, isMeta, isDark);
-      ctx.fillStyle = `rgba(${Math.round(catColor[0] * 255)},${Math.round(catColor[1] * 255)},${Math.round(catColor[2] * 255)},${catColor[3]})`;
-      ctx.fillRect(x + 1, y + 1, nodeWidth - 2, 4);
-
-      // Header separator
-      ctx.strokeStyle = isDark ? 'rgba(48, 54, 61, 0.8)' : 'rgba(208, 215, 222, 0.8)';
-      ctx.lineWidth = 1 / zoom;
-      ctx.beginPath();
-      ctx.moveTo(x + 1, y + NODE_HEADER_HEIGHT);
-      ctx.lineTo(x + nodeWidth - 1, y + NODE_HEADER_HEIGHT);
-      ctx.stroke();
-
-      // Title
-      ctx.fillStyle = isDark ? '#f0f6fc' : '#1f2328';
-      ctx.font = 'bold 12px "Comfortaa", -apple-system, sans-serif';
-      ctx.fillText(node.title, x + 10, y + 17);
-
-      // Category / Meta pill
-      ctx.fillStyle = isMeta ? (isDark ? '#58a6ff' : '#0969da') : isDark ? '#8b949e' : '#57606a';
-      ctx.font = '10px "Datatype", monospace';
-      const catText = isMeta ? `META (${node.metaSubgraph?.nodes.length ?? 0})` : node.category.toUpperCase();
-      const catWidth = ctx.measureText(catText).width;
-      ctx.fillText(catText, x + nodeWidth - catWidth - 10, y + 17);
-
-      // Subtitle operation identifier
-      ctx.fillStyle = isDark ? '#8b949e' : '#57606a';
-      ctx.font = '9px "Datatype", monospace';
-      ctx.fillText(node.operation, x + 10, y + 28);
-
-      // Port circles (Pins) and labels
-      ctx.font = '11px "Comfortaa", -apple-system, sans-serif';
-      for (const [idx, port] of (node.inputs ?? []).entries()) {
-        const portY = y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
-        const isHovered = hoveredPort?.nodeId === node.id && hoveredPort.portId === port.id;
-        const portRgb = getPortTypeRgba(port.type, isDark);
-        const portColor = `rgba(${Math.round(portRgb[0] * 255)},${Math.round(portRgb[1] * 255)},${Math.round(portRgb[2] * 255)},${portRgb[3]})`;
-
-        ctx.save();
-        ctx.fillStyle = isDark ? '#161b22' : '#f0f2f5';
-        ctx.strokeStyle = portColor;
-        ctx.lineWidth = (isHovered ? 2.5 : 1.5) / zoom;
-        ctx.beginPath();
-        ctx.arc(x, portY, 5 / zoom, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.fillStyle = isHovered ? '#ffffff' : portColor;
-        ctx.beginPath();
-        ctx.arc(x, portY, 2.5 / zoom, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-
-        // Label
-        ctx.fillStyle = isDark ? '#c9d1d9' : '#24292f';
-        ctx.fillText(port.name, x + 12, portY + 4);
-      }
-
-      for (const [idx, port] of (node.outputs ?? []).entries()) {
-        const portY = y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
-        const isHovered = hoveredPort?.nodeId === node.id && hoveredPort.portId === port.id;
-        const portRgb = getPortTypeRgba(port.type, isDark);
-        const portColor = `rgba(${Math.round(portRgb[0] * 255)},${Math.round(portRgb[1] * 255)},${Math.round(portRgb[2] * 255)},${portRgb[3]})`;
-
-        ctx.save();
-        ctx.fillStyle = isDark ? '#161b22' : '#f0f2f5';
-        ctx.strokeStyle = portColor;
-        ctx.lineWidth = (isHovered ? 2.5 : 1.5) / zoom;
-        ctx.beginPath();
-        ctx.arc(x + nodeWidth, portY, 5 / zoom, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.fillStyle = isHovered ? '#ffffff' : portColor;
-        ctx.beginPath();
-        ctx.arc(x + nodeWidth, portY, 2.5 / zoom, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-
-        // Label
-        ctx.fillStyle = isDark ? '#c9d1d9' : '#24292f';
-        const labelWidth = ctx.measureText(port.name).width;
-        ctx.fillText(port.name, x + nodeWidth - labelWidth - 12, portY + 4);
-      }
-
-      // Literal properties preview
-      if (node.properties && Object.keys(node.properties).length > 0) {
-        const propKeys = Object.keys(node.properties);
-        const firstVal = String(node.properties[propKeys[0]]);
-        ctx.fillStyle = isDark ? '#58a6ff' : '#0969da';
-        ctx.font = '10px "Datatype", monospace';
-        ctx.fillText(`= ${firstVal}`, x + 10, y + nodeHeight - 8);
-      }
-
-      ctx.restore();
+      render2dSingleNode(ctx, node, zoomVal, isDark);
     }
 
     ctx.restore();
@@ -2375,6 +2606,668 @@ if (globalThis.self !== undefined) {
       visiblePinsCount: nodes.length * 4,
       isFallback: activeBackend === 'canvas2d',
     };
+  }
+
+  /**
+   * Renders background grid lines into WebGL line vertex buffers.
+   */
+  function renderWebGLGridPass(
+    minX: number,
+    minY: number,
+    maxX: number,
+    maxY: number,
+    zoomVal: number,
+    isDark: boolean,
+  ): void {
+    const minorSpacing = 24;
+    const majorSpacing = 120;
+    const startX = Math.floor(minX / minorSpacing) * minorSpacing;
+    const endX = Math.ceil(maxX / minorSpacing) * minorSpacing;
+    const startY = Math.floor(minY / minorSpacing) * minorSpacing;
+    const endY = Math.ceil(maxY / minorSpacing) * minorSpacing;
+    const lineThick = 1 / zoomVal;
+
+    if (zoomVal > 0.4) {
+      const minorColor = isDark ? [0.22, 0.25, 0.32, 0.25] : [0.55, 0.61, 0.69, 0.25];
+      for (let x = startX; x <= endX; x += minorSpacing) {
+        if (x % majorSpacing !== 0) {
+          pushThickLine(x, minY, x, maxY, lineThick, minorColor[0], minorColor[1], minorColor[2], minorColor[3]);
+        }
+      }
+      for (let y = startY; y <= endY; y += minorSpacing) {
+        if (y % majorSpacing !== 0) {
+          pushThickLine(minX, y, maxX, y, lineThick, minorColor[0], minorColor[1], minorColor[2], minorColor[3]);
+        }
+      }
+    }
+
+    const majorColor = isDark ? [0.35, 0.4, 0.5, 0.35] : [0.39, 0.47, 0.57, 0.45];
+    const majorStartX = Math.floor(minX / majorSpacing) * majorSpacing;
+    const majorEndX = Math.ceil(maxX / majorSpacing) * majorSpacing;
+    const majorStartY = Math.floor(minY / majorSpacing) * majorSpacing;
+    const majorEndY = Math.ceil(maxY / majorSpacing) * majorSpacing;
+    for (let x = majorStartX; x <= majorEndX; x += majorSpacing) {
+      pushThickLine(x, minY, x, maxY, lineThick, majorColor[0], majorColor[1], majorColor[2], majorColor[3]);
+    }
+    for (let y = majorStartY; y <= majorEndY; y += majorSpacing) {
+      pushThickLine(minX, y, maxX, y, lineThick, majorColor[0], majorColor[1], majorColor[2], majorColor[3]);
+    }
+  }
+
+  /**
+   * Renders group boxes and labels into WebGL triangle/quad batches.
+   */
+  function renderWebGLGroupPass(
+    minX: number,
+    minY: number,
+    maxX: number,
+    maxY: number,
+    isDark: boolean,
+    wasmEngine: NonNullable<typeof wasm>,
+  ): void {
+    for (const group of groups) {
+      const groupNodes = nodes.filter((n) => group.nodeIds.includes(n.id));
+      if (groupNodes.length === 0) continue;
+
+      let gMinX = Number.POSITIVE_INFINITY;
+      let gMinY = Number.POSITIVE_INFINITY;
+      let gMaxX = Number.NEGATIVE_INFINITY;
+      let gMaxY = Number.NEGATIVE_INFINITY;
+      for (const node of groupNodes) {
+        const bounds = getNodeBounds(node);
+        if (bounds.minX < gMinX) gMinX = bounds.minX;
+        if (bounds.maxX > gMaxX) gMaxX = bounds.maxX;
+        if (bounds.minY < gMinY) gMinY = bounds.minY;
+        if (bounds.maxY > gMaxY) gMaxY = bounds.maxY;
+      }
+      const pad = 24;
+      const gx = gMinX - pad;
+      const gy = gMinY - pad - 22;
+      const gw = gMaxX - gMinX + pad * 2;
+      const gh = gMaxY - gMinY + pad * 2 + 22;
+
+      if (gx + gw < minX || gx > maxX || gy + gh < minY || gy > maxY) {
+        continue;
+      }
+
+      const isSelectedGroup = selectedGroupId === group.id;
+      const defaultBorder: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 1] : [0.035, 0.412, 0.855, 1];
+      const parsedColor = parseColorToRgba(group.color, defaultBorder);
+      const groupBg: [number, number, number, number] = group.backgroundColor
+        ? parseColorToRgba(group.backgroundColor, [
+            parsedColor[0],
+            parsedColor[1],
+            parsedColor[2],
+            isDark ? 0.12 : 0.08,
+          ])
+        : [parsedColor[0], parsedColor[1], parsedColor[2], isDark ? 0.12 : 0.08];
+      const groupBorder: [number, number, number, number] = isSelectedGroup
+        ? [1, 1, 1, 1]
+        : [parsedColor[0], parsedColor[1], parsedColor[2], isDark ? 0.7 : 0.6];
+      pushRect(gx, gy, gw, gh, groupBg[0], groupBg[1], groupBg[2], groupBg[3]);
+      pushRectBorder(gx, gy, gw, gh, groupBorder[0], groupBorder[1], groupBorder[2], groupBorder[3]);
+
+      const titleW = wasmEngine.font_measure_text(group.title, 12);
+      const pillW = titleW + 16;
+      pushRect(gx + 10, gy + 4, pillW, 20, parsedColor[0], parsedColor[1], parsedColor[2], 0.9);
+      if (isSelectedGroup) {
+        pushRectBorder(gx + 10, gy + 4, pillW, 20, 1, 1, 1, 1);
+      }
+      wasmEngine.font_append_text_quads(group.title, gx + 18, gy + 18, 12, 1, 1, 1, 1, 0);
+    }
+  }
+
+  /**
+   * Evaluates bezier segments for an edge and emits WebGL thick lines.
+   */
+  function pushWebGLBezierEdge(
+    p0x: number,
+    p0y: number,
+    p3x: number,
+    p3y: number,
+    edgeThickness: number,
+    colorR: number,
+    colorG: number,
+    colorB: number,
+    colorA: number,
+    wasmEngine: NonNullable<typeof wasm>,
+  ): void {
+    const p1x = p0x + wasmEngine.bezier_control_dx(Math.round(p0x), Math.round(p3x));
+    const p1y = p0y;
+    const p2x = p3x - wasmEngine.bezier_control_dx(Math.round(p0x), Math.round(p3x));
+    const p2y = p3y;
+    const steps = 24;
+    for (let s = 0; s < steps; s++) {
+      const t1Permille = Math.round((s / steps) * 1000);
+      const t2Permille = Math.round(((s + 1) / steps) * 1000);
+      const sx1 = wasmEngine.bezier_point_1d(
+        Math.round(p0x),
+        Math.round(p1x),
+        Math.round(p2x),
+        Math.round(p3x),
+        t1Permille,
+      );
+      const sy1 = wasmEngine.bezier_point_1d(
+        Math.round(p0y),
+        Math.round(p1y),
+        Math.round(p2y),
+        Math.round(p3y),
+        t1Permille,
+      );
+      const sx2 = wasmEngine.bezier_point_1d(
+        Math.round(p0x),
+        Math.round(p1x),
+        Math.round(p2x),
+        Math.round(p3x),
+        t2Permille,
+      );
+      const sy2 = wasmEngine.bezier_point_1d(
+        Math.round(p0y),
+        Math.round(p1y),
+        Math.round(p2y),
+        Math.round(p3y),
+        t2Permille,
+      );
+      pushThickLine(sx1, sy1, sx2, sy2, edgeThickness, colorR, colorG, colorB, colorA);
+    }
+  }
+
+  /**
+   * Renders edge connections and waypoints into WebGL primitive buffers.
+   */
+  function renderWebGLEdgePass(
+    minX: number,
+    minY: number,
+    maxX: number,
+    maxY: number,
+    nodeMap: Map<string, FlintGraphNode>,
+    isDark: boolean,
+    wasmEngine: NonNullable<typeof wasm>,
+  ): number {
+    let visibleEdgesCount = 0;
+
+    for (const edge of edges) {
+      const fromNode = nodeMap.get(edge.fromNodeId);
+      const toNode = nodeMap.get(edge.toNodeId);
+      if (!fromNode || !toNode) continue;
+
+      const fromPortIndex = Math.max(
+        0,
+        (fromNode.outputs ?? []).findIndex((p) => p.id === edge.fromPortId),
+      );
+      const toPortIndex = Math.max(
+        0,
+        (toNode.inputs ?? []).findIndex((p) => p.id === edge.toPortId),
+      );
+
+      const p0x = fromNode.position.x + NODE_WIDTH;
+      const p0y = fromNode.position.y + NODE_HEADER_HEIGHT + fromPortIndex * PORT_ROW_HEIGHT + 14;
+      const p3x = toNode.position.x;
+      const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIndex * PORT_ROW_HEIGHT + 14;
+
+      if (
+        Math.max(p0x, p3x) < minX ||
+        Math.min(p0x, p3x) > maxX ||
+        Math.max(p0y, p3y) < minY ||
+        Math.min(p0y, p3y) > maxY
+      ) {
+        continue;
+      }
+      visibleEdgesCount++;
+
+      const isSelected = selectedEdgeIds.has(edge.id);
+      const pulseOffset = edgePulses.get(edge.id);
+      const isActive = pulseOffset !== undefined;
+
+      const colorR = isDark
+        ? isSelected
+          ? 0.35
+          : isActive
+            ? 0.25
+            : 0.35
+        : isSelected
+          ? 0.035
+          : isActive
+            ? 0.1
+            : 0.035;
+      const colorG = isDark
+        ? isSelected
+          ? 0.65
+          : isActive
+            ? 0.73
+            : 0.65
+        : isSelected
+          ? 0.412
+          : isActive
+            ? 0.5
+            : 0.412;
+      const colorB = isDark ? (isSelected ? 1 : isActive ? 0.31 : 1) : isSelected ? 0.855 : isActive ? 0.22 : 0.855;
+      const colorA = isSelected || isActive ? 1 : isDark ? 0.85 : 0.8;
+      const edgeThickness = isSelected ? 3.5 : 2.5;
+
+      const hasWaypoints = edge.points && edge.points.length > 0;
+      if (hasWaypoints && edge.points) {
+        let prevX = p0x;
+        let prevY = p0y;
+        for (const pt of edge.points) {
+          pushThickLine(prevX, prevY, pt.x, pt.y, edgeThickness, colorR, colorG, colorB, colorA);
+          pushRect(pt.x - 3, pt.y - 3, 6, 6, isSelected ? 0.35 : 1, isSelected ? 0.65 : 1, 1, 1);
+          prevX = pt.x;
+          prevY = pt.y;
+        }
+        pushThickLine(prevX, prevY, p3x, p3y, edgeThickness, colorR, colorG, colorB, colorA);
+      } else {
+        pushWebGLBezierEdge(p0x, p0y, p3x, p3y, edgeThickness, colorR, colorG, colorB, colorA, wasmEngine);
+      }
+    }
+
+    return visibleEdgesCount;
+  }
+
+  /**
+   * Renders in-flight wire connection cable in WebGL.
+   */
+  function renderWebGLConnectingEdgePass(nodeMap: Map<string, FlintGraphNode>, isDark: boolean): void {
+    if (!connectingEdge) return;
+    const fromNode = nodeMap.get(connectingEdge.fromNodeId);
+    if (!fromNode) return;
+
+    const outIdx = (fromNode.outputs ?? []).findIndex((p) => p.id === connectingEdge?.fromPortId);
+    const inIdx = (fromNode.inputs ?? []).findIndex((p) => p.id === connectingEdge?.fromPortId);
+    let p0x = fromNode.position.x + NODE_WIDTH;
+    let p0y = fromNode.position.y + NODE_HEADER_HEIGHT + 14;
+    if (outIdx !== -1) {
+      p0x = fromNode.position.x + NODE_WIDTH;
+      p0y = fromNode.position.y + NODE_HEADER_HEIGHT + outIdx * PORT_ROW_HEIGHT + 14;
+    } else if (inIdx !== -1) {
+      p0x = fromNode.position.x;
+      p0y = fromNode.position.y + NODE_HEADER_HEIGHT + inIdx * PORT_ROW_HEIGHT + 14;
+    }
+
+    let p3x = connectingEdge.cursorX;
+    let p3y = connectingEdge.cursorY;
+    let isSnapped = false;
+
+    if (hoveredPort) {
+      const targetNode = nodeMap.get(hoveredPort.nodeId);
+      if (targetNode) {
+        const tInIdx = (targetNode.inputs ?? []).findIndex((p) => p.id === hoveredPort?.portId);
+        const tOutIdx = (targetNode.outputs ?? []).findIndex((p) => p.id === hoveredPort?.portId);
+        if (tInIdx !== -1) {
+          p3x = targetNode.position.x;
+          p3y = targetNode.position.y + NODE_HEADER_HEIGHT + tInIdx * PORT_ROW_HEIGHT + 14;
+          isSnapped = true;
+        } else if (tOutIdx !== -1) {
+          p3x = targetNode.position.x + NODE_WIDTH;
+          p3y = targetNode.position.y + NODE_HEADER_HEIGHT + tOutIdx * PORT_ROW_HEIGHT + 14;
+          isSnapped = true;
+        }
+      }
+    }
+
+    const connR = isSnapped ? 0.247 : isDark ? 0.35 : 0.035;
+    const connG = isSnapped ? 0.725 : isDark ? 0.65 : 0.412;
+    const connB = isSnapped ? 0.314 : isDark ? 1 : 0.855;
+    pushThickLine(p0x, p0y, p3x, p3y, isSnapped ? 4 : 3, connR, connG, connB, 1);
+    pushCircle(p3x, p3y, isSnapped ? 8 : 6, connR, connG, connB, 1);
+    pushCircle(p3x, p3y, isSnapped ? 5 : 4, isDark ? 1 : 0, isDark ? 1 : 0, isDark ? 1 : 0, 1);
+  }
+
+  /**
+   * Renders input and output port pins and labels for a single WebGL node.
+   */
+  function renderWebGLNodePins(
+    node: FlintGraphNode,
+    x: number,
+    y: number,
+    nodeWidth: number,
+    isDark: boolean,
+    wasmEngine: NonNullable<typeof wasm>,
+  ): number {
+    let pinCount = 0;
+
+    for (const [idx, port] of (node.inputs ?? []).entries()) {
+      const portY = y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
+      const isHovered = hoveredPort?.nodeId === node.id && hoveredPort?.portId === port.id;
+      const pinRadius = isHovered ? 7 : 5;
+      const portColor = getPortTypeRgba(port.type, isDark);
+      const pinInner = isDark ? [0.086, 0.106, 0.133] : [0.941, 0.949, 0.961];
+
+      pushCircle(x, portY, pinRadius, portColor[0], portColor[1], portColor[2], 1);
+      pushCircle(x, portY, Math.max(1, pinRadius - 1.5), pinInner[0], pinInner[1], pinInner[2], 1);
+      pushCircle(
+        x,
+        portY,
+        2.5,
+        isHovered ? 1 : portColor[0],
+        isHovered ? 1 : portColor[1],
+        isHovered ? 1 : portColor[2],
+        1,
+      );
+      pinCount++;
+
+      const portTextColor = isDark ? [0.788, 0.82, 0.851] : [0.141, 0.161, 0.184];
+      wasmEngine.font_append_text_quads(
+        port.name,
+        x + 12,
+        portY + 4,
+        11,
+        portTextColor[0],
+        portTextColor[1],
+        portTextColor[2],
+        1,
+        0,
+      );
+    }
+
+    for (const [idx, port] of (node.outputs ?? []).entries()) {
+      const portY = y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
+      const isHovered = hoveredPort?.nodeId === node.id && hoveredPort?.portId === port.id;
+      const pinRadius = isHovered ? 7 : 5;
+      const portColor = getPortTypeRgba(port.type, isDark);
+      const pinInner = isDark ? [0.086, 0.106, 0.133] : [0.941, 0.949, 0.961];
+
+      pushCircle(x + nodeWidth, portY, pinRadius, portColor[0], portColor[1], portColor[2], 1);
+      pushCircle(x + nodeWidth, portY, Math.max(1, pinRadius - 1.5), pinInner[0], pinInner[1], pinInner[2], 1);
+      pushCircle(
+        x + nodeWidth,
+        portY,
+        2.5,
+        isHovered ? 1 : portColor[0],
+        isHovered ? 1 : portColor[1],
+        isHovered ? 1 : portColor[2],
+        1,
+      );
+      pinCount++;
+
+      const portTextColor = isDark ? [0.788, 0.82, 0.851] : [0.141, 0.161, 0.184];
+      wasmEngine.font_append_text_quads(
+        port.name,
+        x + nodeWidth - 12,
+        portY + 4,
+        11,
+        portTextColor[0],
+        portTextColor[1],
+        portTextColor[2],
+        1,
+        1,
+      );
+    }
+
+    return pinCount;
+  }
+
+  /**
+   * Renders an individual node card, header, and port pins in WebGL.
+   */
+  function renderWebGLSingleNode(node: FlintGraphNode, isDark: boolean, wasmEngine: NonNullable<typeof wasm>): number {
+    const bounds = getNodeBounds(node);
+    const nodeWidth = bounds.maxX - bounds.minX;
+    const nodeHeight = bounds.maxY - bounds.minY;
+    const x = bounds.minX;
+    const y = bounds.minY;
+
+    const isSelected = selectedNodeIds.has(node.id);
+    const isActive = activeNodeIds.has(node.id);
+    const isTrapped = trappedNodeId === node.id;
+    const isMeta = node.metaSubgraph !== undefined || node.operation === 'meta';
+
+    const fillR = isDark ? (isMeta ? 0.086 : 0.129) : isMeta ? 0.941 : 1;
+    const fillG = isDark ? (isMeta ? 0.118 : 0.149) : isMeta ? 0.957 : 1;
+    const fillB = isDark ? (isMeta ? 0.18 : 0.176) : isMeta ? 0.973 : 1;
+    pushRect(x, y, nodeWidth, nodeHeight, fillR, fillG, fillB, isDark ? 0.95 : 0.98);
+
+    const borderR = isDark
+      ? isTrapped
+        ? 0.973
+        : isActive
+          ? 0.247
+          : isSelected
+            ? 0.345
+            : isMeta
+              ? 0.475
+              : 0.188
+      : isTrapped
+        ? 0.812
+        : isActive
+          ? 0.102
+          : isSelected
+            ? 0.035
+            : isMeta
+              ? 0.035
+              : 0.816;
+    const borderG = isDark
+      ? isTrapped
+        ? 0.318
+        : isActive
+          ? 0.725
+          : isSelected
+            ? 0.651
+            : isMeta
+              ? 0.753
+              : 0.212
+      : isTrapped
+        ? 0.133
+        : isActive
+          ? 0.498
+          : isSelected
+            ? 0.412
+            : isMeta
+              ? 0.412
+              : 0.843;
+    const borderB = isDark
+      ? isTrapped
+        ? 0.286
+        : isActive
+          ? 0.314
+          : isSelected
+            ? 1
+            : isMeta
+              ? 1
+              : 0.239
+      : isTrapped
+        ? 0.18
+        : isActive
+          ? 0.216
+          : isSelected
+            ? 0.855
+            : isMeta
+              ? 0.855
+              : 0.871;
+    const borderA = isSelected || isTrapped || isActive ? 1 : isDark ? 0.8 : 0.9;
+    pushRectBorder(x, y, nodeWidth, nodeHeight, borderR, borderG, borderB, borderA);
+
+    const headerR = isDark
+      ? isTrapped
+        ? 0.239
+        : isActive
+          ? 0.078
+          : isMeta
+            ? 0.051
+            : 0.086
+      : isTrapped
+        ? 0.996
+        : isActive
+          ? 0.863
+          : isMeta
+            ? 0.882
+            : 0.941;
+    const headerG = isDark
+      ? isTrapped
+        ? 0.078
+        : isActive
+          ? 0.239
+          : isMeta
+            ? 0.157
+            : 0.106
+      : isTrapped
+        ? 0.886
+        : isActive
+          ? 0.988
+          : isMeta
+            ? 0.925
+            : 0.949;
+    const headerB = isDark
+      ? isTrapped
+        ? 0.09
+        : isActive
+          ? 0.133
+          : isMeta
+            ? 0.278
+            : 0.133
+      : isTrapped
+        ? 0.886
+        : isActive
+          ? 0.906
+          : isMeta
+            ? 0.969
+            : 0.961;
+    pushRect(x + 1, y + 1, nodeWidth - 2, NODE_HEADER_HEIGHT - 1, headerR, headerG, headerB, 1);
+
+    const catColor = getCategoryRgba(node.category, isMeta, isDark);
+    pushRect(x + 1, y + 1, nodeWidth - 2, 4, catColor[0], catColor[1], catColor[2], 1);
+
+    const sepColor = isDark ? [0.188, 0.212, 0.239, 0.8] : [0.816, 0.843, 0.871, 0.8];
+    pushLine(
+      x + 1,
+      y + NODE_HEADER_HEIGHT,
+      x + nodeWidth - 1,
+      y + NODE_HEADER_HEIGHT,
+      sepColor[0],
+      sepColor[1],
+      sepColor[2],
+      sepColor[3],
+    );
+
+    const titleColor = isDark ? [0.941, 0.965, 0.988] : [0.122, 0.137, 0.157];
+    wasmEngine.font_append_text_quads(
+      node.title,
+      x + 10,
+      y + 17,
+      12,
+      titleColor[0],
+      titleColor[1],
+      titleColor[2],
+      1,
+      0,
+    );
+
+    const catText = isMeta
+      ? `META (${node.metaSubgraph?.nodes.length ?? 0})`
+      : (node.category || 'OPERATION').toUpperCase();
+    const catTextColor = isMeta
+      ? isDark
+        ? [0.345, 0.651, 1, 1]
+        : [0.035, 0.412, 0.855, 1]
+      : isDark
+        ? [0.545, 0.58, 0.62, 1]
+        : [0.341, 0.376, 0.416, 1];
+    wasmEngine.font_append_text_quads(
+      catText,
+      x + nodeWidth - 10,
+      y + 17,
+      10,
+      catTextColor[0],
+      catTextColor[1],
+      catTextColor[2],
+      1,
+      1,
+    );
+
+    const subColor = isDark ? [0.545, 0.58, 0.62] : [0.341, 0.376, 0.416];
+    wasmEngine.font_append_text_quads(node.operation, x + 10, y + 28, 9, subColor[0], subColor[1], subColor[2], 1, 0);
+
+    const pinCount = renderWebGLNodePins(node, x, y, nodeWidth, isDark, wasmEngine);
+
+    if (node.properties && Object.keys(node.properties).length > 0) {
+      const firstVal = String(Object.values(node.properties)[0]);
+      const propColor = isDark ? [0.345, 0.651, 1] : [0.035, 0.412, 0.855];
+      wasmEngine.font_append_text_quads_mono(
+        `= ${firstVal}`,
+        x + 10,
+        y + nodeHeight - 8,
+        10,
+        propColor[0],
+        propColor[1],
+        propColor[2],
+        1,
+        0,
+      );
+    }
+
+    return pinCount;
+  }
+
+  /**
+   * Renders all visible nodes in WebGL.
+   */
+  function renderWebGLNodePass(
+    minX: number,
+    minY: number,
+    maxX: number,
+    maxY: number,
+    isDark: boolean,
+    wasmEngine: NonNullable<typeof wasm>,
+  ): { visibleNodesCount: number; visiblePinsCount: number } {
+    let visibleNodesCount = 0;
+    let visiblePinsCount = 0;
+
+    for (const node of nodes) {
+      const bounds = getNodeBounds(node);
+      const nodeWidth = bounds.maxX - bounds.minX;
+      const nodeHeight = bounds.maxY - bounds.minY;
+      const x = bounds.minX;
+      const y = bounds.minY;
+
+      if (x + nodeWidth < minX || x > maxX || y + nodeHeight < minY || y > maxY) continue;
+      visibleNodesCount++;
+      visiblePinsCount += renderWebGLSingleNode(node, isDark, wasmEngine);
+    }
+
+    return { visibleNodesCount, visiblePinsCount };
+  }
+
+  /**
+   * Flushes WebGL SDF text batch to screen.
+   */
+  function renderWebGLTextPass(
+    gl: WebGLRenderingContext | WebGL2RenderingContext,
+    wasmEngine: NonNullable<typeof wasm>,
+  ): number {
+    const glTextFloatCount = wasmEngine.font_get_vertex_float_count();
+    const glTextBufPtr = wasmEngine.font_get_vertex_buffer_ptr();
+    const glTextF64View = new Float64Array(wasmEngine.memory.buffer, glTextBufPtr, glTextFloatCount);
+    textTriVertices = new Float32Array(glTextF64View);
+
+    if (
+      textTriVertices.length > 0 &&
+      glTextProgram &&
+      glTexVertexBuffer &&
+      glFontTexture &&
+      glTextUniformLocations &&
+      glTextAttribLocations
+    ) {
+      gl.useProgram(glTextProgram);
+      gl.uniform2f(glTextUniformLocations.u_resolution, width, height);
+      gl.uniform2f(glTextUniformLocations.u_camera, wasmEngine.get_camera_x(), wasmEngine.get_camera_y());
+      gl.uniform1f(glTextUniformLocations.u_zoom, wasmEngine.get_camera_zoom());
+
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, glFontTexture);
+      gl.uniform1i(glTextUniformLocations.u_fontTexture, 0);
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, glTexVertexBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, textTriVertices, gl.DYNAMIC_DRAW);
+      gl.enableVertexAttribArray(glTextAttribLocations.a_position);
+      gl.vertexAttribPointer(glTextAttribLocations.a_position, 2, gl.FLOAT, false, 32, 0);
+      gl.enableVertexAttribArray(glTextAttribLocations.a_uv);
+      gl.vertexAttribPointer(glTextAttribLocations.a_uv, 2, gl.FLOAT, false, 32, 8);
+      gl.enableVertexAttribArray(glTextAttribLocations.a_color);
+      gl.vertexAttribPointer(glTextAttribLocations.a_color, 4, gl.FLOAT, false, 32, 16);
+      gl.drawArrays(gl.TRIANGLES, 0, textTriVertices.length / 8);
+    }
+
+    return glTextFloatCount;
   }
 
   /**
@@ -2414,534 +3307,16 @@ if (globalThis.self !== undefined) {
     const maxX = wasm.get_bounds_max_x();
     const maxY = wasm.get_bounds_max_y();
 
-    // 1. Grid
-    const minorSpacing = 24;
-    const majorSpacing = 120;
-    const startX = Math.floor(minX / minorSpacing) * minorSpacing;
-    const endX = Math.ceil(maxX / minorSpacing) * minorSpacing;
-    const startY = Math.floor(minY / minorSpacing) * minorSpacing;
-    const endY = Math.ceil(maxY / minorSpacing) * minorSpacing;
-    const lineThick = 1 / wasm.get_camera_zoom();
+    renderWebGLGridPass(minX, minY, maxX, maxY, wasm.get_camera_zoom(), isDark);
+    renderWebGLGroupPass(minX, minY, maxX, maxY, isDark, wasm);
 
-    if (wasm.get_camera_zoom() > 0.4) {
-      const minorColor = isDark ? [0.22, 0.25, 0.32, 0.25] : [0.55, 0.61, 0.69, 0.25];
-      for (let x = startX; x <= endX; x += minorSpacing) {
-        if (x % majorSpacing !== 0) {
-          pushThickLine(x, minY, x, maxY, lineThick, minorColor[0], minorColor[1], minorColor[2], minorColor[3]);
-        }
-      }
-      for (let y = startY; y <= endY; y += minorSpacing) {
-        if (y % majorSpacing !== 0) {
-          pushThickLine(minX, y, maxX, y, lineThick, minorColor[0], minorColor[1], minorColor[2], minorColor[3]);
-        }
-      }
-    }
-
-    const majorColor = isDark ? [0.35, 0.4, 0.5, 0.35] : [0.39, 0.47, 0.57, 0.45];
-    const majorStartX = Math.floor(minX / majorSpacing) * majorSpacing;
-    const majorEndX = Math.ceil(maxX / majorSpacing) * majorSpacing;
-    const majorStartY = Math.floor(minY / majorSpacing) * majorSpacing;
-    const majorEndY = Math.ceil(maxY / majorSpacing) * majorSpacing;
-    for (let x = majorStartX; x <= majorEndX; x += majorSpacing) {
-      pushThickLine(x, minY, x, maxY, lineThick, majorColor[0], majorColor[1], majorColor[2], majorColor[3]);
-    }
-    for (let y = majorStartY; y <= majorEndY; y += majorSpacing) {
-      pushThickLine(minX, y, maxX, y, lineThick, majorColor[0], majorColor[1], majorColor[2], majorColor[3]);
-    }
-
-    // 2. Groups
-    for (const group of groups) {
-      const groupNodes = nodes.filter((n) => group.nodeIds.includes(n.id));
-      if (groupNodes.length === 0) continue;
-
-      let gMinX = Number.POSITIVE_INFINITY;
-      let gMinY = Number.POSITIVE_INFINITY;
-      let gMaxX = Number.NEGATIVE_INFINITY;
-      let gMaxY = Number.NEGATIVE_INFINITY;
-      for (const node of groupNodes) {
-        const bounds = getNodeBounds(node);
-        if (bounds.minX < gMinX) gMinX = bounds.minX;
-        if (bounds.maxX > gMaxX) gMaxX = bounds.maxX;
-        if (bounds.minY < gMinY) gMinY = bounds.minY;
-        if (bounds.maxY > gMaxY) gMaxY = bounds.maxY;
-      }
-      const pad = 24;
-      const gx = gMinX - pad;
-      const gy = gMinY - pad - 22;
-      const gw = gMaxX - gMinX + pad * 2;
-      const gh = gMaxY - gMinY + pad * 2 + 22;
-
-      // Viewport culling for WebGL group
-      if (gx + gw < minX || gx > maxX || gy + gh < minY || gy > maxY) {
-        continue;
-      }
-
-      const isSelectedGroup = selectedGroupId === group.id;
-      const defaultBorder: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 1] : [0.035, 0.412, 0.855, 1];
-      const parsedColor = parseColorToRgba(group.color, defaultBorder);
-      const groupBg: [number, number, number, number] = group.backgroundColor
-        ? parseColorToRgba(group.backgroundColor, [
-            parsedColor[0],
-            parsedColor[1],
-            parsedColor[2],
-            isDark ? 0.12 : 0.08,
-          ])
-        : [parsedColor[0], parsedColor[1], parsedColor[2], isDark ? 0.12 : 0.08];
-      const groupBorder: [number, number, number, number] = isSelectedGroup
-        ? [1, 1, 1, 1]
-        : [parsedColor[0], parsedColor[1], parsedColor[2], isDark ? 0.7 : 0.6];
-      pushRect(gx, gy, gw, gh, groupBg[0], groupBg[1], groupBg[2], groupBg[3]);
-      pushRectBorder(gx, gy, gw, gh, groupBorder[0], groupBorder[1], groupBorder[2], groupBorder[3]);
-
-      const titleW = wasm.font_measure_text(group.title, 12);
-      const pillW = titleW + 16;
-      pushRect(gx + 10, gy + 4, pillW, 20, parsedColor[0], parsedColor[1], parsedColor[2], 0.9);
-      if (isSelectedGroup) {
-        pushRectBorder(gx + 10, gy + 4, pillW, 20, 1, 1, 1, 1);
-      }
-      wasm.font_append_text_quads(group.title, gx + 18, gy + 18, 12, 1, 1, 1, 1, 0);
-    }
-
-    // 3. Edges
-    let visibleEdgesCount = 0;
     const nodeMap = new Map<string, FlintGraphNode>(nodes.map((n) => [n.id, n]));
-    for (const edge of edges) {
-      const fromNode = nodeMap.get(edge.fromNodeId);
-      const toNode = nodeMap.get(edge.toNodeId);
-      if (!fromNode || !toNode) continue;
+    const visibleEdgesCount = renderWebGLEdgePass(minX, minY, maxX, maxY, nodeMap, isDark, wasm);
+    renderWebGLConnectingEdgePass(nodeMap, isDark);
 
-      const fromPortIndex = Math.max(
-        0,
-        (fromNode.outputs ?? []).findIndex((p) => p.id === edge.fromPortId),
-      );
-      const toPortIndex = Math.max(
-        0,
-        (toNode.inputs ?? []).findIndex((p) => p.id === edge.toPortId),
-      );
+    const { visibleNodesCount, visiblePinsCount } = renderWebGLNodePass(minX, minY, maxX, maxY, isDark, wasm);
+    const glTextFloatCount = renderWebGLTextPass(gl, wasm);
 
-      const p0x = fromNode.position.x + NODE_WIDTH;
-      const p0y = fromNode.position.y + NODE_HEADER_HEIGHT + fromPortIndex * PORT_ROW_HEIGHT + 14;
-      const p3x = toNode.position.x;
-      const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIndex * PORT_ROW_HEIGHT + 14;
-
-      // Viewport culling for edge
-      if (
-        Math.max(p0x, p3x) < minX ||
-        Math.min(p0x, p3x) > maxX ||
-        Math.max(p0y, p3y) < minY ||
-        Math.min(p0y, p3y) > maxY
-      ) {
-        continue;
-      }
-      visibleEdgesCount++;
-
-      const isSelected = selectedEdgeIds.has(edge.id);
-      const pulseOffset = edgePulses.get(edge.id);
-      const isActive = pulseOffset !== undefined;
-
-      const colorR = isDark
-        ? isSelected
-          ? 0.35
-          : isActive
-            ? 0.25
-            : 0.35
-        : isSelected
-          ? 0.035
-          : isActive
-            ? 0.1
-            : 0.035;
-      const colorG = isDark
-        ? isSelected
-          ? 0.65
-          : isActive
-            ? 0.73
-            : 0.65
-        : isSelected
-          ? 0.412
-          : isActive
-            ? 0.5
-            : 0.412;
-      const colorB = isDark ? (isSelected ? 1 : isActive ? 0.31 : 1) : isSelected ? 0.855 : isActive ? 0.22 : 0.855;
-      const colorA = isSelected || isActive ? 1 : isDark ? 0.85 : 0.8;
-
-      const edgeThickness = isSelected ? 3.5 : 2.5;
-      const hasWaypoints = edge.points && edge.points.length > 0;
-      if (hasWaypoints && edge.points) {
-        let prevX = p0x;
-        let prevY = p0y;
-        for (const pt of edge.points) {
-          pushThickLine(prevX, prevY, pt.x, pt.y, edgeThickness, colorR, colorG, colorB, colorA);
-          pushRect(pt.x - 3, pt.y - 3, 6, 6, isSelected ? 0.35 : 1, isSelected ? 0.65 : 1, 1, 1);
-          prevX = pt.x;
-          prevY = pt.y;
-        }
-        pushThickLine(prevX, prevY, p3x, p3y, edgeThickness, colorR, colorG, colorB, colorA);
-      } else {
-        const p1x = p0x + wasm.bezier_control_dx(Math.round(p0x), Math.round(p3x));
-        const p1y = p0y;
-        const p2x = p3x - wasm.bezier_control_dx(Math.round(p0x), Math.round(p3x));
-        const p2y = p3y;
-        const steps = 24;
-        for (let s = 0; s < steps; s++) {
-          const t1Permille = Math.round((s / steps) * 1000);
-          const t2Permille = Math.round(((s + 1) / steps) * 1000);
-          const sx1 = wasm.bezier_point_1d(
-            Math.round(p0x),
-            Math.round(p1x),
-            Math.round(p2x),
-            Math.round(p3x),
-            t1Permille,
-          );
-          const sy1 = wasm.bezier_point_1d(
-            Math.round(p0y),
-            Math.round(p1y),
-            Math.round(p2y),
-            Math.round(p3y),
-            t1Permille,
-          );
-          const sx2 = wasm.bezier_point_1d(
-            Math.round(p0x),
-            Math.round(p1x),
-            Math.round(p2x),
-            Math.round(p3x),
-            t2Permille,
-          );
-          const sy2 = wasm.bezier_point_1d(
-            Math.round(p0y),
-            Math.round(p1y),
-            Math.round(p2y),
-            Math.round(p3y),
-            t2Permille,
-          );
-          pushThickLine(sx1, sy1, sx2, sy2, edgeThickness, colorR, colorG, colorB, colorA);
-        }
-      }
-    }
-
-    // 4. Connecting Edge
-    if (connectingEdge) {
-      const fromNode = nodeMap.get(connectingEdge.fromNodeId);
-      if (fromNode) {
-        const outIdx = (fromNode.outputs ?? []).findIndex((p) => p.id === connectingEdge?.fromPortId);
-        const inIdx = (fromNode.inputs ?? []).findIndex((p) => p.id === connectingEdge?.fromPortId);
-        let p0x = fromNode.position.x + NODE_WIDTH;
-        let p0y = fromNode.position.y + NODE_HEADER_HEIGHT + 14;
-        if (outIdx !== -1) {
-          p0x = fromNode.position.x + NODE_WIDTH;
-          p0y = fromNode.position.y + NODE_HEADER_HEIGHT + outIdx * PORT_ROW_HEIGHT + 14;
-        } else if (inIdx !== -1) {
-          p0x = fromNode.position.x;
-          p0y = fromNode.position.y + NODE_HEADER_HEIGHT + inIdx * PORT_ROW_HEIGHT + 14;
-        }
-
-        let p3x = connectingEdge.cursorX;
-        let p3y = connectingEdge.cursorY;
-        let isSnapped = false;
-
-        if (hoveredPort) {
-          const targetNode = nodeMap.get(hoveredPort.nodeId);
-          if (targetNode) {
-            const tInIdx = (targetNode.inputs ?? []).findIndex((p) => p.id === hoveredPort?.portId);
-            const tOutIdx = (targetNode.outputs ?? []).findIndex((p) => p.id === hoveredPort?.portId);
-            if (tInIdx !== -1) {
-              p3x = targetNode.position.x;
-              p3y = targetNode.position.y + NODE_HEADER_HEIGHT + tInIdx * PORT_ROW_HEIGHT + 14;
-              isSnapped = true;
-            } else if (tOutIdx !== -1) {
-              p3x = targetNode.position.x + NODE_WIDTH;
-              p3y = targetNode.position.y + NODE_HEADER_HEIGHT + tOutIdx * PORT_ROW_HEIGHT + 14;
-              isSnapped = true;
-            }
-          }
-        }
-
-        const connR = isSnapped ? 0.247 : isDark ? 0.35 : 0.035;
-        const connG = isSnapped ? 0.725 : isDark ? 0.65 : 0.412;
-        const connB = isSnapped ? 0.314 : isDark ? 1 : 0.855;
-        pushThickLine(p0x, p0y, p3x, p3y, isSnapped ? 4 : 3, connR, connG, connB, 1);
-        pushCircle(p3x, p3y, isSnapped ? 8 : 6, connR, connG, connB, 1);
-        pushCircle(p3x, p3y, isSnapped ? 5 : 4, isDark ? 1 : 0, isDark ? 1 : 0, isDark ? 1 : 0, 1);
-      }
-    }
-
-    // 5. Nodes
-    let visibleNodesCount = 0;
-    let visiblePinsCount = 0;
-    for (const node of nodes) {
-      const bounds = getNodeBounds(node);
-      const nodeWidth = bounds.maxX - bounds.minX;
-      const nodeHeight = bounds.maxY - bounds.minY;
-      const x = bounds.minX;
-      const y = bounds.minY;
-
-      if (x + nodeWidth < minX || x > maxX || y + nodeHeight < minY || y > maxY) continue;
-      visibleNodesCount++;
-
-      const isSelected = selectedNodeIds.has(node.id);
-      const isActive = activeNodeIds.has(node.id);
-      const isTrapped = trappedNodeId === node.id;
-      const isMeta = node.metaSubgraph !== undefined || node.operation === 'meta';
-
-      const fillR = isDark ? (isMeta ? 0.086 : 0.129) : isMeta ? 0.941 : 1;
-      const fillG = isDark ? (isMeta ? 0.118 : 0.149) : isMeta ? 0.957 : 1;
-      const fillB = isDark ? (isMeta ? 0.18 : 0.176) : isMeta ? 0.973 : 1;
-      pushRect(x, y, nodeWidth, nodeHeight, fillR, fillG, fillB, isDark ? 0.95 : 0.98);
-
-      const borderR = isDark
-        ? isTrapped
-          ? 0.973
-          : isActive
-            ? 0.247
-            : isSelected
-              ? 0.345
-              : isMeta
-                ? 0.475
-                : 0.188
-        : isTrapped
-          ? 0.812
-          : isActive
-            ? 0.102
-            : isSelected
-              ? 0.035
-              : isMeta
-                ? 0.035
-                : 0.816;
-      const borderG = isDark
-        ? isTrapped
-          ? 0.318
-          : isActive
-            ? 0.725
-            : isSelected
-              ? 0.651
-              : isMeta
-                ? 0.753
-                : 0.212
-        : isTrapped
-          ? 0.133
-          : isActive
-            ? 0.498
-            : isSelected
-              ? 0.412
-              : isMeta
-                ? 0.412
-                : 0.843;
-      const borderB = isDark
-        ? isTrapped
-          ? 0.286
-          : isActive
-            ? 0.314
-            : isSelected
-              ? 1
-              : isMeta
-                ? 1
-                : 0.239
-        : isTrapped
-          ? 0.18
-          : isActive
-            ? 0.216
-            : isSelected
-              ? 0.855
-              : isMeta
-                ? 0.855
-                : 0.871;
-      const borderA = isSelected || isTrapped || isActive ? 1 : isDark ? 0.8 : 0.9;
-      pushRectBorder(x, y, nodeWidth, nodeHeight, borderR, borderG, borderB, borderA);
-
-      // Node Header fill
-      const headerR = isDark
-        ? isTrapped
-          ? 0.239
-          : isActive
-            ? 0.078
-            : isMeta
-              ? 0.051
-              : 0.086
-        : isTrapped
-          ? 0.996
-          : isActive
-            ? 0.863
-            : isMeta
-              ? 0.882
-              : 0.941;
-      const headerG = isDark
-        ? isTrapped
-          ? 0.078
-          : isActive
-            ? 0.239
-            : isMeta
-              ? 0.157
-              : 0.106
-        : isTrapped
-          ? 0.886
-          : isActive
-            ? 0.988
-            : isMeta
-              ? 0.925
-              : 0.949;
-      const headerB = isDark
-        ? isTrapped
-          ? 0.09
-          : isActive
-            ? 0.133
-            : isMeta
-              ? 0.278
-              : 0.133
-        : isTrapped
-          ? 0.886
-          : isActive
-            ? 0.906
-            : isMeta
-              ? 0.969
-              : 0.961;
-      pushRect(x + 1, y + 1, nodeWidth - 2, NODE_HEADER_HEIGHT - 1, headerR, headerG, headerB, 1);
-
-      // Category accent bar (4px)
-      const catColor = getCategoryRgba(node.category, isMeta, isDark);
-      pushRect(x + 1, y + 1, nodeWidth - 2, 4, catColor[0], catColor[1], catColor[2], 1);
-
-      // Header separator
-      const sepColor = isDark ? [0.188, 0.212, 0.239, 0.8] : [0.816, 0.843, 0.871, 0.8];
-      pushLine(
-        x + 1,
-        y + NODE_HEADER_HEIGHT,
-        x + nodeWidth - 1,
-        y + NODE_HEADER_HEIGHT,
-        sepColor[0],
-        sepColor[1],
-        sepColor[2],
-        sepColor[3],
-      );
-
-      // Node Text
-      // Title
-      const titleColor = isDark ? [0.941, 0.965, 0.988] : [0.122, 0.137, 0.157];
-      wasm.font_append_text_quads(node.title, x + 10, y + 17, 12, titleColor[0], titleColor[1], titleColor[2], 1, 0);
-
-      // Category / Meta pill
-      const catText = isMeta
-        ? `META (${node.metaSubgraph?.nodes.length ?? 0})`
-        : (node.category || 'OPERATION').toUpperCase();
-      const catTextColor = isMeta
-        ? isDark
-          ? [0.345, 0.651, 1, 1]
-          : [0.035, 0.412, 0.855, 1]
-        : isDark
-          ? [0.545, 0.58, 0.62, 1]
-          : [0.341, 0.376, 0.416, 1];
-      wasm.font_append_text_quads(
-        catText,
-        x + nodeWidth - 10,
-        y + 17,
-        10,
-        catTextColor[0],
-        catTextColor[1],
-        catTextColor[2],
-        1,
-        1,
-      );
-
-      // Subtitle operation identifier
-      const subColor = isDark ? [0.545, 0.58, 0.62] : [0.341, 0.376, 0.416];
-      wasm.font_append_text_quads(node.operation, x + 10, y + 28, 9, subColor[0], subColor[1], subColor[2], 1, 0);
-
-      // Pins (Inputs)
-      for (const [idx, port] of (node.inputs ?? []).entries()) {
-        const portY = y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
-        const isHovered = hoveredPort?.nodeId === node.id && hoveredPort?.portId === port.id;
-        const pinRadius = isHovered ? 7 : 5;
-        const portColor = getPortTypeRgba(port.type, isDark);
-        const pinInner = isDark ? [0.086, 0.106, 0.133] : [0.941, 0.949, 0.961];
-
-        // Outer ring + inner background + inner dot
-        pushCircle(x, portY, pinRadius, portColor[0], portColor[1], portColor[2], 1);
-        pushCircle(x, portY, Math.max(1, pinRadius - 1.5), pinInner[0], pinInner[1], pinInner[2], 1);
-        pushCircle(
-          x,
-          portY,
-          2.5,
-          isHovered ? 1 : portColor[0],
-          isHovered ? 1 : portColor[1],
-          isHovered ? 1 : portColor[2],
-          1,
-        );
-        visiblePinsCount++;
-
-        // Port label text
-        const portTextColor = isDark ? [0.788, 0.82, 0.851] : [0.141, 0.161, 0.184];
-        wasm.font_append_text_quads(
-          port.name,
-          x + 12,
-          portY + 4,
-          11,
-          portTextColor[0],
-          portTextColor[1],
-          portTextColor[2],
-          1,
-          0,
-        );
-      }
-
-      // Pins (Outputs)
-      for (const [idx, port] of (node.outputs ?? []).entries()) {
-        const portY = y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
-        const isHovered = hoveredPort?.nodeId === node.id && hoveredPort?.portId === port.id;
-        const pinRadius = isHovered ? 7 : 5;
-        const portColor = getPortTypeRgba(port.type, isDark);
-        const pinInner = isDark ? [0.086, 0.106, 0.133] : [0.941, 0.949, 0.961];
-
-        // Outer ring + inner background + inner dot
-        pushCircle(x + nodeWidth, portY, pinRadius, portColor[0], portColor[1], portColor[2], 1);
-        pushCircle(x + nodeWidth, portY, Math.max(1, pinRadius - 1.5), pinInner[0], pinInner[1], pinInner[2], 1);
-        pushCircle(
-          x + nodeWidth,
-          portY,
-          2.5,
-          isHovered ? 1 : portColor[0],
-          isHovered ? 1 : portColor[1],
-          isHovered ? 1 : portColor[2],
-          1,
-        );
-        visiblePinsCount++;
-
-        // Port label text
-        const portTextColor = isDark ? [0.788, 0.82, 0.851] : [0.141, 0.161, 0.184];
-        wasm.font_append_text_quads(
-          port.name,
-          x + nodeWidth - 12,
-          portY + 4,
-          11,
-          portTextColor[0],
-          portTextColor[1],
-          portTextColor[2],
-          1,
-          1,
-        );
-      }
-
-      // Literal properties preview
-      if (node.properties && Object.keys(node.properties).length > 0) {
-        const firstVal = String(Object.values(node.properties)[0]);
-        const propColor = isDark ? [0.345, 0.651, 1] : [0.035, 0.412, 0.855];
-        wasm.font_append_text_quads_mono(
-          `= ${firstVal}`,
-          x + 10,
-          y + nodeHeight - 8,
-          10,
-          propColor[0],
-          propColor[1],
-          propColor[2],
-          1,
-          0,
-        );
-      }
-    }
-
-    const glTextFloatCount = wasm.font_get_vertex_float_count();
-    const glTextBufPtr = wasm.font_get_vertex_buffer_ptr();
-    const glTextF64View = new Float64Array(wasm.memory.buffer, glTextBufPtr, glTextFloatCount);
-    textTriVertices = new Float32Array(glTextF64View);
-
-    // Draw triangles
     if (triVertices.length > 0 && glVertexBuffer) {
       gl.bindBuffer(gl.ARRAY_BUFFER, glVertexBuffer);
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(triVertices), gl.DYNAMIC_DRAW);
@@ -2952,7 +3327,6 @@ if (globalThis.self !== undefined) {
       gl.drawArrays(gl.TRIANGLES, 0, triVertices.length / 6);
     }
 
-    // Draw lines
     if (lineVertices.length > 0 && glVertexBuffer) {
       gl.bindBuffer(gl.ARRAY_BUFFER, glVertexBuffer);
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(lineVertices), gl.DYNAMIC_DRAW);
@@ -2961,35 +3335,6 @@ if (globalThis.self !== undefined) {
       gl.enableVertexAttribArray(glAttribLocations.a_color);
       gl.vertexAttribPointer(glAttribLocations.a_color, 4, gl.FLOAT, false, 24, 8);
       gl.drawArrays(gl.LINES, 0, lineVertices.length / 6);
-    }
-
-    // Draw text
-    if (
-      textTriVertices.length > 0 &&
-      glTextProgram &&
-      glTexVertexBuffer &&
-      glFontTexture &&
-      glTextUniformLocations &&
-      glTextAttribLocations
-    ) {
-      gl.useProgram(glTextProgram);
-      gl.uniform2f(glTextUniformLocations.u_resolution, width, height);
-      gl.uniform2f(glTextUniformLocations.u_camera, wasm.get_camera_x(), wasm.get_camera_y());
-      gl.uniform1f(glTextUniformLocations.u_zoom, wasm.get_camera_zoom());
-
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, glFontTexture);
-      gl.uniform1i(glTextUniformLocations.u_fontTexture, 0);
-
-      gl.bindBuffer(gl.ARRAY_BUFFER, glTexVertexBuffer);
-      gl.bufferData(gl.ARRAY_BUFFER, textTriVertices, gl.DYNAMIC_DRAW);
-      gl.enableVertexAttribArray(glTextAttribLocations.a_position);
-      gl.vertexAttribPointer(glTextAttribLocations.a_position, 2, gl.FLOAT, false, 32, 0);
-      gl.enableVertexAttribArray(glTextAttribLocations.a_uv);
-      gl.vertexAttribPointer(glTextAttribLocations.a_uv, 2, gl.FLOAT, false, 32, 8);
-      gl.enableVertexAttribArray(glTextAttribLocations.a_color);
-      gl.vertexAttribPointer(glTextAttribLocations.a_color, 4, gl.FLOAT, false, 32, 16);
-      gl.drawArrays(gl.TRIANGLES, 0, textTriVertices.length / 8);
     }
 
     const tEnd = typeof performance === 'undefined' ? 0 : performance.now();
@@ -3438,29 +3783,40 @@ if (globalThis.self !== undefined) {
   }
 
   /**
+   * Flushes batched triangles to WebGL framebuffer.
+   */
+  function flushWebGLTriangles(gl: WebGLRenderingContext | WebGL2RenderingContext): void {
+    if (triVertices.length === 0 || !glVertexBuffer || !glAttribLocations) return;
+    gl.bindBuffer(gl.ARRAY_BUFFER, glVertexBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(triVertices), gl.DYNAMIC_DRAW);
+    gl.enableVertexAttribArray(glAttribLocations.a_position);
+    gl.vertexAttribPointer(glAttribLocations.a_position, 2, gl.FLOAT, false, 24, 0);
+    gl.enableVertexAttribArray(glAttribLocations.a_color);
+    gl.vertexAttribPointer(glAttribLocations.a_color, 4, gl.FLOAT, false, 24, 8);
+    gl.drawArrays(gl.TRIANGLES, 0, triVertices.length / 6);
+  }
+
+  /**
+   * Flushes batched line primitives to WebGL framebuffer.
+   */
+  function flushWebGLLines(gl: WebGLRenderingContext | WebGL2RenderingContext): void {
+    if (lineVertices.length === 0 || !glVertexBuffer || !glAttribLocations) return;
+    gl.bindBuffer(gl.ARRAY_BUFFER, glVertexBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(lineVertices), gl.DYNAMIC_DRAW);
+    gl.enableVertexAttribArray(glAttribLocations.a_position);
+    gl.vertexAttribPointer(glAttribLocations.a_position, 2, gl.FLOAT, false, 24, 0);
+    gl.enableVertexAttribArray(glAttribLocations.a_color);
+    gl.vertexAttribPointer(glAttribLocations.a_color, 4, gl.FLOAT, false, 24, 8);
+    gl.drawArrays(gl.LINES, 0, lineVertices.length / 6);
+  }
+
+  /**
    * Flushes batched triangles and line primitives to WebGL framebuffer.
    */
   function flushWebGLPrimitives(): void {
-    if (!glCtx || !glVertexBuffer || !glAttribLocations) return;
-    const gl = glCtx;
-    if (triVertices.length > 0) {
-      gl.bindBuffer(gl.ARRAY_BUFFER, glVertexBuffer);
-      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(triVertices), gl.DYNAMIC_DRAW);
-      gl.enableVertexAttribArray(glAttribLocations.a_position);
-      gl.vertexAttribPointer(glAttribLocations.a_position, 2, gl.FLOAT, false, 24, 0);
-      gl.enableVertexAttribArray(glAttribLocations.a_color);
-      gl.vertexAttribPointer(glAttribLocations.a_color, 4, gl.FLOAT, false, 24, 8);
-      gl.drawArrays(gl.TRIANGLES, 0, triVertices.length / 6);
-    }
-    if (lineVertices.length > 0) {
-      gl.bindBuffer(gl.ARRAY_BUFFER, glVertexBuffer);
-      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(lineVertices), gl.DYNAMIC_DRAW);
-      gl.enableVertexAttribArray(glAttribLocations.a_position);
-      gl.vertexAttribPointer(glAttribLocations.a_position, 2, gl.FLOAT, false, 24, 0);
-      gl.enableVertexAttribArray(glAttribLocations.a_color);
-      gl.vertexAttribPointer(glAttribLocations.a_color, 4, gl.FLOAT, false, 24, 8);
-      gl.drawArrays(gl.LINES, 0, lineVertices.length / 6);
-    }
+    if (!glCtx) return;
+    flushWebGLTriangles(glCtx);
+    flushWebGLLines(glCtx);
     triVertices = [];
     lineVertices = [];
   }
@@ -3469,7 +3825,7 @@ if (globalThis.self !== undefined) {
    * Draws minor grid lines on Canvas2D.
    */
   function drawCanvas2dMinorGridLines(
-    ctx: CanvasRenderingContext2D,
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
     minX: number,
     minY: number,
     maxX: number,
@@ -3493,7 +3849,7 @@ if (globalThis.self !== undefined) {
    * Draws major grid lines on Canvas2D.
    */
   function drawCanvas2dMajorGridLines(
-    ctx: CanvasRenderingContext2D,
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
     minX: number,
     minY: number,
     maxX: number,
@@ -3513,7 +3869,7 @@ if (globalThis.self !== undefined) {
    * Renders background coordinate grid in Canvas2D context.
    */
   function drawCanvas2dGridLines(
-    ctx: CanvasRenderingContext2D,
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
     minX: number,
     minY: number,
     maxX: number,
@@ -3552,7 +3908,7 @@ if (globalThis.self !== undefined) {
    * Renders animated pulse particle traveling along an active edge.
    */
   function drawCanvas2dPulseDot(
-    ctx: CanvasRenderingContext2D,
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
     p0x: number,
     p0y: number,
     p1x: number,
@@ -3589,6 +3945,56 @@ if (globalThis.self !== undefined) {
     uniforms[21] = 1;
     uniforms[22] = theme === 'light' ? 0 : 1;
     return uniforms;
+  }
+
+  function getGlEdgeColor(isSelected: number, isDark: boolean): [number, number, number, number] {
+    if (isSelected) {
+      return isDark ? [0.35, 0.65, 1, 1] : [0.035, 0.412, 0.855, 1];
+    }
+    return isDark ? [0.47, 0.66, 1, 0.7] : [0.34, 0.38, 0.42, 0.65];
+  }
+
+  function pushWebGLBezierEdgeSegments(
+    p0x: number,
+    p0y: number,
+    p1x: number,
+    p1y: number,
+    p2x: number,
+    p2y: number,
+    p3x: number,
+    p3y: number,
+    color: readonly number[],
+  ): void {
+    let prevX = p0x;
+    let prevY = p0y;
+    for (let step = 1; step <= 20; step++) {
+      const stepFactor = step / 20;
+      const currX = evaluateCubicBezier(p0x, p1x, p2x, p3x, stepFactor);
+      const currY = evaluateCubicBezier(p0y, p1y, p2y, p3y, stepFactor);
+      lineVertices.push(
+        prevX,
+        prevY,
+        color[0],
+        color[1],
+        color[2],
+        color[3],
+        currX,
+        currY,
+        color[0],
+        color[1],
+        color[2],
+        color[3],
+      );
+      prevX = currX;
+      prevY = currY;
+    }
+  }
+
+  function getC2dEdgeColor(isSelected: number, isDark: boolean): string {
+    if (isSelected) {
+      return isDark ? '#58a6ff' : '#0969da';
+    }
+    return isDark ? 'rgba(139, 148, 158, 0.6)' : 'rgba(87, 96, 106, 0.6)';
   }
 
   const capabilities: WebAssembly.Imports = {
@@ -3821,34 +4227,8 @@ if (globalThis.self !== undefined) {
         _isActive: number,
       ) => {
         const isDark = currentTheme !== 'light';
-        const edgeRed = isSelected ? (isDark ? 0.35 : 0.035) : isDark ? 0.47 : 0.34;
-        const edgeGreen = isSelected ? (isDark ? 0.65 : 0.412) : isDark ? 0.66 : 0.38;
-        const edgeBlue = isSelected ? (isDark ? 1 : 0.855) : isDark ? 1 : 0.42;
-        const edgeAlpha = isSelected ? 1 : isDark ? 0.7 : 0.65;
-
-        let prevX = p0x;
-        let prevY = p0y;
-        for (let step = 1; step <= 20; step++) {
-          const stepFactor = step / 20;
-          const currX = evaluateCubicBezier(p0x, p1x, p2x, p3x, stepFactor);
-          const currY = evaluateCubicBezier(p0y, p1y, p2y, p3y, stepFactor);
-          lineVertices.push(
-            prevX,
-            prevY,
-            edgeRed,
-            edgeGreen,
-            edgeBlue,
-            edgeAlpha,
-            currX,
-            currY,
-            edgeRed,
-            edgeGreen,
-            edgeBlue,
-            edgeAlpha,
-          );
-          prevX = currX;
-          prevY = currY;
-        }
+        const color = getGlEdgeColor(isSelected, isDark);
+        pushWebGLBezierEdgeSegments(p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, color);
       },
     },
     'webgl.draw_node': {
@@ -3972,13 +4352,7 @@ if (globalThis.self !== undefined) {
         const isDark = currentTheme !== 'light';
         ctx.save();
         ctx.lineWidth = isSelected ? 3 : 2;
-        ctx.strokeStyle = isSelected
-          ? isDark
-            ? '#58a6ff'
-            : '#0969da'
-          : isDark
-            ? 'rgba(139, 148, 158, 0.6)'
-            : 'rgba(87, 96, 106, 0.6)';
+        ctx.strokeStyle = getC2dEdgeColor(isSelected, isDark);
         ctx.beginPath();
         ctx.moveTo(p0x, p0y);
         ctx.bezierCurveTo(p1x, p1y, p2x, p2y, p3x, p3y);
@@ -4082,6 +4456,11 @@ if (globalThis.self !== undefined) {
     }
   }
 
+  /**
+   * Dispatches a response message from the render worker back to the main thread or window.
+   *
+   * @param reply - Output response message payload.
+   */
   const postReply = (reply: RenderWorkerOutputMessage): void => {
     const messageWithId: RenderWorkerOutputMessage = { id: 'flint_render_worker', ...reply };
     if (!globalThis.self) return;
@@ -4279,13 +4658,6 @@ if (globalThis.self !== undefined) {
     selectedEdgeIds.clear();
     for (const id of msg.selectedEdgeIds ?? []) selectedEdgeIds.add(id);
     selectedGroupId = msg.selectedGroupId;
-    wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
-    postReply({
-      type: 'frame',
-      performance: performanceStats,
-      visibleNodes: nodes.length,
-      visibleEdges: edges.length,
-    } as RenderWorkerOutputMessage);
   }
 
   /**
@@ -4298,13 +4670,6 @@ if (globalThis.self !== undefined) {
     trappedNodeId = msg.trappedNodeId;
     edgePulses.clear();
     for (const pulse of msg.edgePulses ?? []) edgePulses.set(pulse.edgeId, pulse.offset);
-    wasm.engine_render_frame(nodes.length, edges.length, nodes.length * 4);
-    postReply({
-      type: 'frame',
-      performance: performanceStats,
-      visibleNodes: nodes.length,
-      visibleEdges: edges.length,
-    } as RenderWorkerOutputMessage);
   }
 
   /**
@@ -4333,7 +4698,7 @@ if (globalThis.self !== undefined) {
     const p0y = fromNode.position.y + NODE_HEADER_HEIGHT + fromPortIdx * PORT_ROW_HEIGHT + 14;
     const p3x = toNode.position.x;
     const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIdx * PORT_ROW_HEIGHT + 14;
-    return wasmEngine.edge_hit_test(cursorX, cursorY, p0x, p0y, p3x, p3y, snapRadius);
+    return Boolean(wasmEngine.edge_hit_test(cursorX, cursorY, p0x, p0y, p3x, p3y, snapRadius));
   }
 
   /**
@@ -4395,11 +4760,15 @@ if (globalThis.self !== undefined) {
    * Cleans up WebGL buffers, textures, and shader programs.
    */
   function cleanupGlResources(gl: WebGLRenderingContext | WebGL2RenderingContext): void {
-    if (glVertexBuffer) gl.deleteBuffer(glVertexBuffer);
-    if (glTexVertexBuffer) gl.deleteBuffer(glTexVertexBuffer);
+    const buffers = [glVertexBuffer, glTexVertexBuffer];
+    for (const buf of buffers) {
+      if (buf) gl.deleteBuffer(buf);
+    }
     if (glFontTexture) gl.deleteTexture(glFontTexture);
-    if (glProgram) gl.deleteProgram(glProgram);
-    if (glTextProgram) gl.deleteProgram(glTextProgram);
+    const programs = [glProgram, glTextProgram];
+    for (const prog of programs) {
+      if (prog) gl.deleteProgram(prog);
+    }
   }
 
   /**
@@ -4513,34 +4882,36 @@ if (globalThis.self !== undefined) {
     );
   }
 
+  /**
+   * Routes worker input messages to appropriate handler procedures.
+   */
+  async function dispatchWorkerInputMessage(msg: RenderWorkerInputMessage): Promise<void> {
+    if (msg.type === 'init') {
+      await handleWorkerInit(msg);
+      return;
+    }
+    if (msg.type === 'set_graph') {
+      handleWorkerSetGraph(msg);
+      return;
+    }
+    if (msg.type === 'hit_test') {
+      handleWorkerHitTest(msg);
+      return;
+    }
+    if (msg.type === 'destroy') {
+      handleWorkerDestroy();
+      return;
+    }
+    handleWorkerOtherMessage(msg);
+  }
+
   globalThis.self.addEventListener('message', async (event: MessageEvent<RenderWorkerInputMessage>) => {
     const msg = event.data;
     if (isWorkerMessageIgnored(msg)) return;
     if (!wasm) wasm = getFlintRenderWorkerWasm(capabilities);
 
     try {
-      switch (msg.type) {
-        case 'init': {
-          await handleWorkerInit(msg);
-          break;
-        }
-        case 'set_graph': {
-          handleWorkerSetGraph(msg);
-          break;
-        }
-        case 'hit_test': {
-          handleWorkerHitTest(msg);
-          break;
-        }
-        case 'destroy': {
-          handleWorkerDestroy();
-          break;
-        }
-        default: {
-          handleWorkerOtherMessage(msg);
-          break;
-        }
-      }
+      await dispatchWorkerInputMessage(msg);
     } catch (error) {
       postReply({
         type: 'error',

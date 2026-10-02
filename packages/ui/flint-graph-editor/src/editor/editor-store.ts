@@ -490,7 +490,7 @@ function remapPastedEdges(
 function validateCandidateConnection(
   graph: FlintNodeGraph,
   newEdge: FlintGraphEdge,
-): { valid: boolean; validation: FlintValidationResult; error?: string } {
+): { valid: boolean; validation: FlintGraphValidationResult; error?: string } {
   const candidateGraph: FlintNodeGraph = {
     ...graph,
     edges: [...graph.edges, newEdge],
