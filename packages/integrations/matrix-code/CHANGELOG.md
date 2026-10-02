@@ -1,5 +1,28 @@
 # @mission-platform/matrix-code
 
+## 3.0.2
+
+### Patch Changes
+
+- 8be0da7: align package manifest exports with dist/components output and disable forge clean
+- 94a694a: migrate Forge Web Script (FWS) packages and downstream integrations to Flint
+  
+  BREAKING CHANGE: The systems programming language formerly known as Forge Web Script (FWS) is now Flint. All package names have migrated to `@mission-platform/flint*`, primary source files now use `.flint` (with `.flt` supported as compact), diagnostic codes now emit `FLINT-*` prefixes, and compiler executables have been renamed to `flint` and `flint-lsp`.
+- 8be0da7: optimize turbo pipeline, standardize type-check task, and consolidate package build scripts
+- 8be0da7: split monolithic tsdown configs into discrete target configs and purge vestigial vite configs
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [94a694a]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+  - @mission-platform/components@3.2.2
+  - @mission-platform/forge-jsx@2.0.2
+  - @mission-platform/matrix-code-wasm@3.1.1
+  - @mission-platform/forge-adapters@1.2.2
+  - @mission-platform/icons@2.0.4
+  - @mission-platform/typography@1.1.3
+
 ## 3.0.1
 
 ### Patch Changes

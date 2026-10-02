@@ -1,5 +1,19 @@
 # @mission-platform/theme
 
+## 1.1.3
+
+### Patch Changes
+
+- 8be0da7: optimize turbo pipeline, standardize type-check task, and consolidate package build scripts
+- 8be0da7: split monolithic tsdown configs into discrete target configs and purge vestigial vite configs
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+  - @mission-platform/forge-jsx@2.0.2
+  - @mission-platform/forge-adapters@1.2.2
+  - @mission-platform/tokens@2.0.1
+
 ## 1.1.2
 
 ### Patch Changes

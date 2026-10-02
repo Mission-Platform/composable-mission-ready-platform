@@ -1,8 +1,8 @@
-# @mission-platform/scripts
+# @mission-platform/edge-security
 
-## 0.0.1
+## 0.1.0
 
-### Patch Changes
+### Minor Changes
 
 - 0878d97: feat(platform): implement review recommendations across security, tooling, and testing
   
@@ -11,3 +11,8 @@
   - Expand automated Storybook visual parity harness to Solid and Svelte
   - Automate upstream build priming in Turborepo task graph
   - Document Forge lowering lifecycle and Sea-of-Nodes IR architecture
+
+### Patch Changes
+
+- 8be0da7: fix package entry exports, precompute security headers, and redirect framework entry helper declarations
+- 8be0da7: reduce cyclomatic complexity in security header application and cached framework declaration formatting

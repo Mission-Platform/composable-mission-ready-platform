@@ -1,7 +1,7 @@
 {
   "name": "@mission-platform/scripts",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "BSD-4-Clause",
   "type": "module",
   "scripts": {

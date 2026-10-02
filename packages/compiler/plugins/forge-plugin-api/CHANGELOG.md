@@ -1,5 +1,27 @@
 # @mission-platform/forge-plugin-api
 
+## 0.5.0
+
+### Minor Changes
+
+- 0c0e7ce: feat(forge): implement forge plugin recommendations and CST rewrites
+  
+  - Introduce @mission-platform/forge-cst for robust AST/CST-based import rewrites
+  - Add declarative intention validation schemas in @mission-platform/forge-plugin-api
+  - Unify Forge build adapter contracts across React, Vue, Solid, Svelte, and Web Components
+  - Move path normalization into Tsdown and simplify artifact staging in @mission-platform/vite-plugin-forge
+  - Resolve DeepSource code quality findings across compiler plugins and tooling
+
+### Patch Changes
+
+- 0878d97: feat(platform): implement review recommendations across security, tooling, and testing
+  
+  - Add @mission-platform/edge-security and harden Cloudflare worker security headers
+  - Introduce Turborepo package scaffolding (@turbo/gen) and CI locale validation
+  - Expand automated Storybook visual parity harness to Solid and Svelte
+  - Automate upstream build priming in Turborepo task graph
+  - Document Forge lowering lifecycle and Sea-of-Nodes IR architecture
+
 ## 0.4.1
 
 ### Patch Changes

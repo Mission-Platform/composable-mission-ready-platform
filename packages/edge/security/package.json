@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/edge-security",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "license": "BSD-4-Clause",
   "description": "Hardened HTTP security headers, CSP builders, and Cloudflare Worker middleware for the Mission Platform",
   "type": "module",

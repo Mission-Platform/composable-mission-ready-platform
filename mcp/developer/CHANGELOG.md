@@ -1,5 +1,21 @@
 # @mission-platform/mcp-developer
 
+## 0.1.5
+
+### Patch Changes
+
+- Updated dependencies [26de5ea]
+- Updated dependencies [6c683ae]
+- Updated dependencies [94a694a]
+- Updated dependencies [f3b344d]
+- Updated dependencies [9e54a30]
+- Updated dependencies [6c683ae]
+- Updated dependencies [6c683ae]
+- Updated dependencies [8be0da7]
+  - @mission-platform/flint-wasm@2.0.0
+  - @mission-platform/flint-runtime@1.0.0
+  - @mission-platform/flint@1.0.0
+
 ## 0.1.4
 
 ### Patch Changes

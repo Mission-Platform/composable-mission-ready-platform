@@ -1,5 +1,41 @@
 # @mission-platform/vite-plugin-forge
 
+## 2.1.0
+
+### Minor Changes
+
+- 8be0da7: emit self-contained framework declarations and typed properties from cached sources
+- 0c0e7ce: feat(forge): implement forge plugin recommendations and CST rewrites
+  
+  - Introduce @mission-platform/forge-cst for robust AST/CST-based import rewrites
+  - Add declarative intention validation schemas in @mission-platform/forge-plugin-api
+  - Unify Forge build adapter contracts across React, Vue, Solid, Svelte, and Web Components
+  - Move path normalization into Tsdown and simplify artifact staging in @mission-platform/vite-plugin-forge
+  - Resolve DeepSource code quality findings across compiler plugins and tooling
+
+### Patch Changes
+
+- 8be0da7: fix package entry exports, precompute security headers, and redirect framework entry helper declarations
+- 8be0da7: address deepsource code quality, complexity, and documentation issues
+- 8be0da7: reduce cyclomatic complexity in security header application and cached framework declaration formatting
+- 8be0da7: resolve documentation warnings and format generated API references
+- 94a694a: migrate Forge Web Script (FWS) packages and downstream integrations to Flint
+  
+  BREAKING CHANGE: The systems programming language formerly known as Forge Web Script (FWS) is now Flint. All package names have migrated to `@mission-platform/flint*`, primary source files now use `.flint` (with `.flt` supported as compact), diagnostic codes now emit `FLINT-*` prefixes, and compiler executables have been renamed to `flint` and `flint-lsp`.
+- 8be0da7: align component barrel declarations with source index files and enrich framework component typings
+- 8be0da7: Resolve code review and DeepSource code quality, documentation, and complexity issues.
+- 8be0da7: resolve remaining deepsource code quality, complexity, and non-null assertion issues in compiler discovery and declaration plugins
+- 8be0da7: resolve DeepSource code quality, documentation, complexity, and typing issues
+- Updated dependencies [8be0da7]
+- Updated dependencies [0c0e7ce]
+- Updated dependencies [0878d97]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+  - @mission-platform/forge-jsx@2.0.2
+  - @mission-platform/forge-plugin-api@0.5.0
+  - @mission-platform/forge-router-plugin-api@0.2.0
+
 ## 2.0.1
 
 ### Patch Changes

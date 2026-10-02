@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/flint-cli",
-  "version": "0.2.2",
+  "version": "1.0.0",
   "publishConfig": {
     "access": "public"
   },

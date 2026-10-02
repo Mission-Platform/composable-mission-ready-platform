@@ -1,5 +1,31 @@
 # @mission-platform/forge-web-script
 
+## 1.0.0
+
+### Major Changes
+
+- 94a694a: migrate Forge Web Script (FWS) packages and downstream integrations to Flint
+  
+  BREAKING CHANGE: The systems programming language formerly known as Forge Web Script (FWS) is now Flint. All package names have migrated to `@mission-platform/flint*`, primary source files now use `.flint` (with `.flt` supported as compact), diagnostic codes now emit `FLINT-*` prefixes, and compiler executables have been renamed to `flint` and `flint-lsp`.
+
+### Minor Changes
+
+- 6c683ae: align C interoperability subsystem: centralized C ABI package, #[repr(C)] struct syntax, C string null-termination ergonomics, host foreign call validation, and expanded bindgen capabilities
+- f3b344d: modernize Flint compiler, runtime, ABI, and tooling with LLVM and GCC innovations
+
+### Patch Changes
+
+- 8be0da7: optimize turbo pipeline, standardize type-check task, and consolidate package build scripts
+- Updated dependencies [26de5ea]
+- Updated dependencies [6c683ae]
+- Updated dependencies [94a694a]
+- Updated dependencies [f3b344d]
+- Updated dependencies [6c683ae]
+- Updated dependencies [8be0da7]
+  - @mission-platform/flint-c-abi@0.4.0
+  - @mission-platform/flint-wasm@2.0.0
+  - @mission-platform/flint-regex@1.0.0
+
 ## 0.3.1
 
 ### Patch Changes

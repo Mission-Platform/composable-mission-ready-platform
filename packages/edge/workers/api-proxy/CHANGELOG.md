@@ -1,4 +1,4 @@
-# @mission-platform/scripts
+# @mission-platform/api-proxy
 
 ## 0.0.1
 
@@ -11,3 +11,7 @@
   - Expand automated Storybook visual parity harness to Solid and Svelte
   - Automate upstream build priming in Turborepo task graph
   - Document Forge lowering lifecycle and Sea-of-Nodes IR architecture
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [0878d97]
+  - @mission-platform/edge-security@0.1.0

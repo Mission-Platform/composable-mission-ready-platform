@@ -1,5 +1,25 @@
 # @mission-platform/select
 
+## 1.2.2
+
+### Patch Changes
+
+- 8be0da7: address deepsource code quality, complexity, and documentation issues
+- 8be0da7: resolve documentation warnings and format generated API references
+- 8be0da7: optimize turbo pipeline, standardize type-check task, and consolidate package build scripts
+- 8be0da7: Resolve code review and DeepSource code quality, documentation, and complexity issues.
+- 8be0da7: resolve DeepSource code quality, documentation, complexity, and typing issues
+- 8be0da7: split monolithic tsdown configs into discrete target configs and purge vestigial vite configs
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+  - @mission-platform/forge-jsx@2.0.2
+  - @mission-platform/float@1.2.2
+  - @mission-platform/forge-adapters@1.2.2
+  - @mission-platform/icons@2.0.4
+  - @mission-platform/typography@1.1.3
+
 ## 1.2.1
 
 ### Patch Changes
