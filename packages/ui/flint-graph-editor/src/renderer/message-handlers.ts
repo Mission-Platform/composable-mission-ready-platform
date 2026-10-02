@@ -125,6 +125,18 @@ function syncCanvasDimensions(state: RenderWorkerState): void {
 }
 
 /**
+ * Applies initial dimensions and theme configuration from init message.
+ */
+function applyInitDimensions(state: RenderWorkerState, msg: Extract<RenderWorkerInputMessage, { type: 'init' }>): void {
+  state.canvas = msg.canvas;
+  state.width = msg.width ?? 800;
+  state.height = msg.height ?? 600;
+  state.dpr = msg.dpr ?? 1;
+  state.currentTheme = msg.theme ?? state.currentTheme;
+  syncCanvasDimensions(state);
+}
+
+/**
  * Initializes and selects the rendering backend.
  */
 async function initWorkerBackendPipeline(
@@ -147,13 +159,8 @@ export async function handleWorkerInit(
 ): Promise<void> {
   const wasm = state.wasm;
   if (!wasm) return;
-  state.canvas = msg.canvas;
-  state.width = msg.width ?? 800;
-  state.height = msg.height ?? 600;
-  state.dpr = msg.dpr ?? 1;
-  state.currentTheme = msg.theme ?? state.currentTheme;
+  applyInitDimensions(state, msg);
 
-  syncCanvasDimensions(state);
   wasm.engine_create(state.width, state.height, state.dpr);
   wasm.engine_set_theme(state.currentTheme === 'light' ? 1 : 0);
   await initWorkerBackendPipeline(state, msg.renderer);

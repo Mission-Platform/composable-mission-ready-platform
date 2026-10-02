@@ -17,6 +17,9 @@ import {
   PORT_TYPE_RGBA_LIGHT,
 } from './constants';
 
+const DEFAULT_CATEGORY_DARK: [number, number, number, number] = [0.545, 0.58, 0.62, 1];
+const DEFAULT_CATEGORY_LIGHT: [number, number, number, number] = [0.341, 0.376, 0.416, 1];
+
 /**
  * Resolves node status key from integer flags.
  */
@@ -28,14 +31,22 @@ function resolveNodeStatusKey(isTrapped: number, isActive: number, isSelected: n
 }
 
 /**
+ * Resolves node category key or meta category default.
+ */
+function resolveCategoryKey(category?: string, isMeta?: boolean): string {
+  if (isMeta) return 'math';
+  return category ?? '';
+}
+
+/**
  * Maps a graph node category to an RGBA color tuple adapted to light or dark themes.
  */
 export function getCategoryRgba(category?: string, isMeta?: boolean, isDark = true): [number, number, number, number] {
   const table = isDark ? CATEGORY_RGBA_DARK : CATEGORY_RGBA_LIGHT;
-  const key = isMeta ? 'math' : (category ?? '');
+  const key = resolveCategoryKey(category, isMeta);
   const color = table[key];
   if (color) return [...color];
-  return isDark ? [0.545, 0.58, 0.62, 1] : [0.341, 0.376, 0.416, 1];
+  return isDark ? DEFAULT_CATEGORY_DARK : DEFAULT_CATEGORY_LIGHT;
 }
 
 /**
@@ -81,9 +92,9 @@ export function parseHexColor(hexStr: string): [number, number, number, number] 
 export function parseRgbColor(rgbStr: string): [number, number, number, number] | undefined {
   const match = rgbStr.match(/rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)/);
   if (!match) return undefined;
-  const redChannel = Number.parseInt(match[1]!, 10) / 255;
-  const greenChannel = Number.parseInt(match[2]!, 10) / 255;
-  const blueChannel = Number.parseInt(match[3]!, 10) / 255;
+  const redChannel = Number.parseInt(match[1] ?? '0', 10) / 255;
+  const greenChannel = Number.parseInt(match[2] ?? '0', 10) / 255;
+  const blueChannel = Number.parseInt(match[3] ?? '0', 10) / 255;
   const alphaChannel = Number.parseFloat(match[4] ?? '1');
   return [redChannel, greenChannel, blueChannel, alphaChannel];
 }

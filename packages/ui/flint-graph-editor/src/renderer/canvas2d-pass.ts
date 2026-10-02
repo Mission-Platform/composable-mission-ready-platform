@@ -23,6 +23,42 @@ export function init2dBackend(state: RenderWorkerState, targetCanvas: OffscreenC
 }
 
 /**
+ * Renders minor grid vertical lines onto 2D canvas context.
+ */
+function render2dMinorVerticalGrid(
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  minX: number,
+  maxX: number,
+  minY: number,
+  maxY: number,
+): void {
+  for (let x = Math.floor(minX / 24) * 24; x <= Math.ceil(maxX / 24) * 24; x += 24) {
+    if (x % 120 !== 0) {
+      ctx.moveTo(x, minY);
+      ctx.lineTo(x, maxY);
+    }
+  }
+}
+
+/**
+ * Renders minor grid horizontal lines onto 2D canvas context.
+ */
+function render2dMinorHorizontalGrid(
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  minY: number,
+  maxY: number,
+  minX: number,
+  maxX: number,
+): void {
+  for (let y = Math.floor(minY / 24) * 24; y <= Math.ceil(maxY / 24) * 24; y += 24) {
+    if (y % 120 !== 0) {
+      ctx.moveTo(minX, y);
+      ctx.lineTo(maxX, y);
+    }
+  }
+}
+
+/**
  * Renders minor grid lines onto 2D canvas context.
  */
 function render2dMinorGridLines(
@@ -35,18 +71,8 @@ function render2dMinorGridLines(
 ): void {
   ctx.strokeStyle = isDark ? 'rgba(56, 64, 82, 0.25)' : 'rgba(140, 155, 175, 0.25)';
   ctx.beginPath();
-  for (let x = Math.floor(minX / 24) * 24; x <= Math.ceil(maxX / 24) * 24; x += 24) {
-    if (x % 120 !== 0) {
-      ctx.moveTo(x, minY);
-      ctx.lineTo(x, maxY);
-    }
-  }
-  for (let y = Math.floor(minY / 24) * 24; y <= Math.ceil(maxY / 24) * 24; y += 24) {
-    if (y % 120 !== 0) {
-      ctx.moveTo(minX, y);
-      ctx.lineTo(maxX, y);
-    }
-  }
+  render2dMinorVerticalGrid(ctx, minX, maxX, minY, maxY);
+  render2dMinorHorizontalGrid(ctx, minY, maxY, minX, maxX);
   ctx.stroke();
 }
 
@@ -146,15 +172,24 @@ function draw2dRoundRect(
 }
 
 /**
+ * Computes theme-adaptive RGB string for 2D group.
+ */
+function get2dGroupRgbString(color?: string, isDark = true): string {
+  const defaultBorder: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 1] : [0.035, 0.412, 0.855, 1];
+  const parsed = parseColorToRgba(color, defaultBorder);
+  return `${Math.round(parsed[0] * 255)}, ${Math.round(parsed[1] * 255)}, ${Math.round(parsed[2] * 255)}`;
+}
+
+/**
  * Computes theme-adaptive background and border colors for 2D group.
  */
 function get2dGroupColors(group: { color?: string; backgroundColor?: string }, isDark: boolean) {
-  const defaultBorder: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 1] : [0.035, 0.412, 0.855, 1];
-  const parsed = parseColorToRgba(group.color, defaultBorder);
-  const rgb = `${Math.round(parsed[0] * 255)}, ${Math.round(parsed[1] * 255)}, ${Math.round(parsed[2] * 255)}`;
+  const rgb = get2dGroupRgbString(group.color, isDark);
+  const bgAlpha = isDark ? 0.12 : 0.08;
+  const borderAlpha = isDark ? 0.7 : 0.6;
   return {
-    bg: group.backgroundColor ?? `rgba(${rgb}, ${isDark ? 0.12 : 0.08})`,
-    border: group.color ?? `rgba(${rgb}, ${isDark ? 0.7 : 0.6})`,
+    bg: group.backgroundColor ?? `rgba(${rgb}, ${bgAlpha})`,
+    border: group.color ?? `rgba(${rgb}, ${borderAlpha})`,
   };
 }
 
@@ -218,6 +253,20 @@ function render2dSingleGroup(
 }
 
 /**
+ * Determines whether bounding box lies completely outside current viewport.
+ */
+function isBoxOutsideViewport(
+  box: GroupBoundingBox2d,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+): boolean {
+  if (box.gx + box.gw < minX || box.gx > maxX) return true;
+  return box.gy + box.gh < minY || box.gy > maxY;
+}
+
+/**
  * Renders node group bounding boxes, titles, and borders on 2D canvas.
  */
 export function render2dGroupPass(
@@ -234,10 +283,21 @@ export function render2dGroupPass(
     const groupNodes = state.nodes.filter((node) => group.nodeIds.includes(node.id));
     if (groupNodes.length === 0) continue;
     const box = computeGroupBounds2d(groupNodes);
-    const outside = box.gx + box.gw < minX || box.gx > maxX || box.gy + box.gh < minY || box.gy > maxY;
-    if (outside) continue;
+    if (isBoxOutsideViewport(box, minX, minY, maxX, maxY)) continue;
     render2dSingleGroup(state, ctx, group, box, zoomVal, isDark);
   }
+}
+
+/**
+ * Traces a single waypoint curve segment.
+ */
+function trace2dWaypointSegment(
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  prev: { x: number; y: number },
+  pt: { x: number; y: number },
+): void {
+  const midX = (prev.x + pt.x) / 2;
+  ctx.bezierCurveTo(midX, prev.y, midX, pt.y, pt.x, pt.y);
 }
 
 /**
@@ -251,21 +311,12 @@ function trace2dWaypoints(
   p3x: number,
   p3y: number,
 ): void {
-  for (let i = 0; i < points.length; i++) {
-    const pt = points[i];
-    if (pt) {
-      const prev = i === 0 ? { x: p0x, y: p0y } : points[i - 1];
-      if (prev) {
-        const midX = (prev.x + pt.x) / 2;
-        ctx.bezierCurveTo(midX, prev.y, midX, pt.y, pt.x, pt.y);
-      }
-    }
+  let prev = { x: p0x, y: p0y };
+  for (const pt of points) {
+    trace2dWaypointSegment(ctx, prev, pt);
+    prev = pt;
   }
-  const lastPt = points.at(-1);
-  if (lastPt) {
-    const midX = (lastPt.x + p3x) / 2;
-    ctx.bezierCurveTo(midX, lastPt.y, midX, p3y, p3x, p3y);
-  }
+  trace2dWaypointSegment(ctx, prev, { x: p3x, y: p3y });
 }
 
 /**
@@ -337,21 +388,34 @@ const C2D_EDGE_DEFAULT_LIGHT = {
   shadowBlur: 4,
 };
 
+const C2D_EDGE_TABLE_DARK = {
+  selected: C2D_EDGE_SELECTED_DARK,
+  pulse: C2D_EDGE_PULSE_DARK,
+  default: C2D_EDGE_DEFAULT_DARK,
+};
+
+const C2D_EDGE_TABLE_LIGHT = {
+  selected: C2D_EDGE_SELECTED_LIGHT,
+  pulse: C2D_EDGE_PULSE_LIGHT,
+  default: C2D_EDGE_DEFAULT_LIGHT,
+};
+
+/**
+ * Resolves edge style key from selection and pulse states.
+ */
+function resolveEdgeStyleKey(isSelected: boolean, isPulseActive: boolean): 'selected' | 'pulse' | 'default' {
+  if (isSelected) return 'selected';
+  if (isPulseActive) return 'pulse';
+  return 'default';
+}
+
 /**
  * Computes 2D canvas edge stroke styling.
  */
 function get2dEdgeStyle(isSelected: boolean, isPulseActive: boolean, isDark: boolean, zoomVal: number): C2dEdgeStyle {
-  const conf = isSelected
-    ? isDark
-      ? C2D_EDGE_SELECTED_DARK
-      : C2D_EDGE_SELECTED_LIGHT
-    : isPulseActive
-      ? isDark
-        ? C2D_EDGE_PULSE_DARK
-        : C2D_EDGE_PULSE_LIGHT
-      : isDark
-        ? C2D_EDGE_DEFAULT_DARK
-        : C2D_EDGE_DEFAULT_LIGHT;
+  const table = isDark ? C2D_EDGE_TABLE_DARK : C2D_EDGE_TABLE_LIGHT;
+  const key = resolveEdgeStyleKey(isSelected, isPulseActive);
+  const conf = table[key];
   return {
     strokeStyle: conf.strokeStyle,
     lineWidth: conf.widthMult / zoomVal,
@@ -401,6 +465,23 @@ function render2dEdgeArrow(
 }
 
 /**
+ * Computes arrow position on edge curve.
+ */
+function resolveEdgeArrowPosition(
+  edge: FlintGraphEdge,
+  p0x: number,
+  p0y: number,
+  p3x: number,
+  p3y: number,
+): { arrowX: number; arrowY: number } {
+  const firstPt = edge.points?.[0];
+  if (firstPt) {
+    return { arrowX: firstPt.x, arrowY: firstPt.y };
+  }
+  return { arrowX: (p0x + p3x) / 2, arrowY: (p0y + p3y) / 2 };
+}
+
+/**
  * Renders waypoint dots and direction indicator arrow.
  */
 function render2dEdgeDecorations(
@@ -424,8 +505,7 @@ function render2dEdgeDecorations(
     render2dWaypointDots(ctx, edge.points, zoomVal, isSelected, isDark);
   }
 
-  const arrowX = edge.points && edge.points.length > 0 ? (edge.points[0]?.x ?? (p0x + p3x) / 2) : (p0x + p3x) / 2;
-  const arrowY = edge.points && edge.points.length > 0 ? (edge.points[0]?.y ?? (p0y + p3y) / 2) : (p0y + p3y) / 2;
+  const { arrowX, arrowY } = resolveEdgeArrowPosition(edge, p0x, p0y, p3x, p3y);
   render2dEdgeArrow(ctx, arrowX, arrowY, zoomVal, isSelected, isDark);
 }
 
@@ -506,6 +586,47 @@ function render2dEdgePulse(
 }
 
 /**
+ * Determines whether edge bounding endpoints lie completely outside viewport.
+ */
+function isEdgeOutsideViewport(
+  p0x: number,
+  p0y: number,
+  p3x: number,
+  p3y: number,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+): boolean {
+  if (Math.max(p0x, p3x) < minX || Math.min(p0x, p3x) > maxX) return true;
+  return Math.max(p0y, p3y) < minY || Math.min(p0y, p3y) > maxY;
+}
+
+/**
+ * Resolves source and target endpoint coordinates for an edge.
+ */
+function resolveEdgeEndpoints(
+  fromNode: FlintGraphNode,
+  toNode: FlintGraphNode,
+  edge: FlintGraphEdge,
+): { p0x: number; p0y: number; p3x: number; p3y: number } {
+  const fromPortIndex = Math.max(
+    0,
+    (fromNode.outputs ?? []).findIndex((p) => p.id === edge.fromPortId),
+  );
+  const toPortIndex = Math.max(
+    0,
+    (toNode.inputs ?? []).findIndex((p) => p.id === edge.toPortId),
+  );
+  return {
+    p0x: fromNode.position.x + NODE_WIDTH,
+    p0y: fromNode.position.y + NODE_HEADER_HEIGHT + fromPortIndex * PORT_ROW_HEIGHT + 14,
+    p3x: toNode.position.x,
+    p3y: toNode.position.y + NODE_HEADER_HEIGHT + toPortIndex * PORT_ROW_HEIGHT + 14,
+  };
+}
+
+/**
  * Renders edge connection cables and execution flow pulses on 2D canvas.
  */
 export function render2dEdgePass(
@@ -525,23 +646,8 @@ export function render2dEdgePass(
     const toNode = nodeMap.get(edge.toNodeId);
     if (!fromNode || !toNode) continue;
 
-    const fromPortIndex = Math.max(
-      0,
-      (fromNode.outputs ?? []).findIndex((p) => p.id === edge.fromPortId),
-    );
-    const toPortIndex = Math.max(
-      0,
-      (toNode.inputs ?? []).findIndex((p) => p.id === edge.toPortId),
-    );
-
-    const p0x = fromNode.position.x + NODE_WIDTH;
-    const p0y = fromNode.position.y + NODE_HEADER_HEIGHT + fromPortIndex * PORT_ROW_HEIGHT + 14;
-    const p3x = toNode.position.x;
-    const p3y = toNode.position.y + NODE_HEADER_HEIGHT + toPortIndex * PORT_ROW_HEIGHT + 14;
-
-    const outside =
-      Math.max(p0x, p3x) < minX || Math.min(p0x, p3x) > maxX || Math.max(p0y, p3y) < minY || Math.min(p0y, p3y) > maxY;
-    if (outside) continue;
+    const { p0x, p0y, p3x, p3y } = resolveEdgeEndpoints(fromNode, toNode, edge);
+    if (isEdgeOutsideViewport(p0x, p0y, p3x, p3y, minX, minY, maxX, maxY)) continue;
 
     const dx = wasmEngine.bezier_control_dx(Math.round(p0x), Math.round(p3x));
     const p1x = p0x + dx;
@@ -555,7 +661,7 @@ export function render2dEdgePass(
 
     render2dEdgeCurve(ctx, edge, p0x, p0y, p3x, p3y, p1x, p1y, p2x, p2y, zoomVal, isDark, isSelected, isPulseActive);
 
-    if (isPulseActive && pulseOffset !== undefined) {
+    if (pulseOffset !== undefined) {
       render2dEdgePulse(ctx, p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, pulseOffset, zoomVal, isDark, wasmEngine);
     }
     ctx.restore();
@@ -573,12 +679,35 @@ function get2dConnectingEdgeSource(fromNode: FlintGraphNode, fromPortId?: string
       p0y: fromNode.position.y + NODE_HEADER_HEIGHT + outIdx * PORT_ROW_HEIGHT + 14,
     };
   }
-  const inIdx = (fromNode.inputs ?? []).findIndex((p) => p.id === fromPortId);
-  const isInput = inIdx !== -1;
+  const inIdx = Math.max(
+    0,
+    (fromNode.inputs ?? []).findIndex((p) => p.id === fromPortId),
+  );
   return {
-    p0x: isInput ? fromNode.position.x : fromNode.position.x + NODE_WIDTH,
-    p0y: fromNode.position.y + NODE_HEADER_HEIGHT + (isInput ? inIdx : 0) * PORT_ROW_HEIGHT + 14,
+    p0x: fromNode.position.x,
+    p0y: fromNode.position.y + NODE_HEADER_HEIGHT + inIdx * PORT_ROW_HEIGHT + 14,
   };
+}
+
+/**
+ * Resolves node port offset for in-flight connection target snapping.
+ */
+function resolveNodePortOffset(node: FlintGraphNode, portId: string): { x: number; y: number } | undefined {
+  const inIndex = (node.inputs ?? []).findIndex((p) => p.id === portId);
+  if (inIndex !== -1) {
+    return {
+      x: node.position.x,
+      y: node.position.y + NODE_HEADER_HEIGHT + inIndex * PORT_ROW_HEIGHT + 14,
+    };
+  }
+  const outIndex = (node.outputs ?? []).findIndex((p) => p.id === portId);
+  if (outIndex !== -1) {
+    return {
+      x: node.position.x + NODE_WIDTH,
+      y: node.position.y + NODE_HEADER_HEIGHT + outIndex * PORT_ROW_HEIGHT + 14,
+    };
+  }
+  return undefined;
 }
 
 /**
@@ -593,21 +722,9 @@ function get2dConnectingEdgeTarget(
   const targetNode = nodeMap.get(hoveredPort.nodeId);
   if (!targetNode) return { p3x: cursor.x, p3y: cursor.y, isSnapped: false };
 
-  const inIndex = (targetNode.inputs ?? []).findIndex((p) => p.id === hoveredPort.portId);
-  if (inIndex !== -1) {
-    return {
-      p3x: targetNode.position.x,
-      p3y: targetNode.position.y + NODE_HEADER_HEIGHT + inIndex * PORT_ROW_HEIGHT + 14,
-      isSnapped: true,
-    };
-  }
-  const outIndex = (targetNode.outputs ?? []).findIndex((p) => p.id === hoveredPort.portId);
-  if (outIndex !== -1) {
-    return {
-      p3x: targetNode.position.x + NODE_WIDTH,
-      p3y: targetNode.position.y + NODE_HEADER_HEIGHT + outIndex * PORT_ROW_HEIGHT + 14,
-      isSnapped: true,
-    };
+  const offset = resolveNodePortOffset(targetNode, hoveredPort.portId);
+  if (offset) {
+    return { p3x: offset.x, p3y: offset.y, isSnapped: true };
   }
   return { p3x: cursor.x, p3y: cursor.y, isSnapped: false };
 }
@@ -648,6 +765,33 @@ function render2dConnectingSpline(
 }
 
 /**
+ * Renders source and target endpoint circles for in-flight connecting cable.
+ */
+function renderConnectingEdgeEndpoints(
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  p0x: number,
+  p0y: number,
+  p3x: number,
+  p3y: number,
+  isSnapped: boolean,
+  isDark: boolean,
+  zoomVal: number,
+): void {
+  ctx.fillStyle = isDark ? '#58a6ff' : '#0969da';
+  ctx.beginPath();
+  ctx.arc(p0x, p0y, 5 / zoomVal, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = isSnapped ? '#3fb950' : isDark ? '#79c0ff' : '#218bff';
+  ctx.beginPath();
+  ctx.arc(p3x, p3y, (isSnapped ? 8 : 6) / zoomVal, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = isDark ? '#ffffff' : '#0d1117';
+  ctx.lineWidth = 2 / zoomVal;
+  ctx.stroke();
+}
+
+/**
  * Renders interactive in-flight wire connection cable on 2D canvas.
  */
 export function render2dConnectingEdgePass(
@@ -671,20 +815,7 @@ export function render2dConnectingEdgePass(
 
   ctx.save();
   render2dConnectingSpline(ctx, p0x, p0y, p3x, p3y, dx, isSnapped, isDark, zoomVal);
-
-  ctx.fillStyle = isDark ? '#58a6ff' : '#0969da';
-  ctx.beginPath();
-  ctx.arc(p0x, p0y, 5 / zoomVal, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.fillStyle = isSnapped ? '#3fb950' : isDark ? '#79c0ff' : '#218bff';
-  ctx.beginPath();
-  ctx.arc(p3x, p3y, (isSnapped ? 8 : 6) / zoomVal, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = isDark ? '#ffffff' : '#0d1117';
-  ctx.lineWidth = 2 / zoomVal;
-  ctx.stroke();
-
+  renderConnectingEdgeEndpoints(ctx, p0x, p0y, p3x, p3y, isSnapped, isDark, zoomVal);
   ctx.restore();
 }
 
@@ -810,6 +941,43 @@ function getC2dNodeHeaderBg(isTrapped: boolean, isActive: boolean, isMeta: boole
 }
 
 /**
+ * Resolves node category text label.
+ */
+function resolveNodeCategoryLabel(node: FlintGraphNode, isMeta: boolean): string {
+  if (isMeta) {
+    return `META (${node.metaSubgraph?.nodes.length ?? 0})`;
+  }
+  return (node.category || 'OPERATION').toUpperCase();
+}
+
+/**
+ * Renders node title, category, and operation text labels.
+ */
+function render2dNodeHeaderLabels(
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  node: FlintGraphNode,
+  x: number,
+  y: number,
+  nodeWidth: number,
+  isDark: boolean,
+  isMeta: boolean,
+): void {
+  ctx.fillStyle = isDark ? '#f0f6fc' : '#1f2328';
+  ctx.font = 'bold 12px "Comfortaa", -apple-system, sans-serif';
+  ctx.fillText(node.title, x + 10, y + 17);
+
+  ctx.fillStyle = isMeta ? (isDark ? '#58a6ff' : '#0969da') : isDark ? '#8b949e' : '#57606a';
+  ctx.font = '10px "Datatype", monospace';
+  const catText = resolveNodeCategoryLabel(node, isMeta);
+  const catWidth = ctx.measureText(catText).width;
+  ctx.fillText(catText, x + nodeWidth - catWidth - 10, y + 17);
+
+  ctx.fillStyle = isDark ? '#8b949e' : '#57606a';
+  ctx.font = '9px "Datatype", monospace';
+  ctx.fillText(node.operation, x + 10, y + 28);
+}
+
+/**
  * Renders 2D canvas node header bar, category strip, and typography labels.
  */
 function render2dNodeHeader(
@@ -839,21 +1007,33 @@ function render2dNodeHeader(
   ctx.lineTo(x + nodeWidth - 1, y + NODE_HEADER_HEIGHT);
   ctx.stroke();
 
-  ctx.fillStyle = isDark ? '#f0f6fc' : '#1f2328';
-  ctx.font = 'bold 12px "Comfortaa", -apple-system, sans-serif';
-  ctx.fillText(node.title, x + 10, y + 17);
+  render2dNodeHeaderLabels(ctx, node, x, y, nodeWidth, isDark, isMeta);
+}
 
-  ctx.fillStyle = isMeta ? (isDark ? '#58a6ff' : '#0969da') : isDark ? '#8b949e' : '#57606a';
-  ctx.font = '10px "Datatype", monospace';
-  const catText = isMeta
-    ? `META (${node.metaSubgraph?.nodes.length ?? 0})`
-    : (node.category || 'OPERATION').toUpperCase();
-  const catWidth = ctx.measureText(catText).width;
-  ctx.fillText(catText, x + nodeWidth - catWidth - 10, y + 17);
+const C2D_SHADOW_DARK = {
+  trapped: { color: '#f85149', blur: 14 },
+  active: { color: '#3fb950', blur: 14 },
+  selected: { color: '#58a6ff', blur: 10 },
+};
 
-  ctx.fillStyle = isDark ? '#8b949e' : '#57606a';
-  ctx.font = '9px "Datatype", monospace';
-  ctx.fillText(node.operation, x + 10, y + 28);
+const C2D_SHADOW_LIGHT = {
+  trapped: { color: '#cf222e', blur: 14 },
+  active: { color: '#1a7f37', blur: 14 },
+  selected: { color: '#0969da', blur: 10 },
+};
+
+/**
+ * Resolves node shadow state key.
+ */
+function resolveNodeShadowKey(
+  isTrapped: boolean,
+  isActive: boolean,
+  isSelected: boolean,
+): 'trapped' | 'active' | 'selected' | undefined {
+  if (isTrapped) return 'trapped';
+  if (isActive) return 'active';
+  if (isSelected) return 'selected';
+  return undefined;
 }
 
 /**
@@ -866,16 +1046,49 @@ function apply2dNodeShadow(
   isSelected: boolean,
   isDark: boolean,
 ): void {
-  if (isTrapped) {
-    ctx.shadowColor = isDark ? '#f85149' : '#cf222e';
-    ctx.shadowBlur = 14;
-  } else if (isActive) {
-    ctx.shadowColor = isDark ? '#3fb950' : '#1a7f37';
-    ctx.shadowBlur = 14;
-  } else if (isSelected) {
-    ctx.shadowColor = isDark ? '#58a6ff' : '#0969da';
-    ctx.shadowBlur = 10;
-  }
+  const key = resolveNodeShadowKey(isTrapped, isActive, isSelected);
+  if (!key) return;
+  const table = isDark ? C2D_SHADOW_DARK : C2D_SHADOW_LIGHT;
+  const config = table[key];
+  ctx.shadowColor = config.color;
+  ctx.shadowBlur = config.blur;
+}
+
+/**
+ * Resolves 2D node card background fill color.
+ */
+function get2dNodeFill(isMeta: boolean, isDark: boolean): string {
+  if (isDark) return isMeta ? '#161e2e' : '#21262d';
+  return isMeta ? '#f0f4f8' : '#ffffff';
+}
+
+/**
+ * Resolves 2D node stroke outline width.
+ */
+function get2dNodeStrokeWidth(isTrapped: boolean, isActive: boolean, isSelected: boolean): number {
+  if (isTrapped || isActive) return 2.5;
+  if (isSelected) return 2;
+  return 1;
+}
+
+/**
+ * Renders node property value preview string.
+ */
+function render2dNodeProperties(
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  node: FlintGraphNode,
+  x: number,
+  y: number,
+  nodeHeight: number,
+  isDark: boolean,
+): void {
+  if (!node.properties) return;
+  const propKeys = Object.keys(node.properties);
+  if (propKeys.length === 0) return;
+  const firstVal = String(node.properties[propKeys[0]]);
+  ctx.fillStyle = isDark ? '#58a6ff' : '#0969da';
+  ctx.font = '10px "Datatype", monospace';
+  ctx.fillText(`= ${firstVal}`, x + 10, y + nodeHeight - 8);
 }
 
 /**
@@ -902,10 +1115,10 @@ export function render2dSingleNode(
   ctx.save();
   apply2dNodeShadow(ctx, isTrapped, isActive, isSelected, isDark);
 
-  ctx.fillStyle = isDark ? (isMeta ? '#161e2e' : '#21262d') : isMeta ? '#f0f4f8' : '#ffffff';
+  ctx.fillStyle = get2dNodeFill(isMeta, isDark);
   const nodeStroke = computeC2dNodeStroke(isSelected ? 1 : 0, isActive ? 1 : 0, isTrapped ? 1 : 0, isDark);
   ctx.strokeStyle = nodeStroke.strokeStyle;
-  ctx.lineWidth = (isTrapped || isActive ? 2.5 : isSelected ? 2 : 1) / zoomVal;
+  ctx.lineWidth = get2dNodeStrokeWidth(isTrapped, isActive, isSelected) / zoomVal;
 
   draw2dRoundRect(ctx, x, y, nodeWidth, nodeHeight, 8);
   ctx.fill();
@@ -913,16 +1126,48 @@ export function render2dSingleNode(
 
   render2dNodeHeader(ctx, node, x, y, nodeWidth, zoomVal, isDark, isTrapped, isActive, isMeta);
   render2dNodePins(state, ctx, node, x, y, nodeWidth, zoomVal, isDark);
-
-  if (node.properties && Object.keys(node.properties).length > 0) {
-    const propKeys = Object.keys(node.properties);
-    const firstVal = String(node.properties[propKeys[0]]);
-    ctx.fillStyle = isDark ? '#58a6ff' : '#0969da';
-    ctx.font = '10px "Datatype", monospace';
-    ctx.fillText(`= ${firstVal}`, x + 10, y + nodeHeight - 8);
-  }
+  render2dNodeProperties(ctx, node, x, y, nodeHeight, isDark);
 
   ctx.restore();
+}
+
+/**
+ * Determines whether node bounding box lies completely outside current viewport.
+ */
+function isNodeOutsideViewport(
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+): boolean {
+  if (x + w < minX || x > maxX) return true;
+  return y + h < minY || y > maxY;
+}
+
+/**
+ * Renders nodes intersecting with the visible viewport bounds.
+ */
+function render2dVisibleNodes(
+  state: RenderWorkerState,
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+  zoomVal: number,
+  isDark: boolean,
+): void {
+  for (const node of state.nodes) {
+    const bounds = getNodeBounds(node);
+    const nodeWidth = bounds.maxX - bounds.minX;
+    const nodeHeight = bounds.maxY - bounds.minY;
+    if (isNodeOutsideViewport(bounds.minX, bounds.minY, nodeWidth, nodeHeight, minX, minY, maxX, maxY)) continue;
+    render2dSingleNode(state, ctx, node, zoomVal, isDark);
+  }
 }
 
 /**
@@ -972,31 +1217,6 @@ function record2dFrameStats(state: RenderWorkerState, t0: number): void {
     isFallback: true,
     backend: 'canvas2d',
   };
-}
-
-/**
- * Renders nodes intersecting with the visible viewport bounds.
- */
-function render2dVisibleNodes(
-  state: RenderWorkerState,
-  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
-  minX: number,
-  minY: number,
-  maxX: number,
-  maxY: number,
-  zoomVal: number,
-  isDark: boolean,
-): void {
-  for (const node of state.nodes) {
-    const bounds = getNodeBounds(node);
-    const nodeWidth = bounds.maxX - bounds.minX;
-    const nodeHeight = bounds.maxY - bounds.minY;
-    const x = bounds.minX;
-    const y = bounds.minY;
-
-    if (x + nodeWidth < minX || x > maxX || y + nodeHeight < minY || y > maxY) continue;
-    render2dSingleNode(state, ctx, node, zoomVal, isDark);
-  }
 }
 
 /**

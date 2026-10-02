@@ -1787,6 +1787,20 @@ function handleCtrlShortcuts(event: KeyboardEvent, store: FlintEditorStore, brid
 }
 
 /**
+ * Tests whether key is a deletion shortcut.
+ */
+function isDeleteKey(key: string): boolean {
+  return key === 'Delete' || key === 'Backspace';
+}
+
+/**
+ * Tests whether keyboard event has modifier keys pressed.
+ */
+function hasModifierKey(event: KeyboardEvent): boolean {
+  return event.ctrlKey || event.metaKey;
+}
+
+/**
  * Processes global keyboard shortcuts for editor navigation, deletion, and undo/redo.
  */
 function handleEditorKeyboardAction(
@@ -1796,9 +1810,9 @@ function handleEditorKeyboardAction(
 ): void {
   if (event.key === 'Escape') {
     handleEscapeKey(store, bridge);
-  } else if (event.key === 'Delete' || event.key === 'Backspace') {
+  } else if (isDeleteKey(event.key)) {
     handleDeleteKey(store, bridge);
-  } else if (event.ctrlKey || event.metaKey) {
+  } else if (hasModifierKey(event)) {
     handleCtrlShortcuts(event, store, bridge);
   }
 }
@@ -2124,6 +2138,37 @@ function handlePortHitPointerDown(
 }
 
 /**
+ * Handles pointer down on group hit.
+ */
+function handleEntityGroupHit(
+  hit: Extract<FlintHitResult, { type: 'group' }>,
+  store: FlintEditorStore,
+  bridge: FlintRendererBridge,
+  nodesStartPositions: Map<string, { readonly x: number; readonly y: number }>,
+): PointerDownHitOutcome | undefined {
+  if (!hit.groupId) return undefined;
+  handleGroupPointerDown(hit, store, bridge, nodesStartPositions);
+  return { dragMode: 'group' };
+}
+
+/**
+ * Handles pointer down on edge hit.
+ */
+function handleEntityEdgeHit(
+  hit: Extract<FlintHitResult, { type: 'edge' }>,
+  offsetX: number,
+  offsetY: number,
+  now: number,
+  lastClick: { time: number; id: string },
+  store: FlintEditorStore,
+  bridge: FlintRendererBridge,
+): PointerDownHitOutcome | undefined {
+  if (!hit.edgeId) return undefined;
+  handleEdgeHitPointerDown(hit, offsetX, offsetY, now, lastClick, store, bridge);
+  return { dragMode: 'none' };
+}
+
+/**
  * Routes pointer down hit test results on specific entities.
  */
 function handleEntityPointerDown(
@@ -2137,23 +2182,17 @@ function handleEntityPointerDown(
   bridge: FlintRendererBridge,
   nodesStartPositions: Map<string, { readonly x: number; readonly y: number }>,
 ): PointerDownHitOutcome | undefined {
-  if (hit.type === 'group' && hit.groupId) {
-    handleGroupPointerDown(hit, store, bridge, nodesStartPositions);
-    return { dragMode: 'group' };
-  }
-  if (hit.type === 'waypoint' && hit.edgeId && hit.waypointIndex !== undefined) {
-    return handleWaypointHitPointerDown(hit as Extract<FlintHitResult, { type: 'waypoint' }>, store, bridge);
-  }
-  if (hit.type === 'edge' && hit.edgeId) {
-    handleEdgeHitPointerDown(hit, offsetX, offsetY, now, lastClick, store, bridge);
-    return { dragMode: 'none' };
-  }
+  if (hit.type === 'group') return handleEntityGroupHit(hit, store, bridge, nodesStartPositions);
+  if (hit.type === 'edge') return handleEntityEdgeHit(hit, offsetX, offsetY, now, lastClick, store, bridge);
   if (hit.type === 'node') {
     handleNodeHitPointerDown(hit, isShift, now, lastClick, store, bridge, nodesStartPositions);
     return { dragMode: 'node' };
   }
+  if (hit.type === 'waypoint' && hit.edgeId && hit.waypointIndex !== undefined) {
+    return handleWaypointHitPointerDown(hit, store, bridge);
+  }
   if (hit.type === 'port' && hit.portId) {
-    return handlePortHitPointerDown(hit as Extract<FlintHitResult, { type: 'port' }>, store, bridge);
+    return handlePortHitPointerDown(hit, store, bridge);
   }
   return undefined;
 }
@@ -2239,28 +2278,21 @@ function handlePointerUpAction(
   store: FlintEditorStore,
   setSelectionSquare: (updater: SelectionSquareState | ((prev: SelectionSquareState) => SelectionSquareState)) => void,
 ): void {
-  switch (dragMode) {
-    case 'box_select': {
-      handleBoxSelectPointerUp(event, boxSelectStart, bridge, store, setSelectionSquare);
-      break;
-    }
-    case 'connect': {
-      handleConnectPointerUp(event, connectingSourceNodeId, connectingSourcePortId, bridge, store);
-      break;
-    }
-    case 'node':
-    case 'group': {
-      store.commitNodeMove();
-      bridge.renderFrame();
-      break;
-    }
-    case 'waypoint': {
-      bridge.renderFrame();
-      break;
-    }
-    default: {
-      break;
-    }
+  if (dragMode === 'box_select') {
+    handleBoxSelectPointerUp(event, boxSelectStart, bridge, store, setSelectionSquare);
+    return;
+  }
+  if (dragMode === 'connect') {
+    handleConnectPointerUp(event, connectingSourceNodeId, connectingSourcePortId, bridge, store);
+    return;
+  }
+  if (dragMode === 'node' || dragMode === 'group') {
+    store.commitNodeMove();
+    bridge.renderFrame();
+    return;
+  }
+  if (dragMode === 'waypoint') {
+    bridge.renderFrame();
   }
 }
 
@@ -2334,6 +2366,25 @@ interface DragMoveContext {
 }
 
 /**
+ * Handles waypoint drag movement step.
+ */
+function handleWaypointDragStep(
+  event: PointerEvent,
+  draggedEdgeId: string,
+  draggedWaypointIndex: number,
+  store: FlintEditorStore,
+  bridge: FlintRendererBridge,
+): void {
+  if (!draggedEdgeId) return;
+  const { x: worldX, y: worldY } = bridge.screenToWorld(event.offsetX, event.offsetY);
+  store.updateEdgePoint(draggedEdgeId, draggedWaypointIndex, {
+    x: Math.round(worldX),
+    y: Math.round(worldY),
+  });
+  syncGraphWithBridge(store, bridge);
+}
+
+/**
  * Handles active gesture drag step routing.
  */
 function handleDragMoveStep(context: DragMoveContext): { resetDragStart?: boolean } {
@@ -2353,46 +2404,34 @@ function handleDragMoveStep(context: DragMoveContext): { resetDragStart?: boolea
     setSelectionSquare,
   } = context;
 
-  switch (dragMode) {
-    case 'box_select': {
-      setSelectionSquare((previous) => ({
-        ...previous,
-        currentX: event.offsetX,
-        currentY: event.offsetY,
-      }));
-      return {};
-    }
-    case 'group':
-    case 'node': {
-      if (nodesStartPositions.size > 0) {
-        handleNodeGroupDrag(deltaX, deltaY, cameraZoom, nodesStartPositions, store, bridge);
-      }
-      return {};
-    }
-    case 'waypoint': {
-      if (draggedEdgeId) {
-        const { x: worldX, y: worldY } = bridge.screenToWorld(event.offsetX, event.offsetY);
-        store.updateEdgePoint(draggedEdgeId, draggedWaypointIndex, {
-          x: Math.round(worldX),
-          y: Math.round(worldY),
-        });
-        syncGraphWithBridge(store, bridge);
-      }
-      return {};
-    }
-    case 'connect': {
-      handleConnectDrag(event, bridge, store, connectingSourceNodeId, connectingSourcePortId);
-      return {};
-    }
-    case 'pan': {
-      bridge.pan(deltaX, deltaY);
-      bridge.renderFrame();
-      return { resetDragStart: true };
-    }
-    default: {
-      return {};
-    }
+  if (dragMode === 'box_select') {
+    setSelectionSquare((previous) => ({
+      ...previous,
+      currentX: event.offsetX,
+      currentY: event.offsetY,
+    }));
+    return {};
   }
+  if (dragMode === 'group' || dragMode === 'node') {
+    if (nodesStartPositions.size > 0) {
+      handleNodeGroupDrag(deltaX, deltaY, cameraZoom, nodesStartPositions, store, bridge);
+    }
+    return {};
+  }
+  if (dragMode === 'waypoint') {
+    handleWaypointDragStep(event, draggedEdgeId, draggedWaypointIndex, store, bridge);
+    return {};
+  }
+  if (dragMode === 'connect') {
+    handleConnectDrag(event, bridge, store, connectingSourceNodeId, connectingSourcePortId);
+    return {};
+  }
+  if (dragMode === 'pan') {
+    bridge.pan(deltaX, deltaY);
+    bridge.renderFrame();
+    return { resetDragStart: true };
+  }
+  return {};
 }
 
 /**
@@ -2422,6 +2461,25 @@ function tryCapturePointer(element: HTMLCanvasElement, pointerId: number): void 
   } catch {
     // pointer capture optional
   }
+}
+
+/**
+ * Normalizes hit outcome into state properties.
+ */
+function applyGestureOutcome(outcome: PointerDownHitOutcome): {
+  dragMode: 'pan' | 'node' | 'group' | 'waypoint' | 'connect' | 'box_select' | 'none';
+  sourceNodeId: string;
+  sourcePortId: string;
+  edgeId: string;
+  waypointIndex: number;
+} {
+  return {
+    dragMode: outcome.dragMode,
+    sourceNodeId: outcome.connectingSourceNodeId ?? '',
+    sourcePortId: outcome.connectingSourcePortId ?? '',
+    edgeId: outcome.draggedEdgeId ?? '',
+    waypointIndex: outcome.draggedWaypointIndex ?? -1,
+  };
 }
 
 /**
@@ -2483,11 +2541,12 @@ function setupCanvasEventListeners(options: CanvasGestureBindingsOptions): () =>
       nodesStartPositions,
     });
 
-    dragMode = outcome.dragMode;
-    connectingSourceNodeId = outcome.connectingSourceNodeId || '';
-    connectingSourcePortId = outcome.connectingSourcePortId || '';
-    draggedEdgeId = outcome.draggedEdgeId || '';
-    draggedWaypointIndex = outcome.draggedWaypointIndex === undefined ? -1 : outcome.draggedWaypointIndex;
+    const parsed = applyGestureOutcome(outcome);
+    dragMode = parsed.dragMode;
+    connectingSourceNodeId = parsed.sourceNodeId;
+    connectingSourcePortId = parsed.sourcePortId;
+    draggedEdgeId = parsed.edgeId;
+    draggedWaypointIndex = parsed.waypointIndex;
 
     if (dragMode === 'box_select') {
       boxSelectStart = initBoxSelection(event, setSelectionSquare);
@@ -4126,6 +4185,71 @@ interface FlintEditorContextMenuProperties {
 }
 
 /**
+ * Renders edge context menu actions.
+ */
+function renderEdgeContextMenuActions(
+  cm: ContextMenuState,
+  store: FlintEditorStore,
+  bridge?: FlintRendererBridge,
+  onClose?: () => void,
+): MpElement {
+  if (!cm.targetId || !onClose) return <></>;
+  return (
+    <ContextMenuEdgeActions
+      targetId={cm.targetId}
+      worldX={cm.worldX}
+      worldY={cm.worldY}
+      store={store}
+      bridge={bridge}
+      onClose={onClose}
+    />
+  );
+}
+
+/**
+ * Renders node context menu actions.
+ */
+function renderNodeContextMenuActions(
+  cm: ContextMenuState,
+  selectedNode: FlintGraphNode | undefined,
+  store: FlintEditorStore,
+  bridge?: FlintRendererBridge,
+  onClose?: () => void,
+): MpElement {
+  if (!cm.targetId || !onClose) return <></>;
+  return (
+    <ContextMenuNodeActions
+      targetId={cm.targetId}
+      targetGroupId={cm.targetGroupId}
+      selectedNode={selectedNode}
+      store={store}
+      bridge={bridge}
+      onClose={onClose}
+    />
+  );
+}
+
+/**
+ * Renders group context menu actions.
+ */
+function renderGroupContextMenuActions(
+  cm: ContextMenuState,
+  store: FlintEditorStore,
+  bridge?: FlintRendererBridge,
+  onClose?: () => void,
+): MpElement {
+  if (!cm.targetGroupId || !onClose) return <></>;
+  return (
+    <ContextMenuGroupActions
+      targetGroupId={cm.targetGroupId}
+      store={store}
+      bridge={bridge}
+      onClose={onClose}
+    />
+  );
+}
+
+/**
  * Renders target-specific context menu action panel.
  */
 function renderTargetActions(
@@ -4136,60 +4260,19 @@ function renderTargetActions(
   bridge: FlintRendererBridge | undefined,
   onClose: () => void,
 ): MpElement {
-  switch (cm.targetType) {
-    case 'edge': {
-      return cm.targetId ? (
-        <ContextMenuEdgeActions
-          targetId={cm.targetId}
-          worldX={cm.worldX}
-          worldY={cm.worldY}
-          store={store}
-          bridge={bridge}
-          onClose={onClose}
-        />
-      ) : (
-        <></>
-      );
-    }
-    case 'node': {
-      return cm.targetId ? (
-        <ContextMenuNodeActions
-          targetId={cm.targetId}
-          targetGroupId={cm.targetGroupId}
-          selectedNode={selectedNode}
-          store={store}
-          bridge={bridge}
-          onClose={onClose}
-        />
-      ) : (
-        <></>
-      );
-    }
-    case 'group': {
-      return cm.targetGroupId ? (
-        <ContextMenuGroupActions
-          targetGroupId={cm.targetGroupId}
-          store={store}
-          bridge={bridge}
-          onClose={onClose}
-        />
-      ) : (
-        <></>
-      );
-    }
-    case 'selection': {
-      return (
-        <ContextMenuSelectionActions
-          selectedNodeCount={selectedNodeCount}
-          store={store}
-          onClose={onClose}
-        />
-      );
-    }
-    default: {
-      return <></>;
-    }
+  if (cm.targetType === 'edge') return renderEdgeContextMenuActions(cm, store, bridge, onClose);
+  if (cm.targetType === 'node') return renderNodeContextMenuActions(cm, selectedNode, store, bridge, onClose);
+  if (cm.targetType === 'group') return renderGroupContextMenuActions(cm, store, bridge, onClose);
+  if (cm.targetType === 'selection') {
+    return (
+      <ContextMenuSelectionActions
+        selectedNodeCount={selectedNodeCount}
+        store={store}
+        onClose={onClose}
+      />
+    );
   }
+  return <></>;
 }
 
 /**
@@ -4704,30 +4787,31 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
   useEffect(() => {
     if (properties.theme && properties.theme !== 'auto') {
       setResolvedTheme(properties.theme);
-      return;
+    } else {
+      return setupThemeObserver(setResolvedTheme);
     }
-    return setupThemeObserver(setResolvedTheme);
   }, [properties.theme]);
 
   useEffect(() => {
     const canvasElement = canvasReference.current;
-    if (!canvasElement) return;
-    const session = setupEditorCanvasBridge(
-      canvasElement,
-      store,
-      properties.renderer,
-      properties.theme,
-      recordPerfMetrics,
-      setIsFallback,
-      setEditorState,
-      setContextMenu,
-      setSelectionSquare,
-    );
-    bridgeReference.current = session.bridge;
-    return () => {
-      session.cleanup();
-      bridgeReference.current = undefined;
-    };
+    if (canvasElement) {
+      const session = setupEditorCanvasBridge(
+        canvasElement,
+        store,
+        properties.renderer,
+        properties.theme,
+        recordPerfMetrics,
+        setIsFallback,
+        setEditorState,
+        setContextMenu,
+        setSelectionSquare,
+      );
+      bridgeReference.current = session.bridge;
+      return () => {
+        session.cleanup();
+        bridgeReference.current = undefined;
+      };
+    }
   }, [store, properties.renderer]);
 
   const query = searchQuery.toLowerCase().trim();

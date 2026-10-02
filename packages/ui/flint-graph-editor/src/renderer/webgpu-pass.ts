@@ -146,6 +146,18 @@ export function uploadGpuInstanceData(
   return targetBuffer;
 }
 
+function calculateClampedInstances(
+  floatsLength: number,
+  bufferSize: number,
+  strideFloats: number,
+  maxCount?: number,
+): number {
+  const maxInstances = Math.floor(bufferSize / (strideFloats * 4));
+  const availableInstances = Math.floor(floatsLength / strideFloats);
+  const clampedCount = maxCount === undefined ? availableInstances : Math.min(maxCount, availableInstances);
+  return Math.min(clampedCount, maxInstances);
+}
+
 /**
  * Configures pipeline state and issues instanced WebGPU draw calls.
  */
@@ -160,10 +172,7 @@ export function executeGpuInstancedDraw(
   maxCount?: number,
 ): void {
   if (!passEncoder || !pipeline || !cameraGroup || !instanceBuffer) return;
-  const maxInstances = Math.floor(instanceBuffer.size / (strideFloats * 4));
-  const availableInstances = Math.floor(floats.length / strideFloats);
-  const clampedCount = maxCount === undefined ? availableInstances : Math.min(maxCount, availableInstances);
-  const actualCount = Math.min(clampedCount, maxInstances);
+  const actualCount = calculateClampedInstances(floats.length, instanceBuffer.size, strideFloats, maxCount);
   if (actualCount === 0) return;
   passEncoder.setPipeline(pipeline);
   passEncoder.setBindGroup(0, cameraGroup);
@@ -175,23 +184,19 @@ export function executeGpuInstancedDraw(
  * Flushes WebGPU text vertex buffer and executes text draw calls.
  */
 export function flushWebGpuTextBatch(state: RenderWorkerState): void {
-  if (
-    !state.currentPassEncoder ||
-    !state.textPipeline ||
-    !state.cameraBindGroup ||
-    !state.fontBindGroup ||
-    !state.gpuDevice
-  )
-    return;
+  const encoder = state.currentPassEncoder;
+  const device = state.gpuDevice;
+  if (!encoder || !state.textPipeline || !state.cameraBindGroup || !state.fontBindGroup || !device) return;
   if (state.webGpuTextVertices.length === 0) return;
+
   const requiredBytes = state.webGpuTextVertices.length * 4;
-  state.textVertexBuffer = ensureGpuInstanceBuffer(state.textVertexBuffer, requiredBytes, state.gpuDevice);
-  state.gpuDevice.queue.writeBuffer(state.textVertexBuffer, 0, new Float32Array(state.webGpuTextVertices));
-  state.currentPassEncoder.setPipeline(state.textPipeline);
-  state.currentPassEncoder.setBindGroup(0, state.cameraBindGroup);
-  state.currentPassEncoder.setBindGroup(1, state.fontBindGroup);
-  state.currentPassEncoder.setVertexBuffer(0, state.textVertexBuffer);
-  state.currentPassEncoder.draw(state.webGpuTextVertices.length / 8, 1, 0, 0);
+  state.textVertexBuffer = ensureGpuInstanceBuffer(state.textVertexBuffer, requiredBytes, device);
+  device.queue.writeBuffer(state.textVertexBuffer, 0, new Float32Array(state.webGpuTextVertices));
+  encoder.setPipeline(state.textPipeline);
+  encoder.setBindGroup(0, state.cameraBindGroup);
+  encoder.setBindGroup(1, state.fontBindGroup);
+  encoder.setVertexBuffer(0, state.textVertexBuffer);
+  encoder.draw(state.webGpuTextVertices.length / 8, 1, 0, 0);
 }
 
 /**
@@ -327,6 +332,17 @@ export function createWebGpuGeometryPipelines(
 }
 
 /**
+ * Resolves font atlas texture data buffer from WebAssembly exports.
+ */
+function resolveFontTextureData(wasm: FlintRenderWorkerWasmExports | undefined, atlasSize: number): Uint8Array {
+  const atlasPtr = wasm ? wasm.font_get_atlas_ptr() : 0;
+  if (wasm && atlasPtr > 0) {
+    return new Uint8Array(wasm.memory.buffer, atlasPtr, atlasSize * atlasSize * 4);
+  }
+  return new Uint8Array(atlasSize * atlasSize * 4);
+}
+
+/**
  * Initializes WebGPU font atlas texture and SDF text pipeline.
  */
 export function setupWebGpuFontPipeline(
@@ -337,11 +353,7 @@ export function setupWebGpuFontPipeline(
 ): void {
   const wasm = state.wasm;
   const atlasSize = wasm ? wasm.font_get_atlas_size() : 1024;
-  const atlasPtr = wasm ? wasm.font_get_atlas_ptr() : 0;
-  const rgbaData =
-    wasm && atlasPtr > 0
-      ? new Uint8Array(wasm.memory.buffer, atlasPtr, atlasSize * atlasSize * 4)
-      : new Uint8Array(atlasSize * atlasSize * 4);
+  const rgbaData = resolveFontTextureData(wasm, atlasSize);
 
   state.fontTexture = device.createTexture({
     size: [atlasSize, atlasSize, 1],
@@ -423,6 +435,26 @@ async function requestGpuDevice(nav: WebGpuNavigator): Promise<GPUDevice | undef
 }
 
 /**
+ * Initializes camera uniform buffers and pipeline bind groups.
+ */
+function setupGpuCameraBuffers(
+  state: RenderWorkerState,
+  device: GPUDevice,
+): { cameraBindGroupLayout: GPUBindGroupLayout; pipelineLayout: GPUPipelineLayout } {
+  const cameraBindGroupLayout = device.createBindGroupLayout({
+    entries: [{ binding: 0, visibility: 3, buffer: { type: 'uniform' } }],
+  });
+  const pipelineLayout = device.createPipelineLayout({ bindGroupLayouts: [cameraBindGroupLayout] });
+
+  state.cameraBuffer = device.createBuffer({ size: 256, usage: 0x00_40 | 0x00_08 });
+  state.cameraBindGroup = device.createBindGroup({
+    layout: cameraBindGroupLayout,
+    entries: [{ binding: 0, resource: { buffer: state.cameraBuffer } }],
+  });
+  return { cameraBindGroupLayout, pipelineLayout };
+}
+
+/**
  * Initializes the WebGPU device, swapchain context, pipelines, and uniform bind groups.
  */
 export async function initWebGpuBackend(
@@ -449,17 +481,7 @@ export async function initWebGpuBackend(
     state.gpuDevice = device;
     state.gpuContext = context;
 
-    const cameraBindGroupLayout = device.createBindGroupLayout({
-      entries: [{ binding: 0, visibility: 3, buffer: { type: 'uniform' } }],
-    });
-    const pipelineLayout = device.createPipelineLayout({ bindGroupLayouts: [cameraBindGroupLayout] });
-
-    state.cameraBuffer = device.createBuffer({ size: 256, usage: 0x00_40 | 0x00_08 });
-    state.cameraBindGroup = device.createBindGroup({
-      layout: cameraBindGroupLayout,
-      entries: [{ binding: 0, resource: { buffer: state.cameraBuffer } }],
-    });
-
+    const { cameraBindGroupLayout, pipelineLayout } = setupGpuCameraBuffers(state, device);
     createWebGpuGeometryPipelines(state, device, pipelineLayout, format);
     setupWebGpuFontPipeline(state, device, cameraBindGroupLayout, format);
 
@@ -501,6 +523,37 @@ function computeGroupBoundsGpu(groupNodes: readonly FlintGraphNode[]): GroupBoun
 }
 
 /**
+ * Resolves color tuples for WebGPU group background, border, and title badges.
+ */
+function resolveGpuGroupColors(
+  group: { color?: string; backgroundColor?: string },
+  isSelected: boolean,
+  isDark: boolean,
+): {
+  bg: [number, number, number, number];
+  border: [number, number, number, number];
+  titleBg: [number, number, number, number];
+} {
+  const defaultBorder: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 1] : [0.035, 0.412, 0.855, 1];
+  const parsedColor = parseColorToRgba(group.color, defaultBorder);
+  const fallbackBg: [number, number, number, number] = [
+    parsedColor[0],
+    parsedColor[1],
+    parsedColor[2],
+    isDark ? 0.12 : 0.08,
+  ];
+  const groupBg = parseColorToRgba(group.backgroundColor, fallbackBg);
+  const groupBorder: [number, number, number, number] = isSelected
+    ? [1, 1, 1, 1]
+    : [parsedColor[0], parsedColor[1], parsedColor[2], isDark ? 0.7 : 0.6];
+  return {
+    bg: groupBg,
+    border: groupBorder,
+    titleBg: [parsedColor[0], parsedColor[1], parsedColor[2], 0.9],
+  };
+}
+
+/**
  * Prepares WebGPU instance and text quads for an individual node group.
  */
 function prepareSingleWebGpuGroup(
@@ -512,20 +565,9 @@ function prepareSingleWebGpuGroup(
   wasmEngine: FlintRenderWorkerWasmExports,
 ): void {
   const { gx, gy, gw, gh } = box;
-  const defaultBorder: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 1] : [0.035, 0.412, 0.855, 1];
-  const parsedColor = parseColorToRgba(group.color, defaultBorder);
-  const fallbackBg: [number, number, number, number] = [
-    parsedColor[0],
-    parsedColor[1],
-    parsedColor[2],
-    isDark ? 0.12 : 0.08,
-  ];
-  const groupBg = parseColorToRgba(group.backgroundColor, fallbackBg);
-  const groupBorder: [number, number, number, number] = isSelectedGroup
-    ? [1, 1, 1, 1]
-    : [parsedColor[0], parsedColor[1], parsedColor[2], isDark ? 0.7 : 0.6];
+  const colors = resolveGpuGroupColors(group, isSelectedGroup, isDark);
 
-  pushGpuNodeInstance(state, gx + gw / 2, gy + gh / 2, gw, gh, 12, groupBg, groupBorder, isSelectedGroup ? 3.5 : 2);
+  pushGpuNodeInstance(state, gx + gw / 2, gy + gh / 2, gw, gh, 12, colors.bg, colors.border, isSelectedGroup ? 3.5 : 2);
 
   const titleW = wasmEngine.font_measure_text(group.title, 12);
   const pillW = titleW + 16;
@@ -536,11 +578,25 @@ function prepareSingleWebGpuGroup(
     pillW,
     20,
     4,
-    [parsedColor[0], parsedColor[1], parsedColor[2], 0.9],
+    colors.titleBg,
     isSelectedGroup ? [1, 1, 1, 1] : undefined,
     isSelectedGroup ? 1.5 : 0,
   );
   wasmEngine.font_append_text_quads(group.title, gx + 18, gy + 18, 12, 1, 1, 1, 1, 0);
+}
+
+/**
+ * Determines whether WebGPU group bounding box lies completely outside viewport.
+ */
+function isGpuBoxOutsideViewport(
+  box: GroupBoundingBoxGpu,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+): boolean {
+  if (box.gx + box.gw < minX || box.gx > maxX) return true;
+  return box.gy + box.gh < minY || box.gy > maxY;
 }
 
 /**
@@ -560,8 +616,7 @@ export function prepareWebGpuGroupInstances(
     const groupNodes = state.nodes.filter((n) => group.nodeIds.includes(n.id));
     if (groupNodes.length === 0) continue;
     const box = computeGroupBoundsGpu(groupNodes);
-    const outside = box.gx + box.gw < minX || box.gx > maxX || box.gy + box.gh < minY || box.gy > maxY;
-    if (outside) continue;
+    if (isGpuBoxOutsideViewport(box, minX, minY, maxX, maxY)) continue;
     prepareSingleWebGpuGroup(state, group, box, isDark, selectedGroupIdVal === group.id, wasmEngine);
   }
 }
@@ -707,6 +762,16 @@ function getGpuNodeFill(isMeta: boolean, isDark: boolean): [number, number, numb
 }
 
 /**
+ * Resolves category text color channels for WebGPU node header.
+ */
+function resolveGpuCategoryTextColor(isMeta: boolean, isDark: boolean): [number, number, number, number] {
+  if (isMeta) {
+    return isDark ? [0.345, 0.651, 1, 1] : [0.035, 0.412, 0.855, 1];
+  }
+  return isDark ? [0.545, 0.58, 0.62, 1] : [0.341, 0.376, 0.416, 1];
+}
+
+/**
  * Prepares WebGPU node header card, category strip, and titles.
  */
 function prepareWebGpuNodeHeader(
@@ -736,13 +801,7 @@ function prepareWebGpuNodeHeader(
   const catText = isMeta
     ? `META (${node.metaSubgraph?.nodes.length ?? 0})`
     : (node.category || 'OPERATION').toUpperCase();
-  const catTextColor = isMeta
-    ? isDark
-      ? [0.345, 0.651, 1, 1]
-      : [0.035, 0.412, 0.855, 1]
-    : isDark
-      ? [0.545, 0.58, 0.62, 1]
-      : [0.341, 0.376, 0.416, 1];
+  const catTextColor = resolveGpuCategoryTextColor(isMeta, isDark);
   wasmEngine.font_append_text_quads(
     catText,
     x + nodeWidth - 10,
@@ -832,6 +891,23 @@ export function prepareSingleWebGpuNode(
 }
 
 /**
+ * Determines whether node bounding box lies completely outside current viewport.
+ */
+function isNodeOutsideViewport(
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+): boolean {
+  if (x + w < minX || x > maxX) return true;
+  return y + h < minY || y > maxY;
+}
+
+/**
  * Prepares instanced WebGPU geometry and SDF text quads for nodes.
  */
 export function prepareWebGpuNodeInstances(
@@ -851,14 +927,8 @@ export function prepareWebGpuNodeInstances(
     const bounds = getNodeBounds(node);
     const nodeWidth = bounds.maxX - bounds.minX;
     const nodeHeight = bounds.maxY - bounds.minY;
-    const x = bounds.minX;
-    const y = bounds.minY;
-
-    if (x + nodeWidth < minX || x > maxX || y + nodeHeight < minY || y > maxY) {
-      continue;
-    }
+    if (isNodeOutsideViewport(bounds.minX, bounds.minY, nodeWidth, nodeHeight, minX, minY, maxX, maxY)) continue;
     visibleNodesCount++;
-
     visiblePinsCount += prepareSingleWebGpuNode(state, node, isDark, hoveredPortInfo, wasmEngine);
   }
 
@@ -891,6 +961,23 @@ function computeGpuEdgeCoordinates(
 }
 
 /**
+ * Determines whether WebGPU edge endpoints lie completely outside viewport.
+ */
+function isGpuEdgeOutsideViewport(
+  p0x: number,
+  p0y: number,
+  p3x: number,
+  p3y: number,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+): boolean {
+  if (Math.max(p0x, p3x) < minX || Math.min(p0x, p3x) > maxX) return true;
+  return Math.max(p0y, p3y) < minY || Math.min(p0y, p3y) > maxY;
+}
+
+/**
  * Packs WebGPU instancing floats for an individual graph edge curve.
  */
 function prepareSingleWebGpuEdge(
@@ -906,19 +993,18 @@ function prepareSingleWebGpuEdge(
   wasmEngine: FlintRenderWorkerWasmExports,
 ): void {
   const pulseT = Math.round(pulseOffset * 1000);
-  if (edge.points && edge.points.length > 0) {
-    let prevX = p0x;
-    let prevY = p0y;
-    for (const pt of edge.points) {
-      wasmEngine.compute_edge_instance(prevX, prevY, pt.x, pt.y, isSelected, isActive, pulseT);
-      pushGpuPinInstance(state, pt.x, pt.y, isSelected ? 6 : 4.5, isSelected ? [0.35, 0.65, 1, 1] : [0.7, 0.7, 0.7, 1]);
-      prevX = pt.x;
-      prevY = pt.y;
-    }
-    wasmEngine.compute_edge_instance(prevX, prevY, p3x, p3y, isSelected, isActive, pulseT);
-  } else {
-    wasmEngine.compute_edge_instance(p0x, p0y, p3x, p3y, isSelected, isActive, pulseT);
+  const pinFill: [number, number, number, number] = isSelected ? [0.35, 0.65, 1, 1] : [0.7, 0.7, 0.7, 1];
+  const pinRadius = isSelected ? 6 : 4.5;
+
+  let prevX = p0x;
+  let prevY = p0y;
+  for (const pt of edge.points ?? []) {
+    wasmEngine.compute_edge_instance(prevX, prevY, pt.x, pt.y, isSelected, isActive, pulseT);
+    pushGpuPinInstance(state, pt.x, pt.y, pinRadius, pinFill);
+    prevX = pt.x;
+    prevY = pt.y;
   }
+  wasmEngine.compute_edge_instance(prevX, prevY, p3x, p3y, isSelected, isActive, pulseT);
 }
 
 /**
@@ -941,15 +1027,7 @@ export function prepareWebGpuEdgeInstances(
     if (!fromNode || !toNode) continue;
 
     const { p0x, p0y, p3x, p3y } = computeGpuEdgeCoordinates(fromNode, toNode, edge.fromPortId, edge.toPortId);
-
-    if (
-      Math.max(p0x, p3x) < minX ||
-      Math.min(p0x, p3x) > maxX ||
-      Math.max(p0y, p3y) < minY ||
-      Math.min(p0y, p3y) > maxY
-    ) {
-      continue;
-    }
+    if (isGpuEdgeOutsideViewport(p0x, p0y, p3x, p3y, minX, minY, maxX, maxY)) continue;
     visibleEdgesCount++;
 
     const isSelected = state.selectedEdgeIds.has(edge.id) ? 1 : 0;
@@ -987,6 +1065,16 @@ function computeGpuConnectingSource(fromNode: FlintGraphNode, fromPortId?: strin
 }
 
 /**
+ * Resolves connecting wire hover target indicator color.
+ */
+function resolveConnectingHoverColor(isHovered: boolean, isDark: boolean): [number, number, number, number] {
+  if (isHovered) {
+    return isDark ? [0.247, 0.725, 0.314, 1] : [0.102, 0.498, 0.216, 1];
+  }
+  return isDark ? [0.345, 0.651, 1, 1] : [0.035, 0.412, 0.855, 1];
+}
+
+/**
  * Prepares in-flight interactive wire connection spline.
  */
 export function prepareWebGpuConnectingEdge(
@@ -1006,13 +1094,7 @@ export function prepareWebGpuConnectingEdge(
   const p3y = connectingEdgeInfo.cursorY;
   wasmEngine.compute_edge_instance(p0x, p0y, p3x, p3y, 1, 1, 0);
 
-  const hoverColor: [number, number, number, number] = hoveredPortInfo
-    ? isDark
-      ? [0.247, 0.725, 0.314, 1]
-      : [0.102, 0.498, 0.216, 1]
-    : isDark
-      ? [0.345, 0.651, 1, 1]
-      : [0.035, 0.412, 0.855, 1];
+  const hoverColor = resolveConnectingHoverColor(Boolean(hoveredPortInfo), isDark);
   pushGpuPinInstance(state, p3x, p3y, 6, hoverColor);
 }
 
@@ -1074,6 +1156,14 @@ export function prepareWebGpuInstances(state: RenderWorkerState): void {
 }
 
 /**
+ * Resolves WebGPU background clear color.
+ */
+function getGpuClearColor(isDark: boolean): { r: number; g: number; b: number; a: number } {
+  if (isDark) return { r: 0.043, g: 0.071, b: 0.098, a: 1 };
+  return { r: 0.961, g: 0.965, b: 0.973, a: 1 };
+}
+
+/**
  * Initiates WebGPU command encoder and render pass with clear color.
  */
 function beginGpuRenderPass(state: RenderWorkerState): void {
@@ -1081,15 +1171,13 @@ function beginGpuRenderPass(state: RenderWorkerState): void {
   state.currentCommandEncoder = state.gpuDevice.createCommandEncoder();
   const textureView = state.gpuContext.getCurrentTexture().createView();
   const isDark = state.currentTheme !== 'light';
-  const clearR = isDark ? 0.043 : 0.961;
-  const clearG = isDark ? 0.071 : 0.965;
-  const clearB = isDark ? 0.098 : 0.973;
+  const clearValue = getGpuClearColor(isDark);
 
   state.currentPassEncoder = state.currentCommandEncoder.beginRenderPass({
     colorAttachments: [
       {
         view: textureView,
-        clearValue: { r: clearR, g: clearG, b: clearB, a: 1 },
+        clearValue,
         loadOp: 'clear',
         storeOp: 'store',
       },

@@ -257,16 +257,23 @@ export function createGlProgram(
 }
 
 /**
+ * Resolves font atlas texture data buffer from WebAssembly exports.
+ */
+function resolveFontTextureData(wasm: FlintRenderWorkerWasmExports | undefined, atlasSize: number): Uint8Array {
+  const atlasPtr = wasm ? wasm.font_get_atlas_ptr() : 0;
+  if (wasm && atlasPtr > 0) {
+    return new Uint8Array(wasm.memory.buffer, atlasPtr, atlasSize * atlasSize * 4);
+  }
+  return new Uint8Array(atlasSize * atlasSize * 4);
+}
+
+/**
  * Initializes and binds glyph font texture in WebGL context.
  */
 export function setupGlFontTexture(state: RenderWorkerState, gl: WebGLRenderingContext | WebGL2RenderingContext): void {
   const wasm = state.wasm;
   const atlasSize = wasm ? wasm.font_get_atlas_size() : 1024;
-  const atlasPtr = wasm ? wasm.font_get_atlas_ptr() : 0;
-  const rgbaData =
-    wasm && atlasPtr > 0
-      ? new Uint8Array(wasm.memory.buffer, atlasPtr, atlasSize * atlasSize * 4)
-      : new Uint8Array(atlasSize * atlasSize * 4);
+  const rgbaData = resolveFontTextureData(wasm, atlasSize);
   const tex = gl.createTexture();
   if (!tex) return;
   gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -385,31 +392,50 @@ const FS_SOURCE = `
 `;
 
 /**
+ * Acquires WebGL 1.0 or 2.0 rendering context from target canvas.
+ */
+function acquireGlContext(
+  targetCanvas: OffscreenCanvas | HTMLCanvasElement,
+): WebGLRenderingContext | WebGL2RenderingContext | null {
+  return (targetCanvas.getContext('webgl2', { preserveDrawingBuffer: true, alpha: true }) ||
+    targetCanvas.getContext('webgl', { preserveDrawingBuffer: true, alpha: true })) as
+    WebGLRenderingContext | WebGL2RenderingContext | null;
+}
+
+/**
+ * Binds shader uniform and attribute locations to worker state.
+ */
+function bindGlProgramLocations(
+  state: RenderWorkerState,
+  gl: WebGLRenderingContext | WebGL2RenderingContext,
+  program: WebGLProgram,
+): void {
+  state.glProgram = program;
+  state.glVertexBuffer = gl.createBuffer() ?? undefined;
+  state.glUniformLocations = {
+    u_resolution: gl.getUniformLocation(program, 'u_resolution'),
+    u_camera: gl.getUniformLocation(program, 'u_camera'),
+    u_zoom: gl.getUniformLocation(program, 'u_zoom'),
+  };
+  state.glAttribLocations = {
+    a_position: gl.getAttribLocation(program, 'a_position'),
+    a_color: gl.getAttribLocation(program, 'a_color'),
+  };
+}
+
+/**
  * Initializes WebGL 1.0 or 2.0 context, compiles vertex and fragment shaders, and configures vertex attributes.
  */
 export function initWebGLBackend(state: RenderWorkerState, targetCanvas: OffscreenCanvas | HTMLCanvasElement): boolean {
   try {
-    const gl = (targetCanvas.getContext('webgl2', { preserveDrawingBuffer: true, alpha: true }) ||
-      targetCanvas.getContext('webgl', { preserveDrawingBuffer: true, alpha: true })) as
-      WebGLRenderingContext | WebGL2RenderingContext | null;
+    const gl = acquireGlContext(targetCanvas);
     if (!gl) return false;
     state.glCtx = gl;
 
     const program = createGlProgram(gl, VS_SOURCE, FS_SOURCE);
     if (!program) return false;
 
-    state.glProgram = program;
-    state.glVertexBuffer = gl.createBuffer() ?? undefined;
-    state.glUniformLocations = {
-      u_resolution: gl.getUniformLocation(program, 'u_resolution'),
-      u_camera: gl.getUniformLocation(program, 'u_camera'),
-      u_zoom: gl.getUniformLocation(program, 'u_zoom'),
-    };
-    state.glAttribLocations = {
-      a_position: gl.getAttribLocation(program, 'a_position'),
-      a_color: gl.getAttribLocation(program, 'a_color'),
-    };
-
+    bindGlProgramLocations(state, gl, program);
     gl.getExtension('OES_standard_derivatives');
     setupGlTextProgram(state, gl);
 
@@ -424,6 +450,23 @@ export function initWebGLBackend(state: RenderWorkerState, targetCanvas: Offscre
  */
 function getWebGLClearColor(isDark: boolean): [number, number, number] {
   return isDark ? [0.043, 0.071, 0.098] : [0.961, 0.965, 0.973];
+}
+
+/**
+ * Configures WebGL viewport and clear state.
+ */
+function applyGlViewportState(
+  gl: WebGLRenderingContext | WebGL2RenderingContext,
+  canvasW: number,
+  canvasH: number,
+  isDark: boolean,
+): void {
+  gl.viewport(0, 0, canvasW, canvasH);
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  const [clearR, clearG, clearB] = getWebGLClearColor(isDark);
+  gl.clearColor(clearR, clearG, clearB, 1);
+  gl.clear(gl.COLOR_BUFFER_BIT);
 }
 
 /**
@@ -443,12 +486,8 @@ export function setupWebGLViewport(
   const isDark = state.currentTheme !== 'light';
   const canvasW = state.canvas ? state.canvas.width : Math.round(w * dprVal);
   const canvasH = state.canvas ? state.canvas.height : Math.round(h * dprVal);
-  gl.viewport(0, 0, canvasW, canvasH);
-  gl.enable(gl.BLEND);
-  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-  const [clearR, clearG, clearB] = getWebGLClearColor(isDark);
-  gl.clearColor(clearR, clearG, clearB, 1);
-  gl.clear(gl.COLOR_BUFFER_BIT);
+
+  applyGlViewportState(gl, canvasW, canvasH, isDark);
   gl.useProgram(state.glProgram);
   if (state.glUniformLocations) {
     gl.uniform2f(state.glUniformLocations.u_resolution, w, h);
@@ -642,18 +681,36 @@ export function flushWebGLPrimitives(state: RenderWorkerState): void {
 }
 
 /**
- * Cleans up WebGL buffers, textures, and shader programs.
+ * Deletes an array of WebGL buffers safely.
  */
-export function cleanupGlResources(state: RenderWorkerState, gl: WebGLRenderingContext | WebGL2RenderingContext): void {
-  const buffers = [state.glVertexBuffer, state.glTexVertexBuffer];
+function deleteGlBuffers(
+  gl: WebGLRenderingContext | WebGL2RenderingContext,
+  buffers: readonly (WebGLBuffer | undefined)[],
+): void {
   for (const buf of buffers) {
     if (buf) gl.deleteBuffer(buf);
   }
-  if (state.glFontTexture) gl.deleteTexture(state.glFontTexture);
-  const programs = [state.glProgram, state.glTextProgram];
+}
+
+/**
+ * Deletes an array of WebGL shader programs safely.
+ */
+function deleteGlPrograms(
+  gl: WebGLRenderingContext | WebGL2RenderingContext,
+  programs: readonly (WebGLProgram | undefined)[],
+): void {
   for (const prog of programs) {
     if (prog) gl.deleteProgram(prog);
   }
+}
+
+/**
+ * Cleans up WebGL buffers, textures, and shader programs.
+ */
+export function cleanupGlResources(state: RenderWorkerState, gl: WebGLRenderingContext | WebGL2RenderingContext): void {
+  deleteGlBuffers(gl, [state.glVertexBuffer, state.glTexVertexBuffer]);
+  if (state.glFontTexture) gl.deleteTexture(state.glFontTexture);
+  deleteGlPrograms(gl, [state.glProgram, state.glTextProgram]);
 }
 
 /**
@@ -708,6 +765,37 @@ function computeGroupBounds(groupNodes: readonly FlintGraphNode[]): GroupBoundin
 }
 
 /**
+ * Resolves color tuples for WebGL group background, border, and title badges.
+ */
+function resolveWebGLGroupColors(
+  group: FlintGraphGroup,
+  isSelected: boolean,
+  isDark: boolean,
+): {
+  bg: [number, number, number, number];
+  border: [number, number, number, number];
+  titleBg: [number, number, number, number];
+} {
+  const defaultBorder: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 1] : [0.035, 0.412, 0.855, 1];
+  const parsedColor = parseColorToRgba(group.color, defaultBorder);
+  const fallbackBg: [number, number, number, number] = [
+    parsedColor[0],
+    parsedColor[1],
+    parsedColor[2],
+    isDark ? 0.12 : 0.08,
+  ];
+  const groupBg = parseColorToRgba(group.backgroundColor, fallbackBg);
+  const groupBorder: [number, number, number, number] = isSelected
+    ? [1, 1, 1, 1]
+    : [parsedColor[0], parsedColor[1], parsedColor[2], isDark ? 0.7 : 0.6];
+  return {
+    bg: groupBg,
+    border: groupBorder,
+    titleBg: [parsedColor[0], parsedColor[1], parsedColor[2], 0.9],
+  };
+}
+
+/**
  * Renders an individual node group box, header pill, and label.
  */
 function renderWebGLSingleGroup(
@@ -718,29 +806,52 @@ function renderWebGLSingleGroup(
   wasmEngine: FlintRenderWorkerWasmExports,
 ): void {
   const isSelectedGroup = state.selectedGroupId === group.id;
-  const defaultBorder: [number, number, number, number] = isDark ? [0.35, 0.65, 1, 1] : [0.035, 0.412, 0.855, 1];
-  const parsedColor = parseColorToRgba(group.color, defaultBorder);
-  const fallbackBg: [number, number, number, number] = [
-    parsedColor[0],
-    parsedColor[1],
-    parsedColor[2],
-    isDark ? 0.12 : 0.08,
-  ];
-  const groupBg = parseColorToRgba(group.backgroundColor, fallbackBg);
-  const groupBorder: [number, number, number, number] = isSelectedGroup
-    ? [1, 1, 1, 1]
-    : [parsedColor[0], parsedColor[1], parsedColor[2], isDark ? 0.7 : 0.6];
+  const colors = resolveWebGLGroupColors(group, isSelectedGroup, isDark);
 
-  pushRect(state, box.gx, box.gy, box.gw, box.gh, groupBg[0], groupBg[1], groupBg[2], groupBg[3]);
-  pushRectBorder(state, box.gx, box.gy, box.gw, box.gh, groupBorder[0], groupBorder[1], groupBorder[2], groupBorder[3]);
+  pushRect(state, box.gx, box.gy, box.gw, box.gh, colors.bg[0], colors.bg[1], colors.bg[2], colors.bg[3]);
+  pushRectBorder(
+    state,
+    box.gx,
+    box.gy,
+    box.gw,
+    box.gh,
+    colors.border[0],
+    colors.border[1],
+    colors.border[2],
+    colors.border[3],
+  );
 
   const titleW = wasmEngine.font_measure_text(group.title, 12);
   const pillW = titleW + 16;
-  pushRect(state, box.gx + 10, box.gy + 4, pillW, 20, parsedColor[0], parsedColor[1], parsedColor[2], 0.9);
+  pushRect(
+    state,
+    box.gx + 10,
+    box.gy + 4,
+    pillW,
+    20,
+    colors.titleBg[0],
+    colors.titleBg[1],
+    colors.titleBg[2],
+    colors.titleBg[3],
+  );
   if (isSelectedGroup) {
     pushRectBorder(state, box.gx + 10, box.gy + 4, pillW, 20, 1, 1, 1, 1);
   }
   wasmEngine.font_append_text_quads(group.title, box.gx + 18, box.gy + 18, 12, 1, 1, 1, 1, 0);
+}
+
+/**
+ * Determines whether group bounding box lies completely outside current viewport.
+ */
+function isGlBoxOutsideViewport(
+  box: GroupBoundingBox,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+): boolean {
+  if (box.gx + box.gw < minX || box.gx > maxX) return true;
+  return box.gy + box.gh < minY || box.gy > maxY;
 }
 
 /**
@@ -759,8 +870,7 @@ export function renderWebGLGroupPass(
     const groupNodes = state.nodes.filter((n) => group.nodeIds.includes(n.id));
     if (groupNodes.length === 0) continue;
     const box = computeGroupBounds(groupNodes);
-    const outside = box.gx + box.gw < minX || box.gx > maxX || box.gy + box.gh < minY || box.gy > maxY;
-    if (outside) continue;
+    if (isGlBoxOutsideViewport(box, minX, minY, maxX, maxY)) continue;
     renderWebGLSingleGroup(state, group, box, isDark, wasmEngine);
   }
 }
@@ -897,13 +1007,34 @@ const GL_EDGE_STYLE_DEFAULT_LIGHT: WebGLEdgeStyle = {
   edgeThickness: 2,
 };
 
+const GL_EDGE_TABLE_DARK = {
+  selected: GL_EDGE_STYLE_SELECTED_DARK,
+  active: GL_EDGE_STYLE_ACTIVE_DARK,
+  default: GL_EDGE_STYLE_DEFAULT_DARK,
+};
+
+const GL_EDGE_TABLE_LIGHT = {
+  selected: GL_EDGE_STYLE_SELECTED_LIGHT,
+  active: GL_EDGE_STYLE_ACTIVE_LIGHT,
+  default: GL_EDGE_STYLE_DEFAULT_LIGHT,
+};
+
+/**
+ * Resolves WebGL edge styling key from selection and activity status.
+ */
+function resolveGlEdgeKey(isSelected: boolean, isActive: boolean): 'selected' | 'active' | 'default' {
+  if (isSelected) return 'selected';
+  if (isActive) return 'active';
+  return 'default';
+}
+
 /**
  * Resolves edge color and thickness attributes.
  */
 function getWebGLEdgeStyle(isSelected: boolean, isActive: boolean, isDark: boolean): WebGLEdgeStyle {
-  if (isSelected) return isDark ? GL_EDGE_STYLE_SELECTED_DARK : GL_EDGE_STYLE_SELECTED_LIGHT;
-  if (isActive) return isDark ? GL_EDGE_STYLE_ACTIVE_DARK : GL_EDGE_STYLE_ACTIVE_LIGHT;
-  return isDark ? GL_EDGE_STYLE_DEFAULT_DARK : GL_EDGE_STYLE_DEFAULT_LIGHT;
+  const table = isDark ? GL_EDGE_TABLE_DARK : GL_EDGE_TABLE_LIGHT;
+  const key = resolveGlEdgeKey(isSelected, isActive);
+  return table[key];
 }
 
 /**
@@ -958,6 +1089,23 @@ function renderWebGLEdgePulse(
 }
 
 /**
+ * Determines whether WebGL edge endpoints lie completely outside viewport.
+ */
+function isGlEdgeOutsideViewport(
+  p0x: number,
+  p0y: number,
+  p3x: number,
+  p3y: number,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+): boolean {
+  if (Math.max(p0x, p3x) < minX || Math.min(p0x, p3x) > maxX) return true;
+  return Math.max(p0y, p3y) < minY || Math.min(p0y, p3y) > maxY;
+}
+
+/**
  * Renders edge connections and waypoints into WebGL primitive buffers.
  */
 export function renderWebGLEdgePass(
@@ -978,15 +1126,7 @@ export function renderWebGLEdgePass(
     if (!fromNode || !toNode) continue;
 
     const { p0x, p0y, p3x, p3y } = computeEdgeCoordinates(fromNode, toNode, edge.fromPortId, edge.toPortId);
-
-    if (
-      Math.max(p0x, p3x) < minX ||
-      Math.min(p0x, p3x) > maxX ||
-      Math.max(p0y, p3y) < minY ||
-      Math.min(p0y, p3y) > maxY
-    ) {
-      continue;
-    }
+    if (isGlEdgeOutsideViewport(p0x, p0y, p3x, p3y, minX, minY, maxX, maxY)) continue;
     visibleEdgesCount++;
 
     const isSelected = state.selectedEdgeIds.has(edge.id);
@@ -1065,17 +1205,16 @@ function renderWebGLInputPins(
   isDark: boolean,
   wasmEngine: FlintRenderWorkerWasmExports,
 ): number {
-  let pinCount = 0;
-  for (const [idx, port] of (node.inputs ?? []).entries()) {
+  const inputs = node.inputs ?? [];
+  const portTextColor = isDark ? [0.788, 0.82, 0.851] : [0.141, 0.161, 0.184];
+
+  for (const [idx, port] of inputs.entries()) {
     const py = y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
     const isHovered = state.hoveredPort?.nodeId === node.id && state.hoveredPort?.portId === port.id;
-    const pinRadius = isHovered ? 6 : 4;
     const portColor = getPortTypeRgba(port.type, isDark);
-    pushCircle(state, x, py, pinRadius, portColor[0], portColor[1], portColor[2], portColor[3]);
-    if (isHovered) pushCircle(state, x, py, 2.5, 1, 1, 1, 1);
-    pinCount++;
 
-    const portTextColor = isDark ? [0.788, 0.82, 0.851] : [0.141, 0.161, 0.184];
+    pushCircle(state, x, py, isHovered ? 6 : 4, portColor[0], portColor[1], portColor[2], portColor[3]);
+    if (isHovered) pushCircle(state, x, py, 2.5, 1, 1, 1, 1);
     wasmEngine.font_append_text_quads(
       port.name,
       x + 12,
@@ -1088,7 +1227,7 @@ function renderWebGLInputPins(
       0,
     );
   }
-  return pinCount;
+  return inputs.length;
 }
 
 /**
@@ -1103,17 +1242,16 @@ function renderWebGLOutputPins(
   isDark: boolean,
   wasmEngine: FlintRenderWorkerWasmExports,
 ): number {
-  let pinCount = 0;
-  for (const [idx, port] of (node.outputs ?? []).entries()) {
+  const outputs = node.outputs ?? [];
+  const portTextColor = isDark ? [0.788, 0.82, 0.851] : [0.141, 0.161, 0.184];
+
+  for (const [idx, port] of outputs.entries()) {
     const py = y + NODE_HEADER_HEIGHT + idx * PORT_ROW_HEIGHT + 14;
     const isHovered = state.hoveredPort?.nodeId === node.id && state.hoveredPort?.portId === port.id;
-    const pinRadius = isHovered ? 6 : 4;
     const portColor = getPortTypeRgba(port.type, isDark);
-    pushCircle(state, x + nodeWidth, py, pinRadius, portColor[0], portColor[1], portColor[2], portColor[3]);
-    if (isHovered) pushCircle(state, x + nodeWidth, py, 2.5, 1, 1, 1, 1);
-    pinCount++;
 
-    const portTextColor = isDark ? [0.788, 0.82, 0.851] : [0.141, 0.161, 0.184];
+    pushCircle(state, x + nodeWidth, py, isHovered ? 6 : 4, portColor[0], portColor[1], portColor[2], portColor[3]);
+    if (isHovered) pushCircle(state, x + nodeWidth, py, 2.5, 1, 1, 1, 1);
     wasmEngine.font_append_text_quads(
       port.name,
       x + nodeWidth - 12,
@@ -1126,7 +1264,7 @@ function renderWebGLOutputPins(
       1,
     );
   }
-  return pinCount;
+  return outputs.length;
 }
 
 /**
@@ -1187,6 +1325,16 @@ function getGlNodeFill(isMeta: boolean, isDark: boolean): [number, number, numbe
 }
 
 /**
+ * Resolves category text color channels for WebGL node header.
+ */
+function resolveWebGLCategoryColors(isMeta: boolean, isDark: boolean): [number, number, number, number] {
+  if (isMeta) {
+    return isDark ? [0.345, 0.651, 1, 1] : [0.035, 0.412, 0.855, 1];
+  }
+  return isDark ? [0.545, 0.58, 0.62, 1] : [0.341, 0.376, 0.416, 1];
+}
+
+/**
  * Renders node header card and category badge in WebGL.
  */
 function renderWebGLNodeHeader(
@@ -1226,13 +1374,7 @@ function renderWebGLNodeHeader(
   const catText = isMeta
     ? `META (${node.metaSubgraph?.nodes.length ?? 0})`
     : (node.category || 'OPERATION').toUpperCase();
-  const catTextColor = isMeta
-    ? isDark
-      ? [0.345, 0.651, 1, 1]
-      : [0.035, 0.412, 0.855, 1]
-    : isDark
-      ? [0.545, 0.58, 0.62, 1]
-      : [0.341, 0.376, 0.416, 1];
+  const catTextColor = resolveWebGLCategoryColors(isMeta, isDark);
   wasmEngine.font_append_text_quads(
     catText,
     x + nodeWidth - 10,
@@ -1277,6 +1419,15 @@ function renderWebGLNodeProperties(
 }
 
 /**
+ * Resolves WebGL node border outline thickness.
+ */
+function getGlBorderThickness(isTrapped: number, isActive: number, isSelected: number): number {
+  if (isTrapped || isActive) return 2.5;
+  if (isSelected) return 2;
+  return 1.2;
+}
+
+/**
  * Renders individual WebGL node body, header, pin, and text primitives.
  */
 export function renderWebGLSingleNode(
@@ -1300,7 +1451,7 @@ export function renderWebGLSingleNode(
   pushRect(state, x, y, nodeWidth, nodeHeight, fillR, fillG, fillB, fillA);
 
   const { br, bg, bb } = computeGlNodeBorder(isSelected, isActive, isTrapped, isDark);
-  const borderThickness = isTrapped || isActive ? 2.5 : isSelected ? 2 : 1.2;
+  const borderThickness = getGlBorderThickness(isTrapped, isActive, isSelected);
   pushRectBorder(state, x, y, nodeWidth, nodeHeight, br, bg, bb, 1, borderThickness);
 
   renderWebGLNodeHeader(state, node, x, y, nodeWidth, isDark, isTrapped, isActive, isMeta, wasmEngine);
@@ -1308,6 +1459,23 @@ export function renderWebGLSingleNode(
   renderWebGLNodeProperties(node, x, y, nodeHeight, isDark, wasmEngine);
 
   return pinCount;
+}
+
+/**
+ * Determines whether node bounding box lies completely outside current viewport.
+ */
+function isNodeOutsideViewport(
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number,
+): boolean {
+  if (x + w < minX || x > maxX) return true;
+  return y + h < minY || y > maxY;
 }
 
 /**
@@ -1329,15 +1497,50 @@ export function renderWebGLNodePass(
     const bounds = getNodeBounds(node);
     const nodeWidth = bounds.maxX - bounds.minX;
     const nodeHeight = bounds.maxY - bounds.minY;
-    const x = bounds.minX;
-    const y = bounds.minY;
-
-    if (x + nodeWidth < minX || x > maxX || y + nodeHeight < minY || y > maxY) continue;
+    if (isNodeOutsideViewport(bounds.minX, bounds.minY, nodeWidth, nodeHeight, minX, minY, maxX, maxY)) continue;
     visibleNodesCount++;
     visiblePinsCount += renderWebGLSingleNode(state, node, isDark, wasmEngine);
   }
 
   return { visibleNodesCount, visiblePinsCount };
+}
+
+/**
+ * Flushes WebGL SDF text batch to screen.
+ */
+function flushGlTextTriangles(
+  state: RenderWorkerState,
+  gl: WebGLRenderingContext | WebGL2RenderingContext,
+  wasmEngine: FlintRenderWorkerWasmExports,
+): void {
+  if (
+    state.textTriVertices.length === 0 ||
+    !state.glTextProgram ||
+    !state.glTexVertexBuffer ||
+    !state.glFontTexture ||
+    !state.glTextUniformLocations ||
+    !state.glTextAttribLocations
+  ) {
+    return;
+  }
+  gl.useProgram(state.glTextProgram);
+  gl.uniform2f(state.glTextUniformLocations.u_resolution, state.width, state.height);
+  gl.uniform2f(state.glTextUniformLocations.u_camera, wasmEngine.get_camera_x(), wasmEngine.get_camera_y());
+  gl.uniform1f(state.glTextUniformLocations.u_zoom, wasmEngine.get_camera_zoom());
+
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, state.glFontTexture);
+  gl.uniform1i(state.glTextUniformLocations.u_fontTexture, 0);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, state.glTexVertexBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, state.textTriVertices, gl.DYNAMIC_DRAW);
+  gl.enableVertexAttribArray(state.glTextAttribLocations.a_position);
+  gl.vertexAttribPointer(state.glTextAttribLocations.a_position, 2, gl.FLOAT, false, 32, 0);
+  gl.enableVertexAttribArray(state.glTextAttribLocations.a_uv);
+  gl.vertexAttribPointer(state.glTextAttribLocations.a_uv, 2, gl.FLOAT, false, 32, 8);
+  gl.enableVertexAttribArray(state.glTextAttribLocations.a_color);
+  gl.vertexAttribPointer(state.glTextAttribLocations.a_color, 4, gl.FLOAT, false, 32, 16);
+  gl.drawArrays(gl.TRIANGLES, 0, state.textTriVertices.length / 8);
 }
 
 /**
@@ -1353,35 +1556,37 @@ export function renderWebGLTextPass(
   const glTextF64View = new Float64Array(wasmEngine.memory.buffer, glTextBufPtr, glTextFloatCount);
   state.textTriVertices = new Float32Array(glTextF64View);
 
-  if (
-    state.textTriVertices.length > 0 &&
-    state.glTextProgram &&
-    state.glTexVertexBuffer &&
-    state.glFontTexture &&
-    state.glTextUniformLocations &&
-    state.glTextAttribLocations
-  ) {
-    gl.useProgram(state.glTextProgram);
-    gl.uniform2f(state.glTextUniformLocations.u_resolution, state.width, state.height);
-    gl.uniform2f(state.glTextUniformLocations.u_camera, wasmEngine.get_camera_x(), wasmEngine.get_camera_y());
-    gl.uniform1f(state.glTextUniformLocations.u_zoom, wasmEngine.get_camera_zoom());
-
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, state.glFontTexture);
-    gl.uniform1i(state.glTextUniformLocations.u_fontTexture, 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, state.glTexVertexBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, state.textTriVertices, gl.DYNAMIC_DRAW);
-    gl.enableVertexAttribArray(state.glTextAttribLocations.a_position);
-    gl.vertexAttribPointer(state.glTextAttribLocations.a_position, 2, gl.FLOAT, false, 32, 0);
-    gl.enableVertexAttribArray(state.glTextAttribLocations.a_uv);
-    gl.vertexAttribPointer(state.glTextAttribLocations.a_uv, 2, gl.FLOAT, false, 32, 8);
-    gl.enableVertexAttribArray(state.glTextAttribLocations.a_color);
-    gl.vertexAttribPointer(state.glTextAttribLocations.a_color, 4, gl.FLOAT, false, 32, 16);
-    gl.drawArrays(gl.TRIANGLES, 0, state.textTriVertices.length / 8);
-  }
-
+  flushGlTextTriangles(state, gl, wasmEngine);
   return glTextFloatCount;
+}
+
+/**
+ * Updates frame timing performance stats for WebGL backend.
+ */
+function recordWebGLFrameStats(
+  state: RenderWorkerState,
+  t0: number,
+  visibleNodesCount: number,
+  visibleEdgesCount: number,
+  visiblePinsCount: number,
+  glTextFloatCount: number,
+): void {
+  const tEnd = typeof performance === 'undefined' ? 0 : performance.now();
+  const frameTime = t0 > 0 && tEnd > 0 ? tEnd - t0 : 1.2;
+  state.performanceStats = {
+    ...state.performanceStats,
+    renderTimeMs: Math.round(frameTime * 100) / 100,
+    totalFrameTimeMs: Math.round((frameTime + 0.4) * 100) / 100,
+    visibleNodesCount,
+    totalNodesCount: state.nodes.length,
+    visibleEdgesCount,
+    totalEdgesCount: state.edges.length,
+    visiblePinsCount,
+    totalPinsCount: state.nodes.length * 4,
+    textQuadCount: glTextFloatCount / 8,
+    backend: 'webgl',
+    isFallback: false,
+  };
 }
 
 /**
@@ -1389,31 +1594,20 @@ export function renderWebGLTextPass(
  */
 export function renderWebGLFrame(state: RenderWorkerState): void {
   const gl = state.glCtx;
-  if (
-    !gl ||
-    !state.glProgram ||
-    !state.glVertexBuffer ||
-    !state.glUniformLocations ||
-    !state.glAttribLocations ||
-    !state.wasm
-  )
-    return;
+  if (!gl || !state.glProgram || !state.glVertexBuffer || !state.wasm) return;
 
   const isDark = state.currentTheme !== 'light';
   const t0 = typeof performance === 'undefined' ? 0 : performance.now();
   const canvasW = state.canvas ? state.canvas.width : Math.round(state.width * state.dpr);
   const canvasH = state.canvas ? state.canvas.height : Math.round(state.height * state.dpr);
-  gl.viewport(0, 0, canvasW, canvasH);
-  gl.enable(gl.BLEND);
-  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-  const [clearR, clearG, clearB] = getWebGLClearColor(isDark);
-  gl.clearColor(clearR, clearG, clearB, 1);
-  gl.clear(gl.COLOR_BUFFER_BIT);
 
+  applyGlViewportState(gl, canvasW, canvasH, isDark);
   gl.useProgram(state.glProgram);
-  gl.uniform2f(state.glUniformLocations.u_resolution, state.width, state.height);
-  gl.uniform2f(state.glUniformLocations.u_camera, state.wasm.get_camera_x(), state.wasm.get_camera_y());
-  gl.uniform1f(state.glUniformLocations.u_zoom, state.wasm.get_camera_zoom());
+  if (state.glUniformLocations) {
+    gl.uniform2f(state.glUniformLocations.u_resolution, state.width, state.height);
+    gl.uniform2f(state.glUniformLocations.u_camera, state.wasm.get_camera_x(), state.wasm.get_camera_y());
+    gl.uniform1f(state.glUniformLocations.u_zoom, state.wasm.get_camera_zoom());
+  }
 
   state.lineVertices = [];
   state.triVertices = [];
@@ -1438,23 +1632,7 @@ export function renderWebGLFrame(state: RenderWorkerState): void {
   const glTextFloatCount = renderWebGLTextPass(state, gl, wasm);
 
   flushWebGLPrimitives(state);
-
-  const tEnd = typeof performance === 'undefined' ? 0 : performance.now();
-  const frameTime = t0 > 0 && tEnd > 0 ? tEnd - t0 : 1.2;
-  state.performanceStats = {
-    ...state.performanceStats,
-    renderTimeMs: Math.round(frameTime * 100) / 100,
-    totalFrameTimeMs: Math.round((frameTime + 0.4) * 100) / 100,
-    visibleNodesCount,
-    totalNodesCount: state.nodes.length,
-    visibleEdgesCount,
-    totalEdgesCount: state.edges.length,
-    visiblePinsCount,
-    totalPinsCount: state.nodes.length * 4,
-    textQuadCount: glTextFloatCount / 8,
-    backend: 'webgl',
-    isFallback: false,
-  };
+  recordWebGLFrameStats(state, t0, visibleNodesCount, visibleEdgesCount, visiblePinsCount, glTextFloatCount);
 }
 
 const GL_PIN_COLORS_DARK: Readonly<Record<string, readonly [number, number, number, number]>> = {
