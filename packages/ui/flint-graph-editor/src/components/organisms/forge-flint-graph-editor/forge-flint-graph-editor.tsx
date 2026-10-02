@@ -381,17 +381,23 @@ function isPointInsideNode(
  * Safely extracts string value from an HTML input or textarea event target.
  */
 function extractEventTargetStringValue(event: unknown): string | undefined {
-  const target = (event as { target?: { value?: unknown } } | undefined)?.target;
-  const value = target?.value;
-  return typeof value === 'string' ? value : undefined;
+  if (event && typeof event === 'object' && 'target' in event) {
+    const target = event.target;
+    if (target && typeof target === 'object' && 'value' in target && typeof target.value === 'string') {
+      return target.value;
+    }
+  }
+  return undefined;
 }
 
 /**
  * Safely extracts operation name from drag data transfer payload.
  */
 function extractDragOperationType(event: unknown): string | undefined {
-  const dataTransfer = (event as { dataTransfer?: DataTransfer } | undefined)?.dataTransfer;
-  return dataTransfer?.getData('text/plain');
+  if (typeof DragEvent !== 'undefined' && event instanceof DragEvent && event.dataTransfer) {
+    return event.dataTransfer.getData('text/plain');
+  }
+  return undefined;
 }
 
 interface GroupBoundingRect {
@@ -1614,15 +1620,22 @@ function resolveGlyphBBox(wasm: ReturnType<typeof getFlintRenderWorkerWasm>, ind
 }
 
 /**
+ * Helper to invoke optional wasm font metric accessor or return default fallback.
+ */
+function callMetric(metricFunction: (() => number) | undefined, fallback: number): number {
+  return metricFunction ? metricFunction() : fallback;
+}
+
+/**
  * Resolves font line spacing and leading metrics.
  */
 function resolveGlyphLineMetrics(wasm: ReturnType<typeof getFlintRenderWorkerWasm>) {
   return {
-    ascent: wasm.font_get_ascent ? wasm.font_get_ascent() : 18,
-    descent: wasm.font_get_descent ? wasm.font_get_descent() : 6,
-    linegap: wasm.font_get_linegap ? wasm.font_get_linegap() : 4,
-    internalLeading: wasm.font_get_internal_leading ? wasm.font_get_internal_leading() : 2,
-    externalLeading: wasm.font_get_external_leading ? wasm.font_get_external_leading() : 4,
+    ascent: callMetric(wasm.font_get_ascent, 18),
+    descent: callMetric(wasm.font_get_descent, 6),
+    linegap: callMetric(wasm.font_get_linegap, 4),
+    internalLeading: callMetric(wasm.font_get_internal_leading, 2),
+    externalLeading: callMetric(wasm.font_get_external_leading, 4),
   };
 }
 
@@ -1649,6 +1662,26 @@ function resolveGlyphBearings(
 }
 
 /**
+ * Resolves glyph advance, width, and height metrics.
+ */
+function resolveGlyphDimensions(
+  wasm: ReturnType<typeof getFlintRenderWorkerWasm>,
+  code: number,
+  foundIndex: number,
+  foundW: number,
+  foundH: number,
+) {
+  const getAdvance = wasm.font_get_char_advance;
+  const getWidth = wasm.font_get_glyph_width;
+  const getHeight = wasm.font_get_glyph_height;
+  return {
+    advance: getAdvance ? getAdvance(code) : 14,
+    width: getWidth ? getWidth(foundIndex) : foundW,
+    height: getHeight ? getHeight(foundIndex) : foundH,
+  };
+}
+
+/**
  * Extracts typography and layout metrics for a hovered glyph.
  */
 function resolveGlyphDetails(
@@ -1661,14 +1694,7 @@ function resolveGlyphDetails(
 ): HoveredGlyphInfo {
   const char = GLYPH_CHARS_BY_IDX[foundIndex] ?? '';
   const code = char.codePointAt(0) ?? 0;
-  const getAdvance = wasm.font_get_char_advance;
-  const getWidth = wasm.font_get_glyph_width;
-  const getHeight = wasm.font_get_glyph_height;
-
-  const advance = getAdvance ? getAdvance(code) : 14;
-  const width = getWidth ? getWidth(foundIndex) : foundW;
-  const height = getHeight ? getHeight(foundIndex) : foundH;
-
+  const { advance, width, height } = resolveGlyphDimensions(wasm, code, foundIndex, foundW, foundH);
   const bearings = resolveGlyphBearings(wasm, foundIndex, advance, width);
   const bbox = resolveGlyphBBox(wasm, foundIndex, foundW);
   const lineMetrics = resolveGlyphLineMetrics(wasm);
@@ -1727,20 +1753,25 @@ function handleEscapeKey(store: FlintEditorStore, bridge?: FlintRendererBridge):
   }
 }
 
+function isInputFocused(): boolean {
+  const activeElement = typeof document === 'undefined' ? undefined : document.activeElement;
+  return activeElement instanceof HTMLInputElement || activeElement instanceof HTMLTextAreaElement;
+}
+
 /**
  * Handles Delete and Backspace shortcut actions.
  */
 function handleDeleteKey(store: FlintEditorStore, bridge?: FlintRendererBridge): void {
-  const activeElement = typeof document === 'undefined' ? undefined : document.activeElement;
-  if (activeElement instanceof HTMLInputElement || activeElement instanceof HTMLTextAreaElement) return;
+  if (isInputFocused()) return;
   if (store.getState().activeEdgeId) {
     store.removeActiveEdge();
-  } else if (store.getState().selectedNodeIds.length > 0) {
-    store.deleteSelected();
-  } else {
+    syncGraphWithBridge(store, bridge);
     return;
   }
-  syncGraphWithBridge(store, bridge);
+  if (store.getState().selectedNodeIds.length > 0) {
+    store.deleteSelected();
+    syncGraphWithBridge(store, bridge);
+  }
 }
 
 /**
@@ -1767,9 +1798,13 @@ function handleEditorKeyboardAction(
 ): void {
   if (event.key === 'Escape') {
     handleEscapeKey(store, bridge);
-  } else if (event.key === 'Delete' || event.key === 'Backspace') {
+    return;
+  }
+  if (event.key === 'Delete' || event.key === 'Backspace') {
     handleDeleteKey(store, bridge);
-  } else if (event.ctrlKey || event.metaKey) {
+    return;
+  }
+  if (event.ctrlKey || event.metaKey) {
     handleCtrlShortcuts(event, store, bridge);
   }
 }
@@ -1894,6 +1929,37 @@ function handleEdgeHitPointerDown(
 }
 
 /**
+ * Attempts double-click drill-down navigation into meta subgraph node.
+ */
+function handleNodeDoubleClick(nodeId: string, store: FlintEditorStore, bridge: FlintRendererBridge): boolean {
+  const clickedNode = store.getState().graph.nodes.find((n) => n.id === nodeId);
+  if (clickedNode && (clickedNode.metaSubgraph || clickedNode.operation === 'meta')) {
+    store.drillIntoMetaNode(clickedNode.id);
+    syncGraphWithBridge(store, bridge);
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Updates selected node start positions map for drag operations.
+ */
+function updateNodePositions(
+  store: FlintEditorStore,
+  hitNodeId: string,
+  nodesStartPositions: Map<string, { readonly x: number; readonly y: number }>,
+): void {
+  const currentNodes = store.getState().graph.nodes;
+  const selectedSet = new Set(store.getState().selectedNodeIds);
+  nodesStartPositions.clear();
+  for (const n of currentNodes) {
+    if (selectedSet.has(n.id) || n.id === hitNodeId) {
+      nodesStartPositions.set(n.id, { ...n.position });
+    }
+  }
+}
+
+/**
  * Handles pointer down on a node to select or drill into meta graph on double click.
  */
 function handleNodeHitPointerDown(
@@ -1905,14 +1971,8 @@ function handleNodeHitPointerDown(
   bridge: FlintRendererBridge,
   nodesStartPositions: Map<string, { readonly x: number; readonly y: number }>,
 ): void {
-  if (now - lastClick.time < 350 && lastClick.id === hit.nodeId) {
-    const clickedNode = store.getState().graph.nodes.find((n) => n.id === hit.nodeId);
-    if (clickedNode && (clickedNode.metaSubgraph || clickedNode.operation === 'meta')) {
-      store.drillIntoMetaNode(clickedNode.id);
-      syncGraphWithBridge(store, bridge);
-      return;
-    }
-  }
+  if (now - lastClick.time < 350 && lastClick.id === hit.nodeId && handleNodeDoubleClick(hit.nodeId, store, bridge))
+    return;
   lastClick.time = now;
   lastClick.id = hit.nodeId;
 
@@ -1921,14 +1981,8 @@ function handleNodeHitPointerDown(
   } else if (!store.getState().selectedNodeIds.includes(hit.nodeId)) {
     store.selectNode(hit.nodeId);
   }
-  const currentNodes = store.getState().graph.nodes;
+  updateNodePositions(store, hit.nodeId, nodesStartPositions);
   const selectedSet = new Set(store.getState().selectedNodeIds);
-  nodesStartPositions.clear();
-  for (const n of currentNodes) {
-    if (selectedSet.has(n.id) || n.id === hit.nodeId) {
-      nodesStartPositions.set(n.id, { ...n.position });
-    }
-  }
   bridge.setSelection([...selectedSet, hit.nodeId]);
   bridge.renderFrame();
 }
@@ -2027,37 +2081,38 @@ interface PointerDownHitOutcome {
 }
 
 /**
- * Routes pointer down hit test results to entity selection or drag initialization.
+ * Routes pointer down hit test results on specific entities.
  */
-function dispatchPointerDownHit(context: PointerDownHitContext): PointerDownHitOutcome {
-  const { hit, isShift, now, offsetX, offsetY, lastClick, store, bridge, nodesStartPositions } = context;
-
-  if (hit?.type === 'group' && hit.groupId) {
+function handleEntityPointerDown(
+  hit: FlintHitResult,
+  isShift: boolean,
+  now: number,
+  offsetX: number,
+  offsetY: number,
+  lastClick: { time: number; id: string },
+  store: FlintEditorStore,
+  bridge: FlintRendererBridge,
+  nodesStartPositions: Map<string, { readonly x: number; readonly y: number }>,
+): PointerDownHitOutcome | undefined {
+  if (hit.type === 'group' && hit.groupId) {
     handleGroupPointerDown(hit, store, bridge, nodesStartPositions);
     return { dragMode: 'group' };
   }
-
-  if (hit?.type === 'waypoint' && hit.edgeId && hit.waypointIndex !== undefined) {
+  if (hit.type === 'waypoint' && hit.edgeId && hit.waypointIndex !== undefined) {
     store.selectEdge(hit.edgeId);
     bridge.setSelection([], [hit.edgeId]);
     bridge.renderFrame();
     return { dragMode: 'waypoint', draggedEdgeId: hit.edgeId, draggedWaypointIndex: hit.waypointIndex };
   }
-
-  if (hit?.type === 'edge' && hit.edgeId) {
+  if (hit.type === 'edge' && hit.edgeId) {
     handleEdgeHitPointerDown(hit, offsetX, offsetY, now, lastClick, store, bridge);
     return { dragMode: 'none' };
   }
-
-  if (hit?.type === 'node') {
+  if (hit.type === 'node') {
     handleNodeHitPointerDown(hit, isShift, now, lastClick, store, bridge, nodesStartPositions);
     return { dragMode: 'node' };
   }
-
-  lastClick.time = 0;
-  lastClick.id = '';
-
-  if (hit?.type === 'port' && hit.portId) {
+  if (hit.type === 'port' && hit.portId) {
     store.startConnecting(hit.nodeId, hit.portId, hit.worldX ?? 0, hit.worldY ?? 0);
     bridge.setConnectingEdge({
       fromNodeId: hit.nodeId,
@@ -2071,6 +2126,32 @@ function dispatchPointerDownHit(context: PointerDownHitContext): PointerDownHitO
       connectingSourcePortId: hit.portId,
     };
   }
+  return undefined;
+}
+
+/**
+ * Routes pointer down hit test results to entity selection or drag initialization.
+ */
+function dispatchPointerDownHit(context: PointerDownHitContext): PointerDownHitOutcome {
+  const { hit, isShift, now, offsetX, offsetY, lastClick, store, bridge, nodesStartPositions } = context;
+
+  if (hit) {
+    const outcome = handleEntityPointerDown(
+      hit,
+      isShift,
+      now,
+      offsetX,
+      offsetY,
+      lastClick,
+      store,
+      bridge,
+      nodesStartPositions,
+    );
+    if (outcome) return outcome;
+  }
+
+  lastClick.time = 0;
+  lastClick.id = '';
 
   if (isShift) {
     return { dragMode: 'box_select' };
@@ -2097,6 +2178,26 @@ function handlePointerHover(event: PointerEvent, canvasElement: HTMLCanvasElemen
 }
 
 /**
+ * Commits interactive wire connection upon pointer release.
+ */
+function handleConnectPointerUp(
+  event: PointerEvent,
+  connectingSourceNodeId: string,
+  connectingSourcePortId: string,
+  bridge: FlintRendererBridge,
+  store: FlintEditorStore,
+): void {
+  const targetHit = bridge.hitTestSync(event.offsetX, event.offsetY, 18);
+  if (targetHit?.type === 'port' && targetHit.nodeId !== connectingSourceNodeId && targetHit.portId) {
+    store.connectPorts(connectingSourceNodeId, connectingSourcePortId, targetHit.nodeId, targetHit.portId);
+  }
+  store.cancelConnecting();
+  bridge.setConnectingEdge();
+  bridge.setHoveredPort();
+  bridge.renderFrame();
+}
+
+/**
  * Handles pointer release cleanup and gesture completion.
  */
 function handlePointerUpAction(
@@ -2109,36 +2210,42 @@ function handlePointerUpAction(
   store: FlintEditorStore,
   setSelectionSquare: (updater: SelectionSquareState | ((prev: SelectionSquareState) => SelectionSquareState)) => void,
 ): void {
-  switch (dragMode) {
-    case 'box_select': {
-      handleBoxSelectPointerUp(event, boxSelectStart, bridge, store, setSelectionSquare);
-      break;
-    }
-    case 'connect': {
-      const targetHit = bridge.hitTestSync(event.offsetX, event.offsetY, 18);
-      if (targetHit?.type === 'port' && targetHit.nodeId !== connectingSourceNodeId && targetHit.portId) {
-        store.connectPorts(connectingSourceNodeId, connectingSourcePortId, targetHit.nodeId, targetHit.portId);
-      }
-      store.cancelConnecting();
-      bridge.setConnectingEdge();
-      bridge.setHoveredPort();
-      bridge.renderFrame();
-      break;
-    }
-    case 'node':
-    case 'group': {
-      store.commitNodeMove();
-      bridge.renderFrame();
-      break;
-    }
-    case 'waypoint': {
-      bridge.renderFrame();
-      break;
-    }
-    default: {
-      break;
-    }
+  if (dragMode === 'box_select') {
+    handleBoxSelectPointerUp(event, boxSelectStart, bridge, store, setSelectionSquare);
+    return;
   }
+  if (dragMode === 'connect') {
+    handleConnectPointerUp(event, connectingSourceNodeId, connectingSourcePortId, bridge, store);
+    return;
+  }
+  if (dragMode === 'node' || dragMode === 'group') {
+    store.commitNodeMove();
+    bridge.renderFrame();
+    return;
+  }
+  if (dragMode === 'waypoint') {
+    bridge.renderFrame();
+  }
+}
+
+/**
+ * Resolves context menu target classification for a selected graph node.
+ */
+function resolveNodeContextMenuTarget(
+  nodeId: string,
+  store: FlintEditorStore,
+  bridge: FlintRendererBridge,
+): { targetType: 'node' | 'selection'; targetId: string; targetGroupId: string } {
+  const isSelected = store.getState().selectedNodeIds.includes(nodeId);
+  let targetType: 'node' | 'selection' = 'node';
+  if (store.getState().selectedNodeIds.length > 1 && isSelected) {
+    targetType = 'selection';
+  } else {
+    store.selectNode(nodeId);
+    bridge.setSelection([nodeId]);
+  }
+  const node = store.getState().graph.nodes.find((n) => n.id === nodeId);
+  return { targetType, targetId: nodeId, targetGroupId: node?.groupId ?? '' };
 }
 
 /**
@@ -2161,16 +2268,7 @@ function resolveContextMenuTarget(
   }
 
   if (hit?.type === 'node') {
-    const isSelected = store.getState().selectedNodeIds.includes(hit.nodeId);
-    let targetType: 'node' | 'selection' = 'node';
-    if (store.getState().selectedNodeIds.length > 1 && isSelected) {
-      targetType = 'selection';
-    } else {
-      store.selectNode(hit.nodeId);
-      bridge.setSelection([hit.nodeId]);
-    }
-    const node = store.getState().graph.nodes.find((n) => n.id === hit.nodeId);
-    return { targetType, targetId: hit.nodeId, targetGroupId: node?.groupId ?? '' };
+    return resolveNodeContextMenuTarget(hit.nodeId, store, bridge);
   }
 
   const groupHit = findGroupAtPoint(store.getState().graph.groups, store.getState().graph.nodes, world.x, world.y);
@@ -2179,6 +2277,77 @@ function resolveContextMenuTarget(
   }
 
   return { targetType: 'empty', targetId: '', targetGroupId: '' };
+}
+
+interface DragMoveContext {
+  readonly dragMode: 'pan' | 'node' | 'group' | 'waypoint' | 'connect' | 'box_select' | 'none';
+  readonly event: PointerEvent;
+  readonly deltaX: number;
+  readonly deltaY: number;
+  readonly cameraZoom: number;
+  readonly nodesStartPositions: Map<string, { readonly x: number; readonly y: number }>;
+  readonly draggedEdgeId: string;
+  readonly draggedWaypointIndex: number;
+  readonly connectingSourceNodeId: string;
+  readonly connectingSourcePortId: string;
+  readonly store: FlintEditorStore;
+  readonly bridge: FlintRendererBridge;
+  readonly setSelectionSquare: (
+    updater: SelectionSquareState | ((prev: SelectionSquareState) => SelectionSquareState),
+  ) => void;
+}
+
+/**
+ * Handles active gesture drag step routing.
+ */
+function handleDragMoveStep(context: DragMoveContext): { resetDragStart?: boolean } {
+  const {
+    dragMode,
+    event,
+    deltaX,
+    deltaY,
+    cameraZoom,
+    nodesStartPositions,
+    draggedEdgeId,
+    draggedWaypointIndex,
+    connectingSourceNodeId,
+    connectingSourcePortId,
+    store,
+    bridge,
+    setSelectionSquare,
+  } = context;
+
+  if (dragMode === 'box_select') {
+    setSelectionSquare((previous) => ({
+      ...previous,
+      currentX: event.offsetX,
+      currentY: event.offsetY,
+    }));
+    return {};
+  }
+  if ((dragMode === 'group' || dragMode === 'node') && nodesStartPositions.size > 0) {
+    handleNodeGroupDrag(deltaX, deltaY, cameraZoom, nodesStartPositions, store, bridge);
+    return {};
+  }
+  if (dragMode === 'waypoint' && draggedEdgeId) {
+    const { x: worldX, y: worldY } = bridge.screenToWorld(event.offsetX, event.offsetY);
+    store.updateEdgePoint(draggedEdgeId, draggedWaypointIndex, {
+      x: Math.round(worldX),
+      y: Math.round(worldY),
+    });
+    syncGraphWithBridge(store, bridge);
+    return {};
+  }
+  if (dragMode === 'connect') {
+    handleConnectDrag(event, bridge, store, connectingSourceNodeId, connectingSourcePortId);
+    return {};
+  }
+  if (dragMode === 'pan') {
+    bridge.pan(deltaX, deltaY);
+    bridge.renderFrame();
+    return { resetDragStart: true };
+  }
+  return {};
 }
 
 /**
@@ -2275,27 +2444,24 @@ function setupCanvasEventListeners(options: CanvasGestureBindingsOptions): () =>
     const deltaX = event.clientX - dragStartScreen.x;
     const deltaY = event.clientY - dragStartScreen.y;
 
-    if (dragMode === 'box_select') {
-      setSelectionSquare((previous) => ({
-        ...previous,
-        currentX: event.offsetX,
-        currentY: event.offsetY,
-      }));
-    } else if ((dragMode === 'group' || dragMode === 'node') && nodesStartPositions.size > 0) {
-      handleNodeGroupDrag(deltaX, deltaY, camera.zoom, nodesStartPositions, store, bridge);
-    } else if (dragMode === 'waypoint' && draggedEdgeId) {
-      const { x: worldX, y: worldY } = bridge.screenToWorld(event.offsetX, event.offsetY);
-      store.updateEdgePoint(draggedEdgeId, draggedWaypointIndex, {
-        x: Math.round(worldX),
-        y: Math.round(worldY),
-      });
-      syncGraphWithBridge(store, bridge);
-    } else if (dragMode === 'connect') {
-      handleConnectDrag(event, bridge, store, connectingSourceNodeId, connectingSourcePortId);
-    } else if (dragMode === 'pan') {
+    const result = handleDragMoveStep({
+      dragMode,
+      event,
+      deltaX,
+      deltaY,
+      cameraZoom: camera.zoom,
+      nodesStartPositions,
+      draggedEdgeId,
+      draggedWaypointIndex,
+      connectingSourceNodeId,
+      connectingSourcePortId,
+      store,
+      bridge,
+      setSelectionSquare,
+    });
+
+    if (result.resetDragStart) {
       dragStartScreen = { x: event.clientX, y: event.clientY };
-      bridge.pan(deltaX, deltaY);
-      bridge.renderFrame();
     }
   };
 
@@ -3358,6 +3524,12 @@ function extractDropClientCoordinates(event: unknown): { clientX: number; client
   return { clientX: 0, clientY: 0 };
 }
 
+function preventDragEvent(event: unknown): void {
+  if (typeof DragEvent !== 'undefined' && event instanceof DragEvent) {
+    event.preventDefault();
+  }
+}
+
 /**
  * Handles node drop events onto canvas.
  */
@@ -3369,15 +3541,15 @@ function handleCanvasDrop(
 ): void {
   const op = extractDragOperationType(event);
   if (!op || !bridge || !canvas) return;
-  if (typeof DragEvent !== 'undefined' && event instanceof DragEvent) event.preventDefault();
+  preventDragEvent(event);
   const rect = canvas.getBoundingClientRect();
   const { clientX, clientY } = extractDropClientCoordinates(event);
   const world = bridge.screenToWorld(clientX - rect.left, clientY - rect.top);
   if (op.startsWith('meta_template:')) {
     store.instantiateMetaNode(op.slice('meta_template:'.length), world);
-  } else {
-    store.addNode(op, world);
+    return;
   }
+  store.addNode(op, world);
 }
 
 interface FlintEditorCanvasProperties {
@@ -3888,17 +4060,16 @@ interface FlintEditorContextMenuProperties {
 }
 
 /**
- * Sub-panel for target-specific context menu actions.
+ * Renders target-specific context menu action panel.
  */
-function ContextMenuTargetActions(properties: {
-  readonly cm: ContextMenuState;
-  readonly selectedNode?: FlintGraphNode;
-  readonly selectedNodeCount: number;
-  readonly store: FlintEditorStore;
-  readonly bridge?: FlintRendererBridge;
-  readonly onClose: () => void;
-}): MpElement {
-  const { cm, selectedNode, selectedNodeCount, store, bridge, onClose } = properties;
+function renderTargetActions(
+  cm: ContextMenuState,
+  selectedNode: FlintGraphNode | undefined,
+  selectedNodeCount: number,
+  store: FlintEditorStore,
+  bridge: FlintRendererBridge | undefined,
+  onClose: () => void,
+): MpElement {
   if (cm.targetType === 'edge' && cm.targetId) {
     return (
       <ContextMenuEdgeActions
@@ -3946,6 +4117,21 @@ function ContextMenuTargetActions(properties: {
 }
 
 /**
+ * Sub-panel for target-specific context menu actions.
+ */
+function ContextMenuTargetActions(properties: {
+  readonly cm: ContextMenuState;
+  readonly selectedNode?: FlintGraphNode;
+  readonly selectedNodeCount: number;
+  readonly store: FlintEditorStore;
+  readonly bridge?: FlintRendererBridge;
+  readonly onClose: () => void;
+}): MpElement {
+  const { cm, selectedNode, selectedNodeCount, store, bridge, onClose } = properties;
+  return renderTargetActions(cm, selectedNode, selectedNodeCount, store, bridge, onClose);
+}
+
+/**
  * Context menu paste action button.
  */
 function ContextMenuPasteAction(properties: {
@@ -3985,6 +4171,9 @@ function FlintEditorContextMenu(properties: FlintEditorContextMenuProperties): M
   const store = properties.store;
   const bridge = properties.bridge;
 
+  /**
+   * Closes the open context menu popup.
+   */
   const handleClose = (): void => {
     properties.setContextMenu({ ...cm, open: false });
   };
@@ -4085,6 +4274,20 @@ function paintAtlasTexture(
 }
 
 /**
+ * Renders font atlas grid overlay if enabled.
+ */
+function paintAtlasGridIfEnabled(
+  context: CanvasRenderingContext2D,
+  wasm: ReturnType<typeof getFlintRenderWorkerWasm>,
+  grid: boolean,
+  highlightIndex?: number,
+): void {
+  if (!grid) return;
+  const tableBase = wasm.font_get_table_ptr ? wasm.font_get_table_ptr() : 256;
+  renderAtlasGrid(context, new Uint32Array(wasm.memory.buffer), tableBase, highlightIndex);
+}
+
+/**
  * Executes low-level sprite sheet canvas rendering pass.
  */
 function executePaintSpriteSheet(
@@ -4099,10 +4302,7 @@ function executePaintSpriteSheet(
   try {
     const wasm = getFlintRenderWorkerWasm();
     paintAtlasTexture(context, wasm, mode);
-    if (grid) {
-      const tableBase = wasm.font_get_table_ptr ? wasm.font_get_table_ptr() : 256;
-      renderAtlasGrid(context, new Uint32Array(wasm.memory.buffer), tableBase, highlightIndex);
-    }
+    paintAtlasGridIfEnabled(context, wasm, grid, highlightIndex);
   } catch {
     // Ignore if wasm not ready yet
   }
@@ -4188,6 +4388,47 @@ function setupEditorCanvasBridge(
       bridge.destroy();
     },
   };
+}
+
+interface ActiveSelections {
+  readonly selectedNode?: FlintGraphNode;
+  readonly selectedDefinition?: FlintNodeDefinition;
+  readonly selectedGroup?: FlintGraphGroup;
+  readonly selectedEdge?: FlintGraphEdge;
+}
+
+/**
+ * Resolves active selected graph entities from store state.
+ */
+function resolveActiveSelections(editorState: FlintEditorStoreState): ActiveSelections {
+  const selectedNodeId = editorState.selectedNodeIds[0];
+  const selectedNode: FlintGraphNode | undefined = selectedNodeId
+    ? editorState.graph.nodes.find((node) => node?.id === selectedNodeId)
+    : undefined;
+  const selectedDefinition = selectedNode ? getNodeDefinition(selectedNode.operation) : undefined;
+  const selectedGroup = editorState.selectedGroupId
+    ? (editorState.graph.groups ?? []).find((group) => group.id === editorState.selectedGroupId)
+    : undefined;
+  const selectedEdge = editorState.activeEdgeId
+    ? editorState.graph.edges.find((edge) => edge.id === editorState.activeEdgeId)
+    : undefined;
+  return { selectedNode, selectedDefinition, selectedGroup, selectedEdge };
+}
+
+/**
+ * Filters node catalog definitions matching search term query.
+ */
+function filterNodeDefinitions(
+  query: string,
+  allDefinitions: readonly FlintNodeDefinition[],
+): readonly FlintNodeDefinition[] {
+  if (!query) return allDefinitions;
+  return allDefinitions.filter(
+    (definition) =>
+      definition.title.toLowerCase().includes(query) ||
+      definition.operation.toLowerCase().includes(query) ||
+      definition.description.toLowerCase().includes(query),
+  );
 }
 
 /**
@@ -4421,27 +4662,8 @@ export function ForgeFlintGraphEditor(properties: Readonly<FlintGraphEditorPrope
 
   const query = searchQuery.toLowerCase().trim();
   const allDefinitions = getAllNodeDefinitions();
-  const filteredDefinitions = query
-    ? allDefinitions.filter(
-        (definition) =>
-          definition.title.toLowerCase().includes(query) ||
-          definition.operation.toLowerCase().includes(query) ||
-          definition.description.toLowerCase().includes(query),
-      )
-    : allDefinitions;
-
-  const selectedNodeId = editorState.selectedNodeIds[0];
-  const selectedNode: FlintGraphNode | undefined = selectedNodeId
-    ? editorState.graph.nodes.find((node) => node?.id === selectedNodeId)
-    : undefined;
-
-  const selectedDefinition = selectedNode ? getNodeDefinition(selectedNode.operation) : undefined;
-  const selectedGroup = editorState.selectedGroupId
-    ? (editorState.graph.groups ?? []).find((group) => group.id === editorState.selectedGroupId)
-    : undefined;
-  const selectedEdge = editorState.activeEdgeId
-    ? editorState.graph.edges.find((edge) => edge.id === editorState.activeEdgeId)
-    : undefined;
+  const filteredDefinitions = filterNodeDefinitions(query, allDefinitions);
+  const { selectedNode, selectedDefinition, selectedGroup, selectedEdge } = resolveActiveSelections(editorState);
 
   /**
    * Instantiates a new node from the catalog at the current viewport center.
