@@ -64,6 +64,10 @@ const meta = {
           '`@mission-platform/three` is the framework-neutral Three.js integration. This story mounts the write-once `ForgeThreeCanvas` component and, through its `onReady` callback, adds a cube to the `useThree`-managed scene and animates it every frame — the same neutral source compiled to each supported framework.',
       },
     },
+    chromatic: {
+      pauseAnimationAtEnd: true,
+      delay: 300,
+    },
   },
   argTypes: {
     color: { control: 'color' },

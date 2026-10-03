@@ -23,6 +23,10 @@ const meta = {
           'High-performance WebGPU visual node graph editor for the Flint compiler. Supports instanced rendering of 10,000+ nodes and edges, interactive Static Single Assignment (SSA) dataflow authoring, live WebAssembly in-browser execution, and execution trace debugging with causal edge pulses.',
       },
     },
+    chromatic: {
+      delay: 500,
+      pauseAnimationAtEnd: true,
+    },
   },
 } satisfies Meta<typeof ForgeFlintGraphEditor>;
 
@@ -689,6 +693,12 @@ export const MetaNodes: Story = {
 };
 
 export const LiveTraceDebugger: Story = {
+  parameters: {
+    chromatic: {
+      delay: 800,
+      pauseAnimationAtEnd: true,
+    },
+  },
   render: () => {
     const store = createMathPipelineStore();
     const artifacts = compileNodeGraph(store.getState().graph);
@@ -755,6 +765,11 @@ export const LiveTraceDebugger: Story = {
 };
 
 export const PerformanceStressTest10k: Story = {
+  parameters: {
+    chromatic: {
+      disableSnapshot: true,
+    },
+  },
   render: () => {
     const store = create10kStressTestStore();
     return (
