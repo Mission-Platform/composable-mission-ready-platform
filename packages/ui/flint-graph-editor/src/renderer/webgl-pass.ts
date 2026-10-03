@@ -1593,7 +1593,7 @@ function getGlTextPipeline(state: RenderWorkerState): GlTextPipeline | undefined
   } = state;
   if (textTriVertices.length === 0) return undefined;
   if (
-    [glTextProgram, glTexVertexBuffer, glFontTexture, glTextUniformLocations, glTextAttribLocations].includes(undefined)
+    ![glTextProgram, glTexVertexBuffer, glFontTexture, glTextUniformLocations, glTextAttribLocations].every(Boolean)
   ) {
     return undefined;
   }

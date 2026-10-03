@@ -213,7 +213,7 @@ interface WebGpuTextContext {
 function getWebGpuTextContext(state: RenderWorkerState): WebGpuTextContext | undefined {
   const { currentPassEncoder, gpuDevice, textPipeline, cameraBindGroup, fontBindGroup, webGpuTextVertices } = state;
   if (webGpuTextVertices.length === 0) return undefined;
-  if ([currentPassEncoder, gpuDevice, textPipeline, cameraBindGroup, fontBindGroup].includes(undefined)) {
+  if (![currentPassEncoder, gpuDevice, textPipeline, cameraBindGroup, fontBindGroup].every(Boolean)) {
     return undefined;
   }
   return {
