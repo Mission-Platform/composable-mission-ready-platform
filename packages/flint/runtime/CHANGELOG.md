@@ -1,5 +1,12 @@
 # @mission-platform/forge-web-script-runtime
 
+## 1.0.1
+
+### Patch Changes
+
+- Updated dependencies [5a7c372]
+  - @mission-platform/flint@1.1.0
+
 ## 1.0.0
 
 ### Major Changes

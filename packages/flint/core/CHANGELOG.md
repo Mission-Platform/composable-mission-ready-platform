@@ -1,5 +1,11 @@
 # @mission-platform/forge-web-script
 
+## 1.1.0
+
+### Minor Changes
+
+- 5a7c372: add headless graph compiler, semantic validation, and dual AST and source code generator
+
 ## 1.0.0
 
 ### Major Changes

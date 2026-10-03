@@ -1,5 +1,11 @@
 # @mission-platform/scheduler
 
+## 0.3.4
+
+### Patch Changes
+
+- @mission-platform/forms@2.2.3
+
 ## 0.3.3
 
 ### Patch Changes

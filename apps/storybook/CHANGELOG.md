@@ -1,5 +1,24 @@
 # @mission-platform/storybook
 
+## 0.0.19
+
+### Patch Changes
+
+- Updated dependencies [5a7c372]
+- Updated dependencies [5a7c372]
+- Updated dependencies [5a7c372]
+  - @mission-platform/flint@1.1.0
+  - @mission-platform/flint-graph-editor@0.2.0
+  - @mission-platform/flint-runtime@1.0.1
+  - @mission-platform/qr-code@3.0.3
+  - @mission-platform/content@1.2.3
+  - @mission-platform/barcode@3.0.3
+  - @mission-platform/code-scanner@1.3.3
+  - @mission-platform/matrix-code@3.0.3
+  - @mission-platform/forms@2.2.3
+  - @mission-platform/scheduler@0.3.4
+  - @mission-platform/resource-planner@1.2.4
+
 ## 0.0.18
 
 ### Patch Changes

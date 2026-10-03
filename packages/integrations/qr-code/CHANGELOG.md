@@ -1,5 +1,11 @@
 # @mission-platform/qr-code
 
+## 3.0.3
+
+### Patch Changes
+
+- @mission-platform/qr-code-wasm@3.1.2
+
 ## 3.0.2
 
 ### Patch Changes

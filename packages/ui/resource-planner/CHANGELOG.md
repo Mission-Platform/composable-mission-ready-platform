@@ -1,5 +1,11 @@
 # @mission-platform/resource-planner
 
+## 1.2.4
+
+### Patch Changes
+
+- @mission-platform/scheduler@0.3.4
+
 ## 1.2.3
 
 ### Patch Changes

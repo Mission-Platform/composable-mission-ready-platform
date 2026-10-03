@@ -1,5 +1,11 @@
 # @mission-platform/code-scanner
 
+## 1.3.3
+
+### Patch Changes
+
+- @mission-platform/code-scanner-wasm@1.4.2
+
 ## 1.3.2
 
 ### Patch Changes
