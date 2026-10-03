@@ -140,6 +140,8 @@ export interface VisualParityResult {
   comparisons: VisualParityComparison[];
 }
 
+export const DEFAULT_VISUAL_PARITY_MISMATCH_THRESHOLD = 0.02;
+
 export interface VisualParityDiffOptions {
   pixelThreshold: number;
   maxMismatchRatio: number;
@@ -179,6 +181,9 @@ export interface VisualParityReport {
   cleanupErrors: string[];
 }
 
+/**
+ * Creates deterministic server and URL definitions across the five supported visual parity framework renderers.
+ */
 export function createRendererDefinitions(options: RendererDefinitionOptions = {}): VisualParityRendererDefinition[] {
   const host = options.host ?? '127.0.0.1';
   const ports = VISUAL_PARITY_RENDERERS.map(

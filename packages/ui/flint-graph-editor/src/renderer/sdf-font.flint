@@ -1,0 +1,3694 @@
+// ============================================================================
+// Flint High-Performance Signed Distance Field (MSDF) Font Engine
+// Supports 1024x1024 Atlas, 2D Shelf Rect Packing, Base-2 Cell Variations (4x4, 8x8, 8x16, 16x8, 16x16, 16x32, 32x16, 32x32, 32x64, 64x32, 64x64 - up to 64x64 max),
+// UTF-8 Typography, Rich Text Styling (Colors, Italic Slant, Underline, Strike-Through,
+// Automated Word-Wrapping, Line Height, Letter Spacing, and Kerning).
+// ============================================================================
+
+export fn isqrt_u32(val: u32) -> u32 {
+  if val == 0 { return 0; }
+  let mut x: u32 = val;
+  let u_one: u32 = 1;
+  let u_two: u32 = 2;
+  let mut y: u32 = (x + u_one) / u_two;
+  while y < x {
+    x = y;
+    y = (x + val / x) / u_two;
+  }
+  return x;
+}
+
+export fn dist_to_segment_u32(
+  px: u32, py: u32,
+  ax: u32, ay: u32,
+  bx: u32, by: u32
+) -> u32 {
+  let mut dx_pos: bool = true;
+  let mut dx: u32 = 0;
+  if bx >= ax { dx = bx - ax; } else { dx = ax - bx; dx_pos = false; }
+
+  let mut dy_pos: bool = true;
+  let mut dy: u32 = 0;
+  if by >= ay { dy = by - ay; } else { dy = ay - by; dy_pos = false; }
+
+  let l2: u32 = dx * dx + dy * dy;
+  if l2 == 0 {
+    let mut rx: u32 = 0;
+    let mut ry: u32 = 0;
+    if px >= ax { rx = px - ax; } else { rx = ax - px; }
+    if py >= ay { ry = py - ay; } else { ry = ay - py; }
+    return isqrt_u32(rx * rx + ry * ry);
+  }
+
+  let mut dpx_pos: bool = true;
+  let mut dpx: u32 = 0;
+  if px >= ax { dpx = px - ax; } else { dpx = ax - px; dpx_pos = false; }
+
+  let mut dpy_pos: bool = true;
+  let mut dpy: u32 = 0;
+  if py >= ay { dpy = py - ay; } else { dpy = ay - py; dpy_pos = false; }
+
+  let mut dot_pos: bool = true;
+  let mut dot_mag: u32 = 0;
+
+  let term1_pos: bool = (dx_pos && dpx_pos) || (!dx_pos && !dpx_pos);
+  let term1_mag: u32 = dx * dpx;
+
+  let term2_pos: bool = (dy_pos && dpy_pos) || (!dy_pos && !dpy_pos);
+  let term2_mag: u32 = dy * dpy;
+
+  if term1_pos && term2_pos {
+    dot_pos = true;
+    dot_mag = term1_mag + term2_mag;
+  } else {
+    if !term1_pos && !term2_pos {
+      dot_pos = false;
+      dot_mag = term1_mag + term2_mag;
+    } else {
+      if term1_pos && !term2_pos {
+        if term1_mag >= term2_mag {
+          dot_pos = true;
+          dot_mag = term1_mag - term2_mag;
+        } else {
+          dot_pos = false;
+          dot_mag = term2_mag - term1_mag;
+        }
+      } else {
+        if term2_mag >= term1_mag {
+          dot_pos = true;
+          dot_mag = term2_mag - term1_mag;
+        } else {
+          dot_pos = false;
+          dot_mag = term1_mag - term2_mag;
+        }
+      }
+    }
+  }
+
+  if !dot_pos || dot_mag == 0 {
+    let mut rx: u32 = 0;
+    let mut ry: u32 = 0;
+    if px >= ax { rx = px - ax; } else { rx = ax - px; }
+    if py >= ay { ry = py - ay; } else { ry = ay - py; }
+    return isqrt_u32(rx * rx + ry * ry);
+  }
+
+  if dot_mag >= l2 {
+    let mut rx: u32 = 0;
+    let mut ry: u32 = 0;
+    if px >= bx { rx = px - bx; } else { rx = bx - px; }
+    if py >= by { ry = py - by; } else { ry = by - py; }
+    return isqrt_u32(rx * rx + ry * ry);
+  }
+
+  let qx_diff: u32 = (dx * dot_mag) / l2;
+  let qy_diff: u32 = (dy * dot_mag) / l2;
+
+  let mut qx: u32 = 0;
+  let mut qy: u32 = 0;
+
+  if dx_pos { qx = ax + qx_diff; } else { qx = ax - qx_diff; }
+  if dy_pos { qy = ay + qy_diff; } else { qy = ay - qy_diff; }
+
+  let mut rx: u32 = 0;
+  let mut ry: u32 = 0;
+  if px >= qx { rx = px - qx; } else { rx = qx - px; }
+  if py >= qy { ry = py - qy; } else { ry = qy - py; }
+  return isqrt_u32(rx * rx + ry * ry);
+}
+
+export fn sdf_get_atlas_size() -> u32 {
+  let stored: u32 = memory_load_u32(192);
+  if stored != 0 {
+    return stored;
+  }
+  return 1024;
+}
+
+export fn sdf_get_base_font_size() -> f64 {
+  return f64_from_u32(24);
+}
+
+export fn utf8_codepoint_length(byte_val: i32) -> i32 {
+  if byte_val < 128 { return 1; }
+  if byte_val >= 192 && byte_val < 224 { return 2; }
+  if byte_val >= 224 && byte_val < 240 { return 3; }
+  if byte_val >= 240 && byte_val < 248 { return 4; }
+  return 1;
+}
+
+export fn utf8_decode_codepoint(text: string, i: i32, len: i32) -> i32 {
+  let b0: i32 = string_byte_at(text, i);
+  if b0 < 128 { return b0; }
+  if b0 >= 192 && b0 < 224 {
+    if i + 1 < len {
+      let b1: i32 = string_byte_at(text, i + 1);
+      return (b0 - 192) * 64 + (b1 - 128);
+    }
+  }
+  if b0 >= 224 && b0 < 240 {
+    if i + 2 < len {
+      let b1: i32 = string_byte_at(text, i + 1);
+      let b2: i32 = string_byte_at(text, i + 2);
+      return (b0 - 224) * 4096 + (b1 - 128) * 64 + (b2 - 128);
+    }
+  }
+  if b0 >= 240 && b0 < 248 {
+    if i + 3 < len {
+      let b1: i32 = string_byte_at(text, i + 1);
+      let b2: i32 = string_byte_at(text, i + 2);
+      let b3: i32 = string_byte_at(text, i + 3);
+      return (b0 - 240) * 262144 + (b1 - 128) * 4096 + (b2 - 128) * 64 + (b3 - 128);
+    }
+  }
+  return b0;
+}
+
+export fn unicode_to_idx(code: i32) -> u32 {
+  // Math & Logic
+  if code == 177 { return 96; } // ±
+  if code == 215 { return 97; } // ×
+  if code == 247 { return 98; } // ÷
+  if code == 8730 { return 99; } // √
+  if code == 8734 { return 100; } // ∞
+  if code == 8776 { return 101; } // ≈
+  if code == 8800 { return 102; } // ≠
+  if code == 8804 { return 103; } // ≤
+  if code == 8805 { return 104; } // ≥
+  if code == 8721 { return 105; } // ∑
+  if code == 8719 { return 106; } // ∏
+  if code == 8747 { return 107; } // ∫
+  if code == 8722 { return 108; } // −
+  if code == 8706 { return 109; } // ∂
+  if code == 8711 { return 110; } // ∇
+  if code == 8712 { return 111; } // ∈
+
+  // Arrows
+  if code == 8592 { return 112; } // ←
+  if code == 8593 { return 113; } // ↑
+  if code == 8594 { return 114; } // →
+  if code == 8595 { return 115; } // ↓
+  if code == 8596 { return 116; } // ↔
+  if code == 8658 { return 117; } // ⇒
+
+  // Common symbols & punctuation
+  if code == 176 { return 118; } // °
+  if code == 8226 { return 119; } // •
+  if code == 8230 { return 120; } // …
+  if code == 8212 { return 121; } // —
+  if code == 8211 { return 122; } // –
+  if code == 10003 { return 123; } // ✓
+  if code == 10007 { return 124; } // ✗
+  if code == 9733 { return 125; } // ★
+  if code == 9889 { return 126; } // ⚡
+  if code == 169 { return 127; } // ©
+  if code == 174 { return 128; } // ®
+  if code == 181 { return 129; } // µ
+  if code == 178 { return 130; } // ²
+  if code == 179 { return 131; } // ³
+
+  // Greek
+  if code == 945 { return 132; } // α
+  if code == 946 { return 133; } // β
+  if code == 947 { return 134; } // γ
+  if code == 948 { return 135; } // δ
+  if code == 955 { return 136; } // λ
+  if code == 956 { return 137; } // μ
+  if code == 960 { return 138; } // π
+  if code == 963 { return 139; } // σ
+  if code == 969 { return 140; } // ω
+  if code == 916 { return 141; } // Δ
+  if code == 937 { return 142; } // Ω
+  if code == 952 { return 143; } // θ
+
+  // Latin-1 Accented Letters
+  if code == 228 { return 144; } // ä
+  if code == 246 { return 145; } // ö
+  if code == 252 { return 146; } // ü
+  if code == 233 { return 147; } // é
+  if code == 232 { return 148; } // è
+  if code == 234 { return 149; } // ê
+  if code == 225 { return 150; } // á
+  if code == 237 { return 151; } // í
+  if code == 243 { return 152; } // ó
+  if code == 250 { return 153; } // ú
+  if code == 241 { return 154; } // ñ
+  if code == 231 { return 155; } // ç
+  if code == 223 { return 156; } // ß
+
+  // Fallback box for unmapped printable UTF-8 character
+  return 95;
+}
+
+
+
+
+
+
+
+export fn char_code_to_idx(code: i32) -> u32 {
+  if code >= 32 && code <= 126 {
+    let mut idx: u32 = 0;
+    let mut cur: i32 = 32;
+    while cur <= 126 {
+      if cur == code {
+        return idx;
+      }
+      idx = idx + 1;
+      cur = cur + 1;
+    }
+    return 0;
+  }
+  if code < 32 {
+    return 0;
+  }
+  return unicode_to_idx(code);
+}
+
+export fn is_narrow_glyph_idx(idx: u32) -> bool {
+  if idx == 1 || idx == 2 || idx == 7 || idx == 8 || idx == 9 || idx == 12 || idx == 14 {
+    return true;
+  }
+  if idx == 26 || idx == 27 || idx == 41 || idx == 59 || idx == 61 || idx == 73 || idx == 74 || idx == 76 {
+    return true;
+  }
+  if idx == 92 || idx == 105 || idx == 106 || idx == 108 || idx == 130 || idx == 131 || idx == 133 || idx == 144 || idx == 151 || idx == 156 {
+    return true;
+  }
+  return false;
+}
+
+export fn get_glyph_cell_w_u32(idx: u32) -> u32 {
+  if idx == 0 { return 8; }
+  let adv: u32 = get_glyph_advance_u32(idx);
+  let w: u32 = get_glyph_width_u32(idx);
+  let u_eight: u32 = 8;
+  let u_three: u32 = 3;
+  let u_two: u32 = 2;
+  let u_one: u32 = 1;
+  let u_16: u32 = 16;
+  let u_64: u32 = 64;
+  let mut cw: u32 = ((adv * u_eight) / u_three) + u_eight;
+  if w > adv {
+    cw = ((w * u_eight) / u_three) + u_eight;
+  }
+  let rem: u32 = cw % u_two;
+  if rem != 0 {
+    cw = cw + u_one;
+  }
+  if cw < u_16 { cw = u_16; }
+  if cw > u_64 { cw = u_64; }
+  return cw;
+}
+
+export fn get_glyph_cell_h_u32(idx: u32) -> u32 {
+  if idx == 0 { return 8; }
+  let h: u32 = get_glyph_height_u32(idx);
+  let u_two: u32 = 2;
+  let u_one: u32 = 1;
+  let u_24: u32 = 24;
+  let u_44: u32 = 44;
+  let u_64: u32 = 64;
+  if h <= 6 {
+    return u_24;
+  }
+  if h <= 12 {
+    return u_44;
+  }
+  return u_64;
+}
+
+export fn get_glyph_stroke_bias_u32(idx: u32) -> u32 {
+  return 0;
+}
+
+export fn write_seg(seg_ptr: u32, seg_idx: u32, x1: u32, y1: u32, x2: u32, y2: u32) -> unit {
+  let offset: u32 = seg_ptr + seg_idx * 16;
+  memory_store_u32(offset, x1);
+  memory_store_u32(offset + 4, y1);
+  memory_store_u32(offset + 8, x2);
+  memory_store_u32(offset + 12, y2);
+}
+
+
+
+
+
+
+
+export fn sdf_load_char_segments(idx: u32, seg_ptr: u32) -> u32 {
+  if idx == 0 { return 0; }
+  if idx == 1 {
+    write_seg(seg_ptr, 0, 80, 56, 80, 132);
+    write_seg(seg_ptr, 1, 80, 172, 80, 180);
+    return 2;
+  }
+  if idx == 2 {
+    write_seg(seg_ptr, 0, 72, 64, 72, 96);
+    write_seg(seg_ptr, 1, 104, 64, 104, 96);
+    return 2;
+  }
+  if idx == 3 {
+    write_seg(seg_ptr, 0, 80, 72, 80, 184);
+    write_seg(seg_ptr, 1, 112, 72, 112, 184);
+    write_seg(seg_ptr, 2, 64, 104, 128, 104);
+    write_seg(seg_ptr, 3, 64, 152, 128, 152);
+    return 4;
+  }
+  if idx == 4 {
+    write_seg(seg_ptr, 0, 96, 56, 96, 184);
+    write_seg(seg_ptr, 1, 118, 90, 110, 74);
+    write_seg(seg_ptr, 2, 110, 74, 96, 68);
+    write_seg(seg_ptr, 3, 96, 68, 82, 74);
+    write_seg(seg_ptr, 4, 82, 74, 74, 90);
+    write_seg(seg_ptr, 5, 74, 90, 78, 108);
+    write_seg(seg_ptr, 6, 78, 108, 96, 120);
+    write_seg(seg_ptr, 7, 96, 120, 114, 132);
+    write_seg(seg_ptr, 8, 114, 132, 118, 150);
+    write_seg(seg_ptr, 9, 118, 150, 110, 166);
+    write_seg(seg_ptr, 10, 110, 166, 96, 172);
+    write_seg(seg_ptr, 11, 96, 172, 82, 166);
+    write_seg(seg_ptr, 12, 82, 166, 74, 150);
+    return 13;
+  }
+  if idx == 5 {
+    write_seg(seg_ptr, 0, 136, 56, 56, 184);
+    write_seg(seg_ptr, 1, 96, 88, 86, 105);
+    write_seg(seg_ptr, 2, 86, 105, 66, 105);
+    write_seg(seg_ptr, 3, 66, 105, 56, 88);
+    write_seg(seg_ptr, 4, 56, 88, 66, 71);
+    write_seg(seg_ptr, 5, 66, 71, 86, 71);
+    write_seg(seg_ptr, 6, 86, 71, 96, 88);
+    write_seg(seg_ptr, 7, 136, 152, 126, 169);
+    write_seg(seg_ptr, 8, 126, 169, 106, 169);
+    write_seg(seg_ptr, 9, 106, 169, 96, 152);
+    write_seg(seg_ptr, 10, 96, 152, 106, 135);
+    write_seg(seg_ptr, 11, 106, 135, 126, 135);
+    write_seg(seg_ptr, 12, 126, 135, 136, 152);
+    return 13;
+  }
+  if idx == 6 {
+    write_seg(seg_ptr, 0, 101, 111, 84, 90);
+    write_seg(seg_ptr, 1, 84, 90, 97, 67);
+    write_seg(seg_ptr, 2, 97, 67, 124, 70);
+    write_seg(seg_ptr, 3, 124, 70, 131, 95);
+    write_seg(seg_ptr, 4, 142, 163, 118, 176);
+    write_seg(seg_ptr, 5, 118, 176, 93, 166);
+    write_seg(seg_ptr, 6, 93, 166, 84, 140);
+    write_seg(seg_ptr, 7, 84, 140, 99, 117);
+    write_seg(seg_ptr, 8, 99, 117, 126, 114);
+    write_seg(seg_ptr, 9, 88, 120, 152, 184);
+    return 10;
+  }
+  if idx == 7 {
+    write_seg(seg_ptr, 0, 68, 64, 68, 96);
+    return 1;
+  }
+  if idx == 8 {
+    write_seg(seg_ptr, 0, 76, 159, 63, 146);
+    write_seg(seg_ptr, 1, 63, 146, 57, 129);
+    write_seg(seg_ptr, 2, 57, 129, 57, 111);
+    write_seg(seg_ptr, 3, 57, 111, 63, 94);
+    write_seg(seg_ptr, 4, 63, 94, 76, 81);
+    return 5;
+  }
+  if idx == 9 {
+    write_seg(seg_ptr, 0, 84, 81, 97, 94);
+    write_seg(seg_ptr, 1, 97, 94, 103, 111);
+    write_seg(seg_ptr, 2, 103, 111, 103, 129);
+    write_seg(seg_ptr, 3, 103, 129, 97, 146);
+    write_seg(seg_ptr, 4, 97, 146, 84, 159);
+    return 5;
+  }
+  if idx == 10 {
+    write_seg(seg_ptr, 0, 64, 128, 128, 128);
+    write_seg(seg_ptr, 1, 96, 96, 96, 160);
+    write_seg(seg_ptr, 2, 76, 108, 116, 148);
+    write_seg(seg_ptr, 3, 76, 148, 116, 108);
+    return 4;
+  }
+  if idx == 11 {
+    write_seg(seg_ptr, 0, 64, 128, 144, 128);
+    write_seg(seg_ptr, 1, 104, 88, 104, 168);
+    return 2;
+  }
+  if idx == 12 {
+    write_seg(seg_ptr, 0, 72, 164, 72, 176);
+    write_seg(seg_ptr, 1, 72, 176, 60, 192);
+    return 2;
+  }
+  if idx == 13 {
+    write_seg(seg_ptr, 0, 64, 132, 112, 132);
+    return 1;
+  }
+  if idx == 14 {
+    write_seg(seg_ptr, 0, 72, 172, 72, 180);
+    return 1;
+  }
+  if idx == 15 {
+    write_seg(seg_ptr, 0, 56, 184, 104, 56);
+    return 1;
+  }
+  if idx == 16 {
+    write_seg(seg_ptr, 0, 140, 128, 127, 159);
+    write_seg(seg_ptr, 1, 127, 159, 96, 172);
+    write_seg(seg_ptr, 2, 96, 172, 65, 159);
+    write_seg(seg_ptr, 3, 65, 159, 52, 128);
+    write_seg(seg_ptr, 4, 52, 128, 65, 97);
+    write_seg(seg_ptr, 5, 65, 97, 96, 84);
+    write_seg(seg_ptr, 6, 96, 84, 127, 97);
+    write_seg(seg_ptr, 7, 127, 97, 140, 128);
+    return 8;
+  }
+  if idx == 17 {
+    write_seg(seg_ptr, 0, 76, 92, 96, 72);
+    write_seg(seg_ptr, 1, 96, 72, 96, 184);
+    return 2;
+  }
+  if idx == 18 {
+    write_seg(seg_ptr, 0, 68, 88, 76, 68);
+    write_seg(seg_ptr, 1, 76, 68, 96, 56);
+    write_seg(seg_ptr, 2, 96, 56, 116, 68);
+    write_seg(seg_ptr, 3, 116, 68, 124, 88);
+    write_seg(seg_ptr, 4, 124, 88, 116, 112);
+    write_seg(seg_ptr, 5, 116, 112, 68, 180);
+    write_seg(seg_ptr, 6, 68, 180, 124, 180);
+    return 7;
+  }
+  if idx == 19 {
+    write_seg(seg_ptr, 0, 73, 84, 94, 72);
+    write_seg(seg_ptr, 1, 94, 72, 116, 80);
+    write_seg(seg_ptr, 2, 116, 80, 124, 102);
+    write_seg(seg_ptr, 3, 124, 102, 112, 123);
+    write_seg(seg_ptr, 4, 115, 126, 127, 146);
+    write_seg(seg_ptr, 5, 127, 146, 123, 169);
+    write_seg(seg_ptr, 6, 123, 169, 104, 183);
+    write_seg(seg_ptr, 7, 104, 183, 81, 180);
+    write_seg(seg_ptr, 8, 81, 180, 66, 162);
+    return 9;
+  }
+  if idx == 20 {
+    write_seg(seg_ptr, 0, 112, 64, 68, 140);
+    write_seg(seg_ptr, 1, 68, 140, 128, 140);
+    write_seg(seg_ptr, 2, 112, 64, 112, 184);
+    return 3;
+  }
+  if idx == 21 {
+    write_seg(seg_ptr, 0, 120, 72, 72, 72);
+    write_seg(seg_ptr, 1, 72, 72, 72, 116);
+    write_seg(seg_ptr, 2, 76, 121, 101, 115);
+    write_seg(seg_ptr, 3, 101, 115, 123, 128);
+    write_seg(seg_ptr, 4, 123, 128, 129, 153);
+    write_seg(seg_ptr, 5, 129, 153, 116, 175);
+    write_seg(seg_ptr, 6, 116, 175, 91, 181);
+    write_seg(seg_ptr, 7, 91, 181, 69, 168);
+    return 8;
+  }
+  if idx == 22 {
+    write_seg(seg_ptr, 0, 120, 68, 104, 60);
+    write_seg(seg_ptr, 1, 104, 60, 84, 68);
+    write_seg(seg_ptr, 2, 84, 68, 68, 92);
+    write_seg(seg_ptr, 3, 68, 92, 64, 128);
+    write_seg(seg_ptr, 4, 64, 128, 64, 152);
+    write_seg(seg_ptr, 5, 64, 152, 72, 174);
+    write_seg(seg_ptr, 6, 72, 174, 96, 184);
+    write_seg(seg_ptr, 7, 96, 184, 120, 174);
+    write_seg(seg_ptr, 8, 120, 174, 128, 152);
+    write_seg(seg_ptr, 9, 128, 152, 120, 130);
+    write_seg(seg_ptr, 10, 120, 130, 96, 120);
+    write_seg(seg_ptr, 11, 96, 120, 72, 130);
+    write_seg(seg_ptr, 12, 72, 130, 64, 152);
+    return 13;
+  }
+  if idx == 23 {
+    write_seg(seg_ptr, 0, 68, 72, 124, 72);
+    write_seg(seg_ptr, 1, 124, 72, 84, 184);
+    return 2;
+  }
+  if idx == 24 {
+    write_seg(seg_ptr, 0, 96, 60, 118, 68);
+    write_seg(seg_ptr, 1, 118, 68, 124, 88);
+    write_seg(seg_ptr, 2, 124, 88, 118, 108);
+    write_seg(seg_ptr, 3, 118, 108, 96, 116);
+    write_seg(seg_ptr, 4, 96, 116, 74, 108);
+    write_seg(seg_ptr, 5, 74, 108, 68, 88);
+    write_seg(seg_ptr, 6, 68, 88, 74, 68);
+    write_seg(seg_ptr, 7, 74, 68, 96, 60);
+    write_seg(seg_ptr, 8, 96, 116, 122, 124);
+    write_seg(seg_ptr, 9, 122, 124, 128, 148);
+    write_seg(seg_ptr, 10, 128, 148, 122, 172);
+    write_seg(seg_ptr, 11, 122, 172, 96, 184);
+    write_seg(seg_ptr, 12, 96, 184, 70, 172);
+    write_seg(seg_ptr, 13, 70, 172, 64, 148);
+    write_seg(seg_ptr, 14, 64, 148, 70, 124);
+    write_seg(seg_ptr, 15, 70, 124, 96, 116);
+    return 16;
+  }
+  if idx == 25 {
+    write_seg(seg_ptr, 0, 128, 88, 120, 66);
+    write_seg(seg_ptr, 1, 120, 66, 96, 56);
+    write_seg(seg_ptr, 2, 96, 56, 72, 66);
+    write_seg(seg_ptr, 3, 72, 66, 64, 88);
+    write_seg(seg_ptr, 4, 64, 88, 72, 110);
+    write_seg(seg_ptr, 5, 72, 110, 96, 120);
+    write_seg(seg_ptr, 6, 96, 120, 120, 110);
+    write_seg(seg_ptr, 7, 120, 110, 128, 88);
+    write_seg(seg_ptr, 8, 128, 88, 128, 124);
+    write_seg(seg_ptr, 9, 128, 124, 124, 148);
+    write_seg(seg_ptr, 10, 124, 148, 108, 172);
+    write_seg(seg_ptr, 11, 108, 172, 88, 180);
+    write_seg(seg_ptr, 12, 88, 180, 72, 172);
+    return 13;
+  }
+  if idx == 26 {
+    write_seg(seg_ptr, 0, 76, 112, 76, 120);
+    write_seg(seg_ptr, 1, 76, 172, 76, 180);
+    return 2;
+  }
+  if idx == 27 {
+    write_seg(seg_ptr, 0, 76, 112, 76, 120);
+    write_seg(seg_ptr, 1, 76, 168, 76, 176);
+    write_seg(seg_ptr, 2, 76, 176, 64, 192);
+    return 3;
+  }
+  if idx == 28 {
+    write_seg(seg_ptr, 0, 120, 88, 68, 128);
+    write_seg(seg_ptr, 1, 68, 128, 120, 168);
+    return 2;
+  }
+  if idx == 29 {
+    write_seg(seg_ptr, 0, 64, 108, 128, 108);
+    write_seg(seg_ptr, 1, 64, 148, 128, 148);
+    return 2;
+  }
+  if idx == 30 {
+    write_seg(seg_ptr, 0, 68, 88, 120, 128);
+    write_seg(seg_ptr, 1, 120, 128, 68, 168);
+    return 2;
+  }
+  if idx == 31 {
+    write_seg(seg_ptr, 0, 68, 88, 76, 68);
+    write_seg(seg_ptr, 1, 76, 68, 96, 56);
+    write_seg(seg_ptr, 2, 96, 56, 116, 68);
+    write_seg(seg_ptr, 3, 116, 68, 124, 88);
+    write_seg(seg_ptr, 4, 124, 88, 116, 108);
+    write_seg(seg_ptr, 5, 116, 108, 96, 120);
+    write_seg(seg_ptr, 6, 96, 120, 96, 132);
+    write_seg(seg_ptr, 7, 96, 172, 96, 180);
+    return 8;
+  }
+  if idx == 32 {
+    write_seg(seg_ptr, 0, 120, 128, 114, 112);
+    write_seg(seg_ptr, 1, 114, 112, 96, 108);
+    write_seg(seg_ptr, 2, 96, 108, 78, 112);
+    write_seg(seg_ptr, 3, 78, 112, 72, 128);
+    write_seg(seg_ptr, 4, 72, 128, 78, 144);
+    write_seg(seg_ptr, 5, 78, 144, 96, 148);
+    write_seg(seg_ptr, 6, 96, 148, 114, 144);
+    write_seg(seg_ptr, 7, 114, 144, 120, 128);
+    write_seg(seg_ptr, 8, 120, 128, 120, 148);
+    write_seg(seg_ptr, 9, 120, 148, 114, 164);
+    write_seg(seg_ptr, 10, 114, 164, 96, 172);
+    write_seg(seg_ptr, 11, 96, 172, 68, 164);
+    write_seg(seg_ptr, 12, 68, 164, 52, 136);
+    write_seg(seg_ptr, 13, 52, 136, 52, 104);
+    write_seg(seg_ptr, 14, 52, 104, 68, 76);
+    write_seg(seg_ptr, 15, 68, 76, 96, 64);
+    write_seg(seg_ptr, 16, 96, 64, 132, 64);
+    write_seg(seg_ptr, 17, 132, 64, 156, 88);
+    write_seg(seg_ptr, 18, 156, 88, 160, 124);
+    write_seg(seg_ptr, 19, 160, 124, 152, 156);
+    write_seg(seg_ptr, 20, 152, 156, 132, 176);
+    write_seg(seg_ptr, 21, 132, 176, 104, 184);
+    return 22;
+  }
+  if idx == 33 {
+    write_seg(seg_ptr, 0, 64, 184, 104, 64);
+    write_seg(seg_ptr, 1, 104, 64, 120, 64);
+    write_seg(seg_ptr, 2, 120, 64, 160, 184);
+    write_seg(seg_ptr, 3, 80, 136, 144, 136);
+    return 4;
+  }
+  if idx == 34 {
+    write_seg(seg_ptr, 0, 68, 56, 68, 184);
+    write_seg(seg_ptr, 1, 68, 56, 104, 56);
+    write_seg(seg_ptr, 2, 104, 56, 124, 68);
+    write_seg(seg_ptr, 3, 124, 68, 128, 86);
+    write_seg(seg_ptr, 4, 128, 86, 124, 104);
+    write_seg(seg_ptr, 5, 124, 104, 104, 116);
+    write_seg(seg_ptr, 6, 104, 116, 68, 116);
+    write_seg(seg_ptr, 7, 68, 116, 108, 116);
+    write_seg(seg_ptr, 8, 108, 116, 128, 128);
+    write_seg(seg_ptr, 9, 128, 128, 132, 148);
+    write_seg(seg_ptr, 10, 132, 148, 128, 168);
+    write_seg(seg_ptr, 11, 128, 168, 108, 184);
+    write_seg(seg_ptr, 12, 108, 184, 68, 184);
+    return 13;
+  }
+  if idx == 35 {
+    write_seg(seg_ptr, 0, 154, 162, 119, 180);
+    write_seg(seg_ptr, 1, 119, 180, 80, 171);
+    write_seg(seg_ptr, 2, 80, 171, 55, 140);
+    write_seg(seg_ptr, 3, 55, 140, 55, 100);
+    write_seg(seg_ptr, 4, 55, 100, 80, 69);
+    write_seg(seg_ptr, 5, 80, 69, 119, 60);
+    write_seg(seg_ptr, 6, 119, 60, 154, 78);
+    return 7;
+  }
+  if idx == 36 {
+    write_seg(seg_ptr, 0, 68, 56, 68, 184);
+    write_seg(seg_ptr, 1, 68, 58, 99, 66);
+    write_seg(seg_ptr, 2, 99, 66, 122, 89);
+    write_seg(seg_ptr, 3, 122, 89, 130, 120);
+    write_seg(seg_ptr, 4, 130, 120, 122, 151);
+    write_seg(seg_ptr, 5, 122, 151, 99, 174);
+    write_seg(seg_ptr, 6, 99, 174, 68, 182);
+    return 7;
+  }
+  if idx == 37 {
+    write_seg(seg_ptr, 0, 68, 56, 68, 184);
+    write_seg(seg_ptr, 1, 68, 56, 132, 56);
+    write_seg(seg_ptr, 2, 68, 120, 120, 120);
+    write_seg(seg_ptr, 3, 68, 184, 132, 184);
+    return 4;
+  }
+  if idx == 38 {
+    write_seg(seg_ptr, 0, 68, 56, 68, 184);
+    write_seg(seg_ptr, 1, 68, 56, 132, 56);
+    write_seg(seg_ptr, 2, 68, 120, 116, 120);
+    return 3;
+  }
+  if idx == 39 {
+    write_seg(seg_ptr, 0, 154, 154, 128, 180);
+    write_seg(seg_ptr, 1, 128, 180, 84, 176);
+    write_seg(seg_ptr, 2, 84, 176, 56, 144);
+    write_seg(seg_ptr, 3, 56, 144, 56, 96);
+    write_seg(seg_ptr, 4, 56, 96, 84, 64);
+    write_seg(seg_ptr, 5, 84, 64, 128, 60);
+    write_seg(seg_ptr, 6, 128, 60, 154, 86);
+    write_seg(seg_ptr, 7, 154, 154, 154, 120);
+    write_seg(seg_ptr, 8, 154, 120, 116, 120);
+    return 9;
+  }
+  if idx == 40 {
+    write_seg(seg_ptr, 0, 68, 56, 68, 184);
+    write_seg(seg_ptr, 1, 148, 56, 148, 184);
+    write_seg(seg_ptr, 2, 68, 120, 148, 120);
+    return 3;
+  }
+  if idx == 41 {
+    write_seg(seg_ptr, 0, 80, 56, 80, 184);
+    return 1;
+  }
+  if idx == 42 {
+    write_seg(seg_ptr, 0, 100, 56, 100, 152);
+    write_seg(seg_ptr, 1, 100, 152, 93, 169);
+    write_seg(seg_ptr, 2, 93, 169, 76, 176);
+    write_seg(seg_ptr, 3, 76, 176, 59, 169);
+    write_seg(seg_ptr, 4, 59, 169, 52, 152);
+    return 5;
+  }
+  if idx == 43 {
+    write_seg(seg_ptr, 0, 68, 56, 68, 184);
+    write_seg(seg_ptr, 1, 140, 56, 68, 128);
+    write_seg(seg_ptr, 2, 88, 112, 140, 184);
+    return 3;
+  }
+  if idx == 44 {
+    write_seg(seg_ptr, 0, 68, 56, 68, 184);
+    write_seg(seg_ptr, 1, 68, 184, 132, 184);
+    return 2;
+  }
+  if idx == 45 {
+    write_seg(seg_ptr, 0, 64, 184, 64, 56);
+    write_seg(seg_ptr, 1, 64, 56, 120, 136);
+    write_seg(seg_ptr, 2, 120, 136, 176, 56);
+    write_seg(seg_ptr, 3, 176, 56, 176, 184);
+    return 4;
+  }
+  if idx == 46 {
+    write_seg(seg_ptr, 0, 68, 184, 68, 56);
+    write_seg(seg_ptr, 1, 68, 56, 148, 184);
+    write_seg(seg_ptr, 2, 148, 184, 148, 56);
+    return 3;
+  }
+  if idx == 47 {
+    write_seg(seg_ptr, 0, 176, 120, 158, 162);
+    write_seg(seg_ptr, 1, 158, 162, 116, 180);
+    write_seg(seg_ptr, 2, 116, 180, 74, 162);
+    write_seg(seg_ptr, 3, 74, 162, 56, 120);
+    write_seg(seg_ptr, 4, 56, 120, 74, 78);
+    write_seg(seg_ptr, 5, 74, 78, 116, 60);
+    write_seg(seg_ptr, 6, 116, 60, 158, 78);
+    write_seg(seg_ptr, 7, 158, 78, 176, 120);
+    return 8;
+  }
+  if idx == 48 {
+    write_seg(seg_ptr, 0, 68, 56, 68, 180);
+    write_seg(seg_ptr, 1, 68, 56, 96, 56);
+    write_seg(seg_ptr, 2, 96, 56, 120, 68);
+    write_seg(seg_ptr, 3, 120, 68, 124, 88);
+    write_seg(seg_ptr, 4, 124, 88, 120, 108);
+    write_seg(seg_ptr, 5, 120, 108, 96, 120);
+    write_seg(seg_ptr, 6, 96, 120, 68, 120);
+    return 7;
+  }
+  if idx == 49 {
+    write_seg(seg_ptr, 0, 176, 120, 158, 162);
+    write_seg(seg_ptr, 1, 158, 162, 116, 180);
+    write_seg(seg_ptr, 2, 116, 180, 74, 162);
+    write_seg(seg_ptr, 3, 74, 162, 56, 120);
+    write_seg(seg_ptr, 4, 56, 120, 74, 78);
+    write_seg(seg_ptr, 5, 74, 78, 116, 60);
+    write_seg(seg_ptr, 6, 116, 60, 158, 78);
+    write_seg(seg_ptr, 7, 158, 78, 176, 120);
+    write_seg(seg_ptr, 8, 120, 148, 156, 192);
+    return 9;
+  }
+  if idx == 50 {
+    write_seg(seg_ptr, 0, 68, 56, 68, 184);
+    write_seg(seg_ptr, 1, 68, 56, 96, 56);
+    write_seg(seg_ptr, 2, 96, 56, 120, 68);
+    write_seg(seg_ptr, 3, 120, 68, 124, 88);
+    write_seg(seg_ptr, 4, 124, 88, 120, 108);
+    write_seg(seg_ptr, 5, 120, 108, 96, 120);
+    write_seg(seg_ptr, 6, 96, 120, 68, 120);
+    write_seg(seg_ptr, 7, 96, 120, 136, 184);
+    return 8;
+  }
+  if idx == 51 {
+    write_seg(seg_ptr, 0, 124, 84, 114, 66);
+    write_seg(seg_ptr, 1, 114, 66, 96, 56);
+    write_seg(seg_ptr, 2, 96, 56, 78, 66);
+    write_seg(seg_ptr, 3, 78, 66, 68, 86);
+    write_seg(seg_ptr, 4, 68, 86, 72, 106);
+    write_seg(seg_ptr, 5, 72, 106, 96, 120);
+    write_seg(seg_ptr, 6, 96, 120, 120, 134);
+    write_seg(seg_ptr, 7, 120, 134, 124, 154);
+    write_seg(seg_ptr, 8, 124, 154, 114, 174);
+    write_seg(seg_ptr, 9, 114, 174, 96, 184);
+    write_seg(seg_ptr, 10, 96, 184, 78, 174);
+    write_seg(seg_ptr, 11, 78, 174, 68, 154);
+    return 12;
+  }
+  if idx == 52 {
+    write_seg(seg_ptr, 0, 108, 56, 108, 184);
+    write_seg(seg_ptr, 1, 56, 56, 160, 56);
+    return 2;
+  }
+  if idx == 53 {
+    write_seg(seg_ptr, 0, 68, 56, 68, 136);
+    write_seg(seg_ptr, 1, 68, 136, 76, 160);
+    write_seg(seg_ptr, 2, 76, 160, 96, 174);
+    write_seg(seg_ptr, 3, 96, 174, 120, 174);
+    write_seg(seg_ptr, 4, 120, 174, 140, 160);
+    write_seg(seg_ptr, 5, 140, 160, 148, 136);
+    write_seg(seg_ptr, 6, 148, 136, 148, 56);
+    return 7;
+  }
+  if idx == 54 {
+    write_seg(seg_ptr, 0, 64, 56, 116, 184);
+    write_seg(seg_ptr, 1, 116, 184, 168, 56);
+    return 2;
+  }
+  if idx == 55 {
+    write_seg(seg_ptr, 0, 60, 56, 88, 184);
+    write_seg(seg_ptr, 1, 88, 184, 116, 96);
+    write_seg(seg_ptr, 2, 116, 96, 144, 184);
+    write_seg(seg_ptr, 3, 144, 184, 172, 56);
+    return 4;
+  }
+  if idx == 56 {
+    write_seg(seg_ptr, 0, 68, 56, 148, 184);
+    write_seg(seg_ptr, 1, 148, 56, 68, 184);
+    return 2;
+  }
+  if idx == 57 {
+    write_seg(seg_ptr, 0, 64, 56, 116, 120);
+    write_seg(seg_ptr, 1, 168, 56, 116, 120);
+    write_seg(seg_ptr, 2, 116, 120, 116, 184);
+    return 3;
+  }
+  if idx == 58 {
+    write_seg(seg_ptr, 0, 68, 56, 136, 56);
+    write_seg(seg_ptr, 1, 136, 56, 68, 184);
+    write_seg(seg_ptr, 2, 68, 184, 136, 184);
+    return 3;
+  }
+  if idx == 59 {
+    write_seg(seg_ptr, 0, 88, 56, 68, 56);
+    write_seg(seg_ptr, 1, 68, 56, 68, 184);
+    write_seg(seg_ptr, 2, 68, 184, 88, 184);
+    return 3;
+  }
+  if idx == 60 {
+    write_seg(seg_ptr, 0, 56, 56, 104, 184);
+    return 1;
+  }
+  if idx == 61 {
+    write_seg(seg_ptr, 0, 68, 56, 88, 56);
+    write_seg(seg_ptr, 1, 88, 56, 88, 184);
+    write_seg(seg_ptr, 2, 88, 184, 68, 184);
+    return 3;
+  }
+  if idx == 62 {
+    write_seg(seg_ptr, 0, 60, 104, 92, 64);
+    write_seg(seg_ptr, 1, 92, 64, 124, 104);
+    return 2;
+  }
+  if idx == 63 {
+    write_seg(seg_ptr, 0, 48, 192, 144, 192);
+    return 1;
+  }
+  if idx == 64 {
+    write_seg(seg_ptr, 0, 64, 64, 88, 88);
+    return 1;
+  }
+  if idx == 65 {
+    write_seg(seg_ptr, 0, 124, 108, 124, 180);
+    write_seg(seg_ptr, 1, 124, 144, 118, 118);
+    write_seg(seg_ptr, 2, 118, 118, 96, 108);
+    write_seg(seg_ptr, 3, 96, 108, 74, 118);
+    write_seg(seg_ptr, 4, 74, 118, 68, 144);
+    write_seg(seg_ptr, 5, 68, 144, 74, 170);
+    write_seg(seg_ptr, 6, 74, 170, 96, 180);
+    write_seg(seg_ptr, 7, 96, 180, 118, 170);
+    write_seg(seg_ptr, 8, 118, 170, 124, 144);
+    return 9;
+  }
+  if idx == 66 {
+    write_seg(seg_ptr, 0, 68, 56, 68, 180);
+    write_seg(seg_ptr, 1, 68, 144, 74, 118);
+    write_seg(seg_ptr, 2, 74, 118, 96, 108);
+    write_seg(seg_ptr, 3, 96, 108, 118, 118);
+    write_seg(seg_ptr, 4, 118, 118, 124, 144);
+    write_seg(seg_ptr, 5, 124, 144, 118, 170);
+    write_seg(seg_ptr, 6, 118, 170, 96, 180);
+    write_seg(seg_ptr, 7, 96, 180, 74, 170);
+    write_seg(seg_ptr, 8, 74, 170, 68, 144);
+    return 9;
+  }
+  if idx == 67 {
+    write_seg(seg_ptr, 0, 121, 165, 96, 176);
+    write_seg(seg_ptr, 1, 96, 176, 71, 165);
+    write_seg(seg_ptr, 2, 71, 165, 60, 140);
+    write_seg(seg_ptr, 3, 60, 140, 71, 115);
+    write_seg(seg_ptr, 4, 71, 115, 96, 104);
+    write_seg(seg_ptr, 5, 96, 104, 121, 115);
+    return 6;
+  }
+  if idx == 68 {
+    write_seg(seg_ptr, 0, 124, 56, 124, 180);
+    write_seg(seg_ptr, 1, 124, 144, 118, 118);
+    write_seg(seg_ptr, 2, 118, 118, 96, 108);
+    write_seg(seg_ptr, 3, 96, 108, 74, 118);
+    write_seg(seg_ptr, 4, 74, 118, 68, 144);
+    write_seg(seg_ptr, 5, 68, 144, 74, 170);
+    write_seg(seg_ptr, 6, 74, 170, 96, 180);
+    write_seg(seg_ptr, 7, 96, 180, 118, 170);
+    write_seg(seg_ptr, 8, 118, 170, 124, 144);
+    return 9;
+  }
+  if idx == 69 {
+    write_seg(seg_ptr, 0, 64, 140, 128, 140);
+    write_seg(seg_ptr, 1, 128, 140, 124, 120);
+    write_seg(seg_ptr, 2, 124, 120, 96, 108);
+    write_seg(seg_ptr, 3, 96, 108, 68, 120);
+    write_seg(seg_ptr, 4, 68, 120, 64, 140);
+    write_seg(seg_ptr, 5, 64, 140, 68, 164);
+    write_seg(seg_ptr, 6, 68, 164, 96, 176);
+    write_seg(seg_ptr, 7, 96, 176, 124, 168);
+    return 8;
+  }
+  if idx == 70 {
+    write_seg(seg_ptr, 0, 80, 88, 80, 180);
+    write_seg(seg_ptr, 1, 80, 88, 86, 68);
+    write_seg(seg_ptr, 2, 86, 68, 100, 56);
+    write_seg(seg_ptr, 3, 100, 56, 116, 64);
+    write_seg(seg_ptr, 4, 60, 108, 104, 108);
+    return 5;
+  }
+  if idx == 71 {
+    write_seg(seg_ptr, 0, 124, 144, 118, 118);
+    write_seg(seg_ptr, 1, 118, 118, 96, 108);
+    write_seg(seg_ptr, 2, 96, 108, 74, 118);
+    write_seg(seg_ptr, 3, 74, 118, 68, 144);
+    write_seg(seg_ptr, 4, 68, 144, 74, 170);
+    write_seg(seg_ptr, 5, 74, 170, 96, 180);
+    write_seg(seg_ptr, 6, 96, 180, 118, 170);
+    write_seg(seg_ptr, 7, 118, 170, 124, 144);
+    write_seg(seg_ptr, 8, 124, 108, 124, 204);
+    write_seg(seg_ptr, 9, 124, 204, 116, 220);
+    write_seg(seg_ptr, 10, 116, 220, 96, 228);
+    write_seg(seg_ptr, 11, 96, 228, 76, 220);
+    write_seg(seg_ptr, 12, 76, 220, 68, 204);
+    return 13;
+  }
+  if idx == 72 {
+    write_seg(seg_ptr, 0, 68, 56, 68, 180);
+    write_seg(seg_ptr, 1, 116, 132, 116, 180);
+    write_seg(seg_ptr, 2, 68, 132, 75, 115);
+    write_seg(seg_ptr, 3, 75, 115, 92, 108);
+    write_seg(seg_ptr, 4, 92, 108, 109, 115);
+    write_seg(seg_ptr, 5, 109, 115, 116, 132);
+    return 6;
+  }
+  if idx == 73 {
+    write_seg(seg_ptr, 0, 76, 116, 76, 180);
+    write_seg(seg_ptr, 1, 76, 72, 76, 80);
+    return 2;
+  }
+  if idx == 74 {
+    write_seg(seg_ptr, 0, 76, 116, 76, 200);
+    write_seg(seg_ptr, 1, 76, 200, 68, 214);
+    write_seg(seg_ptr, 2, 68, 214, 52, 214);
+    write_seg(seg_ptr, 3, 52, 214, 44, 200);
+    write_seg(seg_ptr, 4, 76, 72, 76, 80);
+    return 5;
+  }
+  if idx == 75 {
+    write_seg(seg_ptr, 0, 68, 56, 68, 180);
+    write_seg(seg_ptr, 1, 120, 108, 68, 144);
+    write_seg(seg_ptr, 2, 84, 132, 120, 180);
+    return 3;
+  }
+  if idx == 76 {
+    write_seg(seg_ptr, 0, 76, 56, 76, 180);
+    return 1;
+  }
+  if idx == 77 {
+    write_seg(seg_ptr, 0, 60, 108, 60, 180);
+    write_seg(seg_ptr, 1, 104, 132, 104, 180);
+    write_seg(seg_ptr, 2, 148, 132, 148, 180);
+    write_seg(seg_ptr, 3, 60, 132, 67, 115);
+    write_seg(seg_ptr, 4, 67, 115, 82, 108);
+    write_seg(seg_ptr, 5, 82, 108, 97, 115);
+    write_seg(seg_ptr, 6, 97, 115, 104, 132);
+    write_seg(seg_ptr, 7, 104, 132, 111, 115);
+    write_seg(seg_ptr, 8, 111, 115, 126, 108);
+    write_seg(seg_ptr, 9, 126, 108, 141, 115);
+    write_seg(seg_ptr, 10, 141, 115, 148, 132);
+    return 11;
+  }
+  if idx == 78 {
+    write_seg(seg_ptr, 0, 68, 108, 68, 180);
+    write_seg(seg_ptr, 1, 116, 132, 116, 180);
+    write_seg(seg_ptr, 2, 68, 132, 75, 115);
+    write_seg(seg_ptr, 3, 75, 115, 92, 108);
+    write_seg(seg_ptr, 4, 92, 108, 109, 115);
+    write_seg(seg_ptr, 5, 109, 115, 116, 132);
+    return 6;
+  }
+  if idx == 79 {
+    write_seg(seg_ptr, 0, 132, 140, 121, 165);
+    write_seg(seg_ptr, 1, 121, 165, 96, 176);
+    write_seg(seg_ptr, 2, 96, 176, 71, 165);
+    write_seg(seg_ptr, 3, 71, 165, 60, 140);
+    write_seg(seg_ptr, 4, 60, 140, 71, 115);
+    write_seg(seg_ptr, 5, 71, 115, 96, 104);
+    write_seg(seg_ptr, 6, 96, 104, 121, 115);
+    write_seg(seg_ptr, 7, 121, 115, 132, 140);
+    return 8;
+  }
+  if idx == 80 {
+    write_seg(seg_ptr, 0, 68, 108, 68, 224);
+    write_seg(seg_ptr, 1, 68, 144, 74, 118);
+    write_seg(seg_ptr, 2, 74, 118, 96, 108);
+    write_seg(seg_ptr, 3, 96, 108, 118, 118);
+    write_seg(seg_ptr, 4, 118, 118, 124, 144);
+    write_seg(seg_ptr, 5, 124, 144, 118, 170);
+    write_seg(seg_ptr, 6, 118, 170, 96, 180);
+    write_seg(seg_ptr, 7, 96, 180, 74, 170);
+    write_seg(seg_ptr, 8, 74, 170, 68, 144);
+    return 9;
+  }
+  if idx == 81 {
+    write_seg(seg_ptr, 0, 124, 108, 124, 224);
+    write_seg(seg_ptr, 1, 124, 144, 118, 118);
+    write_seg(seg_ptr, 2, 118, 118, 96, 108);
+    write_seg(seg_ptr, 3, 96, 108, 74, 118);
+    write_seg(seg_ptr, 4, 74, 118, 68, 144);
+    write_seg(seg_ptr, 5, 68, 144, 74, 170);
+    write_seg(seg_ptr, 6, 74, 170, 96, 180);
+    write_seg(seg_ptr, 7, 96, 180, 118, 170);
+    write_seg(seg_ptr, 8, 118, 170, 124, 144);
+    return 9;
+  }
+  if idx == 82 {
+    write_seg(seg_ptr, 0, 68, 108, 68, 180);
+    write_seg(seg_ptr, 1, 68, 132, 75, 115);
+    write_seg(seg_ptr, 2, 75, 115, 92, 108);
+    write_seg(seg_ptr, 3, 92, 108, 108, 115);
+    return 4;
+  }
+  if idx == 83 {
+    write_seg(seg_ptr, 0, 118, 126, 110, 114);
+    write_seg(seg_ptr, 1, 110, 114, 96, 108);
+    write_seg(seg_ptr, 2, 96, 108, 82, 114);
+    write_seg(seg_ptr, 3, 82, 114, 74, 126);
+    write_seg(seg_ptr, 4, 74, 126, 78, 138);
+    write_seg(seg_ptr, 5, 78, 138, 96, 144);
+    write_seg(seg_ptr, 6, 96, 144, 114, 150);
+    write_seg(seg_ptr, 7, 114, 150, 118, 162);
+    write_seg(seg_ptr, 8, 118, 162, 110, 174);
+    write_seg(seg_ptr, 9, 110, 174, 96, 180);
+    write_seg(seg_ptr, 10, 96, 180, 82, 174);
+    write_seg(seg_ptr, 11, 82, 174, 74, 162);
+    return 12;
+  }
+  if idx == 84 {
+    write_seg(seg_ptr, 0, 76, 72, 76, 164);
+    write_seg(seg_ptr, 1, 76, 164, 82, 178);
+    write_seg(seg_ptr, 2, 82, 178, 96, 174);
+    write_seg(seg_ptr, 3, 56, 108, 96, 108);
+    return 4;
+  }
+  if idx == 85 {
+    write_seg(seg_ptr, 0, 68, 108, 68, 148);
+    write_seg(seg_ptr, 1, 68, 148, 76, 168);
+    write_seg(seg_ptr, 2, 76, 168, 92, 176);
+    write_seg(seg_ptr, 3, 92, 176, 108, 168);
+    write_seg(seg_ptr, 4, 108, 168, 116, 148);
+    write_seg(seg_ptr, 5, 116, 108, 116, 180);
+    return 6;
+  }
+  if idx == 86 {
+    write_seg(seg_ptr, 0, 64, 108, 96, 180);
+    write_seg(seg_ptr, 1, 96, 180, 128, 108);
+    return 2;
+  }
+  if idx == 87 {
+    write_seg(seg_ptr, 0, 56, 108, 76, 180);
+    write_seg(seg_ptr, 1, 76, 180, 96, 128);
+    write_seg(seg_ptr, 2, 96, 128, 116, 180);
+    write_seg(seg_ptr, 3, 116, 180, 136, 108);
+    return 4;
+  }
+  if idx == 88 {
+    write_seg(seg_ptr, 0, 64, 108, 128, 180);
+    write_seg(seg_ptr, 1, 128, 108, 64, 180);
+    return 2;
+  }
+  if idx == 89 {
+    write_seg(seg_ptr, 0, 64, 108, 96, 168);
+    write_seg(seg_ptr, 1, 128, 108, 72, 224);
+    return 2;
+  }
+  if idx == 90 {
+    write_seg(seg_ptr, 0, 64, 108, 120, 108);
+    write_seg(seg_ptr, 1, 120, 108, 64, 180);
+    write_seg(seg_ptr, 2, 64, 180, 120, 180);
+    return 3;
+  }
+  if idx == 91 {
+    write_seg(seg_ptr, 0, 104, 56, 84, 80);
+    write_seg(seg_ptr, 1, 84, 80, 84, 112);
+    write_seg(seg_ptr, 2, 84, 112, 64, 124);
+    write_seg(seg_ptr, 3, 64, 124, 84, 136);
+    write_seg(seg_ptr, 4, 84, 136, 84, 168);
+    write_seg(seg_ptr, 5, 84, 168, 104, 184);
+    return 6;
+  }
+  if idx == 92 {
+    write_seg(seg_ptr, 0, 68, 48, 68, 192);
+    return 1;
+  }
+  if idx == 93 {
+    write_seg(seg_ptr, 0, 64, 56, 84, 80);
+    write_seg(seg_ptr, 1, 84, 80, 84, 112);
+    write_seg(seg_ptr, 2, 84, 112, 104, 124);
+    write_seg(seg_ptr, 3, 104, 124, 84, 136);
+    write_seg(seg_ptr, 4, 84, 136, 84, 168);
+    write_seg(seg_ptr, 5, 84, 168, 64, 184);
+    return 6;
+  }
+  if idx == 94 {
+    write_seg(seg_ptr, 0, 64, 144, 56, 124);
+    write_seg(seg_ptr, 1, 56, 124, 72, 108);
+    write_seg(seg_ptr, 2, 72, 108, 92, 116);
+    write_seg(seg_ptr, 3, 132, 116, 134, 136);
+    write_seg(seg_ptr, 4, 134, 136, 118, 148);
+    write_seg(seg_ptr, 5, 118, 148, 100, 140);
+    return 6;
+  }
+  if idx == 95 {
+    write_seg(seg_ptr, 0, 64, 64, 128, 64);
+    write_seg(seg_ptr, 1, 128, 64, 128, 176);
+    write_seg(seg_ptr, 2, 128, 176, 64, 176);
+    write_seg(seg_ptr, 3, 64, 176, 64, 64);
+    return 4;
+  }
+  if idx == 96 {
+    write_seg(seg_ptr, 0, 64, 104, 144, 104);
+    write_seg(seg_ptr, 1, 104, 64, 104, 144);
+    write_seg(seg_ptr, 2, 64, 168, 144, 168);
+    return 3;
+  }
+  if idx == 97 {
+    write_seg(seg_ptr, 0, 68, 92, 132, 156);
+    write_seg(seg_ptr, 1, 132, 92, 68, 156);
+    return 2;
+  }
+  if idx == 98 {
+    write_seg(seg_ptr, 0, 64, 128, 144, 128);
+    write_seg(seg_ptr, 1, 104, 92, 104, 100);
+    write_seg(seg_ptr, 2, 104, 156, 104, 164);
+    return 3;
+  }
+  if idx == 99 {
+    write_seg(seg_ptr, 0, 56, 128, 76, 176);
+    write_seg(seg_ptr, 1, 76, 176, 112, 64);
+    write_seg(seg_ptr, 2, 112, 64, 144, 64);
+    return 3;
+  }
+  if idx == 100 {
+    write_seg(seg_ptr, 0, 128, 144, 104, 116);
+    write_seg(seg_ptr, 1, 104, 116, 76, 116);
+    write_seg(seg_ptr, 2, 76, 116, 52, 144);
+    write_seg(seg_ptr, 3, 52, 144, 76, 172);
+    write_seg(seg_ptr, 4, 76, 172, 104, 172);
+    write_seg(seg_ptr, 5, 104, 172, 128, 144);
+    write_seg(seg_ptr, 6, 128, 144, 152, 116);
+    write_seg(seg_ptr, 7, 152, 116, 180, 116);
+    write_seg(seg_ptr, 8, 180, 116, 204, 144);
+    write_seg(seg_ptr, 9, 204, 144, 180, 172);
+    write_seg(seg_ptr, 10, 180, 172, 152, 172);
+    write_seg(seg_ptr, 11, 152, 172, 128, 144);
+    return 12;
+  }
+  if idx == 101 {
+    write_seg(seg_ptr, 0, 60, 112, 74, 100);
+    write_seg(seg_ptr, 1, 74, 100, 92, 100);
+    write_seg(seg_ptr, 2, 92, 100, 108, 116);
+    write_seg(seg_ptr, 3, 108, 116, 124, 124);
+    write_seg(seg_ptr, 4, 124, 124, 138, 118);
+    write_seg(seg_ptr, 5, 60, 148, 74, 136);
+    write_seg(seg_ptr, 6, 74, 136, 92, 136);
+    write_seg(seg_ptr, 7, 92, 136, 108, 152);
+    write_seg(seg_ptr, 8, 108, 152, 124, 160);
+    write_seg(seg_ptr, 9, 124, 160, 138, 154);
+    return 10;
+  }
+  if idx == 102 {
+    write_seg(seg_ptr, 0, 64, 104, 144, 104);
+    write_seg(seg_ptr, 1, 64, 152, 144, 152);
+    write_seg(seg_ptr, 2, 128, 64, 80, 192);
+    return 3;
+  }
+  if idx == 103 {
+    write_seg(seg_ptr, 0, 128, 80, 72, 120);
+    write_seg(seg_ptr, 1, 72, 120, 128, 160);
+    write_seg(seg_ptr, 2, 72, 184, 128, 184);
+    return 3;
+  }
+  if idx == 104 {
+    write_seg(seg_ptr, 0, 72, 80, 128, 120);
+    write_seg(seg_ptr, 1, 128, 120, 72, 160);
+    write_seg(seg_ptr, 2, 72, 184, 128, 184);
+    return 3;
+  }
+  if idx == 105 {
+    write_seg(seg_ptr, 0, 152, 56, 68, 56);
+    write_seg(seg_ptr, 1, 68, 56, 116, 120);
+    write_seg(seg_ptr, 2, 116, 120, 68, 184);
+    write_seg(seg_ptr, 3, 68, 184, 152, 184);
+    return 4;
+  }
+  if idx == 106 {
+    write_seg(seg_ptr, 0, 56, 56, 168, 56);
+    write_seg(seg_ptr, 1, 80, 56, 80, 184);
+    write_seg(seg_ptr, 2, 144, 56, 144, 184);
+    return 3;
+  }
+  if idx == 107 {
+    write_seg(seg_ptr, 0, 116, 68, 108, 56);
+    write_seg(seg_ptr, 1, 108, 56, 96, 56);
+    write_seg(seg_ptr, 2, 96, 56, 84, 68);
+    write_seg(seg_ptr, 3, 84, 68, 80, 84);
+    write_seg(seg_ptr, 4, 80, 84, 80, 156);
+    write_seg(seg_ptr, 5, 80, 156, 76, 172);
+    write_seg(seg_ptr, 6, 76, 172, 64, 184);
+    write_seg(seg_ptr, 7, 64, 184, 52, 184);
+    write_seg(seg_ptr, 8, 52, 184, 44, 172);
+    return 9;
+  }
+  if idx == 108 {
+    write_seg(seg_ptr, 0, 56, 128, 136, 128);
+    return 1;
+  }
+  if idx == 109 {
+    write_seg(seg_ptr, 0, 128, 144, 119, 167);
+    write_seg(seg_ptr, 1, 119, 167, 96, 176);
+    write_seg(seg_ptr, 2, 96, 176, 73, 167);
+    write_seg(seg_ptr, 3, 73, 167, 64, 144);
+    write_seg(seg_ptr, 4, 64, 144, 73, 121);
+    write_seg(seg_ptr, 5, 73, 121, 96, 112);
+    write_seg(seg_ptr, 6, 96, 112, 119, 121);
+    write_seg(seg_ptr, 7, 119, 121, 128, 144);
+    write_seg(seg_ptr, 8, 128, 144, 128, 96);
+    write_seg(seg_ptr, 9, 128, 96, 116, 68);
+    write_seg(seg_ptr, 10, 116, 68, 96, 56);
+    write_seg(seg_ptr, 11, 96, 56, 74, 66);
+    write_seg(seg_ptr, 12, 74, 66, 66, 88);
+    write_seg(seg_ptr, 13, 66, 88, 76, 104);
+    return 14;
+  }
+  if idx == 110 {
+    write_seg(seg_ptr, 0, 64, 56, 160, 56);
+    write_seg(seg_ptr, 1, 160, 56, 112, 184);
+    write_seg(seg_ptr, 2, 112, 184, 64, 56);
+    return 3;
+  }
+  if idx == 111 {
+    write_seg(seg_ptr, 0, 104, 168, 80, 160);
+    write_seg(seg_ptr, 1, 80, 160, 66, 140);
+    write_seg(seg_ptr, 2, 66, 140, 66, 116);
+    write_seg(seg_ptr, 3, 66, 116, 80, 96);
+    write_seg(seg_ptr, 4, 80, 96, 104, 88);
+    write_seg(seg_ptr, 5, 64, 128, 136, 128);
+    return 6;
+  }
+  if idx == 112 {
+    write_seg(seg_ptr, 0, 56, 128, 184, 128);
+    write_seg(seg_ptr, 1, 96, 88, 56, 128);
+    write_seg(seg_ptr, 2, 96, 168, 56, 128);
+    return 3;
+  }
+  if idx == 113 {
+    write_seg(seg_ptr, 0, 96, 56, 96, 184);
+    write_seg(seg_ptr, 1, 56, 96, 96, 56);
+    write_seg(seg_ptr, 2, 136, 96, 96, 56);
+    return 3;
+  }
+  if idx == 114 {
+    write_seg(seg_ptr, 0, 56, 128, 184, 128);
+    write_seg(seg_ptr, 1, 144, 88, 184, 128);
+    write_seg(seg_ptr, 2, 144, 168, 184, 128);
+    return 3;
+  }
+  if idx == 115 {
+    write_seg(seg_ptr, 0, 96, 56, 96, 184);
+    write_seg(seg_ptr, 1, 56, 144, 96, 184);
+    write_seg(seg_ptr, 2, 136, 144, 96, 184);
+    return 3;
+  }
+  if idx == 116 {
+    write_seg(seg_ptr, 0, 56, 128, 184, 128);
+    write_seg(seg_ptr, 1, 88, 96, 56, 128);
+    write_seg(seg_ptr, 2, 88, 160, 56, 128);
+    write_seg(seg_ptr, 3, 152, 96, 184, 128);
+    write_seg(seg_ptr, 4, 152, 160, 184, 128);
+    return 5;
+  }
+  if idx == 117 {
+    write_seg(seg_ptr, 0, 56, 112, 168, 112);
+    write_seg(seg_ptr, 1, 56, 144, 168, 144);
+    write_seg(seg_ptr, 2, 136, 80, 184, 128);
+    write_seg(seg_ptr, 3, 136, 176, 184, 128);
+    return 4;
+  }
+  if idx == 118 {
+    write_seg(seg_ptr, 0, 108, 80, 98, 97);
+    write_seg(seg_ptr, 1, 98, 97, 78, 97);
+    write_seg(seg_ptr, 2, 78, 97, 68, 80);
+    write_seg(seg_ptr, 3, 68, 80, 78, 63);
+    write_seg(seg_ptr, 4, 78, 63, 98, 63);
+    write_seg(seg_ptr, 5, 98, 63, 108, 80);
+    return 6;
+  }
+  if idx == 119 {
+    write_seg(seg_ptr, 0, 108, 120, 98, 137);
+    write_seg(seg_ptr, 1, 98, 137, 78, 137);
+    write_seg(seg_ptr, 2, 78, 137, 68, 120);
+    write_seg(seg_ptr, 3, 68, 120, 78, 103);
+    write_seg(seg_ptr, 4, 78, 103, 98, 103);
+    write_seg(seg_ptr, 5, 98, 103, 108, 120);
+    return 6;
+  }
+  if idx == 120 {
+    write_seg(seg_ptr, 0, 64, 172, 64, 180);
+    write_seg(seg_ptr, 1, 96, 172, 96, 180);
+    write_seg(seg_ptr, 2, 128, 172, 128, 180);
+    return 3;
+  }
+  if idx == 121 {
+    write_seg(seg_ptr, 0, 48, 128, 192, 128);
+    return 1;
+  }
+  if idx == 122 {
+    write_seg(seg_ptr, 0, 64, 128, 144, 128);
+    return 1;
+  }
+  if idx == 123 {
+    write_seg(seg_ptr, 0, 56, 128, 96, 176);
+    write_seg(seg_ptr, 1, 96, 176, 168, 64);
+    return 2;
+  }
+  if idx == 124 {
+    write_seg(seg_ptr, 0, 64, 80, 144, 176);
+    write_seg(seg_ptr, 1, 144, 80, 64, 176);
+    return 2;
+  }
+  if idx == 125 {
+    write_seg(seg_ptr, 0, 112, 48, 132, 96);
+    write_seg(seg_ptr, 1, 132, 96, 184, 100);
+    write_seg(seg_ptr, 2, 184, 100, 144, 132);
+    write_seg(seg_ptr, 3, 144, 132, 156, 184);
+    write_seg(seg_ptr, 4, 156, 184, 112, 152);
+    write_seg(seg_ptr, 5, 112, 152, 68, 184);
+    write_seg(seg_ptr, 6, 68, 184, 80, 132);
+    write_seg(seg_ptr, 7, 80, 132, 40, 100);
+    write_seg(seg_ptr, 8, 40, 100, 92, 96);
+    write_seg(seg_ptr, 9, 92, 96, 112, 48);
+    return 10;
+  }
+  if idx == 126 {
+    write_seg(seg_ptr, 0, 120, 48, 72, 120);
+    write_seg(seg_ptr, 1, 72, 120, 112, 120);
+    write_seg(seg_ptr, 2, 112, 120, 80, 200);
+    write_seg(seg_ptr, 3, 80, 200, 160, 104);
+    write_seg(seg_ptr, 4, 160, 104, 112, 104);
+    write_seg(seg_ptr, 5, 112, 104, 136, 48);
+    return 6;
+  }
+  if idx == 127 {
+    write_seg(seg_ptr, 0, 156, 128, 141, 165);
+    write_seg(seg_ptr, 1, 141, 165, 104, 180);
+    write_seg(seg_ptr, 2, 104, 180, 67, 165);
+    write_seg(seg_ptr, 3, 67, 165, 52, 128);
+    write_seg(seg_ptr, 4, 52, 128, 67, 91);
+    write_seg(seg_ptr, 5, 67, 91, 104, 76);
+    write_seg(seg_ptr, 6, 104, 76, 141, 91);
+    write_seg(seg_ptr, 7, 141, 91, 156, 128);
+    write_seg(seg_ptr, 8, 124, 148, 100, 156);
+    write_seg(seg_ptr, 9, 100, 156, 79, 141);
+    write_seg(seg_ptr, 10, 79, 141, 79, 115);
+    write_seg(seg_ptr, 11, 79, 115, 100, 100);
+    write_seg(seg_ptr, 12, 100, 100, 124, 108);
+    return 13;
+  }
+  if idx == 128 {
+    write_seg(seg_ptr, 0, 156, 128, 141, 165);
+    write_seg(seg_ptr, 1, 141, 165, 104, 180);
+    write_seg(seg_ptr, 2, 104, 180, 67, 165);
+    write_seg(seg_ptr, 3, 67, 165, 52, 128);
+    write_seg(seg_ptr, 4, 52, 128, 67, 91);
+    write_seg(seg_ptr, 5, 67, 91, 104, 76);
+    write_seg(seg_ptr, 6, 104, 76, 141, 91);
+    write_seg(seg_ptr, 7, 141, 91, 156, 128);
+    write_seg(seg_ptr, 8, 84, 96, 84, 160);
+    write_seg(seg_ptr, 9, 84, 92, 98, 98);
+    write_seg(seg_ptr, 10, 98, 98, 104, 112);
+    write_seg(seg_ptr, 11, 104, 112, 98, 126);
+    write_seg(seg_ptr, 12, 98, 126, 84, 132);
+    write_seg(seg_ptr, 13, 92, 132, 116, 160);
+    return 14;
+  }
+  if idx == 129 {
+    write_seg(seg_ptr, 0, 68, 108, 68, 216);
+    write_seg(seg_ptr, 1, 68, 152, 75, 169);
+    write_seg(seg_ptr, 2, 75, 169, 92, 176);
+    write_seg(seg_ptr, 3, 92, 176, 109, 169);
+    write_seg(seg_ptr, 4, 109, 169, 116, 152);
+    write_seg(seg_ptr, 5, 116, 108, 116, 180);
+    return 6;
+  }
+  if idx == 130 {
+    write_seg(seg_ptr, 0, 70, 80, 76, 92);
+    write_seg(seg_ptr, 1, 76, 92, 88, 98);
+    write_seg(seg_ptr, 2, 88, 98, 100, 92);
+    write_seg(seg_ptr, 3, 100, 92, 106, 80);
+    write_seg(seg_ptr, 4, 106, 80, 70, 128);
+    write_seg(seg_ptr, 5, 70, 128, 106, 128);
+    return 6;
+  }
+  if idx == 131 {
+    write_seg(seg_ptr, 0, 74, 70, 92, 63);
+    write_seg(seg_ptr, 1, 92, 63, 105, 76);
+    write_seg(seg_ptr, 2, 105, 76, 98, 94);
+    write_seg(seg_ptr, 3, 99, 96, 107, 112);
+    write_seg(seg_ptr, 4, 107, 112, 99, 128);
+    write_seg(seg_ptr, 5, 99, 128, 82, 130);
+    write_seg(seg_ptr, 6, 82, 130, 70, 118);
+    return 7;
+  }
+  if idx == 132 {
+    write_seg(seg_ptr, 0, 78, 165, 66, 147);
+    write_seg(seg_ptr, 1, 66, 147, 69, 126);
+    write_seg(seg_ptr, 2, 69, 126, 85, 112);
+    write_seg(seg_ptr, 3, 85, 112, 107, 112);
+    write_seg(seg_ptr, 4, 107, 112, 123, 126);
+    write_seg(seg_ptr, 5, 123, 126, 126, 147);
+    write_seg(seg_ptr, 6, 126, 147, 114, 165);
+    write_seg(seg_ptr, 7, 112, 120, 140, 108);
+    write_seg(seg_ptr, 8, 112, 160, 140, 172);
+    return 9;
+  }
+  if idx == 133 {
+    write_seg(seg_ptr, 0, 68, 56, 68, 216);
+    write_seg(seg_ptr, 1, 68, 58, 89, 67);
+    write_seg(seg_ptr, 2, 89, 67, 98, 88);
+    write_seg(seg_ptr, 3, 98, 88, 89, 109);
+    write_seg(seg_ptr, 4, 89, 109, 68, 118);
+    write_seg(seg_ptr, 5, 68, 110, 88, 117);
+    write_seg(seg_ptr, 6, 88, 117, 100, 134);
+    write_seg(seg_ptr, 7, 100, 134, 100, 154);
+    write_seg(seg_ptr, 8, 100, 154, 88, 171);
+    write_seg(seg_ptr, 9, 88, 171, 68, 178);
+    return 10;
+  }
+  if idx == 134 {
+    write_seg(seg_ptr, 0, 64, 108, 88, 160);
+    write_seg(seg_ptr, 1, 128, 108, 88, 160);
+    write_seg(seg_ptr, 2, 88, 160, 72, 216);
+    return 3;
+  }
+  if idx == 135 {
+    write_seg(seg_ptr, 0, 132, 144, 123, 167);
+    write_seg(seg_ptr, 1, 123, 167, 100, 176);
+    write_seg(seg_ptr, 2, 100, 176, 77, 167);
+    write_seg(seg_ptr, 3, 77, 167, 68, 144);
+    write_seg(seg_ptr, 4, 68, 144, 77, 121);
+    write_seg(seg_ptr, 5, 77, 121, 100, 112);
+    write_seg(seg_ptr, 6, 100, 112, 123, 121);
+    write_seg(seg_ptr, 7, 123, 121, 132, 144);
+    write_seg(seg_ptr, 8, 108, 108, 88, 100);
+    write_seg(seg_ptr, 9, 88, 100, 80, 80);
+    write_seg(seg_ptr, 10, 80, 80, 88, 60);
+    write_seg(seg_ptr, 11, 88, 60, 108, 52);
+    return 12;
+  }
+  if idx == 136 {
+    write_seg(seg_ptr, 0, 72, 56, 136, 184);
+    write_seg(seg_ptr, 1, 112, 104, 64, 184);
+    return 2;
+  }
+  if idx == 137 {
+    write_seg(seg_ptr, 0, 68, 108, 68, 216);
+    write_seg(seg_ptr, 1, 68, 152, 75, 169);
+    write_seg(seg_ptr, 2, 75, 169, 92, 176);
+    write_seg(seg_ptr, 3, 92, 176, 109, 169);
+    write_seg(seg_ptr, 4, 109, 169, 116, 152);
+    write_seg(seg_ptr, 5, 116, 108, 116, 180);
+    return 6;
+  }
+  if idx == 138 {
+    write_seg(seg_ptr, 0, 52, 108, 156, 108);
+    write_seg(seg_ptr, 1, 76, 108, 76, 180);
+    write_seg(seg_ptr, 2, 128, 108, 128, 172);
+    write_seg(seg_ptr, 3, 128, 172, 144, 180);
+    return 4;
+  }
+  if idx == 139 {
+    write_seg(seg_ptr, 0, 126, 140, 116, 164);
+    write_seg(seg_ptr, 1, 116, 164, 92, 174);
+    write_seg(seg_ptr, 2, 92, 174, 68, 164);
+    write_seg(seg_ptr, 3, 68, 164, 58, 140);
+    write_seg(seg_ptr, 4, 58, 140, 68, 116);
+    write_seg(seg_ptr, 5, 68, 116, 92, 106);
+    write_seg(seg_ptr, 6, 92, 106, 116, 116);
+    write_seg(seg_ptr, 7, 116, 116, 126, 140);
+    write_seg(seg_ptr, 8, 92, 106, 140, 106);
+    return 9;
+  }
+  if idx == 140 {
+    write_seg(seg_ptr, 0, 52, 124, 68, 124);
+    write_seg(seg_ptr, 1, 68, 124, 60, 156);
+    write_seg(seg_ptr, 2, 60, 156, 76, 180);
+    write_seg(seg_ptr, 3, 76, 180, 104, 180);
+    write_seg(seg_ptr, 4, 104, 180, 128, 144);
+    write_seg(seg_ptr, 5, 128, 144, 152, 180);
+    write_seg(seg_ptr, 6, 152, 180, 180, 180);
+    write_seg(seg_ptr, 7, 180, 180, 196, 156);
+    write_seg(seg_ptr, 8, 196, 156, 188, 124);
+    write_seg(seg_ptr, 9, 188, 124, 204, 124);
+    return 10;
+  }
+  if idx == 141 {
+    write_seg(seg_ptr, 0, 64, 184, 112, 56);
+    write_seg(seg_ptr, 1, 112, 56, 160, 184);
+    write_seg(seg_ptr, 2, 64, 184, 160, 184);
+    return 3;
+  }
+  if idx == 142 {
+    write_seg(seg_ptr, 0, 56, 184, 80, 184);
+    write_seg(seg_ptr, 1, 80, 184, 84, 152);
+    write_seg(seg_ptr, 2, 74, 131, 66, 104);
+    write_seg(seg_ptr, 3, 66, 104, 74, 77);
+    write_seg(seg_ptr, 4, 74, 77, 98, 60);
+    write_seg(seg_ptr, 5, 98, 60, 126, 60);
+    write_seg(seg_ptr, 6, 126, 60, 150, 77);
+    write_seg(seg_ptr, 7, 150, 77, 158, 104);
+    write_seg(seg_ptr, 8, 158, 104, 150, 131);
+    write_seg(seg_ptr, 9, 140, 152, 144, 184);
+    write_seg(seg_ptr, 10, 144, 184, 168, 184);
+    return 11;
+  }
+  if idx == 143 {
+    write_seg(seg_ptr, 0, 152, 124, 137, 161);
+    write_seg(seg_ptr, 1, 137, 161, 100, 176);
+    write_seg(seg_ptr, 2, 100, 176, 63, 161);
+    write_seg(seg_ptr, 3, 63, 161, 48, 124);
+    write_seg(seg_ptr, 4, 48, 124, 63, 87);
+    write_seg(seg_ptr, 5, 63, 87, 100, 72);
+    write_seg(seg_ptr, 6, 100, 72, 137, 87);
+    write_seg(seg_ptr, 7, 137, 87, 152, 124);
+    write_seg(seg_ptr, 8, 52, 124, 148, 124);
+    return 9;
+  }
+  if idx == 144 {
+    write_seg(seg_ptr, 0, 124, 108, 124, 180);
+    write_seg(seg_ptr, 1, 124, 144, 118, 118);
+    write_seg(seg_ptr, 2, 118, 118, 96, 108);
+    write_seg(seg_ptr, 3, 96, 108, 74, 118);
+    write_seg(seg_ptr, 4, 74, 118, 68, 144);
+    write_seg(seg_ptr, 5, 68, 144, 74, 170);
+    write_seg(seg_ptr, 6, 74, 170, 96, 180);
+    write_seg(seg_ptr, 7, 96, 180, 118, 170);
+    write_seg(seg_ptr, 8, 118, 170, 124, 144);
+    write_seg(seg_ptr, 9, 76, 68, 76, 76);
+    write_seg(seg_ptr, 10, 108, 68, 108, 76);
+    return 11;
+  }
+  if idx == 145 {
+    write_seg(seg_ptr, 0, 132, 140, 121, 165);
+    write_seg(seg_ptr, 1, 121, 165, 96, 176);
+    write_seg(seg_ptr, 2, 96, 176, 71, 165);
+    write_seg(seg_ptr, 3, 71, 165, 60, 140);
+    write_seg(seg_ptr, 4, 60, 140, 71, 115);
+    write_seg(seg_ptr, 5, 71, 115, 96, 104);
+    write_seg(seg_ptr, 6, 96, 104, 121, 115);
+    write_seg(seg_ptr, 7, 121, 115, 132, 140);
+    write_seg(seg_ptr, 8, 80, 68, 80, 76);
+    write_seg(seg_ptr, 9, 112, 68, 112, 76);
+    return 10;
+  }
+  if idx == 146 {
+    write_seg(seg_ptr, 0, 68, 108, 68, 152);
+    write_seg(seg_ptr, 1, 68, 152, 75, 169);
+    write_seg(seg_ptr, 2, 75, 169, 92, 176);
+    write_seg(seg_ptr, 3, 92, 176, 109, 169);
+    write_seg(seg_ptr, 4, 109, 169, 116, 152);
+    write_seg(seg_ptr, 5, 116, 108, 116, 180);
+    write_seg(seg_ptr, 6, 80, 68, 80, 76);
+    write_seg(seg_ptr, 7, 112, 68, 112, 76);
+    return 8;
+  }
+  if idx == 147 {
+    write_seg(seg_ptr, 0, 64, 140, 128, 140);
+    write_seg(seg_ptr, 1, 128, 140, 124, 120);
+    write_seg(seg_ptr, 2, 124, 120, 96, 108);
+    write_seg(seg_ptr, 3, 96, 108, 68, 120);
+    write_seg(seg_ptr, 4, 68, 120, 64, 140);
+    write_seg(seg_ptr, 5, 64, 140, 68, 164);
+    write_seg(seg_ptr, 6, 68, 164, 96, 176);
+    write_seg(seg_ptr, 7, 96, 176, 124, 168);
+    write_seg(seg_ptr, 8, 80, 84, 104, 64);
+    return 9;
+  }
+  if idx == 148 {
+    write_seg(seg_ptr, 0, 64, 140, 128, 140);
+    write_seg(seg_ptr, 1, 128, 140, 124, 120);
+    write_seg(seg_ptr, 2, 124, 120, 96, 108);
+    write_seg(seg_ptr, 3, 96, 108, 68, 120);
+    write_seg(seg_ptr, 4, 68, 120, 64, 140);
+    write_seg(seg_ptr, 5, 64, 140, 68, 164);
+    write_seg(seg_ptr, 6, 68, 164, 96, 176);
+    write_seg(seg_ptr, 7, 96, 176, 124, 168);
+    write_seg(seg_ptr, 8, 96, 64, 72, 84);
+    return 9;
+  }
+  if idx == 149 {
+    write_seg(seg_ptr, 0, 64, 140, 128, 140);
+    write_seg(seg_ptr, 1, 128, 140, 124, 120);
+    write_seg(seg_ptr, 2, 124, 120, 96, 108);
+    write_seg(seg_ptr, 3, 96, 108, 68, 120);
+    write_seg(seg_ptr, 4, 68, 120, 64, 140);
+    write_seg(seg_ptr, 5, 64, 140, 68, 164);
+    write_seg(seg_ptr, 6, 68, 164, 96, 176);
+    write_seg(seg_ptr, 7, 96, 176, 124, 168);
+    write_seg(seg_ptr, 8, 76, 84, 96, 64);
+    write_seg(seg_ptr, 9, 96, 64, 116, 84);
+    return 10;
+  }
+  if idx == 150 {
+    write_seg(seg_ptr, 0, 124, 108, 124, 180);
+    write_seg(seg_ptr, 1, 124, 144, 118, 118);
+    write_seg(seg_ptr, 2, 118, 118, 96, 108);
+    write_seg(seg_ptr, 3, 96, 108, 74, 118);
+    write_seg(seg_ptr, 4, 74, 118, 68, 144);
+    write_seg(seg_ptr, 5, 68, 144, 74, 170);
+    write_seg(seg_ptr, 6, 74, 170, 96, 180);
+    write_seg(seg_ptr, 7, 96, 180, 118, 170);
+    write_seg(seg_ptr, 8, 118, 170, 124, 144);
+    write_seg(seg_ptr, 9, 80, 84, 104, 64);
+    return 10;
+  }
+  if idx == 151 {
+    write_seg(seg_ptr, 0, 76, 108, 76, 180);
+    write_seg(seg_ptr, 1, 68, 84, 88, 68);
+    return 2;
+  }
+  if idx == 152 {
+    write_seg(seg_ptr, 0, 132, 140, 121, 165);
+    write_seg(seg_ptr, 1, 121, 165, 96, 176);
+    write_seg(seg_ptr, 2, 96, 176, 71, 165);
+    write_seg(seg_ptr, 3, 71, 165, 60, 140);
+    write_seg(seg_ptr, 4, 60, 140, 71, 115);
+    write_seg(seg_ptr, 5, 71, 115, 96, 104);
+    write_seg(seg_ptr, 6, 96, 104, 121, 115);
+    write_seg(seg_ptr, 7, 121, 115, 132, 140);
+    write_seg(seg_ptr, 8, 80, 84, 104, 64);
+    return 9;
+  }
+  if idx == 153 {
+    write_seg(seg_ptr, 0, 68, 108, 68, 152);
+    write_seg(seg_ptr, 1, 68, 152, 75, 169);
+    write_seg(seg_ptr, 2, 75, 169, 92, 176);
+    write_seg(seg_ptr, 3, 92, 176, 109, 169);
+    write_seg(seg_ptr, 4, 109, 169, 116, 152);
+    write_seg(seg_ptr, 5, 116, 108, 116, 180);
+    write_seg(seg_ptr, 6, 80, 84, 104, 64);
+    return 7;
+  }
+  if idx == 154 {
+    write_seg(seg_ptr, 0, 68, 108, 68, 180);
+    write_seg(seg_ptr, 1, 116, 132, 116, 180);
+    write_seg(seg_ptr, 2, 68, 132, 75, 115);
+    write_seg(seg_ptr, 3, 75, 115, 92, 108);
+    write_seg(seg_ptr, 4, 92, 108, 109, 115);
+    write_seg(seg_ptr, 5, 109, 115, 116, 132);
+    write_seg(seg_ptr, 6, 76, 72, 92, 64);
+    write_seg(seg_ptr, 7, 92, 64, 108, 72);
+    return 8;
+  }
+  if idx == 155 {
+    write_seg(seg_ptr, 0, 121, 165, 96, 176);
+    write_seg(seg_ptr, 1, 96, 176, 71, 165);
+    write_seg(seg_ptr, 2, 71, 165, 60, 140);
+    write_seg(seg_ptr, 3, 60, 140, 71, 115);
+    write_seg(seg_ptr, 4, 71, 115, 96, 104);
+    write_seg(seg_ptr, 5, 96, 104, 121, 115);
+    write_seg(seg_ptr, 6, 88, 180, 88, 200);
+    write_seg(seg_ptr, 7, 88, 200, 76, 212);
+    return 8;
+  }
+  if idx == 156 {
+    write_seg(seg_ptr, 0, 68, 56, 68, 184);
+    write_seg(seg_ptr, 1, 68, 58, 89, 67);
+    write_seg(seg_ptr, 2, 89, 67, 98, 88);
+    write_seg(seg_ptr, 3, 98, 88, 89, 109);
+    write_seg(seg_ptr, 4, 89, 109, 68, 118);
+    write_seg(seg_ptr, 5, 68, 110, 88, 117);
+    write_seg(seg_ptr, 6, 88, 117, 100, 134);
+    write_seg(seg_ptr, 7, 100, 134, 100, 154);
+    write_seg(seg_ptr, 8, 100, 154, 88, 171);
+    write_seg(seg_ptr, 9, 88, 171, 68, 178);
+    return 10;
+  }
+  return 0;
+}
+
+
+
+fn dist_to_val_u32(min_d: u32, radius: u32) -> u32 {
+  let mut val: u32 = 0;
+  let u_255: u32 = 255;
+  let u_128: u32 = 128;
+  let u_127: u32 = 127;
+  if radius == 0 {
+    return 0;
+  }
+  if min_d <= radius {
+    val = u_128 + ((radius - min_d) * u_127) / radius;
+  } else {
+    let outer_radius: u32 = radius * 2;
+    if min_d <= outer_radius {
+      val = ((outer_radius - min_d) * u_128) / radius;
+    }
+  }
+  if val > u_255 {
+    val = u_255;
+  }
+  return val;
+}
+
+export fn sdf_render_char_cell(
+  idx: u32,
+  atlas_ptr: u32,
+  atlas_dim: u32,
+  cell_x0: u32,
+  cell_y0: u32,
+  cell_w: u32,
+  cell_h: u32,
+  temp_seg_ptr: u32
+) -> unit {
+  let num_segs: u32 = sdf_load_char_segments(idx, temp_seg_ptr);
+
+  let u_two: u32 = 2;
+  let u_three: u32 = 3;
+  let u_four: u32 = 4;
+  let u_eight: u32 = 8;
+  let u_twelve: u32 = 12;
+  let u_16: u32 = 16;
+  let u_256: u32 = 256;
+  let u_65536: u32 = 65536;
+  let u_16777216: u32 = 16777216;
+  let u_9999: u32 = 9999;
+  let u_255: u32 = 255;
+  let u_220: u32 = 220;
+  let u_204: u32 = 204;
+  let u_153: u32 = 153;
+  let u_140: u32 = 140;
+  let u_113: u32 = 113;
+  let u_46: u32 = 46;
+  let u_240: u32 = 240;
+  let u_zero: u32 = 0;
+
+  let stroke_bias: u32 = get_glyph_stroke_bias_u32(idx);
+  let weight_bias: u32 = memory_load_u32(228);
+  let total_bias: u32 = stroke_bias + weight_bias;
+
+  let u_128: u32 = 128;
+  let mut radius: u32 = u_eight;
+
+  let scale_units: u32 = 4;
+  let half_w: u32 = cell_w / u_two;
+  let half_h: u32 = cell_h / u_two;
+  let span_x: u32 = half_w * scale_units;
+  let span_y: u32 = half_h * scale_units;
+  let cx: u32 = get_glyph_center_x_u32(idx);
+  let cy: u32 = get_glyph_center_y_u32(idx);
+  let mut base_x: u32 = 0;
+  let mut neg_x: u32 = 0;
+  if cx >= span_x {
+    base_x = cx - span_x;
+  } else {
+    neg_x = span_x - cx;
+  }
+  let mut base_y: u32 = 0;
+  let mut neg_y: u32 = 0;
+  if cy >= span_y {
+    base_y = cy - span_y;
+  } else {
+    neg_y = span_y - cy;
+  }
+
+  let mut ly: u32 = 0;
+  while ly < cell_h {
+    let curr_y: u32 = ly * scale_units + u_two;
+    let mut py: u32 = 0;
+    if neg_y == 0 {
+      py = base_y + curr_y;
+    } else {
+      if curr_y >= neg_y {
+        py = curr_y - neg_y;
+      }
+    }
+    let mut lx: u32 = 0;
+    while lx < cell_w {
+      let curr_x: u32 = lx * scale_units + u_two;
+      let mut px: u32 = 0;
+      if neg_x == 0 {
+        px = base_x + curr_x;
+      } else {
+        if curr_x >= neg_x {
+          px = curr_x - neg_x;
+        }
+      }
+
+      let mut val_r: u32 = 0;
+      let mut val_g: u32 = 0;
+      let mut val_b: u32 = 0;
+      let mut val_a: u32 = 0;
+
+      if num_segs > 0 {
+        let mut min_d_r: u32 = u_9999;
+        let mut min_d_g: u32 = u_9999;
+        let mut min_d_b: u32 = u_9999;
+        let mut min_d_a: u32 = u_9999;
+
+        let mut s: u32 = 0;
+        while s < num_segs {
+          let s_off: u32 = temp_seg_ptr + s * u_16;
+          let ax: u32 = memory_load_u32(s_off);
+          let ay: u32 = memory_load_u32(s_off + u_four);
+          let bx: u32 = memory_load_u32(s_off + u_eight);
+          let by: u32 = memory_load_u32(s_off + u_twelve);
+          let raw_d: u32 = dist_to_segment_u32(px, py, ax, ay, bx, by);
+          let mut d: u32 = 0;
+          if raw_d > total_bias {
+            d = raw_d - total_bias;
+          }
+
+          if d < min_d_a {
+            min_d_a = d;
+          }
+
+          if num_segs == 1 {
+            if d < min_d_r { min_d_r = d; }
+            if d < min_d_g { min_d_g = d; }
+            if d < min_d_b { min_d_b = d; }
+          } else {
+            let color_cycle: u32 = s % u_three;
+            // Yellow: R + G
+            if color_cycle == 0 {
+              if d < min_d_r { min_d_r = d; }
+              if d < min_d_g { min_d_g = d; }
+            }
+            // Cyan: G + B
+            if color_cycle == 1 {
+              if d < min_d_g { min_d_g = d; }
+              if d < min_d_b { min_d_b = d; }
+            }
+            // Magenta: R + B
+            if color_cycle == 2 {
+              if d < min_d_r { min_d_r = d; }
+              if d < min_d_b { min_d_b = d; }
+            }
+          }
+
+          s = s + 1;
+        }
+
+        val_r = dist_to_val_u32(min_d_r, radius);
+        val_g = dist_to_val_u32(min_d_g, radius);
+        val_b = dist_to_val_u32(min_d_b, radius);
+        val_a = dist_to_val_u32(min_d_a, radius);
+
+        let emoji_inner: u32 = radius;
+        let emoji_outer: u32 = (radius * u_three) / u_two;
+
+        if idx == 126 { // ⚡
+          if min_d_a < emoji_inner {
+            val_r = u_255;
+            val_g = u_220;
+            val_b = u_zero;
+            val_a = u_255;
+          } else {
+            if min_d_a < emoji_outer {
+              val_r = u_255;
+              val_g = u_140;
+              val_b = u_zero;
+              val_a = u_240;
+            }
+          }
+        } else {
+          if idx == 125 { // ★
+            if min_d_a < emoji_inner {
+              val_r = u_255;
+              val_g = u_204;
+              val_b = u_zero;
+              val_a = u_255;
+            } else {
+              if min_d_a < emoji_outer {
+                val_r = u_255;
+                val_g = u_153;
+                val_b = u_zero;
+                val_a = u_240;
+              }
+            }
+          }
+        }
+      }
+
+      let packed: u32 = val_r + (val_g * u_256) + (val_b * u_65536) + (val_a * u_16777216);
+      let pixel_idx: u32 = (cell_y0 + ly) * atlas_dim + (cell_x0 + lx);
+      memory_store_u32(atlas_ptr + pixel_idx * 4, packed);
+
+      lx = lx + 1;
+    }
+    ly = ly + 1;
+  }
+}
+
+fn compute_best_atlas_dim(total_glyphs: u32, order_ptr: u32) -> u32 {
+  let u_zero: u32 = 0;
+  let u_one: u32 = 1;
+  let u_two: u32 = 2;
+  let u_four: u32 = 4;
+  let mut candidate: u32 = 256;
+  while candidate <= 2048 {
+    let mut shelf_x: u32 = u_zero;
+    let mut shelf_y: u32 = u_zero;
+    let mut shelf_h: u32 = u_zero;
+    let mut fits: bool = true;
+
+    let mut k: u32 = u_zero;
+    while k < total_glyphs {
+      let idx: u32 = memory_load_u32(order_ptr + k * u_four);
+      let cell_w: u32 = get_glyph_cell_w_u32(idx);
+      let cell_h: u32 = get_glyph_cell_h_u32(idx);
+      if cell_w > candidate || cell_h > candidate {
+        fits = false;
+      }
+      if shelf_x + cell_w > candidate {
+        shelf_y = shelf_y + shelf_h;
+        shelf_x = u_zero;
+        shelf_h = u_zero;
+      }
+      if cell_h > shelf_h {
+        shelf_h = cell_h;
+      }
+      shelf_x = shelf_x + cell_w;
+      k = k + u_one;
+    }
+    if shelf_y + shelf_h > candidate {
+      fits = false;
+    }
+    if fits {
+      return candidate;
+    }
+    candidate = candidate * u_two;
+  }
+  return 2048;
+}
+
+export fn sdf_init_atlas_data() -> u32 {
+  let u_zero: u32 = 0;
+  let u_one: u32 = 1;
+  let u_four: u32 = 4;
+  let u_eight: u32 = 8;
+  let u_twelve: u32 = 12;
+  let u_16: u32 = 16;
+  let existing_ptr: u32 = memory_load_u32(196);
+  if existing_ptr != 0 {
+    return existing_ptr;
+  }
+
+  let total_glyphs: u32 = 220;
+
+  // Allocate order buffer for sorted packing
+  let order_ptr: u32 = memory_alloc(total_glyphs * u_four + u_16);
+  let mut i: u32 = u_zero;
+  while i < total_glyphs {
+    memory_store_u32(order_ptr + i * u_four, i);
+    i = i + u_one;
+  }
+
+  // Selection sort glyphs by cell_h descending, then cell_w descending, then idx ascending
+  i = u_zero;
+  while i < total_glyphs {
+    let mut best_j: u32 = i;
+    let mut best_idx: u32 = memory_load_u32(order_ptr + best_j * u_four);
+    let mut best_h: u32 = get_glyph_cell_h_u32(best_idx);
+    let mut best_w: u32 = get_glyph_cell_w_u32(best_idx);
+
+    let mut j: u32 = i + u_one;
+    while j < total_glyphs {
+      let cand_idx: u32 = memory_load_u32(order_ptr + j * u_four);
+      let cand_h: u32 = get_glyph_cell_h_u32(cand_idx);
+      let cand_w: u32 = get_glyph_cell_w_u32(cand_idx);
+
+      let mut is_better: bool = false;
+      if cand_h > best_h {
+        is_better = true;
+      } else {
+        if cand_h == best_h {
+          if cand_w > best_w {
+            is_better = true;
+          } else {
+            if cand_w == best_w && cand_idx < best_idx {
+              is_better = true;
+            }
+          }
+        }
+      }
+
+      if is_better {
+        best_j = j;
+        best_idx = cand_idx;
+        best_h = cand_h;
+        best_w = cand_w;
+      }
+      j = j + u_one;
+    }
+
+    if best_j != i {
+      let temp: u32 = memory_load_u32(order_ptr + i * u_four);
+      memory_store_u32(order_ptr + i * u_four, memory_load_u32(order_ptr + best_j * u_four));
+      memory_store_u32(order_ptr + best_j * u_four, temp);
+    }
+    i = i + u_one;
+  }
+
+  let atlas_dim: u32 = compute_best_atlas_dim(total_glyphs, order_ptr);
+  memory_store_u32(192, atlas_dim);
+
+  // Allocate table ptr for glyph rects (220 glyphs * 16 bytes = 3520 bytes + padding)
+  let table_bytes: u32 = total_glyphs * u_16 + u_16;
+  let raw_table_ptr: u32 = memory_alloc(table_bytes);
+  let rem_t: u32 = raw_table_ptr % u_eight;
+  let mut table_ptr: u32 = raw_table_ptr;
+  if rem_t != 0 {
+    table_ptr = raw_table_ptr + (u_eight - rem_t);
+  }
+  memory_store_u32(224, table_ptr);
+
+  // Allocate table ptr for FreeType glyph metrics (220 glyphs * 32 bytes = 7040 bytes + padding)
+  let metrics_bytes: u32 = total_glyphs * 32 + 32;
+  let raw_metrics_ptr: u32 = memory_alloc(metrics_bytes);
+  let rem_m: u32 = raw_metrics_ptr % u_eight;
+  let mut metrics_ptr: u32 = raw_metrics_ptr;
+  if rem_m != 0 {
+    metrics_ptr = raw_metrics_ptr + (u_eight - rem_m);
+  }
+  memory_store_u32(232, metrics_ptr);
+
+  // atlas_dim * atlas_dim * 4 bytes + 16 bytes alignment padding
+  let atlas_bytes: u32 = atlas_dim * atlas_dim * 4 + 16;
+  let raw_ptr: u32 = memory_alloc(atlas_bytes);
+  let rem: u32 = raw_ptr % u_eight;
+  let mut atlas_ptr: u32 = raw_ptr;
+  if rem != 0 {
+    atlas_ptr = raw_ptr + (u_eight - rem);
+  }
+  memory_store_u32(196, atlas_ptr);
+
+  // Scratch memory for up to 32 segments * 16 bytes = 512 bytes
+  let temp_seg_ptr: u32 = memory_alloc(512);
+
+  // 2D Shelf Rectangle Packing Algorithm across sorted non-sequential glyphs
+  let mut shelf_x: u32 = u_zero;
+  let mut shelf_y: u32 = u_zero;
+  let mut shelf_h: u32 = u_zero;
+
+  let mut k: u32 = u_zero;
+  while k < total_glyphs {
+    let idx: u32 = memory_load_u32(order_ptr + k * u_four);
+    let cell_w: u32 = get_glyph_cell_w_u32(idx);
+    let cell_h: u32 = get_glyph_cell_h_u32(idx);
+
+    if shelf_x + cell_w > atlas_dim {
+      shelf_y = shelf_y + shelf_h;
+      shelf_x = u_zero;
+      shelf_h = u_zero;
+    }
+
+    let cell_x: u32 = shelf_x;
+    let cell_y: u32 = shelf_y;
+
+    if cell_h > shelf_h {
+      shelf_h = cell_h;
+    }
+    shelf_x = shelf_x + cell_w;
+
+    // Store packed rect table at table_ptr + idx * 16 (indexed by original idx)
+    let table_entry: u32 = table_ptr + idx * u_16;
+    memory_store_u32(table_entry, cell_x);
+    memory_store_u32(table_entry + u_four, cell_y);
+    memory_store_u32(table_entry + u_eight, cell_w);
+    memory_store_u32(table_entry + u_twelve, cell_h);
+
+    // Store FreeType glyph metrics table at metrics_ptr + idx * 32
+    let metrics_entry: u32 = metrics_ptr + idx * 32;
+    sdf_get_glyph_metrics(idx, metrics_entry);
+
+    // Rasterize character cell MSDF into atlas
+    sdf_render_char_cell(idx, atlas_ptr, atlas_dim, cell_x, cell_y, cell_w, cell_h, temp_seg_ptr);
+    k = k + u_one;
+  }
+
+  return atlas_ptr;
+}
+
+export fn sdf_get_metrics_table_ptr() -> u32 {
+  let existing_ptr: u32 = memory_load_u32(232);
+  if existing_ptr == 0 {
+    sdf_init_atlas_data();
+    return memory_load_u32(232);
+  }
+  return existing_ptr;
+}
+
+export fn sdf_get_table_ptr() -> u32 {
+  let existing_ptr: u32 = memory_load_u32(224);
+  if existing_ptr == 0 {
+    sdf_init_atlas_data();
+    return memory_load_u32(224);
+  }
+  return existing_ptr;
+}
+
+export fn sdf_get_atlas_ptr() -> u32 {
+  let existing_ptr: u32 = memory_load_u32(196);
+  if existing_ptr == 0 {
+    return sdf_init_atlas_data();
+  }
+  return existing_ptr;
+}
+
+export fn sdf_clear_text_vertices() -> unit {
+  let u_zero: u32 = 0;
+  memory_store_u32(200, u_zero);
+}
+
+export fn sdf_get_vertex_buffer_ptr() -> u32 {
+  let existing_ptr: u32 = memory_load_u32(204);
+  if existing_ptr != 0 {
+    return existing_ptr;
+  }
+  // 1048576 floats * 8 bytes (f64) = 8,388,608 bytes + 16 bytes alignment padding
+  let raw_ptr: u32 = memory_alloc(8388624);
+  let u_eight: u32 = 8;
+  let rem: u32 = raw_ptr % u_eight;
+  let mut aligned_ptr: u32 = raw_ptr;
+  if rem != 0 {
+    aligned_ptr = raw_ptr + (u_eight - rem);
+  }
+  memory_store_u32(204, aligned_ptr);
+  return aligned_ptr;
+}
+
+export fn sdf_get_vertex_float_count() -> u32 {
+  return memory_load_u32(200);
+}
+
+export fn sdf_set_char_spacing(spacing: f64) -> unit {
+  memory_store_f64(208, spacing);
+}
+
+export fn sdf_get_char_spacing() -> f64 {
+  return memory_load_f64(208);
+}
+
+export fn sdf_set_line_height(line_height: f64) -> unit {
+  memory_store_f64(216, line_height);
+}
+
+export fn sdf_get_line_height() -> f64 {
+  let val: f64 = memory_load_f64(216);
+  if val == f64_from_u32(0) {
+    return f64_from_u32(1);
+  }
+  return val;
+}
+
+
+
+
+export fn sdf_get_font_ascent() -> u32 {
+  return 18;
+}
+
+export fn sdf_get_font_descent() -> u32 {
+  return 6;
+}
+
+export fn sdf_get_font_linegap() -> u32 {
+  return 4;
+}
+
+export fn sdf_get_font_internal_leading() -> u32 {
+  return 2;
+}
+
+export fn sdf_get_font_external_leading() -> u32 {
+  return 4;
+}
+
+export fn get_glyph_right_bearing_i32(idx: u32) -> i32 {
+  if idx == 0 { return 0; }
+  let adv: u32 = get_glyph_advance_u32(idx);
+  let bx: i32 = get_glyph_hori_bearing_x_i32(idx);
+  let w: u32 = get_glyph_width_u32(idx);
+  let u_zero: u32 = 0;
+  let u_two: u32 = 2;
+  let u_four: u32 = 4;
+  let u_six: u32 = 6;
+  let u_eight: u32 = 8;
+  let u_ten: u32 = 10;
+  let u_12: u32 = 12;
+  let mut bx_u32: u32 = u_zero;
+  if bx == 2 { bx_u32 = u_two; }
+  if bx == 4 { bx_u32 = u_four; }
+  if bx == 6 { bx_u32 = u_six; }
+  if bx == 8 { bx_u32 = u_eight; }
+  if bx == 10 { bx_u32 = u_ten; }
+  let used: u32 = bx_u32 + w;
+  if adv >= used {
+    let diff: u32 = adv - used;
+    if diff == u_two { return 2; }
+    if diff == u_four { return 4; }
+    if diff == u_six { return 6; }
+    if diff == u_eight { return 8; }
+    if diff == u_ten { return 10; }
+    if diff == u_12 { return 12; }
+    return 0;
+  }
+  return 0;
+}
+
+export fn get_glyph_center_x_u32(idx: u32) -> u32 {
+  if idx == 0 { return 128; }
+  if idx == 1 { return 80; }
+  if idx == 2 { return 88; }
+  if idx == 3 { return 96; }
+  if idx == 4 { return 96; }
+  if idx == 5 { return 96; }
+  if idx == 6 { return 118; }
+  if idx == 7 { return 68; }
+  if idx == 8 { return 67; }
+  if idx == 9 { return 94; }
+  if idx == 10 { return 96; }
+  if idx == 11 { return 104; }
+  if idx == 12 { return 66; }
+  if idx == 13 { return 88; }
+  if idx == 14 { return 72; }
+  if idx == 15 { return 80; }
+  if idx == 16 { return 96; }
+  if idx == 17 { return 86; }
+  if idx == 18 { return 96; }
+  if idx == 19 { return 97; }
+  if idx == 20 { return 98; }
+  if idx == 21 { return 99; }
+  if idx == 22 { return 96; }
+  if idx == 23 { return 96; }
+  if idx == 24 { return 96; }
+  if idx == 25 { return 96; }
+  if idx == 26 { return 76; }
+  if idx == 27 { return 70; }
+  if idx == 28 { return 94; }
+  if idx == 29 { return 96; }
+  if idx == 30 { return 94; }
+  if idx == 31 { return 96; }
+  if idx == 32 { return 106; }
+  if idx == 33 { return 112; }
+  if idx == 34 { return 100; }
+  if idx == 35 { return 105; }
+  if idx == 36 { return 99; }
+  if idx == 37 { return 100; }
+  if idx == 38 { return 100; }
+  if idx == 39 { return 105; }
+  if idx == 40 { return 108; }
+  if idx == 41 { return 80; }
+  if idx == 42 { return 76; }
+  if idx == 43 { return 104; }
+  if idx == 44 { return 100; }
+  if idx == 45 { return 120; }
+  if idx == 46 { return 108; }
+  if idx == 47 { return 116; }
+  if idx == 48 { return 96; }
+  if idx == 49 { return 116; }
+  if idx == 50 { return 102; }
+  if idx == 51 { return 96; }
+  if idx == 52 { return 108; }
+  if idx == 53 { return 108; }
+  if idx == 54 { return 116; }
+  if idx == 55 { return 116; }
+  if idx == 56 { return 108; }
+  if idx == 57 { return 116; }
+  if idx == 58 { return 102; }
+  if idx == 59 { return 78; }
+  if idx == 60 { return 80; }
+  if idx == 61 { return 78; }
+  if idx == 62 { return 92; }
+  if idx == 63 { return 96; }
+  if idx == 64 { return 76; }
+  if idx == 65 { return 96; }
+  if idx == 66 { return 96; }
+  if idx == 67 { return 91; }
+  if idx == 68 { return 96; }
+  if idx == 69 { return 96; }
+  if idx == 70 { return 88; }
+  if idx == 71 { return 96; }
+  if idx == 72 { return 92; }
+  if idx == 73 { return 76; }
+  if idx == 74 { return 60; }
+  if idx == 75 { return 94; }
+  if idx == 76 { return 76; }
+  if idx == 77 { return 104; }
+  if idx == 78 { return 92; }
+  if idx == 79 { return 96; }
+  if idx == 80 { return 96; }
+  if idx == 81 { return 96; }
+  if idx == 82 { return 88; }
+  if idx == 83 { return 96; }
+  if idx == 84 { return 76; }
+  if idx == 85 { return 92; }
+  if idx == 86 { return 96; }
+  if idx == 87 { return 96; }
+  if idx == 88 { return 96; }
+  if idx == 89 { return 96; }
+  if idx == 90 { return 92; }
+  if idx == 91 { return 84; }
+  if idx == 92 { return 68; }
+  if idx == 93 { return 84; }
+  if idx == 94 { return 95; }
+  if idx == 95 { return 96; }
+  if idx == 96 { return 104; }
+  if idx == 97 { return 100; }
+  if idx == 98 { return 104; }
+  if idx == 99 { return 100; }
+  if idx == 100 { return 128; }
+  if idx == 101 { return 99; }
+  if idx == 102 { return 104; }
+  if idx == 103 { return 100; }
+  if idx == 104 { return 100; }
+  if idx == 105 { return 110; }
+  if idx == 106 { return 112; }
+  if idx == 107 { return 80; }
+  if idx == 108 { return 96; }
+  if idx == 109 { return 96; }
+  if idx == 110 { return 112; }
+  if idx == 111 { return 100; }
+  if idx == 112 { return 120; }
+  if idx == 113 { return 96; }
+  if idx == 114 { return 120; }
+  if idx == 115 { return 96; }
+  if idx == 116 { return 120; }
+  if idx == 117 { return 120; }
+  if idx == 118 { return 88; }
+  if idx == 119 { return 88; }
+  if idx == 120 { return 96; }
+  if idx == 121 { return 120; }
+  if idx == 122 { return 104; }
+  if idx == 123 { return 112; }
+  if idx == 124 { return 104; }
+  if idx == 125 { return 112; }
+  if idx == 126 { return 116; }
+  if idx == 127 { return 104; }
+  if idx == 128 { return 104; }
+  if idx == 129 { return 92; }
+  if idx == 130 { return 88; }
+  if idx == 131 { return 89; }
+  if idx == 132 { return 103; }
+  if idx == 133 { return 84; }
+  if idx == 134 { return 96; }
+  if idx == 135 { return 100; }
+  if idx == 136 { return 100; }
+  if idx == 137 { return 92; }
+  if idx == 138 { return 104; }
+  if idx == 139 { return 99; }
+  if idx == 140 { return 128; }
+  if idx == 141 { return 112; }
+  if idx == 142 { return 112; }
+  if idx == 143 { return 100; }
+  if idx == 144 { return 96; }
+  if idx == 145 { return 96; }
+  if idx == 146 { return 92; }
+  if idx == 147 { return 96; }
+  if idx == 148 { return 96; }
+  if idx == 149 { return 96; }
+  if idx == 150 { return 96; }
+  if idx == 151 { return 78; }
+  if idx == 152 { return 96; }
+  if idx == 153 { return 92; }
+  if idx == 154 { return 92; }
+  if idx == 155 { return 91; }
+  if idx == 156 { return 84; }
+  return 128;
+}
+
+export fn get_glyph_center_y_u32(idx: u32) -> u32 {
+  if idx == 0 { return 128; }
+  if idx == 1 { return 118; }
+  if idx == 2 { return 80; }
+  if idx == 3 { return 128; }
+  if idx == 4 { return 120; }
+  if idx == 5 { return 120; }
+  if idx == 6 { return 126; }
+  if idx == 7 { return 80; }
+  if idx == 8 { return 120; }
+  if idx == 9 { return 120; }
+  if idx == 10 { return 128; }
+  if idx == 11 { return 128; }
+  if idx == 12 { return 178; }
+  if idx == 13 { return 132; }
+  if idx == 14 { return 176; }
+  if idx == 15 { return 120; }
+  if idx == 16 { return 128; }
+  if idx == 17 { return 128; }
+  if idx == 18 { return 118; }
+  if idx == 19 { return 128; }
+  if idx == 20 { return 124; }
+  if idx == 21 { return 127; }
+  if idx == 22 { return 122; }
+  if idx == 23 { return 128; }
+  if idx == 24 { return 122; }
+  if idx == 25 { return 118; }
+  if idx == 26 { return 146; }
+  if idx == 27 { return 152; }
+  if idx == 28 { return 128; }
+  if idx == 29 { return 128; }
+  if idx == 30 { return 128; }
+  if idx == 31 { return 118; }
+  if idx == 32 { return 124; }
+  if idx == 33 { return 124; }
+  if idx == 34 { return 120; }
+  if idx == 35 { return 120; }
+  if idx == 36 { return 120; }
+  if idx == 37 { return 120; }
+  if idx == 38 { return 120; }
+  if idx == 39 { return 120; }
+  if idx == 40 { return 120; }
+  if idx == 41 { return 120; }
+  if idx == 42 { return 116; }
+  if idx == 43 { return 120; }
+  if idx == 44 { return 120; }
+  if idx == 45 { return 120; }
+  if idx == 46 { return 120; }
+  if idx == 47 { return 120; }
+  if idx == 48 { return 118; }
+  if idx == 49 { return 126; }
+  if idx == 50 { return 120; }
+  if idx == 51 { return 120; }
+  if idx == 52 { return 120; }
+  if idx == 53 { return 115; }
+  if idx == 54 { return 120; }
+  if idx == 55 { return 120; }
+  if idx == 56 { return 120; }
+  if idx == 57 { return 120; }
+  if idx == 58 { return 120; }
+  if idx == 59 { return 120; }
+  if idx == 60 { return 120; }
+  if idx == 61 { return 120; }
+  if idx == 62 { return 84; }
+  if idx == 63 { return 192; }
+  if idx == 64 { return 76; }
+  if idx == 65 { return 144; }
+  if idx == 66 { return 118; }
+  if idx == 67 { return 140; }
+  if idx == 68 { return 118; }
+  if idx == 69 { return 142; }
+  if idx == 70 { return 118; }
+  if idx == 71 { return 168; }
+  if idx == 72 { return 118; }
+  if idx == 73 { return 126; }
+  if idx == 74 { return 143; }
+  if idx == 75 { return 118; }
+  if idx == 76 { return 118; }
+  if idx == 77 { return 144; }
+  if idx == 78 { return 144; }
+  if idx == 79 { return 140; }
+  if idx == 80 { return 166; }
+  if idx == 81 { return 166; }
+  if idx == 82 { return 144; }
+  if idx == 83 { return 144; }
+  if idx == 84 { return 125; }
+  if idx == 85 { return 144; }
+  if idx == 86 { return 144; }
+  if idx == 87 { return 144; }
+  if idx == 88 { return 144; }
+  if idx == 89 { return 166; }
+  if idx == 90 { return 144; }
+  if idx == 91 { return 120; }
+  if idx == 92 { return 120; }
+  if idx == 93 { return 120; }
+  if idx == 94 { return 128; }
+  if idx == 95 { return 120; }
+  if idx == 96 { return 116; }
+  if idx == 97 { return 124; }
+  if idx == 98 { return 128; }
+  if idx == 99 { return 120; }
+  if idx == 100 { return 144; }
+  if idx == 101 { return 130; }
+  if idx == 102 { return 128; }
+  if idx == 103 { return 132; }
+  if idx == 104 { return 132; }
+  if idx == 105 { return 120; }
+  if idx == 106 { return 120; }
+  if idx == 107 { return 120; }
+  if idx == 108 { return 128; }
+  if idx == 109 { return 116; }
+  if idx == 110 { return 120; }
+  if idx == 111 { return 128; }
+  if idx == 112 { return 128; }
+  if idx == 113 { return 120; }
+  if idx == 114 { return 128; }
+  if idx == 115 { return 120; }
+  if idx == 116 { return 128; }
+  if idx == 117 { return 128; }
+  if idx == 118 { return 80; }
+  if idx == 119 { return 120; }
+  if idx == 120 { return 176; }
+  if idx == 121 { return 128; }
+  if idx == 122 { return 128; }
+  if idx == 123 { return 120; }
+  if idx == 124 { return 128; }
+  if idx == 125 { return 116; }
+  if idx == 126 { return 124; }
+  if idx == 127 { return 128; }
+  if idx == 128 { return 128; }
+  if idx == 129 { return 162; }
+  if idx == 130 { return 104; }
+  if idx == 131 { return 97; }
+  if idx == 132 { return 140; }
+  if idx == 133 { return 136; }
+  if idx == 134 { return 162; }
+  if idx == 135 { return 114; }
+  if idx == 136 { return 120; }
+  if idx == 137 { return 162; }
+  if idx == 138 { return 144; }
+  if idx == 139 { return 140; }
+  if idx == 140 { return 152; }
+  if idx == 141 { return 120; }
+  if idx == 142 { return 122; }
+  if idx == 143 { return 124; }
+  if idx == 144 { return 124; }
+  if idx == 145 { return 122; }
+  if idx == 146 { return 124; }
+  if idx == 147 { return 120; }
+  if idx == 148 { return 120; }
+  if idx == 149 { return 120; }
+  if idx == 150 { return 122; }
+  if idx == 151 { return 124; }
+  if idx == 152 { return 120; }
+  if idx == 153 { return 122; }
+  if idx == 154 { return 122; }
+  if idx == 155 { return 158; }
+  if idx == 156 { return 120; }
+  return 128;
+}
+
+
+// ============================================================================
+// FreeType Glyph Metrics Suite (https://freetype.org/freetype2/docs/glyphs/glyphs-3.html)
+// Captures full FreeType metrics: width, height, horiBearingX, horiBearingY,
+// horiAdvance, vertBearingX, vertBearingY, vertAdvance, and BBox (minX, minY, maxX, maxY).
+// All glyph bounds and bearing dimensions are aligned to multiples of 2 on X & Y planes.
+// ============================================================================
+
+export fn get_glyph_hori_advance_u32(idx: u32) -> u32 {
+  return get_glyph_advance_u32(idx);
+}
+
+export fn get_glyph_width_u32(idx: u32) -> u32 {
+  if idx == 0 { return 0; }
+  let adv: u32 = get_glyph_advance_u32(idx);
+  let u_two: u32 = 2;
+  let u_four: u32 = 4;
+  let u_one: u32 = 1;
+  if adv <= u_four {
+    return u_two;
+  }
+  let mut w: u32 = adv - u_two;
+  if is_narrow_glyph_idx(idx) {
+    if adv > u_four {
+      w = adv - u_four;
+    }
+  }
+  let rem: u32 = w % u_two;
+  if rem != 0 {
+    w = w + u_one;
+  }
+  return w;
+}
+
+export fn get_glyph_height_u32(idx: u32) -> u32 {
+  if idx == 0 { return 0; }
+  let u_two: u32 = 2;
+  let u_four: u32 = 4;
+  let u_12: u32 = 12;
+  let u_16: u32 = 16;
+  let u_18: u32 = 18;
+  let u_24: u32 = 24;
+  let u_one: u32 = 1;
+  let mut h: u32 = u_12;
+  if (idx >= 16 && idx <= 25) || (idx >= 33 && idx <= 58) || idx == 66 || idx == 68 || idx == 70 || idx == 72 || idx == 75 || idx == 76 {
+    h = u_18;
+  } else {
+    if idx == 71 || idx == 80 || idx == 81 || idx == 89 || (idx >= 96 && idx <= 156) {
+      if idx == 107 {
+        h = u_24;
+      } else {
+        if idx == 118 || idx == 119 || idx == 121 || idx == 122 || idx == 130 || idx == 131 {
+          h = u_12;
+        } else {
+          h = u_18;
+        }
+      }
+    } else {
+      if idx == 74 {
+        h = u_24;
+      } else {
+        if idx == 12 || idx == 14 {
+          h = u_four;
+        } else {
+          if idx == 26 || idx == 27 {
+            h = u_12;
+          } else {
+            if idx == 73 || idx == 84 {
+              h = u_16;
+            }
+          }
+        }
+      }
+    }
+  }
+  let rem: u32 = h % u_two;
+  if rem != 0 {
+    h = h + u_one;
+  }
+  return h;
+}
+
+export fn get_glyph_hori_bearing_x_i32(idx: u32) -> i32 {
+  if idx == 0 { return 0; }
+  let adv: u32 = get_glyph_advance_u32(idx);
+  let w: u32 = get_glyph_width_u32(idx);
+  let u_two: u32 = 2;
+  let u_one: u32 = 1;
+  if adv >= w {
+    let diff: u32 = adv - w;
+    let bearing: u32 = diff / u_two;
+    let rem: u32 = bearing % u_two;
+    let mut aligned: u32 = bearing;
+    if rem != 0 {
+      aligned = bearing - u_one;
+    }
+    if aligned == 2 { return 2; }
+    if aligned == 4 { return 4; }
+    if aligned == 6 { return 6; }
+    if aligned == 8 { return 8; }
+    if aligned == 10 { return 10; }
+    return 0;
+  }
+  return 0;
+}
+
+export fn get_glyph_hori_bearing_y_i32(idx: u32) -> i32 {
+  if idx == 0 { return 0; }
+  let h: u32 = get_glyph_height_u32(idx);
+  if h == 24 { return 24; }
+  if h == 18 { return 18; }
+  if h == 16 { return 16; }
+  if h == 12 { return 12; }
+  if h == 4 { return 4; }
+  if h == 2 { return 2; }
+  return 12;
+}
+
+export fn get_glyph_vert_advance_u32(idx: u32) -> u32 {
+  let u_24: u32 = 24;
+  return u_24;
+}
+
+export fn get_glyph_vert_bearing_x_u32(idx: u32) -> u32 {
+  let w: u32 = get_glyph_width_u32(idx);
+  let u_two: u32 = 2;
+  let u_one: u32 = 1;
+  let half: u32 = w / u_two;
+  let rem: u32 = half % u_two;
+  let mut aligned: u32 = half;
+  if rem != 0 {
+    aligned = half + u_one;
+  }
+  return aligned;
+}
+
+export fn get_glyph_vert_bearing_x_i32(idx: u32) -> i32 {
+  let aligned: u32 = get_glyph_vert_bearing_x_u32(idx);
+  if aligned == 2 { return -2; }
+  if aligned == 4 { return -4; }
+  if aligned == 6 { return -6; }
+  if aligned == 8 { return -8; }
+  if aligned == 10 { return -10; }
+  if aligned == 12 { return -12; }
+  if aligned == 14 { return -14; }
+  if aligned == 16 { return -16; }
+  if aligned == 18 { return -18; }
+  if aligned == 20 { return -20; }
+  if aligned == 22 { return -22; }
+  if aligned == 24 { return -24; }
+  return 0;
+}
+
+export fn get_glyph_vert_bearing_y_i32(idx: u32) -> i32 {
+  let h: u32 = get_glyph_height_u32(idx);
+  let u_two: u32 = 2;
+  let u_one: u32 = 1;
+  let u_24: u32 = 24;
+  if u_24 >= h {
+    let diff: u32 = u_24 - h;
+    let bearing: u32 = diff / u_two;
+    let rem: u32 = bearing % u_two;
+    let mut aligned: u32 = bearing;
+    if rem != 0 {
+      aligned = bearing + u_one;
+    }
+    if aligned == 2 { return 2; }
+    if aligned == 4 { return 4; }
+    if aligned == 6 { return 6; }
+    if aligned == 8 { return 8; }
+    if aligned == 10 { return 10; }
+    if aligned == 12 { return 12; }
+    return 0;
+  }
+  return 0;
+}
+
+export fn get_glyph_bbox_min_x_i32(idx: u32) -> i32 {
+  return get_glyph_hori_bearing_x_i32(idx);
+}
+
+export fn get_glyph_bbox_max_x_i32(idx: u32) -> i32 {
+  let bx: i32 = get_glyph_hori_bearing_x_i32(idx);
+  let w: u32 = get_glyph_width_u32(idx);
+  if w == 2 { return bx + 2; }
+  if w == 4 { return bx + 4; }
+  if w == 6 { return bx + 6; }
+  if w == 8 { return bx + 8; }
+  if w == 10 { return bx + 10; }
+  if w == 12 { return bx + 12; }
+  if w == 14 { return bx + 14; }
+  if w == 16 { return bx + 16; }
+  if w == 18 { return bx + 18; }
+  if w == 20 { return bx + 20; }
+  if w == 22 { return bx + 22; }
+  if w == 24 { return bx + 24; }
+  if w == 26 { return bx + 26; }
+  return bx;
+}
+
+export fn get_glyph_bbox_min_y_i32(idx: u32) -> i32 {
+  let by: i32 = get_glyph_hori_bearing_y_i32(idx);
+  let h: u32 = get_glyph_height_u32(idx);
+  if h == 2 { return by - 2; }
+  if h == 4 { return by - 4; }
+  if h == 6 { return by - 6; }
+  if h == 8 { return by - 8; }
+  if h == 10 { return by - 10; }
+  if h == 12 { return by - 12; }
+  if h == 14 { return by - 14; }
+  if h == 16 { return by - 16; }
+  if h == 18 { return by - 18; }
+  if h == 20 { return by - 20; }
+  if h == 22 { return by - 22; }
+  if h == 24 { return by - 24; }
+  return by;
+}
+
+export fn get_glyph_bbox_max_y_i32(idx: u32) -> i32 {
+  return get_glyph_hori_bearing_y_i32(idx);
+}
+
+export fn sdf_get_glyph_metrics(idx: u32, out_ptr: u32) -> unit {
+  let w: u32 = get_glyph_width_u32(idx);
+  let h: u32 = get_glyph_height_u32(idx);
+  let adv: u32 = get_glyph_hori_advance_u32(idx);
+  let vadv: u32 = get_glyph_vert_advance_u32(idx);
+
+  let u_zero: u32 = 0;
+  let u_two: u32 = 2;
+  let u_four: u32 = 4;
+  let u_six: u32 = 6;
+  let u_eight: u32 = 8;
+  let u_ten: u32 = 10;
+  let u_twelve: u32 = 12;
+  let u_16: u32 = 16;
+  let u_18: u32 = 18;
+  let u_20: u32 = 20;
+  let u_24: u32 = 24;
+  let u_28: u32 = 28;
+
+  memory_store_u32(out_ptr, w);
+  memory_store_u32(out_ptr + u_four, h);
+
+  let bx: i32 = get_glyph_hori_bearing_x_i32(idx);
+  let mut bx_u32: u32 = u_zero;
+  if bx == 2 { bx_u32 = u_two; }
+  if bx == 4 { bx_u32 = u_four; }
+  if bx == 6 { bx_u32 = u_six; }
+  if bx == 8 { bx_u32 = u_eight; }
+  memory_store_u32(out_ptr + u_eight, bx_u32);
+
+  let by: i32 = get_glyph_hori_bearing_y_i32(idx);
+  let mut by_u32: u32 = u_zero;
+  if by == 24 { by_u32 = u_24; }
+  if by == 18 { by_u32 = u_18; }
+  if by == 16 { by_u32 = u_16; }
+  if by == 12 { by_u32 = u_twelve; }
+  if by == 4 { by_u32 = u_four; }
+  if by == 2 { by_u32 = u_two; }
+  memory_store_u32(out_ptr + u_twelve, by_u32);
+
+  memory_store_u32(out_ptr + u_16, adv);
+
+  let vbx_u32: u32 = get_glyph_vert_bearing_x_u32(idx);
+  memory_store_u32(out_ptr + u_20, vbx_u32);
+
+  let vby: i32 = get_glyph_vert_bearing_y_i32(idx);
+  let mut vby_u32: u32 = u_zero;
+  if vby == 2 { vby_u32 = u_two; }
+  if vby == 4 { vby_u32 = u_four; }
+  if vby == 6 { vby_u32 = u_six; }
+  if vby == 8 { vby_u32 = u_eight; }
+  if vby == 10 { vby_u32 = u_ten; }
+  if vby == 12 { vby_u32 = u_twelve; }
+  memory_store_u32(out_ptr + u_24, vby_u32);
+
+  memory_store_u32(out_ptr + u_28, vadv);
+}
+
+export fn get_glyph_advance_u32(idx: u32) -> u32 {
+  if idx == 0 { return 7; }
+  if idx == 1 { return 6; }
+  if idx == 2 { return 7; }
+  if idx == 3 { return 17; }
+  if idx == 4 { return 14; }
+  if idx == 5 { return 21; }
+  if idx == 6 { return 17; }
+  if idx == 7 { return 4; }
+  if idx == 8 { return 6; }
+  if idx == 9 { return 6; }
+  if idx == 10 { return 9; }
+  if idx == 11 { return 13; }
+  if idx == 12 { return 5; }
+  if idx == 13 { return 9; }
+  if idx == 14 { return 5; }
+  if idx == 15 { return 11; }
+  if idx == 16 { return 14; }
+  if idx == 17 { return 9; }
+  if idx == 18 { return 14; }
+  if idx == 19 { return 14; }
+  if idx == 20 { return 16; }
+  if idx == 21 { return 15; }
+  if idx == 22 { return 14; }
+  if idx == 23 { return 14; }
+  if idx == 24 { return 14; }
+  if idx == 25 { return 14; }
+  if idx == 26 { return 5; }
+  if idx == 27 { return 5; }
+  if idx == 28 { return 13; }
+  if idx == 29 { return 12; }
+  if idx == 30 { return 13; }
+  if idx == 31 { return 13; }
+  if idx == 32 { return 26; }
+  if idx == 33 { return 17; }
+  if idx == 34 { return 17; }
+  if idx == 35 { return 18; }
+  if idx == 36 { return 18; }
+  if idx == 37 { return 17; }
+  if idx == 38 { return 15; }
+  if idx == 39 { return 18; }
+  if idx == 40 { return 20; }
+  if idx == 41 { return 7; }
+  if idx == 42 { return 15; }
+  if idx == 43 { return 16; }
+  if idx == 44 { return 15; }
+  if idx == 45 { return 24; }
+  if idx == 46 { return 20; }
+  if idx == 47 { return 22; }
+  if idx == 48 { return 15; }
+  if idx == 49 { return 22; }
+  if idx == 50 { return 15; }
+  if idx == 51 { return 16; }
+  if idx == 52 { return 16; }
+  if idx == 53 { return 20; }
+  if idx == 54 { return 17; }
+  if idx == 55 { return 23; }
+  if idx == 56 { return 17; }
+  if idx == 57 { return 16; }
+  if idx == 58 { return 17; }
+  if idx == 59 { return 7; }
+  if idx == 60 { return 11; }
+  if idx == 61 { return 7; }
+  if idx == 62 { return 11; }
+  if idx == 63 { return 11; }
+  if idx == 64 { return 7; }
+  if idx == 65 { return 16; }
+  if idx == 66 { return 17; }
+  if idx == 67 { return 14; }
+  if idx == 68 { return 17; }
+  if idx == 69 { return 15; }
+  if idx == 70 { return 9; }
+  if idx == 71 { return 16; }
+  if idx == 72 { return 16; }
+  if idx == 73 { return 7; }
+  if idx == 74 { return 7; }
+  if idx == 75 { return 14; }
+  if idx == 76 { return 7; }
+  if idx == 77 { return 23; }
+  if idx == 78 { return 16; }
+  if idx == 79 { return 16; }
+  if idx == 80 { return 17; }
+  if idx == 81 { return 17; }
+  if idx == 82 { return 11; }
+  if idx == 83 { return 13; }
+  if idx == 84 { return 10; }
+  if idx == 85 { return 16; }
+  if idx == 86 { return 13; }
+  if idx == 87 { return 18; }
+  if idx == 88 { return 13; }
+  if idx == 89 { return 13; }
+  if idx == 90 { return 13; }
+  if idx == 91 { return 9; }
+  if idx == 92 { return 9; }
+  if idx == 93 { return 9; }
+  if idx == 94 { return 11; }
+  if idx == 95 { return 14; }
+  if idx == 96 { return 14; }
+  if idx == 97 { return 12; }
+  if idx == 98 { return 12; }
+  if idx == 99 { return 20; }
+  if idx == 100 { return 20; }
+  if idx == 101 { return 12; }
+  if idx == 102 { return 12; }
+  if idx == 103 { return 14; }
+  if idx == 104 { return 14; }
+  if idx == 105 { return 18; }
+  if idx == 106 { return 18; }
+  if idx == 107 { return 14; }
+  if idx == 108 { return 14; }
+  if idx == 109 { return 16; }
+  if idx == 110 { return 16; }
+  if idx == 111 { return 14; }
+  if idx == 112 { return 24; }
+  if idx == 113 { return 12; }
+  if idx == 114 { return 24; }
+  if idx == 115 { return 12; }
+  if idx == 116 { return 24; }
+  if idx == 117 { return 22; }
+  if idx == 118 { return 12; }
+  if idx == 119 { return 10; }
+  if idx == 120 { return 18; }
+  if idx == 121 { return 24; }
+  if idx == 122 { return 10; }
+  if idx == 123 { return 18; }
+  if idx == 124 { return 14; }
+  if idx == 125 { return 24; }
+  if idx == 126 { return 24; }
+  if idx == 127 { return 22; }
+  if idx == 128 { return 22; }
+  if idx == 129 { return 16; }
+  if idx == 130 { return 10; }
+  if idx == 131 { return 10; }
+  if idx == 132 { return 16; }
+  if idx == 133 { return 17; }
+  if idx == 134 { return 13; }
+  if idx == 135 { return 16; }
+  if idx == 136 { return 14; }
+  if idx == 137 { return 16; }
+  if idx == 138 { return 17; }
+  if idx == 139 { return 16; }
+  if idx == 140 { return 18; }
+  if idx == 141 { return 17; }
+  if idx == 142 { return 20; }
+  if idx == 143 { return 16; }
+  if idx == 144 { return 16; }
+  if idx == 145 { return 16; }
+  if idx == 146 { return 16; }
+  if idx == 147 { return 15; }
+  if idx == 148 { return 15; }
+  if idx == 149 { return 15; }
+  if idx == 150 { return 16; }
+  if idx == 151 { return 7; }
+  if idx == 152 { return 16; }
+  if idx == 153 { return 16; }
+  if idx == 154 { return 16; }
+  if idx == 155 { return 14; }
+  if idx == 156 { return 16; }
+  return 12;
+}
+
+export fn sdf_get_char_advance_u32(code: i32) -> u32 {
+  if code == 32 { return 7; }
+  let idx: u32 = char_code_to_idx(code);
+  return get_glyph_hori_advance_u32(idx);
+}
+
+
+fn is_kerning_negative(c1: i32, c2: i32) -> bool {
+  if c1 == 65 { // 'A'
+    if c2 == 86 || c2 == 87 || c2 == 89 || c2 == 118 || c2 == 119 || c2 == 121 { return true; } // V, W, Y, v, w, y
+  }
+  if c1 == 84 { // 'T'
+    if c2 == 97 || c2 == 101 || c2 == 111 || c2 == 117 || c2 == 114 || c2 == 121 { return true; } // a, e, o, u, r, y
+  }
+  if c1 == 86 || c1 == 87 || c1 == 89 { // 'V', 'W', 'Y'
+    if c2 == 65 || c2 == 97 || c2 == 101 || c2 == 111 { return true; } // A, a, e, o
+  }
+  if c1 == 70 || c1 == 80 { // 'F', 'P'
+    if c2 == 65 || c2 == 97 || c2 == 101 || c2 == 111 { return true; } // A, a, e, o
+  }
+  return false;
+}
+
+fn is_ligature_arrow_right(c1: i32, c2: i32) -> bool {
+  return c1 == 45 && c2 == 62; // "->"
+}
+
+fn is_ligature_arrow_left(c1: i32, c2: i32) -> bool {
+  return c1 == 60 && c2 == 45; // "<-"
+}
+
+fn is_ligature_not_equal(c1: i32, c2: i32) -> bool {
+  return c1 == 33 && c2 == 61; // "!="
+}
+
+fn is_ligature_arrow_double(c1: i32, c2: i32) -> bool {
+  return c1 == 61 && c2 == 62; // "=>"
+}
+
+fn is_ligature_less_equal(c1: i32, c2: i32) -> bool {
+  return c1 == 60 && c2 == 61; // "<="
+}
+
+fn is_ligature_greater_equal(c1: i32, c2: i32) -> bool {
+  return c1 == 62 && c2 == 61; // ">="
+}
+
+fn get_kerning_adj(c1: i32, c2: i32, font_size: f64, base_size: f64) -> f64 {
+  let kern: f64 = sdf_get_kerning(c1, c2);
+  return (kern * font_size) / base_size;
+}
+
+export fn is_multi_color_emoji(code: i32) -> bool {
+  if code == 9889 || code == 9733 || code == 10003 || code == 10060 || code == 9888 || code == 8505 { return true; } // ⚡, ★, ✓, ❌, ⚠️, ℹ️
+  if code == 128640 || code == 128161 || code == 9881 || code == 10084 || code == 128293 { return true; } // 🚀, 💡, ⚙️, ❤️, 🔥
+  if code == 127752 || code == 127912 || code == 128512 || code == 128077 || code == 128170 { return true; } // 🌈, 🎨, 😀, 👍, 💪
+  if code == 128187 || code == 129302 || code == 127918 || code == 128269 || code == 128274 || code == 128275 { return true; } // 💻, 🤖, 🎮, 🔍, 🔒, 🔓
+  if code >= 127744 && code <= 129535 { return true; }
+  return false;
+}
+
+fn is_ligature_ellipsis(c1: i32, c2: i32, c3: i32) -> bool {
+  return c1 == 46 && c2 == 46 && c3 == 46; // "..."
+}
+
+export fn sdf_get_kerning(c1: i32, c2: i32) -> f64 {
+  if is_kerning_negative(c1, c2) {
+    return f64_from_u32(0) - f64_from_u32(1);
+  }
+  return f64_from_u32(0);
+}
+
+export fn sdf_measure_text(text: string, font_size: f64) -> f64 {
+  let len: i32 = string_length(text);
+  if len == 0 {
+    return f64_from_u32(0);
+  }
+  let base_size: f64 = f64_from_u32(24);
+  let mut max_w_units: f64 = f64_from_u32(0);
+  let mut current_line_w: f64 = f64_from_u32(0);
+  let char_spacing: f64 = sdf_get_char_spacing();
+  let mut prev_code: i32 = 0;
+
+  let mut i: i32 = 0;
+  while i < len {
+    let b0: i32 = string_byte_at(text, i);
+    if b0 == 10 {
+      if current_line_w > max_w_units {
+        max_w_units = current_line_w;
+      }
+      current_line_w = f64_from_u32(0);
+      prev_code = 0;
+      i = i + 1;
+    } else {
+      let mut step: i32 = 1;
+      let mut ucode: i32 = b0;
+
+      if i + 2 < len && is_ligature_ellipsis(b0, string_byte_at(text, i + 1), string_byte_at(text, i + 2)) {
+        ucode = 8230;
+        step = 3;
+      } else {
+        if i + 1 < len {
+          let b1: i32 = string_byte_at(text, i + 1);
+          if is_ligature_arrow_right(b0, b1) {
+            ucode = 8594;
+            step = 2;
+          } else {
+            if is_ligature_not_equal(b0, b1) {
+              ucode = 8800;
+              step = 2;
+            } else {
+              if b0 >= 192 {
+                let decoded_len: i32 = utf8_codepoint_length(b0);
+                ucode = utf8_decode_codepoint(text, i, decoded_len);
+                step = decoded_len;
+              }
+            }
+          }
+        } else {
+          if b0 >= 192 {
+            let decoded_len: i32 = utf8_codepoint_length(b0);
+            ucode = utf8_decode_codepoint(text, i, decoded_len);
+            step = decoded_len;
+          }
+        }
+      }
+
+      let kern: f64 = sdf_get_kerning(prev_code, ucode);
+      let adv_u32: u32 = sdf_get_char_advance_u32(ucode);
+      let adv_f64: f64 = f64_from_u32(adv_u32) + kern + char_spacing;
+      current_line_w = current_line_w + adv_f64;
+      prev_code = ucode;
+      i = i + step;
+    }
+  }
+
+  if current_line_w > max_w_units {
+    max_w_units = current_line_w;
+  }
+
+  return (max_w_units * font_size) / base_size;
+}
+
+export fn sdf_append_text_quads_styled(
+  text: string,
+  origin_x: f64,
+  baseline_y: f64,
+  font_size: f64,
+  r: f64,
+  g: f64,
+  b: f64,
+  a: f64,
+  align: u32,
+  is_italic: bool,
+  is_underline: bool,
+  is_strike: bool,
+  max_width: f64
+) -> u32 {
+  let u_one: u32 = 1;
+  let u_four: u32 = 4;
+  let u_eight: u32 = 8;
+  let u_twelve: u32 = 12;
+  let u_16: u32 = 16;
+  let u_48: u32 = 48;
+  let u_256: u32 = 256;
+  let u_max_floats: u32 = 1048576;
+  let len: i32 = string_length(text);
+  if len == 0 {
+    return 0;
+  }
+
+  let base_size: f64 = f64_from_u32(24);
+  let scale: f64 = font_size / base_size;
+  let atlas_size_f64: f64 = f64_from_u32(sdf_get_atlas_size());
+
+  let char_spacing: f64 = sdf_get_char_spacing();
+  let line_height_mul: f64 = sdf_get_line_height();
+  let line_step_y: f64 = font_size * line_height_mul;
+
+  let total_width: f64 = sdf_measure_text(text, font_size);
+  let mut cursor_x: f64 = origin_x;
+  if align == 1 {
+    cursor_x = origin_x - total_width;
+  } else {
+    if align == 2 {
+      cursor_x = origin_x - (total_width / f64_from_u32(2));
+    }
+  }
+
+  let mut current_baseline_y: f64 = baseline_y;
+
+  let vbuf_base: u32 = sdf_get_vertex_buffer_ptr();
+  let mut float_count: u32 = sdf_get_vertex_float_count();
+
+  let top_f64: f64 = f64_from_u32(23);
+  let mut slant_f64: f64 = f64_from_u32(0);
+  if is_italic {
+    slant_f64 = (font_size * f64_from_u32(22)) / f64_from_u32(100);
+  }
+
+  let mut i: i32 = 0;
+  let mut quads_added: u32 = 0;
+  let mut prev_code: i32 = 0;
+
+  while i < len {
+    let b0: i32 = string_byte_at(text, i);
+    if b0 == 10 {
+      current_baseline_y = current_baseline_y + line_step_y;
+      cursor_x = origin_x;
+      prev_code = 0;
+      i = i + 1;
+    } else {
+      let mut step: i32 = 1;
+      let mut ucode: i32 = b0;
+
+      if i + 2 < len && is_ligature_ellipsis(b0, string_byte_at(text, i + 1), string_byte_at(text, i + 2)) {
+        ucode = 8230;
+        step = 3;
+      } else {
+        if i + 1 < len {
+          let b1: i32 = string_byte_at(text, i + 1);
+          if is_ligature_arrow_right(b0, b1) {
+            ucode = 8594;
+            step = 2;
+          } else {
+            if is_ligature_arrow_left(b0, b1) {
+              ucode = 8592;
+              step = 2;
+            } else {
+              if is_ligature_arrow_double(b0, b1) {
+                ucode = 8658;
+                step = 2;
+              } else {
+                if is_ligature_not_equal(b0, b1) {
+                  ucode = 8800;
+                  step = 2;
+                } else {
+                  if is_ligature_less_equal(b0, b1) {
+                    ucode = 8804;
+                    step = 2;
+                  } else {
+                    if is_ligature_greater_equal(b0, b1) {
+                      ucode = 8805;
+                      step = 2;
+                    } else {
+                      step = utf8_codepoint_length(b0);
+                      ucode = utf8_decode_codepoint(text, i, len);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        } else {
+          step = utf8_codepoint_length(b0);
+          ucode = utf8_decode_codepoint(text, i, len);
+        }
+      }
+
+      if prev_code != 0 {
+        let kern_adj: f64 = get_kerning_adj(prev_code, ucode, font_size, base_size);
+        cursor_x = cursor_x + kern_adj;
+      }
+
+      let adv_u32: u32 = sdf_get_char_advance_u32(ucode);
+      let adv_f64: f64 = (f64_from_u32(adv_u32) * font_size) / base_size;
+
+      // Automated word wrapping if max_width > 0
+      if max_width > f64_from_u32(0) && (cursor_x + adv_f64) > (origin_x + max_width) {
+        current_baseline_y = current_baseline_y + line_step_y;
+        cursor_x = origin_x;
+      }
+
+      if ucode == 32 {
+        cursor_x = cursor_x + adv_f64 + char_spacing;
+      } else {
+        let idx: u32 = char_code_to_idx(ucode);
+        let table_base: u32 = sdf_get_table_ptr();
+        let table_entry: u32 = table_base + idx * u_16;
+        let cell_x: u32 = memory_load_u32(table_entry);
+        let cell_y: u32 = memory_load_u32(table_entry + u_four);
+        let cell_w: u32 = memory_load_u32(table_entry + u_eight);
+        let cell_h: u32 = memory_load_u32(table_entry + u_twelve);
+
+        let cell_x_f64: f64 = f64_from_u32(cell_x);
+        let cell_y_f64: f64 = f64_from_u32(cell_y);
+        let cell_w_f64: f64 = f64_from_u32(cell_w);
+        let cell_h_f64: f64 = f64_from_u32(cell_h);
+
+        let quad_w_f64: f64 = (cell_w_f64 * font_size) / f64_from_u32(40);
+        let quad_h_f64: f64 = (cell_h_f64 * font_size) / f64_from_u32(40);
+
+        let cy_f64: f64 = f64_from_u32(get_glyph_center_y_u32(idx));
+        let span_y_f64: f64 = (cell_h_f64 / f64_from_u32(2)) * f64_from_u32(4);
+        let base_y_f64: f64 = cy_f64 - span_y_f64;
+        let qy0: f64 = current_baseline_y - ((f64_from_u32(180) - base_y_f64) * font_size) / f64_from_u32(160);
+        let qy1: f64 = qy0 + quad_h_f64;
+
+        let qx0: f64 = cursor_x + (adv_f64 / f64_from_u32(2)) - (quad_w_f64 / f64_from_u32(2));
+        let qx1: f64 = qx0 + quad_w_f64;
+
+        let u0: f64 = cell_x_f64 / atlas_size_f64;
+        let v0: f64 = cell_y_f64 / atlas_size_f64;
+        let u1: f64 = (cell_x_f64 + cell_w_f64) / atlas_size_f64;
+        let v1: f64 = (cell_y_f64 + cell_h_f64) / atlas_size_f64;
+
+        let mut quad_a: f64 = a;
+        if is_multi_color_emoji(ucode) {
+          quad_a = f64_from_u32(0) - a;
+        }
+
+        if float_count + u_48 <= u_max_floats {
+          let v0_ptr: u32 = vbuf_base + float_count * u_eight;
+          memory_store_f64(v0_ptr, qx0 + slant_f64); memory_store_f64(v0_ptr + 8, qy0); memory_store_f64(v0_ptr + 16, u0); memory_store_f64(v0_ptr + 24, v0);
+          memory_store_f64(v0_ptr + 32, r); memory_store_f64(v0_ptr + 40, g); memory_store_f64(v0_ptr + 48, b); memory_store_f64(v0_ptr + 56, quad_a);
+
+          let v1_ptr: u32 = v0_ptr + 64;
+          memory_store_f64(v1_ptr, qx1 + slant_f64); memory_store_f64(v1_ptr + 8, qy0); memory_store_f64(v1_ptr + 16, u1); memory_store_f64(v1_ptr + 24, v0);
+          memory_store_f64(v1_ptr + 32, r); memory_store_f64(v1_ptr + 40, g); memory_store_f64(v1_ptr + 48, b); memory_store_f64(v1_ptr + 56, quad_a);
+
+          let v2_ptr: u32 = v1_ptr + 64;
+          memory_store_f64(v2_ptr, qx0); memory_store_f64(v2_ptr + 8, qy1); memory_store_f64(v2_ptr + 16, u0); memory_store_f64(v2_ptr + 24, v1);
+          memory_store_f64(v2_ptr + 32, r); memory_store_f64(v2_ptr + 40, g); memory_store_f64(v2_ptr + 48, b); memory_store_f64(v2_ptr + 56, quad_a);
+
+          let v3_ptr: u32 = v2_ptr + 64;
+          memory_store_f64(v3_ptr, qx0); memory_store_f64(v3_ptr + 8, qy1); memory_store_f64(v3_ptr + 16, u0); memory_store_f64(v3_ptr + 24, v1);
+          memory_store_f64(v3_ptr + 32, r); memory_store_f64(v3_ptr + 40, g); memory_store_f64(v3_ptr + 48, b); memory_store_f64(v3_ptr + 56, quad_a);
+
+          let v4_ptr: u32 = v3_ptr + 64;
+          memory_store_f64(v4_ptr, qx1 + slant_f64); memory_store_f64(v4_ptr + 8, qy0); memory_store_f64(v4_ptr + 16, u1); memory_store_f64(v4_ptr + 24, v0);
+          memory_store_f64(v4_ptr + 32, r); memory_store_f64(v4_ptr + 40, g); memory_store_f64(v4_ptr + 48, b); memory_store_f64(v4_ptr + 56, quad_a);
+
+          let v5_ptr: u32 = v4_ptr + 64;
+          memory_store_f64(v5_ptr, qx1); memory_store_f64(v5_ptr + 8, qy1); memory_store_f64(v5_ptr + 16, u1); memory_store_f64(v5_ptr + 24, v1);
+          memory_store_f64(v5_ptr + 32, r); memory_store_f64(v5_ptr + 40, g); memory_store_f64(v5_ptr + 48, b); memory_store_f64(v5_ptr + 56, quad_a);
+
+          float_count = float_count + u_48;
+          quads_added = quads_added + u_one;
+        }
+
+        cursor_x = cursor_x + adv_f64 + char_spacing;
+      }
+
+      prev_code = ucode;
+      i = i + step;
+    }
+  }
+
+  memory_store_u32(200, float_count);
+  return quads_added;
+}
+
+export fn sdf_append_text_quads(
+  text: string,
+  origin_x: f64,
+  baseline_y: f64,
+  font_size: f64,
+  r: f64,
+  g: f64,
+  b: f64,
+  a: f64,
+  align: u32
+) -> u32 {
+  return sdf_append_text_quads_styled(
+    text,
+    origin_x,
+    baseline_y,
+    font_size,
+    r,
+    g,
+    b,
+    a,
+    align,
+    false,
+    false,
+    false,
+    f64_from_u32(0)
+  );
+}
+
+export fn sdf_measure_text_mono(text: string, font_size: f64) -> f64 {
+  let len: i32 = string_length(text);
+  let base_size: f64 = f64_from_u32(24);
+  let fixed_adv: f64 = (f64_from_u32(14) * font_size) / base_size;
+  let mut total: f64 = f64_from_u32(0);
+  let mut i: i32 = 0;
+  while i < len {
+    total = total + fixed_adv;
+    i = i + 1;
+  }
+  return total;
+}
+
+export fn sdf_append_text_quads_mono(
+  text: string,
+  origin_x: f64,
+  baseline_y: f64,
+  font_size: f64,
+  r: f64,
+  g: f64,
+  b: f64,
+  a: f64,
+  align: u32
+) -> u32 {
+  let u_one: u32 = 1;
+  let u_four: u32 = 4;
+  let u_eight: u32 = 8;
+  let u_twelve: u32 = 12;
+  let u_16: u32 = 16;
+  let u_48: u32 = 48;
+  let u_max_floats: u32 = 1048576;
+  let len: i32 = string_length(text);
+  if len == 0 {
+    return 0;
+  }
+
+  let base_size: f64 = f64_from_u32(24);
+  let scale: f64 = font_size / base_size;
+  let atlas_size_f64: f64 = f64_from_u32(sdf_get_atlas_size());
+
+  let total_width: f64 = sdf_measure_text_mono(text, font_size);
+  let mut cursor_x: f64 = origin_x;
+  if align == 1 {
+    cursor_x = origin_x - total_width;
+  } else {
+    if align == 2 {
+      cursor_x = origin_x - (total_width / f64_from_u32(2));
+    }
+  }
+
+  let fixed_adv_f64: f64 = (f64_from_u32(14) * font_size) / base_size;
+
+  let vbuf_base: u32 = sdf_get_vertex_buffer_ptr();
+  let mut float_count: u32 = sdf_get_vertex_float_count();
+
+  let top_f64: f64 = f64_from_u32(23);
+
+  let mut i: i32 = 0;
+  let mut quads_added: u32 = 0;
+
+  while i < len {
+    let b0: i32 = string_byte_at(text, i);
+    let step: i32 = utf8_codepoint_length(b0);
+    let ucode: i32 = utf8_decode_codepoint(text, i, len);
+
+    if ucode == 32 {
+      cursor_x = cursor_x + fixed_adv_f64;
+    } else {
+      let idx: u32 = char_code_to_idx(ucode);
+      let table_base: u32 = sdf_get_table_ptr();
+      let table_entry: u32 = table_base + idx * u_16;
+      let cell_x: u32 = memory_load_u32(table_entry);
+      let cell_y: u32 = memory_load_u32(table_entry + u_four);
+      let cell_w: u32 = memory_load_u32(table_entry + u_eight);
+      let cell_h: u32 = memory_load_u32(table_entry + u_twelve);
+
+      let cell_x_f64: f64 = f64_from_u32(cell_x);
+      let cell_y_f64: f64 = f64_from_u32(cell_y);
+      let cell_w_f64: f64 = f64_from_u32(cell_w);
+      let cell_h_f64: f64 = f64_from_u32(cell_h);
+
+      let quad_w_f64: f64 = (cell_w_f64 * font_size) / f64_from_u32(40);
+      let quad_h_f64: f64 = (cell_h_f64 * font_size) / f64_from_u32(40);
+
+      let cy_f64: f64 = f64_from_u32(get_glyph_center_y_u32(idx));
+      let span_y_f64: f64 = (cell_h_f64 / f64_from_u32(2)) * f64_from_u32(4);
+      let base_y_f64: f64 = cy_f64 - span_y_f64;
+      let qy0: f64 = baseline_y - ((f64_from_u32(180) - base_y_f64) * font_size) / f64_from_u32(160);
+      let qy1: f64 = qy0 + quad_h_f64;
+
+      let qx0: f64 = cursor_x + (fixed_adv_f64 / f64_from_u32(2)) - (quad_w_f64 / f64_from_u32(2));
+      let qx1: f64 = qx0 + quad_w_f64;
+
+      let u0: f64 = cell_x_f64 / atlas_size_f64;
+      let v0: f64 = cell_y_f64 / atlas_size_f64;
+      let u1: f64 = (cell_x_f64 + cell_w_f64) / atlas_size_f64;
+      let v1: f64 = (cell_y_f64 + cell_h_f64) / atlas_size_f64;
+
+      if float_count + u_48 <= u_max_floats {
+        let v0_ptr: u32 = vbuf_base + float_count * u_eight;
+        memory_store_f64(v0_ptr, qx0); memory_store_f64(v0_ptr + 8, qy0); memory_store_f64(v0_ptr + 16, u0); memory_store_f64(v0_ptr + 24, v0);
+        memory_store_f64(v0_ptr + 32, r); memory_store_f64(v0_ptr + 40, g); memory_store_f64(v0_ptr + 48, b); memory_store_f64(v0_ptr + 56, a);
+
+        let v1_ptr: u32 = v0_ptr + 64;
+        memory_store_f64(v1_ptr, qx1); memory_store_f64(v1_ptr + 8, qy0); memory_store_f64(v1_ptr + 16, u1); memory_store_f64(v1_ptr + 24, v0);
+        memory_store_f64(v1_ptr + 32, r); memory_store_f64(v1_ptr + 40, g); memory_store_f64(v1_ptr + 48, b); memory_store_f64(v1_ptr + 56, a);
+
+        let v2_ptr: u32 = v1_ptr + 64;
+        memory_store_f64(v2_ptr, qx0); memory_store_f64(v2_ptr + 8, qy1); memory_store_f64(v2_ptr + 16, u0); memory_store_f64(v2_ptr + 24, v1);
+        memory_store_f64(v2_ptr + 32, r); memory_store_f64(v2_ptr + 40, g); memory_store_f64(v2_ptr + 48, b); memory_store_f64(v2_ptr + 56, a);
+
+        let v3_ptr: u32 = v2_ptr + 64;
+        memory_store_f64(v3_ptr, qx0); memory_store_f64(v3_ptr + 8, qy1); memory_store_f64(v3_ptr + 16, u0); memory_store_f64(v3_ptr + 24, v1);
+        memory_store_f64(v3_ptr + 32, r); memory_store_f64(v3_ptr + 40, g); memory_store_f64(v3_ptr + 48, b); memory_store_f64(v3_ptr + 56, a);
+
+        let v4_ptr: u32 = v3_ptr + 64;
+        memory_store_f64(v4_ptr, qx1); memory_store_f64(v4_ptr + 8, qy0); memory_store_f64(v4_ptr + 16, u1); memory_store_f64(v4_ptr + 24, v0);
+        memory_store_f64(v4_ptr + 32, r); memory_store_f64(v4_ptr + 40, g); memory_store_f64(v4_ptr + 48, b); memory_store_f64(v4_ptr + 56, a);
+
+        let v5_ptr: u32 = v4_ptr + 64;
+        memory_store_f64(v5_ptr, qx1); memory_store_f64(v5_ptr + 8, qy1); memory_store_f64(v5_ptr + 16, u1); memory_store_f64(v5_ptr + 24, v1);
+        memory_store_f64(v5_ptr + 32, r); memory_store_f64(v5_ptr + 40, g); memory_store_f64(v5_ptr + 48, b); memory_store_f64(v5_ptr + 56, a);
+
+        float_count = float_count + u_48;
+        quads_added = quads_added + u_one;
+      }
+
+      cursor_x = cursor_x + fixed_adv_f64;
+    }
+
+    i = i + step;
+  }
+
+  memory_store_u32(200, float_count);
+  return quads_added;
+}
+
+export fn sdf_set_font_weight(weight: u32) -> unit {
+  memory_store_u32(228, weight);
+}
+
+export fn sdf_get_font_weight() -> u32 {
+  return memory_load_u32(228);
+}
+
+export fn sdf_set_font_slant(slant: f64) -> unit {
+  memory_store_f64(236, slant);
+}
+
+export fn sdf_get_font_slant() -> f64 {
+  return memory_load_f64(236);
+}
+
+export fn sdf_append_text_quads_perspective(
+  text: string,
+  origin_x: f64,
+  baseline_y: f64,
+  font_size: f64,
+  r: f64,
+  g: f64,
+  b: f64,
+  a: f64,
+  align: u32,
+  m00: f64,
+  m01: f64,
+  m10: f64,
+  m11: f64,
+  tilt_x: f64,
+  tilt_y: f64
+) -> u32 {
+  let u_one: u32 = 1;
+  let u_four: u32 = 4;
+  let u_eight: u32 = 8;
+  let u_twelve: u32 = 12;
+  let u_16: u32 = 16;
+  let u_48: u32 = 48;
+  let u_max_floats: u32 = 1048576;
+  let len: i32 = string_length(text);
+  if len == 0 {
+    return 0;
+  }
+
+  let base_size: f64 = f64_from_u32(24);
+  let scale: f64 = font_size / base_size;
+  let atlas_size_f64: f64 = f64_from_u32(sdf_get_atlas_size());
+
+  let total_width: f64 = sdf_measure_text(text, font_size);
+  let mut cursor_x: f64 = origin_x;
+  if align == 1 {
+    cursor_x = origin_x - total_width;
+  } else {
+    if align == 2 {
+      cursor_x = origin_x - (total_width / f64_from_u32(2));
+    }
+  }
+
+  let vbuf_base: u32 = sdf_get_vertex_buffer_ptr();
+  let mut float_count: u32 = sdf_get_vertex_float_count();
+
+  let top_f64: f64 = f64_from_u32(23);
+
+  let mut i: i32 = 0;
+  let mut prev_code: i32 = 0;
+  let mut quads_added: u32 = 0;
+
+  while i < len {
+    let b0: i32 = string_byte_at(text, i);
+    let step: i32 = utf8_codepoint_length(b0);
+    let ucode: i32 = utf8_decode_codepoint(text, i, len);
+
+    if prev_code != 0 {
+      let kern_adj: f64 = get_kerning_adj(prev_code, ucode, font_size, base_size);
+      cursor_x = cursor_x + kern_adj;
+    }
+
+    let adv_u32: u32 = sdf_get_char_advance_u32(ucode);
+    let adv_f64: f64 = (f64_from_u32(adv_u32) * font_size) / base_size;
+
+    if ucode == 32 {
+      cursor_x = cursor_x + adv_f64;
+    } else {
+      let idx: u32 = char_code_to_idx(ucode);
+      let table_base: u32 = sdf_get_table_ptr();
+      let table_entry: u32 = table_base + idx * u_16;
+      let cell_x: u32 = memory_load_u32(table_entry);
+      let cell_y: u32 = memory_load_u32(table_entry + u_four);
+      let cell_w: u32 = memory_load_u32(table_entry + u_eight);
+      let cell_h: u32 = memory_load_u32(table_entry + u_twelve);
+
+      let cell_x_f64: f64 = f64_from_u32(cell_x);
+      let cell_y_f64: f64 = f64_from_u32(cell_y);
+      let cell_w_f64: f64 = f64_from_u32(cell_w);
+      let cell_h_f64: f64 = f64_from_u32(cell_h);
+
+      let quad_w_f64: f64 = (cell_w_f64 * font_size) / f64_from_u32(40);
+      let quad_h_f64: f64 = (cell_h_f64 * font_size) / f64_from_u32(40);
+
+      let cy_f64: f64 = f64_from_u32(get_glyph_center_y_u32(idx));
+      let span_y_f64: f64 = (cell_h_f64 / f64_from_u32(2)) * f64_from_u32(4);
+      let base_y_f64: f64 = cy_f64 - span_y_f64;
+      let raw_qy0: f64 = baseline_y - ((f64_from_u32(180) - base_y_f64) * font_size) / f64_from_u32(160);
+      let raw_qy1: f64 = raw_qy0 + quad_h_f64;
+
+      let raw_qx0: f64 = cursor_x + (adv_f64 / f64_from_u32(2)) - (quad_w_f64 / f64_from_u32(2));
+      let raw_qx1: f64 = raw_qx0 + quad_w_f64;
+
+      // Apply perspective / affine transform around origin
+      let rx0: f64 = raw_qx0 - origin_x;
+      let ry0: f64 = raw_qy0 - baseline_y;
+      let rx1: f64 = raw_qx1 - origin_x;
+      let ry1: f64 = raw_qy1 - baseline_y;
+
+      let qx0: f64 = origin_x + (rx0 * m00 + ry0 * m01 + (rx0 * tilt_x));
+      let qy0: f64 = baseline_y + (rx0 * m10 + ry0 * m11 + (ry0 * tilt_y));
+      let qx1: f64 = origin_x + (rx1 * m00 + ry0 * m01 + (rx1 * tilt_x));
+      let qy1: f64 = baseline_y + (rx1 * m10 + ry0 * m11 + (ry0 * tilt_y));
+      let qx2: f64 = origin_x + (rx0 * m00 + ry1 * m01 + (rx0 * tilt_x));
+      let qy2: f64 = baseline_y + (rx0 * m10 + ry1 * m11 + (ry1 * tilt_y));
+      let qx3: f64 = origin_x + (rx1 * m00 + ry1 * m01 + (rx1 * tilt_x));
+      let qy3: f64 = baseline_y + (rx1 * m10 + ry1 * m11 + (ry1 * tilt_y));
+
+      let u0: f64 = cell_x_f64 / atlas_size_f64;
+      let v0: f64 = cell_y_f64 / atlas_size_f64;
+      let u1: f64 = (cell_x_f64 + cell_w_f64) / atlas_size_f64;
+      let v1: f64 = (cell_y_f64 + cell_h_f64) / atlas_size_f64;
+
+      let mut quad_a: f64 = a;
+      if is_multi_color_emoji(ucode) {
+        quad_a = f64_from_u32(0) - a;
+      }
+
+      if float_count + u_48 <= u_max_floats {
+        let v0_ptr: u32 = vbuf_base + float_count * u_eight;
+        memory_store_f64(v0_ptr, qx0); memory_store_f64(v0_ptr + 8, qy0); memory_store_f64(v0_ptr + 16, u0); memory_store_f64(v0_ptr + 24, v0);
+        memory_store_f64(v0_ptr + 32, r); memory_store_f64(v0_ptr + 40, g); memory_store_f64(v0_ptr + 48, b); memory_store_f64(v0_ptr + 56, quad_a);
+
+        let v1_ptr: u32 = v0_ptr + 64;
+        memory_store_f64(v1_ptr, qx1); memory_store_f64(v1_ptr + 8, qy1); memory_store_f64(v1_ptr + 16, u1); memory_store_f64(v1_ptr + 24, v0);
+        memory_store_f64(v1_ptr + 32, r); memory_store_f64(v1_ptr + 40, g); memory_store_f64(v1_ptr + 48, b); memory_store_f64(v1_ptr + 56, quad_a);
+
+        let v2_ptr: u32 = v1_ptr + 64;
+        memory_store_f64(v2_ptr, qx2); memory_store_f64(v2_ptr + 8, qy2); memory_store_f64(v2_ptr + 16, u0); memory_store_f64(v2_ptr + 24, v1);
+        memory_store_f64(v2_ptr + 32, r); memory_store_f64(v2_ptr + 40, g); memory_store_f64(v2_ptr + 48, b); memory_store_f64(v2_ptr + 56, quad_a);
+
+        let v3_ptr: u32 = v2_ptr + 64;
+        memory_store_f64(v3_ptr, qx2); memory_store_f64(v3_ptr + 8, qy2); memory_store_f64(v3_ptr + 16, u0); memory_store_f64(v3_ptr + 24, v1);
+        memory_store_f64(v3_ptr + 32, r); memory_store_f64(v3_ptr + 40, g); memory_store_f64(v3_ptr + 48, b); memory_store_f64(v3_ptr + 56, quad_a);
+
+        let v4_ptr: u32 = v3_ptr + 64;
+        memory_store_f64(v4_ptr, qx1); memory_store_f64(v4_ptr + 8, qy1); memory_store_f64(v4_ptr + 16, u1); memory_store_f64(v4_ptr + 24, v0);
+        memory_store_f64(v4_ptr + 32, r); memory_store_f64(v4_ptr + 40, g); memory_store_f64(v4_ptr + 48, b); memory_store_f64(v4_ptr + 56, quad_a);
+
+        let v5_ptr: u32 = v4_ptr + 64;
+        memory_store_f64(v5_ptr, qx3); memory_store_f64(v5_ptr + 8, qy3); memory_store_f64(v5_ptr + 16, u1); memory_store_f64(v5_ptr + 24, v1);
+        memory_store_f64(v5_ptr + 32, r); memory_store_f64(v5_ptr + 40, g); memory_store_f64(v5_ptr + 48, b); memory_store_f64(v5_ptr + 56, quad_a);
+
+        float_count = float_count + u_48;
+        quads_added = quads_added + u_one;
+      }
+
+      cursor_x = cursor_x + adv_f64;
+    }
+
+    prev_code = ucode;
+    i = i + step;
+  }
+
+  memory_store_u32(200, float_count);
+  return quads_added;
+}

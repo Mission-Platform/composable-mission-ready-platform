@@ -38,3 +38,5 @@ export * from './sonir/passes/canonical.js';
 export * from './passes/sanitizer.js';
 // eslint-disable-next-line import-x/no-useless-path-segments
 export * from './interop/index.js';
+// eslint-disable-next-line import-x/no-useless-path-segments
+export * from './graph-compiler/index.js';

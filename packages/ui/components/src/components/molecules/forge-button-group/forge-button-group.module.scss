@@ -16,6 +16,9 @@
 @layer mp.components {
   .forge-button-group {
     display: inline-flex;
+    flex-shrink: 0;
+    width: max-content;
+    min-width: max-content;
 
     @supports (container-type: inline-size) {
       container: forge-button-group / inline-size;
@@ -40,10 +43,10 @@
 
     /* Gaps (only when not attached) */
     $gap-map: (
-      'none': var(--forge-button-group-gap-none, var(--mp-button-group-gap-none)),
-      'xs': var(--forge-button-group-gap-xs, var(--mp-button-group-gap-xs)),
-      'sm': var(--forge-button-group-gap-sm, var(--mp-button-group-gap-sm)),
-      'md': var(--forge-button-group-gap-md, var(--mp-button-group-gap-md)),
+      'none': var(--forge-button-group-gap-none, var(--mp-button-group-gap-none, 0)),
+      'xs': var(--forge-button-group-gap-xs, var(--mp-button-group-gap-xs, 4px)),
+      'sm': var(--forge-button-group-gap-sm, var(--mp-button-group-gap-sm, 8px)),
+      'md': var(--forge-button-group-gap-md, var(--mp-button-group-gap-md, 12px)),
     );
 
     @each $name, $value in $gap-map {

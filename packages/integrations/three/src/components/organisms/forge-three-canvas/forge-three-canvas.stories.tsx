@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 import { ForgeThreeCanvas, type ThreeContext } from '@mission-platform/three';
-import * as THREE from 'three';
+import { BoxGeometry, Color, Mesh, MeshBasicMaterial } from 'three';
 
 /**
  * A small Three.js scene demonstrating `@mission-platform/three`. A single cube
@@ -19,18 +19,27 @@ interface ThreeSpinningCubeProperties {
   speed?: number;
 }
 
+/**
+ * Storybook example component rendering an interactive spinning Three.js cube.
+ */
 function ThreeSpinningCube({
   color = '#4f46e5',
   wireframe = false,
   speed = 0.01,
 }: Readonly<ThreeSpinningCubeProperties>) {
+  /**
+   * Initializes the Three.js scene geometry, material, mesh, and animation loop.
+   */
   const onReady = ({ scene }: ThreeContext): (() => void) => {
-    const geometry = new THREE.BoxGeometry(2, 2, 2);
-    const material = new THREE.MeshBasicMaterial({ color: new THREE.Color(color), wireframe });
-    const cube = new THREE.Mesh(geometry, material);
+    const geometry = new BoxGeometry(2, 2, 2);
+    const material = new MeshBasicMaterial({ color: new Color(color), wireframe });
+    const cube = new Mesh(geometry, material);
     scene.add(cube);
 
     let frameId: number;
+    /**
+     * Animation frame step callback updating cube rotation.
+     */
     const spin = (): void => {
       frameId = requestAnimationFrame(spin);
       cube.rotation.x += speed;
@@ -63,6 +72,10 @@ const meta = {
         component:
           '`@mission-platform/three` is the framework-neutral Three.js integration. This story mounts the write-once `ForgeThreeCanvas` component and, through its `onReady` callback, adds a cube to the `useThree`-managed scene and animates it every frame — the same neutral source compiled to each supported framework.',
       },
+    },
+    chromatic: {
+      pauseAnimationAtEnd: true,
+      delay: 300,
     },
   },
   argTypes: {

@@ -85,7 +85,7 @@ describe('repository inventory', () => {
       '@mission-platform/website',
     ]);
     expect(inventory.apps.some((app) => app.name === '@mission-platform/figma-forge-plugin')).toBe(false);
-    expect(inventory.storybookPackages).toHaveLength(22);
+    expect(inventory.storybookPackages).toHaveLength(23);
     expect(inventory.stories.some((story) => story.id.includes('@mission-platform/components:'))).toBe(true);
     expect(inventory.stories.some((story) => story.exportedStories?.includes('Default'))).toBe(true);
   });
@@ -191,9 +191,9 @@ describe('application runtime sweep', () => {
       storybookPackages: [],
     } satisfies RepositoryInventory;
     const calls: Array<{ app?: string; port?: number }> = [];
-    const validate = vi.fn(async (_root, _inventory, options) => {
+    const validate = vi.fn((_root, _inventory, options) => {
       calls.push({ app: options.app, port: options.port });
-      return [];
+      return Promise.resolve([]);
     });
 
     await validateAppsForFullRun(repositoryRoot, inventory, { port: 7400 }, validate);
@@ -224,9 +224,9 @@ describe('application runtime sweep', () => {
       storybookPackages: [],
     } satisfies RepositoryInventory;
     const calls: Array<{ app?: string; port?: number }> = [];
-    const validate = vi.fn(async (_root, _inventory, options) => {
+    const validate = vi.fn((_root, _inventory, options) => {
       calls.push({ app: options.app, port: options.port });
-      return [];
+      return Promise.resolve([]);
     });
 
     await validateAppsForFullRun(repositoryRoot, inventory, {}, validate);
@@ -456,9 +456,12 @@ describe('manifest and index contracts', () => {
     );
     expect(i18nStory).toBeTruthy();
     expect(speechAudioStory).toBeTruthy();
+    if (!i18nStory || !speechAudioStory) {
+      throw new Error('Expected i18n and speech-audio stories to be present');
+    }
 
-    expect(excludedIds.has(i18nStory!.id)).toBe(true);
-    expect(excludedIds.has(speechAudioStory!.id)).toBe(true);
+    expect(excludedIds.has(i18nStory.id)).toBe(true);
+    expect(excludedIds.has(speechAudioStory.id)).toBe(true);
 
     const reactResults = selectResults(inventory, { framework: 'react', packageName: '@mission-platform/storybook' });
     expect(reactResults.filter((result) => result.status === 'excluded')).toHaveLength(vueExcludedStories.length);
@@ -627,23 +630,18 @@ describe('retry and failure classification', () => {
     let attempts = 0;
     await expect(
       withRetry(
-        async () => {
+        () => {
           attempts += 1;
-          if (attempts === 1) throw new Error('network timeout');
-          return 'ok';
+          if (attempts === 1) return Promise.reject(new Error('network timeout'));
+          return Promise.resolve('ok');
         },
         { delayMs: 0 },
       ),
     ).resolves.toEqual({ value: 'ok', attempts: 2 });
     expect(isTransientRuntimeError(new Error('module syntax error'))).toBe(false);
-    await expect(
-      withRetry(
-        async () => {
-          throw new Error('module syntax error');
-        },
-        { delayMs: 0 },
-      ),
-    ).rejects.toThrow('module syntax error');
+    await expect(withRetry(() => Promise.reject(new Error('module syntax error')), { delayMs: 0 })).rejects.toThrow(
+      'module syntax error',
+    );
   });
 
   it('normalizes retry attempt and delay options', async () => {
@@ -651,16 +649,17 @@ describe('retry and failure classification', () => {
     let attempts = 0;
     await expect(
       withRetry(
-        async () => {
+        () => {
           attempts += 1;
-          if (attempts < 2) throw new Error('network timeout');
-          return 'ok';
+          if (attempts < 2) return Promise.reject(new Error('network timeout'));
+          return Promise.resolve('ok');
         },
         {
           attempts: 2.9,
           delayMs: -10,
-          sleep: async (delay) => {
+          sleep: (delay) => {
             delays.push(delay);
+            return Promise.resolve();
           },
         },
       ),
@@ -697,7 +696,7 @@ describe('managed process cleanup', () => {
     const signals: Array<[number, NodeJS.Signals]> = [];
     await terminateProcessTree(
       { pid: 42 },
-      { graceMs: 1, wait: async () => {}, kill: (pid, signal) => signals.push([pid, signal]) },
+      { graceMs: 1, wait: () => Promise.resolve(), kill: (pid, signal) => signals.push([pid, signal]) },
     );
     expect(signals).toEqual([
       [-42, 'SIGTERM'],
@@ -718,7 +717,7 @@ describe('managed process cleanup', () => {
 
       const managed = { pid: 42, kill: vi.fn() } satisfies { pid: number; kill: () => void };
 
-      await terminateProcessTree(managed, { graceMs: 1, wait: async () => {} });
+      await terminateProcessTree(managed, { graceMs: 1, wait: () => Promise.resolve() });
 
       expect(killCalls).toEqual([
         [-42, 'SIGTERM'],
@@ -738,7 +737,7 @@ describe('managed process cleanup', () => {
     }) as unknown as typeof globalThis.process.kill);
 
     const managedKill = vi.fn();
-    await terminateProcessTree({ pid: 42, kill: managedKill }, { graceMs: 1, wait: async () => {} });
+    await terminateProcessTree({ pid: 42, kill: managedKill }, { graceMs: 1, wait: () => Promise.resolve() });
 
     expect(managedKill).toHaveBeenCalledTimes(2);
     expect(managedKill).toHaveBeenNthCalledWith(1, 'SIGTERM');

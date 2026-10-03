@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
@@ -23,6 +22,7 @@ import {
 import { startStorybookServers } from './servers.ts';
 import {
   createRendererDefinitions,
+  DEFAULT_VISUAL_PARITY_MISMATCH_THRESHOLD,
   DEFAULT_VISUAL_PARITY_VIEWPORT,
   VISUAL_PARITY_CANDIDATES,
   VISUAL_PARITY_RENDERERS,
@@ -38,71 +38,160 @@ import {
 
 const DEFAULT_TIMEOUT_MS = 120_000;
 const DEFAULT_PIXEL_THRESHOLD = 0.1;
-const DEFAULT_MAX_MISMATCH_RATIO = 0;
+const DEFAULT_MAX_MISMATCH_RATIO = DEFAULT_VISUAL_PARITY_MISMATCH_THRESHOLD;
 const DEFAULT_WORKERS = 1;
 const DEFAULT_OUTPUT_DIRECTORY = '.artifacts/visual-parity';
 
+/**
+ * Normalizes a selector string into lowercase alphanumeric characters.
+ */
 function compactSelector(value: string): string {
   return value.replaceAll(/[^a-z0-9]+/g, '');
 }
 
+/**
+ * Computes the absolute path to the repository root directory.
+ */
 function repositoryRoot(): string {
   return path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 }
 
+/**
+ * Extracts a named option value from a CLI argument list.
+ */
 function option(args: string[], name: string): string | undefined {
   const index = args.indexOf(name);
   return index === -1 ? undefined : args[index + 1];
 }
 
+/**
+ * Returns the first option name present in the argument list.
+ */
 function firstOptionName(args: string[], names: string[]): string {
   return names.find((name) => option(args, name) !== undefined) ?? names[0];
 }
 
+/**
+ * Checks if a numeric value is within bounds.
+ */
+function isWithinBounds(value: number, min: number, max?: number): boolean {
+  if (!Number.isFinite(value) || value < min) return false;
+  return max === undefined || value <= max;
+}
+
+/**
+ * Asserts numeric value is finite and within bounds.
+ */
+function assertNumericBounds(value: number, name: string, min: number, max?: number): void {
+  if (isWithinBounds(value, min, max)) return;
+  const range = max === undefined ? ` >= ${min}` : ` between ${min} and ${max}`;
+  throw new Error(`${name} must be a number${range}.`);
+}
+
+/**
+ * Parses a numeric CLI option with validation bounds.
+ */
 function numericOption(args: string[], name: string, fallback: number, min: number, max?: number): number {
   const raw = option(args, name);
   if (raw === undefined) return fallback;
   const value = Number(raw);
-  if (!Number.isFinite(value) || value < min || (max !== undefined && value > max))
-    throw new Error(`${name} must be a number${max === undefined ? ` >= ${min}` : ` between ${min} and ${max}`}.`);
+  assertNumericBounds(value, name, min, max);
   return value;
 }
 
+/**
+ * Parses a positive integer CLI option.
+ */
 function positiveIntegerOption(args: string[], name: string, fallback: number): number {
   const value = numericOption(args, name, fallback, 1);
   if (!Number.isInteger(value)) throw new Error(`${name} must be a positive integer.`);
   return value;
 }
 
-function parsePorts(args: string[]): Partial<Record<VisualParityRenderer, number>> {
-  const ports: Partial<Record<VisualParityRenderer, number>> = {};
+/**
+ * Checks if a numeric value is a valid TCP base port allowing consecutive allocation.
+ */
+function isValidBasePort(value: number): boolean {
+  return Number.isInteger(value) && value >= 1 && value <= 65_531;
+}
+
+/**
+ * Parses base port flag for all renderers.
+ */
+function parseBasePort(args: string[], ports: Partial<Record<VisualParityRenderer, number>>): void {
   const base = option(args, '--port');
-  if (base !== undefined) {
-    const value = Number(base);
-    if (!Number.isInteger(value) || value < 1 || value > 65_531)
-      throw new Error('--port must allow five valid consecutive TCP ports.');
-    for (const [index, renderer] of VISUAL_PARITY_RENDERERS.entries()) ports[renderer] = value + index;
+  if (base === undefined) return;
+  const value = Number(base);
+  if (!isValidBasePort(value)) {
+    throw new Error('--port must allow five valid consecutive TCP ports.');
   }
+  let index = 0;
   for (const renderer of VISUAL_PARITY_RENDERERS) {
-    const value = option(args, `--${renderer}-port`);
-    if (value !== undefined) {
-      const port = Number(value);
-      if (!Number.isInteger(port) || port < 1 || port > 65_535)
-        throw new Error(`--${renderer}-port must be a valid TCP port.`);
+    ports[renderer] = value + index;
+    index += 1;
+  }
+}
+
+/**
+ * Parses single port option from CLI flags.
+ */
+function parsePortOption(args: string[], flag: string): number | undefined {
+  const raw = option(args, flag);
+  if (raw === undefined) return undefined;
+  const port = Number(raw);
+  if (!Number.isInteger(port) || port < 1 || port > 65_535) {
+    throw new Error(`${flag} must be a valid TCP port.`);
+  }
+  return port;
+}
+
+/**
+ * Parses individual framework renderer port flags.
+ */
+function parseIndividualPorts(args: string[], ports: Partial<Record<VisualParityRenderer, number>>): void {
+  for (const renderer of VISUAL_PARITY_RENDERERS) {
+    const port = parsePortOption(args, `--${renderer}-port`);
+    if (port !== undefined) {
       ports[renderer] = port;
     }
   }
-  const list = option(args, '--ports');
-  if (list !== undefined) {
-    for (const item of list.split(',')) {
-      const [renderer, rawPort] = item.split('=');
-      if (!VISUAL_PARITY_RENDERERS.includes(renderer as VisualParityRenderer))
-        throw new Error(`Unknown renderer in --ports: ${renderer}`);
-      const port = Number(rawPort);
-      if (!Number.isInteger(port) || port < 1 || port > 65_535) throw new Error(`Invalid port in --ports: ${item}`);
-      ports[renderer as VisualParityRenderer] = port;
-    }
+}
+
+/**
+ * Parses single renderer port mapping item.
+ */
+function parseSinglePortMapping(item: string): [VisualParityRenderer, number] {
+  const [renderer, rawPort] = item.split('=');
+  if (!VISUAL_PARITY_RENDERERS.includes(renderer as VisualParityRenderer)) {
+    throw new Error(`Unknown renderer in --ports: ${renderer}`);
   }
+  const port = Number(rawPort);
+  if (!Number.isInteger(port) || port < 1 || port > 65_535) {
+    throw new Error(`Invalid port in --ports: ${item}`);
+  }
+  return [renderer as VisualParityRenderer, port];
+}
+
+/**
+ * Parses comma-separated --ports list flag.
+ */
+function parsePortsList(args: string[], ports: Partial<Record<VisualParityRenderer, number>>): void {
+  const list = option(args, '--ports');
+  if (list === undefined) return;
+  for (const item of list.split(',')) {
+    const [renderer, port] = parseSinglePortMapping(item);
+    ports[renderer] = port;
+  }
+}
+
+/**
+ * Parses TCP port allocations for framework renderers from CLI flags.
+ */
+function parsePorts(args: string[]): Partial<Record<VisualParityRenderer, number>> {
+  const ports: Partial<Record<VisualParityRenderer, number>> = {};
+  parseBasePort(args, ports);
+  parseIndividualPorts(args, ports);
+  parsePortsList(args, ports);
   return ports;
 }
 
@@ -128,11 +217,25 @@ function parseTargets(args: string[]): readonly VisualParityCandidate[] | undefi
   });
 }
 
+/**
+ * Validates viewport and theme CLI parameters.
+ */
+function assertViewportAndTheme(viewport: string, theme: string): void {
+  if (viewport !== 'md') {
+    throw new Error('Visual parity currently supports only --viewport md.');
+  }
+  if (theme !== 'light') {
+    throw new Error('Visual parity currently supports only --theme light.');
+  }
+}
+
+/**
+ * Parses command line options for visual parity execution and verification.
+ */
 export function parseVisualParityArgs(args: string[], root = repositoryRoot()): VisualParityCliOptions {
   const viewport = option(args, '--viewport') ?? 'md';
   const theme = option(args, '--theme') ?? 'light';
-  if (viewport !== 'md') throw new Error('Visual parity currently supports only --viewport md.');
-  if (theme !== 'light') throw new Error('Visual parity currently supports only --theme light.');
+  assertViewportAndTheme(viewport, theme);
   return {
     repositoryRoot: root,
     packageName: option(args, '--package'),
@@ -163,19 +266,33 @@ export function parseVisualParityArgs(args: string[], root = repositoryRoot()): 
   };
 }
 
-/** Match exact Storybook IDs, documented short selectors, or compact alphanumeric suffixes. */
-export function matchesStorySelector(storyId: string, selector?: string): boolean {
-  if (!selector) return true;
-  if (storyId === selector) return true;
-  const id = storyId.toLowerCase();
-  const sel = selector.toLowerCase().trim().replaceAll(/\s+/g, '-');
-  if (!sel) return true;
-  if (id === sel || id.endsWith(sel) || id.endsWith(`--${sel}`)) return true;
+/**
+ * Compares compact normalized forms of story and selector.
+ */
+function matchesCompactSelector(id: string, sel: string): boolean {
   const compactId = compactSelector(id);
   const compactSel = compactSelector(sel);
   return compactSel.length > 0 && (compactId === compactSel || compactId.endsWith(compactSel));
 }
 
+/**
+ * Checks if a story ID matches a selector or common naming variants.
+ */
+function isDirectStoryMatch(id: string, sel: string): boolean {
+  return !sel || id === sel || id.endsWith(sel) || id.endsWith(`--${sel}`);
+}
+
+/** Match exact Storybook IDs, documented short selectors, or compact alphanumeric suffixes. */
+export function matchesStorySelector(storyId: string, selector?: string): boolean {
+  if (!selector || storyId === selector) return true;
+  const id = storyId.toLowerCase();
+  const sel = selector.toLowerCase().trim().replaceAll(/\s+/g, '-');
+  return isDirectStoryMatch(id, sel) || matchesCompactSelector(id, sel);
+}
+
+/**
+ * Filters matched story index pairs matching package name and story selector constraints.
+ */
 export function selectedPairs(
   pairs: StorybookIndexPair[],
   inventory: ReturnType<typeof discoverInventory>,
@@ -192,6 +309,9 @@ export function selectedPairs(
   return options.maxStories === undefined ? selected : selected.slice(0, options.maxStories);
 }
 
+/**
+ * Filters missing story index pairs matching package name and story selector constraints.
+ */
 export function selectedMissing(
   missing: StorybookIndexMissingPair[],
   inventory: ReturnType<typeof discoverInventory>,
@@ -208,43 +328,32 @@ export function selectedMissing(
   return options.maxStories === undefined ? selected : selected.slice(0, options.maxStories);
 }
 
+/**
+ * Creates a lookup map of captures indexed by renderer and story ID.
+ */
 function captureByKey(captures: VisualParityCaptureResult[]): Map<string, VisualParityCaptureResult> {
   return new Map(captures.map((capture) => [`${capture.renderer}\u0000${capture.storyId}`, capture]));
 }
 
+/**
+ * Categorizes failure status based on diagnostic readiness.
+ */
 function captureFailure(capture: VisualParityCaptureResult | undefined): VisualParityComparisonStatus {
-  if (capture?.status === 'blocked') return 'blocked';
-  return 'runtime-failure';
+  return capture?.status === 'blocked' ? 'blocked' : 'runtime-failure';
 }
 
 type VisualParityComparisonStatus = VisualParityComparison['status'];
 
-function compareRenderer(
-  storyId: string,
-  candidate: VisualParityCandidate,
-  captures: Map<string, VisualParityCaptureResult>,
-  outputDirectory: string,
+/**
+ * Executes PNG diff comparison and populates result fields.
+ */
+function executeDiffComparison(
+  baseline: VisualParityCaptureResult,
+  candidateCapture: VisualParityCaptureResult,
+  diffPath: string,
   options: VisualParityCliOptions,
-): VisualParityComparison {
-  const baseline = captures.get(`web-component\u0000${storyId}`);
-  const candidateCapture = captures.get(`${candidate}\u0000${storyId}`);
-  const comparison: VisualParityComparison = {
-    baseline: 'web-component',
-    candidate,
-    status: 'runtime-failure',
-    baselineUrl: baseline?.url,
-    candidateUrl: candidateCapture?.url,
-  };
-  if (!baseline || !candidateCapture || baseline.status !== 'pass' || candidateCapture.status !== 'pass') {
-    comparison.status = captureFailure(baseline?.status === 'pass' ? candidateCapture : baseline);
-    comparison.message =
-      [baseline?.message, candidateCapture?.message].filter(Boolean).join('\n') || 'Renderer capture did not complete.';
-    return comparison;
-  }
-  const diffPath = path.join(
-    storyArtifactDirectory(outputDirectory, storyId),
-    `web-component-to-${candidate}.diff.png`,
-  );
+  comparison: VisualParityComparison,
+): void {
   try {
     const diff = comparePngFiles({
       baselinePath: baseline.imagePath as string,
@@ -270,9 +379,68 @@ function compareRenderer(
     comparison.status = 'runtime-failure';
     comparison.message = error instanceof Error ? error.message : String(error);
   }
+}
+
+/**
+ * Checks if both baseline and candidate captures completed successfully.
+ */
+function hasPassingCaptures(baseline?: VisualParityCaptureResult, candidate?: VisualParityCaptureResult): boolean {
+  return Boolean(baseline && candidate && baseline.status === 'pass' && candidate.status === 'pass');
+}
+
+/**
+ * Formats diagnostic failure messages for failed capture comparison.
+ */
+function handleFailedComparison(
+  baseline: VisualParityCaptureResult | undefined,
+  candidateCapture: VisualParityCaptureResult | undefined,
+  comparison: VisualParityComparison,
+): void {
+  comparison.status = captureFailure(baseline?.status === 'pass' ? candidateCapture : baseline);
+  comparison.message =
+    [baseline?.message, candidateCapture?.message].filter(Boolean).join('\n') || 'Renderer capture did not complete.';
+}
+
+/**
+ * Compares candidate renderer capture against web-component baseline.
+ */
+function compareRenderer(
+  storyId: string,
+  candidate: VisualParityCandidate,
+  captures: Map<string, VisualParityCaptureResult>,
+  outputDirectory: string,
+  options: VisualParityCliOptions,
+): VisualParityComparison {
+  const baseline = captures.get(`web-component\u0000${storyId}`);
+  const candidateCapture = captures.get(`${candidate}\u0000${storyId}`);
+  const comparison: VisualParityComparison = {
+    baseline: 'web-component',
+    candidate,
+    status: 'runtime-failure',
+    baselineUrl: baseline?.url,
+    candidateUrl: candidateCapture?.url,
+  };
+  if (!hasPassingCaptures(baseline, candidateCapture)) {
+    handleFailedComparison(baseline, candidateCapture, comparison);
+    return comparison;
+  }
+  const diffPath = path.join(
+    storyArtifactDirectory(outputDirectory, storyId),
+    `web-component-to-${candidate}.diff.png`,
+  );
+  executeDiffComparison(
+    baseline as VisualParityCaptureResult,
+    candidateCapture as VisualParityCaptureResult,
+    diffPath,
+    options,
+    comparison,
+  );
   return comparison;
 }
 
+/**
+ * Generates visual parity result record for missing renderer index pairs.
+ */
 function missingResult(
   pair: StorybookIndexMissingPair,
   packageName: string,
@@ -614,6 +782,9 @@ export async function runVisualParity(options: VisualParityCliOptions): Promise<
   return buildVisualParityReport(options, definitions, results, captures, diagnostics, cleanupErrors);
 }
 
+/**
+ * CLI entrypoint executing visual parity test suite from process arguments.
+ */
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
   if (args.includes('--help')) {

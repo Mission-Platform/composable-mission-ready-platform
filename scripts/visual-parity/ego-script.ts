@@ -49,6 +49,11 @@ export function buildStoryReadinessSource(timeoutMs = 15_000): string {
   return String.raw`(async () => {
   const root = document.querySelector('#storybook-root');
   const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+  if (document.fonts?.ready) {
+    try {
+      await document.fonts.ready;
+    } catch {}
+  }
   const deadline = Date.now() + ${budgetMs};
   const readRender = () => {
     const preview = window.__STORYBOOK_PREVIEW__;
@@ -68,7 +73,7 @@ export function buildStoryReadinessSource(timeoutMs = 15_000): string {
     if (shadow && (shadow.childElementCount > 0 || (shadow.textContent || '').trim())) return true;
     return false;
   };
-  const isTerminalPhase = (phase) => phase === 'finished' || phase === 'afterEach' || phase === 'aborted';
+  const isTerminalPhase = (phase) => phase === 'finished' || phase === 'afterEach' || phase === 'rendered' || phase === 'aborted';
   const waitForImages = async () => {
     const images = [...document.images];
     await Promise.all(images.map((image) => image.complete
@@ -85,17 +90,19 @@ export function buildStoryReadinessSource(timeoutMs = 15_000): string {
     };
   };
   const waitForCustomElements = async () => {
+    if (typeof customElements === 'undefined') return [];
     const tags = [...new Set([...root.querySelectorAll('*')]
       .map((element) => element.localName)
-      .filter((tag) => tag.includes('-')))];
+      .filter((tag) => tag.startsWith('forge-')))];
     const pending = [];
     await Promise.all(tags.map(async (tag) => {
+      if (customElements.get(tag)) return;
       let resolved = false;
       await Promise.race([
         customElements.whenDefined(tag).then(() => { resolved = true; }),
-        wait(5000),
+        wait(500),
       ]);
-      if (!resolved) pending.push(tag);
+      if (!resolved && !customElements.get(tag)) pending.push(tag);
     }));
     return pending;
   };
@@ -125,7 +132,7 @@ export function buildStoryReadinessSource(timeoutMs = 15_000): string {
     phase = render.phase;
     const contentReady = hasContent(root);
     if (isTerminalPhase(phase) && contentReady) {
-      storyRenderComplete = phase === 'finished' || phase === 'afterEach';
+      storyRenderComplete = phase === 'finished' || phase === 'afterEach' || phase === 'rendered';
       break;
     }
     // Content without an exposed phase still needs a short settle for play/fonts.
@@ -135,7 +142,7 @@ export function buildStoryReadinessSource(timeoutMs = 15_000): string {
         const delayed = readRender();
         phase = delayed.phase;
         if (isTerminalPhase(phase) || phase == null) {
-          storyRenderComplete = phase == null || phase === 'finished' || phase === 'afterEach';
+          storyRenderComplete = phase == null || phase === 'finished' || phase === 'afterEach' || phase === 'rendered';
           break;
         }
       }
@@ -176,20 +183,62 @@ export function buildStoryReadinessSource(timeoutMs = 15_000): string {
 })()`;
 }
 
+/**
+ * Formats an unknown error or exception into a detailed stack or message string.
+ */
 function errorMessage(error: unknown): string {
   return error instanceof Error ? (error.stack ?? error.message) : String(error);
 }
 
-export function buildStoryIframeUrl(baseUrl: string, storyId: string): string {
-  return `${baseUrl.replace(/\/+$/, '')}/iframe.html?id=${encodeURIComponent(storyId)}`;
+/**
+ * Builds the fully qualified URL to a story iframe with optional theme parameter.
+ */
+export function buildStoryIframeUrl(baseUrl: string, storyId: string, theme?: string): string {
+  const url = `${baseUrl.replace(/\/+$/, '')}/iframe.html?id=${encodeURIComponent(storyId)}`;
+  return theme ? `${url}&globals=theme:${encodeURIComponent(theme)}` : url;
 }
 
+/**
+ * Validates that a viewport matches the deterministic md viewport constraints.
+ */
+function isStandardMdViewport(value: VisualParityViewport): boolean {
+  return value.name === 'md' && value.width === 1024 && value.height === 768 && value.deviceScaleFactor === 1;
+}
+
+/**
+ * Validates and normalizes viewport configuration against deterministic capture constraints.
+ */
 function normalizeViewport(viewport?: VisualParityViewport): VisualParityViewport {
   const value = viewport ?? DEFAULT_VISUAL_PARITY_VIEWPORT;
-  if (value.name !== 'md' || value.width !== 1024 || value.height !== 768 || value.deviceScaleFactor !== 1) {
+  if (!isStandardMdViewport(value)) {
     throw new Error('Visual parity capture currently supports only the deterministic md viewport (1024x768 @ 1x).');
   }
   return value;
+}
+
+interface EgoScriptConfig {
+  readonly viewport: VisualParityViewport;
+  readonly retries: number;
+  readonly timeoutSeconds: number;
+  readonly taskName: string;
+  readonly theme: string;
+}
+
+/**
+ * Extracts configuration values for Ego script generation.
+ */
+function buildEgoScriptConfig(options: VisualParityCaptureOptions): EgoScriptConfig {
+  const viewport = normalizeViewport(options.viewport);
+  const rawRetries = options.retries ?? 3;
+  const rawTimeout = options.timeoutMs ?? 30_000;
+  const baseTaskName = options.taskName ?? 'visual parity capture';
+  return {
+    viewport,
+    retries: Math.max(1, Math.floor(rawRetries)),
+    timeoutSeconds: Math.max(1, Math.ceil(rawTimeout / 1000)),
+    taskName: `${baseTaskName}-${Date.now()}-${process.pid}`,
+    theme: options.theme ?? 'light',
+  };
 }
 
 /**
@@ -199,13 +248,10 @@ function normalizeViewport(viewport?: VisualParityViewport): VisualParityViewpor
  * so manager/chrome layout cannot affect the captured pixels.
  */
 export function visualParityEgoScript(options: VisualParityCaptureOptions): string {
-  const viewport = normalizeViewport(options.viewport);
-  const retries = Math.max(1, Math.floor(options.retries ?? 3));
-  const timeoutSeconds = Math.max(1, Math.ceil((options.timeoutMs ?? 30_000) / 1000));
-  const taskName = `${options.taskName ?? 'visual parity capture'}-${Date.now()}-${process.pid}`;
+  const config = buildEgoScriptConfig(options);
   const captures = options.captures.map((capture) => ({
     ...capture,
-    url: buildStoryIframeUrl(capture.baseUrl, capture.storyId),
+    url: buildStoryIframeUrl(capture.baseUrl, capture.storyId, config.theme),
   }));
   return String.raw`
 (async () => {
@@ -214,11 +260,11 @@ const path = await import('node:path');
 const captures = ${JSON.stringify(captures)};
 const repositoryRoot = ${JSON.stringify(options.repositoryRoot)};
 const artifactDirectory = ${JSON.stringify(options.artifactDirectory)};
-const viewport = ${JSON.stringify(viewport)};
-const theme = ${JSON.stringify(options.theme ?? 'light')};
-const maxAttempts = ${retries};
-const timeoutSeconds = ${timeoutSeconds};
-const task = await useOrCreateTaskSpace(${JSON.stringify(taskName)});
+const viewport = ${JSON.stringify(config.viewport)};
+const theme = ${JSON.stringify(config.theme)};
+const maxAttempts = ${config.retries};
+const timeoutSeconds = ${config.timeoutSeconds};
+const task = await useOrCreateTaskSpace(${JSON.stringify(config.taskName)});
 const allDiagnostics = [];
 let cleanupErrors = [];
 try {
@@ -351,15 +397,19 @@ for (const item of captures) await capture(item);
 /** Backwards-compatible short name matching the runtime-validation harness. */
 export const egoScript = visualParityEgoScript;
 
+/**
+ * Generates a synthetic failure capture result record.
+ */
 function failureResult(
   capture: VisualParityCaptureOptions['captures'][number],
   message: string,
   status: 'runtime-failure' | 'blocked',
+  theme = 'light',
 ): VisualParityCaptureResult {
   return {
     storyId: capture.storyId,
     renderer: capture.renderer,
-    url: buildStoryIframeUrl(capture.baseUrl, capture.storyId),
+    url: buildStoryIframeUrl(capture.baseUrl, capture.storyId, theme),
     status,
     attempts: 0,
     diagnostics: [{ kind: 'environment', message }],
@@ -368,8 +418,11 @@ function failureResult(
 }
 
 /** Default captures per Ego Lite process; keeps large inventories under process timeouts. */
-export const VISUAL_PARITY_CAPTURE_CHUNK_SIZE = 120;
+export const VISUAL_PARITY_CAPTURE_CHUNK_SIZE = 15;
 
+/**
+ * Splits capture requests into bounded process chunks.
+ */
 function chunkCaptures<T>(items: readonly T[], chunkSize: number): T[][] {
   if (items.length === 0) return [];
   const size = Math.max(1, Math.floor(chunkSize));
@@ -387,55 +440,124 @@ export function egoProcessTimeoutMs(captureCount: number, perCaptureTimeoutMs = 
   return Math.max(perCaptureTimeoutMs, 90_000 + count * perCaptureBudget);
 }
 
-async function runVisualParityCaptureChunk(options: VisualParityCaptureOptions): Promise<VisualParityCaptureRun> {
+/**
+ * Resolves fallback error message for missing capture entries.
+ */
+function resolveFailureMessage(diagnostics: readonly string[], stderr: string): string {
+  const lastDiag = diagnostics.at(-1);
+  if (lastDiag) return lastDiag;
+  const trimmed = stderr.trim();
+  return trimmed.length > 0 ? trimmed : 'Ego Lite completed without a capture result.';
+}
+
+/**
+ * Fills in failure capture results for entries missing from Ego output.
+ */
+function populateMissingCaptureFailures(
+  options: VisualParityCaptureOptions,
+  results: VisualParityCaptureResult[],
+  diagnostics: readonly string[],
+  stderr: string,
+): void {
+  const byKey = new Map(results.map((result) => [`${result.renderer}:${result.storyId}`, result]));
+  const defaultMessage = resolveFailureMessage(diagnostics, stderr);
+  const failureStatus = diagnostics.length > 0 ? 'runtime-failure' : 'blocked';
+  for (const capture of options.captures) {
+    const key = `${capture.renderer}:${capture.storyId}`;
+    if (!byKey.has(key)) {
+      results.push(failureResult(capture, defaultMessage, failureStatus));
+    }
+  }
+}
+
+/**
+ * Handles completed message payload from child process.
+ */
+function handleDoneMessage(message: CaptureMessage, diagnostics: string[], cleanupErrors: string[]): void {
+  if (message.diagnostics) {
+    diagnostics.push(...message.diagnostics);
+  }
+  if (message.cleanupErrors) {
+    cleanupErrors.push(...message.cleanupErrors);
+  }
+}
+
+/**
+ * Parses a single line of Ego runner JSON output.
+ */
+function parseOutputLine(
+  line: string,
+  results: VisualParityCaptureResult[],
+  diagnostics: string[],
+  cleanupErrors: string[],
+): void {
+  try {
+    const message = JSON.parse(line) as CaptureMessage;
+    if (message.kind === 'capture' && message.result) results.push(message.result);
+    if (message.kind === 'done') handleDoneMessage(message, diagnostics, cleanupErrors);
+  } catch {
+    // ego-browser may emit human-readable diagnostics alongside JSON.
+  }
+}
+
+/**
+ * Formats exit diagnostic message for child process failure.
+ */
+function extractChildExitDiagnostic(code: number | null, stderr: string): string {
+  return stderr || `ego-browser exited with code ${code ?? 'null'}`;
+}
+
+/**
+ * Executes an isolated batch of captures within an Ego Lite child process.
+ */
+function runVisualParityCaptureChunk(options: VisualParityCaptureOptions): Promise<VisualParityCaptureRun> {
   return new Promise((resolve) => {
     const child = spawn('ego-browser', ['nodejs'], {
       cwd: options.repositoryRoot,
+      env: process.env,
       stdio: ['pipe', 'pipe', 'pipe'],
       detached: true,
     }) as unknown as PipedProcess;
     const results: VisualParityCaptureResult[] = [];
     const diagnostics: string[] = [];
-    let cleanupErrors: string[] = [];
+    const cleanupErrors: string[] = [];
     let pending = '';
     let stderr = '';
     let settled = false;
-    const timeoutMs = egoProcessTimeoutMs(options.captures.length, options.timeoutMs ?? 30_000);
-    const timeout = setTimeout(() => {
-      diagnostics.push(`Ego Lite timed out after ${timeoutMs}ms`);
-      void terminateProcessTree(child, { graceMs: 250 }).finally(finish);
-    }, timeoutMs);
-    const finish = (): void => {
+    let timer: NodeJS.Timeout | undefined;
+
+    /**
+     * Finalizes child process lifecycle and resolves promise.
+     */
+    function finish(): void {
       if (settled) return;
       settled = true;
-      clearTimeout(timeout);
-      const byKey = new Map(results.map((result) => [`${result.renderer}:${result.storyId}`, result]));
-      for (const capture of options.captures) {
-        const key = `${capture.renderer}:${capture.storyId}`;
-        if (!byKey.has(key)) {
-          const message = (diagnostics.at(-1) ?? stderr.trim()) || 'Ego Lite completed without a capture result.';
-          results.push(failureResult(capture, message, diagnostics.length > 0 ? 'runtime-failure' : 'blocked'));
-        }
+      if (timer !== undefined) {
+        clearTimeout(timer);
+        timer = undefined;
       }
+      populateMissingCaptureFailures(options, results, diagnostics, stderr);
       resolve({ results, diagnostics, cleanupErrors });
-    };
+    }
+
+    const timeoutMs = egoProcessTimeoutMs(options.captures.length, options.timeoutMs ?? 30_000);
+    timer = setTimeout(() => {
+      diagnostics.push(`Ego Lite timed out after ${timeoutMs}ms`);
+      terminateProcessTree(child, { graceMs: 250 }).finally(() => finish());
+    }, timeoutMs);
+
+    /**
+     * Ingests chunk stream buffer and processes JSON lines.
+     */
     const parse = (chunk: Buffer): void => {
       pending += chunk.toString();
       const lines = pending.split('\n');
       pending = lines.pop() ?? '';
       for (const line of lines) {
-        try {
-          const message = JSON.parse(line) as CaptureMessage;
-          if (message.kind === 'capture' && message.result) results.push(message.result);
-          if (message.kind === 'done') {
-            diagnostics.push(...(message.diagnostics ?? []));
-            cleanupErrors = message.cleanupErrors ?? [];
-          }
-        } catch {
-          // ego-browser may emit human-readable diagnostics alongside JSON.
-        }
+        parseOutputLine(line, results, diagnostics, cleanupErrors);
       }
     };
+
     child.stdout.on('data', parse);
     child.stderr.on('data', (chunk) => {
       stderr += chunk.toString();
@@ -447,14 +569,18 @@ async function runVisualParityCaptureChunk(options: VisualParityCaptureOptions):
     });
     child.on('close', (code) => {
       if (pending.trim()) parse(Buffer.from(`${pending}\n`));
-      if (code !== 0 && diagnostics.length === 0)
-        diagnostics.push(stderr || `ego-browser exited with code ${code ?? 'null'}`);
+      if (code !== 0 && diagnostics.length === 0) {
+        diagnostics.push(extractChildExitDiagnostic(code, stderr));
+      }
       finish();
     });
     child.stdin.end(visualParityEgoScript(options));
   });
 }
 
+/**
+ * Concurrently maps asynchronous work items across a bounded worker pool.
+ */
 async function mapPool<T, R>(
   items: readonly T[],
   concurrency: number,
@@ -463,15 +589,22 @@ async function mapPool<T, R>(
   const limit = Math.max(1, Math.floor(concurrency));
   const results = Array.from({ length: items.length });
   let next = 0;
+
+  /**
+   * Worker loop pulling work items from the shared pool queue.
+   */
   const run = async (): Promise<void> => {
     while (next < items.length) {
-      const index = next;
-      next += 1;
-      results[index] = await worker(items[index]!, index);
+      const index = next++;
+      const currentItem = items[index];
+      if (currentItem !== undefined) {
+        results[index] = await worker(currentItem, index);
+      }
     }
   };
+
   await Promise.all(Array.from({ length: Math.min(limit, items.length) }, () => run()));
-  return results;
+  return results as R[];
 }
 
 /** Runs the generated program and parses one structured result per renderer/story. */
@@ -481,7 +614,7 @@ export async function runVisualParityCapture(options: VisualParityCaptureOptions
   fs.mkdirSync(options.artifactDirectory, { recursive: true });
   const chunks = chunkCaptures(options.captures, VISUAL_PARITY_CAPTURE_CHUNK_SIZE);
   const workers = Math.max(1, Math.floor(options.workers ?? 1));
-  const chunkRuns = await mapPool(chunks, workers, async (captures, index) =>
+  const chunkRuns = await mapPool(chunks, workers, (captures, index) =>
     runVisualParityCaptureChunk({
       ...options,
       captures,
@@ -496,6 +629,9 @@ export async function runVisualParityCapture(options: VisualParityCaptureOptions
   };
 }
 
+/**
+ * Builds the URL for capturing visual parity frames from a story ID.
+ */
 export function visualParityCaptureUrl(baseUrl: string, storyId: string): string {
   return buildStoryIframeUrl(baseUrl, storyId);
 }

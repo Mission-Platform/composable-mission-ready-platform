@@ -1,0 +1,180 @@
+
+struct SpatialNode {
+  node_idx: u32;
+  min_x: u32;
+  min_y: u32;
+  max_x: u32;
+  max_y: u32;
+}
+
+struct SpatialPort {
+  node_idx: u32;
+  port_idx: u32;
+  direction: u32;
+  x: u32;
+  y: u32;
+}
+
+export fn spatial_init() -> u32 {
+  memory_store_u32(100, 0);
+  let node_bytes: u32 = 200000;
+  let nodes_ptr: u32 = memory_alloc(node_bytes);
+  memory_store_u32(104, nodes_ptr);
+
+  memory_store_u32(108, 0);
+  let port_bytes: u32 = 400000;
+  let ports_ptr: u32 = memory_alloc(port_bytes);
+  memory_store_u32(112, ports_ptr);
+
+  memory_store_u32(116, 0);
+  let query_bytes: u32 = 40000;
+  let query_ptr: u32 = memory_alloc(query_bytes);
+  memory_store_u32(120, query_ptr);
+
+  return nodes_ptr;
+}
+
+export fn spatial_clear() -> unit {
+  memory_store_u32(100, 0);
+  memory_store_u32(108, 0);
+  memory_store_u32(116, 0);
+}
+
+export fn spatial_insert_node(node_idx: u32, min_x: u32, min_y: u32, max_x: u32, max_y: u32) -> unit {
+  let mut base: u32 = memory_load_u32(104);
+  if base == 0 {
+    base = spatial_init();
+  }
+  let count: u32 = memory_load_u32(100);
+  if count >= 10000 {
+    return;
+  }
+  let ptr: u32 = base + count * 20;
+  memory_store_u32(ptr, node_idx);
+  memory_store_u32(ptr + 4, min_x);
+  memory_store_u32(ptr + 8, min_y);
+  memory_store_u32(ptr + 12, max_x);
+  memory_store_u32(ptr + 16, max_y);
+  memory_store_u32(100, count + 1);
+}
+
+export fn spatial_insert_port(node_idx: u32, port_idx: u32, dir: u32, x: u32, y: u32) -> unit {
+  let mut base: u32 = memory_load_u32(112);
+  if base == 0 {
+    let _init: u32 = spatial_init();
+    base = memory_load_u32(112);
+  }
+  let count: u32 = memory_load_u32(108);
+  if count >= 20000 {
+    return;
+  }
+  let ptr: u32 = base + count * 20;
+  memory_store_u32(ptr, node_idx);
+  memory_store_u32(ptr + 4, port_idx);
+  memory_store_u32(ptr + 8, dir);
+  memory_store_u32(ptr + 12, x);
+  memory_store_u32(ptr + 16, y);
+  memory_store_u32(108, count + 1);
+}
+
+export fn spatial_query_box(q_min_x: u32, q_min_y: u32, q_max_x: u32, q_max_y: u32) -> u32 {
+  let count: u32 = memory_load_u32(100);
+  let base: u32 = memory_load_u32(104);
+  let query_base: u32 = memory_load_u32(120);
+  let mut match_count: u32 = 0;
+  let mut i: u32 = 0;
+
+  while i < count {
+    let ptr: u32 = base + i * 20;
+    let min_x: u32 = memory_load_u32(ptr + 4);
+    let min_y: u32 = memory_load_u32(ptr + 8);
+    let max_x: u32 = memory_load_u32(ptr + 12);
+    let max_y: u32 = memory_load_u32(ptr + 16);
+
+    if max_x >= q_min_x && min_x <= q_max_x && max_y >= q_min_y && min_y <= q_max_y {
+      let node_idx: u32 = memory_load_u32(ptr);
+      memory_store_u32(query_base + match_count * 4, node_idx);
+      match_count = match_count + 1;
+    }
+    i = i + 1;
+  }
+
+  memory_store_u32(116, match_count);
+  return match_count;
+}
+
+export fn spatial_get_query_result(index: u32) -> u32 {
+  let query_base: u32 = memory_load_u32(120);
+  return memory_load_u32(query_base + index * 4);
+}
+
+export fn spatial_hit_test_point(px: u32, py: u32) -> u32 {
+  let count: u32 = memory_load_u32(100);
+  if count == 0 {
+    return 0;
+  }
+  let base: u32 = memory_load_u32(104);
+  let mut last_hit: u32 = 0;
+  let mut i: u32 = 0;
+
+  while i < count {
+    let ptr: u32 = base + i * 20;
+    let min_x: u32 = memory_load_u32(ptr + 4);
+    let min_y: u32 = memory_load_u32(ptr + 8);
+    let max_x: u32 = memory_load_u32(ptr + 12);
+    let max_y: u32 = memory_load_u32(ptr + 16);
+
+    if px >= min_x {
+      if px <= max_x {
+        if py >= min_y {
+          if py <= max_y {
+            let node_idx: u32 = memory_load_u32(ptr);
+            last_hit = node_idx + 1;
+          }
+        }
+      }
+    }
+    i = i + 1;
+  }
+  return last_hit;
+}
+
+export fn spatial_hit_test_port(px: u32, py: u32, snap_radius: u32) -> u32 {
+  let count: u32 = memory_load_u32(108);
+  if count == 0 {
+    return 0;
+  }
+  let base: u32 = memory_load_u32(112);
+  let r_sq: u32 = snap_radius * snap_radius;
+  let mut best_dist: u32 = r_sq + 1;
+  let mut best_result: u32 = 0;
+  let mut i: u32 = 0;
+
+  while i < count {
+    let ptr: u32 = base + i * 20;
+    let x: u32 = memory_load_u32(ptr + 12);
+    let y: u32 = memory_load_u32(ptr + 16);
+    let mut dx: u32 = 0;
+    if px > x {
+      dx = px - x;
+    } else {
+      dx = x - px;
+    }
+    let mut dy: u32 = 0;
+    if py > y {
+      dy = py - y;
+    } else {
+      dy = y - py;
+    }
+    let dist_sq: u32 = dx * dx + dy * dy;
+
+    if dist_sq <= r_sq && dist_sq < best_dist {
+      best_dist = dist_sq;
+      let node_idx: u32 = memory_load_u32(ptr);
+      let port_idx: u32 = memory_load_u32(ptr + 4);
+      best_result = (node_idx * 65536) + (port_idx + 1);
+    }
+    i = i + 1;
+  }
+  return best_result;
+}

@@ -1,0 +1,712 @@
+
+import "./renderer-common.flint" as common;
+import "./camera.flint" as camera;
+import "./spatial-index.flint" as spatial;
+import "./sdf-font.flint" as font;
+
+import capability "webgpu.upload_camera_buffer" as gpu_upload_camera_buffer() -> unit;
+import capability "webgpu.upload_node_buffer" as gpu_upload_node_buffer(count: u32) -> unit;
+import capability "webgpu.upload_edge_buffer" as gpu_upload_edge_buffer(count: u32) -> unit;
+import capability "webgpu.upload_pin_buffer" as gpu_upload_pin_buffer(count: u32) -> unit;
+
+import capability "webgpu.render_begin" as gpu_render_begin() -> unit;
+import capability "webgpu.render_grid" as gpu_render_grid() -> unit;
+import capability "webgpu.render_edges" as gpu_render_edges(count: u32) -> unit;
+import capability "webgpu.render_nodes" as gpu_render_nodes(count: u32) -> unit;
+import capability "webgpu.render_pins" as gpu_render_pins(count: u32) -> unit;
+import capability "webgpu.render_end" as gpu_render_end() -> unit;
+
+import capability "webgl.render_begin" as gl_render_begin(
+  viewport_w: f64, viewport_h: f64, dpr: f64,
+  cam_x: f64, cam_y: f64, zoom: f64
+) -> unit;
+import capability "webgl.render_grid" as gl_render_grid(
+  min_x: f64, min_y: f64, max_x: f64, max_y: f64, zoom: f64
+) -> unit;
+import capability "webgl.draw_edge" as gl_draw_edge(
+  p0x: i32, p0y: i32, p1x: i32, p1y: i32, p2x: i32, p2y: i32, p3x: i32, p3y: i32,
+  is_selected: u32, is_active: u32
+) -> unit;
+import capability "webgl.draw_node" as gl_draw_node(
+  x: i32, y: i32, w: i32, h: i32,
+  is_selected: u32, is_active: u32, is_trapped: u32
+) -> unit;
+import capability "webgl.draw_pin" as gl_draw_pin(
+  px: i32, py: i32, radius: i32,
+  is_hovered: u32, is_active: u32, is_output: u32
+) -> unit;
+import capability "webgl.render_end" as gl_render_end(
+  node_count: u32, edge_count: u32, pin_count: u32
+) -> unit;
+import capability "webgl.render_frame" as webgl_render_frame(visible_nodes: u32, visible_edges: u32) -> unit;
+
+import capability "canvas2d.render_begin" as c2d_render_begin(
+  viewport_w: f64, viewport_h: f64, dpr: f64,
+  cam_x: f64, cam_y: f64, zoom: f64
+) -> unit;
+import capability "canvas2d.render_grid" as c2d_render_grid(
+  min_x: f64, min_y: f64, max_x: f64, max_y: f64, zoom: f64
+) -> unit;
+import capability "canvas2d.draw_edge" as c2d_draw_edge(
+  p0x: i32, p0y: i32, p1x: i32, p1y: i32, p2x: i32, p2y: i32, p3x: i32, p3y: i32,
+  is_selected: u32, is_active: u32, pulse_offset_permille: u32
+) -> unit;
+import capability "canvas2d.draw_node" as c2d_draw_node(
+  x: i32, y: i32, w: i32, h: i32,
+  is_selected: u32, is_active: u32, is_trapped: u32,
+  category_rgb: u32
+) -> unit;
+import capability "canvas2d.draw_pin" as c2d_draw_pin(
+  px: i32, py: i32, radius: i32,
+  is_hovered: u32, is_active: u32, is_output: u32
+) -> unit;
+import capability "canvas2d.render_end" as c2d_render_end() -> unit;
+import capability "canvas2d.render_frame" as canvas2d_render_frame(visible_nodes: u32, visible_edges: u32) -> unit;
+
+import capability "webgpu.write_node_instance" as gpu_write_node_instance(
+  cx: i32, cy: i32, w: i32, h: i32, radius: i32,
+  is_selected: u32, is_active: u32, is_trapped: u32
+) -> unit;
+
+import capability "webgpu.write_edge_instance" as gpu_write_edge_instance(
+  p0x: i32, p0y: i32, p1x: i32, p1y: i32, p2x: i32, p2y: i32, p3x: i32, p3y: i32,
+  is_selected: u32, is_active: u32, pulse_offset_permille: u32
+) -> unit;
+
+import capability "webgpu.write_pin_instance" as gpu_write_pin_instance(
+  px: i32, py: i32, radius: i32, is_hovered: u32, is_active: u32, is_output: u32
+) -> unit;
+
+export fn point_in_rect(px: i32, py: i32, rx: i32, ry: i32, rw: i32, rh: i32) -> bool {
+  return px >= rx && px <= (rx + rw) && py >= ry && py <= (ry + rh);
+}
+
+export fn point_in_circle(px: i32, py: i32, cx: i32, cy: i32, radius: i32) -> bool {
+  let dx: i32 = px - cx;
+  let dy: i32 = py - cy;
+  return (dx * dx + dy * dy) <= (radius * radius);
+}
+
+export fn rect_intersects_box(rx: i32, ry: i32, rw: i32, rh: i32, min_x: i32, min_y: i32, max_x: i32, max_y: i32) -> bool {
+  return (rx + rw) >= min_x && rx <= max_x && (ry + rh) >= min_y && ry <= max_y;
+}
+
+export fn lerp_i32(a: i32, b: i32, t_permille: i32) -> i32 {
+  let diff: i32 = b - a;
+  return a + ((diff * t_permille) / 1000);
+}
+
+export fn bezier_point_1d(p0: i32, p1: i32, p2: i32, p3: i32, t_permille: i32) -> i32 {
+  let p01: i32 = lerp_i32(p0, p1, t_permille);
+  let p12: i32 = lerp_i32(p1, p2, t_permille);
+  let p23: i32 = lerp_i32(p2, p3, t_permille);
+
+  let p012: i32 = lerp_i32(p01, p12, t_permille);
+  let p123: i32 = lerp_i32(p12, p23, t_permille);
+
+  return lerp_i32(p012, p123, t_permille);
+}
+
+export fn bezier_control_dx(p0x: i32, p3x: i32) -> i32 {
+  let diff: i32 = p3x - p0x;
+  let abs_diff: i32 = common.abs_i32(diff);
+  let half: i32 = abs_diff / 2;
+  if half > 40 {
+    return half;
+  }
+  return 40;
+}
+
+export fn node_bounds_height(header_h: i32, max_ports: i32, row_h: i32, pad: i32) -> i32 {
+  return header_h + (max_ports * row_h) + pad;
+}
+
+export fn compute_node_instance(
+  min_x: i32, min_y: i32, max_x: i32, max_y: i32,
+  is_selected: u32, is_active: u32, is_trapped: u32
+) -> unit {
+  let width: i32 = max_x - min_x;
+  let height: i32 = max_y - min_y;
+  let cx: i32 = min_x + (width / 2);
+  let cy: i32 = min_y + (height / 2);
+  gpu_write_node_instance(cx, cy, width, height, 8, is_selected, is_active, is_trapped);
+}
+
+export fn compute_edge_instance(
+  p0x: i32, p0y: i32, p3x: i32, p3y: i32,
+  is_selected: u32, is_active: u32, pulse_offset_permille: u32
+) -> unit {
+  let dx: i32 = bezier_control_dx(p0x, p3x);
+  let p1x: i32 = p0x + dx;
+  let p1y: i32 = p0y;
+  let p2x: i32 = p3x - dx;
+  let p2y: i32 = p3y;
+  gpu_write_edge_instance(p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, is_selected, is_active, pulse_offset_permille);
+}
+
+export fn compute_pin_instance(
+  px: i32, py: i32, is_hovered: u32, is_active: u32, is_output: u32
+) -> unit {
+  let mut radius: i32 = 6;
+  if is_hovered != 0 {
+    radius = 8;
+  }
+  gpu_write_pin_instance(px, py, radius, is_hovered, is_active, is_output);
+}
+
+export fn edge_hit_test(
+  cursor_x: i32, cursor_y: i32,
+  p0x: i32, p0y: i32, p3x: i32, p3y: i32,
+  threshold: i32
+) -> bool {
+  let dx: i32 = bezier_control_dx(p0x, p3x);
+  let p1x: i32 = p0x + dx;
+  let p1y: i32 = p0y;
+  let p2x: i32 = p3x - dx;
+  let p2y: i32 = p3y;
+
+  let thresh_sq: i32 = threshold * threshold;
+
+  let mut step: i32 = 0;
+  while step <= 10 {
+    let t_permille: i32 = step * 100;
+    let bx: i32 = bezier_point_1d(p0x, p1x, p2x, p3x, t_permille);
+    let by: i32 = bezier_point_1d(p0y, p1y, p2y, p3y, t_permille);
+    let diff_x: i32 = cursor_x - bx;
+    let diff_y: i32 = cursor_y - by;
+    let dist_sq: i32 = (diff_x * diff_x) + (diff_y * diff_y);
+    if dist_sq <= thresh_sq {
+      return true;
+    }
+    step = step + 1;
+  }
+  return false;
+}
+
+export fn backend_select_tier(has_webgpu: bool, has_webgl: bool, has_canvas2d: bool) -> i32 {
+  if has_webgpu {
+    return 1;
+  }
+  if has_webgl {
+    return 2;
+  }
+  if has_canvas2d {
+    return 3;
+  }
+  return 0;
+}
+
+export fn backend_fallback_next(current_tier: i32, has_webgl: bool, has_canvas2d: bool) -> i32 {
+  if current_tier == 1 {
+    if has_webgl {
+      return 2;
+    }
+    if has_canvas2d {
+      return 3;
+    }
+  }
+  if current_tier == 2 {
+    if has_canvas2d {
+      return 3;
+    }
+  }
+  return 0;
+}
+
+export fn renderer_execute_frame(visible_nodes: u32, visible_edges: u32, visible_pins: u32) -> unit {
+  gpu_render_begin();
+  gpu_render_grid();
+  if visible_edges > 0 {
+    gpu_render_edges(visible_edges);
+  }
+  if visible_nodes > 0 {
+    gpu_render_nodes(visible_nodes);
+  }
+  if visible_pins > 0 {
+    gpu_render_pins(visible_pins);
+  }
+  gpu_render_end();
+}
+
+export fn renderer_render_webgpu_frame(
+  visible_nodes: u32,
+  visible_edges: u32,
+  visible_pins: u32
+) -> unit {
+  gpu_upload_camera_buffer();
+
+  if visible_edges > 0 {
+    gpu_upload_edge_buffer(visible_edges);
+  }
+  if visible_nodes > 0 {
+    gpu_upload_node_buffer(visible_nodes);
+  }
+  if visible_pins > 0 {
+    gpu_upload_pin_buffer(visible_pins);
+  }
+
+  renderer_execute_frame(visible_nodes, visible_edges, visible_pins);
+}
+
+export fn compute_c2d_edge(
+  p0x: i32, p0y: i32, p3x: i32, p3y: i32,
+  is_selected: u32, is_active: u32, pulse_offset_permille: u32
+) -> unit {
+  let dx: i32 = bezier_control_dx(p0x, p3x);
+  let p1x: i32 = p0x + dx;
+  let p1y: i32 = p0y;
+  let p2x: i32 = p3x - dx;
+  let p2y: i32 = p3y;
+  c2d_draw_edge(p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, is_selected, is_active, pulse_offset_permille);
+}
+
+export fn compute_c2d_node(
+  min_x: i32, min_y: i32, max_x: i32, max_y: i32,
+  is_selected: u32, is_active: u32, is_trapped: u32,
+  category_id: i32
+) -> unit {
+  let w: i32 = max_x - min_x;
+  let h: i32 = max_y - min_y;
+  let category_rgb: u32 = camera.getCategoryRgb(category_id);
+  c2d_draw_node(min_x, min_y, w, h, is_selected, is_active, is_trapped, category_rgb);
+}
+
+export fn compute_c2d_pin(
+  px: i32, py: i32,
+  is_hovered: u32, is_active: u32, is_output: u32
+) -> unit {
+  let mut radius: i32 = 5;
+  if is_hovered != 0 {
+    radius = 7;
+  }
+  c2d_draw_pin(px, py, radius, is_hovered, is_active, is_output);
+}
+
+export fn compute_gl_edge(
+  p0x: i32, p0y: i32, p3x: i32, p3y: i32,
+  is_selected: u32, is_active: u32
+) -> unit {
+  let dx: i32 = bezier_control_dx(p0x, p3x);
+  let p1x: i32 = p0x + dx;
+  let p1y: i32 = p0y;
+  let p2x: i32 = p3x - dx;
+  let p2y: i32 = p3y;
+  gl_draw_edge(p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, is_selected, is_active);
+}
+
+export fn compute_gl_node(
+  min_x: i32, min_y: i32, max_x: i32, max_y: i32,
+  is_selected: u32, is_active: u32, is_trapped: u32
+) -> unit {
+  let w: i32 = max_x - min_x;
+  let h: i32 = max_y - min_y;
+  gl_draw_node(min_x, min_y, w, h, is_selected, is_active, is_trapped);
+}
+
+export fn compute_gl_pin(
+  px: i32, py: i32,
+  is_hovered: u32, is_active: u32, is_output: u32
+) -> unit {
+  let mut radius: i32 = 5;
+  if is_hovered != 0 {
+    radius = 7;
+  }
+  gl_draw_pin(px, py, radius, is_hovered, is_active, is_output);
+}
+
+export fn renderer_render_canvas2d_frame(
+  visible_nodes: u32,
+  visible_edges: u32,
+  visible_pins: u32
+) -> unit {
+  let cam_x: f64 = camera.get_camera_x();
+  let cam_y: f64 = camera.get_camera_y();
+  let zoom: f64 = camera.get_camera_zoom();
+  let viewport_w: f64 = camera.get_camera_viewport_width();
+  let viewport_h: f64 = camera.get_camera_viewport_height();
+  let dpr: f64 = engine_get_dpr();
+
+  c2d_render_begin(viewport_w, viewport_h, dpr, cam_x, cam_y, zoom);
+
+  camera.getViewportBounds(f64_from_u32(100));
+  let min_x: f64 = camera.get_bounds_min_x();
+  let min_y: f64 = camera.get_bounds_min_y();
+  let max_x: f64 = camera.get_bounds_max_x();
+  let max_y: f64 = camera.get_bounds_max_y();
+
+  c2d_render_grid(min_x, min_y, max_x, max_y, zoom);
+  canvas2d_render_frame(visible_nodes, visible_edges);
+  c2d_render_end();
+}
+
+export fn renderer_render_webgl_frame(
+  visible_nodes: u32,
+  visible_edges: u32,
+  visible_pins: u32
+) -> unit {
+  let cam_x: f64 = camera.get_camera_x();
+  let cam_y: f64 = camera.get_camera_y();
+  let zoom: f64 = camera.get_camera_zoom();
+  let viewport_w: f64 = camera.get_camera_viewport_width();
+  let viewport_h: f64 = camera.get_camera_viewport_height();
+  let dpr: f64 = engine_get_dpr();
+
+  gl_render_begin(viewport_w, viewport_h, dpr, cam_x, cam_y, zoom);
+
+  camera.getViewportBounds(f64_from_u32(200));
+  let min_x: f64 = camera.get_bounds_min_x();
+  let min_y: f64 = camera.get_bounds_min_y();
+  let max_x: f64 = camera.get_bounds_max_x();
+  let max_y: f64 = camera.get_bounds_max_y();
+
+  gl_render_grid(min_x, min_y, max_x, max_y, zoom);
+  webgl_render_frame(visible_nodes, visible_edges);
+  gl_render_end(visible_nodes, visible_edges, visible_pins);
+}
+
+struct FlintRenderEngine {
+  viewport_w: f64;
+  viewport_h: f64;
+  dpr: f64;
+  backend_tier: u32;
+  theme_mode: u32;
+}
+
+export fn engine_create(viewport_w: f64, viewport_h: f64, dpr: f64) -> unit {
+  camera.createCamera(viewport_w, viewport_h, f64_from_u32(0), f64_from_u32(0), f64_from_u32(1));
+  memory_store_f64(40, dpr);
+  let current_tier: u32 = memory_load_u32(128);
+  if current_tier == 0 {
+    memory_store_u32(128, 1);
+  }
+  spatial.spatial_init();
+}
+
+export fn engine_resize(viewport_w: f64, viewport_h: f64, dpr: f64) -> unit {
+  let cam_x: f64 = memory_load_f64(0);
+  let cam_y: f64 = memory_load_f64(8);
+  let zoom: f64 = memory_load_f64(16);
+  camera.createCamera(viewport_w, viewport_h, cam_x, cam_y, zoom);
+  memory_store_f64(40, dpr);
+}
+
+export fn engine_pan(delta_x: f64, delta_y: f64) -> unit {
+  camera.panCamera(delta_x, delta_y);
+}
+
+export fn engine_zoom(cursor_x: f64, cursor_y: f64, factor: f64) -> unit {
+  camera.zoomCamera(cursor_x, cursor_y, factor);
+}
+
+export fn engine_set_backend(tier: u32) -> unit {
+  memory_store_u32(128, tier);
+}
+
+export fn engine_get_backend() -> u32 {
+  return memory_load_u32(128);
+}
+
+export fn engine_set_theme(theme_mode: u32) -> unit {
+  memory_store_u32(136, theme_mode);
+}
+
+export fn engine_get_theme() -> u32 {
+  return memory_load_u32(136);
+}
+
+export fn engine_render_frame(visible_nodes: u32, visible_edges: u32, visible_pins: u32) -> unit {
+  let tier: u32 = memory_load_u32(128);
+  if tier == 1 {
+    renderer_render_webgpu_frame(visible_nodes, visible_edges, visible_pins);
+  }
+  if tier == 2 {
+    renderer_render_webgl_frame(visible_nodes, visible_edges, visible_pins);
+  }
+  if tier == 3 {
+    renderer_render_canvas2d_frame(visible_nodes, visible_edges, visible_pins);
+  }
+}
+
+export fn engine_get_dpr() -> f64 {
+  return memory_load_f64(40);
+}
+
+export fn engine_set_dpr(dpr: f64) -> unit {
+  memory_store_f64(40, dpr);
+}
+
+export fn engine_hit_test(px: u32, py: u32) -> u32 {
+  return spatial.spatial_hit_test_point(px, py);
+}
+
+export fn font_get_atlas_size() -> u32 {
+  return font.sdf_get_atlas_size();
+}
+
+export fn font_get_base_font_size() -> f64 {
+  return font.sdf_get_base_font_size();
+}
+
+export fn font_get_char_advance(code: i32) -> f64 {
+  return f64_from_u32(font.sdf_get_char_advance_u32(code));
+}
+
+export fn font_get_kerning(c1: i32, c2: i32) -> f64 {
+  return font.sdf_get_kerning(c1, c2);
+}
+
+export fn font_set_char_spacing(spacing: f64) -> unit {
+  font.sdf_set_char_spacing(spacing);
+}
+
+export fn font_get_char_spacing() -> f64 {
+  return font.sdf_get_char_spacing();
+}
+
+export fn font_set_line_height(height: f64) -> unit {
+  font.sdf_set_line_height(height);
+}
+
+export fn font_get_line_height() -> f64 {
+  return font.sdf_get_line_height();
+}
+
+export fn font_measure_text(text: string, font_size: f64) -> f64 {
+  return font.sdf_measure_text(text, font_size);
+}
+
+export fn font_init_atlas_data() -> u32 {
+  return font.sdf_init_atlas_data();
+}
+
+export fn font_get_atlas_ptr() -> u32 {
+  return font.sdf_get_atlas_ptr();
+}
+
+export fn font_get_table_ptr() -> u32 {
+  return font.sdf_get_table_ptr();
+}
+
+export fn font_clear_text_vertices() -> unit {
+  font.sdf_clear_text_vertices();
+}
+
+export fn font_get_vertex_buffer_ptr() -> u32 {
+  return font.sdf_get_vertex_buffer_ptr();
+}
+
+export fn font_get_vertex_float_count() -> u32 {
+  return font.sdf_get_vertex_float_count();
+}
+
+export fn font_append_text_quads(
+  text: string,
+  origin_x: f64,
+  baseline_y: f64,
+  font_size: f64,
+  r: f64,
+  g: f64,
+  b: f64,
+  a: f64,
+  align: u32
+) -> u32 {
+  return font.sdf_append_text_quads_styled(text, origin_x, baseline_y, font_size, r, g, b, a, align, false, false, false, f64_from_u32(0));
+}
+
+export fn font_append_text_quads_styled(
+  text: string,
+  origin_x: f64,
+  baseline_y: f64,
+  font_size: f64,
+  r: f64,
+  g: f64,
+  b: f64,
+  a: f64,
+  align: u32,
+  is_italic: bool,
+  is_underline: bool,
+  is_strike: bool,
+  max_width: f64
+) -> u32 {
+  return font.sdf_append_text_quads_styled(
+    text,
+    origin_x,
+    baseline_y,
+    font_size,
+    r,
+    g,
+    b,
+    a,
+    align,
+    is_italic,
+    is_underline,
+    is_strike,
+    max_width
+  );
+}
+
+export fn font_measure_text_mono(text: string, font_size: f64) -> f64 {
+  return font.sdf_measure_text_mono(text, font_size);
+}
+
+export fn font_append_text_quads_mono(
+  text: string,
+  origin_x: f64,
+  baseline_y: f64,
+  font_size: f64,
+  r: f64,
+  g: f64,
+  b: f64,
+  a: f64,
+  align: u32
+) -> u32 {
+  return font.sdf_append_text_quads_mono(text, origin_x, baseline_y, font_size, r, g, b, a, align);
+}
+
+export fn font_set_font_weight(weight: u32) -> unit {
+  font.sdf_set_font_weight(weight);
+}
+
+export fn font_get_font_weight() -> u32 {
+  return font.sdf_get_font_weight();
+}
+
+export fn font_set_font_slant(slant: f64) -> unit {
+  font.sdf_set_font_slant(slant);
+}
+
+export fn font_get_font_slant() -> f64 {
+  return font.sdf_get_font_slant();
+}
+
+export fn font_append_text_quads_perspective(
+  text: string,
+  origin_x: f64,
+  baseline_y: f64,
+  font_size: f64,
+  r: f64,
+  g: f64,
+  b: f64,
+  a: f64,
+  align: u32,
+  m00: f64,
+  m01: f64,
+  m10: f64,
+  m11: f64,
+  tilt_x: f64,
+  tilt_y: f64
+) -> u32 {
+  return font.sdf_append_text_quads_perspective(
+    text,
+    origin_x,
+    baseline_y,
+    font_size,
+    r,
+    g,
+    b,
+    a,
+    align,
+    m00,
+    m01,
+    m10,
+    m11,
+    tilt_x,
+    tilt_y
+  );
+}
+
+export fn font_char_code_to_idx(code: i32) -> u32 {
+  return font.char_code_to_idx(code);
+}
+
+export fn font_unicode_to_idx(code: i32) -> u32 {
+  return font.unicode_to_idx(code);
+}
+
+export fn font_get_glyph_hori_advance(idx: u32) -> u32 {
+  return font.get_glyph_hori_advance_u32(idx);
+}
+
+export fn font_get_glyph_width(idx: u32) -> u32 {
+  return font.get_glyph_width_u32(idx);
+}
+
+export fn font_get_glyph_height(idx: u32) -> u32 {
+  return font.get_glyph_height_u32(idx);
+}
+
+export fn font_get_glyph_hori_bearing_x(idx: u32) -> i32 {
+  return font.get_glyph_hori_bearing_x_i32(idx);
+}
+
+export fn font_get_glyph_hori_bearing_y(idx: u32) -> i32 {
+  return font.get_glyph_hori_bearing_y_i32(idx);
+}
+
+export fn font_get_glyph_vert_advance(idx: u32) -> u32 {
+  return font.get_glyph_vert_advance_u32(idx);
+}
+
+export fn font_get_glyph_vert_bearing_x(idx: u32) -> i32 {
+  return font.get_glyph_vert_bearing_x_i32(idx);
+}
+
+export fn font_get_glyph_vert_bearing_y(idx: u32) -> i32 {
+  return font.get_glyph_vert_bearing_y_i32(idx);
+}
+
+export fn font_get_glyph_bbox_min_x(idx: u32) -> i32 {
+  return font.get_glyph_bbox_min_x_i32(idx);
+}
+
+export fn font_get_glyph_bbox_max_x(idx: u32) -> i32 {
+  return font.get_glyph_bbox_max_x_i32(idx);
+}
+
+export fn font_get_glyph_bbox_min_y(idx: u32) -> i32 {
+  return font.get_glyph_bbox_min_y_i32(idx);
+}
+
+export fn font_get_glyph_bbox_max_y(idx: u32) -> i32 {
+  return font.get_glyph_bbox_max_y_i32(idx);
+}
+
+export fn font_get_glyph_metrics(idx: u32, out_ptr: u32) -> unit {
+  font.sdf_get_glyph_metrics(idx, out_ptr);
+}
+
+export fn font_get_metrics_table_ptr() -> u32 {
+  return font.sdf_get_metrics_table_ptr();
+}
+
+export fn font_get_ascent() -> u32 {
+  return font.sdf_get_font_ascent();
+}
+
+export fn font_get_descent() -> u32 {
+  return font.sdf_get_font_descent();
+}
+
+export fn font_get_linegap() -> u32 {
+  return font.sdf_get_font_linegap();
+}
+
+export fn font_get_internal_leading() -> u32 {
+  return font.sdf_get_font_internal_leading();
+}
+
+export fn font_get_external_leading() -> u32 {
+  return font.sdf_get_font_external_leading();
+}
+
+export fn font_get_glyph_right_bearing(idx: u32) -> i32 {
+  return font.get_glyph_right_bearing_i32(idx);
+}
+
+export fn font_get_glyph_center_x(idx: u32) -> u32 {
+  return font.get_glyph_center_x_u32(idx);
+}
+
+export fn font_get_glyph_center_y(idx: u32) -> u32 {
+  return font.get_glyph_center_y_u32(idx);
+}

@@ -47,6 +47,75 @@ function kebabCase(name: string): string {
     .toLowerCase();
 }
 
+/**
+ * Applies CSS style object to HTMLElement.
+ */
+function applyStyleProperty(element: Element, value: unknown): void {
+  if (typeof value === 'object' && value !== null) {
+    Object.assign((element as HTMLElement).style, value);
+  }
+}
+
+/**
+ * Applies custom element or event listener property.
+ */
+function applyCustomOrObjectProperty(element: Element, key: string, value: unknown, custom: boolean): void {
+  if (!custom && EVENT_PROPERTY.test(key) && typeof value === 'function') {
+    element.addEventListener(key.slice(2).toLowerCase(), value as EventListener);
+    return;
+  }
+  (element as unknown as Record<string, unknown>)[key] = value;
+}
+
+/**
+ * Sets primitive HTML element attribute.
+ */
+function applyPrimitiveAttribute(element: Element, key: string, value: unknown): void {
+  if (value === false || value === null) {
+    return;
+  }
+  const attributeName = value === true ? key : toAttributeName(key);
+  const attributeValue = value === true ? '' : String(value);
+  element.setAttribute(attributeName, attributeValue);
+}
+
+/**
+ * Checks if key represents a reserved JSX property or absent value.
+ */
+function isIgnoredProperty(key: string, value: unknown): boolean {
+  return key === 'children' || key === 'key' || value === undefined;
+}
+
+/**
+ * Checks if property should be handled as custom object or function.
+ */
+function isObjectOrFunctionProperty(custom: boolean, value: unknown): boolean {
+  return custom || typeof value === 'object' || typeof value === 'function';
+}
+
+/**
+ * Checks if property key matches class attribute name.
+ */
+function isClassProperty(key: string): boolean {
+  return key === 'class' || key === 'className';
+}
+
+/**
+ * Applies a single JSX property or attribute to a DOM element.
+ */
+function applySingleProperty(element: Element, key: string, value: unknown, custom: boolean): void {
+  if (isIgnoredProperty(key, value)) return;
+  if (key === 'style') {
+    applyStyleProperty(element, value);
+  } else if (isClassProperty(key)) {
+    element.setAttribute('class', String(value));
+  } else if (isObjectOrFunctionProperty(custom, value)) {
+    applyCustomOrObjectProperty(element, key, value, custom);
+  } else {
+    applyPrimitiveAttribute(element, key, value);
+  }
+}
+
 /** Apply a JSX property bag to a real DOM element. */
 export function applyProperties(element: Element, properties: Record<string, unknown> | null | undefined): void {
   if (!properties) {
@@ -54,31 +123,7 @@ export function applyProperties(element: Element, properties: Record<string, unk
   }
   const custom = isCustomElementTag(element.tagName.toLowerCase());
   for (const [key, value] of Object.entries(properties)) {
-    if (key === 'children' || key === 'key' || value === undefined) {
-      continue;
-    }
-    if (key === 'style' && typeof value === 'object' && value !== null) {
-      Object.assign((element as HTMLElement).style, value);
-      continue;
-    }
-    if (key === 'class' || key === 'className') {
-      element.setAttribute('class', String(value));
-      continue;
-    }
-    if (custom || typeof value === 'object' || typeof value === 'function') {
-      // Custom elements (and any object/function value on a native element)
-      // must be set as properties — an attribute would stringify them.
-      if (!custom && EVENT_PROPERTY.test(key) && typeof value === 'function') {
-        element.addEventListener(key.slice(2).toLowerCase(), value as EventListener);
-        continue;
-      }
-      (element as unknown as Record<string, unknown>)[key] = value;
-      continue;
-    }
-    if (value === false || value === null) {
-      continue;
-    }
-    element.setAttribute(value === true ? key : toAttributeName(key), value === true ? '' : String(value));
+    applySingleProperty(element, key, value, custom);
   }
 }
 
@@ -90,9 +135,16 @@ function toAttributeName(key: string): string {
   return key.startsWith('aria') && key.length > 4 ? kebabCase(key) : key;
 }
 
+/**
+ * Determines whether a child value is null, undefined, or boolean and should be skipped.
+ */
+function isSkippableChild(child: ChildValue): boolean {
+  return child === undefined || child === null || typeof child === 'boolean';
+}
+
 /** Append a JSX child (node, primitive, or nested array) to `parent`. */
 export function appendChild(parent: ParentNode, child: ChildValue): void {
-  if (child === undefined || child === null || typeof child === 'boolean') {
+  if (isSkippableChild(child)) {
     return;
   }
   if (Array.isArray(child)) {
@@ -108,13 +160,44 @@ export function appendChild(parent: ParentNode, child: ChildValue): void {
   parent.append(String(child));
 }
 
+/**
+ * Checks if an element matches a custom element constructor or fallback tag.
+ */
+function isCustomElementInstance(element: Element, tag: string): boolean {
+  if (typeof customElements === 'undefined') return false;
+  const customConstructor = customElements.get(tag);
+  return Boolean(customConstructor && element instanceof customConstructor);
+}
+
+/**
+ * Checks if tag requires fallback host construction.
+ */
+function requiresFallbackHost(element: Element, tag: string): boolean {
+  const hasConstructor = typeof customElements !== 'undefined' && Boolean(customElements.get(tag));
+  return hasConstructor || (element instanceof HTMLUnknownElement && isCustomElementTag(tag));
+}
+
+/**
+ * Instantiates a DOM element or custom element host fallback.
+ */
+export function instantiateDomElement(tag: string): Element {
+  let element = document.createElement(tag);
+  if (isCustomElementInstance(element, tag)) {
+    return element;
+  }
+  if (requiresFallbackHost(element, tag)) {
+    element = document.createElement('div', { is: tag });
+  }
+  return element;
+}
+
 /** Build a real DOM element for a native tag with its JSX properties/children. */
 export function createDomElement(
   tag: string,
   properties: Record<string, unknown> | null | undefined,
   children: readonly ChildValue[],
 ): Element {
-  const element = document.createElement(tag);
+  const element = instantiateDomElement(tag);
   applyProperties(element, properties);
   for (const child of children) {
     appendChild(element, child);

@@ -35,6 +35,7 @@ const config: StorybookConfig = createStorybookConfig({
     'barcode',
     'code-scanner',
     'email-components',
+    'flint-graph-editor',
   ],
   viteFinal: (config) => ({
     ...config,
