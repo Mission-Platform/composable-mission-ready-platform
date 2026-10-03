@@ -1,5 +1,11 @@
 # @mission-platform/matrix-code-wasm
 
+## 3.1.2
+
+### Patch Changes
+
+- @mission-platform/flint-runtime@1.0.1
+
 ## 3.1.1
 
 ### Patch Changes

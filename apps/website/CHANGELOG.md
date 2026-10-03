@@ -1,5 +1,13 @@
 # @mission-platform/website
 
+## 0.0.13
+
+### Patch Changes
+
+- @mission-platform/qr-code@3.0.3
+  - @mission-platform/content@1.2.3
+  - @mission-platform/forms@2.2.3
+
 ## 0.0.12
 
 ### Patch Changes

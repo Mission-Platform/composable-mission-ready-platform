@@ -1,5 +1,11 @@
 # @mission-platform/content
 
+## 1.2.3
+
+### Patch Changes
+
+- @mission-platform/flint-language-service@1.0.1
+
 ## 1.2.2
 
 ### Patch Changes

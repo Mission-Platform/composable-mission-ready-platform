@@ -1,5 +1,11 @@
 # @mission-platform/service-monitor
 
+## 0.0.8
+
+### Patch Changes
+
+- @mission-platform/forms@2.2.3
+
 ## 0.0.7
 
 ### Patch Changes

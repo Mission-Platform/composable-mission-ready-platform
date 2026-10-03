@@ -1,5 +1,12 @@
 # @mission-platform/docs
 
+## 0.0.7
+
+### Patch Changes
+
+- @mission-platform/content@1.2.3
+  - @mission-platform/forms@2.2.3
+
 ## 0.0.6
 
 ### Patch Changes

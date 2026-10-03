@@ -1,5 +1,11 @@
 # @mission-platform/flint-lsp
 
+## 1.0.1
+
+### Patch Changes
+
+- @mission-platform/flint-language-service@1.0.1
+
 ## 1.0.0
 
 ### Major Changes

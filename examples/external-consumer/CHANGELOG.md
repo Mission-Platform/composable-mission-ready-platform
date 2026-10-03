@@ -1,5 +1,11 @@
 # external-consumer-example
 
+## 0.1.7
+
+### Patch Changes
+
+- @mission-platform/forms@2.2.3
+
 ## 0.1.6
 
 ### Patch Changes

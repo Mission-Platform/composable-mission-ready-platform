@@ -1,5 +1,12 @@
 # @mission-platform/forms
 
+## 2.2.3
+
+### Patch Changes
+
+- @mission-platform/content@1.2.3
+  - @mission-platform/phone-number@0.3.5
+
 ## 2.2.2
 
 ### Patch Changes

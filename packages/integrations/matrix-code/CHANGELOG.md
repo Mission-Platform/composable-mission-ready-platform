@@ -1,5 +1,11 @@
 # @mission-platform/matrix-code
 
+## 3.0.3
+
+### Patch Changes
+
+- @mission-platform/matrix-code-wasm@3.1.2
+
 ## 3.0.2
 
 ### Patch Changes
