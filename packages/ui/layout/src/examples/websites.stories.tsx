@@ -77,6 +77,69 @@ const FOOTER_COLS = {
   color: 'var(--mp-color-text-secondary)',
 };
 
+/**
+ * Card representing a feature item in the marketing grid.
+ */
+function FeatureCard({ title, description }: { readonly title: string; readonly description: string }) {
+  return (
+    <div style={FEATURE}>
+      <h3 style={{ marginTop: 0 }}>{title}</h3>
+      <p>{description}</p>
+    </div>
+  );
+}
+
+/**
+ * Responsive grid containing marketing feature cards.
+ */
+function FeatureGrid() {
+  return (
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(15rem, 1fr))',
+        gap: 'var(--mp-spacing-4)',
+      }}
+    >
+      <FeatureCard
+        title="Write once"
+        description="Author components in a neutral dialect."
+      />
+      <FeatureCard
+        title="Ship everywhere"
+        description="Compile straight to Vue and React."
+      />
+      <FeatureCard
+        title="Design tokens"
+        description="Theme it all with DTCG tokens."
+      />
+    </div>
+  );
+}
+
+/**
+ * Helper component rendering marketing page content section.
+ */
+function MarketingContent() {
+  return (
+    <div>
+      <section style={HERO}>
+        <ForgeContainer variant="fluid">
+          <h1 style={{ margin: 0, fontSize: 'var(--mp-size-font-2xl)' }}>Ship composable apps faster</h1>
+          <p>One write-once component library for Vue and React.</p>
+          <a style={HERO_BTN}>Get started</a>
+        </ForgeContainer>
+      </section>
+      <section style={SECTION}>
+        <ForgeContainer variant="responsive">
+          <h2 style={{ marginTop: 0 }}>Features</h2>
+          <FeatureGrid />
+        </ForgeContainer>
+      </section>
+    </div>
+  );
+}
+
 /** A marketing landing page: a full-bleed hero over a responsive feature grid, with a multi-column footer.
  *
  * `navbar`, `content` and `footer` are **named slots**, not props: only the
@@ -102,42 +165,7 @@ export const Marketing: Story = {
             </nav>
           </div>
         ),
-        content: (
-          <div>
-            <section style={HERO}>
-              <ForgeContainer variant="fluid">
-                <h1 style={{ margin: 0, fontSize: 'var(--mp-size-font-2xl)' }}>Ship composable apps faster</h1>
-                <p>One write-once component library for Vue and React.</p>
-                <a style={HERO_BTN}>Get started</a>
-              </ForgeContainer>
-            </section>
-            <section style={SECTION}>
-              <ForgeContainer variant="responsive">
-                <h2 style={{ marginTop: 0 }}>Features</h2>
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(15rem, 1fr))',
-                    gap: 'var(--mp-spacing-4)',
-                  }}
-                >
-                  <div style={FEATURE}>
-                    <h3 style={{ marginTop: 0 }}>Write once</h3>
-                    <p>Author components in a neutral dialect.</p>
-                  </div>
-                  <div style={FEATURE}>
-                    <h3 style={{ marginTop: 0 }}>Ship everywhere</h3>
-                    <p>Compile straight to Vue and React.</p>
-                  </div>
-                  <div style={FEATURE}>
-                    <h3 style={{ marginTop: 0 }}>Design tokens</h3>
-                    <p>Theme it all with DTCG tokens.</p>
-                  </div>
-                </div>
-              </ForgeContainer>
-            </section>
-          </div>
-        ),
+        content: <MarketingContent />,
         footer: (
           <div style={FOOTER_COLS}>
             <div>

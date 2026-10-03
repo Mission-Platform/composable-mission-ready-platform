@@ -103,6 +103,8 @@ export type FlintRuntimeCommand =
   | 'stackTrace'
   | 'scopes'
   | 'variables'
+  | 'readMemory'
+  | 'evaluate'
   | 'fwsTraceSummary'
   | 'fwsTraceEvents'
   | 'fwsMemoryState'

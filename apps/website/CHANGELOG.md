@@ -1,5 +1,36 @@
 # @mission-platform/website
 
+## 0.0.12
+
+### Patch Changes
+
+- 8be0da7: clean up build steps, remove vestigial aggregate scripts, and scope application build dependencies to required framework adapters
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [94a694a]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+  - @mission-platform/components@3.2.2
+  - @mission-platform/forge-jsx@2.0.2
+  - @mission-platform/select@1.2.2
+  - @mission-platform/qr-code@3.0.2
+  - @mission-platform/breakpoints@6.0.4
+  - @mission-platform/content@1.2.2
+  - @mission-platform/forge-adapters@1.2.2
+  - @mission-platform/forms@2.2.2
+  - @mission-platform/hunspell@0.4.4
+  - @mission-platform/i18n@2.1.4
+  - @mission-platform/icons@2.0.4
+  - @mission-platform/layouts@2.1.3
+  - @mission-platform/seo@0.3.6
+  - @mission-platform/theme@1.1.3
+  - @mission-platform/typography@1.1.3
+  - @mission-platform/tokens@2.0.1
+
 ## 0.0.11
 
 ### Patch Changes

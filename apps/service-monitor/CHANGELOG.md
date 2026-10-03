@@ -1,5 +1,32 @@
 # @mission-platform/service-monitor
 
+## 0.0.7
+
+### Patch Changes
+
+- 8be0da7: clean up build steps, remove vestigial aggregate scripts, and scope application build dependencies to required framework adapters
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+  - @mission-platform/components@3.2.2
+  - @mission-platform/select@1.2.2
+  - @mission-platform/breakpoints@6.0.4
+  - @mission-platform/d3@2.0.4
+  - @mission-platform/float@1.2.2
+  - @mission-platform/forms@2.2.2
+  - @mission-platform/i18n@2.1.4
+  - @mission-platform/icons@2.0.4
+  - @mission-platform/layouts@2.1.3
+  - @mission-platform/rxjs@1.0.4
+  - @mission-platform/seo@0.3.6
+  - @mission-platform/theme@1.1.3
+  - @mission-platform/typography@1.1.3
+  - @mission-platform/tokens@2.0.1
+
 ## 0.0.6
 
 ### Patch Changes

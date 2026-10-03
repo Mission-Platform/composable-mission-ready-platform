@@ -1,5 +1,12 @@
 # @mission-platform/i18n
 
+## 2.1.4
+
+### Patch Changes
+
+- 8be0da7: optimize turbo pipeline, standardize type-check task, and consolidate package build scripts
+- 8be0da7: split monolithic tsdown configs into discrete target configs and purge vestigial vite configs
+
 ## 2.1.3
 
 ### Patch Changes

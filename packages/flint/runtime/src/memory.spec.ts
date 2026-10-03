@@ -137,4 +137,18 @@ describe('Forge Web Script memory capabilities', () => {
     const withExplicit = createFlintMemory({ memory: rawExternalMemory, initialPointer: 1024 });
     expect(withExplicit.allocate(16)).toBe(1024);
   });
+
+  it('reclaims bump pointer memory when the top-of-heap allocation is deallocated', () => {
+    const memory = createFlintMemory();
+    const ptr1 = memory.allocate(64);
+    const ptr2 = memory.allocate(32);
+    expect(ptr2).toBe(ptr1 + 64);
+
+    // Free the top allocation
+    memory.deallocate(ptr2, 32);
+
+    // Next allocation should reuse ptr2 address
+    const ptr3 = memory.allocate(32);
+    expect(ptr3).toBe(ptr2);
+  });
 });

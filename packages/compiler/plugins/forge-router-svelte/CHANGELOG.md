@@ -1,5 +1,15 @@
 # @mission-platform/forge-router-svelte
 
+## 0.1.4
+
+### Patch Changes
+
+- 8be0da7: optimize turbo pipeline, standardize type-check task, and consolidate package build scripts
+- Updated dependencies [0c0e7ce]
+- Updated dependencies [8be0da7]
+  - @mission-platform/forge-router-plugin-api@0.2.0
+  - @mission-platform/router@1.1.3
+
 ## 0.1.3
 
 ### Patch Changes

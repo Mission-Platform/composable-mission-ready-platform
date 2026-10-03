@@ -585,6 +585,38 @@ Converts a 1-based FlintSourceSpan into a 0-based FlintRange.
 | source | string          |             |
 | span   | FlintSourceSpan |             |
 
+## `src/query/query-engine`
+
+### createFlintLanguageQueryEngine
+
+**Kind:** function
+
+```typescript
+function createFlintLanguageQueryEngine(): FlintLanguageQueryEngine;
+```
+
+Creates an incremental query engine for language service operations.
+
+### FlintLanguageQueryEngine
+
+**Kind:** interface
+
+```typescript
+export interface FlintLanguageQueryEngine
+```
+
+Incremental query engine interface for the Flint language service.
+
+### FlintLanguageQueryStats
+
+**Kind:** interface
+
+```typescript
+export interface FlintLanguageQueryStats
+```
+
+Cache and performance statistics for language query engine.
+
 ## `src/symbols`
 
 ### buildSymbolIndex

@@ -201,12 +201,15 @@ export fn emptySum(items: Array<i32>) -> i32 {
 
   it('generates exact export and nested import contracts for every ABI value shape', () => {
     const artifact = compileFlint(
-      input(`
+      input(
+        `
 import capability "clock.now" as now() -> i64;
 export fn currentTime() -> i64 { return now(); }
 export fn roundTrip(value: bytes) -> bytes { return value; }
 export fn echo(value: string) -> string { return value; }
-`),
+`,
+        ['clock.now'],
+      ),
     );
     expect(artifact.diagnostics).toEqual([]);
     expect(artifact.declarations).toContain('export interface FlintExports');

@@ -84,6 +84,26 @@ Compile the supported deterministic regex subset into Forge bytecode.
 | ------- | ------ | ----------- |
 | pattern | string |             |
 
+### MAX_REGEX_PATTERN_LENGTH
+
+**Kind:** constant
+
+```typescript
+export const MAX_REGEX_PATTERN_LENGTH;
+```
+
+No description provided.
+
+### MAX_REGEX_REPEAT_BOUND
+
+**Kind:** constant
+
+```typescript
+export const MAX_REGEX_REPEAT_BOUND;
+```
+
+No description provided.
+
 ### RegexSyntaxError
 
 **Kind:** class

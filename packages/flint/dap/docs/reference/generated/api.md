@@ -206,6 +206,8 @@ export type FlintRuntimeCommand =
   | 'stackTrace'
   | 'scopes'
   | 'variables'
+  | 'readMemory'
+  | 'evaluate'
   | 'fwsTraceSummary'
   | 'fwsTraceEvents'
   | 'fwsMemoryState'
@@ -411,3 +413,33 @@ export interface FlintDapServerOptions
 ```
 
 Configuration options for initializing a Flint DAP server instance.
+
+### MAX_DAP_MEMORY_READ_BYTES
+
+**Kind:** constant
+
+```typescript
+export const MAX_DAP_MEMORY_READ_BYTES;
+```
+
+Maximum allowed memory read bytes in a single DAP readMemory request.
+
+### validateDapMemoryReadRequest
+
+**Kind:** function
+
+```typescript
+function validateDapMemoryReadRequest(arguments_: Record<string, unknown>): {
+  readonly memoryReference: string;
+  readonly offset: number;
+  readonly count: number;
+};
+```
+
+Validates and bounds a DAP readMemory request payload to prevent memory disclosure out of bounds and DoS.
+
+#### Parameters
+
+| Name       | Type                    | Description |
+| ---------- | ----------------------- | ----------- |
+| arguments_ | Record<string, unknown> |             |

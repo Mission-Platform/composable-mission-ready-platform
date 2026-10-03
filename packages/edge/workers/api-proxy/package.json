@@ -1,7 +1,7 @@
 {
   "name": "@mission-platform/api-proxy",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "BSD-4-Clause",
   "description": "Constrained read-only Cloudflare proxy for approved Mission Platform API routes",
   "type": "module",

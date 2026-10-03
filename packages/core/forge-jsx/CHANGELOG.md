@@ -1,5 +1,14 @@
 # @mission-platform/forge-jsx
 
+## 2.0.2
+
+### Patch Changes
+
+- 8be0da7: address deepsource code quality, complexity, and documentation issues
+- 8be0da7: optimize turbo pipeline, standardize type-check task, and consolidate package build scripts
+- 8be0da7: resolve DeepSource code quality, documentation, complexity, and typing issues
+- 8be0da7: split monolithic tsdown configs into discrete target configs and purge vestigial vite configs
+
 ## 2.0.1
 
 ### Patch Changes

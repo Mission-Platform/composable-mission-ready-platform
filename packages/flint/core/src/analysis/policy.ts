@@ -63,6 +63,38 @@ export type FlintAnalysisOptionsLike = Omit<Partial<FlintAnalysisPolicy>, 'limit
 };
 
 /**
+ * Constant-time string comparison to prevent timing side-channel attacks on security tokens and capability names.
+ */
+// skipcq: JS-R1005
+export function timingSafeEqualString(stringA: string, stringB: string): boolean {
+  if (typeof stringA !== 'string' || typeof stringB !== 'string') return false;
+  const lengthA = stringA.length;
+  const lengthB = stringB.length;
+  let mismatch = lengthA ^ lengthB;
+  const maxLength = Math.max(lengthA, lengthB);
+  for (let index = 0; index < maxLength; index += 1) {
+    const codePointA = index < lengthA ? (stringA.codePointAt(index) ?? 0) : 0;
+    const codePointB = index < lengthB ? (stringB.codePointAt(index) ?? 0) : 0;
+    mismatch |= codePointA ^ codePointB;
+  }
+  return mismatch === 0;
+}
+
+/**
+ * Checks whether a requested capability is authorized under the active policy using constant-time comparison.
+ */
+// skipcq: JS-R1005
+export function isCapabilityAuthorized(capability: string, allowedCapabilities: readonly string[]): boolean {
+  let authorized = false;
+  for (const allowed of allowedCapabilities) {
+    if (timingSafeEqualString(capability, allowed)) {
+      authorized = true;
+    }
+  }
+  return authorized;
+}
+
+/**
  * Determines whether a static analysis finding should block compilation under the active policy.
  *
  * @param finding - Static analysis finding to evaluate.

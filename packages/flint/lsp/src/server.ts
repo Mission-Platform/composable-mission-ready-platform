@@ -465,19 +465,65 @@ export function createFlintLspServer(options: FlintLspServerOptions = {}): Flint
     /**
      * Computes quick-fix and refactoring code actions for diagnostics.
      */
+    // skipcq: JS-R1005
     codeActions(params: CodeActionParams): CodeAction[] {
       assertReady();
       if (!documents.has(params.textDocument.uri)) return [];
       const actions: CodeAction[] = [];
       for (const diagnostic of params.context.diagnostics) {
-        if (diagnostic.code === 'FLINT-PARSE-017') {
+        switch (diagnostic.code) {
+          case 'FLINT-PARSE-017': {
+            actions.push({
+              title: 'Close parenthesis',
+              kind: 'quickfix',
+              diagnostics: [diagnostic],
+              edit: {
+                changes: {
+                  [params.textDocument.uri]: [TextEdit.insert(diagnostic.range.end, ')')],
+                },
+              },
+            });
+            break;
+          }
+          case 'FLINT-PARSE-018': {
+            actions.push({
+              title: 'Close curly brace',
+              kind: 'quickfix',
+              diagnostics: [diagnostic],
+              edit: {
+                changes: {
+                  [params.textDocument.uri]: [TextEdit.insert(diagnostic.range.end, '}')],
+                },
+              },
+            });
+            break;
+          }
+          case 'FLINT-PARSE-019': {
+            actions.push({
+              title: 'Close square bracket',
+              kind: 'quickfix',
+              diagnostics: [diagnostic],
+              edit: {
+                changes: {
+                  [params.textDocument.uri]: [TextEdit.insert(diagnostic.range.end, ']')],
+                },
+              },
+            });
+            break;
+          }
+          default: {
+            break;
+          }
+        }
+        const hint = (diagnostic.data as { hint?: string } | undefined)?.hint;
+        if (hint !== undefined && hint.length > 0 && diagnostic.code !== 'FLINT-PARSE-017') {
           actions.push({
-            title: 'Close parenthesis',
+            title: `Fix: ${hint}`,
             kind: 'quickfix',
             diagnostics: [diagnostic],
             edit: {
               changes: {
-                [params.textDocument.uri]: [TextEdit.insert(diagnostic.range.end, ')')],
+                [params.textDocument.uri]: [TextEdit.replace(diagnostic.range, '')],
               },
             },
           });

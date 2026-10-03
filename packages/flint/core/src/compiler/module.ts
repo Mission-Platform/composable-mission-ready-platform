@@ -45,7 +45,12 @@ import type { FlintAbiManifest, FlintDynamicLinkMetadata } from '../manifest.js'
 function resolveAnalysisPolicy(input: FlintCompileInput): FlintAnalysisOptions['policy'] {
   const nested = input.analysis ?? {};
   const basePolicy = nested.policy ?? input.analysisPolicy;
-  if (basePolicy === undefined) return undefined;
+  if (basePolicy === undefined) {
+    if (input.requestedCapabilities !== undefined) {
+      return { allowedCapabilities: input.requestedCapabilities };
+    }
+    return undefined;
+  }
   if (input.requestedCapabilities !== undefined && basePolicy.allowedCapabilities === undefined) {
     return { ...basePolicy, allowedCapabilities: input.requestedCapabilities };
   }

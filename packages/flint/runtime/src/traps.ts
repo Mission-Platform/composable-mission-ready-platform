@@ -15,7 +15,9 @@ export type FlintTrapCode =
   | 'BorrowViolation'
   | 'RegionExpired'
   | 'UseAfterRelease'
-  | 'DoubleRelease';
+  | 'DoubleRelease'
+  | 'StackOverflow'
+  | 'CallDepthExhausted';
 
 /**
  * Options configuring runtime trap error reporting and logging.

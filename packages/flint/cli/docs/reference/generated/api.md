@@ -194,6 +194,32 @@ export interface FlintCliArtifactFiles
 
 Collection of artifact payloads to be written to disk.
 
+### formatFlintCaretDiagnostics
+
+**Kind:** function
+
+```typescript
+function formatFlintCaretDiagnostics(
+  diagnostics: readonly FlintDiagnostic[],
+  sourceResolver?: (fileName: string) => string | undefined,
+): string;
+```
+
+Formats compiler diagnostics with multi-span carets, line gutters, and remediation notes.
+
+#### Parameters
+
+| Name           | Type                                      | Description                                                    |
+| -------------- | ----------------------------------------- | -------------------------------------------------------------- |
+| diagnostics    | readonly FlintDiagnostic[]                | Array of diagnostic records to format.                         |
+| sourceResolver | (fileName: string) => string \| undefined | Optional source resolver returning file contents by file name. |
+
+#### Contract
+
+- **@param:** Array of diagnostic records to format.
+- **@param:** Optional source resolver returning file contents by file name.
+- **@returns:** Human-readable multi-span caret diagnostic string.
+
 ### formatFlintDiagnostics
 
 **Kind:** function
@@ -276,6 +302,46 @@ Computes the target output directory for artifact generation.
 - **@param:** Path to the entry file.
 - **@param:** Explicit or default output directory path.
 - **@returns:** Resolved output directory string.
+
+### sanitizeSourceMap
+
+**Kind:** function
+
+```typescript
+function sanitizeSourceMap(sourceMap: string, workspaceRoot?: string): string;
+```
+
+Sanitizes a v3 source map JSON string, virtualizing all source paths to prevent traversal and leakage.
+
+#### Parameters
+
+| Name          | Type   | Description |
+| ------------- | ------ | ----------- |
+| sourceMap     | string |             |
+| workspaceRoot | string |             |
+
+### sanitizeSourceMapPath
+
+**Kind:** function
+
+```typescript
+function sanitizeSourceMapPath(filePath: string, workspaceRoot?: string): string;
+```
+
+Sanitizes and virtualizes a source file path to prevent host path traversal (e.g. `../`) and host filesystem disclosure.
+
+#### Parameters
+
+| Name          | Type   | Description                                                  |
+| ------------- | ------ | ------------------------------------------------------------ |
+| filePath      | string | Raw source path from AST or source map.                      |
+| workspaceRoot | string | Optional root directory to calculate relative paths against. |
+
+#### Contract
+
+- **@param:** Raw source path from AST or source map.
+- **@param:** Optional root directory to calculate relative paths against.
+- **@returns:** Sanitized virtual or relative path string.
 
 ### writeFlintArtifacts
 

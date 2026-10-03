@@ -141,10 +141,44 @@ const PRIMITIVE_TYPE_NAMES = new Set<string>([
   'c_float',
   'c_double',
   'c_void',
+  'v128',
+  'i8x16',
+  'i16x8',
+  'i32x4',
+  'i64x2',
+  'f32x4',
+  'f64x2',
 ]);
 
 const VALUE_COLLECTIONS = new Set(['Array', 'Vector', 'Option', 'Result', 'iterResult']);
 const DESCRIPTOR_COLLECTIONS = new Set(['Iterable', 'Iterator', 'Fn']);
+export const INTERIOR_MUTABILITY_TYPES = new Set(['Cell', 'RefCell', 'UnsafeCell', 'AtomicCell']);
+
+/**
+ * Checks whether a nominal type constructor represents an interior mutability container.
+ */
+export function isInteriorMutabilityType(name: string): boolean {
+  return INTERIOR_MUTABILITY_TYPES.has(name);
+}
+
+export const MAX_STATIC_ARRAY_ELEMENTS = 16_777_216;
+export const MAX_STATIC_ARRAY_BYTES = 0x7f_ff_ff_ff;
+export const MAX_MACRO_EXPANSION_STEPS = 10_000;
+export const MAX_EXPANSION_DEPTH = 32;
+
+/**
+ * Validates fixed array length bounds to protect against compile-time and layout DoS.
+ */
+export function validateFixedArrayLength(length: number): void {
+  if (!Number.isSafeInteger(length) || length < 0) {
+    throw new RangeError(`Fixed array length must be a non-negative safe integer: got ${length}`);
+  }
+  if (length > MAX_STATIC_ARRAY_ELEMENTS) {
+    throw new RangeError(
+      `Fixed array length ${length} exceeds maximum permitted compile-time static array bound (${MAX_STATIC_ARRAY_ELEMENTS} elements).`,
+    );
+  }
+}
 const RESULT_LIKE_NOMINAL_NAMES = new Set(['Result', 'iterResult']);
 const COLLECTION_HANDLE_NOMINAL_NAMES = new Set(['Array', 'Vector']);
 const FOREIGN_POINTER_NAMES = new Set(['CPtr', 'MutCPtr', 'COpaquePtr']);
@@ -188,6 +222,13 @@ const FIXED_PRIMITIVE_LAYOUTS: Readonly<Record<string, { readonly size: number; 
   c_int: { size: 4, alignment: 4 },
   c_uint: { size: 4, alignment: 4 },
   c_float: { size: 4, alignment: 4 },
+  v128: { size: 16, alignment: 16 },
+  i8x16: { size: 16, alignment: 16 },
+  i16x8: { size: 16, alignment: 16 },
+  i32x4: { size: 16, alignment: 16 },
+  i64x2: { size: 16, alignment: 16 },
+  f32x4: { size: 16, alignment: 16 },
+  f64x2: { size: 16, alignment: 16 },
 };
 
 /**
@@ -355,7 +396,10 @@ export class TypeAlgebra {
    */
   private applyTypeModifiers(id: TypeId, type: FlintTypeName): TypeId {
     let result = id;
-    if (type.length !== undefined) result = this.intern({ kind: 'array', element: result, length: type.length });
+    if (type.length !== undefined) {
+      validateFixedArrayLength(type.length);
+      result = this.intern({ kind: 'array', element: result, length: type.length });
+    }
     if (type.referenceMode !== undefined) {
       result = this.intern({ kind: 'reference', mode: type.referenceMode, inner: result });
     }
@@ -645,8 +689,12 @@ export class TypeAlgebra {
     visiting: ReadonlySet<TypeId>,
     visitingAggregates: ReadonlySet<string>,
   ): TypeLayout {
+    validateFixedArrayLength(node.length);
     const element = this.layout(node.element, visiting, visitingAggregates);
     const stride = alignOffset(element.size === 0 ? 0 : element.size, element.alignment);
+    if (stride > 0 && node.length > Math.floor(MAX_STATIC_ARRAY_BYTES / stride)) {
+      throw new RangeError('Fixed array total byte size overflows maximum permitted compile-time static bound.');
+    }
     return {
       size: stride * node.length,
       alignment: Math.max(element.alignment, 1),
@@ -818,6 +866,110 @@ export class TypeAlgebra {
       };
     }
     return undefined;
+  }
+
+  /**
+   * Determines whether `subId` is a subtype of `superId` according to structural subtyping and variance rules.
+   * Strictly enforces invariance on mutable references (`&mut T`) and interior mutability wrappers (`Cell<T>`).
+   */
+  // skipcq: JS-R1005
+  isSubtypeOf(subId: TypeId, superId: TypeId, depth = 0): boolean {
+    if (subId === superId) return true;
+    if (depth > MAX_EXPANSION_DEPTH) return false;
+
+    const sub = this.node(subId);
+    const sup = this.node(superId);
+
+    // Reference variance rules:
+    if (sub.kind === 'reference' && sup.kind === 'reference') {
+      // Mutable references are strictly invariant
+      if (sub.mode === 'mut-ref' || sup.mode === 'mut-ref') {
+        return sub.mode === sup.mode && sub.inner === sup.inner;
+      }
+      // Immutable references: invariant if inner type has interior mutability, otherwise covariant
+      const subInnerNode = this.node(sub.inner);
+      const supInnerNode = this.node(sup.inner);
+      if (
+        (subInnerNode.kind === 'nominal' && isInteriorMutabilityType(subInnerNode.name)) ||
+        (supInnerNode.kind === 'nominal' && isInteriorMutabilityType(supInnerNode.name))
+      ) {
+        return sub.inner === sup.inner;
+      }
+      return this.isSubtypeOf(sub.inner, sup.inner, depth + 1);
+    }
+
+    // Nominal types:
+    if (sub.kind === 'nominal' && sup.kind === 'nominal') {
+      if (sub.name !== sup.name) return false;
+      if (sub.args.length !== sup.args.length) return false;
+
+      // Types with interior mutability must be invariant across all type parameters
+      if (isInteriorMutabilityType(sub.name)) {
+        return sub.args.every((argument, index) => argument === sup.args[index]);
+      }
+
+      // Standard nominal collections (Option, Result, Array) are covariant
+      return sub.args.every((argument, index) => {
+        const superArgument = sup.args[index];
+        return superArgument !== undefined && this.isSubtypeOf(argument, superArgument, depth + 1);
+      });
+    }
+
+    // Function subtyping: contravariant in parameters, covariant in result
+    if (sub.kind === 'fn' && sup.kind === 'fn') {
+      if (sub.parameters.length !== sup.parameters.length) return false;
+      const parametersMatch = sub.parameters.every((subParameter, index) => {
+        const superParameter = sup.parameters[index];
+        return superParameter !== undefined && this.isSubtypeOf(superParameter, subParameter, depth + 1);
+      });
+      return parametersMatch && this.isSubtypeOf(sub.result, sup.result, depth + 1);
+    }
+
+    return false;
+  }
+
+  /**
+   * Expands type aliases with step and depth bounding to prevent compiler resource exhaustion DoS.
+   */
+  // skipcq: JS-R1005
+  expandTypeAliasBounded(
+    aliasName: string,
+    aliases: ReadonlyMap<string, FlintTypeName>,
+    visited: ReadonlySet<string> = new Set(),
+    state?: { stepCount: number },
+  ): FlintTypeName {
+    const expansionState = state ?? { stepCount: 0 };
+    expansionState.stepCount += 1;
+    if (expansionState.stepCount > MAX_MACRO_EXPANSION_STEPS) {
+      throw new RangeError(
+        `Type alias expansion step budget (${MAX_MACRO_EXPANSION_STEPS}) exceeded: potential macro bomb.`,
+      );
+    }
+    if (visited.size >= MAX_EXPANSION_DEPTH) {
+      throw new RangeError(
+        `Type alias recursion depth limit (${MAX_EXPANSION_DEPTH}) exceeded while expanding '${aliasName}'.`,
+      );
+    }
+    if (visited.has(aliasName)) {
+      throw new RangeError(`Recursive type alias expansion cycle detected for '${aliasName}'.`);
+    }
+
+    const target = aliases.get(aliasName);
+    if (target === undefined) {
+      return {
+        kind: 'type-name',
+        name: isPrimitiveName(aliasName) ? (aliasName as FlintPrimitiveType) : 'unit',
+        reference: aliasName,
+        span: { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 },
+      };
+    }
+
+    const nextVisited = new Set(visited).add(aliasName);
+    if (target.reference !== undefined && aliases.has(target.reference)) {
+      return this.expandTypeAliasBounded(target.reference, aliases, nextVisited, expansionState);
+    }
+
+    return target;
   }
 
   /**
@@ -1116,10 +1268,15 @@ export class TypeAlgebra {
     if (this.isCStructLayout(aggregate)) {
       return this.layoutCStruct(aggregate, environment, visiting, visitingAggregates);
     }
+    const isRecord = aggregate.record === true;
+    const fieldsToProcess = isRecord
+      ? [...aggregate.fields].toSorted((a, b) => a.name.localeCompare(b.name))
+      : aggregate.fields;
+
     let offset = 0;
     let alignment = 1;
     const fieldKeys: string[] = [];
-    for (const field of aggregate.fields) {
+    for (const field of fieldsToProcess) {
       const fieldType = this.substitute(field.type, environment);
       const fieldLayout = this.layout(fieldType, visiting, visitingAggregates);
       offset = alignOffset(offset, fieldLayout.alignment);
@@ -1287,6 +1444,38 @@ export class TypeAlgebra {
   }
 }
 
+export const MAX_MONOMORPHIZATION_SPECIALIZATIONS = 5000;
+export const MAX_GENERIC_DEPTH = 32;
+
+/**
+ * Calculates the recursive generic nesting depth of a type node.
+ */
+// skipcq: JS-R1005
+export function calculateGenericDepth(algebra: TypeAlgebra, id: TypeId, depth = 1): number {
+  if (depth > MAX_GENERIC_DEPTH) return depth;
+  const node = algebra.node(id);
+  switch (node.kind) {
+    case 'nominal': {
+      if (node.args.length === 0) return depth;
+      return Math.max(depth, ...node.args.map((argument) => calculateGenericDepth(algebra, argument, depth + 1)));
+    }
+    case 'array': {
+      return calculateGenericDepth(algebra, node.element, depth + 1);
+    }
+    case 'reference': {
+      return calculateGenericDepth(algebra, node.inner, depth + 1);
+    }
+    case 'fn': {
+      const parameterDepths = node.parameters.map((parameter) => calculateGenericDepth(algebra, parameter, depth + 1));
+      const resultDepth = calculateGenericDepth(algebra, node.result, depth + 1);
+      return Math.max(depth, resultDepth, ...parameterDepths);
+    }
+    default: {
+      return depth;
+    }
+  }
+}
+
 /**
  * Monomorphization cache: concrete generic instantiations keyed by interned
  * argument tuples, with layout-key deduplication across distinct nominal types.
@@ -1295,14 +1484,17 @@ export class MonomorphizationCache {
   private readonly specializations = new Map<string, MonomorphizedSpecialization>();
   private readonly layoutOwners = new Map<string, string>();
   private readonly algebra: TypeAlgebra;
+  private readonly maxSpecializations: number;
 
   /**
    * Creates a monomorphization cache backed by a shared type algebra instance.
    *
    * @param algebra - Type algebra used to intern and lay out specialized types.
+   * @param maxSpecializations - Maximum number of distinct specializations before trapping (DoS protection).
    */
-  constructor(algebra: TypeAlgebra) {
+  constructor(algebra: TypeAlgebra, maxSpecializations = MAX_MONOMORPHIZATION_SPECIALIZATIONS) {
     this.algebra = algebra;
+    this.maxSpecializations = maxSpecializations;
   }
 
   /** Number of distinct recorded specializations. */
@@ -1345,6 +1537,7 @@ export class MonomorphizationCache {
    * When the expanded layout matches a previous entry, `sharedLayout` is set and
    * both specializations retain independent ids while sharing layout ownership.
    */
+  // skipcq: JS-R1005
   monomorphize(
     generic: string,
     argumentIds: readonly TypeId[],
@@ -1352,10 +1545,21 @@ export class MonomorphizationCache {
   ): MonomorphizedSpecialization {
     const resolvedBoundary = this.algebra.defaultBoundary(generic, boundary);
     const typeId = this.algebra.nominal(generic, argumentIds);
+    const genericDepth = calculateGenericDepth(this.algebra, typeId);
+    if (genericDepth > MAX_GENERIC_DEPTH) {
+      throw new RangeError(
+        `Generic type '${generic}' exceeds maximum generic nesting depth limit of ${MAX_GENERIC_DEPTH} (got depth ${genericDepth}).`,
+      );
+    }
+
     const argumentKeys = argumentIds.map((argument) => this.algebra.display(argument));
     const id = `${generic}<${argumentKeys.join(',')}>:${resolvedBoundary}`;
     const existing = this.specializations.get(id);
     if (existing !== undefined) return existing;
+
+    if (this.specializations.size >= this.maxSpecializations) {
+      throw new RangeError(`Exceeded maximum generic specialization limit of ${this.maxSpecializations} entries.`);
+    }
 
     const layout = this.algebra.layout(typeId);
     const owner = this.layoutOwners.get(layout.layoutKey);
@@ -1673,4 +1877,121 @@ export function primitiveLayout(
  */
 export function ownershipFromType(type: FlintTypeName): FlintOwnership | undefined {
   return type.ownership;
+}
+
+/**
+ * Method signature entry in a trait vtable.
+ */
+export interface TraitMethodDescriptor {
+  readonly name: string;
+  readonly parameterTypes?: readonly string[];
+  readonly returnType?: string;
+}
+
+/**
+ * Trait definition with direct supertraits and methods.
+ */
+export interface TraitDefinition {
+  readonly name: string;
+  readonly supertraits: readonly string[];
+  readonly methods: readonly TraitMethodDescriptor[];
+}
+
+/**
+ * Trait composition vtable layout descriptor detailing method slots and supertrait base offsets.
+ */
+export interface TraitVTableLayout {
+  readonly traitName: string;
+  readonly totalSlots: number;
+  readonly methodOffsets: ReadonlyMap<string, number>;
+  readonly supertraitOffsets: ReadonlyMap<string, number>;
+}
+
+/**
+ * Trait object fat pointer representation storing data pointer, vtable pointer, and vtable slice offset.
+ */
+export interface TraitObjectFatPointer {
+  readonly dataPointer: number;
+  readonly vtablePointer: number;
+  readonly vtableOffset: number;
+}
+
+/**
+ * Builds a deterministic vtable layout for a composite trait with inherited supertraits.
+ */
+export function buildTraitVTableLayout(
+  traitName: string,
+  traits: ReadonlyMap<string, TraitDefinition>,
+): TraitVTableLayout {
+  const methodOffsets = new Map<string, number>();
+  const supertraitOffsets = new Map<string, number>();
+  let currentOffset = 0;
+
+  const visited = new Set<string>();
+
+  /**
+   * Recursively collects supertraits and assigns deterministic method/supertrait offsets.
+   */
+  // skipcq: JS-R1005
+  function collectSupertraits(name: string): void {
+    if (visited.has(name)) return;
+    visited.add(name);
+    const definition = traits.get(name);
+    if (!definition) return;
+
+    for (const supertrait of definition.supertraits) {
+      collectSupertraits(supertrait);
+    }
+
+    supertraitOffsets.set(name, currentOffset);
+    for (const method of definition.methods) {
+      if (!methodOffsets.has(method.name)) {
+        methodOffsets.set(method.name, currentOffset);
+        currentOffset += 1;
+      }
+    }
+  }
+
+  collectSupertraits(traitName);
+
+  return {
+    traitName,
+    totalSlots: currentOffset,
+    methodOffsets,
+    supertraitOffsets,
+  };
+}
+
+/**
+ * Computes the exact vtable offset adjustment required when upcasting a trait object from sourceTrait to targetTrait.
+ */
+export function computeTraitUpcastOffset(
+  sourceTrait: string,
+  targetTrait: string,
+  traits: ReadonlyMap<string, TraitDefinition>,
+): number {
+  if (sourceTrait === targetTrait) return 0;
+  const layout = buildTraitVTableLayout(sourceTrait, traits);
+  const targetOffset = layout.supertraitOffsets.get(targetTrait);
+  if (targetOffset === undefined) {
+    throw new Error(`Cannot upcast trait '${sourceTrait}' to non-supertrait '${targetTrait}'.`);
+  }
+  return targetOffset;
+}
+
+/**
+ * Upcasts a trait object fat pointer to a target supertrait, normalizing the vtable offset.
+ */
+export function castTraitObject(
+  source: TraitObjectFatPointer,
+  sourceTrait: string,
+  targetTrait: string,
+  traits: ReadonlyMap<string, TraitDefinition>,
+): TraitObjectFatPointer {
+  const delta = computeTraitUpcastOffset(sourceTrait, targetTrait, traits);
+  return {
+    dataPointer: source.dataPointer,
+    vtablePointer: source.vtablePointer,
+    vtableOffset: source.vtableOffset + delta,
+  };
 }

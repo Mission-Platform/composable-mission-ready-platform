@@ -1,5 +1,13 @@
 # @mission-platform/vite-plugin-i18n
 
+## 0.1.6
+
+### Patch Changes
+
+- Updated dependencies [8be0da7]
+- Updated dependencies [8be0da7]
+  - @mission-platform/i18n@2.1.4
+
 ## 0.1.5
 
 ### Patch Changes

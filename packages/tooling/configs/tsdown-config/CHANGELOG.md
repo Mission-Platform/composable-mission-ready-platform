@@ -1,5 +1,17 @@
 # @mission-platform/tsdown-config
 
+## 0.3.0
+
+### Minor Changes
+
+- 8be0da7: add defineForgeFrameworkTarget helper for discrete framework target configs
+
+### Patch Changes
+
+- 8be0da7: address deepsource code quality, complexity, and documentation issues
+- 8be0da7: resolve DeepSource code quality and complexity issues across tooling and plugin configs
+- 8be0da7: resolve DeepSource code quality, documentation, complexity, and typing issues
+
 ## 0.2.4
 
 ### Patch Changes
