@@ -64,15 +64,10 @@
     "src"
   ],
   "scripts": {
-    "build:forge": "node --experimental-strip-types ../../../scripts/forge-build.ts --target forge",
-    "build:react": "node --experimental-strip-types ../../../scripts/forge-build.ts --target react",
-    "build:vue": "node --experimental-strip-types ../../../scripts/forge-build.ts --target vue",
-    "build:svelte": "node --experimental-strip-types ../../../scripts/forge-build.ts --target svelte",
-    "build:solid": "node --experimental-strip-types ../../../scripts/forge-build.ts --target solid",
-    "build:web-components": "node --experimental-strip-types ../../../scripts/forge-build.ts --target web-components",
-    "build": "node --experimental-strip-types ../../../scripts/forge-build.ts",
+    "build": "node --experimental-strip-types ../../../scripts/build-package.ts",
     "build:check": "tsc --project tsconfig.build.json --noEmit",
     "build:watch": "tsdown --watch",
+    "type-check": "tsc --project tsconfig.build.json --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint src",
