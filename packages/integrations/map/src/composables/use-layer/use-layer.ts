@@ -55,21 +55,57 @@ function extractLayerSourceId(spec: LayerSpecification): string | undefined {
   return undefined;
 }
 
+/** Synchronizes a single paint property if its value has changed. */
+function syncSinglePaintProperty(
+  map: Map,
+  id: string,
+  key: string,
+  previous?: MutableLayerSpec,
+  next?: MutableLayerSpec,
+): void {
+  const previousVal = previous?.paint?.[key];
+  const nextVal = next?.paint?.[key];
+  if (!previous || !specValuesEqual(previousVal, nextVal)) {
+    try {
+      map.setPaintProperty(
+        id,
+        key as Parameters<Map['setPaintProperty']>[1],
+        nextVal as Parameters<Map['setPaintProperty']>[2],
+      );
+    } catch {
+      // ignore
+    }
+  }
+}
+
 /** Synchronizes changed paint properties on an existing layer in place. */
 function syncPaintProperties(map: Map, id: string, previous?: MutableLayerSpec, next?: MutableLayerSpec): void {
   const previousPaint = previous?.paint ?? {};
   const nextPaint = next?.paint ?? {};
   for (const key of new Set([...Object.keys(previousPaint), ...Object.keys(nextPaint)])) {
-    if (!previous || !specValuesEqual(previousPaint[key], nextPaint[key])) {
-      try {
-        map.setPaintProperty(
-          id,
-          key as Parameters<Map['setPaintProperty']>[1],
-          nextPaint[key] as Parameters<Map['setPaintProperty']>[2],
-        );
-      } catch {
-        // ignore
-      }
+    syncSinglePaintProperty(map, id, key, previous, next);
+  }
+}
+
+/** Synchronizes a single layout property if its value has changed. */
+function syncSingleLayoutProperty(
+  map: Map,
+  id: string,
+  key: string,
+  previous?: MutableLayerSpec,
+  next?: MutableLayerSpec,
+): void {
+  const previousVal = previous?.layout?.[key];
+  const nextVal = next?.layout?.[key];
+  if (!previous || !specValuesEqual(previousVal, nextVal)) {
+    try {
+      map.setLayoutProperty(
+        id,
+        key as Parameters<Map['setLayoutProperty']>[1],
+        nextVal as Parameters<Map['setLayoutProperty']>[2],
+      );
+    } catch {
+      // ignore
     }
   }
 }
@@ -79,22 +115,12 @@ function syncLayoutProperties(map: Map, id: string, previous?: MutableLayerSpec,
   const previousLayout = previous?.layout ?? {};
   const nextLayout = next?.layout ?? {};
   for (const key of new Set([...Object.keys(previousLayout), ...Object.keys(nextLayout)])) {
-    if (!previous || !specValuesEqual(previousLayout[key], nextLayout[key])) {
-      try {
-        map.setLayoutProperty(
-          id,
-          key as Parameters<Map['setLayoutProperty']>[1],
-          nextLayout[key] as Parameters<Map['setLayoutProperty']>[2],
-        );
-      } catch {
-        // ignore
-      }
-    }
+    syncSingleLayoutProperty(map, id, key, previous, next);
   }
 }
 
-/** Synchronizes filter and zoom range properties on an existing layer in place. */
-function syncFilterAndZoom(map: Map, id: string, previous?: MutableLayerSpec, next?: MutableLayerSpec): void {
+/** Synchronizes layer filter expression on an existing layer. */
+function syncFilterProperty(map: Map, id: string, previous?: MutableLayerSpec, next?: MutableLayerSpec): void {
   if (!previous || !specValuesEqual(previous.filter, next?.filter)) {
     try {
       map.setFilter(id, next?.filter as Parameters<Map['setFilter']>[1]);
@@ -102,7 +128,10 @@ function syncFilterAndZoom(map: Map, id: string, previous?: MutableLayerSpec, ne
       // ignore
     }
   }
+}
 
+/** Synchronizes minzoom and maxzoom range on an existing layer. */
+function syncZoomRange(map: Map, id: string, previous?: MutableLayerSpec, next?: MutableLayerSpec): void {
   if (!previous || previous.minzoom !== next?.minzoom || previous.maxzoom !== next?.maxzoom) {
     try {
       map.setLayerZoomRange(id, next?.minzoom ?? 0, next?.maxzoom ?? 24);
@@ -110,6 +139,12 @@ function syncFilterAndZoom(map: Map, id: string, previous?: MutableLayerSpec, ne
       // ignore
     }
   }
+}
+
+/** Synchronizes filter and zoom range properties on an existing layer in place. */
+function syncFilterAndZoom(map: Map, id: string, previous?: MutableLayerSpec, next?: MutableLayerSpec): void {
+  syncFilterProperty(map, id, previous, next);
+  syncZoomRange(map, id, previous, next);
 }
 
 /**
@@ -143,6 +178,37 @@ function isLayerStructurallyUnchanged(
   );
 }
 
+/** Safely removes a layer by ID from a map instance if it exists. */
+function safeRemoveLayer(map: Map | undefined, layerId: string): void {
+  if (map?.getLayer(layerId)) {
+    try {
+      map.removeLayer(layerId);
+    } catch {
+      // ignore
+    }
+  }
+}
+
+/** Safely adds a layer to a map instance if not already present. */
+function safeAddLayer(map: Map | undefined, spec: LayerSpecification, beforeId?: string): void {
+  if (!map) {
+    return;
+  }
+  try {
+    map.addLayer(spec, beforeId);
+  } catch {
+    // ignore
+  }
+}
+
+/** Checks whether a layer is ready to be added to the map. */
+function canAddLayer(map: Map | undefined, layerId: string, sourceId: string | undefined): boolean {
+  if (!map || map.getLayer(layerId)) {
+    return false;
+  }
+  return !sourceId || Boolean(map.getSource(sourceId));
+}
+
 /** Removes an outdated layer from whichever map instance currently hosts it. */
 function removePreviousLayer(
   previousSpec: LayerSpecification | undefined,
@@ -152,18 +218,8 @@ function removePreviousLayer(
   if (!previousSpec) {
     return;
   }
-  const targetMap = previousMap?.getLayer(previousSpec.id)
-    ? previousMap
-    : currentMap.getLayer(previousSpec.id)
-      ? currentMap
-      : undefined;
-  if (targetMap) {
-    try {
-      targetMap.removeLayer(previousSpec.id);
-    } catch {
-      // ignore
-    }
-  }
+  safeRemoveLayer(previousMap, previousSpec.id);
+  safeRemoveLayer(currentMap, previousSpec.id);
 }
 
 /** Cleans up layer resources and pending event listeners on unmount. */
@@ -176,13 +232,45 @@ function cleanupLayerEffect(
     map.off('sourcedata', pendingListener);
     map.off('data', pendingListener);
   }
-  if (map && spec && map.getLayer(spec.id)) {
-    try {
-      map.removeLayer(spec.id);
-    } catch {
-      // The source may already be gone mid-teardown; ignore.
-    }
+  if (spec) {
+    safeRemoveLayer(map, spec.id);
   }
+}
+
+/** Sets up deferred layer mounting when referencing a source that has not yet mounted. */
+function setupDeferredLayerMount(
+  map: Map,
+  spec: LayerSpecification,
+  sourceId: string,
+  beforeId: string | undefined,
+  pendingListenerRef: { current: (() => void) | undefined },
+): void {
+  const addWhenSourceReady = (): void => {
+    if (map.getSource(sourceId) && !map.getLayer(spec.id)) {
+      try {
+        map.addLayer(spec, beforeId);
+        map.off('sourcedata', addWhenSourceReady);
+        map.off('data', addWhenSourceReady);
+        pendingListenerRef.current = undefined;
+      } catch {
+        // Ignore if mid-teardown
+      }
+    }
+  };
+  pendingListenerRef.current = addWhenSourceReady;
+  map.on('sourcedata', addWhenSourceReady);
+  map.on('data', addWhenSourceReady);
+
+  globalThis.queueMicrotask?.(() => {
+    if (map && !map.getLayer(spec.id) && map.getSource(sourceId)) {
+      addWhenSourceReady();
+    }
+  });
+  setTimeout(() => {
+    if (map && !map.getLayer(spec.id) && map.getSource(sourceId)) {
+      addWhenSourceReady();
+    }
+  }, 0);
 }
 
 /**
@@ -213,119 +301,78 @@ export function useLayer(map: Map | undefined, options: UseLayerOptions): void {
   const pendingListenerReference = useRef<(() => void) | undefined>();
 
   useEffect(() => {
-    if (!map) {
-      return;
-    }
-    const spec = options.layer;
-    // The stored `Map` and `LayerSpecification` are read back from refs. On the
-    // Vue build a `ref<T>().value` is Vue's deep `UnwrapRef<T>` — a recursive
-    // expansion of these large maplibre types — so their nominal types are
-    // re-asserted here. Used directly, later comparisons and helper calls would
-    // overflow the declaration emitter's instantiation depth (TS2589).
-    const previousSpec = previousSpecReference.current as unknown as LayerSpecification | undefined;
-    const previousMap = mapReference.current as unknown as Map | undefined;
+    if (map) {
+      const spec = options.layer;
+      // The stored `Map` and `LayerSpecification` are read back from refs. On the
+      // Vue build a `ref<T>().value` is Vue's deep `UnwrapRef<T>` — a recursive
+      // expansion of these large maplibre types — so their nominal types are
+      // re-asserted here. Used directly, later comparisons and helper calls would
+      // overflow the declaration emitter's instantiation depth (TS2589).
+      const previousSpec = previousSpecReference.current as unknown as LayerSpecification | undefined;
+      const previousMap = mapReference.current as unknown as Map | undefined;
 
-    // Drop any deferred-add listener left over from a previous spec/map.
-    if (pendingListenerReference.current) {
-      map.off('sourcedata', pendingListenerReference.current);
-      map.off('data', pendingListenerReference.current);
-      pendingListenerReference.current = undefined;
-    }
-
-    // Fast path: the layer already exists and only its visual properties
-    // changed. Sync them in place instead of removing and re-adding the layer,
-    // which would restart symbol placement every render and can crash MapLibre.
-    const unchanged = isLayerStructurallyUnchanged(spec, previousSpec, map, previousMap);
-    const layerExists = Boolean(map.getLayer(spec.id));
-
-    if ((unchanged || (previousSpec === undefined && layerExists)) && layerExists) {
-      if (options.beforeId !== previousBeforeIdReference.current) {
-        try {
-          map.moveLayer(spec.id, options.beforeId);
-        } catch {
-          // ignore
-        }
+      // Drop any deferred-add listener left over from a previous spec/map.
+      if (pendingListenerReference.current) {
+        map.off('sourcedata', pendingListenerReference.current);
+        map.off('data', pendingListenerReference.current);
+        pendingListenerReference.current = undefined;
       }
-      updateLayerInPlace(map, spec, previousSpec);
-      previousSpecReference.current = spec;
-      previousBeforeIdReference.current = options.beforeId;
-      mapReference.current = map;
-      return;
-    }
 
-    // Structural change / first mount / map change: remove the old layer then
-    // (re)add it. Remove from whichever map still holds it.
-    removePreviousLayer(previousSpec, previousMap, map);
+      // Fast path: the layer already exists and only its visual properties
+      // changed. Sync them in place instead of removing and re-adding the layer,
+      // which would restart symbol placement every render and can crash MapLibre.
+      const unchanged = isLayerStructurallyUnchanged(spec, previousSpec, map, previousMap);
+      const layerExists = Boolean(map.getLayer(spec.id));
 
-    // The source a layer references (a string ID). Background layers and layers
-    // with an inline source object have none, so there is nothing to await.
-    const sourceId = extractLayerSourceId(spec);
+      if ((unchanged || (previousSpec === undefined && layerExists)) && layerExists) {
+        if (options.beforeId !== previousBeforeIdReference.current) {
+          try {
+            map.moveLayer(spec.id, options.beforeId);
+          } catch {
+            // ignore
+          }
+        }
+        updateLayerInPlace(map, spec, previousSpec);
+        previousSpecReference.current = spec;
+        previousBeforeIdReference.current = options.beforeId;
+        mapReference.current = map;
+      } else {
+        // Structural change / first mount / map change: remove the old layer then
+        // (re)add it. Remove from whichever map still holds it.
+        removePreviousLayer(previousSpec, previousMap, map);
 
-    if (!map.getLayer(spec.id)) {
-      if (sourceId && !map.getSource(sourceId)) {
-        // Child (layer) effects run *before* parent (source) effects, so on
-        // first mount the source this layer references may not exist yet.
-        // Adding the layer now would throw "source not found"; instead defer
-        // until the map signals the source has been registered.
-        const addWhenSourceReady = (): void => {
-          if (map.getSource(sourceId) && !map.getLayer(spec.id)) {
-            try {
-              map.addLayer(spec, options.beforeId);
-              map.off('sourcedata', addWhenSourceReady);
-              map.off('data', addWhenSourceReady);
-              pendingListenerReference.current = undefined;
-            } catch {
-              // Ignore if mid-teardown
-            }
+        // The source a layer references (a string ID). Background layers and layers
+        // with an inline source object have none, so there is nothing to await.
+        const sourceId = extractLayerSourceId(spec);
+
+        if (!map.getLayer(spec.id)) {
+          if (sourceId && !map.getSource(sourceId)) {
+            setupDeferredLayerMount(map, spec, sourceId, options.beforeId, pendingListenerReference);
+          } else {
+            safeAddLayer(map, spec, options.beforeId);
+          }
+        }
+
+        previousSpecReference.current = spec;
+        previousBeforeIdReference.current = options.beforeId;
+        mapReference.current = map;
+
+        /** Re-adds the layer if it was lost during a style reload. */
+        const reapplyLayer = (): void => {
+          if (canAddLayer(map, spec.id, sourceId)) {
+            safeAddLayer(map, spec, options.beforeId);
           }
         };
-        pendingListenerReference.current = addWhenSourceReady;
-        map.on('sourcedata', addWhenSourceReady);
-        map.on('data', addWhenSourceReady);
 
-        // Also check on the next event loops in case the parent source was registered synchronously
-        globalThis.queueMicrotask?.(() => {
-          if (map && !map.getLayer(spec.id) && map.getSource(sourceId)) {
-            addWhenSourceReady();
-          }
-        });
-        setTimeout(() => {
-          if (map && !map.getLayer(spec.id) && map.getSource(sourceId)) {
-            addWhenSourceReady();
-          }
-        }, 0);
-      } else {
-        try {
-          map.addLayer(spec, options.beforeId);
-        } catch {
-          // ignore
-        }
+        map.on('style.load', reapplyLayer);
+        map.on('styledata', reapplyLayer);
+
+        return () => {
+          map.off('style.load', reapplyLayer);
+          map.off('styledata', reapplyLayer);
+        };
       }
     }
-
-    previousSpecReference.current = spec;
-    previousBeforeIdReference.current = options.beforeId;
-    mapReference.current = map;
-
-    /** Re-adds the layer if it was lost during a style reload. */
-    const reapplyLayer = (): void => {
-      if (!map || map.getLayer(spec.id) || (sourceId && !map.getSource(sourceId))) {
-        return;
-      }
-      try {
-        map.addLayer(spec, options.beforeId);
-      } catch {
-        // ignore
-      }
-    };
-
-    map.on('style.load', reapplyLayer);
-    map.on('styledata', reapplyLayer);
-
-    return () => {
-      map.off('style.load', reapplyLayer);
-      map.off('styledata', reapplyLayer);
-    };
   }, [map, options.layer, options.beforeId]);
 
   useEffect(() => {

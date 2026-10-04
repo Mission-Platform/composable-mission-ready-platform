@@ -256,6 +256,117 @@ function normaliseStepperValue(
   return next;
 }
 
+/** Resolves the effective minimum value for the stepper. */
+function resolveEffectiveMin(unsigned: boolean, min?: number): number | undefined {
+  return unsigned ? Math.max(0, min ?? 0) : min;
+}
+
+/** Resolves the aria-describedby identifier for helper or error text. */
+function resolveStepperDescribedBy(id: string, error?: string, hint?: string): string | undefined {
+  if (error) {
+    return `${id}-error`;
+  }
+  if (hint) {
+    return `${id}-hint`;
+  }
+  return undefined;
+}
+
+/** Determines whether decrementing is currently permissible. */
+function canStepDecrement(disabled: boolean, current: number | undefined, min: number | undefined): boolean {
+  return !disabled && (min === undefined || (current ?? 0) > min);
+}
+
+/** Determines whether incrementing is currently permissible. */
+function canStepIncrement(disabled: boolean, current: number | undefined, max: number | undefined): boolean {
+  return !disabled && (max === undefined || (current ?? 0) < max);
+}
+
+/**
+ * Renders the accessible label element for the number stepper.
+ */
+function renderStepperLabel(
+  label: string | undefined,
+  labelHidden: boolean,
+  resolvedId: string,
+  required: boolean,
+): MpElement | undefined {
+  if (!label) {
+    return undefined;
+  }
+  return (
+    <label
+      className={[
+        styles['forge-number-stepper__label'],
+        {
+          [styles['forge-number-stepper__label--hidden']]: labelHidden,
+        },
+      ]}
+      for={resolvedId}
+    >
+      <ForgeTypography
+        as="span"
+        color="primary"
+        variant="label"
+      >
+        {label}
+      </ForgeTypography>
+      {required ? (
+        <span
+          aria-hidden="true"
+          className={styles['forge-number-stepper__required']}
+        >
+          *
+        </span>
+      ) : undefined}
+    </label>
+  );
+}
+
+/**
+ * Renders the error alert or hint message for the number stepper.
+ */
+function renderStepperMessage(
+  resolvedId: string,
+  error: string | undefined,
+  hint: string | undefined,
+): MpElement | undefined {
+  if (error) {
+    return (
+      <p
+        id={`${resolvedId}-error`}
+        className={styles['forge-number-stepper__error']}
+        role="alert"
+      >
+        <ForgeTypography
+          as="span"
+          color="inherit"
+          variant="caption"
+        >
+          {error}
+        </ForgeTypography>
+      </p>
+    );
+  }
+  if (hint) {
+    return (
+      <p
+        id={`${resolvedId}-hint`}
+        className={styles['forge-number-stepper__hint']}
+      >
+        <ForgeTypography
+          as="span"
+          color="secondary"
+          variant="caption"
+        >
+          {hint}
+        </ForgeTypography>
+      </p>
+    );
+  }
+  return undefined;
+}
+
 /**
  * `ForgeNumberStepper` — numeric stepper authored once in the neutral JSX dialect
  * and compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
@@ -295,9 +406,8 @@ export function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>
 
   const generatedId = useId();
   const resolvedId = properties.id ?? generatedId;
-  const describedBy = error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined;
-
-  const effectiveMin = unsigned ? Math.max(0, min ?? 0) : min;
+  const describedBy = resolveStepperDescribedBy(resolvedId, error, hint);
+  const effectiveMin = resolveEffectiveMin(unsigned, min);
   const current = parseStepperValue(modelValue);
   const display = formatStepperDisplay(current, integer, precision);
 
@@ -315,22 +425,20 @@ export function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>
       return;
     }
     const parsed = Number(raw);
-    if (Number.isNaN(parsed)) {
-      return;
+    if (!Number.isNaN(parsed)) {
+      commit(normaliseStepperValue(parsed, integer, precision, effectiveMin, max));
     }
-    commit(normaliseStepperValue(parsed, integer, precision, effectiveMin, max));
   };
 
-  const canDecrement = !disabled && (effectiveMin === undefined || (current ?? 0) > effectiveMin);
-  const canIncrement = !disabled && (max === undefined || (current ?? 0) < max);
+  const canDecrement = canStepDecrement(disabled, current, effectiveMin);
+  const canIncrement = canStepIncrement(disabled, current, max);
 
   /** Adjusts the current value by one step in the given direction. */
   const adjust = (direction: 1 | -1): void => {
-    if (disabled) {
-      return;
+    if (!disabled) {
+      const base = current ?? effectiveMin ?? 0;
+      commit(normaliseStepperValue(base + direction * step, integer, precision, effectiveMin, max));
     }
-    const base = current ?? effectiveMin ?? 0;
-    commit(normaliseStepperValue(base + direction * step, integer, precision, effectiveMin, max));
   };
 
   return (
@@ -346,33 +454,7 @@ export function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>
       ]}
       style={style}
     >
-      {label ? (
-        <label
-          className={[
-            styles['forge-number-stepper__label'],
-            {
-              [styles['forge-number-stepper__label--hidden']]: labelHidden,
-            },
-          ]}
-          for={resolvedId}
-        >
-          <ForgeTypography
-            as="span"
-            color="primary"
-            variant="label"
-          >
-            {label}
-          </ForgeTypography>
-          {required ? (
-            <span
-              aria-hidden="true"
-              className={styles['forge-number-stepper__required']}
-            >
-              *
-            </span>
-          ) : undefined}
-        </label>
-      ) : undefined}
+      {renderStepperLabel(label, labelHidden, resolvedId, required)}
       <div className={styles['forge-number-stepper__wrapper']}>
         <button
           aria-label="Decrease"
@@ -411,34 +493,7 @@ export function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>
           <ForgeIconPlus size="sm" />
         </button>
       </div>
-      {error ? (
-        <p
-          id={`${resolvedId}-error`}
-          className={styles['forge-number-stepper__error']}
-          role="alert"
-        >
-          <ForgeTypography
-            as="span"
-            color="inherit"
-            variant="caption"
-          >
-            {error}
-          </ForgeTypography>
-        </p>
-      ) : hint ? (
-        <p
-          id={`${resolvedId}-hint`}
-          className={styles['forge-number-stepper__hint']}
-        >
-          <ForgeTypography
-            as="span"
-            color="secondary"
-            variant="caption"
-          >
-            {hint}
-          </ForgeTypography>
-        </p>
-      ) : undefined}
+      {renderStepperMessage(resolvedId, error, hint)}
     </div>
   );
 }

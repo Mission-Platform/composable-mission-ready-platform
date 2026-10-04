@@ -109,20 +109,19 @@ export function createForgeStyle<const T extends Record<string, string | undefin
   return Object.fromEntries(entries) as DefinedForgeStyle<T>;
 }
 
+/** Strips existing dashes and namespace prefixes from a kebab string. */
+function stripExistingPrefix(kebab: string, prefix: string): string {
+  const stripped = kebab.replace(/^--(?:forge-)?/, '');
+  return prefix && stripped.startsWith(`${prefix}-`) ? stripped.slice(prefix.length + 1) : stripped;
+}
+
 /**
  * Normalises a property name key to a `--forge-<prefix>-<kebab>` custom property name.
  */
 function toForgePropertyName(key: string, prefix: string): string {
-  let kebab = key.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
-  if (kebab.startsWith('--forge-')) {
-    kebab = kebab.slice(8);
-  } else if (kebab.startsWith('--')) {
-    kebab = kebab.slice(2);
-  }
-  if (prefix && kebab.startsWith(`${prefix}-`)) {
-    kebab = kebab.slice(prefix.length + 1);
-  }
-  return prefix ? `--forge-${prefix}-${kebab}` : `--forge-${kebab}`;
+  const kebab = key.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
+  const base = stripExistingPrefix(kebab, prefix);
+  return prefix ? `--forge-${prefix}-${base}` : `--forge-${base}`;
 }
 
 /**

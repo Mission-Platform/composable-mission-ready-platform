@@ -142,6 +142,19 @@ const DYNAMIC_CSS_FUNCTION_REGEX = /var\(|light-dark\(|env\(|attr\(/i;
 const RELATIVE_LENGTH_UNIT_REGEX =
   /\b\d+(\.\d+)?(rem|em|ex|ch|ic|cap|lh|rlh|vw|vh|vi|vb|vmin|vmax|cqw|cqh|cqi|cqb|cqmin|cqmax|dvh|dvw|svh|svw|lvh|lvw)\b/i;
 
+/** Checks whether a token value represents a valid non-empty scalar. */
+function isNonEmptyScalar(value: unknown): value is string | number {
+  if (typeof value !== 'string' && typeof value !== 'number') {
+    return false;
+  }
+  return String(value).trim().length > 0;
+}
+
+/** Checks whether a length/dimension token has an invalid unitless zero value. */
+function isInvalidUnitlessZero(type: string | undefined, valueStr: string): boolean {
+  return (type === 'dimension' || type === 'length') && valueStr === '0';
+}
+
 /**
  * Checks whether a token value is computationally independent and valid as an
  * `initial-value` for a typed CSS `@property` registration under the W3C CSS
@@ -153,17 +166,14 @@ const RELATIVE_LENGTH_UNIT_REGEX =
  * omit the `initial-value` descriptor by falling back to the universal `'*'` syntax.
  */
 export function isComputationallyIndependent(record: TokenRecord): boolean {
-  if (isAlias(record.value)) return false;
-  if (typeof record.value !== 'string' && typeof record.value !== 'number') return false;
+  if (isAlias(record.value) || !isNonEmptyScalar(record.value)) {
+    return false;
+  }
   const str = String(record.value).trim();
-  if (!str) return false;
-
   if (DYNAMIC_CSS_FUNCTION_REGEX.test(str) || RELATIVE_LENGTH_UNIT_REGEX.test(str)) {
     return false;
   }
-
-  // Dimension/length with unitless 0 is not valid as initial-value for <length>.
-  return !((record.type === 'dimension' || record.type === 'length') && str === '0');
+  return !isInvalidUnitlessZero(record.type, str);
 }
 
 /**

@@ -28,20 +28,36 @@ export interface MapPopupProperties {
   onClose?: () => void;
 }
 
+/** Resolves coordinates from either lngLat or coordinates property. */
+function resolvePopupCoordinates(properties: Readonly<MapPopupProperties>): LngLatLike {
+  return properties.lngLat ?? properties.coordinates ?? [0, 0];
+}
+
 /** Resolves popup options with sensible fallback values. */
 function resolvePopupOptions(properties: Readonly<MapPopupProperties>): Parameters<typeof usePopup>[1] {
-  const resolvedLngLat = properties.lngLat ?? properties.coordinates ?? [0, 0];
+  const {
+    content = '',
+    isText = false,
+    open = true,
+    offset,
+    className,
+    closeButton = true,
+    closeOnClick = true,
+    anchor,
+    onClose,
+  } = properties;
+
   return {
-    lngLat: resolvedLngLat,
-    content: properties.content ?? '',
-    isText: properties.isText ?? false,
-    open: properties.open ?? true,
-    offset: properties.offset,
-    className: properties.className,
-    closeButton: properties.closeButton ?? true,
-    closeOnClick: properties.closeOnClick ?? true,
-    anchor: properties.anchor,
-    onClose: properties.onClose,
+    lngLat: resolvePopupCoordinates(properties),
+    content,
+    isText,
+    open,
+    offset,
+    className,
+    closeButton,
+    closeOnClick,
+    anchor,
+    onClose,
   };
 }
 
