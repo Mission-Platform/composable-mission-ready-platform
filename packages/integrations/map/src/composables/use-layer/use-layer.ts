@@ -392,40 +392,38 @@ export function useLayer(map: Map | undefined, options: UseLayerOptions): void {
   const pendingListenerReference = useRef<(() => void) | undefined>();
 
   useEffect(() => {
-    if (!map) {
-      return;
-    }
-
-    const spec = options.layer;
-    // The stored `Map` and `LayerSpecification` are read back from refs. On the
-    // Vue build a `ref<T>().value` is Vue's deep `UnwrapRef<T>` — a recursive
-    // expansion of these large maplibre types — so their nominal types are
-    // re-asserted here. Used directly, later comparisons and helper calls would
-    // overflow the declaration emitter's instantiation depth (TS2589).
-    const previousSpec = previousSpecReference.current as unknown as LayerSpecification | undefined;
-    const previousMap = mapReference.current as unknown as Map | undefined;
-    const previousBeforeId = previousBeforeIdReference.current;
-
-    cleanupPendingDeferredListener(map, pendingListenerReference);
-
     let cleanup: (() => void) | undefined;
 
-    if (canUpdateLayerInPlace(spec, previousSpec, map, previousMap)) {
-      handleExistingLayerUpdate(map, spec, previousSpec, options.beforeId, previousBeforeId);
-    } else {
-      cleanup = mountNewOrChangedLayer(
-        map,
-        spec,
-        previousSpec,
-        previousMap,
-        options.beforeId,
-        pendingListenerReference,
-      );
-    }
+    if (map) {
+      const spec = options.layer;
+      // The stored `Map` and `LayerSpecification` are read back from refs. On the
+      // Vue build a `ref<T>().value` is Vue's deep `UnwrapRef<T>` — a recursive
+      // expansion of these large maplibre types — so their nominal types are
+      // re-asserted here. Used directly, later comparisons and helper calls would
+      // overflow the declaration emitter's instantiation depth (TS2589).
+      const previousSpec = previousSpecReference.current as unknown as LayerSpecification | undefined;
+      const previousMap = mapReference.current as unknown as Map | undefined;
+      const previousBeforeId = previousBeforeIdReference.current;
 
-    previousSpecReference.current = spec;
-    previousBeforeIdReference.current = options.beforeId;
-    mapReference.current = map;
+      cleanupPendingDeferredListener(map, pendingListenerReference);
+
+      if (canUpdateLayerInPlace(spec, previousSpec, map, previousMap)) {
+        handleExistingLayerUpdate(map, spec, previousSpec, options.beforeId, previousBeforeId);
+      } else {
+        cleanup = mountNewOrChangedLayer(
+          map,
+          spec,
+          previousSpec,
+          previousMap,
+          options.beforeId,
+          pendingListenerReference,
+        );
+      }
+
+      previousSpecReference.current = spec;
+      previousBeforeIdReference.current = options.beforeId;
+      mapReference.current = map;
+    }
 
     return cleanup;
   }, [map, options.layer, options.beforeId]);

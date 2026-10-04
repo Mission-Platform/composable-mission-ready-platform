@@ -36,37 +36,39 @@ export function useMarker(map: Map | undefined, options: UseMarkerOptions): UseM
   const markerReference = useRef<Marker | undefined>();
 
   useEffect(() => {
-    if (!map) {
-      return;
-    }
+    let cleanup: (() => void) | undefined;
 
-    const instance = new Marker(markerOptions);
-    instance.setLngLat(lngLat).addTo(map);
-    if (onDragend) {
-      instance.on('dragend', () => onDragend(instance.getLngLat()));
-    }
-
-    const element = instance.getElement();
-    let clickListener: ((event: MouseEvent) => void) | undefined;
-    if (onClick) {
-      element.style.cursor = 'pointer';
-      clickListener = (event: MouseEvent) => {
-        event.stopPropagation();
-        onClick();
-      };
-      element.addEventListener('click', clickListener);
-    }
-
-    markerReference.current = instance;
-    setMarker(instance);
-    return () => {
-      if (clickListener) {
-        element.removeEventListener('click', clickListener);
+    if (map) {
+      const instance = new Marker(markerOptions);
+      instance.setLngLat(lngLat).addTo(map);
+      if (onDragend) {
+        instance.on('dragend', () => onDragend(instance.getLngLat()));
       }
-      instance.remove();
-      markerReference.current = undefined;
-      setMarker();
-    };
+
+      const element = instance.getElement();
+      let clickListener: ((event: MouseEvent) => void) | undefined;
+      if (onClick) {
+        element.style.cursor = 'pointer';
+        clickListener = (event: MouseEvent) => {
+          event.stopPropagation();
+          onClick();
+        };
+        element.addEventListener('click', clickListener);
+      }
+
+      markerReference.current = instance;
+      setMarker(instance);
+      cleanup = () => {
+        if (clickListener) {
+          element.removeEventListener('click', clickListener);
+        }
+        instance.remove();
+        markerReference.current = undefined;
+        setMarker();
+      };
+    }
+
+    return cleanup;
   }, [map]);
 
   useEffect(() => {
