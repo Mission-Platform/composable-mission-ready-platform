@@ -1,5 +1,11 @@
 # @mission-platform/stylelint-config
 
+## 0.1.6
+
+### Patch Changes
+
+- 1eaa546: resolve component CSS property declaration errors, update token references, and improve tooling configs
+
 ## 0.1.5
 
 ### Patch Changes

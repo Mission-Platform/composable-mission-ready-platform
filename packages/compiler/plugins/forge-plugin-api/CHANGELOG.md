@@ -1,5 +1,11 @@
 # @mission-platform/forge-plugin-api
 
+## 0.5.1
+
+### Patch Changes
+
+- 1eaa546: resolve component CSS property declaration errors, update token references, and improve tooling configs
+
 ## 0.5.0
 
 ### Minor Changes

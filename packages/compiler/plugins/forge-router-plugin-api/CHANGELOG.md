@@ -1,5 +1,13 @@
 # @mission-platform/forge-router-plugin-api
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [1eaa546]
+  - @mission-platform/forge-plugin-api@0.5.1
+  - @mission-platform/forge-cst@0.2.0
+
 ## 0.2.0
 
 ### Minor Changes

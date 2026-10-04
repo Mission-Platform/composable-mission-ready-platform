@@ -1,5 +1,11 @@
 # @mission-platform/eslint-config
 
+## 1.1.2
+
+### Patch Changes
+
+- 1eaa546: resolve component CSS property declaration errors, update token references, and improve tooling configs
+
 ## 1.1.1
 
 ### Patch Changes

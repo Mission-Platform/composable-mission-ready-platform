@@ -1,5 +1,19 @@
 # @mission-platform/components
 
+## 3.2.3
+
+### Patch Changes
+
+- 1eaa546: resolve component CSS property declaration errors, update token references, and improve tooling configs
+- Updated dependencies [1eaa546]
+  - @mission-platform/forge-jsx@2.0.3
+  - @mission-platform/tokens@2.0.2
+  - @mission-platform/typography@1.1.4
+  - @mission-platform/forge-adapters@1.2.3
+  - @mission-platform/icons@2.0.5
+  - @mission-platform/phone-number@0.3.5
+  - @mission-platform/forms-core@0.3.3
+
 ## 3.2.2
 
 ### Patch Changes

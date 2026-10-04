@@ -1,5 +1,12 @@
 # @mission-platform/email-sender
 
+## 0.0.6
+
+### Patch Changes
+
+- @mission-platform/email-components@1.1.4
+  - @mission-platform/edge-security@0.1.0
+
 ## 0.0.5
 
 ### Patch Changes

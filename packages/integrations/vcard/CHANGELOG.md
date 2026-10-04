@@ -1,5 +1,15 @@
 # @mission-platform/vcard
 
+## 0.2.5
+
+### Patch Changes
+
+- Updated dependencies [1eaa546]
+  - @mission-platform/forge-jsx@2.0.3
+  - @mission-platform/components@3.2.3
+  - @mission-platform/typography@1.1.4
+  - @mission-platform/forge-adapters@1.2.3
+
 ## 0.2.4
 
 ### Patch Changes

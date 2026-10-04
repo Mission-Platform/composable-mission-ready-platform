@@ -1,5 +1,11 @@
 # @mission-platform/tsdown-config
 
+## 0.3.1
+
+### Patch Changes
+
+- 1eaa546: resolve component CSS property declaration errors, update token references, and improve tooling configs
+
 ## 0.3.0
 
 ### Minor Changes

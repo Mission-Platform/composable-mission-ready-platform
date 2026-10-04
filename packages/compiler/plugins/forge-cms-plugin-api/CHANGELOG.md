@@ -1,5 +1,15 @@
 # @mission-platform/forge-cms-plugin-api
 
+## 1.0.3
+
+### Patch Changes
+
+- Updated dependencies [1eaa546]
+  - @mission-platform/forge-plugin-api@0.5.1
+  - @mission-platform/tsdown-config@0.3.1
+  - @mission-platform/vite-config@1.1.5
+  - @mission-platform/vite-plugin-forge@2.1.1
+
 ## 1.0.2
 
 ### Patch Changes

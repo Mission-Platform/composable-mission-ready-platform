@@ -1,5 +1,13 @@
 # @mission-platform/vite-plugin-forge-web-script
 
+## 1.0.1
+
+### Patch Changes
+
+- Updated dependencies [5a7c372]
+  - @mission-platform/flint@1.1.0
+  - @mission-platform/flint-runtime@1.0.1
+
 ## 1.0.0
 
 ### Major Changes

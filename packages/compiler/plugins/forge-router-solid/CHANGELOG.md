@@ -1,5 +1,12 @@
 # @mission-platform/forge-router-solid
 
+## 0.1.5
+
+### Patch Changes
+
+- @mission-platform/forge-router-plugin-api@0.2.1
+  - @mission-platform/router@1.1.3
+
 ## 0.1.4
 
 ### Patch Changes

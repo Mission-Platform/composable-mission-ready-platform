@@ -1,5 +1,27 @@
 # @mission-platform/content
 
+## 1.2.3
+
+### Patch Changes
+
+- 1eaa546: resolve component CSS property declaration errors, update token references, and improve tooling configs
+- Updated dependencies [1eaa546]
+  - @mission-platform/forge-jsx@2.0.3
+  - @mission-platform/components@3.2.3
+  - @mission-platform/float@1.2.3
+  - @mission-platform/tokens@2.0.2
+  - @mission-platform/typography@1.1.4
+  - @mission-platform/flint-language-service@1.0.1
+  - @mission-platform/forge-plugin-react@0.2.3
+  - @mission-platform/forge-plugin-solid@0.2.3
+  - @mission-platform/forge-plugin-svelte@0.2.3
+  - @mission-platform/forge-plugin-vue@0.3.3
+  - @mission-platform/forge-plugin-web-components@0.2.3
+  - @mission-platform/forge-adapters@1.2.3
+  - @mission-platform/icons@2.0.5
+  - @mission-platform/harper@0.2.4
+  - @mission-platform/hunspell@0.4.4
+
 ## 1.2.2
 
 ### Patch Changes

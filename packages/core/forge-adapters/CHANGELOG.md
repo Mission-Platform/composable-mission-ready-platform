@@ -1,5 +1,12 @@
 # @mission-platform/forge-adapters
 
+## 1.2.3
+
+### Patch Changes
+
+- Updated dependencies [1eaa546]
+  - @mission-platform/forge-jsx@2.0.3
+
 ## 1.2.2
 
 ### Patch Changes

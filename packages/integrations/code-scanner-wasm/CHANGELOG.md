@@ -1,5 +1,11 @@
 # @mission-platform/code-scanner-wasm
 
+## 1.4.2
+
+### Patch Changes
+
+- @mission-platform/flint-runtime@1.0.1
+
 ## 1.4.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # forge-web-script-runtime-example
 
+## 0.1.5
+
+### Patch Changes
+
+- @mission-platform/flint-runtime@1.0.1
+
 ## 0.1.4
 
 ### Patch Changes

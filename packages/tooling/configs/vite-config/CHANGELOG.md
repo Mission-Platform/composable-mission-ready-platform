@@ -1,5 +1,12 @@
 # @mission-platform/vite-config
 
+## 1.1.5
+
+### Patch Changes
+
+- 1eaa546: resolve component CSS property declaration errors, update token references, and improve tooling configs
+- @mission-platform/postcss-config@0.1.5
+
 ## 1.1.4
 
 ### Patch Changes
