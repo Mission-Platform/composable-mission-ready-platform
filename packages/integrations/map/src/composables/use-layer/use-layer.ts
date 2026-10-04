@@ -44,18 +44,21 @@ function layerSourceKey(spec: LayerSpecification): string | undefined {
   return 'source' in nonPrimitive ? JSON.stringify((nonPrimitive as { source: unknown }).source) : undefined;
 }
 
-/**
- * Sync a layer's `paint`, `layout`, `filter` and zoom range onto the live map
- * without removing/re-adding it. Only properties whose value actually changed
- * are re-applied, so an unchanged symbol layer is never needlessly re-laid-out.
- */
-function updateLayerInPlace(map: Map, spec: LayerSpecification, previousSpec?: LayerSpecification): void {
-  const id = spec.id;
-  const next = spec as MutableLayerSpec;
-  const previous = previousSpec as MutableLayerSpec | undefined;
+/** Extracts the referenced source ID from a layer spec when specified as a string. */
+function extractLayerSourceId(spec: LayerSpecification): string | undefined {
+  if (typeof spec === 'object' && spec !== null) {
+    const nonPrimitive: object = spec;
+    if ('source' in nonPrimitive && typeof (nonPrimitive as { source: unknown }).source === 'string') {
+      return (nonPrimitive as { source: string }).source;
+    }
+  }
+  return undefined;
+}
 
+/** Synchronizes changed paint properties on an existing layer in place. */
+function syncPaintProperties(map: Map, id: string, previous?: MutableLayerSpec, next?: MutableLayerSpec): void {
   const previousPaint = previous?.paint ?? {};
-  const nextPaint = next.paint ?? {};
+  const nextPaint = next?.paint ?? {};
   for (const key of new Set([...Object.keys(previousPaint), ...Object.keys(nextPaint)])) {
     if (!previous || !specValuesEqual(previousPaint[key], nextPaint[key])) {
       try {
@@ -69,9 +72,12 @@ function updateLayerInPlace(map: Map, spec: LayerSpecification, previousSpec?: L
       }
     }
   }
+}
 
+/** Synchronizes changed layout properties on an existing layer in place. */
+function syncLayoutProperties(map: Map, id: string, previous?: MutableLayerSpec, next?: MutableLayerSpec): void {
   const previousLayout = previous?.layout ?? {};
-  const nextLayout = next.layout ?? {};
+  const nextLayout = next?.layout ?? {};
   for (const key of new Set([...Object.keys(previousLayout), ...Object.keys(nextLayout)])) {
     if (!previous || !specValuesEqual(previousLayout[key], nextLayout[key])) {
       try {
@@ -85,20 +91,96 @@ function updateLayerInPlace(map: Map, spec: LayerSpecification, previousSpec?: L
       }
     }
   }
+}
 
-  if (!previous || !specValuesEqual(previous.filter, next.filter)) {
+/** Synchronizes filter and zoom range properties on an existing layer in place. */
+function syncFilterAndZoom(map: Map, id: string, previous?: MutableLayerSpec, next?: MutableLayerSpec): void {
+  if (!previous || !specValuesEqual(previous.filter, next?.filter)) {
     try {
-      map.setFilter(id, next.filter as Parameters<Map['setFilter']>[1]);
+      map.setFilter(id, next?.filter as Parameters<Map['setFilter']>[1]);
     } catch {
       // ignore
     }
   }
 
-  if (!previous || previous.minzoom !== next.minzoom || previous.maxzoom !== next.maxzoom) {
+  if (!previous || previous.minzoom !== next?.minzoom || previous.maxzoom !== next?.maxzoom) {
     try {
-      map.setLayerZoomRange(id, next.minzoom ?? 0, next.maxzoom ?? 24);
+      map.setLayerZoomRange(id, next?.minzoom ?? 0, next?.maxzoom ?? 24);
     } catch {
       // ignore
+    }
+  }
+}
+
+/**
+ * Sync a layer's `paint`, `layout`, `filter` and zoom range onto the live map
+ * without removing/re-adding it. Only properties whose value actually changed
+ * are re-applied, so an unchanged symbol layer is never needlessly re-laid-out.
+ */
+function updateLayerInPlace(map: Map, spec: LayerSpecification, previousSpec?: LayerSpecification): void {
+  const id = spec.id;
+  const next = spec as MutableLayerSpec;
+  const previous = previousSpec as MutableLayerSpec | undefined;
+
+  syncPaintProperties(map, id, previous, next);
+  syncLayoutProperties(map, id, previous, next);
+  syncFilterAndZoom(map, id, previous, next);
+}
+
+/** Checks whether the layer structure is identical and can be updated in place. */
+function isLayerStructurallyUnchanged(
+  spec: LayerSpecification,
+  previousSpec: LayerSpecification | undefined,
+  map: Map,
+  previousMap: Map | undefined,
+): boolean {
+  return (
+    previousSpec !== undefined &&
+    map === previousMap &&
+    previousSpec.id === spec.id &&
+    previousSpec.type === spec.type &&
+    layerSourceKey(previousSpec) === layerSourceKey(spec)
+  );
+}
+
+/** Removes an outdated layer from whichever map instance currently hosts it. */
+function removePreviousLayer(
+  previousSpec: LayerSpecification | undefined,
+  previousMap: Map | undefined,
+  currentMap: Map,
+): void {
+  if (!previousSpec) {
+    return;
+  }
+  const targetMap = previousMap?.getLayer(previousSpec.id)
+    ? previousMap
+    : currentMap.getLayer(previousSpec.id)
+      ? currentMap
+      : undefined;
+  if (targetMap) {
+    try {
+      targetMap.removeLayer(previousSpec.id);
+    } catch {
+      // ignore
+    }
+  }
+}
+
+/** Cleans up layer resources and pending event listeners on unmount. */
+function cleanupLayerEffect(
+  map: Map | undefined,
+  spec: LayerSpecification | undefined,
+  pendingListener: (() => void) | undefined,
+): void {
+  if (map && pendingListener) {
+    map.off('sourcedata', pendingListener);
+    map.off('data', pendingListener);
+  }
+  if (map && spec && map.getLayer(spec.id)) {
+    try {
+      map.removeLayer(spec.id);
+    } catch {
+      // The source may already be gone mid-teardown; ignore.
     }
   }
 }
@@ -123,12 +205,12 @@ function updateLayerInPlace(map: Map, spec: LayerSpecification, previousSpec?: L
  * ```
  */
 export function useLayer(map: Map | undefined, options: UseLayerOptions): void {
-  const previousSpecReference = useRef<LayerSpecification | undefined>(undefined);
-  const previousBeforeIdReference = useRef<string | undefined>(undefined);
-  const mapReference = useRef<Map | undefined>(undefined);
+  const previousSpecReference = useRef<LayerSpecification | undefined>();
+  const previousBeforeIdReference = useRef<string | undefined>();
+  const mapReference = useRef<Map | undefined>();
   // A `sourcedata` listener registered while we wait for a referenced source to
   // appear. Held so it can be torn down on re-run and unmount.
-  const pendingListenerReference = useRef<(() => void) | undefined>(undefined);
+  const pendingListenerReference = useRef<(() => void) | undefined>();
 
   useEffect(() => {
     if (!map) {
@@ -153,14 +235,10 @@ export function useLayer(map: Map | undefined, options: UseLayerOptions): void {
     // Fast path: the layer already exists and only its visual properties
     // changed. Sync them in place instead of removing and re-adding the layer,
     // which would restart symbol placement every render and can crash MapLibre.
-    const structurallyUnchanged =
-      previousSpec !== undefined &&
-      map === previousMap &&
-      previousSpec.id === spec.id &&
-      previousSpec.type === spec.type &&
-      layerSourceKey(previousSpec) === layerSourceKey(spec);
+    const unchanged = isLayerStructurallyUnchanged(spec, previousSpec, map, previousMap);
+    const layerExists = Boolean(map.getLayer(spec.id));
 
-    if ((structurallyUnchanged || (previousSpec === undefined && map.getLayer(spec.id))) && map.getLayer(spec.id)) {
+    if ((unchanged || (previousSpec === undefined && layerExists)) && layerExists) {
       if (options.beforeId !== previousBeforeIdReference.current) {
         try {
           map.moveLayer(spec.id, options.beforeId);
@@ -177,31 +255,11 @@ export function useLayer(map: Map | undefined, options: UseLayerOptions): void {
 
     // Structural change / first mount / map change: remove the old layer then
     // (re)add it. Remove from whichever map still holds it.
-    if (previousSpec) {
-      if (previousMap?.getLayer(previousSpec.id)) {
-        try {
-          previousMap.removeLayer(previousSpec.id);
-        } catch {
-          // ignore
-        }
-      } else if (map.getLayer(previousSpec.id)) {
-        try {
-          map.removeLayer(previousSpec.id);
-        } catch {
-          // ignore
-        }
-      }
-    }
+    removePreviousLayer(previousSpec, previousMap, map);
 
     // The source a layer references (a string ID). Background layers and layers
     // with an inline source object have none, so there is nothing to await.
-    let sourceId: string | undefined;
-    if (typeof spec === 'object' && spec !== null) {
-      const nonPrimitive: object = spec;
-      if ('source' in nonPrimitive && typeof (nonPrimitive as { source: unknown }).source === 'string') {
-        sourceId = (nonPrimitive as { source: string }).source;
-      }
-    }
+    const sourceId = extractLayerSourceId(spec);
 
     if (!map.getLayer(spec.id)) {
       if (sourceId && !map.getSource(sourceId)) {
@@ -249,16 +307,15 @@ export function useLayer(map: Map | undefined, options: UseLayerOptions): void {
     previousBeforeIdReference.current = options.beforeId;
     mapReference.current = map;
 
+    /** Re-adds the layer if it was lost during a style reload. */
     const reapplyLayer = (): void => {
-      if (map && !map.getLayer(spec.id)) {
-        if (sourceId && !map.getSource(sourceId)) {
-          return;
-        }
-        try {
-          map.addLayer(spec, options.beforeId);
-        } catch {
-          // ignore
-        }
+      if (!map || map.getLayer(spec.id) || (sourceId && !map.getSource(sourceId))) {
+        return;
+      }
+      try {
+        map.addLayer(spec, options.beforeId);
+      } catch {
+        // ignore
       }
     };
 
@@ -273,20 +330,12 @@ export function useLayer(map: Map | undefined, options: UseLayerOptions): void {
 
   useEffect(() => {
     return () => {
-      const map_ = mapReference.current as unknown as Map | undefined;
-      const spec = previousSpecReference.current as unknown as LayerSpecification | undefined;
-      if (map_ && pendingListenerReference.current) {
-        map_.off('sourcedata', pendingListenerReference.current);
-        map_.off('data', pendingListenerReference.current);
-        pendingListenerReference.current = undefined;
-      }
-      if (map_ && spec && map_.getLayer(spec.id)) {
-        try {
-          map_.removeLayer(spec.id);
-        } catch {
-          // The source may already be gone mid-teardown; ignore.
-        }
-      }
+      cleanupLayerEffect(
+        mapReference.current as unknown as Map | undefined,
+        previousSpecReference.current as unknown as LayerSpecification | undefined,
+        pendingListenerReference.current,
+      );
+      pendingListenerReference.current = undefined;
     };
   }, []);
 }

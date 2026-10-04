@@ -41,8 +41,8 @@ export function ForgeMapMarker(properties: Readonly<MapMarkerProperties>): MpEle
     draggable: properties.draggable ?? false,
     rotationAlignment: properties.rotationAlignment,
     pitchAlignment: properties.pitchAlignment,
-    ['onDragend']: handleDragend,
-    ['onClick']: handleClick,
+    onDragend: handleDragend,
+    onClick: handleClick,
   };
   useMarker(map, markerOptions);
 

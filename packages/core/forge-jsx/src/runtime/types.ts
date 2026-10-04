@@ -110,6 +110,22 @@ export function createForgeStyle<const T extends Record<string, string | undefin
 }
 
 /**
+ * Normalises a property name key to a `--forge-<prefix>-<kebab>` custom property name.
+ */
+function toForgePropertyName(key: string, prefix: string): string {
+  let kebab = key.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
+  if (kebab.startsWith('--forge-')) {
+    kebab = kebab.slice(8);
+  } else if (kebab.startsWith('--')) {
+    kebab = kebab.slice(2);
+  }
+  if (prefix && kebab.startsWith(`${prefix}-`)) {
+    kebab = kebab.slice(prefix.length + 1);
+  }
+  return prefix ? `--forge-${prefix}-${kebab}` : `--forge-${kebab}`;
+}
+
+/**
  * Build a component-scoped CSS custom-property style map from a camelCase or kebab-case property bag.
  *
  * Automatically converts camelCase keys into kebab-case, ensures the component namespace
@@ -118,7 +134,7 @@ export function createForgeStyle<const T extends Record<string, string | undefin
  */
 export function createForgeComponentStyle<T extends Record<string, string | undefined>>(
   prefix: string,
-  properties: T | undefined,
+  properties?: T,
 ): Record<string, string> | undefined {
   if (!properties) {
     return undefined;
@@ -127,17 +143,7 @@ export function createForgeComponentStyle<T extends Record<string, string | unde
   let count = 0;
   for (const [key, value] of Object.entries(properties)) {
     if (value !== undefined) {
-      let kebab = key.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
-      if (kebab.startsWith('--forge-')) {
-        kebab = kebab.slice(8);
-      } else if (kebab.startsWith('--')) {
-        kebab = kebab.slice(2);
-      }
-      if (prefix && kebab.startsWith(`${prefix}-`)) {
-        kebab = kebab.slice(prefix.length + 1);
-      }
-      const propertyName = prefix ? `--forge-${prefix}-${kebab}` : `--forge-${kebab}`;
-      result[propertyName] = value;
+      result[toForgePropertyName(key, prefix)] = value;
       count++;
     }
   }

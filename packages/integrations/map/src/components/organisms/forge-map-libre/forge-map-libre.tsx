@@ -65,6 +65,32 @@ export interface MapLibreProperties {
 }
 
 /**
+ * Determines whether the map center should be updated from props.
+ */
+function shouldUpdateCenter(instance: Map | undefined, center: LngLatLike | undefined): instance is Map {
+  if (!instance || !center) {
+    return false;
+  }
+  if (instance.dragPan?.isActive() || instance.touchZoomRotate?.isActive()) {
+    return false;
+  }
+  return centerDiffers(instance.getCenter(), LngLat.convert(center));
+}
+
+/**
+ * Determines whether the map zoom should be updated from props.
+ */
+function shouldUpdateZoom(instance: Map | undefined, zoom: number | undefined): instance is Map {
+  if (!instance || zoom === undefined) {
+    return false;
+  }
+  if (instance.scrollZoom?.isActive?.() || instance.touchZoomRotate?.isActive()) {
+    return false;
+  }
+  return scalarDiffers(instance.getZoom(), zoom);
+}
+
+/**
  * `ForgeMapLibre` — a MapLibre GL map container authored once in the neutral JSX
  * dialect and compiled straight to React or Vue by
  * `@mission-platform/vite-plugin-forge`.
@@ -92,10 +118,9 @@ export function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpEleme
   } = properties;
 
   const containerReference = useRef<HTMLDivElement | null>(null);
-  const mapReference = useRef<Map | undefined>(undefined);
+  const mapReference = useRef<Map | undefined>();
   const previousStyleReference = useRef<MapOptions['style'] | undefined>(resolvedStyle);
-  // eslint-disable-next-line unicorn/no-useless-undefined
-  const [map, setMap] = useState<Map | undefined>(undefined);
+  const [map, setMap] = useState<Map | undefined>();
 
   useEffect(() => {
     const container = containerReference.current;
@@ -126,6 +151,7 @@ export function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpEleme
     }
 
     let isReady = false;
+    /** Marks the map as ready and notifies the onLoad callback. */
     const handleReady = (): void => {
       if (isReady) {
         return;
@@ -135,10 +161,11 @@ export function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpEleme
       properties.onLoad?.(instance);
     };
 
+    /** Safely checks whether the map style has finished loading. */
     const isStyleSafeLoaded = (): boolean => {
       try {
         const rawMap = instance as unknown as { style?: unknown };
-        return Boolean(rawMap && rawMap.style && instance.isStyleLoaded());
+        return Boolean(rawMap?.style && instance.isStyleLoaded());
       } catch {
         return false;
       }
@@ -171,7 +198,7 @@ export function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpEleme
     return () => {
       instance.remove();
       mapReference.current = undefined;
-      setMap(undefined);
+      setMap();
     };
   }, []);
 
@@ -187,26 +214,14 @@ export function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpEleme
     const instance = mapReference.current;
     // Only re-centre when the target differs from the live centre and the user is
     // not actively interacting (dragging/touching) to prevent feedback loops.
-    if (
-      instance &&
-      center &&
-      !(instance.dragPan && instance.dragPan.isActive()) &&
-      !(instance.touchZoomRotate && instance.touchZoomRotate.isActive()) &&
-      centerDiffers(instance.getCenter(), LngLat.convert(center))
-    ) {
+    if (shouldUpdateCenter(instance, center)) {
       instance.setCenter(center);
     }
   }, [center]);
 
   useEffect(() => {
     const instance = mapReference.current;
-    if (
-      instance &&
-      zoom !== undefined &&
-      !(instance.scrollZoom && typeof instance.scrollZoom.isActive === 'function' && instance.scrollZoom.isActive()) &&
-      !(instance.touchZoomRotate && instance.touchZoomRotate.isActive()) &&
-      scalarDiffers(instance.getZoom(), zoom)
-    ) {
+    if (shouldUpdateZoom(instance, zoom)) {
       instance.setZoom(zoom);
     }
   }, [zoom]);

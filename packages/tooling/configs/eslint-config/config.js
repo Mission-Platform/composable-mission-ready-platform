@@ -115,10 +115,10 @@ function findEnclosingTypeAnnotation(node) {
       return current;
     }
     if (BOUNDARY_NODE_TYPES.has(current.type)) {
-      return;
+      return null;
     }
   }
-  return;
+  return null;
 }
 
 /**

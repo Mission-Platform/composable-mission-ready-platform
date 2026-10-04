@@ -15,6 +15,55 @@ export interface UseSourceOptions {
 }
 
 /**
+ * Attempts to fast-path update a GeoJSON source's data in place without removing it.
+ */
+function tryUpdateGeoJsonSource(
+  map: Map,
+  id: string,
+  spec: SourceSpecification,
+  previousSpec?: SourceSpecification,
+  previousMap?: Map,
+): boolean {
+  const isGeoJson =
+    spec.type === 'geojson' &&
+    (previousSpec?.type === 'geojson' || (previousSpec === undefined && Boolean(map.getSource(id)))) &&
+    (map === previousMap || previousMap === undefined);
+
+  if (!isGeoJson) {
+    return false;
+  }
+
+  const existing = map.getSource(id) as GeoJSONSource | undefined;
+  if (existing?.setData) {
+    existing.setData(spec.data as Parameters<GeoJSONSource['setData']>[0]);
+    return true;
+  }
+  return false;
+}
+
+/** Safely removes a source from a map instance without throwing if already removed. */
+function safeRemoveSource(map: Map | undefined, id: string): void {
+  if (map?.getSource(id)) {
+    try {
+      map.removeSource(id);
+    } catch {
+      // ignore
+    }
+  }
+}
+
+/** Safely adds a source to a map instance if it is not already present. */
+function safeAddSource(map: Map, id: string, spec: SourceSpecification): void {
+  if (!map.getSource(id)) {
+    try {
+      map.addSource(id, spec);
+    } catch {
+      // ignore
+    }
+  }
+}
+
+/**
  * Registers a MapLibre data source and keeps it in sync with the map.
  *
  * The source is added once the map is ready and removed when the component
@@ -31,8 +80,8 @@ export interface UseSourceOptions {
  */
 export function useSource(map: Map | undefined, options: UseSourceOptions): void {
   const { id } = options;
-  const previousSpecReference = useRef<SourceSpecification | undefined>(undefined);
-  const previousMapReference = useRef<Map | undefined>(undefined);
+  const previousSpecReference = useRef<SourceSpecification | undefined>();
+  const previousMapReference = useRef<Map | undefined>();
 
   useEffect(() => {
     if (!map) {
@@ -49,46 +98,23 @@ export function useSource(map: Map | undefined, options: UseSourceOptions): void
 
     // Fast path: GeoJSON source already exists — swap the data in place so all
     // referencing layers stay intact and no source teardown is needed.
-    if (
-      spec.type === 'geojson' &&
-      (previousSpec?.type === 'geojson' || (previousSpec === undefined && map.getSource(id))) &&
-      (map === previousMap || previousMap === undefined)
-    ) {
-      const existing = map.getSource(id) as GeoJSONSource | undefined;
-      if (existing?.setData) {
-        existing.setData(spec.data as Parameters<GeoJSONSource['setData']>[0]);
-        previousSpecReference.current = spec;
-        previousMapReference.current = map;
-        return;
-      }
+    if (tryUpdateGeoJsonSource(map, id, spec, previousSpec, previousMap)) {
+      previousSpecReference.current = spec;
+      previousMapReference.current = map;
+      return;
     }
 
     // Structural change or first mount: remove old source (if any) then add.
-    if (previousMap && previousMap !== map && previousMap.getSource(id)) {
-      try {
-        previousMap.removeSource(id);
-      } catch {
-        // ignore
-      }
+    if (previousMap && previousMap !== map) {
+      safeRemoveSource(previousMap, id);
     }
-    if (!map.getSource(id)) {
-      try {
-        map.addSource(id, spec);
-      } catch {
-        // ignore
-      }
-    }
+    safeAddSource(map, id, spec);
     previousSpecReference.current = spec;
     previousMapReference.current = map;
 
+    /** Re-adds the source if it was lost during a style reload. */
     const reapplySource = (): void => {
-      if (map && !map.getSource(id)) {
-        try {
-          map.addSource(id, spec);
-        } catch {
-          // ignore
-        }
-      }
+      safeAddSource(map, id, spec);
     };
 
     map.on('styledata', reapplySource);
@@ -102,14 +128,7 @@ export function useSource(map: Map | undefined, options: UseSourceOptions): void
 
   useEffect(() => {
     return () => {
-      const map_ = previousMapReference.current;
-      if (map_ && map_.getSource(id)) {
-        try {
-          map_.removeSource(id);
-        } catch {
-          // A layer may still reference the source mid-teardown; ignore.
-        }
-      }
+      safeRemoveSource(previousMapReference.current, id);
     };
   }, []);
 }

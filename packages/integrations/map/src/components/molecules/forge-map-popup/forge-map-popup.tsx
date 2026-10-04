@@ -28,15 +28,10 @@ export interface MapPopupProperties {
   onClose?: () => void;
 }
 
-/**
- * `ForgeMapPopup` — adds a MapLibre `Popup` to the nearest `<MapLibre>` ancestor's
- * map. Renders no DOM of its own (the popup lives in the map canvas). Authored
- * once in the neutral JSX dialect.
- */
-export function ForgeMapPopup(properties: Readonly<MapPopupProperties>): MpElement | null {
-  const map = useMap();
+/** Resolves popup options with sensible fallback values. */
+function resolvePopupOptions(properties: Readonly<MapPopupProperties>): Parameters<typeof usePopup>[1] {
   const resolvedLngLat = properties.lngLat ?? properties.coordinates ?? [0, 0];
-  usePopup(map, {
+  return {
     lngLat: resolvedLngLat,
     content: properties.content ?? '',
     isText: properties.isText ?? false,
@@ -47,7 +42,17 @@ export function ForgeMapPopup(properties: Readonly<MapPopupProperties>): MpEleme
     closeOnClick: properties.closeOnClick ?? true,
     anchor: properties.anchor,
     onClose: properties.onClose,
-  });
+  };
+}
+
+/**
+ * `ForgeMapPopup` — adds a MapLibre `Popup` to the nearest `<MapLibre>` ancestor's
+ * map. Renders no DOM of its own (the popup lives in the map canvas). Authored
+ * once in the neutral JSX dialect.
+ */
+export function ForgeMapPopup(properties: Readonly<MapPopupProperties>): MpElement | null {
+  const map = useMap();
+  usePopup(map, resolvePopupOptions(properties));
 
   // Renders no DOM of its own: an empty render is authored as `null`, which the
   // React build emits verbatim (React renders nothing) and the Vue build turns

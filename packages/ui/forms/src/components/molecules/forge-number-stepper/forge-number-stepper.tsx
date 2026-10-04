@@ -108,6 +108,9 @@ export type NumberStepperStyle = CSSStyleProperties & {
   readonly '--forge-number-stepper-input-text-placeholder'?: string | undefined;
 };
 
+/**
+ * Resolves CSS custom property styles for the ForgeNumberStepper component.
+ */
 function createNumberStepperStyle(
   properties: Readonly<NumberStepperStyleProperties> | undefined,
 ): NumberStepperStyle | undefined {
@@ -170,7 +173,7 @@ export interface NumberStepperProperties {
    * The numeric value, or `''`/`undefined` when empty (controlled via `modelValue`).
    * @model onUpdateModelValue
    */
-  modelValue?: number | '' | undefined;
+  modelValue?: number | '';
   /** Visible label text. */
   label?: string;
   /** Visually hide the label (kept for assistive tech). */
@@ -208,6 +211,49 @@ export interface NumberStepperProperties {
 
   /** Component-owned CSS custom-property overrides. */
   properties?: Readonly<NumberStepperStyleProperties>;
+}
+
+/** Parses the input model value into a numeric value or undefined. */
+function parseStepperValue(modelValue: number | '' | undefined): number | undefined {
+  if (modelValue === undefined || modelValue === '') {
+    return undefined;
+  }
+  return typeof modelValue === 'number' ? modelValue : Number(modelValue);
+}
+
+/** Formats a numeric value as a display string. */
+function formatStepperDisplay(current: number | undefined, integer: boolean, precision: number | undefined): string {
+  if (current === undefined || Number.isNaN(current)) {
+    return '';
+  }
+  if (!integer && precision !== undefined) {
+    return current.toFixed(precision);
+  }
+  return String(current);
+}
+
+/** Clamps and rounds a numeric value according to stepper constraints. */
+function normaliseStepperValue(
+  value: number,
+  integer: boolean,
+  precision: number | undefined,
+  min: number | undefined,
+  max: number | undefined,
+): number {
+  let next = value;
+  if (integer) {
+    next = Math.trunc(next);
+  } else if (precision !== undefined) {
+    const factor = 10 ** precision;
+    next = Math.round(next * factor) / factor;
+  }
+  if (min !== undefined) {
+    next = Math.max(min, next);
+  }
+  if (max !== undefined) {
+    next = Math.min(max, next);
+  }
+  return next;
 }
 
 /**
@@ -252,43 +298,16 @@ export function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>
   const describedBy = error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined;
 
   const effectiveMin = unsigned ? Math.max(0, min ?? 0) : min;
+  const current = parseStepperValue(modelValue);
+  const display = formatStepperDisplay(current, integer, precision);
 
-  const current: number | undefined =
-    modelValue === undefined || modelValue === ''
-      ? undefined
-      : typeof modelValue === 'number'
-        ? modelValue
-        : Number(modelValue);
-
-  const display =
-    current === undefined || Number.isNaN(current)
-      ? ''
-      : !integer && precision !== undefined
-        ? current.toFixed(precision)
-        : String(current);
-
-  const normalise = (value: number): number => {
-    let next = value;
-    if (integer) {
-      next = Math.trunc(next);
-    } else if (precision !== undefined) {
-      const factor = 10 ** precision;
-      next = Math.round(next * factor) / factor;
-    }
-    if (effectiveMin !== undefined) {
-      next = Math.max(effectiveMin, next);
-    }
-    if (max !== undefined) {
-      next = Math.min(max, next);
-    }
-    return next;
-  };
-
+  /** Emits value updates through update:modelValue and onChange handlers. */
   const commit = (value?: number): void => {
     properties.onUpdateModelValue?.(value);
     properties.onChange?.(value);
   };
 
+  /** Handles raw text input changes and normalises the value. */
   const onInput = (event: Event): void => {
     const raw = (event.target as HTMLInputElement).value;
     if (raw.trim() === '') {
@@ -299,18 +318,19 @@ export function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>
     if (Number.isNaN(parsed)) {
       return;
     }
-    commit(normalise(parsed));
+    commit(normaliseStepperValue(parsed, integer, precision, effectiveMin, max));
   };
 
   const canDecrement = !disabled && (effectiveMin === undefined || (current ?? 0) > effectiveMin);
   const canIncrement = !disabled && (max === undefined || (current ?? 0) < max);
 
+  /** Adjusts the current value by one step in the given direction. */
   const adjust = (direction: 1 | -1): void => {
     if (disabled) {
       return;
     }
     const base = current ?? effectiveMin ?? 0;
-    commit(normalise(base + direction * step));
+    commit(normaliseStepperValue(base + direction * step, integer, precision, effectiveMin, max));
   };
 
   return (
@@ -319,7 +339,7 @@ export function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>
         styles['forge-number-stepper'],
         styles[`forge-number-stepper--${size}`],
         {
-          [styles['forge-number-stepper--error']]: !!error,
+          [styles['forge-number-stepper--error']]: Boolean(error),
           [styles['forge-number-stepper--disabled']]: disabled,
         },
         properties.className,

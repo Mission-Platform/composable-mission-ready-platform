@@ -49,11 +49,11 @@ describe('component property declaration validation', () => {
   it('accepts declarations in an imported co-located partial exactly once', () => {
     const issues = validateComponentStylesheet(
       '/fixtures/forge-card/forge-card.module.scss',
-      `@use './forge-card-properties'; .component { color: var(--forge-card-color, red); }`,
+      "@use './forge-card-properties'; .component { color: var(--forge-card-color, red); }",
       new Map([
         [
           '/fixtures/forge-card/_forge-card-properties.scss',
-          `@property --forge-card-color { syntax: "*"; inherits: true; }`,
+          '@property --forge-card-color { syntax: "*"; inherits: true; }',
         ],
       ]),
     );

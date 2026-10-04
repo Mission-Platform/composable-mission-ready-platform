@@ -52,6 +52,9 @@ function projectedName(record: TokenRecord, cssNamespace?: string): string {
     : dashedName(record);
 }
 
+/**
+ * Resolves alias paths against component namespace projections if specified.
+ */
 function projectedAlias(alias: string, prefix: string, componentNamespaces?: ReadonlySet<string>): string {
   if (!isAlias(alias)) return alias;
   const segments = alias.slice(1, -1).split('.');
@@ -61,6 +64,9 @@ function projectedAlias(alias: string, prefix: string, componentNamespaces?: Rea
   return aliasToCssVariable(alias, prefix);
 }
 
+/**
+ * Builds standard SCSS $-variable declaration blocks grouped by token category.
+ */
 export function buildScssVariables(
   records: TokenRecord[],
   prefix = 'mp',
@@ -129,6 +135,13 @@ const PROPERTY_SYNTAX_BY_TYPE: Record<string, string> = {
 /** Syntaxes that omit the `initial-value` descriptor (see {@link buildPropertyRule}). */
 const SYNTAXES_WITHOUT_INITIAL_VALUE = new Set(['*']);
 
+/** Regular expression matching dynamic CSS functions. */
+const DYNAMIC_CSS_FUNCTION_REGEX = /var\(|light-dark\(|env\(|attr\(/i;
+
+/** Regular expression matching relative CSS length units. */
+const RELATIVE_LENGTH_UNIT_REGEX =
+  /\b\d+(\.\d+)?(rem|em|ex|ch|ic|cap|lh|rlh|vw|vh|vi|vb|vmin|vmax|cqw|cqh|cqi|cqb|cqmin|cqmax|dvh|dvw|svh|svw|lvh|lvw)\b/i;
+
 /**
  * Checks whether a token value is computationally independent and valid as an
  * `initial-value` for a typed CSS `@property` registration under the W3C CSS
@@ -145,24 +158,22 @@ export function isComputationallyIndependent(record: TokenRecord): boolean {
   const str = String(record.value).trim();
   if (!str) return false;
 
-  // Runtime or document-dependent functions.
-  if (/var\(|light-dark\(|env\(|attr\(/i.test(str)) return false;
-
-  // Font-relative, viewport-relative, or container-relative length units.
-  if (
-    /\b\d+(\.\d+)?(rem|em|ex|ch|ic|cap|lh|rlh|vw|vh|vi|vb|vmin|vmax|cqw|cqh|cqi|cqb|cqmin|cqmax|dvh|dvw|svh|svw|lvh|lvw)\b/i.test(
-      str,
-    )
-  ) {
+  if (DYNAMIC_CSS_FUNCTION_REGEX.test(str) || RELATIVE_LENGTH_UNIT_REGEX.test(str)) {
     return false;
   }
 
   // Dimension/length with unitless 0 is not valid as initial-value for <length>.
-  if ((record.type === 'dimension' || record.type === 'length') && str === '0') {
-    return false;
-  }
+  return !((record.type === 'dimension' || record.type === 'length') && str === '0');
+}
 
-  return true;
+/**
+ * Resolves the CSS `@property` syntax descriptor for a token record.
+ */
+function resolvePropertySyntax(record: TokenRecord): string {
+  if (!isComputationallyIndependent(record)) {
+    return '*';
+  }
+  return PROPERTY_SYNTAX_BY_TYPE[record.type ?? ''] ?? '*';
 }
 
 /**
@@ -187,9 +198,7 @@ export function buildPropertyRule(
 ): string {
   const tokenName = projectedName(record, cssNamespace);
   const name = `--${prefix}-${tokenName}`;
-  // Aliases and non-computationally-independent values (e.g. relative units like rem/em)
-  // cannot use typed initial values, so register them under the universal '*' syntax.
-  const syntax = !isComputationallyIndependent(record) ? '*' : (PROPERTY_SYNTAX_BY_TYPE[record.type ?? ''] ?? '*');
+  const syntax = resolvePropertySyntax(record);
   const lines = [`@property ${name} {`, `  syntax: '${syntax}';`, '  inherits: true;'];
   if (!SYNTAXES_WITHOUT_INITIAL_VALUE.has(syntax)) {
     const initialValue = useScssVariable ? `#{vars.$${tokenName}}` : formatCssValue(record.value);
