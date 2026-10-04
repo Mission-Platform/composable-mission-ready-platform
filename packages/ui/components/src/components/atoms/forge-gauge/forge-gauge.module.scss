@@ -1,6 +1,6 @@
 @use './forge-gauge-properties';
 
-@layer mp.components {
+@layer mp.components.atoms {
   .forge-gauge {
     display: flex;
     flex-direction: column;

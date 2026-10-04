@@ -11,7 +11,7 @@
 
 @use './forge-status-icon-properties';
 
-@layer mp.components {
+@layer mp.components.atoms {
   .forge-status-icon {
     display: inline-flex;
     align-items: center;

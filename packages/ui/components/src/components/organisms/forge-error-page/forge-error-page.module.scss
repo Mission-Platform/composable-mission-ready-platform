@@ -1,6 +1,6 @@
 @use './forge-error-page-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-error-page {
     display: grid;
     justify-items: center;

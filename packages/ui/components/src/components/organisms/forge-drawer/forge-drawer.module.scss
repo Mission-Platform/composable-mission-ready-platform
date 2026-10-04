@@ -24,7 +24,7 @@
 @use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
 @use './forge-drawer-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   $drawer-sizes: (
     '2xs': 14rem,
     'xs': 17rem,

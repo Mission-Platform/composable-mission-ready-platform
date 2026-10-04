@@ -10,7 +10,7 @@
 
 @use './forge-code-scanner-properties';
 
-@layer mp.code-scanner {
+@layer mp.code-scanner.organisms {
   .forge-code-scanner {
     display: inline-flex;
     flex-direction: column;

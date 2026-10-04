@@ -5,7 +5,9 @@ import Vue from 'unplugin-vue/rolldown';
 
 import type { DtsOptions, TsdownPlugin, UserConfig } from 'tsdown';
 
-/** Flatten tsdown's recursive `plugins` option into a plain array for merging. */
+/**
+Flatten tsdown's recursive `plugins` option into a plain array for merging.
+*/
 function flattenPlugins(plugins: UserConfig['plugins']): TsdownPlugin[] {
   if (plugins === undefined || plugins === null || plugins === false) {
     return [];
@@ -18,16 +20,16 @@ function flattenPlugins(plugins: UserConfig['plugins']): TsdownPlugin[] {
 }
 
 /**
- * Default package names every shared library should treat as peer-provided.
- * Mirrors `@mission-platform/vite-config`'s {@link DEFAULT_LIBRARY_EXTERNALS}.
- */
+Default package names every shared library should treat as peer-provided.
+Mirrors `@mission-platform/vite-config`'s {@link DEFAULT_LIBRARY_EXTERNALS}.
+*/
 export const DEFAULT_LIBRARY_EXTERNALS: readonly string[] = ['vue', 'vue-router', '@mission-platform/i18n'];
 
 /**
- * Read the `dependencies` and `peerDependencies` declared in the package.json
- * located at `rootDirectory`. Used to keep a library's runtime dependencies out
- * of its own bundle so consumers can dedupe and tree-shake them.
- */
+Read the `dependencies` and `peerDependencies` declared in the package.json
+located at `rootDirectory`. Used to keep a library's runtime dependencies out
+of its own bundle so consumers can dedupe and tree-shake them.
+*/
 export function readPackageDependencyNames(rootDirectory: string): string[] {
   try {
     const manifest = JSON.parse(fs.readFileSync(path.resolve(rootDirectory, 'package.json'), 'utf8')) as {
@@ -41,9 +43,9 @@ export function readPackageDependencyNames(rootDirectory: string): string[] {
 }
 
 /**
- * Build a Rolldown `external` / `deps.neverBundle` predicate that treats every
- * name in `names` (and any of their subpath imports, e.g. `pkg/sub`) as external.
- */
+Build a Rolldown `external` / `deps.neverBundle` predicate that treats every
+name in `names` (and any of their subpath imports, e.g. `pkg/sub`) as external.
+*/
 export function createExternalMatcher(names: readonly string[]): (id: string) => boolean {
   const exact = new Set(names);
   return (id: string): boolean => {
@@ -59,7 +61,9 @@ export function createExternalMatcher(names: readonly string[]): (id: string) =>
   };
 }
 
-/** Resolve a package-relative entry into absolute path(s) anchored at `rootDir`. */
+/**
+Resolve a package-relative entry into absolute path(s) anchored at `rootDir`.
+*/
 function resolveEntry(
   rootDirectory: string,
   entry: string | string[] | Record<string, string>,
@@ -67,18 +71,21 @@ function resolveEntry(
   if (typeof entry === 'string') {
     return path.resolve(rootDirectory, entry);
   }
-  if (Array.isArray(entry)) {
-    return entry.map((item) => path.resolve(rootDirectory, item));
-  }
-  return Object.fromEntries(Object.entries(entry).map(([key, value]) => [key, path.resolve(rootDirectory, value)]));
+  return Array.isArray(entry)
+    ? entry.map((item) => path.resolve(rootDirectory, item))
+    : Object.fromEntries(Object.entries(entry).map(([key, value]) => [key, path.resolve(rootDirectory, value)]));
 }
 
-/** Safely cast an unknown option value to a record dictionary. */
+/**
+Safely cast an unknown option value to a record dictionary.
+*/
 function toOptionObject(value: unknown): Record<string, unknown> {
   return typeof value === 'object' && value !== null ? (value as Record<string, unknown>) : {};
 }
 
-/** Merge rollup-style object or function options. */
+/**
+Merge rollup-style object or function options.
+*/
 function mergeRollupOptions<T extends object | ((...args: never[]) => unknown)>(
   base?: T,
   overrides?: T,
@@ -89,13 +96,14 @@ function mergeRollupOptions<T extends object | ((...args: never[]) => unknown)>(
   if (typeof base === 'function') {
     return base;
   }
-  if (base === undefined && overrides === undefined) {
-    return undefined;
-  }
-  return { ...toOptionObject(base), ...toOptionObject(overrides) } as T;
+  return base === undefined && overrides === undefined
+    ? undefined
+    : ({ ...toOptionObject(base), ...toOptionObject(overrides) } as T);
 }
 
-/** Merge plugins from base and override configurations. */
+/**
+Merge plugins from base and override configurations.
+*/
 function mergeConfigPlugins(
   basePlugins: UserConfig['plugins'],
   overridePlugins: UserConfig['plugins'],
@@ -104,7 +112,9 @@ function mergeConfigPlugins(
   return merged.length > 0 ? merged : undefined;
 }
 
-/** Deep-merge a base tsdown config with caller overrides (shallow for top-level, concat plugins). */
+/**
+Deep-merge a base tsdown config with caller overrides (shallow for top-level, concat plugins).
+*/
 function mergeTsdownConfig(base: UserConfig, overrides?: UserConfig): UserConfig {
   if (!overrides) {
     return base;
@@ -126,68 +136,88 @@ function mergeTsdownConfig(base: UserConfig, overrides?: UserConfig): UserConfig
 }
 
 export interface TsdownLibraryOptions {
-  /** Absolute path of the consuming workspace (typically `import.meta.dirname`). */
+  /**
+  Absolute path of the consuming workspace (typically `import.meta.dirname`).
+  */
   rootDir: string;
-  /** Entry file(s) or name→path map, relative to `rootDir` (or absolute). Defaults to `src/index.ts`. */
+  /**
+  Entry file(s) or name→path map, relative to `rootDir` (or absolute). Defaults to `src/index.ts`.
+  */
   entry?: string | string[] | Record<string, string>;
-  /** Extra package names to externalise on top of deps/peerDeps + {@link DEFAULT_LIBRARY_EXTERNALS}. */
+  /**
+  Extra package names to externalise on top of deps/peerDeps + {@link DEFAULT_LIBRARY_EXTERNALS}.
+  */
   external?: readonly string[];
   /**
-   * Emit declaration files. Defaults to non-project TypeScript 7 generation so
-   * declarations are written through tsdown's configured `outDir`.
-   * Set `false` when a custom dts plugin (e.g. forge hook/component dts) owns
-   * declaration emit.
-   */
+  Emit declaration files. Defaults to non-project TypeScript 7 generation so
+  declarations are written through tsdown's configured `outDir`.
+  Set `false` when a custom dts plugin (e.g. forge hook/component dts) owns
+  declaration emit.
+  */
   dts?: boolean | DtsOptions;
   /**
-   * Path to the TypeScript config used for bundling + dts. Defaults to
-   * `tsconfig.build.json` when present (the repo convention), otherwise tsdown's
-   * auto-discovery.
-   */
+  Path to the TypeScript config used for bundling + dts. Defaults to
+  `tsconfig.build.json` when present (the repo convention), otherwise tsdown's
+  auto-discovery.
+  */
   tsconfig?: string | boolean;
   /**
-   * Runtime platform. Defaults to `'neutral'` for shared libraries. Use
-   * `'node'` for Vite plugins / Node tooling packages that import `node:*`
-   * builtins so they are externalised cleanly.
-   */
+  Runtime platform. Defaults to `'neutral'` for shared libraries. Use
+  `'node'` for Vite plugins / Node tooling packages that import `node:*`
+  builtins so they are externalised cleanly.
+  */
   platform?: 'neutral' | 'node' | 'browser';
   /**
-   * Preserve the source module graph (one output file per module). Defaults to
-   * `true`, matching the repo's historical `preserveModules: true`.
-   */
+  Preserve the source module graph (one output file per module). Defaults to
+  `true`, matching the repo's historical `preserveModules: true`.
+  */
   unbundle?: boolean;
-  /** Output module formats. Defaults to `['esm']`. */
+  /**
+  Output module formats. Defaults to `['esm']`.
+  */
   format?: Array<'esm' | 'cjs'>;
-  /** Output directory, relative to `rootDir` or absolute. Defaults to `dist`. */
+  /**
+  Output directory, relative to `rootDir` or absolute. Defaults to `dist`.
+  */
   outDir?: string;
-  /** Optional package-local staging mirror used by the shared Forge runner. */
+  /**
+  Optional package-local staging mirror used by the shared Forge runner.
+  */
   outputRoot?: string;
   /**
-   * Whether to clean the output directory before emit. Defaults to `true`.
-   * Multi-framework forge packages should set `false` (or a scoped glob) on
-   * per-framework configs so sibling framework trees are not wiped.
-   */
+  Whether to clean the output directory before emit. Defaults to `true`.
+  Multi-framework forge packages should set `false` (or a scoped glob) on
+  per-framework configs so sibling framework trees are not wiped.
+  */
   clean?: boolean | string[];
   /**
-   * Treat the package's own `dependencies` and `peerDependencies` as external.
-   * Defaults to `true` when `unbundle` is enabled (library mode).
-   */
+  Treat the package's own `dependencies` and `peerDependencies` as external.
+  Defaults to `true` when `unbundle` is enabled (library mode).
+  */
   autoExternalDeps?: boolean;
-  /** Working directory for tsdown (defaults to `rootDir`). */
+  /**
+  Working directory for tsdown (defaults to `rootDir`).
+  */
   cwd?: string;
-  /** Alternate source tree used when resolving TypeScript aliases (for generated caches). */
+  /**
+  Alternate source tree used when resolving TypeScript aliases (for generated caches).
+  */
   tsconfigPathsRoot?: string;
   /**
-   * Re-link each extracted `.css` asset to the JS module that owns it (see
-   * {@link cssBundlePlugin}). Defaults to `true` so co-located component styles
-   * load automatically when a component (or the package barrel) is imported —
-   * Rolldown emits the stylesheets but does not re-inject their side-effect
-   * imports. A no-op for packages that emit no CSS.
-   */
+  Re-link each extracted `.css` asset to the JS module that owns it (see
+  {@link cssBundlePlugin}). Defaults to `true` so co-located component styles
+  load automatically when a component (or the package barrel) is imported —
+  Rolldown emits the stylesheets but does not re-inject their side-effect
+  imports. A no-op for packages that emit no CSS.
+  */
   cssBundle?: boolean;
-  /** Override or extend the generated config. */
+  /**
+  Override or extend the generated config.
+  */
   overrides?: UserConfig;
-  /** Native tsdown plugins applied directly to the generated config. */
+  /**
+  Native tsdown plugins applied directly to the generated config.
+  */
   plugins?: UserConfig['plugins'];
 }
 
@@ -195,7 +225,9 @@ interface WriteBundleOptions {
   dir?: string;
 }
 
-/** Recursively collect every `.css` file under `directory` (relative POSIX paths). */
+/**
+Recursively collect every `.css` file under `directory` (relative POSIX paths).
+*/
 function collectCssFiles(directory: string, base: string = directory): string[] {
   const results: string[] = [];
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
@@ -209,7 +241,9 @@ function collectCssFiles(directory: string, base: string = directory): string[] 
   return results;
 }
 
-/** Read directory entries safely without throwing. */
+/**
+Read directory entries safely without throwing.
+*/
 function readDirectorySafely(currentDirectory: string): fs.Dirent[] {
   try {
     return fs.readdirSync(currentDirectory, { withFileTypes: true });
@@ -218,7 +252,9 @@ function readDirectorySafely(currentDirectory: string): fs.Dirent[] {
   }
 }
 
-/** Check whether a directory entry matches one of the target JavaScript file names. */
+/**
+Check whether a directory entry matches one of the target JavaScript file names.
+*/
 function checkJsEntry(
   entry: fs.Dirent,
   currentDirectory: string,
@@ -236,7 +272,9 @@ function checkJsEntry(
   return path.relative(outputDirectory, fullPath).split(path.sep).join('/');
 }
 
-/** Search a directory for a JavaScript file matching any target name. */
+/**
+Search a directory for a JavaScript file matching any target name.
+*/
 function findJsInDirectory(
   currentDirectory: string,
   outputDirectory: string,
@@ -258,9 +296,9 @@ function findJsInDirectory(
 }
 
 /**
- * Recursively find the first JS module in `outputDirectory` whose base name matches
- * either `baseName` or `fileName`.
- */
+Recursively find the first JS module in `outputDirectory` whose base name matches
+either `baseName` or `fileName`.
+*/
 function findJsByBaseName(outputDirectory: string, baseName: string, fileName: string): string | undefined {
   const targetNames = new Set([baseName, `${baseName}.vue`, `${baseName}.module`, fileName]);
   const queue = [outputDirectory];
@@ -279,32 +317,31 @@ function findJsByBaseName(outputDirectory: string, baseName: string, fileName: s
   return undefined;
 }
 
-/** Resolve the owning JS module for a Vue SFC extracted stylesheet. */
+/**
+Resolve the owning JS module for a Vue SFC extracted stylesheet.
+*/
 function resolveVueCssOwner(outputDirectory: string, fileName: string, prefix: string): string | undefined {
   const vueMarker = '.vue_vue_type_style';
   const base = fileName.slice(0, fileName.indexOf(vueMarker));
   const candidates = [`${prefix}${base}.js`, `${prefix}${base}.vue.js`];
   const match = candidates.find((candidate) => fs.existsSync(path.join(outputDirectory, candidate)));
-  if (match !== undefined) {
-    return match;
-  }
-  return findJsByBaseName(outputDirectory, base, fileName);
+  return match === undefined ? findJsByBaseName(outputDirectory, base, fileName) : match;
 }
 
 /**
- * Resolve the JS module that "owns" an extracted stylesheet `cssRelative`, so a
- * side-effect import can be threaded back into a module that consumers actually
- * pull in.
- *
- * Every forge framework build (react/neutral/solid/svelte/web-components) emits
- * a CSS-Module class map `X.module.js` next to its extracted `X.css`, and every
- * component that uses those classes imports the class map — so the class map is
- * the natural owner (`forge-accordion.css` → `forge-accordion.module.js`, shared
- * `size.css` → `size.module.js`). Vue instead emits SFC-scoped stylesheets named
- * `X.vue_vue_type_style_index_*.css` alongside a plain `X.js` component chunk, so
- * that chunk is the owner. Returns the owner's path relative to the output dir,
- * or `undefined` when no owning chunk exists on disk.
- */
+Resolve the JS module that "owns" an extracted stylesheet `cssRelative`, so a
+side-effect import can be threaded back into a module that consumers actually
+pull in.
+
+Every forge framework build (react/neutral/solid/svelte/web-components) emits
+a CSS-Module class map `X.module.js` next to its extracted `X.css`, and every
+component that uses those classes imports the class map — so the class map is
+the natural owner (`forge-accordion.css` → `forge-accordion.module.js`, shared
+`size.css` → `size.module.js`). Vue instead emits SFC-scoped stylesheets named
+`X.vue_vue_type_style_index_*.css` alongside a plain `X.js` component chunk, so
+that chunk is the owner. Returns the owner's path relative to the output dir,
+or `undefined` when no owning chunk exists on disk.
+*/
 export function resolveCssOwner(outputDirectory: string, cssRelative: string): string | undefined {
   const directory = path.posix.dirname(cssRelative);
   const fileName = path.posix.basename(cssRelative, '.css');
@@ -325,14 +362,12 @@ export function resolveCssOwner(outputDirectory: string, cssRelative: string): s
   ];
 
   const localMatch = candidates.find((candidate) => fs.existsSync(path.join(outputDirectory, candidate)));
-  if (localMatch !== undefined) {
-    return localMatch;
-  }
-
-  return findJsByBaseName(outputDirectory, baseName, fileName);
+  return localMatch === undefined ? findJsByBaseName(outputDirectory, baseName, fileName) : localMatch;
 }
 
-/** Prepend a CSS side-effect import to module code, preserving any leading directives. */
+/**
+Prepend a CSS side-effect import to module code, preserving any leading directives.
+*/
 function prependCssImport(code: string, specifier: string): string {
   const importStatement = `import ${JSON.stringify(specifier)};`;
   const directiveMatch = code.match(/^(?:['"]use client['"];?\s*\n?)+/);
@@ -344,7 +379,9 @@ function prependCssImport(code: string, specifier: string): string {
   return `${directive}${importStatement}\n${rest}`;
 }
 
-/** Relink a single extracted CSS stylesheet to its owning JS module. */
+/**
+Relink a single extracted CSS stylesheet to its owning JS module.
+*/
 function relinkStylesheet(outputDirectory: string, cssRelative: string): void {
   const owner = resolveCssOwner(outputDirectory, cssRelative);
   if (owner === undefined) {
@@ -367,28 +404,28 @@ function relinkStylesheet(outputDirectory: string, cssRelative: string): void {
 }
 
 /**
- * Re-link each extracted CSS asset to the JS module that owns it.
- *
- * tsdown/Rolldown extracts co-located `*.module.scss` / `*.scss` imports into
- * standalone `.css` assets — with the class-name hashing already applied and the
- * resolved names baked into the sibling class maps — but, unlike Vite, does
- * **not** re-inject the matching `import './x.css'` into the JS chunk (it leaves
- * an `/* empty css *\/` placeholder instead) and writes those assets straight to
- * disk rather than through the Rollup bundle. A consumer importing a component
- * therefore gets its markup without its styles, and Rolldown exposes no
- * `viteMetadata.importedCss` to reconstruct the per-chunk CSS graph.
- *
- * So, in `writeBundle` (after every asset is on disk), this plugin prepends a
- * side-effect `import './x.css'` to each stylesheet's owning module (see
- * {@link resolveCssOwner}) — the CSS-Module class map (or, for Vue, the component
- * chunk) that consumers already import. Because the stylesheet is threaded into a
- * module that is actually used (not a pure re-export barrel that a named import
- * would tree-shake away), importing a single component reliably pulls in exactly
- * that component's styles, and the whole library's styles when the barrel is
- * imported — matching the historical Vite library build's automatic per-component
- * CSS loading. The stylesheets are already hashed once, so downstream bundlers
- * ship them verbatim.
- */
+Re-link each extracted CSS asset to the JS module that owns it.
+
+tsdown/Rolldown extracts co-located `*.module.scss` / `*.scss` imports into
+standalone `.css` assets — with the class-name hashing already applied and the
+resolved names baked into the sibling class maps — but, unlike Vite, does
+**not** re-inject the matching `import './x.css'` into the JS chunk (it leaves
+an `/* empty css *\/` placeholder instead) and writes those assets straight to
+disk rather than through the Rollup bundle. A consumer importing a component
+therefore gets its markup without its styles, and Rolldown exposes no
+`viteMetadata.importedCss` to reconstruct the per-chunk CSS graph.
+
+So, in `writeBundle` (after every asset is on disk), this plugin prepends a
+side-effect `import './x.css'` to each stylesheet's owning module (see
+{@link resolveCssOwner}) — the CSS-Module class map (or, for Vue, the component
+chunk) that consumers already import. Because the stylesheet is threaded into a
+module that is actually used (not a pure re-export barrel that a named import
+would tree-shake away), importing a single component reliably pulls in exactly
+that component's styles, and the whole library's styles when the barrel is
+imported — matching the historical Vite library build's automatic per-component
+CSS loading. The stylesheets are already hashed once, so downstream bundlers
+ship them verbatim.
+*/
 export function cssBundlePlugin(): TsdownPlugin {
   const plugin = {
     name: '@mission-platform/tsdown-config:css-relink',
@@ -408,7 +445,9 @@ export function cssBundlePlugin(): TsdownPlugin {
   return plugin as unknown as TsdownPlugin;
 }
 
-/** Build staged DtsOptions redirected into the isolated output root. */
+/**
+Build staged DtsOptions redirected into the isolated output root.
+*/
 function buildStagedDtsOptions(
   resolved: DtsOptions,
   rootDirectory: string,
@@ -440,21 +479,23 @@ function buildStagedDtsOptions(
   };
 }
 
-/** Resolves the base DtsOptions object from boolean or DtsOptions value. */
+/**
+Resolves the base DtsOptions object from boolean or DtsOptions value.
+*/
 function toDtsOptions(dts: true | DtsOptions): DtsOptions {
   return dts === true ? { build: false, generator: 'tsgo' } : { build: false, ...dts };
 }
 
 /**
- * Resolve the default dts option so project-references packages still emit.
- *
- * When a staged `outputRoot` is active, declaration emit and incremental tsc
- * artifacts are redirected under that root. Otherwise packages with
- * `declarationDir: "./dist"` keep reading and writing the live package `dist`
- * tree, and multi-outDir libraries (e.g. icons' `dist/components` +
- * `dist/sprite`) fail to resolve rewritten cross-entry imports such as
- * `./sprite/*.js` against a stale final tree.
- */
+Resolve the default dts option so project-references packages still emit.
+
+When a staged `outputRoot` is active, declaration emit and incremental tsc
+artifacts are redirected under that root. Otherwise packages with
+`declarationDir: "./dist"` keep reading and writing the live package `dist`
+tree, and multi-outDir libraries (e.g. icons' `dist/components` +
+`dist/sprite`) fail to resolve rewritten cross-entry imports such as
+`./sprite/*.js` against a stale final tree.
+*/
 function resolveDtsOption(
   dts: boolean | DtsOptions,
   options?: { readonly rootDir: string; readonly outputRoot?: string; readonly outDir?: string },
@@ -475,9 +516,9 @@ function resolveDtsOption(
 }
 
 /**
- * Materialize a stage-local tsconfig so `tsc -b` cannot reuse the package's
- * live `declarationDir` / `tsBuildInfoFile` from a previous final build.
- */
+Materialize a stage-local tsconfig so `tsc -b` cannot reuse the package's
+live `declarationDir` / `tsBuildInfoFile` from a previous final build.
+*/
 function writeStagedTsconfig(
   rootDirectory: string,
   outputRoot: string,
@@ -500,7 +541,9 @@ function writeStagedTsconfig(
   return stagedTsconfigPath;
 }
 
-/** Resolve the base tsconfig path when staging is active. */
+/**
+Resolve the base tsconfig path when staging is active.
+*/
 function resolveStagedBaseTsconfig(rootDirectory: string, resolvedBase: string | boolean): string {
   if (typeof resolvedBase === 'string') {
     return resolvedBase;
@@ -509,7 +552,9 @@ function resolveStagedBaseTsconfig(rootDirectory: string, resolvedBase: string |
   return fs.existsSync(buildConfig) ? buildConfig : path.resolve(rootDirectory, 'tsconfig.json');
 }
 
-/** Prefer the package's `tsconfig.build.json` when present, stage-remapped if needed. */
+/**
+Prefer the package's `tsconfig.build.json` when present, stage-remapped if needed.
+*/
 function resolveTsconfigOption(
   rootDirectory: string,
   tsconfig: string | boolean | undefined,
@@ -528,16 +573,18 @@ function resolveTsconfigOption(
   return writeStagedTsconfig(rootDirectory, outputRoot, baseTsconfig, outDirectory);
 }
 
-/** Check whether a staged relative output directory escapes the package root. */
+/**
+Check whether a staged relative output directory escapes the package root.
+*/
 function isInvalidStagedPath(relativeOutput: string): boolean {
   return relativeOutput === '' || relativeOutput.startsWith(`..${path.sep}`) || path.isAbsolute(relativeOutput);
 }
 
 /**
- * Mirror a final package output path into an isolated build root. Keeping the
- * package-relative suffix makes neutral, framework, email, and CMS outputs
- * independently promotable without allowing tsdown to clean a sibling tree.
- */
+Mirror a final package output path into an isolated build root. Keeping the
+package-relative suffix makes neutral, framework, email, and CMS outputs
+independently promotable without allowing tsdown to clean a sibling tree.
+*/
 export function resolveTsdownOutputDirectory(
   rootDirectory: string,
   outputDirectory: string,
@@ -559,7 +606,9 @@ interface TsconfigAlias {
   targets: string[];
 }
 
-/** Read the package's path aliases, tolerating the comments used by tsconfig files. */
+/**
+Read the package's path aliases, tolerating the comments used by tsconfig files.
+*/
 function readTsconfigAliases(rootDirectory: string, targetRoot: string): TsconfigAlias[] {
   const configFile = [path.join(rootDirectory, 'tsconfig.build.json'), path.join(rootDirectory, 'tsconfig.json')].find(
     (file) => fs.existsSync(file),
@@ -606,7 +655,9 @@ function readTsconfigAliases(rootDirectory: string, targetRoot: string): Tsconfi
   }
 }
 
-/** Parse prefix and suffix parts around a wildcard pattern. */
+/**
+Parse prefix and suffix parts around a wildcard pattern.
+*/
 function parseWildcardPattern(pattern: string): { prefix: string; suffix: string } {
   const wildcard = pattern.indexOf('*');
   if (wildcard === -1) {
@@ -618,7 +669,9 @@ function parseWildcardPattern(pattern: string): { prefix: string; suffix: string
   };
 }
 
-/** Expand file extension candidates for a resolved target base path. */
+/**
+Expand file extension candidates for a resolved target base path.
+*/
 function expandTargetFileCandidates(resolvedTarget: string): string[] {
   return [
     `${resolvedTarget}.ts`,
@@ -637,7 +690,9 @@ function expandTargetFileCandidates(resolvedTarget: string): string[] {
   ];
 }
 
-/** Match a specifier against a tsconfig path alias and expand target file candidates. */
+/**
+Match a specifier against a tsconfig path alias and expand target file candidates.
+*/
 function matchAliasCandidates(alias: { pattern: string; targets: string[] }, specifier: string): string[] | undefined {
   const { prefix, suffix } = parseWildcardPattern(alias.pattern);
   if (!specifier.startsWith(prefix) || !specifier.endsWith(suffix)) {
@@ -648,13 +703,15 @@ function matchAliasCandidates(alias: { pattern: string; targets: string[] }, spe
   return alias.targets.flatMap((target) => expandTargetFileCandidates(target.replace('*', match)));
 }
 
-/** Resolve TypeScript path aliases, optionally against a generated cache tree. */
+/**
+Resolve TypeScript path aliases, optionally against a generated cache tree.
+*/
 function tsconfigPathsPlugin(rootDirectory: string, targetRoot = path.resolve(rootDirectory, 'src')): TsdownPlugin {
   const aliases = readTsconfigAliases(rootDirectory, targetRoot);
   return {
     name: '@mission-platform/tsdown-config:tsconfig-paths',
     resolveId(source) {
-      const [specifier, query = ''] = source.split(/(?=[?#])/u);
+      const [specifier, query = ''] = source.split(/(?=[?#])/u, 2);
       for (const alias of aliases) {
         const candidates = matchAliasCandidates(alias, specifier);
         if (candidates === undefined) {
@@ -670,10 +727,10 @@ function tsconfigPathsPlugin(rootDirectory: string, targetRoot = path.resolve(ro
 }
 
 /**
- * Build a tsdown config for a plain TypeScript (or single-bundle) library —
- * Archetype A/B. Mirrors `defineLibraryConfig` externalisation semantics from
- * `@mission-platform/vite-config`.
- */
+Build a tsdown config for a plain TypeScript (or single-bundle) library —
+Archetype A/B. Mirrors `defineLibraryConfig` externalisation semantics from
+`@mission-platform/vite-config`.
+*/
 export function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig {
   const {
     rootDir,
@@ -685,7 +742,7 @@ export function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig {
     outDir: outDirectory = 'dist',
     outputRoot = process.env.FORGE_BUILD_STAGE_ROOT,
     clean = true,
-    autoExternalDeps = unbundle,
+    autoExternalDeps: autoExternalDependencies = unbundle,
     cwd = rootDir,
     tsconfig,
     tsconfigPathsRoot,
@@ -707,7 +764,7 @@ export function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig {
   const externalNames = [
     ...DEFAULT_LIBRARY_EXTERNALS,
     ...external,
-    ...(autoExternalDeps ? readPackageDependencyNames(rootDir) : []),
+    ...(autoExternalDependencies ? readPackageDependencyNames(rootDir) : []),
   ];
 
   const base: UserConfig = {
@@ -746,9 +803,9 @@ export function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig {
 }
 
 /**
- * Like {@link defineTsdownLibrary}, but wires `unplugin-vue` and Vue-aware dts
- * for packages that ship `.vue` SFCs (`i18n`, `router`, …).
- */
+Like {@link defineTsdownLibrary}, but wires `unplugin-vue` and Vue-aware dts
+for packages that ship `.vue` SFCs (`i18n`, `router`, …).
+*/
 export function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig {
   const { dts = { vue: true, build: true }, overrides, ...rest } = options;
 
@@ -766,16 +823,16 @@ export function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfi
 
 export interface TsdownForgeTargetOptions extends TsdownLibraryOptions {
   /**
-   * Component output directory relative to `rootDir`.
-   * Defaults to `'dist/components'`.
-   */
+  Component output directory relative to `rootDir`.
+  Defaults to `'dist/components'`.
+  */
   componentsOutDir?: string;
 }
 
 /**
- * Build a tsdown config for the neutral Forge component target (`dist/components/**`).
- * Defaults `outDir` to `'dist/components'` while preserving all {@link defineTsdownLibrary} features.
- */
+Build a tsdown config for the neutral Forge component target (`dist/components/**`).
+Defaults `outDir` to `'dist/components'` while preserving all {@link defineTsdownLibrary} features.
+*/
 export function defineTsdownForgeTarget(options: TsdownForgeTargetOptions): UserConfig {
   const {
     rootDir,

@@ -28,7 +28,7 @@
   margin: var(--forge-popover-spacing-2, var(--mp-spacing-2));
 }
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-popover {
     display: inline-flex;
     align-items: center;

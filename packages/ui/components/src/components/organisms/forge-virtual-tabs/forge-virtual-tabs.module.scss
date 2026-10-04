@@ -10,7 +10,7 @@
  */
 @use './forge-virtual-tabs-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-virtual-tabs {
     display: flex;
     flex-direction: column;

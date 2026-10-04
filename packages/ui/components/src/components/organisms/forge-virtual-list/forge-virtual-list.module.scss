@@ -12,7 +12,7 @@
 
 @use './forge-virtual-list-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .virtual-list-demo-row {
     display: flex;
     align-items: center;

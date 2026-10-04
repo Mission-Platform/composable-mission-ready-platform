@@ -11,7 +11,7 @@
 
 @use './forge-background-video-properties';
 
-@layer mp.components {
+@layer mp.components.atoms {
   .forge-background-video {
     position: relative;
     overflow: hidden;

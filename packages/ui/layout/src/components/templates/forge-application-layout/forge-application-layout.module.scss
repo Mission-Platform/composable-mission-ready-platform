@@ -16,7 +16,7 @@
 @use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
 @use './forge-application-layout-properties';
 
-@layer mp.layout {
+@layer mp.layout.templates {
   .application-layout {
     display: flex;
     flex-direction: column;

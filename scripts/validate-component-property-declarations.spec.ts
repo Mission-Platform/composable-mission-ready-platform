@@ -31,10 +31,10 @@ describe('component property declaration validation', () => {
         .component { color: var(--forge-component-color, red); }
         .component { margin: var(--forge-component-gap, 1rem); }
         @each $size in 'sm' { .component { padding: var(--forge-component-padding-#{$size}, 1rem); } }
-        @property --forge-component-color { syntax: "*"; inherits: true; initial-value: red; }
-        @property --forge-component-color { syntax: "*"; inherits: true; initial-value: red; }
-        @property --forge-component-unused { syntax: "*"; inherits: true; initial-value: red; }
-        @property --forge-component-dynamic-#{$size} { syntax: "*"; inherits: true; initial-value: red; }
+        @property --forge-component-color { syntax: "*"; inherits: true; }
+        @property --forge-component-color { syntax: "*"; inherits: true; }
+        @property --forge-component-unused { syntax: "*"; inherits: true; }
+        @property --forge-component-dynamic-#{$size} { syntax: "*"; inherits: true; }
       `,
     );
 
@@ -53,7 +53,7 @@ describe('component property declaration validation', () => {
       new Map([
         [
           '/fixtures/forge-card/_forge-card-properties.scss',
-          `@property --forge-card-color { syntax: "*"; inherits: true; initial-value: red; }`,
+          `@property --forge-card-color { syntax: "*"; inherits: true; }`,
         ],
       ]),
     );

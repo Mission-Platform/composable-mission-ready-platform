@@ -1,6 +1,6 @@
 @use './forge-empty-state-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-empty-state {
     display: flex;
     flex-direction: column;

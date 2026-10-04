@@ -1,3 +1,38 @@
+/* Canonical CSS cascade layer hierarchy with package namespaces and atomic nesting. */
+@layer mp.reset,
+       mp.tokens,
+       mp.components,
+       mp.components.atoms,
+       mp.components.molecules,
+       mp.components.organisms,
+       mp.components.templates,
+       mp.content,
+       mp.content.atoms,
+       mp.content.molecules,
+       mp.content.organisms,
+       mp.scheduler,
+       mp.scheduler.organisms,
+       mp.barcode,
+       mp.barcode.molecules,
+       mp.code-scanner,
+       mp.code-scanner.organisms,
+       mp.map,
+       mp.map.organisms,
+       mp.matrix-code,
+       mp.matrix-code.molecules,
+       mp.qr-code,
+       mp.qr-code.molecules,
+       mp.breakpoints,
+       mp.breakpoints.molecules,
+       mp.forms,
+       mp.forms.atoms,
+       mp.forms.molecules,
+       mp.forms.organisms,
+       mp.icons,
+       mp.layout,
+       mp.overrides,
+       mp.utilities;
+
 /* Set the base font-size so that 1rem = 14px across all token values. */
 :root {
   font-size: 14px;

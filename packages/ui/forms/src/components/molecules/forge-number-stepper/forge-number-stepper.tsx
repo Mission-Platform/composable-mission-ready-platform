@@ -230,7 +230,7 @@ export function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>
   const style = createNumberStepperStyle(properties.properties);
 
   const {
-    modelValue = undefined,
+    modelValue,
     label,
     labelHidden = false,
     hint,

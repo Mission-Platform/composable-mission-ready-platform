@@ -12,7 +12,7 @@
 
 @use './forge-stack-properties';
 
-@layer mp.components {
+@layer mp.components.atoms {
   .stack-demo-container {
     min-height: 10rem;
     padding: var(--forge-stack-layout-stack-container-padding, var(--mp-layout-stack-container-padding));

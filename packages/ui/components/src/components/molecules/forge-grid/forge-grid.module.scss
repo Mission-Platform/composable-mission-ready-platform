@@ -12,7 +12,7 @@
 
 @use './forge-grid-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .grid-demo-container {
     padding: var(--forge-grid-layout-grid-container-padding, var(--mp-layout-grid-container-padding));
     border: var(--forge-grid-layout-grid-container-border-width, var(--mp-layout-grid-container-border-width)) dashed

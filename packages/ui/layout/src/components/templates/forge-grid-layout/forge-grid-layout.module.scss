@@ -1,6 +1,6 @@
 @use './forge-grid-layout-properties';
 
-@layer mp.layout {
+@layer mp.layout.templates {
   .grid-layout {
     display: grid;
     width: 100%;

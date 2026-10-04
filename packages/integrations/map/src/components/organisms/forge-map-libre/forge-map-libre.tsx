@@ -7,7 +7,14 @@ import {
   useRef,
   useState,
 } from '@mission-platform/forge-jsx';
-import { LngLat, Map, type MapMouseEvent, type MapOptions } from 'maplibre-gl';
+import {
+  LngLat,
+  Map,
+  NavigationControl,
+  type MapMouseEvent,
+  type MapOptions,
+  type NavigationControlOptions,
+} from 'maplibre-gl';
 
 import { MapContext } from '@/map-context';
 import { centerDiffers, scalarDiffers } from '@/utils/camera';
@@ -18,7 +25,9 @@ export interface MapLibreProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
   /** MapLibre style URL or inline style object. */
-  readonly mapStyle: MapOptions['style'];
+  readonly mapStyle?: MapOptions['style'];
+  /** Alias for mapStyle. */
+  readonly style?: MapOptions['style'];
   /** Initial map center as `[lng, lat]`. Defaults to `[0, 0]`. */
   center?: Required<MapOptions['center']>;
   /** Initial zoom level. Defaults to `1`. */
@@ -38,6 +47,13 @@ export interface MapLibreProperties {
    * `AttributionControlOptions` object to customise it.
    */
   attributionControl?: Required<MapOptions['attributionControl']>;
+  /**
+   * Navigation control options. Pass `true` or a configuration object to show
+   * zoom/compass controls, or `false` to omit. Defaults to `false`.
+   */
+  navigationControl?: boolean | NavigationControlOptions;
+  /** Navigation control position. Defaults to `'top-right'`. */
+  navigationControlPosition?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
   /** Fired when the map has finished loading its initial style. */
   onLoad?: (map: Map) => void;
   /** Fired whenever the map moves (pan/zoom/rotate). */
@@ -61,8 +77,8 @@ export interface MapLibreProperties {
  * `@layer mp.map` CSS).
  */
 export function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpElement {
+  const resolvedStyle = properties.mapStyle ?? properties.style;
   const {
-    mapStyle,
     center = [0, 0],
     zoom = 1,
     minZoom,
@@ -71,10 +87,13 @@ export function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpEleme
     pitch = 0,
     cooperativeGestures = false,
     attributionControl,
+    navigationControl = false,
+    navigationControlPosition = 'top-right',
   } = properties;
 
   const containerReference = useRef<HTMLDivElement | null>(null);
   const mapReference = useRef<Map | undefined>(undefined);
+  const previousStyleReference = useRef<MapOptions['style'] | undefined>(resolvedStyle);
   // eslint-disable-next-line unicorn/no-useless-undefined
   const [map, setMap] = useState<Map | undefined>(undefined);
 
@@ -86,7 +105,7 @@ export function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpEleme
 
     const instance = new Map({
       container,
-      style: mapStyle,
+      style: resolvedStyle,
       center,
       zoom,
       minZoom,
@@ -98,10 +117,47 @@ export function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpEleme
     });
     mapReference.current = instance;
 
-    instance.on('load', () => {
+    if (navigationControl) {
+      const navOptions =
+        typeof navigationControl === 'object'
+          ? navigationControl
+          : { showCompass: true, showZoom: true, visualizePitch: true };
+      instance.addControl(new NavigationControl(navOptions), navigationControlPosition);
+    }
+
+    let isReady = false;
+    const handleReady = (): void => {
+      if (isReady) {
+        return;
+      }
+      isReady = true;
       setMap(instance);
       properties.onLoad?.(instance);
-    });
+    };
+
+    const isStyleSafeLoaded = (): boolean => {
+      try {
+        const rawMap = instance as unknown as { style?: unknown };
+        return Boolean(rawMap && rawMap.style && instance.isStyleLoaded());
+      } catch {
+        return false;
+      }
+    };
+
+    if (isStyleSafeLoaded()) {
+      handleReady();
+    } else {
+      instance.on('styledata', () => {
+        if (isStyleSafeLoaded()) {
+          handleReady();
+        }
+      });
+      instance.once('load', handleReady);
+      instance.once('idle', handleReady);
+      setTimeout(() => {
+        handleReady();
+      }, 50);
+    }
     instance.on('move', () => {
       properties.onMove?.(instance);
     });
@@ -120,24 +176,37 @@ export function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpEleme
   }, []);
 
   useEffect(() => {
-    if (mapStyle !== undefined) {
-      mapReference.current?.setStyle(mapStyle);
+    const instance = mapReference.current;
+    if (instance && resolvedStyle !== undefined && resolvedStyle !== previousStyleReference.current) {
+      previousStyleReference.current = resolvedStyle;
+      instance.setStyle(resolvedStyle);
     }
-  }, [mapStyle]);
+  }, [resolvedStyle]);
 
   useEffect(() => {
     const instance = mapReference.current;
-    // Only re-centre when the target differs from the live centre: re-applying an
-    // echoed value (the controlled `onMove` → state → prop round-trip) would emit
-    // another `move` and loop, drifting the map north.
-    if (instance && center && centerDiffers(instance.getCenter(), LngLat.convert(center))) {
+    // Only re-centre when the target differs from the live centre and the user is
+    // not actively interacting (dragging/touching) to prevent feedback loops.
+    if (
+      instance &&
+      center &&
+      !(instance.dragPan && instance.dragPan.isActive()) &&
+      !(instance.touchZoomRotate && instance.touchZoomRotate.isActive()) &&
+      centerDiffers(instance.getCenter(), LngLat.convert(center))
+    ) {
       instance.setCenter(center);
     }
   }, [center]);
 
   useEffect(() => {
     const instance = mapReference.current;
-    if (instance && zoom !== undefined && scalarDiffers(instance.getZoom(), zoom)) {
+    if (
+      instance &&
+      zoom !== undefined &&
+      !(instance.scrollZoom && typeof instance.scrollZoom.isActive === 'function' && instance.scrollZoom.isActive()) &&
+      !(instance.touchZoomRotate && instance.touchZoomRotate.isActive()) &&
+      scalarDiffers(instance.getZoom(), zoom)
+    ) {
       instance.setZoom(zoom);
     }
   }, [zoom]);

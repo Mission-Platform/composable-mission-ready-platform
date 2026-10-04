@@ -1,7 +1,7 @@
 /* stylelint-disable declaration-block-single-line-max-declarations */
 @use './forge-site-footer-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-site-footer {
     width: 100%;
     padding: var(--forge-site-footer-spacing-10, var(--mp-spacing-10))

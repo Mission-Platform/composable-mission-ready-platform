@@ -9,7 +9,7 @@
 
 @use './forge-quote-properties';
 
-@layer mp.components {
+@layer mp.components.atoms {
   .forge-quote {
     margin: 0;
     display: flex;

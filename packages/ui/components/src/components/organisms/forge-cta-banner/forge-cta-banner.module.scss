@@ -1,6 +1,6 @@
 @use './forge-cta-banner-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-cta-banner {
     display: flex;
     align-items: center;

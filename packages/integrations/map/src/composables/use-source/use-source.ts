@@ -49,7 +49,11 @@ export function useSource(map: Map | undefined, options: UseSourceOptions): void
 
     // Fast path: GeoJSON source already exists — swap the data in place so all
     // referencing layers stay intact and no source teardown is needed.
-    if (spec.type === 'geojson' && previousSpec?.type === 'geojson' && map === previousMap) {
+    if (
+      spec.type === 'geojson' &&
+      (previousSpec?.type === 'geojson' || (previousSpec === undefined && map.getSource(id))) &&
+      (map === previousMap || previousMap === undefined)
+    ) {
       const existing = map.getSource(id) as GeoJSONSource | undefined;
       if (existing?.setData) {
         existing.setData(spec.data as Parameters<GeoJSONSource['setData']>[0]);
@@ -60,14 +64,40 @@ export function useSource(map: Map | undefined, options: UseSourceOptions): void
     }
 
     // Structural change or first mount: remove old source (if any) then add.
-    if (previousMap?.getSource(id)) {
-      previousMap.removeSource(id);
+    if (previousMap && previousMap !== map && previousMap.getSource(id)) {
+      try {
+        previousMap.removeSource(id);
+      } catch {
+        // ignore
+      }
     }
     if (!map.getSource(id)) {
-      map.addSource(id, spec);
+      try {
+        map.addSource(id, spec);
+      } catch {
+        // ignore
+      }
     }
     previousSpecReference.current = spec;
     previousMapReference.current = map;
+
+    const reapplySource = (): void => {
+      if (map && !map.getSource(id)) {
+        try {
+          map.addSource(id, spec);
+        } catch {
+          // ignore
+        }
+      }
+    };
+
+    map.on('styledata', reapplySource);
+    map.on('style.load', reapplySource);
+
+    return () => {
+      map.off('styledata', reapplySource);
+      map.off('style.load', reapplySource);
+    };
   }, [map, options.source]);
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 @use './forge-callout-block-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-callout-block {
     display: flex;
     gap: var(--forge-callout-block-spacing-3, var(--mp-spacing-3));

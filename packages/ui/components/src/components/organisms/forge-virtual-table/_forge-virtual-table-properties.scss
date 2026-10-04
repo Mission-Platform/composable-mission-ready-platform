@@ -5,23 +5,19 @@
 @property --forge-virtual-table-data-virtual-table-footer-gap {
   syntax: '*';
   inherits: true;
-  initial-value: var(--mp-data-virtual-table-footer-gap);
 }
 
 @property --forge-virtual-table-data-virtual-table-footer-text {
   syntax: '*';
   inherits: true;
-  initial-value: var(--mp-data-virtual-table-footer-text);
 }
 
 @property --forge-virtual-table-data-virtual-table-footer-accent-text {
   syntax: '*';
   inherits: true;
-  initial-value: var(--mp-data-virtual-table-footer-accent-text);
 }
 
 @property --forge-virtual-table-data-virtual-table-footer-accent-font-weight {
   syntax: '*';
   inherits: true;
-  initial-value: var(--mp-data-virtual-table-footer-accent-font-weight);
 }

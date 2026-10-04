@@ -11,7 +11,7 @@
 
 @use './forge-breadcrumb-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-breadcrumb {
     @supports (container-type: inline-size) {
       container: forge-breadcrumb / inline-size;

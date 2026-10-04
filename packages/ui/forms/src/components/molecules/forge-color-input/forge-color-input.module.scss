@@ -10,7 +10,7 @@
  * The rules live in the package-owned `mp.forms` cascade layer.
  */
 
-@layer mp.forms {
+@layer mp.forms.molecules {
   .forge-color-input {
     display: flex;
     flex-direction: column;

@@ -8,11 +8,9 @@
 @property --forge-barcode-code-barcode-figure-gap {
   syntax: '*';
   inherits: true;
-  initial-value: var(--mp-code-barcode-figure-gap);
 }
 
 @property --forge-barcode-code-barcode-actions-gap {
   syntax: '*';
   inherits: true;
-  initial-value: var(--mp-code-barcode-actions-gap);
 }

@@ -11,7 +11,7 @@
 
 @use './forge-toast-container-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-toast-container {
     position: fixed;
     z-index: var(--mp-z-index-notification-toast);

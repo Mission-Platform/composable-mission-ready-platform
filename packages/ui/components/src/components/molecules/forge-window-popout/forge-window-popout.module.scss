@@ -12,7 +12,7 @@
 
 @use './forge-window-popout-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-window-popout {
     position: relative;
     display: flex;

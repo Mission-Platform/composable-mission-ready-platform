@@ -15,7 +15,7 @@
  */
 @use './forge-typography-properties';
 
-@layer mp.typography {
+@layer mp.typography.atoms {
   .forge-typography {
     margin: 0;
     font-family:

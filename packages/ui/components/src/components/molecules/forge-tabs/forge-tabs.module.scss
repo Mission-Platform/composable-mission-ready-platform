@@ -10,7 +10,7 @@
  */
 @use './forge-tabs-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-tabs {
     display: flex;
     flex-direction: column;

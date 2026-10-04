@@ -1,6 +1,6 @@
 @use './forge-data-card-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-data-card {
     display: block;
     min-width: 12rem;

@@ -5,6 +5,8 @@ import postcssConfig from '@mission-platform/postcss-config';
 import vue from '@vitejs/plugin-vue';
 import { defineConfig, mergeConfig, type Plugin, type UserConfig } from 'vite';
 
+import type { ViteUserConfig } from 'vitest/config';
+
 /**
  * Shared Sass preprocessor options enabling the modern Dart Sass JS API and
  * silencing legacy JS API deprecation warnings.
@@ -49,7 +51,7 @@ export function ignoreVueI18nBlocksPlugin(): Plugin {
       if (id.includes('vue&type=i18n')) {
         return 'export default function ignoredI18nBlock() {}';
       }
-      // eslint-disable-next-line unicorn/no-null -- Rollup load hook protocol returns null to pass through
+
       return null;
     },
   };
@@ -359,7 +361,7 @@ export function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): Us
 
 export interface AppConfigOptions {
   /** Extra config merged on top of the defaults. */
-  overrides?: UserConfig;
+  overrides?: UserConfig | ViteUserConfig;
 }
 
 /**

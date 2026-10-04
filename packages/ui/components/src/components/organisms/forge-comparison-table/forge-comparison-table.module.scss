@@ -1,6 +1,6 @@
 @use './forge-comparison-table-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-comparison-table {
     width: 100%;
     overflow-x: auto;

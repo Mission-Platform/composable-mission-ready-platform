@@ -10,7 +10,7 @@
  */
 @use './forge-time-input-properties';
 
-@layer mp.forms {
+@layer mp.forms.molecules {
   .forge-time-input {
     display: flex;
     flex-direction: column;

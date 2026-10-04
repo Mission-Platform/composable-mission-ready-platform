@@ -14,7 +14,7 @@
 
 @use './forge-hero-properties';
 
-@layer mp.components {
+@layer mp.components.templates {
   .forge-hero {
     position: relative;
     display: flex;

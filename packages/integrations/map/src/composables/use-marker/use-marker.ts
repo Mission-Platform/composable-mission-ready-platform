@@ -11,6 +11,8 @@ export interface UseMarkerOptions extends MarkerOptions {
   lngLat: LngLatLike;
   /** Fired when the marker is dragged to a new position. */
   onDragend?: (lngLat: LngLatLike) => void;
+  /** Fired when the marker is clicked. */
+  onClick?: () => void;
 }
 
 export interface UseMarkerReturn {
@@ -29,7 +31,7 @@ export interface UseMarkerReturn {
  * ```
  */
 export function useMarker(map: Map | undefined, options: UseMarkerOptions): UseMarkerReturn {
-  const { lngLat, onDragend, ...markerOptions } = options;
+  const { lngLat, onDragend, onClick, ...markerOptions } = options;
   // eslint-disable-next-line unicorn/no-useless-undefined
   const [marker, setMarker] = useState<Marker | undefined>(undefined);
   const markerReference = useRef<Marker | undefined>(undefined);
@@ -43,9 +45,24 @@ export function useMarker(map: Map | undefined, options: UseMarkerOptions): UseM
     if (onDragend) {
       instance.on('dragend', () => onDragend(instance.getLngLat()));
     }
+
+    const element = instance.getElement();
+    let clickListener: ((event: MouseEvent) => void) | undefined;
+    if (onClick) {
+      element.style.cursor = 'pointer';
+      clickListener = (event: MouseEvent) => {
+        event.stopPropagation();
+        onClick();
+      };
+      element.addEventListener('click', clickListener);
+    }
+
     markerReference.current = instance;
     setMarker(instance);
     return () => {
+      if (clickListener) {
+        element.removeEventListener('click', clickListener);
+      }
       instance.remove();
       markerReference.current = undefined;
       setMarker(undefined);

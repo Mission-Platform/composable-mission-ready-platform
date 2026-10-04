@@ -1,7 +1,7 @@
 /* stylelint-disable declaration-block-single-line-max-declarations */
 @use './forge-pricing-table-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-pricing-table {
     width: 100%;
     padding: var(--forge-pricing-table-spacing-4, var(--mp-spacing-4)) 0;

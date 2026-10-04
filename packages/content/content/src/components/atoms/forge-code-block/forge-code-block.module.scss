@@ -9,7 +9,7 @@
  */
 @use './forge-code-block-properties';
 
-@layer mp.content {
+@layer mp.content.atoms {
   .forge-code-block {
     /**
      * The single line box the gutter and the code share. Both columns are laid
@@ -29,6 +29,11 @@
     overflow: hidden;
     font-family: var(--forge-code-block-code-typography-font-family, var(--mp-code-typography-font-family));
     font-size: var(--forge-code-block-code-typography-font-size, var(--mp-code-typography-font-size));
+
+    @supports (content-visibility: auto) {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 200px;
+    }
 
     &__header {
       position: sticky;

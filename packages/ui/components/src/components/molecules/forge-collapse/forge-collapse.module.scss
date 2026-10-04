@@ -14,7 +14,7 @@
 
 @use './forge-collapse-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-collapse {
     border: var(--forge-collapse-border-width, var(--mp-collapse-border-width)) solid
       var(--forge-collapse-border, var(--mp-collapse-border));

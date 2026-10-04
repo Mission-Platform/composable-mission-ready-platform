@@ -12,7 +12,7 @@
 
 @use './forge-in-view-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .in-view-demo {
     display: flex;
     align-items: center;

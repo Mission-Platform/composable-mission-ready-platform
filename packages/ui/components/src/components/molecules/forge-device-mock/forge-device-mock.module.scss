@@ -13,7 +13,7 @@
 
 @use './forge-device-mock-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-device-mock {
     position: relative;
     display: inline-flex;

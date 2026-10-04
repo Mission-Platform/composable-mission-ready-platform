@@ -15,7 +15,7 @@
 @use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
 @use './forge-navbar-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-navbar-host {
     display: contents;
   }

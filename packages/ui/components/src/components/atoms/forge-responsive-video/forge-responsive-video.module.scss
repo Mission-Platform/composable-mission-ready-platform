@@ -11,7 +11,7 @@
 
 @use './forge-responsive-video-properties';
 
-@layer mp.components {
+@layer mp.components.atoms {
   .forge-responsive-video {
     display: block;
     width: 100%;

@@ -11,7 +11,7 @@
 
 @use './forge-responsive-image-properties';
 
-@layer mp.components {
+@layer mp.components.atoms {
   .forge-responsive-image {
     display: block;
     overflow: hidden;

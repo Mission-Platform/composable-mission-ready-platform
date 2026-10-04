@@ -11,7 +11,7 @@
 
 @use './forge-menu-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-menu {
     /*
      * The menu is a surface in its own right, legible **at rest**: a background,

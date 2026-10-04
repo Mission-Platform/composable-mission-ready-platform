@@ -13,7 +13,7 @@
 
 @use './forge-button-group-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-button-group {
     display: inline-flex;
     flex-shrink: 0;

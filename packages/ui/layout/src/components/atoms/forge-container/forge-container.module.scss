@@ -23,7 +23,7 @@
 @use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
 @use './forge-container-properties';
 
-@layer mp.layout {
+@layer mp.layout.atoms {
   .forge-container--responsive {
     width: 100%;
     max-width: 100%;

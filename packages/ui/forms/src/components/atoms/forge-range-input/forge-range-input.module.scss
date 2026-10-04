@@ -12,7 +12,7 @@
  * badge) across the `sm`/`md`/`lg` scale, in the package-owned `mp.forms` layer.
  */
 
-@layer mp.forms {
+@layer mp.forms.atoms {
   .forge-range-input {
     --mp-range-track-height: var(
       --forge-range-input-checkable-size-md-track-height,

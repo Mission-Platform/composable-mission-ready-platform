@@ -49,41 +49,57 @@ function layerSourceKey(spec: LayerSpecification): string | undefined {
  * without removing/re-adding it. Only properties whose value actually changed
  * are re-applied, so an unchanged symbol layer is never needlessly re-laid-out.
  */
-function updateLayerInPlace(map: Map, spec: LayerSpecification, previousSpec: LayerSpecification): void {
+function updateLayerInPlace(map: Map, spec: LayerSpecification, previousSpec?: LayerSpecification): void {
   const id = spec.id;
   const next = spec as MutableLayerSpec;
-  const previous = previousSpec as MutableLayerSpec;
+  const previous = previousSpec as MutableLayerSpec | undefined;
 
-  const previousPaint = previous.paint ?? {};
+  const previousPaint = previous?.paint ?? {};
   const nextPaint = next.paint ?? {};
   for (const key of new Set([...Object.keys(previousPaint), ...Object.keys(nextPaint)])) {
-    if (!specValuesEqual(previousPaint[key], nextPaint[key])) {
-      map.setPaintProperty(
-        id,
-        key as Parameters<Map['setPaintProperty']>[1],
-        nextPaint[key] as Parameters<Map['setPaintProperty']>[2],
-      );
+    if (!previous || !specValuesEqual(previousPaint[key], nextPaint[key])) {
+      try {
+        map.setPaintProperty(
+          id,
+          key as Parameters<Map['setPaintProperty']>[1],
+          nextPaint[key] as Parameters<Map['setPaintProperty']>[2],
+        );
+      } catch {
+        // ignore
+      }
     }
   }
 
-  const previousLayout = previous.layout ?? {};
+  const previousLayout = previous?.layout ?? {};
   const nextLayout = next.layout ?? {};
   for (const key of new Set([...Object.keys(previousLayout), ...Object.keys(nextLayout)])) {
-    if (!specValuesEqual(previousLayout[key], nextLayout[key])) {
-      map.setLayoutProperty(
-        id,
-        key as Parameters<Map['setLayoutProperty']>[1],
-        nextLayout[key] as Parameters<Map['setLayoutProperty']>[2],
-      );
+    if (!previous || !specValuesEqual(previousLayout[key], nextLayout[key])) {
+      try {
+        map.setLayoutProperty(
+          id,
+          key as Parameters<Map['setLayoutProperty']>[1],
+          nextLayout[key] as Parameters<Map['setLayoutProperty']>[2],
+        );
+      } catch {
+        // ignore
+      }
     }
   }
 
-  if (!specValuesEqual(previous.filter, next.filter)) {
-    map.setFilter(id, next.filter as Parameters<Map['setFilter']>[1]);
+  if (!previous || !specValuesEqual(previous.filter, next.filter)) {
+    try {
+      map.setFilter(id, next.filter as Parameters<Map['setFilter']>[1]);
+    } catch {
+      // ignore
+    }
   }
 
-  if (previous.minzoom !== next.minzoom || previous.maxzoom !== next.maxzoom) {
-    map.setLayerZoomRange(id, next.minzoom ?? 0, next.maxzoom ?? 24);
+  if (!previous || previous.minzoom !== next.minzoom || previous.maxzoom !== next.maxzoom) {
+    try {
+      map.setLayerZoomRange(id, next.minzoom ?? 0, next.maxzoom ?? 24);
+    } catch {
+      // ignore
+    }
   }
 }
 
@@ -130,6 +146,7 @@ export function useLayer(map: Map | undefined, options: UseLayerOptions): void {
     // Drop any deferred-add listener left over from a previous spec/map.
     if (pendingListenerReference.current) {
       map.off('sourcedata', pendingListenerReference.current);
+      map.off('data', pendingListenerReference.current);
       pendingListenerReference.current = undefined;
     }
 
@@ -143,9 +160,13 @@ export function useLayer(map: Map | undefined, options: UseLayerOptions): void {
       previousSpec.type === spec.type &&
       layerSourceKey(previousSpec) === layerSourceKey(spec);
 
-    if (structurallyUnchanged && map.getLayer(spec.id)) {
+    if ((structurallyUnchanged || (previousSpec === undefined && map.getLayer(spec.id))) && map.getLayer(spec.id)) {
       if (options.beforeId !== previousBeforeIdReference.current) {
-        map.moveLayer(spec.id, options.beforeId);
+        try {
+          map.moveLayer(spec.id, options.beforeId);
+        } catch {
+          // ignore
+        }
       }
       updateLayerInPlace(map, spec, previousSpec);
       previousSpecReference.current = spec;
@@ -158,9 +179,17 @@ export function useLayer(map: Map | undefined, options: UseLayerOptions): void {
     // (re)add it. Remove from whichever map still holds it.
     if (previousSpec) {
       if (previousMap?.getLayer(previousSpec.id)) {
-        previousMap.removeLayer(previousSpec.id);
+        try {
+          previousMap.removeLayer(previousSpec.id);
+        } catch {
+          // ignore
+        }
       } else if (map.getLayer(previousSpec.id)) {
-        map.removeLayer(previousSpec.id);
+        try {
+          map.removeLayer(previousSpec.id);
+        } catch {
+          // ignore
+        }
       }
     }
 
@@ -182,21 +211,64 @@ export function useLayer(map: Map | undefined, options: UseLayerOptions): void {
         // until the map signals the source has been registered.
         const addWhenSourceReady = (): void => {
           if (map.getSource(sourceId) && !map.getLayer(spec.id)) {
-            map.addLayer(spec, options.beforeId);
-            map.off('sourcedata', addWhenSourceReady);
-            pendingListenerReference.current = undefined;
+            try {
+              map.addLayer(spec, options.beforeId);
+              map.off('sourcedata', addWhenSourceReady);
+              map.off('data', addWhenSourceReady);
+              pendingListenerReference.current = undefined;
+            } catch {
+              // Ignore if mid-teardown
+            }
           }
         };
         pendingListenerReference.current = addWhenSourceReady;
         map.on('sourcedata', addWhenSourceReady);
+        map.on('data', addWhenSourceReady);
+
+        // Also check on the next event loops in case the parent source was registered synchronously
+        globalThis.queueMicrotask?.(() => {
+          if (map && !map.getLayer(spec.id) && map.getSource(sourceId)) {
+            addWhenSourceReady();
+          }
+        });
+        setTimeout(() => {
+          if (map && !map.getLayer(spec.id) && map.getSource(sourceId)) {
+            addWhenSourceReady();
+          }
+        }, 0);
       } else {
-        map.addLayer(spec, options.beforeId);
+        try {
+          map.addLayer(spec, options.beforeId);
+        } catch {
+          // ignore
+        }
       }
     }
 
     previousSpecReference.current = spec;
     previousBeforeIdReference.current = options.beforeId;
     mapReference.current = map;
+
+    const reapplyLayer = (): void => {
+      if (map && !map.getLayer(spec.id)) {
+        if (sourceId && !map.getSource(sourceId)) {
+          return;
+        }
+        try {
+          map.addLayer(spec, options.beforeId);
+        } catch {
+          // ignore
+        }
+      }
+    };
+
+    map.on('style.load', reapplyLayer);
+    map.on('styledata', reapplyLayer);
+
+    return () => {
+      map.off('style.load', reapplyLayer);
+      map.off('styledata', reapplyLayer);
+    };
   }, [map, options.layer, options.beforeId]);
 
   useEffect(() => {
@@ -205,6 +277,7 @@ export function useLayer(map: Map | undefined, options: UseLayerOptions): void {
       const spec = previousSpecReference.current as unknown as LayerSpecification | undefined;
       if (map_ && pendingListenerReference.current) {
         map_.off('sourcedata', pendingListenerReference.current);
+        map_.off('data', pendingListenerReference.current);
         pendingListenerReference.current = undefined;
       }
       if (map_ && spec && map_.getLayer(spec.id)) {

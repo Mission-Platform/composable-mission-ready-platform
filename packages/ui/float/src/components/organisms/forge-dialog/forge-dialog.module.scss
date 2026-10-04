@@ -18,7 +18,7 @@
 
 @use './forge-dialog-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-dialog {
     width: 100%;
     max-width: min(560px, calc(100vw - 2rem));

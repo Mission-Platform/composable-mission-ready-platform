@@ -11,7 +11,7 @@
 
 @use './forge-toast-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-toast {
     display: flex;
     align-items: flex-start;

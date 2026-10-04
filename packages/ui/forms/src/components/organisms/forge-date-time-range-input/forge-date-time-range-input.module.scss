@@ -10,7 +10,7 @@
  */
 @use './forge-date-time-range-input-properties';
 
-@layer mp.forms {
+@layer mp.forms.organisms {
   .forge-date-time-range-input {
     display: flex;
     flex-direction: column;

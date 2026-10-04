@@ -10,7 +10,7 @@
 
 @use './forge-qr-code-properties';
 
-@layer mp.qr-code {
+@layer mp.qr-code.molecules {
   .forge-qr-code {
     display: block;
     max-width: 100%;

@@ -11,7 +11,7 @@
 
 @use './forge-progress-bar-properties';
 
-@layer mp.components {
+@layer mp.components.atoms {
   .forge-progress-bar {
     /* The original SFC wrapped the bar in a `ForgeStack` with `gap="2xs"`; the
        neutral version is a plain flex column with the equivalent gap. */

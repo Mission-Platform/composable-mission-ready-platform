@@ -13,7 +13,7 @@
 
 @use './forge-button-properties';
 
-@layer mp.components {
+@layer mp.components.atoms {
   .forge-button {
     display: inline-flex;
     align-items: center;

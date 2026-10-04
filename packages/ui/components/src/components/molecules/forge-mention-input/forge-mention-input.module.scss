@@ -1,6 +1,6 @@
 @use './forge-mention-input-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-mention-input {
     display: flex;
     flex-direction: column;

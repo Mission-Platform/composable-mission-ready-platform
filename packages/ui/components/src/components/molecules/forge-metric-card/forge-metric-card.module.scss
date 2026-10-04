@@ -1,6 +1,6 @@
 @use './forge-metric-card-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-metric-card {
     display: flex;
     flex-direction: column;

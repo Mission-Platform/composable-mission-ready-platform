@@ -1,6 +1,6 @@
 @use './forge-announcement-bar-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-announcement-bar {
     display: flex;
     align-items: center;

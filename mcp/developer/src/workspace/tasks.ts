@@ -581,7 +581,7 @@ function extractStoryEntry(
   const segments = relativeFilePath.split('/');
   const atomicLevels = new Set(['atoms', 'molecules', 'organisms', 'templates', 'pages']);
   const foundLevel = segments.find((s) => atomicLevels.has(s));
-  const packageName = segments.length > 1 ? segments[1] : undefined;
+  const packageName = segments[1];
 
   if (!matchesPackageFilter(packageName, filterPackage)) {
     return undefined;

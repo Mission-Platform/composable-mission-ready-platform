@@ -1,7 +1,7 @@
 /* stylelint-disable declaration-block-single-line-max-declarations */
 @use './forge-profile-card-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-profile-card {
     display: grid;
     gap: var(--forge-profile-card-spacing-4, var(--mp-spacing-4));

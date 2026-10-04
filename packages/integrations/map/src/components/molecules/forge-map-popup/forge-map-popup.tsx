@@ -5,9 +5,11 @@ import type { LngLatLike, PopupOptions } from 'maplibre-gl';
 
 export interface MapPopupProperties {
   /** Longitude/latitude position of the popup. */
-  lngLat: LngLatLike;
+  lngLat?: LngLatLike;
+  /** Alias for lngLat position of the popup. */
+  coordinates?: LngLatLike;
   /** HTML string displayed inside the popup. */
-  content: string;
+  content?: string;
   /** When `true`, `content` is treated as plain text (XSS-safe). */
   isText?: boolean;
   /** Whether the popup is open. */
@@ -33,9 +35,10 @@ export interface MapPopupProperties {
  */
 export function ForgeMapPopup(properties: Readonly<MapPopupProperties>): MpElement | null {
   const map = useMap();
+  const resolvedLngLat = properties.lngLat ?? properties.coordinates ?? [0, 0];
   usePopup(map, {
-    lngLat: properties.lngLat,
-    content: properties.content,
+    lngLat: resolvedLngLat,
+    content: properties.content ?? '',
     isText: properties.isText ?? false,
     open: properties.open ?? true,
     offset: properties.offset,

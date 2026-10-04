@@ -4,7 +4,7 @@
 
 @use './forge-mermaid-properties';
 
-@layer mp.content {
+@layer mp.content.atoms {
   .forge-mermaid {
     min-width: 0;
     overflow-x: auto;

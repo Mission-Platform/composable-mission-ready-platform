@@ -1,6 +1,6 @@
 @use "./forge-resource-planner-properties";
 
-@layer mp.resource-planner {
+@layer mp.resource-planner.organisms {
   .forge-resource-planner {
     display: flex;
     flex-direction: column;

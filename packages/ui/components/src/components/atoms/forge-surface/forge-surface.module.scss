@@ -1,6 +1,6 @@
 @use './forge-surface-properties';
 
-@layer mp.components {
+@layer mp.components.atoms {
   .forge-surface {
     display: block;
     color: var(--forge-surface-text, var(--mp-surface-text, var(--mp-color-text-primary)));

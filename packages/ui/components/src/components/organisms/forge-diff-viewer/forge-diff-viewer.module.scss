@@ -1,6 +1,6 @@
 @use './forge-diff-viewer-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-diff-viewer {
     overflow: hidden;
     border: var(--forge-diff-viewer-border-width-thin, var(--mp-border-width-thin)) solid

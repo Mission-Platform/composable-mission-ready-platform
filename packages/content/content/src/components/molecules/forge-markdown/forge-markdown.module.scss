@@ -11,7 +11,7 @@
 
 @use './forge-markdown-properties';
 
-@layer mp.content {
+@layer mp.content.molecules {
   .forge-markdown {
     color: var(--forge-markdown-text-default, var(--mp-markdown-text-default));
     font-family: var(--forge-markdown-typography-font-family, var(--mp-markdown-typography-font-family));

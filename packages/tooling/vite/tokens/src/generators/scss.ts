@@ -130,6 +130,42 @@ const PROPERTY_SYNTAX_BY_TYPE: Record<string, string> = {
 const SYNTAXES_WITHOUT_INITIAL_VALUE = new Set(['*']);
 
 /**
+ * Checks whether a token value is computationally independent and valid as an
+ * `initial-value` for a typed CSS `@property` registration under the W3C CSS
+ * Properties and Values API Level 1 specification.
+ *
+ * Values referencing `var()`, `light-dark()`, `env()`, font-relative units
+ * (`rem`, `em`, etc.), viewport/container-relative units (`vw`, `vh`, `cqw`, etc.),
+ * or unitless `0` for `<length>` are not computationally independent and must
+ * omit the `initial-value` descriptor by falling back to the universal `'*'` syntax.
+ */
+export function isComputationallyIndependent(record: TokenRecord): boolean {
+  if (isAlias(record.value)) return false;
+  if (typeof record.value !== 'string' && typeof record.value !== 'number') return false;
+  const str = String(record.value).trim();
+  if (!str) return false;
+
+  // Runtime or document-dependent functions.
+  if (/var\(|light-dark\(|env\(|attr\(/i.test(str)) return false;
+
+  // Font-relative, viewport-relative, or container-relative length units.
+  if (
+    /\b\d+(\.\d+)?(rem|em|ex|ch|ic|cap|lh|rlh|vw|vh|vi|vb|vmin|vmax|cqw|cqh|cqi|cqb|cqmin|cqmax|dvh|dvw|svh|svw|lvh|lvw)\b/i.test(
+      str,
+    )
+  ) {
+    return false;
+  }
+
+  // Dimension/length with unitless 0 is not valid as initial-value for <length>.
+  if ((record.type === 'dimension' || record.type === 'length') && str === '0') {
+    return false;
+  }
+
+  return true;
+}
+
+/**
  * Build the CSS `@property` registration for a single custom property.
  *
  * When `useScssVariable` is set the `initial-value` resolves to the matching
@@ -140,7 +176,8 @@ const SYNTAXES_WITHOUT_INITIAL_VALUE = new Set(['*']);
  * A non-universal `@property` requires a computationally-independent
  * `initial-value` (no `var()`, `light-dark()` or relative units), so the
  * universal `*` syntax omits it. Values whose value is a `var()` reference (the
- * typography fields) therefore register under `*` without an `initial-value`.
+ * typography fields) or relative length units (rem, em, vw, etc.) therefore register
+ * under `*` without an `initial-value`.
  */
 export function buildPropertyRule(
   record: TokenRecord,
@@ -150,17 +187,12 @@ export function buildPropertyRule(
 ): string {
   const tokenName = projectedName(record, cssNamespace);
   const name = `--${prefix}-${tokenName}`;
-  // Aliases are emitted as `var()` references in SCSS. CSS custom-property
-  // registrations cannot use those references as computationally-independent
-  // typed initial values, so register aliased values with the universal syntax.
-  const syntax = isAlias(record.value) ? '*' : (PROPERTY_SYNTAX_BY_TYPE[record.type ?? ''] ?? '*');
+  // Aliases and non-computationally-independent values (e.g. relative units like rem/em)
+  // cannot use typed initial values, so register them under the universal '*' syntax.
+  const syntax = !isComputationallyIndependent(record) ? '*' : (PROPERTY_SYNTAX_BY_TYPE[record.type ?? ''] ?? '*');
   const lines = [`@property ${name} {`, `  syntax: '${syntax}';`, '  inherits: true;'];
   if (!SYNTAXES_WITHOUT_INITIAL_VALUE.has(syntax)) {
-    const initialValue = useScssVariable
-      ? record.type === 'string'
-        ? `#{vars.$${tokenName}}`
-        : `vars.$${tokenName}`
-      : formatCssValue(record.value);
+    const initialValue = useScssVariable ? `#{vars.$${tokenName}}` : formatCssValue(record.value);
     lines.push(`  initial-value: ${initialValue};`);
   }
   lines.push('}');

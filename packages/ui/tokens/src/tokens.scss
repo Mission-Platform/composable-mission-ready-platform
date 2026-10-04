@@ -19,21 +19,45 @@
 @use 'scss/fonts';
 @use 'scss/size';
 @use 'generated/tokens';
+
+/* Canonical CSS cascade layer hierarchy with package namespaces and atomic nesting. */
+@layer mp.reset,
+       mp.tokens,
+       mp.components,
+       mp.components.atoms,
+       mp.components.molecules,
+       mp.components.organisms,
+       mp.components.templates,
+       mp.content,
+       mp.content.atoms,
+       mp.content.molecules,
+       mp.content.organisms,
+       mp.scheduler,
+       mp.scheduler.organisms,
+       mp.barcode,
+       mp.barcode.molecules,
+       mp.code-scanner,
+       mp.code-scanner.organisms,
+       mp.map,
+       mp.map.organisms,
+       mp.matrix-code,
+       mp.matrix-code.molecules,
+       mp.qr-code,
+       mp.qr-code.molecules,
+       mp.breakpoints,
+       mp.breakpoints.molecules,
+       mp.forms,
+       mp.forms.atoms,
+       mp.forms.molecules,
+       mp.forms.organisms,
+       mp.icons,
+       mp.layout,
+       mp.overrides,
+       mp.utilities;
 @include size.size-classes;
 
-/* The token custom properties + base resets live in the `mp.tokens` cascade */
-
-/* layer (matching the generated partials) so unlayered application styles win */
-
-/* over them without specificity battles. */
-@layer mp.tokens {
-  /* Establish the base font-size so that 1rem = 14px throughout. */
-
-  /* All token rem values are calculated against this base (font.size.base). */
-  :root {
-    font-size: var(--mp-font-size-base);
-  }
-
+/* Base resets in mp.reset so tokens and component styles override them naturally. */
+@layer mp.reset {
   *,
   *::before,
   *::after {
@@ -45,5 +69,15 @@
     padding: var(--mp-spacing-0);
     margin: var(--mp-spacing-0);
     margin-top: env(safe-area-inset-top);
+  }
+}
+
+/* Base font-size and token properties in mp.tokens. */
+@layer mp.tokens {
+  /* Establish the base font-size so that 1rem = 14px throughout. */
+
+  /* All token rem values are calculated against this base (font.size.base). */
+  :root {
+    font-size: var(--mp-font-size-base);
   }
 }
