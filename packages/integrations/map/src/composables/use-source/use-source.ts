@@ -96,44 +96,47 @@ export function useSource(map: Map | undefined, options: UseSourceOptions): void
   const previousMapReference = useRef<Map | undefined>();
 
   useEffect(() => {
-    if (map) {
-      const spec = options.source;
-      // The stored `Map` and `SourceSpecification` are read back from refs. On the
-      // Vue build a `ref<T>().value` is Vue's deep `UnwrapRef<T>` — a recursive
-      // expansion of these large maplibre types — so their nominal types are
-      // re-asserted here. Used directly, the later comparison/`.data` access would
-      // overflow the declaration emitter's instantiation depth (TS2589).
-      const previousSpec = previousSpecReference.current as unknown as SourceSpecification | undefined;
-      const previousMap = previousMapReference.current as unknown as Map | undefined;
-
-      // Fast path: GeoJSON source already exists — swap the data in place so all
-      // referencing layers stay intact and no source teardown is needed.
-      if (tryUpdateGeoJsonSource(map, id, spec, previousSpec, previousMap)) {
-        previousSpecReference.current = spec;
-        previousMapReference.current = map;
-      } else {
-        // Structural change or first mount: remove old source (if any) then add.
-        if (previousMap && previousMap !== map) {
-          safeRemoveSource(previousMap, id);
-        }
-        safeAddSource(map, id, spec);
-        previousSpecReference.current = spec;
-        previousMapReference.current = map;
-
-        /** Re-adds the source if it was lost during a style reload. */
-        const reapplySource = (): void => {
-          safeAddSource(map, id, spec);
-        };
-
-        map.on('styledata', reapplySource);
-        map.on('style.load', reapplySource);
-
-        return () => {
-          map.off('styledata', reapplySource);
-          map.off('style.load', reapplySource);
-        };
-      }
+    if (!map) {
+      return () => {};
     }
+
+    const spec = options.source;
+    // The stored `Map` and `SourceSpecification` are read back from refs. On the
+    // Vue build a `ref<T>().value` is Vue's deep `UnwrapRef<T>` — a recursive
+    // expansion of these large maplibre types — so their nominal types are
+    // re-asserted here. Used directly, the later comparison/`.data` access would
+    // overflow the declaration emitter's instantiation depth (TS2589).
+    const previousSpec = previousSpecReference.current as unknown as SourceSpecification | undefined;
+    const previousMap = previousMapReference.current as unknown as Map | undefined;
+
+    // Fast path: GeoJSON source already exists — swap the data in place so all
+    // referencing layers stay intact and no source teardown is needed.
+    if (tryUpdateGeoJsonSource(map, id, spec, previousSpec, previousMap)) {
+      previousSpecReference.current = spec;
+      previousMapReference.current = map;
+      return () => {};
+    }
+
+    // Structural change or first mount: remove old source (if any) then add.
+    if (previousMap && previousMap !== map) {
+      safeRemoveSource(previousMap, id);
+    }
+    safeAddSource(map, id, spec);
+    previousSpecReference.current = spec;
+    previousMapReference.current = map;
+
+    /** Re-adds the source if it was lost during a style reload. */
+    const reapplySource = (): void => {
+      safeAddSource(map, id, spec);
+    };
+
+    map.on('styledata', reapplySource);
+    map.on('style.load', reapplySource);
+
+    return () => {
+      map.off('styledata', reapplySource);
+      map.off('style.load', reapplySource);
+    };
   }, [map, options.source]);
 
   useEffect(() => {

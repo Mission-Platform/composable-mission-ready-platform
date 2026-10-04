@@ -124,80 +124,82 @@ export function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpEleme
 
   useEffect(() => {
     const container = containerReference.current;
-    if (container) {
-      const instance = new Map({
-        container,
-        style: resolvedStyle,
-        center,
-        zoom,
-        minZoom,
-        maxZoom,
-        bearing,
-        pitch,
-        cooperativeGestures,
-        attributionControl,
-      });
-      mapReference.current = instance;
-
-      if (navigationControl) {
-        const navOptions =
-          typeof navigationControl === 'object'
-            ? navigationControl
-            : { showCompass: true, showZoom: true, visualizePitch: true };
-        instance.addControl(new NavigationControl(navOptions), navigationControlPosition);
-      }
-
-      let isReady = false;
-      /** Marks the map as ready and notifies the onLoad callback. */
-      const handleReady = (): void => {
-        if (isReady) {
-          return;
-        }
-        isReady = true;
-        setMap(instance);
-        properties.onLoad?.(instance);
-      };
-
-      /** Safely checks whether the map style has finished loading. */
-      const isStyleSafeLoaded = (): boolean => {
-        try {
-          const rawMap = instance as unknown as { style?: unknown };
-          return Boolean(rawMap?.style && instance.isStyleLoaded());
-        } catch {
-          return false;
-        }
-      };
-
-      if (isStyleSafeLoaded()) {
-        handleReady();
-      } else {
-        instance.on('styledata', () => {
-          if (isStyleSafeLoaded()) {
-            handleReady();
-          }
-        });
-        instance.once('load', handleReady);
-        instance.once('idle', handleReady);
-        setTimeout(() => {
-          handleReady();
-        }, 50);
-      }
-      instance.on('move', () => {
-        properties.onMove?.(instance);
-      });
-      instance.on('click', (event) => {
-        properties.onClick?.(event);
-      });
-      instance.on('contextmenu', (event) => {
-        properties.onContextmenu?.(event);
-      });
-
-      return () => {
-        instance.remove();
-        mapReference.current = undefined;
-        setMap();
-      };
+    if (!container) {
+      return () => {};
     }
+
+    const instance = new Map({
+      container,
+      style: resolvedStyle,
+      center,
+      zoom,
+      minZoom,
+      maxZoom,
+      bearing,
+      pitch,
+      cooperativeGestures,
+      attributionControl,
+    });
+    mapReference.current = instance;
+
+    if (navigationControl) {
+      const navOptions =
+        typeof navigationControl === 'object'
+          ? navigationControl
+          : { showCompass: true, showZoom: true, visualizePitch: true };
+      instance.addControl(new NavigationControl(navOptions), navigationControlPosition);
+    }
+
+    let isReady = false;
+    /** Marks the map as ready and notifies the onLoad callback. */
+    const handleReady = (): void => {
+      if (isReady) {
+        return;
+      }
+      isReady = true;
+      setMap(instance);
+      properties.onLoad?.(instance);
+    };
+
+    /** Safely checks whether the map style has finished loading. */
+    const isStyleSafeLoaded = (): boolean => {
+      try {
+        const rawMap = instance as unknown as { style?: unknown };
+        return Boolean(rawMap?.style && instance.isStyleLoaded());
+      } catch {
+        return false;
+      }
+    };
+
+    if (isStyleSafeLoaded()) {
+      handleReady();
+    } else {
+      instance.on('styledata', () => {
+        if (isStyleSafeLoaded()) {
+          handleReady();
+        }
+      });
+      instance.once('load', handleReady);
+      instance.once('idle', handleReady);
+      setTimeout(() => {
+        handleReady();
+      }, 50);
+    }
+    instance.on('move', () => {
+      properties.onMove?.(instance);
+    });
+    instance.on('click', (event) => {
+      properties.onClick?.(event);
+    });
+    instance.on('contextmenu', (event) => {
+      properties.onContextmenu?.(event);
+    });
+
+    return () => {
+      instance.remove();
+      mapReference.current = undefined;
+      setMap();
+    };
   }, []);
 
   useEffect(() => {

@@ -36,35 +36,37 @@ export function useMarker(map: Map | undefined, options: UseMarkerOptions): UseM
   const markerReference = useRef<Marker | undefined>();
 
   useEffect(() => {
-    if (map) {
-      const instance = new Marker(markerOptions);
-      instance.setLngLat(lngLat).addTo(map);
-      if (onDragend) {
-        instance.on('dragend', () => onDragend(instance.getLngLat()));
-      }
-
-      const element = instance.getElement();
-      let clickListener: ((event: MouseEvent) => void) | undefined;
-      if (onClick) {
-        element.style.cursor = 'pointer';
-        clickListener = (event: MouseEvent) => {
-          event.stopPropagation();
-          onClick();
-        };
-        element.addEventListener('click', clickListener);
-      }
-
-      markerReference.current = instance;
-      setMarker(instance);
-      return () => {
-        if (clickListener) {
-          element.removeEventListener('click', clickListener);
-        }
-        instance.remove();
-        markerReference.current = undefined;
-        setMarker();
-      };
+    if (!map) {
+      return () => {};
     }
+
+    const instance = new Marker(markerOptions);
+    instance.setLngLat(lngLat).addTo(map);
+    if (onDragend) {
+      instance.on('dragend', () => onDragend(instance.getLngLat()));
+    }
+
+    const element = instance.getElement();
+    let clickListener: ((event: MouseEvent) => void) | undefined;
+    if (onClick) {
+      element.style.cursor = 'pointer';
+      clickListener = (event: MouseEvent) => {
+        event.stopPropagation();
+        onClick();
+      };
+      element.addEventListener('click', clickListener);
+    }
+
+    markerReference.current = instance;
+    setMarker(instance);
+    return () => {
+      if (clickListener) {
+        element.removeEventListener('click', clickListener);
+      }
+      instance.remove();
+      markerReference.current = undefined;
+      setMarker();
+    };
   }, [map]);
 
   useEffect(() => {
