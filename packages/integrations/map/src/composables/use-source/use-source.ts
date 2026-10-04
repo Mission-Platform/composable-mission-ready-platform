@@ -97,7 +97,7 @@ export function useSource(map: Map | undefined, options: UseSourceOptions): void
 
   useEffect(() => {
     if (!map) {
-      return () => {};
+      return;
     }
 
     const spec = options.source;
@@ -114,7 +114,7 @@ export function useSource(map: Map | undefined, options: UseSourceOptions): void
     if (tryUpdateGeoJsonSource(map, id, spec, previousSpec, previousMap)) {
       previousSpecReference.current = spec;
       previousMapReference.current = map;
-      return () => {};
+      return;
     }
 
     // Structural change or first mount: remove old source (if any) then add.

@@ -125,7 +125,7 @@ export function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpEleme
   useEffect(() => {
     const container = containerReference.current;
     if (!container) {
-      return () => {};
+      return;
     }
 
     const instance = new Map({
@@ -164,8 +164,8 @@ export function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpEleme
     /** Safely checks whether the map style has finished loading. */
     const isStyleSafeLoaded = (): boolean => {
       try {
-        const rawMap = instance as unknown as { style?: unknown };
-        return Boolean(rawMap?.style && instance.isStyleLoaded());
+        const rawMap = instance as unknown as Record<string, unknown>;
+        return Boolean(rawMap?.['style'] && instance.isStyleLoaded());
       } catch {
         return false;
       }

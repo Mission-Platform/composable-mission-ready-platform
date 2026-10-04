@@ -37,7 +37,7 @@ export function useMarker(map: Map | undefined, options: UseMarkerOptions): UseM
 
   useEffect(() => {
     if (!map) {
-      return () => {};
+      return;
     }
 
     const instance = new Marker(markerOptions);

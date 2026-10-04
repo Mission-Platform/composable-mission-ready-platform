@@ -340,7 +340,7 @@ function buildScssVariables(
 ): string;
 ```
 
-No description provided.
+Builds standard SCSS $-variable declaration blocks grouped by token category.
 
 #### Parameters
 

@@ -393,7 +393,7 @@ export function useLayer(map: Map | undefined, options: UseLayerOptions): void {
 
   useEffect(() => {
     if (!map) {
-      return () => {};
+      return;
     }
 
     const spec = options.layer;
@@ -408,7 +408,7 @@ export function useLayer(map: Map | undefined, options: UseLayerOptions): void {
 
     cleanupPendingDeferredListener(map, pendingListenerReference);
 
-    let cleanup = () => {};
+    let cleanup: (() => void) | undefined;
 
     if (canUpdateLayerInPlace(spec, previousSpec, map, previousMap)) {
       handleExistingLayerUpdate(map, spec, previousSpec, options.beforeId, previousBeforeId);

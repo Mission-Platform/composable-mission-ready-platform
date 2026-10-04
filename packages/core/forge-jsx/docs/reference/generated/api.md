@@ -209,7 +209,7 @@ A dependency list controlling when an effect / memo re-runs.
 **Kind:** component
 
 ```typescript
-export type MpEffectCallback = (() => void) | (() => MpEffectCleanup);
+export type MpEffectCallback = MpEffectCleanup | undefined;
 ```
 
 The effect callback run by {@link useEffect}.
@@ -654,7 +654,7 @@ Convert a camelCase string type to kebab-case.
 **Kind:** function
 
 ```typescript
-function createForgeComponentStyle(prefix: string, properties: T | undefined): Record<string, string> | undefined;
+function createForgeComponentStyle(prefix: string, properties?: T): Record<string, string> | undefined;
 ```
 
 Build a component-scoped CSS custom-property style map from a camelCase or kebab-case property bag.
@@ -665,10 +665,10 @@ chains remain active. Returns `undefined` when no defined overrides are present.
 
 #### Parameters
 
-| Name       | Type           | Description |
-| ---------- | -------------- | ----------- |
-| prefix     | string         |             |
-| properties | T \| undefined |             |
+| Name       | Type   | Description |
+| ---------- | ------ | ----------- |
+| prefix     | string |             |
+| properties | T      |             |
 
 ### createForgeStyle
 
