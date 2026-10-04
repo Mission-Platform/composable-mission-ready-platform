@@ -1,5 +1,12 @@
 # @mission-platform/d3
 
+## 2.0.5
+
+### Patch Changes
+
+- Updated dependencies [1eaa546]
+  - @mission-platform/forge-jsx@2.0.3
+
 ## 2.0.4
 
 ### Patch Changes

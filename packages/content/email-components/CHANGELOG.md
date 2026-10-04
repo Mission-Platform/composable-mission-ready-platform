@@ -1,5 +1,15 @@
 # @mission-platform/email-components
 
+## 1.1.4
+
+### Patch Changes
+
+- Updated dependencies [1eaa546]
+  - @mission-platform/forge-jsx@2.0.3
+  - @mission-platform/tokens@2.0.2
+  - @mission-platform/email-renderer@0.1.6
+  - @mission-platform/forge-adapters@1.2.3
+
 ## 1.1.3
 
 ### Patch Changes

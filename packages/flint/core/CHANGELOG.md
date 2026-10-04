@@ -1,5 +1,17 @@
 # @mission-platform/forge-web-script
 
+## 1.1.0
+
+### Minor Changes
+
+- 5a7c372: add headless graph compiler, semantic validation, and dual AST and source code generator
+
+### Patch Changes
+
+- @mission-platform/flint-c-abi@0.4.0
+  - @mission-platform/flint-regex@1.0.0
+  - @mission-platform/flint-wasm@2.0.0
+
 ## 1.0.0
 
 ### Major Changes

@@ -1,5 +1,11 @@
 # @mission-platform/forge-jsx
 
+## 2.0.3
+
+### Patch Changes
+
+- 1eaa546: resolve component CSS property declaration errors, update token references, and improve tooling configs
+
 ## 2.0.2
 
 ### Patch Changes

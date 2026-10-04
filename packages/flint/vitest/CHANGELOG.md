@@ -1,5 +1,16 @@
 # @mission-platform/flint-vitest
 
+## 1.0.1
+
+### Patch Changes
+
+- Updated dependencies [5a7c372]
+- Updated dependencies [1eaa546]
+  - @mission-platform/flint@1.1.0
+  - @mission-platform/vite-config@1.1.5
+  - @mission-platform/flint-runtime@1.0.1
+  - @mission-platform/vite-plugin-flint@1.0.1
+
 ## 1.0.0
 
 ### Major Changes

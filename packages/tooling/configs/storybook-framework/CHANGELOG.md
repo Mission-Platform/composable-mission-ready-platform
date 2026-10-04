@@ -1,5 +1,13 @@
 # @mission-platform/storybook-framework
 
+## 0.3.5
+
+### Patch Changes
+
+- Updated dependencies [1eaa546]
+  - @mission-platform/vite-config@1.1.5
+  - @mission-platform/vite-plugin-i18n@0.1.6
+
 ## 0.3.4
 
 ### Patch Changes

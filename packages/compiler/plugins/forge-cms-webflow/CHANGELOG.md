@@ -1,5 +1,13 @@
 # @mission-platform/forge-cms-webflow
 
+## 0.2.5
+
+### Patch Changes
+
+- Updated dependencies [1eaa546]
+  - @mission-platform/forge-plugin-api@0.5.1
+  - @mission-platform/forge-cms-plugin-api@1.0.3
+
 ## 0.2.4
 
 ### Patch Changes

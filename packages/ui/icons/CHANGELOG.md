@@ -1,5 +1,13 @@
 # @mission-platform/icons
 
+## 2.0.5
+
+### Patch Changes
+
+- Updated dependencies [1eaa546]
+  - @mission-platform/forge-jsx@2.0.3
+  - @mission-platform/forge-adapters@1.2.3
+
 ## 2.0.4
 
 ### Patch Changes
