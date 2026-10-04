@@ -109,12 +109,14 @@ portal host/propagation decision, not a silently global variable.
 
 Every concrete `--forge-*` property read by a component module must have
 exactly one matching `@property` registration in the module's imported,
-co-located `_forge-<component>-properties.scss` partial. Registrations use
-`inherits: true`, preserve the consuming token or literal fallback as their
-`initial-value`, and are written as concrete names rather than unresolved Sass
-interpolations. This includes every finite size, tone, state, typography,
-popup, and map-generated variant, plus semantic anchors such as
-`--forge-logo-columns`, `--forge-stats-columns`,
+co-located `_forge-<component>-properties.scss` partial. Registrations conform
+to the W3C CSS Properties and Values API Level 1 specification:
+they use `syntax: "*"` and `inherits: true` with no invalid `initial-value`
+descriptor, allowing standard `var(--forge-*, var(--mp-*))` fallbacks to resolve
+at near $O(1)$ style evaluation. Registrations are written as concrete names
+rather than unresolved Sass interpolations. This includes every finite size,
+tone, state, typography, popup, and map-generated variant, plus semantic anchors
+such as `--forge-logo-columns`, `--forge-stats-columns`,
 `--forge-testimonial-columns`, `--forge-grid-columns`, and
 `--forge-grid-rows`.
 
@@ -127,32 +129,86 @@ declarations.
 
 ### Neutral output and precedence
 
-The neutral JSX output uses the standard `style` property. Its type is an
-intersection with the platform's `CSSStyleProperties`, not a separate
-untyped/custom-property bag. Each component narrows the intersection to its
-own stable custom-property names; the optional keys preserve the equivalent
-`string | undefined` value contract while allowing omitted overrides:
+The neutral JSX output uses the standard `style` property produced by
+`createForgeComponentStyle(prefix, props.properties)`. Its type accepts both
+camelCase and kebab-case keys via the platform's `ForgePropertyBag` /
+`CSSStyleProperties`, with automatic conversion and prefixing:
 
 ```ts
-type ComponentStyle = CSSStyleProperties & {
-  readonly "--forge-component-surface-color"?: string | undefined;
-  readonly "--forge-component-border-width"?: string | undefined;
-};
+import { createForgeComponentStyle, type CSSStyleProperties } from '@mission-platform/forge-jsx';
 
-const style: ComponentStyle = {};
-if (properties.properties?.["surface-color"] !== undefined) {
-  style["--forge-component-surface-color"] =
-    properties.properties["surface-color"];
+export interface ButtonProperties {
+  readonly primaryGap?: string;
+  readonly 'primary-gap'?: string;
+  readonly primaryBackgroundDefault?: string;
+  readonly 'primary-background-default'?: string;
 }
+
+// In component rendering:
+const customStyle = createForgeComponentStyle('button', props.properties);
 ```
 
-The concrete extension must list every exposed key; it must not use a string
-index signature. Undefined values are omitted from the emitted object, so
-token fallbacks remain active. Never emit a `styles` property; it is not part
-of the neutral runtime contract and would be an unknown DOM attribute in
-targets that do not lower it specially. Numeric semantic variables may keep
-their existing `number` representation; typed override values are CSS strings
-so units, commas, spaces, and `calc()` remain intact.
+Undefined values are omitted from the emitted object, so token fallbacks remain
+active. Never emit a `styles` property; it is not part of the neutral runtime
+contract and would be an unknown DOM attribute in targets that do not lower it
+specially. Numeric semantic variables may keep their existing `number`
+representation; typed override values are CSS strings so units, commas, spaces,
+and `calc()` remain intact.
+
+### CSS Cascade Layer Hierarchy & Atomic Structure
+
+All styles are organized into an explicit, deterministic `@layer` hierarchy
+declared at the root token layer (`@mission-platform/tokens`):
+
+```scss
+@layer mp.reset,
+       mp.tokens,
+       mp.components,
+       mp.components.atoms,
+       mp.components.molecules,
+       mp.components.organisms,
+       mp.components.templates,
+       mp.content,
+       mp.content.atoms,
+       mp.content.molecules,
+       mp.content.organisms,
+       mp.scheduler,
+       mp.scheduler.organisms,
+       mp.barcode,
+       mp.barcode.molecules,
+       mp.code-scanner,
+       mp.code-scanner.organisms,
+       mp.map,
+       mp.map.organisms,
+       mp.matrix-code,
+       mp.matrix-code.molecules,
+       mp.qr-code,
+       mp.qr-code.molecules,
+       mp.breakpoints,
+       mp.breakpoints.molecules,
+       mp.overrides,
+       mp.utilities;
+```
+
+Component stylesheets assign their rules to their respective package and atomic
+sublayer (e.g. `@layer mp.components.atoms`, `@layer mp.components.molecules`,
+`@layer mp.scheduler.organisms`), guaranteeing predictable cascade precedence
+without specificity conflicts.
+
+### Progressive Performance Enhancements via `@supports`
+
+Complex composite components and heavy organisms leverage modern browser CSS
+features guarded by `@supports` feature queries with resilient graceful
+degradation:
+
+1. **`content-visibility: auto`**: Off-screen layout and paint costs for heavy
+   organisms (`ForgeScheduler`, `ForgeCodeBlock`, `ForgeBarcode`, `ForgeTable`)
+   are deferred with `contain-intrinsic-size`.
+2. **Container Queries (`@container`)**: Adaptive density and responsive
+   component typography adapt to container dimensions via
+   `@supports (container-type: inline-size)`.
+3. **Single-Hop Fallbacks**: Property lookups maintain shallow
+   `var(--forge-*, var(--mp-*))` graphs to keep style recalculation near $O(1)$.
 
 Precedence is, from lowest to highest: token/theme fallback, component
 variant/default rule, semantic prop selection, component override custom
