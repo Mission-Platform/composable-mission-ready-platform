@@ -9,7 +9,7 @@
 
 @use './forge-virtual-log-viewer-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .log-viewer {
     display: flex;
     flex-direction: column;

@@ -11,7 +11,7 @@
 
 @use './forge-skeleton-properties';
 
-@layer mp.components {
+@layer mp.components.atoms {
   .forge-skeleton {
     display: block;
     background-color: var(

@@ -1,7 +1,7 @@
 /* stylelint-disable declaration-block-single-line-max-declarations */
 @use './forge-transfer-list-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-transfer-list {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);

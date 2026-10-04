@@ -13,7 +13,7 @@
 
 @use './forge-timeline-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-timeline {
     --mp-timeline-line-thickness: var(--forge-timeline-line-width, var(--mp-timeline-line-width));
 

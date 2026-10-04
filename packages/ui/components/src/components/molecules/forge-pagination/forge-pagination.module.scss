@@ -11,7 +11,7 @@
 
 @use './forge-pagination-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-pagination {
     @supports (container-type: inline-size) {
       container: forge-pagination / inline-size;

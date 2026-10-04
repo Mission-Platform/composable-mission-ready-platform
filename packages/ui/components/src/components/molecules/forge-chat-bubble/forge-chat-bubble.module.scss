@@ -11,7 +11,7 @@
 
 @use './forge-chat-bubble-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-chat-bubble {
     display: flex;
     gap: var(--forge-chat-bubble-gap, var(--mp-chat-bubble-gap));

@@ -5,7 +5,7 @@
  */
 @use './forge-scheduler-properties';
 
-@layer mp.scheduler {
+@layer mp.scheduler.organisms {
   .forge-scheduler {
     display: flex;
     flex-direction: column;
@@ -15,6 +15,11 @@
     border-radius: var(--forge-scheduler-container-radius, var(--mp-scheduler-container-radius));
     background-color: var(--forge-scheduler-container-surface, var(--mp-scheduler-container-surface));
     padding: var(--forge-scheduler-container-padding, var(--mp-scheduler-container-padding));
+
+    @supports (content-visibility: auto) {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 600px;
+    }
 
     // ── Toolbar ────────────────────────────────────────────────────────────
     &__toolbar {

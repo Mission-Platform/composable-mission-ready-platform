@@ -1,6 +1,6 @@
 @use './forge-wysiwyg-toolbar-properties';
 
-@layer mp.content {
+@layer mp.content.molecules {
   .wysiwyg-toolbar {
     display: flex;
     flex-wrap: wrap;

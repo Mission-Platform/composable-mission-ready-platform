@@ -8,7 +8,7 @@
 
 @use './forge-tag-properties';
 
-@layer mp.select {
+@layer mp.select.atoms {
   .forge-tag {
     display: inline-flex;
     align-items: center;

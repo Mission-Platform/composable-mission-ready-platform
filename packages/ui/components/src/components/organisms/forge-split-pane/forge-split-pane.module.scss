@@ -1,7 +1,7 @@
 /* stylelint-disable declaration-block-single-line-max-declarations */
 @use './forge-split-pane-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-split-pane {
     display: flex;
     width: 100%;

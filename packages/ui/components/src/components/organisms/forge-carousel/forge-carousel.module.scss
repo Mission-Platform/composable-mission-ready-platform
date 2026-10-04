@@ -13,7 +13,7 @@
 
 @use './forge-carousel-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-carousel {
     position: relative;
     width: 100%;

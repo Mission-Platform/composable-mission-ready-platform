@@ -14,7 +14,7 @@
 
 @use './forge-chat-area-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-chat-area {
     display: flex;
     flex-direction: column;

@@ -11,7 +11,7 @@
 
 @use './forge-alert-banner-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   /* `display: contents` host so toggling visibility adds no layout box. */
   .forge-alert-banner-host {
     display: contents;

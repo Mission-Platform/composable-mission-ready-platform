@@ -10,11 +10,16 @@
 
 @use './forge-barcode-properties';
 
-@layer mp.barcode {
+@layer mp.barcode.molecules {
   .forge-barcode {
     display: block;
     max-width: 100%;
     height: auto;
+
+    @supports (content-visibility: auto) {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 120px;
+    }
   }
 
   // Wrapper used only when the save/copy action toolbar is enabled.

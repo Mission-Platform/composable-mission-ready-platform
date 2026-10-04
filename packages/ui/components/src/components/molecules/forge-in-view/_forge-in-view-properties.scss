@@ -5,29 +5,24 @@
 @property --forge-in-view-padding {
   syntax: '*';
   inherits: true;
-  initial-value: var(--mp-in-view-padding);
 }
 
 @property --forge-in-view-radius {
   syntax: '*';
   inherits: true;
-  initial-value: var(--mp-in-view-radius);
 }
 
 @property --forge-in-view-surface {
   syntax: '*';
   inherits: true;
-  initial-value: var(--mp-in-view-surface);
 }
 
 @property --forge-in-view-text {
   syntax: '*';
   inherits: true;
-  initial-value: var(--mp-in-view-text);
 }
 
 @property --forge-in-view-font-weight {
   syntax: '*';
   inherits: true;
-  initial-value: var(--mp-in-view-font-weight);
 }

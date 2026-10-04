@@ -25,6 +25,7 @@ export {
   buildScssVariablesScss,
   buildStructuralScss,
   buildTypographyRecords,
+  isComputationallyIndependent,
   typographyEntries,
 } from './generators/scss.js';
 export { buildBarrelModule, buildTokenModule } from './generators/typescript.js';

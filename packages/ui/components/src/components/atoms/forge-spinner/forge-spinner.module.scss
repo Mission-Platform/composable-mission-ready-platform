@@ -11,7 +11,7 @@
 
 @use './forge-spinner-properties';
 
-@layer mp.components {
+@layer mp.components.atoms {
   .forge-spinner {
     display: inline-block;
     border-style: solid;

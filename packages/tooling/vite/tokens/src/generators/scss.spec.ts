@@ -48,28 +48,35 @@ describe('buildScssVariablesScss', () => {
 });
 
 describe('buildPropertyRule', () => {
-  const radius = { path: ['radius', 'md'], group: 'radius', type: 'dimension', value: '0.429rem' };
+  const absoluteDimension = { path: ['font-size', 'base'], group: 'font-size', type: 'dimension', value: '14px' };
+  const relativeDimension = { path: ['radius', 'md'], group: 'radius', type: 'dimension', value: '0.429rem' };
 
-  it('inlines the literal initial-value by default', () => {
-    expect(buildPropertyRule(radius, 'mp')).toContain('initial-value: 0.429rem;');
+  it('inlines the literal initial-value for computationally-independent values by default', () => {
+    expect(buildPropertyRule(absoluteDimension, 'mp')).toContain('initial-value: 14px;');
   });
 
-  it('resolves the initial-value to the local `$`-variable when requested', () => {
+  it('resolves the initial-value to the local `$`-variable when requested for computationally-independent values', () => {
     expect(
       buildPropertyRule(
-        { path: ['size', 'radius', '2xl'], group: 'size', type: 'dimension', value: '0.857rem' },
+        { path: ['breakpoint', 'xs'], group: 'breakpoint', type: 'dimension', value: '480px' },
         'mp',
         true,
       ),
     ).toBe(
       [
-        '@property --mp-size-radius-2xl {',
+        '@property --mp-breakpoint-xs {',
         "  syntax: '<length>';",
         '  inherits: true;',
-        '  initial-value: vars.$size-radius-2xl;',
+        '  initial-value: #{vars.$breakpoint-xs};',
         '}',
       ].join('\n'),
     );
+  });
+
+  it('uses the universal `*` syntax without an initial-value for relative length units (rem, em, vw)', () => {
+    const rule = buildPropertyRule(relativeDimension, 'mp', true);
+    expect(rule).toContain("syntax: '*';");
+    expect(rule).not.toContain('initial-value');
   });
 
   it('uses the universal `*` syntax without an initial-value for shadows', () => {
@@ -159,12 +166,13 @@ describe('buildStructuralScss', () => {
     expect(scss).toContain(':root {');
     expect(scss).toContain('--mp-radius-md: #{vars.$radius-md};');
     expect(scss).toContain('@property --mp-radius-md {');
-    expect(scss).toContain('initial-value: vars.$radius-md;');
+    expect(scss).toContain("syntax: '*';");
+    expect(scss).not.toContain('initial-value:');
   });
 
   it('wraps both the `@property` registrations and the `:root` block in the `mp.tokens` layer (props first)', () => {
     // The `@property` registrations come first, indented inside the layer…
-    expect(scss).toMatch(/@layer mp\.tokens \{\n {2}@property --mp-radius-md \{\n {4}syntax: '<length>';/);
+    expect(scss).toMatch(/@layer mp\.tokens \{\n {2}@property --mp-radius-md \{\n {4}syntax: '\*';/);
     // …followed by the `:root` block, also inside the layer.
     expect(scss).toMatch(/\n {2}:root \{/);
     expect(scss.indexOf('@property --mp-radius-md {')).toBeLessThan(scss.indexOf(':root {'));

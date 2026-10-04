@@ -1,6 +1,6 @@
 @use './forge-comment-thread-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-comment-thread {
     width: 100%;
     color: var(--forge-comment-thread-color-text-primary, var(--mp-color-text-primary));

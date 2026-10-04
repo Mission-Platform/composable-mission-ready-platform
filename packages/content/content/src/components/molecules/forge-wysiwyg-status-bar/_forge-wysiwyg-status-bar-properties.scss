@@ -8,41 +8,34 @@
 @property --forge-wysiwyg-status-bar-editor-status-bar-gap {
   syntax: '*';
   inherits: true;
-  initial-value: var(--mp-editor-status-bar-gap);
 }
 
 @property --forge-wysiwyg-status-bar-editor-status-bar-padding-block {
   syntax: '*';
   inherits: true;
-  initial-value: var(--mp-editor-status-bar-padding-block);
 }
 
 @property --forge-wysiwyg-status-bar-editor-status-bar-padding-inline {
   syntax: '*';
   inherits: true;
-  initial-value: var(--mp-editor-status-bar-padding-inline);
 }
 
 @property --forge-wysiwyg-status-bar-editor-status-bar-text {
   syntax: '*';
   inherits: true;
-  initial-value: var(--mp-editor-status-bar-text);
 }
 
 @property --forge-wysiwyg-status-bar-editor-status-bar-font-size {
   syntax: '*';
   inherits: true;
-  initial-value: var(--mp-editor-status-bar-font-size);
 }
 
 @property --forge-wysiwyg-status-bar-editor-status-bar-border-width {
   syntax: '*';
   inherits: true;
-  initial-value: var(--mp-editor-status-bar-border-width);
 }
 
 @property --forge-wysiwyg-status-bar-editor-status-bar-border {
   syntax: '*';
   inherits: true;
-  initial-value: var(--mp-editor-status-bar-border);
 }

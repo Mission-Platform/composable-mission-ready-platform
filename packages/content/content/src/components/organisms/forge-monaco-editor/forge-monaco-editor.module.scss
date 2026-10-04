@@ -7,7 +7,7 @@
  * The rules live in the package-owned `mp.content` cascade layer.
  */
 
-@layer mp.content {
+@layer mp.content.organisms {
   .forge-monaco-editor {
     width: 100%;
     border: var(--mp-editor-monaco-border-width) solid var(--mp-editor-monaco-border);

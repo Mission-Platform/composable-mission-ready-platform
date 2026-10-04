@@ -1,7 +1,7 @@
 /* stylelint-disable declaration-block-single-line-max-declarations */
 @use './forge-logo-cloud-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-logo-cloud {
     width: 100%;
     padding: var(--forge-logo-cloud-spacing-6, var(--mp-spacing-6)) 0;

@@ -36,7 +36,7 @@ Re-link each extracted CSS asset to the JS module that owns it.
 tsdown/Rolldown extracts co-located `*.module.scss` / `*.scss` imports into
 standalone `.css` assets — with the class-name hashing already applied and the
 resolved names baked into the sibling class maps — but, unlike Vite, does
-**not** re-inject the matching `import './x.css'` into the JS chunk (it leaves
+_not_* re-inject the matching `import './x.css'` into the JS chunk (it leaves
 an `/* empty css *\/` placeholder instead) and writes those assets straight to
 disk rather than through the Rollup bundle. A consumer importing a component
 therefore gets its markup without its styles, and Rolldown exposes no

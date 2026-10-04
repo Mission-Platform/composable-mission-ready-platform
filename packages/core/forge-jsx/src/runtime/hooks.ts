@@ -30,7 +30,7 @@ export type MpSetState<T> = (value?: T | ((previous: T) => T)) => void;
 export type MpEffectCleanup = () => void;
 
 /** The effect callback run by {@link useEffect}. */
-export type MpEffectCallback = (() => void) | (() => MpEffectCleanup);
+export type MpEffectCallback = MpEffectCleanup | undefined;
 
 /** A dependency list controlling when an effect / memo re-runs. */
 export type MpDependencyList = readonly unknown[];

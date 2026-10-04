@@ -16,7 +16,7 @@
 
 @use './forge-multiselect-properties';
 
-@layer mp.select {
+@layer mp.select.molecules {
   .forge-multiselect {
     display: flex;
     flex-direction: column;

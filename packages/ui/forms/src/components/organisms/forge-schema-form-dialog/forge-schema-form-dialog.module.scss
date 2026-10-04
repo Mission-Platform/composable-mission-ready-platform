@@ -8,7 +8,7 @@
  * `ForgeSchemaForm`'s `actions` slot needs layout here.
  */
 
-@layer mp.forms {
+@layer mp.forms.organisms {
   .forge-schema-form-dialog {
     &__actions {
       display: flex;

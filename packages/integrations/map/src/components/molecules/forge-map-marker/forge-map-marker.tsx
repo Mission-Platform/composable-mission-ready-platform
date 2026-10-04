@@ -5,7 +5,9 @@ import type { LngLatLike, MarkerOptions } from 'maplibre-gl';
 
 export interface MapMarkerProperties {
   /** Longitude/latitude position of the marker. */
-  lngLat: LngLatLike;
+  lngLat?: LngLatLike;
+  /** Alias for lngLat position of the marker. */
+  coordinates?: LngLatLike;
   /** Marker colour (CSS colour string). Overrides the default blue. */
   color?: MarkerOptions['color'];
   /** Scale factor for the default marker icon. */
@@ -18,6 +20,8 @@ export interface MapMarkerProperties {
   pitchAlignment?: MarkerOptions['pitchAlignment'];
   /** Fired when the marker is dragged to a new position. */
   onDragend?: (lngLat: LngLatLike) => void;
+  /** Fired when the marker is clicked. */
+  onClick?: () => void;
 }
 
 /**
@@ -28,14 +32,17 @@ export interface MapMarkerProperties {
 export function ForgeMapMarker(properties: Readonly<MapMarkerProperties>): MpElement | null {
   const map = useMap();
   const handleDragend = properties.onDragend;
+  const handleClick = properties.onClick;
+  const resolvedLngLat = properties.lngLat ?? properties.coordinates ?? [0, 0];
   const markerOptions = {
-    lngLat: properties.lngLat,
+    lngLat: resolvedLngLat,
     color: properties.color,
     scale: properties.scale,
     draggable: properties.draggable ?? false,
     rotationAlignment: properties.rotationAlignment,
     pitchAlignment: properties.pitchAlignment,
-    ['onDragend']: handleDragend,
+    onDragend: handleDragend,
+    onClick: handleClick,
   };
   useMarker(map, markerOptions);
 

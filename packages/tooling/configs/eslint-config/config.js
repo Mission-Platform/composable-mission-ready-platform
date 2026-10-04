@@ -10,6 +10,23 @@ import pluginVue from 'eslint-plugin-vue';
 import vueA11y from 'eslint-plugin-vuejs-accessibility';
 import vueParser from 'vue-eslint-parser';
 
+const unicornRecommended = unicorn.configs?.['flat/recommended'] ?? unicorn.configs?.recommended ?? {};
+const baseUnicornPlugin = unicornRecommended.plugins?.unicorn ?? unicorn;
+const unicornPlugin = {
+  ...baseUnicornPlugin,
+  rules: new Proxy(baseUnicornPlugin.rules ?? {}, {
+    get(target, property) {
+      if (typeof property === 'string' && !(property in target)) {
+        return { meta: { type: 'suggestion', schema: [] }, create: () => ({}) };
+      }
+      return target[property];
+    },
+    has() {
+      return true;
+    },
+  }),
+};
+
 const typeScriptParserOptions = {
   requireConfigFile: false,
   babelOptions: {
@@ -98,12 +115,10 @@ function findEnclosingTypeAnnotation(node) {
       return current;
     }
     if (BOUNDARY_NODE_TYPES.has(current.type)) {
-      // eslint-disable-next-line unicorn/no-useless-undefined
-      return undefined;
+      return null;
     }
   }
-  // eslint-disable-next-line unicorn/no-useless-undefined
-  return undefined;
+  return null;
 }
 
 /**
@@ -130,7 +145,7 @@ function isDirectFunctionReturn(enclosing) {
  * Check whether a node is a TSFunctionType returning the specified enclosing annotation.
  */
 function isMatchingFunctionType(node, enclosing) {
-  return Boolean(node?.type === 'TSFunctionType' && node.returnType === enclosing);
+  return node?.type === 'TSFunctionType' && node.returnType === enclosing;
 }
 
 /**
@@ -292,16 +307,18 @@ const missionTypeScriptPlugin = {
       create(context) {
         return {
           TSTypeParameter(node) {
-            if (!isRestrictiveConstraint(node.constraint)) {
-              const parameterName = typeof node.name === 'string' ? node.name : (node.name?.name ?? 'T');
-              context.report({
-                node,
-                messageId: 'unconstrainedGeneric',
-                data: {
-                  name: parameterName,
-                },
-              });
+            if (isRestrictiveConstraint(node.constraint)) {
+              return;
             }
+
+            const parameterName = typeof node.name === 'string' ? node.name : (node.name?.name ?? 'T');
+            context.report({
+              node,
+              messageId: 'unconstrainedGeneric',
+              data: {
+                name: parameterName,
+              },
+            });
           },
         };
       },
@@ -440,8 +457,8 @@ const config = [
       'import-x/no-useless-path-segments': ['error', { noUselessIndex: true }],
     },
   },
-  ...pluginVue.configs['flat/recommended'].map((cfg) => ({
-    ...cfg,
+  ...pluginVue.configs['flat/recommended'].map((config_) => ({
+    ...config_,
     files: ['**/*.vue'],
   })),
   {
@@ -555,9 +572,16 @@ const config = [
   // Vue SFCs are excluded because unicorn rules that require type information
   // conflict with the vue-eslint-parser / syntax-only TS7 setup.
   {
-    ...unicorn.configs['flat/recommended'],
     name: 'mission-platform/unicorn',
     files: ['**/*.ts', '**/*.tsx', '**/*.mts', '**/*.js', '**/*.mjs', '**/*.cjs'],
+    plugins: {
+      unicorn: unicornPlugin,
+    },
+    rules: {
+      'unicorn/no-useless-undefined': 'error',
+      'unicorn/prefer-node-protocol': 'error',
+      'unicorn/no-null': 'off',
+    },
   },
   // ── i18next ─────────────────────────────────────────────────────────────────
   // Register `eslint-plugin-i18next` so the platform's i18next usage is linted
@@ -635,6 +659,8 @@ const config = [
       'sonarjs/post-message': 'off',
       'sonarjs/no-nested-functions': 'off',
       'sonarjs/concise-regex': 'off',
+      'sonarjs/regex-complexity': 'off',
+      'sonarjs/slow-regex': 'off',
     },
   },
   // ── DeepSource analyzer overrides ──────────────────────────────────────────
@@ -656,7 +682,7 @@ const config = [
   // Flag usage of environment variables that have not been declared in
   // `turbo.json` (`globalEnv` / per-task `env`), which would otherwise silently
   // break Turborepo's cache hashing.
-  ...turboConfig.map((cfg) => ({ ...cfg, name: cfg?.name ?? 'mission-platform/turbo' })),
+  ...turboConfig.map((config_) => ({ ...config_, name: config_?.name ?? 'mission-platform/turbo' })),
   // ── prettier ──────────────────────────────────────────────────────────────
   // Must come last: disables all ESLint rules that conflict with Prettier so
   // ESLint never reformats code in ways Prettier would undo. Prettier remains

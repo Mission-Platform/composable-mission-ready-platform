@@ -14,7 +14,7 @@
 
 @use './forge-accordion-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-accordion {
     border: var(--forge-accordion-collapse-border-width, var(--mp-collapse-border-width)) solid
       var(--forge-accordion-collapse-border, var(--mp-collapse-border));

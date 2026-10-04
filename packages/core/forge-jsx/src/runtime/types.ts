@@ -72,6 +72,27 @@ type DefinedForgeStyle<T extends Record<string, string | undefined>> = {
 };
 
 /**
+ * Convert a camelCase string type to kebab-case.
+ */
+export type CamelToKebab<S extends string> = S extends `${infer T}${infer U}`
+  ? `${T extends Uppercase<T> ? '-' : ''}${Lowercase<T>}${CamelToKebab<U>}`
+  : S;
+
+/**
+ * Convert a kebab-case string type to camelCase.
+ */
+export type KebabToCamel<S extends string> = S extends `${infer T}-${infer U}`
+  ? `${T}${Capitalize<KebabToCamel<U>>}`
+  : S;
+
+/**
+ * Permissive property override bag accepting either kebab-case or camelCase property keys.
+ */
+export type ForgePropertyBag<T extends Record<string, string | undefined> = Record<string, string | undefined>> = {
+  [K in keyof T as K | (K extends string ? KebabToCamel<K> : never)]?: string | undefined;
+};
+
+/**
  * Build a neutral `style` map from defined custom-property values.
  *
  * Entries whose value is `undefined` are omitted so SCSS
@@ -86,6 +107,46 @@ export function createForgeStyle<const T extends Record<string, string | undefin
     return undefined;
   }
   return Object.fromEntries(entries) as DefinedForgeStyle<T>;
+}
+
+/** Strips existing dashes and namespace prefixes from a kebab string. */
+function stripExistingPrefix(kebab: string, prefix: string): string {
+  const stripped = kebab.replace(/^--(?:forge-)?/, '');
+  return prefix && stripped.startsWith(`${prefix}-`) ? stripped.slice(prefix.length + 1) : stripped;
+}
+
+/**
+ * Normalises a property name key to a `--forge-<prefix>-<kebab>` custom property name.
+ */
+function toForgePropertyName(key: string, prefix: string): string {
+  const kebab = key.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
+  const base = stripExistingPrefix(kebab, prefix);
+  return prefix ? `--forge-${prefix}-${base}` : `--forge-${base}`;
+}
+
+/**
+ * Build a component-scoped CSS custom-property style map from a camelCase or kebab-case property bag.
+ *
+ * Automatically converts camelCase keys into kebab-case, ensures the component namespace
+ * prefix `--forge-<prefix>-` is applied, and omits undefined entries so CSS token fallback
+ * chains remain active. Returns `undefined` when no defined overrides are present.
+ */
+export function createForgeComponentStyle<T extends Record<string, string | undefined>>(
+  prefix: string,
+  properties?: T,
+): Record<string, string> | undefined {
+  if (!properties) {
+    return undefined;
+  }
+  const result: Record<string, string> = {};
+  let count = 0;
+  for (const [key, value] of Object.entries(properties)) {
+    if (value !== undefined) {
+      result[toForgePropertyName(key, prefix)] = value;
+      count++;
+    }
+  }
+  return count > 0 ? result : undefined;
 }
 
 /**

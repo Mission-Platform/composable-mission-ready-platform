@@ -11,6 +11,8 @@ export interface UseMarkerOptions extends MarkerOptions {
   lngLat: LngLatLike;
   /** Fired when the marker is dragged to a new position. */
   onDragend?: (lngLat: LngLatLike) => void;
+  /** Fired when the marker is clicked. */
+  onClick?: () => void;
 }
 
 export interface UseMarkerReturn {
@@ -29,27 +31,44 @@ export interface UseMarkerReturn {
  * ```
  */
 export function useMarker(map: Map | undefined, options: UseMarkerOptions): UseMarkerReturn {
-  const { lngLat, onDragend, ...markerOptions } = options;
-  // eslint-disable-next-line unicorn/no-useless-undefined
-  const [marker, setMarker] = useState<Marker | undefined>(undefined);
-  const markerReference = useRef<Marker | undefined>(undefined);
+  const { lngLat, onDragend, onClick, ...markerOptions } = options;
+  const [marker, setMarker] = useState<Marker | undefined>();
+  const markerReference = useRef<Marker | undefined>();
 
   useEffect(() => {
-    if (!map) {
-      return;
+    let cleanup: (() => void) | undefined;
+
+    if (map) {
+      const instance = new Marker(markerOptions);
+      instance.setLngLat(lngLat).addTo(map);
+      if (onDragend) {
+        instance.on('dragend', () => onDragend(instance.getLngLat()));
+      }
+
+      const element = instance.getElement();
+      let clickListener: ((event: MouseEvent) => void) | undefined;
+      if (onClick) {
+        element.style.cursor = 'pointer';
+        clickListener = (event: MouseEvent) => {
+          event.stopPropagation();
+          onClick();
+        };
+        element.addEventListener('click', clickListener);
+      }
+
+      markerReference.current = instance;
+      setMarker(instance);
+      cleanup = () => {
+        if (clickListener) {
+          element.removeEventListener('click', clickListener);
+        }
+        instance.remove();
+        markerReference.current = undefined;
+        setMarker();
+      };
     }
-    const instance = new Marker(markerOptions);
-    instance.setLngLat(lngLat).addTo(map);
-    if (onDragend) {
-      instance.on('dragend', () => onDragend(instance.getLngLat()));
-    }
-    markerReference.current = instance;
-    setMarker(instance);
-    return () => {
-      instance.remove();
-      markerReference.current = undefined;
-      setMarker(undefined);
-    };
+
+    return cleanup;
   }, [map]);
 
   useEffect(() => {

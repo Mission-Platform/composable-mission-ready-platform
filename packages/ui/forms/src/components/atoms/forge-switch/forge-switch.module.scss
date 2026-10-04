@@ -10,7 +10,7 @@
 @use 'sass:list';
 @use './forge-switch-properties';
 
-@layer mp.forms {
+@layer mp.forms.atoms {
   .forge-switch {
     display: flex;
     flex-direction: column;

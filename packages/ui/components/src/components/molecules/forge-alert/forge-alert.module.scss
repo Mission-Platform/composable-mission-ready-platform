@@ -1,6 +1,6 @@
 @use './forge-alert-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-alert {
     display: flex;
     gap: var(--forge-alert-spacing-3, var(--mp-spacing-3));

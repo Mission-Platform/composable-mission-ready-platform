@@ -9,7 +9,7 @@
 
 @use './forge-virtual-tree-view-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .virtual-tree {
     font-family: var(--forge-virtual-tree-view-data-virtual-tree-font-family, var(--mp-data-virtual-tree-font-family));
     font-size: var(--forge-virtual-tree-view-data-virtual-tree-font-size, var(--mp-data-virtual-tree-font-size));

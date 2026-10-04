@@ -1,6 +1,6 @@
 @use './forge-activity-feed-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-activity-feed {
     width: 100%;
     color: var(--forge-activity-feed-color-text-primary, var(--mp-color-text-primary));

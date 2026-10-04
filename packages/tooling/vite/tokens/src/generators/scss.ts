@@ -52,6 +52,9 @@ function projectedName(record: TokenRecord, cssNamespace?: string): string {
     : dashedName(record);
 }
 
+/**
+ * Resolves alias paths against component namespace projections if specified.
+ */
 function projectedAlias(alias: string, prefix: string, componentNamespaces?: ReadonlySet<string>): string {
   if (!isAlias(alias)) return alias;
   const segments = alias.slice(1, -1).split('.');
@@ -61,6 +64,9 @@ function projectedAlias(alias: string, prefix: string, componentNamespaces?: Rea
   return aliasToCssVariable(alias, prefix);
 }
 
+/**
+ * Builds standard SCSS $-variable declaration blocks grouped by token category.
+ */
 export function buildScssVariables(
   records: TokenRecord[],
   prefix = 'mp',
@@ -129,6 +135,57 @@ const PROPERTY_SYNTAX_BY_TYPE: Record<string, string> = {
 /** Syntaxes that omit the `initial-value` descriptor (see {@link buildPropertyRule}). */
 const SYNTAXES_WITHOUT_INITIAL_VALUE = new Set(['*']);
 
+/** Regular expression matching dynamic CSS functions. */
+const DYNAMIC_CSS_FUNCTION_REGEX = /var\(|light-dark\(|env\(|attr\(/i;
+
+/** Regular expression matching relative CSS length units. */
+const RELATIVE_LENGTH_UNIT_REGEX =
+  /\b\d+(\.\d+)?(rem|em|ex|ch|ic|cap|lh|rlh|vw|vh|vi|vb|vmin|vmax|cqw|cqh|cqi|cqb|cqmin|cqmax|dvh|dvw|svh|svw|lvh|lvw)\b/i;
+
+/** Checks whether a token value represents a valid non-empty scalar. */
+function isNonEmptyScalar(value: unknown): value is string | number {
+  if (typeof value !== 'string' && typeof value !== 'number') {
+    return false;
+  }
+  return String(value).trim().length > 0;
+}
+
+/** Checks whether a length/dimension token has an invalid unitless zero value. */
+function isInvalidUnitlessZero(type: string | undefined, valueStr: string): boolean {
+  return (type === 'dimension' || type === 'length') && valueStr === '0';
+}
+
+/**
+ * Checks whether a token value is computationally independent and valid as an
+ * `initial-value` for a typed CSS `@property` registration under the W3C CSS
+ * Properties and Values API Level 1 specification.
+ *
+ * Values referencing `var()`, `light-dark()`, `env()`, font-relative units
+ * (`rem`, `em`, etc.), viewport/container-relative units (`vw`, `vh`, `cqw`, etc.),
+ * or unitless `0` for `<length>` are not computationally independent and must
+ * omit the `initial-value` descriptor by falling back to the universal `'*'` syntax.
+ */
+export function isComputationallyIndependent(record: TokenRecord): boolean {
+  if (isAlias(record.value) || !isNonEmptyScalar(record.value)) {
+    return false;
+  }
+  const str = String(record.value).trim();
+  if (DYNAMIC_CSS_FUNCTION_REGEX.test(str) || RELATIVE_LENGTH_UNIT_REGEX.test(str)) {
+    return false;
+  }
+  return !isInvalidUnitlessZero(record.type, str);
+}
+
+/**
+ * Resolves the CSS `@property` syntax descriptor for a token record.
+ */
+function resolvePropertySyntax(record: TokenRecord): string {
+  if (!isComputationallyIndependent(record)) {
+    return '*';
+  }
+  return PROPERTY_SYNTAX_BY_TYPE[record.type ?? ''] ?? '*';
+}
+
 /**
  * Build the CSS `@property` registration for a single custom property.
  *
@@ -140,7 +197,8 @@ const SYNTAXES_WITHOUT_INITIAL_VALUE = new Set(['*']);
  * A non-universal `@property` requires a computationally-independent
  * `initial-value` (no `var()`, `light-dark()` or relative units), so the
  * universal `*` syntax omits it. Values whose value is a `var()` reference (the
- * typography fields) therefore register under `*` without an `initial-value`.
+ * typography fields) or relative length units (rem, em, vw, etc.) therefore register
+ * under `*` without an `initial-value`.
  */
 export function buildPropertyRule(
   record: TokenRecord,
@@ -150,17 +208,10 @@ export function buildPropertyRule(
 ): string {
   const tokenName = projectedName(record, cssNamespace);
   const name = `--${prefix}-${tokenName}`;
-  // Aliases are emitted as `var()` references in SCSS. CSS custom-property
-  // registrations cannot use those references as computationally-independent
-  // typed initial values, so register aliased values with the universal syntax.
-  const syntax = isAlias(record.value) ? '*' : (PROPERTY_SYNTAX_BY_TYPE[record.type ?? ''] ?? '*');
+  const syntax = resolvePropertySyntax(record);
   const lines = [`@property ${name} {`, `  syntax: '${syntax}';`, '  inherits: true;'];
   if (!SYNTAXES_WITHOUT_INITIAL_VALUE.has(syntax)) {
-    const initialValue = useScssVariable
-      ? record.type === 'string'
-        ? `#{vars.$${tokenName}}`
-        : `vars.$${tokenName}`
-      : formatCssValue(record.value);
+    const initialValue = useScssVariable ? `#{vars.$${tokenName}}` : formatCssValue(record.value);
     lines.push(`  initial-value: ${initialValue};`);
   }
   lines.push('}');

@@ -1,7 +1,7 @@
 /* stylelint-disable declaration-block-single-line-max-declarations */
 @use './forge-stats-section-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-stats-section {
     width: 100%;
     padding: var(--forge-stats-section-spacing-8, var(--mp-spacing-8))

@@ -12,7 +12,7 @@
 
 @use './forge-theme-toggle-properties';
 
-@layer mp.components {
+@layer mp.components.atoms {
   .theme-toggle {
     display: inline-flex;
     align-items: center;

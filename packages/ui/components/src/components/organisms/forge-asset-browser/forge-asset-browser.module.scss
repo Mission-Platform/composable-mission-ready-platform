@@ -1,6 +1,6 @@
 @use './forge-asset-browser-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-asset-browser {
     width: 100%;
     color: var(--forge-asset-browser-color-text-primary, var(--mp-color-text-primary));

@@ -1,6 +1,6 @@
 @use './forge-sync-status-indicator-properties';
 
-@layer mp.components {
+@layer mp.components.atoms {
   .forge-sync-status-indicator {
     display: inline-flex;
     align-items: center;

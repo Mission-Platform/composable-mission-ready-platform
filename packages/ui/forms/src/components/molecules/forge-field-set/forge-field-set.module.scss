@@ -10,7 +10,7 @@
  * The rules live in the package-owned `mp.forms` cascade layer.
  */
 
-@layer mp.forms {
+@layer mp.forms.molecules {
   .forge-field-set {
     min-width: 0;
     padding: var(--forge-field-set-padding, var(--mp-field-set-padding));

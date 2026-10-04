@@ -12,6 +12,7 @@ export const ADAPTERS_MODULE = "@mission-platform/forge-adapters";
 export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string> = new Set([
   "classNames",
   "createForgeStyle",
+  "createForgeComponentStyle",
 ]);
 export const CLASS_NAME_ATTRIBUTE = "className";
 export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string> = new Map([

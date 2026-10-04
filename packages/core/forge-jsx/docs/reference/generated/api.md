@@ -209,7 +209,7 @@ A dependency list controlling when an effect / memo re-runs.
 **Kind:** component
 
 ```typescript
-export type MpEffectCallback = (() => void) | (() => MpEffectCleanup);
+export type MpEffectCallback = MpEffectCleanup | undefined;
 ```
 
 The effect callback run by {@link useEffect}.
@@ -639,6 +639,37 @@ import to each framework's native group transition — Vue's built-in
 
 ## `src/runtime/types`
 
+### CamelToKebab
+
+**Kind:** type
+
+```typescript
+export type CamelToKebab<S extends string> = S extends `$
+```
+
+Convert a camelCase string type to kebab-case.
+
+### createForgeComponentStyle
+
+**Kind:** function
+
+```typescript
+function createForgeComponentStyle(prefix: string, properties?: T): Record<string, string> | undefined;
+```
+
+Build a component-scoped CSS custom-property style map from a camelCase or kebab-case property bag.
+
+Automatically converts camelCase keys into kebab-case, ensures the component namespace
+prefix `--forge-<prefix>-` is applied, and omits undefined entries so CSS token fallback
+chains remain active. Returns `undefined` when no defined overrides are present.
+
+#### Parameters
+
+| Name       | Type   | Description |
+| ---------- | ------ | ----------- |
+| prefix     | string |             |
+| properties | T      |             |
+
 ### createForgeStyle
 
 **Kind:** function
@@ -672,6 +703,16 @@ Framework-neutral CSS style object used by the JSX `style` attribute.
 Component-owned custom properties should extend this type with explicit
 `--forge-*` keys (for example `CSSStyleProperties & { '--forge-button-radius'?: string | undefined }`)
 rather than introducing an untyped style dictionary or a non-DOM `styles` bag.
+
+### ForgePropertyBag
+
+**Kind:** type
+
+```typescript
+export type ForgePropertyBag<T extends Record<string, string | undefined> = Record<string, string | undefined>> =
+```
+
+Permissive property override bag accepting either kebab-case or camelCase property keys.
 
 ### Fragment
 
@@ -709,6 +750,16 @@ Narrow an arbitrary value to an {@link MpElement}.
 | Name  | Type    | Description |
 | ----- | ------- | ----------- |
 | value | unknown |             |
+
+### KebabToCamel
+
+**Kind:** type
+
+```typescript
+export type KebabToCamel<S extends string> = S extends `$
+```
+
+Convert a kebab-case string type to camelCase.
 
 ### MpChild
 

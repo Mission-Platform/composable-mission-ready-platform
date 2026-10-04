@@ -1,6 +1,6 @@
 @use './forge-cookie-consent-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-cookie-consent,
   .forge-cookie-consent__dialog {
     color: var(--forge-cookie-consent-color-text-primary, var(--mp-color-text-primary));

@@ -1,6 +1,6 @@
 @use './forge-wysiwyg-block-controls-properties';
 
-@layer mp.content {
+@layer mp.content.molecules {
   .wysiwyg-block-controls {
     position: absolute;
     z-index: var(--mp-z-index-feature-editor);

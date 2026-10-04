@@ -1,6 +1,6 @@
 @use './forge-divider-properties';
 
-@layer mp.components {
+@layer mp.components.atoms {
   .forge-divider {
     display: block;
     flex-shrink: 0;

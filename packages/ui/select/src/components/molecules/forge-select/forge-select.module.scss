@@ -14,7 +14,7 @@
 
 @use './forge-select-properties';
 
-@layer mp.select {
+@layer mp.select.molecules {
   .forge-select {
     display: flex;
     flex-direction: column;

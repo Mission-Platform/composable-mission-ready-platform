@@ -21,7 +21,7 @@
 
 @use './forge-masonry-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-masonry {
     width: 100%;
     min-width: 0;

@@ -12,7 +12,7 @@
  * across the `sm`/`md`/`lg` scale, in the package-owned `mp.forms` cascade layer.
  */
 
-@layer mp.forms {
+@layer mp.forms.atoms {
   .forge-slider {
     --mp-slider-track-height: var(
       --forge-slider-checkable-size-md-track-height,

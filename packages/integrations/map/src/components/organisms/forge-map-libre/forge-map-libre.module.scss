@@ -4,10 +4,27 @@
  * The rules live in the package's own `mp.map` cascade layer so unlayered
  * application styles win over them.
  */
-@layer mp.map {
+/* stylelint-disable selector-pseudo-class-no-unknown */
+@layer mp.map.organisms {
   .forge-map-libre {
     position: relative;
     width: 100%;
     height: 100%;
+    overflow: hidden;
+
+    :global(.maplibregl-canvas-container) {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    :global(.maplibregl-canvas) {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
   }
 }

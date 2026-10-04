@@ -315,7 +315,8 @@ literal `$value` is inlined.
 A non-universal `@property` requires a computationally-independent
 `initial-value` (no `var()`, `light-dark()` or relative units), so the
 universal `*` syntax omits it. Values whose value is a `var()` reference (the
-typography fields) therefore register under `*` without an `initial-value`.
+typography fields) or relative length units (rem, em, vw, etc.) therefore register
+under `*` without an `initial-value`.
 
 #### Parameters
 
@@ -339,7 +340,7 @@ function buildScssVariables(
 ): string;
 ```
 
-No description provided.
+Builds standard SCSS $-variable declaration blocks grouped by token category.
 
 #### Parameters
 
@@ -430,6 +431,29 @@ Each field becomes a `typography-<variant>-<field>` token whose value is the
 | --------------- | --------- | ----------- |
 | typographyGroup | DtcgGroup |             |
 | prefix          |           |             |
+
+### isComputationallyIndependent
+
+**Kind:** function
+
+```typescript
+function isComputationallyIndependent(record: TokenRecord): boolean;
+```
+
+Checks whether a token value is computationally independent and valid as an
+`initial-value` for a typed CSS `@property` registration under the W3C CSS
+Properties and Values API Level 1 specification.
+
+Values referencing `var()`, `light-dark()`, `env()`, font-relative units
+(`rem`, `em`, etc.), viewport/container-relative units (`vw`, `vh`, `cqw`, etc.),
+or unitless `0` for `<length>` are not computationally independent and must
+omit the `initial-value` descriptor by falling back to the universal `'*'` syntax.
+
+#### Parameters
+
+| Name   | Type        | Description |
+| ------ | ----------- | ----------- |
+| record | TokenRecord |             |
 
 ### typographyEntries
 

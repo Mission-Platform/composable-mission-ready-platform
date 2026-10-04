@@ -11,7 +11,7 @@
 
 @use './forge-navbar-item-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-navbar-item-dropdown-host {
     display: inline-flex;
     position: relative;

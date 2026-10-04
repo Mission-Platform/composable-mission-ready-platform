@@ -15,7 +15,7 @@
 @use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
 @use './forge-table-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-table-wrapper {
     position: relative;
     width: fit-content;
@@ -24,6 +24,11 @@
     border: var(--forge-table-data-table-wrapper-border-width, var(--mp-data-table-wrapper-border-width)) solid
       var(--forge-table-data-table-wrapper-border, var(--mp-data-table-wrapper-border));
     border-radius: var(--forge-table-data-table-wrapper-radius, var(--mp-data-table-wrapper-radius));
+
+    @supports (content-visibility: auto) {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 300px;
+    }
   }
 
   .forge-table__loading {

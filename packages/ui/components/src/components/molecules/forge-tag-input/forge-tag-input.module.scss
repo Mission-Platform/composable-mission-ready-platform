@@ -1,6 +1,6 @@
 @use './forge-tag-input-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-tag-input {
     display: flex;
     flex-direction: column;

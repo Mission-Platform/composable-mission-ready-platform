@@ -1,7 +1,7 @@
 /* stylelint-disable declaration-block-single-line-max-declarations */
 @use './forge-kanban-board-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .forge-kanban-board {
     width: 100%;
     overflow-x: auto;

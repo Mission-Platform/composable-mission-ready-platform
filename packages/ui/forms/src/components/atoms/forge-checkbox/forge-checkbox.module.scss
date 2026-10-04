@@ -10,7 +10,7 @@
  * The rules live in the package-owned `mp.forms` cascade layer.
  */
 
-@layer mp.forms {
+@layer mp.forms.atoms {
   .forge-checkbox {
     $control-size: var(--forge-checkbox-checkable-control-size, var(--mp-checkable-control-size));
     $gap-inline: var(--forge-checkbox-checkable-gap-inline, var(--mp-checkable-gap-inline));

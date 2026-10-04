@@ -1,6 +1,6 @@
 @use './forge-drop-zone-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-drop-zone {
     display: flex;
     flex-direction: column;

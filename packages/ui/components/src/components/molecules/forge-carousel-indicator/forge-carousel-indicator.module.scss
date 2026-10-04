@@ -1,6 +1,6 @@
 @use './forge-carousel-indicator-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-carousel-indicator {
     display: flex;
     gap: var(

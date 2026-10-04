@@ -1,6 +1,6 @@
 @use './forge-wysiwyg-status-bar-properties';
 
-@layer mp.content {
+@layer mp.content.molecules {
   .wysiwyg-status-bar {
     display: flex;
     gap: var(--forge-wysiwyg-status-bar-editor-status-bar-gap, var(--mp-editor-status-bar-gap));

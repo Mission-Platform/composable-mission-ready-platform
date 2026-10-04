@@ -8,11 +8,9 @@
 @property --forge-qr-code-spacing-3 {
   syntax: '*';
   inherits: true;
-  initial-value: var(--mp-spacing-3);
 }
 
 @property --forge-qr-code-spacing-2 {
   syntax: '*';
   inherits: true;
-  initial-value: var(--mp-spacing-2);
 }

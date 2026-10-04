@@ -12,7 +12,7 @@
 
 @use './forge-virtual-table-properties';
 
-@layer mp.components {
+@layer mp.components.organisms {
   .virtual-table-demo-footer {
     display: flex;
     gap: var(--forge-virtual-table-data-virtual-table-footer-gap, var(--mp-data-virtual-table-footer-gap));

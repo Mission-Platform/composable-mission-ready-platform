@@ -33,7 +33,11 @@ export {
 } from './context';
 export {
   createForgeStyle,
+  createForgeComponentStyle,
   isMpElement,
+  type CamelToKebab,
+  type KebabToCamel,
+  type ForgePropertyBag,
   type MpChild,
   type CSSStyleProperties,
   type MpComponent,

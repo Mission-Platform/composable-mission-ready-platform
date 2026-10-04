@@ -1,6 +1,6 @@
 @use './forge-kbd-properties';
 
-@layer mp.components {
+@layer mp.components.atoms {
   .forge-kbd {
     display: inline-flex;
     align-items: center;

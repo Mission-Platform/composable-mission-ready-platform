@@ -1,6 +1,6 @@
 @use './forge-inline-edit-properties';
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-inline-edit {
     display: inline-flex;
     flex-direction: column;

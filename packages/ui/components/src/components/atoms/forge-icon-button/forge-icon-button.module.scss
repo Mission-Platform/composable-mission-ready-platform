@@ -9,7 +9,7 @@
 
 @use './forge-icon-button-properties';
 
-@layer mp.components {
+@layer mp.components.atoms {
   .forge-icon-button {
     position: relative;
     display: inline-flex;

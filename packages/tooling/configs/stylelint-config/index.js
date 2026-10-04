@@ -22,9 +22,9 @@ const config = {
       customSyntax: 'postcss-html',
       rules: {
         // v-bind() in Vue SFC CSS uses camelCase JS expressions — disable keyword casing for Vue files
-        'value-keyword-case': null, // eslint-disable-line unicorn/no-null -- stylelint rule API uses null to disable a rule
+        'value-keyword-case': null,
         // SCSS @use/@include are handled by scss/at-rule-no-unknown; disable the base rule for Vue SFCs
-        'at-rule-no-unknown': null, // eslint-disable-line unicorn/no-null -- stylelint rule API uses null to disable a rule
+        'at-rule-no-unknown': null,
       },
     },
   ],
@@ -43,7 +43,7 @@ const config = {
     'scss/no-duplicate-dollar-variables': true,
     'scss/dollar-variable-pattern': '^[a-z][a-z0-9-]*$',
     'import-notation': 'string',
-    'layer-name-pattern': null, // eslint-disable-line unicorn/no-null -- SCSS interpolation in layer names
+    'layer-name-pattern': null,
     'property-no-deprecated': [true, { ignoreProperties: ['clip'] }],
   },
 };

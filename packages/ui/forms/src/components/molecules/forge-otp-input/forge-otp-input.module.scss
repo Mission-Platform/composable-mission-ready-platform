@@ -10,7 +10,7 @@
  * The rules live in the package-owned `mp.forms` cascade layer.
  */
 
-@layer mp.forms {
+@layer mp.forms.molecules {
   .forge-otp-input {
     --mp-otp-cell-size: var(--forge-otp-input-input-otp-size-md-cell, var(--mp-input-otp-size-md-cell));
     --mp-otp-font-size: var(--forge-otp-input-input-otp-size-md-font-size, var(--mp-input-otp-size-md-font-size));

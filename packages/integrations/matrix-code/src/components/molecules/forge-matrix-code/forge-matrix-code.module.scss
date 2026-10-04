@@ -10,7 +10,7 @@
 
 @use './forge-matrix-code-properties';
 
-@layer mp.matrix-code {
+@layer mp.matrix-code.molecules {
   .forge-matrix-code {
     display: block;
     max-width: 100%;

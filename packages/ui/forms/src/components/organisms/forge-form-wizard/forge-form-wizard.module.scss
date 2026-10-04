@@ -6,7 +6,7 @@
  * The rules live in the package-owned `mp.forms` cascade layer.
  */
 
-@layer mp.forms {
+@layer mp.forms.organisms {
   .forge-form-wizard {
     display: flex;
     flex-direction: column;

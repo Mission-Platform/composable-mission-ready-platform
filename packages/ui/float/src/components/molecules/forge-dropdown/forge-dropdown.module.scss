@@ -29,7 +29,7 @@
   margin: var(--forge-dropdown-spacing-1, var(--mp-spacing-1));
 }
 
-@layer mp.components {
+@layer mp.components.molecules {
   .forge-dropdown {
     display: contents;
 
