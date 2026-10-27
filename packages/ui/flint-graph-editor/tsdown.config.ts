@@ -73,6 +73,7 @@ export default [
           forgeWebComponentsFramework(),
           forgeVueFramework(),
         ],
+        entryModule: componentsModule,
         componentsModule,
         name: 'MissionPlatformFlintGraphEditor',
         external: [

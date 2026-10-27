@@ -30,13 +30,21 @@ Read the `dependencies` and `peerDependencies` declared in the package.json
 located at `rootDirectory`. Used to keep a library's runtime dependencies out
 of its own bundle so consumers can dedupe and tree-shake them.
 */
-export function readPackageDependencyNames(rootDirectory: string): string[] {
+export function readPackageDependencyNames(
+  rootDirectory: string,
+  options?: { includeDevDependencies?: boolean },
+): string[] {
   try {
     const manifest = JSON.parse(fs.readFileSync(path.resolve(rootDirectory, 'package.json'), 'utf8')) as {
       dependencies?: Record<string, string>;
       peerDependencies?: Record<string, string>;
+      devDependencies?: Record<string, string>;
     };
-    return [...Object.keys(manifest.dependencies ?? {}), ...Object.keys(manifest.peerDependencies ?? {})];
+    return [
+      ...Object.keys(manifest.dependencies ?? {}),
+      ...Object.keys(manifest.peerDependencies ?? {}),
+      ...(options?.includeDevDependencies ? Object.keys(manifest.devDependencies ?? {}) : []),
+    ];
   } catch {
     return [];
   }
@@ -149,7 +157,7 @@ export interface TsdownLibraryOptions {
   */
   external?: readonly string[];
   /**
-  Emit declaration files. Defaults to non-project TypeScript 7 generation so
+  Emit declaration files. Defaults to non-project TypeScript generation so
   declarations are written through tsdown's configured `outDir`.
   Set `false` when a custom dts plugin (e.g. forge hook/component dts) owns
   declaration emit.
@@ -195,6 +203,13 @@ export interface TsdownLibraryOptions {
   Defaults to `true` when `unbundle` is enabled (library mode).
   */
   autoExternalDeps?: boolean;
+  /**
+  Treat the package's own `devDependencies` as external in addition to dependencies.
+  Useful for compiler and tooling packages where devDependencies (e.g. `vite`) export
+  types that should not be bundled by rolldown-plugin-dts.
+  Defaults to `false`.
+  */
+  autoExternalDevDeps?: boolean;
   /**
   Working directory for tsdown (defaults to `rootDir`).
   */
@@ -454,22 +469,26 @@ function buildStagedDtsOptions(
   outDirectory: string,
   outputRoot: string,
 ): DtsOptions {
-  if (resolved.vue !== true && resolved.generator === 'tsgo') {
+  if (resolved.tsc?.vue !== true && resolved.generator === 'tsgo') {
     return { ...resolved, generator: 'oxc' };
   }
 
   const stagedDeclarationDirectory = resolveTsdownOutputDirectory(rootDirectory, outDirectory, outputRoot);
   const existingCompilerOptions = toOptionObject(resolved.compilerOptions);
+  const existingTscOptions = resolved.tsc ?? {};
 
   return {
     ...resolved,
     // Never reuse in-memory or on-disk declaration caches from a previous final
     // `dist` when emitting into an isolated stage.
-    newContext: resolved.newContext ?? true,
-    // Solution-builder incremental state from the package tsconfig still points
-    // at the live `dist` tree; disable it for staged emits and rely on the
-    // stage-local tsconfig/tsbuildinfo instead.
-    incremental: false,
+    tsc: {
+      ...existingTscOptions,
+      newContext: existingTscOptions.newContext ?? true,
+      // Solution-builder incremental state from the package tsconfig still points
+      // at the live `dist` tree; disable it for staged emits and rely on the
+      // stage-local tsconfig/tsbuildinfo instead.
+      incremental: false,
+    },
     compilerOptions: {
       ...existingCompilerOptions,
       declarationDir: stagedDeclarationDirectory,
@@ -483,7 +502,14 @@ function buildStagedDtsOptions(
 Resolves the base DtsOptions object from boolean or DtsOptions value.
 */
 function toDtsOptions(dts: true | DtsOptions): DtsOptions {
-  return dts === true ? { build: false, generator: 'tsgo' } : { build: false, ...dts };
+  const compilerOptions = {
+    isolatedDeclarations: true,
+    ...(dts === true ? {} : toOptionObject(dts.compilerOptions)),
+  };
+
+  return dts === true
+    ? { generator: 'oxc', compilerOptions, tsc: { build: false } }
+    : { ...dts, generator: dts.generator ?? 'oxc', compilerOptions, tsc: { build: false, ...dts.tsc } };
 }
 
 /**
@@ -743,6 +769,7 @@ export function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig {
     outputRoot = process.env.FORGE_BUILD_STAGE_ROOT,
     clean = true,
     autoExternalDeps: autoExternalDependencies = unbundle,
+    autoExternalDevDeps: autoExternalDevDependencies = false,
     cwd = rootDir,
     tsconfig,
     tsconfigPathsRoot,
@@ -764,7 +791,9 @@ export function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig {
   const externalNames = [
     ...DEFAULT_LIBRARY_EXTERNALS,
     ...external,
-    ...(autoExternalDependencies ? readPackageDependencyNames(rootDir) : []),
+    ...(autoExternalDependencies
+      ? readPackageDependencyNames(rootDir, { includeDevDependencies: autoExternalDevDependencies })
+      : []),
   ];
 
   const base: UserConfig = {
@@ -807,7 +836,7 @@ Like {@link defineTsdownLibrary}, but wires `unplugin-vue` and Vue-aware dts
 for packages that ship `.vue` SFCs (`i18n`, `router`, …).
 */
 export function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig {
-  const { dts = { vue: true, build: true }, overrides, ...rest } = options;
+  const { dts = { generator: 'tsc', tsc: { vue: true, build: true } }, overrides, ...rest } = options;
 
   return defineTsdownLibrary({
     ...rest,
