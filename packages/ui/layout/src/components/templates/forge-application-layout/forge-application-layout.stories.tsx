@@ -1,8 +1,6 @@
-import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
-
 import { ForgeApplicationLayout } from '@mission-platform/layouts';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
 
 /**
  * `ForgeApplicationLayout` stacks a colour-coded status banner, a header (navbar),

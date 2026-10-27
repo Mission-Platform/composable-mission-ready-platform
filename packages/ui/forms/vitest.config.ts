@@ -24,7 +24,7 @@ export default defineVitestConfig({
       // CSS-Module handling — rather than externalised and loaded as raw `.tsx` by Node.
       server: {
         deps: {
-          inline: ['@mission-platform/icons'],
+          inline: ['@mission-platform/icons', '@mission-platform/components'],
         },
       },
       // The styled components consume their CSS Modules' class maps; render the

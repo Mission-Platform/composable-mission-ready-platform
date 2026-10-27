@@ -12,7 +12,6 @@
 // approach reuses the exact, proven Vue logic.
 
 import { createField, widgetHasOptions } from '@mission-platform/forms-core';
-
 import type { BuilderField, FormFieldType } from '@mission-platform/forms-core';
 
 /** Where a field should be inserted on the canvas. */
@@ -34,7 +33,6 @@ interface Located {
 
 /** Deep-clone the step matrix (plain, JSON-serialisable field data only). */
 function cloneSteps(steps: BuilderField[][]): BuilderField[][] {
-  // eslint-disable-next-line unicorn/prefer-structured-clone
   return JSON.parse(JSON.stringify(steps)) as BuilderField[][];
 }
 
@@ -81,7 +79,6 @@ function cloneField(field: BuilderField, usedKeys: Iterable<string>): BuilderFie
   const fresh = createField({ type: field.type, key: field.key, label: field.label, usedKeys });
   const { children, ...rest } = field;
   const clone: BuilderField = {
-    // eslint-disable-next-line unicorn/prefer-structured-clone
     ...(JSON.parse(JSON.stringify(rest)) as BuilderField),
     id: fresh.id,
     key: fresh.key,

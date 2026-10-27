@@ -1,8 +1,7 @@
 import { ForgeContainer } from '@mission-platform/layouts';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 import styles from './forge-container.module.scss';
-
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**
  * `ForgeContainer` constrains and centres page/section content on the inline axis

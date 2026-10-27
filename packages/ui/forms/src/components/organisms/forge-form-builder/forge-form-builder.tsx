@@ -355,7 +355,7 @@ export function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): M
   } = properties;
 
   const [steps, setSteps] = useState<BuilderField[][]>(seedSteps(modelValue));
-  // eslint-disable-next-line unicorn/no-useless-undefined -- the neutral `useState` requires an explicit initial value
+
   const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
   const [activeTab, setActiveTab] = useState('editor');
   const [stepTitles, setStepTitles] = useState<string[]>(schemaStepTitles(modelValue));
@@ -375,17 +375,11 @@ export function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): M
   // The live drop-placement ghost: the container + index a drop would land at
   // while a drag is hovering the canvas (cleared on drop / drag-end). Rendered as
   // a placeholder row so the author sees where the field will be inserted.
-  const [dropIndicator, setDropIndicator] = useState<InsertTarget | undefined>(
-    // eslint-disable-next-line unicorn/no-useless-undefined -- the neutral `useState` requires an explicit initial value
-    undefined,
-  );
+  const [dropIndicator, setDropIndicator] = useState<InsertTarget | undefined>(undefined);
 
   // The field currently being dragged (a canvas move) — used to dim its source
   // row while it is in flight (drag movement styling).
-  const [draggingId, setDraggingId] = useState<string | undefined>(
-    // eslint-disable-next-line unicorn/no-useless-undefined -- the neutral `useState` requires an explicit initial value
-    undefined,
-  );
+  const [draggingId, setDraggingId] = useState<string | undefined>(undefined);
 
   /** Build the schema definition from the given working state. */
   const buildDefinition = (
@@ -1424,7 +1418,7 @@ export function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): M
         <div slot="end">{renderInspector()}</div>
         <ForgeTabs
           modelValue={activeTab}
-          panel={(scope) => renderPanel(scope.tab.id)}
+          panel={(scope: { tab: TabItem }) => renderPanel(scope.tab.id)}
           tabs={tabs}
           variant="pill"
           onUpdateModelValue={(next: string) => setActiveTab(next)}

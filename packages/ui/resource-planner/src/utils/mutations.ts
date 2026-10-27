@@ -1,5 +1,6 @@
 import { moveEventPatch, resizeEventPatch } from "@mission-platform/scheduler";
 import { fmtLike, parseDT } from "@mission-platform/vcard";
+import type { VEvent } from "@mission-platform/vcard";
 
 import type {
   PlannerAssignment,
@@ -7,7 +8,6 @@ import type {
   PlannerEditOptions,
   PlannerRangeSelection,
 } from "../types";
-import type { VEvent } from "@mission-platform/vcard";
 
 function clampDelta(
   event: VEvent,

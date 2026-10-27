@@ -1,9 +1,9 @@
 import { useArgs } from 'storybook/preview-api';
 
 import { ForgeSchemaForm } from '@mission-platform/forms';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 import type { SchemaFormDefinition } from './forge-schema-form';
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**
  * `ForgeSchemaForm` is the write-once `ForgeSchemaForm` in `@mission-platform/forms`.

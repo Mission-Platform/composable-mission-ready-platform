@@ -100,9 +100,9 @@ export function ForgeVerticalLayout(properties: Readonly<VerticalLayoutPropertie
 
   const [isInline, setIsInline] = useState(false);
   // The dragged track widths in `rem`, or `undefined` before the first resize.
-  // eslint-disable-next-line unicorn/no-useless-undefined -- the neutral `useState` requires an explicit initial value
+
   const [startWidthOverride, setStartWidthOverride] = useState<string | undefined>(undefined);
-  // eslint-disable-next-line unicorn/no-useless-undefined -- the neutral `useState` requires an explicit initial value
+
   const [endWidthOverride, setEndWidthOverride] = useState<string | undefined>(undefined);
 
   useEffect(() => {

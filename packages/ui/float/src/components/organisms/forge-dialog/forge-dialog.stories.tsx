@@ -1,10 +1,10 @@
-import { ForgeButton, ForgeStack } from '@mission-platform/components';
-import { ForgeTypography } from '@mission-platform/typography';
 import { useArgs } from 'storybook/preview-api';
 
-import { ForgeDialog } from './forge-dialog';
-
+import { ForgeButton, ForgeStack } from '@mission-platform/components';
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+import { ForgeTypography } from '@mission-platform/typography';
+
+import { ForgeDialog } from './forge-dialog';
 
 /**
  * `ForgeDialog` is the write-once component of `@mission-platform/float`.

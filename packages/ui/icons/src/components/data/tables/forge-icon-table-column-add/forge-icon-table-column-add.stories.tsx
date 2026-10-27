@@ -1,5 +1,4 @@
 import { ForgeIconTableColumnAdd } from '@mission-platform/icons';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**

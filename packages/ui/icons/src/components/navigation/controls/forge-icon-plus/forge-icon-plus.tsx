@@ -1,8 +1,8 @@
+import type { MpElement } from '@mission-platform/forge-jsx';
+
 import { useIconHref } from '../../../../sprite/provider';
 
 import styles from './forge-icon-plus.module.scss';
-
-import type { MpElement } from '@mission-platform/forge-jsx';
 
 export interface IconPlusProperties {
   /** Width and height — named size token ('2xs' → '2xl') or pixel number. */

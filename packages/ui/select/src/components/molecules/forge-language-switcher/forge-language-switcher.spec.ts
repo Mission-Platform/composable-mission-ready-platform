@@ -1,5 +1,6 @@
-import { isMpElement, type MpElement } from '@mission-platform/forge-jsx';
 import { describe, expect, it, vi } from 'vitest';
+
+import { isMpElement, type MpElement } from '@mission-platform/forge-jsx';
 
 import { ForgeLanguageSwitcher } from './forge-language-switcher';
 

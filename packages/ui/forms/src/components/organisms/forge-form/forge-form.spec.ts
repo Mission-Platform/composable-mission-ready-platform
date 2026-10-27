@@ -1,10 +1,11 @@
-import { toReactComponent } from '@mission-platform/forge-adapters/react';
-import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createApp, createSSRApp, h as vueH, nextTick } from 'vue';
 import { renderToString } from 'vue/server-renderer';
+
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 
 import {
   defaultFormContext,
@@ -328,7 +329,6 @@ describe('Modular schema sub-validators', () => {
       const validErrors = await validateWithStandardSchema({ email: 'test@example.com' }, mockSchema);
       expect(validErrors).toEqual({});
 
-      // eslint-disable-next-line unicorn/no-null
       const nullErrors = await validateWithStandardSchema({}, null);
       expect(nullErrors).toEqual({});
 
@@ -449,7 +449,6 @@ describe('Modular schema sub-validators', () => {
       const errors = await validateWithYup({}, cleanSchema);
       expect(errors).toEqual({});
 
-      // eslint-disable-next-line unicorn/no-null
       const invalidSchema = await validateWithYup({}, null);
       expect(invalidSchema).toEqual({});
     });
