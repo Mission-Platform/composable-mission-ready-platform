@@ -1,9 +1,10 @@
-import { h, type MpComponent, Teleport } from '@mission-platform/forge-jsx/runtime';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { createSSRApp } from 'vue';
 import { renderToString } from 'vue/server-renderer';
+
+import { h, type MpComponent, Teleport } from '@mission-platform/forge-jsx/runtime';
 
 import { Teleport as ReactTeleport, toReactComponent } from './adapters/react';
 import { toVueComponent } from './adapters/vue';

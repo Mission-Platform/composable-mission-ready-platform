@@ -1,9 +1,10 @@
-import { h, type MpComponent, Transition, TransitionGroup } from '@mission-platform/forge-jsx/runtime';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { createSSRApp } from 'vue';
 import { renderToString } from 'vue/server-renderer';
+
+import { h, type MpComponent, Transition, TransitionGroup } from '@mission-platform/forge-jsx/runtime';
 
 import {
   toReactComponent,

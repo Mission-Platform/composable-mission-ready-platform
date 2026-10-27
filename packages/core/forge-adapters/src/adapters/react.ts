@@ -8,6 +8,23 @@
  * generated components can be composed from ordinary React code.
  */
 import {
+  cloneElement,
+  createElement,
+  Fragment as ReactFragment,
+  Suspense as ReactSuspense,
+  type FunctionComponent,
+  isValidElement,
+  type Key,
+  type ReactElement,
+  type ReactNode,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
+import { createPortal } from 'react-dom';
+
+import {
   classNames,
   Dynamic as DynamicMarker,
   Fragment,
@@ -35,22 +52,6 @@ import {
   resolveSlotMarkers,
   Suspense as SuspenseMarker,
 } from '@mission-platform/forge-jsx/runtime';
-import {
-  cloneElement,
-  createElement,
-  Fragment as ReactFragment,
-  Suspense as ReactSuspense,
-  type FunctionComponent,
-  isValidElement,
-  type Key,
-  type ReactElement,
-  type ReactNode,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
-import { createPortal } from 'react-dom';
 
 /** Neutral prop names that differ in React's DOM prop vocabulary. */
 const REACT_PROPERTY_ALIASES: Readonly<Record<string, string>> = {
@@ -224,7 +225,7 @@ export function toReactComponent<P extends MpPropertyBag>(
       // `null` as nothing, so it is forwarded verbatim rather than fed into
       // `renderToReact` (which expects a real element).
       const rendered = component(properties) as MpElement | null;
-      // eslint-disable-next-line unicorn/no-null
+
       return rendered === null ? null : renderToReact(rendered);
     } finally {
       popSlotScope();

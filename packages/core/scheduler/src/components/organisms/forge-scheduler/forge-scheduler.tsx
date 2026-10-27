@@ -466,7 +466,7 @@ export function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpEle
   const [events, setEvents] = useState<VEvent[]>(modelValue);
   const [view, setView] = useState<SchedulerView>(defaultView);
   const [anchor, setAnchor] = useState<Date>(startOfDay(new Date()));
-  // eslint-disable-next-line unicorn/no-useless-undefined -- the neutral `useState` requires an explicit initial value
+
   const [draft, setDraft] = useState<EventDraft | undefined>(undefined);
 
   const commitEvents = (next: VEvent[]): void => {

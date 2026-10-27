@@ -1,10 +1,11 @@
-import { jsx, jsxs } from '@mission-platform/forge-jsx/jsx-runtime';
-import { Fragment, h, HtmlContent, isMpElement, type MpComponent, Slot } from '@mission-platform/forge-jsx/runtime';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { createSSRApp } from 'vue';
 import { renderToString } from 'vue/server-renderer';
+
+import { jsx, jsxs } from '@mission-platform/forge-jsx/jsx-runtime';
+import { Fragment, h, HtmlContent, isMpElement, type MpComponent, Slot } from '@mission-platform/forge-jsx/runtime';
 
 import { toReactComponent } from './adapters/react';
 import { toVueComponent } from './adapters/vue';
@@ -45,7 +46,7 @@ const SlotPasser: MpComponent = () =>
 // `<MapLayer>`): React renders `null` as nothing and a Vue functional component
 // returning `null` renders nothing. Typed `MpElement | null`, so it is cast to
 // the `MpComponent` shape the adapters accept.
-// eslint-disable-next-line unicorn/no-null
+
 const Blank = (() => null) as MpComponent;
 // The equivalent authored as an empty fragment (`<></>` → `h(Fragment)`): a
 // fragment with no children renders nothing on both frameworks.

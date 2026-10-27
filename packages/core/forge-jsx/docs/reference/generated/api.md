@@ -209,7 +209,7 @@ A dependency list controlling when an effect / memo re-runs.
 **Kind:** component
 
 ```typescript
-export type MpEffectCallback = MpEffectCleanup | undefined;
+export type MpEffectCallback = () => MpEffectCleanup | void;
 ```
 
 The effect callback run by {@link useEffect}.
@@ -441,7 +441,7 @@ reading the current component's slot scope.
 **Kind:** component
 
 ```typescript
-export type MpRenderProperty<S = MpPropertyBag> = (scope: S) => MpChild | readonly MpChild[];
+export type MpRenderProperty<S = MpPropertyBag, R = MpChild | readonly MpChild[]> = (scope: S) => R;
 ```
 
 A **render-prop / scoped-slot** function: given the slot's scope it returns
@@ -649,26 +649,150 @@ export type CamelToKebab<S extends string> = S extends `$
 
 Convert a camelCase string type to kebab-case.
 
+### createAvatarContainerStyle
+
+**Kind:** function
+
+```typescript
+function createAvatarContainerStyle(): Record<string, string>;
+```
+
+No description provided.
+
+### createAvatarImageImgStyle
+
+**Kind:** function
+
+```typescript
+function createAvatarImageImgStyle(): Record<string, string>;
+```
+
+No description provided.
+
+### createAvatarInlineStyle
+
+**Kind:** function
+
+```typescript
+function createAvatarInlineStyle(
+  size: string = 'md',
+  shape: string = 'circle',
+  src?: string,
+  variant: string = 'primary',
+  color?: string,
+): Record<string, string>;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name    | Type   | Description |
+| ------- | ------ | ----------- |
+| size    | string |             |
+| shape   | string |             |
+| src     | string |             |
+| variant | string |             |
+| color   | string |             |
+
+### createAvatarStatusInlineStyle
+
+**Kind:** function
+
+```typescript
+function createAvatarStatusInlineStyle(size: string = 'md', status?: string): Record<string, string> | undefined;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name   | Type   | Description |
+| ------ | ------ | ----------- |
+| size   | string |             |
+| status | string |             |
+
+### createBackgroundVideoInlineStyle
+
+**Kind:** function
+
+```typescript
+function createBackgroundVideoInlineStyle(minHeight: string = '24rem'): Record<string, string>;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name      | Type   | Description |
+| --------- | ------ | ----------- |
+| minHeight | string |             |
+
+### createCodeScannerStyle
+
+**Kind:** function
+
+```typescript
+function createCodeScannerStyle(): Record<string, string>;
+```
+
+No description provided.
+
+### createContainerInlineStyle
+
+**Kind:** function
+
+```typescript
+function createContainerInlineStyle(
+  variant: string = 'responsive',
+  maxWidth: string = 'lg',
+  gutter: string = 'md',
+  center: boolean = true,
+): Record<string, string>;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name     | Type    | Description |
+| -------- | ------- | ----------- |
+| variant  | string  |             |
+| maxWidth | string  |             |
+| gutter   | string  |             |
+| center   | boolean |             |
+
+### createCoverObjectFitStyle
+
+**Kind:** function
+
+```typescript
+function createCoverObjectFitStyle(): Record<string, string>;
+```
+
+No description provided.
+
 ### createForgeComponentStyle
 
 **Kind:** function
 
 ```typescript
-function createForgeComponentStyle(prefix: string, properties?: T): Record<string, string> | undefined;
+function createForgeComponentStyle(
+  prefix: string,
+  properties?: T,
+  style?: Record<string, string>,
+): Record<string, string> | undefined;
 ```
 
-Build a component-scoped CSS custom-property style map from a camelCase or kebab-case property bag.
-
-Automatically converts camelCase keys into kebab-case, ensures the component namespace
-prefix `--forge-<prefix>-` is applied, and omits undefined entries so CSS token fallback
-chains remain active. Returns `undefined` when no defined overrides are present.
+No description provided.
 
 #### Parameters
 
-| Name       | Type   | Description |
-| ---------- | ------ | ----------- |
-| prefix     | string |             |
-| properties | T      |             |
+| Name       | Type                   | Description |
+| ---------- | ---------------------- | ----------- |
+| prefix     | string                 |             |
+| properties | T                      |             |
+| style      | Record<string, string> |             |
 
 ### createForgeStyle
 
@@ -689,6 +813,268 @@ when no overrides are present.
 | Name  | Type | Description |
 | ----- | ---- | ----------- |
 | style | T    |             |
+
+### createGaugeInlineMath
+
+**Kind:** function
+
+```typescript
+function createGaugeInlineMath(
+  value: number = 0,
+  min: number = 0,
+  max: number = 100,
+): {
+  clampedValue: number;
+  percentage: number;
+  displayValue: string;
+  dashOffset: number;
+};
+```
+
+No description provided.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | number |             |
+| min   | number |             |
+| max   | number |             |
+
+### createGridLayoutInlineStyle
+
+**Kind:** function
+
+```typescript
+function createGridLayoutInlineStyle(rows: number = 1, columns: number = 1, gap: string = 'md'): Record<string, string>;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name    | Type   | Description |
+| ------- | ------ | ----------- |
+| rows    | number |             |
+| columns | number |             |
+| gap     | string |             |
+
+### createHighlightStyle
+
+**Kind:** function
+
+```typescript
+function createHighlightStyle(left: string = '0%', width: string = '100%'): Record<string, string>;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| left  | string |             |
+| width | string |             |
+
+### createLeftPositionStyle
+
+**Kind:** function
+
+```typescript
+function createLeftPositionStyle(left: string = '0%'): Record<string, string>;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| left | string |             |
+
+### createObjectFitStyle
+
+**Kind:** function
+
+```typescript
+function createObjectFitStyle(fit: string = 'cover'): Record<string, string>;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| fit  | string |             |
+
+### createPreviewTextStyle
+
+**Kind:** function
+
+```typescript
+function createPreviewTextStyle(): Record<string, string>;
+```
+
+No description provided.
+
+### createProgressBarPercent
+
+**Kind:** function
+
+```typescript
+function createProgressBarPercent(
+  value: number = 0,
+  max: number = 100,
+  indeterminate: boolean = false,
+): { percent: number; percentLabel: string };
+```
+
+No description provided.
+
+#### Parameters
+
+| Name          | Type    | Description |
+| ------------- | ------- | ----------- |
+| value         | number  |             |
+| max           | number  |             |
+| indeterminate | boolean |             |
+
+### createRangeInputMath
+
+**Kind:** function
+
+```typescript
+function createRangeInputMath(
+  modelValue: [number, number] = [0, 100],
+  min: number = 0,
+  max: number = 100,
+): {
+  minPercent: number;
+  maxPercent: number;
+  highlightLeft: string;
+  highlightWidth: string;
+  minLeft: string;
+  maxLeft: string;
+};
+```
+
+No description provided.
+
+#### Parameters
+
+| Name       | Type             | Description |
+| ---------- | ---------------- | ----------- |
+| modelValue | [number, number] |             |
+| min        | number           |             |
+| max        | number           |             |
+
+### createResponsiveImageInlineStyle
+
+**Kind:** function
+
+```typescript
+function createResponsiveImageInlineStyle(aspectRatio?: string): Record<string, string> | undefined;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name        | Type   | Description |
+| ----------- | ------ | ----------- |
+| aspectRatio | string |             |
+
+### createResponsiveVideoInlineStyle
+
+**Kind:** function
+
+```typescript
+function createResponsiveVideoInlineStyle(
+  aspectRatio: string = '16 / 9',
+  fit: string = 'contain',
+): Record<string, string>;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name        | Type   | Description |
+| ----------- | ------ | ----------- |
+| aspectRatio | string |             |
+| fit         | string |             |
+
+### createSkeletonInlineStyle
+
+**Kind:** function
+
+```typescript
+function createSkeletonInlineStyle(width?: string, height?: string): Record<string, string>;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name   | Type   | Description |
+| ------ | ------ | ----------- |
+| width  | string |             |
+| height | string |             |
+
+### createSliderMath
+
+**Kind:** function
+
+```typescript
+function createSliderMath(
+  value: number = 0,
+  min: number = 0,
+  max: number = 100,
+): { percent: number; fillWidth: string; thumbLeft: string };
+```
+
+No description provided.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | number |             |
+| min   | number |             |
+| max   | number |             |
+
+### createVerticalLayoutInlineStyle
+
+**Kind:** function
+
+```typescript
+function createVerticalLayoutInlineStyle(gap: string = 'var(--mp-spacing-4)'): Record<string, string>;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| gap  | string |             |
+
+### createWidthStyle
+
+**Kind:** function
+
+```typescript
+function createWidthStyle(width: string = '0%'): Record<string, string>;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| width | string |             |
 
 ### CSSStyleProperties
 
@@ -869,6 +1255,814 @@ export interface MpSuspenseProperties
 ```
 
 Props carried by the framework-neutral Suspense marker.
+
+### renderAccordionItems
+
+**Kind:** function
+
+```typescript
+function renderAccordionItems(
+  items: readonly any[] = [],
+  _exclusive: boolean = true,
+  defaultOpen: readonly string[] = [],
+  _properties?: any,
+): any;
+```
+
+Build a component-scoped CSS custom-property style map from a camelCase or kebab-case property bag.
+
+Automatically converts camelCase keys into kebab-case, ensures the component namespace
+prefix `--forge-<prefix>-` is applied, and omits undefined entries so CSS token fallback
+chains remain active. Returns `undefined` when no defined overrides are present.
+
+#### Parameters
+
+| Name        | Type              | Description |
+| ----------- | ----------------- | ----------- |
+| items       | readonly any[]    |             |
+| _exclusive  | boolean           |             |
+| defaultOpen | readonly string[] |             |
+| _properties | any               |             |
+
+### renderActivityFeedItems
+
+**Kind:** function
+
+```typescript
+function renderActivityFeedItems(items: readonly any[] = [], maxItems?: number, onItemClick?: (item: any) => void): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name        | Type                | Description |
+| ----------- | ------------------- | ----------- |
+| items       | readonly any[]      |             |
+| maxItems    | number              |             |
+| onItemClick | (item: any) => void |             |
+
+### renderAssetBrowserGrid
+
+**Kind:** function
+
+```typescript
+function renderAssetBrowserGrid(
+  assets: readonly any[] = [],
+  selected: readonly string[] = [],
+  onSelect?: (asset: any) => void,
+): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name     | Type                 | Description |
+| -------- | -------------------- | ----------- |
+| assets   | readonly any[]       |             |
+| selected | readonly string[]    |             |
+| onSelect | (asset: any) => void |             |
+
+### renderBarcodeSvg
+
+**Kind:** function
+
+```typescript
+function renderBarcodeSvg(
+  value: string = '',
+  symbology: string = 'code128',
+  color: string = '#000000',
+  background: string = '#ffffff',
+  displayValue: boolean = false,
+  ariaLabel?: string,
+  onError?: (err: Error) => void,
+  showActions?: any,
+): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name         | Type                 | Description |
+| ------------ | -------------------- | ----------- |
+| value        | string               |             |
+| symbology    | string               |             |
+| color        | string               |             |
+| background   | string               |             |
+| displayValue | boolean              |             |
+| ariaLabel    | string               |             |
+| onError      | (err: Error) => void |             |
+| showActions  | any                  |             |
+
+### renderBreadcrumbItems
+
+**Kind:** function
+
+```typescript
+function renderBreadcrumbItems(items: readonly any[] = [], separator: string = '/'): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name      | Type           | Description |
+| --------- | -------------- | ----------- |
+| items     | readonly any[] |             |
+| separator | string         |             |
+
+### renderCarouselIndicatorItems
+
+**Kind:** function
+
+```typescript
+function renderCarouselIndicatorItems(
+  total: number = 0,
+  current: number = 0,
+  clickable: boolean = true,
+  variant: string = 'dots',
+  onSelect?: (index: number) => void,
+): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name      | Type                    | Description |
+| --------- | ----------------------- | ----------- |
+| total     | number                  |             |
+| current   | number                  |             |
+| clickable | boolean                 |             |
+| variant   | string                  |             |
+| onSelect  | (index: number) => void |             |
+
+### renderCarouselSlides
+
+**Kind:** function
+
+```typescript
+function renderCarouselSlides(
+  slides: readonly any[] = [],
+  current: number = 0,
+  _orientation: string = 'horizontal',
+  slideWidth: number = 100,
+): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name         | Type           | Description |
+| ------------ | -------------- | ----------- |
+| slides       | readonly any[] |             |
+| current      | number         |             |
+| _orientation | string         |             |
+| slideWidth   | number         |             |
+
+### renderCatalogIcon
+
+**Kind:** function
+
+```typescript
+function renderCatalogIcon(name: string, size: number = 20, color: string = 'currentColor'): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| name  | string |             |
+| size  | number |             |
+| color | string |             |
+
+### renderCodeBlockLineNumbers
+
+**Kind:** function
+
+```typescript
+function renderCodeBlockLineNumbers(code: string = ''): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| code | string |             |
+
+### renderCommandPaletteGroups
+
+**Kind:** function
+
+```typescript
+function renderCommandPaletteGroups(
+  commands: readonly any[] = [],
+  _groups: readonly string[] = [],
+  activeIndex: number = 0,
+  onSelect?: (command: any) => void,
+): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name        | Type                   | Description |
+| ----------- | ---------------------- | ----------- |
+| commands    | readonly any[]         |             |
+| _groups     | readonly string[]      |             |
+| activeIndex | number                 |             |
+| onSelect    | (command: any) => void |             |
+
+### renderCommentTree
+
+**Kind:** function
+
+```typescript
+function renderCommentTree(
+  comments: readonly any[] = [],
+  onReply?: (comment: any) => void,
+  onResolve?: (comment: any) => void,
+): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name      | Type                   | Description |
+| --------- | ---------------------- | ----------- |
+| comments  | readonly any[]         |             |
+| onReply   | (comment: any) => void |             |
+| onResolve | (comment: any) => void |             |
+
+### renderComparisonTableBody
+
+**Kind:** function
+
+```typescript
+function renderComparisonTableBody(items: readonly any[] = [], features: readonly any[] = []): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name     | Type           | Description |
+| -------- | -------------- | ----------- |
+| items    | readonly any[] |             |
+| features | readonly any[] |             |
+
+### renderComparisonTableHeaders
+
+**Kind:** function
+
+```typescript
+function renderComparisonTableHeaders(items: readonly any[] = []): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name  | Type           | Description |
+| ----- | -------------- | ----------- |
+| items | readonly any[] |             |
+
+### renderCtaBannerActions
+
+**Kind:** function
+
+```typescript
+function renderCtaBannerActions(actions: readonly any[] = []): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name    | Type           | Description |
+| ------- | -------------- | ----------- |
+| actions | readonly any[] |             |
+
+### renderDataCardMetrics
+
+**Kind:** function
+
+```typescript
+function renderDataCardMetrics(metrics: readonly any[] = []): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name    | Type           | Description |
+| ------- | -------------- | ----------- |
+| metrics | readonly any[] |             |
+
+### renderDropdownItems
+
+**Kind:** function
+
+```typescript
+function renderDropdownItems(items: readonly any[] = [], onSelect?: (item: any) => void): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name     | Type                | Description |
+| -------- | ------------------- | ----------- |
+| items    | readonly any[]      |             |
+| onSelect | (item: any) => void |             |
+
+### renderImageSources
+
+**Kind:** function
+
+```typescript
+function renderImageSources(sources?: readonly any[]): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name    | Type           | Description |
+| ------- | -------------- | ----------- |
+| sources | readonly any[] |             |
+
+### renderMarketingHeaderActions
+
+**Kind:** function
+
+```typescript
+function renderMarketingHeaderActions(actions: readonly any[] = []): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name    | Type           | Description |
+| ------- | -------------- | ----------- |
+| actions | readonly any[] |             |
+
+### renderNavbarItems
+
+**Kind:** function
+
+```typescript
+function renderNavbarItems(items: readonly any[] = []): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name  | Type           | Description |
+| ----- | -------------- | ----------- |
+| items | readonly any[] |             |
+
+### renderNotificationPanelItems
+
+**Kind:** function
+
+```typescript
+function renderNotificationPanelItems(
+  notifications: readonly any[] = [],
+  onDismiss?: (id: string) => void,
+  _onRead?: (id: string) => void,
+  onActionClick?: (item: any) => void,
+): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name          | Type                 | Description |
+| ------------- | -------------------- | ----------- |
+| notifications | readonly any[]       |             |
+| onDismiss     | (id: string) => void |             |
+| _onRead       | (id: string) => void |             |
+| onActionClick | (item: any) => void  |             |
+
+### renderPaginationControls
+
+**Kind:** function
+
+```typescript
+function renderPaginationControls(
+  currentPage: number = 1,
+  totalPages: number = 1,
+  maxVisiblePages: number = 7,
+  showEdges: boolean = false,
+  onPageChange?: (page: number) => void,
+): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name            | Type                   | Description |
+| --------------- | ---------------------- | ----------- |
+| currentPage     | number                 |             |
+| totalPages      | number                 |             |
+| maxVisiblePages | number                 |             |
+| showEdges       | boolean                |             |
+| onPageChange    | (page: number) => void |             |
+
+### renderRatingStars
+
+**Kind:** function
+
+```typescript
+function renderRatingStars(
+  max: number = 5,
+  modelValue: number = 0,
+  disabled: boolean = false,
+  isReadonly: boolean = false,
+  onUpdateModelValue?: (val: number) => void,
+  onChange?: (val: number) => void,
+): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name               | Type                  | Description |
+| ------------------ | --------------------- | ----------- |
+| max                | number                |             |
+| modelValue         | number                |             |
+| disabled           | boolean               |             |
+| isReadonly         | boolean               |             |
+| onUpdateModelValue | (val: number) => void |             |
+| onChange           | (val: number) => void |             |
+
+### renderResourcePlannerRows
+
+**Kind:** function
+
+```typescript
+function renderResourcePlannerRows(
+  resources: readonly any[] = [],
+  segments: readonly any[] = [],
+  _assignments: readonly any[] = [],
+  _availability: readonly any[] = [],
+  _onEventClick?: (assignment: any) => void,
+): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name          | Type                      | Description |
+| ------------- | ------------------------- | ----------- |
+| resources     | readonly any[]            |             |
+| segments      | readonly any[]            |             |
+| _assignments  | readonly any[]            |             |
+| _availability | readonly any[]            |             |
+| _onEventClick | (assignment: any) => void |             |
+
+### renderSegmentControlOptions
+
+**Kind:** function
+
+```typescript
+function renderSegmentControlOptions(
+  options: readonly any[] = [],
+  modelValue?: string,
+  onSelect?: (value: string) => void,
+): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name       | Type                    | Description |
+| ---------- | ----------------------- | ----------- |
+| options    | readonly any[]          |             |
+| modelValue | string                  |             |
+| onSelect   | (value: string) => void |             |
+
+### renderSiteFooterSections
+
+**Kind:** function
+
+```typescript
+function renderSiteFooterSections(sections: readonly any[] = []): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name     | Type           | Description |
+| -------- | -------------- | ----------- |
+| sections | readonly any[] |             |
+
+### renderStepsItems
+
+**Kind:** function
+
+```typescript
+function renderStepsItems(
+  steps: readonly any[] = [],
+  currentStep: number = 0,
+  onStepClick?: (step: number) => void,
+): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name        | Type                   | Description |
+| ----------- | ---------------------- | ----------- |
+| steps       | readonly any[]         |             |
+| currentStep | number                 |             |
+| onStepClick | (step: number) => void |             |
+
+### renderTableColumns
+
+**Kind:** function
+
+```typescript
+function renderTableColumns(columns: readonly any[] = []): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name    | Type           | Description |
+| ------- | -------------- | ----------- |
+| columns | readonly any[] |             |
+
+### renderTableRows
+
+**Kind:** function
+
+```typescript
+function renderTableRows(data: readonly any[] = [], columns: readonly any[] = []): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name    | Type           | Description |
+| ------- | -------------- | ----------- |
+| data    | readonly any[] |             |
+| columns | readonly any[] |             |
+
+### renderTabsList
+
+**Kind:** function
+
+```typescript
+function renderTabsList(
+  tabs: readonly any[] = [],
+  activeId?: string,
+  variant: string = 'line',
+  closable: boolean = false,
+  onSelect?: (id: string) => void,
+  onClose?: (id: string) => void,
+  addable: boolean = false,
+  addLabel: string = 'Add tab',
+  onAdd?: () => void,
+): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name     | Type                 | Description |
+| -------- | -------------------- | ----------- |
+| tabs     | readonly any[]       |             |
+| activeId | string               |             |
+| variant  | string               |             |
+| closable | boolean              |             |
+| onSelect | (id: string) => void |             |
+| onClose  | (id: string) => void |             |
+| addable  | boolean              |             |
+| addLabel | string               |             |
+| onAdd    | () => void           |             |
+
+### renderTimelineItems
+
+**Kind:** function
+
+```typescript
+function renderTimelineItems(items: readonly any[] = [], align: string = 'start'): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name  | Type           | Description |
+| ----- | -------------- | ----------- |
+| items | readonly any[] |             |
+| align | string         |             |
+
+### renderTreeViewNodes
+
+**Kind:** function
+
+```typescript
+function renderTreeViewNodes(nodes: readonly any[] = [], onSelect?: (node: any) => void): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name     | Type                | Description |
+| -------- | ------------------- | ----------- |
+| nodes    | readonly any[]      |             |
+| onSelect | (node: any) => void |             |
+
+### renderUnreadBadge
+
+**Kind:** function
+
+```typescript
+function renderUnreadBadge(unreadCount: number = 0): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name        | Type   | Description |
+| ----------- | ------ | ----------- |
+| unreadCount | number |             |
+
+### renderVideoSources
+
+**Kind:** function
+
+```typescript
+function renderVideoSources(sources?: readonly any[]): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name    | Type           | Description |
+| ------- | -------------- | ----------- |
+| sources | readonly any[] |             |
+
+### resolveCatalogIcon
+
+**Kind:** function
+
+```typescript
+function resolveCatalogIcon(catalog: Record<string, any>, name: string): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name    | Type                | Description |
+| ------- | ------------------- | ----------- |
+| catalog | Record<string, any> |             |
+| name    | string              |             |
+
+### resolveEmailTypographyTag
+
+**Kind:** function
+
+```typescript
+function resolveEmailTypographyTag(asTag?: string, variant?: string): string;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name    | Type   | Description |
+| ------- | ------ | ----------- |
+| asTag   | string |             |
+| variant | string |             |
+
+### resolveIconPixelSize
+
+**Kind:** function
+
+```typescript
+function resolveIconPixelSize(size: string = 'md'): number;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| size | string |             |
+
+### resolveStatusIcon
+
+**Kind:** function
+
+```typescript
+function resolveStatusIcon(catalog: Record<string, any>, status: string = 'neutral'): any;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name    | Type                | Description |
+| ------- | ------------------- | ----------- |
+| catalog | Record<string, any> |             |
+| status  | string              |             |
+
+### resolveSyncStatusLabel
+
+**Kind:** function
+
+```typescript
+function resolveSyncStatusLabel(status: string = 'synced', label?: string): string;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name   | Type   | Description |
+| ------ | ------ | ----------- |
+| status | string |             |
+| label  | string |             |
+
+### resolveTextVariantForQuote
+
+**Kind:** function
+
+```typescript
+function resolveTextVariantForQuote(size: string = 'md'): string;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| size | string |             |
+
+### resolveTypographyScaleVariant
+
+**Kind:** function
+
+```typescript
+function resolveTypographyScaleVariant(variant?: string): string;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name    | Type   | Description |
+| ------- | ------ | ----------- |
+| variant | string |             |
+
+### resolveTypographyTag
+
+**Kind:** function
+
+```typescript
+function resolveTypographyTag(asTag?: string, href?: string, variant?: string): string;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name    | Type   | Description |
+| ------- | ------ | ----------- |
+| asTag   | string |             |
+| href    | string |             |
+| variant | string |             |
 
 ### Slot
 
