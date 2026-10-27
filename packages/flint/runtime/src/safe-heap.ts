@@ -657,7 +657,6 @@ export class FlintDynamicTableManager {
     this.activeSlots.add(slotIndex);
 
     try {
-      // eslint-disable-next-line unicorn/no-null
       this.table.set(slotIndex, typeof functionReference === 'function' ? functionReference : null);
     } catch {
       // Best-effort table slot initialization
@@ -687,7 +686,6 @@ export class FlintDynamicTableManager {
     }
     this.activeSlots.delete(handle.slotIndex);
     try {
-      // eslint-disable-next-line unicorn/no-null
       this.table.set(handle.slotIndex, null);
     } catch {
       // Nullify table slot

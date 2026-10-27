@@ -1237,7 +1237,7 @@ export function prepareFlintVmWasm(
   let activeRedact: FlintTraceOptions['redact'];
   let traceFinished = false;
   let executionInProgress = false;
-  // eslint-disable-next-line unicorn/consistent-function-scoping -- Keep observability scoped to one VM execution.
+
   const observe = (callback: () => void): void => {
     try {
       callback();

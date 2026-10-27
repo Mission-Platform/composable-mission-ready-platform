@@ -70,6 +70,23 @@ Computes autocomplete suggestions at the given document position.
 
 ## `src/documents`
 
+### applyFlintContentChanges
+
+**Kind:** function
+
+```typescript
+function applyFlintContentChanges(text: string, changes: readonly FlintContentChange[]): string;
+```
+
+Applies ordered UTF-16 edits to a document, including full-text fallback changes.
+
+#### Parameters
+
+| Name    | Type                          | Description |
+| ------- | ----------------------------- | ----------- |
+| text    | string                        |             |
+| changes | readonly FlintContentChange[] |             |
+
 ### createFlintLanguageService
 
 **Kind:** function
@@ -85,6 +102,147 @@ Creates a language service managing analysis, symbols, and LSP features for open
 | Name | Type               | Description |
 | ---- | ------------------ | ----------- |
 | host | FlintWorkspaceHost |             |
+
+## `src/embedded-css`
+
+### completeEmbeddedCss
+
+**Kind:** function
+
+```typescript
+function completeEmbeddedCss(
+  document: FlintDocument,
+  position: { readonly line: number; readonly character: number },
+): readonly FlintCompletion[];
+```
+
+Provides CSS property/value completions mapped to the original Flint document.
+
+#### Parameters
+
+| Name     | Type                                                  | Description |
+| -------- | ----------------------------------------------------- | ----------- |
+| document | FlintDocument                                         |             |
+| position | { readonly line: number; readonly character: number } |             |
+
+### diagnoseEmbeddedCss
+
+**Kind:** function
+
+```typescript
+function diagnoseEmbeddedCss(document: FlintDocument): readonly FlintLanguageDiagnostic[];
+```
+
+Reports unmatched CSS braces while retaining original document coordinates.
+
+#### Parameters
+
+| Name     | Type          | Description |
+| -------- | ------------- | ----------- |
+| document | FlintDocument |             |
+
+### embeddedCssPositionAt
+
+**Kind:** function
+
+```typescript
+function embeddedCssPositionAt(document: FlintDocument, localOffset: number);
+```
+
+Converts a virtual CSS offset to an original source position.
+
+#### Parameters
+
+| Name        | Type          | Description |
+| ----------- | ------------- | ----------- |
+| document    | FlintDocument |             |
+| localOffset | number        |             |
+
+### extractEmbeddedCss
+
+**Kind:** function
+
+```typescript
+function extractEmbeddedCss(document: FlintDocument): FlintEmbeddedCssDocument | undefined;
+```
+
+Extracts the parser-owned style region as a stable virtual CSS document.
+
+#### Parameters
+
+| Name     | Type          | Description |
+| -------- | ------------- | ----------- |
+| document | FlintDocument |             |
+
+### FlintEmbeddedCssDocument
+
+**Kind:** interface
+
+```typescript
+export interface FlintEmbeddedCssDocument
+```
+
+Stable virtual CSS document extracted from a component style region.
+
+### hoverEmbeddedCss
+
+**Kind:** function
+
+```typescript
+function hoverEmbeddedCss(
+  document: FlintDocument,
+  position: { readonly line: number; readonly character: number },
+): FlintHover | undefined;
+```
+
+Provides concise CSS property/value hover documentation in source coordinates.
+
+#### Parameters
+
+| Name     | Type                                                  | Description |
+| -------- | ----------------------------------------------------- | ----------- |
+| document | FlintDocument                                         |             |
+| position | { readonly line: number; readonly character: number } |             |
+
+### isEmbeddedCssPosition
+
+**Kind:** function
+
+```typescript
+function isEmbeddedCssPosition(
+  document: FlintDocument,
+  position: { readonly line: number; readonly character: number },
+): FlintEmbeddedCssDocument | undefined;
+```
+
+Returns the style document when a source position belongs to its content.
+
+#### Parameters
+
+| Name     | Type                                                  | Description |
+| -------- | ----------------------------------------------------- | ----------- |
+| document | FlintDocument                                         |             |
+| position | { readonly line: number; readonly character: number } |             |
+
+### mapEmbeddedCssEdit
+
+**Kind:** function
+
+```typescript
+function mapEmbeddedCssEdit(
+  document: FlintDocument,
+  edit: { readonly range: { readonly start: number; readonly end: number }; readonly newText: string },
+): FlintTextEdit | undefined;
+```
+
+Maps an edit returned by a CSS provider from virtual CSS to source coordinates.
+
+#### Parameters
+
+| Name     | Type                                                                                           | Description |
+| -------- | ---------------------------------------------------------------------------------------------- | ----------- |
+| document | FlintDocument                                                                                  |             |
+| edit     | { readonly range: { readonly start: number; readonly end: number }; readonly newText: string } |             |
 
 ## `src/features`
 
@@ -734,6 +892,26 @@ export interface FlintCallable
 
 Callable signature descriptor including parameters and return type.
 
+### FlintCallHierarchyEdge
+
+**Kind:** interface
+
+```typescript
+export interface FlintCallHierarchyEdge
+```
+
+No description provided.
+
+### FlintCallHierarchyItem
+
+**Kind:** interface
+
+```typescript
+export interface FlintCallHierarchyItem
+```
+
+No description provided.
+
 ### FlintCodeLens
 
 **Kind:** interface
@@ -754,6 +932,36 @@ export type FlintCodeLensKind = 'references';
 
 Category of code lens action (references, debug, etc.).
 
+### FlintColor
+
+**Kind:** interface
+
+```typescript
+export interface FlintColor
+```
+
+No description provided.
+
+### FlintColorPresentation
+
+**Kind:** interface
+
+```typescript
+export interface FlintColorPresentation
+```
+
+No description provided.
+
+### FlintCommand
+
+**Kind:** interface
+
+```typescript
+export interface FlintCommand
+```
+
+No description provided.
+
 ### FlintCompletion
 
 **Kind:** interface
@@ -773,6 +981,26 @@ export type FlintCompletionKind = 'keyword' | 'type' | 'declaration' | 'value' |
 ```
 
 Autocomplete suggestion category (keyword, type, function, etc.).
+
+### FlintContentChange
+
+**Kind:** interface
+
+```typescript
+export interface FlintContentChange
+```
+
+One ordered UTF-16 text change from an incremental document notification.
+
+### FlintDiagnosticReport
+
+**Kind:** interface
+
+```typescript
+export interface FlintDiagnosticReport
+```
+
+No description provided.
 
 ### FlintDisposable
 
@@ -804,6 +1032,16 @@ export interface FlintDocumentation
 
 Documentation comments and markdown description for a symbol.
 
+### FlintDocumentLink
+
+**Kind:** interface
+
+```typescript
+export interface FlintDocumentLink
+```
+
+No description provided.
+
 ### FlintDocumentSymbol
 
 **Kind:** interface
@@ -829,7 +1067,7 @@ Range of source code collapsible in the editor.
 **Kind:** type
 
 ```typescript
-export type FlintFoldingRangeKind = 'module' | 'declaration' | 'region';
+export type FlintFoldingRangeKind = 'module' | 'declaration' | 'region' | 'markup';
 ```
 
 Category of code folding range (comment, imports, region).
@@ -864,6 +1102,16 @@ export type FlintInlayHintKind = 'parameter' | 'type';
 
 Category of inlay hint (parameter, type).
 
+### FlintInlineCompletion
+
+**Kind:** interface
+
+```typescript
+export interface FlintInlineCompletion
+```
+
+No description provided.
+
 ### FlintInlineValue
 
 **Kind:** interface
@@ -894,6 +1142,16 @@ export interface FlintLanguageService
 
 Unified language service providing code intelligence queries across documents.
 
+### FlintLinkedEditingRanges
+
+**Kind:** interface
+
+```typescript
+export interface FlintLinkedEditingRanges
+```
+
+No description provided.
+
 ### FlintLocation
 
 **Kind:** interface
@@ -903,6 +1161,16 @@ export interface FlintLocation
 ```
 
 Document URI and range identifying a source code location.
+
+### FlintMoniker
+
+**Kind:** interface
+
+```typescript
+export interface FlintMoniker
+```
+
+No description provided.
 
 ### FlintPosition
 
@@ -924,6 +1192,26 @@ export interface FlintRange
 
 Range delimited by start and end positions with character offsets.
 
+### FlintSelectionRange
+
+**Kind:** interface
+
+```typescript
+export interface FlintSelectionRange
+```
+
+No description provided.
+
+### FlintSemanticTokens
+
+**Kind:** interface
+
+```typescript
+export interface FlintSemanticTokens
+```
+
+A semantic-token snapshot and optional delta against a known prior snapshot.
+
 ### FlintSymbol
 
 **Kind:** interface
@@ -939,7 +1227,7 @@ Symbol descriptor with name, kind, container, and location.
 **Kind:** type
 
 ```typescript
-export type FlintSymbolKind = 'module' | 'function' | 'parameter' | 'local' | 'capability' | 'type';
+export type FlintSymbolKind = 'module' | 'function' | 'parameter' | 'local' | 'capability' | 'type' | 'markup';
 ```
 
 Kind category of a language symbol (function, struct, local, etc.).

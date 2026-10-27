@@ -1,4 +1,4 @@
-import type { FlintHostImport } from '../manifest.js';
+import type { FlintHostImport } from '@mission-platform/flint-c-abi';
 
 /**
  * Synthesizes the runtime value marshaling JavaScript code for strings, arrays, and records.

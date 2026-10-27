@@ -1,26 +1,36 @@
 import type {
   FlintAnalysisOptions,
+  FlintAnalysisPolicy,
   FlintAnalysisReport,
   FlintAnalysisRule,
   FlintAnalysisSourceMap,
-  FlintAnalysisPolicy,
-} from './analysis';
-import type { FlintFunction, FlintModule } from './ast.js';
+  FlintOptimizationReport,
+} from '@mission-platform/flint-analysis';
+import type { FlintFunction, FlintModule } from '@mission-platform/flint-ast';
+import type {
+  FlintAbiManifest,
+  FlintDynamicLinkMetadata,
+  FlintLinkedExport,
+  FlintSourceImport,
+} from '@mission-platform/flint-c-abi';
+import type { FlintStandardLibraryIdentity } from '@mission-platform/flint-regex';
+import type {
+  FlintIrModule,
+  FlintSoNBoundsChecks,
+  FlintSoNModule,
+  FlintSoNOptimizationReport,
+} from '@mission-platform/flint-sonir';
+
 import type { FlintWatCache } from './cache.js';
 import type { FlintDiagnostic } from './diagnostics.js';
 import type { FlintLinkConfiguration, FlintModuleGraph } from './graph.js';
-import type { FlintIrModule } from './ir.js';
-import type { FlintAbiManifest, FlintDynamicLinkMetadata, FlintLinkedExport, FlintSourceImport } from './manifest.js';
-import type { FlintOptimizationReport } from './optimizer.js';
 import type { FlintSelfHostedCompilerStage, FlintSelfHostedStageArtifact } from './self-hosted/artifact.js';
-import type { FlintSoNBoundsChecks, FlintSoNModule, FlintSoNOptimizationReport } from './son-ir.js';
-import type { FlintStandardLibraryIdentity } from './stdlib/regex.js';
 
 /** Compiler optimization level selecting debug or release lowering. */
 export type FlintOptimization = 'debug' | 'release';
 
 /** Named cross-project packaging profile used by graph-aware consumers. */
-export type FlintLinkProfile = 'static' | 'dynamic';
+export type FlintLinkProfile = 'standard' | 'minimal' | 'full' | 'dynamic' | 'static' | 'monolithic' | 'cross-package';
 
 /** Link-time policy recorded alongside the ordinary compiler optimization. */
 export type FlintLinkOptimizationProfile = 'standard' | 'static-aggressive' | 'dynamic-conservative';

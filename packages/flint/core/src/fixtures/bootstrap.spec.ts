@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
+import { createFlintAbiManifest } from '@mission-platform/flint-analysis';
+
 import { compileFlint } from '../compiler.ts';
-import { createFlintAbiManifest } from '../manifest.ts';
 import { validateFlint } from '../validate.ts';
 
 import { acceptedBootstrapFixtures, rejectedBootstrapFixtures } from './bootstrap.ts';

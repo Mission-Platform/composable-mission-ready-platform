@@ -1,5 +1,3 @@
-/* eslint-disable unicorn/prevent-abbreviations */
-
 import path from 'node:path';
 
 import type {
@@ -402,7 +400,7 @@ function buildCliOptions(state: ParseState, cwd: string): FlintCliOptions {
  * @returns Fully validated FlintCliOptions structure.
  */
 // skipcq: JS-R1005
-export function parseFlintCliArgs(argv: readonly string[], cwd = process.cwd()): FlintCliOptions {
+export function parseFlintCliArgs(argv: readonly string[], cwd: string = process.cwd()): FlintCliOptions {
   const state: ParseState = {
     optimization: 'debug',
     compilerVersion: '0.1.0',

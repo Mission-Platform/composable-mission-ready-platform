@@ -1,4 +1,5 @@
-import type { FlintFunction } from './ast.js';
+import type { FlintFunction } from '@mission-platform/flint-ast';
+
 import type { FlintModuleGraph, FlintResolvedModule } from './graph.js';
 
 /**
@@ -23,12 +24,27 @@ export function resolveFlintImportTypeEnvironment(
   const externalFunctions = graph.edges
     .filter(({ importer: importerFileName }) => importerFileName === importer.fileName)
     .flatMap((edge) => {
-      const alias = importer.module.sourceImports.find(({ source }) => source === edge.source)?.alias;
-      return (graph.modules.find(({ fileName }) => fileName === edge.resolved)?.module.functions ?? [])
-        .filter(({ exported }) => exported)
-        .flatMap((declaration) =>
-          alias === undefined ? [declaration] : [declaration, { ...declaration, name: `${alias}.${declaration.name}` }],
-        );
+      const sourceImport = importer.module.sourceImports.find(({ source }) => source === edge.source);
+      const exportedFunctions = (
+        graph.modules.find(({ fileName }) => fileName === edge.resolved)?.module.functions ?? []
+      ).filter(({ exported }) => exported);
+      if (sourceImport === undefined) return exportedFunctions;
+      if (sourceImport.bindings === undefined) {
+        return exportedFunctions.flatMap((declaration) => [
+          declaration,
+          { ...declaration, name: `${sourceImport.alias}.${declaration.name}` },
+        ]);
+      }
+      if (sourceImport.bindingKind === 'named') {
+        return (sourceImport.bindings ?? []).flatMap((binding) => {
+          if (binding.kind !== 'named') return [];
+          const declaration = exportedFunctions.find(({ name }) => name === binding.importedName);
+          return declaration === undefined ? [] : [{ ...declaration, name: binding.localName }];
+        });
+      }
+      const namespace = (sourceImport.bindings ?? []).find(({ kind }) => kind === 'namespace');
+      const alias = namespace?.localName ?? sourceImport.alias;
+      return exportedFunctions.map((declaration) => ({ ...declaration, name: `${alias}.${declaration.name}` }));
     });
 
   return { externalFunctions };

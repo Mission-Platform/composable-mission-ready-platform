@@ -1,8 +1,7 @@
+import type { FlintAnalysisEvidence, FlintAnalysisReport } from '@mission-platform/flint-analysis';
 import type {
   FlintDiagnosticPhase,
   FlintDiagnosticSeverity,
-  FlintAnalysisEvidence,
-  FlintAnalysisReport,
   FlintImportTypeEnvironment,
   FlintModule,
   FlintSelfHostedStageReport,
@@ -10,7 +9,7 @@ import type {
   FlintVmExecutionMode,
   FlintSourceSpan,
   FlintToken,
-} from '@mission-platform/flint';
+} from '@mission-platform/flint-ast';
 
 /** Line and character position in a source document. */
 export interface FlintPosition {
@@ -56,6 +55,76 @@ export interface FlintDocument {
   readonly fileName?: string;
   readonly text: string;
   readonly version: number;
+}
+
+/** One ordered UTF-16 text change from an incremental document notification. */
+export interface FlintContentChange {
+  readonly range?: { readonly start: FlintPosition; readonly end: FlintPosition };
+  readonly text: string;
+}
+
+/** A semantic-token snapshot and optional delta against a known prior snapshot. */
+export interface FlintSemanticTokens {
+  readonly resultId: string;
+  readonly data: readonly number[];
+  readonly delta?: {
+    readonly start: number;
+    readonly deleteCount: number;
+    readonly data: readonly number[];
+  };
+}
+
+export interface FlintDocumentLink {
+  readonly range: FlintRange;
+  readonly target?: string;
+  readonly tooltip?: string;
+}
+export interface FlintColor {
+  readonly range: FlintRange;
+  readonly color: { readonly red: number; readonly green: number; readonly blue: number; readonly alpha: number };
+}
+export interface FlintColorPresentation {
+  readonly label: string;
+  readonly textEdit?: FlintTextEdit;
+}
+export interface FlintSelectionRange {
+  readonly range: FlintRange;
+  readonly parent?: FlintSelectionRange;
+}
+export interface FlintCommand {
+  readonly command: string;
+  readonly title: string;
+  readonly arguments?: readonly unknown[];
+}
+export interface FlintCallHierarchyItem {
+  readonly name: string;
+  readonly uri: string;
+  readonly range: FlintRange;
+  readonly selectionRange: FlintRange;
+}
+export interface FlintCallHierarchyEdge {
+  readonly from: FlintCallHierarchyItem;
+  readonly to: FlintCallHierarchyItem;
+  readonly fromRanges: readonly FlintRange[];
+}
+export interface FlintLinkedEditingRanges {
+  readonly ranges: readonly FlintRange[];
+  readonly wordPattern?: string;
+}
+export interface FlintMoniker {
+  readonly scheme: string;
+  readonly identifier: string;
+  readonly unique: 'read' | 'write' | 'readWrite';
+}
+export interface FlintInlineCompletion {
+  readonly insertText: string;
+  readonly range?: FlintRange;
+  readonly command?: FlintCommand;
+}
+export interface FlintDiagnosticReport {
+  readonly kind: 'full' | 'unchanged';
+  readonly resultId: string;
+  readonly items: readonly FlintLanguageDiagnostic[];
 }
 
 /** Callable signature descriptor including parameters and return type. */
@@ -123,7 +192,7 @@ export interface FlintLanguageDiagnostic {
 }
 
 /** Kind category of a language symbol (function, struct, local, etc.). */
-export type FlintSymbolKind = 'module' | 'function' | 'parameter' | 'local' | 'capability' | 'type';
+export type FlintSymbolKind = 'module' | 'function' | 'parameter' | 'local' | 'capability' | 'type' | 'markup';
 
 /** Symbol descriptor with name, kind, container, and location. */
 export interface FlintSymbol {
@@ -167,10 +236,11 @@ export interface FlintCodeLens {
   readonly symbolName: string;
   readonly symbolKind: FlintSymbolKind;
   readonly referenceCount: number;
+  readonly data?: string;
 }
 
 /** Category of code folding range (comment, imports, region). */
-export type FlintFoldingRangeKind = 'module' | 'declaration' | 'region';
+export type FlintFoldingRangeKind = 'module' | 'declaration' | 'region' | 'markup';
 
 /** Range of source code collapsible in the editor. */
 export interface FlintFoldingRange {
@@ -196,6 +266,7 @@ export interface FlintInlayHint {
   readonly kind: FlintInlayHintKind;
   readonly paddingLeft?: boolean;
   readonly paddingRight?: boolean;
+  readonly data?: string;
 }
 
 /** Hierarchical document outline symbol node. */
@@ -223,7 +294,16 @@ export interface FlintWorkspaceIndex {
 export interface FlintTokenClassification {
   readonly kind:
     | 'comment'
+    | 'component-region'
+    | 'css-property'
+    | 'css-selector'
+    | 'css-value'
     | 'declaration'
+    | 'html-attribute'
+    | 'html-tag'
+    | 'markup-directive'
+    | 'markup-interpolation'
+    | 'markup-slot'
     | 'identifier'
     | 'invalid'
     | 'keyword'
@@ -255,6 +335,7 @@ export interface FlintAnalysis {
 export interface FlintLanguageService {
   openDocument(document: FlintDocument): void;
   updateDocument(document: FlintDocument): void;
+  applyChanges(uri: string, version: number, changes: readonly FlintContentChange[]): FlintDocument | undefined;
   closeDocument(uri: string): void;
   diagnose(uri: string): FlintAnalysis;
   complete(uri: string, position: FlintPosition): readonly FlintCompletion[];
@@ -264,6 +345,9 @@ export interface FlintLanguageService {
   implementation(uri: string, position: FlintPosition): readonly FlintLocation[];
   references(uri: string, position: FlintPosition): readonly FlintLocation[];
   rename(uri: string, position: FlintPosition, newName: string): FlintWorkspaceEdit | undefined;
+  markupEdit(uri: string, range: FlintRange, newText: string): FlintTextEdit | undefined;
+  resolveCodeLens(uri: string, lens: FlintCodeLens): FlintCodeLens | undefined;
+  resolveInlayHint(uri: string, hint: FlintInlayHint): FlintInlayHint | undefined;
   codeLenses(uri: string): readonly FlintCodeLens[];
   foldingRanges(uri: string): readonly FlintFoldingRange[];
   inlineValues(uri: string, range?: FlintRange): readonly FlintInlineValue[];
@@ -273,5 +357,19 @@ export interface FlintLanguageService {
   refreshWorkspace(uri?: string): Promise<void>;
   invalidateWorkspace(change?: FlintWorkspaceChange): void;
   tokenize(uri: string): readonly FlintTokenClassification[];
+  semanticTokens(uri: string, previousResultId?: string): FlintSemanticTokens;
+  documentLinks(uri: string): readonly FlintDocumentLink[];
+  colors(uri: string): readonly FlintColor[];
+  colorPresentations(uri: string, color: FlintColor): readonly FlintColorPresentation[];
+  formatting(uri: string, range?: FlintRange): readonly FlintTextEdit[];
+  selectionRanges(uri: string, positions: readonly FlintPosition[]): readonly FlintSelectionRange[];
+  executeCommand(uri: string, command: FlintCommand): readonly FlintWorkspaceEdit[];
+  prepareCallHierarchy(uri: string, position: FlintPosition): FlintCallHierarchyItem | undefined;
+  incomingCalls(item: FlintCallHierarchyItem): readonly FlintCallHierarchyEdge[];
+  outgoingCalls(item: FlintCallHierarchyItem): readonly FlintCallHierarchyEdge[];
+  linkedEditingRanges(uri: string, position: FlintPosition): FlintLinkedEditingRanges | undefined;
+  monikers(uri: string, position: FlintPosition): readonly FlintMoniker[];
+  inlineCompletions(uri: string, position: FlintPosition): readonly FlintInlineCompletion[];
+  diagnosticReport(uri: string, previousResultId?: string): FlintDiagnosticReport;
   dispose(): void;
 }

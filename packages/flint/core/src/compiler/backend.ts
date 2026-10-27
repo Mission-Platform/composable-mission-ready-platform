@@ -1,3 +1,5 @@
+import type { FlintAbiManifest, FlintDynamicLinkMetadata } from '@mission-platform/flint-c-abi';
+import { lexFlint } from '@mission-platform/flint-parser';
 import {
   compileFlintWasm,
   verifyFlintWasmArtifact,
@@ -6,10 +8,8 @@ import {
 } from '@mission-platform/flint-wasm';
 
 import { createDiagnostic, type FlintDiagnostic } from '../diagnostics.js';
-import { lexFlint } from '../lexer.js';
 
 import type { FlintArtifactVerificationReport, FlintIteratorExport } from '../contracts.js';
-import type { FlintAbiManifest, FlintDynamicLinkMetadata } from '../manifest.js';
 
 /**
  * Result structure returned by WebAssembly backend code generation.

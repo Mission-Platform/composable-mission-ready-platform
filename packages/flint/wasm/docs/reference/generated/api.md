@@ -635,6 +635,64 @@ Abstract type name representation utilized during WebAssembly lowering.
 
 ## `src/emitter`
 
+### compileFlintWasm
+
+**Kind:** function
+
+```typescript
+function compileFlintWasm(input: FlintWasmBackendInput, fileName = '<input>'): FlintWasmBackendResult;
+```
+
+Main entry point compiling a Flint IR module to WebAssembly binary and text formats.
+
+#### Parameters
+
+| Name     | Type                  | Description |
+| -------- | --------------------- | ----------- |
+| input    | FlintWasmBackendInput |             |
+| fileName |                       |             |
+
+## `src/emitter/section-builder`
+
+### SECTION_IDS
+
+**Kind:** constant
+
+```typescript
+export const SECTION_IDS;
+```
+
+No description provided.
+
+### section
+
+**Kind:** function
+
+```typescript
+function section(id: number, contents: readonly number[]): number[];
+```
+
+Packages payload bytes into a WebAssembly section with section ID and length prefix.
+
+#### Parameters
+
+| Name     | Type              | Description |
+| -------- | ----------------- | ----------- |
+| id       | number            |             |
+| contents | readonly number[] |             |
+
+### WasmSectionBuilder
+
+**Kind:** class
+
+```typescript
+export class WasmSectionBuilder
+```
+
+Creates a typed WebAssembly section builder.
+
+## `src/encoding/bytes`
+
 ### appendF32
 
 **Kind:** function
@@ -687,22 +745,103 @@ export const CANONICAL_F64_NAN_BYTES;
 
 Canonical quiet NaN bit pattern for 64-bit floats (0x7ff8000000000000 in little-endian).
 
-### compileFlintWasm
+### vector
 
 **Kind:** function
 
 ```typescript
-function compileFlintWasm(input: FlintWasmBackendInput, fileName = '<input>'): FlintWasmBackendResult;
+function vector(values: readonly number[]): number[];
 ```
 
-Main entry point compiling a Flint IR module to WebAssembly binary and text formats.
+Prefixes an array of bytecode elements with its count in LEB128 encoding.
 
 #### Parameters
 
-| Name     | Type                  | Description |
-| -------- | --------------------- | ----------- |
-| input    | FlintWasmBackendInput |             |
-| fileName |                       |             |
+| Name   | Type              | Description |
+| ------ | ----------------- | ----------- |
+| values | readonly number[] |             |
+
+### wasmString
+
+**Kind:** function
+
+```typescript
+function wasmString(value: string): number[];
+```
+
+Encodes a UTF-8 string prefixed by its byte length in WebAssembly format.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | string |             |
+
+## `src/encoding/leb128`
+
+### signedLeb
+
+**Kind:** function
+
+```typescript
+function signedLeb(value: number | bigint): number[];
+```
+
+Encodes a signed 32-bit or 64-bit integer into a WebAssembly LEB128 byte array.
+
+#### Parameters
+
+| Name  | Type             | Description |
+| ----- | ---------------- | ----------- |
+| value | number \| bigint |             |
+
+### signedLeb128
+
+**Kind:** function
+
+```typescript
+function signedLeb128(value: number | bigint): number[];
+```
+
+Alias for signedLeb.
+
+#### Parameters
+
+| Name  | Type             | Description |
+| ----- | ---------------- | ----------- |
+| value | number \| bigint |             |
+
+### unsignedLeb
+
+**Kind:** function
+
+```typescript
+function unsignedLeb(value: number): number[];
+```
+
+Encodes an unsigned 32-bit integer into a WebAssembly LEB128 byte array.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | number |             |
+
+### unsignedLeb128
+
+**Kind:** function
+
+```typescript
+function unsignedLeb128(value: number): number[];
+```
+
+Alias for unsignedLeb.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | number |             |
 
 ## `src/optimizer`
 

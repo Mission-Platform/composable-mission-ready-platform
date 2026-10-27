@@ -27,7 +27,6 @@ const DEFAULT_JIT_THRESHOLD = 3;
 
 /** Bit-exact ToInt32 used by 32-bit VM arithmetic (Wasm i32 semantics). */
 function toInt32(value: number): number {
-  // eslint-disable-next-line unicorn/prefer-math-trunc -- intentional ToInt32 wrap
   return value | 0;
 }
 

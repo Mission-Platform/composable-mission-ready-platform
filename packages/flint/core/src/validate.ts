@@ -1,8 +1,8 @@
-import { diagnosticKey, type FlintDiagnostic } from './diagnostics.js';
-import { parseFlint } from './parser.js';
-import { checkFlint, type FlintTypeCheckOptions } from './type-checker.js';
+import type { FlintModule } from '@mission-platform/flint-ast';
+import { parseFlint } from '@mission-platform/flint-parser';
+import { checkFlint, type FlintTypeCheckOptions } from '@mission-platform/flint-types';
 
-import type { FlintModule } from './ast.js';
+import { diagnosticKey, type FlintDiagnostic } from './diagnostics.js';
 
 /**
  * Result of validating a Flint source file through parsing and type-checking.

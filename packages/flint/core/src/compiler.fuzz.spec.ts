@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { createFlintQueryEngine } from './analysis/query-engine.js';
+import { createFlintQueryEngine } from '@mission-platform/flint-analysis';
+import { lexFlint, parseFlint } from '@mission-platform/flint-parser';
+
 import { compileFlint } from './compiler/module.js';
-import { lexFlint } from './lexer.js';
-import { parseFlint } from './parser.js';
 
 class FuzzPrng {
   private state: number;

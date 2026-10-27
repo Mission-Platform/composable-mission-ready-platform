@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
+import { createFlintAbiManifest } from '@mission-platform/flint-analysis';
+import { parseFlint } from '@mission-platform/flint-parser';
+
 import { compileFlint } from '../compiler.ts';
-import { createFlintAbiManifest } from '../manifest.ts';
-import { parseFlint } from '../parser.ts';
 
 import { codecMigrationFixture } from './codec-migration.ts';
 

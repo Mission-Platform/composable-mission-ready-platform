@@ -1,7 +1,16 @@
-import { lexFlint } from '@mission-platform/flint';
 import { describe, expect, it } from 'vitest';
 
-import { createFlintLanguageService, offsetAtPosition, positionAtOffset, tokenizeFlint } from '.';
+import { lexFlint } from '@mission-platform/flint-parser';
+
+import {
+  createFlintLanguageService,
+  applyFlintContentChanges,
+  extractEmbeddedCss,
+  mapEmbeddedCssEdit,
+  offsetAtPosition,
+  positionAtOffset,
+  tokenizeFlint,
+} from '.';
 
 const arithmetic = `export fn add(value: i32) -> i32 {
     let result: i32 = value + 1;
@@ -13,6 +22,208 @@ function document(text: string, version = 1) {
 }
 
 describe('Forge Web Script language service', () => {
+  it('applies ordered UTF-16 changes, rejects stale versions, and computes token deltas', () => {
+    const service = createFlintLanguageService();
+    const source = 'export fn add(value: i32) -> i32 { return value; }';
+    const componentDocument = {
+      uri: 'file:///workspace/incremental.flint',
+      fileName: 'incremental.flint',
+      text: source,
+      version: 1,
+    };
+    service.openDocument(componentDocument);
+    expect(
+      applyFlintContentChanges('abcdef', [
+        { range: { start: { line: 0, character: 1 }, end: { line: 0, character: 2 } }, text: 'X' },
+        { range: { start: { line: 0, character: 5 }, end: { line: 0, character: 6 } }, text: '!' },
+      ]),
+    ).toBe('aXcde!');
+    const full = service.semanticTokens(componentDocument.uri);
+    const next = service.applyChanges(componentDocument.uri, 2, [
+      {
+        range: { start: { line: 0, character: 0 }, end: { line: 0, character: 0 } },
+        text: '// changed\n',
+      },
+    ]);
+    expect(next?.text).toBe(`// changed\n${source}`);
+    expect(service.applyChanges(componentDocument.uri, 2, [{ text: source }])).toBeUndefined();
+    const delta = service.semanticTokens(componentDocument.uri, full.resultId);
+    expect(delta.resultId).not.toBe(full.resultId);
+    expect(delta.delta).toBeDefined();
+    expect(service.semanticTokens(componentDocument.uri, 'unknown-result-id').data.length).toBeGreaterThan(0);
+    const lenses = service.codeLenses(componentDocument.uri);
+    if (lenses[0] !== undefined) expect(service.resolveCodeLens(componentDocument.uri, lenses[0])).toEqual(lenses[0]);
+    if (lenses[0] !== undefined)
+      expect(service.resolveCodeLens(componentDocument.uri, { ...lenses[0], data: 'stale' })).toBeUndefined();
+    service.dispose();
+  });
+  it('routes .flintc style queries through a mapped virtual CSS document', () => {
+    const service = createFlintLanguageService();
+    const source = `<script>export struct ButtonProperties { layoutGap: string; }</script>
+<template><button class="button" /></template>
+<style>
+.button {
+  color: re;
+  gap: bind(layoutGap, --mp-layout-gap);
+}
+</style>`;
+    const componentDocument = {
+      uri: 'file:///workspace/button.flintc',
+      fileName: 'button.flintc',
+      text: source,
+      version: 1,
+    };
+    service.openDocument(componentDocument);
+    const uri = componentDocument.uri;
+    const colorOffset = source.indexOf('color:') + 'color: '.length;
+    const colorPosition = positionAtOffset(source, colorOffset);
+
+    expect(extractEmbeddedCss(componentDocument)).toMatchObject({
+      uri: 'file:///workspace/button.flintc#style',
+      text: expect.stringContaining('color: re;'),
+    });
+    expect(service.complete(uri, colorPosition)).toEqual(
+      expect.arrayContaining([expect.objectContaining({ label: 'relative', detail: 'CSS' })]),
+    );
+    expect(service.hover(uri, positionAtOffset(source, source.indexOf('color') + 1))).toMatchObject({
+      contents: ['CSS property: color'],
+    });
+    expect(service.tokenize(uri)).toEqual(
+      expect.arrayContaining([expect.objectContaining({ kind: 'css-property', text: 'color' })]),
+    );
+    const cssStart = extractEmbeddedCss(componentDocument)?.sourceStart ?? 0;
+    expect(
+      mapEmbeddedCssEdit(componentDocument, {
+        range: { start: colorOffset - cssStart, end: colorOffset - cssStart + 2 },
+        newText: 'red',
+      }),
+    ).toMatchObject({ newText: 'red', range: { startOffset: colorOffset, endOffset: colorOffset + 2 } });
+
+    const updatedSource = source.replace('color: re;', 'color: red;\n  display: flex;');
+    service.updateDocument({ ...componentDocument, text: updatedSource, version: 2 });
+    expect(service.complete(uri, positionAtOffset(updatedSource, updatedSource.indexOf('display:') + 2))).toEqual(
+      expect.arrayContaining([expect.objectContaining({ label: 'display' })]),
+    );
+    service.closeDocument(uri);
+    service.dispose();
+  });
+
+  it('provides AST-aware template markup intelligence without masking Flint expressions', () => {
+    const service = createFlintLanguageService();
+    const source = `<script>
+export struct Properties { label: string; }
+</script>
+<template>
+  <Button on:click={handle} slot="header">
+    <span>{label}</span>
+  </Button>
+</template>`;
+    const componentDocument = {
+      uri: 'file:///workspace/markup.flintc',
+      fileName: 'markup.flintc',
+      text: source,
+      version: 1,
+    };
+    service.openDocument(componentDocument);
+    const uri = componentDocument.uri;
+    const tagPosition = positionAtOffset(source, source.indexOf('<Button') + '<But'.length);
+    const attributePosition = positionAtOffset(source, source.indexOf('on:click') + 3);
+
+    expect(service.complete(uri, tagPosition)).toEqual(
+      expect.arrayContaining([expect.objectContaining({ label: 'Button', detail: 'Markup element' })]),
+    );
+    expect(service.hover(uri, positionAtOffset(source, source.indexOf('Button') + 1))).toMatchObject({
+      contents: ['Markup element <Button>'],
+    });
+    expect(service.hover(uri, attributePosition)).toMatchObject({
+      contents: ['Flint directive on:click'],
+    });
+    expect(service.documentSymbols(uri)).toEqual(
+      expect.arrayContaining([expect.objectContaining({ name: '<Button>', kind: 'markup' })]),
+    );
+    expect(service.foldingRanges(uri)).toEqual(expect.arrayContaining([expect.objectContaining({ kind: 'markup' })]));
+    expect(service.tokenize(uri)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ kind: 'markup-directive', text: 'on:click' }),
+        expect.objectContaining({ kind: 'markup-interpolation', text: '{label}' }),
+      ]),
+    );
+    const buttonStart = source.indexOf('Button');
+    expect(
+      service.markupEdit(uri, { startOffset: buttonStart, endOffset: buttonStart + 'Button'.length }, 'ForgeButton'),
+    ).toMatchObject({ newText: 'ForgeButton' });
+    const expressionStart = source.indexOf('{label}');
+    expect(
+      service.markupEdit(uri, { startOffset: expressionStart + 1, endOffset: expressionStart + 6 }, 'title'),
+    ).toBeUndefined();
+    service.dispose();
+  });
+  it('indexes css! companions and completes HTML/CSS authoring regions', () => {
+    const service = createFlintLanguageService();
+    const source = `export fn Button() -> unit {
+  css! { .button { color: red; } }
+  html! { <button /> };
+  return;
+}`;
+    service.openDocument(document(source));
+    const uri = document(source).uri;
+    const analysis = service.diagnose(uri);
+
+    expect(analysis.diagnostics).toEqual([]);
+    expect(analysis.symbols).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: '.button', detail: 'CSS selector .button' }),
+        expect.objectContaining({ name: 'color', detail: 'CSS declaration color: red' }),
+      ]),
+    );
+    expect(service.complete(uri, positionAtOffset(source, source.indexOf('color:')))).toEqual(
+      expect.arrayContaining([expect.objectContaining({ label: 'background-color', kind: 'value' })]),
+    );
+    expect(service.complete(uri, positionAtOffset(source, source.indexOf('<button') + 1))).toEqual(
+      expect.arrayContaining([expect.objectContaining({ label: 'div', kind: 'keyword' })]),
+    );
+    expect(service.hover(uri, positionAtOffset(source, source.indexOf('color') + 1))).toMatchObject({
+      contents: ['CSS property color: compile-time companion style declaration.'],
+    });
+    service.dispose();
+  });
+
+  it('provides nested CSS and HTML completion, hover, and outline symbols', () => {
+    const service = createFlintLanguageService();
+    const source = `export fn Button() -> unit {
+  let styles = css! { .button { color: red; .label { background-color: red; } } };
+  let nested = styles["button"]["label"];
+  return html! { <button class="button" ><span class="label" /></button> };
+}`;
+    service.openDocument(document(source));
+    const uri = document(source).uri;
+    expect(service.complete(uri, positionAtOffset(source, source.indexOf('color:') + 'color: '.length))).toEqual(
+      expect.arrayContaining([expect.objectContaining({ label: 'flex', detail: 'CSS value' })]),
+    );
+    expect(service.complete(uri, positionAtOffset(source, source.indexOf('<button') + '<button '.length))).toEqual(
+      expect.arrayContaining([expect.objectContaining({ label: 'class', detail: 'HTML attribute' })]),
+    );
+    expect(service.hover(uri, positionAtOffset(source, source.indexOf('background-color') + 3))).toMatchObject({
+      contents: ['CSS property background-color: compile-time companion style declaration.'],
+    });
+    expect(service.hover(uri, positionAtOffset(source, source.indexOf('<button') + 2))).toMatchObject({
+      contents: ['HTML element <button>'],
+    });
+    expect(service.hover(uri, positionAtOffset(source, source.indexOf('.button') + 2))).toMatchObject({
+      contents: ['CSS class selector .button: local CSS-module class.'],
+    });
+    expect(service.complete(uri, positionAtOffset(source, source.indexOf('label"]') + 3))).toEqual(
+      expect.arrayContaining([expect.objectContaining({ label: 'label', detail: 'nested CSS class-map member' })]),
+    );
+    expect(service.hover(uri, positionAtOffset(source, source.indexOf('label"]') + 1))).toMatchObject({
+      contents: ['CSS module class-map member label.'],
+    });
+    const outline = service.documentSymbols(uri);
+    expect(outline.flatMap((symbol) => [symbol.name, ...symbol.children.map((child) => child.name)])).toEqual(
+      expect.arrayContaining(['.button', '.label', 'button', 'span']),
+    );
+    service.dispose();
+  });
   it('accepts private helpers by default and exposes them to same-module editor tooling', () => {
     const service = createFlintLanguageService();
     const source = `fn helper(value: i32) -> i32 { return value + 1; }
@@ -258,6 +469,19 @@ export fn caller() -> i32 { return add(1); }`;
     expect(hover?.contents).toContain('string_length(string): i32');
   });
 
+  it('excludes any and unknown from type completion proposals', () => {
+    const service = createFlintLanguageService();
+    const source = 'export fn test(x: ';
+    const uri = document(source).uri;
+    service.openDocument(document(source));
+    const completions = service.complete(uri, positionAtOffset(source, source.length));
+    const labels = completions.map((item) => item.label);
+    expect(labels).not.toContain('any');
+    expect(labels).not.toContain('unknown');
+    expect(labels).toContain('i32');
+    expect(labels).toContain('bool');
+  });
+
   it('keeps completion and hover safe for incomplete documents', () => {
     const service = createFlintLanguageService();
     const cases = [
@@ -311,6 +535,22 @@ export fn caller() -> i32 { return add(1); }`;
       end: { line: 1, character: 13 },
     });
     expect(tokens.some((token) => token.text === 'eof')).toBe(false);
+  });
+
+  it('highlights embedded template markup and CSS with source ranges', () => {
+    const source = `<script>export struct Props { label: string; }</script>
+<template><button aria-label={label} class="primary">🙂</button></template>
+<style>.primary { color: red; }</style>`;
+    const tokens = tokenizeFlint(source, 'button.flintc');
+
+    expect(tokens.find((token) => token.text === 'button')?.kind).toBe('html-tag');
+    expect(tokens.find((token) => token.text === 'aria')?.kind).toBe('html-attribute');
+    expect(
+      tokens.find((token) => token.text === 'primary' && token.range.startOffset > source.indexOf('<style>'))?.kind,
+    ).toBe('css-selector');
+    expect(tokens.find((token) => token.text === 'color')?.kind).toBe('css-property');
+    expect(tokens.find((token) => token.text === 'red')?.kind).toBe('css-value');
+    expect(tokens.find((token) => token.text === 'button')?.range.startOffset).toBe(source.indexOf('button'));
   });
 
   it('supports imperative loops and exposes iterator types in editor surfaces', () => {

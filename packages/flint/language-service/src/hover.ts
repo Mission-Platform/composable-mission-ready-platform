@@ -1,4 +1,5 @@
-import { FLINT_REGEX_FUNCTIONS, FLINT_STRING_FUNCTIONS, primitiveTypes } from '@mission-platform/flint';
+import { primitiveTypes } from '@mission-platform/flint-parser';
+import { FLINT_REGEX_FUNCTIONS, FLINT_STRING_FUNCTIONS } from '@mission-platform/flint-types';
 
 import { containsOffset, offsetAtPosition, rangeFromOffsets } from './positions.js';
 
@@ -22,6 +23,33 @@ export function hoverFlint(
   const offset = offsetAtPosition(source, position);
   const token = identifierAt(source, offset);
   if (token === undefined) return undefined;
+  const cssProperty = cssPropertyAt(source, token.start);
+  if (cssProperty !== undefined) {
+    return {
+      range: rangeFromOffsets(source, token.start, token.end),
+      contents: [`CSS property ${cssProperty}: compile-time companion style declaration.`],
+    };
+  }
+  const cssSelector = cssSelectorAt(source, token.end);
+  if (cssSelector !== undefined) {
+    return {
+      range: rangeFromOffsets(source, token.start, token.end),
+      contents: [`CSS class selector .${cssSelector}: local CSS-module class.`],
+    };
+  }
+  if (cssClassMapMemberAt(source, token.end) !== undefined) {
+    return {
+      range: rangeFromOffsets(source, token.start, token.end),
+      contents: [`CSS module class-map member ${token.text}.`],
+    };
+  }
+  const htmlContext = htmlTokenContext(source, token.start);
+  if (htmlContext !== undefined) {
+    return {
+      range: rangeFromOffsets(source, token.start, token.end),
+      contents: [htmlContext.kind === 'tag' ? `HTML element <${token.text}>.` : `HTML attribute ${token.text}.`],
+    };
+  }
   const direct = symbols
     .filter((symbol) => containsOffset(symbol.range, offset) && symbol.name === token.text)
     .toSorted((left, right) => left.range.endOffset - right.range.endOffset)[0];
@@ -72,6 +100,23 @@ export function hoverFlint(
         signature,
       ),
     };
+  const metaDocs: Record<string, string> = {
+    size_of: 'size_of<T>(): u32 - Compile-time byte size of type T on target ABI.',
+    align_of: 'align_of<T>(): u32 - Compile-time byte alignment of type T on target ABI.',
+    offset_of: 'offset_of<T>(field: string): u32 - Compile-time byte offset of a named field in type T.',
+    fields_of: 'fields_of<T>(): FieldInfo[] - List of field metadata for aggregate type T.',
+    type_info: 'type_info<T>(): TypeInfo - Complete type layout and field introspection descriptor.',
+    comptime: 'comptime { ... } - Compile-time constant expression or static assertion block.',
+    derive: 'derive MacroName(...) - Declares a custom derive macro transformation.',
+    macro: 'macro MacroName(...) - Declares a hygienic procedural/declarative AST macro.',
+  };
+  if (metaDocs[token.text] !== undefined) {
+    return {
+      range: rangeFromOffsets(source, token.start, token.end),
+      contents: [metaDocs[token.text]!],
+    };
+  }
+
   const standardLibrary = FLINT_STRING_FUNCTIONS.find((declaration) => declaration.name === token.text);
   const regexStandardLibrary = FLINT_REGEX_FUNCTIONS.find((declaration) => declaration.name === token.text);
   const standardLibraryDeclaration = standardLibrary ?? regexStandardLibrary;
@@ -82,6 +127,54 @@ export function hoverFlint(
         `${standardLibraryDeclaration.name}(${standardLibraryDeclaration.parameters.join(', ')}): ${standardLibraryDeclaration.result}`,
       ],
     };
+  return undefined;
+}
+
+function cssPropertyAt(source: string, offset: number): string | undefined {
+  const before = source.slice(0, offset);
+  if (!isInsideCss(source, offset)) return undefined;
+  const lineStart = Math.max(before.lastIndexOf('{'), before.lastIndexOf(';'));
+  const colon = source.indexOf(':', offset);
+  const nextOpen = source.indexOf('{', offset);
+  return colon >= offset && (nextOpen < 0 || colon < nextOpen) && (lineStart < 0 || lineStart < offset)
+    ? source.slice(offset, colon).trim()
+    : undefined;
+}
+
+function isInsideCss(source: string, offset: number): boolean {
+  const before = source.slice(0, offset);
+  const marker = Math.max(before.lastIndexOf('css!'), before.lastIndexOf('<style>'));
+  if (marker < 0) return false;
+  const open = source.indexOf('{', marker);
+  if (open < 0 || open >= offset) return false;
+  let depth = 0;
+  for (const character of source.slice(open, offset)) {
+    if (character === '{') depth += 1;
+    if (character === '}') depth -= 1;
+  }
+  return depth > 0;
+}
+
+function cssSelectorAt(source: string, offset: number): string | undefined {
+  if (!isInsideCss(source, offset)) return undefined;
+  const before = source.slice(0, offset);
+  const match = /\.([A-Za-z_][\w-]*)$/u.exec(before);
+  return match?.[1];
+}
+
+function cssClassMapMemberAt(source: string, offset: number): string | undefined {
+  const before = source.slice(0, offset);
+  const access = /styles(?:\s*\[\s*["'][^"']+["']\s*\])+\s*\[\s*["']([A-Za-z_][\w-]*)$/u.exec(before);
+  return access?.[1];
+}
+
+function htmlTokenContext(source: string, offset: number): { readonly kind: 'tag' | 'attribute' } | undefined {
+  const before = source.slice(0, offset);
+  const open = before.lastIndexOf('<');
+  if (open <= before.lastIndexOf('>')) return undefined;
+  const fragment = before.slice(open);
+  if (/^<\/?[A-Za-z][\w:-]*$/u.test(fragment)) return { kind: 'tag' };
+  if (/^<[A-Za-z][\w:-]*\s+[A-Za-z-]*$/u.test(fragment)) return { kind: 'attribute' };
   return undefined;
 }
 
@@ -98,9 +191,9 @@ function identifierAt(
 ): { readonly text: string; readonly start: number; readonly end: number } | undefined {
   const bounded = Math.min(offset, source.length);
   let start = bounded;
-  while (start > 0 && /[A-Za-z0-9_]/u.test(source[start - 1] ?? '')) start -= 1;
+  while (start > 0 && /[A-Za-z0-9_-]/u.test(source[start - 1] ?? '')) start -= 1;
   let end = bounded;
-  while (end < source.length && /[A-Za-z0-9_]/u.test(source[end] ?? '')) end += 1;
+  while (end < source.length && /[A-Za-z0-9_-]/u.test(source[end] ?? '')) end += 1;
   if (start === end || !/[A-Za-z_]/u.test(source[start] ?? '')) return undefined;
   return { text: source.slice(start, end), start, end };
 }

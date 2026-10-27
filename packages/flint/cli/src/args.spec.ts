@@ -1,5 +1,3 @@
-/* eslint-disable unicorn/prevent-abbreviations */
-
 import { describe, expect, it } from 'vitest';
 
 import { parseFlintCliArgs } from './args.js';

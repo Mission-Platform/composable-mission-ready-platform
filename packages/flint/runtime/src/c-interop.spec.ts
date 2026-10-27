@@ -1,6 +1,7 @@
-import { compileCHeader, compileFlint, createFlintAbiManifest, parseFlint } from '@mission-platform/flint';
 import sqlite3InitModule from '@sqlite.org/sqlite-wasm';
 import { describe, expect, it } from 'vitest';
+
+import { compileCHeader, compileFlint, createFlintAbiManifest, parseFlint } from '@mission-platform/flint';
 
 import { createFlintHost } from './host.ts';
 import { createFlintMemory, createFlintMultiMemory, FlintRegionalArena, FLINT_MEMORY_CAPABILITIES } from './memory.ts';

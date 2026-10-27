@@ -1,20 +1,20 @@
-import {
-  primitiveTypes,
-  renderFlintDocumentation,
-  type FlintEnumDeclaration,
-  type FlintExpression,
-  type FlintFunction,
-  type FlintGenericParameter,
-  type FlintInterfaceDeclaration,
-  type FlintInterfaceFunction,
-  type FlintModule,
-  type FlintPrimitiveType,
-  type FlintSourceSpan,
-  type FlintStructDeclaration,
-  type FlintStatement,
-  type FlintToken,
-  type FlintTypeName,
-} from '@mission-platform/flint';
+import type {
+  FlintEnumDeclaration,
+  FlintExpression,
+  FlintFunction,
+  FlintGenericParameter,
+  FlintInterfaceDeclaration,
+  FlintInterfaceFunction,
+  FlintModule,
+  FlintPrimitiveType,
+  FlintSourceSpan,
+  FlintStyleCompanion,
+  FlintStructDeclaration,
+  FlintStatement,
+  FlintToken,
+  FlintTypeName,
+} from '@mission-platform/flint-ast';
+import { primitiveTypes, renderFlintDocumentation } from '@mission-platform/flint-parser';
 
 import { rangeFromOffsets, rangeFromSpan } from './positions.js';
 
@@ -48,14 +48,67 @@ export function buildSymbolIndex(
     detail: `module ${module.name}`,
   });
   for (const imported of module.sourceImports) {
-    const aliasToken = findToken(rawTokens, imported.alias, imported.span.start, imported.span.end);
-    symbols.push({
-      name: imported.alias,
-      kind: 'capability',
-      range: aliasToken === undefined ? rangeFromSpan(source, imported.span) : tokenRange(source, aliasToken),
-      detail: `${imported.source} as ${imported.alias}`,
-    });
+    const bindings = imported.bindings ?? [
+      { kind: 'namespace' as const, localName: imported.alias, span: imported.span },
+    ];
+    for (const binding of bindings) {
+      const bindingToken = findToken(rawTokens, binding.localName, binding.span.start, binding.span.end);
+      symbols.push({
+        name: binding.localName,
+        kind: 'capability',
+        range: bindingToken === undefined ? rangeFromSpan(source, binding.span) : tokenRange(source, bindingToken),
+        detail:
+          binding.kind === 'named'
+            ? `${binding.importedName} from ${imported.source}`
+            : `${imported.source} as ${binding.localName}`,
+      });
+    }
   }
+  for (const companion of module.styleCompanions ?? []) {
+    const addRule = (rule: FlintStyleCompanion['rules'][number]): void => {
+      symbols.push({
+        name: rule.selector,
+        kind: 'capability',
+        range: rangeFromSpan(source, rule.span),
+        detail: `CSS selector ${rule.selector}`,
+      });
+      for (const declaration of rule.declarations) {
+        symbols.push({
+          name: declaration.property,
+          kind: 'capability',
+          range: rangeFromSpan(source, declaration.span),
+          detail: `CSS declaration ${declaration.property}: ${declaration.value}`,
+        });
+      }
+      for (const child of rule.children ?? []) addRule(child);
+    };
+    for (const rule of companion.rules) addRule(rule);
+    for (const atRule of companion.atRules) {
+      symbols.push({
+        name: `@${atRule.name}`,
+        kind: 'capability',
+        range: rangeFromSpan(source, atRule.span),
+        detail: `CSS at-rule @${atRule.name} ${atRule.prelude}`.trim(),
+      });
+      for (const rule of atRule.rules) addRule(rule);
+    }
+    const addClassNode = (classNode: NonNullable<FlintStyleCompanion['classMap']>[number]): void => {
+      const classStart = source.indexOf(`.${classNode.className}`, classNode.span.start);
+      symbols.push({
+        name: classNode.className,
+        kind: 'capability',
+        range: rangeFromOffsets(
+          source,
+          classStart < 0 ? classNode.span.start : classStart + 1,
+          classStart < 0 ? classNode.span.end : classStart + 1 + classNode.className.length,
+        ),
+        detail: `CSS module class .${classNode.className}`,
+      });
+      for (const child of classNode.children) addClassNode(child);
+    };
+    for (const classNode of companion.classMap ?? []) addClassNode(classNode);
+  }
+  addMarkupSymbols(source, symbols);
   for (const imported of module.imports) {
     const aliasToken = findToken(rawTokens, imported.alias, imported.span.start, imported.span.end);
     const callable = {
@@ -121,6 +174,27 @@ export function buildSymbolIndex(
     addStatementSymbols(source, declaration, declaration.body, rawTokens, symbols, declaration.span);
   }
   return { symbols, callables };
+}
+
+function addMarkupSymbols(source: string, symbols: FlintSymbol[]): void {
+  const tags = /<([A-Za-z][\w:-]*)(?=\s|\/?>)/gu;
+  for (const match of source.matchAll(tags)) {
+    const tagName = match[1];
+    const start = (match.index ?? 0) + 1;
+    if (tagName === undefined || ['script', 'template', 'style'].includes(tagName)) continue;
+    const before = source.slice(0, start - 1);
+    const htmlStart = before.lastIndexOf('html!');
+    const htmlEnd = before.lastIndexOf('};');
+    const templateStart = before.lastIndexOf('<template>');
+    const templateEnd = before.lastIndexOf('</template>');
+    if (htmlStart <= htmlEnd && templateStart <= templateEnd) continue;
+    symbols.push({
+      name: tagName,
+      kind: 'capability',
+      range: rangeFromOffsets(source, start, start + tagName.length),
+      detail: `HTML element <${tagName}>`,
+    });
+  }
 }
 
 /** Indexes struct declarations, fields, and constructors. */

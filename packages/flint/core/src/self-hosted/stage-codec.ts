@@ -1,3 +1,21 @@
+import type {
+  FlintBinaryOperator,
+  FlintCssClassMapNode,
+  FlintComponentRegion,
+  FlintExpression,
+  FlintFunction,
+  FlintMarkupAttr,
+  FlintMarkupChild,
+  FlintModule,
+  FlintParameter,
+  FlintPattern,
+  FlintPrimitiveType,
+  FlintStatement,
+  FlintStyleCompanion,
+  FlintTypeName,
+} from '@mission-platform/flint-ast';
+import type { FlintToken, FlintTokenKind } from '@mission-platform/flint-parser';
+
 import {
   createFlintSelfHostedStageArtifact,
   decodeFlintSelfHostedStageArtifact,
@@ -8,18 +26,7 @@ import {
   type FlintSelfHostedStageArtifact,
 } from './artifact.js';
 
-import type {
-  FlintBinaryOperator,
-  FlintExpression,
-  FlintFunction,
-  FlintModule,
-  FlintParameter,
-  FlintPrimitiveType,
-  FlintStatement,
-  FlintTypeName,
-} from '../ast.js';
 import type { FlintDiagnostic, FlintSourceSpan } from '../diagnostics.js';
-import type { FlintToken, FlintTokenKind } from '../lexer.js';
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder('utf-8', { fatal: true });
@@ -29,6 +36,7 @@ const tokenMagic = new Uint8Array([0x46, 0x57, 0x53, 0x54]);
 /** Binary magic: FLINTM */
 const moduleMagic = new Uint8Array([0x46, 0x57, 0x53, 0x4d]);
 const payloadVersion = 1;
+const modulePayloadVersion = 4;
 
 const tokenKinds = [
   'eof',
@@ -82,7 +90,6 @@ class BinaryWriter {
    * @param value - The value parameter.
    */
   public i32(value: number): void {
-    // eslint-disable-next-line unicorn/prefer-math-trunc -- intentional ToInt32 framing
     const encoded = value | 0;
     this.bytes.push(encoded & 0xff, (encoded >>> 8) & 0xff, (encoded >>> 16) & 0xff, (encoded >>> 24) & 0xff);
   }
@@ -495,7 +502,7 @@ function readLiteralValue(reader: BinaryReader): boolean | number | string {
  * @param writer - Binary stream writer.
  * @param pattern - Pattern AST node to encode.
  */
-function writePattern(writer: BinaryWriter, pattern: import('../ast.js').FlintPattern): void {
+function writePattern(writer: BinaryWriter, pattern: FlintPattern): void {
   writer.string(pattern.kind);
   if (pattern.kind === 'wildcard') {
     writeSpan(writer, pattern.span);
@@ -518,7 +525,7 @@ function writePattern(writer: BinaryWriter, pattern: import('../ast.js').FlintPa
  * @param reader - Binary stream reader.
  * @returns Decoded pattern AST node.
  */
-function readPattern(reader: BinaryReader): import('../ast.js').FlintPattern {
+function readPattern(reader: BinaryReader): FlintPattern {
   const kind = reader.string();
   if (kind === 'wildcard') return { kind: 'wildcard', span: readSpan(reader) };
   if (kind === 'literal') return { kind: 'literal', value: readLiteralValue(reader), span: readSpan(reader) };
@@ -721,6 +728,22 @@ function readStructValueExpression(reader: BinaryReader): Extract<FlintExpressio
   return { kind: 'struct-value', type, fields, span: readSpan(reader) };
 }
 
+function writeObjectExpression(writer: BinaryWriter, expression: Extract<FlintExpression, { kind: 'object' }>): void {
+  const fields = Object.entries(expression.fields).toSorted(([left], [right]) => left.localeCompare(right));
+  writer.u32(fields.length);
+  for (const [name, value] of fields) {
+    writer.string(name);
+    writeExpression(writer, value);
+  }
+  writeSpan(writer, expression.span);
+}
+
+function readObjectExpression(reader: BinaryReader): Extract<FlintExpression, { kind: 'object' }> {
+  const fields: Record<string, FlintExpression> = {};
+  for (let index = 0; index < reader.u32(); index += 1) fields[reader.string()] = readExpression(reader);
+  return { kind: 'object', fields, span: readSpan(reader) };
+}
+
 /**
  * Serializes an enum-variant constructor expression to the binary writer.
  *
@@ -850,6 +873,286 @@ function readMatchExpression(reader: BinaryReader): Extract<FlintExpression, { k
   return { kind: 'match', value, arms, span: readSpan(reader) };
 }
 
+function writeComptimeExpression(
+  writer: BinaryWriter,
+  expression: Extract<FlintExpression, { kind: 'comptime-expression' }>,
+): void {
+  writeExpression(writer, expression.expression);
+  writeSpan(writer, expression.span);
+}
+
+function readComptimeExpression(reader: BinaryReader): Extract<FlintExpression, { kind: 'comptime-expression' }> {
+  return {
+    kind: 'comptime-expression',
+    expression: readExpression(reader),
+    span: readSpan(reader),
+  };
+}
+
+function writeMarkupAttr(writer: BinaryWriter, attr: FlintMarkupAttr): void {
+  writer.string(attr.kind);
+  if (attr.kind === 'markup-spread-attribute') {
+    writeExpression(writer, attr.expression);
+    writeSpan(writer, attr.span);
+  } else if (attr.kind === 'markup-slot-attribute') {
+    writer.string(attr.name);
+    writeExpression(writer, attr.payload);
+    writeSpan(writer, attr.span);
+  } else {
+    writer.string(attr.name);
+    writer.bool(attr.value !== undefined);
+    if (attr.value !== undefined) {
+      writer.string(attr.value.kind);
+      if (attr.value.kind === 'string') {
+        writer.string(attr.value.value);
+      } else {
+        writeExpression(writer, attr.value.expression);
+      }
+      writeSpan(writer, attr.value.span);
+    }
+    writeSpan(writer, attr.span);
+  }
+}
+
+function readMarkupAttr(reader: BinaryReader): FlintMarkupAttr {
+  const kind = reader.string();
+  if (kind === 'markup-spread-attribute') {
+    const expression = readExpression(reader);
+    const span = readSpan(reader);
+    return {
+      kind: 'markup-spread-attribute',
+      expression,
+      span,
+    };
+  }
+  if (kind === 'markup-slot-attribute') {
+    return {
+      kind: 'markup-slot-attribute',
+      name: reader.string(),
+      payload: readExpression(reader),
+      span: readSpan(reader),
+    };
+  }
+  const name = reader.string();
+  const hasValue = reader.bool();
+  let value: FlintMarkupAttr extends { value?: infer V } ? V : never = undefined as unknown as FlintMarkupAttr extends {
+    value?: infer V;
+  }
+    ? V
+    : never;
+  if (hasValue) {
+    const valueKind = reader.string();
+    if (valueKind === 'string') {
+      value = {
+        kind: 'string',
+        value: reader.string(),
+        span: readSpan(reader),
+      } as unknown as FlintMarkupAttr extends { value?: infer V } ? V : never;
+    } else {
+      value = {
+        kind: 'expression',
+        expression: readExpression(reader),
+        span: readSpan(reader),
+      } as unknown as FlintMarkupAttr extends { value?: infer V } ? V : never;
+    }
+  }
+  const span = readSpan(reader);
+  return {
+    kind: 'markup-attribute',
+    name,
+    ...(value !== undefined ? { value } : {}),
+    span,
+  };
+}
+
+function writeMarkupChild(writer: BinaryWriter, child: FlintMarkupChild): void {
+  writer.string(child.kind);
+  switch (child.kind) {
+    case 'markup-element': {
+      writer.bool(typeof child.tag === 'string');
+      if (typeof child.tag === 'string') {
+        writer.string(child.tag);
+      } else {
+        writeExpression(writer, child.tag);
+      }
+      writer.string(child.tagKind);
+      writer.bool(child.selfClosing);
+      writer.u32(child.attributes.length);
+      for (const attr of child.attributes) {
+        writeMarkupAttr(writer, attr);
+      }
+      writer.u32(child.children.length);
+      for (const c of child.children) {
+        writeMarkupChild(writer, c);
+      }
+      writeSpan(writer, child.span);
+      break;
+    }
+    case 'markup-text': {
+      writer.string(child.text);
+      writeSpan(writer, child.span);
+      break;
+    }
+    case 'markup-expression': {
+      writeExpression(writer, child.expression);
+      writeSpan(writer, child.span);
+      break;
+    }
+    case 'markup-slot': {
+      writer.string(child.name);
+      writer.bool(child.fallback !== undefined);
+      if (child.fallback !== undefined) {
+        writer.u32(child.fallback.length);
+        for (const f of child.fallback) {
+          writeMarkupChild(writer, f);
+        }
+      }
+      writeSpan(writer, child.span);
+      break;
+    }
+    case 'markup-conditional': {
+      writeExpression(writer, child.condition);
+      writer.u32(child.truthy.length);
+      for (const nested of child.truthy) writeMarkupChild(writer, nested);
+      writer.u32(child.elseif?.length ?? 0);
+      for (const branch of child.elseif ?? []) {
+        writeExpression(writer, branch.condition);
+        writer.u32(branch.children.length);
+        for (const nested of branch.children) writeMarkupChild(writer, nested);
+        writeSpan(writer, branch.span);
+      }
+      writer.bool(child.fallback !== undefined);
+      if (child.fallback !== undefined) {
+        writer.u32(child.fallback.length);
+        for (const nested of child.fallback) writeMarkupChild(writer, nested);
+      }
+      writeSpan(writer, child.span);
+      break;
+    }
+    case 'markup-for': {
+      writeExpression(writer, child.items);
+      writer.string(child.directiveBindings.itemName);
+      writer.optionalString(child.directiveBindings.indexName);
+      writer.optionalString(child.directiveBindings.iterableName);
+      writeSpan(writer, child.directiveBindings.span);
+      writer.u32(child.children.length);
+      for (const nested of child.children) writeMarkupChild(writer, nested);
+      writeSpan(writer, child.span);
+      break;
+    }
+  }
+}
+
+function readMarkupChild(reader: BinaryReader): FlintMarkupChild {
+  const kind = reader.string();
+  switch (kind) {
+    case 'markup-element': {
+      const isStringTag = reader.bool();
+      const tag = isStringTag ? reader.string() : readExpression(reader);
+      const tagKind = reader.string() as 'element' | 'component' | 'fragment' | 'dynamic';
+      const selfClosing = reader.bool();
+      const attrCount = reader.u32();
+      const attributes = Array.from({ length: attrCount }, () => readMarkupAttr(reader));
+      const childCount = reader.u32();
+      const children = Array.from({ length: childCount }, () => readMarkupChild(reader));
+      const span = readSpan(reader);
+      return {
+        kind: 'markup-element',
+        tag,
+        tagKind,
+        selfClosing,
+        attributes,
+        children,
+        span,
+      };
+    }
+    case 'markup-text': {
+      const text = reader.string();
+      const span = readSpan(reader);
+      return {
+        kind: 'markup-text',
+        text,
+        span,
+      };
+    }
+    case 'markup-expression': {
+      const expression = readExpression(reader);
+      const span = readSpan(reader);
+      return {
+        kind: 'markup-expression',
+        expression,
+        span,
+      };
+    }
+    case 'markup-slot': {
+      const name = reader.string();
+      const hasFallback = reader.bool();
+      const fallback = hasFallback ? Array.from({ length: reader.u32() }, () => readMarkupChild(reader)) : undefined;
+      const span = readSpan(reader);
+      return {
+        kind: 'markup-slot',
+        name,
+        ...(fallback ? { fallback } : {}),
+        span,
+      };
+    }
+    case 'markup-conditional': {
+      const condition = readExpression(reader);
+      const truthy = Array.from({ length: reader.u32() }, () => readMarkupChild(reader));
+      const elseif = Array.from({ length: reader.u32() }, () => ({
+        kind: 'markup-conditional-branch' as const,
+        condition: readExpression(reader),
+        children: Array.from({ length: reader.u32() }, () => readMarkupChild(reader)),
+        span: readSpan(reader),
+      }));
+      const fallback = reader.bool() ? Array.from({ length: reader.u32() }, () => readMarkupChild(reader)) : undefined;
+      return {
+        kind: 'markup-conditional',
+        condition,
+        truthy,
+        ...(elseif.length === 0 ? {} : { elseif }),
+        ...(fallback === undefined ? {} : { fallback }),
+        span: readSpan(reader),
+      };
+    }
+    case 'markup-for': {
+      const items = readExpression(reader);
+      const itemName = reader.string();
+      const indexName = reader.optionalString();
+      const iterableName = reader.optionalString();
+      const directiveBindings = {
+        itemName,
+        ...(indexName === undefined ? {} : { indexName }),
+        ...(iterableName === undefined ? {} : { iterableName }),
+        span: readSpan(reader),
+      };
+      const children = Array.from({ length: reader.u32() }, () => readMarkupChild(reader));
+      return { kind: 'markup-for', items, directiveBindings, children, span: readSpan(reader) };
+    }
+    default:
+      throw invalid(`unsupported markup child kind '${kind}'`);
+  }
+}
+
+function writeMarkupBlockExpression(
+  writer: BinaryWriter,
+  expression: Extract<FlintExpression, { kind: 'markup-block' }>,
+): void {
+  writer.u32(expression.children.length);
+  for (const child of expression.children) writeMarkupChild(writer, child);
+  writeSpan(writer, expression.span);
+}
+
+function readMarkupBlockExpression(reader: BinaryReader): Extract<FlintExpression, { kind: 'markup-block' }> {
+  const children = Array.from({ length: reader.u32() }, () => readMarkupChild(reader));
+  return {
+    kind: 'markup-block',
+    children,
+    ...(children[0] === undefined ? {} : { root: children[0] }),
+    span: readSpan(reader),
+  };
+}
+
 const WRITE_EXPRESSION_DISPATCH = {
   literal: (writer: BinaryWriter, expression: FlintExpression) =>
     writeLiteralExpression(writer, expression as Extract<FlintExpression, { kind: 'literal' }>),
@@ -865,6 +1168,8 @@ const WRITE_EXPRESSION_DISPATCH = {
     writeFunctionValueExpression(writer, expression as Extract<FlintExpression, { kind: 'function-value' }>),
   'struct-value': (writer: BinaryWriter, expression: FlintExpression) =>
     writeStructValueExpression(writer, expression as Extract<FlintExpression, { kind: 'struct-value' }>),
+  object: (writer: BinaryWriter, expression: FlintExpression) =>
+    writeObjectExpression(writer, expression as Extract<FlintExpression, { kind: 'object' }>),
   'enum-value': (writer: BinaryWriter, expression: FlintExpression) =>
     writeEnumValueExpression(writer, expression as Extract<FlintExpression, { kind: 'enum-value' }>),
   'array-literal': (writer: BinaryWriter, expression: FlintExpression) =>
@@ -875,6 +1180,10 @@ const WRITE_EXPRESSION_DISPATCH = {
     writeIndexExpression(writer, expression as Extract<FlintExpression, { kind: 'index' }>),
   match: (writer: BinaryWriter, expression: FlintExpression) =>
     writeMatchExpression(writer, expression as Extract<FlintExpression, { kind: 'match' }>),
+  'comptime-expression': (writer: BinaryWriter, expression: FlintExpression) =>
+    writeComptimeExpression(writer, expression as Extract<FlintExpression, { kind: 'comptime-expression' }>),
+  'markup-block': (writer: BinaryWriter, expression: FlintExpression) =>
+    writeMarkupBlockExpression(writer, expression as Extract<FlintExpression, { kind: 'markup-block' }>),
 } satisfies Record<FlintExpression['kind'], (writer: BinaryWriter, expression: FlintExpression) => void>;
 
 /**
@@ -896,11 +1205,14 @@ const READ_EXPRESSION_DISPATCH = {
   unary: (reader: BinaryReader) => readUnaryExpression(reader),
   'function-value': (reader: BinaryReader) => readFunctionValueExpression(reader),
   'struct-value': (reader: BinaryReader) => readStructValueExpression(reader),
+  object: (reader: BinaryReader) => readObjectExpression(reader),
   'enum-value': (reader: BinaryReader) => readEnumValueExpression(reader),
   'array-literal': (reader: BinaryReader) => readListLiteralExpression(reader, 'array-literal'),
   'vector-literal': (reader: BinaryReader) => readListLiteralExpression(reader, 'vector-literal'),
   index: (reader: BinaryReader) => readIndexExpression(reader),
   match: (reader: BinaryReader) => readMatchExpression(reader),
+  'comptime-expression': (reader: BinaryReader) => readComptimeExpression(reader),
+  'markup-block': (reader: BinaryReader) => readMarkupBlockExpression(reader),
 } satisfies Record<FlintExpression['kind'], (reader: BinaryReader) => FlintExpression>;
 
 /**
@@ -1308,6 +1620,23 @@ function readSwitchStatement(reader: BinaryReader): Extract<FlintStatement, { ki
   };
 }
 
+function writeComptimeStatement(
+  writer: BinaryWriter,
+  statement: Extract<FlintStatement, { kind: 'comptime-statement' }>,
+): void {
+  writer.u32(statement.body.length);
+  for (const step of statement.body) writeStatement(writer, step);
+  writeSpan(writer, statement.span);
+}
+
+function readComptimeStatement(reader: BinaryReader): Extract<FlintStatement, { kind: 'comptime-statement' }> {
+  return {
+    kind: 'comptime-statement',
+    body: Array.from({ length: reader.u32() }, () => readStatement(reader)),
+    span: readSpan(reader),
+  };
+}
+
 const WRITE_STATEMENT_DISPATCH = {
   let: (writer: BinaryWriter, statement: FlintStatement) =>
     writeLetStatement(writer, statement as Extract<FlintStatement, { kind: 'let' }>),
@@ -1333,6 +1662,8 @@ const WRITE_STATEMENT_DISPATCH = {
     writeMatchStatement(writer, statement as Extract<FlintStatement, { kind: 'match-statement' }>),
   switch: (writer: BinaryWriter, statement: FlintStatement) =>
     writeSwitchStatement(writer, statement as Extract<FlintStatement, { kind: 'switch' }>),
+  'comptime-statement': (writer: BinaryWriter, statement: FlintStatement) =>
+    writeComptimeStatement(writer, statement as Extract<FlintStatement, { kind: 'comptime-statement' }>),
 } satisfies Record<FlintStatement['kind'], (writer: BinaryWriter, statement: FlintStatement) => void>;
 
 /**
@@ -1359,6 +1690,7 @@ const READ_STATEMENT_DISPATCH = {
   'iterator-loop': (reader: BinaryReader) => readIteratorLoopStatement(reader),
   'match-statement': (reader: BinaryReader) => readMatchStatement(reader),
   switch: (reader: BinaryReader) => readSwitchStatement(reader),
+  'comptime-statement': (reader: BinaryReader) => readComptimeStatement(reader),
 } satisfies Record<FlintStatement['kind'], (reader: BinaryReader) => FlintStatement>;
 
 /**
@@ -1558,9 +1890,26 @@ export function encodeFlintSelfHostedModule(module: FlintModule): Uint8Array {
   if (module.kind !== 'module') invalid('module kind must be module');
   const writer = new BinaryWriter();
   writer.raw(moduleMagic);
-  writer.u8(payloadVersion);
+  writer.u8(modulePayloadVersion);
   writer.string(module.name);
   writeSpan(writer, module.span);
+  writer.u8(module.fileKind === 'component' ? 1 : 0);
+  if (module.fileKind === 'component') {
+    const regions = module.componentRegions ?? [];
+    writer.u32(regions.length);
+    for (const region of regions) {
+      writer.string(region.region);
+      writer.string(region.content);
+      writeSpan(writer, region.span);
+      writeSpan(writer, region.contentSpan);
+    }
+    writer.bool(module.template !== undefined);
+    if (module.template !== undefined) {
+      writer.u32(module.template.children.length);
+      for (const child of module.template.children) writeMarkupChild(writer, child);
+      writeSpan(writer, module.template.span);
+    }
+  }
 
   encodeCapabilityImports(writer, module);
   encodeSourceImports(writer, module);
@@ -1568,7 +1917,147 @@ export function encodeFlintSelfHostedModule(module: FlintModule): Uint8Array {
   encodeEnumDeclarations(writer, module);
   encodeInterfaceDeclarations(writer, module);
   encodeFunctionDeclarations(writer, module);
+  encodeStyleCompanions(writer, module.styleCompanions ?? []);
   return writer.toBytes();
+}
+
+function encodeStyleCompanions(writer: BinaryWriter, companions: readonly FlintStyleCompanion[]): void {
+  writer.u32(companions.length);
+  for (const companion of companions) {
+    writer.string(companion.ownerModule);
+    writer.optionalString(companion.bindingName);
+    writer.u32(companion.rules.length);
+    for (const rule of companion.rules) {
+      writeCssRule(writer, rule);
+    }
+    writer.u32(companion.atRules.length);
+    for (const atRule of companion.atRules) {
+      writer.string(atRule.name);
+      writer.string(atRule.prelude);
+      writer.u32(atRule.rules.length);
+      for (const rule of atRule.rules) writeCssRule(writer, rule);
+      writer.u32(atRule.declarations.length);
+      for (const declaration of atRule.declarations) {
+        writeCssDeclaration(writer, declaration);
+      }
+      writeSpan(writer, atRule.span);
+    }
+    writer.u32(companion.propertyRegistrations.length);
+    for (const property of companion.propertyRegistrations) writer.string(property);
+    writer.u32(companion.diagnostics.length);
+    const classMap = companion.classMap ?? [];
+    writer.u32(classMap.length);
+    for (const node of classMap) writeClassMapNode(writer, node);
+    writeSpan(writer, companion.span);
+  }
+}
+
+function writeCssRule(writer: BinaryWriter, rule: FlintStyleCompanion['rules'][number]): void {
+  writer.string(rule.selector);
+  writer.u32(rule.declarations.length);
+  for (const declaration of rule.declarations) writeCssDeclaration(writer, declaration);
+  const children = rule.children ?? [];
+  writer.u32(children.length);
+  for (const child of children) writeCssRule(writer, child);
+  writeSpan(writer, rule.span);
+}
+
+function writeCssDeclaration(
+  writer: BinaryWriter,
+  declaration: FlintStyleCompanion['rules'][number]['declarations'][number],
+): void {
+  writer.string(declaration.property);
+  writer.string(declaration.value);
+  writer.bool(declaration.binding !== undefined);
+  if (declaration.binding !== undefined) {
+    writer.string(declaration.binding.property);
+    writer.string(declaration.binding.cssVariable);
+    writeSpan(writer, declaration.binding.span);
+  }
+  writeSpan(writer, declaration.span);
+}
+
+function writeClassMapNode(writer: BinaryWriter, node: FlintCssClassMapNode): void {
+  writer.string(node.className);
+  writer.string(node.selector);
+  writer.u32(node.children.length);
+  for (const child of node.children) writeClassMapNode(writer, child);
+  writeSpan(writer, node.span);
+}
+
+function readStyleCompanions(
+  reader: BinaryReader,
+  includeNestedClassMaps: boolean,
+  includePropertyBindings: boolean,
+): FlintStyleCompanion[] {
+  const declaration = () => {
+    const property = reader.string();
+    const value = reader.string();
+    const binding =
+      includePropertyBindings && reader.bool()
+        ? {
+            kind: 'css-property-binding' as const,
+            property: reader.string(),
+            cssVariable: reader.string(),
+            span: readSpan(reader),
+          }
+        : undefined;
+    return {
+      kind: 'css-declaration' as const,
+      property,
+      value,
+      ...(binding === undefined ? {} : { binding }),
+      span: readSpan(reader),
+    };
+  };
+  const rule = (): FlintStyleCompanion['rules'][number] => {
+    const selector = reader.string();
+    const declarations = Array.from({ length: reader.u32() }, declaration);
+    const children = includeNestedClassMaps ? Array.from({ length: reader.u32() }, rule) : [];
+    const span = readSpan(reader);
+    return {
+      kind: 'css-rule',
+      selector,
+      declarations,
+      ...(children.length === 0 ? {} : { children }),
+      span,
+    };
+  };
+  const classMapNode = (): FlintCssClassMapNode => ({
+    kind: 'css-class-map-node',
+    className: reader.string(),
+    selector: reader.string(),
+    children: Array.from({ length: reader.u32() }, classMapNode),
+    span: readSpan(reader),
+  });
+  return Array.from({ length: reader.u32() }, () => {
+    const ownerModule = reader.string();
+    const bindingName = includeNestedClassMaps ? reader.optionalString() : undefined;
+    const rules = Array.from({ length: reader.u32() }, rule);
+    const atRules = Array.from({ length: reader.u32() }, () => ({
+      kind: 'css-at-rule' as const,
+      name: reader.string(),
+      prelude: reader.string(),
+      rules: Array.from({ length: reader.u32() }, rule),
+      declarations: Array.from({ length: reader.u32() }, declaration),
+      span: readSpan(reader),
+    }));
+    const propertyRegistrations = Array.from({ length: reader.u32() }, () => reader.string());
+    const diagnosticCount = reader.u32();
+    if (diagnosticCount !== 0) invalid('style companion diagnostics are not serializable in this stage');
+    const classMap = includeNestedClassMaps ? Array.from({ length: reader.u32() }, classMapNode) : undefined;
+    return {
+      kind: 'style-companion' as const,
+      ownerModule,
+      ...(bindingName === undefined ? {} : { bindingName }),
+      rules,
+      atRules,
+      propertyRegistrations,
+      ...(classMap === undefined ? {} : { classMap }),
+      diagnostics: [],
+      span: readSpan(reader),
+    };
+  });
 }
 
 /**
@@ -1600,6 +2089,15 @@ function encodeSourceImports(writer: BinaryWriter, module: FlintModule): void {
   for (const entry of module.sourceImports) {
     writer.string(entry.source);
     writer.string(entry.alias);
+    const bindings = entry.bindings ?? ([{ kind: 'namespace', localName: entry.alias, span: entry.span }] as const);
+    writer.u8(entry.bindingKind === 'named' ? 1 : 2);
+    writer.u32(bindings.length);
+    for (const binding of bindings) {
+      writer.u8(binding.kind === 'named' ? 1 : 2);
+      writer.string(binding.localName);
+      writer.optionalString(binding.kind === 'named' ? binding.importedName : undefined);
+      writeSpan(writer, binding.span);
+    }
     writeSpan(writer, entry.span);
   }
 }
@@ -1707,10 +2205,52 @@ export function decodeFlintSelfHostedModule(bytes: Uint8Array): FlintModule {
   if (!reader.take(moduleMagic.length).every((value, index) => value === moduleMagic[index])) {
     invalid('module payload magic does not match');
   }
-  if (reader.u8() !== payloadVersion) invalid('module payload version is unsupported');
+  const decodedModulePayloadVersion = reader.u8();
+  if (
+    decodedModulePayloadVersion !== 1 &&
+    decodedModulePayloadVersion !== 2 &&
+    decodedModulePayloadVersion !== 3 &&
+    decodedModulePayloadVersion !== modulePayloadVersion
+  ) {
+    invalid('module payload version is unsupported');
+  }
   const name = reader.string();
   if (name.length === 0) invalid('module name must not be empty');
   const span = readSpan(reader);
+  let fileKind: 'component' | undefined;
+  let componentRegions: FlintComponentRegion[] | undefined;
+  let template: FlintModule['template'];
+  if (decodedModulePayloadVersion >= 3) {
+    if (reader.u8() === 1) {
+      fileKind = 'component';
+      componentRegions = Array.from({ length: reader.u32() }, () => {
+        const region = reader.string();
+        if (region !== 'script' && region !== 'template' && region !== 'style') {
+          invalid(`unknown component region: ${region}`);
+        }
+        return {
+          kind: 'component-region' as const,
+          region,
+          content: reader.string(),
+          span: readSpan(reader),
+          contentSpan: readSpan(reader),
+        };
+      });
+      if (reader.bool()) {
+        const children =
+          decodedModulePayloadVersion === modulePayloadVersion
+            ? Array.from({ length: reader.u32() }, () => readMarkupChild(reader))
+            : [readMarkupChild(reader)];
+        const templateSpan = readSpan(reader);
+        template = {
+          kind: 'markup-block',
+          children,
+          ...(children[0] === undefined ? {} : { root: children[0] }),
+          span: templateSpan,
+        };
+      }
+    }
+  }
 
   const imports = Array.from({ length: reader.u32() }, () => ({
     kind: 'capability-import' as const,
@@ -1721,12 +2261,36 @@ export function decodeFlintSelfHostedModule(bytes: Uint8Array): FlintModule {
     span: readSpan(reader),
   }));
 
-  const sourceImports = Array.from({ length: reader.u32() }, () => ({
-    kind: 'source-module-import' as const,
-    source: reader.string(),
-    alias: reader.string(),
-    span: readSpan(reader),
-  }));
+  const sourceImports = Array.from({ length: reader.u32() }, () => {
+    const source = reader.string();
+    const alias = reader.string();
+    if (decodedModulePayloadVersion === 1) {
+      return {
+        kind: 'source-module-import' as const,
+        source,
+        alias,
+        span: readSpan(reader),
+      };
+    }
+    const bindingKind = reader.u8();
+    const bindings = Array.from({ length: reader.u32() }, () => {
+      const kind = reader.u8();
+      const localName = reader.string();
+      const importedName = reader.optionalString();
+      const span = readSpan(reader);
+      return kind === 1
+        ? { kind: 'named' as const, importedName: importedName ?? localName, localName, span }
+        : { kind: 'namespace' as const, localName, span };
+    });
+    return {
+      kind: 'source-module-import' as const,
+      source,
+      alias,
+      bindingKind: bindingKind === 1 ? ('named' as const) : ('namespace' as const),
+      bindings,
+      span: readSpan(reader),
+    };
+  });
 
   const structs = Array.from({ length: reader.u32() }, () => ({
     kind: 'struct' as const,
@@ -1799,16 +2363,27 @@ export function decodeFlintSelfHostedModule(bytes: Uint8Array): FlintModule {
   }));
 
   const functions = Array.from({ length: reader.u32() }, () => readFunction(reader));
+  const styleCompanions =
+    decodedModulePayloadVersion >= 2
+      ? readStyleCompanions(
+          reader,
+          decodedModulePayloadVersion >= 3,
+          decodedModulePayloadVersion === modulePayloadVersion,
+        )
+      : [];
   reader.done();
   return {
     kind: 'module',
     name,
+    ...(fileKind === undefined ? {} : { fileKind, componentRegions }),
+    ...(template === undefined ? {} : { template }),
     imports,
     sourceImports,
     structs,
     enums,
     interfaces,
     functions,
+    ...(styleCompanions.length === 0 ? {} : { styleCompanions }),
     span,
   };
 }
