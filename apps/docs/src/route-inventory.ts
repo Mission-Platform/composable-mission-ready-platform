@@ -1,6 +1,8 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
+import type { SitemapUrl } from '@mission-platform/seo';
+
 import {
   DOCUMENTATION_WORKSPACE_FAMILIES,
   packageDocumentationSourceRoot,
@@ -9,8 +11,6 @@ import {
   type DocumentationSourceRoot,
 } from './documentation-sources.ts';
 import * as siteConstants from './ssg/site-constants.ts';
-
-import type { SitemapUrl } from '@mission-platform/seo';
 
 export { DEFAULT_SLUG, SITE_ORIGIN, SUPPORTED_LOCALES } from './ssg/site-constants.ts';
 

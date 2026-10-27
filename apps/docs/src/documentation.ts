@@ -4,6 +4,7 @@
 
 import { parseDocumentationModulePath, qualifiedSlug, type DocumentationSourceRoot } from './documentation-sources';
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type DocumentationLocale } from './i18n';
+import { DEFAULT_DESCRIPTION, extractDescription, extractTitle } from './shared/markdown-utils';
 
 const rawModules = import.meta.glob(
   ['../../../docs/**/*.md', '../../../packages/**/docs/**/*.md', '../../../extensions/**/docs/**/*.md'],
@@ -63,59 +64,6 @@ export const DEFAULT_SLUG = 'overview';
 function titleFromSlug(slug: string): string {
   const last = slug.split('/').pop() ?? slug;
   return last.replaceAll('-', ' ').replaceAll(/\b\w/g, (char) => char.toUpperCase());
-}
-
-function extractTitle(markdown: string, fallback: string): string {
-  const match = markdown.match(/^#\s+(.+?)\s*$/m);
-  return match ? match[1].trim() : fallback;
-}
-
-/** Fallback description used when a document has no usable prose paragraph. */
-const DEFAULT_DESCRIPTION = 'Documentation for the Mission Platform — a composable, mission-ready monorepo.';
-
-/** Maximum length of a generated meta description before it is truncated. */
-const DESCRIPTION_MAX_LENGTH = 160;
-
-/**
- * Derive a plain-text meta description from a Markdown document: the first
- * real prose paragraph, stripped of Markdown syntax and clamped to a
- * search-engine-friendly length. Headings, fenced code blocks, blockquotes,
- * list markers, HTML comments, and machine-translation provenance disclaimers
- * are skipped so the summary reads naturally.
- */
-function extractDescription(markdown: string, fallback: string): string {
-  const withoutCode = markdown.replaceAll(/```[\s\S]*?```/g, '').replaceAll(/<!--[\s\S]*?-->/g, '');
-
-  // Pattern to detect machine-translation provenance disclaimers across all supported locales.
-  // These are typically short paragraphs mentioning "machine-assisted translation" or equivalent.
-  // The pattern matches the opening words and key phrases from the provenance text in each locale.
-  const provenancePattern =
-    /^(machine-assisted|machine-supported|machine-generated|machine translation|assisted translation|maschinenunterstützte|traducción|traduction|traduzione|תרגום|machineondersteunde|由规范|정식|正規の|ترجمة)/i;
-
-  for (const rawBlock of withoutCode.split(/\n{2,}/)) {
-    const block = rawBlock.trim();
-    if (block.length === 0) continue;
-    // Skip headings, blockquotes, tables, and list-only blocks.
-    if (/^(#{1,6}\s|>|\||[-*+]\s|\d+\.\s)/.test(block)) continue;
-    // Skip machine-translation provenance disclaimers.
-    if (provenancePattern.test(block)) continue;
-
-    const text = block
-      .replaceAll(/\r?\n/g, ' ')
-      // Images → alt text; links → link text.
-      .replaceAll(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
-      .replaceAll(/\[([^\]]+)\]\([^)]*\)/g, '$1')
-      // Inline emphasis / code markers.
-      .replaceAll(/[*_`]+/g, '')
-      .replaceAll(/\s+/g, ' ')
-      .trim();
-
-    if (text.length === 0) continue;
-    if (text.length <= DESCRIPTION_MAX_LENGTH) return text;
-    return `${text.slice(0, DESCRIPTION_MAX_LENGTH - 1).trimEnd()}…`;
-  }
-
-  return fallback;
 }
 
 function buildManifest(): Record<DocumentationLocale, Record<string, DocumentEntry>> {

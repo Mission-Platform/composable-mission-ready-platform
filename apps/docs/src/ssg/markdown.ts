@@ -6,42 +6,27 @@
 import hljs from 'highlight.js';
 import { marked, type Tokens } from 'marked';
 
-import { docsDirectoryForRoot, qualifiedSlug, type DocumentationSourceRoot } from '../documentation-sources.ts';
+import {
+  buildToc,
+  extractDescription,
+  extractTitle,
+  plainText,
+  resolveInternalHref,
+  slugify,
+  type MarkdownLinkContext,
+  type TocItem,
+} from '../shared/markdown-utils.ts';
 
-import { DEFAULT_LOCALE, documentPath, type DocumentationLocale } from './site-constants.ts';
+import { DEFAULT_LOCALE, type DocumentationLocale } from './site-constants.ts';
 
-export interface TocItem {
-  id: string;
-  text: string;
-  depth: 2 | 3;
-}
+export type { MarkdownLinkContext, TocItem };
+export { buildToc, extractDescription, extractTitle, resolveInternalHref };
 
 export interface RenderedMarkdown {
   html: string;
   toc: TocItem[];
   title: string;
   description: string;
-}
-
-export interface MarkdownLinkContext {
-  readonly currentRoot?: DocumentationSourceRoot;
-  readonly roots?: readonly DocumentationSourceRoot[];
-  readonly hasDocument?: (slug: string, locale: DocumentationLocale) => boolean;
-}
-
-const DEFAULT_DESCRIPTION = 'Documentation for the Mission Platform — a composable, mission-ready monorepo.';
-const DESCRIPTION_MAX_LENGTH = 160;
-
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .trim()
-    .replaceAll(/[^\p{L}\p{N}_]+/gu, '-')
-    .replaceAll(/^-+|-+$/g, '');
-}
-
-function plainText(text: string): string {
-  return text.replaceAll(/[*_`~]/g, '').trim();
 }
 
 function escapeHtml(value: string): string {
@@ -90,113 +75,6 @@ function sanitizeUrl(value: string | undefined): string | undefined {
   } catch {
     return undefined;
   }
-}
-
-export function extractTitle(markdown: string, fallback: string): string {
-  const match = markdown.match(/^#\s+(.+?)\s*$/m);
-  return match ? match[1].trim() : fallback;
-}
-
-export function extractDescription(markdown: string, fallback = DEFAULT_DESCRIPTION): string {
-  const withoutCode = markdown.replaceAll(/```[\s\S]*?```/g, '').replaceAll(/<!--[\s\S]*?-->/g, '');
-  const provenancePattern =
-    /^(machine-assisted|machine-supported|machine-generated|machine translation|assisted translation|maschinenunterstützte|traducción|traduction|traduzione|תרגום|machineondersteunde|由规范|정식|正規の|ترجمة)/i;
-
-  for (const rawBlock of withoutCode.split(/\n{2,}/)) {
-    const block = rawBlock.trim();
-    if (block.length === 0) continue;
-    if (/^(#{1,6}\s|>|\||[-*+]\s|\d+\.\s)/.test(block)) continue;
-    if (provenancePattern.test(block)) continue;
-
-    const text = block
-      .replaceAll(/\r?\n/g, ' ')
-      .replaceAll(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
-      .replaceAll(/\[([^\]]+)\]\([^)]*\)/g, '$1')
-      .replaceAll(/[*_`]+/g, '')
-      .replaceAll(/\s+/g, ' ')
-      .trim();
-
-    if (text.length === 0) continue;
-    if (text.length <= DESCRIPTION_MAX_LENGTH) return text;
-    return `${text.slice(0, DESCRIPTION_MAX_LENGTH - 1).trimEnd()}…`;
-  }
-
-  return fallback;
-}
-
-/** Resolve a relative Markdown link into an in-app route path. */
-export function resolveInternalHref(
-  href: string,
-  currentSlug: string,
-  locale: DocumentationLocale = DEFAULT_LOCALE,
-  context: MarkdownLinkContext = {},
-): string | undefined {
-  const [pathPart, hash] = href.split('#');
-  if (!/\.md$/i.test(pathPart)) return undefined;
-
-  if (context.currentRoot !== undefined && context.roots !== undefined) {
-    const root = context.currentRoot;
-    const localSlug = root.routePrefix === '' ? currentSlug : currentSlug.slice(`${root.routePrefix}/`.length);
-    const currentFile = [...docsDirectoryForRoot(root).split('/'), ...localSlug.split('/')];
-    currentFile[currentFile.length - 1] = `${currentFile.at(-1)}.md`;
-    const target = [...currentFile.slice(0, -1), ...pathSegments(pathPart.replace(/\.md$/i, '').split('/'))];
-    const targetPath = normalizeSegments(target);
-    const owner = context.roots.find((candidate) => {
-      const prefix = `${docsDirectoryForRoot(candidate)}/`;
-      return targetPath.startsWith(prefix);
-    });
-    if (owner === undefined) return undefined;
-    const targetDocument = targetPath.slice(`${docsDirectoryForRoot(owner)}/`.length);
-    const slug = qualifiedSlug(owner, targetDocument);
-    if (context.hasDocument !== undefined && !context.hasDocument(slug, locale)) return undefined;
-    return `${documentPath(slug, locale)}${hash ? `#${hash}` : ''}`;
-  }
-
-  const baseSegments = currentSlug.includes('/') ? currentSlug.split('/').slice(0, -1) : [];
-  const segments = [...baseSegments];
-
-  for (const segment of pathPart.replace(/\.md$/i, '').split('/')) {
-    if (segment === '' || segment === '.') continue;
-    if (segment === '..') {
-      segments.pop();
-    } else {
-      segments.push(segment);
-    }
-  }
-
-  const slug = segments.join('/');
-  return `${documentPath(slug, locale)}${hash ? `#${hash}` : ''}`;
-}
-
-function pathSegments(segments: readonly string[]): string[] {
-  return segments.filter((segment) => segment !== '' && segment !== '.');
-}
-
-function normalizeSegments(segments: readonly string[]): string {
-  const normalized: string[] = [];
-  for (const segment of segments) {
-    if (segment === '..') normalized.pop();
-    else if (segment !== '.') normalized.push(segment);
-  }
-  return normalized.join('/');
-}
-
-function buildToc(markdown: string): TocItem[] {
-  if (!markdown) return [];
-  const toc: TocItem[] = [];
-  const counts = new Map<string, number>();
-  for (const token of marked.lexer(markdown)) {
-    if (token.type !== 'heading') continue;
-    const heading = token as Tokens.Heading;
-    const base = slugify(heading.text);
-    const count = counts.get(base) ?? 0;
-    counts.set(base, count + 1);
-    const id = count > 0 ? `${base}-${count}` : base;
-    if (heading.depth === 2 || heading.depth === 3) {
-      toc.push({ id, text: plainText(heading.text), depth: heading.depth });
-    }
-  }
-  return toc;
 }
 
 function highlightCode(code: string, language: string | undefined): string {
