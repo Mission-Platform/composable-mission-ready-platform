@@ -1,6 +1,7 @@
+import type { CompilerDiagnostic, CompilerPhase } from '@mission-platform/forge-plugin-api';
+
 import type { ForgeArtifactManifest } from './artifact-manifest.js';
 import type { ForgeCacheStats } from './cache.js';
-import type { CompilerDiagnostic, CompilerPhase } from '@mission-platform/forge-plugin-api';
 
 /** A completed compiler phase duration, in milliseconds. */
 export interface ForgePhaseTiming {

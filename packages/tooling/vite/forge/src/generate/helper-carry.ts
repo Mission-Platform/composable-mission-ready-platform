@@ -1,11 +1,12 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
+import type { GeneratedModule } from '@mission-platform/forge-plugin-api';
+
 import { readNeutralImports, readStyleImports } from '../compiler/imports.js';
 
 import type { ForgeGenerationContext } from '../compiler/generation-context.js';
 import type { ForgeFileGraph } from '../compiler/graph.js';
-import type { GeneratedModule } from '@mission-platform/forge-plugin-api';
 
 export function createHelperModuleCarrier(input: {
   /** Graphs for the public package entry and transformed component barrel. */

@@ -385,7 +385,7 @@ export function compileRouterModule(input: RouterCompilerInput): RouterCompilati
 }
 
 /** Dispatcher form used by the Forge compiler and by standalone target fixtures. */
-export function createRouterCompilerPipeline() {
+export function createRouterCompilerPipeline(): { readonly compile: typeof compileRouterModule } {
   return {
     compile: compileRouterModule,
   };

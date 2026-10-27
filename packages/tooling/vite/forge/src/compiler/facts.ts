@@ -1,6 +1,6 @@
-import { parseOxcModule } from './oxc.js';
-
 import type { JsxFramework } from '@mission-platform/forge-plugin-api';
+
+import { parseOxcModule } from './oxc.js';
 
 /** A source location used by graph diagnostics and import/export facts. */
 export interface ForgeSourceSpan {

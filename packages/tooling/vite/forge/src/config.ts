@@ -1,10 +1,13 @@
 import { createRequire } from 'node:module';
 import path from 'node:path';
 
-import { defineLibraryConfig } from '@mission-platform/vite-config';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { mergeConfig, type Plugin, type UserConfig } from 'vite';
 import solidPlugin from 'vite-plugin-solid';
+
+import type { FrameworkOutputPlugin, JsxFramework } from '@mission-platform/forge-plugin-api';
+import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
+import { defineLibraryConfig } from '@mission-platform/vite-config';
 
 import {
   forgeArtifactPublishPlugin,
@@ -25,8 +28,6 @@ import {
 } from './target-plan.js';
 
 import type { ForgeCompilerService } from './compiler/service.js';
-import type { FrameworkOutputPlugin, JsxFramework } from '@mission-platform/forge-plugin-api';
-import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
 
 export function reactJsxPlugin(): Plugin {
   return {

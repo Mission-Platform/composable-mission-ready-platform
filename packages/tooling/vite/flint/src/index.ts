@@ -48,7 +48,8 @@ function splitFlintId(
   id: string,
 ): { fileName: string; query?: string } | undefined {
   const [fileName, query] = id.split("?", 2);
-  if (!fileName.endsWith(".flint")) return undefined;
+  if (!fileName.endsWith(".flint") && !fileName.endsWith(".flintc"))
+    return undefined;
   if (query === "import") return { fileName };
   if (query !== undefined && !QUERY_NAMES.has(query)) return undefined;
   return query === undefined ? { fileName } : { fileName, query };

@@ -7,6 +7,7 @@ import {
   type FrameworkOutputPlugin,
   type GeneratedModule,
 } from '@mission-platform/forge-plugin-api';
+import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
 
 import { sourceBase, type DiscoveredComponent } from '../compiler/discover.js';
 import { compileRouterModule } from '../compiler/router.js';
@@ -17,7 +18,6 @@ import { copyComponentOwnStyles } from './helper-carry.js';
 import type { ForgeGenerationContext } from '../compiler/generation-context.js';
 import type { ForgeFileEdge, ForgeFileGraph, ForgeFileNode } from '../compiler/graph.js';
 import type { FrameworkSourceTarget } from '../generate.js';
-import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
 
 export interface PrepareComponentHostsOptions {
   readonly plugin: FrameworkOutputPlugin;

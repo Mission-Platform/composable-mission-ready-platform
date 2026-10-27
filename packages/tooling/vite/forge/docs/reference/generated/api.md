@@ -1044,7 +1044,7 @@ Defaults every pass ON; pass `{ deadBranchPruning: false, … }` to disable.
 **Kind:** constant
 
 ```typescript
-export const optimizeSourceFile;
+export const optimizeSourceFile: typeof optimizeForgeModule;
 ```
 
 Compatibility alias retained for compiler integrations using the old name.
@@ -1522,7 +1522,7 @@ Compile neutral router usage through a selected native target adapter.
 **Kind:** function
 
 ```typescript
-function createRouterCompilerPipeline();
+function createRouterCompilerPipeline(): { readonly compile: typeof compileRouterModule };
 ```
 
 Dispatcher form used by the Forge compiler and by standalone target fixtures.

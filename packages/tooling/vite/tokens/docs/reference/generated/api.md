@@ -498,7 +498,7 @@ function buildTokenModule(
   basename: string,
   document_: DtcgGroup,
   aliasDocument?: DtcgGroup,
-  exportName = camelCase(basename),
+  exportName: string = camelCase(basename),
 ): string;
 ```
 
@@ -518,7 +518,7 @@ composite `typography` source resolves its `{font.*}` references against it).
 | basename      | string    |             |
 | document_     | DtcgGroup |             |
 | aliasDocument | DtcgGroup |             |
-| exportName    |           |             |
+| exportName    | string    |             |
 
 ## `src/index`
 

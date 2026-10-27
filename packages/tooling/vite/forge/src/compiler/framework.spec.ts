@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
+import type { FrameworkOutputPlugin } from '@mission-platform/forge-plugin-api';
+
 import { compileModule } from './compile.js';
 import { createCompilerPipeline } from './pipeline.js';
-
-import type { FrameworkOutputPlugin } from '@mission-platform/forge-plugin-api';
 
 function fixtureFramework(id: string): FrameworkOutputPlugin {
   return {
