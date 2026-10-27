@@ -1,5 +1,6 @@
-import { renderEmail } from '@mission-platform/email-renderer';
 import { describe, expect, it } from 'vitest';
+
+import { renderEmail } from '@mission-platform/email-renderer';
 
 import { EmailFooter, EmailHeader, EmailPreheader } from '..';
 import { assertCompatibleEmailHtml } from '../../../compatibility';

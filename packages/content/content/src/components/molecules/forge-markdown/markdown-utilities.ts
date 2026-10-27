@@ -1,9 +1,10 @@
 import { marked, type Token, type Tokens } from 'marked';
 
+import type { TypographyVariant } from '@mission-platform/typography';
+
 import { sanitizeUrl } from '../../../utils/sanitize';
 
 import type { CodeBlockLanguage } from '../../atoms/forge-code-block';
-import type { TypographyVariant } from '@mission-platform/typography';
 
 /** Size token — canonical 2xs → 2xl scale. */
 export type MarkdownSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';

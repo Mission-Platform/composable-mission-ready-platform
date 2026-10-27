@@ -1,5 +1,4 @@
 import { validateUrl } from '@mission-platform/email-renderer';
-
 import type { MpChild, MpElement } from '@mission-platform/forge-jsx';
 
 export interface EmailImageProperties {

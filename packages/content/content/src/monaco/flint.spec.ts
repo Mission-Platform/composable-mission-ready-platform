@@ -1,5 +1,6 @@
-import { createFlintLanguageService } from '@mission-platform/flint-language-service';
 import { describe, expect, it, vi } from 'vitest';
+
+import { createFlintLanguageService } from '@mission-platform/flint-language-service';
 
 import { attachFlintMonaco } from './flint';
 
@@ -8,14 +9,19 @@ interface Disposable {
 }
 
 class FakeModel {
-  readonly uri = {
-    path: '/workspace/example.flint',
-    toString: () => 'file:///workspace/example.flint',
-  };
+  readonly uri: { readonly path: string; readonly toString: () => string };
   private listener: (() => void) | undefined;
   private version = 1;
 
-  constructor(private text: string) {}
+  constructor(
+    private text: string,
+    fileName = 'example.flint',
+  ) {
+    this.uri = {
+      path: `/workspace/${fileName}`,
+      toString: () => `file:///workspace/${fileName}`,
+    };
+  }
 
   getValue(): string {
     return this.text;
@@ -208,6 +214,41 @@ describe('Flint Monaco adapter', () => {
 export fn entry() -> i32 { return hidden(); }`);
     await handle.refresh();
     expect(fake.markers.at(-1)).toEqual([]);
+    handle.dispose();
+  });
+
+  it('routes .flintc template and style models through shared markup and CSS providers', async () => {
+    const model = new FakeModel(
+      `<script>export struct Properties { gap: string; }</script>
+<template><button class="button" /></template>
+<style>.button { color: red; display: flex; }</style>`,
+      'button.flintc',
+    );
+    const fake = createFakeMonaco(model);
+    const service = createFlintLanguageService();
+    const handle = attachFlintMonaco(fake.editor as never, fake.runtime as never, { languageService: service });
+
+    const tokenResult = fake.tokenProviders[0]?.provider.tokenize('  color: red;', {});
+    expect((tokenResult as { tokens: Array<{ scopes: string }> }).tokens).toEqual(
+      expect.arrayContaining([expect.objectContaining({ scopes: 'css-property' })]),
+    );
+    const styleLine = model.getValue().split('\n')[2] ?? '';
+    const completion = (await fake.completionProviders[0]?.provideCompletionItems(model, {
+      lineNumber: 3,
+      column: styleLine.indexOf('display') + 1,
+    })) as {
+      suggestions: Array<{ label: string; detail?: string }>;
+    };
+    expect(completion.suggestions).toEqual(
+      expect.arrayContaining([expect.objectContaining({ label: 'display', detail: 'CSS' })]),
+    );
+    const hover = await fake.hoverProviders[0]?.provideHover(model, {
+      lineNumber: 3,
+      column: styleLine.indexOf('color') + 1,
+    });
+    expect(hover).toMatchObject({
+      contents: expect.arrayContaining([expect.objectContaining({ value: expect.stringContaining('CSS') })]),
+    });
     handle.dispose();
   });
 });

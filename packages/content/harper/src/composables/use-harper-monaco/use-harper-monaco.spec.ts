@@ -6,7 +6,7 @@ import { useHarperMonaco } from './use-harper-monaco';
 
 import type * as monaco from 'monaco-editor';
 
-// ── Monaco mock ───────────────────────────────────────────────────────────────
+// ── Monaco & Worker mocks ─────────────────────────────────────────────────────
 
 const {
   mockSetModelMarkers,
@@ -16,103 +16,21 @@ const {
   onDidChangeModelContentListeners,
   MarkerSeverity,
   mockRegisterCodeActionProvider,
-} = vi.hoisted(() => {
-  const onDidChangeModelContentListeners: Array<() => void> = [];
-
-  const mockGetPositionAt = vi.fn((offset: number) => ({
-    lineNumber: 1,
-    column: offset + 1,
-  }));
-
-  const mockGetValue = vi.fn(() => 'hello wrold');
-
-  const mockModel = {
-    getPositionAt: mockGetPositionAt,
-    getValue: mockGetValue,
-    uri: 'file:///test.txt',
-    getVersionId: vi.fn(() => 1),
-  };
-
-  const mockSetModelMarkers = vi.fn();
-  const mockRegisterCodeActionProvider = vi.fn(() => ({ dispose: vi.fn() }));
-
-  const mockOnDidChangeModelContent = vi.fn((callback: () => void) => {
-    onDidChangeModelContentListeners.push(callback);
-    return { dispose: vi.fn() };
-  });
-
-  const mockEditorInstance = {
-    getModel: vi.fn(() => mockModel),
-    onDidChangeModelContent: mockOnDidChangeModelContent,
-  };
-
-  const MarkerSeverity = { Error: 8, Warning: 4, Info: 2, Hint: 1 };
-
-  return {
-    mockSetModelMarkers,
-    mockOnDidChangeModelContent,
-    mockModel,
-    mockEditorInstance,
-    onDidChangeModelContentListeners,
-    MarkerSeverity,
-    mockRegisterCodeActionProvider,
-  };
-});
-
-vi.mock('monaco-editor', () => ({
-  editor: {
-    setModelMarkers: mockSetModelMarkers,
-  },
-  languages: {
-    registerCodeActionProvider: mockRegisterCodeActionProvider,
-  },
-  Range: function (startLineNumber: number, startColumn: number, endLineNumber: number, endColumn: number) {
-    return {
-      startLineNumber,
-      startColumn,
-      endLineNumber,
-      endColumn,
-      intersectRanges() {
-        return true;
-      },
-    };
-  },
-  MarkerSeverity,
-}));
-
-// ── Worker mock ───────────────────────────────────────────────────────────────
-
-const {
+  monacoMockModule,
   MockWorker,
   mockWorkerTerminate,
   mockWorkerPostMessage,
   getWorkerMessageListeners,
   resetWorkerMessageListeners,
-} = vi.hoisted(() => {
-  const mockWorkerTerminate = vi.fn();
-  const mockWorkerPostMessage = vi.fn();
-  let listeners: Array<(event_: MessageEvent) => void> = [];
-
-  function MockWorker() {
-    return {
-      terminate: mockWorkerTerminate,
-      postMessage: mockWorkerPostMessage,
-      addEventListener(_event: string, listener: (event_: MessageEvent) => void): void {
-        listeners.push(listener);
-      },
-    };
-  }
-
+} = await vi.hoisted(async () => {
+  const { createMonacoMock, createWorkerMock } = await import('../../../../content/src/test-support');
   return {
-    MockWorker,
-    mockWorkerTerminate,
-    mockWorkerPostMessage,
-    getWorkerMessageListeners: () => listeners,
-    resetWorkerMessageListeners: () => {
-      listeners = [];
-    },
+    ...createMonacoMock(),
+    ...createWorkerMock(),
   };
 });
+
+vi.mock('monaco-editor', () => monacoMockModule);
 
 vi.stubGlobal('HarperEnvironment', { getWorker: () => MockWorker() });
 

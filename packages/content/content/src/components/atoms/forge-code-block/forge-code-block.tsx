@@ -1,14 +1,3 @@
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  createForgeStyle,
-  type MpElement,
-  type CSSStyleProperties,
-} from '@mission-platform/forge-jsx';
-import { ForgeIconCheck, ForgeIconCopy } from '@mission-platform/icons';
-import { ForgeTypography } from '@mission-platform/typography';
 import hljs from 'highlight.js/lib/core';
 import bash from 'highlight.js/lib/languages/bash';
 import css from 'highlight.js/lib/languages/css';
@@ -28,14 +17,26 @@ import typescript from 'highlight.js/lib/languages/typescript';
 import xml from 'highlight.js/lib/languages/xml';
 import yaml from 'highlight.js/lib/languages/yaml';
 
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  createForgeStyle,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge-jsx';
+import { ForgeIconCheck, ForgeIconCopy } from '@mission-platform/icons';
+import type { SizeScale } from '@mission-platform/tokens';
+import { ForgeTypography } from '@mission-platform/typography';
+
 // The hljs token theme ships as a **plain (global) CSS side-effect import** —
 // not a CSS Module — so highlight.js' generated `.hljs-*` class names are NOT
 // hashed (a CSS Module would localise them). The two-stage compiler carries
 // bare side-effect CSS imports onto both the React and Vue builds.
 import './forge-code-block.hljs.css';
-import styles from './forge-code-block.module.scss';
 
-import type { SizeScale } from '@mission-platform/tokens';
+import styles from './forge-code-block.module.scss';
 
 /** Size token — canonical 2xs → 2xl scale. */
 export type CodeBlockSize = SizeScale;

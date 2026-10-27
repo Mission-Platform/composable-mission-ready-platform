@@ -1,7 +1,6 @@
 import { useArgs } from 'storybook/preview-api';
 
 import { ForgeWysiwygEditor } from '@mission-platform/content';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**

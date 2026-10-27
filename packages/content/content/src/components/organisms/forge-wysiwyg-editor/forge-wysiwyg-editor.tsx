@@ -189,9 +189,9 @@ export function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>
   const [codeDialogLanguage, setCodeDialogLanguage] = useState<CodeBlockLanguage>('plaintext');
   const [codeDialogCode, setCodeDialogCode] = useState<string>('');
   const [codeBlocks, setCodeBlocks] = useState<CodeBlockEmbed[]>([]);
-  // eslint-disable-next-line unicorn/no-useless-undefined -- the neutral `useState` requires an explicit initial value
+
   const [blockGeometry, setBlockGeometry] = useState<WysiwygBlockControlsGeometry | undefined>(undefined);
-  // eslint-disable-next-line unicorn/no-useless-undefined -- the neutral `useState` requires an explicit initial value
+
   const [blockAlign, setBlockAlign] = useState<WysiwygBlockAlign | undefined>(undefined);
   const [blockControlsVisible, setBlockControlsVisible] = useState<boolean>(false);
   const [canMoveUp, setCanMoveUp] = useState<boolean>(false);

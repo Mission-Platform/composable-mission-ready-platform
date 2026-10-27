@@ -1,5 +1,4 @@
 import { ForgeCodeBlock } from '@mission-platform/content';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**

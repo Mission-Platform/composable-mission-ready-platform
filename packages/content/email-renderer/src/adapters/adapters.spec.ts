@@ -1,5 +1,6 @@
-import { h } from '@mission-platform/forge-jsx';
 import { describe, expect, it } from 'vitest';
+
+import { h } from '@mission-platform/forge-jsx';
 
 import { renderEmail } from '../render';
 

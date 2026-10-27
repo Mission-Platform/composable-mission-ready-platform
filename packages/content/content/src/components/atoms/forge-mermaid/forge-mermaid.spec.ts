@@ -1,10 +1,11 @@
 // @vitest-environment jsdom
-import { toReactComponent } from '@mission-platform/forge-adapters/react';
 import mermaid from 'mermaid';
 import { act, createElement } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
 
 import { ForgeMermaid } from './forge-mermaid';
 import { mermaidThemeCSS, mermaidThemeVariables } from './forge-mermaid-theme';

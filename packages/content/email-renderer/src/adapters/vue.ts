@@ -1,7 +1,7 @@
 import { renderToVue, toVueComponent } from '@mission-platform/forge-adapters/vue';
+import type { MpComponent, MpPropertyBag } from '@mission-platform/forge-jsx';
 
 import type { EmailNode } from '../render';
-import type { MpComponent, MpPropertyBag } from '@mission-platform/forge-jsx';
 import type { FunctionalComponent, VNode } from 'vue';
 
 /** Render the shared Forge tree as a Vue VNode for browser previews. */
