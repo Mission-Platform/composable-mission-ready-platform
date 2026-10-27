@@ -7,6 +7,7 @@ import "./decoders/qr/qr-decoder.flint" as qr;
 // sequence into a real string still needs a host decoder. Data Matrix and
 // Aztec triplets use the identical decimal-triplet-per-byte encoding as the
 // QR byte payload, so the same capability and "1"+text marker apply here.
+import capability "qr.decode.utf8" as decode_utf8(value: string) -> string;
 import capability "qr.decode.utf8" as matrix_decode_utf8(value: string) -> string;
 import "./decoders/matrix/matrix-decoder-datamatrix.flint" as datamatrix;
 import "./decoders/matrix/matrix-decoder-aztec.flint" as aztec;

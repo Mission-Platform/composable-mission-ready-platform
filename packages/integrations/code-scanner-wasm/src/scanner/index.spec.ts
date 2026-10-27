@@ -1,7 +1,8 @@
+import { describe, expect, it, vi } from 'vitest';
+
 import { type BarcodeSymbology, encodeBarcode } from '@mission-platform/barcode';
 import { encodeMatrix } from '@mission-platform/matrix-code';
 import { encodeQr, type QrErrorCorrection } from '@mission-platform/qr-code';
-import { describe, expect, it, vi } from 'vitest';
 
 import {
   createScannerRawPointerSession,

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { encodeMatrix, type MatrixCode, type MatrixSymbology } from './index';
+import { encodeMatrix, type MatrixCode, type MatrixSymbology } from '.';
 
 interface GoldenVector {
   readonly symbology: MatrixSymbology;

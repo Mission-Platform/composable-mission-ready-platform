@@ -53,7 +53,7 @@ fn digit(value: i32) -> string {
   return "9";
 }
 
-fn check(value: string) -> i32 {
+fn itf_check(value: string) -> i32 {
   let sum: i32 = string_byte_at(value, 0) - 48;
   let mut weighted: i32 = sum * 3;
   let second: i32 = string_byte_at(value, 1) - 48;
@@ -120,7 +120,7 @@ export fn encode_itf14(value: string) -> string {
   if length != 13 && length != 14 { return ""; }
   if !all_digits(value, 0) { return ""; }
   let mut normalized: string = value;
-  if length == 13 { normalized = string_concat(value, digit(check(value))); }
-  if string_byte_at(normalized, 13) != 48 + check(string_slice(normalized, 0, 13)) { return ""; }
+  if length == 13 { normalized = string_concat(value, digit(itf_check(value))); }
+  if string_byte_at(normalized, 13) != 48 + itf_check(string_slice(normalized, 0, 13)) { return ""; }
   return string_concat(encode_digits(normalized, 0, "1010"), "");
 }

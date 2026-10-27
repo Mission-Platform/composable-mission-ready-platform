@@ -1,5 +1,4 @@
 import { ForgeQrCode } from '@mission-platform/qr-code';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**

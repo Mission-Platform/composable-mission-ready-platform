@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { encodeMatrix, encodeMatrixAsync, type MatrixCode, type MatrixSymbology } from './index';
+import { encodeMatrix, encodeMatrixAsync, type MatrixCode, type MatrixSymbology } from '.';
 
 /** The grid is `width * height` binary modules. */
 function assertShape(code: MatrixCode, symbology: MatrixSymbology): void {

@@ -9,4 +9,3 @@ declare module '*.flt' {
   export function load(): Promise<Readonly<Record<string, (...args: never[]) => unknown>>>;
   export function loadSync(): Readonly<Record<string, (...args: never[]) => unknown>>;
 }
-
