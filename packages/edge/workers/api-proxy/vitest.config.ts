@@ -1,9 +1,6 @@
-import { defineConfig } from 'vitest/config';
+import { defineVitestConfig } from '@mission-platform/vite-config/vitest';
 
-export default defineConfig({
-  test: {
-    environment: 'node',
-    globals: false,
-    include: ['src/**/*.spec.ts'],
-  },
+export default defineVitestConfig({
+  environment: 'node',
+  globals: false,
 });
