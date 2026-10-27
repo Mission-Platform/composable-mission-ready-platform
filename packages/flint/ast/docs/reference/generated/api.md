@@ -30,16 +30,16 @@ Constructs a structured compiler diagnostic with optional hint and security meta
 
 #### Parameters
 
-| Name     | Type                                                                                          | Description                                                               |
-| -------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| fileName | string                                                                                        | - Path or identifier of the source file.                                  |
-| phase    | FlintDiagnosticPhase                                                                          | - Compiler phase emitting the diagnostic.                                 |
-| code     | string                                                                                        | - Diagnostic error or warning code.                                       |
-| message  | string                                                                                        | - Descriptive human-readable diagnostic message.                          |
-| span     | FlintSourceSpan                                                                               | - Source span coordinates for the diagnostic location.                    |
-| severity | FlintDiagnosticSeverity                                                                       | - Severity level, defaulting to 'error'.                                  |
-| hint     | string                                                                                        | - Optional remediation hint or actionable advice.                         |
-| metadata | Pick<FlintDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> | - Optional rule ID, category, evidence, or security taxonomy identifiers. |
+| Name     | Type                                                                                            | Description                                                               |
+| -------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| fileName | string                                                                                          | - Path or identifier of the source file.                                  |
+| phase    | FlintDiagnosticPhase                                                                            | - Compiler phase emitting the diagnostic.                                 |
+| code     | string                                                                                          | - Diagnostic error or warning code.                                       |
+| message  | string                                                                                          | - Descriptive human-readable diagnostic message.                          |
+| span     | FlintSourceSpan                                                                                 | - Source span coordinates for the diagnostic location.                    |
+| severity | FlintDiagnosticSeverity                                                                         | - Severity level, defaulting to 'error'.                                  |
+| hint     | string                                                                                          | - Optional remediation hint or actionable advice.                         |
+| metadata | Pick< FlintDiagnostic, "ruleId" \| "category" \| "blocking" \| "evidence" \| "owasp" \| "cwe" > | - Optional rule ID, category, evidence, or security taxonomy identifiers. |
 
 #### Contract
 

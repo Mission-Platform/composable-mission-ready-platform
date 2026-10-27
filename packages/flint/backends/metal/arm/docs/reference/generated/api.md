@@ -21,7 +21,7 @@ No description provided.
 **Kind:** class
 
 ```typescript
-export class ArmTargetBackend implements TargetBackend<ArmEmissionOptions, string>
+export class ArmTargetBackend implements TargetBackend< ArmEmissionOptions, string >
 ```
 
 ARMv7-M (Thumb-2) Target Backend for STM32 and Cortex-M bare-metal systems.

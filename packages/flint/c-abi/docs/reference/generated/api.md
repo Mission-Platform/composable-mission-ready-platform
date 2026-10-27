@@ -206,7 +206,7 @@ No description provided.
 **Kind:** type
 
 ```typescript
-export type FlintCAbiManifest = FlintAbiManifest |
+export type FlintCAbiManifest = | FlintAbiManifest |
 ```
 
 Structural representation of a Flint ABI Manifest alias.

@@ -41,7 +41,7 @@ No description provided.
 **Kind:** class
 
 ```typescript
-export class WasmTargetBackend implements TargetBackend<WasmEmissionOptions, WasmEmissionResult>
+export class WasmTargetBackend implements TargetBackend< WasmEmissionOptions, WasmEmissionResult >
 ```
 
 WebAssembly Backend Emitter implementing TargetBackend.

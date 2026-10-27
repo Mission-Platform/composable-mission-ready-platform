@@ -1679,7 +1679,7 @@ Optimizes an intermediate representation Flint module using algebraic and SSA pr
 | Name         | Type                 | Description |
 | ------------ | -------------------- | ----------- |
 | module       | FlintIrModule        |             |
-| optimization | 'debug' \| 'release' |             |
+| optimization | "debug" \| "release" |             |
 
 ### optimizeFlintSoN
 

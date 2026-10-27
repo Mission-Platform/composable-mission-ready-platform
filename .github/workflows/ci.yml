@@ -24,7 +24,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        uses: actions/checkout@v7
         with:
           # Full history lets `turbo run … --affected` diff against the base.
           fetch-depth: 0
@@ -107,31 +107,25 @@ jobs:
           printf 'TURBO_SCM_HEAD=%s\n' "$head" >> "$GITHUB_ENV"
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@f520eceda224fe1a4aed5a2a27a194379a409996 # v6
+        uses: pnpm/action-setup@v6
         with:
           run_install: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
       - name: Cache Turborepo
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        uses: actions/cache@v6
         with:
           path: .turbo
           key: turbo-${{ runner.os }}-${{ github.job }}-${{ github.sha }}
           restore-keys: |
             turbo-${{ runner.os }}-${{ github.job }}-
             turbo-${{ runner.os }}-
-
-      - name: Set up Rust
-        uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # stable
-        with:
-          toolchain: stable
-          targets: wasm32-unknown-unknown
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -163,7 +157,7 @@ jobs:
           node packages/flint/cli/dist/main.js check packages/flint/core/src/fixtures/file-compile.flint --format sarif > artifacts/flint-sarif.json
 
       - name: Upload Flint SARIF artifact
-        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb99ba841f # v4
+        uses: actions/upload-artifact@v7
         with:
           name: flint-sarif
           path: artifacts/flint-sarif.json

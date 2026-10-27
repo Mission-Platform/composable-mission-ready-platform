@@ -1161,7 +1161,7 @@ Disallows undeclared capabilities and treats errors as blocking.
 **Kind:** type
 
 ```typescript
-export type FlintAnalysisOptionsLike = Omit<Partial<FlintAnalysisPolicy>, 'limits'> &
+export type FlintAnalysisOptionsLike = Omit< Partial<FlintAnalysisPolicy>, "limits" > &
 ```
 
 Loose input type for configuring analysis policy options.
@@ -1329,10 +1329,10 @@ No description provided.
 
 #### Parameters
 
-| Name        | Type                                                                | Description |
-| ----------- | ------------------------------------------------------------------- | ----------- |
-| diagnostics | readonly FlintDiagnostic[]                                          |             |
-| options     | { readonly toolVersion?: string; readonly informationUri?: string } |             |
+| Name        | Type                                                                 | Description |
+| ----------- | -------------------------------------------------------------------- | ----------- |
+| diagnostics | readonly FlintDiagnostic[]                                           |             |
+| options     | { readonly toolVersion?: string; readonly informationUri?: string; } |             |
 
 ## `src/registry`
 

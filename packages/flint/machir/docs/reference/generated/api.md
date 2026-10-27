@@ -11,7 +11,7 @@ Generated from public source declarations in `@mission-platform/flint-machir`.
 **Kind:** interface
 
 ```typescript
-export interface TargetBackend<TOptions = Record<string, unknown>, TArtifact = string | Uint8Array>
+export interface TargetBackend< TOptions = Record<string, unknown>, TArtifact = string | Uint8Array, >
 ```
 
 Standard interface implemented by all Web and Metal target emitters.
@@ -38,7 +38,7 @@ Creates a fixed hardware MachRegister reference.
 | ------------- | ----------------------------- | ----------- |
 | hwIndex       | number                        |             |
 | name          | string                        |             |
-| physicalClass | MachRegister['physicalClass'] |             |
+| physicalClass | MachRegister["physicalClass"] |             |
 
 ### getCallingConventionDetails
 
@@ -96,7 +96,7 @@ Creates a virtual MachRegister reference.
 | Name          | Type                          | Description |
 | ------------- | ----------------------------- | ----------- |
 | id            | number                        |             |
-| physicalClass | MachRegister['physicalClass'] |             |
+| physicalClass | MachRegister["physicalClass"] |             |
 
 ## `src/optimizer`
 

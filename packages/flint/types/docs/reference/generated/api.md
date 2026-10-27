@@ -125,7 +125,7 @@ aggregate definitions from a module's struct declarations.
 
 | Name   | Type                         | Description                                                                  |
 | ------ | ---------------------------- | ---------------------------------------------------------------------------- |
-| module | Pick<FlintModule, 'structs'> | - Optional module (or struct-only slice) to seed aggregate definitions from. |
+| module | Pick<FlintModule, "structs"> | - Optional module (or struct-only slice) to seed aggregate definitions from. |
 | target | TargetPlatform               | - Optional target platform profile.                                          |
 
 #### Contract
@@ -151,7 +151,7 @@ Shared algebra instance helpers for call sites that do not need a private table.
 
 | Name           | Type                                           | Description |
 | -------------- | ---------------------------------------------- | ----------- |
-| moduleOrTarget | Pick<FlintModule, 'structs'> \| TargetPlatform |             |
+| moduleOrTarget | Pick<FlintModule, "structs"> \| TargetPlatform |             |
 | maybeTarget    | TargetPlatform                                 |             |
 
 ### CStructFieldLayout

@@ -21,7 +21,7 @@ No description provided.
 **Kind:** class
 
 ```typescript
-export class AArch64TargetBackend implements TargetBackend<AArch64EmissionOptions, string>
+export class AArch64TargetBackend implements TargetBackend< AArch64EmissionOptions, string >
 ```
 
 AArch64 (ARM64) 64-bit Native Target Backend.
@@ -189,7 +189,7 @@ No description provided.
 **Kind:** class
 
 ```typescript
-export class Amd64TargetBackend implements TargetBackend<Amd64EmissionOptions, string>
+export class Amd64TargetBackend implements TargetBackend< Amd64EmissionOptions, string >
 ```
 
 AMD64 (x86_64) Native Target Backend.
