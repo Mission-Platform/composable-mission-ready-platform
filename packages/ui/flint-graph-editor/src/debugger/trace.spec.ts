@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { TraceDebuggerController } from './trace-controller';
-
 import type { FlintNodeSourceMap } from '@mission-platform/flint';
 import type { FlintTraceReport } from '@mission-platform/flint-runtime';
+
+import { TraceDebuggerController } from './trace-controller';
 
 describe('Flint Trace Debugger Controller', () => {
   const mockSourceMap: FlintNodeSourceMap = {
