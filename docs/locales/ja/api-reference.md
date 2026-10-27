@@ -12,7 +12,7 @@
 このページではなくパッケージを参照してください。
 
 > **インポートは常にベアです。** フレームワーク配布の `@mission-platform/*` パッケージは単一の `.` を公開します
-> `mp:vue`、`mp:react`、`mp:solid`、および `mp:web-component` エクスポートによって保護されたエントリ
+> `mp:vue`、`mp:react`、`mp:svelte`、`mp:solid`、および `mp:web-component` エクスポートによって保護されたエントリ
 > 条件。 `resolve.conditions` 経由でフレームワークを **1 回**選択します (`defineFrameworkAppConfig` / を参照)
 > `frameworkResolveConditions` (`@mission-platform/vite-config` から) および `customConditions` (
 > `@mission-platform/typescript-config/framework-<name>` プリセット) — 次に、すべてを裸の状態でインポートします
@@ -313,7 +313,7 @@ Forge Web Script アーティファクトは、`sha256-v1:<hex>` 形式のバー
 ## さらに読む
 
 - [Vue 2 から Vue 3 への移行ガイド](migration-guides/vue2-to-vue3.md)
-- [プロジェクト構成の概要](packages/tooling/configs/index.md)
+- [プロジェクト構成の概要](configs/index.md)
 - [ワークスペース構造](workspace-structure.md)
 
 ## 完全なワークスペース パッケージ インデックス

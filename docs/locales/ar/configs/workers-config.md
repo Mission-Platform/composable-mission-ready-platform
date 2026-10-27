@@ -2,7 +2,7 @@
 
 ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
 
-> docs/packages/tooling/configs/workers-config.md: [docs/packages/tooling/configs/workers-config.md](../../../packages/tooling/configs/workers-config.md)
+> docs/configs/workers-config.md: [docs/configs/workers-config.md](../../../configs/workers-config.md)
 > اللغة: العربية (ar)
 
 تنتمي وثائق تنفيذ العامل بجانب كل عامل قابل للنشر:

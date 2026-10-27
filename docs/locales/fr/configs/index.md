@@ -2,7 +2,7 @@
 
 Traduction assistée par machine à partir de la source anglaise canonique. À relire manuellement si besoin. Les noms de paquets, commandes, chemins et identifiants techniques restent inchangés.
 
-> docs/packages/tooling/configs/index.md: [docs/packages/tooling/configs/index.md](../../../packages/tooling/configs/index.md)
+> docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
 > Langue: Français (fr)
 
 La plateforme de mission utilise des packages de configuration centralisés dans le `packages/tooling/configs/` répertoire pour garantir la cohérence à travers

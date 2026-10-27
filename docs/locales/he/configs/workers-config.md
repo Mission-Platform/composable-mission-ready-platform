@@ -2,7 +2,7 @@
 
 תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
 
-> docs/packages/tooling/configs/workers-config.md: [docs/packages/tooling/configs/workers-config.md](../../../packages/tooling/configs/workers-config.md)
+> docs/configs/workers-config.md: [docs/configs/workers-config.md](../../../configs/workers-config.md)
 > שפה: עברית (he)
 
 תיעוד הטמעת עובדים שייך לצד כל עובד שניתן לפרסום:

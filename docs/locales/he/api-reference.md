@@ -12,7 +12,7 @@
 חבילה ולא דף זה.
 
 > **היבוא תמיד חשוף.** חבילות `@mission-platform/*` למשלוח מסגרת חושפות `.` יחיד
-> כניסה נשמרת על ידי ייצוא `mp:vue`, `mp:react`, `mp:solid` ו-`mp:web-component`
+> כניסה נשמרת על ידי ייצוא `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid` ו-`mp:web-component`
 > תנאים. בחר את המסגרת **פעם אחת** - דרך `resolve.conditions` (ראה `defineFrameworkAppConfig` /
 > `frameworkResolveConditions` מ-`@mission-platform/vite-config`) ו-`customConditions` (באמצעות
 > `@mission-platform/typescript-config/framework-<name>` קביעות מוגדרות מראש) - ואז ייבא הכל עם החשוף
@@ -313,7 +313,7 @@ const router = createWebComponentsRouter({
 ## קריאה נוספת
 
 - [מדריך ההגירה של Vue 2 ל-Vue 3](migration-guides/vue2-to-vue3.md)
-- [סקירת תצורת פרויקט](packages/tooling/configs/index.md)
+- [סקירת תצורת פרויקט](configs/index.md)
 - [מבנה סביבת עבודה](workspace-structure.md)
 
 ## אינדקס חבילות עבודה מלא

@@ -2,7 +2,7 @@
 
 Traduction assistée par machine à partir de la source anglaise canonique. À relire manuellement si besoin. Les noms de paquets, commandes, chemins et identifiants techniques restent inchangés.
 
-> docs/packages/tooling/configs/workers-config.md: [docs/packages/tooling/configs/workers-config.md](../../../packages/tooling/configs/workers-config.md)
+> docs/configs/workers-config.md: [docs/configs/workers-config.md](../../../configs/workers-config.md)
 > Langue: Français (fr)
 
 La documentation d'implémentation du Worker appartient à côté de chaque Worker publiable :

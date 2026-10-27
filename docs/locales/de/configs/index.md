@@ -2,7 +2,7 @@
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
 
-> docs/packages/tooling/configs/index.md: [docs/packages/tooling/configs/index.md](../../../packages/tooling/configs/index.md)
+> docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
 > Sprache: Deutsch (de)
 
 Die Mission Platform verwendet zentralisierte Konfigurationspakete im `packages/tooling/configs/` Verzeichnis, um die Konsistenz zwischen allen zu gewährleisten

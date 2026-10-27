@@ -2,7 +2,7 @@
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
-> docs/packages/tooling/configs/index.md: [docs/packages/tooling/configs/index.md](../../../packages/tooling/configs/index.md)
+> docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
 > Taal: Nederlands (nl)
 
 Het Mission Platform maakt gebruik van gecentraliseerde configuratiepakketten in de `packages/tooling/configs/` directory om consistentie te garanderen

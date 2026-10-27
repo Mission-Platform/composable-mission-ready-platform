@@ -12,7 +12,7 @@ en ` `. Gegenereerde API-referenties moeten worden toegevoegd aan het bezit
 pakket in plaats van deze pagina.
 
 > **Imports zijn altijd kaal.** Framework-verzending `@mission-platform/*`-pakketten tonen één `.`
-> toegang bewaakt door de export `mp:vue`, `mp:react`, `mp:solid` en `mp:web-component`
+> toegang bewaakt door de export `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid` en `mp:web-component`
 > voorwaarden. Selecteer het raamwerk **eenmaal** — via `resolve.conditions` (zie `defineFrameworkAppConfig` /
 > `frameworkResolveConditions` van `@mission-platform/vite-config`) en `customConditions` (via de
 > `@mission-platform/typescript-config/framework-<name>`-voorinstellingen) - importeer vervolgens alles met de kale
@@ -313,7 +313,7 @@ Het voorvoegsel `sha256-v1` maakt toekomstige upgrades van het hash-algoritme zo
 ## Verder lezen
 
 - [Vue 2 naar Vue 3 Migratiehandleiding](migration-guides/vue2-to-vue3.md)
-- [Overzicht projectconfiguratie](packages/tooling/configs/index.md)
+- [Overzicht projectconfiguratie](configs/index.md)
 - [Werkruimtestructuur](workspace-structure.md)
 
 ## Volledige werkruimtepakketindex

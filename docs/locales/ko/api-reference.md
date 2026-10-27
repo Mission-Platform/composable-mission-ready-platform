@@ -12,7 +12,7 @@
 이 페이지보다는 패키지를 선택하세요.
 
 > **가져오기는 항상 기본입니다.** 프레임워크 제공 `@mission-platform/*` 패키지는 단일 `.`를 노출합니다.
-> `mp:vue`, `mp:react`, `mp:solid` 및 `mp:web-component` 내보내기로 보호되는 항목
+> `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid` 및 `mp:web-component` 내보내기로 보호되는 항목
 > 조건. `resolve.conditions`를 통해 프레임워크 **한 번** 선택(`defineFrameworkAppConfig` / 참조)
 > `@mission-platform/vite-config`의 `frameworkResolveConditions`) 및 `customConditions`(
 > `@mission-platform/typescript-config/framework-<name>` 사전 설정) — 그런 다음 기본으로 모든 것을 가져옵니다.
@@ -313,7 +313,7 @@ Forge 웹 스크립트 아티팩트는 `sha256-v1:<hex>` 형식의 버전이 지
 ## 추가 자료
 
 - [Vue 2에서 Vue 3으로 마이그레이션 가이드](migration-guides/vue2-to-vue3.md)
-- [프로젝트 구성 개요](packages/tooling/configs/index.md)
+- [프로젝트 구성 개요](configs/index.md)
 - [작업공간 구조](workspace-structure.md)
 
 ## 완전한 작업 공간 패키지 색인

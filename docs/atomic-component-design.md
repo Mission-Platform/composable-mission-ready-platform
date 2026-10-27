@@ -74,9 +74,10 @@ const meta = {
 2. **Naming**: Components should use the `Base` prefix (e.g., `ForgeCard`) unless they are specific implementations.
 3. **Type Safety**: Export a `*Properties` interface for the component's props.
 4. **Testing**: A co-located `.spec.ts` is required for every component.
-5. **Scaffolding**: Use the `scaffold_component` MCP tool to ensure the correct directory structure and boilerplate.
+5. **Scaffolding**: Use the `scaffold_component` MCP tool through a connected Mission Platform Developer MCP server to
+   ensure the correct directory structure and boilerplate.
 
-```bash
+```text
 # Example: Creating a new 'forge-chip' atom in the 'components' package
 scaffold_component(name="forge-chip", level="atom", area="Display", package="components", apply=true)
 ```

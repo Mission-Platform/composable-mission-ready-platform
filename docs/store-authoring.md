@@ -76,9 +76,10 @@ useEffect(() => {
 
 ## Scaffolding
 
-Use the Mission Platform Developer MCP tool to generate a new store skeleton:
+Use the `scaffold_store` tool through a connected Mission Platform Developer MCP server to generate a new store
+skeleton. This is an MCP tool-call example, not a shell command:
 
-```bash
+```text
 # Example: Creating a new 'auth-store' in the 'components' package
 scaffold_store(name="auth-store", package="components", apply=true)
 ```

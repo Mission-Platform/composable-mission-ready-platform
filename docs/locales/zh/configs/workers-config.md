@@ -2,7 +2,7 @@
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
-> docs/packages/tooling/configs/workers-config.md: [docs/packages/tooling/configs/workers-config.md](../../../packages/tooling/configs/workers-config.md)
+> docs/configs/workers-config.md: [docs/configs/workers-config.md](../../../configs/workers-config.md)
 > 语言: 简体中文 (zh)
 
 Worker 实现文档位于每个可发布的 Worker 旁边：

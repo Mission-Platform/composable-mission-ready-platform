@@ -12,7 +12,7 @@
 包而不是这个页面。
 
 > **导入始终是裸露的。** 框架传送 `@mission-platform/*` 包公开单个 `.`
-> 由 `mp:vue`、`mp:react`、`mp:solid` 和 `mp:web-component` 导出保护的条目
+> 由 `mp:vue`、`mp:react`、`mp:svelte`、`mp:solid` 和 `mp:web-component` 导出保护的条目
 > 条件。选择框架**一次** — 通过 `resolve.conditions`（请参阅 `defineFrameworkAppConfig` /
 > `frameworkResolveConditions` 来自 `@mission-platform/vite-config`) 和 `customConditions` (通过
 > `@mission-platform/typescript-config/framework-<name>` 预设) — 然后用裸露导入所有内容
@@ -313,7 +313,7 @@ Forge Web 脚本工件使用格式为 `sha256-v1:<hex>` 的版本化 SHA-256 内
 ## 进一步阅读
 
 - [Vue 2 到 Vue 3 迁移指南](migration-guides/vue2-to-vue3.md)
-- [项目配置概述](packages/tooling/configs/index.md)
+- [项目配置概述](configs/index.md)
 - [工作空间结构](workspace-structure.md)
 
 ## 完整的工作空间包索引

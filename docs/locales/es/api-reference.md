@@ -12,7 +12,7 @@ y ` `. Las referencias de API generadas deben agregarse a la propiedad.
 paquete en lugar de esta página.
 
 > **Las importaciones siempre son simples.** Los paquetes `@mission-platform/*` de envío de marco exponen un solo `.`
-> entrada custodiada por la exportación `mp:vue`, `mp:react`, `mp:solid` y `mp:web-component`
+> entrada custodiada por la exportación `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid` y `mp:web-component`
 > condiciones. Seleccione el marco **una vez** — a través de `resolve.conditions` (consulte `defineFrameworkAppConfig` /
 > `frameworkResolveConditions` de `@mission-platform/vite-config`) y `customConditions` (a través del
 > `@mission-platform/typescript-config/framework-<name>` ajustes preestablecidos) - luego importe todo con el simple
@@ -313,7 +313,7 @@ El prefijo `sha256-v1` permite futuras actualizaciones del algoritmo hash sin am
 ## Lectura adicional
 
 - [Guía de migración de Vue 2 a Vue 3](migration-guides/vue2-to-vue3.md)
-- [Descripción general de la configuración del proyecto](packages/tooling/configs/index.md)
+- [Descripción general de la configuración del proyecto](configs/index.md)
 - [Estructura del espacio de trabajo](workspace-structure.md)
 
 ## Índice completo del paquete del espacio de trabajo

@@ -2,7 +2,7 @@
 
 ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
 
-> docs/packages/tooling/configs/index.md: [docs/packages/tooling/configs/index.md](../../../packages/tooling/configs/index.md)
+> docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
 > اللغة: العربية (ar)
 
 تستخدم منصة المهمة حزم التكوين المركزية في `packages/tooling/configs/` الدليل لضمان الاتساق عبر

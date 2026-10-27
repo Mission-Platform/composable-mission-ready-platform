@@ -41,9 +41,10 @@ export function clamp(value: number, min: number, max: number): number {
 
 ## Scaffolding
 
-Use the Mission Platform Developer MCP tool to generate a new utility skeleton:
+Use the `scaffold_util` tool through a connected Mission Platform Developer MCP server to generate a new utility
+skeleton. This is an MCP tool-call example, not a shell command:
 
-```bash
+```text
 # Example: Creating a new 'string-utils' folder in the 'i18n' package
 scaffold_util(name="string-utils", package="i18n", apply=true)
 ```

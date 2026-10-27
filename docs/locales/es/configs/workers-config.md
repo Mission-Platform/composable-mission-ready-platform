@@ -2,7 +2,7 @@
 
 Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
 
-> docs/packages/tooling/configs/workers-config.md: [docs/packages/tooling/configs/workers-config.md](../../../packages/tooling/configs/workers-config.md)
+> docs/configs/workers-config.md: [docs/configs/workers-config.md](../../../configs/workers-config.md)
 > Idioma: Español (es)
 
 La documentación de implementación del trabajador pertenece al lado de cada trabajador publicable:
