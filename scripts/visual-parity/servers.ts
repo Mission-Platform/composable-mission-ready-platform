@@ -134,9 +134,9 @@ export async function generateSharedStorybookCertificate(
   return { output: result.output, ...paths };
 }
 
-function fetchStorybookIndex(url: string): Promise<StorybookIndex> {
+function fetchStorybookIndex(url: string, certificatePath: string): Promise<StorybookIndex> {
   return new Promise((resolve, reject) => {
-    const request = https.get(`${url}/index.json`, { rejectUnauthorized: false }, (response) => {
+    const request = https.get(`${url}/index.json`, { ca: fs.readFileSync(certificatePath) }, (response) => {
       let body = '';
       response.setEncoding('utf8');
       response.on('data', (chunk: string) => (body += chunk));
@@ -162,6 +162,7 @@ async function waitForStorybookIndex(
   url: string,
   getOutput: () => string,
   getSpawnError: () => Error | undefined,
+  certificatePath: string,
   timeoutMs: number,
 ): Promise<StorybookIndex> {
   const deadline = Date.now() + timeoutMs;
@@ -172,7 +173,7 @@ async function waitForStorybookIndex(
     if (child.exitCode !== null)
       throw new Error(`Storybook exited before becoming ready at ${url}: ${getOutput()}`.trim());
     try {
-      return await fetchStorybookIndex(url);
+      return await fetchStorybookIndex(url, certificatePath);
     } catch (error) {
       lastError = errorMessage(error);
       await new Promise<void>((resolve) => setTimeout(resolve, 150));
@@ -235,6 +236,7 @@ async function launchServer(
       definition.url,
       getOutput,
       () => spawnError,
+      certificate.certificate,
       timeoutMs,
     );
     return { definition, index, logPath, getOutput, close };
