@@ -1,6 +1,7 @@
+import { createElement, type ReactNode } from 'react';
+
 import { softwareApplication } from '@mission-platform/seo/json-ld';
 import { buildPageMeta } from '@mission-platform/seo/meta';
-import { createElement, type ReactNode } from 'react';
 
 import styles from './styles.css?url';
 
@@ -79,10 +80,7 @@ export function Document({ children }: { children: ReactNode }) {
           rel="stylesheet"
           href={styles}
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </head>
       <body>
         <div id="root">{children}</div>

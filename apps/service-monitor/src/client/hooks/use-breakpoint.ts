@@ -1,5 +1,6 @@
-import { maxMediaQuery } from '@mission-platform/breakpoints/core';
 import { useEffect, useState } from 'react';
+
+import { maxMediaQuery } from '@mission-platform/breakpoints/core';
 
 /**
  * `true` when the viewport is at or below the `sm` breakpoint, tracked live via

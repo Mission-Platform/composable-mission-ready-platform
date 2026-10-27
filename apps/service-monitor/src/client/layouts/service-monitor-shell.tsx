@@ -1,11 +1,12 @@
 'use client';
 
+import { supportedLocales } from 'virtual:i18n-locales';
+
 import { ForgeNavbar, ForgeNavbarItem } from '@mission-platform/components';
 import { useI18n } from '@mission-platform/i18n';
 import { ForgeApplicationLayout } from '@mission-platform/layouts';
 import { ForgeLanguageSwitcher, type ForgeLanguageSwitcherOption } from '@mission-platform/select';
 import { ForgeThemeToggle } from '@mission-platform/theme';
-import { supportedLocales } from 'virtual:i18n-locales';
 
 import type { Incident } from '@/monitoring/types';
 import type { Resource } from 'i18next';

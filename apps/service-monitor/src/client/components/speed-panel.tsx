@@ -1,11 +1,12 @@
 'use client';
 
+import { useState } from 'react';
+
 import { ForgeBadge, ForgeButton, ForgeSpinner } from '@mission-platform/components';
 import { ForgeDialog } from '@mission-platform/float';
 import { useI18n } from '@mission-platform/i18n';
 import { ForgeIconLightning, ForgeIconRefresh } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
-import { useState } from 'react';
 
 import { type ChartPoint, TimeSeriesChart } from './time-series-chart';
 

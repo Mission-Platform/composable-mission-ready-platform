@@ -1,6 +1,6 @@
-import { createForgeI18N, forgeNamespace } from '@mission-platform/i18n';
 import { resources } from 'virtual:i18n-resources';
 
+import { createForgeI18N, forgeNamespace } from '@mission-platform/i18n';
 import type { ForgeI18N } from '@mission-platform/i18n';
 
 /** The app's own i18n namespace (`mp.service-monitor`). */
