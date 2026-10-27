@@ -72,7 +72,7 @@
     "@mission-platform/typography": "workspace:*",
     "@mission-platform/vcard": "workspace:*",
     "luxon": "catalog:",
-    "nanoid": "^6.0.1"
+    "nanoid": "catalog:"
   },
   "peerDependencies": {
     "lit": "^3.0.0",
