@@ -1,8 +1,7 @@
+import type { ForgeExportBundle, ForgeExportFile, ForgeRepositoryExportRequest } from '@mission-platform/forge-figma';
 import { isForgeBridgeResponse, type ForgeBridgeResponse } from '@mission-platform/forge-figma-bridge/protocol';
 
 import { isForgeBridgeConfig, type ForgeBridgeConfig } from './messages';
-
-import type { ForgeExportBundle, ForgeExportFile, ForgeRepositoryExportRequest } from '@mission-platform/forge-figma';
 
 export interface ForgeDownloadEnvironment {
   readonly document: Pick<Document, 'createElement'>;
