@@ -89,7 +89,7 @@ same write-once story inventory must render in every active workbench.
 **Kind:** function
 
 ```typescript
-function sharedPreviewDecorators();
+function sharedPreviewDecorators(): Array<ReturnType<typeof withThemeByDataAttribute<TRenderer>>>;
 ```
 
 Shared Storybook decorators for all frameworks.
@@ -99,7 +99,17 @@ Shared Storybook decorators for all frameworks.
 **Kind:** constant
 
 ```typescript
-export const sharedPreviewParameters;
+export const sharedPreviewParameters: {
+  readonly controls: {
+    readonly matchers: {
+      readonly color: RegExp;
+      readonly date: RegExp;
+    };
+  };
+  readonly a11y: {
+    readonly test: 'error';
+  };
+};
 ```
 
 Shared Storybook parameters for all frameworks.
@@ -109,7 +119,15 @@ Shared Storybook parameters for all frameworks.
 **Kind:** function
 
 ```typescript
-function sharedPreviewParametersFor(framework?: PreviewFramework);
+function sharedPreviewParametersFor(framework?: PreviewFramework):
+  | typeof sharedPreviewParameters
+  | (typeof sharedPreviewParameters & {
+      readonly docs: {
+        readonly source: {
+          readonly type: 'code';
+        };
+      };
+    });
 ```
 
 Framework-aware Storybook parameters.

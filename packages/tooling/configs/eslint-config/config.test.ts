@@ -118,4 +118,79 @@ describe('missionTypeScriptPlugin rules via ESLint flat config', () => {
       'Expected @typescript-eslint/no-implicit-unknown warning on factory returning () => unknown',
     );
   });
+
+  it('unicorn/no-useless-undefined flags useless explicit undefined arguments', async () => {
+    const code = 'function foo(a = undefined) { return undefined; }\nfoo(undefined);\n';
+    const [result] = await eslint.lintText(code, { filePath: 'test.ts' });
+    assert.ok(result);
+    const uselessUndefined = result.messages.filter((m) => m.ruleId === 'unicorn/no-useless-undefined');
+    assert.ok(uselessUndefined.length > 0, 'Expected unicorn/no-useless-undefined error');
+  });
+
+  it('import-x/order enforces ordering and classifies @mission-platform as internal', async () => {
+    const badCode = [
+      "import { localFn } from './local';",
+      "import { coreFn } from '@mission-platform/core';",
+      "import fs from 'node:fs';",
+      '',
+      'export { localFn, coreFn, fs };',
+      '',
+    ].join('\n');
+    const [result] = await eslint.lintText(badCode, { filePath: 'test.ts' });
+    assert.ok(result);
+    const orderErrors = result.messages.filter((m) => m.ruleId === 'import-x/order');
+    assert.ok(orderErrors.length > 0, 'Expected import-x/order errors for out-of-order imports');
+  });
+
+  it('compiler-safe-codegen flags eval, Function constructor, and vm execution', async () => {
+    const dangerousCode = `
+      eval("const a = 1;");
+      const fn = new Function("x", "return x + 1");
+      vm.runInContext(code, context);
+      vm.runInNewContext(code);
+    `;
+    const [result] = await eslint.lintText(dangerousCode, {
+      filePath: 'packages/compiler/plugins/forge-react/src/transformers/unsafe.ts',
+    });
+    assert.ok(result);
+    const codegenErrors = result.messages.filter((m) => m.ruleId === '@typescript-eslint/compiler-safe-codegen');
+    assert.equal(codegenErrors.length, 4, 'Expected 4 compiler-safe-codegen errors');
+    assert.ok(codegenErrors.some((m) => m.message.includes('eval()')));
+    assert.ok(codegenErrors.some((m) => m.message.includes('new Function()')));
+    assert.ok(codegenErrors.some((m) => m.message.includes('vm execution')));
+  });
+
+  it('compiler-no-dynamic-imports flags dynamic non-literal import and require in compiler files', async () => {
+    const dynamicCode = `
+      const mod = await import(dynamicPath);
+      const req = require(someVariable);
+    `;
+    const [result] = await eslint.lintText(dynamicCode, {
+      filePath: 'packages/compiler/plugins/forge-vue/src/transformers/dynamic.ts',
+    });
+    assert.ok(result);
+    const dynamicErrors = result.messages.filter((m) => m.ruleId === '@typescript-eslint/compiler-no-dynamic-imports');
+    assert.equal(dynamicErrors.length, 2, 'Expected 2 compiler-no-dynamic-imports errors');
+  });
+
+  it('compiler security rules pass safe static imports and static AST constructs', async () => {
+    const safeCode = `
+      import path from 'node:path';
+      import { quoteString, isIdentifierName } from './source-text.js';
+
+      export function lower(name: string): string {
+        return isIdentifierName(name) ? name : quoteString(name);
+      }
+    `;
+    const [result] = await eslint.lintText(safeCode, {
+      filePath: 'packages/compiler/plugins/forge-react/src/transformers/safe.ts',
+    });
+    assert.ok(result);
+    const securityErrors = result.messages.filter(
+      (m) =>
+        m.ruleId === '@typescript-eslint/compiler-safe-codegen' ||
+        m.ruleId === '@typescript-eslint/compiler-no-dynamic-imports',
+    );
+    assert.equal(securityErrors.length, 0, 'Did not expect compiler security errors in safe code');
+  });
 });
