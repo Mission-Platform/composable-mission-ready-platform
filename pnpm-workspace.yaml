@@ -214,6 +214,7 @@ allowBuilds:
 overrides:
   source-map: ^0.7.6
   beasties: ^0.5.5
+  dompurify: 3.4.17
   nanoid: ^6.0.2
 
 patchedDependencies:
