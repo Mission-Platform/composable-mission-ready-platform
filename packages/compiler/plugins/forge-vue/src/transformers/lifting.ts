@@ -15,6 +15,10 @@
  * the folded initializer is always the complete value.
  */
 import { EMPTY_SPAN, sourceBacked } from "@mission-platform/forge-plugin-api";
+import type {
+  GenericRenderNode,
+  GenericStatement,
+} from "@mission-platform/forge-plugin-api";
 
 import { readVariableStatement } from "./statements.js";
 import {
@@ -23,11 +27,6 @@ import {
   matchBracket,
   splitTopLevel,
 } from "./text.js";
-
-import type {
-  GenericRenderNode,
-  GenericStatement,
-} from "@mission-platform/forge-plugin-api";
 
 /**
  * The fresh accumulator a lifted `let` build is folded onto. It is deliberately

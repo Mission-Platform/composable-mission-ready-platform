@@ -35,6 +35,12 @@ import {
   isTextNode,
   renderNodeTagName,
 } from "@mission-platform/forge-plugin-api";
+import type {
+  GenericAttribute,
+  GenericRenderChild,
+  GenericRenderNode,
+  SourceSpan,
+} from "@mission-platform/forge-plugin-api";
 import { MP_STATIC_ATTR } from "@mission-platform/forge-plugin-api/compiler/optimize.js";
 
 import {
@@ -79,13 +85,6 @@ import {
   type SvelteScope,
 } from "./expression.js";
 import { readBranchingBlockBody, readSafeBlockBody } from "./statements.js";
-
-import type {
-  GenericAttribute,
-  GenericRenderChild,
-  GenericRenderNode,
-  SourceSpan,
-} from "@mission-platform/forge-plugin-api";
 
 /** A list source and the key expression the plan inferred for it. */
 export interface TemplateListKey {

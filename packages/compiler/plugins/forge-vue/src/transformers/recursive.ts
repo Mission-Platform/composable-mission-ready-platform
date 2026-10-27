@@ -20,6 +20,8 @@
  * Everything here is read off the recorded text of the derived const and the
  * render node the IR already carries — nothing is re-parsed.
  */
+import type { GenericRenderNode } from "@mission-platform/forge-plugin-api";
+
 import { splitStatements } from "./statements.js";
 import {
   indexOfTopLevel,
@@ -30,7 +32,6 @@ import {
 } from "./text.js";
 
 import type { DerivedConst } from "./scope.js";
-import type { GenericRenderNode } from "@mission-platform/forge-plugin-api";
 
 /** A typed name — a helper parameter or a captured handler lifted to a prop. */
 export interface RecursiveProp {

@@ -17,15 +17,14 @@
  * string it was in TypeScript.
  */
 import { contentFields } from "@mission-platform/forge-cms-plugin-api";
-
-import { DEFAULT_INCLUDE_NAMESPACE, includePath } from "./template.js";
-
 import type {
   ContentComponent,
   ContentDefaultValue,
   ContentField,
   ContentFieldKindName,
 } from "@mission-platform/forge-cms-plugin-api";
+
+import { DEFAULT_INCLUDE_NAMESPACE, includePath } from "./template.js";
 
 /** The vocabulary the neutral field kinds are published under in `_data`. */
 export type JekyllFieldType = "string" | "number" | "boolean" | "enum" | "slot";

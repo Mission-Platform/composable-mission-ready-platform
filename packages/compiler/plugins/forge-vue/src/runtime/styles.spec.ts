@@ -5,9 +5,9 @@ import path from "node:path";
 import { describe, expect, it, afterEach, beforeEach } from "vitest";
 import { compileScript, compileStyle, parse } from "vue/compiler-sfc";
 
-import { buildStyles } from "./styles.js";
-
 import type { StyleImport } from "@mission-platform/forge-plugin-api/compiler/ast.js";
+
+import { buildStyles } from "./styles.js";
 
 // `buildStyles` reads the imported stylesheet from disk relative to the neutral
 // source, so the tests write a real `.module.scss` next to a source file whose

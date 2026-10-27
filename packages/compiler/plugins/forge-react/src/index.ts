@@ -2,12 +2,6 @@ import {
   assertTargetIntentionsLowered,
   defineForgeOutputPlugin,
 } from "@mission-platform/forge-plugin-api";
-
-import { emitReactModule } from "./emitters/module.js";
-import { lowerReactModule } from "./lower.js";
-import { optimizeReactModule } from "./optimize.js";
-
-import type { ReactLoweredModule } from "./lower.js";
 import type {
   ForgeBuildAdapters,
   FrameworkOutputPlugin,
@@ -16,6 +10,12 @@ import type {
   TargetIntentions,
   TargetOptimizeOptions,
 } from "@mission-platform/forge-plugin-api";
+
+import { emitReactModule } from "./emitters/module.js";
+import { lowerReactModule } from "./lower.js";
+import { optimizeReactModule } from "./optimize.js";
+
+import type { ReactLoweredModule } from "./lower.js";
 import type { TsdownPlugin } from "tsdown";
 import type { Plugin } from "vite";
 

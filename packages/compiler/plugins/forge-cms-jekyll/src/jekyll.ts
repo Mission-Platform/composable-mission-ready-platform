@@ -16,15 +16,6 @@
  * entry, so the shared driver writes its placeholder instead).
  */
 import { defineForgeCmsPlugin } from "@mission-platform/forge-cms-plugin-api";
-
-import { emitComponentsData, emitJekyllConfig } from "./manifest.js";
-import {
-  DEFAULT_INCLUDE_NAMESPACE,
-  emitLiquidInclude,
-  includeFileName,
-  jekyllDiagnostics,
-} from "./template.js";
-
 import type {
   CmsArtifact,
   CmsOutputPlugin,
@@ -35,6 +26,14 @@ import type {
   FrameworkOutputPlugin,
   SemanticModule,
 } from "@mission-platform/forge-plugin-api";
+
+import { emitComponentsData, emitJekyllConfig } from "./manifest.js";
+import {
+  DEFAULT_INCLUDE_NAMESPACE,
+  emitLiquidInclude,
+  includeFileName,
+  jekyllDiagnostics,
+} from "./template.js";
 
 /** The aggregate schema every generated site reads from `site.data`. */
 export const COMPONENTS_DATA_FILE = "_data/forge-components.yml";

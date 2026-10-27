@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import type { RouterCapabilityModule } from '@mission-platform/forge-router-plugin-api';
+
 import {
   MpMemoryHistory,
   createWebComponentsRouter,
@@ -11,8 +13,6 @@ import {
 } from '../runtime';
 
 import { forgeRouterWebComponents } from './forge-router-web-components';
-
-import type { RouterCapabilityModule } from '@mission-platform/forge-router-plugin-api';
 
 describe('forgeRouterWebComponents', () => {
   it('rewrites neutral imports to same-named runtime helpers', () => {

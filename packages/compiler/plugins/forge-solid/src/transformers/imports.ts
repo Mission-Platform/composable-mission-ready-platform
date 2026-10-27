@@ -22,6 +22,10 @@
  *   framework-split workspace package resolves through its `mp:solid` export
  *   condition.
  */
+import type {
+  GenericImport,
+  SemanticModule,
+} from "@mission-platform/forge-plugin-api";
 import {
   frameworkAdapterModule,
   LOCAL_JSX_TYPE_NAMES,
@@ -43,10 +47,6 @@ import {
 } from "../runtime/modules.js";
 
 import type { SolidLoweringContext } from "./context.js";
-import type {
-  GenericImport,
-  SemanticModule,
-} from "@mission-platform/forge-plugin-api";
 
 /** The hyperscript binding a `<Dynamic>` lowers to. */
 const HYPERSCRIPT_NAME = "h";

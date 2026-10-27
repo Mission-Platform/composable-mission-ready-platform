@@ -1,4 +1,3 @@
-import { parseLocation, stringifyLocation } from '@mission-platform/router';
 import {
   RouterView,
   useRoute,
@@ -9,6 +8,7 @@ import {
   type Router,
 } from 'vue-router';
 
+import { parseLocation, stringifyLocation } from '@mission-platform/router';
 import type {
   MpLinkOptions,
   MpNavigationOptions,

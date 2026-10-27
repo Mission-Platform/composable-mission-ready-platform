@@ -1,7 +1,8 @@
+import type { MpRouteLocationRaw, MpRouterCapabilities } from '@mission-platform/router';
+
 import { getActiveRouter, setActiveRouter } from './router';
 
 import type { MpWebComponentsRouter } from './router';
-import type { MpRouteLocationRaw, MpRouterCapabilities } from '@mission-platform/router';
 
 export {
   MpBrowserHistory,
@@ -31,7 +32,6 @@ export const ForgeRouterOutlet = MpRouterView;
 
 /** Read the current app-owned route as a neutral location. */
 export function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value'] {
-  // eslint-disable-next-line unicorn/no-null
   return getActiveRouter()?.current.value ?? null;
 }
 

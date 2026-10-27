@@ -14,6 +14,15 @@
  * it with {@link isReactLowered} rather than casting.
  */
 import { walkRenderNodes } from "@mission-platform/forge-plugin-api";
+import type {
+  GenericBindingKind,
+  GenericRenderNode,
+  SemanticModule,
+  SourceSpan,
+  TargetContext,
+  TargetIntentions,
+  TargetLoweredModule,
+} from "@mission-platform/forge-plugin-api";
 import {
   LOCAL_JSX_TYPE_NAMES,
   NEUTRAL_COMPILE_TIME_MARKERS,
@@ -31,16 +40,6 @@ import {
   readReturnTypeAnnotation,
 } from "./transformers/source-text.js";
 import { callsUseI18n, usesTranslation } from "./transformers/statements.js";
-
-import type {
-  GenericBindingKind,
-  GenericRenderNode,
-  SemanticModule,
-  SourceSpan,
-  TargetContext,
-  TargetIntentions,
-  TargetLoweredModule,
-} from "@mission-platform/forge-plugin-api";
 
 /** The framework ID this plugin lowers for. */
 export const REACT_FRAMEWORK = "react";

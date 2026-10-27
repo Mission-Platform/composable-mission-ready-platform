@@ -1,5 +1,6 @@
-import { MP_STATIC_ATTR } from "@mission-platform/forge-plugin-api/compiler/optimize.js";
 import { describe, expect, it } from "vitest";
+
+import { MP_STATIC_ATTR } from "@mission-platform/forge-plugin-api/compiler/optimize.js";
 
 import {
   booleanAttribute,

@@ -27,6 +27,12 @@ import {
   isRenderNode,
   isTextNode,
 } from "@mission-platform/forge-plugin-api";
+import type {
+  GenericAttribute,
+  GenericExpressionNode,
+  GenericRenderChild,
+  GenericRenderNode,
+} from "@mission-platform/forge-plugin-api";
 import {
   CLASS_NAME_ATTRIBUTE,
   JSX_ATTRIBUTE_RENAMES,
@@ -56,12 +62,6 @@ import {
 } from "./text.js";
 
 import type { RecursiveHelper } from "./recursive.js";
-import type {
-  GenericAttribute,
-  GenericExpressionNode,
-  GenericRenderChild,
-  GenericRenderNode,
-} from "@mission-platform/forge-plugin-api";
 
 /** Raised when a render shape has no faithful `<template>` form. */
 export class UnsupportedTemplate extends Error {

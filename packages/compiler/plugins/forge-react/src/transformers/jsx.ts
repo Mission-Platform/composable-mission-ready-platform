@@ -22,6 +22,12 @@ import {
   isRenderNode,
   isTextNode,
 } from "@mission-platform/forge-plugin-api";
+import type {
+  GenericAttribute,
+  GenericRenderChild,
+  GenericRenderNode,
+  SourceBackedExpression,
+} from "@mission-platform/forge-plugin-api";
 import { CLASS_NAME_ATTRIBUTE } from "@mission-platform/forge-plugin-api/compiler/ast.js";
 import { MP_STATIC_ATTR } from "@mission-platform/forge-plugin-api/compiler/optimize.js";
 
@@ -44,12 +50,6 @@ import {
 } from "./source-text.js";
 
 import type { ReactLoweringContext } from "./context.js";
-import type {
-  GenericAttribute,
-  GenericRenderChild,
-  GenericRenderNode,
-  SourceBackedExpression,
-} from "@mission-platform/forge-plugin-api";
 
 /** Prefix for synthesised static-hoist binding names (`__mpHoist_0`, …). */
 export const MP_HOIST_PREFIX = "__mpHoist_";

@@ -325,6 +325,12 @@ export const semanticModuleSchema: DeclarativeSchema = {
       type: "object",
       message: "Semantic module must define semantic intentions.",
     },
+    {
+      path: "setupContract",
+      code: "FORGE_INTENTIONS_INVALID_SETUP",
+      type: "object",
+      message: "Semantic module setupContract must be an object when present.",
+    },
   ],
 };
 

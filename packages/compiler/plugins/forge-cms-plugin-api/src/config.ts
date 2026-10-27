@@ -8,6 +8,8 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { mergeConfig } from "vite";
+
 import { defineLibraryConfig } from "@mission-platform/vite-config";
 import {
   assertForgeArtifactRoot,
@@ -18,17 +20,14 @@ import {
   forgeVirtualEntry,
   resolveForgeArtifactPath,
 } from "@mission-platform/vite-plugin-forge";
-import { mergeConfig } from "vite";
+import type { ForgeTargetGenerationContext } from "@mission-platform/vite-plugin-forge";
 
 import { copyAndPruneAssets } from "./assets.js";
 import { generateCmsArtifacts } from "./driver.js";
 import { cmsCacheDirectory, resolveComponentsModule } from "./tsdown.js";
 
 import type { CmsArtifact, CmsOutputPlugin } from "./cms.js";
-import type { ForgeTargetGenerationContext } from "@mission-platform/vite-plugin-forge";
 import type { Plugin, UserConfig } from "vite";
-
-/* eslint-disable unicorn/prevent-abbreviations -- Vite's public config uses the established rootDir/outDir names. */
 
 /** Options for {@link defineViteForgeCmsLibrary}. */
 export interface ViteForgeCmsLibraryOptions {

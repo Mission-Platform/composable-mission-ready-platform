@@ -11,11 +11,12 @@
  * This is the single classification implementation in the repository — a fix to
  * union, alias, or marker handling benefits every target at once.
  */
-import type { ContentFieldKind } from "./content-model.js";
 import type {
   OxcNode,
   OxcParsedModule,
 } from "@mission-platform/vite-plugin-forge/compiler/oxc.js";
+
+import type { ContentFieldKind } from "./content-model.js";
 
 /** The result of classifying a prop (`undefined` → drop the prop). */
 export type ClassifiedFieldKind = ContentFieldKind | undefined;

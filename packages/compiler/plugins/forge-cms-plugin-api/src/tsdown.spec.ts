@@ -1,7 +1,8 @@
 import path from "node:path";
 
-import { defineTsdownLibrary } from "@mission-platform/tsdown-config";
 import { describe, expect, it, vi } from "vitest";
+
+import { defineTsdownLibrary } from "@mission-platform/tsdown-config";
 
 import { stubFramework } from "./__fixtures__/framework.js";
 import { cmsCacheDirectory } from "./tsdown.js";

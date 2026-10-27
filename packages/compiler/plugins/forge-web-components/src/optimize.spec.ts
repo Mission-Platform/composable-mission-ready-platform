@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
 
+import type {
+  SemanticModule,
+  TargetContext,
+  TargetOptimizeOptions,
+} from "@mission-platform/forge-plugin-api";
+
 import {
   booleanAttribute,
   component,
@@ -23,11 +29,6 @@ import type {
   WebComponentsLoweredModule,
   WebComponentsReactiveProperty,
 } from "./lower.ts";
-import type {
-  SemanticModule,
-  TargetContext,
-  TargetOptimizeOptions,
-} from "@mission-platform/forge-plugin-api";
 
 const CONTEXT: TargetContext = {
   framework: "web-components",

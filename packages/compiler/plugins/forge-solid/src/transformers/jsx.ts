@@ -25,6 +25,12 @@ import {
   isRenderNode,
   isTextNode,
 } from "@mission-platform/forge-plugin-api";
+import type {
+  GenericAttribute,
+  GenericRenderChild,
+  GenericRenderNode,
+  SourceBackedExpression,
+} from "@mission-platform/forge-plugin-api";
 
 import { aliasAttributeName } from "../runtime/aliases.js";
 import {
@@ -60,12 +66,6 @@ import {
 } from "./text.js";
 
 import type { SolidLoweringContext } from "./context.js";
-import type {
-  GenericAttribute,
-  GenericRenderChild,
-  GenericRenderNode,
-  SourceBackedExpression,
-} from "@mission-platform/forge-plugin-api";
 
 /** A lowered render node: Solid source plus how it may be spliced back in. */
 export interface LoweredRenderNode {

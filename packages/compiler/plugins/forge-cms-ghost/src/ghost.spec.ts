@@ -1,9 +1,17 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
+import { describe, expect, it } from "vitest";
+
 import {
   analyzeContentComponent,
   generateCmsArtifacts,
+} from "@mission-platform/forge-cms-plugin-api";
+import type {
+  CmsArtifact,
+  CmsTargetContext,
+  ContentComponent,
+  ContentComponentNamesInput,
 } from "@mission-platform/forge-cms-plugin-api";
 import {
   BADGE,
@@ -24,9 +32,12 @@ import {
   siteHeaderNames,
   stubFramework,
 } from "@mission-platform/forge-cms-plugin-api/fixtures";
+import type {
+  CompilerDiagnostic,
+  SemanticModule,
+} from "@mission-platform/forge-plugin-api";
 import { analyzeForgeModule } from "@mission-platform/vite-plugin-forge";
 import { parseOxcModule } from "@mission-platform/vite-plugin-forge/compiler/oxc.js";
-import { describe, expect, it } from "vitest";
 
 import { forgeGhostCms } from "./ghost.js";
 
@@ -35,16 +46,6 @@ import type {
   GhostComponentsManifest,
   GhostThemeConfig,
 } from "./manifest.js";
-import type {
-  CmsArtifact,
-  CmsTargetContext,
-  ContentComponent,
-  ContentComponentNamesInput,
-} from "@mission-platform/forge-cms-plugin-api";
-import type {
-  CompilerDiagnostic,
-  SemanticModule,
-} from "@mission-platform/forge-plugin-api";
 
 function irFor(
   source: string,

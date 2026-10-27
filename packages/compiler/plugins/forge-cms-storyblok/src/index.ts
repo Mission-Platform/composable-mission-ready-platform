@@ -22,10 +22,13 @@
  * `components.json` remains at the Storyblok output root.
  */
 export {
+  defaultStoryblokFrameworks,
+  defineStoryblokCmsConfig,
   forgeStoryblokCms,
   forgeStoryblokCmsTargets,
   type ForgeStoryblokCmsOptions,
   type ForgeStoryblokCmsTargetsOptions,
+  type StoryblokCmsConfigOptions,
 } from "./storyblok.js";
 
 export {

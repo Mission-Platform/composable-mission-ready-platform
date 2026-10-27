@@ -15,15 +15,14 @@
  * that were printed rather than sliced out of a buffer.
  */
 import { EMPTY_SPAN, sourceBacked } from "@mission-platform/forge-plugin-api";
-
-import { maskLiterals, matchBracket, splitTopLevel } from "./text.js";
-
 import type {
   GenericAttribute,
   GenericRenderChild,
   GenericRenderNode,
   GenericTagKind,
 } from "@mission-platform/forge-plugin-api";
+
+import { maskLiterals, matchBracket, splitTopLevel } from "./text.js";
 
 /** Whether `text` is a quoted string literal with no interpolation. */
 function stringLiteral(text: string): string | undefined {

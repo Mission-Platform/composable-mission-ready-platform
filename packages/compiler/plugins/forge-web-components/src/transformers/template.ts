@@ -19,6 +19,14 @@
  * is scoped to the element instance by the source-text rewrite in
  * `./expression` rather than by a TypeScript transform.
  */
+import type {
+  GenericAttribute,
+  GenericRenderChild,
+  GenericRenderNode,
+  GenericTagKind,
+  SourceBackedExpression,
+  TargetComponentHost,
+} from "@mission-platform/forge-plugin-api";
 import { MP_STATIC_ATTR } from "@mission-platform/forge-plugin-api/compiler/optimize.js";
 
 import {
@@ -28,15 +36,6 @@ import {
   splitLogicalAnd,
   stripOuterParentheses,
 } from "./expression.js";
-
-import type {
-  GenericAttribute,
-  GenericRenderChild,
-  GenericRenderNode,
-  GenericTagKind,
-  SourceBackedExpression,
-  TargetComponentHost,
-} from "@mission-platform/forge-plugin-api";
 
 /** A direct-DOM source unit consumed by the Web-Components element emitter. */
 export interface DomTemplateSource {

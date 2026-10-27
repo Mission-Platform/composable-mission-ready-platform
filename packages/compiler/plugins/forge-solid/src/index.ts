@@ -1,14 +1,9 @@
+import solidPlugin from "vite-plugin-solid";
+
 import {
   assertTargetIntentionsLowered,
   defineForgeOutputPlugin,
 } from "@mission-platform/forge-plugin-api";
-import solidPlugin from "vite-plugin-solid";
-
-import { emitSolidHookModule, emitSolidModule } from "./emitters";
-import { lowerSolidModule } from "./lower.js";
-import { optimizeSolidModule } from "./optimize.js";
-
-import type { SolidLoweredModule } from "./lower.js";
 import type {
   ForgeBuildAdapters,
   FrameworkOutputPlugin,
@@ -16,6 +11,12 @@ import type {
   TargetIntentions,
   TargetOptimizeOptions,
 } from "@mission-platform/forge-plugin-api";
+
+import { emitSolidHookModule, emitSolidModule } from "./emitters";
+import { lowerSolidModule } from "./lower.js";
+import { optimizeSolidModule } from "./optimize.js";
+
+import type { SolidLoweredModule } from "./lower.js";
 import type { TsdownPlugin } from "tsdown";
 import type { Plugin } from "vite";
 

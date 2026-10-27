@@ -21,6 +21,10 @@
  * is the whole function, so this emitter splits each body itself (see
  * `../transformers/statements.js`) rather than re-parsing the module.
  */
+import type {
+  GenericStatement,
+  SemanticModule,
+} from "@mission-platform/forge-plugin-api";
 import {
   frameworkAdapterModule,
   NEUTRAL_CONTEXT_VALUES,
@@ -46,11 +50,6 @@ import {
   splitTopLevel,
   unwrapParentheses,
 } from "../transformers/text.js";
-
-import type {
-  GenericStatement,
-  SemanticModule,
-} from "@mission-platform/forge-plugin-api";
 
 /** The subset of Vue's API the hook translation can reference, imported from `vue`. */
 const VUE_RUNTIME_IMPORTS: readonly string[] = [

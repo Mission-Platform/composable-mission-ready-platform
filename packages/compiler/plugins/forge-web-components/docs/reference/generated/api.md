@@ -193,7 +193,7 @@ The plugin's framework ID, and the discriminator of its lowered plan.
 **Kind:** constant
 
 ```typescript
-export const WEBCOMPONENTS_NATIVE_HOSTS;
+export const WEBCOMPONENTS_NATIVE_HOSTS: Readonly<Record<string, string>>;
 ```
 
 The compatibility table for roots that can safely be customized built-ins.

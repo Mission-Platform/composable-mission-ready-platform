@@ -6,6 +6,8 @@
  * self-call inside the markup becomes a `v-for` of the module referencing itself
  * (Vue resolves a component by the name `defineOptions` gives it).
  */
+import type { GenericStatement } from "@mission-platform/forge-plugin-api";
+
 import { emptyScope } from "../transformers/expressions.js";
 import {
   emitRenderNode,
@@ -13,7 +15,6 @@ import {
 } from "../transformers/template.js";
 
 import type { RecursiveHelper } from "../transformers/recursive.js";
-import type { GenericStatement } from "@mission-platform/forge-plugin-api";
 
 /** Statement kinds carrying a type the auxiliary module may need. */
 const TYPE_STATEMENT_KINDS: ReadonlySet<string> = new Set([

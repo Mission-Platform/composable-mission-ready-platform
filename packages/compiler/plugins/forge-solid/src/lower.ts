@@ -13,8 +13,6 @@
  * `framework === 'solid'`, so {@link isSolidLowered} can narrow a
  * `TargetLoweredModule` without a cast.
  */
-import { constantMemoValue } from "./transformers/constants.js";
-
 import type {
   CompilerDiagnostic,
   DynamicNodeIntention,
@@ -32,6 +30,8 @@ import type {
   TargetIntentions,
   TargetLoweredModule,
 } from "@mission-platform/forge-plugin-api";
+
+import { constantMemoValue } from "./transformers/constants.js";
 
 /** The framework identifier every Solid plan is discriminated on. */
 export const SOLID_FRAMEWORK = "solid";

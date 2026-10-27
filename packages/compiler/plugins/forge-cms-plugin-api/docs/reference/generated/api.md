@@ -11,7 +11,7 @@ Generated from public source declarations in `@mission-platform/forge-cms-plugin
 **Kind:** constant
 
 ```typescript
-export const BADGE;
+export const BADGE: readonly string[];
 ```
 
 Literal-union options, JSDoc descriptions, and `?? literal` defaults.
@@ -31,7 +31,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const BUTTON;
+export const BUTTON: readonly string[];
 ```
 
 A union degrading to text plus a dropped callback prop.
@@ -51,7 +51,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const COUNTER;
+export const COUNTER: readonly string[];
 ```
 
 An interactive component: state and an event handler force a hydrated island.
@@ -71,7 +71,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const EMPTY;
+export const EMPTY: readonly string[];
 ```
 
 A component with no props at all.
@@ -91,7 +91,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const GRID;
+export const GRID: readonly string[];
 ```
 
 A numeric prop with a numeric default.
@@ -111,7 +111,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const LAYOUT;
+export const LAYOUT: readonly string[];
 ```
 
 A named slot alongside the default slot.
@@ -131,7 +131,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const REQUIRED;
+export const REQUIRED: readonly string[];
 ```
 
 A required (non-optional) prop alongside an optional one.
@@ -151,7 +151,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const SITE_HEADER;
+export const SITE_HEADER: readonly string[];
 ```
 
 A component with a site-wide setting prop.

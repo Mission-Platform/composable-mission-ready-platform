@@ -16,6 +16,16 @@
  * plugin the caller passes.
  */
 import { defineForgeCmsPlugin } from "@mission-platform/forge-cms-plugin-api";
+import type {
+  CmsArtifact,
+  CmsOutputPlugin,
+  CmsTargetContext,
+  ContentComponent,
+} from "@mission-platform/forge-cms-plugin-api";
+import type {
+  FrameworkOutputPlugin,
+  SemanticModule,
+} from "@mission-platform/forge-plugin-api";
 
 import {
   DEFAULT_GHOST_THEME_NAME,
@@ -29,17 +39,6 @@ import {
   ghostPartialFileName,
   ghostTemplateDiagnostics,
 } from "./template.js";
-
-import type {
-  CmsArtifact,
-  CmsOutputPlugin,
-  CmsTargetContext,
-  ContentComponent,
-} from "@mission-platform/forge-cms-plugin-api";
-import type {
-  FrameworkOutputPlugin,
-  SemanticModule,
-} from "@mission-platform/forge-plugin-api";
 
 /** Options for {@link forgeGhostCms}. */
 export interface ForgeGhostCmsOptions {

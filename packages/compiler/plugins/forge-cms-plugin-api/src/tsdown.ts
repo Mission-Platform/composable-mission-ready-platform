@@ -28,15 +28,13 @@ import {
   resolveForgeArtifactPath,
   validateForgeArtifactSegment,
 } from "@mission-platform/vite-plugin-forge";
+import type { ForgeTargetGenerationContext } from "@mission-platform/vite-plugin-forge";
 
 import { copyAndPruneAssets } from "./assets.js";
 import { generateCmsArtifacts } from "./driver.js";
 
 import type { CmsArtifact, CmsArtifactKind, CmsOutputPlugin } from "./cms.js";
-import type { ForgeTargetGenerationContext } from "@mission-platform/vite-plugin-forge";
 import type { TsdownPlugin, UserConfig } from "tsdown";
-
-/* eslint-disable unicorn/prevent-abbreviations -- tsdown mirrors the repository's public rootDir/outDir config names. */
 
 /** Options for one CMS target, used internally by the native adapter. */
 interface TsdownForgeCmsTargetOptions {
@@ -162,7 +160,7 @@ export function resolveComponentsModule(
 export function cmsCacheDirectory(
   rootDir: string,
   target: CmsOutputPlugin,
-  cacheRoot = path.join(rootDir, "node_modules/.cache"),
+  cacheRoot: string = path.join(rootDir, "node_modules/.cache"),
 ): string {
   validateForgeArtifactSegment(target.id);
   validateForgeArtifactSegment(target.framework.id);

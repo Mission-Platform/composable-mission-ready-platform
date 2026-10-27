@@ -1,3 +1,9 @@
+import type {
+  GenericComponent,
+  SemanticModule,
+  StateIntention,
+} from "@mission-platform/forge-plugin-api";
+
 import {
   type ElementScope,
   rewriteExpressionText,
@@ -9,12 +15,6 @@ import {
   type WebComponentsElementRef,
   type WebComponentsGeneratedId,
 } from "./types.js";
-
-import type {
-  GenericComponent,
-  SemanticModule,
-  StateIntention,
-} from "@mission-platform/forge-plugin-api";
 
 /** Lower every `const <name> = useId();` in the component body into an instance field. */
 export function loweredGeneratedIds(
