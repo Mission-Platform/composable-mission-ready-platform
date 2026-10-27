@@ -1,5 +1,6 @@
-import type { loadSync } from './render-worker.flint';
 import type { FlintGraphEdge, FlintGraphGroup, FlintGraphNode } from '@mission-platform/flint';
+
+import type { loadSync } from './render-worker.flint';
 
 export type FlintRenderWorkerWasmExports = ReturnType<typeof loadSync>;
 
@@ -10,14 +11,12 @@ export interface FlintCamera {
   readonly viewportWidth: number;
   readonly viewportHeight: number;
 }
-
 export interface ViewBounds {
   readonly minX: number;
   readonly minY: number;
   readonly maxX: number;
   readonly maxY: number;
 }
-
 export type FlintHitResult =
   | {
       readonly type: 'node';
@@ -69,7 +68,6 @@ export type FlintHitResult =
       readonly worldX?: number;
       readonly worldY?: number;
     };
-
 export interface ScreenPoint {
   readonly x: number;
   readonly y: number;
@@ -86,11 +84,7 @@ export type RenderWorkerInputMessage =
       readonly renderer?: 'webgpu' | 'webgl' | 'canvas2d';
       readonly theme?: 'light' | 'dark';
     }
-  | {
-      readonly type: 'set_theme';
-      readonly id?: string;
-      readonly theme: 'light' | 'dark';
-    }
+  | { readonly type: 'set_theme'; readonly id?: string; readonly theme: 'light' | 'dark' }
   | {
       readonly type: 'set_graph';
       readonly id?: string;
@@ -98,12 +92,7 @@ export type RenderWorkerInputMessage =
       readonly edges: readonly FlintGraphEdge[];
       readonly groups?: readonly FlintGraphGroup[];
     }
-  | {
-      readonly type: 'pan';
-      readonly id?: string;
-      readonly deltaX: number;
-      readonly deltaY: number;
-    }
+  | { readonly type: 'pan'; readonly id?: string; readonly deltaX: number; readonly deltaY: number }
   | {
       readonly type: 'zoom';
       readonly id?: string;
@@ -138,17 +127,9 @@ export type RenderWorkerInputMessage =
   | {
       readonly type: 'set_hovered_port';
       readonly id?: string;
-      readonly hoveredPort?: {
-        readonly nodeId: string;
-        readonly portId: string;
-      };
+      readonly hoveredPort?: { readonly nodeId: string; readonly portId: string };
     }
-  | {
-      readonly type: 'set_pulse';
-      readonly id?: string;
-      readonly edgeId: string;
-      readonly progress: number;
-    }
+  | { readonly type: 'set_pulse'; readonly id?: string; readonly edgeId: string; readonly progress: number }
   | {
       readonly type: 'hit_test';
       readonly id?: string;
@@ -162,33 +143,21 @@ export type RenderWorkerInputMessage =
       readonly id?: string;
       readonly activeNodeIds?: readonly string[];
       readonly trappedNodeId?: string;
-      readonly edgePulses?: readonly {
-        readonly edgeId: string;
-        readonly offset: number;
-      }[];
+      readonly edgePulses?: readonly { readonly edgeId: string; readonly offset: number }[];
       readonly requestId?: string;
     }
-  | {
-      readonly type: 'render_frame';
-      readonly id?: string;
-    }
-  | {
-      readonly type: 'reload_font_atlas';
-      readonly id?: string;
-    }
-  | {
-      readonly type: 'destroy';
-      readonly id?: string;
-    };
+  | { readonly type: 'render_frame'; readonly id?: string }
+  | { readonly type: 'reload_font_atlas'; readonly id?: string }
+  | { readonly type: 'destroy'; readonly id?: string };
 
 export interface FlintPerformanceMetrics {
   readonly updateTimeMs: number;
-  readonly renderTimeMs: number;
   readonly spatialIndexTimeMs: number;
   readonly bufferUploadTimeMs: number;
   readonly drawPassTimeMs: number;
   readonly textPassTimeMs?: number;
   readonly layoutTimeMs?: number;
+  readonly renderTimeMs?: number;
   readonly totalFrameTimeMs: number;
   readonly visibleNodesCount: number;
   readonly totalNodesCount?: number;
@@ -202,7 +171,6 @@ export interface FlintPerformanceMetrics {
   readonly fps?: number;
   readonly backend?: 'webgpu' | 'webgl' | 'canvas2d';
 }
-
 export interface RenderWorkerOutputMessage {
   readonly id?: string;
   readonly type: 'ready' | 'frame' | 'hit_test_result' | 'hit_result' | 'camera_changed' | 'error';
@@ -226,7 +194,6 @@ export interface GPUAdapter {
     readonly description?: string;
   };
 }
-
 export interface GPUDevice {
   readonly queue: GPUQueue;
   createShaderModule(descriptor: { code: string }): GPUShaderModule;
@@ -240,7 +207,6 @@ export interface GPUDevice {
   createCommandEncoder(): GPUCommandEncoder;
   destroy(): void;
 }
-
 export interface GPUQueue {
   writeBuffer(buffer: GPUBuffer, bufferOffset: number, data: BufferSource | ArrayBufferView | Float32Array): void;
   writeTexture(
@@ -251,56 +217,43 @@ export interface GPUQueue {
   ): void;
   submit(commandBuffers: readonly GPUCommandBuffer[]): void;
 }
-
 export interface GPUBuffer {
   readonly size: number;
   destroy(): void;
 }
-
 export interface GPUSampler {
   readonly label?: string;
 }
-
 export interface GPUShaderModule {
   readonly label?: string;
 }
-
 export interface GPUBindGroupLayout {
   readonly label?: string;
 }
-
 export interface GPUPipelineLayout {
   readonly label?: string;
 }
-
 export interface GPURenderPipeline {
   readonly label?: string;
 }
-
 export interface GPUBindGroup {
   readonly label?: string;
 }
-
 export interface GPUCommandBuffer {
   readonly label?: string;
 }
-
 export interface GPUTexture {
   createView(): GPUTextureView;
   destroy?(): void;
 }
-
 export interface GPUTextureView {
   readonly label?: string;
 }
-
 export type GPUTextureFormat = string;
-
 export interface GPUCommandEncoder {
   beginRenderPass(descriptor: Record<string, unknown>): GPURenderPassEncoder;
   finish(): GPUCommandBuffer;
 }
-
 export interface GPURenderPassEncoder {
   setPipeline(pipeline: GPURenderPipeline): void;
   setBindGroup(index: number, bindGroup: GPUBindGroup): void;
@@ -308,37 +261,31 @@ export interface GPURenderPassEncoder {
   draw(vertexCount: number, instanceCount?: number, firstVertex?: number, firstInstance?: number): void;
   end(): void;
 }
-
 export interface GPUCanvasContext {
   configure(configuration: { device: GPUDevice; format: string; alphaMode?: string }): void;
   getCurrentTexture(): GPUTexture;
 }
-
 export interface WebGpuNavigator {
   readonly gpu?: {
     requestAdapter(options?: Record<string, unknown>): Promise<GPUAdapter | null>;
     getPreferredCanvasFormat(): string;
   };
 }
-
 export interface WebGLUniformLocations {
   readonly u_resolution: WebGLUniformLocation | null;
   readonly u_camera: WebGLUniformLocation | null;
   readonly u_zoom: WebGLUniformLocation | null;
 }
-
 export interface WebGLAttribLocations {
   readonly a_position: number;
   readonly a_color: number;
 }
-
 export interface WebGLTextUniformLocations {
   readonly u_resolution: WebGLUniformLocation | null;
   readonly u_camera: WebGLUniformLocation | null;
   readonly u_zoom: WebGLUniformLocation | null;
   readonly u_fontTexture: WebGLUniformLocation | null;
 }
-
 export interface WebGLTextAttribLocations {
   readonly a_position: number;
   readonly a_uv: number;

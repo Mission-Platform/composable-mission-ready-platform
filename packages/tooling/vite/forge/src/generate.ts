@@ -13,6 +13,9 @@
 import { existsSync, mkdirSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
+import type { CompilerDiagnostic, FrameworkOutputPlugin } from '@mission-platform/forge-plugin-api';
+import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
+
 import { LOCAL_JSX_TYPES_FILE, localJsxTypesModuleSource } from './compiler/constants.js';
 import {
   discoverExternalExportsFromGraph,
@@ -33,8 +36,6 @@ import { createGeneratedIndexSourceBuilder } from './generate/index-source.js';
 
 import type { ForgeCompilerService } from './compiler/service.js';
 import type { TypeOrigin, TypeOriginResolver } from './generate/entry-synthesis.js';
-import type { CompilerDiagnostic, FrameworkOutputPlugin } from '@mission-platform/forge-plugin-api';
-import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
 
 export { generateEntry } from './generate/entry-synthesis.js';
 export {

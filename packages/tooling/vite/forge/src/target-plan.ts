@@ -1,13 +1,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import type { FrameworkOutputPlugin } from '@mission-platform/forge-plugin-api';
+import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
+
 import { generateHookLibrarySources } from './generate-hooks.js';
 import { generateFrameworkSources } from './generate.js';
 
 import type { ForgeCompilerService } from './compiler/service.js';
 import type { ForgeTargetPlan } from './compiler/session.js';
-import type { FrameworkOutputPlugin } from '@mission-platform/forge-plugin-api';
-import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
 
 /** Shared generation options forwarded into stage-1 drivers. */
 export interface ForgeGenerationPlanOptions {

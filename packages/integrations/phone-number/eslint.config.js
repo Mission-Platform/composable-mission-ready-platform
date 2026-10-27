@@ -26,7 +26,6 @@ export default [
       'unicorn/no-array-callback-reference': 'off',
       'unicorn/number-literal-case': 'off',
       'unicorn/explicit-length-check': 'off',
-      'unicorn/no-useless-undefined': 'off',
       'unicorn/no-zero-fractions': 'off',
       'unicorn/no-negated-condition': 'off',
       'unicorn/prefer-spread': 'off',
@@ -37,8 +36,6 @@ export default [
       'unicorn/numeric-separators-style': 'off',
       'unicorn/prefer-switch': 'off',
       'unicorn/no-new-array': 'off',
-      'import-x/no-useless-path-segments': 'off',
-      'import-x/order': 'off',
     },
   },
 ];

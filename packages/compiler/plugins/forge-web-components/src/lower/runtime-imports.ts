@@ -1,3 +1,5 @@
+import type { SemanticModule } from "@mission-platform/forge-plugin-api";
+
 import { HAS_SLOT_RUNTIME, MODULE_SCOPE } from "../transformers/expression.js";
 import { renderNodeToDomTemplate } from "../transformers/template.js";
 
@@ -22,10 +24,8 @@ import {
   type WebComponentsTemplatePlan,
 } from "./types.js";
 
-import type { SemanticModule } from "@mission-platform/forge-plugin-api";
-
 /** Stylesheet imports resolve to CSS sidecars with the source-relative layout. */
-export const STYLE_IMPORT = /\.(?:css|scss|sass|less|styl)$/u;
+export const STYLE_IMPORT: RegExp = /\.(?:css|scss|sass|less|styl)$/u;
 
 export function styleSidecarUrl(specifier: string): string {
   return specifier
@@ -55,7 +55,7 @@ export function listKeysOf(module: SemanticModule): WebComponentsListKey[] {
   }));
 }
 
-export const RUNTIME_VALUES = [
+export const RUNTIME_VALUES: readonly string[] = [
   "ForgeElement",
   "domTemplate",
   "dynamicElement",
@@ -65,7 +65,7 @@ export const RUNTIME_VALUES = [
   HAS_SLOT_RUNTIME,
   "unsafeHtml",
   "useId",
-] as const;
+];
 
 export const RUNTIME_PROPERTY_DECLARATION_TYPE = "PropertyDeclaration";
 export const RUNTIME_TEMPLATE_DEFINITION_TYPE = "DomTemplateDefinition";

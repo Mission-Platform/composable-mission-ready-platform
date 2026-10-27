@@ -1,8 +1,12 @@
-import { FLINT_ABI_VERSION, FLINT_LANGUAGE_VERSION } from '@mission-platform/flint';
+import type { FlintPrimitiveType } from '@mission-platform/flint';
+import {
+  FLINT_ABI_VERSION,
+  FLINT_LANGUAGE_VERSION,
+  type FlintAbiFunction,
+  type FlintAbiManifest,
+} from '@mission-platform/flint-c-abi';
 
 import { FlintTrap } from './traps.js';
-
-import type { FlintAbiFunction, FlintAbiManifest, FlintPrimitiveType } from '@mission-platform/flint';
 
 /**
  * Validation result for a Flint ABI manifest containing validation status and error messages.

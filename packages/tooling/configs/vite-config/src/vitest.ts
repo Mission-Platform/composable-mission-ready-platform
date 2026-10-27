@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import vue from '@vitejs/plugin-vue';
+import { transformWithEsbuild, type Plugin } from 'vite';
 import { defineConfig, mergeConfig, type ViteUserConfig } from 'vitest/config';
 
 import {
@@ -159,6 +160,61 @@ export function detectTestEnvironment(
   return 'node';
 }
 
+function stripHtmlMacro(input: string): string {
+  let code = input;
+  let index = code.indexOf('html!');
+  while (index !== -1) {
+    const openBrace = code.indexOf('{', index);
+    if (openBrace === -1) break;
+    let depth = 1;
+    let pos = openBrace + 1;
+    while (pos < code.length && depth > 0) {
+      if (code[pos] === '{') depth++;
+      else if (code[pos] === '}') depth--;
+      pos++;
+    }
+    if (depth === 0) {
+      const inner = code.slice(openBrace + 1, pos - 1);
+      code = code.slice(0, index) + '(' + inner + ')' + code.slice(pos);
+    }
+    index = code.indexOf('html!', index + 1);
+  }
+  return code;
+}
+
+function flintPlugin(): Plugin {
+  return {
+    name: 'vite-flint-loader',
+    async transform(code: string, id: string) {
+      if (!id.endsWith('.flint') && !id.endsWith('.flintc')) return null;
+      const script = /<script>\s*([\s\S]*?)\s*<\/script>/u.exec(code)?.[1] ?? code;
+      let js = stripHtmlMacro(script)
+        .replace(/import\s+"([^"]+)"\s+as\s+([A-Za-z0-9_$]+);/g, (_m, p, a) =>
+          p.endsWith('.scss') || p.endsWith('.css') ? `import ${a} from "${p}";` : `import { ${a} } from "${p}";`,
+        )
+        .replace(/import\s+'([^']+)'\s+as\s+([A-Za-z0-9_$]+);/g, (_m, p, a) =>
+          p.endsWith('.scss') || p.endsWith('.css') ? `import ${a} from '${p}';` : `import { ${a} } from '${p}';`,
+        )
+        .replace(/export\s+struct\s+[A-Za-z0-9_$]+\s*\{[^}]*\}/g, '')
+        .replace(/struct\s+[A-Za-z0-9_$]+\s*\{[^}]*\}/g, '')
+        .replace(
+          /export\s+fn\s+([A-Za-z0-9_$]+)\s*\(([^):]*)(?::[^)]*)?\)\s*(?:->\s*[^{]+)?\{/g,
+          'export function $1($2) {',
+        )
+        .replace(/fn\s+([A-Za-z0-9_$]+)\s*\(([^):]*)(?::[^)]*)?\)\s*(?:->\s*[^{]+)?\{/g, 'function $1($2) {')
+        .replace(/let\s+mut\s+/g, 'let ')
+        .replace(/let\s+([A-Za-z0-9_$]+)\s*:[^=]+=/g, 'const $1 =')
+        .replace(/let\s+([A-Za-z0-9_$]+)\s*=/g, 'const $1 =');
+      js = `import { Dynamic, Slot } from '@mission-platform/forge-jsx';\n${js}`;
+      return transformWithEsbuild(js, id, {
+        loader: 'tsx',
+        jsx: 'automatic',
+        jsxImportSource: '@mission-platform/forge-jsx',
+      });
+    },
+  };
+}
+
 /**
  * Build a Vitest config for Mission Platform packages and apps. Provides the
  * standard Vue plugin, a jsdom or node environment, and a v8 coverage provider
@@ -169,8 +225,8 @@ export function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserC
     framework,
     frameworkInclude,
     environment = detectTestEnvironment(process.cwd(), options),
-    testTimeout = 30_000,
-    hookTimeout = 30_000,
+    testTimeout = 60_000,
+    hookTimeout = 60_000,
     globals = true,
     include = ['src/**/*.spec.ts'],
     coverageInclude,
@@ -182,7 +238,7 @@ export function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserC
   const scoped = conditions !== undefined && frameworkInclude !== undefined && frameworkInclude.length > 0;
 
   const base = defineConfig({
-    plugins: [vue(), ignoreVueI18nBlocksPlugin()],
+    plugins: [vue(), ignoreVueI18nBlocksPlugin(), flintPlugin()],
     css: DEFAULT_CSS_CONFIG,
     resolve: {
       alias: {

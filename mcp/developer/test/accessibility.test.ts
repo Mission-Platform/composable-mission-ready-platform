@@ -109,23 +109,8 @@ describe('accessibility audit', () => {
     );
   });
 
-  it('returns navigation failures as structured render errors', async () => {
-    const { page, calls } = makePage({
-      goto: async () => {
-        throw new Error('connection refused');
-      },
-    });
-    const { browser, calls: browserCalls } = makeBrowser(page);
-
-    const result = await runAccessibilityAudit(
-      { url: 'http://127.0.0.1:9', timeout: 500 },
-      { launchBrowser: async () => browser, axeSource: 'axe-source', settleTime: 0 },
-    );
-
-    assert.deepEqual(result.violations, []);
-    assert.match(result.renderErrors[0] ?? '', /navigation: connection refused/);
-    assert.deepEqual(calls, ['goto', 'page-close']);
-    assert.deepEqual(browserCalls, ['new-page', 'browser-close']);
+  it('rejects loopback destinations before launching a browser', async () => {
+    await assert.rejects(() => runAccessibilityAudit({ url: 'http://127.0.0.1:9' }), /private destination/);
   });
 
   it('closes page and browser when axe evaluation fails', async () => {

@@ -1,4 +1,14 @@
 import {
+  LngLat,
+  Map,
+  NavigationControl,
+  type LngLatLike,
+  type MapMouseEvent,
+  type MapOptions,
+  type NavigationControlOptions,
+} from 'maplibre-gl';
+
+import {
   classNames,
   type MpChild,
   type MpElement,
@@ -7,14 +17,6 @@ import {
   useRef,
   useState,
 } from '@mission-platform/forge-jsx';
-import {
-  LngLat,
-  Map,
-  NavigationControl,
-  type MapMouseEvent,
-  type MapOptions,
-  type NavigationControlOptions,
-} from 'maplibre-gl';
 
 import { MapContext } from '@/map-context';
 import { centerDiffers, scalarDiffers } from '@/utils/camera';

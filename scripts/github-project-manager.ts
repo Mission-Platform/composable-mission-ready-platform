@@ -304,6 +304,114 @@ export const UI_COMPONENTS_PROJECT_CONFIG: ProjectConfig = {
 
 export const PROJECT_CONFIG = UI_COMPONENTS_PROJECT_CONFIG;
 
+export const FABRICA_PROJECT_CONFIG: ProjectConfig = {
+  title: 'Fabrica Platform Modernization',
+  projectTitle: 'Fabrica Rebrand & Multi-Framework Modernization',
+  description:
+    'End-to-end migration and rebrand to Fabrica (Platform), Lathe (Multi-Framework UI Compiler), and Scribe (Scanner, DSL & Wasm IR Engine).',
+  organization: 'Mission-Platform',
+  repository: 'Mission-Platform/composable-mission-ready-platform',
+  milestoneTitle: 'Fabrica Rebrand & Multi-Framework Modernization',
+  milestoneNumber: 3,
+  planPath: 'docs/fabrica-project-plan.json',
+  fields: {
+    status: ['Backlog', 'Ready', 'In Progress', 'In Review', 'Done'],
+    priority: ['P0 - Critical', 'P1 - High', 'P2 - Medium', 'P3 - Low'],
+    track: [
+      'Foundation & Tooling',
+      'Design Tokens & UI',
+      'Compiler & Adapters',
+      'Scanner & Runtime',
+      'Applications & MCP',
+      'Documentation',
+    ],
+    complexity: ['S', 'M', 'L', 'XL'],
+  },
+  issues: [
+    {
+      issueNumber: 109,
+      title: 'refactor(tooling): rename root configs and workspace scopes to @fabrica',
+      track: 'Foundation & Tooling',
+      priority: 'P0 - Critical',
+      complexity: 'M',
+      initialStatus: 'Ready',
+    },
+    {
+      issueNumber: 110,
+      title: 'refactor(tokens): migrate custom properties from --mp-* to --fb-* and publish @fabrica/tokens',
+      track: 'Design Tokens & UI',
+      priority: 'P0 - Critical',
+      complexity: 'M',
+      initialStatus: 'Backlog',
+    },
+    {
+      issueNumber: 111,
+      title: 'refactor(core): rename @mission-platform/i18n and @mission-platform/core to @fabrica/*',
+      track: 'Design Tokens & UI',
+      priority: 'P0 - Critical',
+      complexity: 'M',
+      initialStatus: 'Backlog',
+    },
+    {
+      issueNumber: 112,
+      title:
+        'refactor(components): rename @mission-platform/components to @fabrica/components and bind to @fabrica/tokens',
+      track: 'Design Tokens & UI',
+      priority: 'P0 - Critical',
+      complexity: 'L',
+      initialStatus: 'Backlog',
+    },
+    {
+      issueNumber: 113,
+      title: 'refactor(lathe): migrate Forge multi-framework compiler and target adapters to @fabrica/lathe-*',
+      track: 'Compiler & Adapters',
+      priority: 'P1 - High',
+      complexity: 'XL',
+      initialStatus: 'Backlog',
+    },
+    {
+      issueNumber: 114,
+      title: 'refactor(scribe): migrate Flint scanner, SonIR, and Wasm execution engine to @fabrica/scribe-*',
+      track: 'Scanner & Runtime',
+      priority: 'P1 - High',
+      complexity: 'XL',
+      initialStatus: 'Backlog',
+    },
+    {
+      issueNumber: 115,
+      title: 'refactor(extensions): migrate VS Code tooling to Scribe',
+      track: 'Scanner & Runtime',
+      priority: 'P2 - Medium',
+      complexity: 'M',
+      initialStatus: 'Backlog',
+    },
+    {
+      issueNumber: 116,
+      title: 'refactor(apps): update applications and Storybook workbench to consume @fabrica/* packages',
+      track: 'Applications & MCP',
+      priority: 'P1 - High',
+      complexity: 'L',
+      initialStatus: 'Backlog',
+    },
+    {
+      issueNumber: 117,
+      title: 'refactor(mcp): rebrand MCP developer and consumer servers to @fabrica/mcp-*',
+      track: 'Applications & MCP',
+      priority: 'P1 - High',
+      complexity: 'M',
+      initialStatus: 'Backlog',
+    },
+    {
+      issueNumber: 118,
+      title: 'docs(rebrand): update documentation, AGENTS.md, architectural guides, and website content to Fabrica',
+      track: 'Documentation',
+      priority: 'P2 - Medium',
+      complexity: 'L',
+      initialStatus: 'Backlog',
+    },
+  ],
+};
+
 export const BOARD_STAGES = ['Backlog', 'Ready', 'In Progress', 'In Review', 'Done'] as const;
 export type BoardStage = (typeof BOARD_STAGES)[number];
 
@@ -333,6 +441,18 @@ export const CURRENT_BOARD_STATE: Record<number, BoardStage> = {
   60: 'Done',
   61: 'Done',
   62: 'Done',
+
+  // Milestone 3 (Fabrica Rebrand & Multi-Framework Modernization)
+  109: 'Ready',
+  110: 'Backlog',
+  111: 'Backlog',
+  112: 'Backlog',
+  113: 'Backlog',
+  114: 'Backlog',
+  115: 'Backlog',
+  116: 'Backlog',
+  117: 'Backlog',
+  118: 'Backlog',
 };
 
 async function runGh(args: readonly string[]): Promise<string> {
@@ -367,13 +487,18 @@ export async function checkProjectAuthScopes(): Promise<{
 }
 
 // skipcq: JS-R1005
-export async function exportProjectPlan(which: 'components' | 'flint' | 'fws' | 'all' = 'all'): Promise<void> {
+export async function exportProjectPlan(
+  which: 'components' | 'flint' | 'fws' | 'fabrica' | 'all' = 'all',
+): Promise<void> {
   const configs: ProjectConfig[] = [];
   if (which === 'all' || which === 'components') {
     configs.push(UI_COMPONENTS_PROJECT_CONFIG);
   }
   if (which === 'all' || which === 'fws' || which === 'flint') {
     configs.push(FLINT_PROJECT_CONFIG);
+  }
+  if (which === 'all' || which === 'fabrica') {
+    configs.push(FABRICA_PROJECT_CONFIG);
   }
 
   for (const config of configs) {
@@ -387,16 +512,19 @@ export async function exportProjectPlan(which: 'components' | 'flint' | 'fws' | 
 /**
  * Displays the current status, priority breakdown, and board stage of tracked issues.
  *
- * @param which - Config selection filter ('components', 'flint', 'fws', or 'all').
+ * @param which - Config selection filter ('components', 'flint', 'fws', 'fabrica', or 'all').
  */
 // skipcq: JS-R1005
-export function showProjectStatus(which: 'components' | 'flint' | 'fws' | 'all' = 'all'): Promise<void> {
+export function showProjectStatus(which: 'components' | 'flint' | 'fws' | 'fabrica' | 'all' = 'all'): Promise<void> {
   const configs: ProjectConfig[] = [];
   if (which === 'all' || which === 'components') {
     configs.push(UI_COMPONENTS_PROJECT_CONFIG);
   }
   if (which === 'all' || which === 'fws' || which === 'flint') {
     configs.push(FLINT_PROJECT_CONFIG);
+  }
+  if (which === 'all' || which === 'fabrica') {
+    configs.push(FABRICA_PROJECT_CONFIG);
   }
 
   for (const config of configs) {
@@ -544,8 +672,15 @@ export async function syncBoard(boardName = 'The Board'): Promise<void> {
 }
 
 // skipcq: JS-R1005
-export async function setupProject(target: 'components' | 'flint' | 'fws' = 'components'): Promise<void> {
-  const config = target === 'fws' || target === 'flint' ? FLINT_PROJECT_CONFIG : UI_COMPONENTS_PROJECT_CONFIG;
+export async function setupProject(target: 'components' | 'flint' | 'fws' | 'fabrica' = 'components'): Promise<void> {
+  let config: ProjectConfig;
+  if (target === 'fabrica') {
+    config = FABRICA_PROJECT_CONFIG;
+  } else if (target === 'fws' || target === 'flint') {
+    config = FLINT_PROJECT_CONFIG;
+  } else {
+    config = UI_COMPONENTS_PROJECT_CONFIG;
+  }
   console.log(`[github-project-manager] Initiating project setup for '${config.title}'...`);
 
   await exportProjectPlan(target);
@@ -624,7 +759,7 @@ export async function setupProject(target: 'components' | 'flint' | 'fws' = 'com
 
 async function main(): Promise<void> {
   const command = process.argv[2] ?? 'status';
-  const target = (process.argv[3] ?? 'all') as 'components' | 'flint' | 'fws' | 'all';
+  const target = (process.argv[3] ?? 'all') as 'components' | 'flint' | 'fws' | 'fabrica' | 'all';
 
   switch (command) {
     case 'plan': {
@@ -636,7 +771,7 @@ async function main(): Promise<void> {
       break;
     }
     case 'setup': {
-      const proj = (process.argv[3] ?? 'components') as 'components' | 'flint' | 'fws';
+      const proj = (process.argv[3] ?? 'components') as 'components' | 'flint' | 'fws' | 'fabrica';
       await setupProject(proj);
       break;
     }

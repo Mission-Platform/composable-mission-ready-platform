@@ -1,15 +1,17 @@
+import type {
+  FlintExpression,
+  FlintFunction,
+  FlintModule,
+  FlintSourceSpan,
+  FlintStatement,
+  FlintTypeName,
+} from '@mission-platform/flint-ast';
 import {
-  type FlintExpression,
-  type FlintFunction,
-  type FlintModule,
-  type FlintResolvedModule,
-  type FlintSourceSpan,
-  type FlintStatement,
-  type FlintTypeName,
   hashFlintModuleGraph,
   resolveFlintImportTypeEnvironment,
   resolveFlintModuleGraph,
-} from '@mission-platform/flint';
+  type FlintResolvedModule,
+} from '@mission-platform/flint-linker';
 
 import { analyzeFlint } from './analysis.js';
 import { offsetAtPosition, rangeFromOffsets } from './positions.js';
@@ -90,7 +92,9 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
   public async refresh(uri?: string): Promise<void> {
     const documents = this.#callbacks.documents;
     const listed = uri === undefined && this.#host !== undefined ? await this.#host.listFiles().catch(() => []) : [];
-    const entries = uniqueUris([...documents.keys(), ...listed].filter((entry) => entry.endsWith('.flint')));
+    const entries = uniqueUris(
+      [...documents.keys(), ...listed].filter((entry) => entry.endsWith('.flint') || entry.endsWith('.flintc')),
+    );
     if (uri !== undefined && documents.has(uri) && !entries.some((entry) => sameIdentity(entry, uri))) {
       entries.push(uri);
     }
@@ -154,10 +158,11 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
       const importerRecord =
         nextRecords.get(importerUri) ??
         [...nextRecords.values()].find((record) => sameIdentity(record.uri, importerUri));
-      const alias = importerRecord?.module?.sourceImports.find((item) => item.source === edge.source)?.alias;
-      if (alias === undefined) continue;
+      const sourceImport = importerRecord?.module?.sourceImports.find((item) => item.source === edge.source);
+      if (sourceImport === undefined) continue;
       const aliases = nextImports.get(identityKey(importerUri)) ?? new Map<string, string>();
-      aliases.set(alias, targetUri);
+      const bindings = sourceImport.bindings ?? [{ kind: 'namespace' as const, localName: sourceImport.alias }];
+      for (const binding of bindings) aliases.set(binding.localName, targetUri);
       nextImports.set(identityKey(importerUri), aliases);
     }
 
@@ -397,7 +402,8 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
         if (resolved === undefined) continue;
         const target = this.#findRecord(resolved);
         if (target === undefined) continue;
-        aliases.set(sourceImport.alias, target.uri);
+        const bindings = sourceImport.bindings ?? [{ kind: 'namespace' as const, localName: sourceImport.alias }];
+        for (const binding of bindings) aliases.set(binding.localName, target.uri);
       }
       this.#imports.delete(key);
       if (aliases.size > 0) this.#imports.set(key, aliases);
@@ -414,6 +420,43 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
     for (const record of records) {
       if (record.module === undefined) continue;
       for (const declaration of record.module.functions) this.#collectStatements(record, declaration, declaration.body);
+      this.#collectEmbeddedReferences(record);
+    }
+  }
+
+  /** Indexes component tags and CSS-module class uses from embedded markup. */
+  #collectEmbeddedReferences(record: WorkspaceRecord): void {
+    const tagPattern = /<([A-Za-z][\w:-]*)(?=\s|\/?>)/gu;
+    for (const match of record.source.matchAll(tagPattern)) {
+      const name = match[1];
+      const start = (match.index ?? 0) + 1;
+      if (name === undefined || ['script', 'template', 'style'].includes(name)) continue;
+      const target = this.#resolve(record, name, start);
+      if (target !== undefined && target.record.uri !== record.uri) {
+        this.#references.push({
+          target,
+          uri: record.uri,
+          range: rangeFromOffsets(record.source, start, start + name.length),
+        });
+      }
+    }
+    const classPattern = /\bclass\s*=\s*["']([^"']*)["']/gu;
+    for (const match of record.source.matchAll(classPattern)) {
+      const classes = match[1]?.matchAll(/[A-Za-z_][\w-]*/gu) ?? [];
+      for (const classMatch of classes) {
+        const className = classMatch[0];
+        if (className === undefined) continue;
+        const target = record.symbols.find(
+          (symbol) => symbol.symbol.name === className && symbol.symbol.detail.startsWith('CSS module class .'),
+        );
+        if (target === undefined) continue;
+        const matchStart = (match.index ?? 0) + (match[0]?.indexOf(className) ?? 0);
+        this.#references.push({
+          target,
+          uri: record.uri,
+          range: rangeFromOffsets(record.source, matchStart, matchStart + className.length),
+        });
+      }
     }
   }
 
@@ -575,6 +618,21 @@ export class FlintWorkspaceSemanticIndex implements FlintWorkspaceIndex {
   // skipcq: JS-R1005
   #resolve(record: WorkspaceRecord, name: string, offset: number): IndexedSymbol | undefined {
     const parts = name.split('.');
+    const namedImport = record.module?.sourceImports
+      .flatMap((sourceImport) => sourceImport.bindings ?? [])
+      .find((binding) => binding.kind === 'named' && binding.localName === name);
+    if (namedImport?.kind === 'named') {
+      const sourceImport = record.module?.sourceImports.find((item) => item.bindings?.includes(namedImport));
+      const mappedUri = this.#imports.get(identityKey(record.uri))?.get(name);
+      const resolvedUri =
+        mappedUri ?? (sourceImport === undefined ? undefined : resolveSource(sourceImport.source, record.uri));
+      const targetRecord = resolvedUri === undefined ? undefined : this.#findRecord(resolvedUri);
+      const target = targetRecord?.symbols.find(
+        (symbol) =>
+          symbol.symbol.name === namedImport.importedName && symbol.exported && symbol.symbol.kind !== 'capability',
+      );
+      if (target !== undefined) return target;
+    }
     if (parts.length > 1) {
       const alias = parts[0] ?? '';
       const member = parts.at(-1) ?? '';

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { flintDefaultPassingMode, isFlintPodType } from './ast.ts';
-import { parseFlint } from './parser.ts';
-import { checkFlint } from './type-checker.ts';
+import { flintDefaultPassingMode, isFlintPodType } from '@mission-platform/flint-ast';
+import { parseFlint } from '@mission-platform/flint-parser';
+import { checkFlint } from '@mission-platform/flint-types';
 
 function requireModule(result: ReturnType<typeof parseFlint>) {
   if (result.module === undefined) throw new Error('Expected parsed module to be defined');

@@ -13,8 +13,8 @@ const MAX_REDIRECTS = 5;
 const REDIRECT_STATUSES = new Set([301, 302, 303, 307, 308]);
 
 /** Keep the proxy read-only and limited to the documented API routes. */
-export const ALLOWED_METHODS = new Set(['GET', 'HEAD']);
-export const ALLOWED_ROUTE_PREFIXES = ['/users/', '/v1/'];
+export const ALLOWED_METHODS: Set<string> = new Set(['GET', 'HEAD']);
+export const ALLOWED_ROUTE_PREFIXES: string[] = ['/users/', '/v1/'];
 
 const HOP_BY_HOP_HEADERS = new Set([
   'connection',
@@ -179,7 +179,7 @@ async function fetchUpstream(request: Request): Promise<Response> {
   return new Response('Bad gateway', { status: 502 });
 }
 
-export default withSecurityHeaders({
+const handler: ExportedHandler = withSecurityHeaders({
   async fetch(request: Request, _environment: unknown, _context: ExecutionContext): Promise<Response> {
     if (!isAllowedProxyRequest(request)) {
       return new Response('Not found', { status: 404 });
@@ -192,4 +192,6 @@ export default withSecurityHeaders({
       return new Response('Bad gateway', { status: 502 });
     }
   },
-}) satisfies ExportedHandler;
+});
+
+export default handler;

@@ -280,7 +280,7 @@ export function formatFlintSoNSummary(module: FlintSoNModule): {
     functions: module.functions.length,
     nodes: module.nodes.length,
     regions: module.regions.length,
-    optimizerPasses: module.optimizationReport?.passes.map(({ name }) => name) ?? [],
+    optimizerPasses: module.optimizationReport?.passes.map((pass: { readonly name: string }) => pass.name) ?? [],
   } as const;
   return {
     json,

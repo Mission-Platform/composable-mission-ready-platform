@@ -129,7 +129,7 @@ export function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockContr
   }
 
   // This handler intentionally captures the component-local event contract.
-  // eslint-disable-next-line unicorn/consistent-function-scoping
+
   const preventFocusLoss = (event: MouseEvent): void => event.preventDefault();
   const align = (value: WysiwygBlockAlign): void => properties.onAlign?.(value);
 

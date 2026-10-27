@@ -1,5 +1,3 @@
-/* eslint-disable unicorn/no-array-for-each, unicorn/no-negated-condition */
-
 import type { FlintWasmFunction, FlintWasmPrimitiveType, FlintWasmStatement } from './contracts.js';
 
 /**

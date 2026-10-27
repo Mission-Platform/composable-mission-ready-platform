@@ -34,6 +34,7 @@ export interface SecurityScanResult {
   readonly skippedFiles?: number;
   readonly unreadableFiles?: number;
   readonly oversizedFiles?: number;
+  readonly excludedFiles?: number;
   readonly errors?: readonly string[];
 }
 

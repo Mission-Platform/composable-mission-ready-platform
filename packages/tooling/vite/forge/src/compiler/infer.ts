@@ -3,6 +3,22 @@ import {
   EMPTY_SEMANTIC_INTENTIONS,
   walkRenderNodes,
 } from '@mission-platform/forge-plugin-api';
+import type {
+  CompilerDiagnostic,
+  EffectIntention,
+  EventIntention,
+  GenericStatement,
+  DynamicNodeIntention,
+  ListKeyIntention,
+  MemoIntention,
+  PropIntention,
+  RefIntention,
+  SemanticModule,
+  SourceBackedExpression,
+  SourceSpan,
+  StateIntention,
+  SlotIntention,
+} from '@mission-platform/forge-plugin-api';
 import { hasMpStaticMarker } from '@mission-platform/forge-plugin-api/compiler/optimize.js';
 
 import { NEUTRAL_MODULE } from './constants.js';
@@ -25,23 +41,6 @@ import {
   type OxcParentMap,
   type OxcParsedModule,
 } from './oxc.js';
-
-import type {
-  CompilerDiagnostic,
-  EffectIntention,
-  EventIntention,
-  GenericStatement,
-  DynamicNodeIntention,
-  ListKeyIntention,
-  MemoIntention,
-  PropIntention,
-  RefIntention,
-  SemanticModule,
-  SourceBackedExpression,
-  SourceSpan,
-  StateIntention,
-  SlotIntention,
-} from '@mission-platform/forge-plugin-api';
 
 function expression(
   source: string,

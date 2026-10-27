@@ -33,7 +33,12 @@
   "dependencies": {
     "@mission-platform/forge-cms-plugin-api": "workspace:*",
     "@mission-platform/forge-plugin-api": "workspace:*",
-    "@storyblok/js": "^6.3.2",
+    "@mission-platform/forge-plugin-react": "workspace:*",
+    "@mission-platform/forge-plugin-solid": "workspace:*",
+    "@mission-platform/forge-plugin-svelte": "workspace:*",
+    "@mission-platform/forge-plugin-vue": "workspace:*",
+    "@mission-platform/forge-plugin-web-components": "workspace:*",
+    "@storyblok/js": "^6.3.4",
     "typescript": "catalog:typescript"
   },
   "peerDependencies": {

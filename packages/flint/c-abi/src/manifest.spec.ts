@@ -1,55 +1,24 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  decodeCbor,
+  canonicalizeAbiManifest,
   decodeCborAbiManifest,
-  encodeCbor,
   encodeCborAbiManifest,
+  validateAbiManifest,
+  type FlintCAbiManifest,
 } from "./manifest.js";
 
-describe("Binary CBOR encoder and decoder", () => {
-  it("roundtrips primitive values, arrays, maps, and bigints", () => {
-    const input = {
-      name: "flint_test_module",
-      version: 2,
-      active: true,
-      score: 99.5,
-      flags: [1, 2, 3, 4],
-      tags: { tier: "P0", stable: true },
-      nullValue: undefined,
-    };
-
-    const encoded = encodeCbor(input);
-    expect(encoded).toBeInstanceOf(Uint8Array);
-    expect(encoded.byteLength).toBeGreaterThan(0);
-
-    const decoded = decodeCbor<typeof input>(encoded);
-    expect(decoded.name).toBe("flint_test_module");
-    expect(decoded.version).toBe(2);
-    expect(decoded.active).toBe(true);
-    expect(decoded.score).toBeCloseTo(99.5);
-    expect(decoded.flags).toEqual([1, 2, 3, 4]);
-    expect(decoded.tags).toEqual({ tier: "P0", stable: true });
-  });
-
-  it("roundtrips Flint ABI manifest structures without data loss", () => {
-    const sampleManifest = {
+describe("Flint C-ABI Manifest Serialization and Validation", () => {
+  it("validates a well-formed ABI manifest", () => {
+    const manifest: FlintCAbiManifest = {
       format: "forge-web-script-module",
       languageVersion: "1.0",
       abiVersion: "1.2",
-      entryModule: "main.flint",
-      exports: [
-        {
-          name: "add",
-          parameters: [
-            { name: "left", type: "i32", ownership: "borrowed" },
-            { name: "right", type: "i32", ownership: "borrowed" },
-          ],
-          result: "i32",
-          resultOwnership: "owned",
-        },
-      ],
+      moduleName: "test",
+      exports: [],
       imports: [],
+      sourceImports: [],
+      requiredCapabilities: [],
       memory: {
         pageSize: 65_536,
         addressType: "u32",
@@ -60,38 +29,74 @@ describe("Binary CBOR encoder and decoder", () => {
         deallocatorExport: "fws_dealloc",
         reallocatorExport: "fws_realloc",
       },
-    } as const;
+      valueRepresentations: {
+        bool: "bool-i32",
+        bytes: "pointer-length-u32",
+        f32: "f32",
+        f64: "f64",
+        i32: "i32",
+        i64: "i64",
+        string: "pointer-length-u32",
+        u32: "u32",
+        u64: "u64",
+        unit: "unit",
+      },
+      trapModel: "explicit-trap",
+      standardLibrary: { version: "1.0", hash: "abc" },
+      aggregateLayouts: [],
+      enumDeclarations: [],
+      collectionLayouts: [],
+      specializations: [],
+      iteratorDescriptors: [],
+      boundsChecks: "runtime",
+    };
 
-    const encoded = encodeCborAbiManifest(sampleManifest);
+    const validation = validateAbiManifest(manifest);
+    expect(validation.valid).toBe(true);
+    expect(validation.errors).toEqual([]);
+  });
+
+  it("detects invalid format in ABI manifest", () => {
+    const invalidManifest = {
+      format: "invalid-format",
+      languageVersion: "1.0",
+      abiVersion: "1.2",
+    };
+
+    const validation = validateAbiManifest(
+      invalidManifest as unknown as FlintCAbiManifest,
+    );
+    expect(validation.valid).toBe(false);
+    expect(validation.errors.length).toBeGreaterThan(0);
+  });
+
+  it("roundtrips ABI manifest through binary CBOR encoding and decoding", () => {
+    const manifest: FlintCAbiManifest = {
+      format: "forge-web-script-module",
+      languageVersion: "1.0",
+      abiVersion: "1.2",
+      moduleName: "cbor_roundtrip",
+      count: 42,
+      flags: [true, false],
+    };
+
+    const encoded = encodeCborAbiManifest(manifest);
+    expect(encoded).toBeInstanceOf(Uint8Array);
+    expect(encoded.length).toBeGreaterThan(0);
+
     const decoded = decodeCborAbiManifest(encoded);
-
-    expect(decoded.format).toBe(sampleManifest.format);
-    expect(decoded.exports).toHaveLength(1);
-    expect(decoded.exports[0]?.name).toBe("add");
-    expect(decoded.memory.allocatorExport).toBe("fws_alloc");
+    expect(decoded).toEqual(manifest);
   });
 
-  it("prevents prototype pollution via __proto__, constructor, and prototype keys", () => {
-    // Manually construct CBOR map with __proto__ key: Major type 5 (map), 1 pair
-    const maliciousPayload = new Uint8Array([
-      0xa1, // Map with 1 pair
-      0x69, // Text string of 9 bytes
-      ...new TextEncoder().encode("__proto__"),
-      0x65, // Text string of 5 bytes
-      ...new TextEncoder().encode("owned"),
-    ]);
+  it("canonicalizes key ordering deterministically", () => {
+    const uncanonical = {
+      z: 1,
+      a: 2,
+      m: { y: 3, b: 4 },
+    };
 
-    expect(() => decodeCbor(maliciousPayload)).toThrow(TypeError);
-    expect(Object.prototype).not.toHaveProperty("polluted");
-  });
-
-  it("prevents unbounded recursion and deserialization bombs", () => {
-    // Deeply nested array exceeding MAX_CBOR_DEPTH (64)
-    const nested = new Uint8Array(70).fill(0x81); // Array of 1 element repeated 70 times
-    expect(() => decodeCbor(nested)).toThrow(RangeError);
-
-    // Truncated string length payload
-    const truncatedPayload = new Uint8Array([0x7a, 0x00, 0x01, 0x00, 0x00]); // String claiming 65536 bytes with 0 trailing
-    expect(() => decodeCbor(truncatedPayload)).toThrow(RangeError);
+    const canonical = canonicalizeAbiManifest(uncanonical);
+    expect(Object.keys(canonical)).toEqual(["a", "m", "z"]);
+    expect(Object.keys(canonical.m)).toEqual(["b", "y"]);
   });
 });

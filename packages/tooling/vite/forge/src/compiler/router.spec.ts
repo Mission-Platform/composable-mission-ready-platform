@@ -1,5 +1,6 @@
-import { defineForgeRouterPlugin, type RouterOutputPlugin } from '@mission-platform/forge-router-plugin-api';
 import { describe, expect, it } from 'vitest';
+
+import { defineForgeRouterPlugin, type RouterOutputPlugin } from '@mission-platform/forge-router-plugin-api';
 
 import { analyzeRouterCapabilities, compileRouterModule } from './router.js';
 

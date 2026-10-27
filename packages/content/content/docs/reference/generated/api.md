@@ -918,3 +918,21 @@ No description provided.
 | Name   | Type   | Description |
 | ------ | ------ | ----------- |
 | source | string |             |
+
+## `src/utils/sanitize`
+
+### sanitizeHtml
+
+**Kind:** function
+
+```typescript
+function sanitizeHtml(value: string): string;
+```
+
+Sanitize persisted/editor HTML while retaining the editor's formatting markup.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | string |             |

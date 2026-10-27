@@ -8,7 +8,6 @@ import type {
 
 /** Bit-exact ToInt32 used by the shared arithmetic and dataset kernels. */
 export function toI32(value: number): number {
-  // eslint-disable-next-line unicorn/prefer-math-trunc -- intentional ToInt32 wrap
   return value | 0;
 }
 

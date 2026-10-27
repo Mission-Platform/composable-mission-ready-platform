@@ -1,4 +1,5 @@
 import { parseDate } from "@mission-platform/vcard";
+import type { VEvent } from "@mission-platform/vcard";
 
 import { calculateCapacityState } from "./capacity";
 import { layoutResourceEvents } from "./layout";
@@ -7,8 +8,6 @@ import {
   resizePlannerEventPatch,
   selectPlannerRange,
 } from "./mutations";
-
-import type { VEvent } from "@mission-platform/vcard";
 
 const event = (uid: string, start: string, end: string): VEvent => ({
   uid,

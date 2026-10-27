@@ -9,8 +9,9 @@
  * `v-editable="blok"`), and renders each `bloks` field through
  * `StoryblokComponent`.
  */
-import type { AnalyzedField, AnalyzedStoryblokComponent } from "./types.js";
 import type { JsxFramework } from "@mission-platform/forge-plugin-api";
+
+import type { AnalyzedField, AnalyzedStoryblokComponent } from "./types.js";
 
 /** Options for {@link emitStoryblokBlokWrapper}. */
 export interface StoryblokBlokWrapperOptions {

@@ -11,12 +11,19 @@
  * shared token payload. All ranges are half-open [start, end).
  *)
 
-source                  = { trivia }, compilation-unit, { trivia }, eof ;
+source                  = { trivia }, ( regular-source | component-source ), { trivia }, eof ;
+regular-source          = compilation-unit ;
+component-source        = script-region, template-region, style-region ;
+script-region           = "<script>", { ? any source character other than the matching closing tag ? }, "</script>" ;
+template-region         = "<template>", { ? any source character other than the matching closing tag ? }, "</template>" ;
+style-region            = "<style>", { ? any source character other than the matching closing tag ? }, "</style>" ;
 compilation-unit        = legacy-module | { top-level-declaration } ;
 legacy-module           = "module", identifier, "{", { top-level-declaration }, "}" ;
 top-level-declaration   = import-declaration
                         | foreign-capability-declaration
                         | opaque-foreign-type-declaration
+                        | macro-declaration
+                        | comptime-statement
                         | struct-declaration
                         | record-declaration
                         | enum-declaration
@@ -36,26 +43,45 @@ identifier-start        = letter | "_" ;
 identifier-part         = identifier-start | decimal-digit ;
 letter                  = "A" .. "Z" | "a" .. "z" ;
 decimal-digit           = "0" .. "9" ;
-integer                 = decimal-digit, { decimal-digit } ;
+hex-digit               = decimal-digit | "A" .. "F" | "a" .. "f" ;
+binary-digit            = "0" | "1" ;
+octal-digit             = "0" .. "7" ;
+
+decimal-literal         = decimal-digit, { [ "_" ], decimal-digit } ;
+hex-literal             = ( "0x" | "0X" ), hex-digit, { [ "_" ], hex-digit } ;
+binary-literal          = ( "0b" | "0B" ), binary-digit, { [ "_" ], binary-digit } ;
+octal-literal           = ( "0o" | "0O" ), octal-digit, { [ "_" ], octal-digit } ;
+
+integer-literal         = hex-literal | binary-literal | octal-literal | decimal-literal ;
+exponent-part           = ( "e" | "E" ), [ "+" | "-" ], decimal-digit, { [ "_" ], decimal-digit } ;
+float-literal           = decimal-literal, ( ".", decimal-literal, [ exponent-part ] | exponent-part ) ;
+numeric-type-suffix     = [ "_" ], ( "i8" | "i32" | "i64" | "u8" | "u32" | "u64" | "f32" | "f64"
+                        | "c_char" | "c_uchar" | "c_short" | "c_ushort" | "c_int"
+                        | "c_uint" | "c_long" | "c_ulong" | "c_longlong" | "c_ulonglong"
+                        | "c_size" | "c_ssize" | "c_float" | "c_double" | "c_void" ) ;
+
+numeric-literal         = ( float-literal | integer-literal ), [ numeric-type-suffix ] ;
+integer                 = numeric-literal ;
 string                  = "\"", { string-character | escape-sequence }, "\"" ;
 string-character        = ? any source character other than quote, backslash, CR, or LF ? ;
 escape-sequence         = "\\", ( "\"" | "\\" | "/" | "b" | "f" | "n" | "r" | "t" | unicode-escape ) ;
 unicode-escape          = "u", hex-digit, hex-digit, hex-digit, hex-digit ;
-hex-digit               = decimal-digit | "A" .. "F" | "a" .. "f" ;
 
 (* The scanner uses longest match for operators before one-character forms. *)
-operator                = "!=" | "&&" | "==" | "||" | "<=" | ">=" | "->" | "=>" | "::"
-                        | "!" | "%" | "*" | "+" | "-" | "/" | "<" | ">" | "=" | "&" ;
+operator                = "!=" | "&&" | "==" | "||" | "<=" | ">=" | "->" | "=>" | "::" | "|>"
+                        | "!" | "%" | "*" | "+" | "-" | "/" | "<" | ">" | "=" | "&" | "?" ;
 punctuation             = "{" | "}" | "(" | ")" | "[" | "]" | ":" | ";"
-                        | "," | "|" | "." | "#" ;
+                        | "," | "|" | "." | "#" | "@" ;
 
 keyword                 = "as" | "capability" | "case" | "catch" | "class"
-                        | "constructor" | "default" | "do" | "else" | "enum"
-                        | "extends" | "export" | "for" | "foreign" | "fn" | "if" | "impl"
-                        | "import" | "inline" | "interface" | "iter" | "let" | "mut"
-                        | "likely" | "loop" | "match" | "module" | "new"
+                        | "comptime" | "constructor" | "default" | "derive" | "do" | "else" | "enum"
+                        | "emit" | "emits" | "event" | "events" | "extends" | "export" | "for" | "foreign"
+                        | "from" | "fn" | "if" | "impl"
+                        | "import" | "inline" | "interface" | "iter" | "let" | "macro" | "mut"
+                        | "likely" | "loop" | "match" | "model" | "module" | "new"
                         | "noinline" | "opaque" | "record" | "return" | "struct" | "switch" | "throw"
-                        | "trait" | "try" | "type" | "unlikely" | "while" | "yield" ;
+                        | "property" | "properties" | "readonly" | "setup" | "trait" | "try" | "type"
+                        | "unlikely" | "while" | "yield" ;
 boolean-literal         = "true" | "false" ;
 
 (* Lexical recovery *)
@@ -66,6 +92,9 @@ boolean-literal         = "true" | "false" ;
  * string reports FLINT-LEX-005. Any other source character consumes one source
  * code unit and reports FLINT-LEX-002. Recovery always advances and the scanner
  * emits one eof token after the final source offset.
+ *
+ * An unclosed delimiter reaching end-of-input reports FLINT-PARSE-004 at the
+ * opening delimiter span, allowing the parser to maintain AST continuity.
  *)
 eof                     = ? zero-width end-of-input token ? ;
 
@@ -73,7 +102,10 @@ eof                     = ? zero-width end-of-input token ? ;
 import-declaration      = capability-import | source-import ;
 capability-import       = "import", "capability", string, "as", identifier,
                           parameter-list, "->", type, ";" ;
-source-import           = "import", [ "module" ], string, "as", identifier, ";" ;
+source-import           = "import", [ "module" ], ( legacy-source-import | named-source-import | namespace-source-import ) ;
+legacy-source-import    = string, "as", identifier, ";" ;
+named-source-import     = "{", identifier, { [ "as", identifier ], ",", identifier }, "}", "from", string, ";" ;
+namespace-source-import = "*", "as", identifier, "from", string, ";" ;
 foreign-capability-declaration = "foreign", string, "capability", string, "{",
                                  { foreign-function-declaration }, "}" ;
 foreign-function-declaration   = "fn", identifier, parameter-list, "->", type, ";" ;
@@ -82,22 +114,28 @@ parameter-list          = "(", [ parameters ], ")" ;
 parameters              = parameter, { ",", parameter } ;
 parameter               = [ "mut" ], identifier, ":", type ;
 
-function-declaration    = { function-modifier }, "fn", identifier,
+attribute-annotation    = ( "@", identifier, [ call-arguments ] )
+                        | ( "#", "[", identifier, [ "(", [ attribute-argument, { ",", attribute-argument } ], ")" ], "]" ) ;
+attribute-argument      = identifier | integer | string | expression ;
+
+macro-declaration       = ( "macro" | "derive" ), identifier, parameter-list, block ;
+
+function-declaration    = { attribute-annotation }, { function-modifier }, "fn", identifier,
                           [ generic-parameters ], parameter-list, "->", type, block ;
 function-modifier       = "export" | "iter" | "inline" | "noinline" ;
 generic-parameters      = "<", generic-parameter, { ",", generic-parameter }, ">" ;
 generic-parameter       = identifier, [ ":", identifier, { "+", identifier } ] ;
 
-struct-attribute        = "#", "[", identifier, [ "(", identifier, [ "(", integer, ")" ], ")" ], "]" ;
-struct-declaration      = [ struct-attribute ], "struct", identifier, [ generic-parameters ], "{",
+struct-attribute        = attribute-annotation ;
+struct-declaration      = { attribute-annotation }, "struct", identifier, [ generic-parameters ], "{",
                           { struct-field }, "}" ;
-record-declaration      = "record", identifier, [ generic-parameters ], "{",
+record-declaration      = { attribute-annotation }, "record", identifier, [ generic-parameters ], "{",
                           { struct-field }, "}" ;
 struct-field            = identifier, ":", type, ( "," | ";" ) ;
-enum-declaration        = [ "export" ], "enum", identifier, [ generic-parameters ],
+enum-declaration        = { attribute-annotation }, [ "export" ], "enum", identifier, [ generic-parameters ],
                           "{", [ enum-variant, { ",", enum-variant }, [ "," ] ], "}" ;
 enum-variant            = identifier, [ parameter-list ], [ "=", [ "-" ], integer ] ;
-interface-declaration   = "interface", identifier, [ generic-parameters ], "{",
+interface-declaration   = { attribute-annotation }, "interface", identifier, [ generic-parameters ], "{",
                           { interface-function }, "}" ;
 interface-function      = "fn", identifier, [ generic-parameters ], parameter-list,
                           "->", type, ";" ;
@@ -113,6 +151,7 @@ statement               = let-statement
                         | while-statement
                         | do-while-statement
                         | switch-statement
+                        | comptime-statement
                         | unsupported-exception-statement
                         | unsupported-for-statement
                         | expression-statement ;
@@ -125,6 +164,7 @@ if-statement            = "if", [ "likely" | "unlikely" ], expression, block,
                           [ "else", block ] ;
 while-statement         = "while", expression, block ;
 do-while-statement      = "do", block, "while", expression, ";" ;
+comptime-statement      = "comptime", block ;
 switch-statement        = "switch", expression, "{", { switch-arm }, "}" ;
 switch-arm              = "case", switch-case-value, ":", switch-arm-body
                         | "default", ":", switch-arm-body ;
@@ -143,8 +183,8 @@ type                    = fixed-array-type | type-name ;
 fixed-array-type        = "[", type, ";", integer, "]" ;
 type-name               = [ "&", [ "mut" ] ], type-atom, [ "<", type, { ",", type }, ">" ] ;
 type-atom               = primitive-type | identifier ;
-primitive-type          = "bool" | "bytes" | "f32" | "f64" | "i32" | "i64"
-                        | "string" | "u32" | "u64" | "unit"
+primitive-type          = "bool" | "bytes" | "f32" | "f64" | "i8" | "i32" | "i64"
+                        | "string" | "u8" | "u32" | "u64" | "unit"
                         | "c_char" | "c_uchar" | "c_short" | "c_ushort" | "c_int"
                         | "c_uint" | "c_long" | "c_ulong" | "c_longlong" | "c_ulonglong"
                         | "c_size" | "c_ssize" | "c_float" | "c_double" | "c_void" ;
@@ -162,10 +202,12 @@ primary-expression      = integer
                         | string
                         | boolean-literal
                         | identifier-expression
+                        | comptime-expression
                         | function-value
                         | array-literal
                         | vector-literal
                         | match-expression ;
+comptime-expression     = "comptime", ( block | expression ) ;
 identifier-expression   = identifier, [ qualified-constructor | call-arguments
                         | record-initializer ] ;
 qualified-constructor   = "::", identifier, [ call-arguments ] ;

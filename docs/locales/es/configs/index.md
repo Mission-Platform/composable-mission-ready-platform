@@ -2,7 +2,7 @@
 
 Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
 
-> docs/packages/tooling/configs/index.md: [docs/packages/tooling/configs/index.md](../../../packages/tooling/configs/index.md)
+> docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
 > Idioma: Español (es)
 
 La Mission Platform utiliza paquetes de configuración centralizados en el `packages/tooling/configs/` directorio para garantizar la coherencia entre

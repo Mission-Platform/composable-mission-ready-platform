@@ -2,7 +2,7 @@
 
 정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
 
-> docs/packages/tooling/configs/index.md: [docs/packages/tooling/configs/index.md](../../../packages/tooling/configs/index.md)
+> docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
 > 언어: 한국어 (ko)
 
 Mission Platform은 중앙 집중식 구성 패키지를 사용합니다. `packages/tooling/configs/` 일관성을 보장하기 위한 디렉토리

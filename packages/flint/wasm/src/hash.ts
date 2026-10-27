@@ -1,5 +1,3 @@
-/* eslint-disable unicorn/numeric-separators-style */
-
 const HASH_VERSION = 'sha256-v1';
 
 const ROUND_CONSTANTS = [

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-  import { ForgeMonacoEditor, type MonacoReadyContext } from '@mission-platform/content';
   import { computed } from 'vue';
+
+  import { ForgeMonacoEditor, type MonacoReadyContext } from '@mission-platform/content';
 
   import { useMonacoTheme } from '../composables/use-monaco-theme';
   import { useSnippets } from '../composables/use-snippets';
@@ -130,7 +131,7 @@
       }
     });
 
-    editor.onKeyDown((e) => {
+    editor.onKeyDown((e: monaco.IKeyboardEvent) => {
       if (e.code === 'Space' || e.code === 'Enter') {
         if (slashCommandStart !== undefined) {
           const position = editor.getPosition();

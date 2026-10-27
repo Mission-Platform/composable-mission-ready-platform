@@ -1,6 +1,6 @@
-import { colorValue, containerWidthValue } from '../../../tokens';
-
 import type { MpChild, MpElement } from '@mission-platform/forge-jsx';
+
+import { colorValue, containerWidthValue } from '../../../tokens';
 
 export interface EmailContainerProperties {
   /** The content rendered inside the component. */

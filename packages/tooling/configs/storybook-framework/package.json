@@ -49,20 +49,20 @@
     "format:write": "prettier --write ."
   },
   "peerDependencies": {
-    "@storybook/html-vite": "*",
-    "@storybook/react-vite": "*",
-    "@storybook/svelte-vite": "*",
-    "@storybook/vue3-vite": "*",
-    "@storybook/web-components-vite": "*",
-    "@vitejs/plugin-react": "*",
-    "@vitejs/plugin-vue-jsx": "*",
-    "@sveltejs/vite-plugin-svelte": "*",
-    "svelte": "*",
-    "react": "*",
-    "solid-js": "*",
-    "vue": "*",
-    "vite": "*",
-    "vite-plugin-solid": "*"
+    "@storybook/html-vite": "catalog:storybook",
+    "@storybook/react-vite": "catalog:storybook",
+    "@storybook/svelte-vite": "catalog:storybook",
+    "@storybook/vue3-vite": "catalog:storybook",
+    "@storybook/web-components-vite": "catalog:storybook",
+    "@vitejs/plugin-react": "catalog:react",
+    "@vitejs/plugin-vue-jsx": "catalog:vue",
+    "@sveltejs/vite-plugin-svelte": "catalog:svelte",
+    "svelte": "catalog:svelte",
+    "react": "catalog:react",
+    "solid-js": "catalog:solid",
+    "vue": "catalog:vue",
+    "vite": "catalog:vite",
+    "vite-plugin-solid": "catalog:solid"
   },
   "peerDependenciesMeta": {
     "@storybook/html-vite": {

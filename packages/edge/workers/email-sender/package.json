@@ -36,6 +36,7 @@
     "@mission-platform/prettier-config": "workspace:*",
     "@mission-platform/tsdown-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
+    "@mission-platform/vite-config": "workspace:*",
     "@types/node": "catalog:typescript",
     "eslint": "catalog:eslint",
     "prettier": "catalog:prettier",

@@ -24,6 +24,16 @@
  * drift from it.
  */
 import { defineForgeCmsPlugin } from "@mission-platform/forge-cms-plugin-api";
+import type {
+  CmsArtifact,
+  CmsOutputPlugin,
+  CmsTargetContext,
+  ContentComponent,
+} from "@mission-platform/forge-cms-plugin-api";
+import type {
+  FrameworkOutputPlugin,
+  SemanticModule,
+} from "@mission-platform/forge-plugin-api";
 
 import {
   DEFAULT_WEBFLOW_GROUP,
@@ -37,17 +47,6 @@ import {
   WEBFLOW_LIBRARY_MANIFEST,
   emitWebflowManifest,
 } from "./manifest.js";
-
-import type {
-  CmsArtifact,
-  CmsOutputPlugin,
-  CmsTargetContext,
-  ContentComponent,
-} from "@mission-platform/forge-cms-plugin-api";
-import type {
-  FrameworkOutputPlugin,
-  SemanticModule,
-} from "@mission-platform/forge-plugin-api";
 
 /** Modules the emitted declarations import that the Webflow toolchain provides. */
 export const WEBFLOW_RUNTIME_EXTERNALS: readonly string[] = [

@@ -5,11 +5,11 @@ import {
   registerRouterElements,
   setForgeRouter,
 } from '@mission-platform/forge-router-web-components/runtime';
+import type { MpHistory, MpRoute, MpRouteViewAdapter } from '@mission-platform/router';
 
 import { DEFAULT_SLUG } from '../documentation';
 import { SUPPORTED_LOCALES } from '../i18n';
 
-import type { MpHistory, MpRoute, MpRouteViewAdapter } from '@mission-platform/router';
 import './document-view';
 import './search-view';
 

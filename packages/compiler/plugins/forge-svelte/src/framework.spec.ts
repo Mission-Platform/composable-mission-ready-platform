@@ -1,6 +1,13 @@
-import { MP_STATIC_ATTR } from "@mission-platform/forge-plugin-api/compiler/optimize.js";
 import { compile } from "svelte/compiler";
 import { describe, expect, it } from "vitest";
+
+import type {
+  GeneratedModule,
+  SemanticModule,
+  TargetContext,
+  TargetIntentions,
+} from "@mission-platform/forge-plugin-api";
+import { MP_STATIC_ATTR } from "@mission-platform/forge-plugin-api/compiler/optimize.js";
 
 import {
   booleanAttribute,
@@ -24,13 +31,6 @@ import {
   emitSvelteModule,
   forgeSvelteFramework,
 } from ".";
-
-import type {
-  GeneratedModule,
-  SemanticModule,
-  TargetContext,
-  TargetIntentions,
-} from "@mission-platform/forge-plugin-api";
 
 const NEUTRAL = "@mission-platform/forge-jsx";
 

@@ -2,6 +2,13 @@ import {
   createFlintVmAotArtifact,
   createFlintVmExecutor,
 } from "@mission-platform/flint-runtime";
+import type {
+  FlintVmExecutionResult,
+  FlintVmInstruction,
+  FlintVmModule,
+  FlintVmPreparedExecutor,
+  FlintVmValue,
+} from "@mission-platform/flint-runtime";
 
 import { decodeUtf8, encodeUtf8, normalizeBenchmarkOutput } from "../abi.ts";
 
@@ -13,13 +20,6 @@ import type {
   InitializedAdapter,
   RuntimeAdapter,
 } from "../contracts.ts";
-import type {
-  FlintVmExecutionResult,
-  FlintVmInstruction,
-  FlintVmModule,
-  FlintVmPreparedExecutor,
-  FlintVmValue,
-} from "@mission-platform/flint-runtime";
 
 const COMPILER_VERSION = "benchmark-flint-v1";
 const SOURCE_HASH = "benchmark-flint-vm-wasm-v1";

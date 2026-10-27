@@ -112,3 +112,426 @@ export interface RewriteResult
 ```
 
 Result of a CST import rewrite transformation.
+
+## `src/text`
+
+### blankRegions
+
+**Kind:** function
+
+```typescript
+function blankRegions(text: string, regions: readonly string[]): string;
+```
+
+Blank out every occurrence of each region, preserving character indices.
+
+#### Parameters
+
+| Name    | Type              | Description |
+| ------- | ----------------- | ----------- |
+| text    | string            |             |
+| regions | readonly string[] |             |
+
+### collapseWhitespace
+
+**Kind:** function
+
+```typescript
+function collapseWhitespace(text: string): string;
+```
+
+Collapse all runs of whitespace to single spaces and trim the result.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| text | string |             |
+
+### endOfTypeArguments
+
+**Kind:** function
+
+```typescript
+function endOfTypeArguments(text: string, start: number): number;
+```
+
+The index just past the `>` closing the type-argument list opened at `start`,
+or `-1` when the list never closes.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| text  | string |             |
+| start | number |             |
+
+### escapeAttribute
+
+**Kind:** function
+
+```typescript
+function escapeAttribute(value: string): string;
+```
+
+Escape a double-quoted HTML attribute value.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | string |             |
+
+### escapeBinding
+
+**Kind:** function
+
+```typescript
+function escapeBinding(expression: string): string;
+```
+
+Escape an expression for use inside a double-quoted Vue binding.
+
+#### Parameters
+
+| Name       | Type   | Description |
+| ---------- | ------ | ----------- |
+| expression | string |             |
+
+### indexOfTopLevel
+
+**Kind:** function
+
+```typescript
+function indexOfTopLevel(text: string, token: string, from = 0): number;
+```
+
+Index of the first top-level occurrence of `token` in `text` (outside
+brackets, strings and comments), or `-1`.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| text  | string |             |
+| token | string |             |
+| from  |        |             |
+
+### isIdentifierName
+
+**Kind:** function
+
+```typescript
+function isIdentifierName(name: string): boolean;
+```
+
+Alias for isPlainIdentifier.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| name | string |             |
+
+### isIdentifierPart
+
+**Kind:** function
+
+```typescript
+function isIdentifierPart(character: string | undefined): boolean;
+```
+
+Whether the character can continue a JavaScript identifier.
+
+#### Parameters
+
+| Name      | Type                | Description |
+| --------- | ------------------- | ----------- |
+| character | string \| undefined |             |
+
+### isIdentifierStart
+
+**Kind:** function
+
+```typescript
+function isIdentifierStart(character: string | undefined): boolean;
+```
+
+Whether the character can start a JavaScript identifier.
+
+#### Parameters
+
+| Name      | Type                | Description |
+| --------- | ------------------- | ----------- |
+| character | string \| undefined |             |
+
+### isPlainIdentifier
+
+**Kind:** function
+
+```typescript
+function isPlainIdentifier(name: string): boolean;
+```
+
+Whether a string is a valid plain JavaScript identifier name.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| name | string |             |
+
+### maskLiterals
+
+**Kind:** function
+
+```typescript
+function maskLiterals(text: string): boolean[];
+```
+
+Compute a boolean mask marking every index in `text` that sits inside a string literal,
+template literal or comment. Positions marked `true` are literal content and must never
+be rewritten structurally.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| text | string |             |
+
+### matchBracket
+
+**Kind:** function
+
+```typescript
+function matchBracket(text: string, start: number): number;
+```
+
+Index of the bracket matching the opening bracket at `start`, or `-1` when the
+text is unbalanced. Literal and comment regions are skipped.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| text  | string |             |
+| start | number |             |
+
+### memberAccess
+
+**Kind:** function
+
+```typescript
+function memberAccess(object: string, key: string): string;
+```
+
+Returns `<object>.<key>` for plain identifiers, or `<object>["<key>"]` (bracket notation) otherwise.
+
+#### Parameters
+
+| Name   | Type   | Description |
+| ------ | ------ | ----------- |
+| object | string |             |
+| key    | string |             |
+
+### pad
+
+**Kind:** function
+
+```typescript
+function pad(depth: number): string;
+```
+
+Indentation for a template depth (two spaces per level).
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| depth | number |             |
+
+### quote
+
+**Kind:** function
+
+```typescript
+function quote(value: string): string;
+```
+
+Alias for quoteString.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | string |             |
+
+### quoteAttributeValue
+
+**Kind:** function
+
+```typescript
+function quoteAttributeValue(value: string): string;
+```
+
+Quote a string as a JSX attribute value.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | string |             |
+
+### quoteString
+
+**Kind:** function
+
+```typescript
+function quoteString(value: string): string;
+```
+
+Double-quoted string literal for emitted code (JSON encoded).
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | string |             |
+
+### replaceFirst
+
+**Kind:** function
+
+```typescript
+function replaceFirst(
+  text: string,
+  search: string,
+  replacement: string,
+): string;
+```
+
+Replace the first occurrence of `search` in `text` with `replacement`.
+
+#### Parameters
+
+| Name        | Type   | Description |
+| ----------- | ------ | ----------- |
+| text        | string |             |
+| search      | string |             |
+| replacement | string |             |
+
+### skipAtomicToken
+
+**Kind:** function
+
+```typescript
+function skipAtomicToken(text: string, index: number): number;
+```
+
+Advance past the token starting at `index` when it opens a string, template or comment.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| text  | string |             |
+| index | number |             |
+
+### skipTrivia
+
+**Kind:** function
+
+```typescript
+function skipTrivia(text: string, index: number): number;
+```
+
+Skip whitespace and comments, returning the offset of the next significant character.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| text  | string |             |
+| index | number |             |
+
+### splitTopLevel
+
+**Kind:** function
+
+```typescript
+function splitTopLevel(text: string, separator: string): string[];
+```
+
+Split `text` on every top-level occurrence of `separator` (a single
+character), ignoring separators nested in brackets, strings or comments.
+
+#### Parameters
+
+| Name      | Type   | Description |
+| --------- | ------ | ----------- |
+| text      | string |             |
+| separator | string |             |
+
+### stripOuterParentheses
+
+**Kind:** function
+
+```typescript
+function stripOuterParentheses(text: string): string;
+```
+
+Alias for unwrapParentheses.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| text | string |             |
+
+### stripTypeAssertion
+
+**Kind:** function
+
+```typescript
+function stripTypeAssertion(text: string): string;
+```
+
+Strip a trailing `as T` / `satisfies T` assertion.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| text | string |             |
+
+### unquote
+
+**Kind:** function
+
+```typescript
+function unquote(text: string): string | undefined;
+```
+
+Unquotes a string literal if wrapped in single, double, or backtick quotes, or undefined if not.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| text | string |             |
+
+### unwrapParentheses
+
+**Kind:** function
+
+```typescript
+function unwrapParentheses(text: string): string;
+```
+
+Strip one layer of redundant wrapping parentheses (`(x)` -> `x`), repeatedly.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| text | string |             |

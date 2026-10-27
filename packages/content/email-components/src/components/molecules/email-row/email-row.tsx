@@ -1,7 +1,8 @@
+import type { MpChild, MpElement } from '@mission-platform/forge-jsx';
+
 import { spacingValue } from '../../../tokens';
 
 import type { EmailSpacingScale } from '../../../tokens';
-import type { MpChild, MpElement } from '@mission-platform/forge-jsx';
 
 export interface EmailRowProperties {
   /** The content rendered inside the component. */

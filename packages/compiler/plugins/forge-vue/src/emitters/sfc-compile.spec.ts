@@ -11,6 +11,8 @@
 import { describe, expect, it } from "vitest";
 import { parse, compileScript, compileTemplate } from "vue/compiler-sfc";
 
+import type { SemanticModule } from "@mission-platform/forge-plugin-api";
+
 import {
   component,
   element,
@@ -28,8 +30,6 @@ import {
 } from "../ir-test-helpers.js";
 
 import { emitVueModule } from "./component.js";
-
-import type { SemanticModule } from "@mission-platform/forge-plugin-api";
 
 /** The neutral import every fixture module declares. */
 const NEUTRAL_IMPORT = moduleImport(

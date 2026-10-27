@@ -1,6 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import type { FrameworkOutputPlugin, JsxFramework } from '@mission-platform/forge-plugin-api';
+import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
 import { defineTsdownLibrary, resolveTsdownOutputDirectory } from '@mission-platform/tsdown-config';
 
 import {
@@ -24,8 +26,6 @@ import {
 } from './target-plan.js';
 
 import type { ForgeCompilerService } from './compiler/service.js';
-import type { FrameworkOutputPlugin, JsxFramework } from '@mission-platform/forge-plugin-api';
-import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
 import type { TsdownPlugin, UserConfig } from 'tsdown';
 
 /** Flatten tsdown's recursive `plugins` option into a plain array for merging. */

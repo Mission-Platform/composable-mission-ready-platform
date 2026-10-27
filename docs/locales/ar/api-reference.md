@@ -12,7 +12,7 @@
 الحزمة بدلاً من هذه الصفحة.
 
 > **الواردات تكون عارية دائمًا.** تعرض حزم `@mission-platform/*` الخاصة بشحن الإطار `.` واحد
-> الإدخال المحمي بواسطة تصدير `mp:vue` و`mp:react` و`mp:solid` و`mp:web-component`
+> الإدخال المحمي بواسطة تصدير `mp:vue` و`mp:react` و`mp:svelte` و`mp:solid` و`mp:web-component`
 > الشروط. حدد الإطار **مرة واحدة** — عبر `resolve.conditions` (راجع `defineFrameworkAppConfig` /
 > `frameworkResolveConditions` من `@mission-platform/vite-config`) و`customConditions` (عبر
 > الإعدادات المسبقة `@mission-platform/typescript-config/framework-<name>`) - ثم قم باستيراد كل شيء بالعارية
@@ -313,7 +313,7 @@ const router = createWebComponentsRouter({
 ## مزيد من القراءة
 
 - [Vue 2 إلى Vue 3 دليل الترحيل](migration-guides/vue2-to-vue3.md)
-- [نظرة عامة على تكوين المشروع](packages/tooling/configs/index.md)
+- [نظرة عامة على تكوين المشروع](configs/index.md)
 - [بنية مساحة العمل](workspace-structure.md)
 
 ## استكمال فهرس حزمة مساحة العمل

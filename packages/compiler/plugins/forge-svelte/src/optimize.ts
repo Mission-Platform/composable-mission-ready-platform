@@ -28,6 +28,12 @@
  *   `onMount` of a dropped mount effect) is pruned.
  */
 
+import type {
+  SemanticModule,
+  TargetIntentions,
+  TargetOptimizeOptions,
+} from "@mission-platform/forge-plugin-api";
+
 import { isEmptyCallback, isSvelteLowered } from "./lower.js";
 
 import type {
@@ -37,11 +43,6 @@ import type {
   SvelteStaticPlan,
   SvelteTargetIntentions,
 } from "./lower.js";
-import type {
-  SemanticModule,
-  TargetIntentions,
-  TargetOptimizeOptions,
-} from "@mission-platform/forge-plugin-api";
 
 /** A `$state` cell only ever computed from other reactive state becomes `$derived`. */
 export const STATE_TO_DERIVED = "svelte:state-to-derived";

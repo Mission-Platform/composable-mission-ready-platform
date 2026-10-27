@@ -1,5 +1,7 @@
-import { unsupportedRouterCapabilities } from '@mission-platform/forge-router-plugin-api';
 import { describe, expect, it, vi } from 'vitest';
+
+import { unsupportedRouterCapabilities } from '@mission-platform/forge-router-plugin-api';
+import type { RouterCapabilityModule } from '@mission-platform/forge-router-plugin-api';
 
 import {
   createRedwoodRouterCapabilities,
@@ -10,8 +12,6 @@ import {
 } from '../runtime';
 
 import { forgeRouterRedwood } from './forge-router-redwood';
-
-import type { RouterCapabilityModule } from '@mission-platform/forge-router-plugin-api';
 
 describe('forgeRouterRedwood', () => {
   it('rewrites neutral imports to the Redwood runtime helpers', () => {

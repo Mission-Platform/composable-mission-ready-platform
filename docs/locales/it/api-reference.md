@@ -12,7 +12,7 @@ e ` `. I riferimenti API generati devono essere aggiunti al proprietario
 pacchetto anziché questa pagina.
 
 > **Le importazioni sono sempre vuote.** I pacchetti `@mission-platform/*` di spedizione del framework espongono un singolo `.`
-> voce protetta dall'esportazione `mp:vue`, `mp:react`, `mp:solid` e `mp:web-component`
+> voce protetta dall'esportazione `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid` e `mp:web-component`
 > condizioni. Selezionare il framework **una volta** — tramite `resolve.conditions` (vedi `defineFrameworkAppConfig` /
 > `frameworkResolveConditions` da `@mission-platform/vite-config`) e `customConditions` (tramite il
 > `@mission-platform/typescript-config/framework-<name>` preset) — quindi importa tutto con bare
@@ -313,7 +313,7 @@ Il prefisso `sha256-v1` consente futuri aggiornamenti dell'algoritmo hash senza 
 ## Ulteriori letture
 
 - [Guida alla migrazione da Vue 2 a Vue 3](migration-guides/vue2-to-vue3.md)
-- [Panoramica sulla configurazione del progetto](packages/tooling/configs/index.md)
+- [Panoramica sulla configurazione del progetto](configs/index.md)
 - [Struttura dell'area di lavoro](workspace-structure.md)
 
 ## Indice completo del pacchetto Workspace

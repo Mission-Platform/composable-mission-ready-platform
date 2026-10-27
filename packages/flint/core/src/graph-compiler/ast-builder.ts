@@ -1,16 +1,3 @@
-import {
-  createPrimitiveType,
-  createSyntheticSpan,
-  flattenGraph,
-  type FlintGraphEdge,
-  type FlintGraphNode,
-  type FlintGraphPort,
-  type FlintGraphValidationResult,
-  type FlintNodeGraph,
-  type FlintNodeSourceMap,
-} from './types.js';
-import { validateGraph } from './validator.js';
-
 import type {
   FlintBinaryExpression,
   FlintCapabilityImport,
@@ -25,7 +12,21 @@ import type {
   FlintStatement,
   FlintStructDeclaration,
   FlintTypeName,
-} from '../ast.js';
+} from '@mission-platform/flint-ast';
+
+import {
+  createPrimitiveType,
+  createSyntheticSpan,
+  flattenGraph,
+  type FlintGraphEdge,
+  type FlintGraphNode,
+  type FlintGraphPort,
+  type FlintGraphValidationResult,
+  type FlintNodeGraph,
+  type FlintNodeSourceMap,
+} from './types.js';
+import { validateGraph } from './validator.js';
+
 import type { FlintSourceSpan } from '../diagnostics.js';
 
 export interface FlintAstBuildResult {

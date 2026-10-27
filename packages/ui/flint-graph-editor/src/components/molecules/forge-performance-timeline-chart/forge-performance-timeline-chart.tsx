@@ -1,10 +1,11 @@
-import { useD3 } from '@mission-platform/d3';
 import { scaleLinear, type Selection } from 'd3';
+
+import { useD3 } from '@mission-platform/d3';
+import type { MpElement } from '@mission-platform/forge-jsx';
 
 import styles from './forge-performance-timeline-chart.module.scss';
 
 import type { FlintPerformanceMetrics } from '../../../renderer/render-worker';
-import type { MpElement } from '@mission-platform/forge-jsx';
 
 export interface ForgePerformanceTimelineChartProperties {
   readonly history: readonly FlintPerformanceMetrics[];

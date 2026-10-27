@@ -1,11 +1,12 @@
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
+import type { CompilerDiagnostic } from '@mission-platform/forge-plugin-api';
+
 import { moduleTargetsFramework } from '../compiler/directives.js';
 import { discoverComponentsFromGraph, type DiscoveredComponent } from '../compiler/discover.js';
 
 import type { ForgeFileEdge, ForgeFileGraph, ForgeFileNode } from '../compiler/graph.js';
-import type { CompilerDiagnostic } from '@mission-platform/forge-plugin-api';
 
 const toPosix = (value: string): string => value.split(path.sep).join('/');
 

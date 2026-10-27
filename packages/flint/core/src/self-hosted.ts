@@ -1,3 +1,5 @@
+import type { FlintAbiManifest } from '@mission-platform/flint-c-abi';
+
 import { compileFlintSeed } from './compiler.js';
 import { prepareFlintFrontend } from './frontend.js';
 import {
@@ -11,7 +13,6 @@ import {
 import { flintSelfHostedCompilerSources } from './self-hosted/sources.js';
 
 import type { FlintArtifact, FlintCompileInput, FlintFrontendResult } from './contracts.js';
-import type { FlintAbiManifest } from './manifest.js';
 import type { FlintSelfHostedSourceModule } from './self-hosted/sources.js';
 
 export * from './self-hosted/artifact.js';

@@ -1,10 +1,12 @@
+import { describe, expect, it } from "vitest";
+
+import type { SemanticModule } from "@mission-platform/forge-plugin-api";
 import { analyzeForgeModule } from "@mission-platform/vite-plugin-forge";
 import {
   parseOxcModule,
   type OxcNode,
   type OxcParsedModule,
 } from "@mission-platform/vite-plugin-forge/compiler/oxc.js";
-import { describe, expect, it } from "vitest";
 
 import {
   BADGE,
@@ -32,7 +34,6 @@ import type {
   ContentComponentNamesInput,
   ContentField,
 } from "./content-model.js";
-import type { SemanticModule } from "@mission-platform/forge-plugin-api";
 
 function analyze(
   source: string,

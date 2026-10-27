@@ -2,6 +2,14 @@ import { createHash } from 'node:crypto';
 import path from 'node:path';
 
 import { assertTargetIntentionsLowered, throwOnCompilerErrors } from '@mission-platform/forge-plugin-api';
+import type {
+  CompilerDiagnostic,
+  FrameworkOutputPlugin,
+  GeneratedModule,
+  SemanticModule,
+  TargetContext,
+  TargetOptimizeOptions,
+} from '@mission-platform/forge-plugin-api';
 
 import { createForgeArtifactManifest, type ForgeArtifactRecord } from './artifact-manifest.js';
 import {
@@ -25,14 +33,6 @@ import { compileRouterModule } from './router.js';
 
 import type { OxcParsedModule } from './oxc.js';
 import type { CompilerInput } from './pipeline.js';
-import type {
-  CompilerDiagnostic,
-  FrameworkOutputPlugin,
-  GeneratedModule,
-  SemanticModule,
-  TargetContext,
-  TargetOptimizeOptions,
-} from '@mission-platform/forge-plugin-api';
 
 /** Project-level inputs that affect source preparation and cache identity. */
 export interface ForgeProjectInput {

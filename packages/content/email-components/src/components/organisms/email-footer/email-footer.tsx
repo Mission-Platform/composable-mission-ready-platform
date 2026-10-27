@@ -1,7 +1,7 @@
+import type { MpChild, MpElement } from '@mission-platform/forge-jsx';
+
 import { combineStyleValues, colorValue, spacingValue, typographyStyle } from '../../../tokens';
 import { EmailDivider } from '../../atoms';
-
-import type { MpChild, MpElement } from '@mission-platform/forge-jsx';
 
 export interface EmailFooterProperties {
   /** The content rendered inside the component. */

@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { serializeFlintSoN } from '@mission-platform/flint-sonir';
+
 import {
   flintSoNPath,
   flintWatCacheKey,
@@ -13,7 +15,6 @@ import {
 } from './cache.ts';
 import { compileFlint } from './compiler.ts';
 import { prepareFlintFrontend } from './frontend.ts';
-import { serializeFlintSoN } from './son-cache.ts';
 
 describe('Forge Web Script WAT cache', () => {
   it('keys graph, link mode, compiler, and optimization deterministically', () => {

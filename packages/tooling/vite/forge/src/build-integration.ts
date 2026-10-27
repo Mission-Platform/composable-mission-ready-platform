@@ -2,11 +2,11 @@ import { existsSync, lstatSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
 import { validateForgeOutputPlugin, validateForgeOutputPluginSelection } from '@mission-platform/forge-plugin-api';
+import type { FrameworkOutputPlugin } from '@mission-platform/forge-plugin-api';
 
 import { createForgeArtifactWriter, type ForgeArtifactWriter } from './compiler/artifact-writer.js';
 
 import type { ForgeBuildPlan, ForgeBuildSession, ForgeTargetPlan, ForgeTargetResult } from './compiler/session.js';
-import type { FrameworkOutputPlugin } from '@mission-platform/forge-plugin-api';
 import type { Plugin } from 'vite';
 
 const FORGE_VIRTUAL_ENTRY_PREFIX = '\0@mission-platform/forge/entry:';

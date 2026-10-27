@@ -1,38 +1,9 @@
-import fs from "node:fs";
-import path from "node:path";
+import { defineTsdownLibrary } from "@mission-platform/tsdown-config";
 
-import { defineConfig } from "tsdown";
-
-const rootDirectory = import.meta.dirname;
-const package_ = JSON.parse(
-  fs.readFileSync(path.join(rootDirectory, "package.json"), "utf8"),
-) as {
-  dependencies?: Record<string, string>;
-  peerDependencies?: Record<string, string>;
-  devDependencies?: Record<string, string>;
-};
-const externalNames = [
-  ...Object.keys(package_.dependencies ?? {}),
-  ...Object.keys(package_.peerDependencies ?? {}),
-  ...Object.keys(package_.devDependencies ?? {}),
-];
-
-export default defineConfig({
-  entry: [
-    path.resolve(rootDirectory, "src/index.ts"),
-    path.resolve(rootDirectory, "src/fixtures.ts"),
-  ],
-  format: ["esm"],
+export default defineTsdownLibrary({
+  rootDir: import.meta.dirname,
+  entry: ["src/index.ts", "src/fixtures.ts"],
+  dts: { tsc: { build: true } },
+  autoExternalDevDeps: true,
   platform: "node",
-  dts: { build: true },
-  tsconfig: path.resolve(rootDirectory, "tsconfig.build.json"),
-  clean: true,
-  sourcemap: false,
-  fixedExtension: false,
-  outDir: path.resolve(rootDirectory, "dist"),
-  unbundle: true,
-  deps: {
-    neverBundle: (id) =>
-      externalNames.some((name) => id === name || id.startsWith(`${name}/`)),
-  },
 });

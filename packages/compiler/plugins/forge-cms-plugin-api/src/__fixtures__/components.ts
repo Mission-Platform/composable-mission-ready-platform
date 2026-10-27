@@ -10,7 +10,7 @@
 import type { ContentComponentNamesInput } from "../content-model.js";
 
 /** Literal-union options, JSDoc descriptions, and `?? literal` defaults. */
-export const BADGE = [
+export const BADGE: readonly string[] = [
   "import { classNames, h, type MpChild, type MpElement } from '@mission-platform/forge-jsx';",
   "",
   "export type BadgeVariant = 'default' | 'primary' | 'secondary';",
@@ -34,7 +34,7 @@ export const BADGE = [
 ].join("\n");
 
 /** A union degrading to text plus a dropped callback prop. */
-export const BUTTON = [
+export const BUTTON: readonly string[] = [
   "import { h, type MpChild, type MpElement } from '@mission-platform/forge-jsx';",
   "",
   "export type ButtonVariant = 'primary' | 'secondary' | 'ghost';",
@@ -58,7 +58,7 @@ export const BUTTON = [
 ].join("\n");
 
 /** A numeric prop with a numeric default. */
-export const GRID = [
+export const GRID: readonly string[] = [
   "import { h, type MpChild, type MpElement } from '@mission-platform/forge-jsx';",
   "",
   "export interface GridProperties {",
@@ -74,7 +74,7 @@ export const GRID = [
 ].join("\n");
 
 /** A named slot alongside the default slot. */
-export const LAYOUT = [
+export const LAYOUT: readonly string[] = [
   "import { h, type MpChild, type MpElement, Slot } from '@mission-platform/forge-jsx';",
   "",
   "export interface LayoutProperties {",
@@ -95,7 +95,7 @@ export const LAYOUT = [
 ].join("\n");
 
 /** An interactive component: state and an event handler force a hydrated island. */
-export const COUNTER = [
+export const COUNTER: readonly string[] = [
   "import { h, useState, type MpElement } from '@mission-platform/forge-jsx';",
   "",
   "export interface CounterProperties {",
@@ -117,7 +117,7 @@ export const COUNTER = [
 ].join("\n");
 
 /** A component with a site-wide setting prop. */
-export const SITE_HEADER = [
+export const SITE_HEADER: readonly string[] = [
   "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   "",
   "export interface SiteHeaderProperties {",
@@ -137,7 +137,7 @@ export const SITE_HEADER = [
 ].join("\n");
 
 /** A required (non-optional) prop alongside an optional one. */
-export const REQUIRED = [
+export const REQUIRED: readonly string[] = [
   "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   "",
   "export interface RequiredProperties {",
@@ -153,7 +153,7 @@ export const REQUIRED = [
 ].join("\n");
 
 /** A component with no props at all. */
-export const EMPTY = [
+export const EMPTY: readonly string[] = [
   "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   "",
   "export function ForgeEmpty(): MpElement {",

@@ -1,10 +1,11 @@
+import type { FlintGraphEdge, FlintGraphNode } from '@mission-platform/flint';
+
 import { evaluateCubicBezier, getNodeBounds } from './camera';
 import { computeC2dNodeStroke, computeC2dPinFill, getCategoryRgba, getPortTypeRgba, parseColorToRgba } from './color';
 import { NODE_HEADER_HEIGHT, NODE_WIDTH, PORT_ROW_HEIGHT } from './constants';
 
 import type { FlintRenderWorkerWasmExports } from './types';
 import type { RenderWorkerState } from './worker-state';
-import type { FlintGraphEdge, FlintGraphNode } from '@mission-platform/flint';
 
 /**
  * Initializes standard 2D canvas context as a fallback rendering pipeline.

@@ -2,7 +2,7 @@
 
 תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
 
-> docs/packages/tooling/configs/index.md: [docs/packages/tooling/configs/index.md](../../../packages/tooling/configs/index.md)
+> docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
 > שפה: עברית (he)
 
 פלטפורמת המשימה משתמשת בחבילות תצורה מרכזיות ב- `packages/tooling/configs/` ספרייה כדי להבטיח עקביות על פני

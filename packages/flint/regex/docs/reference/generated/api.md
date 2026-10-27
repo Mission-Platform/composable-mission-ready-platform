@@ -114,6 +114,46 @@ export class RegexSyntaxError extends Error
 
 Compiler-owned syntax error with deterministic source-relative messages.
 
+## `src/index`
+
+### DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY
+
+**Kind:** constant
+
+```typescript
+export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: FlintStandardLibraryIdentity;
+```
+
+No description provided.
+
+### flintStandardLibraryIdentity
+
+**Kind:** function
+
+```typescript
+function flintStandardLibraryIdentity(
+  identity?: FlintStandardLibraryIdentity,
+): FlintStandardLibraryIdentity;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name     | Type                         | Description |
+| -------- | ---------------------------- | ----------- |
+| identity | FlintStandardLibraryIdentity |             |
+
+### FlintStandardLibraryIdentity
+
+**Kind:** interface
+
+```typescript
+export interface FlintStandardLibraryIdentity
+```
+
+No description provided.
+
 ## `src/reference-vm`
 
 ### captureEnd

@@ -7,9 +7,10 @@ import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { after, before, describe, it } from 'node:test';
 
-import { findRepoRoot } from '@mission-platform/mcp-shared/repo/paths';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
+
+import { findRepoRoot } from '@mission-platform/mcp-shared/repo/paths';
 
 import packageJson from '../package.json' with { type: 'json' };
 import { createServer } from '../src/index.ts';

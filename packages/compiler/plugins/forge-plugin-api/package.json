@@ -47,6 +47,14 @@
     "./schema.js": {
       "types": "./dist/schema.d.ts",
       "import": "./dist/schema.js"
+    },
+    "./testing": {
+      "types": "./dist/testing.d.ts",
+      "import": "./dist/testing.js"
+    },
+    "./testing.js": {
+      "types": "./dist/testing.d.ts",
+      "import": "./dist/testing.js"
     }
   },
   "files": [
@@ -54,6 +62,7 @@
   ],
   "scripts": {
     "build": "tsdown",
+    "type-check": "tsc --project tsconfig.build.json --noEmit",
     "test": "vitest run",
     "lint": "eslint .",
     "format": "prettier --check .",

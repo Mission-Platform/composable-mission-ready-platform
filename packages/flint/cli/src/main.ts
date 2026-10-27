@@ -18,7 +18,6 @@ import {
   FLINT_CLI_USAGE,
   FlintCliUsageError,
   // The short `Args` suffix is part of the documented CLI module name.
-  // eslint-disable-next-line unicorn/prevent-abbreviations
   parseFlintCliArgs,
   type FlintCliOptions,
 } from './args.js';
@@ -403,7 +402,7 @@ function dispatchCompiledCommand(
 export async function runFlintCli(
   argv: readonly string[] = process.argv.slice(2),
   io: FlintCliIo = defaultIo,
-  cwd = process.cwd(),
+  cwd: string = process.cwd(),
 ): Promise<number> {
   if (argv.includes('--help') || argv.includes('-h')) {
     io.stdout(FLINT_CLI_USAGE.trimEnd());

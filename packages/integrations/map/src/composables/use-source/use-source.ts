@@ -46,7 +46,7 @@ function tryUpdateGeoJsonSource(
   }
 
   const existing = map.getSource(id) as GeoJSONSource | undefined;
-  if (typeof existing?.setData === 'function') {
+  if (spec.type === 'geojson' && typeof existing?.setData === 'function') {
     existing.setData(spec.data as Parameters<GeoJSONSource['setData']>[0]);
     return true;
   }

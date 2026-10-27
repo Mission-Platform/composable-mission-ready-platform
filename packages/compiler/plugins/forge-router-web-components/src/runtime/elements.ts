@@ -1,9 +1,9 @@
 import { normalizeHash, normalizePath } from '@mission-platform/router';
+import type { MpRoute, MpRouteLocationRaw, MpRouteViewContext } from '@mission-platform/router';
 
 import { getActiveRouter, routeHref } from './router';
 
 import type { MpRouterLoadingFallback, MpWebComponentsRouter } from './router';
-import type { MpRoute, MpRouteLocationRaw, MpRouteViewContext } from '@mission-platform/router';
 
 function parseTarget(value: string): MpRouteLocationRaw {
   try {
@@ -587,7 +587,6 @@ export function registerRouterElements(options: RegisterRouterElementsOptions = 
   }
 }
 
-// eslint-disable-next-line unicorn/prefer-global-this -- Required for global HTMLElement tag-name augmentation.
 declare global {
   interface HTMLElementTagNameMap {
     'forge-router-link': MpRouterLinkElement;

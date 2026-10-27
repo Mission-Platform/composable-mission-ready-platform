@@ -1,4 +1,5 @@
-import type { FlintPrimitiveType, FlintTypeName } from '../ast.js';
+import type { FlintPrimitiveType, FlintTypeName } from '@mission-platform/flint-ast';
+
 import type { FlintSourceSpan } from '../diagnostics.js';
 
 export type FlintPortDirection = 'input' | 'output';

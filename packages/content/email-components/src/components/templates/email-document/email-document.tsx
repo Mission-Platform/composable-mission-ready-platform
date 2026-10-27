@@ -1,6 +1,6 @@
-import { EmailPreheader } from '../../organisms';
-
 import type { MpChild, MpElement } from '@mission-platform/forge-jsx';
+
+import { EmailPreheader } from '../../organisms';
 
 export interface EmailDocumentProperties {
   /** The content rendered inside the component. */

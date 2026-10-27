@@ -52,7 +52,7 @@ describe('Flint LSP server', () => {
     await server.openDocument({ uri, version: 1, text: 'export fn broken(' });
     expect(published.at(-1)).toMatchObject({
       uri,
-      diagnostics: expect.arrayContaining([expect.objectContaining({ code: 'FLINT-PARSE-017', source: 'flint' })]),
+      diagnostics: expect.arrayContaining([expect.objectContaining({ code: 'FLINT-PARSE-004', source: 'flint' })]),
     });
     await server.closeDocument(uri);
     expect(published.at(-1)).toEqual({ uri, diagnostics: [] });
@@ -209,6 +209,9 @@ export fn entry(value: i32) -> i32 {
         [{ uri, range: { start: { line: 5, character: 9 }, end: { line: 5, character: 15 } } }],
       ],
     });
+    const resolvableCodeLens = codeLenses.find((lens) => lens.data !== undefined);
+    expect(resolvableCodeLens).toBeDefined();
+    expect(server.codeLensResolve(resolvableCodeLens!)).toMatchObject({ data: expect.any(Object) });
     expect(server.foldingRanges({ textDocument: { uri } }).length).toBeGreaterThan(0);
     expect(
       server.inlineValues({
@@ -303,8 +306,15 @@ export fn parse(value: string) -> bool { return regex_search(value, value, 0); }
     await server.openDocument({ uri, version: 1, text: validSource });
 
     const semanticTokens = server.semanticTokens({ textDocument: { uri } });
+    expect(semanticTokens.resultId).toEqual(expect.any(String));
     expect(semanticTokens.data.slice(0, 15)).toEqual([0, 0, 6, 4, 0, 0, 7, 2, 4, 0, 0, 3, 3, 1, 0]);
     expect(semanticTokens.data.length % 5).toBe(0);
+    await server.updateDocumentChanges({ uri, version: 2, text: validSource }, [
+      { range: { start: { line: 0, character: 0 }, end: { line: 0, character: 0 } }, text: '// changed\n' },
+    ]);
+    const delta = server.semanticTokensDelta({ textDocument: { uri }, previousResultId: semanticTokens.resultId });
+    expect(delta.resultId).toEqual(expect.any(String));
+    expect(delta.edits).toHaveLength(1);
     await server.shutdown();
   });
 

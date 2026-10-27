@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 import { findRepoRoot, resolveRepoPath } from '@mission-platform/mcp-shared/repo/paths';
@@ -88,24 +88,23 @@ function parseConfiguration(contents: string): readonly LspServerDefinition[] {
 export function readLspConfiguration(): LspConfigurationSnapshot {
   const root = findRepoRoot();
   const path = configPath();
-  if (!readFileIfPresent(path)) {
-    return { configPath: relative(root, join(root, CONFIG_FILE)), configPresent: false, servers: [] };
+  let size: number;
+  try {
+    size = statSync(path).size;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      return { configPath: relative(root, join(root, CONFIG_FILE)), configPresent: false, servers: [] };
+    }
+    throw error;
+  }
+  if (size > MAX_CONFIG_BYTES) {
+    throw new Error(`LSP configuration exceeds the ${MAX_CONFIG_BYTES}-byte limit.`);
   }
   return {
     configPath: relative(root, path),
     configPresent: true,
     servers: parseConfiguration(readFileSync(path, 'utf8')),
   };
-}
-
-function readFileIfPresent(path: string): boolean {
-  try {
-    readFileSync(path);
-    return true;
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return false;
-    throw error;
-  }
 }
 
 function serializeConfiguration(servers: readonly LspServerDefinition[]): string {

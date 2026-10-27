@@ -10,6 +10,8 @@
  * boundary; this stage proves independent VM execution and parity gating.
  */
 
+import type { FlintAggregateLayout } from '@mission-platform/flint-c-abi';
+
 import {
   FLINT_LEX_STAGE_SOURCE_LAYOUT,
   type FlintSelfHostedVmFunction,
@@ -17,8 +19,6 @@ import {
   type FlintSelfHostedVmModule,
   type FlintSelfHostedVmValue,
 } from './lex-stage.js';
-
-import type { FlintAggregateLayout } from '../manifest.js';
 
 export const FLINT_PARSER_STAGE_ENTRY = 'parse_stage';
 
@@ -62,6 +62,12 @@ const DECL_KEYWORDS = new Map<string, number>([
   ['interface', 7],
   ['class', 8],
   ['module', 9],
+  ['record', 10],
+  ['comptime', 11],
+  ['derive', 12],
+  ['macro', 13],
+  ['foreign', 14],
+  ['opaque', 15],
 ]);
 
 const STMT_KEYWORDS = new Map<string, number>([
@@ -73,36 +79,59 @@ const STMT_KEYWORDS = new Map<string, number>([
   ['for', 6],
   ['match', 7],
   ['do', 8],
+  ['switch', 9],
+  ['yield', 10],
+  ['loop', 11],
 ]);
 
 const ALL_KEYWORDS = [
   'as',
   'capability',
   'case',
+  'catch',
   'class',
+  'comptime',
   'constructor',
+  'default',
+  'derive',
+  'do',
   'else',
   'enum',
   'extends',
   'export',
-  'do',
   'for',
+  'foreign',
   'fn',
   'if',
   'impl',
+  'inline',
   'interface',
   'import',
+  'iter',
   'let',
+  'likely',
+  'loop',
+  'macro',
   'match',
   'module',
+  'mut',
   'new',
+  'noinline',
+  'opaque',
+  'record',
   'return',
   'struct',
+  'switch',
+  'throw',
   'trait',
+  'try',
+  'type',
+  'unlikely',
   'while',
+  'yield',
 ] as const;
 
-const TWO_CHAR_OPS = ['!=', '&&', '==', '||', '<=', '>=', '->', '=>'] as const;
+const TWO_CHAR_OPS = ['!=', '&&', '==', '||', '<=', '>=', '->', '=>', '::'] as const;
 const ONE_CHAR_OPS = new Set(['!', '%', '*', '+', '-', '/', '<', '>', '=']);
 const PUNCT = new Set(['{', '}', '(', ')', ':', ';', ',', '|']);
 
@@ -114,7 +143,6 @@ const encoder = new TextEncoder();
  * @returns The number result.
  */
 function toInt32(value: number): number {
-  // eslint-disable-next-line unicorn/prefer-math-trunc -- intentional ToInt32 wrap for hash parity
   return value | 0;
 }
 
@@ -978,6 +1006,7 @@ function buildIsTwoCharOp(): FlintSelfHostedVmFunction {
     [42, 43],
     [44, 45],
     [46, 47],
+    [48, 49],
   ] as const;
   // skipcq: JS-C1002
   const b = createBuilder(2);
@@ -1022,7 +1051,7 @@ function buildIsTwoCharOp(): FlintSelfHostedVmFunction {
  * @returns The FlintSelfHostedVmFunction result.
  */
 function buildIsOneCharOp(): FlintSelfHostedVmFunction {
-  return buildPredicateFromEquals('is_one_char_op', [48, 49, 50, 51, 52, 53, 54, 55, 56]);
+  return buildPredicateFromEquals('is_one_char_op', [50, 51, 52, 53, 54, 55, 56, 57, 58]);
 }
 
 /**
@@ -1030,7 +1059,7 @@ function buildIsOneCharOp(): FlintSelfHostedVmFunction {
  * @returns The FlintSelfHostedVmFunction result.
  */
 function buildIsPunct(): FlintSelfHostedVmFunction {
-  return buildPredicateFromEquals('is_punct', [57, 58, 59, 60, 61, 62, 63, 64]);
+  return buildPredicateFromEquals('is_punct', [59, 60, 61, 62, 63, 64, 65, 66]);
 }
 
 /**
@@ -1124,14 +1153,14 @@ function buildClassifyIdent(keywordHashBase: number, _keywordCount: number): Fli
       b.binary('==', temporary, 1, c);
       b.branch(temporary, `decl_${String(index)}`, `kw_${String(index)}`);
       b.label(`decl_${String(index)}`);
-      b.num(tag, 70); // TAG_DECL constant index
-      b.num(c, 80 + meta.id); // decl id constants start at 80
+      b.num(tag, 72); // TAG_DECL constant index
+      b.num(c, 82 + meta.id); // decl id constants start at 82
       b.binary('<<', packed, tag, eight);
       b.binary('|', packed, packed, c);
       b.ret(packed);
       b.label(`kw_${String(index)}`);
-      b.num(tag, 72); // TAG_KEYWORD
-      b.num(c, 80 + meta.id);
+      b.num(tag, 74); // TAG_KEYWORD
+      b.num(c, 82 + meta.id);
       b.binary('<<', packed, tag, eight);
       b.binary('|', packed, packed, c);
       b.ret(packed);
@@ -1141,19 +1170,19 @@ function buildClassifyIdent(keywordHashBase: number, _keywordCount: number): Fli
       b.binary('>', temporary, 1, c);
       b.branch(temporary, `stmt_${String(index)}`, `kw2_${String(index)}`);
       b.label(`stmt_${String(index)}`);
-      b.num(tag, 71); // TAG_STMT
-      b.num(c, 90 + meta.id); // stmt ids at 90+
+      b.num(tag, 73); // TAG_STMT
+      b.num(c, 98 + meta.id); // stmt ids at 98+
       b.binary('<<', packed, tag, eight);
       b.binary('|', packed, packed, c);
       b.ret(packed);
       b.label(`kw2_${String(index)}`);
-      b.num(tag, 72);
-      b.num(c, 90 + meta.id);
+      b.num(tag, 74);
+      b.num(c, 98 + meta.id);
       b.binary('<<', packed, tag, eight);
       b.binary('|', packed, packed, c);
       b.ret(packed);
     } else {
-      b.num(tag, 72);
+      b.num(tag, 74); // TAG_KEYWORD
       b.num(c, 2); // id 0
       b.binary('<<', packed, tag, eight);
       b.binary('|', packed, packed, c);
@@ -1162,7 +1191,7 @@ function buildClassifyIdent(keywordHashBase: number, _keywordCount: number): Fli
   }
 
   b.label('ident');
-  b.num(tag, 73); // TAG_IDENT
+  b.num(tag, 75); // TAG_IDENT
   b.num(c, 2);
   b.binary('<<', packed, tag, eight);
   b.binary('|', packed, packed, c);
@@ -1328,9 +1357,7 @@ function buildParseStage(blockCommentStarConstant: number): FlintSelfHostedVmFun
   b.binary('+', offset, offset, one);
   b.jump('str_loop');
   b.label('str_done');
-  b.num(tag, 70); // reuse - wait TAG_STRING is const index 65? see constants
-  // Actually TAG constants start at index defined below - use dedicated indexes
-  b.num(tag, 65); // TAG_STRING
+  b.num(tag, 67); // TAG_STRING
   b.call(hash, 'fnv_mix', [hash, tag]);
   b.move(temporary, start);
   b.label('str_mix');
@@ -1361,7 +1388,7 @@ function buildParseStage(blockCommentStarConstant: number): FlintSelfHostedVmFun
   b.binary('+', offset, offset, one);
   b.jump('num_loop');
   b.label('num_done');
-  b.num(tag, 66); // TAG_NUMBER
+  b.num(tag, 68); // TAG_NUMBER
   b.call(hash, 'fnv_mix', [hash, tag]);
   b.move(temporary, start);
   b.label('num_mix');
@@ -1392,7 +1419,7 @@ function buildParseStage(blockCommentStarConstant: number): FlintSelfHostedVmFun
   b.binary('+', offset, offset, one);
   b.jump('id_loop');
   b.label('id_done');
-  b.num(identHash, 74); // FNV_OFFSET raw (const index for plain FNV offset)
+  b.num(identHash, 76); // FNV_OFFSET raw (const index for plain FNV offset)
   b.move(temporary, start);
   b.label('id_hash');
   b.binary('<', cond, temporary, offset);
@@ -1414,12 +1441,12 @@ function buildParseStage(blockCommentStarConstant: number): FlintSelfHostedVmFun
 
   // {
   b.label('lbrace');
-  b.num(temporary, 57); // '{'
+  b.num(temporary, 59); // '{'
   b.binary('==', cond, byte, temporary);
   b.branch(cond, 'do_lbrace', 'rbrace');
   b.label('do_lbrace');
   b.binary('+', depth, depth, one);
-  b.num(tag, 67); // TAG_LBRACE
+  b.num(tag, 69); // TAG_LBRACE
   b.call(hash, 'fnv_mix', [hash, tag]);
   b.binary('&', temporary, depth, mask);
   b.call(hash, 'fnv_mix', [hash, temporary]);
@@ -1428,11 +1455,11 @@ function buildParseStage(blockCommentStarConstant: number): FlintSelfHostedVmFun
 
   // }
   b.label('rbrace');
-  b.num(temporary, 58); // '}'
+  b.num(temporary, 60); // '}'
   b.binary('==', cond, byte, temporary);
   b.branch(cond, 'do_rbrace', 'lparen');
   b.label('do_rbrace');
-  b.num(tag, 68); // TAG_RBRACE
+  b.num(tag, 70); // TAG_RBRACE
   b.call(hash, 'fnv_mix', [hash, tag]);
   b.binary('&', temporary, depth, mask);
   b.call(hash, 'fnv_mix', [hash, temporary]);
@@ -1446,55 +1473,55 @@ function buildParseStage(blockCommentStarConstant: number): FlintSelfHostedVmFun
 
   // (
   b.label('lparen');
-  b.num(temporary, 59);
+  b.num(temporary, 61); // '('
   b.binary('==', cond, byte, temporary);
   b.branch(cond, 'do_lparen', 'rparen');
   b.label('do_lparen');
-  b.num(tag, 69); // TAG_LPAREN
+  b.num(tag, 71); // TAG_LPAREN
   b.call(hash, 'fnv_mix', [hash, tag]);
   b.binary('+', offset, offset, one);
   b.jump('loop');
 
   // )
   b.label('rparen');
-  b.num(temporary, 60);
+  b.num(temporary, 62); // ')'
   b.binary('==', cond, byte, temporary);
   b.branch(cond, 'do_rparen', 'colon');
   b.label('do_rparen');
-  b.num(tag, 75); // TAG_RPAREN
+  b.num(tag, 77); // TAG_RPAREN
   b.call(hash, 'fnv_mix', [hash, tag]);
   b.binary('+', offset, offset, one);
   b.jump('loop');
 
   // :
   b.label('colon');
-  b.num(temporary, 61);
+  b.num(temporary, 63); // ':'
   b.binary('==', cond, byte, temporary);
   b.branch(cond, 'do_colon', 'semi');
   b.label('do_colon');
-  b.num(tag, 76); // TAG_COLON
+  b.num(tag, 78); // TAG_COLON
   b.call(hash, 'fnv_mix', [hash, tag]);
   b.binary('+', offset, offset, one);
   b.jump('loop');
 
   // ;
   b.label('semi');
-  b.num(temporary, 62);
+  b.num(temporary, 64); // ';'
   b.binary('==', cond, byte, temporary);
   b.branch(cond, 'do_semi', 'comma');
   b.label('do_semi');
-  b.num(tag, 77); // TAG_SEMI
+  b.num(tag, 79); // TAG_SEMI
   b.call(hash, 'fnv_mix', [hash, tag]);
   b.binary('+', offset, offset, one);
   b.jump('loop');
 
   // ,
   b.label('comma');
-  b.num(temporary, 63);
+  b.num(temporary, 65); // ','
   b.binary('==', cond, byte, temporary);
   b.branch(cond, 'do_comma', 'two_char');
   b.label('do_comma');
-  b.num(tag, 78); // TAG_COMMA
+  b.num(tag, 80); // TAG_COMMA
   b.call(hash, 'fnv_mix', [hash, tag]);
   b.binary('+', offset, offset, one);
   b.jump('loop');
@@ -1510,25 +1537,21 @@ function buildParseStage(blockCommentStarConstant: number): FlintSelfHostedVmFun
   b.branch(cond, 'do_two', 'one_char');
   b.label('do_two');
   // arrow -> ?
-  b.num(temporary, 52); // '-'
+  b.num(temporary, 54); // '-' (one-char ops index 54 is 45 = '-')
   b.binary('==', cond, byte, temporary);
   b.branch(cond, 'maybe_arrow', 'two_op');
   b.label('maybe_arrow');
-  b.num(temporary, 43); // '>' const index for second of -> which is const 45 = '>'
-  // second byte of -> is at constants 45 = 62 '>'
-  b.num(temporary, 45); // wait - constant index 45 is second byte of -> which value is 62
-  // Actually we compare nextByte value to 62
-  b.num(temporary, 99); // will set constant 99 = 62 for '>'
+  b.num(temporary, 110); // 62 for '>'
   b.binary('==', cond, nextByte, temporary);
   b.branch(cond, 'do_arrow', 'two_op');
   b.label('do_arrow');
-  b.num(tag, 79); // TAG_ARROW
+  b.num(tag, 81); // TAG_ARROW
   b.call(hash, 'fnv_mix', [hash, tag]);
   b.binary('+', offset, offset, one);
   b.binary('+', offset, offset, one);
   b.jump('loop');
   b.label('two_op');
-  b.num(tag, 100); // TAG_OP
+  b.num(tag, 111); // TAG_OP
   b.call(hash, 'fnv_mix', [hash, tag]);
   b.call(hash, 'fnv_mix', [hash, byte]);
   b.call(hash, 'fnv_mix', [hash, nextByte]);
@@ -1541,7 +1564,7 @@ function buildParseStage(blockCommentStarConstant: number): FlintSelfHostedVmFun
   b.call(cond, 'is_one_char_op', [byte]);
   b.branch(cond, 'do_one_op', 'punct');
   b.label('do_one_op');
-  b.num(tag, 100); // TAG_OP
+  b.num(tag, 111); // TAG_OP
   b.call(hash, 'fnv_mix', [hash, tag]);
   b.call(hash, 'fnv_mix', [hash, byte]);
   b.binary('+', offset, offset, one);
@@ -1552,7 +1575,7 @@ function buildParseStage(blockCommentStarConstant: number): FlintSelfHostedVmFun
   b.call(cond, 'is_punct', [byte]);
   b.branch(cond, 'do_punct', 'error');
   b.label('do_punct');
-  b.num(tag, 101); // TAG_PUNCT
+  b.num(tag, 112); // TAG_PUNCT
   b.call(hash, 'fnv_mix', [hash, tag]);
   b.call(hash, 'fnv_mix', [hash, byte]);
   b.binary('+', offset, offset, one);
@@ -1560,14 +1583,14 @@ function buildParseStage(blockCommentStarConstant: number): FlintSelfHostedVmFun
 
   // recovery
   b.label('error');
-  b.num(tag, 102); // TAG_ERROR
+  b.num(tag, 113); // TAG_ERROR
   b.call(hash, 'fnv_mix', [hash, tag]);
   b.call(hash, 'fnv_mix', [hash, byte]);
   b.binary('+', offset, offset, one);
   b.jump('loop');
 
   b.label('done');
-  b.num(tag, 103); // TAG_EOF
+  b.num(tag, 114); // TAG_EOF
   b.call(hash, 'fnv_mix', [hash, tag]);
   b.binary('&', temporary, depth, mask);
   b.call(hash, 'fnv_mix', [hash, temporary]);
@@ -1629,90 +1652,102 @@ export function createFlintParserStageVmModule(
     int32Constant(0),
     int32Constant(0),
     int32Constant(0),
-    // two-char op pairs at 32..47
+    // two-char op pairs at 32..49 (9 pairs)
     int32Constant(33),
-    int32Constant(61), // !=
+    int32Constant(61), // != (32, 33)
     int32Constant(38),
-    int32Constant(38), // &&
+    int32Constant(38), // && (34, 35)
     int32Constant(61),
-    int32Constant(61), // ==
+    int32Constant(61), // == (36, 37)
     int32Constant(124),
-    int32Constant(124), // ||
+    int32Constant(124), // || (38, 39)
     int32Constant(60),
-    int32Constant(61), // <=
+    int32Constant(61), // <= (40, 41)
     int32Constant(62),
-    int32Constant(61), // >=
+    int32Constant(61), // >= (42, 43)
     int32Constant(45),
-    int32Constant(62), // ->
+    int32Constant(62), // -> (44, 45)
     int32Constant(61),
-    int32Constant(62), // =>
-    // one-char ops at 48..56
-    int32Constant(33),
-    int32Constant(37),
-    int32Constant(42),
-    int32Constant(43),
-    int32Constant(45),
-    int32Constant(47),
-    int32Constant(60),
-    int32Constant(62),
-    int32Constant(61),
-    // punct at 57..64
-    int32Constant(123), // {
-    int32Constant(125), // }
-    int32Constant(40), // (
-    int32Constant(41), // )
-    int32Constant(58), // :
-    int32Constant(59), // ;
-    int32Constant(44), // ,
-    int32Constant(124), // |
-    // tags 65+
-    int32Constant(TAG_STRING), // 65
-    int32Constant(TAG_NUMBER), // 66
-    int32Constant(TAG_LBRACE), // 67
-    int32Constant(TAG_RBRACE), // 68
-    int32Constant(TAG_LPAREN), // 69
-    int32Constant(TAG_DECL), // 70
-    int32Constant(TAG_STMT), // 71
-    int32Constant(TAG_KEYWORD), // 72
-    int32Constant(TAG_IDENT), // 73
-    int32Constant(FNV_OFFSET), // 74 plain FNV offset for ident hashing
-    int32Constant(TAG_RPAREN), // 75
-    int32Constant(TAG_COLON), // 76
-    int32Constant(TAG_SEMI), // 77
-    int32Constant(TAG_COMMA), // 78
-    int32Constant(TAG_ARROW), // 79
-    // decl ids 80..89
-    int32Constant(0), // 80 unused id0
-    int32Constant(1), // 81 export
-    int32Constant(2), // 82 fn
-    int32Constant(3), // 83 import
-    int32Constant(4), // 84 capability
-    int32Constant(5), // 85 struct
-    int32Constant(6), // 86 enum
-    int32Constant(7), // 87 interface
-    int32Constant(8), // 88 class
-    int32Constant(9), // 89 module
-    // stmt ids 90..98
-    int32Constant(0), // 90
-    int32Constant(1), // 91 let
-    int32Constant(2), // 92 return
-    int32Constant(3), // 93 if
-    int32Constant(4), // 94 else
-    int32Constant(5), // 95 while
-    int32Constant(6), // 96 for
-    int32Constant(7), // 97 match
-    int32Constant(8), // 98 do
-    int32Constant(62), // 99 '>' value for arrow check
-    int32Constant(TAG_OP), // 100
-    int32Constant(TAG_PUNCT), // 101
-    int32Constant(TAG_ERROR), // 102
-    int32Constant(TAG_EOF), // 103
-    // keyword hashes at 104..
+    int32Constant(62), // => (46, 47)
+    int32Constant(58),
+    int32Constant(58), // :: (48, 49)
+    // one-char ops at 50..58 (9 items)
+    int32Constant(33), // 50
+    int32Constant(37), // 51
+    int32Constant(42), // 52
+    int32Constant(43), // 53
+    int32Constant(45), // 54
+    int32Constant(47), // 55
+    int32Constant(60), // 56
+    int32Constant(62), // 57
+    int32Constant(61), // 58
+    // punct at 59..66 (8 items)
+    int32Constant(123), // 59 {
+    int32Constant(125), // 60 }
+    int32Constant(40), // 61 (
+    int32Constant(41), // 62 )
+    int32Constant(58), // 63 :
+    int32Constant(59), // 64 ;
+    int32Constant(44), // 65 ,
+    int32Constant(124), // 66 |
+    // tags 67..81
+    int32Constant(TAG_STRING), // 67
+    int32Constant(TAG_NUMBER), // 68
+    int32Constant(TAG_LBRACE), // 69
+    int32Constant(TAG_RBRACE), // 70
+    int32Constant(TAG_LPAREN), // 71
+    int32Constant(TAG_DECL), // 72
+    int32Constant(TAG_STMT), // 73
+    int32Constant(TAG_KEYWORD), // 74
+    int32Constant(TAG_IDENT), // 75
+    int32Constant(FNV_OFFSET), // 76 plain FNV offset for ident hashing
+    int32Constant(TAG_RPAREN), // 77
+    int32Constant(TAG_COLON), // 78
+    int32Constant(TAG_SEMI), // 79
+    int32Constant(TAG_COMMA), // 80
+    int32Constant(TAG_ARROW), // 81
+    // decl ids 82..97
+    int32Constant(0), // 82 unused id0
+    int32Constant(1), // 83 export
+    int32Constant(2), // 84 fn
+    int32Constant(3), // 85 import
+    int32Constant(4), // 86 capability
+    int32Constant(5), // 87 struct
+    int32Constant(6), // 88 enum
+    int32Constant(7), // 89 interface
+    int32Constant(8), // 90 class
+    int32Constant(9), // 91 module
+    int32Constant(10), // 92 record
+    int32Constant(11), // 93 comptime
+    int32Constant(12), // 94 derive
+    int32Constant(13), // 95 macro
+    int32Constant(14), // 96 foreign
+    int32Constant(15), // 97 opaque
+    // stmt ids 98..109
+    int32Constant(0), // 98
+    int32Constant(1), // 99 let
+    int32Constant(2), // 100 return
+    int32Constant(3), // 101 if
+    int32Constant(4), // 102 else
+    int32Constant(5), // 103 while
+    int32Constant(6), // 104 for
+    int32Constant(7), // 105 match
+    int32Constant(8), // 106 do
+    int32Constant(9), // 107 switch
+    int32Constant(10), // 108 yield
+    int32Constant(11), // 109 loop
+    // arrow char and additional tags 110..114
+    int32Constant(62), // 110 '>' value for arrow check
+    int32Constant(TAG_OP), // 111
+    int32Constant(TAG_PUNCT), // 112
+    int32Constant(TAG_ERROR), // 113
+    int32Constant(TAG_EOF), // 114
+    // keyword hashes at 115..
     ...keywordHashes.map((value) => int32Constant(value)),
     int32Constant(42), // block-comment '*'
   ];
 
-  const keywordHashBase = 104;
+  const keywordHashBase = 115;
   const blockCommentStarConstant = keywordHashBase + keywordHashes.length;
 
   // Fix classify_ident constant indexes for decl/stmt ids:

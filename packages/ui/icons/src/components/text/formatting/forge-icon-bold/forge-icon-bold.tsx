@@ -1,8 +1,8 @@
+import type { MpElement } from '@mission-platform/forge-jsx';
+
 import { useIconHref } from '../../../../sprite/provider';
 
 import styles from './forge-icon-bold.module.scss';
-
-import type { MpElement } from '@mission-platform/forge-jsx';
 
 export interface IconBoldProperties {
   /** Width and height — named size token ('2xs' → '2xl') or pixel number. */

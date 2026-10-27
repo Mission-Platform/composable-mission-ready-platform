@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 
+import type { SemanticModule } from "@mission-platform/forge-plugin-api";
+
 import {
   booleanAttribute,
   component,
@@ -22,8 +24,6 @@ import {
 import { optimizeWebComponentsPlan } from "../optimize.ts";
 
 import { synthesiseElementClass } from "./element.ts";
-
-import type { SemanticModule } from "@mission-platform/forge-plugin-api";
 
 const NO_FOLDERS: ReadonlySet<string> = new Set();
 

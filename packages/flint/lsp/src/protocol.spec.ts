@@ -57,20 +57,32 @@ describe('Flint stdio protocol', () => {
       id: 1,
       result: {
         capabilities: {
-          textDocumentSync: 1,
+          textDocumentSync: 2,
           hoverProvider: true,
           definitionProvider: true,
           declarationProvider: true,
           implementationProvider: true,
           referencesProvider: true,
           documentSymbolProvider: true,
-          codeLensProvider: { resolveProvider: false },
+          codeLensProvider: { resolveProvider: true },
           foldingRangeProvider: true,
           inlineValueProvider: true,
-          inlayHintProvider: { resolveProvider: false },
+          inlayHintProvider: { resolveProvider: true },
           renameProvider: true,
+          documentLinkProvider: { resolveProvider: false },
+          colorProvider: true,
+          documentFormattingProvider: true,
+          documentRangeFormattingProvider: true,
+          selectionRangeProvider: true,
+          executeCommandProvider: { commands: ['flint.refreshWorkspace', 'flint.showReferences'] },
+          callHierarchyProvider: true,
+          linkedEditingRangeProvider: true,
+          monikerProvider: true,
+          typeHierarchyProvider: true,
+          diagnosticProvider: { identifier: 'flint', interFileDependencies: true, workspaceDiagnostics: true },
+          inlineCompletionProvider: {},
           semanticTokensProvider: {
-            full: true,
+            full: { delta: true },
             legend: {
               tokenTypes: expect.arrayContaining(['comment', 'keyword', 'type']),
               tokenModifiers: [],
@@ -103,7 +115,7 @@ describe('Flint stdio protocol', () => {
       method: 'window/workDoneProgress/create',
       params: { token: expect.any(String) },
     });
-    // eslint-disable-next-line unicorn/no-null -- JSON-RPC responses require an explicit null result.
+
     send(input, { jsonrpc: '2.0', id: progressCreate.id, result: null });
     await readUntil(
       output,
@@ -130,7 +142,7 @@ describe('Flint stdio protocol', () => {
     expect(diagnostics).toMatchObject({
       method: 'textDocument/publishDiagnostics',
       params: {
-        diagnostics: expect.arrayContaining([expect.objectContaining({ source: 'flint', code: 'FLINT-PARSE-017' })]),
+        diagnostics: expect.arrayContaining([expect.objectContaining({ source: 'flint', code: 'FLINT-PARSE-004' })]),
       },
     });
     expect(diagnostics.params?.diagnostics).not.toEqual(
@@ -145,7 +157,7 @@ describe('Flint stdio protocol', () => {
       secondMessages[0] ??
       (await readUntil(output, (message) => message.method === 'window/workDoneProgress/create', secondMessages));
     expect(secondProgressCreate.params?.token).not.toBe(progressCreate.params?.token);
-    // eslint-disable-next-line unicorn/no-null -- JSON-RPC responses require an explicit null result.
+
     send(input, { jsonrpc: '2.0', id: secondProgressCreate.id, result: null });
     await readUntil(
       output,

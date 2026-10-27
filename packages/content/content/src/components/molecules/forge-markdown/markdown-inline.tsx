@@ -1,3 +1,4 @@
+import type { MpElement } from '@mission-platform/forge-jsx';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import { sanitizeUrl } from '../../../utils/sanitize';
@@ -5,7 +6,6 @@ import { sanitizeUrl } from '../../../utils/sanitize';
 import styles from './forge-markdown.module.scss';
 import { decodeEntities, isAbsoluteHref } from './markdown-utilities';
 
-import type { MpElement } from '@mission-platform/forge-jsx';
 import type { Token, Tokens } from 'marked';
 
 export interface MarkdownInlineProperties {

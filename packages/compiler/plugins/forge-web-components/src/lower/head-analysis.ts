@@ -1,3 +1,5 @@
+import type { GenericStatement } from "@mission-platform/forge-plugin-api";
+
 import {
   isFunctionExpressionText,
   isPureExpressionText,
@@ -10,7 +12,6 @@ import { propsBindingStatement } from "../transformers/props-binding.js";
 import { referencesIdentifier, referencesLocal } from "./identifier.js";
 
 import type { PropsBindingSite } from "./props-plan.js";
-import type { GenericStatement } from "@mission-platform/forge-plugin-api";
 
 const LIFTED_HOOK_DECLARATION = /\buse(?:State|Ref|Memo)\s*[(<]/;
 const LIFTED_HOOK_EFFECT = /\buseEffect\s*\(/;

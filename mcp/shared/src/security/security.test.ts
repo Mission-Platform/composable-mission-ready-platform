@@ -109,6 +109,15 @@ test("secret scan ignores placeholders and documentation dummy keys", () => {
   assert.equal(result.findings.length, 0);
 });
 
+test("secret scan reports deliberate fixture exclusions by exact repository path", () => {
+  const result = scanSecrets({
+    path: "mcp/shared/src/security/security.test.ts",
+  });
+  assert.equal(result.clean, true);
+  assert.equal(result.excludedFiles, 1);
+  assert.equal(result.incomplete, undefined);
+});
+
 test("secret scan rejects directory traversal and symlink escapes", () => {
   assert.throws(
     () => scanSecrets({ path: "../../outside/path" }),
@@ -265,6 +274,34 @@ test("code vulnerability scanner detects OWASP 2025 and CWE Top 25 injection, tr
   assert.ok(corsMisconfig);
   assert.equal(corsMisconfig.cwe, "CWE-16");
   assert.equal(corsMisconfig.owasp, "A02:2025-Security Misconfiguration");
+});
+
+test("code vulnerability scanner detects compiler transformer AST and codegen flaws", () => {
+  const compilerVulns = `
+    const rendered = emitCode("export default " + userInput);
+    const dynamicMod = import(req.query.modulePath);
+    vm.runInContext(sourceCode, sandbox);
+    const pattern = new RegExp("tag_" + dynamicTag, "g");
+  `;
+
+  const result = analyzeCode({
+    content: compilerVulns,
+    filePath: "packages/compiler/plugins/forge-react/src/transformers/vuln.ts",
+  });
+  assert.equal(result.clean, false);
+
+  const ids = new Set(result.findings.map((f) => f.id));
+  assert.ok(ids.has("COMPILER_UNESCAPED_CODEGEN"));
+  assert.ok(ids.has("COMPILER_UNVALIDATED_DYNAMIC_IMPORT"));
+  assert.ok(ids.has("COMPILER_VM_EXECUTION"));
+  assert.ok(ids.has("COMPILER_RAW_REGEX_INJECTION"));
+
+  const codegenFinding = result.findings.find(
+    (f) => f.id === "COMPILER_UNESCAPED_CODEGEN",
+  );
+  assert.equal(codegenFinding?.cwe, "CWE-94");
+  assert.equal(codegenFinding?.owasp, "A05:2025-Injection");
+  assert.equal(codegenFinding?.isoControl, "A.8.28");
 });
 
 test("secret findings include OWASP 2025, CWE Top 25, and ISO 27001 metadata", () => {

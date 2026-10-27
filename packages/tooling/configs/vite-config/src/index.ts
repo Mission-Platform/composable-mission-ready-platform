@@ -1,9 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import postcssConfig from '@mission-platform/postcss-config';
 import vue from '@vitejs/plugin-vue';
 import { defineConfig, mergeConfig, type Plugin, type UserConfig } from 'vite';
+
+import postcssConfig from '@mission-platform/postcss-config';
 
 import type { ViteUserConfig } from 'vitest/config';
 

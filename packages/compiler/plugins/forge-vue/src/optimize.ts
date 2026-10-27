@@ -11,6 +11,11 @@
  * - **recorded** by identifier on {@link VueLoweredModule.appliedOptimizations},
  *   which the emitter reads to decide what it may take advantage of.
  */
+import type {
+  TargetIntentions,
+  TargetOptimizeOptions,
+} from "@mission-platform/forge-plugin-api";
+
 import { isVueLowered } from "./lower.js";
 
 import type {
@@ -20,10 +25,6 @@ import type {
   VueRuntimeImports,
   VueStaticSubtreePlan,
 } from "./lower.js";
-import type {
-  TargetIntentions,
-  TargetOptimizeOptions,
-} from "@mission-platform/forge-plugin-api";
 
 /** Prune `vue` imports the refined plan no longer needs. */
 export const DROP_UNUSED_IMPORTS = "vue:drop-unused-imports";

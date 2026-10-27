@@ -1,4 +1,4 @@
-import type { FlintDocumentation, FlintDocumentationTag } from './ast.js';
+import type { FlintDocumentation, FlintDocumentationTag } from '@mission-platform/flint-ast';
 
 const tagsWithSubjects = new Set(['arg', 'argument', 'param', 'parameter', 'typeparam', 'throws', 'exception']);
 

@@ -1,6 +1,7 @@
+import { defineComponent, ref } from 'vue';
+
 import { createForgeI18N, useI18n } from '@mission-platform/i18n';
 import { ForgeLanguageSwitcher } from '@mission-platform/select';
-import { defineComponent, ref } from 'vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
@@ -121,6 +122,9 @@ const ForgeLanguageSwitcherExample = defineComponent({
     const locale = ref('en');
     return () => (
       <ForgeLanguageSwitcher
+        id="storybook-language-switcher"
+        label="Language"
+        size="md"
         locale={locale.value}
         locales={[
           { code: 'en', label: 'English', countryCode: 'AU' },

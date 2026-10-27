@@ -6,8 +6,8 @@
  * Full compiler ownership remains seed-backed outside this stage.
  */
 
-import type { FlintOwnership } from '../ast.js';
-import type { FlintAggregateLayout } from '../manifest.js';
+import type { FlintOwnership } from '@mission-platform/flint-ast';
+import type { FlintAggregateLayout } from '@mission-platform/flint-c-abi';
 
 export const FLINT_LEX_STAGE_SOURCE_LAYOUT = 'FlintSourceBytes';
 export const FLINT_LEX_STAGE_ENTRY = 'lex_fingerprint';
@@ -176,7 +176,6 @@ const encoder = new TextEncoder();
 
 /** Bit-exact ToInt32 for FNV and VM parity (not floating truncation). */
 function toInt32(value: number): number {
-  // eslint-disable-next-line unicorn/prefer-math-trunc -- intentional ToInt32 wrap for hash parity
   return value | 0;
 }
 

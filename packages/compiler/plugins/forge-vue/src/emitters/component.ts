@@ -27,6 +27,11 @@
  * component's parameter/body/return node — and from `module.intentions`; the
  * emitter never parses or re-parses source.
  */
+import type {
+  GenericRenderNode,
+  GenericStatement,
+  SemanticModule,
+} from "@mission-platform/forge-plugin-api";
 import {
   NEUTRAL_CONTEXT_VALUES,
   NEUTRAL_RUNTIME_VALUES,
@@ -48,6 +53,7 @@ import {
 import {
   collectInlinableHelpers,
   countNameRefs,
+  readHelperCall,
 } from "../transformers/helpers.js";
 import {
   containsHyperscript,
@@ -89,11 +95,6 @@ import { assembleSfc, type SfcParts } from "./sfc.js";
 import type { VueLoweredModule } from "../lower.js";
 import type { VueStyleBinding } from "../runtime/styles.js";
 import type { VuePropertySignature } from "../transformers/props-interface.js";
-import type {
-  GenericRenderNode,
-  GenericStatement,
-  SemanticModule,
-} from "@mission-platform/forge-plugin-api";
 
 /** An auxiliary SFC the Vue emitter generates alongside the primary module. */
 export interface EmittedExtraModule {
@@ -578,12 +579,17 @@ export function emitVueModule(
   // middle link.
   const derivedRenderNodes = new Map(
     [...analysis.derived, ...analysis.nodeConsts].map((entry) => {
+      const helperCall = readHelperCall(entry.initializer, helpers);
       const hyperscript = containsHyperscript(entry.initializer)
         ? hyperscriptRenderNode(entry.initializer, entry.renderNodes)
         : undefined;
+      const helperRenderNodes =
+        entry.renderNodes.length > 0
+          ? entry.renderNodes
+          : (helperCall?.helper.renderNodes ?? []);
       return [
         entry.name,
-        hyperscript === undefined ? entry.renderNodes : [hyperscript],
+        hyperscript === undefined ? helperRenderNodes : [hyperscript],
       ] as const;
     }),
   );
@@ -598,19 +604,29 @@ export function emitVueModule(
       // extraction machinery already owns. Requiring `isUsedAsChild` for a
       // handler would strand it as a retained declaration whose JSX (and its
       // neutral `className`) is never lowered.
+      .map((entry) => {
+        const helperCall = readHelperCall(entry.initializer, helpers);
+        const renderNodes =
+          entry.renderNodes.length > 0
+            ? entry.renderNodes
+            : (helperCall?.helper.renderNodes ?? []);
+        return { entry, renderNodes };
+      })
       .filter(
-        (entry) =>
+        ({ entry, renderNodes }) =>
           entry.node === undefined &&
-          ((entry.renderNodes.length > 0 &&
+          ((renderNodes.length > 0 &&
             (entry.isHandler ||
               isUsedAsChild(returnNode, entry.name, derivedRenderNodes))) ||
-            isTemplateListProjection(entry.initializer, entry.renderNodes) ||
+            isTemplateListProjection(entry.initializer, renderNodes) ||
             containsHyperscript(entry.initializer)),
       )
-      .map((entry) => [
-        entry.name,
-        { initializer: entry.initializer, renderNodes: entry.renderNodes },
-      ]),
+      .map(({ entry, renderNodes }) => {
+        return [
+          entry.name,
+          { initializer: entry.initializer, renderNodes },
+        ] as const;
+      }),
   );
   // A helper's body is spliced into its call sites, so its own declaration is
   // normally dropped. That only holds for call sites the *markup* owns: a data
@@ -729,6 +745,9 @@ export function emitVueModule(
     isRetained(statement),
   );
 
+  const carryOver = rewriteClosureAttributes(
+    buildCarryOver(retainedDeclarations, propsInterface, droppedPropNames),
+  );
   const sfcParts: SfcParts = {
     componentName,
     propsParameterName,
@@ -744,11 +763,7 @@ export function emitVueModule(
     helperImports: importPlan.helperImports,
     vueAdapterValues,
     externalImports,
-    carryOver: buildCarryOver(
-      retainedDeclarations,
-      propsInterface,
-      droppedPropNames,
-    ),
+    carryOver,
     dataPropertySignatures,
     propDefaults: analysis.propDefaults,
     emittedEventSignatures,
@@ -921,6 +936,44 @@ export function emitVueModule(
   // indirection is needed).
   // Inside the closure those consts are re-declared as plain locals, so they are
   // no longer reactive boxes: reading them through `.value` would be wrong.
+  const fallbackScriptTexts = [
+    ...analysis.renderStatements,
+    ...[...analysis.nodeConsts, ...analysis.derived].map(
+      (entry) => entry.initializer,
+    ),
+    ...analysis.setupLines,
+    ...(component.returnExpression === undefined
+      ? []
+      : [component.returnExpression.text]),
+  ];
+  for (let changed = true; changed;) {
+    changed = false;
+    const scriptTexts = [
+      ...fallbackScriptTexts,
+      ...ast.declarations
+        .filter((statement) => isRetained(statement))
+        .map((statement) => statement.text.text),
+    ];
+    for (const name of droppedNames) {
+      if (
+        !scriptCalledHelpers.has(name) &&
+        scriptTexts.some((text) => countNameRefs(name, text).callee > 0)
+      ) {
+        scriptCalledHelpers.add(name);
+        changed = true;
+      }
+    }
+  }
+  const fallbackRetainedDeclarations = ast.declarations.filter((statement) =>
+    isRetained(statement),
+  );
+  const fallbackCarryOver = rewriteClosureAttributes(
+    buildCarryOver(
+      fallbackRetainedDeclarations,
+      propsInterface,
+      droppedPropNames,
+    ),
+  );
   const closureLocals = new Set(
     [...analysis.nodeConsts, ...analysis.derived].map((entry) => entry.name),
   );
@@ -986,11 +1039,11 @@ export function emitVueModule(
   );
   const fallbackParts: SfcParts =
     readSlotProps.size === 0
-      ? sfcParts
+      ? { ...sfcParts, carryOver: fallbackCarryOver }
       : {
           ...sfcParts,
           carryOver: buildCarryOver(
-            retainedDeclarations,
+            fallbackRetainedDeclarations,
             propsInterface,
             new Set(
               [...droppedPropNames].filter((name) => !readSlotProps.has(name)),

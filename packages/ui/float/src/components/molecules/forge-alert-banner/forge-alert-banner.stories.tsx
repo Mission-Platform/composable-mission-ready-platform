@@ -1,8 +1,8 @@
 import { useArgs } from 'storybook/preview-api';
 
-import { ForgeAlertBanner } from './forge-alert-banner';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+import { ForgeAlertBanner } from './forge-alert-banner';
 
 /**
  * `ForgeAlertBanner` is the write-once component of `@mission-platform/float`.

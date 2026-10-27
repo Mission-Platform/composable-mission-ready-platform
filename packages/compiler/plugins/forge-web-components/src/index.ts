@@ -3,13 +3,6 @@ import {
   defineForgeOutputPlugin,
   frameworkAdapterModule,
 } from "@mission-platform/forge-plugin-api";
-
-import { emitWebComponentModule } from "./emitters/module.js";
-import { inferWebComponentsHost, lowerWebComponentsModule } from "./lower.js";
-import { optimizeWebComponentsModule } from "./optimize.js";
-import { emitWebComponentHookModule } from "./runtime/hook-module.js";
-
-import type { WebComponentsLoweredModule } from "./lower.js";
 import type {
   ForgeBuildAdapters,
   FrameworkOutputPlugin,
@@ -19,6 +12,13 @@ import type {
   TargetIntentions,
   TargetOptimizeOptions,
 } from "@mission-platform/forge-plugin-api";
+
+import { emitWebComponentModule } from "./emitters/module.js";
+import { inferWebComponentsHost, lowerWebComponentsModule } from "./lower.js";
+import { optimizeWebComponentsModule } from "./optimize.js";
+import { emitWebComponentHookModule } from "./runtime/hook-module.js";
+
+import type { WebComponentsLoweredModule } from "./lower.js";
 
 const BUILD: ForgeBuildAdapters = { vite: () => [], tsdown: () => [] };
 

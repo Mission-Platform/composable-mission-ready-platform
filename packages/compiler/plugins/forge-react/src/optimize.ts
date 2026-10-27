@@ -9,6 +9,11 @@
  * every pass already recorded, so no identifier is ever listed twice.
  */
 import { walkRenderNodes } from "@mission-platform/forge-plugin-api";
+import type {
+  SemanticModule,
+  TargetIntentions,
+  TargetOptimizeOptions,
+} from "@mission-platform/forge-plugin-api";
 import { REACT_TYPE_ALIASES } from "@mission-platform/forge-plugin-api/compiler/ast.js";
 
 import {
@@ -23,12 +28,6 @@ import {
   type ReactModulePlan,
 } from "./lower.js";
 import { CLIENT_HOOKS } from "./transformers/aliases.js";
-
-import type {
-  SemanticModule,
-  TargetIntentions,
-  TargetOptimizeOptions,
-} from "@mission-platform/forge-plugin-api";
 
 /** The identifiers recorded on a plan the React optimizer has refined. */
 export const REACT_OPTIMIZATIONS = {

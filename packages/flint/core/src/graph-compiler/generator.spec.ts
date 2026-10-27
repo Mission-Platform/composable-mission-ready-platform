@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { parseFlint } from '../parser.js';
+import { parseFlint } from '@mission-platform/flint-parser';
 
 import { buildGraphAst } from './ast-builder.js';
 import { createNodeFromDefinition, getNodeDefinition } from './catalog.js';

@@ -944,9 +944,9 @@ fn oned_c39_find_asterisk(row: Array<i32>) -> i32 {
           let width: i32 = oned_c39_record9(row, index);
           if width > 0 {
             let quiet_start: i32 = index - width / 2;
-            let mut from: i32 = 0;
-            if quiet_start > 0 { from = quiet_start; }
-            if oned_white_range(row, from, index) { return index; }
+            let mut quietFrom: i32 = 0;
+            if quiet_start > 0 { quietFrom = quiet_start; }
+            if oned_white_range(row, quietFrom, index) { return index; }
           }
         }
       }

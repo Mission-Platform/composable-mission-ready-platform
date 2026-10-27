@@ -1,6 +1,6 @@
-import { ForgeICalendar } from './forge-icalendar';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+import { ForgeICalendar } from './forge-icalendar';
 
 const meta = {
   title: 'VCard/ForgeICalendar',

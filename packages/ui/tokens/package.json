@@ -32,6 +32,7 @@
   ],
   "scripts": {
     "build": "tsdown",
+    "test": "vitest run",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "lint:style": "stylelint \"src/**/*.scss\"",
@@ -58,6 +59,7 @@
     "stylelint": "catalog:stylelint",
     "tsdown": "catalog:build",
     "typescript": "catalog:typescript",
-    "vite": "catalog:vite"
+    "vite": "catalog:vite",
+    "vitest": "catalog:testing"
   }
 }

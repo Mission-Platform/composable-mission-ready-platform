@@ -1,5 +1,6 @@
-import { useMidi, useSound, useSpeechRecognition, useSpeechSynthesis } from '@mission-platform/speech-audio';
 import { defineComponent, ref } from 'vue';
+
+import { useMidi, useSound, useSpeechRecognition, useSpeechSynthesis } from '@mission-platform/speech-audio';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 

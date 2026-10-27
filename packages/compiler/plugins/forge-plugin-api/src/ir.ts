@@ -87,7 +87,18 @@ export interface GenericJsxSpreadAttribute {
   readonly span: SourceSpan;
 }
 
-export type GenericAttribute = GenericJsxAttribute | GenericJsxSpreadAttribute;
+/** Typed attribute-based slot projection. */
+export interface GenericSlotAttribute {
+  readonly kind: "slot-attribute";
+  readonly name: string;
+  readonly payload: SourceBackedExpression;
+  /** Compatibility view used by existing attribute lowering helpers. */
+  readonly value?: GenericAttributeValue;
+  readonly span: SourceSpan;
+}
+
+export type GenericAttribute =
+  GenericJsxAttribute | GenericJsxSpreadAttribute | GenericSlotAttribute;
 
 /** Literal text between JSX tags. */
 export interface GenericTextNode {
@@ -106,8 +117,43 @@ export interface GenericExpressionNode {
   readonly span: SourceSpan;
 }
 
+export interface GenericConditionalBranch {
+  readonly kind: "conditional-branch";
+  readonly condition: SourceBackedExpression;
+  readonly children: readonly GenericRenderChild[];
+  readonly span: SourceSpan;
+}
+
+export interface GenericConditionalNode {
+  readonly kind: "conditional";
+  readonly condition: SourceBackedExpression;
+  readonly truthy: readonly GenericRenderChild[];
+  readonly elseif?: readonly GenericConditionalBranch[];
+  readonly fallback?: readonly GenericRenderChild[];
+  readonly span: SourceSpan;
+}
+
+export interface GenericForBindings {
+  readonly itemName: string;
+  readonly indexName?: string;
+  readonly iterableName?: string;
+  readonly span: SourceSpan;
+}
+
+export interface GenericForNode {
+  readonly kind: "for";
+  readonly items: SourceBackedExpression;
+  readonly directiveBindings: GenericForBindings;
+  readonly children: readonly GenericRenderChild[];
+  readonly span: SourceSpan;
+}
+
 export type GenericRenderChild =
-  GenericRenderNode | GenericTextNode | GenericExpressionNode;
+  | GenericRenderNode
+  | GenericTextNode
+  | GenericExpressionNode
+  | GenericConditionalNode
+  | GenericForNode;
 
 /** How a render node's tag resolves in the target vocabulary. */
 export type GenericTagKind = "element" | "component" | "fragment" | "dynamic";
@@ -159,6 +205,58 @@ export interface GenericComponent {
 export type GenericAstNode =
   GenericImport | GenericStatement | GenericRenderNode;
 
+/** Normalized CSS declaration carried from a Flint style companion. */
+export interface GenericStyleDeclaration {
+  readonly property: string;
+  readonly value: string;
+  readonly binding?: GenericStyleBinding;
+  readonly span: SourceSpan;
+}
+
+/** Typed CSS custom-property binding lowered from `bind(property, --name)`. */
+export interface GenericStyleBinding {
+  readonly kind: "style-binding";
+  readonly property: string;
+  readonly cssVariable: string;
+  readonly span: SourceSpan;
+}
+
+/** Normalized CSS rule carried from a Flint style companion. */
+export interface GenericStyleRule {
+  readonly selector: string;
+  readonly declarations: readonly GenericStyleDeclaration[];
+  readonly children?: readonly GenericStyleRule[];
+  readonly span: SourceSpan;
+}
+
+/** One addressable local class in a normalized CSS-module class map. */
+export interface GenericStyleClassMapNode {
+  readonly className: string;
+  readonly selector: string;
+  readonly children: readonly GenericStyleClassMapNode[];
+  readonly span: SourceSpan;
+}
+
+/** Normalized CSS at-rule carried from a Flint style companion. */
+export interface GenericStyleAtRule {
+  readonly name: string;
+  readonly prelude: string;
+  readonly rules: readonly GenericStyleRule[];
+  readonly declarations: readonly GenericStyleDeclaration[];
+  readonly span: SourceSpan;
+}
+
+/** Target-neutral style artifact owned by one Flint module. */
+export interface GenericStyleCompanion {
+  readonly ownerModule: string;
+  readonly bindingName?: string;
+  readonly rules: readonly GenericStyleRule[];
+  readonly atRules: readonly GenericStyleAtRule[];
+  readonly propertyRegistrations: readonly string[];
+  readonly classMap?: readonly GenericStyleClassMapNode[];
+  readonly span: SourceSpan;
+}
+
 /** Serializable source representation shared by all compiler phases. */
 export interface GenericModuleAst {
   readonly kind: "generic-module";
@@ -169,6 +267,8 @@ export interface GenericModuleAst {
   /** Module-level statements excluding imports and the component function. */
   readonly declarations: readonly GenericStatement[];
   readonly component?: GenericComponent;
+  /** Parsed CSS companion artifacts associated with this module. */
+  readonly styles?: readonly GenericStyleCompanion[];
   /** JSX roots reachable from the module, in source order. */
   readonly renderNodes: readonly GenericRenderNode[];
   /** Flat, source-ordered view of imports, declarations, and render roots. */
@@ -241,6 +341,70 @@ export interface EventIntention {
   readonly span?: SourceSpan;
 }
 
+/** A reactive component property shared by every target emitter. */
+export interface ReactiveProperty {
+  readonly name: string;
+  readonly typeText: string;
+  readonly optional: boolean;
+  readonly defaultValue?: SourceBackedExpression;
+  readonly readonly: boolean;
+  readonly writable: boolean;
+  readonly span: SourceSpan;
+}
+
+/** A named value returned from setup and addressable by render/style bindings. */
+export interface ComputedSetupValue {
+  readonly name: string;
+  readonly typeText: string;
+  readonly dependencies: readonly string[];
+  readonly expression: SourceBackedExpression;
+  readonly exposeToTemplate: boolean;
+  readonly exposeToStyle: boolean;
+  readonly span: SourceSpan;
+}
+
+/** An event handler declared outside setup. */
+export interface SetupEventHandler {
+  readonly name: string;
+  readonly payloadType?: string;
+  readonly parameters: readonly GenericParameter[];
+  readonly body: readonly SourceBackedExpression[];
+  readonly span: SourceSpan;
+}
+
+/** An event emitter declared outside setup and paired with event configuration. */
+export interface SetupEventEmitter {
+  readonly name: string;
+  readonly eventName: string;
+  readonly payloadType?: string;
+  readonly parameters: readonly GenericParameter[];
+  readonly body: readonly SourceBackedExpression[];
+  readonly span: SourceSpan;
+}
+
+/** A target-neutral controlled value and its typed update event. */
+export interface ModelContract {
+  readonly name: string;
+  readonly typeText: string;
+  readonly updateEventName: string;
+  readonly updatePayloadType: string;
+  readonly writable: boolean;
+  readonly span: SourceSpan;
+}
+
+/** Canonical setup/event/model contract consumed by all target lowerers. */
+export interface SetupContract {
+  readonly setupName: string;
+  readonly parameters: readonly GenericParameter[];
+  readonly properties: readonly ReactiveProperty[];
+  readonly computedValues: readonly ComputedSetupValue[];
+  readonly handlers: readonly SetupEventHandler[];
+  readonly emitters: readonly SetupEventEmitter[];
+  readonly models: readonly ModelContract[];
+  readonly templateReferences: readonly string[];
+  readonly styleReferences: readonly string[];
+}
+
 /** A stable key candidate for a target list renderer. */
 export interface ListKeyIntention {
   readonly source: SourceBackedExpression;
@@ -279,6 +443,8 @@ export interface SemanticModule {
   readonly ast: GenericModuleAst;
   readonly imports: readonly GenericImport[];
   readonly intentions: SemanticIntentions;
+  /** Explicit setup pipeline, when the source module declares one. */
+  readonly setupContract?: SetupContract;
   readonly diagnostics?: readonly CompilerDiagnostic[];
 }
 
@@ -371,6 +537,21 @@ export function walkRenderNodes(
   nodes: readonly GenericRenderNode[],
   visit: (node: GenericRenderNode) => void,
 ): void {
+  const walkChildren = (children: readonly GenericRenderChild[]): void => {
+    for (const child of children) {
+      if (child.kind === "render-node") {
+        walkRenderNodes([child], visit);
+      } else if (child.kind === "expression-node") {
+        walkRenderNodes(child.nested, visit);
+      } else if (child.kind === "conditional") {
+        walkChildren(child.truthy);
+        for (const branch of child.elseif ?? []) walkChildren(branch.children);
+        walkChildren(child.fallback ?? []);
+      } else if (child.kind === "for") {
+        walkChildren(child.children);
+      }
+    }
+  };
   for (const node of nodes) {
     visit(node);
     for (const attribute of node.attributes) {
@@ -381,12 +562,68 @@ export function walkRenderNodes(
         walkRenderNodes(attribute.value.nested, visit);
       }
     }
-    for (const child of node.children) {
-      if (child.kind === "render-node") {
-        walkRenderNodes([child], visit);
-      } else if (child.kind === "expression-node") {
-        walkRenderNodes(child.nested, visit);
-      }
-    }
+    walkChildren(node.children);
   }
+}
+
+/** The plain tag text of a render node (a computed tag prints its source expression). */
+export function renderNodeTagText(node: GenericRenderNode): string {
+  return typeof node.tag === "string" ? node.tag : node.tag.text;
+}
+
+/** Whether the node is a named compile-time marker. */
+export function isRenderNodeMarker(
+  node: GenericRenderNode,
+  tag: string,
+): boolean {
+  return typeof node.tag === "string" && node.tag === tag;
+}
+
+/**
+ * Whether the node's tag names a component (a capitalised identifier, or dynamic/member expression)
+ * rather than an intrinsic HTML element.
+ */
+export function isComponentNode(node: GenericRenderNode): boolean {
+  return node.tagKind === "component" || node.tagKind === "dynamic";
+}
+
+/** Children that survive to the target (whitespace-only text carries nothing). */
+export function meaningfulChildren(
+  node: GenericRenderNode,
+): readonly GenericRenderChild[] {
+  return node.children.filter(
+    (child) => !isTextNode(child) || child.text.trim().length > 0,
+  );
+}
+
+/** The `slot="…"` name a child is routed into, or `undefined` for default-slot content. */
+export function childSlotName(
+  child: GenericRenderChild,
+  slotAttributeName = "slot",
+  defaultSlotName = "default",
+): string | undefined {
+  if (!isRenderNode(child)) {
+    return undefined;
+  }
+  const name = attributeStringValue(child, slotAttributeName);
+  return name === undefined || name === "" || name === defaultSlotName
+    ? undefined
+    : name;
+}
+
+/** A copy of the node without its `slot="…"` routing marker. */
+export function withoutSlotAttribute(
+  node: GenericRenderNode,
+  slotAttributeName = "slot",
+): GenericRenderNode {
+  return {
+    ...node,
+    attributes: node.attributes.filter(
+      (attribute) =>
+        !(
+          attribute.kind === "jsx-attribute" &&
+          attribute.name === slotAttributeName
+        ),
+    ),
+  };
 }

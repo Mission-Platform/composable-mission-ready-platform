@@ -1,5 +1,6 @@
-import { localJsxTypesModuleSource as sharedLocalJsxTypesModuleSource } from '@mission-platform/forge-plugin-api/compiler/ast.js';
 import { describe, expect, it } from 'vitest';
+
+import { localJsxTypesModuleSource as sharedLocalJsxTypesModuleSource } from '@mission-platform/forge-plugin-api/compiler/ast.js';
 
 import {
   compileComponentModule,

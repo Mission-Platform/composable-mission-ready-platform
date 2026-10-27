@@ -1,9 +1,21 @@
+import { lookup } from 'node:dns/promises';
+import { isIP } from 'node:net';
+
 import axe from 'axe-core';
 import { chromium } from 'playwright';
 import { z } from 'zod';
 
 const DEFAULT_TIMEOUT = 30_000;
 const DEFAULT_SETTLE_TIME = 250;
+const ACCESSIBILITY_ALLOWLIST_ENV = 'MISSION_PLATFORM_ACCESSIBILITY_ALLOWLIST';
+
+type AccessibilityRoute = {
+  request(): { url(): string };
+  abort(): Promise<void>;
+  continue(): Promise<void>;
+};
+
+type AccessibilityRouteHandler = (route: AccessibilityRoute) => Promise<void>;
 
 const httpUrlSchema = z
   .string()
@@ -93,6 +105,7 @@ export interface AccessibilityPage {
   on(event: 'console', listener: (message: AccessibilityConsoleMessage) => void): unknown;
   setViewportSize(size: { width: number; height: number }): Promise<void>;
   goto(url: string, options: { waitUntil: 'load'; timeout: number }): Promise<unknown>;
+  route?: (pattern: string, handler: AccessibilityRouteHandler) => Promise<void>;
   waitForTimeout(timeout: number): Promise<void>;
   addScriptTag(options: { content: string }): Promise<unknown>;
   evaluate<T, Argument>(pageFunction: (argument: Argument) => Promise<T>, argument: Argument): Promise<T>;
@@ -129,6 +142,66 @@ function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
+function accessibilityAllowlist(): ReadonlySet<string> {
+  return new Set(
+    (process.env[ACCESSIBILITY_ALLOWLIST_ENV] ?? '')
+      .split(',')
+      .map((host) => host.trim().toLowerCase())
+      .filter(Boolean),
+  );
+}
+
+function isPrivateIp(address: string): boolean {
+  if (isIP(address) === 4) {
+    const octets = address.split('.').map(Number);
+    const [first, second] = octets;
+    return (
+      first === 0 ||
+      first === 10 ||
+      first === 127 ||
+      (first === 169 && second === 254) ||
+      (first === 172 && second >= 16 && second <= 31) ||
+      (first === 192 && second === 168) ||
+      (first === 100 && second >= 64 && second <= 127)
+    );
+  }
+  const normalized = address.toLowerCase();
+  return (
+    normalized === '::1' ||
+    normalized.startsWith('fe80:') ||
+    normalized.startsWith('fc') ||
+    normalized.startsWith('fd') ||
+    normalized.startsWith('::ffff:10.') ||
+    normalized.startsWith('::ffff:192.168.') ||
+    normalized.startsWith('::ffff:127.')
+  );
+}
+
+async function assertSafeAccessibilityDestination(url: string, resolveDns = true): Promise<void> {
+  const parsed = new URL(url);
+  const hostname = parsed.hostname.replace(/\.$/, '').toLowerCase();
+  const allowlist = accessibilityAllowlist();
+  if (allowlist.has(hostname)) return;
+  if (
+    hostname === 'localhost' ||
+    hostname.endsWith('.localhost') ||
+    hostname.endsWith('.local') ||
+    hostname.endsWith('.internal')
+  ) {
+    throw new Error(`Accessibility auditing refuses internal destination '${hostname}'.`);
+  }
+  if (isIP(hostname) && isPrivateIp(hostname)) {
+    throw new Error(`Accessibility auditing refuses private destination '${hostname}'.`);
+  }
+  if (isIP(hostname) || !resolveDns) return;
+  const addresses = await lookup(hostname, { all: true, verbatim: true });
+  if (addresses.some(({ address }) => isPrivateIp(address))) {
+    throw new Error(
+      `Accessibility auditing refuses destination '${hostname}' because it resolves to an internal address.`,
+    );
+  }
+}
+
 function browserLauncher(): Promise<AccessibilityBrowser> {
   return chromium.launch({ headless: true }) as unknown as Promise<AccessibilityBrowser>;
 }
@@ -146,6 +219,17 @@ async function auditPage(
   });
 
   try {
+    await assertSafeAccessibilityDestination(input.url, false);
+    if (page.route) {
+      await page.route('**/*', async (route) => {
+        try {
+          await assertSafeAccessibilityDestination(route.request().url());
+          await route.continue();
+        } catch {
+          await route.abort();
+        }
+      });
+    }
     if (input.width !== undefined || input.height !== undefined) {
       await page.setViewportSize({ width: input.width ?? 1280, height: input.height ?? 720 });
     }
@@ -197,6 +281,7 @@ export async function runAccessibilityAudit(
   dependencies: AccessibilityAuditDependencies = {},
 ): Promise<AccessibilityAuditResult> {
   const parsed = accessibilityAuditInputSchema.parse(input);
+  await assertSafeAccessibilityDestination(parsed.url, false);
   const launchBrowser = dependencies.launchBrowser ?? browserLauncher;
   const axeSource = dependencies.axeSource ?? axe.source;
   const settleTime = dependencies.settleTime ?? DEFAULT_SETTLE_TIME;

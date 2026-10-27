@@ -4,10 +4,8 @@ import {
   createPrimitiveType,
   getNodeDefinition,
 } from '@mission-platform/flint';
-
-import { FlintEditorStore, ForgeDebugScrubber, ForgeFlintGraphEditor } from '@mission-platform/flint-graph-editor';
-
 import type { FlintGraphEdge, FlintGraphNode, FlintMetaNodeSubgraph, FlintNodeGraph } from '@mission-platform/flint';
+import { FlintEditorStore, ForgeDebugScrubber, ForgeFlintGraphEditor } from '@mission-platform/flint-graph-editor';
 import type { FlintTraceReport } from '@mission-platform/flint-runtime';
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 

@@ -30,6 +30,11 @@
  *   template contract, and `PropertyDeclaration`, the contract the class'
  *   `static properties` map is typed with).
  */
+import type {
+  GeneratedExtraModule,
+  GenericImport,
+  SemanticModule,
+} from "@mission-platform/forge-plugin-api";
 import {
   frameworkAdapterModule,
   LOCAL_JSX_TYPE_NAMES,
@@ -47,12 +52,6 @@ import {
 } from "../lower.js";
 
 import { synthesiseElementClass } from "./element.js";
-
-import type {
-  GeneratedExtraModule,
-  GenericImport,
-  SemanticModule,
-} from "@mission-platform/forge-plugin-api";
 
 /** The module the native runtime values are imported from. */
 const RUNTIME_MODULE = frameworkAdapterModule("web-components");

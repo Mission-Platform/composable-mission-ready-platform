@@ -14,20 +14,21 @@ import { classNames, useEffect, useRef, useState, type MpElement } from '@missio
 
 import { TraceDebuggerController } from '../../../debugger/trace-controller';
 import { FlintEditorStore, type FlintEditorStoreState } from '../../../editor/editor-store';
-import {
-  getFlintRenderWorkerWasm,
-  type FlintCamera,
-  type FlintHitResult,
-  type FlintPerformanceMetrics,
-  type RenderWorkerInputMessage,
-  type RenderWorkerOutputMessage,
-  type ViewBounds,
-} from '../../../renderer/render-worker';
+import { getFlintRenderWorkerWasm } from '../../../renderer/wasm';
 import { ForgeDebugScrubber } from '../../molecules/forge-debug-scrubber';
 import { ForgePerformancePieChart } from '../../molecules/forge-performance-pie-chart';
 import { ForgePerformanceTimelineChart } from '../../molecules/forge-performance-timeline-chart';
 
 import styles from './forge-flint-graph-editor.module.scss';
+
+import type {
+  FlintCamera,
+  FlintHitResult,
+  FlintPerformanceMetrics,
+  RenderWorkerInputMessage,
+  RenderWorkerOutputMessage,
+  ViewBounds,
+} from '../../../renderer/types';
 
 if (
   typeof globalThis !== 'undefined' &&
@@ -1366,7 +1367,7 @@ function PerfMetricsGrid(properties: { readonly perfMetrics: FlintPerformanceMet
         />
         <PerfMetricCard
           label="Render Duration"
-          value={`${metrics.renderTimeMs.toFixed(2)} ms`}
+          value={`${(metrics.renderTimeMs ?? 0).toFixed(2)} ms`}
           color="#3fb950"
         />
         <PerfMetricCard
@@ -3524,7 +3525,7 @@ function ToolbarStatusGroup(properties: ToolbarStatusGroupProperties): MpElement
   const backendText = properties.isFallback ? '2D Canvas' : 'WebGPU';
   const backendClass = properties.isFallback ? styles.statusBadgeWarning : styles.statusBadgePrimary;
   const updateMs = properties.perfMetrics.updateTimeMs.toFixed(1);
-  const renderMs = properties.perfMetrics.renderTimeMs.toFixed(1);
+  const renderMs = (properties.perfMetrics.renderTimeMs ?? 0).toFixed(1);
   const perfLabel = `update: ${updateMs}ms | render: ${renderMs}ms (${backendText})`;
 
   return (

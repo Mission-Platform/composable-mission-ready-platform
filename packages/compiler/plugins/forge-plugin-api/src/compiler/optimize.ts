@@ -114,7 +114,18 @@ export function stripMpStaticMarker(
     ...node,
     attributes: stripMpStaticAttributes(node.attributes),
     children: node.children.map((child) =>
-      child.kind === "render-node" ? stripMpStaticMarker(child) : child,
+      child.kind === "render-node"
+        ? stripMpStaticMarker(child)
+        : child.kind === "conditional"
+          ? {
+              ...child,
+              truthy: child.truthy.map((nested) =>
+                nested.kind === "render-node"
+                  ? stripMpStaticMarker(nested)
+                  : nested,
+              ),
+            }
+          : child,
     ),
   };
 }
@@ -125,6 +136,7 @@ function isStaticNode(node: GenericRenderNode): boolean {
   return (
     node.attributes.every((attribute) => {
       if (attribute.kind === "jsx-spread-attribute") return false;
+      if (attribute.kind === "slot-attribute") return false;
       if (
         attribute.name === "key" ||
         attribute.name === "ref" ||
@@ -142,10 +154,13 @@ function isStaticNode(node: GenericRenderNode): boolean {
     node.children.every((child) => {
       if (child.kind === "text") return true;
       if (child.kind === "render-node") return isStaticNode(child);
-      return (
-        child.expression === undefined ||
-        isCompileTimeConstant(child.expression)
-      );
+      if (child.kind === "expression-node") {
+        return (
+          child.expression === undefined ||
+          isCompileTimeConstant(child.expression)
+        );
+      }
+      return false;
     })
   );
 }

@@ -219,6 +219,36 @@ No description provided.
 
 ## `src/storyblok`
 
+### defaultStoryblokFrameworks
+
+**Kind:** function
+
+```typescript
+function defaultStoryblokFrameworks(): FrameworkOutputPlugin[];
+```
+
+Default 5 Forge framework plugins targeting React, Vue, Svelte, Solid, and Web Components.
+
+### defineStoryblokCmsConfig
+
+**Kind:** function
+
+```typescript
+function defineStoryblokCmsConfig(
+  options: StoryblokCmsConfigOptions,
+): UserConfig[];
+```
+
+Return native tsdown `UserConfig[]` configurations for Storyblok CMS targets.
+Automatically resolves `packageName` from package.json if omitted and defaults
+`componentsModule` and the 5 standard framework output plugins.
+
+#### Parameters
+
+| Name    | Type                      | Description |
+| ------- | ------------------------- | ----------- |
+| options | StoryblokCmsConfigOptions |             |
+
 ### forgeStoryblokCms
 
 **Kind:** function
@@ -269,6 +299,16 @@ No description provided.
 
 ```typescript
 export interface ForgeStoryblokCmsTargetsOptions
+```
+
+No description provided.
+
+### StoryblokCmsConfigOptions
+
+**Kind:** interface
+
+```typescript
+export interface StoryblokCmsConfigOptions
 ```
 
 No description provided.

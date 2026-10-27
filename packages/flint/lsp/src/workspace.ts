@@ -185,7 +185,7 @@ function canonicalPath(path: string): string {
 function isRelevantSourcePath(path: string): boolean {
   const normalizedPath = path.replaceAll('\\', '/');
   return (
-    normalizedPath.endsWith('.flint') &&
+    (normalizedPath.endsWith('.flint') || normalizedPath.endsWith('.flintc')) &&
     !normalizedPath.split('/').some((segment) => excludedDirectoryNames.has(segment))
   );
 }
@@ -200,7 +200,7 @@ async function collectFiles(root: string, files: string[]): Promise<void> {
         if (entry.isDirectory() && excludedDirectoryNames.has(entry.name)) return;
         const path = nodePath.resolve(root, entry.name);
         if (entry.isDirectory()) await collectFiles(path, files);
-        else if (entry.isFile() && entry.name.endsWith('.flint')) files.push(path);
+        else if (entry.isFile() && (entry.name.endsWith('.flint') || entry.name.endsWith('.flintc'))) files.push(path);
       }),
     );
   } catch (error) {

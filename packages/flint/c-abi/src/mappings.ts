@@ -156,7 +156,6 @@ export function mapCTypeToWasmValueType(
   return "i32";
 }
 
-// eslint-disable-next-line unicorn/prevent-abbreviations
 export const mapCTypeToWasmValType = mapCTypeToWasmValueType;
 
 /** Set of 64-bit Flint integer types represented as bigint in TypeScript. */

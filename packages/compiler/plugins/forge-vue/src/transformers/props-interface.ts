@@ -18,14 +18,13 @@
  * comments, so the tag is read from that text with a small targeted scan.
  */
 import { sourceBacked } from "@mission-platform/forge-plugin-api";
-import { eventNameForProperty } from "@mission-platform/forge-plugin-api/compiler/ast.js";
-
-import { maskLiterals, matchBracket, splitTopLevel } from "./text.js";
-
 import type {
   GenericStatement,
   PropIntention,
 } from "@mission-platform/forge-plugin-api";
+import { eventNameForProperty } from "@mission-platform/forge-plugin-api/compiler/ast.js";
+
+import { maskLiterals, matchBracket, splitTopLevel } from "./text.js";
 
 /** A runtime prop rendered into the type-based `defineProps<{ … }>()`. */
 export interface VuePropertySignature {

@@ -2,7 +2,7 @@
 
 正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
 
-> docs/packages/tooling/configs/index.md: [docs/packages/tooling/configs/index.md](../../../packages/tooling/configs/index.md)
+> docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
 > 言語: 日本語 (ja)
 
 Mission Platform は、集中管理された構成パッケージを使用します。 `packages/tooling/configs/` ディレクトリ間で一貫性を確保する

@@ -1,8 +1,7 @@
 import { ForgeButton } from '@mission-platform/components';
+import type { MpChild, MpElement } from '@mission-platform/forge-jsx';
 
 import styles from './forge-wysiwyg-toolbar-button.module.scss';
-
-import type { MpChild, MpElement } from '@mission-platform/forge-jsx';
 
 export interface WysiwygToolbarButtonProperties {
   /** The content rendered inside the component. */

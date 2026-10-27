@@ -37,7 +37,7 @@
     "@types/node": "catalog:typescript",
     "@types/pngjs": "^6.0.5",
     "eslint": "catalog:eslint",
-    "pixelmatch": "^7.2.0",
+    "pixelmatch": "catalog:testing",
     "pngjs": "^7.0.0",
     "prettier": "catalog:prettier",
     "typescript": "catalog:typescript",

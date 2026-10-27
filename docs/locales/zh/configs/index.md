@@ -2,7 +2,7 @@
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
-> docs/packages/tooling/configs/index.md: [docs/packages/tooling/configs/index.md](../../../packages/tooling/configs/index.md)
+> docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
 > 语言: 简体中文 (zh)
 
 任务平台使用集中配置包 `packages/tooling/configs/` 目录以确保一致性

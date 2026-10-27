@@ -9,10 +9,9 @@ import {
   type MpChild,
   type MpElement,
 } from '@mission-platform/forge-jsx';
+import type { SizeScale } from '@mission-platform/tokens';
 
 import styles from './forge-typography.module.scss';
-
-import type { SizeScale } from '@mission-platform/tokens';
 
 /** Optional size token — canonical 2xs → 2xl scale (overrides the variant's font-size when set). */
 export type TypographySize = SizeScale;

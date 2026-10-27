@@ -1,8 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { cssBundlePlugin, defineTsdownLibrary, resolveCssOwner } from '@mission-platform/tsdown-config';
 import { describe, expect, it } from 'vitest';
+
+import type { FrameworkOutputPlugin } from '@mission-platform/forge-plugin-api';
+import { cssBundlePlugin, defineTsdownLibrary, resolveCssOwner } from '@mission-platform/tsdown-config';
 
 import {
   defineTsdownForgeComponentsAll,
@@ -14,7 +16,6 @@ import {
   tsdownForgeComponentPlugins,
 } from './tsdown';
 
-import type { FrameworkOutputPlugin } from '@mission-platform/forge-plugin-api';
 import type { TsdownPlugin, UserConfig } from 'tsdown';
 
 type ForgeTsdownPlugin = TsdownPlugin & {

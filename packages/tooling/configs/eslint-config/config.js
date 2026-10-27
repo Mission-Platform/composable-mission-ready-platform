@@ -345,6 +345,78 @@ const missionTypeScriptPlugin = {
         };
       },
     },
+    'compiler-safe-codegen': {
+      meta: {
+        type: 'problem',
+        docs: {
+          description: 'Disallow eval, Function constructor, and vm execution in compiler and platform sources.',
+        },
+        schema: [],
+        messages: {
+          noEval: 'Unexpected eval(). Dynamic evaluation is prohibited in compiler transformers and platform sources.',
+          noFunctionConstructor:
+            'Unexpected new Function(). Dynamic function synthesis is prohibited; use static functions.',
+          noVmExecution: 'Unexpected vm execution ({{method}}). Dynamic VM code execution is prohibited.',
+        },
+      },
+      create(context) {
+        return {
+          CallExpression(node) {
+            if (node.callee?.type === 'Identifier' && node.callee.name === 'eval') {
+              context.report({ node, messageId: 'noEval' });
+              return;
+            }
+            if (
+              node.callee?.type === 'MemberExpression' &&
+              node.callee.object?.name === 'vm' &&
+              ['runInContext', 'runInNewContext', 'runInThisContext'].includes(node.callee.property?.name)
+            ) {
+              context.report({
+                node,
+                messageId: 'noVmExecution',
+                data: { method: node.callee.property.name },
+              });
+            }
+          },
+          NewExpression(node) {
+            if (node.callee?.type === 'Identifier' && node.callee.name === 'Function') {
+              context.report({ node, messageId: 'noFunctionConstructor' });
+            }
+          },
+        };
+      },
+    },
+    'compiler-no-dynamic-imports': {
+      meta: {
+        type: 'problem',
+        docs: {
+          description:
+            'Disallow dynamic import or require with non-literal expressions in compiler transformers and packages.',
+        },
+        schema: [],
+        messages: {
+          noDynamicImport:
+            'Unexpected dynamic import/require with non-literal expression. Use static imports or explicit allowlists.',
+        },
+      },
+      create(context) {
+        return {
+          ImportExpression(node) {
+            if (node.source && node.source.type !== 'Literal' && node.source.type !== 'StringLiteral') {
+              context.report({ node, messageId: 'noDynamicImport' });
+            }
+          },
+          CallExpression(node) {
+            if (node.callee?.type === 'Identifier' && node.callee.name === 'require' && node.arguments.length > 0) {
+              const arg = node.arguments[0];
+              if (arg.type !== 'Literal' && arg.type !== 'StringLiteral') {
+                context.report({ node, messageId: 'noDynamicImport' });
+              }
+            }
+          },
+        };
+      },
+    },
   },
 };
 
@@ -407,10 +479,20 @@ const config = [
       '@typescript-eslint/prefer-satisfies': 'warn',
       '@typescript-eslint/no-unconstrained-generics': 'warn',
       '@typescript-eslint/no-implicit-unknown': 'warn',
+      '@typescript-eslint/compiler-safe-codegen': 'error',
+      '@typescript-eslint/compiler-no-dynamic-imports': 'warn',
       'import-x/order': [
         'error',
         {
           groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
+          pathGroups: [
+            {
+              pattern: '@mission-platform/**',
+              group: 'internal',
+              position: 'before',
+            },
+          ],
+          pathGroupsExcludedImportTypes: ['builtin'],
           'newlines-between': 'always',
           alphabetize: { order: 'asc', caseInsensitive: true },
         },
@@ -444,10 +526,20 @@ const config = [
       '@typescript-eslint/prefer-satisfies': 'warn',
       '@typescript-eslint/no-unconstrained-generics': 'warn',
       '@typescript-eslint/no-implicit-unknown': 'warn',
+      '@typescript-eslint/compiler-safe-codegen': 'error',
+      '@typescript-eslint/compiler-no-dynamic-imports': 'warn',
       'import-x/order': [
         'error',
         {
           groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
+          pathGroups: [
+            {
+              pattern: '@mission-platform/**',
+              group: 'internal',
+              position: 'before',
+            },
+          ],
+          pathGroupsExcludedImportTypes: ['builtin'],
           'newlines-between': 'always',
           alphabetize: { order: 'asc', caseInsensitive: true },
         },
@@ -494,10 +586,20 @@ const config = [
       '@typescript-eslint/prefer-satisfies': 'warn',
       '@typescript-eslint/no-unconstrained-generics': 'warn',
       '@typescript-eslint/no-implicit-unknown': 'warn',
+      '@typescript-eslint/compiler-safe-codegen': 'error',
+      '@typescript-eslint/compiler-no-dynamic-imports': 'warn',
       'import-x/order': [
         'error',
         {
           groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
+          pathGroups: [
+            {
+              pattern: '@mission-platform/**',
+              group: 'internal',
+              position: 'before',
+            },
+          ],
+          pathGroupsExcludedImportTypes: ['builtin'],
           'newlines-between': 'always',
           alphabetize: { order: 'asc', caseInsensitive: true },
         },
@@ -505,6 +607,29 @@ const config = [
       'import-x/no-duplicates': 'error',
       'import-x/first': 'error',
       'import-x/no-useless-path-segments': ['error', { noUselessIndex: true }],
+    },
+  },
+  {
+    name: 'mission-platform/compiler-transformers',
+    files: [
+      'packages/compiler/**/*.ts',
+      'packages/compiler/**/*.tsx',
+      'packages/compiler/**/*.js',
+      '**/transformers/**/*.ts',
+      '**/transformers/**/*.tsx',
+      '**/transformers/**/*.js',
+    ],
+    rules: {
+      '@typescript-eslint/compiler-safe-codegen': 'error',
+      '@typescript-eslint/compiler-no-dynamic-imports': 'error',
+    },
+  },
+  {
+    name: 'mission-platform/tests-overrides',
+    files: ['**/*.spec.ts', '**/*.spec.tsx', '**/*.spec.js', '**/*.test.ts', '**/*.test.tsx', '**/*.test.js'],
+    rules: {
+      '@typescript-eslint/compiler-safe-codegen': 'off',
+      '@typescript-eslint/compiler-no-dynamic-imports': 'off',
     },
   },
   {
@@ -521,6 +646,14 @@ const config = [
         'error',
         {
           groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
+          pathGroups: [
+            {
+              pattern: '@mission-platform/**',
+              group: 'internal',
+              position: 'before',
+            },
+          ],
+          pathGroupsExcludedImportTypes: ['builtin'],
           'newlines-between': 'always',
           alphabetize: { order: 'asc', caseInsensitive: true },
         },

@@ -1,12 +1,7 @@
-import {
-  analyzeFlint as analyzeFlintSource,
-  createDiagnostic,
-  prepareFlintFrontend,
-  validateFlint,
-  type FlintDiagnostic,
-  type FlintSelfHostedStageReport,
-} from '@mission-platform/flint';
+import { analyzeFlint as analyzeFlintSource, prepareFlintFrontend } from '@mission-platform/flint-analysis';
+import { createDiagnostic, type FlintDiagnostic, type FlintSelfHostedStageReport } from '@mission-platform/flint-ast';
 import { runFlintSelfHostedLexStage } from '@mission-platform/flint-runtime';
+import { validateFlint } from '@mission-platform/flint-types';
 
 import { normalizeFlintWorkspaceOptions } from './options.js';
 import { rangeFromSpan } from './positions.js';

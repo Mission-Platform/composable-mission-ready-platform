@@ -11,7 +11,6 @@ import {
   EMPTY_SPAN,
   sourceBacked,
 } from "@mission-platform/forge-plugin-api";
-
 import type {
   DynamicNodeIntention,
   EffectIntention,

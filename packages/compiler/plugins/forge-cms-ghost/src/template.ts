@@ -28,14 +28,13 @@ import {
   slotFields,
   toKebabName,
 } from "@mission-platform/forge-cms-plugin-api";
-
-import { FORGE_GHOST_FIELD_UNSUPPORTED, ghostWarning } from "./diagnostics.js";
-
 import type {
   ContentComponent,
   ContentField,
 } from "@mission-platform/forge-cms-plugin-api";
 import type { CompilerDiagnostic } from "@mission-platform/forge-plugin-api";
+
+import { FORGE_GHOST_FIELD_UNSUPPORTED, ghostWarning } from "./diagnostics.js";
 
 /** The partial name a component is invoked under (`{{> forge/badge}}`). */
 export function ghostPartialName(component: ContentComponent): string {

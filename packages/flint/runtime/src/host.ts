@@ -1,11 +1,11 @@
-import { mapCTypeToWasmValType } from '@mission-platform/flint-c-abi';
+import type { FlintPrimitiveType } from '@mission-platform/flint';
+import { mapCTypeToWasmValType, type FlintAbiFunction, type FlintAbiManifest } from '@mission-platform/flint-c-abi';
 
 import { assertValidFlintAbiManifest, equalFunction } from './abi.js';
 import { createFlintLogger, type FlintLogger } from './logging.js';
 import { toFlintHostError, FlintTrap } from './traps.js';
 
 import type { FlintMultiMemory } from './memory.js';
-import type { FlintAbiFunction, FlintAbiManifest, FlintPrimitiveType } from '@mission-platform/flint';
 
 /**
  * Callable host function invoked by guest runtime execution.

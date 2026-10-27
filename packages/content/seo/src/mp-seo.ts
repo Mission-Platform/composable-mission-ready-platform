@@ -1,4 +1,4 @@
-import { computed, defineComponent, type PropType } from 'vue';
+import { computed, defineComponent, type DefineComponent, type PropType } from 'vue';
 
 import { useSeo } from './composables/use-seo/use-seo';
 
@@ -6,6 +6,12 @@ import type { JsonLd, OpenGraphMetadata, PageMetadata, SeoMetadata } from './typ
 
 /** Stable, hoisted render function for the renderless `<Seo>` component. */
 const renderNothing = (): undefined => undefined;
+
+interface MpSeoProps {
+  readonly page?: PageMetadata;
+  readonly openGraph?: OpenGraphMetadata;
+  readonly jsonLd?: JsonLd | JsonLd[];
+}
 
 /**
  * Renderless `<Seo>` component — a declarative wrapper around {@link useSeo}.
@@ -21,7 +27,7 @@ const renderNothing = (): undefined => undefined;
  *   :json-ld="[webSite({ name: 'X', url: 'https://x.test' })]"
  * />
  */
-export const MpSeo = defineComponent({
+export const MpSeo: DefineComponent<MpSeoProps> = defineComponent({
   name: 'MpSeo',
   props: {
     /** Standard page metadata block. */

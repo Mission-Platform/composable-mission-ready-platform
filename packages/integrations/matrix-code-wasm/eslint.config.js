@@ -19,8 +19,6 @@ export default [
       'unicorn/numeric-separators-style': 'off',
       'unicorn/no-for-loop': 'off',
       'unicorn/no-array-for-each': 'off',
-      'import-x/no-useless-path-segments': 'off',
-      'import-x/order': 'off',
     },
   },
 ];

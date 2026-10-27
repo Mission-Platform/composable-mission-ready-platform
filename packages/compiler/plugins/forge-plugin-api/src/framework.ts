@@ -30,11 +30,20 @@ export interface GeneratedExtraModule {
   readonly lang: OutputLanguage;
 }
 
+/** A stylesheet emitted alongside a generated source module. */
+export interface GeneratedStyleArtifact {
+  readonly fileName: string;
+  readonly code: string;
+  readonly lang: "css";
+}
+
 /** The source artifact returned by a framework output plugin. */
 export interface GeneratedModule {
   readonly code: string;
   readonly lang: OutputLanguage;
   readonly extraModules?: readonly GeneratedExtraModule[];
+  /** Optional companion stylesheet retained by targets that cannot embed styles. */
+  readonly style?: GeneratedStyleArtifact;
   /** Optional source map retained by chained compiler passes. */
   readonly map?: string | Readonly<Record<string, unknown>>;
   /** Optional declaration modules retained by chained compiler passes. */

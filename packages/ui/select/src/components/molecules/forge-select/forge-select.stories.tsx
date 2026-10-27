@@ -1,9 +1,9 @@
 import { useArgs } from 'storybook/preview-api';
 import { expect, userEvent, within } from 'storybook/test';
 
-import { ForgeSelect } from './forge-select';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+import { ForgeSelect } from './forge-select';
 
 /**
  * `ForgeSelect` is the write-once `ForgeSelect` component of `@mission-platform/select`. By default it is **searchable**: the trigger is

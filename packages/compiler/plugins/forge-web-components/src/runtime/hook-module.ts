@@ -29,17 +29,16 @@
  * Every other statement (interfaces, type aliases, the composable/context
  * declarations themselves) is carried over verbatim from its source text.
  */
+import type {
+  GenericImport,
+  SemanticModule,
+} from "@mission-platform/forge-plugin-api";
 import {
   LOCAL_JSX_TYPE_NAMES,
   LOCAL_JSX_TYPES_MODULE,
   NEUTRAL_COMPILE_TIME_MARKERS,
   NEUTRAL_MODULE,
 } from "@mission-platform/forge-plugin-api/compiler/ast.js";
-
-import type {
-  GenericImport,
-  SemanticModule,
-} from "@mission-platform/forge-plugin-api";
 
 /** Rewrite a relative sibling import to the flat generated layout (`./<base>`). */
 function flattenSiblingSpecifier(specifier: string): string {

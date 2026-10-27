@@ -1,3 +1,5 @@
+import type { JsxFramework } from '@mission-platform/forge-plugin-api';
+
 import {
   deriveDisambiguatedFolderFromDir,
   type DiscoveredComponent,
@@ -7,7 +9,6 @@ import {
 } from '../compiler/discover.js';
 
 import type { FrameworkSourceTarget } from '../generate.js';
-import type { JsxFramework } from '@mission-platform/forge-plugin-api';
 
 export interface TypeOrigin {
   /** The flat-tree module base that exports the type (a component folder or a copied helper). */

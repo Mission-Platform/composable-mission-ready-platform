@@ -6,6 +6,22 @@ Generated from public source declarations in `@mission-platform/flint-c-abi`.
 
 ## `src/manifest`
 
+### canonicalizeAbiManifest
+
+**Kind:** function
+
+```typescript
+function canonicalizeAbiManifest(manifest: T): T;
+```
+
+Normalizes an arbitrary ABI manifest object into a canonical key-sorted data structure.
+
+#### Parameters
+
+| Name     | Type | Description |
+| -------- | ---- | ----------- |
+| manifest | T    |             |
+
 ### CborDecodeOptions
 
 **Kind:** interface
@@ -14,7 +30,7 @@ Generated from public source declarations in `@mission-platform/flint-c-abi`.
 export interface CborDecodeOptions
 ```
 
-Options configuring CBOR decoding behavior and validation checks.
+No description provided.
 
 ### decodeCbor
 
@@ -24,7 +40,7 @@ Options configuring CBOR decoding behavior and validation checks.
 function decodeCbor(bytes: Uint8Array, options: CborDecodeOptions = {}): T;
 ```
 
-Decodes canonical binary CBOR bytes into a JavaScript object structure.
+No description provided.
 
 #### Parameters
 
@@ -44,7 +60,7 @@ function decodeCborAbiManifest(
 ): T;
 ```
 
-Decodes a binary CBOR byte array into a Flint ABI Manifest.
+No description provided.
 
 #### Parameters
 
@@ -77,7 +93,7 @@ Encodes arbitrary JavaScript primitive, array, and object data structures into c
 function encodeCborAbiManifest(manifest: T): Uint8Array;
 ```
 
-Encodes a Flint ABI Manifest directly to binary CBOR byte array.
+No description provided.
 
 #### Parameters
 
@@ -85,15 +101,369 @@ Encodes a Flint ABI Manifest directly to binary CBOR byte array.
 | -------- | ---- | ----------- |
 | manifest | T    |             |
 
-### FlintCAbiManifest
+### FLINT_ABI_VERSION
+
+**Kind:** constant
+
+```typescript
+export const FLINT_ABI_VERSION;
+```
+
+Binary ABI manifest format version emitted by the compiler.
+
+### FLINT_LANGUAGE_VERSION
+
+**Kind:** constant
+
+```typescript
+export const FLINT_LANGUAGE_VERSION;
+```
+
+Current language specification version supported by the Flint compiler.
+
+### FlintAbiFunction
 
 **Kind:** interface
 
 ```typescript
-export interface FlintCAbiManifest
+export interface FlintAbiFunction
 ```
 
-Structural representation of a Flint ABI Manifest.
+ABI specification for an exported or imported function within a WebAssembly module.
+
+### FlintAbiManifest
+
+**Kind:** interface
+
+```typescript
+export interface FlintAbiManifest
+```
+
+Canonical ABI manifest describing module interface, memory, layouts, and capabilities.
+
+### FlintAbiParameter
+
+**Kind:** interface
+
+```typescript
+export interface FlintAbiParameter
+```
+
+Describes a single parameter in an exported or imported ABI function signature.
+
+### FlintAbiVersion
+
+**Kind:** type
+
+```typescript
+export type FlintAbiVersion = typeof FLINT_ABI_VERSION;
+```
+
+Type representation of the current ABI version string.
+
+### FlintAggregateFieldLayout
+
+**Kind:** interface
+
+```typescript
+export interface FlintAggregateFieldLayout
+```
+
+Memory layout descriptor for a single field within a struct or enum variant.
+
+### FlintAggregateLayout
+
+**Kind:** interface
+
+```typescript
+export interface FlintAggregateLayout
+```
+
+Binary layout and alignment descriptor for an aggregate struct or enum type.
+
+### FlintAsyncCapability
+
+**Kind:** type
+
+```typescript
+export type FlintAsyncCapability = "scheduler.microtask" | "scheduler.worker";
+```
+
+No description provided.
+
+### FlintAsyncCompilationContract
+
+**Kind:** interface
+
+```typescript
+export interface FlintAsyncCompilationContract
+```
+
+No description provided.
+
+### FlintCAbiManifest
+
+**Kind:** type
+
+```typescript
+export type FlintCAbiManifest = | FlintAbiManifest |
+```
+
+Structural representation of a Flint ABI Manifest alias.
+
+### FlintCollectionLayout
+
+**Kind:** interface
+
+```typescript
+export interface FlintCollectionLayout
+```
+
+Layout and representation specification for arrays and vectors.
+
+### FlintDynamicLinkMetadata
+
+**Kind:** interface
+
+```typescript
+export interface FlintDynamicLinkMetadata
+```
+
+Stable metadata consumed by dynamic loaders and their dispatch caches.
+
+### FlintDynamicModuleBinding
+
+**Kind:** interface
+
+```typescript
+export interface FlintDynamicModuleBinding
+```
+
+Manifest-visible binding information for an explicitly dynamic module.
+
+### FlintEnumMetadata
+
+**Kind:** interface
+
+```typescript
+export interface FlintEnumMetadata
+```
+
+Exported enum metadata describing variant names and integer tags.
+
+### FlintForeignCapability
+
+**Kind:** interface
+
+```typescript
+export interface FlintForeignCapability
+```
+
+Foreign capability descriptor recorded in the ABI manifest.
+
+### FlintForeignFunction
+
+**Kind:** interface
+
+```typescript
+export interface FlintForeignFunction
+```
+
+Individual foreign function descriptor within an ABI manifest foreign capability.
+
+### FlintHostImport
+
+**Kind:** interface
+
+```typescript
+export interface FlintHostImport
+```
+
+Specification for a host capability imported into a Flint module.
+
+### FlintIteratorBoundaryDescriptor
+
+**Kind:** interface
+
+```typescript
+export interface FlintIteratorBoundaryDescriptor
+```
+
+Boundary descriptor for iterators crossing module or generic boundaries.
+
+### FlintLanguageVersion
+
+**Kind:** type
+
+```typescript
+export type FlintLanguageVersion = typeof FLINT_LANGUAGE_VERSION;
+```
+
+Type representation of the current language version string.
+
+### FlintLinkedExport
+
+**Kind:** interface
+
+```typescript
+export interface FlintLinkedExport
+```
+
+Export specification for a function linked across multi-module boundaries.
+
+### FlintLinkMode
+
+**Kind:** type
+
+```typescript
+export type FlintLinkMode = "static" | "dynamic";
+```
+
+No description provided.
+
+### FlintLinkOptimizationProfile
+
+**Kind:** type
+
+```typescript
+export type FlintLinkOptimizationProfile =
+  | "standard"
+  | "size"
+  | "speed"
+  | "debug"
+  | "dynamic-conservative"
+  | "static-thinlto"
+  | "static-aggressive";
+```
+
+No description provided.
+
+### FlintLinkProfile
+
+**Kind:** type
+
+```typescript
+export type FlintLinkProfile =
+  | "standard"
+  | "minimal"
+  | "full"
+  | "dynamic"
+  | "static"
+  | "monolithic"
+  | "cross-package";
+```
+
+No description provided.
+
+### FlintMemoryLayout
+
+**Kind:** interface
+
+```typescript
+export interface FlintMemoryLayout
+```
+
+Linear memory configuration and memory allocator contract emitted in the ABI manifest.
+
+### FlintRttiMetadata
+
+**Kind:** interface
+
+```typescript
+export interface FlintRttiMetadata
+```
+
+Opt-in Runtime Type Information (RTTI) metadata table in the ABI manifest.
+
+### FlintSoNBoundsChecks
+
+**Kind:** type
+
+```typescript
+export type FlintSoNBoundsChecks =
+  "runtime" | "proven-safe" | "excluded-by-profile";
+```
+
+No description provided.
+
+### FlintSourceImport
+
+**Kind:** interface
+
+```typescript
+export interface FlintSourceImport
+```
+
+Source import declaration representing a dependency on another Flint module.
+
+### FlintSpecialization
+
+**Kind:** interface
+
+```typescript
+export interface FlintSpecialization
+```
+
+Monomorphized specialization mapping for generic types.
+
+### FlintStandardLibraryDescriptor
+
+**Kind:** interface
+
+```typescript
+export interface FlintStandardLibraryDescriptor
+```
+
+No description provided.
+
+### FlintTargetFeatures
+
+**Kind:** interface
+
+```typescript
+export interface FlintTargetFeatures
+```
+
+No description provided.
+
+### FlintValueRepresentation
+
+**Kind:** type
+
+```typescript
+export type FlintValueRepresentation =
+  | "bool-i32"
+  | "f32"
+  | "f64"
+  | "i32"
+  | "i64"
+  | "pointer-length-u32"
+  | "pointer-length-u64"
+  | "u32"
+  | "u64"
+  | "unit";
+```
+
+Binary encoding representation formats for primitive and compound values.
+
+### validateAbiManifest
+
+**Kind:** function
+
+```typescript
+function validateAbiManifest(manifest: FlintCAbiManifest): {
+  readonly valid: boolean;
+  readonly errors: readonly string[];
+};
+```
+
+Validates structural invariants of a Flint ABI manifest.
+
+#### Parameters
+
+| Name     | Type              | Description |
+| -------- | ----------------- | ----------- |
+| manifest | FlintCAbiManifest |             |
 
 ## `src/mappings`
 

@@ -1,5 +1,4 @@
 import { ForgeBentoLayout } from '@mission-platform/layouts';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 const meta = {

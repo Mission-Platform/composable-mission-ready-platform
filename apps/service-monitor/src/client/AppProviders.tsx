@@ -1,8 +1,9 @@
 'use client';
 
+import { type ReactNode, useMemo } from 'react';
+
 import { ForgeI18NProvider } from '@mission-platform/i18n';
 import { ForgeThemeProvider } from '@mission-platform/theme';
-import { type ReactNode, useMemo } from 'react';
 
 import { createAppI18n } from '@/app/i18n';
 

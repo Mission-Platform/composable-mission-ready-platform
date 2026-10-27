@@ -1,10 +1,12 @@
-import { toReactComponent } from '@mission-platform/forge-adapters/react';
-import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 import { createApp, createSSRApp, h as vueH, nextTick } from 'vue';
 import { renderToString } from 'vue/server-renderer';
+
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
+import { ForgeIconFlag } from '@mission-platform/icons';
 
 import { ForgeSelect } from './forge-select';
 
@@ -92,6 +94,26 @@ describe('ForgeSelect authors the same component for React and Vue', () => {
       // The selected option's label seeds the search field so it shows the value.
       expect(html).toContain('value="Green"');
     }
+  });
+
+  it('renders option icons as elements instead of interpolating them as text in Vue', async () => {
+    const properties = {
+      options: [
+        {
+          icon: ForgeIconFlag({ countryCode: 'AU', size: 'sm' }),
+          label: 'English',
+          value: 'en',
+        },
+      ],
+      id: 'sel-with-icons',
+      modelValue: 'en',
+      open: true,
+      searchable: false,
+    };
+
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueSelect, properties) }));
+
+    expect(vue).toContain('English');
   });
 
   it('falls back to a plain button trigger when searchable is disabled on both frameworks', async () => {

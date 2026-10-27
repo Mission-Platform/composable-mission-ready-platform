@@ -1,8 +1,8 @@
+import type { MpResolvedLocation } from '@mission-platform/router';
+
 import { descriptionForSlug, getDocument, titleForSlug } from '../documentation';
 import { resolveDocumentationLocale } from '../i18n';
 import { applyDocsRouteSeo, buildDocumentSeo, buildSearchSeo } from '../ssg/seo';
-
-import type { MpResolvedLocation } from '@mission-platform/router';
 
 function slugFromRoute(route: MpResolvedLocation): string {
   const value = route.params.slug;

@@ -1,6 +1,11 @@
 import { env } from 'cloudflare:workers';
 
-import { authorizeMonitorRequest, handleMonitorSession } from '@/app/auth';
+import {
+  authorizeMonitorRequest,
+  handleMonitorSession,
+  readRequestTextWithLimit,
+  RequestBodyTooLargeError,
+} from '@/app/auth';
 import {
   resolveIntervalSeconds,
   resolveRetentionMs,
@@ -30,7 +35,7 @@ function json(body: unknown, init?: ResponseInit): Response {
 }
 
 /** Return the authentication failure for an administrative API request. */
-function requireAuthentication(request: Request): Response | null {
+async function requireAuthentication(request: Request): Promise<Response | null> {
   return authorizeMonitorRequest(request, env.MONITOR_API_TOKEN);
 }
 
@@ -40,15 +45,13 @@ async function readJsonBody(request: Request): Promise<Record<string, unknown> |
     return json({ error: 'Request body is too large.' }, { status: 413 });
   }
   try {
-    const text = await request.text();
-    if (new TextEncoder().encode(text).byteLength > MAX_MONITOR_REQUEST_BYTES) {
-      return json({ error: 'Request body is too large.' }, { status: 413 });
-    }
+    const text = await readRequestTextWithLimit(request, MAX_MONITOR_REQUEST_BYTES);
     const body = JSON.parse(text) as unknown;
     return typeof body === 'object' && body !== null && !Array.isArray(body)
       ? (body as Record<string, unknown>)
       : json({ error: 'Request body must be a JSON object.' }, { status: 400 });
-  } catch {
+  } catch (error) {
+    if (error instanceof RequestBodyTooLargeError) return json({ error: error.message }, { status: 413 });
     return json({ error: 'Request body must be valid JSON.' }, { status: 400 });
   }
 }
@@ -110,7 +113,7 @@ export async function handleMetrics(request: Request): Promise<Response> {
  * seeding the dashboard on first load instead of waiting for the next alarm.
  */
 export async function handleCheckNow(request: Request): Promise<Response> {
-  const authenticationFailure = requireAuthentication(request);
+  const authenticationFailure = await requireAuthentication(request);
   if (authenticationFailure) return authenticationFailure;
 
   const monitor = getMonitor();
@@ -138,7 +141,7 @@ export async function handleMonitors(): Promise<Response> {
  * probed immediately so the change is reflected without waiting for the alarm.
  */
 export async function handleMonitorUpsert(request: Request): Promise<Response> {
-  const authenticationFailure = requireAuthentication(request);
+  const authenticationFailure = await requireAuthentication(request);
   if (authenticationFailure) return authenticationFailure;
 
   const bodyResult = await readJsonBody(request);
@@ -162,7 +165,7 @@ export async function handleMonitorUpsert(request: Request): Promise<Response> {
  * `DELETE /api/monitors?id=<id>` — remove a monitor and its stored samples.
  */
 export async function handleMonitorDelete(request: Request): Promise<Response> {
-  const authenticationFailure = requireAuthentication(request);
+  const authenticationFailure = await requireAuthentication(request);
   if (authenticationFailure) return authenticationFailure;
 
   const url = new URL(request.url);
@@ -181,7 +184,7 @@ export async function handleMonitorDelete(request: Request): Promise<Response> {
  * the HTTP method so a single route can serve the whole CRUD surface.
  */
 export async function handleMonitorsRoute(request: Request): Promise<Response> {
-  const authenticationFailure = requireAuthentication(request);
+  const authenticationFailure = await requireAuthentication(request);
   if (authenticationFailure) return authenticationFailure;
 
   switch (request.method) {
@@ -203,7 +206,7 @@ export async function handleMonitorsRoute(request: Request): Promise<Response> {
 
 /** Runtime incident listing, reporting, and status updates. */
 export async function handleIncidentsRoute(request: Request): Promise<Response> {
-  const authenticationFailure = requireAuthentication(request);
+  const authenticationFailure = await requireAuthentication(request);
   if (authenticationFailure) return authenticationFailure;
 
   const monitor = getMonitor();
@@ -260,7 +263,7 @@ export async function handleIncidentsRoute(request: Request): Promise<Response> 
 
 /** Planned maintenance listing, creation, and updates. */
 export async function handleMaintenanceRoute(request: Request): Promise<Response> {
-  const authenticationFailure = requireAuthentication(request);
+  const authenticationFailure = await requireAuthentication(request);
   if (authenticationFailure) return authenticationFailure;
 
   const monitor = getMonitor();
@@ -344,7 +347,7 @@ export async function handleSpeedSeries(request: Request): Promise<Response> {
  * provider and return the fresh results.
  */
 export async function handleSpeedRun(request: Request): Promise<Response> {
-  const authenticationFailure = requireAuthentication(request);
+  const authenticationFailure = await requireAuthentication(request);
   if (authenticationFailure) return authenticationFailure;
 
   const monitor = getMonitor();

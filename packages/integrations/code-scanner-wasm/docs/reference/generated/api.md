@@ -11,7 +11,7 @@ Generated from public source declarations in `@mission-platform/code-scanner-was
 **Kind:** function
 
 ```typescript
-function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>;
+function blobToImageData(blob: Blob, roi: number = 1): Promise<ImageLike>;
 ```
 
 Decode an image `Blob`/`File` into an {@link ImageLike} (RGBA pixels). Uses
@@ -19,10 +19,10 @@ Decode an image `Blob`/`File` into an {@link ImageLike} (RGBA pixels). Uses
 
 #### Parameters
 
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| blob | Blob |             |
-| roi  |      |             |
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| blob | Blob   |             |
+| roi  | number |             |
 
 ### scanFile
 
@@ -65,7 +65,7 @@ asynchronously — safe in any environment (no inlined binary required).
 **Kind:** function
 
 ```typescript
-function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike;
+function videoFrameToImageData(video: HTMLVideoElement, roi: number = DEFAULT_ROI): ImageLike;
 ```
 
 Capture the current frame of a playing `<video>` element as an
@@ -79,7 +79,7 @@ reticle size the UI shows the user greatly raises the hit rate.
 | Name  | Type             | Description |
 | ----- | ---------------- | ----------- |
 | video | HTMLVideoElement |             |
-| roi   |                  |             |
+| roi   | number           |             |
 
 ## `src/debug`
 
@@ -139,8 +139,8 @@ Enable or disable the scanner's JS-side diagnostic logging at runtime.
 ```typescript
 function contrastStretchLuma(
   luma: LumaImage,
-  lowPercentile = DEFAULT_LOW_PERCENTILE,
-  highPercentile = DEFAULT_HIGH_PERCENTILE,
+  lowPercentile: number = DEFAULT_LOW_PERCENTILE,
+  highPercentile: number = DEFAULT_HIGH_PERCENTILE,
 ): LumaImage;
 ```
 
@@ -148,24 +148,13 @@ Contrast-stretch a {@link LumaImage}, mapping its `lowPercentile`..`highPercenti
 intensity range onto the full `0..255` span (values outside the range are
 clamped). Returns a **new** image; the input is left untouched.
 
-The wasm binariser picks a single global Otsu threshold, which separates a
-clean, bimodal histogram best. Uploaded images usually are; live camera
-frames often are not — glare, uneven lighting and low contrast squash the
-histogram so the dark modules and light background bleed together. Stretching
-the dynamic range first re-separates them without touching the threshold
-logic, which is exactly what the 1D-barcode and Data Matrix locators (that
-rely on the ink bounding box) need.
-
-A degenerate (flat) frame — where the two percentiles collapse to the same
-value — is returned unchanged, since there is nothing to stretch.
-
 #### Parameters
 
 | Name           | Type      | Description |
 | -------------- | --------- | ----------- |
 | luma           | LumaImage |             |
-| lowPercentile  |           |             |
-| highPercentile |           |             |
+| lowPercentile  | number    |             |
+| highPercentile | number    |             |
 
 ### imageDataToContrastStretchLuma
 
@@ -200,16 +189,6 @@ single-channel {@link LumaImage} using the Rec. 601 luma weights
 | Name  | Type      | Description |
 | ----- | --------- | ----------- |
 | image | ImageLike |             |
-
-### LumaImage
-
-**Kind:** interface
-
-```typescript
-export interface LumaImage
-```
-
-A single-channel grayscale image: `width * height` luma bytes.
 
 ## `src/scanner/index`
 

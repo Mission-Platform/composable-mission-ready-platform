@@ -1,6 +1,7 @@
-import { Fragment, type MpChild, type MpElement, type MpPropertyBag } from '@mission-platform/forge-jsx';
 import { createComponent, type Component, type JSX } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
+
+import { Fragment, type MpChild, type MpElement, type MpPropertyBag } from '@mission-platform/forge-jsx';
 
 import type { EmailNode } from '../render';
 

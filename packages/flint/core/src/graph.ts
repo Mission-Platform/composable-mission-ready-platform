@@ -1,16 +1,17 @@
+import type { FlintModule } from '@mission-platform/flint-ast';
+import { parseFlint } from '@mission-platform/flint-parser';
+import { checkFlint } from '@mission-platform/flint-types';
+
 import { createDiagnostic, type FlintDiagnostic } from './diagnostics.js';
 import { deriveFlintModuleId, normalizeFlintFileId } from './identity.js';
 import { resolveFlintImportTypeEnvironment } from './module-types.js';
-import { parseFlint } from './parser.js';
-import { checkFlint } from './type-checker.js';
-
-import type { FlintModule } from './ast.js';
 
 /**
  * Linking mode specifying whether dependencies are resolved statically (bundled
  * into a single component) or dynamically (via host-level runtime imports).
  */
 export type FlintLinkMode = 'static' | 'dynamic';
+export type FlintLinkProfile = 'standard' | 'minimal' | 'full' | 'dynamic' | 'static' | 'monolithic' | 'cross-package';
 
 /**
  * Represents a project boundary containing a file root and derived identifier.
@@ -76,7 +77,7 @@ export interface FlintForeignObjectReference {
 export interface FlintLinkConfiguration {
   readonly projectRoots?: readonly string[];
   /** Selects the cross-project packaging policy when no explicit mode exists. */
-  readonly linkProfile?: FlintLinkMode;
+  readonly linkProfile?: FlintLinkProfile;
   readonly defaultLinkMode?: FlintLinkMode;
   readonly crossProjectLinkMode?: FlintLinkMode;
   readonly linkModes?: Readonly<Record<string, FlintLinkMode>>;
@@ -177,7 +178,11 @@ function linkModeFor(
   const configured = configuration.linkModes?.[key] ?? configuration.linkModes?.[target.projectRoot];
   if (configured !== undefined) return configured;
   if (importer.projectRoot === target.projectRoot) return 'static';
-  return configuration.crossProjectLinkMode ?? configuration.defaultLinkMode ?? configuration.linkProfile ?? 'dynamic';
+  return (
+    configuration.crossProjectLinkMode ??
+    configuration.defaultLinkMode ??
+    (configuration.linkProfile === 'static' ? 'static' : 'dynamic')
+  );
 }
 
 /**

@@ -1,6 +1,6 @@
-import { parseLocation, parseQuery, stringifyLocation, stringifyQuery } from '@mission-platform/router';
 import { Outlet, useLocation, useNavigate, useParams, type NavigateFunction, type To } from 'react-router';
 
+import { parseLocation, parseQuery, stringifyLocation, stringifyQuery } from '@mission-platform/router';
 import type {
   MpLinkOptions,
   MpNavigationOptions,

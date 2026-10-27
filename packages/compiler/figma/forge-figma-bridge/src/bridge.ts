@@ -17,12 +17,12 @@ import {
   type ForgeBridgeResponse,
 } from './protocol.js';
 
-export const DEFAULT_MAX_REQUEST_BYTES = 10 * 1024 * 1024;
-export const DEFAULT_MAX_FILE_BYTES = 5 * 1024 * 1024;
-export const DEFAULT_EXPORT_PATH = '/export';
-export const DEFAULT_ALLOWED_ORIGIN = 'https://www.figma.com';
-export const FORGE_BRIDGE_AUTH_HEADER = 'authorization';
-export const FORGE_BRIDGE_TOKEN_HEADER = 'x-forge-bridge-token';
+export const DEFAULT_MAX_REQUEST_BYTES: number = 10 * 1024 * 1024;
+export const DEFAULT_MAX_FILE_BYTES: number = 5 * 1024 * 1024;
+export const DEFAULT_EXPORT_PATH: string = '/export';
+export const DEFAULT_ALLOWED_ORIGIN: string = 'https://www.figma.com';
+export const FORGE_BRIDGE_AUTH_HEADER: string = 'authorization';
+export const FORGE_BRIDGE_TOKEN_HEADER: string = 'x-forge-bridge-token';
 
 export interface ForgeBridgeOptions {
   readonly repositoryRoots: ReadonlyMap<string, string> | Readonly<Record<string, string>>;

@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
+import type { FlintGraphNode } from '@mission-platform/flint';
+
 import { executeGraph, exportGraphArtifacts } from './compiler-worker';
 import { FlintEditorStore } from './editor-store';
-
-import type { FlintGraphNode } from '@mission-platform/flint';
 
 function addRequiredNode(
   store: FlintEditorStore,

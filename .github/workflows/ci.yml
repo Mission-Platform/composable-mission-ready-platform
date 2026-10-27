@@ -24,7 +24,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        uses: actions/checkout@v7
         with:
           # Full history lets `turbo run … --affected` diff against the base.
           fetch-depth: 0
@@ -88,8 +88,16 @@ jobs:
             exit 1
           fi
           if [[ "$base" == "$zero_sha" ]]; then
-            echo "::error::The initial push has no previous commit for Turbo's affected comparison." >&2
-            exit 1
+            if git rev-parse --verify "${head}^" >/dev/null 2>&1; then
+              base=$(git rev-parse "${head}^")
+            elif git rev-parse --verify origin/main >/dev/null 2>&1; then
+              base=$(git rev-parse origin/main)
+            elif git rev-parse --verify origin/develop >/dev/null 2>&1; then
+              base=$(git rev-parse origin/develop)
+            else
+              echo "::error::The initial push has no previous commit for Turbo's affected comparison." >&2
+              exit 1
+            fi
           fi
 
           resolve_commit "$base" "base" "$base_ref"
@@ -99,19 +107,19 @@ jobs:
           printf 'TURBO_SCM_HEAD=%s\n' "$head" >> "$GITHUB_ENV"
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@f520eceda224fe1a4aed5a2a27a194379a409996 # v6
+        uses: pnpm/action-setup@v6
         with:
           run_install: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
       - name: Cache Turborepo
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        uses: actions/cache@v6
         with:
           path: .turbo
           key: turbo-${{ runner.os }}-${{ github.job }}-${{ github.sha }}
@@ -119,14 +127,14 @@ jobs:
             turbo-${{ runner.os }}-${{ github.job }}-
             turbo-${{ runner.os }}-
 
-      - name: Set up Rust
-        uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # stable
-        with:
-          toolchain: stable
-          targets: wasm32-unknown-unknown
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Audit dependencies for critical vulnerabilities
+        run: pnpm audit --audit-level=critical
+
+      - name: Run MCP security and compliance checks
+        run: pnpm --filter @mission-platform/mcp-developer exec node --test src/security.test.ts
 
       - name: Build all affected workspaces
         run: pnpm exec turbo run build --affected
@@ -134,7 +142,23 @@ jobs:
       - name: Lint all affected workspaces
         run: pnpm exec turbo run lint --affected
 
+      - name: Style-check all affected workspaces
+        run: pnpm exec turbo run lint:style --affected
+
       # The plain test task is available in every affected workspace, including
       # workspaces that intentionally do not collect coverage.
       - name: Run affected tests
         run: pnpm exec turbo run test --affected
+
+      - name: Run Flint static analysis SARIF generation
+        run: |
+          mkdir -p artifacts
+          pnpm exec turbo run build --filter @mission-platform/flint-cli...
+          node packages/flint/cli/dist/main.js check packages/flint/core/src/fixtures/file-compile.flint --format sarif > artifacts/flint-sarif.json
+
+      - name: Upload Flint SARIF artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: flint-sarif
+          path: artifacts/flint-sarif.json
+          if-no-files-found: error

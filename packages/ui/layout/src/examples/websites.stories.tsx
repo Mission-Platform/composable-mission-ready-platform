@@ -1,8 +1,6 @@
-import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
-
 import { ForgeApplicationLayout, ForgeContainer } from '@mission-platform/layouts';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
 
 /**
  * **Websites** — example marketing / public-site layouts assembled from the

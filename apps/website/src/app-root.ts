@@ -1,7 +1,8 @@
-import { toVueComponent } from '@mission-platform/forge-adapters/vue';
-import { IconSpriteProvider } from '@mission-platform/icons';
 import { h, type VNode } from 'vue';
 import { RouterView } from 'vue-router';
+
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
+import { IconSpriteProvider } from '@mission-platform/icons';
 
 const VueIconSpriteProvider = toVueComponent(IconSpriteProvider);
 

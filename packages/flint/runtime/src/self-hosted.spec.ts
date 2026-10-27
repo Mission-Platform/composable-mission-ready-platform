@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
+import { describe, expect, it } from 'vitest';
+
 import {
   computeFlintLexStageFingerprint,
   computeFlintParserStageFingerprint,
@@ -9,7 +11,6 @@ import {
   decodeFlintSelfHostedTokens,
   lexFlint,
 } from '@mission-platform/flint';
-import { describe, expect, it } from 'vitest';
 
 import { runFlintSelfHostedCompiler, runFlintSelfHostedLexStage } from './self-hosted.ts';
 
@@ -214,4 +215,30 @@ export fn sample(value: i32) -> i32 {
     };
     expect(instantiate(documented.artifact.wasm)).toBe(instantiate(undocumented.artifact.wasm));
   });
+
+  it.each(['interpret', 'jit', 'aot'] as const)(
+    'maintains parser stage and fingerprint parity across modern constructs in %s mode',
+    (mode) => {
+      const source = `
+record Point { x: i32, y: i32 }
+comptime {
+  let initial: i32 = 42;
+}
+export fn calculate(value: i32) -> i32 {
+  switch value {
+    case 1: { return 10; }
+    default: { return 0; }
+  }
+}
+`;
+      const expectedFingerprint = computeFlintParserStageFingerprint(source);
+      const run = runFlintSelfHostedCompiler(input(source), mode);
+      const parser = run.stages?.[1];
+
+      expect(run.parity).toBe(true);
+      expect(parser?.parity).toBe(true);
+      expect(parser?.lexFingerprint).toBe(expectedFingerprint);
+      expect(parser?.expectedLexFingerprint).toBe(expectedFingerprint);
+    },
+  );
 });

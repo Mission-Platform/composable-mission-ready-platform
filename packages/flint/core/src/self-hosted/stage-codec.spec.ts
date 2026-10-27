@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { lexFlint } from '../lexer.ts';
-import { parseFlint } from '../parser.ts';
+import { lexFlint, parseFlint } from '@mission-platform/flint-parser';
 
 import {
   decodeFlintSelfHostedModule,
@@ -43,6 +42,57 @@ describe('Forge Web Script self-hosted stage codecs', () => {
     expect(new TextDecoder().decode(encoded).includes('"functions"')).toBe(false);
     const decoded = decodeFlintSelfHostedModule(encoded);
     expect(decoded).toEqual(parsed.module);
+    expect(encodeFlintSelfHostedModule(decoded)).toEqual(encoded);
+  });
+
+  it('round-trips css! companion rules and property registrations', () => {
+    const parsed = parseFlint(
+      'export fn Button() -> unit { let styles = css! { @property --forge-color { inherits: true; } .button { color: red; .label { background: red; } } }; return; }',
+      'button.flint',
+    );
+    if (parsed.module === undefined) throw new Error('Expected module to be defined');
+    const encoded = encodeFlintSelfHostedModule(parsed.module);
+    const decoded = decodeFlintSelfHostedModule(encoded);
+
+    expect(decoded.styleCompanions).toMatchObject([
+      {
+        propertyRegistrations: ['--forge-color'],
+        bindingName: 'styles',
+        rules: [
+          {
+            selector: '.button',
+            declarations: [{ property: 'color', value: 'red' }],
+            children: [{ selector: '.label', declarations: [{ property: 'background', value: 'red' }] }],
+          },
+        ],
+        classMap: [
+          {
+            className: 'button',
+            children: [{ className: 'label', children: [] }],
+          },
+        ],
+        atRules: [{ name: 'property', prelude: '--forge-color' }],
+      },
+    ]);
+    expect(encodeFlintSelfHostedModule(decoded)).toEqual(encoded);
+  });
+
+  it('round-trips canonical component file metadata and region spans', () => {
+    const parsed = parseFlint(
+      '<script>export struct Props { value: i32; }</script><template><button /></template><style>.button { color: red; }</style>',
+      'button.flintc',
+    );
+    if (parsed.module === undefined) throw new Error('Expected component module to be defined');
+
+    const encoded = encodeFlintSelfHostedModule(parsed.module);
+    const decoded = decodeFlintSelfHostedModule(encoded);
+
+    expect(decoded.fileKind).toBe('component');
+    expect(decoded.componentRegions).toEqual(parsed.module.componentRegions);
+    expect(decoded.template).toMatchObject({
+      kind: 'markup-block',
+      root: { kind: 'markup-element', tag: 'button' },
+    });
     expect(encodeFlintSelfHostedModule(decoded)).toEqual(encoded);
   });
 

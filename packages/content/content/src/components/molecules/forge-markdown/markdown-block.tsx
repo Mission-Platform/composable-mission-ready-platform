@@ -1,4 +1,5 @@
 import { ForgeTable } from '@mission-platform/components';
+import type { MpElement } from '@mission-platform/forge-jsx';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import { ForgeCodeBlock } from '../../atoms/forge-code-block';
@@ -16,7 +17,6 @@ import {
   tableRows,
 } from './markdown-utilities';
 
-import type { MpElement } from '@mission-platform/forge-jsx';
 import type { Token, Tokens } from 'marked';
 
 export interface MarkdownBlockProperties {

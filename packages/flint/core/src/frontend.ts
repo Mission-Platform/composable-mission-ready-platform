@@ -1,28 +1,41 @@
-import { createDiagnostic, diagnosticKey, type FlintDiagnostic } from './diagnostics.js';
-import { hashFlintModuleGraph, type FlintLinkConfiguration, type FlintModuleGraph } from './graph.js';
-import { normalizeFlintFileId } from './identity.js';
-import { lowerFlintIrToModule, lowerFlintToIr } from './ir.js';
-import { lexFlint } from './lexer.js';
-import { validateFlintLinks } from './linker.js';
 import {
   createFlintAbiManifest,
-  type FlintAbiFunction,
-  type FlintLinkedExport,
-  type FlintSourceImport,
-} from './manifest.js';
-import { optimizeFlintModule } from './optimizer.js';
-import { parseFlint } from './parser.js';
-import { buildFlintSoN, optimizeFlintSoN } from './son-ir.js';
-import { flintStandardLibraryIdentity } from './stdlib/regex.js';
-import { checkFlint } from './type-checker.js';
+  FlintComptimeEvaluator,
+  FlintIntrospectionEngine,
+} from '@mission-platform/flint-analysis';
+import type { FlintModule, FlintPrimitiveType } from '@mission-platform/flint-ast';
+import type { FlintAbiFunction, FlintLinkedExport, FlintSourceImport } from '@mission-platform/flint-c-abi';
+import { validateFlintLinks } from '@mission-platform/flint-linker';
+import { expandFlintMacros } from '@mission-platform/flint-macro';
+import { lexFlint, parseFlint } from '@mission-platform/flint-parser';
+import { flintStandardLibraryIdentity } from '@mission-platform/flint-regex';
+import {
+  buildFlintSoN,
+  lowerFlintIrToModule,
+  lowerFlintToIr,
+  optimizeFlintModule,
+  optimizeFlintSoN,
+} from '@mission-platform/flint-sonir';
+import { checkFlint } from '@mission-platform/flint-types';
 
-import type { FlintModule, FlintPrimitiveType } from './ast.js';
+import {
+  createDiagnostic,
+  diagnosticKey,
+  FLINT_SECURITY_SOURCE_TOO_LARGE,
+  getSourceByteLength,
+  MAX_SOURCE_INPUT_BYTES,
+  type FlintDiagnostic,
+} from './diagnostics.js';
+import { hashFlintModuleGraph, type FlintLinkConfiguration, type FlintModuleGraph } from './graph.js';
+import { normalizeFlintFileId } from './identity.js';
+
 import type {
   FlintCompileInput,
   FlintFrontendLinkMetadata,
   FlintFrontendResult,
   FlintGraphCompileInput,
   FlintLinkOptimizationProfile,
+  FlintLinkProfile,
 } from './contracts.js';
 
 /**
@@ -176,12 +189,12 @@ const emptyLinks = (): FlintFrontendLinkMetadata => ({
  */
 // skipcq: JS-R1005
 function linkOptimizationProfile(
-  profile: FlintLinkOptimizationProfile | 'static' | 'dynamic' | undefined,
+  profile: FlintLinkOptimizationProfile | FlintLinkProfile | undefined,
   linkMode: 'static' | 'dynamic' | undefined,
 ): FlintLinkOptimizationProfile {
   if (profile === 'static') return 'static-aggressive';
   if (profile === 'dynamic') return 'dynamic-conservative';
-  if (profile !== undefined) return profile;
+  if (profile === 'dynamic-conservative' || profile === 'static-aggressive') return profile;
   if (linkMode === 'static') return 'static-aggressive';
   if (linkMode === 'dynamic') return 'dynamic-conservative';
   return 'standard';
@@ -209,21 +222,69 @@ function uniqueDiagnostics(diagnostics: readonly FlintDiagnostic[]): readonly Fl
 function checkedModule(
   input: Pick<
     FlintCompileInput,
-    'source' | 'fileName' | 'root' | 'requestedCapabilities' | 'requireExports' | 'externalFunctions'
+    'source' | 'fileName' | 'root' | 'requestedCapabilities' | 'requireExports' | 'externalFunctions' | 'targetFeatures'
   >,
 ): { readonly module?: FlintModule; readonly diagnostics: readonly FlintDiagnostic[] } {
+  const sourceByteLength = getSourceByteLength(input.source);
+  if (sourceByteLength > MAX_SOURCE_INPUT_BYTES) {
+    const errorDiagnostic = createDiagnostic(
+      input.fileName,
+      'lex',
+      FLINT_SECURITY_SOURCE_TOO_LARGE,
+      `Source file exceeds maximum allowed size of ${MAX_SOURCE_INPUT_BYTES} bytes (got ${sourceByteLength}).`,
+      { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 },
+      'error',
+      undefined,
+      {
+        category: 'security',
+        blocking: true,
+        owasp: ['A05:2025-Security-Misconfiguration'],
+        cwe: ['CWE-400'],
+      },
+    );
+    return {
+      module: undefined,
+      diagnostics: [errorDiagnostic],
+    };
+  }
+
   const parsed = parseFlint(input.source, input.fileName, { root: input.root });
-  const checkedDiagnostics =
-    parsed.module === undefined
-      ? []
-      : checkFlint(parsed.module, input.fileName, {
-          requestedCapabilities: input.requestedCapabilities,
-          requireExports: input.requireExports,
-          externalFunctions: input.externalFunctions,
-        }).diagnostics;
+  if (parsed.module === undefined) {
+    return {
+      module: undefined,
+      diagnostics: parsed.diagnostics,
+    };
+  }
+
+  const expanded = expandFlintMacros(parsed.module, {
+    fileName: input.fileName,
+    targetPlatform: input.targetFeatures?.memory64 ? 'wasm64' : 'wasm32',
+  });
+
+  const comptimeDiagnostics: FlintDiagnostic[] = [];
+  if (expanded.module.comptimeStatements && expanded.module.comptimeStatements.length > 0) {
+    const targetPlatform = input.targetFeatures?.memory64 ? 'wasm64' : 'wasm32';
+    const evaluator = new FlintComptimeEvaluator(input.fileName, new FlintIntrospectionEngine(targetPlatform));
+    evaluator.registerModule(expanded.module);
+    for (const comptimeStmt of expanded.module.comptimeStatements) {
+      comptimeDiagnostics.push(...evaluator.evaluateStatement(comptimeStmt));
+    }
+  }
+
+  const checkedDiagnostics = checkFlint(expanded.module, input.fileName, {
+    requestedCapabilities: input.requestedCapabilities,
+    requireExports: input.requireExports,
+    externalFunctions: input.externalFunctions,
+  }).diagnostics;
+
   return {
-    module: parsed.module,
-    diagnostics: uniqueDiagnostics([...parsed.diagnostics, ...checkedDiagnostics]),
+    module: expanded.module,
+    diagnostics: uniqueDiagnostics([
+      ...parsed.diagnostics,
+      ...expanded.diagnostics,
+      ...comptimeDiagnostics,
+      ...checkedDiagnostics,
+    ]),
   };
 }
 
@@ -325,7 +386,7 @@ function successfulResultFor(
   const sonOptimized = optimizeFlintSoN(unoptimizedSonIr, ir, optimization);
   const optimizedIr = sonOptimized.ir;
   const optimizedModule = lowerFlintIrToModule(optimizedIr);
-  const legacyOptimized = optimizeFlintModule(module, optimization);
+  const legacyOptimized = optimizeFlintModule(ir, optimization);
   return {
     source: input.source,
     fileName: input.fileName,
@@ -336,7 +397,11 @@ function successfulResultFor(
     unoptimizedSonIr,
     sonIr: sonOptimized.module,
     sonOptimizationReport: sonOptimized.report,
-    optimizationReport: { ...legacyOptimized.report, sonPasses: sonOptimized.report.passes.map(({ name }) => name) },
+    optimizationReport: {
+      ...legacyOptimized.report,
+      mode: sonOptimized.report.mode,
+      passes: sonOptimized.report.passes.map(({ name }) => name),
+    },
     abi: createFlintAbiManifest(optimizedModule, abiManifestOptions(input, links)),
     links,
     sourceFiles,
@@ -394,7 +459,7 @@ export function prepareFlintFrontend(input: FlintCompileInput): FlintFrontendRes
     ...emptyLinks(),
     ...(profile === undefined
       ? {}
-      : { linkProfile: profile, optimizationProfile: linkOptimizationProfile(undefined, profile) }),
+      : { linkProfile: profile, optimizationProfile: linkOptimizationProfile(profile, undefined) }),
   };
   return resultFor(input, validation.module, validation.diagnostics, links, [input.fileName]);
 }

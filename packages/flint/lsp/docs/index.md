@@ -10,7 +10,7 @@ owned by `@mission-platform/flint`.
   completion, hover, semantic tokens, and supported boundaries.
 - [Build and test guide](guides/development.md) — local server checks and
   protocol fixtures.
-- [`llms.txt` in the language package](../../flint/llms.txt) — core
+- [`llms.txt` in the language package](../../llms.txt) — core
   language API notes.
 
 The server requires Node.js `>=24.0.0` and exposes the `flint-lsp`

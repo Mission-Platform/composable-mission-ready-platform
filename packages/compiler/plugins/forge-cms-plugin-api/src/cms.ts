@@ -12,15 +12,15 @@
  * adding a platform is an additive package with no edits here.
  */
 import { validateForgeOutputPlugin } from "@mission-platform/forge-plugin-api";
-import { validateForgeArtifactSegment } from "@mission-platform/vite-plugin-forge";
-
-import type { ContentComponent } from "./content-model.js";
 import type {
   CompilerDiagnostic,
   ForgeBuildAdapters,
   FrameworkOutputPlugin,
   SemanticModule,
 } from "@mission-platform/forge-plugin-api";
+import { validateForgeArtifactSegment } from "@mission-platform/vite-plugin-forge";
+
+import type { ContentComponent } from "./content-model.js";
 
 /** The role an emitted artifact plays in the target's output tree. */
 export type CmsArtifactKind =

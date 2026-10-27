@@ -19,9 +19,9 @@
  * frontend recorded for it.
  */
 
-import { hookImports } from "../transformers/imports.js";
-
 import type { SemanticModule } from "@mission-platform/forge-plugin-api";
+
+import { hookImports } from "../transformers/imports.js";
 
 /** Print a neutral hook/composable module as its Svelte-target `.ts` source. */
 export function emitSvelteHookModule(module: SemanticModule): string {
