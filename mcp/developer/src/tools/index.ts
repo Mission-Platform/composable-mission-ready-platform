@@ -7,8 +7,11 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 
+import { z } from 'zod';
+
 import {
   analyzeFlint,
+  createFlintAnalysisPolicy,
   deserializeFlintSoN,
   prepareFlintFrontend,
   type FlintAnalysisOptions,
@@ -61,7 +64,6 @@ import {
   type SecurityFinding,
   type SecurityFindingSeverity,
 } from '@mission-platform/mcp-shared/security';
-import { z } from 'zod';
 
 import { accessibilityAuditInputSchema, runAccessibilityAudit } from '../accessibility/audit.ts';
 import { COMMIT_TYPES, applyCommitPlan, createCommitPlan, type CommitPlan } from '../git/commit.ts';
@@ -347,7 +349,7 @@ function fwsAnalysisOptions(
   const normalizedPolicy: FlintAnalysisOptions['policy'] =
     policy === undefined
       ? undefined
-      : {
+      : createFlintAnalysisPolicy({
           ...(policy.profile === undefined ? {} : { profile: policy.profile }),
           ...(policy.allowedCapabilities === undefined ? {} : { allowedCapabilities: policy.allowedCapabilities }),
           ...(policy.boundsChecks === undefined ? {} : { boundsChecks: policy.boundsChecks }),
@@ -369,7 +371,7 @@ function fwsAnalysisOptions(
                     : { maxRegexInputLength: policy.limits.maxRegexInputLength }),
                 },
               }),
-        };
+        });
   const normalizedTargetFeatures: FlintAnalysisOptions['targetFeatures'] =
     targetFeatures === undefined
       ? undefined

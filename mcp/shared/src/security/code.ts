@@ -48,6 +48,7 @@ interface CodeVulnerabilityRule {
     match: RegExpExecArray,
     lineText: string,
     fullContent: string,
+    filePath?: string,
   ) => boolean;
 }
 
@@ -274,6 +275,68 @@ const VULNERABILITY_RULES: readonly CodeVulnerabilityRule[] = [
     remediation:
       'Do not pair wildcard CORS origin ("*") with credentials: true; specify trusted explicit origins.',
   },
+  {
+    id: "COMPILER_UNESCAPED_CODEGEN",
+    title: "Compiler Transformer: Unescaped code generation or AST injection",
+    severity: "high",
+    owasp: "A05:2025-Injection",
+    cwe: "CWE-94",
+    isoControl: "A.8.28",
+    pattern:
+      /(?:emitCode|generateCode|lowerExpression|transformAst|codegen|emitTemplate)\s*\([^)]*?\+\s*[^)]*?\)/gi,
+    remediation:
+      "Ensure compiler transformers and emitters escape AST strings, sanitize dynamic values, and use quoteString / quoteAttributeValue / isIdentifierName instead of raw concatenation.",
+    isMatchValid: (_match, lineText) =>
+      !lineText.includes("// safe") && !lineText.includes("// test"),
+  },
+  {
+    id: "COMPILER_UNVALIDATED_DYNAMIC_IMPORT",
+    title:
+      "Compiler Transformer: Dynamic import or require with unvalidated expression",
+    severity: "critical",
+    owasp: "A05:2025-Injection",
+    cwe: "CWE-94",
+    isoControl: "A.8.28",
+    pattern:
+      /\b(?:import|require)\s*\(\s*(?:`[^`]*\$\{[^}]+\}[^`]*`|(?!\s*['"`)])[a-zA-Z0-9_.]+(?:\s*\+\s*[^,)]+)?)\s*\)/g,
+    remediation:
+      "Validate and allowlist dynamic import or require paths in compiler transformers.",
+    isMatchValid: (_match, lineText) =>
+      !lineText.includes("// safe") && !lineText.includes("// test"),
+  },
+  {
+    id: "COMPILER_VM_EXECUTION",
+    title: "Compiler Transformer: Unsafe Node.js vm context execution",
+    severity: "critical",
+    owasp: "A05:2025-Injection",
+    cwe: "CWE-95",
+    isoControl: "A.8.28",
+    pattern:
+      /\b(?:vm\.runInContext|vm\.runInThisContext|vm\.runInNewContext|new\s+vm\.Script)\s*\(/g,
+    remediation:
+      "Avoid executing untrusted AST or compiler input with Node.js vm module (runInContext, runInNewContext, Script).",
+    isMatchValid: (_match, lineText) =>
+      !lineText.includes("// safe") && !lineText.includes("// test"),
+  },
+  {
+    id: "COMPILER_RAW_REGEX_INJECTION",
+    title:
+      "Compiler Transformer: Unescaped dynamic pattern in RegExp constructor",
+    severity: "medium",
+    owasp: "A05:2025-Injection",
+    cwe: "CWE-1333",
+    isoControl: "A.8.28",
+    pattern:
+      /new\s+RegExp\s*\(\s*(?:`[^`]*\$\{[^}]+\}[^`]*`|(?:["'][^"']*["']|[a-zA-Z0-9_.]+)\s*\+\s*[^,)]+)\s*(?:,\s*['"][gimsuy]*['"])?\s*\)/g,
+    remediation:
+      "Escape dynamic variables using an escape regex utility (e.g. escapeName / replaceAll) before passing into RegExp constructor in compiler transformers.",
+    isMatchValid: (_match, lineText, _fullContent, filePath) =>
+      !lineText.includes("escape") &&
+      !lineText.includes("replaceAll") &&
+      !lineText.includes("// safe") &&
+      !filePath?.includes(".spec.") &&
+      !filePath?.includes(".test."),
+  },
 ];
 
 /**
@@ -291,7 +354,7 @@ function matchVulnerabilityRule(
   let match: RegExpExecArray | null = rule.pattern.exec(lineText);
   while (match !== null) {
     const isValid = rule.isMatchValid
-      ? rule.isMatchValid(match, lineText, content)
+      ? rule.isMatchValid(match, lineText, content, filePath)
       : true;
     if (isValid) {
       const snippet = lineText.trim();

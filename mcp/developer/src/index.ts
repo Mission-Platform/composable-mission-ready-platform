@@ -10,9 +10,10 @@ import { realpathSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { registerResources } from '@mission-platform/mcp-shared/resources/index';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+
+import { registerResources } from '@mission-platform/mcp-shared/resources/index';
 
 import packageJson from '../package.json' with { type: 'json' };
 
@@ -89,6 +90,5 @@ function isDirectExecution(): boolean {
 // Only start the stdio transport when executed as a program, not when imported
 // by tests.
 if (isDirectExecution()) {
-  // eslint-disable-next-line unicorn/prefer-top-level-await
   void main();
 }

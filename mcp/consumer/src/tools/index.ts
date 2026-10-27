@@ -2,6 +2,8 @@
  * Tool definitions for the CONSUMER MCP server.
  * Focuses on external project setup and component consumption.
  */
+import { z } from "zod";
+
 import {
   GUIDE_IDS,
   getGuide,
@@ -35,7 +37,6 @@ import {
   listOverridableTokenVariables,
   readTokens,
 } from "@mission-platform/mcp-shared/repo/tokens";
-import { z } from "zod";
 
 import { validateConsumerSetup, type ConsumerFramework } from "./validator.ts";
 
