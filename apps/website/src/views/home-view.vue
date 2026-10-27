@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+  import { type Component, computed, onBeforeUnmount, onMounted, ref } from 'vue';
+  import { useRouter } from 'vue-router';
+
   import {
     ForgeAccordion,
     ForgeAvatar,
@@ -30,8 +33,6 @@
   import { organizationId, useSeo, webPage, webSiteId } from '@mission-platform/seo';
   import { ForgeThemeToggle } from '@mission-platform/theme';
   import { ForgeTypography } from '@mission-platform/typography';
-  import { type Component, computed, onBeforeUnmount, onMounted, ref } from 'vue';
-  import { useRouter } from 'vue-router';
 
   import { LANGUAGE_OPTIONS } from '../language-options';
   import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type SupportedLocale } from '../router';
