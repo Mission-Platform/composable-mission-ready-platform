@@ -99,7 +99,7 @@ jobs:
           printf 'TURBO_SCM_HEAD=%s\n' "$head" >> "$GITHUB_ENV"
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@f520eceda224fe1a4aed5a2a27a194379a409996 # v6
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6
         with:
           run_install: false
 
