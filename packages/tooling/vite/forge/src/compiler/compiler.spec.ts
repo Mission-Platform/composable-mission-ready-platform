@@ -557,8 +557,9 @@ describe('the emitters translate named `<Slot>` elements', () => {
     expect(vue.code).toContain('<slot />');
     // The (non-slot) `sticky` prop keeps its declared type via a type-based
     // macro; the slot-backed `header` stays out of the runtime props macro.
+    // The compiler now wraps defineProps with withDefaults for explicit defaults.
     expect(vue.code).toContain(
-      "defineProps<{\n  sticky?: boolean;\n  className?: import('@mission-platform/forge-jsx').ClassValue;\n}>();",
+      "withDefaults(defineProps<{\n  sticky?: boolean;\n  className?: import('@mission-platform/forge-jsx').ClassValue;\n}>(), {",
     );
     expect(vue.code).not.toContain('header?: MpChild;\n}>');
   });

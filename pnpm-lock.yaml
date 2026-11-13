@@ -1864,6 +1864,9 @@ importers:
       '@mission-platform/typescript-config':
         specifier: workspace:*
         version: link:../../../tooling/configs/typescript-config
+      '@mission-platform/vite-config':
+        specifier: workspace:*
+        version: link:../../../tooling/configs/vite-config
       '@types/node':
         specifier: catalog:typescript
         version: 26.6.6
